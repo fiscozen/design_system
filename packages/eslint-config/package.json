@@ -1,0 +1,17 @@
+{
+  "name": "@fiscozen/eslint-config",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "@vue/eslint-config-typescript": "^12.0.0",
+    "eslint-plugin-vue": "^9.17.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
