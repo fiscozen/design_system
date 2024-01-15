@@ -31,3 +31,6 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+
+.nx/cache

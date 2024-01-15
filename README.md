@@ -16,3 +16,13 @@ We handle dependencies with `pnpm`. Please refer to its [documentation](https://
 
 ### Dependency installation
 Run `pnpm install`.
+
+### Running tasks
+Our task runner of choice is [nx](https://nx.dev/).
+In order to run tasks you can, for example
+```
+npx nx run @fiscozen/storybook:storybook // run the "storybook" task on @fiscozen/storybook package
+npx nx run-many -t build // executes the "build" task on all projects
+npx run affected:test // execute the "test" task only on packages that are affected in this branch vs main, and on all dependent packages
+```
+Please refer to Nx documentation for full usage explanation.
