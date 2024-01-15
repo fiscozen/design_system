@@ -1,0 +1,13 @@
+{
+  "name": "@fiscozen/prettier-config",
+  "version": "1.0.0",
+  "description": "Common prettier configuration",
+  "main": "prettier.config.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Riccardo Agnoletto",
+  "license": "ISC"
+}
