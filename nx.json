@@ -1,0 +1,32 @@
+{
+  "targetDefaults": {
+    "build": {
+      "cache": true,
+      "dependsOn": ["^build"]
+    },
+    "test:unit": {
+      "cache": true,
+      "dependsOn": ["^build"]
+    },
+    "test:e2e": {
+      "cache": true,
+      "dependsOn": ["^build"]
+    },
+    "type-check": {
+      "cache": true
+    },
+    "lint": {
+      "cache": true
+    },
+    "build-storybook": {
+      "cache": true
+    },
+    "test": {
+      "cache": true,
+      "dependsOn": ["^build"]
+    }
+  },
+  "affected": {
+    "defaultBase": "main"
+  }
+}
