@@ -9,8 +9,9 @@
   "main": "src/index.ts",
   "keywords": [],
   "author": "Riccardo Agnoletto",
-  "dependencies": {
-    "vue": "^3.4.13"
+  "peerDependencies": {
+    "vue": "^3.4.13",
+    "tailwindcss": "^3.4.1"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",

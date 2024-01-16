@@ -8,6 +8,9 @@
     "test": "exit 0;",
     "build": "exit 0;"
   },
+  "devDependencies": {
+    "prettier-plugin-tailwindcss": "^0.5.11"
+  },
   "keywords": [],
   "author": "Riccardo Agnoletto",
   "license": "ISC"
