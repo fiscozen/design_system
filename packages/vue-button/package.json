@@ -4,6 +4,7 @@
   "description": "Design system button component",
   "scripts": {
     "coverage": "vitest run --coverage",
+    "format": "prettier --write src/",
     "test:unit": "vitest run",
     "build": "vite build"
   },
