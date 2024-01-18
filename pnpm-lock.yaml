@@ -11,6 +11,9 @@ importers:
       nx:
         specifier: 17.2.8
         version: 17.2.8
+      vitest:
+        specifier: ^1.0.4
+        version: 1.2.0(@types/node@18.19.7)(jsdom@23.2.0)
 
   apps/storybook:
     dependencies:
@@ -66,6 +69,9 @@ importers:
       '@vitejs/plugin-vue':
         specifier: ^4.5.2
         version: 4.6.2(vite@5.0.11)(vue@3.4.13)
+      '@vitest/coverage-v8':
+        specifier: ^1.2.1
+        version: 1.2.1(vitest@1.2.0)
       '@vue/test-utils':
         specifier: ^2.4.3
         version: 2.4.3(vue@3.4.13)
@@ -193,6 +199,9 @@ importers:
       '@vitejs/plugin-vue':
         specifier: ^4.5.2
         version: 4.6.2(vite@5.0.11)(vue@3.4.13)
+      '@vitest/coverage-v8':
+        specifier: ^1.2.1
+        version: 1.2.1(vitest@1.2.0)
       '@vue/test-utils':
         specifier: ^2.4.3
         version: 2.4.3(vue@3.4.13)
@@ -221,7 +230,7 @@ importers:
         specifier: ^5.0.10
         version: 5.0.11(@types/node@18.19.7)
       vitest:
-        specifier: ^1.0.4
+        specifier: ^1.2.0
         version: 1.2.0(@types/node@18.19.7)(jsdom@23.2.0)
       vue-tsc:
         specifier: ^1.8.25
@@ -1519,6 +1528,10 @@ packages:
       '@babel/helper-string-parser': 7.23.4
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
+
+  /@bcoe/v8-coverage@0.2.3:
+    resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+    dev: true
 
   /@colors/colors@1.5.0:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
@@ -4239,6 +4252,29 @@ packages:
       vue: 3.4.13(typescript@5.3.3)
     dev: true
 
+  /@vitest/coverage-v8@1.2.1(vitest@1.2.0):
+    resolution: {integrity: sha512-fJEhKaDwGMZtJUX7BRcGxooGwg1Hl0qt53mVup/ZJeznhvL5EodteVnb/mcByhEcvVWbK83ZF31c7nPEDi4LOQ==}
+    peerDependencies:
+      vitest: ^1.0.0
+    dependencies:
+      '@ampproject/remapping': 2.2.1
+      '@bcoe/v8-coverage': 0.2.3
+      debug: 4.3.4(supports-color@8.1.1)
+      istanbul-lib-coverage: 3.2.2
+      istanbul-lib-report: 3.0.1
+      istanbul-lib-source-maps: 4.0.1
+      istanbul-reports: 3.1.6
+      magic-string: 0.30.5
+      magicast: 0.3.3
+      picocolors: 1.0.0
+      std-env: 3.7.0
+      test-exclude: 6.0.0
+      v8-to-istanbul: 9.2.0
+      vitest: 1.2.0(@types/node@18.19.7)(jsdom@23.2.0)
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /@vitest/expect@0.34.7:
     resolution: {integrity: sha512-G9iEtwrD6ZQ4MVHZufif9Iqz3eLtuwBBNx971fNAGPaugM7ftAWjQN+ob2zWhtzURp8RK3zGXOxVb01mFo3zAQ==}
     dependencies:
@@ -6791,6 +6827,10 @@ packages:
       whatwg-encoding: 3.1.1
     dev: true
 
+  /html-escaper@2.0.2:
+    resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
+    dev: true
+
   /http-errors@2.0.0:
     resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
     engines: {node: '>= 0.8'}
@@ -7226,6 +7266,34 @@ packages:
       semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /istanbul-lib-report@3.0.1:
+    resolution: {integrity: sha512-GCfE1mtsHGOELCU8e/Z7YWzpmybrx/+dSTfLrvY8qRmaY6zXTKWn6WQIjaAFw069icm6GVMNkgu0NzI4iPZUNw==}
+    engines: {node: '>=10'}
+    dependencies:
+      istanbul-lib-coverage: 3.2.2
+      make-dir: 4.0.0
+      supports-color: 7.2.0
+    dev: true
+
+  /istanbul-lib-source-maps@4.0.1:
+    resolution: {integrity: sha512-n3s8EwkdFIJCG3BPKBYvskgXGoy88ARzvegkitk60NxRdwltLOTaH7CUiMRXvwYorl0Q712iEjcWB+fK/MrWVw==}
+    engines: {node: '>=10'}
+    dependencies:
+      debug: 4.3.4(supports-color@8.1.1)
+      istanbul-lib-coverage: 3.2.2
+      source-map: 0.6.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /istanbul-reports@3.1.6:
+    resolution: {integrity: sha512-TLgnMkKg3iTDsQ9PbPTdpfAK2DzjF9mqUG7RMgcQl8oFjad8ob4laGxv5XV5U9MAfx8D6tSJiUyuAwzLicaxlg==}
+    engines: {node: '>=8'}
+    dependencies:
+      html-escaper: 2.0.2
+      istanbul-lib-report: 3.0.1
     dev: true
 
   /jackspeak@2.3.6:
@@ -7702,6 +7770,14 @@ packages:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
 
+  /magicast@0.3.3:
+    resolution: {integrity: sha512-ZbrP1Qxnpoes8sz47AM0z08U+jW6TyRgZzcWy3Ma3vDhJttwMwAFDMMQFobwdBxByBD46JYmxRzeF7w2+wJEuw==}
+    dependencies:
+      '@babel/parser': 7.23.6
+      '@babel/types': 7.23.6
+      source-map-js: 1.0.2
+    dev: true
+
   /make-dir@2.1.0:
     resolution: {integrity: sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA==}
     engines: {node: '>=6'}
@@ -7715,6 +7791,13 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       semver: 6.3.1
+    dev: true
+
+  /make-dir@4.0.0:
+    resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
+    engines: {node: '>=10'}
+    dependencies:
+      semver: 7.5.4
     dev: true
 
   /makeerror@1.0.12:
@@ -10235,6 +10318,15 @@ packages:
   /uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
+    dev: true
+
+  /v8-to-istanbul@9.2.0:
+    resolution: {integrity: sha512-/EH/sDgxU2eGxajKdwLCDmQ4FWq+kpi3uCmBGpw1xJtnAxEjlD8j8PEiGWpCIMIs3ciNAgH0d3TTJiUkYzyZjA==}
+    engines: {node: '>=10.12.0'}
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.21
+      '@types/istanbul-lib-coverage': 2.0.6
+      convert-source-map: 2.0.0
     dev: true
 
   /validate-npm-package-license@3.0.4:
