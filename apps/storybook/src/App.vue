@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import { FzButton } from '@fiscozen/vue-button';
+import { FzButton } from '@fiscozen/vue-button'
 </script>
 
 <template>

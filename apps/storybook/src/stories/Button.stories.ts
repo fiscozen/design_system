@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 
-import { FzButton } from '@fiscozen/vue-button';
+import { FzButton } from '@fiscozen/vue-button'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
@@ -11,7 +11,7 @@ const meta = {
   argTypes: {
     size: { control: 'select', options: ['small', 'medium', 'large'] },
     backgroundColor: { control: 'color' },
-    onClick: { action: 'clicked' },
+    onClick: { action: 'clicked' }
   },
   args: { primary: false } // default value
 } satisfies Meta<typeof FzButton>

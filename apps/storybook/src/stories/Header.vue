@@ -41,7 +41,7 @@
 
 <script lang="ts" setup>
 import './header.css'
-import { FzButton } from '@fiscozen/vue-button';
+import { FzButton } from '@fiscozen/vue-button'
 
 defineProps<{ user: { name: string } | null }>()
 

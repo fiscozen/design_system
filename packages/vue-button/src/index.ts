@@ -1,5 +1,3 @@
-import FzButton from './FzButton.vue';
+import FzButton from './FzButton.vue'
 
-export {
-    FzButton
-}
+export { FzButton }
