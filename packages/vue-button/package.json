@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/vue-button",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Design system button component",
   "scripts": {
     "coverage": "vitest run --coverage",
