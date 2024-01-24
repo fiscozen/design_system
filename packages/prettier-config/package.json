@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/prettier-config",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Common prettier configuration",
   "main": "prettier.config.js",
   "type": "module",

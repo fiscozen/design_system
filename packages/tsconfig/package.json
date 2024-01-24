@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/tsconfig",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "scripts": {
     "test": "exit 0;",
