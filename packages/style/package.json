@@ -1,0 +1,16 @@
+{
+  "name": "@fiscozen/style",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "exit 0;"
+  },
+  "keywords": [],
+  "author": "Riccardo Agnoletto",
+  "license": "ISC",
+  "devDependencies": {
+    "style-dictionary": "^3.9.2",
+    "style-dictionary-utils": "^2.0.7",
+    "token-transformer": "^0.0.33"
+  }
+}
