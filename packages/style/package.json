@@ -4,9 +4,8 @@
   "description": "",
   "scripts": {
     "test": "exit 0;",
-    "build:transform:global": "npx token-transformer tokens.json tokens/global.json global",
+    "build:transform": "npx token-transformer tokens.json tokens/global.json",
     "build-sd": "node build.js",
-    "build:transform": "pnpm run build:transform:global",
     "build": "pnpm run build:transform && pnpm run build-sd"
   },
   "keywords": [],

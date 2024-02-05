@@ -1,4 +1,12 @@
 {
+  "button": {
+    "bgcolor": {
+      "default": {
+        "value": "#5a6eff",
+        "type": "color"
+      }
+    }
+  },
   "blue": {
     "50": {
       "value": "#eff1ff",
@@ -275,6 +283,16 @@
     "black": {
       "value": "#2c282f",
       "type": "color"
+    }
+  },
+  "tokenSetOrder": {
+    "0": {
+      "value": "global",
+      "type": "other"
+    },
+    "1": {
+      "value": "ds",
+      "type": "other"
     }
   }
 }
