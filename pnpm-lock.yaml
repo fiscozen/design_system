@@ -33,6 +33,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../../packages/prettier-config
+      '@fiscozen/style':
+        specifier: workspace:^
+        version: link:../../packages/style
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../../packages/tsconfig
