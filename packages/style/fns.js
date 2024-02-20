@@ -37,4 +37,15 @@ function deepen(obj) {
     return deep
   }
   
-  module.exports = { createArray, filterTokensByType };
+  function buildFontSizesObj(tokens) {
+    const fontSizes = tokens.reduce((acc, curr, index, arr) => {
+      if (curr.type === 'fontSizes') {
+        const lineHeight = arr.find((el) => el.type === 'lineHeights' && el.attributes.type === curr.attributes.type);
+        acc[curr.attributes.type] = lineHeight ? [curr.value, {lineHeight: lineHeight.value}] : [curr.value];
+      }
+      return acc;
+    }, {});
+    return fontSizes;
+  }
+  
+  module.exports = { createArray, filterTokensByType, buildFontSizesObj };
