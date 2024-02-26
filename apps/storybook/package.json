@@ -26,6 +26,7 @@
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",
     "@fiscozen/prettier-config": "workspace:^",
+    "@fiscozen/style": "workspace:^",
     "@fiscozen/tsconfig": "workspace:^",
     "@rushstack/eslint-patch": "^1.3.3",
     "@storybook/addon-essentials": "^7.6.8",
