@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
 import { mount } from '@vue/test-utils'
-import FzButton from '../FzButton.vue'
+import FzButton from '../FzIconButton.vue'
 
 describe('FzButton', () => {
   it('renders properly', () => {
