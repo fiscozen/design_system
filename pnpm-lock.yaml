@@ -51,6 +51,9 @@ importers:
       '@storybook/addon-links':
         specifier: ^7.6.8
         version: 7.6.8(react@18.2.0)
+      '@storybook/addon-themes':
+        specifier: ^7.6.17
+        version: 7.6.17
       '@storybook/blocks':
         specifier: ^7.6.8
         version: 7.6.8(react-dom@18.2.0)(react@18.2.0)
@@ -169,6 +172,9 @@ importers:
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
+      '@fiscozen/icons':
+        specifier: workspace:^
+        version: link:../icons
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
@@ -217,6 +223,31 @@ importers:
       vue-tsc:
         specifier: ^1.8.25
         version: 1.8.27(typescript@5.3.3)
+
+  packages/icons:
+    dependencies:
+      '@awesome.me/kit-8137893ad3':
+        specifier: ^1.0.40
+        version: 1.0.40
+      '@fortawesome/fontawesome-svg-core':
+        specifier: ^6.5.1
+        version: 6.5.1
+      '@fortawesome/vue-fontawesome':
+        specifier: ^3.0.6
+        version: 3.0.6(@fortawesome/fontawesome-svg-core@6.5.1)(vue@3.4.13)
+      vue:
+        specifier: ^3.4.13
+        version: 3.4.13(typescript@5.3.3)
+    devDependencies:
+      '@fiscozen/eslint-config':
+        specifier: workspace:^
+        version: link:../eslint-config
+      '@fiscozen/prettier-config':
+        specifier: workspace:^
+        version: link:../prettier-config
+      '@fiscozen/tsconfig':
+        specifier: workspace:^
+        version: link:../tsconfig
 
   packages/prettier-config:
     devDependencies:
@@ -282,6 +313,13 @@ packages:
     dependencies:
       default-browser-id: 3.0.0
     dev: true
+
+  /@awesome.me/kit-8137893ad3@1.0.40:
+    resolution: {integrity: sha512-c0IjcS76xWRzxfd8UeZx4xf01Oet95IH1zZ23XdCCEtsMeW/wOib9w/7g37vJAX0BmSv4kRSt8KVfSpdsELEog==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.40/kit-8137893ad3.tgz}
+    engines: {node: '>=16'}
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.5.1
+    dev: false
 
   /@babel/code-frame@7.23.5:
     resolution: {integrity: sha512-CgH3s1a96LipHCmSUmYFPwY7MNx8C3avkq7i4Wl3cfa662ldtUe4VM1TPXX70pfmrlWTb6jLqTYrZyT2ZTJBgA==}
@@ -2078,6 +2116,30 @@ packages:
     resolution: {integrity: sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==}
     dev: true
 
+  /@fortawesome/fontawesome-common-types@6.5.1:
+    resolution: {integrity: sha512-GkWzv+L6d2bI5f/Vk6ikJ9xtl7dfXtoRu3YGE6nq0p/FFqA1ebMOAWg3XgRyb0I6LYyYkiAo+3/KrwuBp8xG7A==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dev: false
+
+  /@fortawesome/fontawesome-svg-core@6.5.1:
+    resolution: {integrity: sha512-MfRCYlQPXoLlpem+egxjfkEuP9UQswTrlCOsknus/NcMoblTH2g0jPrapbcIb04KGA7E2GZxbAccGZfWoYgsrQ==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.5.1
+    dev: false
+
+  /@fortawesome/vue-fontawesome@3.0.6(@fortawesome/fontawesome-svg-core@6.5.1)(vue@3.4.13):
+    resolution: {integrity: sha512-akrL7lTroyNpPkoHtvK2UpsMzJr6jXdHaQ0YdcwqDsB8jdwlpNHZYijpOUd9KJsARr+VB3WXY4EyObepqJ4ytQ==}
+    peerDependencies:
+      '@fortawesome/fontawesome-svg-core': ~1 || ~6
+      vue: '>= 3.0.0 < 4'
+    dependencies:
+      '@fortawesome/fontawesome-svg-core': 6.5.1
+      vue: 3.4.13(typescript@5.3.3)
+    dev: false
+
   /@hapi/hoek@9.3.0:
     resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
     dev: true
@@ -3153,6 +3215,12 @@ packages:
     resolution: {integrity: sha512-eTHreyvxYLIPt5AbMyDO3CEgGClQFt+CtA/RgSjpyv9MgYXPsZp/h1ZHpYYhSPRYnRE4//YnPMuk7eLf4udaag==}
     dependencies:
       '@storybook/global': 5.0.0
+      ts-dedent: 2.2.0
+    dev: true
+
+  /@storybook/addon-themes@7.6.17:
+    resolution: {integrity: sha512-i/dI3GKlJmQv0Di9HM3fKJvFIab55kvva0vXCGBkqSw3wYoZuq++npkWeDnjjZUvggV12H2RTdGqYwMCXB/GHg==}
+    dependencies:
       ts-dedent: 2.2.0
     dev: true
 

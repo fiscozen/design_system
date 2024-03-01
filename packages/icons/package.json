@@ -1,0 +1,28 @@
+{
+  "name": "@fiscozen/icons",
+  "version": "0.1.0",
+  "description": "Design system icon plugin",
+  "scripts": {
+    "format": "prettier --write src/",
+    "test": "exit 0;",
+    "build": "exit 0;"
+  },
+  "main": "src/index.ts",
+  "type": "module",
+  "keywords": [],
+  "author": "Riccardo Agnoletto",
+  "license": "ISC",
+  "peerDependencies": {
+    "vue": "^3.4.13"
+  },
+  "devDependencies": {
+    "@fiscozen/eslint-config": "workspace:^",
+    "@fiscozen/prettier-config": "workspace:^",
+    "@fiscozen/tsconfig": "workspace:^"
+  },
+  "dependencies": {
+    "@awesome.me/kit-8137893ad3": "^1.0.40",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/vue-fontawesome": "^3.0.6"
+  }
+}

@@ -9,10 +9,11 @@ const meta = {
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
   argTypes: {
-    size: { control: 'select', options: ['small', 'medium', 'large'] },
-    onClick: { action: 'clicked' }
+    variant: { control: 'select', options: ['primary', 'secondary', 'notification', 'invisible'] },
+    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    iconVariant: { control: 'select', options: ['fas', 'far', 'fal', 'fat', 'fad', 'fass', 'fasr', 'fasl', 'fast'] },
   },
-  args: { variant:  IconButtonVariant.primary} // default value
+  args: { variant:  IconButtonVariant.primary, disabled: false, iconName: 'bell', iconVariant: 'fasl'} // default value
 } satisfies Meta<typeof FzIconButton>
 
 export default meta
@@ -35,16 +36,16 @@ export const Secondary: Story = {
   }
 }
 
-export const Large: Story = {
+export const Notification: Story = {
   args: {
-    size: 'lg',
-    tooltip: 'Large button'
+    variant: IconButtonVariant.notification,
+    tooltip: 'Notification button'
   }
 }
 
-export const Small: Story = {
+export const Invisible: Story = {
   args: {
-    size: 'sm',
-    tooltip: 'Small button'
+    variant: IconButtonVariant.invisible,
+    tooltip: 'Invisible button'
   }
 }
