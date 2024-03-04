@@ -16,7 +16,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=chpt_1a654273b7f5392"
   },
   "dependencies": {
     "@fiscozen/vue-button": "workspace:^",
@@ -43,6 +44,7 @@
     "@vue/test-utils": "^2.4.3",
     "@vue/tsconfig": "^0.5.0",
     "autoprefixer": "^10.4.16",
+    "chromatic": "^11.0.0",
     "cypress": "^13.6.1",
     "eslint": "^8.49.0",
     "eslint-plugin-cypress": "^2.15.1",
