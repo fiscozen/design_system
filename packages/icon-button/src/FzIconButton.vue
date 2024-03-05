@@ -9,7 +9,10 @@
         :name="iconName"
         :variant="iconVariant"
         :size="mappedIconSize"/>
-      <div class="fz__iconbtn__notification" v-if="variant === IconButtonVariant.notification" :class="notificationClasses"></div>
+      <div class="fz__iconbtn__notification" 
+        v-if="variant === IconButtonVariant.notification"
+        :class="notificationClasses">
+      </div>
       <span class="hidden w-0 h-0">{{ tooltip }}</span>
     </button>
 </template>
@@ -53,7 +56,6 @@ const props = withDefaults(
     size: 'md',
     disabled: false,
     iconVariant: 'fasl',
-    showNotificationHint: false
   }
 )
 
@@ -63,7 +65,7 @@ const customVariantClasses = computed(() => ({
     'hover:bg-blue-600': true,
     'disabled:bg-blue-200': true, 
     'text-core-white': true, 
-    'focus:bg-blue-500': true,
+    'focus:bg-blue-500': !props.disabled,
   },
   [IconButtonVariant.secondary]: {
     'text-grey-500': true, 
@@ -71,7 +73,7 @@ const customVariantClasses = computed(() => ({
     'border-1': true,
     'border-grey-200': true,
     'hover:bg-grey-100': !props.disabled, 
-    'focus:border-blue-600': true,
+    'focus:border-blue-600': !props.disabled,
     'disabled:text-grey-100': true,
   },
   [IconButtonVariant.notification]: {
@@ -101,9 +103,9 @@ const classes = computed(() => ({
   'w-28 h-28': props.size === 'sm',
   'w-32 h-32': props.size === 'md',
   'w-40 h-40': props.size === 'lg',
-  'focus:border-blue-600': true,
-  'focus:border-solid': true,
-  'focus:border-1': true,
+  'focus:border-blue-600': !props.disabled,
+  'focus:border-solid': !props.disabled,
+  'focus:border-1': !props.disabled,
   ...customVariantClasses.value[props.variant],
 }))
 
@@ -116,22 +118,21 @@ const notificationClasses = computed(() => ({
   'w-6 h-6': props.size === 'sm',
   'w-8 h-8': props.size === 'md',
   'w-10 h-10': props.size === 'lg',
-  'disabled:bg-grey-200': true,
+  'bg-grey-200': props.disabled,
 }))
 
 const iconSizeMap = {
   sm: 'md',
-  md: 'lg',
   lg: 'lg'
 }
 
-const mappedIconSize = computed(() => iconSizeMap[props.size])
+const mappedIconSize = computed(() => iconSizeMap[props.size] as 'sm'|'lg'|undefined)
 
 </script>
 
 <style>
 .fz__iconbtn__notification {
-    margin-top: -1px;
-    margin-right: -1px;
+    margin-top: -2px;
+    margin-right: -2px;
 }
 </style>
