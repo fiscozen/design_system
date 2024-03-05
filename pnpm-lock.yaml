@@ -17,6 +17,9 @@ importers:
 
   apps/storybook:
     dependencies:
+      '@fiscozen/breadcrumbs':
+        specifier: workspace:^
+        version: link:../../packages/breadcrumbs
       '@fiscozen/icon-button':
         specifier: workspace:^
         version: link:../../packages/icon-button
@@ -135,6 +138,9 @@ importers:
       storybook:
         specifier: ^7.6.8
         version: 7.6.8
+      storybook-vue3-router:
+        specifier: ^5.0.0
+        version: 5.0.0(@storybook/preview-api@7.6.8)(@storybook/vue3@7.6.8)(vue-router@4.2.5)(vue@3.4.13)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -3861,7 +3867,7 @@ packages:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.4.13(typescript@5.3.3)
-      vue-component-type-helpers: 2.0.4
+      vue-component-type-helpers: 2.0.5
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -4535,7 +4541,6 @@ packages:
 
   /@vue/devtools-api@6.5.1:
     resolution: {integrity: sha512-+KpckaAQyfbvshdDW5xQylLni1asvNSGme1JFs8I1+/H5pHEhqUKMEQD/qn3Nx5+/nycBq11qAEi8lk+LXI2dA==}
-    dev: false
 
   /@vue/eslint-config-prettier@8.0.0(eslint@8.56.0)(prettier@3.2.2):
     resolution: {integrity: sha512-55dPqtC4PM/yBjhAr+yEw6+7KzzdkBuLmnhBrDfp4I48+wy+Giqqj9yUr5T2uD/BkBROjjmqnLZmXRdOx/VtQg==}
@@ -9923,6 +9928,25 @@ packages:
     resolution: {integrity: sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==}
     dev: true
 
+  /storybook-vue3-router@5.0.0(@storybook/preview-api@7.6.8)(@storybook/vue3@7.6.8)(vue-router@4.2.5)(vue@3.4.13):
+    resolution: {integrity: sha512-Q5ePPv8xyYT+9IzcEMSAQeCT8OlPDX0rfUfYCmiYDXsGPvvDej2Oyid3wyaxZmU/LXt1XzMDRO3v9qk/EN6pXg==}
+    peerDependencies:
+      '@storybook/preview-api': 7.x||>=7.0.0-rc.0
+      '@storybook/vue3': 7.x||>=7.0.0-rc.0
+      vue: 3.x
+      vue-router: 4.x
+    peerDependenciesMeta:
+      vue:
+        optional: true
+      vue-router:
+        optional: true
+    dependencies:
+      '@storybook/preview-api': 7.6.8
+      '@storybook/vue3': 7.6.8(vue@3.4.13)
+      vue: 3.4.13(typescript@5.3.3)
+      vue-router: 4.2.5(vue@3.4.13)
+    dev: true
+
   /storybook@7.6.8:
     resolution: {integrity: sha512-ugRtDSs2eTgHMOZ3wKXbUEbPnlJ2XImPbnvxNssK14py2mHKwPnhSqLNrjlQMkmkO13GdjalLDyj4lZtoYdo0Q==}
     hasBin: true
@@ -10802,8 +10826,8 @@ packages:
     resolution: {integrity: sha512-0vOfAtI67UjeO1G6UiX5Kd76CqaQ67wrRZiOe7UAb9Jm6GzlUr/fC7CV90XfwapJRjpCMaZFhv1V0ajWRmE9Dg==}
     dev: true
 
-  /vue-component-type-helpers@2.0.4:
-    resolution: {integrity: sha512-IFZ8rjfV1zWf1LOMPfmMaHe28zZfo5w2NyZxCqeqLGT3CGur0Y9+R3/bvX400tqVukuzf8mLw2fOvGTyXKPWjg==}
+  /vue-component-type-helpers@2.0.5:
+    resolution: {integrity: sha512-v9N4ufDSnd8YHcDq/vURPjxDyBVak5ZVAQ6aGNIrf7ZAj/VxRKpLZXFHEaqt9yHkWi0/TZp76Jmf8yNJxDQi4g==}
     dev: true
 
   /vue-docgen-api@4.75.1(vue@3.4.13):
@@ -10858,7 +10882,6 @@ packages:
     dependencies:
       '@vue/devtools-api': 6.5.1
       vue: 3.4.13(typescript@5.3.3)
-    dev: false
 
   /vue-router@4.3.0(vue@3.4.13):
     resolution: {integrity: sha512-dqUcs8tUeG+ssgWhcPbjHvazML16Oga5w34uCUmsk7i0BcnskoLGwjpa15fqMr2Fa5JgVBrdL2MEgqz6XZ/6IQ==}
