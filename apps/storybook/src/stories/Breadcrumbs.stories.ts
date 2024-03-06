@@ -1,47 +1,58 @@
 import type { Meta } from '@storybook/vue3'
 import { vueRouter} from 'storybook-vue3-router';
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import { FzBreadcrumbs, Breadcrumb, CustomRouteLocation } from '@fiscozen/breadcrumbs'
 
 const Page = {
   setup () {
     const route = useRoute()
+    const router = useRouter()
+
+    const routes = router.getRoutes()
     
     return {
         route,
+        routes
     }
   },
   template: `
     <div>
         <h2>Page {{ route.name }}</h2>                
-        <pre>full path: {{route.fullPath}}<pre/>
+        <pre>full path: {{route.fullPath}}</pre>
+        <h3>Test links</h3>
+        <div class="flex flex-row">
+          <router-link class="px-4 underline" v-for="routeRec in routes" :to="routeRec.path">{{routeRec.name}}</router-link>
+        </div>
     </div>
   `
 };
 const routes = [
     {
-        name: 'foo',
-        path: '/foo',
+        name: 'home',
+        path: '/',
         component: Page,
-    },
-    {
-        name: 'bar',
-        path: '/foo/bar',
-        component: Page,
-    },
-    {
-        name: 'baz',
-        path: '/foo/bar/baz',
-        component: Page,
+        children: [
+          {
+              name: 'foo',
+              path: '/foo',
+              component: Page,
+              children: [
+                {
+                    name: 'bar',
+                    path: '/foo/bar',
+                    component: Page,
+                }
+              ]
+          },
+          {
+              name: 'baz',
+              path: '/foo/baz',
+              component: Page,
+          },
+        ]
     },
 ]
-
-const breadcrumbs: Breadcrumb<CustomRouteLocation>[] = routes.map((el) => ({
-    id: el.name,
-    label: el.name,
-    metadata: el    
-}))
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
@@ -52,7 +63,6 @@ const meta = {
   argTypes: {
   },
   args: {
-    breadcrumbs
   } // default value
 } satisfies Meta<typeof FzBreadcrumbs>
 
@@ -76,16 +86,61 @@ const withArgs = (args) => ({
   template: `
     <fz-breadcrumbs 
         :breadcrumbs="args.breadcrumbs" />
-      <router-view />
+    <br/>
+    <router-view />
+
   `
 })
 
 export const Default = withArgs.bind({})
 /* args are passed to route component via <router-view> props */
-Default.args = {
-  routerLinkParam: 'some-url-parameter',
-}
 Default.decorators = [
+  vueRouter(
+    routes,
+    {
+      initialRoute: '/foo'
+    }
+  )
+]
+
+export const Static = withArgs.bind({})
+Static.args = {
+  breadcrumbs: [
+    {
+      id: 'home',
+      label: 'home',
+      metadata: {
+        name: 'home',
+        path: '/'
+      }
+    },
+    {
+      id: 'foo',
+      label: 'foo',
+      metadata: {
+        name: 'foo',
+        path: '/foo'
+      }
+    },
+    {
+      id: 'bar',
+      label: 'bar',
+      metadata: {
+        name: 'bar',
+        path: '/foo/bar'
+      }
+    },
+    {
+      id: 'baz',
+      label: 'baz',
+      metadata: {
+        name: 'baz',
+        path: '/foo/bar/baz'
+      }
+    },
+  ]
+}
+Static.decorators = [
   vueRouter(
     routes,
     {
