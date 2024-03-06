@@ -27,8 +27,8 @@ importers:
         specifier: ^3.4.13
         version: 3.4.13(typescript@5.3.3)
       vue-router:
-        specifier: ^4.2.5
-        version: 4.2.5(vue@3.4.13)
+        specifier: ^4.3.0
+        version: 4.3.0(vue@3.4.13)
     devDependencies:
       '@fiscozen/eslint-config':
         specifier: workspace:^
@@ -140,7 +140,7 @@ importers:
         version: 7.6.8
       storybook-vue3-router:
         specifier: ^5.0.0
-        version: 5.0.0(@storybook/preview-api@7.6.8)(@storybook/vue3@7.6.8)(vue-router@4.2.5)(vue@3.4.13)
+        version: 5.0.0(@storybook/preview-api@7.6.8)(@storybook/vue3@7.6.8)(vue-router@4.3.0)(vue@3.4.13)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -9928,7 +9928,7 @@ packages:
     resolution: {integrity: sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==}
     dev: true
 
-  /storybook-vue3-router@5.0.0(@storybook/preview-api@7.6.8)(@storybook/vue3@7.6.8)(vue-router@4.2.5)(vue@3.4.13):
+  /storybook-vue3-router@5.0.0(@storybook/preview-api@7.6.8)(@storybook/vue3@7.6.8)(vue-router@4.3.0)(vue@3.4.13):
     resolution: {integrity: sha512-Q5ePPv8xyYT+9IzcEMSAQeCT8OlPDX0rfUfYCmiYDXsGPvvDej2Oyid3wyaxZmU/LXt1XzMDRO3v9qk/EN6pXg==}
     peerDependencies:
       '@storybook/preview-api': 7.x||>=7.0.0-rc.0
@@ -9944,7 +9944,7 @@ packages:
       '@storybook/preview-api': 7.6.8
       '@storybook/vue3': 7.6.8(vue@3.4.13)
       vue: 3.4.13(typescript@5.3.3)
-      vue-router: 4.2.5(vue@3.4.13)
+      vue-router: 4.3.0(vue@3.4.13)
     dev: true
 
   /storybook@7.6.8:
@@ -10875,14 +10875,6 @@ packages:
       vue: 3.4.13(typescript@5.3.3)
     dev: true
 
-  /vue-router@4.2.5(vue@3.4.13):
-    resolution: {integrity: sha512-DIUpKcyg4+PTQKfFPX88UWhlagBEBEfJ5A8XDXRJLUnZOvcpMF8o/dnL90vpVkGaPbjvXazV/rC1qBKrZlFugw==}
-    peerDependencies:
-      vue: ^3.2.0
-    dependencies:
-      '@vue/devtools-api': 6.5.1
-      vue: 3.4.13(typescript@5.3.3)
-
   /vue-router@4.3.0(vue@3.4.13):
     resolution: {integrity: sha512-dqUcs8tUeG+ssgWhcPbjHvazML16Oga5w34uCUmsk7i0BcnskoLGwjpa15fqMr2Fa5JgVBrdL2MEgqz6XZ/6IQ==}
     peerDependencies:
@@ -10890,7 +10882,6 @@ packages:
     dependencies:
       '@vue/devtools-api': 6.5.1
       vue: 3.4.13(typescript@5.3.3)
-    dev: false
 
   /vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}

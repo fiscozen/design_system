@@ -23,7 +23,7 @@
     "@fiscozen/breadcrumbs": "workspace:^",
     "@fiscozen/icon-button": "workspace:^",
     "vue": "^3.4.13",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",

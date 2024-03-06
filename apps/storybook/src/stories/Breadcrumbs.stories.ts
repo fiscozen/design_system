@@ -54,7 +54,7 @@ const routes = [
     },
 ]
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
+// More on how to set up stories at: 
 const meta = {
   title: 'BreadCrumbs',
   component: FzBreadcrumbs,
@@ -135,7 +135,7 @@ Static.args = {
       label: 'baz',
       metadata: {
         name: 'baz',
-        path: '/foo/bar/baz'
+        path: '/foo/baz'
       }
     },
   ]

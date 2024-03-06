@@ -26,6 +26,9 @@ const breads: ComputedRef<Breadcrumb<CustomRouteLocation>[]> = computed(() => {
     if (props.breadcrumbs && props.breadcrumbs.length) {
         return props.breadcrumbs;
     }
+    if (!route || !route.matched) {
+        return []
+    }
 
     return route.matched.map((match) => ({
         id: match.name,

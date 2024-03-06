@@ -8,7 +8,7 @@ body {
 
 @font-face {
   font-family: Inter;
-  src: url('fonts/Inter-Regular.ttf') format('ttf');
+  src: url('/fonts/Inter-Regular.ttf') format('ttf');
 }
 @font-face {
   font-family: Inter;
