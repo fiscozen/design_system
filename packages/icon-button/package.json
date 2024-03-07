@@ -4,6 +4,7 @@
   "description": "Design system icon button component",
   "scripts": {
     "coverage": "vitest run --coverage",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
     "format": "prettier --write src/",
     "test:unit": "vitest run",
     "build": "vite build"

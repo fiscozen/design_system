@@ -1,4 +1,4 @@
 import FzIconButton from './FzIconButton.vue'
-import {IconButtonVariant} from './types';
+import type { IconButtonVariant } from './types'
 
 export { FzIconButton, IconButtonVariant }
