@@ -122,8 +122,7 @@ const notificationClasses = computed(() => ({
   'top-0': true,
   'right-0': true,
   'w-6 h-6': props.size === 'sm',
-  'w-8 h-8': props.size === 'md',
-  'w-10 h-10': props.size === 'lg',
+  'w-8 h-8': props.size === 'md' || props.size === 'lg',
   'bg-grey-200': props.disabled
 }))
 
