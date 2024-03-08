@@ -15,6 +15,4 @@ export {
     IconPlugin,
 }
 
-export type {
-    IconVariant
-}
+export { IconVariant } from './types';
