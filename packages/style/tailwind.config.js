@@ -4,8 +4,9 @@ const { filterTokensByType, buildFontSizesObj } = require("./fns");
 const colors = filterTokensByType('color', globals);
 const spacing = filterTokensByType('spacing', globals).spacing;
 const fontSize = buildFontSizesObj(globals);
-const borderWidth = filterTokensByType('borderWidth', globals)['border-width'];
-const borderRadius = filterTokensByType('borderRadius', globals)['border-radius'];
+const borderWidth = filterTokensByType('borderWidth', globals)['border'];
+const borderRadius = filterTokensByType('borderRadius', globals)['rounded'];
+borderRadius.DEFAULT = borderRadius.base
 const screens = filterTokensByType('sizing', globals, true)['breakpoint'];
 
 module.exports = {

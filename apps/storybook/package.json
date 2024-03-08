@@ -13,13 +13,13 @@
     "coverage": "vitest run --coverage",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
     "format": "prettier --write src/",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@fiscozen/vue-button": "workspace:^",
+    "@fiscozen/icon-button": "workspace:^",
     "vue": "^3.4.13",
     "vue-router": "^4.2.5"
   },
@@ -32,6 +32,7 @@
     "@storybook/addon-essentials": "^7.6.8",
     "@storybook/addon-interactions": "^7.6.8",
     "@storybook/addon-links": "^7.6.8",
+    "@storybook/addon-themes": "^7.6.17",
     "@storybook/blocks": "^7.6.8",
     "@storybook/test": "^7.6.8",
     "@storybook/vue3": "^7.6.8",
@@ -43,6 +44,7 @@
     "@vue/test-utils": "^2.4.3",
     "@vue/tsconfig": "^0.5.0",
     "autoprefixer": "^10.4.16",
+    "chromatic": "^11.0.0",
     "cypress": "^13.6.1",
     "eslint": "^8.49.0",
     "eslint-plugin-cypress": "^2.15.1",

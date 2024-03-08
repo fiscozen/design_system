@@ -1,4 +1,6 @@
-import type { Preview } from '@storybook/vue3'
+import type { Preview, VueRenderer } from '@storybook/vue3'
+import '../src/assets/main.css';
+import { withThemeByClassName } from '@storybook/addon-themes';
 
 const preview: Preview = {
   parameters: {
@@ -9,7 +11,13 @@ const preview: Preview = {
         date: /Date$/i
       }
     }
-  }
+  },
+  decorators: [
+    withThemeByClassName<VueRenderer>({
+      themes: {global: 'global-theme'},
+      defaultTheme: 'global'
+    })
+  ]
 }
 
 export default preview
