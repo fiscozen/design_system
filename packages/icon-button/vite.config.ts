@@ -17,7 +17,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, './src/index.ts'),
-      name: 'FzButton',
+      name: 'FzIconButton',
     },
     rollupOptions: {
       external: ['vue'],

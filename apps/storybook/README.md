@@ -66,3 +66,14 @@ pnpm test:e2e
 ```sh
 pnpm lint
 ```
+
+## Chromatic build
+We use Chromatic to host Storybook and we run interaction and visual regression tests against this statically served Storybook version.
+
+To launch a new build in chromatic use:
+
+```
+npx chromatic --project-token=CHROMATIC_BUILD_TOKEN
+```
+
+with the appropriate environment variable set
