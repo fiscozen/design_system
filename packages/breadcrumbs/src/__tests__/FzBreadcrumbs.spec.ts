@@ -1,57 +1,57 @@
 import { describe, it, expect } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
-import { createRouter, createWebHistory, useRoute, useRouter } from 'vue-router'
+import { RouteRecordRaw, createRouter, createWebHistory, useRoute, useRouter } from 'vue-router'
 
-import { FzBreadcrumbs } from '..'
+import { Breadcrumb, CustomRouteLocation, FzRouterBreadcrumbs } from '..'
 
-const breadcrumbs = [
-    {
-        id: 'home',
-        label: 'home',
-        metadata: {
-            name: 'home',
-            path: '/'
-        }
-    },
-    {
-        id: 'foo',
-        label: 'foo',
-        metadata: {
-            name: 'foo',
-            path: '/foo'
-        }
-    },
-    {
-        id: 'bar',
-        label: 'bar',
-        metadata: {
-            name: 'bar',
-            path: '/foo/bar'
-        }
-    },
-    {
-        id: 'baz',
-        label: 'baz',
-        metadata: {
-            name: 'baz',
-            path: '/foo/baz'
-        }
-    },
+const breadcrumbs: Breadcrumb<CustomRouteLocation>[] = [
+  {
+    id: 'home',
+    label: 'home',
+    metadata: {
+      name: 'home',
+      path: '/'
+    }
+  },
+  {
+    id: 'foo',
+    label: 'foo',
+    metadata: {
+      name: 'foo',
+      path: '/foo'
+    }
+  },
+  {
+    id: 'bar',
+    label: 'bar',
+    metadata: {
+      name: 'bar',
+      path: '/foo/bar'
+    }
+  },
+  {
+    id: 'baz',
+    label: 'baz',
+    metadata: {
+      name: 'baz',
+      path: '/foo/baz'
+    }
+  }
 ]
 
 const Page = {
-    setup() {
-        const route = useRoute()
-        const router = useRouter()
+  setup() {
+    const route = useRoute()
+    const router = useRouter()
 
-        const routes = router.getRoutes()
+    const routes = router.getRoutes()
 
-        return {
-            route,
-            routes
-        }
-    },
-    template: `
+    return {
+      route,
+      routes
+    }
+  },
+  template: `
     <div>
         <h2>Page {{ route.name }}</h2>                
         <pre>full path: {{route.fullPath}}</pre>
@@ -61,91 +61,88 @@ const Page = {
         </div>
     </div>
   `
-};
+}
 
-const routes = [
-    {
-        name: 'home',
-        path: '/',
+const routes: RouteRecordRaw[] = [
+  {
+    name: 'home',
+    path: '/',
+    component: Page,
+    children: [
+      {
+        name: 'foo',
+        path: '/foo',
         component: Page,
         children: [
-            {
-                name: 'foo',
-                path: '/foo',
-                component: Page,
-                children: [
-                    {
-                        name: 'bar',
-                        path: '/foo/bar',
-                        component: Page,
-                    }
-                ]
-            },
-            {
-                name: 'baz',
-                path: '/foo/baz',
-                component: Page,
-            },
+          {
+            name: 'bar',
+            path: '/foo/bar',
+            component: Page
+          }
         ]
-    },
+      },
+      {
+        name: 'baz',
+        path: '/foo/baz',
+        component: Page
+      }
+    ]
+  }
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
+  history: createWebHistory(),
+  routes
 })
 
 const App = {
-    components: { FzBreadcrumbs },
-    template: `
-    <fz-breadcrumbs />
+  components: { FzRouterBreadcrumbs },
+  template: `
+    <fz-router-breadcrumbs />
     <router-view />
   `
 }
 
+describe('FzRouterBreadcrumbs', () => {
+  it('should match snapshot for static breadcrumbs', async () => {
+    router.push('/')
+    await router.isReady()
 
-describe('FzBreadCrumbs', () => {
-    it('should match snapshot for static breadcrumbs', async () => {
-        router.push('/')
-        await router.isReady()
-
-        const wrapper = mount(FzBreadcrumbs, {
-            props: {
-                breadcrumbs
-            },
-            global: {
-                plugins: [router]
-            }
-        })
-
-        await flushPromises()
-        expect(wrapper.html()).toMatchSnapshot()
-        expect(
-            wrapper
-                .findComponent({name: 'fz-simple-breadcrumbs'})
-                .findAllComponents({name: 'router-link'})
-        ).to.have.length(4)
+    const wrapper = mount(FzRouterBreadcrumbs, {
+      props: {
+        breadcrumbs
+      },
+      global: {
+        plugins: [router]
+      }
     })
 
-    it('should match snapshot for automatic breadcrumbs', async () => {
-        router.push('/')
-        await router.isReady()
+    await flushPromises()
+    expect(wrapper.html()).toMatchSnapshot()
+    expect(
+      wrapper.findComponent({ name: 'fz-breadcrumbs' }).findAllComponents({ name: 'router-link' })
+    ).to.have.length(4)
+  })
 
-        const wrapper = mount(App, {
-            global: {
-                plugins: [router]
-            }
-        })
+  it('should match snapshot for automatic breadcrumbs', async () => {
+    router.push('/')
+    await router.isReady()
 
-        await router.push('/foo/bar')
-        await flushPromises()
-
-        expect(wrapper.html()).toMatchSnapshot()
-        expect(
-            wrapper
-                .findComponent({name: 'fz-breadcrumbs'})
-                .findComponent({name: 'fz-simple-breadcrumbs'})
-                .findAllComponents({name: 'router-link'})
-        ).to.have.length(3)
+    const wrapper = mount(App, {
+      global: {
+        plugins: [router]
+      }
     })
+
+    await router.push('/foo/bar')
+    await flushPromises()
+
+    expect(wrapper.html()).toMatchSnapshot()
+    expect(
+      wrapper
+        .findComponent({ name: 'fz-router-breadcrumbs' })
+        .findComponent({ name: 'fz-breadcrumbs' })
+        .findAllComponents({ name: 'router-link' })
+    ).to.have.length(3)
+  })
 })

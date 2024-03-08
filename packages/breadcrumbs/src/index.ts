@@ -1,4 +1,3 @@
-import FzBreadcrumbs from './FzBreadcrumbs.vue'
-
 export * from './types'
-export { FzBreadcrumbs }
+export { default as FzRouterBreadcrumbs } from './FzRouterBreadcrumbs.vue'
+export { default as FzBreadcrumbs } from './FzBreadcrumbs.vue'

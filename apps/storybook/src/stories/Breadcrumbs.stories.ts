@@ -2,7 +2,7 @@ import type { Meta } from '@storybook/vue3'
 import { vueRouter} from 'storybook-vue3-router';
 import { useRoute, useRouter } from 'vue-router'
 
-import { FzBreadcrumbs, Breadcrumb, CustomRouteLocation } from '@fiscozen/breadcrumbs'
+import { FzRouterBreadcrumbs, Breadcrumb, CustomRouteLocation } from '@fiscozen/breadcrumbs'
 
 const Page = {
   setup () {
@@ -57,14 +57,14 @@ const routes = [
 // More on how to set up stories at: 
 const meta = {
   title: 'BreadCrumbs',
-  component: FzBreadcrumbs,
+  component: FzRouterBreadcrumbs,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
   argTypes: {
   },
   args: {
   } // default value
-} satisfies Meta<typeof FzBreadcrumbs>
+} satisfies Meta<typeof FzRouterBreadcrumbs>
 
 export default meta
 
@@ -81,10 +81,10 @@ const withArgs = (args) => ({
     /* make `args` available within template */
     return { args }
   },
-  components: { 'page': Page, 'FzBreadcrumbs': FzBreadcrumbs },
+  components: { 'page': Page, 'FzRouterBreadcrumbs': FzRouterBreadcrumbs },
   /* create template and pass Storybook args to <router-view> using props */
   template: `
-    <fz-breadcrumbs 
+    <fz-router-breadcrumbs 
         :breadcrumbs="args.breadcrumbs" />
     <br/>
     <router-view />
