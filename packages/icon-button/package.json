@@ -1,9 +1,10 @@
 {
   "name": "@fiscozen/icon-button",
   "version": "0.1.0",
-  "description": "Design system icon button component",
+  "description": "Design System Icon Button Component",
   "scripts": {
     "coverage": "vitest run --coverage",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
     "format": "prettier --write src/",
     "test:unit": "vitest run",
     "build": "vite build"

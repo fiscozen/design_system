@@ -13,7 +13,7 @@ const meta = {
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
     iconVariant: { control: 'select', options: ['fas', 'far', 'fal', 'fat', 'fad', 'fass', 'fasr', 'fasl', 'fast'] },
   },
-  args: { variant:  IconButtonVariant.primary, disabled: false, iconName: 'bell', iconVariant: 'fasl'} // default value
+  args: { variant: 'primary', disabled: false, iconName: 'bell', iconVariant: 'fasl'} // default value
 } satisfies Meta<typeof FzIconButton>
 
 export default meta
@@ -31,21 +31,21 @@ export const Primary: Story = {
 
 export const Secondary: Story = {
   args: {
-    variant: IconButtonVariant.secondary,
+    variant: 'secondary',
     tooltip: 'Secondary button'
   }
 }
 
 export const Notification: Story = {
   args: {
-    variant: IconButtonVariant.notification,
+    variant: 'notification',
     tooltip: 'Notification button'
   }
 }
 
 export const Invisible: Story = {
   args: {
-    variant: IconButtonVariant.invisible,
+    variant: 'invisible',
     tooltip: 'Invisible button'
   }
 }
