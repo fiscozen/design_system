@@ -525,6 +525,12 @@ importers:
 
   packages/navlink:
     dependencies:
+      '@fiscozen/collapse':
+        specifier: workspace:^
+        version: link:../collapse
+      '@fiscozen/icons':
+        specifier: workspace:^
+        version: link:../icons
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { byPrefixAndName } from '@awesome.me/kit-8137893ad3/icons'
-import type { IconVariant } from './types'
+import type { IconSize, IconVariant } from './types'
 
 withDefaults(
   defineProps<{
     name: string | string[]
-    size: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+    size?: IconSize
     variant?: IconVariant
   }>(),
   { size: 'lg', variant: 'fasl' }
