@@ -1,12 +1,12 @@
 <template>
   <div class="flex text-sm">
     <template v-for="(el, index) in breadcrumbs" :key="el.id">
-      <slot name="bread-label" :bread="el" :isActive="index === breadcrumbs.length - 1">
-        <div class="text-blue-500" :class="{ 'text-grey-500': index !== breadcrumbs.length - 1 }">
+      <slot name="bread-label" :bread="el" :isActive="isActiveLink(index)">
+        <div class="text-blue-500" :class="{ 'text-grey-500': !isActiveLink(index) }">
           {{ el.label }}
         </div>
       </slot>
-      <template v-if="index !== breadcrumbs.length - 1">
+      <template v-if="!isActiveLink(index)">
         <slot name="bread-separator">
           <div class="text-grey-300 mx-4">{{ separator }}</div>
         </slot>
@@ -18,7 +18,7 @@
 <script setup lang="ts" generic="T">
 import { Breadcrumb } from './types'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     /**
      * List of breadcrumbs
@@ -33,4 +33,8 @@ withDefaults(
     separator: '/'
   }
 )
+
+const isActiveLink = (index) => {
+  return index === props.breadcrumbs.length - 1
+}
 </script>
