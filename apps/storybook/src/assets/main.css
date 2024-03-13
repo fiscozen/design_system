@@ -8,25 +8,25 @@ body {
 
 @font-face {
   font-family: Inter;
-  src: url('/fonts/Inter-Regular.ttf') format('ttf');
+  src: url('/fonts/Inter-Regular.ttf') format('truetype');
 }
 @font-face {
   font-family: Inter;
-  src: url('/fonts/Inter-Bold.ttf') format('ttf');
+  src: url('/fonts/Inter-Bold.ttf') format('truetype');
   font-weight: bold
 }
 @font-face {
   font-family: Inter;
-  src: url('/fonts/Inter-SemiBold.ttf') format('ttf');
+  src: url('/fonts/Inter-SemiBold.ttf') format('truetype');
   font-weight: 600;
 }
 @font-face {
   font-family: Inter;
-  src: url('/fonts/Inter-Bold.ttf') format('ttf');
+  src: url('/fonts/Inter-Bold.ttf') format('truetype');
   font-weight: 700;
 }
 @font-face {
   font-family: Inter;
-  src: url('/fonts/Inter-Light.ttf') format('ttf');
+  src: url('/fonts/Inter-Light.ttf') format('truetype');
   font-weight: 300;
 }
