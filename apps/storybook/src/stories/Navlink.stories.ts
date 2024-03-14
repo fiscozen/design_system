@@ -1,7 +1,7 @@
 import type { Meta } from '@storybook/vue3'
 import { vueRouter } from 'storybook-vue3-router'
 import { useRoute, useRouter } from 'vue-router'
-import { FzNavlink } from '@fiscozen/navlink'
+import { FzNavlink, FzRouterNavlink } from '@fiscozen/navlink'
 
 const Page = {
   setup() {
@@ -56,7 +56,7 @@ const meta = {
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
   argTypes: {},
-  args: { disabled: false, meta: {some: ''} } // default value
+  args: { disabled: false, meta: { some: '' } } // default value
 } satisfies Meta<typeof FzNavlink>
 
 export default meta
@@ -89,3 +89,32 @@ export const IconNavlink = navlinkWithArgs.bind({})
 IconNavlink.args = {
   iconName: 'bell'
 }
+
+const navlinkRouterLink = (args) => ({
+  setup() {
+    return { args }
+  },
+  components: { page: Page, FzNavlink, FzRouterNavlink },
+  template: `
+    <fz-router-navlink
+      :disabled="args.disabled"
+      :meta="args.meta"
+      :label="args.label"
+      :icon-name="args.iconName"></fz-router-navlink>
+    <br/>
+    <router-view />
+  `
+})
+
+export const RouterNavlink = navlinkRouterLink.bind({})
+RouterNavlink.args = {
+  label: 'router navlink',
+  meta: {
+    path: '/foo/bar'
+  }
+}
+RouterNavlink.decorators = [
+  vueRouter(routes, {
+    initialRoute: '/foo'
+  })
+]
