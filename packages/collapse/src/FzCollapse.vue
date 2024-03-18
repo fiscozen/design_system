@@ -40,4 +40,9 @@ const handleSummaryClick = () => {
 .v-leave-to {
   opacity: 0;
 }
+.fz__collapse--open {
+  .fz__collapse__summary {
+    background-color: var(--background-alice-blue, #ecf2fc);
+  }
+}
 </style>
