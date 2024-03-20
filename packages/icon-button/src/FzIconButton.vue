@@ -1,11 +1,7 @@
 <template>
   <button type="button" class="relative" :disabled="disabled" :class="classes">
     <fz-icon :name="iconName" :variant="iconVariant" :size="mappedIconSize" />
-    <div
-      class="-mr-2 -mt-2"
-      v-if="variant === 'notification'"
-      :class="notificationClasses"
-    ></div>
+    <div class="-mr-2 -mt-2" v-if="variant === 'notification'" :class="notificationClasses"></div>
     <span class="hidden h-0 w-0">{{ tooltip }}</span>
   </button>
 </template>
@@ -84,7 +80,7 @@ const customVariantClasses = computed(() => {
         'disabled:text-grey-100': true
       }
       break
-    case 'invisible': 
+    case 'invisible':
       return {
         'text-grey-500': true,
         'bg-core-white': true,
