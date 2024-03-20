@@ -13,7 +13,7 @@ body {
 @font-face {
   font-family: Inter;
   src: url('/fonts/Inter-Bold.ttf') format('truetype');
-  font-weight: bold
+  font-weight: bold;
 }
 @font-face {
   font-family: Inter;

@@ -1,19 +1,19 @@
 import type { Meta } from '@storybook/vue3'
-import { vueRouter} from 'storybook-vue3-router';
+import { vueRouter } from 'storybook-vue3-router'
 import { useRoute, useRouter } from 'vue-router'
 
 import { FzRouterBreadcrumbs, Breadcrumb, CustomRouteLocation } from '@fiscozen/breadcrumbs'
 
 const Page = {
-  setup () {
+  setup() {
     const route = useRoute()
     const router = useRouter()
 
     const routes = router.getRoutes()
-    
+
     return {
-        route,
-        routes
+      route,
+      routes
     }
   },
   template: `
@@ -26,50 +26,45 @@ const Page = {
         </div>
     </div>
   `
-};
+}
 const routes = [
-    {
-        name: 'home',
-        path: '/',
+  {
+    name: 'home',
+    path: '/',
+    component: Page,
+    children: [
+      {
+        name: 'foo',
+        path: '/foo',
         component: Page,
         children: [
           {
-              name: 'foo',
-              path: '/foo',
-              component: Page,
-              children: [
-                {
-                    name: 'bar',
-                    path: '/foo/bar',
-                    component: Page,
-                }
-              ]
-          },
-          {
-              name: 'baz',
-              path: '/foo/baz',
-              component: Page,
-          },
+            name: 'bar',
+            path: '/foo/bar',
+            component: Page
+          }
         ]
-    },
+      },
+      {
+        name: 'baz',
+        path: '/foo/baz',
+        component: Page
+      }
+    ]
+  }
 ]
 
-// More on how to set up stories at: 
+// More on how to set up stories at:
 const meta = {
   title: 'BreadCrumbs',
   component: FzRouterBreadcrumbs,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
-  argTypes: {
-  },
-  args: {
-  } // default value
+  argTypes: {},
+  args: {} // default value
 } satisfies Meta<typeof FzRouterBreadcrumbs>
 
 export default meta
-
-
-
 
 /**
  * STORYBOOK EXPORT
@@ -77,11 +72,11 @@ export default meta
 
 /* Create story with StoryBook Args */
 const withArgs = (args) => ({
-  setup () {
+  setup() {
     /* make `args` available within template */
     return { args }
   },
-  components: { 'page': Page, 'FzRouterBreadcrumbs': FzRouterBreadcrumbs },
+  components: { page: Page, FzRouterBreadcrumbs: FzRouterBreadcrumbs },
   /* create template and pass Storybook args to <router-view> using props */
   template: `
     <fz-router-breadcrumbs 
@@ -95,12 +90,9 @@ const withArgs = (args) => ({
 export const Default = withArgs.bind({})
 /* args are passed to route component via <router-view> props */
 Default.decorators = [
-  vueRouter(
-    routes,
-    {
-      initialRoute: '/foo'
-    }
-  )
+  vueRouter(routes, {
+    initialRoute: '/foo'
+  })
 ]
 
 export const Static = withArgs.bind({})
@@ -137,14 +129,11 @@ Static.args = {
         name: 'baz',
         path: '/foo/baz'
       }
-    },
+    }
   ]
 }
 Static.decorators = [
-  vueRouter(
-    routes,
-    {
-      initialRoute: '/foo'
-    }
-  )
+  vueRouter(routes, {
+    initialRoute: '/foo'
+  })
 ]

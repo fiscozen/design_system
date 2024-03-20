@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@fiscozen/breadcrumbs": "workspace:^",
+    "@fiscozen/collapse": "workspace:^",
     "@fiscozen/icon-button": "workspace:^",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
