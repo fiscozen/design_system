@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it } from 'vitest'
 
 import { flushPromises, mount } from '@vue/test-utils'
 import FzCollapse from '../FzCollapse.vue'
 
-describe('FzCollapse', () => {
-  it('should match snapshot', () => {
+describe.concurrent('FzCollapse', () => {
+  it('should match snapshot', ({expect}) => {
     const wrapper = mount(FzCollapse, {
       props: {
         summary: 'this is a test summary',
@@ -15,16 +15,18 @@ describe('FzCollapse', () => {
 
     expect(wrapper.html()).toMatchSnapshot()
   })
-  it('should open when the summary is clicked', async () => {
+  it('should open when the summary is clicked', async ({expect}) => {
     const wrapper = mount(FzCollapse, {
       props: {
         summary: 'this is a test summary',
         content: 'this is test content',
-        open: false
-      }
+        isOpen: false
+      },
+      attachTo: document.body
     })
 
-    await wrapper.find('[data-e2e-summary]').trigger('click')
-    expect(wrapper.find('[data-e2e-content]').isVisible()).toBe(true)
+    expect(wrapper.find('[data-e2e=content]').isVisible()).toBe(false)
+    await wrapper.find('[data-e2e=summary]').trigger('click')
+    expect(wrapper.find('[data-e2e=content]').isVisible()).toBe(true)
   })
 })
