@@ -11,9 +11,10 @@ const handleSummaryClick = () => {
 </script>
 
 <template>
-  <details :open="isOpen">
+  <details 
+    :open="isOpen"
+    @toggle="handleSummaryClick">
     <summary
-      @click.prevent="handleSummaryClick"
       data-e2e="summary"
       :class="summaryClass"
       class="text-grey-500 flex h-32 select-none cursor-pointer list-none items-center text-sm"
