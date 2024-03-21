@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzViewFlag } from '@fiscozen/view-flag'
 
-const meta = {
+const meta: Meta<typeof FzViewFlag> = {
   title: 'View Flag',
   component: FzViewFlag,
   tags: ['autodocs'],
@@ -13,7 +13,7 @@ const meta = {
     lastName: 'Rossi',
     environment: 'staging.D'
   }
-} satisfies Meta<typeof FzViewFlag>
+}
 
 export default meta
 
