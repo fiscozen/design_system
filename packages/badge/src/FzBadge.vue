@@ -19,14 +19,16 @@ const props = withDefaults(
   },
 );
 
+const mapColorToClasses = {
+  black: "bg-core-black text-core-white",
+  error: "bg-semantic-error text-core-white",
+  warning: "bg-semantic-warning text-core-white",
+  success: "bg-semantic-success text-core-white",
+  info: "bg-semantic-info text-core-white",
+};
+
 const classes = computed(() => [
   "text-xs px-12 rounded-xl w-fit",
-  {
-    black: "bg-core-black text-core-white",
-    error: "bg-semantic-error text-core-white",
-    warning: "bg-semantic-warning text-core-white",
-    success: "bg-semantic-success text-core-white",
-    info: "bg-semantic-info text-core-white",
-  }[props.color],
+  mapColorToClasses[props.color],
 ]);
 </script>
