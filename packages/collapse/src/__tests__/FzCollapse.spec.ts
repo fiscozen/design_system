@@ -4,7 +4,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import FzCollapse from '../FzCollapse.vue'
 
 describe.concurrent('FzCollapse', () => {
-  it('should match snapshot', ({expect}) => {
+  it('should match snapshot', ({ expect }) => {
     const wrapper = mount(FzCollapse, {
       props: {
         summary: 'this is a test summary',
@@ -15,7 +15,7 @@ describe.concurrent('FzCollapse', () => {
 
     expect(wrapper.html()).toMatchSnapshot()
   })
-  it('should open when the summary is clicked', async ({expect}) => {
+  it('should open when the summary is clicked', async ({ expect }) => {
     const wrapper = mount(FzCollapse, {
       props: {
         summary: 'this is a test summary',
@@ -26,7 +26,7 @@ describe.concurrent('FzCollapse', () => {
     })
 
     expect(wrapper.find('[data-e2e=content]').isVisible()).toBe(false)
-    await wrapper.find('[data-e2e=summary]').trigger('click')
+    await wrapper.find('[data-e2e=details]').trigger('toggle')
     expect(wrapper.find('[data-e2e=content]').isVisible()).toBe(true)
   })
 })

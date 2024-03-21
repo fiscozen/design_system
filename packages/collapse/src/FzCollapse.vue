@@ -11,13 +11,11 @@ const handleSummaryClick = () => {
 </script>
 
 <template>
-  <details 
-    :open="isOpen"
-    @toggle="handleSummaryClick">
+  <details :open="isOpen" data-e2e="details" @toggle="handleSummaryClick">
     <summary
       data-e2e="summary"
       :class="summaryClass"
-      class="text-grey-500 flex h-32 select-none cursor-pointer list-none items-center text-sm"
+      class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm"
     >
       <slot name="summary">{{ summary }}</slot>
       <slot name="icon">
