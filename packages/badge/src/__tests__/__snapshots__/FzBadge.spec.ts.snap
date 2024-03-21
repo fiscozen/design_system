@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzBadge > black color matches snapshot 1`] = `"<div class="text-xs px-12 rounded-xl w-fit bg-core-black text-core-white">Fiscozen</div>"`;
+
+exports[`FzBadge > error color matches snapshot 1`] = `"<div class="text-xs px-12 rounded-xl w-fit bg-semantic-error text-core-white">Fiscozen</div>"`;
+
+exports[`FzBadge > info color matches snapshot 1`] = `"<div class="text-xs px-12 rounded-xl w-fit bg-semantic-info text-core-white">Fiscozen</div>"`;
+
+exports[`FzBadge > success color matches snapshot 1`] = `"<div class="text-xs px-12 rounded-xl w-fit bg-semantic-success text-core-white">Fiscozen</div>"`;
+
+exports[`FzBadge > warning color matches snapshot 1`] = `"<div class="text-xs px-12 rounded-xl w-fit bg-semantic-warning">Fiscozen</div>"`;
