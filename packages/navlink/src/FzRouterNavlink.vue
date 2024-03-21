@@ -7,6 +7,6 @@ const props = defineProps<FzRouterNavlinkProps>()
 
 <template>
   <router-link :to="meta.path">
-    <fz-navlink v-bind="props"></fz-navlink>
+    <FzNavlink v-bind="props"></FzNavlink>
   </router-link>
 </template>
