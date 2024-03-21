@@ -11,7 +11,7 @@ defineProps<FzNavlinkProps<T>>()
     :disabled="disabled"
     :class="{ 'w-32': !label, 'px-12 py-6': label }"
   >
-    <fz-icon
+    <FzIcon
       :name="iconName"
       v-if="iconName"
       :class="!label ? 'w-32' : 'mr-8'"
