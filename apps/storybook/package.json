@@ -23,6 +23,7 @@
     "@fiscozen/breadcrumbs": "workspace:^",
     "@fiscozen/collapse": "workspace:^",
     "@fiscozen/icon-button": "workspace:^",
+    "@fiscozen/avatar": "workspace:^",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
   },
