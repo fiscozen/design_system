@@ -1,7 +1,7 @@
 {
   "name": "@fiscozen/badge",
   "version": "0.1.0",
-  "description": "Design System Bdage component",
+  "description": "Design System Badge component",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",
