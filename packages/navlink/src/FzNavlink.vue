@@ -17,7 +17,7 @@ defineProps<FzNavlinkProps<T>>()
       :class="!label ? 'w-32' : 'mr-8'"
       :size="iconSize"
     ></FzIcon>
-    <slot name="navlink-label">
+    <slot>
       <span>{{ label }}</span>
     </slot>
   </button>
