@@ -19,7 +19,7 @@ const handleSummaryClick = () => {
     >
       <slot name="summary">{{ summary }}</slot>
       <slot name="icon">
-        <fz-icon :name="isOpen ? 'chevron-up' : 'chevron-down'" class="ml-32" size="md"></fz-icon>
+        <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" class="ml-32" size="md"></FzIcon>
       </slot>
     </summary>
     <Transition>
