@@ -8,4 +8,4 @@ exports[`FzBadge > info color matches snapshot 1`] = `"<div class="text-xs px-12
 
 exports[`FzBadge > success color matches snapshot 1`] = `"<div class="text-xs px-12 rounded-xl w-fit bg-semantic-success text-core-white">Fiscozen</div>"`;
 
-exports[`FzBadge > warning color matches snapshot 1`] = `"<div class="text-xs px-12 rounded-xl w-fit bg-semantic-warning text-core-white">Fiscozen</div>"`;
+exports[`FzBadge > warning color matches snapshot 1`] = `"<div class="text-xs px-12 rounded-xl w-fit bg-semantic-warning">Fiscozen</div>"`;
