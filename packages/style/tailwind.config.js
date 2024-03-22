@@ -11,7 +11,6 @@ const screens = filterTokensByType('sizing', globals, true)['breakpoint'];
 
 module.exports = {
     theme: {
-      colors,
       fontSize,
       spacing,
       borderWidth,
@@ -19,6 +18,7 @@ module.exports = {
       screens,
       extend: {
         spacing,
+        colors,
       }
     },
     variants: {},
