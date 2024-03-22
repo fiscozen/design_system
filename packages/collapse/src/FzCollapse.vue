@@ -14,7 +14,7 @@ const handleSummaryClick = () => {
   <details :open="isOpen" data-e2e="details" @toggle="handleSummaryClick">
     <summary
       data-e2e="summary"
-      :class="summaryClass"
+      :class="[summaryClass, {'bg-background-alice-blue': isOpen}]"
       class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm"
     >
       <slot name="summary">{{ summary }}</slot>
@@ -39,10 +39,5 @@ const handleSummaryClick = () => {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
-}
-.fz__collapse--open {
-  .fz__collapse__summary {
-    background-color: var(--background-alice-blue, #ecf2fc);
-  }
 }
 </style>

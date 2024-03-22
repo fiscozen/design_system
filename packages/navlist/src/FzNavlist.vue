@@ -11,7 +11,7 @@ const isSubMenu = (item: FzRouterNavlinkProps | FzNavlistSub): item is FzNavlist
 </script>
 
 <template>
-  <div class="fz__navlist inline-flex grow-0 flex-col rounded px-4">
+  <div class="fz__navlist inline-flex grow-0 flex-col rounded p-4">
     <div
       class="fz__navlist__section border-grey-200"
       v-for="(section, index) in sections"
@@ -21,25 +21,25 @@ const isSubMenu = (item: FzRouterNavlinkProps | FzNavlistSub): item is FzNavlist
         <span>{{ section.label }}</span>
       </div>
       <div class="flex flex-col" v-for="(item, itemid) in section.items" :key="itemid">
-        <fz-collapse v-if="isSubMenu(item)" :summary-class="'px-12'">
+        <FzCollapse v-if="isSubMenu(item)" :summary-class="'px-12'">
           <template #summary
             ><span class="grow">{{ item.summary }}</span></template
           >
           <template #content>
             <div class="flex flex-col">
-              <fz-navlink
-                class="grow-1 flex justify-start"
+              <FzNavlink
+                class="grow-1 flex justify-start pl-24"
                 v-for="(subitem, index) in item.subitems"
                 :key="index"
                 v-bind="subitem"
-                >{{ subitem.label }}</fz-navlink
+                >{{ subitem.label }}</FzNavlink
               >
             </div>
           </template>
-        </fz-collapse>
-        <fz-navlink class="grow-1 flex justify-start" v-else v-bind="item">{{
+        </FzCollapse>
+        <FzNavlink class="grow-1 flex justify-start" v-else v-bind="item">{{
           item.label
-        }}</fz-navlink>
+        }}</FzNavlink>
       </div>
       <hr
         v-if="index !== sections.length - 1"
