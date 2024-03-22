@@ -73,10 +73,7 @@ const navlinkWithArgs = (args) => ({
   components: { page: Page, FzNavlink },
   template: `
     <fz-navlink
-      :disabled="args.disabled"
-      :meta="args.meta"
-      :label="args.label"
-      :icon-name="args.iconName"></fz-navlink>
+      v-bind="args"></fz-navlink>
   `
 })
 
@@ -87,7 +84,8 @@ SimpleNavlink.args = {
 
 export const IconNavlink = navlinkWithArgs.bind({})
 IconNavlink.args = {
-  iconName: 'bell'
+  iconName: 'bell',
+  iconOnly: true
 }
 
 const navlinkRouterLink = (args) => ({
