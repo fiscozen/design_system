@@ -21,7 +21,7 @@ const isSubMenu = (item: FzRouterNavlinkProps | FzNavlistSub): item is FzNavlist
         <span>{{ section.label }}</span>
       </div>
       <div class="flex flex-col" v-for="(item, itemid) in section.items" :key="itemid">
-        <FzCollapse v-if="isSubMenu(item)" :summary-class="'px-12'">
+        <FzCollapse v-if="isSubMenu(item)" summary-class="px-12">
           <template #summary
             ><span class="grow">{{ item.summary }}</span></template
           >
