@@ -15,5 +15,5 @@ export interface FzNavlistProps {
 }
  
 export const isSubMenu = (item: FzRouterNavlinkProps | FzNavlistSub): item is FzNavlistSub => {
-  return Boolean((item as FzNavlistSub).subitems)
+  return "subitems" in item
 }
