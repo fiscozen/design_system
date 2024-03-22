@@ -27,6 +27,7 @@
     "@fiscozen/badge": "workspace:^",
     "@fiscozen/view-flag": "workspace:^",
     "@fiscozen/navlink": "workspace:^",
+    "@fiscozen/navlist": "workspace:^",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
   },
