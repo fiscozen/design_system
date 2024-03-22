@@ -9,12 +9,15 @@ defineProps<FzNavlinkProps<T>>()
 <template>
   <button
     :disabled="disabled"
-    :class="[{ 'w-32 flex flex-row items-center justify-center': iconOnly, 'px-12 py-6': !iconOnly }, commonClasses]"
+    :class="[
+      { 'flex w-32 flex-row items-center justify-center': iconOnly, 'px-12 py-6': !iconOnly },
+      commonClasses
+    ]"
   >
     <FzIcon
       :name="iconName"
       v-if="iconName"
-      :class="iconOnly ?'' : 'mr-8'"
+      :class="iconOnly ? '' : 'mr-8'"
       :size="iconSize"
     ></FzIcon>
     <slot>

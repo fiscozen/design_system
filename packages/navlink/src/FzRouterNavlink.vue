@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { FzRouterNavlinkProps } from './types'
-import { commonClasses } from './classUtils';
+import { commonClasses } from './classUtils'
 
 const props = defineProps<FzRouterNavlinkProps>()
 </script>
 
 <template>
-  <router-link :to="meta.path"
+  <router-link
+    :to="meta.path"
     :disabled="disabled"
     :class="[{ 'w-32': iconOnly, 'px-12 py-6': !iconOnly }, commonClasses]"
   >
