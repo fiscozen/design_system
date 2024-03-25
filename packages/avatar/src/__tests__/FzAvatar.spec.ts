@@ -8,7 +8,7 @@ describe.concurrent('FzAvatar', () => {
       props: {
         firstName: 'Mario',
         lastName: 'Rossi',
-        imageSource: 'https://example.com',
+        src: 'https://example.com',
         size: 'xl'
       }
     })
@@ -32,7 +32,7 @@ describe.concurrent('FzAvatar', () => {
       props: {
         firstName: 'Mario',
         lastName: 'Rossi',
-        imageSource: 'https://example.com'
+        src: 'https://example.com'
       }
     })
 
@@ -55,11 +55,12 @@ describe.concurrent('FzAvatar', () => {
       props: {
         firstName: 'Mario',
         lastName: 'Rossi',
-        imageSource: 'https://example.com',
+        src: 'https://example.com',
         size: 'xl'
-      }
+      },
+      attachTo: document.body
     })
 
-    expect(wrapper.html()).toContain('size-40')
+    expect(wrapper.find('img').classes()).toContain('size-40')
   })
 })

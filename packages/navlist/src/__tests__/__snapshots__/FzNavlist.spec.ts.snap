@@ -1,23 +1,23 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzNavlist > should match snapshot 1`] = `
-"<div class="fz__navlist inline-flex grow-0 flex-col rounded px-4">
+"<div class="fz__navlist inline-flex grow-0 flex-col rounded p-4">
   <div class="fz__navlist__section border-grey-200">
     <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Label 1</span></div>
-    <div class="flex flex-col"><button class="text-grey-500 hover:bg-background-alice-blue focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-none px-12 py-6 grow-1 flex justify-start">
-        <!--v-if--><span>Item #1</span>
+    <div class="flex flex-col"><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent hover:font-medium focus:font-medium grow-1 flex justify-start">
+        <!--v-if-->Item #1
       </button></div>
     <div class="flex flex-col">
-      <details data-v-5d0ac24e="" class="">
-        <summary data-v-5d0ac24e="" data-e2e-summary="" class="px-12 fz__collapse__summary text-grey-500 focus:bg-background-alice-blue flex h-32 w-full cursor-pointer list-none items-center text-sm"><span class="grow">Item #2</span><svg data-v-5d0ac24e="" class="svg-inline--fa fa-chevron-down ml-32" aria-hidden="true" focusable="false" data-prefix="fasl" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+      <details data-v-5d0ac24e="" data-e2e="details">
+        <summary data-v-5d0ac24e="" data-e2e="summary" class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm px-12"><span class="grow">Item #2</span><svg data-v-5d0ac24e="" class="svg-inline--fa fa-chevron-down ml-32" aria-hidden="true" focusable="false" data-prefix="fasl" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path class="" fill="currentColor" d="M256 406.6l11.3-11.3 192-192L470.6 192 448 169.4l-11.3 11.3L256 361.4 75.3 180.7 64 169.4 41.4 192l11.3 11.3 192 192L256 406.6z"></path>
           </svg></summary>
         <transition-stub data-v-5d0ac24e="" appear="false" persisted="true" css="true">
-          <div data-v-5d0ac24e="" data-e2e-content="" class="text-sm" style="display: none;">
-            <div class="flex flex-col"><button class="text-grey-500 hover:bg-background-alice-blue focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-none px-12 py-6 grow-1 flex justify-start">
-                <!--v-if--><span>Sub-Item #1</span>
-              </button><button class="text-grey-500 hover:bg-background-alice-blue focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-none px-12 py-6 grow-1 flex justify-start">
-                <!--v-if--><span>Sub-Item #2</span>
+          <div data-v-5d0ac24e="" data-e2e="content" class="text-sm" style="display: none;">
+            <div class="flex flex-col"><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent hover:font-medium focus:font-medium grow-1 flex justify-start pl-24">
+                <!--v-if-->Sub-Item #1
+              </button><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent hover:font-medium focus:font-medium grow-1 flex justify-start pl-24">
+                <!--v-if-->Sub-Item #2
               </button></div>
           </div>
         </transition-stub>
@@ -27,11 +27,11 @@ exports[`FzNavlist > should match snapshot 1`] = `
   </div>
   <div class="fz__navlist__section border-grey-200">
     <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Label 2</span></div>
-    <div class="flex flex-col"><button class="text-grey-500 hover:bg-background-alice-blue focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-none px-12 py-6 grow-1 flex justify-start" disabled="">
-        <!--v-if--><span>Item #1</span>
+    <div class="flex flex-col"><button disabled="" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent hover:font-medium focus:font-medium grow-1 flex justify-start">
+        <!--v-if-->Item #1
       </button></div>
-    <div class="flex flex-col"><button class="text-grey-500 hover:bg-background-alice-blue focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-none px-12 py-6 grow-1 flex justify-start">
-        <!--v-if--><span>Item #2</span>
+    <div class="flex flex-col"><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent hover:font-medium focus:font-medium grow-1 flex justify-start">
+        <!--v-if-->Item #2
       </button></div>
     <!--v-if-->
   </div>

@@ -1,5 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzAvatar > image matches snapshot 1`] = `"<img class="rounded-full object-cover size-40" src="https://example.com">"`;
+exports[`FzAvatar > image matches snapshot 1`] = `"<img class="rounded-full select-none object-cover size-40" src="https://example.com" alt="Mario Rossi" title="Mario Rossi">"`;
 
-exports[`FzAvatar > placeholder matches snapshot 1`] = `"<p class="rounded-full size-32 text-sm bg-core-black text-core-white grid place-content-center">MR</p>"`;
+exports[`FzAvatar > placeholder matches snapshot 1`] = `"<div class="rounded-full select-none size-32 text-sm bg-core-black text-core-white grid place-content-center" title="Mario Rossi">MR</div>"`;
