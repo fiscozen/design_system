@@ -20,14 +20,17 @@
     "chromatic": "npx chromatic --project-token=chpt_1a654273b7f5392"
   },
   "dependencies": {
+    "@fiscozen/avatar": "workspace:^",
+    "@fiscozen/badge": "workspace:^",
     "@fiscozen/breadcrumbs": "workspace:^",
     "@fiscozen/collapse": "workspace:^",
     "@fiscozen/icon-button": "workspace:^",
-    "@fiscozen/avatar": "workspace:^",
-    "@fiscozen/badge": "workspace:^",
-    "@fiscozen/view-flag": "workspace:^",
+    "@fiscozen/icons": "workspace:^",
+    "@fiscozen/navbar": "workspace:^",
     "@fiscozen/navlink": "workspace:^",
     "@fiscozen/navlist": "workspace:^",
+    "@fiscozen/style": "workspace:^",
+    "@fiscozen/view-flag": "workspace:^",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
   },
@@ -41,6 +44,7 @@
     "@storybook/addon-interactions": "^7.6.8",
     "@storybook/addon-links": "^7.6.8",
     "@storybook/addon-themes": "^7.6.17",
+    "@storybook/addon-viewport": "^7.0.0",
     "@storybook/blocks": "^7.6.8",
     "@storybook/test": "^7.6.8",
     "@storybook/vue3": "^7.6.8",

@@ -19,6 +19,7 @@ defineProps<FzNavlinkProps<T>>()
       v-if="iconName"
       :class="iconOnly ? '' : 'mr-8'"
       :size="iconSize"
+      :variant="iconVariant"
     ></FzIcon>
     <slot>
       <span>{{ label }}</span>
