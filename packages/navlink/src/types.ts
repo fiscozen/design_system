@@ -1,4 +1,4 @@
-import { IconSize } from '@fiscozen/icons/src/types'
+import { IconSize, IconVariant } from '@fiscozen/icons/src/types'
 import { RouteLocation } from 'vue-router'
 
 export interface FzNavlinkProps<T = void> {
@@ -10,6 +10,10 @@ export interface FzNavlinkProps<T = void> {
    * Size of the fontawesome icon
    */
   iconSize?: IconSize
+  /**
+   * Variant of the fontawesome icon
+   */
+  iconVariant?: IconVariant
   /**
    * Set to true for icon only links
    */

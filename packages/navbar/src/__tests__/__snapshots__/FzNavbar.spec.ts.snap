@@ -1,3 +1,65 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzNavbar > should match snapshot 1`] = `""`;
+exports[`FzNavbar > should match snapshot in horizontal layout large screen 1`] = `
+"<header class="flex px-12 py-12 shadow h-56 w-full">
+  <div class="mr-32">
+    <div id="brandlogo" class="desktop"></div>
+  </div>
+  <div class="flex gap-4 flex-row">
+    <div class="link">one</div>
+    <div class="link">two</div>
+    <div class="link">three</div>
+  </div>
+  <div class="flex gap-16 ml-auto flex-row">
+    <div id="notification"></div>
+    <div id="avatar"></div>
+  </div>
+</header>"
+`;
+
+exports[`FzNavbar > should match snapshot in horizontal layout small screen 1`] = `
+"<header class="flex px-12 py-12 shadow justify-between h-56 w-full"><button type="button" class="relative relative rounded flex flex-shrink items-center justify-center w-32 h-32 focus:border-blue-600 focus:border-solid focus:border-1 text-grey-500 bg-core-white border-1 border-grey-200 hover:bg-grey-100 disabled:text-grey-100"><svg class="svg-inline--fa fa-bars fa-lg" aria-hidden="true" focusable="false" data-prefix="fasl" data-icon="bars" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+      <path class="" fill="currentColor" d="M0 64H448V96H0V64zM0 224H448v32H0V224zM448 384v32H0V384H448z"></path>
+    </svg>
+    <!--v-if--><span class="hidden h-0 w-0">menu</span>
+  </button>
+  <div>
+    <div id="brandlogo" class="mobile"></div>
+  </div>
+  <div>
+    <div id="notification"></div>
+  </div>
+</header>"
+`;
+
+exports[`FzNavbar > should match snapshot in vertical layout large screen 1`] = `
+"<header class="flex px-12 py-12 shadow h-full w-56 flex-col">
+  <div class="mb-32">
+    <div id="brandlogo" class="desktop"></div>
+  </div>
+  <div class="flex gap-4 flex-col">
+    <div class="link">one</div>
+    <div class="link">two</div>
+    <div class="link">three</div>
+  </div>
+  <div class="flex gap-16 mt-auto flex-col">
+    <div id="notification"></div>
+    <div id="avatar"></div>
+  </div>
+</header>"
+`;
+
+exports[`FzNavbar > should match snapshot in vertical layout small screen 1`] = `
+"<header class="flex px-12 py-12 shadow justify-between h-56 w-full"><button type="button" class="relative relative rounded flex flex-shrink items-center justify-center w-32 h-32 focus:border-blue-600 focus:border-solid focus:border-1 text-grey-500 bg-core-white border-1 border-grey-200 hover:bg-grey-100 disabled:text-grey-100"><svg class="svg-inline--fa fa-bars fa-lg" aria-hidden="true" focusable="false" data-prefix="fasl" data-icon="bars" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+      <path class="" fill="currentColor" d="M0 64H448V96H0V64zM0 224H448v32H0V224zM448 384v32H0V384H448z"></path>
+    </svg>
+    <!--v-if--><span class="hidden h-0 w-0">menu</span>
+  </button>
+  <div>
+    <div id="brandlogo" class="mobile"></div>
+  </div>
+  <div>
+    <div id="avatar"></div>
+  </div>
+</header>"
+`;
