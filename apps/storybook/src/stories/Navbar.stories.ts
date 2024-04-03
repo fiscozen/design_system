@@ -39,11 +39,12 @@ const horizontalNavbar = (args) => ({
         <FzNavlink label="Dichiarazione" /> 
       </template>
       
-      <template #notifications>
-        <FzIconButton iconName="bell" variant="notification" tooltip="notifications" :disabled="false" />
+      <template #notifications="{isHorizontal, isVertical, isMobile}">
+        <FzIconButton  iconName="bell" variant="notification" tooltip="notifications" :disabled="false" />
       </template>
-      <template #user-menu>
-        <FzAvatar src="consultant.jpg" />
+      <template #user-menu="{isHorizontal, isVertical, isMobile}">
+        <FzAvatar v-if="isVertical" src="consultant.jpg" />
+        <FzAvatar v-if="isHorizontal && !isMobile" firstName="Mario" lastName="Rossi" />
       </template>
     </FzNavbar>
   `
@@ -74,8 +75,8 @@ const verticalNavbar = (args) => ({
           <FzNavlink :iconOnly="true" iconName="screwdriver-wrench" /> 
         </template>
         
-        <template #notifications>
-          <FzIconButton iconName="bell" variant="notification" tooltip="notifications" :disabled="false" />
+        <template #notifications="{isHorizontal, isVertical, isMobile}">
+          <FzIconButton v-if="!isVertical" iconName="bell" variant="notification" tooltip="notifications" :disabled="false" />
         </template>
         <template #user-menu>
           <FzAvatar src="consultant.jpg" />
