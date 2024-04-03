@@ -30,7 +30,7 @@ const isHorizontal = computed(() => Boolean(props.variant === 'horizontal'))
 
 <template>
   <header
-    class="flex px-12 py-12 shadow"
+    class="flex p-12 shadow"
     :class="{
       'justify-between': isMobile,
       'h-full w-56 flex-col': isVertical && !isMobile,
@@ -39,26 +39,26 @@ const isHorizontal = computed(() => Boolean(props.variant === 'horizontal'))
   >
     <template v-if="!isMobile">
       <div :class="{ 'mr-32': isHorizontal, 'mb-32': isVertical }">
-        <slot name="brand-logo" :isMobile></slot>
+        <slot name="brand-logo" :isMobile :isHorizontal :isVertical></slot>
       </div>
       <div class="flex gap-4" :class="{ 'flex-row': isHorizontal, 'flex-col': isVertical }">
-        <slot name="navigation"></slot>
+        <slot name="navigation" :isVertical :isHorizontal :isMobile></slot>
       </div>
       <div
         class="flex gap-16"
         :class="{ 'ml-auto flex-row': isHorizontal, 'mt-auto flex-col': isVertical }"
       >
-        <slot name="notifications"></slot>
-        <slot name="user-menu"></slot>
+        <slot name="notifications" :isHorizontal :isVertical :isMobile></slot>
+        <slot name="user-menu" :isHorizontal :isMobile :isVertical></slot>
       </div>
     </template>
     <template v-else>
       <FzIconButton iconName="bars" variant="secondary" tooltip="menu" :disabled="false" />
       <div>
-        <slot name="brand-logo" :isMobile></slot>
+        <slot name="brand-logo" :isMobile :isHorizontal :isVertical></slot>
       </div>
       <div>
-        <slot :name="variant === 'horizontal' ? 'notifications' : 'user-menu'"></slot>
+        <slot :name="isHorizontal ? 'notifications' : 'user-menu'" :isHorizontal :isVertical :isMobile></slot>
       </div>
     </template>
   </header>
