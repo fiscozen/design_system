@@ -1,3 +1,1 @@
-export interface FzFloatingProps {
-}
- 
+export interface FzFloatingProps {}

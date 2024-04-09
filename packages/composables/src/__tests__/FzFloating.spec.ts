@@ -5,8 +5,7 @@ import FzFloating from '../FzFloating.vue'
 
 describe('FzFloating', () => {
   it('should match snapshot', () => {
-    const wrapper = mount(FzFloating, {
-    })
+    const wrapper = mount(FzFloating, {})
 
     expect(wrapper.html()).toMatchSnapshot()
   })
