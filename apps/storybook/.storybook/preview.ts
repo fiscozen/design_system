@@ -1,4 +1,5 @@
 import type { Preview, VueRenderer } from '@storybook/vue3'
+import isChromatic from "chromatic/isChromatic";
 import '../src/assets/main.css';
 import { withThemeByClassName } from '@storybook/addon-themes';
 import figmaTokens from '@fiscozen/style/tokens.json'
@@ -33,5 +34,11 @@ const preview: Preview = {
     })
   ]
 }
+
+const fontLoader = async () => ({
+  fonts: await Promise.all([document.fonts.load("400 1em Inter")]),
+});
+
+export const loaders = isChromatic() && document.fonts ? [fontLoader] : [];
 
 export default preview

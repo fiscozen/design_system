@@ -1,5 +1,5 @@
 <template>
-  <div :class="classes">
+  <div :class="classes" class="h-20 flex items-center font-medium">
     <slot></slot>
   </div>
 </template>
