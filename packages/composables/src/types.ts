@@ -1,21 +1,8 @@
 import { Ref } from 'vue'
 
-export type FzFloatingPosition =
-  | 'bottom-start'
-  | 'bottom'
-  | 'bottom-end'
-  | 'left-start'
-  | 'left'
-  | 'left-end'
-  | 'top-start'
-  | 'top'
-  | 'top-end'
-  | 'right-start'
-  | 'right'
-  | 'right-end'
-  | 'auto-start'
-  | 'auto'
-  | 'auto-end'
+  type PositionPrimary = 'bottom' | 'left' | 'top' | 'right' | 'auto'
+  type PositionSecondary = 'start' | 'end'
+  export type FzFloatingPosition = PositionPrimary | `${PositionPrimary}-${PositionSecondary}`
 
 export interface FzFloatingProps {
   isOpen: boolean
