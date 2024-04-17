@@ -1,5 +1,5 @@
 <template>
-  <div :class="classes" class="h-20 flex items-center font-medium">
+  <div :class="classes">
     <slot></slot>
   </div>
 </template>
@@ -28,7 +28,7 @@ const mapColorToClasses = {
 };
 
 const classes = computed(() => [
-  "text-xs px-12 rounded-xl w-fit",
+  "text-xs px-12 rounded-xl w-fit h-20 flex items-center font-medium",
   mapColorToClasses[props.color],
 ]);
 </script>
