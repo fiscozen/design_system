@@ -1,8 +1,12 @@
 <script lang="ts" setup>
+import { computed, useSlots } from 'vue'
 import { FzRouterNavlinkProps } from './types'
 import { commonClasses } from './classUtils'
 
 const props = defineProps<FzRouterNavlinkProps>()
+const slots = useSlots()
+
+const iconOnly = computed(() => !slots.default && !props.label)
 </script>
 
 <template>
