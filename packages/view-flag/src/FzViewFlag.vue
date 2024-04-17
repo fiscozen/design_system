@@ -1,7 +1,7 @@
 <template>
   <div class="border-8 border-semantic-warning fixed inset-0 grid">
     <div
-      class="h-32 bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12"
+      class="h-32 bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center"
     >
       <FzBadge v-if="props.environment">{{ props.environment }}</FzBadge>
       <div>
