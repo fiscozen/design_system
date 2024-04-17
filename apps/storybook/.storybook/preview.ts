@@ -25,7 +25,8 @@ const preview: Preview = {
     viewport: {
       viewports,
       defaultViewport: 'xl'
-    }
+    },
+    layout: 'fullscreen'
   },
   decorators: [
     withThemeByClassName<VueRenderer>({

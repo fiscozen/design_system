@@ -1,0 +1,109 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzFloating > should match snapshot 1`] = `
+"<div>
+  <div class="inline-flex"><button>opener</button></div>
+  <div class="bg-core-white pb-4" style="top: 0px; left: 0px; transform: translateY(-100%) translateX(-50%); position: absolute;">
+    <div>content</div>
+  </div>
+</div>"
+`;
+
+exports[`FzFloating > should match snapshot 2`] = `
+"<div>
+  <div class="inline-flex"><button>opener</button></div>
+  <div class="bg-core-white pb-4" style="top: 0px; left: 0px; transform: translateY(-100%) translateX(0%); position: absolute;">
+    <div>content</div>
+  </div>
+</div>"
+`;
+
+exports[`FzFloating > should match snapshot 3`] = `
+"<div>
+  <div class="inline-flex"><button>opener</button></div>
+  <div class="bg-core-white pb-4" style="top: 0px; left: 0px; transform: translateY(-100%) translateX(-100%); position: absolute;">
+    <div>content</div>
+  </div>
+</div>"
+`;
+
+exports[`FzFloating > should match snapshot 4`] = `
+"<div>
+  <div class="inline-flex"><button>opener</button></div>
+  <div class="bg-core-white pr-4" style="top: 0px; left: 0px; transform: translateY(-50%) translateX(-100%); position: absolute;">
+    <div>content</div>
+  </div>
+</div>"
+`;
+
+exports[`FzFloating > should match snapshot 5`] = `
+"<div>
+  <div class="inline-flex"><button>opener</button></div>
+  <div class="bg-core-white pr-4" style="top: 0px; left: 0px; transform: translateY(0%) translateX(-100%); position: absolute;">
+    <div>content</div>
+  </div>
+</div>"
+`;
+
+exports[`FzFloating > should match snapshot 6`] = `
+"<div>
+  <div class="inline-flex"><button>opener</button></div>
+  <div class="bg-core-white pr-4" style="top: 0px; left: 0px; transform: translateY(-100%) translateX(-100%); position: absolute;">
+    <div>content</div>
+  </div>
+</div>"
+`;
+
+exports[`FzFloating > should match snapshot 7`] = `
+"<div>
+  <div class="inline-flex"><button>opener</button></div>
+  <div class="bg-core-white pt-4" style="top: 0px; left: 0px; transform: translateY(0%) translateX(-50%); position: absolute;">
+    <div>content</div>
+  </div>
+</div>"
+`;
+
+exports[`FzFloating > should match snapshot 8`] = `
+"<div>
+  <div class="inline-flex"><button>opener</button></div>
+  <div class="bg-core-white pt-4" style="top: 0px; left: 0px; transform: translateY(0%) translateX(0%); position: absolute;">
+    <div>content</div>
+  </div>
+</div>"
+`;
+
+exports[`FzFloating > should match snapshot 9`] = `
+"<div>
+  <div class="inline-flex"><button>opener</button></div>
+  <div class="bg-core-white pt-4" style="top: 0px; left: 0px; transform: translateY(0%) translateX(-100%); position: absolute;">
+    <div>content</div>
+  </div>
+</div>"
+`;
+
+exports[`FzFloating > should match snapshot 10`] = `
+"<div>
+  <div class="inline-flex"><button>opener</button></div>
+  <div class="bg-core-white pl-4" style="top: 0px; left: 0px; transform: translateY(-50%) translateX(0%); position: absolute;">
+    <div>content</div>
+  </div>
+</div>"
+`;
+
+exports[`FzFloating > should match snapshot 11`] = `
+"<div>
+  <div class="inline-flex"><button>opener</button></div>
+  <div class="bg-core-white pl-4" style="top: 0px; left: 0px; transform: translateY(0%) translateX(0%); position: absolute;">
+    <div>content</div>
+  </div>
+</div>"
+`;
+
+exports[`FzFloating > should match snapshot 12`] = `
+"<div>
+  <div class="inline-flex"><button>opener</button></div>
+  <div class="bg-core-white pl-4" style="top: 0px; left: 0px; transform: translateY(-100%) translateX(0%); position: absolute;">
+    <div>content</div>
+  </div>
+</div>"
+`;
