@@ -84,8 +84,7 @@ SimpleNavlink.args = {
 
 export const IconNavlink = navlinkWithArgs.bind({})
 IconNavlink.args = {
-  iconName: 'bell',
-  iconOnly: true
+  iconName: 'bell'
 }
 
 const navlinkRouterLink = (args) => ({

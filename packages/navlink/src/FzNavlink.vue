@@ -1,9 +1,13 @@
 <script lang="ts" setup generic="T">
+import { computed, useSlots } from 'vue'
 import { FzIcon } from '@fiscozen/icons'
 import { FzNavlinkProps } from './types'
 import { commonClasses } from './classUtils'
 
-defineProps<FzNavlinkProps<T>>()
+const props = defineProps<FzNavlinkProps<T>>()
+const slots = useSlots()
+
+const iconOnly = computed(() => !slots.default && !props.label)
 </script>
 
 <template>

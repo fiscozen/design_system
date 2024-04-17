@@ -15,10 +15,6 @@ export interface FzNavlinkProps<T = void> {
    */
   iconVariant?: IconVariant
   /**
-   * Set to true for icon only links
-   */
-  iconOnly?: boolean
-  /**
    * Alternative prop to default label slot
    */
   label?: string
