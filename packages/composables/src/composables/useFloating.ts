@@ -20,7 +20,7 @@ export const useFloating = (args: FzUseFloatingArgs) => {
   const handleIntersect = (
     entries: IntersectionObserverEntry[],
     observer: IntersectionObserver
-  ) => {}
+  ) => { }
 
   const floatObserver = ref(new IntersectionObserver(handleIntersect, options))
 
@@ -70,6 +70,7 @@ export const useFloating = (args: FzUseFloatingArgs) => {
             safeElementDomRef.value,
             safeOpenerDomRef.value
           )
+          break;
         case 'auto-start':
           position = getHighestAvailableSpacePos(
             safeContainerDomRef.value,
@@ -77,6 +78,7 @@ export const useFloating = (args: FzUseFloatingArgs) => {
             safeOpenerDomRef.value,
             'start'
           )
+          break;
         case 'auto-end':
           position = getHighestAvailableSpacePos(
             safeContainerDomRef.value,
@@ -84,6 +86,7 @@ export const useFloating = (args: FzUseFloatingArgs) => {
             safeOpenerDomRef.value,
             'end'
           )
+          break;
         default:
           break
       }

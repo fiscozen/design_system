@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, useSlots, watch, toRef, computed } from 'vue'
 import { useFloating } from './composables'
-import { FzFloatingProps, FzUseFloatingArgs } from './types'
+import { FzFloatingPosition, FzFloatingProps, FzUseFloatingArgs } from './types'
 
 const props = withDefaults(defineProps<FzFloatingProps>(), {
   position: 'auto',
@@ -39,7 +39,7 @@ watch(
   (newVal) => newVal && floating.setPosition()
 )
 
-const classMap = {
+const classMap: Record<FzFloatingPosition, string> = {
   left: 'pr-4',
   'left-start': 'pr-4',
   'left-end': 'pr-4',
@@ -51,7 +51,10 @@ const classMap = {
   'top-end': 'pb-4',
   bottom: 'pt-4',
   'bottom-start': 'pt-4',
-  'bottom-end': 'pt-4'
+  'bottom-end': 'pt-4',
+  auto: '',
+  "auto-end": '',
+  'auto-start': ''
 }
 const classes = computed(() => classMap[props.position])
 </script>
