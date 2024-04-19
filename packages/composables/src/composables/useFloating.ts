@@ -1,13 +1,20 @@
-import { FzFloatingPosition, FzUseFloatingArgs } from '../types'
-import { ref, reactive, onUnmounted } from 'vue'
+import { FzFloatingPosition, FzRect, FzUseFloatingArgs } from '../types'
+import { ref, reactive, onUnmounted, Ref } from 'vue'
 import { getHighestAvailableSpacePos } from '../utils'
 
-export const useFloating = (args: FzUseFloatingArgs) => {
+export const useFloating = (
+  args: FzUseFloatingArgs
+): {
+  float: Ref<FzRect>
+  rect: Ref<DOMRect>
+  floatObserver: Ref<IntersectionObserver>
+  setPosition: () => void
+} => {
   const safeElementDomRef = ref<HTMLElement | null>(null)
   const safeContainerDomRef = ref<HTMLElement | null>(null)
   const safeOpenerDomRef = ref<HTMLElement | null>(null)
   const rect = ref<DOMRect | null>(null)
-  const float = reactive({
+  const float = reactive<FzRect>({
     position: { x: 0, y: 0 }
   })
   const options: IntersectionObserverInit = {
@@ -20,7 +27,7 @@ export const useFloating = (args: FzUseFloatingArgs) => {
   const handleIntersect = (
     entries: IntersectionObserverEntry[],
     observer: IntersectionObserver
-  ) => { }
+  ) => {}
 
   const floatObserver = ref(new IntersectionObserver(handleIntersect, options))
 
@@ -70,7 +77,7 @@ export const useFloating = (args: FzUseFloatingArgs) => {
             safeElementDomRef.value,
             safeOpenerDomRef.value
           )
-          break;
+          break
         case 'auto-start':
           position = getHighestAvailableSpacePos(
             safeContainerDomRef.value,
@@ -78,7 +85,7 @@ export const useFloating = (args: FzUseFloatingArgs) => {
             safeOpenerDomRef.value,
             'start'
           )
-          break;
+          break
         case 'auto-end':
           position = getHighestAvailableSpacePos(
             safeContainerDomRef.value,
@@ -86,7 +93,7 @@ export const useFloating = (args: FzUseFloatingArgs) => {
             safeOpenerDomRef.value,
             'end'
           )
-          break;
+          break
         default:
           break
       }

@@ -53,7 +53,7 @@ const classMap: Record<FzFloatingPosition, string> = {
   'bottom-start': 'pt-4',
   'bottom-end': 'pt-4',
   auto: '',
-  "auto-end": '',
+  'auto-end': '',
   'auto-start': ''
 }
 const classes = computed(() => classMap[props.position])
