@@ -5,8 +5,8 @@ import { getHighestAvailableSpacePos } from '../utils'
 export const useFloating = (
   args: FzUseFloatingArgs
 ): {
-  float: Ref<FzRect>
-  rect: Ref<DOMRect>
+  float: FzRect
+  rect: Ref<DOMRect | null>
   floatObserver: Ref<IntersectionObserver>
   setPosition: () => void
 } => {
