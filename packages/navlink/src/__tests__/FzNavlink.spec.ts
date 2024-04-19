@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import FzNavlink from '../FzNavlink.vue'
 
 describe('FzNavlink', () => {
-  it('should render correctly', () => {
+  it('should render correctly with label', () => {
     const wrapper = mount(FzNavlink, {
       props: {
         label: 'this is a test label',
@@ -15,6 +15,19 @@ describe('FzNavlink', () => {
     expect(wrapper.html()).toMatchSnapshot()
     wrapper.setProps({ disabled: true })
     expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  it('should render correctly if icon only', () => {
+    const wrapper = mount(FzNavlink, {
+      props: {
+        iconName: 'bell'
+      }
+    })
+
+    expect(wrapper.html()).toMatchSnapshot()
+    wrapper.setProps({ disabled: true })
+    expect(wrapper.html()).toMatchSnapshot()
+    expect(wrapper.find('span').text()).to.be.empty
   })
 
   it('should emit native event', () => {
