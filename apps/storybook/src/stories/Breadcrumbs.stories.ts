@@ -2,7 +2,7 @@ import type { Meta } from '@storybook/vue3'
 import { vueRouter } from 'storybook-vue3-router'
 import { useRoute, useRouter } from 'vue-router'
 
-import { FzRouterBreadcrumbs, Breadcrumb, CustomRouteLocation } from '@fiscozen/breadcrumbs'
+import { FzRouterBreadcrumbs, FzRouterBreadcrumbsProps } from '@fiscozen/breadcrumbs'
 
 const Page = {
   setup() {
@@ -71,7 +71,7 @@ export default meta
  */
 
 /* Create story with StoryBook Args */
-const withArgs = (args) => ({
+const withArgs = (args : FzRouterBreadcrumbsProps) => ({
   setup() {
     /* make `args` available within template */
     return { args }
