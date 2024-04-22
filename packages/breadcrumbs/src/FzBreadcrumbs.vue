@@ -16,25 +16,16 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { Breadcrumb } from './types'
+import { FzBreadcrumbsProps } from './types'
 
 const props = withDefaults(
-  defineProps<{
-    /**
-     * List of breadcrumbs
-     */
-    breadcrumbs: Breadcrumb<T>[]
-    /**
-     * Breadcrumb separator symbol
-     */
-    separator?: string
-  }>(),
+  defineProps<FzBreadcrumbsProps<T>>(),
   {
     separator: '/'
   }
 )
 
-const isActiveLink = (index) => {
+const isActiveLink = (index : number) => {
   return index === props.breadcrumbs.length - 1
 }
 </script>

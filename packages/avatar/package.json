@@ -6,7 +6,7 @@
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",
     "test:unit": "vitest run",
-    "build": "vite build"
+    "build": "vue-tsc && vite build"
   },
   "main": "src/index.ts",
   "type": "module",
@@ -27,6 +27,7 @@
     "@vitest/coverage-v8": "^1.2.1",
     "@vue/test-utils": "^2.4.3",
     "@vue/tsconfig": "^0.5.0",
+    "vite-plugin-dts": "^3.8.3",
     "eslint": "^8.49.0",
     "jsdom": "^23.0.1",
     "prettier": "^3.0.3",

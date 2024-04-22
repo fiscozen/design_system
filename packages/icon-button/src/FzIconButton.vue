@@ -9,7 +9,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import type { IconButtonVariant } from './types'
-import { FzIcon } from '@fiscozen/icons'
+import { FzIcon, IconSize } from '@fiscozen/icons'
 import type { IconVariant } from '@fiscozen/icons'
 
 const props = withDefaults(
@@ -122,7 +122,9 @@ const notificationClasses = computed(() => ({
   'bg-grey-200': props.disabled
 }))
 
-const iconSizeMap = {
+const iconSizeMap : {
+  [key : string]: IconSize
+} = {
   sm: 'md',
   md: 'lg',
   lg: 'lg'
