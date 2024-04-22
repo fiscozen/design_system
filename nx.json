@@ -1,8 +1,7 @@
 {
   "targetDefaults": {
     "build": {
-      "cache": true,
-      "exclude": ["apps/*"]
+      "cache": true
     },
     "test:unit": {
       "cache": true,
