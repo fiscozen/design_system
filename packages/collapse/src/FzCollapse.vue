@@ -14,7 +14,7 @@ const handleSummaryClick = () => {
   <details :open="isOpen" data-e2e="details" @toggle="handleSummaryClick">
     <summary
       data-e2e="summary"
-      class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm"
+      class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded"
       :class="[summaryClass, {'bg-background-alice-blue !text-blue-500 font-medium': isOpen}]"
     >
       <slot name="summary">{{ summary }}</slot>

@@ -27,7 +27,7 @@ const horizontalNavbar = (args) => ({
   template: `
     <FzNavbar>
       <template #brand-logo="{isMobile}">
-        <FzNavlink iconName="fiscozen" iconVariant="fak" iconSize="xl" :class="{'!text-[20px]': !isMobile, '!text-[24px]': isMobile}" /> 
+        <FzIcon name="fiscozen" variant="fak" size="xl" class="text-core-black text-[32px] !w-[40px] ml-[-4px] cursor-pointer" /> 
       </template>
 
       <template #navigation>
@@ -61,7 +61,7 @@ const verticalNavbar = (args) => ({
     <div class="h-screen m-0">
       <FzNavbar variant="vertical">
         <template #brand-logo="{isMobile}">
-          <FzNavlink iconName="fiscozen" iconVariant="fak" iconSize="xl" :class="{'!text-[20px]': !isMobile, '!text-[24px]': isMobile}" /> 
+          <FzIcon name="fiscozen" variant="fak" size="xl" class="text-core-black text-[32px] !w-[40px] ml-[-4px] cursor-pointer" /> 
         </template>
 
         <template #navigation>
