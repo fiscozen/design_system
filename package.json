@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "nx run-many --target=build",
+    "storybook": "npx nx run @fiscozen/storybook:storybook"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +14,10 @@
   "devDependencies": {
     "nx": "17.2.8",
     "vitest": "^1.0.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "esbuild": "0.18.20"
+    }
   }
 }

@@ -1,22 +1,11 @@
 <script setup lang="ts">
 import { computed, ComputedRef } from 'vue'
 import FzBreadcrumbs from './FzBreadcrumbs.vue'
-import { Breadcrumb, CustomRouteLocation } from './types'
+import { Breadcrumb, CustomRouteLocation, FzRouterBreadcrumbsProps } from './types'
 import { useRoute } from 'vue-router'
 
 const props = withDefaults(
-  defineProps<{
-    /**
-     * List of breadcrumbs. If you don't pass this prop the
-     * component will generate automatic breadcrumbs based on
-     * the route object
-     */
-    breadcrumbs?: Breadcrumb<CustomRouteLocation>[]
-    /**
-     * Breadcrumb separator symbol
-     */
-    separator?: string
-  }>(),
+  defineProps<FzRouterBreadcrumbsProps>(),
   {
     separator: '/'
   }

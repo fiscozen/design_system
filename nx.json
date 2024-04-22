@@ -2,7 +2,7 @@
   "targetDefaults": {
     "build": {
       "cache": true,
-      "dependsOn": ["^build"]
+      "exclude": ["apps/*"]
     },
     "test:unit": {
       "cache": true,

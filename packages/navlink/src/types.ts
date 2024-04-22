@@ -25,7 +25,7 @@ export interface FzNavlinkProps<T = void> {
   /**
    * Metadata
    */
-  meta?: T
+  meta: T
 }
 
 type PartialExcept<T, K extends keyof T> = Pick<Required<T>, K> & Partial<T>

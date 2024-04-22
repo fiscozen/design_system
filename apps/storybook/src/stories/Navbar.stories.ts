@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 
-import { FzNavbar } from '@fiscozen/navbar'
+import { FzNavbar, FzNavbarProps } from '@fiscozen/navbar'
 import { FzIcon } from '@fiscozen/icons'
 import { FzNavlink } from '@fiscozen/navlink'
 import { FzIconButton } from '@fiscozen/icon-button'
@@ -19,7 +19,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const horizontalNavbar = (args) => ({
+const horizontalNavbar = (args : FzNavbarProps) => ({
   setup() {
     return { args }
   },
@@ -52,7 +52,7 @@ const horizontalNavbar = (args) => ({
 
 export const Horizontal = horizontalNavbar.bind({})
 
-const verticalNavbar = (args) => ({
+const verticalNavbar = (args : FzNavbarProps) => ({
   setup() {
     return { args }
   },
