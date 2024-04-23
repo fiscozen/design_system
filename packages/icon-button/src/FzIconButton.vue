@@ -8,7 +8,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import type { IconButtonVariant } from './types'
+import type { IconButtonVariant, IconButtonSize } from './types'
 import { FzIcon, IconSize } from '@fiscozen/icons'
 import type { IconVariant } from '@fiscozen/icons'
 
@@ -25,7 +25,7 @@ const props = withDefaults(
     /**
      * size of the button
      */
-    size?: 'sm' | 'md' | 'lg'
+    size?: IconButtonSize
     /**
      * whether action is enabled or not
      */
@@ -123,7 +123,7 @@ const notificationClasses = computed(() => ({
 }))
 
 const iconSizeMap : {
-  [key : string]: IconSize
+  [key in IconButtonSize]: IconSize
 } = {
   sm: 'md',
   md: 'lg',
