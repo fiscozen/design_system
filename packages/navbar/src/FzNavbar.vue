@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, onBeforeMount, onMounted, onUnmounted, computed } from 'vue'
-import { FzIconButton } from '@fiscozen/icon-button'
+import { FzIconButton } from '@fiscozen/button'
 import { FzNavbarProps } from './types'
 
 const props = withDefaults(defineProps<FzNavbarProps>(), {
