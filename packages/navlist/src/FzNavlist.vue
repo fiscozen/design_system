@@ -24,7 +24,7 @@ defineProps<FzNavlistProps>()
           <template #content>
             <div class="flex flex-col">
               <FzNavlink
-                class="grow-1 flex justify-start pl-24"
+                class="grow-1 flex justify-start pl-24 !font-normal"
                 v-for="(subitem, subIndex) in item.subitems"
                 :key="subIndex"
                 v-bind="subitem"

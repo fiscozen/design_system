@@ -13,7 +13,6 @@ const iconOnly = computed(() => !slots.default && !props.label)
 <template>
   <button
     :disabled="disabled"
-    class="font-medium"
     :class="[
       { 'flex w-32 flex-row items-center justify-center': iconOnly, 'px-12 py-6': !iconOnly },
       commonClasses
