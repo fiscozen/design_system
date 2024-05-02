@@ -4,7 +4,7 @@
       <slot name="before"></slot>
     </div>
     <slot>
-        {{ label }}
+      {{ label }}
     </slot>
     <div :class="afterClasses">
       <slot name="after"></slot>
@@ -134,7 +134,7 @@ const beforeClasses = computed(() => ({
   'mr-4': props.size === 'sm' || props.size === 'xs',
   'pl-12': props.size === 'lg' && iconAndLabel,
   'pl-10': (props.size === 'md' || props.size === 'sm') && iconAndLabel,
-  'pl-8': props.size === 'xs' && iconAndLabel,
+  'pl-8': props.size === 'xs' && iconAndLabel
 }))
 
 const afterClasses = computed(() => ({
@@ -143,27 +143,27 @@ const afterClasses = computed(() => ({
   'ml-4': props.size === 'sm' || props.size === 'xs',
   'pr-12': props.size === 'lg' && iconAndLabel,
   'pr-10': (props.size === 'md' || props.size === 'sm') && iconAndLabel,
-  'pr-8': props.size === 'xs' && iconAndLabel,
+  'pr-8': props.size === 'xs' && iconAndLabel
 }))
 </script>
 
 <style>
 .temporary-bg-red:hover {
-  background-color: #AA2F2F;
+  background-color: #aa2f2f;
 }
 .temporary-bg-red:disabled {
-  background-color: #F8BABA;
+  background-color: #f8baba;
 }
 .temporary-border-red:focus {
-  border-color: #AA2F2F;
+  border-color: #aa2f2f;
 }
 .temporary-bg-green:hover {
-  background-color: #0B7763;
+  background-color: #0b7763;
 }
 .temporary-bg-green:disabled {
-  background-color: #B5D8CE;
+  background-color: #b5d8ce;
 }
 .temporary-border-green:focus {
-  border-color: #0B7763;
+  border-color: #0b7763;
 }
 </style>
