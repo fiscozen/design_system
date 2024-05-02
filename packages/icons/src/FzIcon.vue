@@ -9,7 +9,7 @@ withDefaults(
     size?: IconSize
     variant?: IconVariant
   }>(),
-  { size: 'lg', variant: 'fasr' }
+  { size: 'lg', variant: 'far' }
 )
 </script>
 

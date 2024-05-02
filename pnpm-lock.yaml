@@ -446,67 +446,6 @@ importers:
         specifier: ^1.8.25
         version: 1.8.27(typescript@5.3.3)
 
-  packages/composables:
-    dependencies:
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
-      vue:
-        specifier: ^3.4.13
-        version: 3.4.13(typescript@5.3.3)
-    devDependencies:
-      '@fiscozen/eslint-config':
-        specifier: workspace:^
-        version: link:../eslint-config
-      '@fiscozen/prettier-config':
-        specifier: workspace:^
-        version: link:../prettier-config
-      '@fiscozen/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@rushstack/eslint-patch':
-        specifier: ^1.3.3
-        version: 1.6.1
-      '@types/jsdom':
-        specifier: ^21.1.6
-        version: 21.1.6
-      '@types/node':
-        specifier: ^18.19.3
-        version: 18.19.7
-      '@vitejs/plugin-vue':
-        specifier: ^4.5.2
-        version: 4.6.2(vite@5.0.11)(vue@3.4.13)
-      '@vitest/coverage-v8':
-        specifier: ^1.2.1
-        version: 1.2.1(vitest@1.2.0)
-      '@vue/test-utils':
-        specifier: ^2.4.3
-        version: 2.4.3(vue@3.4.13)
-      '@vue/tsconfig':
-        specifier: ^0.5.0
-        version: 0.5.1
-      eslint:
-        specifier: ^8.49.0
-        version: 8.57.0
-      jsdom:
-        specifier: ^23.0.1
-        version: 23.2.0
-      prettier:
-        specifier: ^3.0.3
-        version: 3.2.5
-      typescript:
-        specifier: ~5.3.0
-        version: 5.3.3
-      vite:
-        specifier: ^5.0.10
-        version: 5.0.11(@types/node@18.19.7)
-      vitest:
-        specifier: ^1.2.0
-        version: 1.2.0(@types/node@18.19.7)(jsdom@23.2.0)
-      vue-tsc:
-        specifier: ^1.8.25
-        version: 1.8.27(typescript@5.3.3)
-
   packages/eslint-config:
     devDependencies:
       '@vue/eslint-config-prettier':
@@ -589,8 +528,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.62
-        version: 1.0.62
+        specifier: ^1.0.65
+        version: 1.0.65
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.5.1
         version: 6.5.1
@@ -956,8 +895,8 @@ packages:
       default-browser-id: 3.0.0
     dev: true
 
-  /@awesome.me/kit-8137893ad3@1.0.62:
-    resolution: {integrity: sha512-5/ULTVH2Bv3AFux4O/Pk79dc5hHxnabu1wJL9HpSo40rNJ51idVWIOPnUDR9K98q7enUP4THsn03AO+HnvxVWQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.62/kit-8137893ad3-1.0.62.tgz}
+  /@awesome.me/kit-8137893ad3@1.0.65:
+    resolution: {integrity: sha512-5Zg35TcOjK+yRTKBDzC7fJgu1UIR88YyaENCjilpA1VRqLePGuWszZzHzSDYnjVLUGTpdk9Lxz7H82wXZsXIbg==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.65/kit-8137893ad3-1.0.65.tgz}
     engines: {node: '>=16'}
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.5.2
