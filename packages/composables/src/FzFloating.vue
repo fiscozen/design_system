@@ -38,25 +38,6 @@ watch(
   () => props.isOpen,
   (newVal) => newVal && floating.setPosition()
 )
-
-const classMap: Record<FzFloatingPosition, string> = {
-  left: 'pr-4',
-  'left-start': 'pr-4',
-  'left-end': 'pr-4',
-  right: 'pl-4',
-  'right-start': 'pl-4',
-  'right-end': 'pl-4',
-  top: 'pb-4',
-  'top-start': 'pb-4',
-  'top-end': 'pb-4',
-  bottom: 'pt-4',
-  'bottom-start': 'pt-4',
-  'bottom-end': 'pt-4',
-  auto: '',
-  'auto-end': '',
-  'auto-start': ''
-}
-const classes = computed(() => classMap[props.position])
 </script>
 
 <template>
@@ -67,8 +48,7 @@ const classes = computed(() => classMap[props.position])
     <div
       ref="content"
       v-show="!$slots.opener || ($slots.opener && isOpen)"
-      class="bg-core-white"
-      :class="classes"
+      class="bg-core-white absolute p-4"
     >
       <slot :isOpen :floating></slot>
     </div>

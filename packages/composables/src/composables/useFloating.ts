@@ -1,14 +1,14 @@
 import { FzFloatingPosition, FzRect, FzUseFloatingArgs } from '../types'
-import { ref, reactive, onUnmounted, Ref } from 'vue'
-import { getHighestAvailableSpacePos } from '../utils'
+import { ref, reactive, onUnmounted, Ref, nextTick, computed } from 'vue'
+import { calcRealPos, getHighestAvailableSpacePos } from '../utils'
 
 export const useFloating = (
   args: FzUseFloatingArgs
 ): {
-  float: FzRect
-  rect: Ref<DOMRect | null>
-  floatObserver: Ref<IntersectionObserver>
-  setPosition: () => void
+  float: FzRect;
+  rect: Ref<DOMRect | null>;
+  floatObserver: Ref<IntersectionObserver>;
+  setPosition: () => Promise<void>;
 } => {
   const safeElementDomRef = ref<HTMLElement | null>(null)
   const safeContainerDomRef = ref<HTMLElement | null>(null)
@@ -31,7 +31,7 @@ export const useFloating = (
 
   const floatObserver = ref(new IntersectionObserver(handleIntersect, options))
 
-  const setPosition = () => {
+  const setPosition = () => nextTick(() => {
     safeElementDomRef.value =
       typeof args.element.domRef.value === 'string'
         ? document.querySelector(args.element.domRef.value)
@@ -66,8 +66,9 @@ export const useFloating = (
     floatObserver.value.observe(safeContainerDomRef.value)
 
     let position: FzFloatingPosition = args.position ? args.position.value : 'auto'
-    let translateY = ''
-    let translateX = ''
+
+    let translateY = 0
+    let translateX = 0
 
     if (args.opener && safeOpenerDomRef.value && openerRect) {
       switch (position) {
@@ -101,74 +102,74 @@ export const useFloating = (
         case 'bottom':
           float.position.y = openerRect.bottom
           float.position.x = openerRect.left + openerRect.width / 2
-          translateX = '-50%'
-          translateY = '0%'
+          translateX = -50
+          translateY = 0
           break
         case 'bottom-start':
           float.position.y = openerRect.bottom
           float.position.x = openerRect.left
-          translateX = '0%'
-          translateY = '0%'
+          translateX = 0
+          translateY = 0
           break
         case 'bottom-end':
           float.position.y = openerRect.bottom
           float.position.x = openerRect.right
-          translateX = '-100%'
-          translateY = '0%'
+          translateX = -100
+          translateY = 0
           break
         case 'left-start':
           float.position.y = openerRect.top
           float.position.x = openerRect.left
-          translateX = '-100%'
-          translateY = '0%'
+          translateX = -100
+          translateY = 0
           break
         case 'left':
           float.position.y = openerRect.top + openerRect.height / 2
           float.position.x = openerRect.left
-          translateY = '-50%'
-          translateX = '-100%'
+          translateY = -50
+          translateX = -100
           break
         case 'left-end':
           float.position.y = openerRect.bottom
           float.position.x = openerRect.left
-          translateY = '-100%'
-          translateX = '-100%'
+          translateY = -100
+          translateX = -100
           break
         case 'top-start':
           float.position.y = openerRect.top
           float.position.x = openerRect.left
-          translateY = '-100%'
-          translateX = '0%'
+          translateY = -100
+          translateX = 0
           break
         case 'top':
           float.position.y = openerRect.top
           float.position.x = openerRect.left + openerRect.width / 2
-          translateX = '-50%'
-          translateY = '-100%'
+          translateX = -50
+          translateY = -100
           break
         case 'top-end':
           float.position.y = openerRect.top
           float.position.x = openerRect.right
-          translateX = '-100%'
-          translateY = '-100%'
+          translateX = -100
+          translateY = -100
           break
         case 'right-start':
           float.position.y = openerRect.top
           float.position.x = openerRect.right
-          translateX = '0%'
-          translateY = '0%'
+          translateX = 0
+          translateY = 0
           break
         case 'right':
           float.position.y = openerRect.top + openerRect.height / 2
           float.position.x = openerRect.right
-          translateY = '-50%'
-          translateX = '0%'
+          translateY = -50
+          translateX = 0
           break
         case 'right-end':
           float.position.y = openerRect.bottom
           float.position.x = openerRect.right
-          translateY = '-100%'
-          translateX = '0%'
+          translateY = -100
+          translateX = 0
           break
         default:
           break
@@ -178,7 +179,7 @@ export const useFloating = (
         case 'bottom':
           float.position.y = containerRect.bottom - rect.value.height
           float.position.x = containerRect.left + containerRect.width / 2
-          translateX = '-50%'
+          translateX = -50
           break
         case 'left-end':
         case 'bottom-start':
@@ -216,12 +217,35 @@ export const useFloating = (
       }
     }
 
+    const realPos = calcRealPos(rect.value, float.position, translateX, translateY)
+
+    if (realPos.x < containerRect.left) {
+      float.position.x = containerRect.left;
+      translateX = 0
+    }
+
+    if ((realPos.x + rect.value.width) > containerRect.right) {
+      float.position.x = containerRect.right - rect.value.width;
+      translateX = 0
+    }
+    
+    if (realPos.y < containerRect.top) {
+      float.position.y = containerRect.top;
+      translateY = 0
+    }
+
+    if ((realPos.y + rect.value.height) > containerRect.bottom) {
+      float.position.y = containerRect.bottom - rect.value.height;
+      translateY = 0
+    }
+
     safeElementDomRef.value.style.top = `${float.position.y}px`
     safeElementDomRef.value.style.left = `${float.position.x}px`
-    safeElementDomRef.value.style.transform = `translateY(${translateY}) translateX(${translateX})`
+    safeElementDomRef.value.style.transform = `translateY(${translateY}%) translateX(${translateX}%)`
     safeElementDomRef.value.style.position = 'absolute'
+
     rect.value = safeElementDomRef.value.getBoundingClientRect()
-  }
+  })
 
   onUnmounted(() => {
     floatObserver.value.disconnect()

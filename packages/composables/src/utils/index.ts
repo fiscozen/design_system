@@ -1,4 +1,4 @@
-import { FzFloatingPosition } from '../types'
+import { FzAbsolutePosition, FzFloatingPosition } from '../types'
 
 type MainPosition = 'right' | 'left' | 'top' | 'bottom'
 interface PositionListItem {
@@ -20,10 +20,10 @@ export const getHighestAvailableSpacePos = (
   const elRect = el.getBoundingClientRect()
   const openerRect = opener.getBoundingClientRect()
 
-  const spaceLeftNormalized = (openerRect.left - containerRect.left) / containerRect.width
-  const spaceRightNormalized = (containerRect.right - openerRect.right) / containerRect.width
-  const spaceTopNormalized = (openerRect.top - containerRect.top) / containerRect.height
-  const spaceBottomNormalized = (containerRect.bottom - openerRect.bottom) / containerRect.height
+  const spaceLeftNormalized = (openerRect.left - containerRect.left - elRect.width) / containerRect.width
+  const spaceRightNormalized = (containerRect.right - openerRect.right - elRect.width) / containerRect.width
+  const spaceTopNormalized = (openerRect.top - containerRect.top - elRect.height) / containerRect.height
+  const spaceBottomNormalized = (containerRect.bottom - openerRect.bottom - elRect.height) / containerRect.height
 
   const positionList = [
     {
@@ -42,7 +42,7 @@ export const getHighestAvailableSpacePos = (
       key: 'left',
       space: spaceLeftNormalized
     } as PositionListItem
-  ].sort((a, b) => a.space - b.space)
+  ].sort((a, b) => b.space - a.space)
 
   mainPosition = positionList[0].key
 
@@ -65,4 +65,12 @@ export const getHighestAvailableSpacePos = (
 
   positionRes = justify ? `${mainPosition}-${justify}` : mainPosition
   return positionRes
+}
+
+
+export const calcRealPos = (rect: DOMRect, pos: FzAbsolutePosition, translateX: number, translateY: number): FzAbsolutePosition => {
+  return {
+    x: pos.x + (rect.width * translateX)/100,
+    y: pos.y + (rect.height * translateY)/100,
+  }
 }
