@@ -83,12 +83,14 @@ const customVariantClasses = computed(() => {
     case 'danger':
       return {
         'text-core-white': true,
+        'temporary-bg-red': true,
         'bg-semantic-error': true
       }
       break
     case 'success':
       return {
         'text-core-white': true,
+        'temporary-bg-green': true,
         'bg-semantic-success': true
       }
       break
@@ -142,3 +144,12 @@ const afterClasses = computed(() => ({
   'pr-8': props.size === 'xs' && iconAndLabel,
 }))
 </script>
+
+<style>
+.temporary-bg-red:hover {
+  background-color: #AA2F2F;
+}
+.temporary-bg-green:hover {
+  background-color: #0B7763;
+}
+</style>
