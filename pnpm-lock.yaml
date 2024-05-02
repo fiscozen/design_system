@@ -26,12 +26,12 @@ importers:
       '@fiscozen/breadcrumbs':
         specifier: workspace:^
         version: link:../../packages/breadcrumbs
+      '@fiscozen/button':
+        specifier: workspace:^
+        version: link:../../packages/button
       '@fiscozen/collapse':
         specifier: workspace:^
         version: link:../../packages/collapse
-      '@fiscozen/icon-button':
-        specifier: workspace:^
-        version: link:../../packages/icon-button
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../../packages/icons
@@ -379,6 +379,70 @@ importers:
         specifier: ^1.8.25
         version: 1.8.27(typescript@5.3.3)
 
+  packages/button:
+    dependencies:
+      tailwindcss:
+        specifier: ^3.4.1
+        version: 3.4.1
+      vue:
+        specifier: ^3.4.13
+        version: 3.4.13(typescript@5.3.3)
+    devDependencies:
+      '@fiscozen/eslint-config':
+        specifier: workspace:^
+        version: link:../eslint-config
+      '@fiscozen/icons':
+        specifier: workspace:^
+        version: link:../icons
+      '@fiscozen/prettier-config':
+        specifier: workspace:^
+        version: link:../prettier-config
+      '@fiscozen/tsconfig':
+        specifier: workspace:^
+        version: link:../tsconfig
+      '@rushstack/eslint-patch':
+        specifier: ^1.3.3
+        version: 1.6.1
+      '@types/jsdom':
+        specifier: ^21.1.6
+        version: 21.1.6
+      '@types/node':
+        specifier: ^18.19.3
+        version: 18.19.7
+      '@vitejs/plugin-vue':
+        specifier: ^4.5.2
+        version: 4.6.2(vite@5.0.11)(vue@3.4.13)
+      '@vitest/coverage-v8':
+        specifier: ^1.2.1
+        version: 1.2.1(vitest@1.2.0)
+      '@vue/test-utils':
+        specifier: ^2.4.3
+        version: 2.4.3(vue@3.4.13)
+      '@vue/tsconfig':
+        specifier: ^0.5.0
+        version: 0.5.1
+      eslint:
+        specifier: ^8.49.0
+        version: 8.57.0
+      jsdom:
+        specifier: ^23.0.1
+        version: 23.2.0
+      prettier:
+        specifier: ^3.0.3
+        version: 3.2.5
+      typescript:
+        specifier: ~5.3.0
+        version: 5.3.3
+      vite:
+        specifier: ^5.0.10
+        version: 5.0.11(@types/node@18.19.7)
+      vitest:
+        specifier: ^1.2.0
+        version: 1.2.0(@types/node@18.19.7)(jsdom@23.2.0)
+      vue-tsc:
+        specifier: ^1.8.25
+        version: 1.8.27(typescript@5.3.3)
+
   packages/collapse:
     dependencies:
       tailwindcss:
@@ -458,73 +522,6 @@ importers:
         specifier: ^9.17.0
         version: 9.20.1(eslint@8.57.0)
 
-  packages/icon-button:
-    dependencies:
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
-      vue:
-        specifier: ^3.4.13
-        version: 3.4.13(typescript@5.3.3)
-    devDependencies:
-      '@fiscozen/eslint-config':
-        specifier: workspace:^
-        version: link:../eslint-config
-      '@fiscozen/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@fiscozen/prettier-config':
-        specifier: workspace:^
-        version: link:../prettier-config
-      '@fiscozen/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@rushstack/eslint-patch':
-        specifier: ^1.3.3
-        version: 1.6.1
-      '@types/jsdom':
-        specifier: ^21.1.6
-        version: 21.1.6
-      '@types/node':
-        specifier: ^18.19.3
-        version: 18.19.7
-      '@vitejs/plugin-vue':
-        specifier: ^4.5.2
-        version: 4.6.2(vite@5.0.11)(vue@3.4.13)
-      '@vitest/coverage-v8':
-        specifier: ^1.2.1
-        version: 1.2.1(vitest@1.2.0)
-      '@vue/test-utils':
-        specifier: ^2.4.3
-        version: 2.4.3(vue@3.4.13)
-      '@vue/tsconfig':
-        specifier: ^0.5.0
-        version: 0.5.1
-      eslint:
-        specifier: ^8.49.0
-        version: 8.56.0
-      jsdom:
-        specifier: ^23.0.1
-        version: 23.2.0
-      prettier:
-        specifier: ^3.0.3
-        version: 3.2.2
-      typescript:
-        specifier: ~5.3.0
-        version: 5.3.3
-      vite:
-        specifier: ^5.0.10
-        version: 5.0.11(@types/node@18.19.7)
-      vite-plugin-dts:
-        specifier: ^3.8.3
-        version: 3.9.0(@types/node@18.19.7)(typescript@5.3.3)(vite@5.0.11)
-      vitest:
-        specifier: ^1.2.0
-        version: 1.2.0(@types/node@18.19.7)(jsdom@23.2.0)
-      vue-tsc:
-        specifier: ^1.8.25
-        version: 1.8.27(typescript@5.3.3)
-
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
@@ -552,9 +549,9 @@ importers:
 
   packages/navbar:
     dependencies:
-      '@fiscozen/icon-button':
+      '@fiscozen/button':
         specifier: workspace:^
-        version: link:../icon-button
+        version: link:../button
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1

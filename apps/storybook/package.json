@@ -24,7 +24,7 @@
     "@fiscozen/badge": "workspace:^",
     "@fiscozen/breadcrumbs": "workspace:^",
     "@fiscozen/collapse": "workspace:^",
-    "@fiscozen/icon-button": "workspace:^",
+    "@fiscozen/button": "workspace:^",
     "@fiscozen/icons": "workspace:^",
     "@fiscozen/navbar": "workspace:^",
     "@fiscozen/navlink": "workspace:^",

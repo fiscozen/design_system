@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzNavbar, FzNavbarProps } from '@fiscozen/navbar'
 import { FzIcon } from '@fiscozen/icons'
 import { FzNavlink } from '@fiscozen/navlink'
-import { FzIconButton } from '@fiscozen/icon-button'
+import { FzIconButton } from '@fiscozen/button'
 import { FzAvatar } from '@fiscozen/avatar'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
