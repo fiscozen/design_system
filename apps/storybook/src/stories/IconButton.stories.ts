@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 
-import { FzIconButton, IconButtonVariant } from '@fiscozen/icon-button'
+import { FzIconButton, IconButtonVariant } from '@fiscozen/button'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
