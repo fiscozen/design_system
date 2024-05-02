@@ -74,7 +74,7 @@ const customVariantClasses = computed(() => {
       return {
         'text-grey-500': true,
         'bg-core-white': true,
-        '!border-grey-200': true,
+        'border-transparent': true,
         'hover:bg-grey-100': !props.disabled,
         'focus:!border-blue-600': !props.disabled,
         'disabled:text-grey-100': true
@@ -84,6 +84,7 @@ const customVariantClasses = computed(() => {
       return {
         'text-core-white': true,
         'temporary-bg-red': true,
+        'temporary-border-red': !props.disabled,
         'bg-semantic-error': true
       }
       break
@@ -91,6 +92,7 @@ const customVariantClasses = computed(() => {
       return {
         'text-core-white': true,
         'temporary-bg-green': true,
+        'temporary-border-green': !props.disabled,
         'bg-semantic-success': true
       }
       break
@@ -149,7 +151,19 @@ const afterClasses = computed(() => ({
 .temporary-bg-red:hover {
   background-color: #AA2F2F;
 }
+.temporary-bg-red:disabled {
+  background-color: #F8BABA;
+}
+.temporary-border-red:focus {
+  border-color: #AA2F2F;
+}
 .temporary-bg-green:hover {
   background-color: #0B7763;
+}
+.temporary-bg-green:disabled {
+  background-color: #B5D8CE;
+}
+.temporary-border-green:focus {
+  border-color: #0B7763;
 }
 </style>
