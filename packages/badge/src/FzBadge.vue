@@ -12,7 +12,7 @@ const props = withDefaults(
     /**
      * Color variant
      */
-    color: "black" | "error" | "warning" | "success" | "info";
+    color: "black" | "blue" | "error" | "warning" | "success" | "info";
   }>(),
   {
     color: "black",
@@ -25,6 +25,7 @@ const mapColorToClasses = {
   warning: "bg-semantic-warning",
   success: "bg-semantic-success text-core-white",
   info: "bg-semantic-info text-core-white",
+  blue: "bg-blue-500 text-core-white",
 };
 
 const classes = computed(() => [
