@@ -33,6 +33,7 @@
     "@fiscozen/style": "workspace:^",
     "@fiscozen/tooltip": "workspace:^",
     "@fiscozen/view-flag": "workspace:^",
+    "@fiscozen/tab": "workspace:^",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
   },
