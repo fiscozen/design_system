@@ -5,6 +5,7 @@ import FzIcon from './FzIcon.vue'
 
 const IconPlugin : Plugin = {
   install(app) {
+    // @ts-ignore
     library.add(...all)
     app.component('fz-icon', FzIcon)
   }
