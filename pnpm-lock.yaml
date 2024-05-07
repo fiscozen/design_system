@@ -50,6 +50,9 @@ importers:
       '@fiscozen/style':
         specifier: workspace:^
         version: link:../../packages/style
+      '@fiscozen/tooltip':
+        specifier: workspace:^
+        version: link:../../packages/tooltip
       '@fiscozen/view-flag':
         specifier: workspace:^
         version: link:../../packages/view-flag
@@ -844,6 +847,12 @@ importers:
 
   packages/tooltip:
     dependencies:
+      '@fiscozen/composables':
+        specifier: workspace:^
+        version: link:../composables
+      '@fiscozen/icons':
+        specifier: workspace:^
+        version: link:../icons
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -854,9 +863,6 @@ importers:
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
-      '@fiscozen/icons':
-        specifier: workspace:^
-        version: link:../icons
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config

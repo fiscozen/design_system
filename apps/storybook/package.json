@@ -31,6 +31,7 @@
     "@fiscozen/navlink": "workspace:^",
     "@fiscozen/navlist": "workspace:^",
     "@fiscozen/style": "workspace:^",
+    "@fiscozen/tooltip": "workspace:^",
     "@fiscozen/view-flag": "workspace:^",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
