@@ -54,67 +54,74 @@ const template = `
   </div>
 `
 
-const neutralTooltip = (args: FzTooltipProps) => ({
-  setup() {
-    return { args, gridClasses }
-  },
-  components: { FzTooltip },
-  template: simpletemplate
-})
-export const NeutralTooltip = neutralTooltip.bind({})
-NeutralTooltip.args = {
-  status: 'neutral',
-  text: 'this is a tooltip'
+export const NeutralTooltip: Story = {
+  render: (args) => ({
+    setup() {
+      return { args, gridClasses }
+    },
+    components: { FzTooltip },
+    template: simpletemplate
+  }),
+  args: {
+    status: 'neutral',
+    text: 'this is a informative tooltip '
+  }
 }
 
-const informativeTooltip = (args: FzTooltipProps) => ({
-  setup() {
-    return { args, gridClasses }
-  },
-  components: { FzTooltip },
-  template
-})
-export const InformativeTooltip = informativeTooltip.bind({})
-InformativeTooltip.args = {
-  status: 'informative',
-  text: 'this is a informative tooltip '
+export const InformativeTooltip: Story = {
+  render: (args) => ({
+    setup() {
+      return { args, gridClasses }
+    },
+    components: { FzTooltip },
+    template
+  }),
+  args: {
+    status: 'informative',
+    text: 'this is a informative tooltip '
+  }
 }
 
-const positiveTooltip = (args: FzTooltipProps) => ({
-  setup() {
-    return { args, gridClasses }
-  },
-  components: { FzTooltip },
-  template
-})
-export const PositiveTooltip = positiveTooltip.bind({})
-PositiveTooltip.args = {
-  status: 'positive',
-  text: 'this is a positive tooltip'
+
+export const PositiveTooltip: Story = {
+  render: (args) => ({
+    setup() {
+      return { args, gridClasses }
+    },
+    components: { FzTooltip },
+    template
+  }),
+  args: {
+    status: 'positive',
+    text: 'this is a positive tooltip '
+  }
 }
 
-const alertTooltip = (args: FzTooltipProps) => ({
-  setup() {
-    return { args, gridClasses }
-  },
-  components: { FzTooltip },
-  template
-})
-export const AlertTooltip = alertTooltip.bind({})
-AlertTooltip.args = {
-  status: 'alert',
-  text: 'this is an alert tooltip'
+
+export const AlertTooltip: Story = {
+  render: (args) => ({
+    setup() {
+      return { args, gridClasses }
+    },
+    components: { FzTooltip },
+    template
+  }),
+  args: {
+    status: 'alert',
+    text: 'this is a alert tooltip '
+  }
 }
 
-const errorTooltip = (args: FzTooltipProps) => ({
-  setup() {
-    return { args, gridClasses }
-  },
-  components: { FzTooltip },
-  template
-})
-export const ErrorTooltip = errorTooltip.bind({})
-ErrorTooltip.args = {
-  status: 'error',
-  text: 'this is an error tooltip'
+export const ErrorTooltip: Story = {
+  render: (args) => ({
+    setup() {
+      return { args, gridClasses }
+    },
+    components: { FzTooltip },
+    template
+  }),
+  args: {
+    status: 'error',
+    text: 'this is a error tooltip '
+  }
 }
