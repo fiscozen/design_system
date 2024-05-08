@@ -122,7 +122,7 @@ const notificationClasses = computed(() => ({
   'bg-grey-200': props.disabled
 }))
 
-const iconSizeMap : {
+const iconSizeMap: {
   [key in IconButtonSize]: IconSize
 } = {
   sm: 'md',
