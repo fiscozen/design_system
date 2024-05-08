@@ -1,5 +1,5 @@
 <template>
-  <button type="button" :disabled="disabled" :class="classes">
+  <button type="button" :disabled="disabled" :class="[staticClasses, classes]">
     <div :class="beforeClasses">
       <slot name="before"></slot>
     </div>
@@ -104,16 +104,19 @@ const customVariantClasses = computed(() => {
 
 const iconAndLabel = () => (props.label || slots.defatult) && (slots.before || slots.after)
 
+const staticClasses = [
+  'relative',
+  'rounded',
+  'flex',
+  'flex-shrink',
+  'items-center',
+  'justify-center',
+  'font-medium',
+  'border-1',
+  'border-transparent',
+]
+
 const classes = computed(() => ({
-  relative: true,
-  rounded: true,
-  flex: true,
-  'flex-shrink': true,
-  'items-center': true,
-  'justify-center': true,
-  'font-medium': true,
-  'border-1': true,
-  'border-transparent': true,
   'h-24 text-xs': props.size === 'xs',
   'h-28 text-sm': props.size === 'sm',
   'h-32': props.size === 'md',
