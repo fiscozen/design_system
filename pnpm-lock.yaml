@@ -589,8 +589,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.65
-        version: 1.0.65
+        specifier: ^1.0.71
+        version: 1.0.71
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.5.1
         version: 6.5.1
