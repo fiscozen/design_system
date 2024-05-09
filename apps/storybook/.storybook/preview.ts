@@ -15,7 +15,6 @@ const viewports = Object.entries(figmaTokens.global.breakpoint)
 
 const preview: Preview = {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
         color: /(background|color)$/i,
