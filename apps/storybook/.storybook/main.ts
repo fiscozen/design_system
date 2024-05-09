@@ -7,7 +7,8 @@ const config: StorybookConfig = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-    '@storybook/addon-viewport'
+    '@storybook/addon-viewport',
+    '@chromatic-com/storybook'
   ],
   framework: {
     name: '@storybook/vue3-vite',
