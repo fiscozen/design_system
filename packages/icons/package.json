@@ -18,7 +18,8 @@
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",
     "@fiscozen/prettier-config": "workspace:^",
-    "@fiscozen/tsconfig": "workspace:^"
+    "@fiscozen/tsconfig": "workspace:^",
+    "lint-staged": "^15.2.2"
   },
   "dependencies": {
     "@awesome.me/kit-8137893ad3": "^1.0.71",

@@ -6,12 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "nx run-many --target=build",
-    "storybook": "nx run @fiscozen/storybook:storybook"
+    "storybook": "nx run @fiscozen/storybook:storybook",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
     "nx": "17.2.8",
     "vitest": "^1.0.4"
   }

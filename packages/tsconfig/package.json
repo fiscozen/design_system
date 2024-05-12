@@ -9,6 +9,7 @@
   "devDependencies": {
     "@tsconfig/node18": "^18.2.2",
     "@vue/tsconfig": "^0.5.1",
+    "lint-staged": "^15.2.2",
     "vue": "^3.4.13"
   },
   "keywords": [],
