@@ -73,7 +73,7 @@ const customVariantClasses = computed(() => {
     case 'invisible':
       return {
         'text-grey-500': true,
-        'bg-core-white': true,
+        'bg-transparent': true,
         'border-transparent': true,
         'hover:bg-grey-100': !props.disabled,
         'focus:!border-blue-600': !props.disabled,
@@ -113,7 +113,7 @@ const staticClasses = [
   'justify-center',
   'font-medium',
   'border-1',
-  'border-transparent',
+  'border-transparent'
 ]
 
 const classes = computed(() => ({
