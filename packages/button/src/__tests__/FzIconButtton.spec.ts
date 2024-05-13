@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
 import { mount } from '@vue/test-utils'
-import FzButton from '../FzIconButton.vue'
+import FzButton from '../FzButton.vue'
 
 describe('FzButton', () => {
   it('should match snapshot', () => {
@@ -19,8 +19,7 @@ describe('FzButton', () => {
     const wrapper = mount(FzButton, {
       props: {
         tooltip: 'some text',
-        disabled: false,
-        iconName: 'bell'
+        disabled: false
       }
     })
     wrapper.trigger('click')
@@ -32,8 +31,7 @@ describe('FzButton', () => {
     const wrapper = mount(FzButton, {
       props: {
         tooltip: 'some text',
-        disabled: true,
-        iconName: 'bell'
+        disabled: true
       }
     })
     wrapper.trigger('click')

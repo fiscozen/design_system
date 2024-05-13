@@ -1,9 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzButton > should match snapshot 1`] = `
-"<button type="button" class="relative relative rounded flex flex-shrink items-center justify-center w-32 h-32 focus:border-blue-600 focus:border-solid focus:border-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500"><svg class="svg-inline--fa fa-bell fa-lg" aria-hidden="true" focusable="false" data-prefix="fasl" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-    <path class="" fill="currentColor" d="M208 0h32V32.8c80.9 8 144 76.2 144 159.2v97.4l59.3 59.3 4.7 4.7V360v40 16H432 16 0V400 360v-6.6l4.7-4.7L64 289.4V192c0-83 63.1-151.2 144-159.2V0zm16 64C153.3 64 96 121.3 96 192V296v6.6l-4.7 4.7L32 366.6V384H416V366.6l-59.3-59.3-4.7-4.7V296 192c0-70.7-57.3-128-128-128zM160 448h32c0 17.7 14.3 32 32 32s32-14.3 32-32h32c0 35.3-28.7 64-64 64s-64-28.7-64-64z"></path>
-  </svg>
-  <!--v-if--><span class="hidden h-0 w-0">some text</span>
+"<button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500" iconname="bell">
+  <div class="mr-6 pl-10"></div>
+  <div class="ml-6 pr-10"></div><span class="hidden h-0 w-0">some text</span>
 </button>"
 `;
