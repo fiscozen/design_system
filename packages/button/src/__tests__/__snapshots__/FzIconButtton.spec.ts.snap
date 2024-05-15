@@ -2,7 +2,7 @@
 
 exports[`FzButton > should match snapshot 1`] = `
 "<button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500" iconname="bell">
-  <div class="mr-6 pl-10"></div>
-  <div class="ml-6 pr-10"></div><span class="hidden h-0 w-0">some text</span>
+  <div class="flex items-center justify-items-center mr-6 pl-10"></div>
+  <div class="flex items-center justify-items-center ml-6 pr-10"></div><span class="hidden h-0 w-0">some text</span>
 </button>"
 `;
