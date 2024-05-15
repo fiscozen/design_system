@@ -17,6 +17,32 @@ const meta = {
 } satisfies Meta<typeof FzButton>
 
 export default meta
+
+const iconTemplate = `
+  <div class="flex flex-row">
+    <FzButton
+      class="m-12"
+      :disabled="args.disabled"
+      :label="args.label"
+      :size="args.size"
+      :tooltip="args.tooltip"
+      :variant="args.variant"
+      iconName="bell"
+      iconPosition="before">
+    </FzButton>
+    <FzButton
+      class="m-12"
+      :disabled="args.disabled"
+      :label="args.label"
+      :size="args.size"
+      :tooltip="args.tooltip"
+      :variant="args.variant"
+      iconName="bell"
+      iconPosition="after">
+    </FzButton>
+  </div>
+`
+
 type Story = StoryObj<typeof meta>
 /*
  *👇 Render functions are a framework specific feature to allow you control on how the component renders.
@@ -35,31 +61,7 @@ const primaryWithIcon = (args) => ({
     return { args }
   },
   components: { FzIcon, FzButton },
-  template: `
-    <div class="flex flex-row">
-      <FzButton
-        :disabled="args.disabled"
-        :label="args.label"
-        :size="args.size"
-        :tooltip="args.tooltip"
-        :variant="args.variant">
-        <template #before>
-          <FzIcon name="bell" size="lg"/> 
-        </template>
-      </FzButton>
-      <FzButton
-        class="ml-12"
-        :disabled="args.disabled"
-        :label="args.label"
-        :size="args.size"
-        :tooltip="args.tooltip"
-        :variant="args.variant">
-        <template #after>
-          <FzIcon name="bell" size="lg"/> 
-        </template>
-      </FzButton>
-    </div>
-  `
+  template: iconTemplate
 })
 
 export const PrimaryWithIcon = primaryWithIcon.bind({})
@@ -69,31 +71,7 @@ const secondaryWithIcon = (args) => ({
     return { args }
   },
   components: { FzIcon, FzButton },
-  template: `
-    <div class="flex flex-row">
-      <FzButton
-        :disabled="args.disabled"
-        :label="args.label"
-        :size="args.size"
-        :tooltip="args.tooltip"
-        :variant="args.variant">
-        <template #before>
-          <FzIcon name="bell" size="lg"/> 
-        </template>
-      </FzButton>
-      <FzButton
-        class="ml-12"
-        :disabled="args.disabled"
-        :label="args.label"
-        :size="args.size"
-        :tooltip="args.tooltip"
-        :variant="args.variant">
-        <template #after>
-          <FzIcon name="bell" size="lg"/> 
-        </template>
-      </FzButton>
-    </div>
-  `
+  template: iconTemplate
 })
 
 export const SecondaryWithIcon = secondaryWithIcon.bind({})
@@ -108,31 +86,7 @@ const invisibleWithIcon = (args) => ({
     return { args }
   },
   components: { FzIcon, FzButton },
-  template: `
-    <div class="flex flex-row">
-      <FzButton
-        :disabled="args.disabled"
-        :label="args.label"
-        :size="args.size"
-        :tooltip="args.tooltip"
-        :variant="args.variant">
-        <template #before>
-          <FzIcon name="bell" size="lg"/> 
-        </template>
-      </FzButton>
-      <FzButton
-        class="ml-12"
-        :disabled="args.disabled"
-        :label="args.label"
-        :size="args.size"
-        :tooltip="args.tooltip"
-        :variant="args.variant">
-        <template #after>
-          <FzIcon name="bell" size="lg"/> 
-        </template>
-      </FzButton>
-    </div>
-  `
+  template: iconTemplate
 })
 
 export const InvisibleWithIcon = invisibleWithIcon.bind({})
@@ -147,31 +101,7 @@ const dangerWithIcon = (args) => ({
     return { args }
   },
   components: { FzIcon, FzButton },
-  template: `
-    <div class="flex flex-row">
-      <FzButton
-        :disabled="args.disabled"
-        :label="args.label"
-        :size="args.size"
-        :tooltip="args.tooltip"
-        :variant="args.variant">
-        <template #before>
-          <FzIcon name="bell" size="lg"/> 
-        </template>
-      </FzButton>
-      <FzButton
-        class="ml-12"
-        :disabled="args.disabled"
-        :label="args.label"
-        :size="args.size"
-        :tooltip="args.tooltip"
-        :variant="args.variant">
-        <template #after>
-          <FzIcon name="bell" size="lg"/> 
-        </template>
-      </FzButton>
-    </div>
-  `
+  template: iconTemplate
 })
 
 export const DangerWithIcon = dangerWithIcon.bind({})
@@ -186,31 +116,7 @@ const successWithIcon = (args) => ({
     return { args }
   },
   components: { FzIcon, FzButton },
-  template: `
-    <div class="flex flex-row">
-      <FzButton
-        :disabled="args.disabled"
-        :label="args.label"
-        :size="args.size"
-        :tooltip="args.tooltip"
-        :variant="args.variant">
-        <template #before>
-          <FzIcon name="bell" size="lg"/> 
-        </template>
-      </FzButton>
-      <FzButton
-        class="ml-12"
-        :disabled="args.disabled"
-        :label="args.label"
-        :size="args.size"
-        :tooltip="args.tooltip"
-        :variant="args.variant">
-        <template #after>
-          <FzIcon name="bell" size="lg"/> 
-        </template>
-      </FzButton>
-    </div>
-  `
+  template: iconTemplate
 })
 
 export const SuccessWithIcon = successWithIcon.bind({})

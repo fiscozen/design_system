@@ -10,13 +10,13 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     variant: { control: 'select', options: ['primary', 'secondary', 'notification', 'invisible'] },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    size: { control: 'select', options: ['xs', 'sm', 'md', 'lg'] },
     iconVariant: {
       control: 'select',
       options: ['fas', 'far', 'fal', 'fat', 'fad', 'fass', 'fasr', 'fasl', 'fast']
     }
   },
-  args: { variant: 'primary', disabled: false, iconName: 'bell', iconVariant: 'fasl' } // default value
+  args: { variant: 'primary', disabled: false, iconName: 'bell', iconVariant: 'far' } // default value
 } satisfies Meta<typeof FzIconButton>
 
 export default meta
