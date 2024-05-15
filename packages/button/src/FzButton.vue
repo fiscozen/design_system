@@ -1,13 +1,17 @@
 <template>
   <button type="button" :disabled="disabled" :class="[staticClasses, classes]">
-    <div :class="beforeClasses">
-      <slot name="before"></slot>
+    <div v-if="iconAndLabel" :class="[staticIconClasses, beforeClasses]">
+      <slot name="before">
+        <FzIcon v-if="iconName && iconPosition === 'before'" :name="iconName" :size="mappedIconSize" />
+      </slot>
     </div>
     <slot>
       {{ label }}
     </slot>
-    <div :class="afterClasses">
-      <slot name="after"></slot>
+    <div v-if="slots.after || iconAndLabel" :class="[staticIconClasses, afterClasses]">
+      <slot name="after">
+        <FzIcon v-if="iconName && iconPosition === 'after'" :name="iconName" :size="mappedIconSize" />
+      </slot>
     </div>
     <span class="hidden h-0 w-0">{{ tooltip }}</span>
   </button>
@@ -15,7 +19,9 @@
 
 <script lang="ts" setup>
 import { computed, useSlots } from 'vue'
-import type { ButtonVariant } from './types'
+import { type IconVariant, FzIcon } from '@fiscozen/icons'
+import type { ButtonSize, ButtonVariant } from './types'
+import { iconSizeMap } from './utils';
 
 const props = withDefaults(
   defineProps<{
@@ -26,7 +32,7 @@ const props = withDefaults(
     /**
      * The tooltip of the button will be shown on hover
      */
-    tooltip: string
+    tooltip?: string
     /**
      * primary or secondary button
      */
@@ -34,11 +40,24 @@ const props = withDefaults(
     /**
      * size of the button
      */
-    size?: 'xs' | 'sm' | 'md' | 'lg'
+    size?: ButtonSize
     /**
      * whether action is enabled or not
      */
-    disabled: boolean
+    disabled?: boolean,
+    /**
+     * Icon to be displayed. Use fontawesome search here https://fontawesome.com/v6/icons
+     * Mind that not all of the icons and variants might be available.
+     */
+    iconName?: string
+    /**
+     * Fontawesome icon variant: solid, regular, light, thin. Sharp subvariants are available as well
+     */
+    iconVariant?: IconVariant
+    /**
+     * Positioning of the icon
+     */
+    iconPosition?: 'before' | 'after'
   }>(),
   {
     variant: 'primary',
@@ -102,7 +121,8 @@ const customVariantClasses = computed(() => {
   }
 })
 
-const iconAndLabel = () => (props.label || slots.defatult) && (slots.before || slots.after)
+const iconAndLabel = computed(() => Boolean((props.label || slots.default) && props.iconName))
+const mappedIconSize = computed(() => iconSizeMap[props.size])
 
 const staticClasses = [
   'relative',
@@ -116,6 +136,8 @@ const staticClasses = [
   'border-transparent'
 ]
 
+const staticIconClasses = ['flex', 'items-center', 'justify-items-center']
+
 const classes = computed(() => ({
   'h-24 text-xs': props.size === 'xs',
   'h-28 text-sm': props.size === 'sm',
@@ -124,10 +146,10 @@ const classes = computed(() => ({
   'focus:border-blue-600': !props.disabled,
   'focus:border-solid': !props.disabled,
   'focus:border-1': !props.disabled,
-  'px-12': props.size === 'xs' && !iconAndLabel,
-  'px-14': props.size === 'sm' && !iconAndLabel,
-  'px-16': props.size === 'md' && !iconAndLabel,
-  'px-20': props.size === 'lg' && !iconAndLabel,
+  'px-12': props.size === 'xs' && !iconAndLabel.value,
+  'px-14': props.size === 'sm' && !iconAndLabel.value,
+  'px-16': props.size === 'md' && !iconAndLabel.value,
+  'px-20': props.size === 'lg' && !iconAndLabel.value,
   ...customVariantClasses.value
 }))
 
@@ -135,18 +157,18 @@ const beforeClasses = computed(() => ({
   'mr-8': props.size === 'lg',
   'mr-6': props.size === 'md',
   'mr-4': props.size === 'sm' || props.size === 'xs',
-  'pl-12': props.size === 'lg' && iconAndLabel,
-  'pl-10': (props.size === 'md' || props.size === 'sm') && iconAndLabel,
-  'pl-8': props.size === 'xs' && iconAndLabel
+  'pl-12': props.size === 'lg' && iconAndLabel.value,
+  'pl-10': (props.size === 'md' || props.size === 'sm') && iconAndLabel.value,
+  'pl-8': props.size === 'xs' && iconAndLabel.value
 }))
 
 const afterClasses = computed(() => ({
   'ml-8': props.size === 'lg',
   'ml-6': props.size === 'md',
   'ml-4': props.size === 'sm' || props.size === 'xs',
-  'pr-12': props.size === 'lg' && iconAndLabel,
-  'pr-10': (props.size === 'md' || props.size === 'sm') && iconAndLabel,
-  'pr-8': props.size === 'xs' && iconAndLabel
+  'pr-12': props.size === 'lg' && iconAndLabel.value,
+  'pr-10': (props.size === 'md' || props.size === 'sm') && iconAndLabel.value,
+  'pr-8': props.size === 'xs' && iconAndLabel.value
 }))
 </script>
 
