@@ -7,6 +7,10 @@ export type FzTabsProps = {
    * Enable horizontal overflow
    */
   horizontalOverflow?: boolean;
+  /**
+   * Enable vertical direction
+   */
+  vertical?: boolean;
 };
 
 export type FzTabProps = {
@@ -30,4 +34,9 @@ export type FzTabProps = {
    * Show the tab content
    */
   initialSelected?: boolean;
+
+  /**
+   * custom property not handled by the component but maybe useful for the user (e.g. aria-label, class, etc.)
+   */
+  [key: string]: unknown;
 };

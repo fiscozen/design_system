@@ -1,5 +1,5 @@
 <template>
-  <button :class="classes" @click="selectedTab = tab.title" :title="tab.title" :disabled="tab.disabled">
+  <button :class="classes" @click="onClickTab" v-bind="tab">
     <FzIcon v-if="tab.icon" :name="tab.icon" :size="size" />
     <span class="text-ellipsis whitespace-nowrap overflow-hidden">{{ tab.title }}</span>
     <FzBadge
@@ -33,4 +33,10 @@ const classes = computed(() => [
     : "text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500",
   props.tab.disabled ? "cursor-not-allowed" : "cursor-pointer",
 ]);
+
+const onClickTab = () => {
+  if (!props.tab.disabled) {
+    selectedTab!.value = props.tab.title;
+  }
+};
 </script>

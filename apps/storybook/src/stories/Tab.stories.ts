@@ -66,6 +66,14 @@ export const Small: TabStory = {
     }
 }
 
+export const MediumVertical: TabStory = {
+    ...Template,
+    args: {
+        size: 'md',
+        vertical: true
+    }
+}
+
 const TemplateWithIcon: TabStory = {
     render: (args) => ({
         components: { FzTabs, FzTab, FzBadge, FzIcon },
