@@ -13,7 +13,7 @@ withDefaults(
 )
 const staticContainerClasses = ['flex', 'items-center', 'justify-center']
 const containerClassSizeMap: Record<IconSize, string> = {
-  xs: 'w-[12.5px] h-[12.5px]',
+  xs: 'size-[12.5px]',
   sm: 'w-[15px] h-[15px]',
   md: 'w-[20px] h-[20px]',
   lg: 'w-[25px] h-[25px]',
