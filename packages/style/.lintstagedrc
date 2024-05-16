@@ -1,0 +1,5 @@
+{
+  "*.{vue,ts}": ["vue-tsc --noEmit"],
+  "*.{vue,ts,js,cjs}": ["eslint"],
+  "*": ["prettier --write"]
+}

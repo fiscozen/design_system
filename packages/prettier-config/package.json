@@ -9,6 +9,7 @@
     "build": "exit 0;"
   },
   "devDependencies": {
+    "lint-staged": "^15.2.2",
     "prettier-plugin-tailwindcss": "^0.5.11"
   },
   "keywords": [],

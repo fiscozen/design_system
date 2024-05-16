@@ -12,6 +12,7 @@
   "author": "Riccardo Agnoletto",
   "license": "ISC",
   "devDependencies": {
+    "lint-staged": "^15.2.2",
     "style-dictionary": "^3.9.2",
     "style-dictionary-utils": "^2.0.7",
     "token-transformer": "^0.0.33"
