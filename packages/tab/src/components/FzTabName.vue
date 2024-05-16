@@ -1,7 +1,9 @@
 <template>
   <button :class="classes" @click="onClickTab" v-bind="tab">
     <FzIcon v-if="tab.icon" :name="tab.icon" :size="size" />
-    <span class="text-ellipsis whitespace-nowrap overflow-hidden">{{ tab.title }}</span>
+    <span class="text-ellipsis whitespace-nowrap overflow-hidden">{{
+      tab.title
+    }}</span>
     <FzBadge
       v-if="tab.badgeContent"
       :color="selectedTab === tab.title ? 'blue' : 'black'"
@@ -15,8 +17,8 @@
 import { inject, computed, Ref } from "vue";
 import { FzBadge } from "@fiscozen/badge";
 import { FzIcon } from "@fiscozen/icons";
-import { FzTabProps } from "./types";
-import { mapSizeToClasses } from "./common";
+import { FzTabProps } from "../types";
+import { mapSizeToClasses } from "../common";
 
 const props = defineProps<{
   tab: FzTabProps;
