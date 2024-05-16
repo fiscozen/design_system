@@ -1,13 +1,18 @@
 <template>
   <div :class="computedClassWrapper">
-    <div
-      :class="computedClass"
-      ref="tabContainer"
-      @wheel="onWheel"
-    >
-      <FzTabPicker v-if="!horizontalOverflow && isOverflowing" :tabs="tabs" :size="size" />
-      <FzTabName v-else v-for="tab in tabs" :tab="tab" :key="tab.title" :size="size" />
-
+    <div :class="computedClass" ref="tabContainer" @wheel="onWheel">
+      <FzTabPicker
+        v-if="!horizontalOverflow && isOverflowing"
+        :tabs="tabs"
+        :size="size"
+      />
+      <FzTabName
+        v-else
+        v-for="tab in tabs"
+        :tab="tab"
+        :key="tab.title"
+        :size="size"
+      />
       <slot name="tabs-end" />
     </div>
     <slot :selected="selectedTab"></slot>
@@ -17,8 +22,8 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, provide, useSlots, watch } from "vue";
 import { FzTabsProps, FzTabProps } from "./types";
-import FzTabName from "./FzTabName.vue";
-import FzTabPicker from "./FzTabPicker.vue";
+import FzTabPicker from "./components/FzTabPicker.vue";
+import FzTabName from "./components/FzTabName.vue";
 import FzTab from "./FzTab.vue";
 
 const props = withDefaults(defineProps<FzTabsProps>(), {
@@ -71,7 +76,9 @@ function onWheel(e: WheelEvent) {
 
 onMounted(() => {
   if (tabs.value.length === 0) {
-    console.error("FzTabs must have at least one FzTab child");
+    console.error(
+      "[Fiscozen Design System]: FzTabs must have at least one FzTab child"
+    );
     return;
   }
 
@@ -85,9 +92,11 @@ onMounted(() => {
   const duplicateTitles = tabs.value
     .map((tab) => tab.title)
     .filter((title, index, self) => self.indexOf(title) !== index);
-  
-  if(duplicateTitles.length > 0) {
-    console.warn(`FzTabs has duplicate titles: ${duplicateTitles.join(", ")}, this may cause unexpected behavior.`);
+
+  if (duplicateTitles.length) {
+    console.warn(
+      `[Fiscozen Design System]: FzTabs has duplicate titles: ${duplicateTitles.join(", ")}, this may cause unexpected behavior.`,
+    );
   }
 });
 
@@ -106,7 +115,7 @@ watch(
       });
     }
 
-    emit('change', selectedTab.value);
+    emit("change", selectedTab.value);
   },
 );
 </script>
