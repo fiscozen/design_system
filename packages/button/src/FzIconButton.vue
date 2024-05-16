@@ -68,7 +68,7 @@ const variantMap = computed(() => {
 })
 
 const classes = computed(() => ({
-  'w-24 h-24': props.size === 'xs',
+  'size-24': props.size === 'xs',
   'w-28 h-28': props.size === 'sm',
   'w-32 h-32': props.size === 'md',
   'w-40 h-40': props.size === 'lg',
