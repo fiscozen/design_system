@@ -81,7 +81,7 @@ const notificationClasses = computed(() => ({
   absolute: true,
   'top-0': true,
   'right-0': true,
-  'w-4 h-4': props.size === 'xs',
+  'size-4': props.size === 'xs',
   'w-6 h-6': props.size === 'sm',
   'w-8 h-8': props.size === 'md' || props.size === 'lg',
   'bg-grey-200': props.disabled
