@@ -219,6 +219,9 @@ export const useFloating = (
 
     const realPos = calcRealPos(rect.value, float.position, translateX, translateY)
 
+    float.position.x = realPos.x;
+    float.position.y = realPos.y;
+
     if (realPos.x < containerRect.left) {
       float.position.x = containerRect.left;
       translateX = 0
@@ -241,8 +244,8 @@ export const useFloating = (
 
     safeElementDomRef.value.style.top = `${float.position.y}px`
     safeElementDomRef.value.style.left = `${float.position.x}px`
-    safeElementDomRef.value.style.transform = `translateY(${translateY}%) translateX(${translateX}%)`
     safeElementDomRef.value.style.position = 'absolute'
+    safeElementDomRef.value.style.display = 'flex'
 
     rect.value = safeElementDomRef.value.getBoundingClientRect()
   })

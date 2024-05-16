@@ -1,13 +1,13 @@
 <template>
-  <FzFloating :is-open="isOpen" :position="position">
+  <FzFloating :is-open="isOpen" :position="position" class="flex h-max">
     <template #opener>
       <div @mouseover="isOpen = true" @mouseleave="isOpen = false">
         <slot></slot>
       </div>
     </template>
     <div :class="[staticClasses, classes]">
-      <FzIcon v-if="withIcon" size="lg" :name="iconName" class="mr-8"></FzIcon>
-      <span>{{ text }}</span>
+      <FzIcon v-if="withIcon" size="lg" :name="iconName" class="mr-8 grow-0 shrink-0"></FzIcon>
+      <span class="basis-0 grow shrink-0 break-all">{{ text }}</span>
     </div>
   </FzFloating>
 </template>

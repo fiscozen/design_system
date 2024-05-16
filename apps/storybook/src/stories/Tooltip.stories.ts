@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import {reactive, ref} from 'vue'
-
-import { FzTooltip, FzTooltipProps } from '@fiscozen/tooltip'
+import { FzTooltip } from '@fiscozen/tooltip'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
@@ -64,7 +62,7 @@ export const NeutralTooltip: Story = {
   }),
   args: {
     status: 'neutral',
-    text: 'this is a informative tooltip '
+    text: 'this is a informative tooltip with a very long text that lets us test overflow'
   }
 }
 
@@ -78,7 +76,7 @@ export const InformativeTooltip: Story = {
   }),
   args: {
     status: 'informative',
-    text: 'this is a informative tooltip '
+    text: 'this is a informative tooltip with a very long text that lets us test overflow'
   }
 }
 
@@ -93,7 +91,7 @@ export const PositiveTooltip: Story = {
   }),
   args: {
     status: 'positive',
-    text: 'this is a positive tooltip '
+    text: 'this is a positive tooltip with a very long text that lets us test overflow'
   }
 }
 
@@ -108,7 +106,7 @@ export const AlertTooltip: Story = {
   }),
   args: {
     status: 'alert',
-    text: 'this is a alert tooltip '
+    text: 'this is a alert tooltip with a very long text that lets us test overflow'
   }
 }
 
@@ -122,6 +120,6 @@ export const ErrorTooltip: Story = {
   }),
   args: {
     status: 'error',
-    text: 'this is a error tooltip '
+    text: 'this is a error tooltip with a very long text that lets us test overflow'
   }
 }
