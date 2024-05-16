@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, useSlots, watch, toRef, computed } from 'vue'
 import { useFloating } from './composables'
-import { FzFloatingPosition, FzFloatingProps, FzUseFloatingArgs } from './types'
+import { FzFloatingProps, FzUseFloatingArgs } from './types'
 
 const props = withDefaults(defineProps<FzFloatingProps>(), {
   position: 'auto',
@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<FzFloatingProps>(), {
 })
 
 const opener = ref(null)
-const content = ref(null)
+const content = ref<HTMLElement|null>(null)
 
 const slots = useSlots()
 
@@ -36,7 +36,15 @@ watch(
 )
 watch(
   () => props.isOpen,
-  (newVal) => newVal && floating.setPosition()
+  (newVal) => {
+    if (!newVal || !content.value) {
+      return;
+    }
+    content.value.style.top = '0px';
+    content.value.style.left = '0px';
+    content.value.style.transform = 'none';
+    floating.setPosition()
+  }
 )
 </script>
 
