@@ -7,7 +7,7 @@
     </template>
     <div :class="[staticClasses, classes]">
       <FzIcon v-if="withIcon" size="lg" :name="iconName" class="mr-8 grow-0 shrink-0"></FzIcon>
-      <span class="basis-0 grow shrink-0 break-all">{{ text }}</span>
+      <span class="basis-0 grow shrink-0 fz__tooltip__text">{{ text }}</span>
     </div>
   </FzFloating>
 </template>
@@ -72,8 +72,12 @@ const staticClasses =
   'text-fzwhite-100 max-w-[200px] p-6 text-xs rounded flex flex-row items-start justify-center'
 </script>
 
-<style>
+<style scoped>
 .text-fzwhite-100 {
   color: #fffefd;
+}
+.fz__tooltip__text {
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 </style>
