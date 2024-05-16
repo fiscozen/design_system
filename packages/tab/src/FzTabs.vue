@@ -1,13 +1,17 @@
 <template>
-  <div
-    class="tab-container flex rounded-lg gap-10 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto"
-    ref="tabContainer"
-    @wheel="onWheel"
-  >
-    <FzTabPicker v-if="!horizontalOverflow && isOverflowing" :tabs="tabs" :size="size" />
-    <FzTabName v-else v-for="tab in tabs" :tab="tab" :key="tab.title" :size="size" />
+  <div :class="computedClassWrapper">
+    <div
+      :class="computedClass"
+      ref="tabContainer"
+      @wheel="onWheel"
+    >
+      <FzTabPicker v-if="!horizontalOverflow && isOverflowing" :tabs="tabs" :size="size" />
+      <FzTabName v-else v-for="tab in tabs" :tab="tab" :key="tab.title" :size="size" />
+
+      <slot name="tabs-end" />
+    </div>
+    <slot :selected="selectedTab"></slot>
   </div>
-  <slot :selected="selectedTab"></slot>
 </template>
 
 <script setup lang="ts">
@@ -19,9 +23,13 @@ import FzTab from "./FzTab.vue";
 
 const props = withDefaults(defineProps<FzTabsProps>(), {
   size: "sm",
+  vertical: false,
 });
 
+const emit = defineEmits(["change"]);
+
 const slots = useSlots();
+
 const tabContainer = ref<HTMLElement | null>(null);
 const selectedTab = ref("");
 provide("selectedTab", selectedTab);
@@ -44,6 +52,16 @@ const isOverflowing = computed(() => {
   return tabContainer.value.scrollWidth > parent.clientWidth;
 });
 
+const computedClass = computed(() => [
+  "tab-container flex rounded-lg gap-10 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto",
+  props.vertical ? "flex-col" : "flex-row",
+]);
+
+const computedClassWrapper = computed(() => [
+  "flex",
+  !props.vertical ? "flex-col" : "flex-row",
+]);
+
 function onWheel(e: WheelEvent) {
   e.preventDefault();
   e.stopPropagation();
@@ -52,7 +70,6 @@ function onWheel(e: WheelEvent) {
 }
 
 onMounted(() => {
-  console.log("entro")
   if (tabs.value.length === 0) {
     console.error("FzTabs must have at least one FzTab child");
     return;
@@ -88,6 +105,8 @@ watch(
         inline: "center",
       });
     }
+
+    emit('change', selectedTab.value);
   },
 );
 </script>

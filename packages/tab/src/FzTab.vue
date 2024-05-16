@@ -3,13 +3,10 @@
 </template>
 
 <script setup lang="ts">
-import { inject, withDefaults, onMounted, Ref, computed } from "vue";
+import { inject, onMounted, Ref, computed } from "vue";
 import { FzTabProps } from "./types";
 
-const props = withDefaults(defineProps<FzTabProps>(), {
-  disabled: false,
-  initialSelected: false,
-});
+const props = defineProps<FzTabProps>();
 
 const selectedTab = inject<Ref<string>>("selectedTab");
 const isActive = computed(() => selectedTab?.value === props.title);
