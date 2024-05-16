@@ -84,4 +84,14 @@ describe("FzTabs", () => {
 
     expect(wrapper.html()).toMatchSnapshot();
   });
+
+  it("renders with vertical direction", async () => {
+    const wrapper = await createWrapper(
+      { size: "sm", vertical: true },
+      { title: "tab1" },
+      { title: "tab2" },
+    );
+
+    expect(wrapper.html()).toMatchSnapshot();
+  })
 });
