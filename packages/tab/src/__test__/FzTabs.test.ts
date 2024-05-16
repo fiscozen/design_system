@@ -4,7 +4,7 @@ import { FzTab, FzTabs } from "..";
 import { h } from "vue";
 import { FzTabProps, FzTabsProps } from "../types";
 
-const  createWrapper = async (
+const createWrapper = async (
   props: FzTabsProps,
   tab1Props: FzTabProps,
   tab2Props: FzTabProps,
@@ -18,7 +18,7 @@ const  createWrapper = async (
       ],
     },
   });
-   
+
   await content.vm.$nextTick();
   return content;
 };
@@ -49,7 +49,6 @@ describe("FzTabs", () => {
       { title: "tab1" },
       { title: "tab2" },
     );
-
 
     expect(wrapper.html()).toMatchSnapshot();
   });
