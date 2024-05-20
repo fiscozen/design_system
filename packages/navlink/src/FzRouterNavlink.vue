@@ -11,7 +11,7 @@ const iconOnly = computed(() => !slots.default && !props.label)
 
 <template>
   <router-link
-    :to="meta.path"
+    :to="meta"
     :disabled="disabled"
     :class="[{ 'w-32': iconOnly, 'px-12 py-6': !iconOnly }, commonClasses]"
   >
