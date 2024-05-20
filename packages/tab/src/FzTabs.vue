@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, provide, useSlots, watch } from "vue";
+import { computed, ref, onMounted, provide, useSlots, watch, VNode } from "vue";
 import { FzTabsProps, FzTabProps } from "./types";
 import FzTabPicker from "./components/FzTabPicker.vue";
 import FzTabName from "./components/FzTabName.vue";
@@ -48,10 +48,18 @@ const tabs = computed(() => {
       return tab.type === FzTab || typeof tab.type === "symbol";
     })
     .map((tab) => {
-      const props =
-        tab.type === FzTab ? tab.props : (tab.children as any)[0].props;
-      return props as FzTabProps;
-    });
+      if(tab.type === FzTab) 
+        return (tab.props as FzTabProps)
+
+      if(typeof tab.type === "symbol") {
+        const children = tab.children as VNode[];
+        if (!children) return null;
+      
+        return children.filter(child => child.type === FzTab).map((child) => child.props as FzTabProps);
+      }
+    })
+    .flat()
+    .filter(el => el != null);
 });
 
 const isOverflowing = computed(() => {
