@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/tab",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Design System Tab component",
   "scripts": {
     "coverage": "vitest run --coverage",
