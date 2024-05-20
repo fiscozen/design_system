@@ -244,15 +244,28 @@ const TemplateWithTabArray: TabStory = {
                         {
                             title: 'tab1',
                             badgeContent: "testo"
+                        },
+                        {
+                            title: 'very long tab text',
+                            badgeContent: "1"
+                        },
+                        {
+                            title: 'tab3',
+                            badgeContent: "2"
+                        },
+                        {
+                            title: 'tab4',
+                            badgeContent: "3"
                         }
                     ]
                 }
             }
         },
         template: `
-            <div style='width:200px; overflow:hidden; height:800px'>
+            <div style='height:800px'>
                 <FzTabs v-bind="args" > 
-                    <FzTab v-for="tab in customProps.tabs" v-bind="tab"> Content tab1 </FzTab> 
+                    <FzTab v-for="tab in customProps.tabs" v-bind="tab"> Content {{tab.title}} </FzTab> 
+                    <FzTab title="static tab"> Content tab static</FzTab>
                 </FzTabs>
             </div>`
     }),
