@@ -14,7 +14,7 @@ const isActive = computed(() => selectedTab?.value === props.title);
 onMounted(() => {
   if (selectedTab === undefined) {
     console.error(
-      "[Fiscozen Design System]: FzTab must be used inside a FzTabs component"
+      "[Fiscozen Design System]: FzTab must be used inside a FzTabs component",
     );
   } else if (props.initialSelected) {
     selectedTab.value = props.title;
