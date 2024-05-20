@@ -232,3 +232,45 @@ export const OverflowWithScrollMedium: TabStory = {
         horizontalOverflow: true
     }
 }
+
+const TemplateWithTabArray: TabStory = {
+    render: (args) => ({
+        components: { FzTabs, FzTab, FzBadge, FzIcon },
+        setup() {
+            return {
+                args,
+                customProps:{
+                    tabs: [
+                        {
+                            title: 'tab1',
+                            badgeContent: "testo"
+                        }
+                    ]
+                }
+            }
+        },
+        template: `
+            <div style='width:200px; overflow:hidden; height:800px'>
+                <FzTabs v-bind="args" > 
+                    <FzTab v-for="tab in customProps.tabs" v-bind="tab"> Content tab1 </FzTab> 
+                </FzTabs>
+            </div>`
+    }),
+    args: {
+        size: 'sm',
+    },
+}
+
+export const TabArray: TabStory = {
+    ...TemplateWithTabArray,
+    args: {
+        size: 'sm'
+    }
+}
+
+export const TabArrayMedium: TabStory = {
+    ...TemplateWithTabArray,
+    args: {
+        size: 'md'
+    }
+}
