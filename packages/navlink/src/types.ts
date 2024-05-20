@@ -25,10 +25,11 @@ export interface FzNavlinkProps<T = void> {
   /**
    * Metadata
    */
-  meta: T
+  meta?: T
 }
 
 type PartialExcept<T, K extends keyof T> = Pick<Required<T>, K> & Partial<T>
 
 export type CustomRouteLocation = PartialExcept<RouteLocation, 'path' | 'name'>
-export interface FzRouterNavlinkProps extends FzNavlinkProps<CustomRouteLocation> {}
+type FzRouterNavlinkPropsType = Required<Pick<FzNavlinkProps<CustomRouteLocation>, 'meta'>> & FzNavlinkProps<CustomRouteLocation>
+export interface FzRouterNavlinkProps extends FzRouterNavlinkPropsType {}
