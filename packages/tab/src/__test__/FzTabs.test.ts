@@ -93,5 +93,5 @@ describe("FzTabs", () => {
     );
 
     expect(wrapper.html()).toMatchSnapshot();
-  })
+  });
 });

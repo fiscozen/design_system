@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, provide, useSlots, watch, VNodeArrayChildren } from "vue";
+import { computed, ref, onMounted, provide, useSlots, watch } from "vue";
 import { FzTabsProps, FzTabProps } from "./types";
 import FzTabPicker from "./components/FzTabPicker.vue";
 import FzTabName from "./components/FzTabName.vue";
@@ -45,13 +45,14 @@ const tabs = computed(() => {
   return slots
     .default()
     .filter((tab) => {
-      return tab.type === FzTab || typeof tab.type === "symbol" ;
+      return tab.type === FzTab || typeof tab.type === "symbol";
     })
     .map((tab) => {
-      const props = tab.type === FzTab ? tab.props : (tab.children as any)[0].props;
+      const props =
+        tab.type === FzTab ? tab.props : (tab.children as any)[0].props;
       return props as FzTabProps;
     });
-}, );
+});
 
 const isOverflowing = computed(() => {
   if (!tabContainer.value) return false;
@@ -80,7 +81,7 @@ function onWheel(e: WheelEvent) {
 onMounted(() => {
   if (tabs.value.length === 0) {
     console.error(
-      "[Fiscozen Design System]: FzTabs must have at least one FzTab child"
+      "[Fiscozen Design System]: FzTabs must have at least one FzTab child",
     );
     return;
   }
