@@ -1,0 +1,106 @@
+<template>
+  <div :class="containerClass">
+    <span> Testo qui </span>
+
+    <slot name="action">
+      <FzButton
+        v-if="style === 'button'"
+        size="sm"
+        :variant="buttonVariant"
+        :tooltip="actionTooltip"
+        @click="emit('actionClick')"
+        >{{ actionLabel }}</FzButton
+      >
+      <FzIconButton
+        v-if="style === 'icon-button'"
+        size="sm"
+        :icon-name="actionIcon!"
+        variant="invisible"
+        :tooltip="actionTooltip"
+        @click="emit('actionClick')"
+      />
+      <FzLink v-if="style === 'link'" :to="actionLink" size="sm" :type="linkType">{{
+        props.actionLabel
+      }}</FzLink>
+    </slot>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { FzButton, FzIconButton } from '@fiscozen/button'
+import { FzLink } from '@fiscozen/link'
+
+const props = withDefaults(
+  defineProps<{
+    /**
+     * Type of the topbar which dictates the appearance
+     */
+    type?: 'default' | 'danger'
+    /**
+     * Style which dictates the action rendered
+     */
+    style?: 'none' | 'button' | 'icon-button' | 'hybrid' | 'link'
+    /**
+     * Action label
+     */
+    actionLabel?: string
+    /**
+     * Action tooltip
+     */
+    actionTooltip?: string
+    /**
+     * Action link
+     */
+    actionLink?: string
+    /**
+     * Action link
+     */
+    actionIcon?: string
+  }>(),
+  {
+    type: 'default',
+    style: 'none'
+  }
+)
+
+const emit = defineEmits(['actionClick'])
+
+const containerClass = computed(() => [
+  'flex px-24 py-12 gap-16 items-center justify-center',
+  {
+    'bg-white-smoke': props.type === 'default',
+    'bg-danger': props.type === 'danger'
+  }
+])
+
+const buttonVariant = computed(
+  () =>
+    (
+      ({
+        default: 'primary',
+        danger: 'danger'
+      }) as const
+    )[props.type]
+)
+
+const linkType = computed(
+  () =>
+    (
+      ({
+        default: 'default',
+        danger: 'danger'
+      }) as const
+    )[props.type]
+)
+</script>
+
+<style scoped>
+.bg-white-smoke {
+  background-color: #f7f6f3;
+}
+
+.bg-danger {
+  background-color: #fef3f3;
+}
+</style>
