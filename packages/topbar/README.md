@@ -1,3 +1,4 @@
 # @fiscozen/topbar
 
-Use avatars to represent users or consultants. We display name initials when a profile picture is unavailable.
+The topbar is a banner that displays a prominent message.
+Use the topbar when you want to display an important message, and provides actions for users to address.

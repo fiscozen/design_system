@@ -1,66 +1,91 @@
 import { describe, it } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { FzAvatar } from '..'
+import { FzTopbar } from '..'
 
-describe.concurrent('FzAvatar', () => {
-  it('image matches snapshot', async ({ expect }) => {
-    const wrapper = mount(FzAvatar, {
+describe.concurrent('FzTopbar', () => {
+  it('matches default topbar snapshot', async ({ expect }) => {
+    const wrapper = mount(FzTopbar, {
       props: {
-        firstName: 'Mario',
-        lastName: 'Rossi',
-        src: 'https://example.com',
-        size: 'xl'
+        type: 'default'
       }
     })
 
     expect(wrapper.html()).toMatchSnapshot()
   })
 
-  it('placeholder matches snapshot', async ({ expect }) => {
-    const wrapper = mount(FzAvatar, {
+  it('matches danger topbar snapshot', async ({ expect }) => {
+    const wrapper = mount(FzTopbar, {
       props: {
-        firstName: 'Mario',
-        lastName: 'Rossi'
+        type: 'danger'
       }
     })
 
     expect(wrapper.html()).toMatchSnapshot()
   })
 
-  it('should render image source prop', async ({ expect }) => {
-    const wrapper = mount(FzAvatar, {
+  it('matches default topbar with button snapshot', async ({ expect }) => {
+    const wrapper = mount(FzTopbar, {
       props: {
-        firstName: 'Mario',
-        lastName: 'Rossi',
-        src: 'https://example.com'
+        type: 'default',
+        style: 'button'
       }
     })
 
-    expect(wrapper.html()).toContain('https://example.com')
+    expect(wrapper.html()).toMatchSnapshot()
   })
 
-  it('should render placeholder initials', async ({ expect }) => {
-    const wrapper = mount(FzAvatar, {
+  it('matches danger topbar with button snapshot', async ({ expect }) => {
+    const wrapper = mount(FzTopbar, {
       props: {
-        firstName: 'Mario',
-        lastName: 'Rossi'
+        type: 'danger',
+        style: 'button'
       }
     })
 
-    expect(wrapper.html()).toContain('MR')
+    expect(wrapper.html()).toMatchSnapshot()
   })
 
-  it('should render size', async ({ expect }) => {
-    const wrapper = mount(FzAvatar, {
+  it('matches default topbar with icon-button snapshot', async ({ expect }) => {
+    const wrapper = mount(FzTopbar, {
       props: {
-        firstName: 'Mario',
-        lastName: 'Rossi',
-        src: 'https://example.com',
-        size: 'xl'
-      },
-      attachTo: document.body
+        type: 'default',
+        style: 'icon-button'
+      }
     })
 
-    expect(wrapper.find('img').classes()).toContain('size-40')
+    expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  it('matches danger topbar with icon-button snapshot', async ({ expect }) => {
+    const wrapper = mount(FzTopbar, {
+      props: {
+        type: 'danger',
+        style: 'icon-button'
+      }
+    })
+
+    expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  it('matches default topbar with link snapshot', async ({ expect }) => {
+    const wrapper = mount(FzTopbar, {
+      props: {
+        type: 'default',
+        style: 'link'
+      }
+    })
+
+    expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  it('matches danger topbar with link snapshot', async ({ expect }) => {
+    const wrapper = mount(FzTopbar, {
+      props: {
+        type: 'danger',
+        style: 'link'
+      }
+    })
+
+    expect(wrapper.html()).toMatchSnapshot()
   })
 })

@@ -45,7 +45,8 @@ const DefaultIconButton: Story = {
 
 const DefaultHybrid: Story = {
   args: {
-    style: 'hybrid'
+    style: 'hybrid',
+    actionIcon: 'bell'
   }
 }
 
@@ -84,7 +85,8 @@ const DangerIconButton: Story = {
 const DangerHybrid: Story = {
   args: {
     type: 'danger',
-    style: 'hybrid'
+    style: 'hybrid',
+    actionIcon: 'bell'
   }
 }
 

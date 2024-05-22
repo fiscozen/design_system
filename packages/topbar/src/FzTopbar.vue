@@ -4,7 +4,8 @@
 
     <slot name="action">
       <FzButton
-        v-if="style === 'button'"
+        v-if="['button', 'hybrid'].includes(props.style)"
+        :class="buttonClass"
         size="sm"
         :variant="buttonVariant"
         :tooltip="actionTooltip"
@@ -12,10 +13,11 @@
         >{{ actionLabel }}</FzButton
       >
       <FzIconButton
-        v-if="style === 'icon-button'"
+        v-if="['icon-button', 'hybrid'].includes(props.style)"
+        :class="iconButtonClass"
         size="sm"
         :icon-name="actionIcon!"
-        variant="invisible"
+        :variant="iconButtonVariant"
         :tooltip="actionTooltip"
         @click="emit('actionClick')"
       />
@@ -83,6 +85,23 @@ const buttonVariant = computed(
       }) as const
     )[props.type]
 )
+
+const buttonClass = computed(() => ({
+  'hidden md:block': props.style === 'hybrid'
+}))
+
+const iconButtonVariant = computed(() => {
+  switch (props.style) {
+    case 'hybrid':
+      return 'primary'
+    default:
+      return 'invisible'
+  }
+})
+
+const iconButtonClass = computed(() => ({
+  'md:hidden': props.style === 'hybrid'
+}))
 
 const linkType = computed(
   () =>
