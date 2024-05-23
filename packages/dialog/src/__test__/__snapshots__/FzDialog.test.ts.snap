@@ -1,0 +1,187 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzDialog > should match snapshot - drawer 1`] = `
+"<dialog class="m-0 fixed top-0 ml-auto max-h-screen">
+  <div class="flex flex-col border-1 rounded bg-core-white w-[480px] h-screen">
+    <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+      <div class="flex flex-row items-center text-xl grow h-32">
+        <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 mx-12">
+          <!--v-if-->
+          <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+              <path class="" fill="currentColor" d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
+            </svg></div>
+          <!--v-if-->
+          <!--v-if--><span class="hidden h-0 w-0"></span>
+        </button>
+      </div>
+    </div>
+    <div class="grow"></div>
+    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+      <form method="dialog" class="w-full h-full">
+        <div class="flex flex-row items-center h-32 grow justify-end h-40"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100" value="false">
+            <!--v-if-->
+            <!--v-if--><span class="hidden h-0 w-0"></span>
+          </button><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500 ml-12" value="true">
+            <!--v-if-->
+            <!--v-if--><span class="hidden h-0 w-0"></span>
+          </button></div>
+      </form>
+    </div>
+  </div>
+</dialog>"
+`;
+
+exports[`FzDialog > should match snapshot - lg 1`] = `
+"<dialog class="xs:max-xl:m-0 xs:max-xl:max-h-screen xs:max-xl:h-screen xs:max-xl:w-screen xs:max-xl:max-w-screen-xl">
+  <div class="flex flex-col border-1 rounded bg-core-white w-screen md:w-[640px] min-h-[300px] md:max-h-[600px] h-screen md:h-auto">
+    <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+      <div class="flex flex-row items-center text-xl grow h-28">
+        <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 mx-12">
+          <!--v-if-->
+          <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+              <path class="" fill="currentColor" d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
+            </svg></div>
+          <!--v-if-->
+          <!--v-if--><span class="hidden h-0 w-0"></span>
+        </button>
+      </div>
+    </div>
+    <div class="grow"></div>
+    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+      <form method="dialog" class="w-full h-full">
+        <div class="flex flex-row items-center h-32 grow justify-end h-32"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100" value="false">
+            <!--v-if-->
+            <!--v-if--><span class="hidden h-0 w-0"></span>
+          </button><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500 ml-12" value="true">
+            <!--v-if-->
+            <!--v-if--><span class="hidden h-0 w-0"></span>
+          </button></div>
+      </form>
+    </div>
+  </div>
+</dialog>"
+`;
+
+exports[`FzDialog > should match snapshot - md - xs screen 1`] = `
+"<dialog class="xs:max-xl:m-0 xs:max-xl:max-h-screen xs:max-xl:h-screen xs:max-xl:w-screen xs:max-xl:max-w-screen-xl">
+  <div class="flex flex-col border-1 rounded bg-core-white w-screen sm:w-[480px] min-h-[300px] sm:max-h-[600px] h-screen sm:h-auto">
+    <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+      <div class="flex flex-row items-center text-xl grow h-28">
+        <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 mx-12">
+          <!--v-if-->
+          <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+              <path class="" fill="currentColor" d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
+            </svg></div>
+          <!--v-if-->
+          <!--v-if--><span class="hidden h-0 w-0"></span>
+        </button>
+      </div>
+    </div>
+    <div class="grow"></div>
+    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+      <form method="dialog" class="w-full h-full">
+        <div class="flex flex-row items-center h-32 grow justify-end h-32"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100" value="false">
+            <!--v-if-->
+            <!--v-if--><span class="hidden h-0 w-0"></span>
+          </button><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500 ml-12" value="true">
+            <!--v-if-->
+            <!--v-if--><span class="hidden h-0 w-0"></span>
+          </button></div>
+      </form>
+    </div>
+  </div>
+</dialog>"
+`;
+
+exports[`FzDialog > should match snapshot - md 1`] = `
+"<dialog class="xs:max-xl:m-0 xs:max-xl:max-h-screen xs:max-xl:h-screen xs:max-xl:w-screen xs:max-xl:max-w-screen-xl">
+  <div class="flex flex-col border-1 rounded bg-core-white w-screen sm:w-[480px] min-h-[300px] sm:max-h-[600px] h-screen sm:h-auto">
+    <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+      <div class="flex flex-row items-center text-xl grow h-28">
+        <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 mx-12">
+          <!--v-if-->
+          <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+              <path class="" fill="currentColor" d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
+            </svg></div>
+          <!--v-if-->
+          <!--v-if--><span class="hidden h-0 w-0"></span>
+        </button>
+      </div>
+    </div>
+    <div class="grow"></div>
+    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+      <form method="dialog" class="w-full h-full">
+        <div class="flex flex-row items-center h-32 grow justify-end h-32"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100" value="false">
+            <!--v-if-->
+            <!--v-if--><span class="hidden h-0 w-0"></span>
+          </button><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500 ml-12" value="true">
+            <!--v-if-->
+            <!--v-if--><span class="hidden h-0 w-0"></span>
+          </button></div>
+      </form>
+    </div>
+  </div>
+</dialog>"
+`;
+
+exports[`FzDialog > should match snapshot - sm 1`] = `
+"<dialog class="">
+  <div class="flex flex-col border-1 rounded bg-core-white w-[320px] min-h-[200px] max-h-[432px]">
+    <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+      <div class="flex flex-row items-center text-xl grow h-28">
+        <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 mx-12">
+          <!--v-if-->
+          <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+              <path class="" fill="currentColor" d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
+            </svg></div>
+          <!--v-if-->
+          <!--v-if--><span class="hidden h-0 w-0"></span>
+        </button>
+      </div>
+    </div>
+    <div class="grow"></div>
+    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+      <form method="dialog" class="w-full h-full">
+        <div class="flex flex-row items-center h-32 grow justify-end h-32"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100" value="false">
+            <!--v-if-->
+            <!--v-if--><span class="hidden h-0 w-0"></span>
+          </button><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500 ml-12" value="true">
+            <!--v-if-->
+            <!--v-if--><span class="hidden h-0 w-0"></span>
+          </button></div>
+      </form>
+    </div>
+  </div>
+</dialog>"
+`;
+
+exports[`FzDialog > should match snapshot - xl 1`] = `
+"<dialog class="xs:max-xl:m-0 xs:max-xl:max-h-screen xs:max-xl:h-screen xs:max-xl:w-screen xs:max-xl:max-w-screen-xl">
+  <div class="flex flex-col border-1 rounded bg-core-white w-screen xl:w-[960px] min-h-[400px] xl:max-h-[600px] h-screen xl:h-auto">
+    <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+      <div class="flex flex-row items-center text-xl grow h-28">
+        <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 mx-12">
+          <!--v-if-->
+          <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+              <path class="" fill="currentColor" d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
+            </svg></div>
+          <!--v-if-->
+          <!--v-if--><span class="hidden h-0 w-0"></span>
+        </button>
+      </div>
+    </div>
+    <div class="grow"></div>
+    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+      <form method="dialog" class="w-full h-full">
+        <div class="flex flex-row items-center h-32 grow justify-end h-32"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100" value="false">
+            <!--v-if-->
+            <!--v-if--><span class="hidden h-0 w-0"></span>
+          </button><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500 ml-12" value="true">
+            <!--v-if-->
+            <!--v-if--><span class="hidden h-0 w-0"></span>
+          </button></div>
+      </form>
+    </div>
+  </div>
+</dialog>"
+`;
