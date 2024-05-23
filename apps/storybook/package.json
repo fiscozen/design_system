@@ -26,6 +26,7 @@
     "@fiscozen/button": "workspace:^",
     "@fiscozen/collapse": "workspace:^",
     "@fiscozen/composables": "workspace:^",
+    "@fiscozen/dialog": "workspace:^",
     "@fiscozen/icons": "workspace:^",
     "@fiscozen/navbar": "workspace:^",
     "@fiscozen/navlink": "workspace:^",
