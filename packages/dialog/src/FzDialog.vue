@@ -67,12 +67,23 @@ const staticClasses = [
 ]
 
 const dialogClasses = computed(() => {
+    let res: Record<string, boolean> = {};
+    if (props.isDrawer) {
+        res = {
+            'm-0': true,
+            'fixed': true,
+            'top-0': true,
+            'ml-auto': true,
+            'max-h-screen': true,
+        }
+        return res
+    }
     switch (props.size) {
         case 'sm':
-            return {} 
+            res = {} 
             break;
         case 'md':
-            return {
+            res = {
                 'xs:max-sm:m-0': true,
                 'xs:max-sm:max-h-screen': true,
                 'xs:max-sm:h-screen': true,
@@ -80,7 +91,7 @@ const dialogClasses = computed(() => {
                 'xs:max-sm:max-w-screen-xl': true,
             } 
          case 'lg':
-            return {
+            res = {
                 'xs:max-md:m-0': true,
                 'xs:max-md:max-h-screen': true,
                 'xs:max-md:h-screen': true,
@@ -88,7 +99,7 @@ const dialogClasses = computed(() => {
                 'xs:max-md:max-w-screen-xl': true,
             } 
           case 'xl':
-            return {
+            res = {
                 'xs:max-xl:m-0': true,
                 'xs:max-xl:max-h-screen': true,
                 'xs:max-xl:h-screen': true,
@@ -97,22 +108,30 @@ const dialogClasses = computed(() => {
             } 
             break;   break; 
         default:
-            return {}
+            res = {}
             break;
     }
+    return res
 })
 
 const classes = computed(() => {
+    let res: Record<string, boolean> = {};
+    if (props.isDrawer) {
+        res['w-[480px]'] = true
+        res['h-screen'] = true
+
+        return res;
+    }
     switch (props.size) {
         case 'sm':
-            return {
+            res = {
                 'w-[320px]': true,
                 'min-h-[200px]': true,
                 'max-h-[432px]': true
             } 
             break;
         case 'md':
-            return {
+            res = {
                 'w-screen sm:w-[480px]': true,
                 'min-h-[300px]': true,
                 'sm:max-h-[600px]': true,
@@ -120,7 +139,7 @@ const classes = computed(() => {
             } 
             break;
         case 'lg':
-            return {
+            res = {
                 'w-screen md:w-[640px]': true,
                 'min-h-[300px]': true,
                 'md:max-h-[600px]': true,
@@ -128,7 +147,7 @@ const classes = computed(() => {
             } 
             break;
         case 'xl':
-            return {
+            res = {
                 'w-screen xl:w-[960px]': true,
                 'min-h-[400px]': true,
                 'xl:max-h-[600px]': true,
@@ -138,6 +157,7 @@ const classes = computed(() => {
         default:
             break;
     }
+    return res;
 })
 </script>
 

@@ -12,6 +12,7 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     size: { control: 'select', options: ['sm', 'md', 'lg', 'xl'] },
+    isDrawer: { control: 'boolean' },
   },
   args: {}
 } satisfies Meta<typeof FzDialog>
