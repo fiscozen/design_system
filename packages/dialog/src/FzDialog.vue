@@ -1,5 +1,5 @@
 <template>
-  <dialog ref="dialog" @close="visible = false" :class="dialogClasses">
+  <dialog ref="dialog" @close="visible = false" :class="[dialogStaticClasses, dialogClasses]">
     <div :class="[staticClasses, classes]">
       <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
         <slot name="header"></slot>
@@ -61,10 +61,14 @@ onUnmounted(() => {
 const staticClasses = [
   "flex",
   "flex-col",
-  "border-1",
-  "rounded",
   "bg-core-white",
 ];
+
+const dialogStaticClasses = {
+  "border-1": true,
+  'rounded': true,
+  'border-grey-100': true
+}
 
 const dialogClasses = computed(() => {
   let res: Record<string, boolean> = {};

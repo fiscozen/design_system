@@ -5,7 +5,7 @@
         <div class="grow h-28 font-medium">{{ title }}</div>
         <FzIconButton
           @click="cancel"
-          class="mx-12"
+          class="ml-12"
           iconName="xmark"
           size="sm"
           variant="invisible"
