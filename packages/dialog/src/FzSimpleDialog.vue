@@ -1,14 +1,14 @@
 <template>
-    <FzDialog :size ref="dialog">
+    <FzDialog v-bind="props" ref="dialog">
         <template #header>
-            <div class="flex flex-row items-center text-xl grow">
+            <div :class="[titleStaticClasses, titleClasses]">
                 <div class="grow h-28 font-medium">{{ title }}</div>
                 <FzIconButton @click="cancel" class="mx-12" iconName="xmark" size="sm" variant="invisible"></FzIconButton>
             </div>
         </template>
         <template #footer>
             <form method="dialog" class="w-full h-full">
-                <div class="flex flex-row items-center h-32 grow justify-end">
+                <div :class="[footerStaticClasses, footerClasses]">
                         <FzButton variant="invisible" @click.prevent="cancel" value="false">{{ cancelLabel }}</FzButton>
                         <FzButton class="ml-12" @click.prevent="confirm" value="true">{{ confirmLabel }}</FzButton>
                 </div>
@@ -18,7 +18,7 @@
 </template>
     
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { computed, ref } from 'vue';
     import {FzIconButton, FzButton} from '@fiscozen/button'
     import {FzDialogProps} from './types'
     import FzDialog from './FzDialog.vue'
@@ -33,6 +33,20 @@
 
     const dialog = ref<InstanceType<typeof FzDialog>>();
     const visible = ref(false);
+
+    const titleStaticClasses = ['flex flex-row items-center text-xl grow']
+    const titleClasses = computed(() => {
+        return {
+            'h-32': props.isDrawer,
+            'h-28': !props.isDrawer,
+        }
+    })
+
+    const footerStaticClasses = ['flex flex-row items-center h-32 grow justify-end']
+    const footerClasses = {
+        'h-32': !props.isDrawer,
+        'h-40': props.isDrawer,
+    }
 
     const show = () => {
         dialog.value?.show();
