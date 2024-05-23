@@ -35,6 +35,9 @@ importers:
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../../packages/composables
+      '@fiscozen/dialog':
+        specifier: workspace:^
+        version: link:../../packages/dialog
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../../packages/icons
