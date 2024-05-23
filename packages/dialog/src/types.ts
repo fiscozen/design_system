@@ -1,4 +1,4 @@
-export type FzDialogSizes = 'sm' | 'md' | 'lg' | 'xl'
+export type FzDialogSizes = "sm" | "md" | "lg" | "xl";
 
 export type FzDialogProps = {
   /**
