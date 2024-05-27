@@ -37,6 +37,7 @@
     "@fiscozen/tab": "workspace:^",
     "@fiscozen/link": "workspace:^",
     "@fiscozen/topbar": "workspace:^",
+    "@fiscozen/radio": "workspace:^",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
   },
