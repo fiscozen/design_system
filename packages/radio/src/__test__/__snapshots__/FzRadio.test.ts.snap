@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzRadio > should render correctly 1`] = `
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="radio--default radio--medium" tabindex="0" value="Radio"><label data-v-029ccdb9="" for="Radio" class="flex items-start gap-4 text-md"><span data-v-029ccdb9="" class="w-fit">Radio</span></label>
+  <!--v-if-->
+</div>"
+`;
