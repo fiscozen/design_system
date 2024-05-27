@@ -1,6 +1,8 @@
 <template>
   <div :class="containerClass">
-    <span> Testo qui </span>
+    <span class="text-xs lg:text-sm">
+      <slot></slot>
+    </span>
 
     <slot name="action">
       <FzButton

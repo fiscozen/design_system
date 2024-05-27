@@ -19,7 +19,8 @@ const meta: Meta<typeof FzTopbar> = {
   args: {
     actionLabel: 'This is the action',
     actionTooltip: 'Action tooltip',
-  }
+    default: 'This is a Topbar'
+  },
 }
 
 type Story = StoryObj<typeof meta>
