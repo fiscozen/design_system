@@ -6,7 +6,10 @@ describe.concurrent('FzTopbar', () => {
   it('matches default topbar snapshot', async ({ expect }) => {
     const wrapper = mount(FzTopbar, {
       props: {
-        type: 'default'
+        type: 'default',
+      },
+      slots: {
+        default: 'This is a Topbar'
       }
     })
 
@@ -17,6 +20,9 @@ describe.concurrent('FzTopbar', () => {
     const wrapper = mount(FzTopbar, {
       props: {
         type: 'danger'
+      },
+      slots: {
+        default: 'This is a Topbar'
       }
     })
 
@@ -28,6 +34,9 @@ describe.concurrent('FzTopbar', () => {
       props: {
         type: 'default',
         style: 'button'
+      },
+      slots: {
+        default: 'This is a Topbar'
       }
     })
 
@@ -39,6 +48,9 @@ describe.concurrent('FzTopbar', () => {
       props: {
         type: 'danger',
         style: 'button'
+      },
+      slots: {
+        default: 'This is a Topbar'
       }
     })
 
@@ -50,6 +62,9 @@ describe.concurrent('FzTopbar', () => {
       props: {
         type: 'default',
         style: 'icon-button'
+      },
+      slots: {
+        default: 'This is a Topbar'
       }
     })
 
@@ -61,6 +76,9 @@ describe.concurrent('FzTopbar', () => {
       props: {
         type: 'danger',
         style: 'icon-button'
+      },
+      slots: {
+        default: 'This is a Topbar'
       }
     })
 
@@ -72,6 +90,9 @@ describe.concurrent('FzTopbar', () => {
       props: {
         type: 'default',
         style: 'link'
+      },
+      slots: {
+        default: 'This is a Topbar'
       }
     })
 
@@ -83,6 +104,9 @@ describe.concurrent('FzTopbar', () => {
       props: {
         type: 'danger',
         style: 'link'
+      },
+      slots: {
+        default: 'This is a Topbar'
       }
     })
 
