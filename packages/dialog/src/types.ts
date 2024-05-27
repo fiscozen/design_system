@@ -22,7 +22,7 @@ export type FzDialogProps = {
    */
   text?: string;
   /**
-   * Wether to show the modal as a drawer
+   * Whether to show the modal as a drawer
    */
   isDrawer?: boolean;
 };
