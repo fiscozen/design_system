@@ -16,7 +16,9 @@
     <label :for="label" :class="computedLabelClass">
       <span class="w-fit">{{ standalone ? "" : label }}</span>
     </label>
-    <FzRadioErrorText :errorText="errorText" :size="size" v-if="error" />
+    <FzRadioErrorText :size="size" v-if="error && $slots.error">
+      <slot name="error" />
+    </FzRadioErrorText>
   </div>
 </template>
 
