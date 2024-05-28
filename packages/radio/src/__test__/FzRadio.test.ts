@@ -39,12 +39,17 @@ describe("FzRadio", () => {
   });
 
   it("should show error text and error icon", async () => {
-    const wrapper = await createWrapper({
-      label: "Radio",
-      size: "md",
-      error: true,
-      errorText: "Error text",
+    const wrapper = mount(FzRadio, {
+      props: {
+        label: "Radio",
+        size: "md",
+        error: true,
+      },
+      slots: {
+        error: "Error text",
+      },
     });
+    await wrapper.vm.$nextTick();
 
     expect(wrapper.find("p")).toBeTruthy();
     expect(wrapper.find("p").text()).toBe("Error text");
@@ -52,12 +57,17 @@ describe("FzRadio", () => {
   });
 
   it("should toggle error text when error switch from true to false", async () => {
-    const wrapper = await createWrapper({
-      label: "Radio",
-      size: "md",
-      error: true,
-      errorText: "Error text",
+    const wrapper = mount(FzRadio, {
+      props: {
+        label: "Radio",
+        size: "md",
+        error: true,
+      },
+      slots: {
+        error: "Error text",
+      },
     });
+    await wrapper.vm.$nextTick();
 
     expect(wrapper.find("p")).toBeTruthy();
     expect(wrapper.find("p").text()).toBe("Error text");

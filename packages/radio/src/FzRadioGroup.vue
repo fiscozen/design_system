@@ -2,12 +2,16 @@
   <div :class="computedContainerClass">
     <label :for="name" :class="computedLabelClass">
       <span>{{ label }}<span v-if="required"> *</span></span>
-      <p v-if="helpText" :class="computedHelpTextClass">{{ helpText }}</p>
+      <p :class="computedHelpTextClass" v-if="$slots.help">
+        <slot name="help" />
+      </p>
     </label>
     <div :class="computedSlotContainerClass">
       <slot :radioGroupProps="controlledProps" />
     </div>
-    <FzRadioErrorText :errorText="errorText" :size="size" v-if="error" />
+    <FzRadioErrorText :size="size" v-if="error && $slots.error">
+      <slot name="error" />
+    </FzRadioErrorText>
   </div>
 </template>
 

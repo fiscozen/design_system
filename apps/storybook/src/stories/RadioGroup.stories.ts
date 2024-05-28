@@ -41,10 +41,13 @@ const Template: RadioGroupStory = {
                 }
             }
         },
-        template: `<FzRadioGroup v-bind="args" v-slot="{radioGroupProps}">
-                    <FzRadio label="Option 1" value="option1" v-model="selected" v-bind="radioGroupProps"/>
-                    <FzRadio label="Option 2" value="option2" v-model="selected" v-bind="radioGroupProps"/>
-                    <FzRadio label="Option 3" value="option3" v-model="selected" v-bind="radioGroupProps"/>
+        template: `<FzRadioGroup v-bind="args" >
+                    <template v-slot="{radioGroupProps}"> 
+                        <FzRadio label="Option 1" value="option1" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 2" value="option2" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 3" value="option3" v-model="selected" v-bind="radioGroupProps"/>
+                    </template>
+                    
                 </FzRadioGroup>`
     }),
     args: {
@@ -69,23 +72,78 @@ export const Small: RadioGroupStory = {
     }
 }
 
+
 export const helpText: RadioGroupStory = {
-    ...Template,
+    render: (args) => ({
+        components: { FzRadioGroup, FzRadio, FzIcon },
+        setup() {
+
+            const selected = ref('option2')
+
+            return {
+                args,
+                selected
+            }
+        },
+        watch: {
+            selected: {
+                immediate: true,
+                handler: function (val) {
+                    console.log(val)
+                }
+            }
+        },
+        template: `<FzRadioGroup v-bind="args" >
+                    <template #help> This is a help text </template>
+                    <template v-slot="{radioGroupProps}"> 
+                        <FzRadio label="Option 1" value="option1" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 2" value="option2" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 3" value="option3" v-model="selected" v-bind="radioGroupProps"/>
+                    </template>
+                    
+                </FzRadioGroup>`
+    }),
     args: {
         size: 'sm',
-        label: 'Radio Group Small',
-        helpText: 'This is a help text',
-    }
+        label: 'Radio Group',
+    },
 }
 
-export const error: RadioGroupStory = {
-    ...Template,
+export const Error: RadioGroupStory = {
+    render: (args) => ({
+        components: { FzRadioGroup, FzRadio, FzIcon },
+        setup() {
+
+            const selected = ref('option2')
+
+            return {
+                args,
+                selected
+            }
+        },
+        watch: {
+            selected: {
+                immediate: true,
+                handler: function (val) {
+                    console.log(val)
+                }
+            }
+        },
+        template: `<FzRadioGroup v-bind="args" >
+                    <template #error> This is an error text </template>
+                    <template v-slot="{radioGroupProps}"> 
+                        <FzRadio label="Option 1" value="option1" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 2" value="option2" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 3" value="option3" v-model="selected" v-bind="radioGroupProps"/>
+                    </template>
+                    
+                </FzRadioGroup>`
+    }),
     args: {
         size: 'sm',
-        label: 'Radio Group Small',
+        label: 'Radio Group',
         error: true,
-        errorText: 'This is an error text',
-    }
+    },
 }
 
 export const disabled: RadioGroupStory = {
