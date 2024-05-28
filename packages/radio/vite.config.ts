@@ -19,10 +19,10 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, './src/index.ts'),
-      name: 'FzTabs',
+      name: 'FzRadio',
     },
     rollupOptions: {
-      external: ['vue', "@fiscozen/icons", "@fiscozen/badge", "@fiscozen/composables"],
+      external: ['vue', "@fiscozen/icons"],
       output: {
         globals: {
           vue: 'Vue',
