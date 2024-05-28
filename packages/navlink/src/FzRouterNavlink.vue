@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { FzIcon } from '@fiscozen/icons';
 import { computed, useSlots } from 'vue'
 import { FzRouterNavlinkProps } from './types'
 import { commonClasses } from './classUtils'
