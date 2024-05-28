@@ -26,10 +26,10 @@ const Template: RadioStory = {
         components: { FzRadio, FzIcon },
         setup() {
             return {
-                args,
+                args
             }
         },
-        template: `<FzRadio v-bind="args"  />`
+        template: `<FzRadio v-bind="args" />`
     }),
     args: {
         size: 'sm',
@@ -82,14 +82,24 @@ export const CheckedDisabled: RadioStory = {
 }
 
 export const Error: RadioStory = {
-    ...Template,
+    render: (args) => ({
+        components: { FzRadio, FzIcon },
+        setup() {
+            return {
+                args
+            }
+        },
+        template: `<FzRadio v-bind="args" >
+            <template #errorText> Error message </template>
+        </FzRadio>`
+    }),
     args: {
-        size: 'md',
+        size: 'sm',
         label: 'Radio',
         error: true,
-        errorText: 'Error message'
-    }
+    },
 }
+
 
 export const Emphasis: RadioStory = {
     ...Template,

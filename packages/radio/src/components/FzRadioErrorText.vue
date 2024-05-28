@@ -1,10 +1,11 @@
 <template>
-  <p :class="computedErrorTextClass" v-if="errorText">
+  <p :class="computedErrorTextClass">
     <FzIcon
       class="text-semantic-error"
       name="triangle-exclamation"
       :size="size"
-    />{{ errorText }}
+    />
+    <slot />
   </p>
 </template>
 
