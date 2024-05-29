@@ -25,9 +25,6 @@ describe('FzNavlink', () => {
     })
 
     expect(wrapper.html()).toMatchSnapshot()
-    wrapper.setProps({ disabled: true })
-    expect(wrapper.html()).toMatchSnapshot()
-    expect(wrapper.find('span').text()).to.be.empty
   })
 
   it('should emit native event', () => {

@@ -115,3 +115,32 @@ RouterNavlink.decorators = [
     initialRoute: '/foo'
   })
 ]
+
+
+const navlinkRouterLinkIcon = (args) => ({
+  setup() {
+    return { args }
+  },
+  components: { page: Page, FzNavlink, FzRouterNavlink },
+  template: `
+    <fz-router-navlink
+      :disabled="args.disabled"
+      :meta="args.meta"
+      :icon-name="args.iconName"></fz-router-navlink>
+    <br/>
+    <router-view />
+  `
+})
+
+export const RouterNavlinkIcon = navlinkRouterLinkIcon.bind({})
+RouterNavlinkIcon.args = {
+  meta: {
+    iconName: 'bell',
+    path: '/foo/bar'
+  }
+}
+RouterNavlinkIcon.decorators = [
+  vueRouter(routes, {
+    initialRoute: '/foo'
+  })
+]
