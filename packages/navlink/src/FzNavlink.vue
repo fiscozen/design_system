@@ -26,7 +26,7 @@ const iconOnly = computed(() => !slots.default && !props.label)
       :variant="iconVariant"
     ></FzIcon>
     <slot>
-      <span>{{ label }}</span>
+      <span v-if="label">{{ label }}</span>
     </slot>
   </button>
 </template>
