@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import figmaTokens from "@fiscozen/style/tokens.json";
 import { describe, it, expect } from "vitest";
-import { FzSimpleDialog } from "../";
+import { FzConfirmDialog } from "../";
 
 const viewports: Record<string, number> = Object.entries(
   figmaTokens.global.breakpoint,
@@ -13,7 +13,7 @@ const viewports: Record<string, number> = Object.entries(
 describe("FzDialog", () => {
   it("should match snapshot - md", () => {
     global.innerWidth = viewports["lg"];
-    const wrapper = mount(FzSimpleDialog, {
+    const wrapper = mount(FzConfirmDialog, {
       props: {},
     });
 
@@ -21,14 +21,14 @@ describe("FzDialog", () => {
   });
   it("should match snapshot - md - xs screen", () => {
     global.innerWidth = viewports["xs"];
-    const wrapper = mount(FzSimpleDialog, {
+    const wrapper = mount(FzConfirmDialog, {
       props: {},
     });
 
     expect(wrapper.html()).toMatchSnapshot();
   });
   it("should match snapshot - sm", () => {
-    const wrapper = mount(FzSimpleDialog, {
+    const wrapper = mount(FzConfirmDialog, {
       props: {
         size: "sm",
       },
@@ -37,7 +37,7 @@ describe("FzDialog", () => {
     expect(wrapper.html()).toMatchSnapshot();
   });
   it("should match snapshot - lg", () => {
-    const wrapper = mount(FzSimpleDialog, {
+    const wrapper = mount(FzConfirmDialog, {
       props: {
         size: "lg",
       },
@@ -46,7 +46,7 @@ describe("FzDialog", () => {
     expect(wrapper.html()).toMatchSnapshot();
   });
   it("should match snapshot - xl", () => {
-    const wrapper = mount(FzSimpleDialog, {
+    const wrapper = mount(FzConfirmDialog, {
       props: {
         size: "xl",
       },
@@ -55,7 +55,7 @@ describe("FzDialog", () => {
     expect(wrapper.html()).toMatchSnapshot();
   });
   it("should match snapshot - drawer", () => {
-    const wrapper = mount(FzSimpleDialog, {
+    const wrapper = mount(FzConfirmDialog, {
       props: {
         isDrawer: true,
       },
