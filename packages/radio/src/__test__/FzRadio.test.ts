@@ -94,6 +94,6 @@ describe("FzRadio", () => {
       emphasis: true,
     });
 
-    expect(wrapper.find("input").classes()).toContain("radio--emphasized");
+    expect(wrapper.find("label").classes()).toContain("before:border-blue-500");
   });
 });

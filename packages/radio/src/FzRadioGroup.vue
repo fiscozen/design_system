@@ -6,7 +6,7 @@
         <slot name="help" />
       </p>
     </label>
-    <div :class="computedSlotContainerClass">
+    <div :class="computedSlotContainerClass" test-id="slot-container">
       <slot :radioGroupProps="controlledProps" />
     </div>
     <FzRadioErrorText :size="size" v-if="error && $slots.error">
@@ -43,7 +43,7 @@ const computedLabelClass = computed(() => [
   "flex flex-col",
   mapSizeToClasses[props.size],
   props.size === "sm" ? "gap-4" : "gap-6",
-  props.disabled ? "text-grey-400" : "text-grey-800",
+  props.disabled ? "text-grey-400" : "text-core-black",
 ]);
 
 const computedContainerClass = computed(() => [

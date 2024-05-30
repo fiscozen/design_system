@@ -63,9 +63,12 @@ describe("FzRadioGroup", () => {
     expect(wrapper.find("p")).toBeTruthy();
     expect(wrapper.find("p").text()).toBe("Error text");
     expect(wrapper.find("p").find("svg")).toBeTruthy();
-    wrapper.findAll("input").forEach((input) => {
-      expect(input.classes()).toContain("radio--error");
-    });
+    wrapper
+      .find('[test-id="slot-container"]')
+      .findAll("label")
+      .forEach((input) => {
+        expect(input.classes()).toContain("before:border-semantic-error");
+      });
   });
 
   it("should set disabled state", async () => {
@@ -75,6 +78,7 @@ describe("FzRadioGroup", () => {
       disabled: true,
     });
 
+    await wrapper.vm.$nextTick();
     wrapper.findAll("input").forEach((input) => {
       expect(input.element.disabled).toBe(true);
     });
@@ -86,9 +90,12 @@ describe("FzRadioGroup", () => {
       size: "md",
       emphasis: true,
     });
-
-    wrapper.findAll("input").forEach((input) => {
-      expect(input.classes()).toContain("radio--emphasized");
-    });
+    await wrapper.vm.$nextTick();
+    wrapper
+      .find('[test-id="slot-container"]')
+      .findAll("label")
+      .forEach((input) => {
+        expect(input.classes()).toContain("before:border-blue-500");
+      });
   });
 });
