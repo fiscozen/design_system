@@ -1,14 +1,24 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzRadioGroup > should render correctly 1`] = `
-"<div class="flex flex-col text-md gap-12"><label for="radio" class="flex flex-col text-md gap-6 text-grey-800"><span>Radio<!--v-if--></span>
+"<div class="flex flex-col text-md gap-12"><label for="radio" class="flex flex-col text-md gap-6 text-core-black"><span>Radio<!--v-if--></span>
     <!--v-if-->
   </label>
-  <div class="flex flex-col text-md gap-8">
-    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio 1" class="radio--default radio--medium" name="radio" tabindex="0" value="Radio 1"><label data-v-029ccdb9="" for="Radio 1" class="flex items-start gap-4 text-md"><span data-v-029ccdb9="" class="w-fit">Radio 1</span></label>
+  <div class="flex flex-col text-md gap-8" test-id="slot-container">
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio 1" class="radio--medium peer" name="radio" tabindex="0" value="Radio 1"><label data-v-029ccdb9="" for="Radio 1" class="flex items-start gap-4 h-16 
+  before:content-[''] before:inline-block before:border-solid before:border-1 before:rounded-full before:ml-4
+  peer-checked:before:bg-transparent peer-focus:before:outline peer-checked:before:outline-offset-1 peer-checked:before:outline-1 peer-checked:before:outline-blue-600
+  peer-disabled:text-grey-300
+  peer-disabled:before:border-grey-200 peer-disabled:before:bg-grey-200
+  peer-checked:peer-disabled:before:border-grey-200 text-md before:h-16 before:w-16 before:mt-4 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio 1</span></label>
       <!--v-if-->
     </div>
-    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio 2" class="radio--default radio--medium" name="radio" tabindex="0" value="Radio 2"><label data-v-029ccdb9="" for="Radio 2" class="flex items-start gap-4 text-md"><span data-v-029ccdb9="" class="w-fit">Radio 2</span></label>
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio 2" class="radio--medium peer" name="radio" tabindex="0" value="Radio 2"><label data-v-029ccdb9="" for="Radio 2" class="flex items-start gap-4 h-16 
+  before:content-[''] before:inline-block before:border-solid before:border-1 before:rounded-full before:ml-4
+  peer-checked:before:bg-transparent peer-focus:before:outline peer-checked:before:outline-offset-1 peer-checked:before:outline-1 peer-checked:before:outline-blue-600
+  peer-disabled:text-grey-300
+  peer-disabled:before:border-grey-200 peer-disabled:before:bg-grey-200
+  peer-checked:peer-disabled:before:border-grey-200 text-md before:h-16 before:w-16 before:mt-4 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio 2</span></label>
       <!--v-if-->
     </div>
   </div>
