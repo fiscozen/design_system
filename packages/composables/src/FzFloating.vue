@@ -57,6 +57,7 @@ watch(
       ref="content"
       v-show="!$slots.opener || ($slots.opener && isOpen)"
       class="bg-core-white absolute p-4"
+      :class="contentClass"
     >
       <slot :isOpen :floating></slot>
     </div>

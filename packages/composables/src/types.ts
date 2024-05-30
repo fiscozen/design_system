@@ -7,7 +7,8 @@ export type FzFloatingPosition = PositionPrimary | `${PositionPrimary}-${Positio
 export interface FzFloatingProps {
   isOpen: boolean
   position?: FzFloatingPosition
-  container?: string | null
+  container?: string | null,
+  contentClass?: string | string[] | Record<string, boolean>
 }
 
 export interface FzAbsolutePosition {
