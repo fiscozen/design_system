@@ -1,5 +1,5 @@
 <template>
-  <p :class="computedErrorTextClass">
+  <p :class="[staticErrorTextClass, computedErrorTextClass]">
     <FzIcon
       class="text-semantic-error"
       name="triangle-exclamation"
@@ -15,9 +15,6 @@ import { mapSizeToClasses } from "../common";
 import { FzIcon } from "@fiscozen/icons";
 
 const props = defineProps<{ errorText?: string; size: "sm" | "md" }>();
-
-const computedErrorTextClass = computed(() => [
-  "flex w-full gap-4 items-center",
-  mapSizeToClasses[props.size],
-]);
+const staticErrorTextClass = "flex w-full gap-4 items-center";
+const computedErrorTextClass = computed(() => [mapSizeToClasses[props.size]]);
 </script>
