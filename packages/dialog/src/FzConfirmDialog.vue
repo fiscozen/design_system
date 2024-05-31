@@ -4,7 +4,7 @@
       <div :class="[titleStaticClasses, titleClasses]">
         <div class="grow h-28 font-medium">{{ title }}</div>
         <FzIconButton
-          @click="cancel"
+          @click="handleCancel"
           class="ml-12"
           iconName="xmark"
           size="sm"
@@ -15,10 +15,10 @@
     <template #footer>
       <form method="dialog" class="w-full h-full">
         <div :class="[footerStaticClasses, footerClasses]">
-          <FzButton variant="invisible" @click.prevent="cancel" value="false">{{
+          <FzButton variant="invisible" @click.prevent="handleCancel" value="false">{{
             cancelLabel
           }}</FzButton>
-          <FzButton class="ml-12" @click.prevent="confirm" value="true">{{
+          <FzButton class="ml-12" @click.prevent="handleConfirm" value="true">{{
             confirmLabel
           }}</FzButton>
         </div>
@@ -62,21 +62,21 @@ const show = () => {
   visible.value = true;
 };
 
-const cancel = () => {
+const handleCancel = () => {
   dialog.value?.close();
   visible.value = false;
   emit("fzmodal:cancel");
 };
 
-const confirm = () => {
+const handleConfirm = () => {
   dialog.value?.close();
   visible.value = false;
   emit("fzmodal:confirm");
 };
 
 defineExpose({
-  cancel,
-  confirm,
+  handleCancel,
+  handleConfirm,
   visible,
   show,
 });
