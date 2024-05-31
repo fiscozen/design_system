@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzCheckbox > renders correctly 1`] = `
-"<div data-v-79ecb611="" class="flex justify-center flex-col w-fit"><input data-v-79ecb611="" type="checkbox" id="test-checkbox" class="checkbox--medium" value="test"><label data-v-79ecb611="" for="test-checkbox" class="flex items-start gap-4 text-md text-grey-500">
+"<div data-v-79ecb611="" class="flex justify-center flex-col w-fit"><input data-v-79ecb611="" type="checkbox" id="test" class="checkbox--medium peer" value="test"><label data-v-79ecb611="" for="test" class="flex items-start gap-4 text-md text-grey-500">
     <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] mt-2 text-grey-500 relative"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
         <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V96c0-8.8 7.2-16 16-16H384zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"></path>
       </svg></div><span data-v-79ecb611="" class="w-fit">Test Checkbox</span>

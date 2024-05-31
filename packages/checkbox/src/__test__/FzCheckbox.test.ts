@@ -67,8 +67,8 @@ describe("FzCheckbox", () => {
       },
     });
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("label").find("div").classes()).toContain(
-      "text-blue-500",
+    expect(wrapper.find("label").classes()).toContain(
+      "peer-checked:[&_div]:text-blue-500",
     );
   });
 

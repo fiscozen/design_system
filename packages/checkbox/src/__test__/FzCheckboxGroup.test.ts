@@ -73,28 +73,28 @@ describe("FzCheckboxGroup", () => {
       true,
     );
   });
-});
 
-it("display emphasized checkboxes when emphasis prop is true", async () => {
-  const wrapper = mount(FzCheckboxGroup, {
-    props: {
-      label: "Test Checkbox Group",
-      size: "md",
-      modelValue: [],
-      options: [
-        { label: "Option 1", value: "option1" },
-        { label: "Option 2", value: "option2" },
-      ],
-      emphasis: true,
-    },
+  it("display emphasized checkboxes when emphasis prop is true", async () => {
+    const wrapper = mount(FzCheckboxGroup, {
+      props: {
+        label: "Test Checkbox Group",
+        size: "md",
+        modelValue: [],
+        options: [
+          { label: "Option 1", value: "option1" },
+          { label: "Option 2", value: "option2" },
+        ],
+        emphasis: true,
+      },
+    });
+
+    await wrapper.vm.$nextTick();
+    expect(wrapper.findAllComponents(FzCheckbox).length).toBe(2);
+    expect(wrapper.findAllComponents(FzCheckbox).at(0)!.props("emphasis")).toBe(
+      true,
+    );
+    expect(wrapper.findAllComponents(FzCheckbox).at(1)!.props("emphasis")).toBe(
+      true,
+    );
   });
-
-  await wrapper.vm.$nextTick();
-  expect(wrapper.findAllComponents(FzCheckbox).length).toBe(2);
-  expect(wrapper.findAllComponents(FzCheckbox).at(0)!.props("emphasis")).toBe(
-    true,
-  );
-  expect(wrapper.findAllComponents(FzCheckbox).at(1)!.props("emphasis")).toBe(
-    true,
-  );
 });
