@@ -5,22 +5,22 @@
       :id="value.replace(/ /g, '-').toLowerCase()"
       :disabled="disabled"
       :checked="checked"
-      :class="computedClass"
+      :class="staticInputClass"
       :required="required"
       :value="value"
-      @change="onChange"
+      @change="emit('change', $event)"
       v-model="model"
       :indeterminate="indeterminate"
       ref="refCheckbox"
     />
     <label
       :for="value.replace(/ /g, '-').toLowerCase()"
-      :class="computedLabelClass"
+      :class="[staticLabelClass, computedLabelClass]"
     >
       <FzIcon
         :name="computedName"
         :size="size"
-        :class="computedIconClasses"
+        :class="[staticIconClass, computedIconClasses]"
         :variant="computedVariant"
       />
       <span class="w-fit">{{ standalone ? "" : label }}</span>
@@ -51,39 +51,33 @@ const model = defineModel<boolean | string[]>({
 });
 
 const emit = defineEmits(["change"]);
-
 const refCheckbox = ref<HTMLInputElement | null>(null);
 
-const computedClass = computed(() => ({
-  "checkbox--small": props.size === "sm",
-  "checkbox--medium": props.size === "md",
-  peer: true,
-  "w-0": true,
-  "h-0": true,
-}));
+const staticInputClass = "w-0 h-0 peer";
+const staticLabelClass = `
+  flex items-start gap-4 hover:cursor-pointer
+  peer-focus:[&_div]:after:border-1
+  peer-focus:[&_div]:after:border-solid
+  peer-focus:[&_div]:after:rounded-[3px]
+  peer-focus:[&_div]:after:border-blue-500
+  peer-focus:[&_div]:after:content-['']
+  peer-focus:[&_div]:after:top-0
+  peer-focus:[&_div]:after:left-0
+  peer-focus:[&_div]:after:right-0
+  peer-focus:[&_div]:after:bottom-0
+  peer-focus:[&_div]:after:absolute
+`;
+const staticIconClass = "relative";
 
 const computedLabelClass = computed(() => [
-  "flex items-start gap-4 hover:cursor-pointer",
-  "peer-focus:[&_div]:after:border-1 peer-focus:[&_div]:after:border-solid peer-focus:[&_div]:after:rounded-[3px] peer-focus:[&_div]:after:border-blue-500",
-  "peer-focus:[&_div]:after:content-[''] peer-focus:[&_div]:after:top-0 peer-focus:[&_div]:after:left-0 peer-focus:[&_div]:after:right-0 peer-focus:[&_div]:after:bottom-0 peer-focus:[&_div]:after:absolute",
   mapSizeToClasses[props.size],
-  props.disabled
-    ? "text-grey-300"
-    : props.error
-      ? "text-semantic-error"
-      : props.emphasis
-        ? "text-grey-500 peer-checked:[&_div]:text-blue-500 peer-indeterminate:[&_div]:text-blue-500"
-        : "text-grey-500",
+  getTextClassForLabel(),
 ]);
 
 const computedIconClasses = computed(() => [
-  props.size === "sm" ? "mt-1" : "mt-2",
-  props.disabled
-    ? "text-grey-300"
-    : props.error
-      ? "text-semantic-error"
-      : "text-grey-500",
-  "relative",
+  props.size === "sm" ? "mt-1" : "",
+  props.size === "md" ? "mt-2" : "",
+  getTextClassForIcon(),
 ]);
 
 const computedName = computed(() => {
@@ -106,8 +100,29 @@ const checkValueIsInModel = () => {
   }
 };
 
-const onChange = (e: any) => {
-  emit("change", e);
+const getTextClassForLabel = () => {
+  switch (true) {
+    case props.disabled:
+      return "text-grey-300";
+    case props.error:
+      return "text-semantic-error";
+    case props.emphasis:
+      return "text-grey-500 peer-checked:[&_div]:text-blue-500 peer-indeterminate:[&_div]:text-blue-500";
+    default:
+      return "text-grey-500";
+  }
+};
+
+const getTextClassForIcon = () => {
+  switch (true) {
+    case props.disabled:
+      return "text-grey-300";
+    case props.error:
+      return "text-semantic-error";
+    case props.emphasis:
+    default:
+      return "text-grey-500";
+  }
 };
 
 onMounted(() => {
@@ -121,5 +136,4 @@ onMounted(() => {
   }
 });
 </script>
-<style scoped>
-</style>
+<style scoped></style>
