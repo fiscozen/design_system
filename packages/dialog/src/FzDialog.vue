@@ -27,35 +27,32 @@ const dialog = ref<HTMLDialogElement>();
 const visible = ref(false);
 
 const showModal = () => {
-  dialog.value?.showModal();
+  dialog.value!.showModal();
   visible.value = true;
 };
 
 defineExpose({
   show: showModal,
-  close: (returnVal?: string): void => dialog.value?.close(returnVal),
+  close: (returnVal?: string): void => dialog.value!.close(returnVal),
   visible,
 });
 
 const handleBackdropClick = (event: MouseEvent) => {
-  if (!dialog.value) {
-    return;
-  }
-  var rect = dialog.value.getBoundingClientRect();
+  var rect = dialog.value!.getBoundingClientRect();
   var isInDialog =
     rect.top <= event.clientY &&
     event.clientY <= rect.top + rect.height &&
     rect.left <= event.clientX &&
     event.clientX <= rect.left + rect.width;
   if (!isInDialog) {
-    dialog.value.close();
+    dialog.value!.close();
   }
 };
 onMounted(() => {
-  dialog.value?.addEventListener("click", handleBackdropClick);
+  dialog.value!.addEventListener("click", handleBackdropClick);
 });
 onUnmounted(() => {
-  dialog.value?.removeEventListener("click", handleBackdropClick);
+  dialog.value!.removeEventListener("click", handleBackdropClick);
 });
 
 const staticClasses = [
