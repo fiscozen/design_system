@@ -95,7 +95,9 @@ describe("FzRadioGroup", () => {
       .find('[test-id="slot-container"]')
       .findAll("label")
       .forEach((input) => {
-        expect(input.classes()).toContain("before:border-blue-500");
+        expect(input.classes()).toContain(
+          "peer-checked:before:border-blue-500",
+        );
       });
   });
 });

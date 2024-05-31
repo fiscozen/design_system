@@ -94,6 +94,8 @@ describe("FzRadio", () => {
       emphasis: true,
     });
 
-    expect(wrapper.find("label").classes()).toContain("before:border-blue-500");
+    expect(wrapper.find("label").classes()).toContain(
+      "peer-checked:before:border-blue-500",
+    );
   });
 });

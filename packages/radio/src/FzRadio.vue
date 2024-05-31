@@ -3,17 +3,18 @@
     <input
       type="radio"
       :id="label"
-      :value="value || label"
+      :value="value"
       :disabled="disabled"
       :checked="checked"
-      :class="computedClass"
+      :class="[staticInputClass, computedInputClass]"
       :name="name"
       :required="required"
+      v-model="model"
       @change="onChange"
       tabindex="0"
       ref="radioContainer"
     />
-    <label :for="label" :class="computedLabelClass">
+    <label :for="label" :class="[staticLabelClass, computedLabelClass]">
       <span class="w-fit">{{ standalone ? "" : label }}</span>
     </label>
     <FzRadioErrorText :size="size" v-if="error && $slots.error">
@@ -32,21 +33,32 @@ const props = withDefaults(defineProps<FzRadioProps>(), {
   size: "md",
 });
 
-const radioContainer = ref<HTMLInputElement | null>(null);
+const model = defineModel();
+const value = props.value || props.label;
 
-const computedClass = computed(() => ({
+const radioContainer = ref<HTMLInputElement | null>(null);
+const staticLabelClass = `
+  flex items-start gap-4 h-16 
+  before:content-[''] 
+  before:inline-block 
+  before:border-solid 
+  before:border-1 
+  before:rounded-full 
+  before:ml-4
+  peer-checked:before:bg-transparent 
+  peer-focus:before:outline 
+  peer-focus:before:outline-offset-1 
+  peer-focus:before:outline-1 
+  peer-focus:before:outline-blue-600
+`;
+const staticInputClass = "peer h-0 w-0 absolute";
+
+const computedInputClass = computed(() => ({
   "radio--small": props.size === "sm",
   "radio--medium": props.size === "md",
-  "peer h-0 w-0 absolute": true,
 }));
 
 const computedLabelClass = computed(() => [
-  `flex items-start gap-4 h-16 
-  before:content-[''] before:inline-block before:border-solid before:border-1 before:rounded-full before:ml-4
-  peer-checked:before:bg-transparent peer-focus:before:outline peer-checked:before:outline-offset-1 peer-checked:before:outline-1 peer-checked:before:outline-blue-600
-  peer-disabled:text-grey-300
-  peer-disabled:before:border-grey-200 peer-disabled:before:bg-grey-200
-  peer-checked:peer-disabled:before:border-grey-200`,
   mapSizeToClasses[props.size],
   props.size === "sm"
     ? "before:h-12 before:w-12 before:mt-[3px] peer-checked:before:border-4"
@@ -54,25 +66,31 @@ const computedLabelClass = computed(() => [
   props.size === "md"
     ? "before:h-16 before:w-16 before:mt-4 peer-checked:before:border-[5px]"
     : "",
-  props.error
-    ? "before:border-semantic-error text-semantic-error"
-    : props.emphasis
-      ? "before:border-grey-500 peer-checked:before:border-blue-500"
-      : "before:border-grey-500",
+  getBorderAndTextColorForLabel(),
 ]);
 
-const model = defineModel();
-
 const onChange = () => {
-  model.value = props.value || props.label;
+  model.value = value;
+};
+
+const getBorderAndTextColorForLabel = () => {
+  switch (true) {
+    case props.disabled:
+      return "text-grey-300 before:border-grey-200 before:bg-grey-200 peer-checked:before:bg-transparent";
+    case props.error:
+      return "before:border-semantic-error text-semantic-error";
+    case props.emphasis:
+      return "before:border-grey-500 peer-checked:before:border-blue-500";
+    default:
+      return "before:border-grey-500";
+  }
 };
 
 onMounted(() => {
   if (props.checked) onChange();
-  if (model.value === props.value || model.value === props.label) {
+  if (model.value === value) {
     radioContainer.value?.click();
   }
 });
 </script>
-<style scoped>
-</style>
+<style scoped></style>
