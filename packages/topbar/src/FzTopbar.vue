@@ -77,7 +77,7 @@ const breakpointsMatch = useBreakpoints(breakpoints)
 const isLgOrGreather = breakpointsMatch.isGreater('lg')
 
 const containerClass = computed(() => [
-  'flex px-24 py-12 gap-16 items-center justify-center',
+  'flex px-24 py-12 gap-16 items-center justify-center lg:h-48',
   {
     'bg-white-smoke': props.type === 'default',
     'bg-danger': props.type === 'danger',
