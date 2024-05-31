@@ -1,6 +1,6 @@
 // FzCheckbox.spec.ts
 import { mount } from "@vue/test-utils";
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import FzCheckbox from "../FzCheckbox.vue";
 
 describe("FzCheckbox", () => {

@@ -10,8 +10,8 @@
     :indeterminate="isIndeterminate"
     @change="onCheckboxParentChange"
   >
-    <template #children v-if="children && children.length > 0">
-      <div :class="computedChildContainerClasses">
+    <template #children v-if="children?.length">
+      <div :class="[staticChildContainerClass, computedChildContainerClasses]">
         <FzCheckbox
           v-for="child in children"
           :key="child.value"
@@ -21,7 +21,7 @@
           :emphasis="emphasis"
           :error="error"
           :size="size"
-          @change="onCheckboxChildChange"
+          @change="handleCheckboxParentChange"
         />
       </div>
     </template>
@@ -39,6 +39,13 @@ const model = defineModel<string[]>({
   default: [],
 });
 
+const staticChildContainerClass = "flex flex-col justify-center pl-24";
+
+const computedChildContainerClasses = computed(() => [
+  props.size === "sm" ? "gap-6 mt-[5px]" : "",
+  props.size === "md" ? "gap-8 mt-[6px]" : "",
+]);
+
 const isIndeterminate = computed(() => {
   if (!props.children) return false;
 
@@ -48,7 +55,7 @@ const isIndeterminate = computed(() => {
   return numChecked > 0 && numChecked < props.children.length;
 });
 
-function onCheckboxChildChange() {
+function handleCheckboxParentChange() {
   if (!props.children) return;
   const numChecked = props.children.filter((child) =>
     model.value.includes(child.value || child.label),
@@ -85,22 +92,5 @@ function onCheckboxParentChange() {
     );
   }
 }
-
-const computedChildContainerClasses = computed(() => [
-  "flex flex-col justify-center",
-  props.size === "sm"
-    ? "gap-6 checkbox-group--child-container__small"
-    : "gap-8 checkbox-group--child-container__medium",
-]);
 </script>
-<style scoped>
-.checkbox-group--child-container__small {
-  margin-top: 5px;
-  padding-left: 24px;
-}
-
-.checkbox-group--child-container__medium {
-  margin-top: 6px;
-  padding-left: 24px;
-}
-</style>
+<style scoped></style>
