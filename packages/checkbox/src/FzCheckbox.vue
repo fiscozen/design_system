@@ -58,10 +58,14 @@ const computedClass = computed(() => ({
   "checkbox--small": props.size === "sm",
   "checkbox--medium": props.size === "md",
   peer: true,
+  "w-0": true,
+  "h-0": true,
 }));
 
 const computedLabelClass = computed(() => [
-  "flex items-start gap-4",
+  "flex items-start gap-4 hover:cursor-pointer",
+  "peer-focus:[&_div]:after:border-1 peer-focus:[&_div]:after:border-solid peer-focus:[&_div]:after:rounded-[3px] peer-focus:[&_div]:after:border-blue-500",
+  "peer-focus:[&_div]:after:content-[''] peer-focus:[&_div]:after:top-0 peer-focus:[&_div]:after:left-0 peer-focus:[&_div]:after:right-0 peer-focus:[&_div]:after:bottom-0 peer-focus:[&_div]:after:absolute",
   mapSizeToClasses[props.size],
   props.disabled
     ? "text-grey-300"
@@ -118,34 +122,4 @@ onMounted(() => {
 });
 </script>
 <style scoped>
-input[type="checkbox"] {
-  width: 0;
-  height: 0;
-}
-
-input[type="checkbox"] + label {
-  cursor: pointer;
-}
-
-input[type="checkbox"] + label:hover {
-  cursor: pointer;
-}
-
-input[type="checkbox"]:focus + label div:after {
-  border-radius: 3px;
-  content: "";
-  border-style: solid;
-  border-width: 1px;
-  @apply border-blue-500;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  position: absolute;
-}
-
-.checkbox--small:focus + label div:after {
-  /* correction in order to get the icon centered around focus ring */
-  transform: translate(-0.2px, 0.4px);
-}
 </style>
