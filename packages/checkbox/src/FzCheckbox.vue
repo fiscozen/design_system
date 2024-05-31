@@ -57,6 +57,7 @@ const refCheckbox = ref<HTMLInputElement | null>(null);
 const computedClass = computed(() => ({
   "checkbox--small": props.size === "sm",
   "checkbox--medium": props.size === "md",
+  peer: true,
 }));
 
 const computedLabelClass = computed(() => [
@@ -66,7 +67,9 @@ const computedLabelClass = computed(() => [
     ? "text-grey-300"
     : props.error
       ? "text-semantic-error"
-      : "text-grey-500",
+      : props.emphasis
+        ? "text-grey-500 peer-checked:[&_div]:text-blue-500 peer-indeterminate:[&_div]:text-blue-500"
+        : "text-grey-500",
 ]);
 
 const computedIconClasses = computed(() => [
@@ -75,9 +78,7 @@ const computedIconClasses = computed(() => [
     ? "text-grey-300"
     : props.error
       ? "text-semantic-error"
-      : props.emphasis
-        ? "text-blue-500"
-        : "text-grey-500",
+      : "text-grey-500",
   "relative",
 ]);
 

@@ -53,12 +53,16 @@ function onCheckboxChildChange() {
   const numChecked = props.children.filter((child) =>
     model.value.includes(child.value || child.label),
   ).length;
-  if (numChecked === 0) {
-    // remove parent value from model
-    model.value = model.value.filter((value) => value !== props.value);
-  } else if (numChecked === props.children.length) {
+
+  if (numChecked === props.children.length) {
     // push parent value to model (using concat to force reactivity, push seems to not work)
     model.value = model.value.concat(props.value || props.label);
+  } else {
+    // remove parent value from model if it exists
+    if (model.value.includes(props.value || props.label))
+      model.value = model.value.filter(
+        (value) => value !== (props.value || props.label),
+      );
   }
 }
 
