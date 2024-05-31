@@ -37,7 +37,7 @@ const radioContainer = ref<HTMLInputElement | null>(null);
 const computedClass = computed(() => ({
   "radio--small": props.size === "sm",
   "radio--medium": props.size === "md",
-  peer: true,
+  "peer h-0 w-0 absolute": true,
 }));
 
 const computedLabelClass = computed(() => [
@@ -57,7 +57,7 @@ const computedLabelClass = computed(() => [
   props.error
     ? "before:border-semantic-error text-semantic-error"
     : props.emphasis
-      ? "before:border-blue-500"
+      ? "before:border-grey-500 peer-checked:before:border-blue-500"
       : "before:border-grey-500",
 ]);
 
@@ -75,17 +75,4 @@ onMounted(() => {
 });
 </script>
 <style scoped>
-input[type="radio"] {
-  height: 0;
-  width: 0;
-  position: absolute;
-}
-
-.radio--small + label span {
-  width: calc(100% - 20px);
-}
-
-.radio--medium + label span {
-  width: calc(100% - 24px);
-}
 </style>
