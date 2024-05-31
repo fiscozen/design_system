@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzTopbar > matches danger topbar snapshot 1`] = `
-"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center bg-danger"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 bg-danger"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
   <!--v-if-->
   <!--v-if-->
   <!--v-if-->
@@ -9,7 +9,7 @@ exports[`FzTopbar > matches danger topbar snapshot 1`] = `
 `;
 
 exports[`FzTopbar > matches danger topbar with button snapshot 1`] = `
-"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center bg-danger"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span><button data-v-f59ba988="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-core-white temporary-bg-red temporary-border-red bg-semantic-error">
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 bg-danger flex-col lg:flex-row"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span><button data-v-f59ba988="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-24 text-xs focus:border-blue-600 focus:border-solid focus:border-1 px-12 text-core-white temporary-bg-red temporary-border-red bg-semantic-error">
     <!--v-if-->
     <!--v-if--><span class="hidden h-0 w-0"></span>
   </button>
@@ -19,7 +19,7 @@ exports[`FzTopbar > matches danger topbar with button snapshot 1`] = `
 `;
 
 exports[`FzTopbar > matches danger topbar with icon-button snapshot 1`] = `
-"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center bg-danger"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 bg-danger"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
   <!--v-if--><button data-v-f59ba988="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28">
     <!--v-if-->
     <div class="flex items-center justify-center w-[20px] h-[20px]">
@@ -33,15 +33,15 @@ exports[`FzTopbar > matches danger topbar with icon-button snapshot 1`] = `
 `;
 
 exports[`FzTopbar > matches danger topbar with link snapshot 1`] = `
-"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center bg-danger"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 bg-danger flex-col lg:flex-row"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
   <!--v-if-->
   <!--v-if-->
-  <router-link data-v-f59ba988="" replace="false" class="border-1 border-transparent text-sm hover:underline text-semantic-error hover:text-red-600 focus:text-red-600 focus:border-red-600"></router-link>
+  <router-link data-v-f59ba988="" replace="false" class="border-1 border-transparent text-xs hover:underline text-semantic-error hover:text-red-600 focus:text-red-600 focus:border-red-600"></router-link>
 </div>"
 `;
 
 exports[`FzTopbar > matches default topbar snapshot 1`] = `
-"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center bg-white-smoke"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 bg-white-smoke"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
   <!--v-if-->
   <!--v-if-->
   <!--v-if-->
@@ -49,7 +49,7 @@ exports[`FzTopbar > matches default topbar snapshot 1`] = `
 `;
 
 exports[`FzTopbar > matches default topbar with button snapshot 1`] = `
-"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center bg-white-smoke"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span><button data-v-f59ba988="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 bg-white-smoke flex-col lg:flex-row"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span><button data-v-f59ba988="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-24 text-xs focus:border-blue-600 focus:border-solid focus:border-1 px-12 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
     <!--v-if-->
     <!--v-if--><span class="hidden h-0 w-0"></span>
   </button>
@@ -59,7 +59,7 @@ exports[`FzTopbar > matches default topbar with button snapshot 1`] = `
 `;
 
 exports[`FzTopbar > matches default topbar with icon-button snapshot 1`] = `
-"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center bg-white-smoke"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 bg-white-smoke"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
   <!--v-if--><button data-v-f59ba988="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28">
     <!--v-if-->
     <div class="flex items-center justify-center w-[20px] h-[20px]">
@@ -73,9 +73,9 @@ exports[`FzTopbar > matches default topbar with icon-button snapshot 1`] = `
 `;
 
 exports[`FzTopbar > matches default topbar with link snapshot 1`] = `
-"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center bg-white-smoke"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 bg-white-smoke flex-col lg:flex-row"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
   <!--v-if-->
   <!--v-if-->
-  <router-link data-v-f59ba988="" replace="false" class="border-1 border-transparent text-sm hover:underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600"></router-link>
+  <router-link data-v-f59ba988="" replace="false" class="border-1 border-transparent text-xs hover:underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600"></router-link>
 </div>"
 `;

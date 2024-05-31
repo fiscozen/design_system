@@ -1,8 +1,14 @@
-import { describe, it } from 'vitest'
+import { describe, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { FzTopbar } from '..'
 
 describe.concurrent('FzTopbar', () => {
+  vi.mock('@fiscozen/composables', () => ({
+    useBreakpoints: vi.fn().mockReturnValue({
+      isGreater: vi.fn().mockReturnValue(false)
+    })
+  }))
+
   it('matches default topbar snapshot', async ({ expect }) => {
     const wrapper = mount(FzTopbar, {
       props: {
