@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<FzFloatingProps>(), {
 })
 
 const opener = ref(null)
-const content = ref<HTMLElement|null>(null)
+const content = ref<HTMLElement | null>(null)
 
 const slots = useSlots()
 
@@ -38,11 +38,11 @@ watch(
   () => props.isOpen,
   (newVal) => {
     if (!newVal || !content.value) {
-      return;
+      return
     }
-    content.value.style.top = '0px';
-    content.value.style.left = '0px';
-    content.value.style.transform = 'none';
+    content.value.style.top = '0px'
+    content.value.style.left = '0px'
+    content.value.style.transform = 'none'
     floating.setPosition()
   }
 )

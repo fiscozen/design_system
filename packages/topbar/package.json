@@ -14,7 +14,9 @@
   "author": "Alen Ajam",
   "dependencies": {
     "@fiscozen/button":"workspace:^",
-    "@fiscozen/link":"workspace:^"
+    "@fiscozen/link":"workspace:^",
+    "@fiscozen/composables":"workspace:^",
+    "@fiscozen/style":"workspace:^"
   },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",

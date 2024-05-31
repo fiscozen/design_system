@@ -20,10 +20,14 @@ export const getHighestAvailableSpacePos = (
   const elRect = el.getBoundingClientRect()
   const openerRect = opener.getBoundingClientRect()
 
-  const spaceLeftNormalized = (openerRect.left - containerRect.left - elRect.width) / containerRect.width
-  const spaceRightNormalized = (containerRect.right - openerRect.right - elRect.width) / containerRect.width
-  const spaceTopNormalized = (openerRect.top - containerRect.top - elRect.height) / containerRect.height
-  const spaceBottomNormalized = (containerRect.bottom - openerRect.bottom - elRect.height) / containerRect.height
+  const spaceLeftNormalized =
+    (openerRect.left - containerRect.left - elRect.width) / containerRect.width
+  const spaceRightNormalized =
+    (containerRect.right - openerRect.right - elRect.width) / containerRect.width
+  const spaceTopNormalized =
+    (openerRect.top - containerRect.top - elRect.height) / containerRect.height
+  const spaceBottomNormalized =
+    (containerRect.bottom - openerRect.bottom - elRect.height) / containerRect.height
 
   const positionList = [
     {
@@ -67,10 +71,14 @@ export const getHighestAvailableSpacePos = (
   return positionRes
 }
 
-
-export const calcRealPos = (rect: DOMRect, pos: FzAbsolutePosition, translateX: number, translateY: number): FzAbsolutePosition => {
+export const calcRealPos = (
+  rect: DOMRect,
+  pos: FzAbsolutePosition,
+  translateX: number,
+  translateY: number
+): FzAbsolutePosition => {
   return {
-    x: pos.x + (rect.width * translateX)/100,
-    y: pos.y + (rect.height * translateY)/100,
+    x: pos.x + (rect.width * translateX) / 100,
+    y: pos.y + (rect.height * translateY) / 100
   }
 }

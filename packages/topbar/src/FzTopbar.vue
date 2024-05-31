@@ -8,7 +8,7 @@
       <FzButton
         v-if="['button', 'hybrid'].includes(props.style)"
         :class="buttonClass"
-        size="sm"
+        :size="buttonSize"
         :variant="buttonVariant"
         :tooltip="actionTooltip"
         @click="emit('actionClick')"
@@ -23,7 +23,7 @@
         :tooltip="actionTooltip"
         @click="emit('actionClick')"
       />
-      <FzLink v-if="style === 'link'" :to="actionLink" size="sm" :type="linkType">{{
+      <FzLink v-if="style === 'link'" :to="actionLink!" :size="linkSize" :type="linkType">{{
         props.actionLabel
       }}</FzLink>
     </slot>
@@ -34,6 +34,9 @@
 import { computed } from 'vue'
 import { FzButton, FzIconButton } from '@fiscozen/button'
 import { FzLink } from '@fiscozen/link'
+import { RouteLocationRaw } from 'vue-router'
+import { useBreakpoints } from '@fiscozen/composables'
+import { breakpoints } from '@fiscozen/style'
 
 const props = withDefaults(
   defineProps<{
@@ -56,7 +59,7 @@ const props = withDefaults(
     /**
      * Action link
      */
-    actionLink?: string
+    actionLink?: RouteLocationRaw
     /**
      * Action link
      */
@@ -70,11 +73,15 @@ const props = withDefaults(
 
 const emit = defineEmits(['actionClick'])
 
+const breakpointsMatch = useBreakpoints(breakpoints)
+const isLgOrGreather = breakpointsMatch.isGreater('lg')
+
 const containerClass = computed(() => [
   'flex px-24 py-12 gap-16 items-center justify-center',
   {
     'bg-white-smoke': props.type === 'default',
-    'bg-danger': props.type === 'danger'
+    'bg-danger': props.type === 'danger',
+    'flex-col lg:flex-row': ['button', 'link'].includes(props.style)
   }
 ])
 
@@ -91,6 +98,8 @@ const buttonVariant = computed(
 const buttonClass = computed(() => ({
   'hidden md:block': props.style === 'hybrid'
 }))
+
+const buttonSize = computed(() => (isLgOrGreather.value ? 'sm' : 'xs'))
 
 const iconButtonVariant = computed(() => {
   switch (props.style) {
@@ -114,6 +123,8 @@ const linkType = computed(
       }) as const
     )[props.type]
 )
+
+const linkSize = computed(() => (isLgOrGreather.value ? 'sm' : 'xs'))
 </script>
 
 <style scoped>

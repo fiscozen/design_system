@@ -6,7 +6,7 @@ describe.concurrent('FzTopbar', () => {
   it('matches default topbar snapshot', async ({ expect }) => {
     const wrapper = mount(FzTopbar, {
       props: {
-        type: 'default',
+        type: 'default'
       },
       slots: {
         default: 'This is a Topbar'

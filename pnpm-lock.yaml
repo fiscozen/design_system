@@ -1154,9 +1154,15 @@ importers:
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
+      '@fiscozen/composables':
+        specifier: workspace:^
+        version: link:../composables
       '@fiscozen/link':
         specifier: workspace:^
         version: link:../link
+      '@fiscozen/style':
+        specifier: workspace:^
+        version: link:../style
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
