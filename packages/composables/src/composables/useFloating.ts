@@ -100,73 +100,73 @@ export const useFloating = (
       }
       switch (position) {
         case 'bottom':
-          float.position.y = openerRect.bottom - containerRect.top
+          float.position.y = openerRect.bottom
           float.position.x = openerRect.left + openerRect.width / 2
           translateX = -50
           translateY = 0
           break
         case 'bottom-start':
-          float.position.y = openerRect.bottom - containerRect.top
+          float.position.y = openerRect.bottom
           float.position.x = openerRect.left
           translateX = 0
           translateY = 0
           break
         case 'bottom-end':
-          float.position.y = openerRect.bottom - containerRect.top
+          float.position.y = openerRect.bottom
           float.position.x = openerRect.right
           translateX = -100
           translateY = 0
           break
         case 'left-start':
-          float.position.y = openerRect.top - containerRect.top
+          float.position.y = openerRect.top
           float.position.x = openerRect.left
           translateX = -100
           translateY = 0
           break
         case 'left':
-          float.position.y = openerRect.top - containerRect.top + openerRect.height / 2
+          float.position.y = openerRect.top + openerRect.height / 2
           float.position.x = openerRect.left
           translateY = -50
           translateX = -100
           break
         case 'left-end':
-          float.position.y = openerRect.bottom - containerRect.top
+          float.position.y = openerRect.bottom
           float.position.x = openerRect.left
           translateY = -100
           translateX = -100
           break
         case 'top-start':
-          float.position.y = openerRect.top - containerRect.top
+          float.position.y = openerRect.top
           float.position.x = openerRect.left
           translateY = -100
           translateX = 0
           break
         case 'top':
-          float.position.y = openerRect.top - containerRect.top
+          float.position.y = openerRect.top
           float.position.x = openerRect.left + openerRect.width / 2
           translateX = -50
           translateY = -100
           break
         case 'top-end':
-          float.position.y = openerRect.top - containerRect.top
+          float.position.y = openerRect.top
           float.position.x = openerRect.right
           translateX = -100
           translateY = -100
           break
         case 'right-start':
-          float.position.y = openerRect.top - containerRect.top
+          float.position.y = openerRect.top
           float.position.x = openerRect.right
           translateX = 0
           translateY = 0
           break
         case 'right':
-          float.position.y = openerRect.top - containerRect.top + openerRect.height / 2
+          float.position.y = openerRect.top + openerRect.height / 2
           float.position.x = openerRect.right
           translateY = -50
           translateX = 0
           break
         case 'right-end':
-          float.position.y = openerRect.bottom - containerRect.top
+          float.position.y = openerRect.bottom
           float.position.x = openerRect.right
           translateY = -100
           translateX = 0
@@ -237,14 +237,14 @@ export const useFloating = (
       translateY = 0
     }
 
-    if ((realPos.y + rect.value.height) > containerRect.bottom - containerRect.top) {
+    if ((realPos.y + rect.value.height) > containerRect.bottom) {
       float.position.y = containerRect.bottom - rect.value.height;
       translateY = 0
     }
 
     safeElementDomRef.value.style.top = `${float.position.y}px`
     safeElementDomRef.value.style.left = `${float.position.x}px`
-    safeElementDomRef.value.style.position = 'absolute'
+    safeElementDomRef.value.style.position = 'fixed'
     safeElementDomRef.value.style.display = 'flex'
 
     rect.value = safeElementDomRef.value.getBoundingClientRect()
