@@ -40,7 +40,7 @@ const simpletemplate = `
   </div>
 `
 const template = `
-  <div class="h-[100vh] w-[100vw]" :class="['grid', 'grid-cols-3', 'grid-rows-3', 'grow-0', args.classes]"> 
+  <div class="h-[200vh] w-[100vw]" :class="['grid', 'grid-cols-3', 'grid-rows-3', 'grow-0', args.classes]"> 
     <div v-for="(gridClass, key) in gridClasses" :class="['container', 'flex', 'flex-row', gridClass]">
       <FzTooltip :text="args.text" :status="args.status">
         <button>hover</button>
