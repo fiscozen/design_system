@@ -5,7 +5,6 @@ export default {
     ...tailwindConfig,
     content: [
         "./src/**/*.{html,js,ts,vue}", 
-        "./node_modules/@fiscozen/**/src/**/*.{html,js,ts,vue}",
-        "./node_modules/@fiscozen/select/src/**/*.{html,js,ts,vue}"
+        "./node_modules/@fiscozen/**/src/**/*.{html,js,ts,vue}"
     ],
 }
