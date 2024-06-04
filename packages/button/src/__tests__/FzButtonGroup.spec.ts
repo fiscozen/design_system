@@ -9,11 +9,11 @@ describe('FzButtonGroup', () => {
     const wrapper = mount(FzButtonGroup, {
       props: {
         gap: true,
-        size: 'md',
+        size: 'md'
       },
       slots: {
-        default: '<button>Button 1</button><button>Button 2</button>',
-      },
+        default: '<button>Button 1</button><button>Button 2</button>'
+      }
     })
     expect(wrapper.html()).to.include('Button 1')
     expect(wrapper.html()).to.include('Button 2')
@@ -24,8 +24,8 @@ describe('FzButtonGroup', () => {
     const wrapper = mount(FzButtonGroup, {
       props: {
         gap: true,
-        size: 'md',
-      },
+        size: 'md'
+      }
     })
     expect(wrapper.classes()).to.include('gap-12')
   })
@@ -34,8 +34,8 @@ describe('FzButtonGroup', () => {
     const wrapper = mount(FzButtonGroup, {
       props: {
         gap: false,
-        size: 'md',
-      },
+        size: 'md'
+      }
     })
     expect(wrapper.classes()).to.include('gap-disabled')
   })
@@ -45,8 +45,8 @@ describe('FzButtonGroup', () => {
       props: {
         gap: false,
         size: 'md',
-        horizontal: false,
-      },
+        horizontal: false
+      }
     })
     expect(wrapper.classes()).to.include('flex-col')
   })

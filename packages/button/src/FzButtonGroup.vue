@@ -43,41 +43,39 @@ const computedClasses = computed(() => {
 </script>
 
 <style scoped>
+.gap-disabled :deep(button:focus) {
+  z-index: 100;
+}
 
-    .gap-disabled :deep(button:focus) {
-        z-index: 100
-    }
+.gap-disabled :deep(button:not(:first-child):not(:last-child)) {
+  border-radius: 0;
+}
 
-    .gap-disabled :deep(button:not(:first-child):not(:last-child)) {
-        border-radius: 0;
-    }
+.gap-disabled.horizontal :deep(button:first-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
 
-    .gap-disabled.horizontal :deep(button:first-child) {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-    }
-    
-    .gap-disabled.horizontal :deep(button:last-child) {
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-    }
+.gap-disabled.horizontal :deep(button:last-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
 
-    .gap-disabled.horizontal :deep(button:not(:first-child)) {
-        margin-left:-1px;
-    }
+.gap-disabled.horizontal :deep(button:not(:first-child)) {
+  margin-left: -1px;
+}
 
-    .gap-disabled.vertical :deep(button:first-child) {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-    }
+.gap-disabled.vertical :deep(button:first-child) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
 
-    .gap-disabled.vertical :deep(button:last-child) {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-    }
+.gap-disabled.vertical :deep(button:last-child) {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
 
-    .gap-disabled.vertical :deep(button:not(:first-child)) {
-        margin-top:-1px;
-    }
-
+.gap-disabled.vertical :deep(button:not(:first-child)) {
+  margin-top: -1px;
+}
 </style>
