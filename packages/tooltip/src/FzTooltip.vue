@@ -7,7 +7,11 @@
     </template>
     <div :class="staticClasses">
       <FzIcon v-if="withIcon" size="lg" :name="iconName" class="mr-8 grow-0 shrink-0"></FzIcon>
-      <span class="basis-0 grow shrink-0 fz__tooltip__text">{{ text }}</span>
+        <span class="basis-0 grow shrink-0 fz__tooltip__text">
+          <slot name="text">
+            {{ text }}
+          </slot>
+        </span>
     </div>
   </FzFloating>
 </template>
