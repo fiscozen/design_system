@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzCard > renders correctly 1`] = `
+"<section class="border-1 border-solid border-grey-100 rounded flex flex-col w-fit bg-core-white">
+  <header class="h-72 border-b-1 border-solid p-20 border-grey-100">
+    <h2 class="text-core-black text-2xl m-0 p-0">Test Card</h2>
+  </header>
+  <article class="p-20 flex-1"></article>
+  <!--v-if-->
+</section>"
+`;
