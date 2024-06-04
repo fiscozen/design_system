@@ -1,18 +1,25 @@
 <template>
   <div :class="computedClassWrapper">
-    <div :class="computedClass" ref="tabContainer" @wheel="onWheel">
-      <FzTabPicker
-        v-if="!horizontalOverflow && isOverflowing"
-        :tabs="tabs"
-        :size="size"
-      />
-      <FzTabName
-        v-else
-        v-for="tab in tabs"
-        :tab="tab"
-        :key="tab.title"
-        :size="size"
-      />
+    <div :class="['flex', computedClass]">
+      <div
+        :class="[staticTabContainerClass, computedClass]"
+        ref="tabContainer"
+        @wheel="onWheel"
+      >
+        <FzTabPicker
+          v-if="!horizontalOverflow && isOverflowing"
+          :tabs="tabs"
+          :size="size"
+        />
+        <FzTabName
+          v-else
+          v-for="tab in tabs"
+          :tab="tab"
+          :key="tab.title"
+          :size="size"
+        />
+        <slot name="tabs-container-end" />
+      </div>
       <slot name="tabs-end" />
     </div>
     <slot :selected="selectedTab"></slot>
@@ -48,18 +55,19 @@ const tabs = computed(() => {
       return tab.type === FzTab || typeof tab.type === "symbol";
     })
     .map((tab) => {
-      if(tab.type === FzTab) 
-        return (tab.props as FzTabProps)
+      if (tab.type === FzTab) return tab.props as FzTabProps;
 
-      if(typeof tab.type === "symbol") {
+      if (typeof tab.type === "symbol") {
         const children = tab.children as VNode[];
         if (!children) return null;
-      
-        return children.filter(child => child.type === FzTab).map((child) => child.props as FzTabProps);
+
+        return children
+          .filter((child) => child.type === FzTab)
+          .map((child) => child.props as FzTabProps);
       }
     })
     .flat()
-    .filter(el => el != null);
+    .filter((el) => el != null);
 });
 
 const isOverflowing = computed(() => {
@@ -69,8 +77,10 @@ const isOverflowing = computed(() => {
   return tabContainer.value.scrollWidth > parent.clientWidth;
 });
 
+const staticTabContainerClass =
+  "tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto";
+
 const computedClass = computed(() => [
-  "tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto",
   props.vertical ? "flex-col" : "flex-row",
 ]);
 
