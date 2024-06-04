@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import { FzCard } from '@fiscozen/card'
-import { FzCardColor } from '@fiscozen/card/src/types'
+import { FzCard, FzCardColor } from '@fiscozen/card'
 
 
 const meta = {
