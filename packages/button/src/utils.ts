@@ -1,5 +1,5 @@
-import { ButtonSize } from "./types"
-import { IconSize } from "@fiscozen/icons"
+import { ButtonSize } from './types'
+import { IconSize } from '@fiscozen/icons'
 
 export const iconSizeMap: {
   [key in ButtonSize]: IconSize
