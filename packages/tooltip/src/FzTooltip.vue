@@ -1,11 +1,11 @@
 <template>
-  <FzFloating :is-open="isOpen" :position="position" class="flex h-max">
+  <FzFloating :is-open="isOpen" :position="position" class="flex h-max" :contentClass="['rounded', classes]">
     <template #opener>
       <div @mouseover="isOpen = true" @mouseleave="isOpen = false">
         <slot></slot>
       </div>
     </template>
-    <div :class="[staticClasses, classes]">
+    <div :class="staticClasses">
       <FzIcon v-if="withIcon" size="lg" :name="iconName" class="mr-8 grow-0 shrink-0"></FzIcon>
       <span class="basis-0 grow shrink-0 fz__tooltip__text">{{ text }}</span>
     </div>
@@ -62,6 +62,7 @@ const classes = computed(() => {
       break
 
     default:
+      return {}
       break
   }
 })
@@ -69,7 +70,7 @@ const classes = computed(() => {
 const isOpen = ref(false)
 
 const staticClasses =
-  'text-fzwhite-100 max-w-[200px] p-6 text-xs rounded flex flex-row items-start justify-center'
+  'text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center'
 </script>
 
 <style scoped>
