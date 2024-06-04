@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzTabs, FzTab } from '@fiscozen/tab'
 import FzBadge from '@fiscozen/badge/src/FzBadge.vue'
 import FzIcon from '@fiscozen/icons/src/FzIcon.vue'
+import FzButton from '@fiscozen/button/src/FzButton.vue'
 
 
 const meta = {
@@ -286,4 +287,120 @@ export const TabArrayMedium: TabStory = {
     args: {
         size: 'md'
     }
+}
+
+export const TabWithActionOnEnd: TabStory = {
+    render: (args) => ({
+        components: { FzTabs, FzTab, FzBadge, FzIcon, FzButton },
+        setup() {
+            return {
+                args,
+                customProps:{
+                    tab1: {
+                        title: 'Active tab',
+                    },
+                    tab2: {
+                        title: 'Default tab',
+                    },
+                    tab3: {
+                        title: 'Default tab 2'
+                    },
+                }
+            }
+        },
+        template: `<FzTabs v-bind="args" > 
+                    <template v-slot="data" #default>
+                        <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
+                        <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
+                        <FzTab v-bind="customProps.tab3"> {{ data.selected }} </FzTab>
+                    </template>
+                    <template #tabs-end>
+                        <div class="flex-1" />
+                        <div class="flex items-center gap-8">
+                            <FzButton label="Button Primary" variant='primary' />
+                            <FzButton label="Button Secondary" variant='secondary' />
+                        </div>
+                    </template>
+                </FzTabs>`
+    }),
+    args: {
+        size: 'sm',
+    },
+}
+
+export const TabWithActionOnEndVertical: TabStory = {
+    render: (args) => ({
+        components: { FzTabs, FzTab, FzBadge, FzIcon, FzButton },
+        setup() {
+            return {
+                args,
+                customProps:{
+                    tab1: {
+                        title: 'Active tab',
+                    },
+                    tab2: {
+                        title: 'Default tab',
+                    },
+                    tab3: {
+                        title: 'Default tab 2'
+                    },
+                }
+            }
+        },
+        template: `<FzTabs v-bind="args" > 
+                    <template v-slot="data" #default>
+                        <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
+                        <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
+                        <FzTab v-bind="customProps.tab3"> {{ data.selected }} </FzTab>
+                    </template>
+                    <template #tabs-end>
+                        <div class="mt-24" />
+                        <div class="flex flex-col justify-center gap-8">
+                            <FzButton label="Primary" variant='primary' />
+                            <FzButton label="Secondary" variant='secondary' />
+                        </div>
+                    </template>
+                </FzTabs>`
+    }),
+    args: {
+        size: 'sm',
+        vertical: true
+    },
+}
+
+export const TabWithActionOnContainerEnd: TabStory = {
+    render: (args) => ({
+        components: { FzTabs, FzTab, FzBadge, FzIcon, FzButton },
+        setup() {
+            return {
+                args,
+                customProps:{
+                    tab1: {
+                        title: 'Active tab',
+                    },
+                    tab2: {
+                        title: 'Default tab',
+                    },
+                    tab3: {
+                        title: 'Default tab 2'
+                    },
+                }
+            }
+        },
+        template: `<FzTabs v-bind="args" > 
+                    <template v-slot="data" #default>
+                        <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
+                        <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
+                        <FzTab v-bind="customProps.tab3"> {{ data.selected }} </FzTab>
+                    </template>
+                    <template #tabs-container-end>
+                        <div class="flex flex-row items-center gap-8">
+                            <FzButton label="+" variant='invisible' />
+                        </div>
+                    </template>
+                </FzTabs>`
+    }),
+    args: {
+        size: 'sm',
+    },
 }
