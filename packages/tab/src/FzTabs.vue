@@ -67,7 +67,7 @@ const tabs = computed(() => {
       }
     })
     .flat()
-    .filter((el) => el != null);
+    .filter((el): el is FzTabProps => el != null);
 });
 
 const isOverflowing = computed(() => {
@@ -125,6 +125,13 @@ onMounted(() => {
 watch(
   () => selectedTab.value,
   () => {
+    if (selectedTab.value === "") {
+      if (tabs.value.length > 0)
+        selectedTab.value =
+          tabs.value.find((tab) => tab.initialSelected)?.title ??
+          tabs.value[0].title;
+    }
+
     const selectedTabElement = tabContainer.value!.querySelector(
       `button[title="${selectedTab.value}"]`,
     );

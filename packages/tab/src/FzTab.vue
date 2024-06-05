@@ -3,10 +3,11 @@
 </template>
 
 <script setup lang="ts">
-import { inject, onMounted, Ref, computed } from "vue";
+import { inject, onMounted, Ref, computed, onBeforeUnmount } from "vue";
 import { FzTabProps } from "./types";
 
 const props = defineProps<FzTabProps>();
+const emit = defineEmits(["unmount"]);
 
 const selectedTab = inject<Ref<string>>("selectedTab");
 const isActive = computed(() => selectedTab?.value === props.title);
@@ -19,5 +20,9 @@ onMounted(() => {
   } else if (props.initialSelected) {
     selectedTab.value = props.title;
   }
+});
+
+onBeforeUnmount(() => {
+  if (selectedTab?.value === props.title) selectedTab.value = "";
 });
 </script>
