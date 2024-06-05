@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
+import { ref } from 'vue'
 import { FzTabs, FzTab } from '@fiscozen/tab'
 import FzBadge from '@fiscozen/badge/src/FzBadge.vue'
 import FzIcon from '@fiscozen/icons/src/FzIcon.vue'
@@ -317,8 +318,8 @@ export const TabWithActionOnEnd: TabStory = {
                     <template #tabs-end>
                         <div class="flex-1" />
                         <div class="flex items-center gap-8">
-                            <FzButton label="Button Primary" variant='primary' />
                             <FzButton label="Button Secondary" variant='secondary' />
+                            <FzButton label="Button Primary" variant='primary' />
                         </div>
                     </template>
                 </FzTabs>`
@@ -356,8 +357,8 @@ export const TabWithActionOnEndVertical: TabStory = {
                     <template #tabs-end>
                         <div class="mt-24" />
                         <div class="flex flex-col justify-center gap-8">
-                            <FzButton label="Primary" variant='primary' />
                             <FzButton label="Secondary" variant='secondary' />
+                            <FzButton label="Primary" variant='primary' />
                         </div>
                     </template>
                 </FzTabs>`
@@ -372,30 +373,51 @@ export const TabWithActionOnContainerEnd: TabStory = {
     render: (args) => ({
         components: { FzTabs, FzTab, FzBadge, FzIcon, FzButton },
         setup() {
+            const tabs = ref([
+                {
+                    title: 'tab1',
+                    badgeContent: "testo"
+                },
+                {
+                    title: 'very long tab text',
+                    badgeContent: "1",
+                    initialSelected: true,
+                },
+                {
+                    title: 'tab3',
+                    badgeContent: "2"
+                },
+                {
+                    title: 'tab4',
+                    badgeContent: "3"
+                }
+            ])
+        
             return {
                 args,
-                customProps:{
-                    tab1: {
-                        title: 'Active tab',
-                    },
-                    tab2: {
-                        title: 'Default tab',
-                    },
-                    tab3: {
-                        title: 'Default tab 2'
-                    },
-                }
+                tabs
+                
+            }
+        },
+        methods: {
+            addTab() {
+                this.tabs.push({
+                    title: 'tab' + (this.tabs.length+1),
+                    badgeContent: this.tabs.length
+                })
+            },
+            removeTab() {
+                this.tabs.pop()
             }
         },
         template: `<FzTabs v-bind="args" > 
                     <template v-slot="data" #default>
-                        <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
-                        <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
-                        <FzTab v-bind="customProps.tab3"> {{ data.selected }} </FzTab>
+                        <FzTab v-for="tab in tabs" v-bind="tab"> Content {{tab.title}} </FzTab> 
                     </template>
                     <template #tabs-container-end>
-                        <div class="flex flex-row items-center gap-8">
-                            <FzButton label="+" variant='invisible' />
+                        <div class="flex flex-row items-center gap-8 h-full">
+                            <FzButton label="-" variant='secondary' @click="removeTab" class="h-full rounded-md"/>
+                            <FzButton label="+" variant='primary' @click="addTab" class="h-full rounded-md"/>
                         </div>
                     </template>
                 </FzTabs>`
