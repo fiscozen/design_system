@@ -2,11 +2,13 @@
   "name": "@fiscozen/style",
   "version": "0.1.0",
   "description": "",
+  "main": "src/index.ts",
   "scripts": {
     "test": "exit 0;",
     "build:transform": "npx token-transformer tokens.json tokens/global.json",
     "build-sd": "node build.js",
-    "build": "pnpm run build:transform && pnpm run build-sd"
+    "build": "pnpm run build:transform && pnpm run build-sd",
+    "format": "prettier --write src/"
   },
   "keywords": [],
   "author": "Riccardo Agnoletto",
