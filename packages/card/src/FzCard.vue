@@ -1,7 +1,7 @@
 <template>
   <section :class="[sectionStaticClass, backgroundColor]">
     <header :class="[headerStaticClass, borderColor]">
-      <h2 class="text-core-black text-2xl m-0 p-0">{{ props.title }}</h2>
+      <h2 class="text-core-black font-medium text-2xl m-0 p-0">{{ props.title }}</h2>
     </header>
     <article :class="['p-20 flex-1', contentClass]">
       <slot></slot>
