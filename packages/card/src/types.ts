@@ -9,12 +9,10 @@ export type FzCardProps = {
 
 type FzCardButton = {
   label: string;
-  callback: () => void;
 };
 
 type FzCardIconButton = {
   icon: string;
-  callback: () => void;
 };
 
 export enum FzCardColor {
