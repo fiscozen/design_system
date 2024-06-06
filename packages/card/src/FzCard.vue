@@ -9,19 +9,19 @@
     <footer v-if="atLeastOneButton" :class="[footerStaticClass, borderColor]">
       <FzIconButton
         v-if="tertiaryAction"
-        @click="tertiaryAction.callback"
+        @click="$emit('click:tertiary')"
         :iconName="tertiaryAction.icon"
         variant="invisible"
       />
       <FzButton
         v-if="secondaryAction"
-        @click="secondaryAction.callback"
+        @click="$emit('click:secondary')"
         :label="secondaryAction.label"
         variant="secondary"
       />
       <FzButton
         v-if="primaryAction"
-        @click="primaryAction.callback"
+        @click="$emit('click:primary')"
         :label="primaryAction.label"
         variant="primary"
       />
