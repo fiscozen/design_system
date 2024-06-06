@@ -7,7 +7,6 @@ import { inject, onMounted, Ref, computed, onBeforeUnmount } from "vue";
 import { FzTabProps } from "./types";
 
 const props = defineProps<FzTabProps>();
-const emit = defineEmits(["unmount"]);
 
 const selectedTab = inject<Ref<string>>("selectedTab");
 const isActive = computed(() => selectedTab?.value === props.title);
