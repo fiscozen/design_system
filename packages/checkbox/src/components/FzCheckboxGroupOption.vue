@@ -42,8 +42,8 @@ const model = defineModel<string[]>({
 const staticChildContainerClass = "flex flex-col justify-center pl-24";
 
 const computedChildContainerClasses = computed(() => [
-  props.size === "sm" ? "gap-6 mt-[5px]" : "",
-  props.size === "md" ? "gap-8 mt-[6px]" : "",
+  props.size === "sm" ? "gap-6 mt-6" : "",
+  props.size === "md" ? "gap-8 mt-8" : "",
 ]);
 
 const isIndeterminate = computed(() => {
