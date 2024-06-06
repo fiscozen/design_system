@@ -19,7 +19,13 @@ const Template: CardStory = {
                 args
             }
         },
-        template: `<FzCard v-bind="args" class="min-w-[500px] min-h-[500px] m-8" > 
+
+        methods: {
+            onPrimaryAction: () => console.log('Primary action clicked'),
+            onSecondaryAction: () => console.log('Secondary action clicked'),
+            onTertiaryAction: () => console.log('Tertiary action clicked')
+        },
+        template: `<FzCard v-bind="args" class="min-w-[500px] min-h-[500px] m-8" @click:primary="onPrimaryAction" @click:secondary="onSecondaryAction" @click:tertiary="onTertiaryAction"> 
                         <div> Content </div>
                     </FzCard>`
     }),
@@ -40,24 +46,15 @@ export const CardWithActions: CardStory = {
     args: {
         ...Template.args,
         primaryAction: {
-            label: 'Action 1',
-            callback: () => {
-                console.log('Primary action clicked')
-            }
+            label: 'Action 1'
         },
         secondaryAction: {
-            label: 'Action 2',
-            callback: () => {
-                console.log('Secondary action clicked')
-            }
+            label: 'Action 2'
         },
         tertiaryAction: {
-            icon: 'bell',
-            callback: () => {
-                console.log('Tertiary action clicked')
-            }
+            icon: 'bell'
         }
-    }
+    },
 }
 
 export const CardPurple: CardStory = {
