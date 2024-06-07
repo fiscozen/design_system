@@ -25,7 +25,7 @@ const Template: CardStory = {
             onSecondaryAction: () => console.log('Secondary action clicked'),
             onTertiaryAction: () => console.log('Tertiary action clicked')
         },
-        template: `<FzCard v-bind="args" class="min-w-[500px] min-h-[500px] m-8" @click:primary="onPrimaryAction" @click:secondary="onSecondaryAction" @click:tertiary="onTertiaryAction"> 
+        template: `<FzCard v-bind="args" class="w-[500px] h-[500px] m-8" @click:primary="onPrimaryAction" @click:secondary="onSecondaryAction" @click:tertiary="onTertiaryAction"> 
                         <div> Content </div>
                     </FzCard>`
     }),
@@ -79,4 +79,36 @@ export const CardBlue: CardStory = {
         ...CardWithActions.args,
         color: FzCardColor.Blue,
     }
+}
+
+export const StdCard: CardStory = {
+    render: (args) => ({
+        components: { FzCard },
+        setup() {
+            return {
+                args
+            }
+        },
+
+        methods: {
+            onPrimaryAction: () => console.log('Primary action clicked'),
+            onSecondaryAction: () => console.log('Secondary action clicked'),
+            onTertiaryAction: () => console.log('Tertiary action clicked')
+        },
+        template: `<FzCard v-bind="args" class="m-8" @click:primary="onPrimaryAction" @click:secondary="onSecondaryAction" @click:tertiary="onTertiaryAction"> 
+                        <div> Some random content </div>
+                    </FzCard>`
+    }),
+    args: {
+        title: 'Title',
+        primaryAction: {
+            label: 'Action 1'
+        },
+        secondaryAction: {
+            label: 'Action 2'
+        },
+        tertiaryAction: {
+            icon: 'bell'
+        },
+    },
 }
