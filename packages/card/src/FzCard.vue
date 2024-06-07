@@ -1,7 +1,12 @@
 <template>
   <section :class="[sectionStaticClass, backgroundColor]">
     <header :class="[headerStaticClass, borderColor]">
-      <h2 class="text-core-black font-medium text-2xl m-0 p-0">{{ props.title }}</h2>
+      <h2
+        class="text-core-black font-medium text-2xl m-0 p-0 break-words"
+        :title="title"
+      >
+        {{ title }}
+      </h2>
     </header>
     <article :class="['p-20 flex-1', contentClass]">
       <slot></slot>
@@ -36,7 +41,7 @@ import { FzButton, FzIconButton } from "@fiscozen/button";
 
 const props = defineProps<FzCardProps>();
 const sectionStaticClass =
-  "border-1 border-solid border-grey-100 rounded flex flex-col w-fit";
+  "border-1 border-solid border-grey-100 rounded flex flex-col";
 const headerStaticClass = "h-72 border-b-1 border-solid p-20";
 const footerStaticClass =
   "h-64 border-t-1 border-solid p-20 flex justify-end gap-8 items-center";
