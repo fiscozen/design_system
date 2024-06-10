@@ -53,6 +53,7 @@ watch(
     <div ref="opener" class="inline-flex">
       <slot name="opener" :isOpen :floating></slot>
     </div>
+    <slot name="opener-end"></slot>
     <div
       ref="content"
       v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
