@@ -42,6 +42,7 @@
     "@fiscozen/card": "workspace:^",
     "@fiscozen/select": "workspace:^",
     "@fiscozen/alert": "workspace:^",
+    "@fiscozen/dropdown": "workspace:^",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
   },
