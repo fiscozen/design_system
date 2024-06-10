@@ -8,6 +8,9 @@
     "build": "nx run-many --target=build",
     "storybook": "nx run @fiscozen/storybook:storybook"
   },
+  "engines": {
+    "pnpm": "^9.3.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
