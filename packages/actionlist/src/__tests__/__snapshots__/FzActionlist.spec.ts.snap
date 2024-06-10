@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzActionlist > should match snapshot 1`] = `
+"<div class="fz__actionlist inline-flex grow-0 flex-col rounded p-4">
+  <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>This is a label</span></div>
+  <div class="flex flex-col"><button disabled="" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start">
+      <!--v-if-->Item #1
+    </button></div>
+  <div class="flex flex-col"><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start">
+      <!--v-if-->Item #2
+    </button></div>
+</div>"
+`;

@@ -1,0 +1,26 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzTopbar > matches snapshot 1`] = `
+"<div>
+  <div class="inline-flex"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
+      <div class="flex items-center justify-items-center mr-6 pl-10">
+        <!--v-if-->
+      </div>This is a dropdown<div class="flex items-center justify-items-center ml-6 pr-10">
+        <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-angle-down fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path>
+          </svg></div>
+      </div><span class="hidden h-0 w-0"></span>
+    </button></div>
+  <div class="bg-core-white absolute p-4 z-10" style="display: none;">
+    <div class="fz__actionlist inline-flex grow-0 flex-col rounded p-4">
+      <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>This is the items label</span></div>
+      <div class="flex flex-col"><button disabled="" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start">
+          <!--v-if-->Item #1
+        </button></div>
+      <div class="flex flex-col"><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start">
+          <!--v-if-->Item #2
+        </button></div>
+    </div>
+  </div>
+</div>"
+`;
