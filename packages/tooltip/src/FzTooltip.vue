@@ -1,7 +1,7 @@
 <template>
   <FzFloating :is-open="isOpen" :position="position" class="fz__tooltip flex h-max" :contentClass="['rounded', classes]">
     <template #opener>
-      <div @mouseover="isOpen = true" @mouseleave="isOpen = false">
+      <div @mouseover="isOpen = text ? true : false" @mouseleave="isOpen = false">
         <slot></slot>
       </div>
     </template>
