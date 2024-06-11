@@ -2,8 +2,8 @@
 
 exports[`FzViewFlag > matches snapshot 1`] = `
 "<div class="border-8 border-semantic-warning fixed inset-0 grid">
-  <div class="h-32 bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12">
-    <div class="text-xs px-12 rounded-xl w-fit bg-core-black text-core-white">staging</div>
+  <div class="h-32 bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center">
+    <div class="text-xs px-12 rounded-xl w-fit h-20 flex items-center font-medium bg-core-black text-core-white">staging</div>
     <div>Operatore: Mario R.</div>
   </div>
 </div>"
