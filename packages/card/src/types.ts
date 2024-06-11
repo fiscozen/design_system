@@ -5,6 +5,8 @@ export type FzCardProps = {
   secondaryAction?: FzCardButton;
   tertiaryAction?: FzCardIconButton;
   contentClass?: string;
+  collapsible?: boolean;
+  defaultExpanded?: boolean;
 };
 
 type FzCardButton = {
@@ -15,8 +17,4 @@ type FzCardIconButton = {
   icon: string;
 };
 
-export enum FzCardColor {
-  Blue = "blue",
-  Orange = "orange",
-  Purple = "purple",
-}
+export type FzCardColor = "purple" | "orange" | "blue";

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import { FzCard, FzCardColor } from '@fiscozen/card'
+import { FzCard } from '@fiscozen/card'
+import { FzBadge } from '@fiscozen/badge'
 
 
 const meta = {
@@ -13,7 +14,7 @@ type CardStory = StoryObj<typeof FzCard>
 
 const Template: CardStory = {
     render: (args) => ({
-        components: { FzCard },
+        components: { FzCard, FzBadge },
         setup() {
             return {
                 args
@@ -25,12 +26,16 @@ const Template: CardStory = {
             onSecondaryAction: () => console.log('Secondary action clicked'),
             onTertiaryAction: () => console.log('Tertiary action clicked')
         },
-        template: `<FzCard v-bind="args" class="w-[500px] h-[500px] m-8" @click:primary="onPrimaryAction" @click:secondary="onSecondaryAction" @click:tertiary="onTertiaryAction"> 
+        template: `<FzCard v-bind="args" class="w-[500px] m-8" @click:primary="onPrimaryAction" @click:secondary="onSecondaryAction" @click:tertiary="onTertiaryAction"> 
+                        <template #header>
+                            <FzBadge color="warning"> Attesa Utente </FzBadge>
+                        </template>
                         <div> Content </div>
                     </FzCard>`
     }),
     args: {
         title: 'Title',
+        contentClass: 'h-[250px]'
     },
 }
 
@@ -61,7 +66,7 @@ export const CardPurple: CardStory = {
     ...CardWithActions,
     args: {
         ...CardWithActions.args,
-        color: FzCardColor.Purple,
+        color: "purple",
     }
 }
 
@@ -69,7 +74,7 @@ export const CardOrange: CardStory = {
     ...CardWithActions,
     args: {
         ...CardWithActions.args,
-        color: FzCardColor.Orange,
+        color: "orange",
     }
 }
 
@@ -77,7 +82,15 @@ export const CardBlue: CardStory = {
     ...CardWithActions,
     args: {
         ...CardWithActions.args,
-        color: FzCardColor.Blue,
+        color: "blue",
+    }
+}
+
+export const CardCollapsible: CardStory = {
+    ...CardWithActions,
+    args: {
+        ...CardWithActions.args,
+        collapsible: true,
     }
 }
 
@@ -111,4 +124,47 @@ export const StdCard: CardStory = {
             icon: 'bell'
         },
     },
+}
+
+export const CardWithHeaderContent: CardStory = {
+    render: (args) => ({
+        components: { FzCard, FzBadge },
+        setup() {
+            return {
+                args
+            }
+        },
+
+        methods: {
+            onPrimaryAction: () => console.log('Primary action clicked'),
+            onSecondaryAction: () => console.log('Secondary action clicked'),
+            onTertiaryAction: () => console.log('Tertiary action clicked')
+        },
+        template: `<FzCard v-bind="args" class="m-8" @click:primary="onPrimaryAction" @click:secondary="onSecondaryAction" @click:tertiary="onTertiaryAction"> 
+                        <template #header>
+                            <FzBadge color="warning"> Attesa Utente </FzBadge>
+                        </template>
+                        <template #header-content>
+                            <div class="flex border-t-1 p-16 justify-between">
+                                <div> Wallet 1 </div>
+                                <div> Wallet 2 </div>
+                                <div> Wallet 3 </div>
+                            </div>
+                        </template>
+                        <div> Content </div>
+                    </FzCard>`
+    }),
+    args: {
+        title: 'Title',
+        primaryAction: {
+            label: 'Action 1'
+        },
+        secondaryAction: {
+            label: 'Action 2'
+        },
+        tertiaryAction: {
+            icon: 'bell'
+        },
+        collapsible: true,
+    }
 }
