@@ -1,7 +1,6 @@
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, vi } from "vitest";
 import FzCard from "../FzCard.vue";
-import { FzCardColor } from "../types";
 
 describe("FzCard", () => {
   it("renders correctly", async () => {
@@ -19,7 +18,7 @@ describe("FzCard", () => {
     const wrapper = mount(FzCard, {
       props: {
         title: "Test Card",
-        color: FzCardColor.Orange,
+        color: "orange",
       },
     });
 
@@ -33,10 +32,9 @@ describe("FzCard", () => {
     const wrapper = mount(FzCard, {
       props: {
         title: "Test Card",
-        color: FzCardColor.Blue,
+        color: "blue",
         primaryAction: {
           label: "Action 1",
-          callback: () => {},
         },
       },
     });
@@ -53,7 +51,6 @@ describe("FzCard", () => {
         title: "Test Card",
         primaryAction: {
           label: "Action 1",
-          callback: () => {},
         },
       },
     });
@@ -96,5 +93,70 @@ describe("FzCard", () => {
       "[Fiscozen Design System]: You should set primaryAction if you want to set secondaryAction",
     );
     warnSpy.mockRestore();
+  });
+
+  it("should emit click event when primaryAction is clicked", async () => {
+    const wrapper = mount(FzCard, {
+      props: {
+        title: "Test Card",
+        primaryAction: {
+          label: "Action 1",
+        },
+      },
+    });
+
+    await wrapper.find("button").trigger("click");
+    expect(wrapper.emitted("click:primary")).toBeTruthy();
+  });
+
+  it("should emit click event when secondaryAction is clicked", async () => {
+    const wrapper = mount(FzCard, {
+      props: {
+        title: "Test Card",
+        primaryAction: {
+          label: "Action 1",
+        },
+        secondaryAction: {
+          label: "Action 2",
+        },
+      },
+    });
+
+    await wrapper.find("button").trigger("click");
+    expect(wrapper.emitted("click:secondary")).toBeTruthy();
+  });
+
+  it("should emit click event when tertiaryAction is clicked", async () => {
+    const wrapper = mount(FzCard, {
+      props: {
+        title: "Test Card",
+        primaryAction: {
+          label: "Action 1",
+        },
+        secondaryAction: {
+          label: "Action 2",
+        },
+        tertiaryAction: {
+          icon: "bell",
+        },
+      },
+    });
+
+    await wrapper.find("button").trigger("click");
+    expect(wrapper.emitted("click:tertiary")).toBeTruthy();
+  });
+
+  it("should expand and collapse when collapsible is true", async () => {
+    const wrapper = mount(FzCard, {
+      props: {
+        title: "Test Card",
+        collapsible: true,
+      },
+    });
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find("article").exists()).toBeFalsy();
+    await wrapper.find("header").find("button").trigger("click");
+    expect(wrapper.find("article").exists()).toBeTruthy();
   });
 });
