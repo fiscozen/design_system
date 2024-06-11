@@ -36,13 +36,13 @@
           class="text-semantic-error"
           :size="size"
         />
-        <div :class="computedErrorClass">
+        <div :class="['mt-1', computedErrorClass]">
           <slot name="error"></slot>
         </div>
       </div>
       <span
         v-else-if="$slots.help"
-        :class="[computedHelpAndErrorClass]"
+        :class="[computedHelpClass]"
         :style="{ 'max-width': containerWidth }"
       >
         <slot name="help"></slot>
@@ -85,7 +85,7 @@ const containerWidth = ref<string>("auto");
 const emit = defineEmits(["select"]);
 
 const staticPickerClass =
-  "flex justify-between items-center px-10 border-1 w-full font-medium rounded gap-8 text-left";
+  "flex justify-between items-center px-10 border-1 w-full rounded gap-8 text-left";
 const computedPickerClass = computed(() => [
   `text-${props.size}`,
   props.size === "sm" ? "h-24" : "",
@@ -102,13 +102,13 @@ const computedLabelClass = computed(() => [
 const staticSpanClass =
   "overflow-hidden text-ellipsis whitespace-nowrap flex-[1]";
 const computedSpanClass = computed(() => [
-  selectedOption.value && !props.disabled ? "text-core-black" : "text-grey-300",
+  selectedOption.value && !props.disabled ? "text-core-black font-medium" : "text-grey-300",
 ]);
 
-const computedHelpAndErrorClass = computed(() => [
+const computedHelpClass = computed(() => [
   props.size === "sm" ? "text-xs" : "",
   props.size === "md" ? "text-sm" : "",
-  props.disabled ? "text-grey-300" : "text-core-black",
+  props.disabled ? "text-grey-300" : "text-grey-500",
 ]);
 
 const computedErrorClass = computed(() => [
