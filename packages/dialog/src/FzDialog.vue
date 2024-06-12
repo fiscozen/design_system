@@ -1,13 +1,22 @@
 <template>
-  <dialog ref="dialog" @close="visible = false" :class="[dialogStaticClasses, dialogClasses]">
+  <dialog
+    ref="dialog"
+    @close="visible = false"
+    :class="[dialogStaticClasses, dialogClasses]"
+  >
     <div :class="[staticClasses, classes]">
-      <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+      <div
+        class="flex items-center p-12 w-full border-b-1 border-grey-100 border-solid"
+      >
         <slot name="header"></slot>
       </div>
-      <div :class="['grow', bodyClasses]" >
+      <div :class="['grow', bodyClasses]">
         <slot name="body"></slot>
       </div>
-      <div v-if="$slots.footer" class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+      <div
+        v-if="$slots.footer"
+        class="flex flex-row p-12 border-t-1 border-grey-100 items-center border-solid"
+      >
         <slot name="footer"></slot>
       </div>
     </div>
@@ -56,28 +65,18 @@ onUnmounted(() => {
   dialog.value!.removeEventListener("click", handleBackdropClick);
 });
 
-const staticClasses = [
-  "flex",
-  "flex-col",
-  "bg-core-white",
-];
+const staticClasses = ["flex", "flex-col", "bg-core-white"];
 
 const dialogStaticClasses = {
   "border-1": true,
-  'rounded': true,
-  'border-grey-100': true
-}
+  rounded: true,
+  "border-grey-100": true,
+};
 
 const dialogClasses = computed(() => {
   let res: string[] = [];
   if (props.isDrawer) {
-    res = [
-      "m-0",
-      "fixed",
-      "top-0",
-      "ml-auto",
-      "max-h-screen",
-    ];
+    res = ["m-0", "fixed", "top-0", "ml-auto", "max-h-screen"];
     return res;
   }
   switch (props.size) {
@@ -124,11 +123,7 @@ const classes = computed(() => {
   }
   switch (props.size) {
     case "sm":
-      res = [
-        "w-[320px]",
-        "min-h-[200px]",
-        "max-h-[432px]",
-      ];
+      res = ["w-[320px]", "min-h-[200px]", "max-h-[432px]"];
       break;
     case "md":
       res = [

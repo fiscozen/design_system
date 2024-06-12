@@ -30,9 +30,13 @@ export type FzDialogProps = {
    */
   closeOnBackdrop?: boolean;
   /**
-   * classes to apply to body 
+   * classes to apply to body
    */
-  bodyClasses?: string | string[] | Record<string, boolean|undefined> | Array<string|Record<string,boolean|undefined>>
+  bodyClasses?:
+    | string
+    | string[]
+    | Record<string, boolean | undefined>
+    | Array<string | Record<string, boolean | undefined>>;
 };
 
 export type FzConfirmDialogProps = FzDialogProps & {
@@ -41,19 +45,23 @@ export type FzConfirmDialogProps = FzDialogProps & {
    */
   footerEnabled?: boolean;
   /**
-   * Whether to show the cancel button 
+   * Whether to show the cancel button
    */
   cancelButtonEnabled?: boolean;
   /**
-   * Whether to enable the confirm button 
+   * Whether to enable the confirm button
    */
   disableConfirm?: boolean;
   /**
-   * Whether to show the confirm button 
+   * Whether to show the confirm button
    */
   confirmButtonEnabled?: boolean;
   /**
-   * classes to apply to footer 
+   * classes to apply to footer
    */
-  footerClasses?: string | string[] | Record<string, boolean|undefined> | Array<string|Record<string,boolean|undefined>>
+  footerClasses?:
+    | string
+    | string[]
+    | Record<string, boolean | undefined>
+    | Array<string | Record<string, boolean | undefined>>;
 };

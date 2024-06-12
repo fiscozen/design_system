@@ -1,9 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzDialog > should match snapshot - drawer 1`] = `
-"<dialog class="border-1 rounded border-grey-100 m-0 fixed top-0 ml-auto max-h-screen">
+"<dialog class="border-1 rounded border-grey-100 m-0 fixed top-0 ml-auto max-h-screen" footerenabled="true" cancelbuttonenabled="true" disableconfirm="false" confirmbuttonenabled="true">
   <div class="flex flex-col bg-core-white w-[480px] h-screen">
-    <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+    <div class="flex items-center p-12 w-full border-b-1 border-grey-100 border-solid">
       <div class="flex flex-row items-center text-xl grow h-32">
         <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-12">
           <!--v-if-->
@@ -16,7 +16,7 @@ exports[`FzDialog > should match snapshot - drawer 1`] = `
       </div>
     </div>
     <div class="grow"></div>
-    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center border-solid">
       <form method="dialog" class="w-full h-full">
         <div class="flex flex-row items-center h-32 grow justify-end h-40"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100" value="false">
             <!--v-if-->
@@ -32,9 +32,9 @@ exports[`FzDialog > should match snapshot - drawer 1`] = `
 `;
 
 exports[`FzDialog > should match snapshot - lg 1`] = `
-"<dialog class="border-1 rounded border-grey-100 xs:max-xl:m-0 xs:max-xl:max-h-screen xs:max-xl:h-screen xs:max-xl:w-screen xs:max-xl:max-w-screen-xl">
+"<dialog class="border-1 rounded border-grey-100 xs:max-xl:m-0 xs:max-xl:max-h-screen xs:max-xl:h-screen xs:max-xl:w-screen xs:max-xl:max-w-screen-xl" footerenabled="true" cancelbuttonenabled="true" disableconfirm="false" confirmbuttonenabled="true">
   <div class="flex flex-col bg-core-white w-screen md:w-[640px] min-h-[300px] md:max-h-[600px] h-screen md:h-auto">
-    <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+    <div class="flex items-center p-12 w-full border-b-1 border-grey-100 border-solid">
       <div class="flex flex-row items-center text-xl grow h-28">
         <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-12">
           <!--v-if-->
@@ -47,7 +47,7 @@ exports[`FzDialog > should match snapshot - lg 1`] = `
       </div>
     </div>
     <div class="grow"></div>
-    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center border-solid">
       <form method="dialog" class="w-full h-full">
         <div class="flex flex-row items-center h-32 grow justify-end h-32"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100" value="false">
             <!--v-if-->
@@ -63,9 +63,9 @@ exports[`FzDialog > should match snapshot - lg 1`] = `
 `;
 
 exports[`FzDialog > should match snapshot - md - xs screen 1`] = `
-"<dialog class="border-1 rounded border-grey-100 xs:max-xl:m-0 xs:max-xl:max-h-screen xs:max-xl:h-screen xs:max-xl:w-screen xs:max-xl:max-w-screen-xl">
+"<dialog class="border-1 rounded border-grey-100 xs:max-xl:m-0 xs:max-xl:max-h-screen xs:max-xl:h-screen xs:max-xl:w-screen xs:max-xl:max-w-screen-xl" footerenabled="true" cancelbuttonenabled="true" disableconfirm="false" confirmbuttonenabled="true">
   <div class="flex flex-col bg-core-white w-screen sm:w-[480px] min-h-[300px] sm:max-h-[600px] h-screen sm:h-auto">
-    <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+    <div class="flex items-center p-12 w-full border-b-1 border-grey-100 border-solid">
       <div class="flex flex-row items-center text-xl grow h-28">
         <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-12">
           <!--v-if-->
@@ -78,7 +78,7 @@ exports[`FzDialog > should match snapshot - md - xs screen 1`] = `
       </div>
     </div>
     <div class="grow"></div>
-    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center border-solid">
       <form method="dialog" class="w-full h-full">
         <div class="flex flex-row items-center h-32 grow justify-end h-32"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100" value="false">
             <!--v-if-->
@@ -94,9 +94,9 @@ exports[`FzDialog > should match snapshot - md - xs screen 1`] = `
 `;
 
 exports[`FzDialog > should match snapshot - md 1`] = `
-"<dialog class="border-1 rounded border-grey-100 xs:max-xl:m-0 xs:max-xl:max-h-screen xs:max-xl:h-screen xs:max-xl:w-screen xs:max-xl:max-w-screen-xl">
+"<dialog class="border-1 rounded border-grey-100 xs:max-xl:m-0 xs:max-xl:max-h-screen xs:max-xl:h-screen xs:max-xl:w-screen xs:max-xl:max-w-screen-xl" footerenabled="true" cancelbuttonenabled="true" disableconfirm="false" confirmbuttonenabled="true">
   <div class="flex flex-col bg-core-white w-screen sm:w-[480px] min-h-[300px] sm:max-h-[600px] h-screen sm:h-auto">
-    <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+    <div class="flex items-center p-12 w-full border-b-1 border-grey-100 border-solid">
       <div class="flex flex-row items-center text-xl grow h-28">
         <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-12">
           <!--v-if-->
@@ -109,7 +109,7 @@ exports[`FzDialog > should match snapshot - md 1`] = `
       </div>
     </div>
     <div class="grow"></div>
-    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center border-solid">
       <form method="dialog" class="w-full h-full">
         <div class="flex flex-row items-center h-32 grow justify-end h-32"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100" value="false">
             <!--v-if-->
@@ -125,9 +125,9 @@ exports[`FzDialog > should match snapshot - md 1`] = `
 `;
 
 exports[`FzDialog > should match snapshot - sm 1`] = `
-"<dialog class="border-1 rounded border-grey-100">
+"<dialog class="border-1 rounded border-grey-100" footerenabled="true" cancelbuttonenabled="true" disableconfirm="false" confirmbuttonenabled="true">
   <div class="flex flex-col bg-core-white w-[320px] min-h-[200px] max-h-[432px]">
-    <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+    <div class="flex items-center p-12 w-full border-b-1 border-grey-100 border-solid">
       <div class="flex flex-row items-center text-xl grow h-28">
         <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-12">
           <!--v-if-->
@@ -140,7 +140,7 @@ exports[`FzDialog > should match snapshot - sm 1`] = `
       </div>
     </div>
     <div class="grow"></div>
-    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center border-solid">
       <form method="dialog" class="w-full h-full">
         <div class="flex flex-row items-center h-32 grow justify-end h-32"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100" value="false">
             <!--v-if-->
@@ -156,9 +156,9 @@ exports[`FzDialog > should match snapshot - sm 1`] = `
 `;
 
 exports[`FzDialog > should match snapshot - xl 1`] = `
-"<dialog class="border-1 rounded border-grey-100 xs:max-xl:m-0 xs:max-xl:max-h-screen xs:max-xl:h-screen xs:max-xl:w-screen xs:max-xl:max-w-screen-xl">
+"<dialog class="border-1 rounded border-grey-100 xs:max-xl:m-0 xs:max-xl:max-h-screen xs:max-xl:h-screen xs:max-xl:w-screen xs:max-xl:max-w-screen-xl" footerenabled="true" cancelbuttonenabled="true" disableconfirm="false" confirmbuttonenabled="true">
   <div class="flex flex-col bg-core-white w-screen xl:w-[960px] min-h-[400px] xl:max-h-[600px] h-screen xl:h-auto">
-    <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
+    <div class="flex items-center p-12 w-full border-b-1 border-grey-100 border-solid">
       <div class="flex flex-row items-center text-xl grow h-28">
         <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-12">
           <!--v-if-->
@@ -171,7 +171,7 @@ exports[`FzDialog > should match snapshot - xl 1`] = `
       </div>
     </div>
     <div class="grow"></div>
-    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+    <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center border-solid">
       <form method="dialog" class="w-full h-full">
         <div class="flex flex-row items-center h-32 grow justify-end h-32"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100" value="false">
             <!--v-if-->
