@@ -4,10 +4,10 @@
       <div class="flex items-center p-12 w-full border-b-1 border-grey-100">
         <slot name="header"></slot>
       </div>
-      <div class="grow">
+      <div :class="['grow', bodyClasses]" >
         <slot name="body"></slot>
       </div>
-      <div class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
+      <div v-if="$slots.footer" class="flex flex-row p-12 border-t-1 border-grey-100 items-center">
         <slot name="footer"></slot>
       </div>
     </div>
@@ -20,6 +20,7 @@ import { FzDialogProps } from "./types";
 
 const props = withDefaults(defineProps<FzDialogProps>(), {
   size: "md",
+  closeOnBackdrop: true,
 });
 const emit = defineEmits(["confirm", "cancel"]);
 
@@ -44,7 +45,7 @@ const handleBackdropClick = (event: MouseEvent) => {
     event.clientY <= rect.top + rect.height &&
     rect.left <= event.clientX &&
     event.clientX <= rect.left + rect.width;
-  if (!isInDialog) {
+  if (!isInDialog && props.closeOnBackdrop) {
     dialog.value!.close();
   }
 };
