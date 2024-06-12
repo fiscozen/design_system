@@ -20,21 +20,25 @@
     <template #footer v-if="footerEnabled">
       <slot name="footer">
         <form method="dialog" class="w-full h-full">
-          <div :class="[footerStaticClasses, footerDynamicClasses, footerClasses]">
+          <div
+            :class="[footerStaticClasses, footerDynamicClasses, footerClasses]"
+          >
             <FzButton
               v-if="cancelButtonEnabled"
               variant="invisible"
               @click.prevent="handleCancel"
-              value="false">
-                {{ cancelLabel }}
+              value="false"
+            >
+              {{ cancelLabel }}
             </FzButton>
             <FzButton
               v-if="confirmButtonEnabled"
               class="ml-12"
               @click.prevent="handleConfirm"
               :disabled="disableConfirm"
-              value="true">
-                {{ confirmLabel }}
+              value="true"
+            >
+              {{ confirmLabel }}
             </FzButton>
           </div>
         </form>
