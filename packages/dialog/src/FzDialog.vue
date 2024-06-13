@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<FzDialogProps>(), {
   size: "md",
   closeOnBackdrop: true,
 });
-const emit = defineEmits(["confirm", "cancel"]);
+const emit = defineEmits(["cancel"]);
 
 const dialog = ref<HTMLDialogElement>();
 const visible = ref(false);
@@ -56,6 +56,7 @@ const handleBackdropClick = (event: MouseEvent) => {
     event.clientX <= rect.left + rect.width;
   if (!isInDialog && props.closeOnBackdrop) {
     dialog.value!.close();
+    emit('cancel');
   }
 };
 onMounted(() => {
