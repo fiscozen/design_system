@@ -91,6 +91,7 @@ const dialogClasses = computed(() => {
         "xs:max-sm:w-screen",
         "xs:max-sm:max-w-screen-xl",
       ];
+      break;
     case "lg":
       res = [
         "xs:max-md:m-0",
@@ -99,6 +100,7 @@ const dialogClasses = computed(() => {
         "xs:max-md:w-screen",
         "xs:max-md:max-w-screen-xl",
       ];
+      break;
     case "xl":
       res = [
         "xs:max-xl:m-0",
