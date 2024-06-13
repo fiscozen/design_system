@@ -10,7 +10,7 @@
       >
         <slot name="header"></slot>
       </div>
-      <div :class="['grow', bodyClasses]">
+      <div :class="['grow', 'p-12', bodyClasses]">
         <slot name="body"></slot>
       </div>
       <div
