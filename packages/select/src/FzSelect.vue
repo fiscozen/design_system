@@ -6,11 +6,11 @@
   >
     <template #opener class="flex">
       <div class="w-full flex flex-col gap-8">
-        <label :class="computedLabelClass">
+        <label :class="['text-sm', computedLabelClass]">
           {{ label }}{{ required ? " *" : "" }}</label
         >
         <button
-          @click="onPickerClick"
+          @click="handlePickerClick"
           :size="size"
           :class="[staticPickerClass, computedPickerClass, pickerClass]"
           ref="opener"
@@ -51,11 +51,12 @@
     <div
       class="flex flex-col p-4 rounded shadow overflow-hidden ml-[-2px] min-w-[120px] w-full"
       :style="{ width: containerWidth ?? 'auto' }"
+      ref="containerRef"
     >
       <FzSelectOption
         v-for="option in options"
         :key="option.value"
-        @click="() => onSelect(option.value)"
+        @click="() => handleSelect(option.value)"
         :option="option"
         :size="size"
         :selectedValue="model"
@@ -68,7 +69,7 @@
 import { computed, ref, watch, nextTick, onMounted } from "vue";
 import { FzSelectProps } from "./types";
 import { FzIcon } from "@fiscozen/icons";
-import { FzFloating } from "@fiscozen/composables";
+import { FzFloating, useClickOutside } from "@fiscozen/composables";
 import FzSelectOption from "./components/FzSelectOption.vue";
 
 const props = withDefaults(defineProps<FzSelectProps>(), {
@@ -80,22 +81,28 @@ const model = defineModel({
 });
 const isOpen = ref(false);
 const opener = ref<HTMLElement>();
+const containerRef = ref<HTMLElement>();
 const containerWidth = ref<string>("auto");
+
+useClickOutside(opener, () => {
+    isOpen.value = false;
+});
 
 const emit = defineEmits(["select"]);
 
 const staticPickerClass =
   "flex justify-between items-center px-10 border-1 w-full rounded gap-8 text-left";
+const mapPickerClass = {
+  sm: "h-24 text-sm",
+  md: "h-32 text-base",
+  lg: "h-40 text-lg",
+};
 const computedPickerClass = computed(() => [
-  `text-${props.size}`,
-  props.size === "sm" ? "h-24" : "",
-  props.size === "md" ? "h-32" : "",
-  props.size === "lg" ? "h-40" : "",
+  mapPickerClass[props.size],
   evaluateProps(),
 ]);
 
 const computedLabelClass = computed(() => [
-  `text-${props.size}`,
   props.disabled ? "text-grey-300" : "text-core-black",
 ]);
 
@@ -108,12 +115,14 @@ const computedSpanClass = computed(() => [
 const computedHelpClass = computed(() => [
   props.size === "sm" ? "text-xs" : "",
   props.size === "md" ? "text-sm" : "",
+  props.size === "lg" ? "text-base" : "",
   props.disabled ? "text-grey-300" : "text-grey-500",
 ]);
 
 const computedErrorClass = computed(() => [
   props.size === "sm" ? "text-xs" : "",
   props.size === "md" ? "text-sm" : "",
+  props.size === "lg" ? "text-base" : "",
   props.disabled ? "text-grey-300" : "text-core-black",
 ]);
 
@@ -127,13 +136,12 @@ onMounted(() => {
   calculateContainerWidth();
 });
 
-const onSelect = (value: string) => {
+const handleSelect = (value: string) => {
   model.value = value;
   emit("select", value);
-  isOpen.value = false;
 };
 
-const onPickerClick = () => {
+const handlePickerClick = () => {
   if (props.disabled) return;
   isOpen.value = !isOpen.value;
 };

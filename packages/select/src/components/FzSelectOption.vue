@@ -1,6 +1,5 @@
 <template>
   <button
-    @click="$emit('click')"
     :class="[staticClass, computedClass]"
     :title="option.label"
   >
@@ -21,12 +20,11 @@ const props = defineProps<{
   selectedValue: string;
 }>();
 
-const emit = defineEmits(["click"]);
 const staticClass =
-  "flex items-center text-left h-40 bg-white text-blue-500 font-medium cursor-pointer py-6 px-12 rounded text-md";
+  "flex items-center text-left h-40 font-medium cursor-pointer py-6 px-12 rounded text-md";
 const computedClass = computed(() => [
   props.selectedValue === props.option.value
-    ? "!bg-background-alice-blue"
-    : "hover:!bg-background-alice-blue !text-core-black hover:!text-blue-500",
+    ? "bg-background-alice-blue text-blue-500"
+    : "bg-white hover:!bg-background-alice-blue text-core-black hover:text-blue-500",
 ]);
 </script>
