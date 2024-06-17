@@ -106,7 +106,7 @@ describe("FzCard", () => {
     });
 
     await wrapper.find("button").trigger("click");
-    expect(wrapper.emitted("click:primary")).toBeTruthy();
+    expect(wrapper.emitted("fzprimary:click")).toBeTruthy();
   });
 
   it("should emit click event when secondaryAction is clicked", async () => {
@@ -123,7 +123,7 @@ describe("FzCard", () => {
     });
 
     await wrapper.find("button").trigger("click");
-    expect(wrapper.emitted("click:secondary")).toBeTruthy();
+    expect(wrapper.emitted("fzsecondary:click")).toBeTruthy();
   });
 
   it("should emit click event when tertiaryAction is clicked", async () => {
@@ -143,7 +143,7 @@ describe("FzCard", () => {
     });
 
     await wrapper.find("button").trigger("click");
-    expect(wrapper.emitted("click:tertiary")).toBeTruthy();
+    expect(wrapper.emitted("fztertiary:click")).toBeTruthy();
   });
 
   it("should expand and collapse when collapsible is true", async () => {
