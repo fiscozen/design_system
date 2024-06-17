@@ -85,7 +85,7 @@ const containerRef = ref<HTMLElement>();
 const containerWidth = ref<string>("auto");
 
 useClickOutside(opener, () => {
-    isOpen.value = false;
+  isOpen.value = false;
 });
 
 const emit = defineEmits(["select"]);
@@ -109,7 +109,9 @@ const computedLabelClass = computed(() => [
 const staticSpanClass =
   "overflow-hidden text-ellipsis whitespace-nowrap flex-[1]";
 const computedSpanClass = computed(() => [
-  selectedOption.value && !props.disabled ? "text-core-black font-medium" : "text-grey-300",
+  selectedOption.value && !props.disabled
+    ? "text-core-black font-medium"
+    : "text-grey-300",
 ]);
 
 const computedHelpClass = computed(() => [

@@ -1,8 +1,5 @@
 <template>
-  <button
-    :class="[staticClass, computedClass]"
-    :title="option.label"
-  >
+  <button :class="[staticClass, computedClass]" :title="option.label">
     <span
       class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm"
       >{{ option.label }}</span
