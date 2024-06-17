@@ -55,7 +55,7 @@ const props = withDefaults(
   }>(),
   {
     style: 'default',
-    size: 'md'
+    size: 'lg'
   }
 )
 
