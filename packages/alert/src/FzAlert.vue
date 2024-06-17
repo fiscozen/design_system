@@ -25,52 +25,27 @@
 import { computed, ref } from 'vue'
 import { FzButton } from '@fiscozen/button'
 import { FzIcon } from '@fiscozen/icons'
+import { AlertProps } from './types'
 
-const props = withDefaults(
-  defineProps<{
-    /**
-     * Type of the topbar which dictates the appearance
-     */
-    type: 'info' | 'error' | 'danger' | 'warning' | 'success'
-    /**
-     * Style which dictates the action rendered
-     */
-    style?: 'default' | 'collapsable' | 'simple'
-    /**
-     * Action label
-     */
-    actionLabel?: string
-    /**
-     * Action tooltip
-     */
-    actionTooltip?: string
-    /**
-     * Size of the alert (applies only if style is simple)
-     */
-    size?: 'sm' | 'md' | 'lg'
-    /**
-     * Title of the alert (applies only if style is not simple)
-     */
-    title?: string
-  }>(),
-  {
-    style: 'default',
-    size: 'lg'
-  }
-)
+const props = withDefaults(defineProps<AlertProps>(), {
+  style: 'default',
+  size: 'lg'
+})
 
-const emit = defineEmits(['actionClick'])
+const emit = defineEmits(['fzaction:click'])
 const isOpen = ref(true)
+
+const mapTypeToContainerClass = {
+  info: 'bg-semantic-info-50 border-semantic-info',
+  error: 'bg-semantic-error-50 border-semantic-error',
+  danger: 'bg-semantic-error-50 border-semantic-error',
+  warning: 'bg-semantic-warning-50 border-semantic-warning',
+  success: 'bg-semantic-success-50 border-semantic-success'
+}
 
 const containerClass = computed(() => [
   'rounded flex gap-12 p-12 border-l-4 select-none',
-  {
-    info: 'bg-semantic-info-50 border-semantic-info',
-    error: 'bg-semantic-error-50 border-semantic-error',
-    danger: 'bg-semantic-error-50 border-semantic-error',
-    warning: 'bg-semantic-warning-50 border-semantic-warning',
-    success: 'bg-semantic-success-50 border-semantic-success'
-  }[props.type],
+  mapTypeToContainerClass[props.type],
   props.style === 'simple' ? 'w-max' : 'w-[800px]'
 ])
 
@@ -128,7 +103,7 @@ const showCollapseIcon = computed(() => props.style === 'collapsable')
 
 function handleButtonClick(event: Event) {
   event.stopPropagation()
-  emit('actionClick')
+  emit('fzaction:click')
 }
 </script>
 
