@@ -28,19 +28,19 @@
       <footer v-if="atLeastOneButton" :class="[footerStaticClass, borderColor]">
         <FzIconButton
           v-if="tertiaryAction"
-          @click="$emit('click:tertiary')"
+          @click="$emit('fztertiary:click')"
           :iconName="tertiaryAction.icon"
           variant="invisible"
         />
         <FzButton
           v-if="secondaryAction"
-          @click="$emit('click:secondary')"
+          @click="$emit('fzsecondary:click')"
           :label="secondaryAction.label"
           variant="secondary"
         />
         <FzButton
           v-if="primaryAction"
-          @click="$emit('click:primary')"
+          @click="$emit('fzprimary:click')"
           :label="primaryAction.label"
           variant="primary"
         />

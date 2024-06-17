@@ -26,7 +26,7 @@ const Template: CardStory = {
             onSecondaryAction: () => console.log('Secondary action clicked'),
             onTertiaryAction: () => console.log('Tertiary action clicked')
         },
-        template: `<FzCard v-bind="args" class="w-[500px] m-8" @click:primary="onPrimaryAction" @click:secondary="onSecondaryAction" @click:tertiary="onTertiaryAction"> 
+        template: `<FzCard v-bind="args" class="w-[500px] m-8" @fzprimary:click="onPrimaryAction" @fzsecondary:click="onSecondaryAction" @fztertiary:click="onTertiaryAction"> 
                         <template #header>
                             <FzBadge color="warning"> Attesa Utente </FzBadge>
                         </template>
@@ -108,7 +108,7 @@ export const StdCard: CardStory = {
             onSecondaryAction: () => console.log('Secondary action clicked'),
             onTertiaryAction: () => console.log('Tertiary action clicked')
         },
-        template: `<FzCard v-bind="args" class="m-8" @click:primary="onPrimaryAction" @click:secondary="onSecondaryAction" @click:tertiary="onTertiaryAction"> 
+        template: `<FzCard v-bind="args" class="m-8" @fzprimary:click="onPrimaryAction" @fzsecondary:click="onSecondaryAction" @fztertiary:click="onTertiaryAction"> 
                         <div> Some random content </div>
                     </FzCard>`
     }),
@@ -140,7 +140,7 @@ export const CardWithHeaderContent: CardStory = {
             onSecondaryAction: () => console.log('Secondary action clicked'),
             onTertiaryAction: () => console.log('Tertiary action clicked')
         },
-        template: `<FzCard v-bind="args" class="m-8" @click:primary="onPrimaryAction" @click:secondary="onSecondaryAction" @click:tertiary="onTertiaryAction"> 
+        template: `<FzCard v-bind="args" class="m-8" @fzprimary:click="onPrimaryAction" @fzsecondary:click="onSecondaryAction" @fztertiary:click="onTertiaryAction"> 
                         <template #header>
                             <FzBadge color="warning"> Attesa Utente </FzBadge>
                         </template>
