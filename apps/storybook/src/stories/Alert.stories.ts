@@ -8,7 +8,7 @@ const meta: Meta<typeof FzAlert> = {
   argTypes: {
     type: {
       control: 'select',
-      options: ['info', 'danger', 'warning', 'success']
+      options: ['info', 'error', 'danger', 'warning', 'success']
     },
     style: {
       control: 'select',
