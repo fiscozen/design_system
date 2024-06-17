@@ -40,6 +40,7 @@
     "@fiscozen/radio": "workspace:^",
     "@fiscozen/checkbox": "workspace:^",
     "@fiscozen/card": "workspace:^",
+    "@fiscozen/select": "workspace:^",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
   },
