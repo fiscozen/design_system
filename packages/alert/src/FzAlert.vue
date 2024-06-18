@@ -44,9 +44,13 @@ const mapTypeToContainerClass = {
 }
 
 const containerClass = computed(() => [
-  'rounded flex gap-12 p-12 border-l-4 select-none',
-  mapTypeToContainerClass[props.type],
-  props.style === 'simple' ? 'w-max' : 'w-[800px]'
+  'flex select-none',
+  ...props.style === 'simple' ? [
+    'gap-6'
+  ] : [
+    mapTypeToContainerClass[props.type],
+    'border-l-4 p-12 gap-12 rounded'
+  ],
 ])
 
 const iconName = computed(
