@@ -1,5 +1,9 @@
 <template>
-  <FzFloating :is-open="isOpen" :position="position" class="fz__tooltip flex h-max" :contentClass="['rounded', classes]">
+  <FzFloating
+    :is-open="isOpen"
+    :position="position"
+    class="fz__tooltip flex h-max"
+    :contentClass="['rounded', '!p-0', 'm-4', classes]">
     <template #opener>
       <div @mouseover="isOpen = text ? true : false" @mouseleave="isOpen = false">
         <slot></slot>
@@ -41,7 +45,7 @@ const classes = computed(() => {
   switch (props.status) {
     case 'neutral':
       return {
-        'bg-grey-500': true
+        '!bg-core-black': true
       }
       break
     case 'alert':
