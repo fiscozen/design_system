@@ -1,5 +1,5 @@
 <template>
-  <FzFloating position="bottom" :isOpen class="w-full overflow-hidden">
+  <FzFloating position="bottom" :isOpen class="w-full overflow-hidden" contentClass="bg-transparent">
     <template #opener>
       <button
         @click="isOpen = !isOpen"
@@ -14,7 +14,7 @@
       </button>
     </template>
     <div
-      class="flex flex-col p-4 rounded-[4px] shadow overflow-hidden"
+      class="flex flex-col p-4 rounded shadow overflow-hidden bg-core-white z-10"
       :style="{ width: containerWidth }"
     >
       <FzTabPickerValue
@@ -45,7 +45,7 @@ const opener = ref<HTMLElement>();
 const selectedTab = inject("selectedTab");
 
 const computedClasses = computed(() => [
-  "flex items-center text-left max-w-[136px] h-auto bg-white text-blue-500 font-medium cursor-pointer capitalize ",
+  "flex items-center text-left max-w-[136px] rounded-md h-auto bg-white text-blue-500 font-medium cursor-pointer capitalize ",
   mapSizeToClasses[props.size],
 ]);
 

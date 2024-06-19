@@ -28,7 +28,7 @@ const props = defineProps<{
 const selectedTab = inject<Ref<string>>("selectedTab");
 
 const classes = computed(() => [
-  "w-auto flex font-medium items-center max-w-[136px]",
+  "w-auto flex font-medium items-center max-w-[136px] rounded-md",
   mapSizeToClasses[props.size],
   selectedTab?.value === props.tab.title
     ? "bg-white text-blue-500"
