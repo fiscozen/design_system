@@ -23,8 +23,8 @@ const emit = defineEmits(["click"]);
 
 const selectedTab = inject<Ref<string>>("selectedTab");
 const computedClasses = computed(() => [
-  "flex items-center text-left max-w-[136px] h-auto bg-white text-blue-500 font-medium cursor-pointer capitalize ",
   mapSizeToClasses[props.size],
+  "flex items-center text-left max-w-[136px] h-auto bg-white text-blue-500 font-medium cursor-pointer capitalize rounded",
   selectedTab?.value === props.tab.title
     ? "!bg-background-alice-blue"
     : "hover:!bg-background-alice-blue !text-black hover:!text-blue-500",
