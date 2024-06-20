@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { FzCheckbox, FzCheckboxGroup } from '@fiscozen/checkbox'
 import { FzIcon } from '@fiscozen/icons'
 const meta = {
-  title: 'Checkbox Group',
+  title: '@fiscozen/checkbox/FzCheckboxGroup',
   component: FzCheckboxGroup,
   tags: ['autodocs'],
   argTypes: {

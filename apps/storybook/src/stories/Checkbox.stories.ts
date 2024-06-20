@@ -4,7 +4,7 @@ import { FzCheckbox } from '@fiscozen/checkbox'
 import { FzIcon } from '@fiscozen/icons'
 
 const meta = {
-  title: 'Checkbox',
+  title: '@fiscozen/checkbox/FzCheckbox',
   component: FzCheckbox,
   tags: ['autodocs'],
   argTypes: {

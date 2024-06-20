@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzAvatar } from '@fiscozen/avatar'
 
 const meta: Meta<typeof FzAvatar> = {
-  title: 'Avatar',
+  title: '@fiscozen/avatar/FzAvatar',
   component: FzAvatar,
   tags: ['autodocs'],
   argTypes: {

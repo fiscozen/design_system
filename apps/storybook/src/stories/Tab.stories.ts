@@ -7,7 +7,7 @@ import FzButton from '@fiscozen/button/src/FzButton.vue'
 
 
 const meta = {
-    title: 'Tab',
+    title: '@fiscozen/tab/FzTabs',
     component: FzTabs,
     subcomponents: { FzTab },
     tags: ['autodocs'],
