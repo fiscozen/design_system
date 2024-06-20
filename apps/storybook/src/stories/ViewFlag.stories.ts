@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzViewFlag } from '@fiscozen/view-flag'
 
 const meta: Meta<typeof FzViewFlag> = {
-  title: 'View Flag',
+  title: '@fiscozen/view-flag/FzViewFlag',
   component: FzViewFlag,
   tags: ['autodocs'],
   argTypes: {

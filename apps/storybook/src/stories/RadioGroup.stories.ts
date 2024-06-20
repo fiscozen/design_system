@@ -1,10 +1,10 @@
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzRadioGroup, FzRadio } from '@fiscozen/radio'
 import { FzIcon } from '@fiscozen/icons'
 
 const meta = {
-    title: 'RadioGoup',
+    title: '@fiscozen/radio/FzRadioGoup',
     component: FzRadioGroup,
     tags: ['autodocs'],
     argTypes: {

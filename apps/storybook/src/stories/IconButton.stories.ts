@@ -4,7 +4,7 @@ import { FzIconButton, IconButtonVariant } from '@fiscozen/button'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
-  title: 'Icon Button',
+  title: '@fiscozen/button/FzIconButton',
   component: FzIconButton,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],

@@ -4,7 +4,7 @@ import { FzIcon } from '@fiscozen/icons'
 
 
 const meta = {
-    title: 'Radio',
+    title: '@fiscozen/radio/FzRadio',
     component: FzRadio,
     tags: ['autodocs'],
     argTypes: {

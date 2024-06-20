@@ -3,7 +3,7 @@ import { FzTooltip } from '@fiscozen/tooltip'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
-  title: 'Tooltip',
+  title: '@fiscozen/tooltip/FzTooltip',
   component: FzTooltip,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],

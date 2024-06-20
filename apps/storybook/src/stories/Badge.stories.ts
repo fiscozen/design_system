@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzBadge } from '@fiscozen/badge'
 
 const meta: Meta<typeof FzBadge> = {
-  title: 'Badge',
+  title: '@fiscozen/badge/FzBadge',
   component: FzBadge,
   tags: ['autodocs'],
   argTypes: {

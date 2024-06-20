@@ -5,7 +5,7 @@ import { FzIcon } from '@fiscozen/icons'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
-  title: 'Button',
+  title: '@fiscozen/button/FzButton',
   component: FzButton,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
@@ -43,7 +43,7 @@ const iconTemplate = `
   </div>
 `
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof FzButton>
 /*
  *👇 Render functions are a framework specific feature to allow you control on how the component renders.
  * See https://storybook.js.org/docs/api/csf
@@ -56,74 +56,54 @@ export const Primary: Story = {
   }
 }
 
-const primaryWithIcon = (args) => ({
-  setup() {
-    return { args }
-  },
-  components: { FzIcon, FzButton },
-  template: iconTemplate
-})
-
-export const PrimaryWithIcon = primaryWithIcon.bind({})
-
-const secondaryWithIcon = (args) => ({
-  setup() {
-    return { args }
-  },
-  components: { FzIcon, FzButton },
-  template: iconTemplate
-})
-
-export const SecondaryWithIcon = secondaryWithIcon.bind({})
-SecondaryWithIcon.args = {
-  variant: 'secondary',
-  tooltip: 'Secondary button',
-  label: 'Secondary button'
+const TemplateIcon: Story = {
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: { FzIcon, FzButton },
+    template: iconTemplate
+  })
+}
+export const PrimaryWithIcon : Story = {
+  ...TemplateIcon
 }
 
-const invisibleWithIcon = (args) => ({
-  setup() {
-    return { args }
-  },
-  components: { FzIcon, FzButton },
-  template: iconTemplate
-})
-
-export const InvisibleWithIcon = invisibleWithIcon.bind({})
-InvisibleWithIcon.args = {
-  variant: 'invisible',
-  tooltip: 'Invisible button',
-  label: 'Invisible button'
+export const SecondaryWithIcon : Story = {
+  ...TemplateIcon,
+  args: {
+    variant: 'secondary',
+    tooltip: 'Secondary button',
+    label: 'Secondary button'
+  }
 }
 
-const dangerWithIcon = (args) => ({
-  setup() {
-    return { args }
-  },
-  components: { FzIcon, FzButton },
-  template: iconTemplate
-})
+export const InvisibleWithIcon : Story = {
+  ...TemplateIcon,
+  args: {
+    variant: 'invisible',
+    tooltip: 'Invisible button',
+    label: 'Invisible button'
+  }
 
-export const DangerWithIcon = dangerWithIcon.bind({})
-DangerWithIcon.args = {
-  variant: 'danger',
-  tooltip: 'Danger button',
-  label: 'Danger button'
 }
 
-const successWithIcon = (args) => ({
-  setup() {
-    return { args }
-  },
-  components: { FzIcon, FzButton },
-  template: iconTemplate
-})
+export const DangerWithIcon : Story = {
+  ...TemplateIcon,
+  args: {
+    variant: 'danger',
+    tooltip: 'Danger button',
+    label: 'Danger button'
+  }
+}
 
-export const SuccessWithIcon = successWithIcon.bind({})
-SuccessWithIcon.args = {
-  variant: 'success',
-  tooltip: 'Success button',
-  label: 'Success button'
+export const SuccessWithIcon : Story = {
+  ...TemplateIcon,
+  args: {
+    variant: 'success',
+    tooltip: 'Success button',
+    label: 'Success button'
+  }
 }
 
 export const Secondary: Story = {
