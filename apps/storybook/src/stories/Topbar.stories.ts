@@ -3,7 +3,7 @@ import { FzTopbar } from '@fiscozen/topbar'
 import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta<typeof FzTopbar> = {
-  title: 'Topbar',
+  title: '@fiscozen/topbar/FzTopbar',
   component: FzTopbar,
   tags: ['autodocs'],
   argTypes: {

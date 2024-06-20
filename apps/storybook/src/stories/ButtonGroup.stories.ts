@@ -3,7 +3,7 @@ import { FzButton, FzButtonGroup } from '@fiscozen/button'
 
 
 const meta = {
-    title: 'Button Group',
+    title: '@fiscozen/button/FzButtonGroup',
     component: FzButtonGroup,
     tags: ['autodocs'],
     argTypes: {

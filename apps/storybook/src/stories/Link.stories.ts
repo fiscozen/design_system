@@ -3,7 +3,7 @@ import { FzLink } from '@fiscozen/link'
 import { vueRouter } from 'storybook-vue3-router';
 
 const meta: Meta<typeof FzLink> = {
-  title: 'Link',
+  title: '@fiscozen/link/FzLink',
   component: FzLink,
   tags: ['autodocs'],
   argTypes: {

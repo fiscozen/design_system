@@ -4,7 +4,7 @@ import { FzBadge } from '@fiscozen/badge'
 
 
 const meta = {
-    title: 'Card',
+    title: '@fiscozen/card/FzCard',
     component: FzCard,
     tags: ['autodocs'],
 } satisfies Meta<typeof FzCard>

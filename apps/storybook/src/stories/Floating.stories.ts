@@ -61,7 +61,7 @@ const example = [
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
-  title: 'Floating',
+  title: '@fiscozen/composables/FzFloating',
   component: FzFloating,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
@@ -71,7 +71,7 @@ const meta = {
 } satisfies Meta<typeof FzFloating>
 
 export default meta
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof FzFloating>
 /*
  *👇 Render functions are a framework specific feature to allow you control on how the component renders.
  * See https://storybook.js.org/docs/api/csf
@@ -79,7 +79,7 @@ type Story = StoryObj<typeof meta>
  */
 
 const simpleTemplate = `
-  <div class="h-screen w-screen" :class="args.classes">
+  <div class="h-screen w-screen" :class="args.class">
     <FzFloating :position="args.position" :isOpen>
       <template #opener>
           <FzNavlink @click="isOpen = !isOpen">open float here</FzNavlink>
@@ -89,184 +89,109 @@ const simpleTemplate = `
   </div>
 `
 
-const withOpenerRightStart = (args) => ({
-  setup() {
-    const isOpen = ref(false);
-    const sections = reactive(example);
-    return { args, isOpen, sections }
-  },
-  components: { FzFloating, FzNavlink, FzNavlist },
-  template: simpleTemplate
-})
-export const WithOpenerRightStart = withOpenerRightStart.bind({})
-WithOpenerRightStart.args = {
+const Template : Story = {
+  render:(args) => ({
+    setup() {
+      const isOpen = ref(false);
+      const sections = reactive(example);
+      return { args, isOpen, sections }
+    },
+    components: { FzFloating, FzNavlink, FzNavlist },
+    template: simpleTemplate
+  })
+}
+export const WithOpenerRightStart : Story = {
+  ...Template,
+  args: {
     position: 'right-start',
-    classes: ''
+    class: ''
+  }
 }
-
-const withOpenerRight = (args) => ({
-  setup() {
-    const isOpen = ref(false);
-    const sections = reactive(example);
-    return { args, isOpen, sections }
-  },
-  components: { FzFloating, FzNavlink, FzNavlist },
-  template: simpleTemplate
-})
-export const WithOpenerRight = withOpenerRight.bind({})
-WithOpenerRight.args = {
+export const WithOpenerRight : Story = {
+  ...Template,
+  args: {
     position: 'right',
-    classes: 'flex flex-col justify-center'
+    class: 'flex flex-col justify-center'
+  }
 }
 
-const withOpenerRightBottom = (args) => ({
-  setup() {
-    const isOpen = ref(false);
-    const sections = reactive(example);
-    return { args, isOpen, sections }
-  },
-  components: { FzFloating, FzNavlink, FzNavlist },
-  template: simpleTemplate
-})
-export const WithOpenerRightBottom = withOpenerRightBottom.bind({})
-WithOpenerRightBottom.args = {
+export const WithOpenerRightBottom : Story = {
+  ...Template,
+  args: {
     position: 'right-end',
-    classes: 'flex flex-col justify-end'
+    class: 'flex flex-col justify-end'
+  }
 }
-
-const withOpenerTopStart = (args) => ({
-  setup() {
-    const isOpen = ref(false);
-    const sections = reactive(example);
-    return { args, isOpen, sections }
-  },
-  components: { FzFloating, FzNavlink, FzNavlist },
-  template: simpleTemplate
-})
-export const WithOpenerTopStart = withOpenerTopStart.bind({})
-WithOpenerTopStart.args = {
+export const WithOpenerTopStart : Story = {
+  ...Template,
+  args: {
     position: 'top-start',
-    classes: 'flex flex-col justify-end'
+    class: 'flex flex-col justify-end'
+  }
 }
 
-const withOpenerTop = (args) => ({
-  setup() {
-    const isOpen = ref(false);
-    const sections = reactive(example);
-    return { args, isOpen, sections }
-  },
-  components: { FzFloating, FzNavlink, FzNavlist },
-  template: simpleTemplate
-})
-export const WithOpenerTop= withOpenerTop.bind({})
-WithOpenerTop.args = {
+export const WithOpenerTop : Story = {
+  ...Template,
+  args: {
     position: 'top',
-    classes: 'flex flex-col justify-end items-center'
+    class: 'flex flex-col justify-end items-center'
+  }
 }
 
-const withOpenerTopEnd = (args) => ({
-  setup() {
-    const isOpen = ref(false);
-    const sections = reactive(example);
-    return { args, isOpen, sections }
-  },
-  components: { FzFloating, FzNavlink, FzNavlist },
-  template: simpleTemplate
-})
-export const WithOpenerTopEnd = withOpenerTopEnd.bind({})
-WithOpenerTopEnd.args = {
+export const WithOpenerTopEnd : Story = {
+  ...Template,
+  args: {
     position: 'top-end',
-    classes: 'flex flex-col justify-end items-end'
+    class: 'flex flex-col justify-end items-end'
+  }
 }
 
-const withOpenerLeftEnd = (args) => ({
-  setup() {
-    const isOpen = ref(false);
-    const sections = reactive(example);
-    return { args, isOpen, sections }
-  },
-  components: { FzFloating, FzNavlink, FzNavlist },
-  template: simpleTemplate
-})
-export const WithOpenerLeftEnd = withOpenerLeftEnd.bind({})
-WithOpenerLeftEnd.args = {
+export const WithOpenerLeftEnd : Story = {
+  ...Template,
+  args: {
     position: 'left-end',
-    classes: 'flex flex-col justify-end items-end'
+    class: 'flex flex-col justify-end items-end'
+  }
 }
 
-const withOpenerLeft = (args) => ({
-  setup() {
-    const isOpen = ref(false);
-    const sections = reactive(example);
-    return { args, isOpen, sections }
-  },
-  components: { FzFloating, FzNavlink, FzNavlist },
-  template: simpleTemplate
-})
-export const WithOpenerLeft = withOpenerLeft.bind({})
-WithOpenerLeft.args = {
+export const WithOpenerLeft : Story = {
+  ...Template,
+  args: {
     position: 'left',
-    classes: 'flex flex-col justify-center items-end'
+    class: 'flex flex-col justify-center items-end'
+  }
 }
 
-const withOpenerLeftStart = (args) => ({
-  setup() {
-    const isOpen = ref(false);
-    const sections = reactive(example);
-    return { args, isOpen, sections }
-  },
-  components: { FzFloating, FzNavlink, FzNavlist },
-  template: simpleTemplate
-})
-export const WithOpenerLeftStart = withOpenerLeftStart.bind({})
-WithOpenerLeftStart.args = {
+export const WithOpenerLeftStart : Story = {
+  ...Template,
+  args: {
     position: 'left-start',
-    classes: 'flex flex-col justify-start items-end'
+    class: 'flex flex-col justify-start items-end'
+  }
 }
 
-const withOpenerBottomEnd = (args) => ({
-  setup() {
-    const isOpen = ref(false);
-    const sections = reactive(example);
-    return { args, isOpen, sections }
-  },
-  components: { FzFloating, FzNavlink, FzNavlist },
-  template: simpleTemplate
-})
-export const WithOpenerBottomEnd = withOpenerBottomEnd.bind({})
-WithOpenerBottomEnd.args = {
+export const WithOpenerBottomEnd : Story = {
+  ...Template,
+  args: {
     position: 'bottom-end',
-    classes: 'flex flex-col justify-start items-end'
+    class: 'flex flex-col justify-start items-end'
+  }
 }
 
-const withOpenerBottom = (args) => ({
-  setup() {
-    const isOpen = ref(false);
-    const sections = reactive(example);
-    return { args, isOpen, sections }
-  },
-  components: { FzFloating, FzNavlink, FzNavlist },
-  template: simpleTemplate
-})
-export const WithOpenerBottom = withOpenerBottom.bind({})
-WithOpenerBottom.args = {
+export const WithOpenerBottom : Story = {
+  ...Template,
+  args: {
     position: 'bottom',
-    classes: 'flex flex-col justify-start items-center'
+    class: 'flex flex-col justify-start items-center'
+  }
 }
 
-const withOpenerBottomStart = (args) => ({
-  setup() {
-    const isOpen = ref(false);
-    const sections = reactive(example);
-    return { args, isOpen, sections }
-  },
-  components: { FzFloating, FzNavlink, FzNavlist },
-  template: simpleTemplate
-})
-export const WithOpenerBottomStart = withOpenerBottomStart.bind({})
-WithOpenerBottomStart.args = {
+export const WithOpenerBottomStart: Story = {
+  ...Template,
+  args: {
     position: 'bottom-start',
-    classes: 'flex flex-col justify-start items-start'
+    class: 'flex flex-col justify-start items-start'
+  }
 }
 
 // following stories are left as comments until related design is finalized

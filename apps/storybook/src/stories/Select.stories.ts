@@ -4,7 +4,7 @@ import { FzSelect } from '@fiscozen/select'
 
 
 const meta = {
-    title: 'Select',
+    title: '@fiscozen/select/FzSelect',
     component: FzSelect,
     tags: ['autodocs'],
     argTypes: {

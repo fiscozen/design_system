@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzAlert } from '@fiscozen/alert'
 
 const meta: Meta<typeof FzAlert> = {
-  title: 'Alert',
+  title: '@fiscozen/alert/FzAlert',
   component: FzAlert,
   tags: ['autodocs'],
   argTypes: {
