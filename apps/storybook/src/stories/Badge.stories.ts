@@ -6,9 +6,9 @@ const meta: Meta<typeof FzBadge> = {
   component: FzBadge,
   tags: ['autodocs'],
   argTypes: {
-    color: { control: 'select', options: ['black', 'error', 'warning', 'success', 'info'] },
+    color: { control: 'select', options: ['black', 'error', 'warning', 'success', 'info'] }
   },
-  args: { default: 'Fiscozen' },
+  args: { default: 'Fiscozen' }
 }
 
 export default meta

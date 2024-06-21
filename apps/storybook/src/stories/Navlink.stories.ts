@@ -62,15 +62,14 @@ const meta = {
 
 export default meta
 
-
 type Story = StoryObj<typeof meta>
 /**
  * STORYBOOK EXPORT
  */
 
 /* Create story with StoryBook Args */
-const Template : Story= {
-  render:(args) => ({
+const Template: Story = {
+  render: (args) => ({
     setup() {
       return { args }
     },
@@ -82,21 +81,21 @@ const Template : Story= {
   })
 }
 
-export const SimpleNavlink : Story = {
+export const SimpleNavlink: Story = {
   ...Template,
   args: {
     label: 'Lorem ipsum'
   }
 }
 
-export const IconNavlink : Story = {
+export const IconNavlink: Story = {
   ...Template,
   args: {
     iconName: 'bell'
   }
 }
 
-const navlinkRouterLink : Story = {
+const navlinkRouterLink: Story = {
   render: (args) => ({
     setup() {
       return { args }
@@ -114,7 +113,7 @@ const navlinkRouterLink : Story = {
   })
 }
 
-export const RouterNavlink : Story = {
+export const RouterNavlink: Story = {
   ...navlinkRouterLink,
   args: {
     label: 'router navlink',
@@ -122,7 +121,7 @@ export const RouterNavlink : Story = {
       path: '/foo/bar'
     }
   }
-} 
+}
 
 RouterNavlink.decorators = [
   vueRouter(routes, {
@@ -130,8 +129,7 @@ RouterNavlink.decorators = [
   })
 ]
 
-
-const navlinkRouterLinkIcon : Story = {
+const navlinkRouterLinkIcon: Story = {
   render: (args) => ({
     setup() {
       return { args }
@@ -148,7 +146,7 @@ const navlinkRouterLinkIcon : Story = {
   })
 }
 
-export const RouterNavlinkIcon : Story = {
+export const RouterNavlinkIcon: Story = {
   ...navlinkRouterLinkIcon
 }
 RouterNavlinkIcon.args = {

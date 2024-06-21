@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import { ref, render } from 'vue'
 
 import { FzDialog, FzConfirmDialog, FzConfirmDialogProps } from '@fiscozen/dialog'
-import {FzButton} from '@fiscozen/button'
+import { FzButton } from '@fiscozen/button'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
@@ -14,17 +14,17 @@ const meta = {
     size: { control: 'select', options: ['sm', 'md', 'lg', 'xl'] },
     isDrawer: { control: 'boolean' },
     closeOnBackdrop: { control: 'boolean' },
-    footerEnabled: { control: 'boolean' },
+    footerEnabled: { control: 'boolean' }
   },
   args: {}
 } satisfies Meta<typeof FzConfirmDialog>
 
 export default meta
 
-const simpleDialog = (args : FzConfirmDialogProps) => ({
+const simpleDialog = (args: FzConfirmDialogProps) => ({
   setup() {
-    const dialog = ref<InstanceType<typeof FzConfirmDialog>>();
-    return { args, dialog: dialog.value}
+    const dialog = ref<InstanceType<typeof FzConfirmDialog>>()
+    return { args, dialog: dialog.value }
   },
   components: { FzDialog, FzConfirmDialog, FzButton },
   template: `
@@ -40,6 +40,6 @@ export const SimpleDialog = {
   args: {
     title: 'Titolo',
     confirmLabel: 'Action 1',
-    cancelLabel: 'Action 2',
+    cancelLabel: 'Action 2'
   }
 }

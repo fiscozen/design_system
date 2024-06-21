@@ -10,8 +10,11 @@ const meta = {
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
   argTypes: {
-    variant: { control: 'select', options: ['primary', 'secondary', 'danger', 'success', 'invisible'] },
-    size: { control: 'select', options: ['xs', 'sm', 'md', 'lg'] },
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary', 'danger', 'success', 'invisible']
+    },
+    size: { control: 'select', options: ['xs', 'sm', 'md', 'lg'] }
   },
   args: { variant: 'primary', disabled: false, label: 'This is a label' } // default value,
 } satisfies Meta<typeof FzButton>
@@ -65,11 +68,11 @@ const TemplateIcon: Story = {
     template: iconTemplate
   })
 }
-export const PrimaryWithIcon : Story = {
+export const PrimaryWithIcon: Story = {
   ...TemplateIcon
 }
 
-export const SecondaryWithIcon : Story = {
+export const SecondaryWithIcon: Story = {
   ...TemplateIcon,
   args: {
     variant: 'secondary',
@@ -78,17 +81,16 @@ export const SecondaryWithIcon : Story = {
   }
 }
 
-export const InvisibleWithIcon : Story = {
+export const InvisibleWithIcon: Story = {
   ...TemplateIcon,
   args: {
     variant: 'invisible',
     tooltip: 'Invisible button',
     label: 'Invisible button'
   }
-
 }
 
-export const DangerWithIcon : Story = {
+export const DangerWithIcon: Story = {
   ...TemplateIcon,
   args: {
     variant: 'danger',
@@ -97,7 +99,7 @@ export const DangerWithIcon : Story = {
   }
 }
 
-export const SuccessWithIcon : Story = {
+export const SuccessWithIcon: Story = {
   ...TemplateIcon,
   args: {
     variant: 'success',
