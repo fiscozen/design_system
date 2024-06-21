@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzLink } from '@fiscozen/link'
-import { vueRouter } from 'storybook-vue3-router';
+import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta<typeof FzLink> = {
   title: '@fiscozen/link/FzLink',
@@ -9,24 +9,22 @@ const meta: Meta<typeof FzLink> = {
   argTypes: {
     type: {
       control: 'select',
-      options: ['default', 'danger'],
+      options: ['default', 'danger']
     },
     style: {
       control: 'select',
-      options: ['default', 'underline'],
+      options: ['default', 'underline']
     },
     size: {
       control: 'select',
-      options: ['xs', 'sm', 'md', 'lg'],
-    },
+      options: ['xs', 'sm', 'md', 'lg']
+    }
   },
   args: {
     to: 'example',
     default: 'This is a link'
   },
-  decorators: [
-    vueRouter()
-  ]
+  decorators: [vueRouter()]
 }
 
 type Story = StoryObj<typeof meta>
@@ -36,7 +34,7 @@ const Default: Story = {}
 const Danger: Story = {
   args: {
     type: 'danger'
-  },
+  }
 }
 
 const DefaultUnderline: Story = {
@@ -52,11 +50,6 @@ const DangerUnderline: Story = {
   }
 }
 
-export {
-  Default,
-  Danger,
-  DefaultUnderline,
-  DangerUnderline
-}
+export { Default, Danger, DefaultUnderline, DangerUnderline }
 
 export default meta

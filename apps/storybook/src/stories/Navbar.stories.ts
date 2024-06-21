@@ -19,7 +19,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const horizontalNavbar = (args : FzNavbarProps) => ({
+const horizontalNavbar = (args: FzNavbarProps) => ({
   setup() {
     return { args }
   },
@@ -52,7 +52,7 @@ const horizontalNavbar = (args : FzNavbarProps) => ({
 
 export const Horizontal = horizontalNavbar.bind({})
 
-const verticalNavbar = (args : FzNavbarProps) => ({
+const verticalNavbar = (args: FzNavbarProps) => ({
   setup() {
     return { args }
   },

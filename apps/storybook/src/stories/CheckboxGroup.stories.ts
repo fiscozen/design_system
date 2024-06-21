@@ -24,18 +24,18 @@ const options = [
     label: 'Parent checkbox',
     value: 'option1',
     children: [
-        {
-            label: 'Option',
-            value: 'option1.1'
-        },
-        {
-            label: 'Option',
-            value: 'option1.2'
-        },
-        {
-            label: 'Option',
-            value: 'option1.3'
-        }
+      {
+        label: 'Option',
+        value: 'option1.1'
+      },
+      {
+        label: 'Option',
+        value: 'option1.2'
+      },
+      {
+        label: 'Option',
+        value: 'option1.3'
+      }
     ]
   },
   {
@@ -184,25 +184,27 @@ export const Required: CheckboxGroupStory = {
     size: 'md',
     label: 'Field label',
     required: true,
-    options: [{
-      label: 'Parent checkbox',
-      value: 'option',
-      required: true,
-      children: [
+    options: [
+      {
+        label: 'Parent checkbox',
+        value: 'option',
+        required: true,
+        children: [
           {
-              label: 'Option',
-              value: 'option1',
-              required: true
+            label: 'Option',
+            value: 'option1',
+            required: true
           },
           {
-              label: 'Option',
-              value: 'option2'
+            label: 'Option',
+            value: 'option2'
           },
           {
-              label: 'Option',
-              value: 'option3'
+            label: 'Option',
+            value: 'option3'
           }
-      ]
-    }]
+        ]
+      }
+    ]
   }
 }

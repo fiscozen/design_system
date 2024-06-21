@@ -1,55 +1,33 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import {reactive, ref} from 'vue'
+import { reactive, ref } from 'vue'
 
 import { FzFloating } from '@fiscozen/composables'
 import { FzNavlink } from '@fiscozen/navlink'
 import { FzNavlist } from '@fiscozen/navlist'
 
 const example = [
+  {
+    label: 'Label 1',
+    items: [
       {
-        label: 'Label 1',
-        items: [
-          {
-            label: 'Item #1',
-            meta: {
-              path: '/foo',
-              name: 'foo'
-            }
-          },
-          {
-            summary: 'Item #2',
-            subitems: [
-              {
-                label: 'Sub-Item #1',
-                meta: {
-                  path: '/foo',
-                  name: 'foo'
-                }
-              },
-              {
-                label: 'Sub-Item #2',
-                meta: {
-                  path: '/foo',
-                  name: 'foo'
-                }
-              }
-            ]
-          }
-        ]
+        label: 'Item #1',
+        meta: {
+          path: '/foo',
+          name: 'foo'
+        }
       },
       {
-        label: 'Label 2',
-        items: [
+        summary: 'Item #2',
+        subitems: [
           {
-            label: 'Item #1',
-            disabled: true,
+            label: 'Sub-Item #1',
             meta: {
               path: '/foo',
               name: 'foo'
             }
           },
           {
-            label: 'Item #2',
+            label: 'Sub-Item #2',
             meta: {
               path: '/foo',
               name: 'foo'
@@ -58,6 +36,28 @@ const example = [
         ]
       }
     ]
+  },
+  {
+    label: 'Label 2',
+    items: [
+      {
+        label: 'Item #1',
+        disabled: true,
+        meta: {
+          path: '/foo',
+          name: 'foo'
+        }
+      },
+      {
+        label: 'Item #2',
+        meta: {
+          path: '/foo',
+          name: 'foo'
+        }
+      }
+    ]
+  }
+]
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
@@ -66,8 +66,7 @@ const meta = {
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
   argTypes: {},
-  args: {
-  }
+  args: {}
 } satisfies Meta<typeof FzFloating>
 
 export default meta
@@ -89,25 +88,25 @@ const simpleTemplate = `
   </div>
 `
 
-const Template : Story = {
-  render:(args) => ({
+const Template: Story = {
+  render: (args) => ({
     setup() {
-      const isOpen = ref(false);
-      const sections = reactive(example);
+      const isOpen = ref(false)
+      const sections = reactive(example)
       return { args, isOpen, sections }
     },
     components: { FzFloating, FzNavlink, FzNavlist },
     template: simpleTemplate
   })
 }
-export const WithOpenerRightStart : Story = {
+export const WithOpenerRightStart: Story = {
   ...Template,
   args: {
     position: 'right-start',
     class: ''
   }
 }
-export const WithOpenerRight : Story = {
+export const WithOpenerRight: Story = {
   ...Template,
   args: {
     position: 'right',
@@ -115,14 +114,14 @@ export const WithOpenerRight : Story = {
   }
 }
 
-export const WithOpenerRightBottom : Story = {
+export const WithOpenerRightBottom: Story = {
   ...Template,
   args: {
     position: 'right-end',
     class: 'flex flex-col justify-end'
   }
 }
-export const WithOpenerTopStart : Story = {
+export const WithOpenerTopStart: Story = {
   ...Template,
   args: {
     position: 'top-start',
@@ -130,7 +129,7 @@ export const WithOpenerTopStart : Story = {
   }
 }
 
-export const WithOpenerTop : Story = {
+export const WithOpenerTop: Story = {
   ...Template,
   args: {
     position: 'top',
@@ -138,7 +137,7 @@ export const WithOpenerTop : Story = {
   }
 }
 
-export const WithOpenerTopEnd : Story = {
+export const WithOpenerTopEnd: Story = {
   ...Template,
   args: {
     position: 'top-end',
@@ -146,7 +145,7 @@ export const WithOpenerTopEnd : Story = {
   }
 }
 
-export const WithOpenerLeftEnd : Story = {
+export const WithOpenerLeftEnd: Story = {
   ...Template,
   args: {
     position: 'left-end',
@@ -154,7 +153,7 @@ export const WithOpenerLeftEnd : Story = {
   }
 }
 
-export const WithOpenerLeft : Story = {
+export const WithOpenerLeft: Story = {
   ...Template,
   args: {
     position: 'left',
@@ -162,7 +161,7 @@ export const WithOpenerLeft : Story = {
   }
 }
 
-export const WithOpenerLeftStart : Story = {
+export const WithOpenerLeftStart: Story = {
   ...Template,
   args: {
     position: 'left-start',
@@ -170,7 +169,7 @@ export const WithOpenerLeftStart : Story = {
   }
 }
 
-export const WithOpenerBottomEnd : Story = {
+export const WithOpenerBottomEnd: Story = {
   ...Template,
   args: {
     position: 'bottom-end',
@@ -178,7 +177,7 @@ export const WithOpenerBottomEnd : Story = {
   }
 }
 
-export const WithOpenerBottom : Story = {
+export const WithOpenerBottom: Story = {
   ...Template,
   args: {
     position: 'bottom',

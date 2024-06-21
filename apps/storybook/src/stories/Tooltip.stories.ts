@@ -21,7 +21,7 @@ type Story = StoryObj<typeof meta>
  * to learn how to use render functions.
  */
 
-const gridClasses =  {
+const gridClasses = {
   tl: 'col-start-1 row-start-1',
   t: 'col-start-2 row-start-1 justify-center',
   tr: 'col-start-3 row-start-1 justify-end',
@@ -29,7 +29,7 @@ const gridClasses =  {
   br: 'col-start-3 row-start-3 justify-end items-end',
   b: 'col-start-2 row-start-3 justify-center items-end',
   bl: 'col-start-1 row-start-3 items-end',
-  l: 'col-start-1 row-start-2 items-center',
+  l: 'col-start-1 row-start-2 items-center'
 }
 
 const simpletemplate = `
@@ -80,7 +80,6 @@ export const InformativeTooltip: Story = {
   }
 }
 
-
 export const PositiveTooltip: Story = {
   render: (args) => ({
     setup() {
@@ -94,7 +93,6 @@ export const PositiveTooltip: Story = {
     text: 'this is a positive tooltip with a very long text that lets us test overflow'
   }
 }
-
 
 export const AlertTooltip: Story = {
   render: (args) => ({

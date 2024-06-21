@@ -74,7 +74,7 @@ type Story = StoryObj<typeof FzRouterBreadcrumbs>
 
 /* Create story with StoryBook Args */
 const withArgs = {
-  render: (args : FzRouterBreadcrumbsProps) => ({
+  render: (args: FzRouterBreadcrumbsProps) => ({
     setup() {
       /* make `args` available within template */
       return { args }
@@ -100,7 +100,7 @@ export const Default = {
   ]
 }
 
-export const Static : Story = {
+export const Static: Story = {
   ...withArgs,
   args: {
     breadcrumbs: [
@@ -136,7 +136,7 @@ export const Static : Story = {
           path: '/foo/baz'
         }
       }
-    ],
+    ]
   },
   decorators: [
     vueRouter(routes, {
