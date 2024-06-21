@@ -5,8 +5,7 @@ const meta: Meta<typeof FzViewFlag> = {
   title: '@fiscozen/view-flag/FzViewFlag',
   component: FzViewFlag,
   tags: ['autodocs'],
-  argTypes: {
-  },
+  argTypes: {},
   args: {
     role: 'Operatore',
     firstName: 'Mario',

@@ -14,13 +14,13 @@ const meta: Meta<typeof FzTopbar> = {
     style: {
       control: 'select',
       options: ['none', 'button', 'icon-button', 'hybrid', 'link']
-    },
+    }
   },
   args: {
     actionLabel: 'This is the action',
     actionTooltip: 'Action tooltip',
     default: 'This is a Topbar'
-  },
+  }
 }
 
 type Story = StoryObj<typeof meta>
@@ -56,9 +56,7 @@ const DefaultLink: Story = {
     style: 'link',
     actionLink: 'example'
   },
-  decorators: [
-    vueRouter()
-  ]
+  decorators: [vueRouter()]
 }
 
 const DangerNone: Story = {
@@ -97,9 +95,7 @@ const DangerLink: Story = {
     style: 'link',
     actionLink: 'example'
   },
-  decorators: [
-    vueRouter()
-  ]
+  decorators: [vueRouter()]
 }
 
 export {

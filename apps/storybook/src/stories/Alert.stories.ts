@@ -17,18 +17,21 @@ const meta: Meta<typeof FzAlert> = {
     size: {
       control: 'select',
       options: ['sm', 'md', 'lg']
-    },
+    }
   },
   args: {
     actionLabel: 'This is the action',
     actionTooltip: 'Action tooltip',
-    default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    default:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     title: 'Title',
     type: 'info'
   },
-  decorators: [() => ({
-    template: '<div class="p-12"><story/></div>'
-  })]
+  decorators: [
+    () => ({
+      template: '<div class="p-12"><story/></div>'
+    })
+  ]
 }
 
 type Story = StoryObj<typeof meta>
@@ -77,14 +80,6 @@ const Collapsable: Story = {
   }
 }
 
-export {
-  Info,
-  Error,
-  Danger,
-  Warning,
-  Success,
-  Simple,
-  Collapsable
-}
+export { Info, Error, Danger, Warning, Success, Simple, Collapsable }
 
 export default meta

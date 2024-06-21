@@ -8,8 +8,8 @@ const meta: Meta<typeof FzAvatar> = {
   argTypes: {
     size: {
       control: 'select',
-      options: ['sm', 'md', 'lg', 'xl'],
-    },
+      options: ['sm', 'md', 'lg', 'xl']
+    }
   },
   args: {
     firstName: 'Mario',
@@ -23,13 +23,10 @@ const Customer: Story = {}
 
 const Consultant: Story = {
   args: {
-    src: 'consultant.jpg',
+    src: 'consultant.jpg'
   }
 }
 
-export {
-  Customer,
-  Consultant,
-}
+export { Customer, Consultant }
 
 export default meta
