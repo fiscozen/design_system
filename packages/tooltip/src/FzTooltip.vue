@@ -5,7 +5,7 @@
     class="fz__tooltip flex h-max"
     :contentClass="['rounded', '!p-0', 'm-4', classes]">
     <template #opener>
-      <div @mouseover="isOpen = text ? true : false" @mouseleave="isOpen = false">
+      <div @mouseover="isOpen = text || $slots.text ? true : false" @mouseleave="isOpen = false">
         <slot></slot>
       </div>
     </template>
