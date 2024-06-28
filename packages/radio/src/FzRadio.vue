@@ -2,7 +2,7 @@
   <div class="flex justify-center flex-col w-fit">
     <input
       type="radio"
-      :id="name ? name + '-' + label : label"
+      :id="computedId"
       :value="value"
       :disabled="disabled"
       :checked="checked"
@@ -14,7 +14,7 @@
       tabindex="0"
       ref="radioContainer"
     />
-    <label :for="name ? name + '-' + label : label" :class="[staticLabelClass, computedLabelClass]">
+    <label :for="computedId" :class="[staticLabelClass, computedLabelClass]">
       <span class="w-fit">{{ standalone ? "" : label }}</span>
     </label>
     <FzRadioErrorText :size="size" v-if="error && $slots.error">
@@ -35,6 +35,7 @@ const props = withDefaults(defineProps<FzRadioProps>(), {
 
 const model = defineModel();
 const value = props.value ?? props.label;
+const computedId = computed(() => props.name ? `${props.name}-${props.label}` : props.label)
 
 const radioContainer = ref<HTMLInputElement | null>(null);
 const staticLabelClass = `
