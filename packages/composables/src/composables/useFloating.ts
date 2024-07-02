@@ -61,6 +61,8 @@ export const useFloating = (
       rect.value = safeElementDomRef.value.getBoundingClientRect()
       const openerRect = safeOpenerDomRef.value?.getBoundingClientRect()
       const containerRect = safeContainerDomRef.value.getBoundingClientRect()
+     
+      const elStyle = window.getComputedStyle(safeElementDomRef.value);
 
       // multiple observer calls on same target do not cause multiple registrations
       floatObserver.value.observe(safeElementDomRef.value)
@@ -72,6 +74,12 @@ export const useFloating = (
       let translateX = 0
 
       if (args.opener && safeOpenerDomRef.value && openerRect) {
+
+        const leftWithoutXMargin = openerRect.left - parseFloat(elStyle.marginLeft) - parseFloat(elStyle.marginRight);
+        const leftWithoutLeftMargin = openerRect.left - parseFloat(elStyle.marginLeft); 
+        const topWithoutYMargin = openerRect.top - parseFloat(elStyle.marginTop) - parseFloat(elStyle.marginBottom);
+        const topWithoutTopMargin = openerRect.top - parseFloat(elStyle.marginTop);
+
         switch (position) {
           case 'auto':
             position = getHighestAvailableSpacePos(
@@ -102,13 +110,13 @@ export const useFloating = (
         switch (position) {
           case 'bottom':
             float.position.y = openerRect.bottom
-            float.position.x = openerRect.left + openerRect.width / 2
+            float.position.x = leftWithoutLeftMargin + openerRect.width / 2
             translateX = -50
             translateY = 0
             break
           case 'bottom-start':
             float.position.y = openerRect.bottom
-            float.position.x = openerRect.left
+            float.position.x = leftWithoutXMargin
             translateX = 0
             translateY = 0
             break
@@ -119,49 +127,49 @@ export const useFloating = (
             translateY = 0
             break
           case 'left-start':
-            float.position.y = openerRect.top
-            float.position.x = openerRect.left
+            float.position.y = topWithoutYMargin
+            float.position.x = leftWithoutXMargin
             translateX = -100
             translateY = 0
             break
           case 'left':
-            float.position.y = openerRect.top + openerRect.height / 2
-            float.position.x = openerRect.left
+            float.position.y = topWithoutTopMargin + openerRect.height / 2
+            float.position.x = leftWithoutXMargin
             translateY = -50
             translateX = -100
             break
           case 'left-end':
             float.position.y = openerRect.bottom
-            float.position.x = openerRect.left
+            float.position.x = leftWithoutXMargin
             translateY = -100
             translateX = -100
             break
           case 'top-start':
-            float.position.y = openerRect.top
-            float.position.x = openerRect.left
+            float.position.y = topWithoutYMargin
+            float.position.x = leftWithoutXMargin
             translateY = -100
             translateX = 0
             break
           case 'top':
-            float.position.y = openerRect.top
-            float.position.x = openerRect.left + openerRect.width / 2
+            float.position.y = topWithoutYMargin
+            float.position.x = leftWithoutLeftMargin + openerRect.width / 2
             translateX = -50
             translateY = -100
             break
           case 'top-end':
-            float.position.y = openerRect.top
+            float.position.y = topWithoutYMargin
             float.position.x = openerRect.right
             translateX = -100
             translateY = -100
             break
           case 'right-start':
-            float.position.y = openerRect.top
+            float.position.y = topWithoutYMargin
             float.position.x = openerRect.right
             translateX = 0
             translateY = 0
             break
           case 'right':
-            float.position.y = openerRect.top + openerRect.height / 2
+            float.position.y = topWithoutTopMargin + openerRect.height / 2
             float.position.x = openerRect.right
             translateY = -50
             translateX = 0
@@ -220,7 +228,7 @@ export const useFloating = (
 
       const realPos = calcRealPos(rect.value, float.position, translateX, translateY)
 
-      float.position.x = realPos.x
+      float.position.x = realPos.x 
       float.position.y = realPos.y
 
       if (realPos.x < containerRect.left) {
