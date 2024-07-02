@@ -6,7 +6,7 @@ type AlertProps = {
   /**
    * Style which dictates the action rendered
    */
-  style?: 'default' | 'collapsable' | 'simple'
+  alertStyle?: 'default' | 'collapsable' | 'simple'
   /**
    * Action label
    */
@@ -23,6 +23,14 @@ type AlertProps = {
    * Title of the alert (applies only if style is not simple)
    */
   title?: string
+  /**
+   * Hide the action button (applies only if style is not simple)
+   */
+  hideAction?: boolean
+  /**
+   * Default state of the alert (open/closed)
+   */
+  defaultOpen?: boolean
 }
 
 export { AlertProps }
