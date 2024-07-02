@@ -69,17 +69,32 @@ const Success: Story = {
 const Simple: Story = {
   args: {
     type: 'info',
-    style: 'simple'
+    alertStyle: 'simple'
   }
 }
 
 const Collapsable: Story = {
   args: {
     type: 'info',
-    style: 'collapsable'
+    alertStyle: 'collapsable'
   }
 }
 
-export { Info, Error, Danger, Warning, Success, Simple, Collapsable }
+const CollapsableDefaultClosed: Story = {
+  args: {
+    type: 'info',
+    alertStyle: 'collapsable',
+    defaultOpen: false
+  }
+}
+
+const WithoutAction: Story = {
+  args: {
+    type: 'info',
+    hideAction: true
+  }
+}
+
+export { Info, Error, Danger, Warning, Success, Simple, Collapsable, CollapsableDefaultClosed, WithoutAction}
 
 export default meta
