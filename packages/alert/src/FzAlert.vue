@@ -28,12 +28,13 @@ import { FzIcon } from '@fiscozen/icons'
 import { AlertProps } from './types'
 
 const props = withDefaults(defineProps<AlertProps>(), {
-  style: 'default',
-  size: 'lg'
+  alertStyle: 'default',
+  size: 'lg',
+  defaultOpen: true,
 })
 
 const emit = defineEmits(['fzaction:click'])
-const isOpen = ref(true)
+const isOpen = ref(props.defaultOpen)
 
 const mapTypeToContainerClass = {
   info: 'bg-semantic-info-50 border-semantic-info',
@@ -45,12 +46,15 @@ const mapTypeToContainerClass = {
 
 const containerClass = computed(() => [
   'flex select-none',
-  ...props.style === 'simple' ? [
+  ...props.alertStyle === 'simple' ? [
     'gap-6'
   ] : [
     mapTypeToContainerClass[props.type],
     'border-l-4 p-12 gap-12 rounded'
   ],
+  ...props.alertStyle === 'collapsable' ? [
+    'cursor-pointer'
+  ] : []
 ])
 
 const iconName = computed(
@@ -74,12 +78,12 @@ const iconClass = computed(() => [
   }[props.type]
 ])
 
-const iconSize = computed(() => (props.style === 'simple' ? props.size : 'lg'))
-const showTitle = computed(() => props.style !== 'simple')
+const iconSize = computed(() => (props.alertStyle === 'simple' ? props.size : 'lg'))
+const showTitle = computed(() => props.alertStyle !== 'simple')
 
 const descriptionClass = computed(() => [
   'font-normal',
-  ...(props.style === 'simple'
+  ...(props.alertStyle === 'simple'
     ? [
         {
           sm: 'text-xs',
@@ -89,21 +93,22 @@ const descriptionClass = computed(() => [
       ]
     : []),
   {
-    'mb-16': props.style !== 'simple'
+    'mb-16': props.alertStyle !== 'simple'
   }
 ])
 
 const showButton = computed(() => {
-  if (props.style === 'simple') return false
-  if (props.style === 'default') return true
+  if (props.alertStyle === 'simple') return false
+  if (props.hideAction) return false
+  if (props.alertStyle === 'default') return true
   return isOpen.value
 })
 const collapseIcon = computed(() => (isOpen.value ? 'angle-up' : 'angle-down'))
 const showDescription = computed(() => {
-  if (props.style !== 'collapsable') return true
+  if (props.alertStyle !== 'collapsable') return true
   return isOpen.value
 })
-const showCollapseIcon = computed(() => props.style === 'collapsable')
+const showCollapseIcon = computed(() => props.alertStyle === 'collapsable')
 
 function handleButtonClick(event: Event) {
   event.stopPropagation()
