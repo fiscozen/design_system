@@ -10,7 +10,7 @@ const meta: Meta<typeof FzAlert> = {
       control: 'select',
       options: ['info', 'error', 'danger', 'warning', 'success']
     },
-    style: {
+    alertStyle: {
       control: 'select',
       options: ['default', 'collapsable', 'simple']
     },
