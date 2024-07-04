@@ -1,3 +1,5 @@
+import { RouteLocationRaw } from 'vue-router'
+
 type AlertProps = {
   /**
    * Type of the topbar which dictates the appearance
@@ -8,13 +10,29 @@ type AlertProps = {
    */
   alertStyle?: 'default' | 'collapsable' | 'simple'
   /**
-   * Action label
+   * Whether to render the button action
    */
-  actionLabel?: string
+  showButtonAction?: boolean
   /**
-   * Action tooltip
+   * Button action label
    */
-  actionTooltip?: string
+  buttonActionLabel?: string
+  /**
+   * Button action tooltip
+   */
+  buttonActionTooltip?: string
+  /**
+   * Whether to render the link action
+   */
+  showLinkAction?: boolean
+  /**
+   * Link action label
+   */
+  linkActionLabel?: string
+  /**
+   * Action link location (applies only if showLinkAction is true)
+   */
+  linkActionLocation?: RouteLocationRaw
   /**
    * Size of the alert (applies only if style is simple)
    */
@@ -23,10 +41,6 @@ type AlertProps = {
    * Title of the alert (applies only if style is not simple)
    */
   title?: string
-  /**
-   * Hide the action button (applies only if style is not simple)
-   */
-  hideAction?: boolean
   /**
    * Default state of the alert (open/closed)
    */

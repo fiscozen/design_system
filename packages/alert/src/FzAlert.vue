@@ -14,9 +14,24 @@
         <slot></slot>
       </p>
 
-      <FzButton @click="handleButtonClick" v-if="showButton" :tooltip="actionTooltip" size="sm">{{
-        actionLabel
-      }}</FzButton>
+      <slot name="action" v-if="showAction">
+        <div class="flex gap-16">
+          <FzButton
+            v-if="showButtonAction"
+            @click="handleButtonClick"
+            :tooltip="buttonActionTooltip"
+            size="sm"
+            >{{ buttonActionLabel }}</FzButton
+          >
+          <FzLink
+            v-if="showLinkAction"
+            :to="linkActionLocation"
+            @click="handleButtonClick"
+            size="md"
+            >{{ linkActionLabel }}</FzLink
+          >
+        </div>
+      </slot>
     </div>
   </div>
 </template>
@@ -26,11 +41,13 @@ import { computed, ref } from 'vue'
 import { FzButton } from '@fiscozen/button'
 import { FzIcon } from '@fiscozen/icons'
 import { AlertProps } from './types'
+import { FzLink } from '@fiscozen/link'
 
 const props = withDefaults(defineProps<AlertProps>(), {
   alertStyle: 'default',
   size: 'lg',
   defaultOpen: true,
+  showButtonAction: true
 })
 
 const emit = defineEmits(['fzaction:click'])
@@ -46,15 +63,10 @@ const mapTypeToContainerClass = {
 
 const containerClass = computed(() => [
   'flex select-none',
-  ...props.alertStyle === 'simple' ? [
-    'gap-6'
-  ] : [
-    mapTypeToContainerClass[props.type],
-    'border-l-4 p-12 gap-12 rounded'
-  ],
-  ...props.alertStyle === 'collapsable' ? [
-    'cursor-pointer'
-  ] : []
+  ...(props.alertStyle === 'simple'
+    ? ['gap-6']
+    : [mapTypeToContainerClass[props.type], 'border-l-4 p-12 gap-12 rounded']),
+  ...(props.alertStyle === 'collapsable' ? ['cursor-pointer'] : [])
 ])
 
 const iconName = computed(
@@ -93,13 +105,12 @@ const descriptionClass = computed(() => [
       ]
     : []),
   {
-    'mb-16': props.alertStyle !== 'simple'
+    'mb-16': props.alertStyle !== 'simple' && (props.showButtonAction || props.showLinkAction)
   }
 ])
 
-const showButton = computed(() => {
+const showAction = computed(() => {
   if (props.alertStyle === 'simple') return false
-  if (props.hideAction) return false
   if (props.alertStyle === 'default') return true
   return isOpen.value
 })
