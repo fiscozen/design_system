@@ -8,7 +8,7 @@ describe.concurrent('FzAlert', () => {
       props: {
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -24,7 +24,7 @@ describe.concurrent('FzAlert', () => {
       props: {
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -40,7 +40,7 @@ describe.concurrent('FzAlert', () => {
       props: {
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -56,7 +56,7 @@ describe.concurrent('FzAlert', () => {
       props: {
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -72,7 +72,7 @@ describe.concurrent('FzAlert', () => {
       props: {
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -89,7 +89,7 @@ describe.concurrent('FzAlert', () => {
         style: 'collapsable',
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -106,7 +106,7 @@ describe.concurrent('FzAlert', () => {
         style: 'collapsable',
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -123,7 +123,7 @@ describe.concurrent('FzAlert', () => {
         style: 'collapsable',
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -140,7 +140,7 @@ describe.concurrent('FzAlert', () => {
         style: 'collapsable',
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -157,7 +157,7 @@ describe.concurrent('FzAlert', () => {
         style: 'collapsable',
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -174,7 +174,7 @@ describe.concurrent('FzAlert', () => {
         style: 'simple',
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -191,7 +191,7 @@ describe.concurrent('FzAlert', () => {
         style: 'simple',
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -208,7 +208,7 @@ describe.concurrent('FzAlert', () => {
         style: 'simple',
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -225,7 +225,7 @@ describe.concurrent('FzAlert', () => {
         style: 'simple',
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
       },
       slots: {
         default:
@@ -242,7 +242,45 @@ describe.concurrent('FzAlert', () => {
         style: 'simple',
         type: 'info',
         title: 'Title here',
-        actionLabel: 'Button action here'
+        buttonActionLabel: 'Button action here'
+      },
+      slots: {
+        default:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+      }
+    })
+
+    expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  it('matches success alert with button and link', async ({ expect }) => {
+    const wrapper = mount(FzAlert, {
+      props: {
+        type: 'info',
+        title: 'Title here',
+        buttonActionLabel: 'Button action here',
+        showLinkAction: true,
+        linkActionLabel: 'This is a link',
+        linkActionLocation: 'example'
+      },
+      slots: {
+        default:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+      }
+    })
+
+    expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  it('matches success alert with link only', async ({ expect }) => {
+    const wrapper = mount(FzAlert, {
+      props: {
+        type: 'info',
+        title: 'Title here',
+        showButtonAction: false,
+        showLinkAction: true,
+        linkActionLabel: 'This is a link',
+        linkActionLocation: 'example'
       },
       slots: {
         default:
