@@ -1,12 +1,14 @@
 <template>
-  <FzButton 
+  <FzButton
+    @click="(e) => $emit('click', e)"
     :class="classes"
     :disabled="disabled"
     :label="label"
     :size="size"
     :tooltip="tooltip"
-    :variant="variantMap">
-    <FzIcon :name="iconName" :size="mappedIconSize" />
+    :variant="variantMap"
+  >
+    <FzIcon :name="iconName" :size="mappedIconSize" @click="(e) => $emit('click', e)" />
     <div class="-mr-2 -mt-2" v-if="variant === 'notification'" :class="notificationClasses"></div>
   </FzButton>
 </template>
@@ -63,6 +65,8 @@ const props = withDefaults(
   }
 )
 
+defineEmits(['click'])
+
 const variantMap = computed(() => {
   return props.variant === 'notification' ? 'secondary' : props.variant
 })
@@ -71,9 +75,8 @@ const classes = computed(() => ({
   'size-24': props.size === 'xs',
   'w-28 h-28': props.size === 'sm',
   'w-32 h-32': props.size === 'md',
-  'w-40 h-40': props.size === 'lg',
+  'w-40 h-40': props.size === 'lg'
 }))
-
 
 const notificationClasses = computed(() => ({
   'rounded-full': true,
@@ -86,8 +89,6 @@ const notificationClasses = computed(() => ({
   'w-8 h-8': props.size === 'md' || props.size === 'lg',
   'bg-grey-200': props.disabled
 }))
-
-
 
 const mappedIconSize = computed(() => iconSizeMap[props.size])
 </script>

@@ -2,7 +2,11 @@
   <button type="button" :disabled="disabled" :class="[staticClasses, classes]">
     <div v-if="iconAndLabel" :class="[staticIconClasses, beforeClasses]">
       <slot name="before">
-        <FzIcon v-if="iconName && iconPosition === 'before'" :name="iconName" :size="mappedIconSize" />
+        <FzIcon
+          v-if="iconName && iconPosition === 'before'"
+          :name="iconName"
+          :size="mappedIconSize"
+        />
       </slot>
     </div>
     <slot>
@@ -10,7 +14,11 @@
     </slot>
     <div v-if="slots.after || iconAndLabel" :class="[staticIconClasses, afterClasses]">
       <slot name="after">
-        <FzIcon v-if="iconName && iconPosition === 'after'" :name="iconName" :size="mappedIconSize" />
+        <FzIcon
+          v-if="iconName && iconPosition === 'after'"
+          :name="iconName"
+          :size="mappedIconSize"
+        />
       </slot>
     </div>
     <span class="hidden h-0 w-0">{{ tooltip }}</span>
@@ -21,7 +29,7 @@
 import { computed, useSlots } from 'vue'
 import { type IconVariant, FzIcon } from '@fiscozen/icons'
 import type { ButtonSize, ButtonVariant } from './types'
-import { iconSizeMap } from './utils';
+import { iconSizeMap } from './utils'
 
 const props = withDefaults(
   defineProps<{
@@ -44,7 +52,7 @@ const props = withDefaults(
     /**
      * whether action is enabled or not
      */
-    disabled?: boolean,
+    disabled?: boolean
     /**
      * Icon to be displayed. Use fontawesome search here https://fontawesome.com/v6/icons
      * Mind that not all of the icons and variants might be available.
