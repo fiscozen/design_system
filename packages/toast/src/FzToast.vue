@@ -31,5 +31,3 @@ const iconName = computed(
     })[props.type],
 );
 </script>
-
-<style scoped></style>

@@ -56,17 +56,3 @@ function handleMouseEnter(index: number) {
   }
 }
 </script>
-
-<style scoped>
-.v-enter-active,
-.v-leave-active {
-  transition-property: opacity;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
-</style>
