@@ -146,6 +146,7 @@ const handleSelect = (value: string) => {
 const handlePickerClick = () => {
   if (props.disabled) return;
   isOpen.value = !isOpen.value;
+  calculateContainerWidth();
 };
 
 const evaluateProps = () => {
