@@ -1,5 +1,12 @@
-type FzToastProps = {
-    type: 'success' | 'warning' | 'error'
-}
+type ToastType = "success" | "warning" | "error";
 
-export { FzToastProps }
+type Toast = {
+  type: ToastType;
+  message: string;
+};
+
+type FzToastProps = {
+  type: ToastType;
+};
+
+export { ToastType, Toast, FzToastProps };

@@ -1,38 +1,38 @@
-import { describe, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { FzToast } from '..'
+import { describe, it, vi } from "vitest";
+import { mount } from "@vue/test-utils";
+import { FzToast } from "..";
 
-describe.concurrent('FzToast', () => {
-  it('success matches snaphost', async ({ expect }) => {
+describe.concurrent("FzToast", () => {
+  it("success matches snaphost", async ({ expect }) => {
     const wrapper = mount(FzToast, {
       props: {
-        type: 'success'
+        type: "success",
       },
-      slots: {}
-    })
+      slots: {},
+    });
 
-    expect(wrapper.html()).toMatchSnapshot()
-  })
+    expect(wrapper.html()).toMatchSnapshot();
+  });
 
-  it('warning matches snaphost', async ({ expect }) => {
+  it("warning matches snaphost", async ({ expect }) => {
     const wrapper = mount(FzToast, {
       props: {
-        type: 'warning'
+        type: "warning",
       },
-      slots: {}
-    })
+      slots: {},
+    });
 
-    expect(wrapper.html()).toMatchSnapshot()
-  })
+    expect(wrapper.html()).toMatchSnapshot();
+  });
 
-  it('error matches snaphost', async ({ expect }) => {
+  it("error matches snaphost", async ({ expect }) => {
     const wrapper = mount(FzToast, {
       props: {
-        type: 'error'
+        type: "error",
       },
-      slots: {}
-    })
+      slots: {},
+    });
 
-    expect(wrapper.html()).toMatchSnapshot()
-  })
-})
+    expect(wrapper.html()).toMatchSnapshot();
+  });
+});
