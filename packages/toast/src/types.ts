@@ -9,4 +9,11 @@ type FzToastProps = {
   type: ToastType;
 };
 
-export { ToastType, Toast, FzToastProps };
+type FzToastQueueProps = {
+  /**
+   * Custom toast queue. Defaults to internal self-managed queue.
+   */
+  toasts?: Toast[];
+};
+
+export { ToastType, Toast, FzToastProps, FzToastQueueProps };

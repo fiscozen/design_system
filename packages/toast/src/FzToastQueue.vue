@@ -6,6 +6,7 @@
         :class="getToastClass(index)"
         :style="getToastStyle(index)"
         @mouseenter="handleMouseEnter(index)"
+        @close="handleToastClose(toast)"
       >
         {{ toast.message }}
       </FzToast>
@@ -14,15 +15,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { FzToast } from "./index";
-import { useToast } from "./useToast";
+import { ref, toRef, watch } from "vue";
+import { FzToast, FzToastQueueProps, Toast } from "./index";
+import { toasts as internalToasts, removeToast } from "./queue";
 
-const { toasts } = useToast();
+const props = defineProps<FzToastQueueProps>();
 const isExpanded = ref(false);
+const toasts = props.toasts ? toRef(props.toasts) : internalToasts;
+
+watch(
+  toasts,
+  (value) => {
+    if (!value.length) isExpanded.value = false;
+  },
+  {
+    deep: true,
+  },
+);
 
 function getToastClass(index: number): string[] {
-  const classes: string[] = ["transition-all"];
+  const classes: string[] = ["transition-transform"];
 
   if (isExpanded.value && index !== 0) {
     classes.push("mt-12");
@@ -54,5 +66,9 @@ function handleMouseEnter(index: number) {
   if (!index) {
     isExpanded.value = true;
   }
+}
+
+function handleToastClose(toast: Toast) {
+  removeToast(toast, toasts);
 }
 </script>
