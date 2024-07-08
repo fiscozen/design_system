@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzAlert } from '@fiscozen/alert'
+import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta<typeof FzAlert> = {
   title: '@fiscozen/alert/FzAlert',
@@ -20,8 +21,8 @@ const meta: Meta<typeof FzAlert> = {
     }
   },
   args: {
-    actionLabel: 'This is the action',
-    actionTooltip: 'Action tooltip',
+    buttonActionLabel: 'This is a button',
+    buttonActionTooltip: 'Action tooltip',
     default:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     title: 'Title',
@@ -88,13 +89,34 @@ const CollapsableDefaultClosed: Story = {
   }
 }
 
+const LinkAndButton: Story = {
+  args: {
+    type: 'info',
+    showLinkAction: true,
+    linkActionLocation: 'example',
+    linkActionLabel: 'This is a link'
+  },
+  decorators: [vueRouter()]
+}
+
+const OnlyLink: Story = {
+  args: {
+    type: 'info',
+    showButtonAction: false,
+    showLinkAction: true,
+    linkActionLocation: 'example',
+    linkActionLabel: 'This is a link'
+  },
+  decorators: [vueRouter()]
+}
+
 const WithoutAction: Story = {
   args: {
     type: 'info',
-    hideAction: true
+    showButtonAction: false
   }
 }
 
-export { Info, Error, Danger, Warning, Success, Simple, Collapsable, CollapsableDefaultClosed, WithoutAction}
+export { Info, Error, Danger, Warning, Success, Simple, Collapsable, CollapsableDefaultClosed, LinkAndButton, OnlyLink, WithoutAction}
 
 export default meta
