@@ -25,7 +25,7 @@
           >
           <FzLink
             v-if="showLinkAction"
-            :to="linkActionLocation"
+            :to="linkActionLocation!"
             @click="handleButtonClick"
             size="md"
             >{{ linkActionLabel }}</FzLink
