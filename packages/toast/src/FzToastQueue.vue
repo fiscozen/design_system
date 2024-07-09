@@ -34,31 +34,26 @@ watch(
 );
 
 function getToastClass(index: number): string[] {
-  const classes: string[] = ["transition-transform"];
-
-  if (isExpanded.value && index !== 0) {
-    classes.push("mt-12");
-    return classes;
-  }
-
-  if (index === 0) {
-    classes.push("z-30");
-  } else if (index === 1) {
-    classes.push("origin-bottom z-20 mt-8");
-  } else if (index === 2) {
-    classes.push("origin-bottom z-10 mt-8");
-  } else {
-    classes.push("origin-bottom");
-  }
-
-  return classes;
+  return [
+    "transition-transform origin-bottom",
+    { 0: "z-30", 1: "z-20", 2: "z-10" }[index] ?? "",
+  ];
 }
 
 function getToastStyle(index: number) {
-  if (!index || isExpanded.value) return;
+  if (!index) return;
 
-  const translateY = `-${index * 100}%`;
-  const scale = index === 1 ? 0.9375 : 0.875;
+  let translateY: string;
+  let scale: number;
+
+  if (isExpanded.value) {
+    translateY = `${index * 16}px`;
+    scale = 1;
+  } else {
+    translateY = `calc(-${index * 100}% + ${index < 3 ? index * 8 : 0}px)`;
+    scale = index === 1 ? 0.9375 : 0.875;
+  }
+
   return { transform: `translateY(${translateY}) scale(${scale})` };
 }
 
