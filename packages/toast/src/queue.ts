@@ -1,4 +1,4 @@
-import { Ref, ref } from "vue";
+import { DeepReadonly, readonly, Ref, ref } from "vue";
 import { Toast } from "./types";
 
 const toasts = ref<Toast[]>([]);
@@ -14,8 +14,13 @@ function enqueueToast(toast: Toast, customQueue?: Ref<Toast[]>) {
   }
 }
 
-function removeToast(toast: Toast, queue: Ref<Toast[]>) {
+function removeToast(toast: Toast, customQueue?: Ref<Toast[]>) {
+  const queue = customQueue ?? toasts;
   queue.value.splice(queue.value.indexOf(toast), 1);
 }
 
-export { toasts, enqueueToast, removeToast };
+const useToasts = (): { toasts: DeepReadonly<typeof toasts> } => ({
+  toasts: readonly(toasts),
+});
+
+export { toasts, enqueueToast, removeToast, useToasts };
