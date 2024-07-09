@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "nx run-many --target=build",
-    "storybook": "nx run @fiscozen/storybook:storybook"
+    "storybook": "nx run @fiscozen/storybook:storybook",
+    "generate:component": "plop component"
   },
   "engines": {
     "pnpm": "^9.3.0"
@@ -16,6 +17,7 @@
   "license": "ISC",
   "devDependencies": {
     "nx": "17.2.8",
+    "plop": "^4.0.1",
     "vitest": "^1.0.4"
   }
 }
