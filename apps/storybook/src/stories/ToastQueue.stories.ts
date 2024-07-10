@@ -56,7 +56,7 @@ const CustomQueue: Story = {
         <div class="h-screen flex m-20 gap-8 items-start">
           <FzButton @click="handleEnqueue('success')">Success</FzButton>
           <FzButton @click="handleEnqueue('warning')">Warning</FzButton>
-          <FzButton @click="handleEnqueue('error')" class="mb-6 mr-auto">Error</FzButton>
+          <FzButton @click="handleEnqueue('error')" class="mb-6">Error</FzButton>
           <FzToastQueue :toasts="toasts" />
         </div>
       `

@@ -1,9 +1,10 @@
 import { DeepReadonly, readonly, Ref, ref } from "vue";
-import { Toast } from "./types";
+import { NewToast, Toast } from "./types";
 
 const toasts = ref<Toast[]>([]);
 
-function enqueueToast(toast: Toast, customQueue?: Ref<Toast[]>) {
+function enqueueToast(newToast: NewToast, customQueue?: Ref<Toast[]>) {
+  const toast = { ...newToast, createdAt: new Date() };
   const queue = customQueue ?? toasts;
   queue.value.unshift(toast);
 

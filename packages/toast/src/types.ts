@@ -3,10 +3,20 @@ type ToastType = "success" | "warning" | "error";
 type Toast = {
   type: ToastType;
   message: string;
+  createdAt: Date;
 };
 
+type NewToast = Omit<Toast, "createdAt">;
+
 type FzToastProps = {
+  /**
+   * Choose type of Toast based on purpose
+   */
   type: ToastType;
+  /**
+   * Whether to show box shadow
+   */
+  showShadow?: boolean;
 };
 
 type FzToastQueueProps = {
@@ -16,4 +26,4 @@ type FzToastQueueProps = {
   toasts?: Toast[];
 };
 
-export { ToastType, Toast, FzToastProps, FzToastQueueProps };
+export { ToastType, Toast, NewToast, FzToastProps, FzToastQueueProps };
