@@ -2,7 +2,7 @@
   <div class="flex justify-center flex-col w-fit">
     <input
       type="checkbox"
-      :id="value.replace(/ /g, '-').toLowerCase()"
+      :id="id"
       :disabled="disabled"
       :checked="checked"
       :class="staticInputClass"
@@ -14,7 +14,7 @@
       ref="refCheckbox"
     />
     <label
-      :for="value.replace(/ /g, '-').toLowerCase()"
+      :for="id"
       :class="[staticLabelClass, computedLabelClass]"
     >
       <FzIcon
@@ -44,9 +44,13 @@ const props = withDefaults(defineProps<FzCheckboxProps>(), {
   indeterminate: false,
 });
 
-const value = props.value || props.label;
+const currentValue = computed(() => props.value ?? props.label);
 
-const model = defineModel<boolean | string[]>({
+const id = computed(() => {
+  return currentValue.value.toString().replace(/ /g, "-").toLowerCase();
+})
+
+const model = defineModel<boolean | (string | number | boolean)[]>({
   required: true,
 });
 
@@ -96,7 +100,7 @@ const checkValueIsInModel = () => {
   if (typeof model.value === "boolean") {
     return model.value;
   } else {
-    return model.value.includes(value);
+    return model.value.includes(currentValue.value);
   }
 };
 
@@ -130,9 +134,9 @@ onMounted(() => {
     if (model.value) refCheckbox.value?.dispatchEvent(new Event("change"));
     else if (props.checked !== undefined) model.value = props.checked;
   } else {
-    if (model.value.includes(value))
+    if (model.value.includes(currentValue.value))
       refCheckbox.value?.dispatchEvent(new Event("change"));
-    else if (props.checked) model.value.push(value);
+    else if (props.checked) model.value.push(currentValue.value);
   }
 });
 </script>

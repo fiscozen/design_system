@@ -201,10 +201,51 @@ export const Required: CheckboxGroupStory = {
           },
           {
             label: 'Option',
-            value: 'option3'
+            value: 1
           }
         ]
       }
     ]
+  }
+}
+
+export const CheckboxGroupWithDynamicOptions: CheckboxGroupStory = {
+  render: (args) => ({
+    components: { FzCheckboxGroup, FzCheckbox, FzIcon },
+    setup() {
+      const model = ref([])
+      const dataFromServer = ref<{label:string, value:any, disabled?:boolean}[]>([])
+
+      setTimeout(() => {
+        dataFromServer.value.push({
+          label: 'Option 1',
+          value: 'option1'
+        })
+        dataFromServer.value.push({
+          label: 'Option 2',
+          value: 'option2'
+        })
+        dataFromServer.value.push({
+          label: 'Option 3',
+          value: 'option3'
+        })
+      },1000);
+
+      return {
+        args,
+        model,
+        dataFromServer
+      }
+    },
+    template: `
+    <form action="#">
+      <FzCheckboxGroup v-bind="args" v-model="model" :options="dataFromServer"/>
+      <input type="submit" value="Submit" />
+    </form>`
+  }),
+  args: {
+    size: 'md',
+    label: 'Field label',
+    required: true,
   }
 }
