@@ -14,10 +14,10 @@
       <div :class="[staticChildContainerClass, computedChildContainerClasses]">
         <FzCheckbox
           v-for="child in children"
-          :key="child.value"
+          :key="child.value ? child.value.toString() : child.label"
           v-model="model"
-          v-bind="child"
           :disabled="disabled"
+          v-bind="child"
           :emphasis="emphasis"
           :error="error"
           :size="size"
@@ -32,9 +32,13 @@ import { computed } from "vue";
 import FzCheckbox from "../FzCheckbox.vue";
 import { ParentCheckbox } from "../types";
 
-const props = defineProps<ParentCheckbox & { size: "sm" | "md" }>();
+FzCheckbox.compatConfig = {
+  MODE: 3,
+};
 
-const model = defineModel<string[]>({
+const props = defineProps<ParentCheckbox & { size: "sm" | "md" }>();
+const currentValue = computed(() => props.value ?? props.label);
+const model = defineModel<(string | number | boolean)[]>({
   required: true,
   default: [],
 });
@@ -50,7 +54,7 @@ const isIndeterminate = computed(() => {
   if (!props.children) return false;
 
   const numChecked = props.children.filter((child) =>
-    model.value.includes(child.value || child.label),
+    model.value.includes(child.value ?? child.label),
   ).length;
   return numChecked > 0 && numChecked < props.children.length;
 });
@@ -58,28 +62,28 @@ const isIndeterminate = computed(() => {
 function handleCheckboxParentChange() {
   if (!props.children) return;
   const numChecked = props.children.filter((child) =>
-    model.value.includes(child.value || child.label),
+    model.value.includes(child.value ?? child.label),
   ).length;
 
   if (numChecked === props.children.length) {
     // push parent value to model (using concat to force reactivity, push seems to not work)
-    model.value = model.value.concat(props.value || props.label);
+    model.value = model.value.concat(currentValue.value);
   } else {
     // remove parent value from model if it exists
-    if (model.value.includes(props.value || props.label))
+    if (model.value.includes(currentValue.value))
       model.value = model.value.filter(
-        (value) => value !== (props.value || props.label),
+        (value) => value !== currentValue.value,
       );
   }
 }
 
 function onCheckboxParentChange() {
   if (!props.children) return;
-  if (model.value.includes(props.value || props.label)) {
+  if (model.value.includes(currentValue.value)) {
     // push all children values to model that are not already in model
     model.value = model.value.concat(
       props.children
-        ?.map((child) => child.value || child.label)
+        ?.map((child) => child.value ?? child.label)
         .filter((value) => !model.value.includes(value)),
     );
   } else {
@@ -87,7 +91,7 @@ function onCheckboxParentChange() {
     model.value = model.value.filter(
       (value) =>
         !props.children
-          ?.map((child) => child.value || child.label)
+          ?.map((child) => child.value ?? child.label)
           .includes(value),
     );
   }

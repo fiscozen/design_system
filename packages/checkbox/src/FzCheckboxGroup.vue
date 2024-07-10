@@ -9,10 +9,10 @@
     <div :class="[staticSlotContainerClass, computedSlotContainerClass]">
       <FzCheckboxGroupOption
         v-for="option in options"
-        :key="option.value"
+        :key="option.value ? option.value.toString() : option.label"
         v-model="model"
-        v-bind="option"
         :disabled="disabled"
+        v-bind="option"
         :emphasis="emphasis"
         :error="error"
         :size="size"
@@ -26,10 +26,14 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { FzCheckboxGroupProps, ParentCheckbox } from "./types";
+import { FzCheckboxGroupProps } from "./types";
 import FzCheckboxErrorText from "./components/FzCheckboxErrorText.vue";
 import { mapSizeToClasses } from "./common";
 import FzCheckboxGroupOption from "./components/FzCheckboxGroupOption.vue";
+
+FzCheckboxGroupOption.compatConfig = {
+  MODE:3
+}
 
 const props = defineProps<FzCheckboxGroupProps>();
 const id = `fz-checkbox-group-${generateRandomId()}`;
