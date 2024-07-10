@@ -6,7 +6,7 @@ export type FzCheckboxProps = {
   /**
    * The value of the checkbox. If not provided, the value will be the label
    */
-  value?: string;
+  value?: string | number | boolean;
   /**
    * The size of the checkbox
    */
