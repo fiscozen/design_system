@@ -62,13 +62,16 @@ const contentClass = computed(() => {
       <slot name="opener" :isOpen :floating></slot>
     </div>
     <slot name="opener-end"></slot>
-    <div
-      ref="content"
-      v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
-      :class="contentClass"
-    >
-      <slot :isOpen :floating></slot>
-    </div>
+    <Teleport to="body">
+      <div
+        ref="content"
+        v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
+        class="fz__floating__content bg-core-white fixed p-4 z-10"
+        :class="contentClass"
+      >
+        <slot :isOpen :floating></slot>
+      </div>
+    </Teleport>
   </div>
 </template>
 
