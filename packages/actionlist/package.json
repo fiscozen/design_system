@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/actionlist",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "Design System Navlist Component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -12,9 +12,11 @@
   "main": "src/index.ts",
   "type": "module",
   "keywords": [],
-  "author": "Riccardo Agnoletto",
+  "author": "Alen Ajam",
+  "dependencies": {
+    "@fiscozen/navlink": "workspace:^"
+  },
   "peerDependencies": {
-    "@fiscozen/navlink": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
