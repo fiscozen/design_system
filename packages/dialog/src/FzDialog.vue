@@ -60,10 +60,10 @@ const handleBackdropClick = (event: MouseEvent) => {
   }
 };
 onMounted(() => {
-  dialog.value!.addEventListener("click", handleBackdropClick);
+  dialog.value?.addEventListener("click", handleBackdropClick);
 });
 onUnmounted(() => {
-  dialog.value!.removeEventListener("click", handleBackdropClick);
+  dialog.value?.removeEventListener("click", handleBackdropClick);
 });
 
 const staticClasses = ["flex", "flex-col", "bg-core-white"];
