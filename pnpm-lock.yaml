@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@fiscozen/composables':
-        specifier: ^0.1.10
-        version: 0.1.10(tailwindcss@3.4.1)(vue@3.4.33(typescript@5.4.2))
     devDependencies:
       nx:
         specifier: 17.2.8
@@ -3195,12 +3191,6 @@ packages:
 
   '@fal-works/esbuild-plugin-global-externals@2.1.2':
     resolution: {integrity: sha512-cEee/Z+I12mZcFJshKcCqC8tuX5hG3s+d+9nZ3LabqKF1vKdF41B92pJVCBggjAGORAeOzyyDDKrZwIkLffeOQ==}
-
-  '@fiscozen/composables@0.1.10':
-    resolution: {integrity: sha512-AKXWMGHbpYM3bDr+X7SAz7aUHGe/75m+Ybk9mK4B7t28qbElxwpoCGkYieL27k+vF4wls1LmO31+8dHBGBZ/Ww==}
-    peerDependencies:
-      tailwindcss: ^3.4.1
-      vue: ^3.4.13
 
   '@fiscozen/icons@0.1.6':
     resolution: {integrity: sha512-Oz/NM97JasaOBTKSslUYpB1KKZDE+3x5tC47uvdlUsxPn+/1v4vy5MiU12istj2CuErbRHewXbNWdZwgmvjFWA==}
@@ -9144,11 +9134,6 @@ snapshots:
   '@eslint/js@8.57.0': {}
 
   '@fal-works/esbuild-plugin-global-externals@2.1.2': {}
-
-  '@fiscozen/composables@0.1.10(tailwindcss@3.4.1)(vue@3.4.33(typescript@5.4.2))':
-    dependencies:
-      tailwindcss: 3.4.1
-      vue: 3.4.33(typescript@5.4.2)
 
   '@fiscozen/icons@0.1.6(vue@3.4.13(typescript@5.3.3))':
     dependencies:
