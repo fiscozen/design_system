@@ -39,7 +39,8 @@ const computedId = computed(() => props.name ? `${props.name}-${props.label}` : 
 
 const radioContainer = ref<HTMLInputElement | null>(null);
 const staticLabelClass = `
-  flex items-start gap-4 h-16 
+  flex items-start gap-4 
+  text-core-black
   before:content-[''] 
   before:inline-block 
   before:border-solid 
