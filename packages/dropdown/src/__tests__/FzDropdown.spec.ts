@@ -12,7 +12,7 @@ describe.concurrent('FzTopbar', () => {
     })
     window.IntersectionObserver = mockIntersectionObserver
   })
-  
+
   it('matches snapshot', async ({ expect }) => {
     const wrapper = mount(FzDropdown, {
       props: {

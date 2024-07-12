@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzDropdown } from '@fiscozen/dropdown'
+import { vueRouter } from 'storybook-vue3-router';
 
 const actions =  [{
   label: 'This is a nav-link',
@@ -22,7 +23,7 @@ const actions =  [{
 }];
 
 const meta: Meta<typeof FzDropdown> = {
-  title: 'Dropdown',
+  title: '@fiscozen/dropdown/FzDropdown',
   component: FzDropdown,
   tags: ['autodocs'],
   argTypes: {
@@ -35,6 +36,11 @@ const meta: Meta<typeof FzDropdown> = {
     actions,
     default: 'This is a dropdown'
   },
+  decorators: [vueRouter([{
+    path: '/foo',
+    name: 'foo',
+    component: () => {}
+  }])]
 }
 
 type Story = StoryObj<typeof meta>

@@ -4,13 +4,15 @@
       <span>{{ label }}</span>
     </div>
     <div class="flex flex-col" v-for="(item, itemIndex) in items" :key="itemIndex">
-      <FzNavlink class="grow-1 flex justify-start" v-bind="item">{{ item.label }}</FzNavlink>
+      <FzRouterNavlink class="grow-1 flex justify-start" v-bind="item">{{
+        item.label
+      }}</FzRouterNavlink>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { FzNavlink } from '@fiscozen/navlink'
+import { FzRouterNavlink } from '@fiscozen/navlink'
 import { FzActionlistProps } from './types'
 
 defineProps<FzActionlistProps>()
