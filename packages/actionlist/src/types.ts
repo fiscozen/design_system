@@ -1,6 +1,12 @@
-import { FzRouterNavlinkProps } from '@fiscozen/navlink'
+import { FzRouterNavlinkProps, FzNavlinkProps } from '@fiscozen/navlink'
 
-export interface FzActionlistProps {
+type ActionlistItem =
+  | (FzRouterNavlinkProps & { type: 'link' })
+  | (FzNavlinkProps & { type: 'button' })
+
+interface FzActionlistProps {
   label?: string
-  items: FzRouterNavlinkProps[]
+  items: ActionlistItem[]
 }
+
+export { ActionlistItem, FzActionlistProps }

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import { FzDropdown } from '@fiscozen/dropdown'
+import { FzActionlist } from '@fiscozen/actionlist'
 import { vueRouter } from 'storybook-vue3-router';
 
 const actions =  [{
@@ -28,19 +28,13 @@ const actions =  [{
   label: 'This is a nav-link'
 }];
 
-const meta: Meta<typeof FzDropdown> = {
-  title: '@fiscozen/dropdown/FzDropdown',
-  component: FzDropdown,
+const meta: Meta<typeof FzActionlist> = {
+  title: '@fiscozen/actionlist/FzActionlist',
+  component: FzActionlist,
   tags: ['autodocs'],
-  argTypes: {
-    size: {
-      control: 'select',
-      options: ['xs', 'sm', 'md', 'lg']
-    },
-  },
   args: {
-    actions,
-    default: 'This is a dropdown'
+    items: actions,
+    label: 'This is a label'
   },
   decorators: [vueRouter([{
     path: '/foo',
@@ -51,25 +45,10 @@ const meta: Meta<typeof FzDropdown> = {
 
 type Story = StoryObj<typeof meta>
 
-const AlignLeft: Story = {
-  decorators: [
-    () => ({
-      template: '<div class="h-screen"><story/></div>'
-    })
-  ]
-}
-
-const AlignRight: Story = {
-  decorators: [
-    () => ({
-      template: '<div class="h-screen flex justify-end"><story/></div>'
-    })
-  ]
-}
+const Default: Story = {}
 
 export {
-  AlignLeft,
-  AlignRight
+  Default,
 }
 
 export default meta
