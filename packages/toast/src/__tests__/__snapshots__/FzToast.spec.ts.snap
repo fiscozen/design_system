@@ -1,12 +1,12 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzToast > error matches snaphost 1`] = `
-"<div class="w-[320px] min-h-[58px] p-12 flex gap-8 text-sm items-center rounded border-1 border-grey-100 shadow-xl bg-semantic-error text-core-white">
+"<div class="w-[320px] p-12 flex gap-8 text-sm items-center rounded border-1 border-grey-100 bg-semantic-error text-core-white shadow-xl">
   <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-circle-xmark fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
       <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path>
-    </svg></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-32 h-32 ml-auto">
+    </svg></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-auto">
     <!--v-if-->
-    <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-xmark fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+    <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
         <path class="" fill="currentColor" d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
       </svg></div>
     <!--v-if-->
@@ -16,7 +16,7 @@ exports[`FzToast > error matches snaphost 1`] = `
 `;
 
 exports[`FzToast > success matches snaphost 1`] = `
-"<div class="w-[320px] min-h-[58px] p-12 flex gap-8 text-sm items-center rounded border-1 border-grey-100 shadow-xl bg-semantic-success text-core-white">
+"<div class="w-[320px] p-12 flex gap-8 text-sm items-center rounded border-1 border-grey-100 bg-semantic-success text-core-white shadow-xl">
   <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-circle-check fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
       <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"></path>
     </svg></div>
@@ -25,12 +25,12 @@ exports[`FzToast > success matches snaphost 1`] = `
 `;
 
 exports[`FzToast > warning matches snaphost 1`] = `
-"<div class="w-[320px] min-h-[58px] p-12 flex gap-8 text-sm items-center rounded border-1 border-grey-100 shadow-xl bg-semantic-warning">
+"<div class="w-[320px] p-12 flex gap-8 text-sm items-center rounded border-1 border-grey-100 bg-semantic-warning shadow-xl">
   <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-triangle-exclamation fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="triangle-exclamation" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
       <path class="" fill="currentColor" d="M248.4 84.3c1.6-2.7 4.5-4.3 7.6-4.3s6 1.6 7.6 4.3L461.9 410c1.4 2.3 2.1 4.9 2.1 7.5c0 8-6.5 14.5-14.5 14.5H62.5c-8 0-14.5-6.5-14.5-14.5c0-2.7 .7-5.3 2.1-7.5L248.4 84.3zm-41-25L9.1 385c-6 9.8-9.1 21-9.1 32.5C0 452 28 480 62.5 480h387c34.5 0 62.5-28 62.5-62.5c0-11.5-3.2-22.7-9.1-32.5L304.6 59.3C294.3 42.4 275.9 32 256 32s-38.3 10.4-48.6 27.3zM288 368a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm-8-184c0-13.3-10.7-24-24-24s-24 10.7-24 24v96c0 13.3 10.7 24 24 24s24-10.7 24-24V184z"></path>
-    </svg></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-32 h-32 ml-auto">
+    </svg></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-auto">
     <!--v-if-->
-    <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-xmark fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+    <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
         <path class="" fill="currentColor" d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
       </svg></div>
     <!--v-if-->
