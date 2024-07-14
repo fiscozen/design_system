@@ -20,15 +20,21 @@ const Default: Story = {
         enqueueToast({ type, message: 'This is a toast.' })
       }
 
+      function handleEnqueueLong(type: 'success' | 'warning' | 'success') {
+        enqueueToast({ type, message: 'This is a long long long long long long long long long long long long long long long long long long long long long long long long long toast.' })
+      }
+
       return {
         handleEnqueue,
+        handleEnqueueLong
       }
     },
     template: `
         <div class="h-screen flex m-20 gap-8 items-start">
           <FzButton @click="handleEnqueue('success')">Success</FzButton>
           <FzButton @click="handleEnqueue('warning')">Warning</FzButton>
-          <FzButton @click="handleEnqueue('error')" class="mb-6 mr-auto">Error</FzButton>
+          <FzButton @click="handleEnqueue('error')" class="mb-6">Error</FzButton>
+          <FzButton @click="handleEnqueueLong('error')" class="mb-6 mr-auto">Error long</FzButton>
           <FzToastQueue />
         </div>
       `

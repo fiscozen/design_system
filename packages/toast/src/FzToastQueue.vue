@@ -1,81 +1,122 @@
 <template>
-  <div class="flex flex-col" @mouseleave="isExpanded = false">
-    <template v-for="(toast, index) in toasts" :key="toast.createdAt">
-      <FzToast
-        :type="toast.type"
-        :class="getToastClass(index)"
-        :style="getToastStyle(index)"
-        :showShadow="isExpanded || index < 3"
-        @mouseenter="handleMouseEnter(index)"
-        @close="handleToastClose(toast)"
-      >
-        {{ toast.message }}
-      </FzToast>
-    </template>
+  <div
+    class="hoverable group"
+    @mouseenter="isHovering = true"
+    @mouseleave="isHovering = false"
+  >
+    <div class="flex flex-col relative">
+      <TransitionGroup name="list">
+        <FzToast
+          v-for="(toast, index) in toasts"
+          :key="toast.createdAt.getTime()"
+          :ref="
+            (el: InstanceType<typeof FzToast>) =>
+              handleToastRef(el, index, isHovering)
+          "
+          :type="toast.type"
+          class="toast absolute right-0 origin-bottom transition-all duration-300"
+          :style="getToastStyle(index)"
+          @close="handleToastClose(toast)"
+        >
+          {{ isHovering || !index ? toast.message : "..." }}
+        </FzToast>
+      </TransitionGroup>
+    </div>
+
+    <div class="flex flex-col">
+      <template v-for="toast in toasts" :key="toast.createdAt">
+        <FzToast
+          :type="toast.type"
+          class="[&:nth-child(n+2)]:mt-12 invisible hidden group-hover:flex"
+        >
+          {{ toast.message }}
+        </FzToast>
+      </template>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, toRef, watch } from "vue";
+import { ref, toRef } from "vue";
 import { FzToast, FzToastQueueProps, Toast } from "./index";
 import { toasts as internalToasts, removeToast } from "./queue";
 
 const props = defineProps<FzToastQueueProps>();
-const isExpanded = ref(false);
-const shouldAnimate = ref(false);
 const toasts = props.toasts ? toRef(props.toasts) : internalToasts;
-let shouldAnimateTimeout: number | undefined;
+const toastsHeight = ref<number[]>([]);
+const isHovering = ref(false);
 
-watch(
-  toasts,
-  (value) => {
-    if (!value.length) isExpanded.value = false;
+/*
+ * While not used, passing isHovering is needed to recalculate toasts' height
+ */
+function handleToastRef(
+  el: InstanceType<typeof FzToast>,
+  index: number,
+  isHovering: boolean,
+) {
+  toastsHeight.value[index] = el?.containerRef?.clientHeight;
+}
 
-    if (shouldAnimateTimeout) window.clearTimeout(shouldAnimateTimeout);
-    shouldAnimate.value = false;
-    shouldAnimateTimeout = window.setTimeout(() => {
-      shouldAnimate.value = true;
-      shouldAnimateTimeout = undefined;
-    }, 0);
-  },
-  {
-    deep: true,
-  },
-);
+function getAllPreviousToastsHeight(index: number) {
+  return toastsHeight.value
+    .slice(0, index)
+    .reduce((prev, current) => prev + current + 2, 0);
+}
 
-function getToastClass(index: number) {
-  return [
-    "origin-bottom",
-    { 0: "z-30", 1: "z-20", 2: "z-10" }[index] ?? "",
-    {
-      "mt-12": index > 0 && isExpanded.value,
-      "mt-8": index > 0 && index < 3 && !isExpanded.value,
-      "transition-all": shouldAnimate.value,
-    },
-  ];
+function getToastHeight(index: number) {
+  return (toastsHeight.value[index] ?? 0) + 2;
 }
 
 function getToastStyle(index: number) {
   if (!index) return;
 
-  let translateY: string | number = 0;
-  let scale: string | number = 1;
+  const margin = 8 * index;
+  const marginHover = 12 * index;
 
-  if (!isExpanded.value) {
-    translateY = `-${index * 100}%`;
-    scale = index === 1 ? 0.9375 : 0.875;
-  }
-
-  return { transform: `translateY(${translateY}) scale(${scale})` };
-}
-
-function handleMouseEnter(index: number) {
-  if (!index) {
-    isExpanded.value = true;
-  }
+  return {
+    "--fz-translate-y": `${getToastHeight(0) - getToastHeight(index) + margin}px`,
+    "--fz-translate-y-hover": `${getAllPreviousToastsHeight(index) + marginHover}px`,
+  };
 }
 
 function handleToastClose(toast: Toast) {
   removeToast(toast, toasts);
 }
 </script>
+
+<style>
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(-100px);
+}
+
+.toast:first-child {
+  z-index: 3;
+}
+
+.toast:nth-child(2) {
+  z-index: 2;
+  transform: translateY(var(--fz-translate-y)) scale(0.9375);
+}
+
+.toast:nth-child(3) {
+  z-index: 1;
+}
+
+.toast:nth-child(n + 3) {
+  transform: translateY(var(--fz-translate-y)) scale(0.875);
+}
+
+.toast:nth-child(n + 4) {
+  opacity: 0;
+}
+
+.hoverable:hover .toast:nth-child(n + 2) {
+  transform: translateY(var(--fz-translate-y-hover));
+}
+
+.hoverable:hover .toast:nth-child(n + 2):not(.list-leave-to) {
+  opacity: 1;
+}
+</style>
