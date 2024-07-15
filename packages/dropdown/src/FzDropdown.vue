@@ -38,9 +38,14 @@ const props = withDefaults(
      * Whether to align to the left or right
      */
     align: 'left' | 'right'
+    /**
+     * Whether to close the action list when an action is clicked
+     */
+    closeOnActionClick?: boolean
   }>(),
   {
-    size: 'md'
+    size: 'md',
+    closeOnActionClick: true
   }
 )
 
@@ -54,5 +59,8 @@ const floatingPosition = computed(() => (props.align === 'left' ? 'bottom-start'
 
 function handleActionClick(index: number, action: ActionlistItem) {
   emit('fzaction:click', index, action)
+  if (props.closeOnActionClick) {
+    isOpen.value = false
+  }
 }
 </script>
