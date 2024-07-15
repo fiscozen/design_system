@@ -36,5 +36,8 @@
     "vitest": "^1.2.0",
     "vue-tsc": "^1.8.25"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@vuepic/vue-datepicker": "^8.8.1"
+  }
 }

@@ -16,6 +16,15 @@ const Default: Story = {
   args: {}
 }
 
-export { Default }
+const Range: Story = {
+  args: {
+    range: true
+  }
+}
+
+export {
+  Default,
+  Range
+}
 
 export default meta
