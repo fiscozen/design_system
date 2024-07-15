@@ -1,5 +1,5 @@
 <template>
-  <FzFloating :isOpen :position="floatingPosition">
+  <FzFloating :isOpen :position="floatingPosition" ref="container">
     <template #opener>
       <FzButton
         icon-position="after"
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ComponentPublicInstance, computed, onMounted, onUnmounted, ref } from 'vue'
 import { FzButton, ButtonSize } from '@fiscozen/button'
 import { FzActionlist, FzActionlistProps, ActionlistItem } from '@fiscozen/actionlist'
 import { FzFloating } from '@fiscozen/composables'
@@ -54,8 +54,27 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(false)
+const container = ref<ComponentPublicInstance>()
 const buttonIconName = computed(() => (isOpen.value ? 'angle-up' : 'angle-down'))
 const floatingPosition = computed(() => (props.align === 'left' ? 'bottom-start' : 'bottom-end'))
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
+
+function handleClickOutside(event: MouseEvent) {
+  if (!container.value) return
+
+  const isClickOutside =
+    container.value.$el !== event.target && !container.value.$el.contains(event.target)
+  if (isClickOutside) {
+    isOpen.value = false
+  }
+}
 
 function handleActionClick(index: number, action: ActionlistItem) {
   emit('fzaction:click', index, action)
