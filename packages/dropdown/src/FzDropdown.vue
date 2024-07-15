@@ -1,5 +1,5 @@
 <template>
-  <FzFloating :isOpen position="auto">
+  <FzFloating :isOpen :position="floatingPosition">
     <template #opener>
       <FzButton
         icon-position="after"
@@ -10,14 +10,14 @@
         <slot></slot>
       </FzButton>
     </template>
-    <FzActionlist :items="actions" :label="actionsLabel" />
+    <FzActionlist :items="actions" :label="actionsLabel" @fzaction:click="handleActionClick" />
   </FzFloating>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { FzButton, ButtonSize } from '@fiscozen/button'
-import { FzActionlist, FzActionlistProps } from '@fiscozen/actionlist'
+import { FzActionlist, FzActionlistProps, ActionlistItem } from '@fiscozen/actionlist'
 import { FzFloating } from '@fiscozen/composables'
 
 const props = withDefaults(
@@ -34,12 +34,25 @@ const props = withDefaults(
      * List of actions
      */
     actions: FzActionlistProps['items']
+    /**
+     * Whether to align to the left or right
+     */
+    align: 'left' | 'right'
   }>(),
   {
     size: 'md'
   }
 )
 
+const emit = defineEmits<{
+  'fzaction:click': [index: number, action: ActionlistItem]
+}>()
+
 const isOpen = ref(false)
 const buttonIconName = computed(() => (isOpen.value ? 'angle-up' : 'angle-down'))
+const floatingPosition = computed(() => (props.align === 'left' ? 'bottom-start' : 'bottom-end'))
+
+function handleActionClick(index: number, action: ActionlistItem) {
+  emit('fzaction:click', index, action)
+}
 </script>

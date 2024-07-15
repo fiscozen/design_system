@@ -3,23 +3,29 @@ import { FzDropdown } from '@fiscozen/dropdown'
 import { vueRouter } from 'storybook-vue3-router';
 
 const actions =  [{
-  label: 'This is a nav-link',
+  type: 'link' as const,
+  label: 'This is a router-nav-link',
   meta: {
      path: '/foo',
      name: 'foo'
   }
 },{
-  label: 'This is a nav-link',
+  type: 'link' as const,
+  label: 'This is a router-nav-link',
   meta: {
      path: '/foo',
      name: 'foo'
   }
 },{
-  label: 'This is a nav-link',
+  type: 'link' as const,
+  label: 'This is a router-nav-link',
   meta: {
      path: '/foo',
      name: 'foo'
   }
+},{
+  type: 'button' as const,
+  label: 'This is a nav-link'
 }];
 
 const meta: Meta<typeof FzDropdown> = {
@@ -31,10 +37,14 @@ const meta: Meta<typeof FzDropdown> = {
       control: 'select',
       options: ['xs', 'sm', 'md', 'lg']
     },
+    align: {
+      control: 'select',
+      options: ['left', 'right']
+    },
   },
   args: {
     actions,
-    default: 'This is a dropdown'
+    default: 'This is a dropdown',
   },
   decorators: [vueRouter([{
     path: '/foo',
@@ -46,17 +56,23 @@ const meta: Meta<typeof FzDropdown> = {
 type Story = StoryObj<typeof meta>
 
 const AlignLeft: Story = {
+  args: {
+    align: 'left',
+  },
   decorators: [
     () => ({
-      template: '<div class="h-screen"><story/></div>'
+      template: '<div class="h-screen flex justify-center"><story/></div>'
     })
   ]
 }
 
 const AlignRight: Story = {
+  args: {
+    align: 'right',
+  },
   decorators: [
     () => ({
-      template: '<div class="h-screen flex justify-end"><story/></div>'
+      template: '<div class="h-screen flex justify-center"><story/></div>'
     })
   ]
 }

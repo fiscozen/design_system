@@ -4,7 +4,14 @@
       <span>{{ label }}</span>
     </div>
     <div class="flex flex-col" v-for="(item, itemIndex) in items" :key="itemIndex">
-      <FzRouterNavlink class="grow-1 flex justify-start" v-bind="item">{{
+      <FzNavlink
+        v-if="item.type === 'button'"
+        class="grow-1 flex justify-start"
+        v-bind="item"
+        @click="emit('fzaction:click', itemIndex, item)"
+        >{{ item.label }}</FzNavlink
+      >
+      <FzRouterNavlink v-else class="grow-1 flex justify-start" v-bind="item">{{
         item.label
       }}</FzRouterNavlink>
     </div>
@@ -12,10 +19,13 @@
 </template>
 
 <script lang="ts" setup>
-import { FzRouterNavlink } from '@fiscozen/navlink'
-import { FzActionlistProps } from './types'
+import { FzNavlink, FzRouterNavlink } from '@fiscozen/navlink'
+import { FzActionlistProps, ActionlistItem } from './types'
 
-defineProps<FzActionlistProps>()
+const props = defineProps<FzActionlistProps>()
+const emit = defineEmits<{
+  'fzaction:click': [index: number, action: ActionlistItem]
+}>()
 </script>
 
 <style>
