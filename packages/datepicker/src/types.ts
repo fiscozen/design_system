@@ -1,0 +1,3 @@
+type FzDatepickerProps = {}
+
+export { FzDatepickerProps }
