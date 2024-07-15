@@ -1,5 +1,5 @@
 <template>
-  <FzFloating :isOpen position="auto">
+  <FzFloating :isOpen :position="floatingPosition">
     <template #opener>
       <FzButton
         icon-position="after"
@@ -34,6 +34,10 @@ const props = withDefaults(
      * List of actions
      */
     actions: FzActionlistProps['items']
+    /**
+     * Whether to align to the left or right
+     */
+    align: 'left' | 'right'
   }>(),
   {
     size: 'md'
@@ -46,6 +50,7 @@ const emit = defineEmits<{
 
 const isOpen = ref(false)
 const buttonIconName = computed(() => (isOpen.value ? 'angle-up' : 'angle-down'))
+const floatingPosition = computed(() => (props.align === 'left' ? 'bottom-start' : 'bottom-end'))
 
 function handleActionClick(index: number, action: ActionlistItem) {
   emit('fzaction:click', index, action)
