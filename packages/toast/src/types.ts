@@ -24,6 +24,10 @@ type FzToastQueueProps = {
    * Custom toast queue. Defaults to internal self-managed queue.
    */
   toasts?: Toast[];
+  /**
+   * Whether to align to the left or right
+   */
+  align?: "left" | "right";
 };
 
 export { ToastType, Toast, NewToast, FzToastProps, FzToastQueueProps };

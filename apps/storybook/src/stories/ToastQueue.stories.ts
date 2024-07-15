@@ -53,8 +53,16 @@ const CustomQueue: Story = {
         enqueueToast({ type, message: 'This is a toast.' }, toasts)
       }
 
+      function handleEnqueueLong(type: 'success' | 'warning' | 'success') {
+        enqueueToast({ 
+          type,
+          message: 'This is a long long long long long long long long long long long long long long long long long long long long long long long long long toast.',
+        }, toasts)
+      }
+
       return {
         handleEnqueue,
+        handleEnqueueLong,
         toasts
       }
     },
@@ -63,6 +71,7 @@ const CustomQueue: Story = {
           <FzButton @click="handleEnqueue('success')">Success</FzButton>
           <FzButton @click="handleEnqueue('warning')">Warning</FzButton>
           <FzButton @click="handleEnqueue('error')" class="mb-6">Error</FzButton>
+          <FzButton @click="handleEnqueueLong('error')" class="mb-6 mr-auto">Error long</FzButton>
           <FzToastQueue :toasts="toasts" />
         </div>
       `

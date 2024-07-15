@@ -9,22 +9,22 @@
         <FzToast
           v-for="(toast, index) in toasts"
           :key="toast.createdAt.getTime()"
-          :ref="
-            (el: InstanceType<typeof FzToast>) =>
-              handleToastRef(el, index, isHovering)
-          "
+          :ref="(el: any) => handleToastRef(el, index, isHovering)"
           :type="toast.type"
-          class="toast absolute right-0 origin-bottom transition-all duration-300"
+          class="toast absolute origin-bottom transition-all duration-300"
+          :class="toastClass"
           :style="getToastStyle(index)"
           @close="handleToastClose(toast)"
         >
-          {{ isHovering || !index ? toast.message : "..." }}
+          <span :class="{ 'truncate group-hover:whitespace-normal': index }">{{
+            toast.message
+          }}</span>
         </FzToast>
       </TransitionGroup>
     </div>
 
     <div class="flex flex-col">
-      <template v-for="toast in toasts" :key="toast.createdAt">
+      <template v-for="toast in toasts" :key="toast.createdAt.getTime()">
         <FzToast
           :type="toast.type"
           class="[&:nth-child(n+2)]:mt-12 invisible hidden group-hover:flex"
@@ -37,23 +37,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRef } from "vue";
+import { computed, ref, toRef } from "vue";
 import { FzToast, FzToastQueueProps, Toast } from "./index";
 import { toasts as internalToasts, removeToast } from "./queue";
 
-const props = defineProps<FzToastQueueProps>();
+const props = withDefaults(defineProps<FzToastQueueProps>(), {
+  align: "right",
+});
 const toasts = props.toasts ? toRef(props.toasts) : internalToasts;
 const toastsHeight = ref<number[]>([]);
 const isHovering = ref(false);
 
+const toastClass = computed(() => [
+  {
+    left: "left-0",
+    right: "right-0",
+  }[props.align],
+]);
+
 /*
  * While not used, passing isHovering is needed to recalculate toasts' height
  */
-function handleToastRef(
-  el: InstanceType<typeof FzToast>,
-  index: number,
-  isHovering: boolean,
-) {
+function handleToastRef(el: any, index: number, isHovering: boolean) {
   toastsHeight.value[index] = el?.containerRef?.clientHeight;
 }
 
