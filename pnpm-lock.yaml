@@ -940,6 +940,9 @@ importers:
 
   packages/datepicker:
     dependencies:
+      '@vuepic/vue-datepicker':
+        specifier: ^8.8.1
+        version: 8.8.1(vue@3.4.13(typescript@5.3.3))
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -4225,6 +4228,11 @@ packages:
   '@vue/tsconfig@0.5.1':
     resolution: {integrity: sha512-VcZK7MvpjuTPx2w6blwnwZAu5/LgBUtejFOi3pPGQFXQN5Ela03FUtd2Qtg4yWGGissVL0dr6Ro1LfOFh+PCuQ==}
 
+  '@vuepic/vue-datepicker@8.8.1':
+    resolution: {integrity: sha512-8ehfUz1m69Vuc16Pm4ukgb3Mg1VT14x4EsG1ag4O/qbSNRWztTo+pUV4JnFt0FGLl5gGb6NXlxIvR7EjLgD7Gg==}
+    peerDependencies:
+      vue: '>=3.2.0'
+
   '@yarnpkg/esbuild-plugin-pnp@3.0.0-rc.15':
     resolution: {integrity: sha512-kYzDJO5CA9sy+on/s2aIW0411AklfCi8Ck/4QDivOqsMKpStZA2SsR+X27VTggGwpStWaLrjJcDcdDMowtG8MA==}
     engines: {node: '>=14.15.0'}
@@ -4838,6 +4846,9 @@ packages:
   data-urls@5.0.0:
     resolution: {integrity: sha512-ZYP5VBHshaDAiVZxjbRVcFJpc+4xGgT0bK3vzy1HLN8jTO975HEbuYzZJcHoQEY5K1a0z8YayJkyVETa08eNTg==}
     engines: {node: '>=18'}
+
+  date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
 
   dayjs@1.11.10:
     resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
@@ -10752,6 +10763,11 @@ snapshots:
 
   '@vue/tsconfig@0.5.1': {}
 
+  '@vuepic/vue-datepicker@8.8.1(vue@3.4.13(typescript@5.3.3))':
+    dependencies:
+      date-fns: 3.6.0
+      vue: 3.4.13(typescript@5.3.3)
+
   '@yarnpkg/esbuild-plugin-pnp@3.0.0-rc.15(esbuild@0.19.11)':
     dependencies:
       esbuild: 0.19.11
@@ -11393,6 +11409,8 @@ snapshots:
     dependencies:
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.0.0
+
+  date-fns@3.6.0: {}
 
   dayjs@1.11.10: {}
 
