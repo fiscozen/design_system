@@ -1,4 +1,4 @@
 export const mapSizeToClasses = {
   sm: "text-sm",
-  md: "text-md",
+  md: "text-base",
 };

@@ -46,7 +46,7 @@ const staticLabelClass = `
   before:border-solid 
   before:border-1 
   before:rounded-full 
-  before:ml-4
+  before:m-2
   peer-checked:before:bg-transparent 
   peer-focus:before:outline 
   peer-focus:before:outline-offset-1 
@@ -66,7 +66,7 @@ const computedLabelClass = computed(() => [
     ? "before:h-12 before:w-12 before:mt-[3px] peer-checked:before:border-4"
     : "",
   props.size === "md"
-    ? "before:h-16 before:w-16 before:mt-4 peer-checked:before:border-[5px]"
+    ? "before:h-16 before:w-16 peer-checked:before:border-[5px]"
     : "",
   getBorderAndTextColorForLabel(),
 ]);
