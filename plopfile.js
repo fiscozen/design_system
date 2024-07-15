@@ -47,6 +47,11 @@ module.exports = function (plop) {
       },
       {
         type: "add",
+        path: basePath + "tsconfig.json",
+        templateFile: "templates/component/tsconfig.json",
+      },
+      {
+        type: "add",
         path: basePath + "vite.config.ts",
         templateFile: "templates/component/vite.config.ts",
       },
