@@ -38,6 +38,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@vuepic/vue-datepicker": "^8.8.1"
+    "@fiscozen/composables": "workspace:^",
+    "@fiscozen/icons": "^0.1.4",
+    "@fiscozen/style": "workspace:^",
+    "@vuepic/vue-datepicker": "^8.8.1",
+    "date-fns": "^3.6.0"
   }
 }
