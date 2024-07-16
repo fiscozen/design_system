@@ -7,6 +7,7 @@ export type FzCardProps = {
   contentClass?: string;
   collapsible?: boolean;
   defaultExpanded?: boolean;
+  alwaysAlive?: boolean;
 };
 
 type FzCardButton = {
