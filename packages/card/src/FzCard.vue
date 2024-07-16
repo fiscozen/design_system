@@ -1,6 +1,6 @@
 <template>
   <section :class="[sectionStaticClass, backgroundColor]">
-    <header :class="[headerContainerComputedClass, borderColor]">
+    <header :class="[headerContainerComputedClass, borderColor]" @click="toggleOpen">
       <div :class="headerStaticClass">
         <div class="flex flex-row gap-12 items-center">
           <h2
@@ -15,37 +15,34 @@
         <FzIconButton
           v-if="collapsible"
           :iconName="isOpen ? 'chevron-up' : 'chevron-down'"
-          @click="isOpen = !isOpen"
           variant="invisible"
         />
       </div>
       <slot name="header-content"></slot>
     </header>
-    <template v-if="showContent">
-      <article :class="['p-20', contentClass]">
-        <slot></slot>
-      </article>
-      <footer v-if="atLeastOneButton" :class="[footerStaticClass, borderColor]">
-        <FzIconButton
-          v-if="tertiaryAction"
-          @click="$emit('fztertiary:click')"
-          :iconName="tertiaryAction.icon"
-          variant="invisible"
-        />
-        <FzButton
-          v-if="secondaryAction"
-          @click="$emit('fzsecondary:click')"
-          :label="secondaryAction.label"
-          variant="secondary"
-        />
-        <FzButton
-          v-if="primaryAction"
-          @click="$emit('fzprimary:click')"
-          :label="primaryAction.label"
-          variant="primary"
-        />
-      </footer>
-    </template>
+    <article v-if="isAlive" :class="['p-20', contentClass]" v-show="showContent">
+      <slot></slot>
+    </article>
+    <footer v-if="atLeastOneButton && isAlive" :class="[footerStaticClass, borderColor]" v-show="showContent">
+      <FzIconButton
+        v-if="tertiaryAction"
+        @click="$emit('fztertiary:click')"
+        :iconName="tertiaryAction.icon"
+        variant="invisible"
+      />
+      <FzButton
+        v-if="secondaryAction"
+        @click="$emit('fzsecondary:click')"
+        :label="secondaryAction.label"
+        variant="secondary"
+      />
+      <FzButton
+        v-if="primaryAction"
+        @click="$emit('fzprimary:click')"
+        :label="primaryAction.label"
+        variant="primary"
+      />
+    </footer>
   </section>
 </template>
 
@@ -65,8 +62,10 @@ const footerStaticClass =
   "h-64 border-t-1 border-solid p-16 flex justify-end gap-8 items-center";
 
 const showContent = computed(() => isOpen.value || !props.collapsible);
+const isAlive = computed(() => props.alwaysAlive || showContent.value);
 const headerContainerComputedClass = computed(() => [
   showContent.value ? "border-b-1" : "border-b-0",
+  props.collapsible ? "cursor-pointer" : "",
 ]);
 
 const backgroundColor = computed(() => {
@@ -102,6 +101,11 @@ const atLeastOneButton = computed(
     props.tertiaryAction !== undefined,
 );
 
+function toggleOpen() {
+  if (props.collapsible) 
+    isOpen.value = !isOpen.value;
+}
+
 onMounted(() => {
   if (props.tertiaryAction && !props.secondaryAction && !props.primaryAction)
     console.warn(
@@ -112,4 +116,6 @@ onMounted(() => {
       "[Fiscozen Design System]: You should set primaryAction if you want to set secondaryAction",
     );
 });
+
+defineExpose({ toggleOpen });
 </script>

@@ -14,7 +14,7 @@ type CardStory = StoryObj<typeof FzCard>
 const Template: CardStory = {
   render: (args) => ({
     components: { FzCard, FzBadge },
-    setup() {
+    setup() {        
       return {
         args
       }
@@ -164,6 +164,31 @@ export const CardWithHeaderContent: CardStory = {
     tertiaryAction: {
       icon: 'bell'
     },
+    collapsible: true
+  }
+}
+
+export const AlwaysAliveCard: CardStory = {
+  render: (args) => ({
+    components: { FzCard },
+    setup() {
+      return {
+        args
+      }
+    },
+
+    methods: {
+      onPrimaryAction: () => console.log('Primary action clicked'),
+      onSecondaryAction: () => console.log('Secondary action clicked'),
+      onTertiaryAction: () => console.log('Tertiary action clicked')
+    },
+    template: `<FzCard v-bind="args" class="m-8" @fzprimary:click="onPrimaryAction" @fzsecondary:click="onSecondaryAction" @fztertiary:click="onTertiaryAction"> 
+                        <div> Some random content </div>
+                    </FzCard>`
+  }),
+  args: {
+    title: 'Title',
+    alwaysAlive: true,
     collapsible: true
   }
 }
