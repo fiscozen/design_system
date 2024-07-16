@@ -1,14 +1,21 @@
-import { describe, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { FzDatepicker } from '..'
+import { describe, it, vi } from "vitest";
+import { mount } from "@vue/test-utils";
+import { FzDatepicker } from "..";
 
-describe.concurrent('FzDatepicker', () => {
-  it('matches snaphost', async ({ expect }) => {
-    const wrapper = mount(FzDatepicker, {
-      props: {},
-      slots: {}
+describe.concurrent("FzDatepicker", () => {
+  vi.mock('@fiscozen/composables', () => ({
+    useBreakpoints: vi.fn().mockReturnValue({
+      isSmaller: vi.fn().mockReturnValue(false)
     })
+  }))
+  it("matches snaphost", async ({ expect }) => {
+    const wrapper = mount(FzDatepicker, {
+      props: {
+        modelValue: new Date()
+      },
+      slots: {},
+    });
 
-    expect(wrapper.html()).toMatchSnapshot()
-  })
-})
+    expect(wrapper.html()).toMatchSnapshot();
+  });
+});

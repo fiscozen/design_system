@@ -1,5 +1,5 @@
-import type {VueDatePickerProps} from '@vuepic/vue-datepicker'
+import type { VueDatePickerProps } from "@vuepic/vue-datepicker";
 
 interface FzDatepickerProps extends VueDatePickerProps {}
 
-export { FzDatepickerProps }
+export { FzDatepickerProps };
