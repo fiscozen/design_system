@@ -11,9 +11,13 @@
         @click="emit('fzaction:click', itemIndex, item)"
         >{{ item.label }}</FzNavlink
       >
-      <FzRouterNavlink v-else class="grow-1 flex justify-start" v-bind="item">{{
-        item.label
-      }}</FzRouterNavlink>
+      <FzRouterNavlink
+        v-else
+        class="grow-1 flex justify-start"
+        v-bind="item"
+        @click="emit('fzaction:click', itemIndex, item)"
+        >{{ item.label }}</FzRouterNavlink
+      >
     </div>
   </div>
 </template>

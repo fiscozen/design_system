@@ -1,5 +1,5 @@
 <template>
-  <FzFloating :isOpen :position="floatingPosition">
+  <FzFloating :isOpen :position="floatingPosition" ref="container">
     <template #opener>
       <FzButton
         icon-position="after"
@@ -15,10 +15,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ComponentPublicInstance, computed, ref } from 'vue'
 import { FzButton, ButtonSize } from '@fiscozen/button'
 import { FzActionlist, FzActionlistProps, ActionlistItem } from '@fiscozen/actionlist'
-import { FzFloating } from '@fiscozen/composables'
+import { FzFloating, useClickOutside } from '@fiscozen/composables'
 
 const props = withDefaults(
   defineProps<{
@@ -38,9 +38,14 @@ const props = withDefaults(
      * Whether to align to the left or right
      */
     align: 'left' | 'right'
+    /**
+     * Whether to close the action list when an action is clicked
+     */
+    closeOnActionClick?: boolean
   }>(),
   {
-    size: 'md'
+    size: 'md',
+    closeOnActionClick: true
   }
 )
 
@@ -49,10 +54,19 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(false)
+const container = ref<ComponentPublicInstance>()
+const containerDom = computed(() => container.value?.$el)
 const buttonIconName = computed(() => (isOpen.value ? 'angle-up' : 'angle-down'))
 const floatingPosition = computed(() => (props.align === 'left' ? 'bottom-start' : 'bottom-end'))
 
+useClickOutside(containerDom, () => {
+  isOpen.value = false
+})
+
 function handleActionClick(index: number, action: ActionlistItem) {
   emit('fzaction:click', index, action)
+  if (props.closeOnActionClick) {
+    isOpen.value = false
+  }
 }
 </script>
