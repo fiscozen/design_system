@@ -6,7 +6,7 @@
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",
     "test:unit": "vitest run",
-    "build": "vue-tsc && vite build"
+    "build": "vue-tsc --noEmit && vite build"
   },
   "main": "src/index.ts",
   "type": "module",
