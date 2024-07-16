@@ -6,10 +6,10 @@
     :model-value="modelValue"
   >
     <template #arrow-left>
-        <FzIcon name="angle-left" size="sm"></FzIcon>
+        <FzIcon name="angle-left" size="md"></FzIcon>
     </template>
     <template #arrow-right>
-        <FzIcon name="angle-right" size="sm"></FzIcon>
+        <FzIcon name="angle-right" size="md"></FzIcon>
     </template>
     <template #tp-inline-arrow-down>
       <FzIcon name="angle-down" size="sm"></FzIcon>
@@ -140,5 +140,24 @@ const calendarClassName = computed(() => {
   margin-left: 8px;
   margin-right: 8px;
 }
+
+.dp--header-wrap, .dp--header-wrap button{
+    height: 32px;
+}
+.dp__month_year_wrap .dp__inner_nav {
+    width: 32px;
+    height: 32px;
+    padding: 3.5px;
+    border-radius: 4px;
+    border: 1px solid var(--grey-200, #D1DDE6);
+    box-shadow: 0px 0px 0px 0px #000;
+}
+
+.dp__month_year_wrap .dp__inner_nav:hover {
+    color: var(--core-white, #FFF);
+}
+
+.dp__month_year_wrap {
+    height: 32px;
+}
 </style>
-<style scoped></style>
