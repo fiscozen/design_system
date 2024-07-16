@@ -5,6 +5,12 @@
     @update:model-value="(e) => $emit('update:model-value', e)"
     :model-value="modelValue"
   >
+    <template #arrow-left>
+        <FzIcon name="angle-left" size="sm"></FzIcon>
+    </template>
+    <template #arrow-right>
+        <FzIcon name="angle-right" size="sm"></FzIcon>
+    </template>
     <template #tp-inline-arrow-down>
       <FzIcon name="angle-down" size="sm"></FzIcon>
     </template>
