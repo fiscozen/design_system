@@ -1084,8 +1084,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.89
-        version: 1.0.89
+        specifier: ^1.0.98
+        version: 1.0.98
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.5.1
         version: 6.5.1
@@ -2000,6 +2000,10 @@ packages:
 
   '@awesome.me/kit-8137893ad3@1.0.89':
     resolution: {integrity: sha512-FzQahyc/VMlgJc1xHfLnjnKuk4a11gTh0/cM38XcG2JFOTkSEQ7M67UA134WuQqDN/Gr1wwkpsddCXw9ETWoYw==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.89/kit-8137893ad3-1.0.89.tgz}
+    engines: {node: '>=16'}
+
+  '@awesome.me/kit-8137893ad3@1.0.98':
+    resolution: {integrity: sha512-70kwISskvDMk/eiN+JfzppWpXlhcd3ZNxh++RG41da+NMQqi3XreVGpjGoG5j8psDi+3l+CsrjI3d/pZbWYyWQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.98/kit-8137893ad3-1.0.98.tgz}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.23.5':
@@ -3316,11 +3320,11 @@ packages:
   '@storybook/csf@0.0.1':
     resolution: {integrity: sha512-USTLkZze5gkel8MYCujSRBVIrUQ3YPBrLOx7GNk/0wttvVtlzWXAq9eLbQ4p/NicGxP+3T7KPEMVV//g+yubpw==}
 
+  '@storybook/csf@0.1.11':
+    resolution: {integrity: sha512-dHYFQH3mA+EtnCkHXzicbLgsvzYjcDJ1JWsogbItZogkPHgSJM/Wr71uMkcvw8v9mmCyP4NpXJuu6bPoVsOnzg==}
+
   '@storybook/csf@0.1.7':
     resolution: {integrity: sha512-53JeLZBibjQxi0Ep+/AJTfxlofJlxy1jXcSKENlnKxHjWEYyHQCumMP5yTFjf7vhNnMjEpV3zx6t23ssFiGRyw==}
-
-  '@storybook/csf@0.1.8':
-    resolution: {integrity: sha512-Ntab9o7LjBCbFIao5l42itFiaSh/Qu+l16l/r/9qmV9LnYZkO+JQ7tzhdlwpgJfhs+B5xeejpdAtftDRyXNajw==}
 
   '@storybook/docs-mdx@3.0.0':
     resolution: {integrity: sha512-NmiGXl2HU33zpwTv1XORe9XG9H+dRUC1Jl11u92L4xr062pZtrShLmD4VKIsOQujxhhOrbxpwhNOt+6TdhyIdQ==}
@@ -6562,8 +6566,8 @@ packages:
     resolution: {integrity: sha512-trVZiI6RMOkO476zLGaBIzszOdFPnCCXHPG9kn0yuS1uz6xdVxPfZdB3vUig9pxPFDM9BRAgz/YUIVQ1/vuiUg==}
     engines: {node: '>=0.6'}
 
-  qs@6.12.1:
-    resolution: {integrity: sha512-zWmv4RSuB9r2mYQw3zxQuHWeU+42aKi1wWig/j4ele4ygELZ7PEO6MM7rim9oAQH2A5MWfsAVf/jPvTPgCbvUQ==}
+  qs@6.12.3:
+    resolution: {integrity: sha512-AWJm14H1vVaO/iNZ4/hO+HyaTehuy9nRqVdkTqlJt0HWvBiBIEXFmb4C0DGeYo3Xes9rrEW+TxHsaigCbN5ICQ==}
     engines: {node: '>=0.6'}
 
   querystringify@2.2.0:
@@ -7715,6 +7719,10 @@ snapshots:
       '@fortawesome/fontawesome-common-types': 6.5.2
 
   '@awesome.me/kit-8137893ad3@1.0.89':
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.5.2
+
+  '@awesome.me/kit-8137893ad3@1.0.98':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.5.2
 
@@ -9377,7 +9385,7 @@ snapshots:
 
   '@storybook/core-events@8.1.2':
     dependencies:
-      '@storybook/csf': 0.1.8
+      '@storybook/csf': 0.1.11
       ts-dedent: 2.2.0
 
   '@storybook/core-server@8.0.10(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
@@ -9458,11 +9466,11 @@ snapshots:
     dependencies:
       lodash: 4.17.21
 
-  '@storybook/csf@0.1.7':
+  '@storybook/csf@0.1.11':
     dependencies:
       type-fest: 2.19.0
 
-  '@storybook/csf@0.1.8':
+  '@storybook/csf@0.1.7':
     dependencies:
       type-fest: 2.19.0
 
@@ -9546,14 +9554,14 @@ snapshots:
       '@storybook/channels': 8.1.2
       '@storybook/client-logger': 8.1.2
       '@storybook/core-events': 8.1.2
-      '@storybook/csf': 0.1.8
+      '@storybook/csf': 0.1.11
       '@storybook/global': 5.0.0
       '@storybook/types': 8.1.2
       '@types/qs': 6.9.15
       dequal: 2.0.3
       lodash: 4.17.21
       memoizerific: 1.11.3
-      qs: 6.12.1
+      qs: 6.12.3
       tiny-invariant: 1.3.3
       ts-dedent: 2.2.0
       util-deprecate: 1.0.2
@@ -13178,7 +13186,7 @@ snapshots:
     dependencies:
       side-channel: 1.0.6
 
-  qs@6.12.1:
+  qs@6.12.3:
     dependencies:
       side-channel: 1.0.6
 
