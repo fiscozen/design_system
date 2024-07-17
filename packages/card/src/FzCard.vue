@@ -26,19 +26,19 @@
     <footer v-if="atLeastOneButton && isAlive" :class="[footerStaticClass, borderColor]" v-show="showContent">
       <FzIconButton
         v-if="tertiaryAction"
-        @click="$emit('fztertiary:click')"
+        @click="emit('fztertiary:click')"
         :iconName="tertiaryAction.icon"
         variant="invisible"
       />
       <FzButton
         v-if="secondaryAction"
-        @click="$emit('fzsecondary:click')"
+        @click="emit('fzsecondary:click')"
         :label="secondaryAction.label"
         variant="secondary"
       />
       <FzButton
         v-if="primaryAction"
-        @click="$emit('fzprimary:click')"
+        @click="emit('fzprimary:click')"
         :label="primaryAction.label"
         variant="primary"
       />
@@ -48,10 +48,12 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { FzCardProps } from "./types";
+import { FzCardEvents, FzCardProps, FzCardSlots } from "./types";
 import { FzButton, FzIconButton } from "@fiscozen/button";
 
 const props = defineProps<FzCardProps>();
+const emit = defineEmits<FzCardEvents>();
+defineSlots<FzCardSlots>();
 const isOpen = ref(props.defaultExpanded ?? false);
 
 const sectionStaticClass =
@@ -117,5 +119,10 @@ onMounted(() => {
     );
 });
 
-defineExpose({ toggleOpen });
+defineExpose({ 
+  /**
+   * Method to toggle the card open/closed state
+   */
+  toggleOpen
+});
 </script>
