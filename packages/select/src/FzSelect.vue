@@ -6,23 +6,25 @@
   >
     <template #opener class="flex">
       <div class="w-full flex flex-col gap-8">
-        <label :class="['text-sm', computedLabelClass]">
-          {{ label }}{{ required ? " *" : "" }}</label
-        >
-        <button
-          @click="handlePickerClick"
-          :size="size"
-          :class="[staticPickerClass, computedPickerClass, pickerClass]"
-          ref="opener"
-          :title="selectedOption ? selectedOption.label : placeholder"
-        >
-          <FzIcon v-if="leftIcon" :name="leftIcon" :size="size" />
-          <span :class="[staticSpanClass, computedSpanClass]">
-            {{ selectedOption ? selectedOption.label : placeholder }}
-          </span>
-          <FzIcon v-if="rightIcon" :name="rightIcon" :size="size" />
-          <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" :size="size" />
-        </button>
+        <slot name="opener" :handlePickerClick :isOpen>
+          <label :class="['text-sm', computedLabelClass]">
+            {{ label }}{{ required ? " *" : "" }}</label
+          >
+          <button
+            @click="handlePickerClick"
+            :size="size"
+            :class="[staticPickerClass, computedPickerClass, pickerClass]"
+            ref="opener"
+            :title="selectedOption ? selectedOption.label : placeholder"
+          >
+            <FzIcon v-if="leftIcon" :name="leftIcon" :size="size" />
+            <span :class="[staticSpanClass, computedSpanClass]">
+              {{ selectedOption ? selectedOption.label : placeholder }}
+            </span>
+            <FzIcon v-if="rightIcon" :name="rightIcon" :size="size" />
+            <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" :size="size" />
+          </button>
+        </slot>
       </div>
     </template>
     <template #opener-end>
@@ -84,7 +86,10 @@ const opener = ref<HTMLElement>();
 const containerRef = ref<HTMLElement>();
 const containerWidth = ref<string>("auto");
 
-useClickOutside(opener, () => {
+const safeOpener = computed(() => {
+  return props.extOpener ? props.extOpener : opener.value;
+})
+useClickOutside(safeOpener, () => {
   isOpen.value = false;
 });
 
