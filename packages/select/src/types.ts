@@ -1,4 +1,6 @@
-export type FzSelectProps = {
+import { FzFloatingProps } from "@fiscozen/composables";
+
+export interface FzSelectProps extends FzFloatingProps {
   /**
    * The list of options displayer in the floating panel
    */
@@ -39,6 +41,10 @@ export type FzSelectProps = {
    * The class applied to the input
    */
   pickerClass?: string;
+  /**
+   * Ref to the element that opens the selection
+   */
+  extOpener?: HTMLElement;
 };
 
 export type FzSelectOptionsProps = {
