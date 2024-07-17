@@ -5,7 +5,11 @@ import { FzBadge } from '@fiscozen/badge'
 const meta = {
   title: '@fiscozen/card/FzCard',
   component: FzCard,
-  tags: ['autodocs']
+  tags: ['autodocs'],
+  argTypes: {
+    // it will not be generated in the typescript definition probabily because it has '- ' in the name
+    'header-content': { description: 'Slot for the header content, it will be displayed below the title' },
+  }
 } satisfies Meta<typeof FzCard>
 export default meta
 
