@@ -60,14 +60,14 @@ const computedInputClass = computed(() => ({
   "radio--medium": props.size === "md",
 }));
 
+const computedLabelObject = {
+  sm: "before:h-12 before:w-12 before:mt-[3px] peer-checked:before:border-4",
+  md: "before:h-16 before:w-16 peer-checked:before:border-[5px]",
+}
+
 const computedLabelClass = computed(() => [
   mapSizeToClasses[props.size],
-  props.size === "sm"
-    ? "before:h-12 before:w-12 before:mt-[3px] peer-checked:before:border-4"
-    : "",
-  props.size === "md"
-    ? "before:h-16 before:w-16 peer-checked:before:border-[5px]"
-    : "",
+  computedLabelObject[props.size],
   getBorderAndTextColorForLabel(),
 ]);
 
