@@ -1,14 +1,14 @@
-import { describe, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { FzTypeahead } from '..'
+import { describe, it, vi } from "vitest";
+import { mount } from "@vue/test-utils";
+import { FzTypeahead } from "..";
 
-describe.concurrent('FzTypeahead', () => {
-  it('matches snaphost', async ({ expect }) => {
+describe.concurrent("FzTypeahead", () => {
+  it("matches snaphost", async ({ expect }) => {
     const wrapper = mount(FzTypeahead, {
       props: {},
-      slots: {}
-    })
+      slots: {},
+    });
 
-    expect(wrapper.html()).toMatchSnapshot()
-  })
-})
+    expect(wrapper.html()).toMatchSnapshot();
+  });
+});
