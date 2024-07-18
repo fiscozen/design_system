@@ -1,2 +1,2 @@
-export { default as FzTypeahead } from './FzTypeahead.vue'
-export type * from './types'
+export { default as FzTypeahead } from "./FzTypeahead.vue";
+export type * from "./types";
