@@ -183,3 +183,32 @@ export const Required: RadioGroupStory = {
     required: true
   }
 }
+
+export const helpTextAndError: RadioGroupStory = {
+  render: (args) => ({
+    components: { FzRadioGroup, FzRadio, FzIcon },
+    setup() {
+      const selected = ref('option2')
+
+      return {
+        args,
+        selected
+      }
+    },
+    template: `<FzRadioGroup v-bind="args" >
+                    <template #help> This is a help text </template>
+                    <template #error> This is an error text </template>
+                    <template v-slot="{radioGroupProps}"> 
+                        <FzRadio label="Option 1" value="option1" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 2" value="option2" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 3" value="option3" v-model="selected" v-bind="radioGroupProps"/>
+                    </template>
+                    
+                </FzRadioGroup>`
+  }),
+  args: {
+    size: 'md',
+    label: 'Radio Group',
+    error: true
+  }
+}
