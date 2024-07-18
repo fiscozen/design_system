@@ -940,12 +940,15 @@ importers:
 
   packages/datepicker:
     dependencies:
+      '@fiscozen/button':
+        specifier: workspace:^
+        version: link:../button
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
       '@fiscozen/icons':
-        specifier: ^0.1.4
-        version: 0.1.4(vue@3.4.13(typescript@5.3.3))
+        specifier: workspace:^
+        version: link:../icons
       '@fiscozen/style':
         specifier: workspace:^
         version: link:../style
@@ -3273,11 +3276,6 @@ packages:
 
   '@fal-works/esbuild-plugin-global-externals@2.1.2':
     resolution: {integrity: sha512-cEee/Z+I12mZcFJshKcCqC8tuX5hG3s+d+9nZ3LabqKF1vKdF41B92pJVCBggjAGORAeOzyyDDKrZwIkLffeOQ==}
-
-  '@fiscozen/icons@0.1.4':
-    resolution: {integrity: sha512-Sh8nMGANP/Od/pE/XboTPJnQqYN98MDDk8uGiGBRkxbTOrQDwtvtHtG8qVCI0I4No98cEt3ZaVjQML6GZmcZHg==}
-    peerDependencies:
-      vue: ^3.4.13
 
   '@fiscozen/icons@0.1.6':
     resolution: {integrity: sha512-Oz/NM97JasaOBTKSslUYpB1KKZDE+3x5tC47uvdlUsxPn+/1v4vy5MiU12istj2CuErbRHewXbNWdZwgmvjFWA==}
@@ -9229,13 +9227,6 @@ snapshots:
   '@eslint/js@8.57.0': {}
 
   '@fal-works/esbuild-plugin-global-externals@2.1.2': {}
-
-  '@fiscozen/icons@0.1.4(vue@3.4.13(typescript@5.3.3))':
-    dependencies:
-      '@awesome.me/kit-8137893ad3': 1.0.89
-      '@fortawesome/fontawesome-svg-core': 6.5.1
-      '@fortawesome/vue-fontawesome': 3.0.6(@fortawesome/fontawesome-svg-core@6.5.1)(vue@3.4.13(typescript@5.3.3))
-      vue: 3.4.13(typescript@5.3.3)
 
   '@fiscozen/icons@0.1.6(vue@3.4.13(typescript@5.3.3))':
     dependencies:
