@@ -35,7 +35,9 @@ const props = withDefaults(defineProps<FzRadioProps>(), {
 
 const model = defineModel();
 const value = props.value ?? props.label;
-const computedId = computed(() => props.name ? `${props.name}-${props.label}` : props.label)
+const computedId = computed(() =>
+  props.name ? `${props.name}-${props.label}` : props.label,
+);
 
 const radioContainer = ref<HTMLInputElement | null>(null);
 const staticLabelClass = `
@@ -63,7 +65,7 @@ const computedInputClass = computed(() => ({
 const computedLabelObject = {
   sm: "before:h-12 before:w-12 before:mt-[3px] peer-checked:before:border-4",
   md: "before:h-16 before:w-16 peer-checked:before:border-[5px]",
-}
+};
 
 const computedLabelClass = computed(() => [
   mapSizeToClasses[props.size],
