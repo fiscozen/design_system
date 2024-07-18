@@ -6,16 +6,16 @@
     :model-value="modelValue"
   >
     <template #arrow-left>
-        <FzIcon name="angle-left" size="md"></FzIcon>
+      <FzIconButton iconName="angle-left" size="md" variant="secondary"></FzIconButton>
     </template>
     <template #arrow-right>
-        <FzIcon name="angle-right" size="md"></FzIcon>
+      <FzIconButton iconName="angle-right" size="md" variant="secondary"></FzIconButton>
     </template>
     <template #tp-inline-arrow-down>
-      <FzIcon name="angle-down" size="sm"></FzIcon>
+      <FzIconButton iconName="angle-down" size="sm" variant="secondary"></FzIconButton>
     </template>
     <template #tp-inline-arrow-up>
-      <FzIcon name="angle-up" size="sm"></FzIcon>
+      <FzIconButton iconName="angle-up" size="sm" variant="secondary"></FzIconButton>
     </template>
   </VueDatePicker>
 </template>
@@ -26,7 +26,7 @@ import { FzDatepickerProps } from "./types";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import { useBreakpoints } from "@fiscozen/composables";
 import { breakpoints } from "@fiscozen/style";
-import { FzIcon } from "@fiscozen/icons";
+import { FzIconButton } from "@fiscozen/button";
 import { it } from "date-fns/locale";
 import "@vuepic/vue-datepicker/dist/main.css";
 
@@ -90,74 +90,54 @@ const calendarClassName = computed(() => {
   --dp-hover-text-color: var(--core-white, #fff);
   --dp-secondary-color: var(--grey-400, #6e777e);
 }
-.dp__range_start {
-  border-end-end-radius: 4px;
-  border-start-end-radius: 4px;
+.dp__range_start,
+.dp__range_end,
+.dp__range_between,
+.dp__date_hover_start:hover,
+.dp__date_hover_end:hover {
+  @apply rounded;
 }
-.dp__range_end {
-  border-end-start-radius: 4px;
-  border-start-start-radius: 4px;
-}
-.dp__range_between {
-  border-radius: 4px;
-}
+
 .dp__today {
-  border: 2px solid var(--blue-500, #5a6eff);
+  @apply border-2 border-blue-500;
 }
 
 .dp__cell_auto_range,
 .dp__cell_auto_range_start,
 .dp__cell_auto_range_end {
-  border: 2px dashed var(--blue-400, #7b8bff);
-  border-radius: 4px;
+  @apply border-2 border-dashed border-blue-400;
 }
 
 .is-mobile .dp__flex_display {
-  flex-direction: column;
+  @apply flex-col;
 }
 
 .dp__overlay {
-  width: 320px !important;
+  @apply !w-[320px]; 
 }
 
 .dp__time_col {
-  flex-direction: row;
-}
-
-.dp__inc_dec_button_inline {
-  border-radius: 4px;
-  border: 1px solid var(--grey-200, #d1dde6);
-  width: 24px;
-  height: 24px;
-  padding: 4.5px;
+  @apply flex-row;
 }
 
 .dp__instance_calendar {
-  padding: 8px;
+  @apply p-8;
 }
 
 .dp__time_display_inline {
-  margin-left: 8px;
-  margin-right: 8px;
+  @apply mx-8;
 }
 
-.dp--header-wrap, .dp--header-wrap button{
-    height: 32px;
-}
-.dp__month_year_wrap .dp__inner_nav {
-    width: 32px;
-    height: 32px;
-    padding: 3.5px;
-    border-radius: 4px;
-    border: 1px solid var(--grey-200, #D1DDE6);
-    box-shadow: 0px 0px 0px 0px #000;
+.dp--header-wrap,
+.dp--header-wrap button {
+  @apply h-32;
 }
 
 .dp__month_year_wrap .dp__inner_nav:hover {
-    color: var(--core-white, #FFF);
+  @apply text-core-white;
 }
 
 .dp__month_year_wrap {
-    height: 32px;
+  @apply h-32;
 }
 </style>
