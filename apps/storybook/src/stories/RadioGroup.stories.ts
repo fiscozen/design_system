@@ -202,13 +202,67 @@ export const helpTextAndError: RadioGroupStory = {
                         <FzRadio label="Option 1" value="option1" v-model="selected" v-bind="radioGroupProps"/>
                         <FzRadio label="Option 2" value="option2" v-model="selected" v-bind="radioGroupProps"/>
                         <FzRadio label="Option 3" value="option3" v-model="selected" v-bind="radioGroupProps"/>
-                    </template>
-                    
+                    </template>                   
                 </FzRadioGroup>`
   }),
   args: {
     size: 'md',
     label: 'Radio Group',
     error: true
+  }
+}
+
+export const valueWithNumber: RadioGroupStory = {
+  render: (args) => ({
+    components: { FzRadioGroup, FzRadio, FzIcon },
+    setup() {
+      const selected = ref("0")
+
+      return {
+        args,
+        selected
+      }
+    },
+    template: `<FzRadioGroup v-bind="args" >
+                    <template v-slot="{radioGroupProps}"> 
+                        <FzRadio label="Option 1" value="0" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 2" value="1" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 3" value="2" v-model="selected" v-bind="radioGroupProps"/>
+                    </template>
+                </FzRadioGroup>`
+  }),
+  args: {
+    size: 'sm',
+    label: 'Radio Group'
+  }
+}
+
+export const doesNotTriggerChangeOnCreation: RadioGroupStory = {
+  render: (args) => ({
+    components: { FzRadioGroup, FzRadio, FzIcon },
+    setup() {
+      const selected = ref("0")
+
+      return {
+        args,
+        selected
+      }
+    },
+    methods: {
+      onChange() {
+        window.alert('on change')
+      }
+    },
+    template: `<FzRadioGroup v-bind="args" @change="onChange" >
+                    <template v-slot="{radioGroupProps}"> 
+                        <FzRadio label="Option 1" value="0" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 2" value="1" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 3" value="2" v-model="selected" v-bind="radioGroupProps"/>
+                    </template>
+                </FzRadioGroup>`
+  }),
+  args: {
+    size: 'sm',
+    label: 'Radio Group'
   }
 }

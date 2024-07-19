@@ -35,6 +35,7 @@ const props = withDefaults(defineProps<FzRadioProps>(), {
 
 const model = defineModel();
 const value = props.value ?? props.label;
+const checked = ref(props.checked)
 const computedId = computed(() =>
   props.name ? `${props.name}-${props.label}` : props.label,
 );
@@ -93,7 +94,7 @@ const getBorderAndTextColorForLabel = () => {
 onMounted(() => {
   if (props.checked) onChange();
   if (model.value === value) {
-    radioContainer.value?.click();
+    checked.value = true;
   }
 });
 </script>
