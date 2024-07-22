@@ -20,6 +20,9 @@ importers:
 
   apps/storybook:
     dependencies:
+      '@awesome.me/kit-8137893ad3':
+        specifier: ^1.0.125
+        version: 1.0.125
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
