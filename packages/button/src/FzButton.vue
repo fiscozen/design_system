@@ -9,9 +9,11 @@
         />
       </slot>
     </div>
-    <slot>
-      {{ label }}
-    </slot>
+    <div :class="['truncate', containerClass]">
+      <slot>
+        {{ label }}
+      </slot>
+    </div>
     <div v-if="slots.after || iconAndLabel" :class="[staticIconClasses, afterClasses]">
       <slot name="after">
         <FzIcon
@@ -65,7 +67,11 @@ const props = withDefaults(
     /**
      * Positioning of the icon
      */
-    iconPosition?: 'before' | 'after'
+    iconPosition?: 'before' | 'after',
+    /**
+     * Define the css class for the default slot container
+     */
+    containerClass?: string
   }>(),
   {
     variant: 'primary',

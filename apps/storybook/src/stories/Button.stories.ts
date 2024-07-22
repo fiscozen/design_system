@@ -139,3 +139,16 @@ export const Success: Story = {
     label: 'Success button'
   }
 }
+
+
+export const ButtonWithLongTextOverflowing: Story = {
+  args: {
+    label: 'This is a very long text that should overflow the button',
+    class: 'w-full'
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'xs'
+    }
+  }
+}
