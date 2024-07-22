@@ -1084,8 +1084,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.98
-        version: 1.0.98
+        specifier: ^1.0.125
+        version: 1.0.125
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.5.1
         version: 6.5.1
@@ -1990,6 +1990,10 @@ packages:
     resolution: {integrity: sha512-Xk1sIhyNC/esHGGVjL/niHLowM0csl/kFO5uawBy4IrWwy0o1G8LGt3jP6nmWGz+USxeeqbihAmp/oVZju6wug==}
     hasBin: true
 
+  '@awesome.me/kit-8137893ad3@1.0.125':
+    resolution: {integrity: sha512-wQqiCY1AbpD0vD9oW3/LDWG/5u4kv5SkM9uJ/GkjncOmeJ++zp9xkFWaeyRjA4VRvRw1qcknEJQN3BMh/CWoHg==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.125/kit-8137893ad3-1.0.125.tgz}
+    engines: {node: '>=16'}
+
   '@awesome.me/kit-8137893ad3@1.0.71':
     resolution: {integrity: sha512-hWXmRY5x4E1jArOdcw9bN64Neeb55jIam9aZYXeF3ETcdGgT99NfNXPKLRra9K5FqJY2w0ljFlk5RkaOz1LaxQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.71/kit-8137893ad3-1.0.71.tgz}
     engines: {node: '>=16'}
@@ -2000,10 +2004,6 @@ packages:
 
   '@awesome.me/kit-8137893ad3@1.0.89':
     resolution: {integrity: sha512-FzQahyc/VMlgJc1xHfLnjnKuk4a11gTh0/cM38XcG2JFOTkSEQ7M67UA134WuQqDN/Gr1wwkpsddCXw9ETWoYw==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.89/kit-8137893ad3-1.0.89.tgz}
-    engines: {node: '>=16'}
-
-  '@awesome.me/kit-8137893ad3@1.0.98':
-    resolution: {integrity: sha512-70kwISskvDMk/eiN+JfzppWpXlhcd3ZNxh++RG41da+NMQqi3XreVGpjGoG5j8psDi+3l+CsrjI3d/pZbWYyWQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.98/kit-8137893ad3-1.0.98.tgz}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.23.5':
@@ -2889,6 +2889,10 @@ packages:
 
   '@fortawesome/fontawesome-common-types@6.5.2':
     resolution: {integrity: sha512-gBxPg3aVO6J0kpfHNILc+NMhXnqHumFxOmjYCFfOiLZfwhnnfhtsdA2hfJlDnj+8PjAs6kKQPenOTKj3Rf7zHw==}
+    engines: {node: '>=6'}
+
+  '@fortawesome/fontawesome-common-types@6.6.0':
+    resolution: {integrity: sha512-xyX0X9mc0kyz9plIyryrRbl7ngsA9jz77mCZJsUkLl+ZKs0KWObgaEBoSgQiYWAsSmjz/yjl0F++Got0Mdp4Rw==}
     engines: {node: '>=6'}
 
   '@fortawesome/fontawesome-svg-core@6.5.1':
@@ -7483,8 +7487,8 @@ packages:
   vue-component-type-helpers@2.0.17:
     resolution: {integrity: sha512-2car49m8ciqg/JjgMBkx7o/Fd2A7fHESxNqL/2vJYFLXm4VwYO4yH0rexOi4a35vwNgDyvt17B07Vj126l9rAQ==}
 
-  vue-component-type-helpers@2.0.26:
-    resolution: {integrity: sha512-sO9qQ8oC520SW6kqlls0iqDak53gsTVSrYylajgjmkt1c0vcgjsGSy1KzlDrbEx8pm02IEYhlUkU5hCYf8rwtg==}
+  vue-component-type-helpers@2.0.28:
+    resolution: {integrity: sha512-hoK0UsKXrXDY9zdpdk+drqOqYHpPhbmfQUJ2mFYK57+l73mQxcYyCteQsolllwGaxhWihT077+OA/FR5ZPTceg==}
 
   vue-docgen-api@4.75.1:
     resolution: {integrity: sha512-MECZ3uExz+ssmhD/2XrFoQQs93y17IVO1KDYTp8nr6i9GNrk67AAto6QAtilW1H/pTDPMkQxJ7w/25ZIqVtfAA==}
@@ -7710,6 +7714,10 @@ snapshots:
     dependencies:
       default-browser-id: 3.0.0
 
+  '@awesome.me/kit-8137893ad3@1.0.125':
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.6.0
+
   '@awesome.me/kit-8137893ad3@1.0.71':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.5.2
@@ -7719,10 +7727,6 @@ snapshots:
       '@fortawesome/fontawesome-common-types': 6.5.2
 
   '@awesome.me/kit-8137893ad3@1.0.89':
-    dependencies:
-      '@fortawesome/fontawesome-common-types': 6.5.2
-
-  '@awesome.me/kit-8137893ad3@1.0.98':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.5.2
 
@@ -8745,6 +8749,8 @@ snapshots:
 
   '@fortawesome/fontawesome-common-types@6.5.2': {}
 
+  '@fortawesome/fontawesome-common-types@6.6.0': {}
+
   '@fortawesome/fontawesome-svg-core@6.5.1':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.5.1
@@ -9667,7 +9673,7 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.4.13(typescript@5.3.3)
-      vue-component-type-helpers: 2.0.26
+      vue-component-type-helpers: 2.0.28
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -14193,7 +14199,7 @@ snapshots:
 
   vue-component-type-helpers@2.0.17: {}
 
-  vue-component-type-helpers@2.0.26: {}
+  vue-component-type-helpers@2.0.28: {}
 
   vue-docgen-api@4.75.1(vue@3.4.13(typescript@5.3.3)):
     dependencies:
