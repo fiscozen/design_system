@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/icons",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Design system icon plugin and component",
   "scripts": {
     "format": "prettier --write src/",
@@ -21,7 +21,7 @@
     "@fiscozen/tsconfig": "workspace:^"
   },
   "dependencies": {
-    "@awesome.me/kit-8137893ad3": "^1.0.98",
+    "@awesome.me/kit-8137893ad3": "^1.0.125",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/vue-fontawesome": "^3.0.6"
   }
