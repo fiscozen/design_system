@@ -1,3 +1,5 @@
+import { IconVariant } from "@fiscozen/icons";
+
 type FzInputProps = {
   /**
    * The label displayed on top of the input
@@ -28,9 +30,17 @@ type FzInputProps = {
    */
   leftIcon?: string;
   /**
+   * Left icon variant
+   */
+  leftIconVariant?: IconVariant;
+  /**
    * Right icon name
    */
   rightIcon?: string;
+  /**
+   * Right icon variant
+   */
+  rightIconVariant?: IconVariant;
   /**
    * The input type
    */

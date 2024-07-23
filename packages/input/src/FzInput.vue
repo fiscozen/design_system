@@ -3,21 +3,44 @@
     <label :class="['text-sm', computedLabelClass]">
       {{ label }}{{ required ? " *" : "" }}
     </label>
-    <div :class="[staticContainerClass, computedContainerClass]" ref="containerRef">
-      <FzIcon v-if="leftIcon" :name="leftIcon" :size="size" />
+    <div
+      :class="[staticContainerClass, computedContainerClass]"
+      ref="containerRef"
+    >
+      <FzIcon
+        v-if="leftIcon"
+        :name="leftIcon"
+        :size="size"
+        :variant="leftIconVariant"
+      />
       <input
         :type="type"
-        :required="required"
+        :required="required ? required : false"
+        :disabled="disabled"
         :placeholder="placeholder"
         v-model="model"
         ref="inputRef"
         :class="[staticInputClass]"
         :pattern="pattern"
       />
-      <FzIcon v-if="valid" name="check" :size="size" />
-      <FzIcon v-if="rightIcon" :name="rightIcon" :size="size" />
+      <FzIcon
+        v-if="valid"
+        name="check"
+        :size="size"
+        class="text-semantic-success"
+      />
+      <FzIcon
+        v-if="rightIcon"
+        :name="rightIcon"
+        :size="size"
+        :variant="rightIconVariant"
+      />
     </div>
-    <div v-if="error && $slots.errorMessage" class="flex gap-4" :style="{width: containerWidth}">
+    <div
+      v-if="error && $slots.errorMessage"
+      class="flex gap-4"
+      :style="{ width: containerWidth }"
+    >
       <FzIcon
         name="triangle-exclamation"
         class="text-semantic-error"
@@ -27,14 +50,18 @@
         <slot name="errorMessage"></slot>
       </div>
     </div>
-    <span v-else-if="$slots.helpText" :class="[computedHelpClass]" :style="{width: containerWidth}">
+    <span
+      v-else-if="$slots.helpText"
+      :class="[computedHelpClass]"
+      :style="{ width: containerWidth }"
+    >
       <slot name="helpText"></slot>
     </span>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick,computed } from "vue";
+import { Ref, ref, watch } from "vue";
 import { FzInputProps } from "./types";
 import { FzIcon } from "@fiscozen/icons";
 import useInputStyle from "./useInputStyle";
@@ -44,9 +71,9 @@ const props = withDefaults(defineProps<FzInputProps>(), {
   error: false,
   type: "text",
 });
-const model = defineModel();
-const containerRef = ref<HTMLDivElement | null>(null);
 
+const model = defineModel();
+const containerRef: Ref<HTMLElement | null> = ref(null);
 
 watch(model, (value) => {
   console.log(value);
@@ -61,7 +88,7 @@ const {
   staticInputClass,
   computedHelpClass,
   computedErrorClass,
-  containerWidth
+  containerWidth,
 } = useInputStyle(props, containerRef);
 
 const emit = defineEmits([]);
