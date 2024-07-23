@@ -70,7 +70,7 @@ export const PreviewAllIcons: Story = {
       <div>
         <h1 class='font-bold px-10'>Icon List</h1>
         <div v-for="prefix in Object.keys(mappedIconsByPrefix)" :key="prefix" class="flex flex-row p-10">
-          <h2>Variant: <b>{{prefix}}</b></h3>
+          <h2>Variant: <b>{{prefix}}</b></h2>
           <div class='flex flex-row flex-wrap gap-20 overflow-hidden mt-20'>
             <div v-for="icon in mappedIconsByPrefix[prefix]" 
                 :key="icon" 
