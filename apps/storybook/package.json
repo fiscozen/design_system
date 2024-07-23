@@ -45,7 +45,7 @@
     "@fiscozen/tooltip": "workspace:^",
     "@fiscozen/topbar": "workspace:^",
     "@fiscozen/view-flag": "workspace:^",
-    "@awesome.me/kit-8137893ad3": "^1.0.125",
+    "@awesome.me/kit-8137893ad3": "^1.0.131",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
   },
