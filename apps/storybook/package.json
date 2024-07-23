@@ -33,6 +33,7 @@
     "@fiscozen/dialog": "workspace:^",
     "@fiscozen/dropdown": "workspace:^",
     "@fiscozen/icons": "workspace:^",
+    "@fiscozen/input": "workspace:^",
     "@fiscozen/link": "workspace:^",
     "@fiscozen/navbar": "workspace:^",
     "@fiscozen/navlink": "workspace:^",
