@@ -11,11 +11,17 @@ const meta = {
       control: {
         type: 'select'
       }
-    }
+    },
+    type: {
+      options: ['text', 'password', 'email', 'number', 'tel', 'url'],
+      control: {
+        type: 'select'
+      }
+    },
   },
   args: {
-    label: 'Label',
-    placeholder: 'Placeholder',
+    label: 'Input Label',
+    placeholder: 'Value',
   }
 } satisfies Meta<typeof FzInput>
 
@@ -26,16 +32,12 @@ const Default: Story = {}
 
 const Disabled: Story = {
   args: {
-    label: 'Label',
-    size: 'md',
     disabled: true
   }
 }
 
 const Password: Story = {
   args: {
-    label: 'Label',
-    size: 'md',
     type: 'password'
   }
 }
@@ -43,16 +45,12 @@ const Password: Story = {
 
 const HelpText: Story = {
   args: {
-    label: 'Label',
-    size: 'md',
     "helpText": 'This is a helper text with a lot of content and it will be displayed in more than one line'
   }
 }
 
 const Error: Story = {
   args: {
-    label: 'Label',
-    size: 'md',
     error: true,
     "errorMessage": 'This is an error message'
   },
@@ -68,16 +66,12 @@ const LeftIcon : Story = {
 
 const RightIcon : Story = {
   args: {
-    label: 'Label',
-    size: 'md',
     rightIcon: 'credit-card'
   }
 }
 
 const Email : Story = {
   args: {
-    label: 'Label',
-    size: 'md',
     type: 'email',
     required: true
   },
@@ -88,8 +82,6 @@ const Email : Story = {
 
 const Telephone : Story = {
   args: {
-    label: 'Label',
-    size: 'md',
     type: 'tel',
     pattern: '[0-9]{3}-[0-9]{3}-[0-9]{4}',
     required: true
@@ -101,12 +93,10 @@ const Telephone : Story = {
 
 const Valid : Story = {
   args: {
-    label: 'Label',
-    size: 'md',
     valid: true
   }
 }
 
-export { Default, Disabled, Password, Email, Telephone, HelpText, Error, LeftIcon, RightIcon, Valid }
+export { Default,LeftIcon, RightIcon, Disabled, Password, Email, Telephone, HelpText, Error, Valid }
 
 export default meta
