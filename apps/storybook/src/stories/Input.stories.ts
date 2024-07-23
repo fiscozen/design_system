@@ -1,5 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzInput } from '@fiscozen/input'
+import { all } from '@awesome.me/kit-8137893ad3/icons'
+
+const templateForm =
+  '<form action="javascript:void(0);"><story/> <button type="submit" class="mt-10 border-1 px-10 py-4 rounded ">Submit</button></form>'
 
 const meta = {
   title: '@fiscozen/input/FzInput',
@@ -18,15 +22,39 @@ const meta = {
         type: 'select'
       }
     },
+    leftIcon: {
+      options: all.map((icon) => icon.iconName) as String[],
+      control: {
+        type: 'select'
+      }
+    },
+    leftIconVariant: {
+      options: all.map((icon) => icon.prefix) as String[],
+      control: {
+        type: 'select'
+      }
+    },
+    rightIcon: {
+      options: all.map((icon) => icon.iconName) as String[],
+      control: {
+        type: 'select'
+      }
+    },
+    rightIconVariant: {
+      options: all.map((icon) => icon.prefix) as String[],
+      control: {
+        type: 'select'
+      }
+    }
   },
   args: {
     label: 'Input Label',
-    placeholder: 'Value',
-  }
+    placeholder: 'Value'
+  },
+  decorators: [() => ({ template: '<div style="max-width: 300px; padding:10px;"><story/></div>' })]
 } satisfies Meta<typeof FzInput>
 
 type Story = StoryObj<typeof meta>
-
 
 const Default: Story = {}
 
@@ -42,21 +70,21 @@ const Password: Story = {
   }
 }
 
-
 const HelpText: Story = {
   args: {
-    "helpText": 'This is a helper text with a lot of content and it will be displayed in more than one line'
+    helpText:
+      'This is a helper text with a lot of content and it will be displayed in more than one line'
   }
 }
 
 const Error: Story = {
   args: {
     error: true,
-    "errorMessage": 'This is an error message'
-  },
+    errorMessage: 'This is an error message'
+  }
 }
 
-const LeftIcon : Story = {
+const LeftIcon: Story = {
   args: {
     label: 'Label',
     size: 'md',
@@ -64,39 +92,91 @@ const LeftIcon : Story = {
   }
 }
 
-const RightIcon : Story = {
+const RightIcon: Story = {
   args: {
     rightIcon: 'credit-card'
   }
 }
 
-const Email : Story = {
+const Email: Story = {
   args: {
     type: 'email',
     required: true
   },
-  decorators: [
-    () => ({ template: '<div style="max-width: 300px;"><form action="#"><story/> <button type="submit">Submit</button></form></div>' })
-  ]
+  decorators: [() => ({ template: templateForm })]
 }
 
-const Telephone : Story = {
+const Telephone: Story = {
   args: {
     type: 'tel',
     pattern: '[0-9]{3}-[0-9]{3}-[0-9]{4}',
     required: true
   },
-  decorators: [
-    () => ({ template: '<div style="max-width: 300px;"><form action="#"><story/> <button type="submit">Submit</button></form></div>' })
-  ]
+  decorators: [() => ({ template: templateForm })]
 }
 
-const Valid : Story = {
+const Valid: Story = {
   args: {
     valid: true
   }
 }
 
-export { Default,LeftIcon, RightIcon, Disabled, Password, Email, Telephone, HelpText, Error, Valid }
+const Required: Story = {
+  args: {
+    required: true
+  },
+  decorators: [() => ({ template: templateForm })]
+}
+
+const LeftAndRightWithValid: Story = {
+  title: 'Left and Right Icon with Valid',
+  args: {
+    leftIcon: 'calendar-lines',
+    rightIcon: 'credit-card',
+    valid: true
+  }
+}
+
+const WithDefaultValues: Story = {
+  args: {
+    label: 'Input Label',
+    placeholder: 'Value',
+    modelValue: 'Default Value'
+  }
+}
+
+const Number: Story = {
+  args: {
+    type: 'number',
+    required: true
+  },
+  decorators: [() => ({ template: templateForm })]
+}
+
+const Url: Story = {
+  args: {
+    type: 'url',
+    required: true
+  },
+  decorators: [() => ({ template: templateForm })]
+}
+
+export {
+  Default,
+  LeftIcon,
+  RightIcon,
+  Required,
+  Disabled,
+  Password,
+  Email,
+  Telephone,
+  Number,
+  Url,
+  HelpText,
+  Error,
+  Valid,
+  LeftAndRightWithValid,
+  WithDefaultValues
+}
 
 export default meta
