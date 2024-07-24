@@ -5,7 +5,7 @@
     class="flex flex-col gap-8 overflow-visible"
   >
     <template #opener class="flex">
-      <div class="w-full flex flex-col gap-8">
+      <div class="w-full flex flex-col gap-8" ref="openerContainer">
         <slot name="opener" :handlePickerClick :isOpen>
           <label :class="['text-sm', computedLabelClass]">
             {{ label }}{{ required ? " *" : "" }}</label
@@ -51,8 +51,8 @@
       </span>
     </template>
     <div
-      class="flex flex-col p-4 rounded shadow overflow-hidden ml-[-2px] min-w-[120px] w-full"
-      :style="{ width: containerWidth ?? 'auto' }"
+      class="flex flex-col p-4 rounded shadow overflow-auto ml-[-2px] min-w-[120px] w-full max-h-min"
+      :style="{ width: containerWidth ?? 'auto', maxHeight: maxHeight }"
       ref="containerRef"
     >
       <FzSelectOption
@@ -85,6 +85,14 @@ const isOpen = ref(false);
 const opener = ref<HTMLElement>();
 const containerRef = ref<HTMLElement>();
 const containerWidth = ref<string>("auto");
+const openerContainer = ref<HTMLElement>();
+const containerTopPosition = ref<number>(0);
+
+const maxHeight = computed(
+  () =>
+    props.floatingPanelMaxHeight ??
+    "calc(100vh - " + containerTopPosition.value + "px)",
+);
 
 const safeOpener = computed(() => {
   return props.extOpener ? props.extOpener : opener.value;
@@ -141,6 +149,7 @@ watch(() => [props.size, model.value], calculateContainerWidth);
 
 onMounted(() => {
   calculateContainerWidth();
+  calculateTopPosition();
 });
 
 const handleSelect = (value: string) => {
@@ -150,6 +159,7 @@ const handleSelect = (value: string) => {
 
 const handlePickerClick = () => {
   if (props.disabled) return;
+  calculateTopPosition();
   isOpen.value = !isOpen.value;
   calculateContainerWidth();
 };
@@ -169,6 +179,13 @@ async function calculateContainerWidth() {
   await nextTick();
   if (!opener.value) containerWidth.value = "auto";
   else containerWidth.value = `${opener.value.clientWidth}px`;
+}
+
+function calculateTopPosition() {
+  if (!opener.value || !openerContainer.value) return;
+  const { top, height } =
+    openerContainer.value.parentElement!.parentElement!.getBoundingClientRect();
+  containerTopPosition.value = top + height;
 }
 </script>
 <style scoped></style>

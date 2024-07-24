@@ -45,6 +45,10 @@ export interface FzSelectProps extends FzFloatingProps {
    * Ref to the element that opens the selection
    */
   extOpener?: HTMLElement;
+  /**
+   * Set the max height of the floating panel
+   */
+  floatingPanelMaxHeight?: string;
 };
 
 export type FzSelectOptionsProps = {

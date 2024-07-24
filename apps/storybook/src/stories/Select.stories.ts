@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { ref } from 'vue'
 import { FzSelect } from '@fiscozen/select'
+import { disabled } from './RadioGroup.stories'
 
 const meta = {
   title: '@fiscozen/select/FzSelect',
@@ -29,12 +30,12 @@ const Template: SelectStory = {
         model
       }
     },
-    template: `<div class="p-8 relative" style='width:200px; overflow:hidden; height:800px'>
-                    <FzSelect v-bind="args" v-model="model"> 
-                        <template #error>Custom error message</template>
-                        <template #help>Custom help message</template>
-                    </FzSelect>
-                   </div>`
+    template: `<div class="p-8 relative" style='width:200px; height:800px'>
+                  <FzSelect v-bind="args" v-model="model"> 
+                      <template #error>Custom error message</template>
+                      <template #help>Custom help message</template>
+                  </FzSelect>
+                </div>`
   }),
   args: {
     size: 'md',
@@ -89,5 +90,28 @@ export const Required: SelectStory = {
   args: {
     ...Template.args,
     required: true
+  }
+}
+
+export const SelectWithHundredsOfOptions: SelectStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    options: Array.from({ length: 1000 }, (_, i) => ({
+      value: i.toString(),
+      label: `Option ${i}`
+    }))
+  }
+}
+
+export const SelectWithHundredsOfOptionsAndMaxHeight: SelectStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    options: Array.from({ length: 1000 }, (_, i) => ({
+      value: i.toString(),
+      label: `Option ${i}`
+    })),
+    floatingPanelMaxHeight: '200px'
   }
 }
