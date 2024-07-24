@@ -32,8 +32,8 @@ import { mapSizeToClasses } from "./common";
 import FzCheckboxGroupOption from "./components/FzCheckboxGroupOption.vue";
 
 FzCheckboxGroupOption.compatConfig = {
-  MODE:3
-}
+  MODE: 3,
+};
 
 const props = defineProps<FzCheckboxGroupProps>();
 const id = `fz-checkbox-group-${generateRandomId()}`;

@@ -214,7 +214,7 @@ export const CheckboxGroupWithDynamicOptions: CheckboxGroupStory = {
     components: { FzCheckboxGroup, FzCheckbox, FzIcon },
     setup() {
       const model = ref([])
-      const dataFromServer = ref<{label:string, value:any, disabled?:boolean}[]>([])
+      const dataFromServer = ref<{ label: string; value: any; disabled?: boolean }[]>([])
 
       setTimeout(() => {
         dataFromServer.value.push({
@@ -229,7 +229,7 @@ export const CheckboxGroupWithDynamicOptions: CheckboxGroupStory = {
           label: 'Option 3',
           value: 'option3'
         })
-      },1000);
+      }, 1000)
 
       return {
         args,
@@ -246,6 +246,6 @@ export const CheckboxGroupWithDynamicOptions: CheckboxGroupStory = {
   args: {
     size: 'md',
     label: 'Field label',
-    required: true,
+    required: true
   }
 }

@@ -3,6 +3,8 @@ import { mount } from "@vue/test-utils";
 import { describe, it, expect } from "vitest";
 import FzCheckbox from "../FzCheckbox.vue";
 
+const MAX_CHECKBOX = 200;
+
 describe("FzCheckbox", () => {
   it("renders correctly", async () => {
     const wrapper = mount(FzCheckbox, {
@@ -16,7 +18,6 @@ describe("FzCheckbox", () => {
 
     await wrapper.vm.$nextTick();
     expect(wrapper.html()).toContain("Test Checkbox");
-    expect(wrapper.html()).toMatchSnapshot();
   });
 
   it("emits an update event when clicked", async () => {
@@ -84,5 +85,24 @@ describe("FzCheckbox", () => {
     });
     await wrapper.vm.$nextTick();
     expect(wrapper.find("input").element.disabled).toBe(true);
+  });
+
+  it(`should render ${MAX_CHECKBOX} checkbox all with different ids`, async () => {
+    const checkboxes = Array.from({ length: MAX_CHECKBOX }).map((_) => {
+      return mount(FzCheckbox, {
+        props: {
+          label: "Test Checkbox",
+          value: "test",
+          size: "md",
+          modelValue: false,
+          disabled: true,
+        },
+      });
+    });
+    await Promise.all(checkboxes.map((c) => c.vm.$nextTick()));
+    const ids = checkboxes.map((c) => c.find("input").attributes("id"));
+    const labelFor = checkboxes.map((c) => c.find("label").attributes("for"));
+    expect(new Set(ids).size).toBe(MAX_CHECKBOX);
+    expect(new Set(labelFor).size).toBe(MAX_CHECKBOX);
   });
 });

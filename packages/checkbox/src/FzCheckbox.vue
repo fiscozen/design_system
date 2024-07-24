@@ -13,10 +13,7 @@
       :indeterminate="indeterminate"
       ref="refCheckbox"
     />
-    <label
-      :for="id"
-      :class="[staticLabelClass, computedLabelClass]"
-    >
+    <label :for="id" :class="[staticLabelClass, computedLabelClass]">
       <FzIcon
         :name="computedName"
         :size="size"
@@ -46,9 +43,9 @@ const props = withDefaults(defineProps<FzCheckboxProps>(), {
 
 const currentValue = computed(() => props.value ?? props.label);
 
-const id = computed(() => {
-  return currentValue.value.toString().replace(/ /g, "-").toLowerCase();
-})
+const id = computed(
+  () => `fz-checkbox-${Math.random().toString(36).slice(2, 9)}`,
+);
 
 const model = defineModel<boolean | (string | number | boolean)[]>({
   required: true,
