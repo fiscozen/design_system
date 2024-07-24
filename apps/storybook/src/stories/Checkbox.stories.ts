@@ -159,3 +159,33 @@ export const ModelValueTrue: CheckboxStory = {
     label: 'Checkbox'
   }
 }
+
+export const CheckboxesWithSameValue: CheckboxStory = {
+  render: (args) => ({
+    components: { FzCheckbox, FzIcon },
+    setup() {
+      const model = ref('')
+      const model2 = ref('')
+      return {
+        args,
+        model,
+        model2
+      }
+    },
+    watch: {
+      model: {
+        handler(newValue) {
+          console.log(newValue)
+        }
+      }
+    },
+    template: `<div>
+            <FzCheckbox v-bind="args" v-model="model" value="false"/>
+            <FzCheckbox v-bind="args" v-model="model2" value="false"/>
+        </div>`
+  }),
+  args: {
+    size: 'md',
+    label: 'Checkbox'
+  }
+}
