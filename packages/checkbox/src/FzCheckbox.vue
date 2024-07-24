@@ -54,7 +54,7 @@ const model = defineModel<boolean | (string | number | boolean)[]>({
 const emit = defineEmits(["change"]);
 const refCheckbox = ref<HTMLInputElement | null>(null);
 
-const staticInputClass = "w-0 h-0 peer";
+const staticInputClass = "w-0 h-0 peer fz-hidden-input";
 const staticLabelClass = `
   flex items-start gap-4 hover:cursor-pointer
   peer-focus:[&_div]:after:border-1
@@ -137,4 +137,13 @@ onMounted(() => {
   }
 });
 </script>
-<style scoped></style>
+<style scoped>
+.fz-hidden-input {
+  opacity: 0;
+  margin:0;
+  height:0;
+  border:none;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+}
+</style>
