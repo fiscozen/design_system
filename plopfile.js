@@ -2,10 +2,10 @@ const { spawn } = require("child_process");
 
 const installPackageInStorybook = (answers) => {
   const kebabize = (str) =>
-    str.replace(
-      /[A-Z]+(?![a-z])|[A-Z]/g,
-      ($, ofs) => (ofs ? "-" : "") + $.toLowerCase(),
-    );
+    str
+      .replace(/([a-z])([A-Z])/g, "$1-$2")
+      .replace(/[\s_]+/g, "-")
+      .toLowerCase();
   const packageName = `@fiscozen/${kebabize(answers.component)}`;
   return new Promise((resolve, reject) => {
     const process = spawn("pnpm", [
