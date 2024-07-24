@@ -1,5 +1,13 @@
 <template>
-  <button :class="[staticClass, computedClass]" :title="option.label" @click="() => {$emit('click')}">
+  <button
+    :class="[staticClass, computedClass]"
+    :title="option.label"
+    @click="
+      () => {
+        $emit('click');
+      }
+    "
+  >
     <span
       class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm"
       >{{ option.label }}</span
