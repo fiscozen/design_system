@@ -71,9 +71,7 @@ function handleCheckboxParentChange() {
   } else {
     // remove parent value from model if it exists
     if (model.value.includes(currentValue.value))
-      model.value = model.value.filter(
-        (value) => value !== currentValue.value,
-      );
+      model.value = model.value.filter((value) => value !== currentValue.value);
   }
 }
 
