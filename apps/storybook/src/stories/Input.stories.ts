@@ -140,8 +140,8 @@ const LeftAndRightWithValid: Story = {
 const WithDefaultValues: Story = {
   args: {
     label: 'Input Label',
-    placeholder: 'Value',
-    modelValue: 'Default Value'
+    placeholder: 'This is a very long placeholder with a longer value and longer meaning',
+    modelValue: 'This is a very long text with a longer value and longer meaning'
   }
 }
 

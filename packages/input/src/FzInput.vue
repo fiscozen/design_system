@@ -1,11 +1,12 @@
 <template>
-  <div class="w-full flex flex-col gap-8" @click="inputRef?.focus()">
-    <label :class="['text-sm', computedLabelClass]">
+  <div class="w-full flex flex-col gap-8">
+    <label :class="['text-sm', computedLabelClass]" :for="uniqueId">
       {{ label }}{{ required ? " *" : "" }}
     </label>
     <div
       :class="[staticContainerClass, computedContainerClass]"
       ref="containerRef"
+      @click="inputRef?.focus()"
     >
       <FzIcon
         v-if="leftIcon"
@@ -19,6 +20,7 @@
         :disabled="disabled"
         :placeholder="placeholder"
         v-model="model"
+        :id="uniqueId"
         ref="inputRef"
         :class="[staticInputClass]"
         :pattern="pattern"
@@ -61,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, watch } from "vue";
+import { Ref, ref } from "vue";
 import { FzInputProps } from "./types";
 import { FzIcon } from "@fiscozen/icons";
 import useInputStyle from "./useInputStyle";
@@ -74,12 +76,8 @@ const props = withDefaults(defineProps<FzInputProps>(), {
 
 const model = defineModel();
 const containerRef: Ref<HTMLElement | null> = ref(null);
-
-watch(model, (value) => {
-  console.log(value);
-});
-
-const inputRef = ref<HTMLInputElement | null>(null);
+const inputRef: Ref<HTMLInputElement | null> = ref(null);
+const uniqueId = `fz-input-${Math.random().toString(36).slice(2, 9)}`;
 
 const {
   staticContainerClass,
