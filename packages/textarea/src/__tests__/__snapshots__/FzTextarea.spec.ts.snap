@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzTextarea > matches snaphost 1`] = `
+"<div class="flex flex-col gap-8 items-start"><label class="text-sm"></label>
+  <div class="relative"><textarea class="border-1 rounded p-10 placeholder:text-gray-300 disabled:bg-grey-100 disabled:border-grey-100 block invalid:border-semantic-error text-base border-grey-300 resize"></textarea>
+    <!--v-if-->
+  </div>
+  <div class="text-sm flex items-center gap-6 h-20">
+    <!--v-if-->
+  </div>
+</div>"
+`;
