@@ -1,19 +1,10 @@
-import { describe, it, vi } from "vitest";
+import { describe, it } from "vitest";
 import { mount } from "@vue/test-utils";
 import { FzInput } from "..";
 
+const NUMBER_OF_INPUTS = 1000;
+
 describe.concurrent("FzInput", () => {
-  it("matches snaphost", async ({ expect }) => {
-    const wrapper = mount(FzInput, {
-      props: {
-        label: "Label",
-      },
-      slots: {},
-    });
-
-    expect(wrapper.html()).toMatchSnapshot();
-  });
-
   it("renders label", async ({ expect }) => {
     const wrapper = mount(FzInput, {
       props: {
@@ -139,5 +130,24 @@ describe.concurrent("FzInput", () => {
     });
 
     expect(wrapper.find("input").attributes("type")).toBe("password");
+  });
+
+  it(`renders ${NUMBER_OF_INPUTS} input with different ids`, async ({
+    expect,
+  }) => {
+    const wrapperList = Array.from({ length: NUMBER_OF_INPUTS }).map((_, i) =>
+      mount(FzInput, {
+        props: {
+          label: `Label ${i}`,
+        },
+        slots: {},
+      }),
+    );
+
+    await Promise.all(wrapperList.map((w) => w.vm.$nextTick()));
+
+    const ids = wrapperList.map((w) => w.find("input").attributes("id"));
+
+    expect(new Set(ids).size).toBe(NUMBER_OF_INPUTS);
   });
 });

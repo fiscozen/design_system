@@ -10,7 +10,7 @@ export default function useInputStyle(
   );
 
   const mapContainerClass = {
-    sm: "h-24 text-sm",
+    sm: "h-28 text-sm",
     md: "h-32 text-base",
     lg: "h-40 text-lg",
   };
@@ -26,7 +26,7 @@ export default function useInputStyle(
     props.disabled ? "text-grey-300" : "text-core-black",
   ]);
 
-  const staticInputClass = `peer w-full bg-transparent border-0 focus:outline-none focus:ring-0 cursor-text truncate`;
+  const staticInputClass = `peer w-full bg-transparent border-0 focus:outline-none cursor-[inherit] focus:ring-0 truncate`;
 
   const computedHelpClass = computed(() => [
     props.size === "sm" ? "text-xs" : "",
