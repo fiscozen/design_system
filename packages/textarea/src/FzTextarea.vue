@@ -51,7 +51,7 @@ const props = withDefaults(defineProps<FzTextareaProps>(), {
   resize: "all",
 });
 
-const model = defineModel();
+const model = defineModel<string>();
 
 const containerClasses = computed(() => [
   "flex flex-col gap-8 items-start",

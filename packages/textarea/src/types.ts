@@ -1,5 +1,5 @@
 type FzTextareaProps = {
-  /** 
+  /**
    * Uniquely identifies textarea and binds label to it
    */
   id?: string;
