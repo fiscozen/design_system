@@ -24,6 +24,7 @@
         ref="inputRef"
         :class="[staticInputClass]"
         :pattern="pattern"
+        :name
       />
       <FzIcon
         v-if="valid"

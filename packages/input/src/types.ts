@@ -53,6 +53,10 @@ type FzInputProps = {
    * Pattern to validate the input
    */
   pattern?: string;
+  /**
+   * Defines the textarea key in a form
+   */
+  name?: string;
 };
 
 export { FzInputProps };
