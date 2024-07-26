@@ -9,7 +9,7 @@
     </thead>
 
     <tbody>
-      <tr v-for="rowData in value">
+      <tr v-for="rowData in value" class="border-b-1 border-grey-100">
         <td v-for="column in columns" class="px-16 h-48 text-grey-500">
           <component
             v-if="column.children?.default"
