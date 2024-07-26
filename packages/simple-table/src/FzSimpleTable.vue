@@ -11,7 +11,7 @@
         </th>
       </tr>
 
-      <tr v-for="rowData in data">
+      <tr v-for="rowData in value">
         <td v-for="column in columns" class="px-16 h-48 text-grey-500">
           <component
             v-if="column.children?.default"
@@ -24,7 +24,7 @@
         </td>
       </tr>
 
-      <tr v-if="!data.length" class="text-center text-grey-500">
+      <tr v-if="!value.length" class="text-center text-grey-500">
         <td colspan="100%" class="h-80">
           {{ placeholder ?? "No data available" }}
         </td>

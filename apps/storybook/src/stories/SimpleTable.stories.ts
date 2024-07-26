@@ -20,7 +20,7 @@ type Story = StoryObj<typeof meta>
 
 const Default: Story = {
   args: {
-    data: [{
+    value: [{
       date: new Date(),
       user: 'John Doe',
       action: 'Ha inviato un messaggio',
@@ -75,7 +75,7 @@ const Empty: Story = {
     },
     template: `
       <div class="p-12">
-        <FzSimpleTable :data="[]">
+        <FzSimpleTable :value="[]">
           <FzColumn field="date" header="Data">
             <template #default="props">
               {{ props.data.date.toLocaleDateString() }}

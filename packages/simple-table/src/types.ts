@@ -2,7 +2,7 @@ type FzSimpleTableProps = {
   /**
    * The data that gets rendered in the table rows. Must be an array of POJOs.
    */
-  data: Record<string, any>[];
+  value: Record<string, any>[];
   /**
    * Rendered when no data gets provided
    */
