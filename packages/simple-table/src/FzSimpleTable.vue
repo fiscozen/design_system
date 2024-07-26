@@ -1,16 +1,18 @@
 <template>
-  <table class="w-full text-left rounded overflow-hidden bg-core-white">
+  <slot name="header"></slot>
+  <table
+    class="w-full text-left rounded overflow-hidden bg-core-white"
+    :class="tableClass"
+  >
     <thead>
-      <slot name="header"></slot>
-    </thead>
-
-    <tbody>
       <tr class="bg-grey-100">
         <th v-for="column in columns" class="px-16 h-48 font-medium">
           {{ column.props.header }}
         </th>
       </tr>
+    </thead>
 
+    <tbody>
       <tr v-for="rowData in value">
         <td v-for="column in columns" class="px-16 h-48 text-grey-500">
           <component
@@ -30,11 +32,8 @@
         </td>
       </tr>
     </tbody>
-
-    <tfoot>
-      <slot name="footer"></slot>
-    </tfoot>
   </table>
+  <slot name="footer"></slot>
 </template>
 
 <script setup lang="ts">

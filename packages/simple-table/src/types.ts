@@ -7,6 +7,10 @@ type FzSimpleTableProps = {
    * Rendered when no data gets provided
    */
   placeholder?: string;
+  /**
+   * Additional classes for the table
+   */
+  tableClass?: string;
 };
 
 type FzSimpleTableSlots = {

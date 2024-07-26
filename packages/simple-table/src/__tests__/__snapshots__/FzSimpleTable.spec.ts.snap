@@ -1,0 +1,39 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzSimpleTable > matches snaphost 1`] = `
+"<table class="w-full text-left rounded overflow-hidden bg-core-white">
+  <thead>
+    <tr class="bg-grey-100">
+      <th class="px-16 h-48 font-medium">User</th>
+      <th class="px-16 h-48 font-medium">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="px-16 h-48 text-grey-500">John Doe</td>
+      <td class="px-16 h-48 text-grey-500">Fri Jul 26 2024 14:58:20 GMT+0200 (Central European Summer Time)</td>
+    </tr>
+    <tr>
+      <td class="px-16 h-48 text-grey-500">John Doe1</td>
+      <td class="px-16 h-48 text-grey-500">Fri Jul 26 2024 14:58:20 GMT+0200 (Central European Summer Time)</td>
+    </tr>
+    <!--v-if-->
+  </tbody>
+</table>"
+`;
+
+exports[`FzSimpleTable > matches snaphost empty table 1`] = `
+"<table class="w-full text-left rounded overflow-hidden bg-core-white">
+  <thead>
+    <tr class="bg-grey-100">
+      <th class="px-16 h-48 font-medium">User</th>
+      <th class="px-16 h-48 font-medium">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="text-center text-grey-500">
+      <td colspan="100%" class="h-80">No data available</td>
+    </tr>
+  </tbody>
+</table>"
+`;
