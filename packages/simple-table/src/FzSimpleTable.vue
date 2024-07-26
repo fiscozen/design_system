@@ -1,9 +1,5 @@
 <template>
-  <slot name="header"></slot>
-  <table
-    class="w-full text-left rounded overflow-hidden bg-core-white"
-    :class="tableClass"
-  >
+  <table class="w-full text-left rounded overflow-hidden bg-core-white">
     <thead>
       <tr class="bg-grey-100">
         <th v-for="column in columns" class="px-16 h-48 font-medium">
@@ -33,7 +29,6 @@
       </tr>
     </tbody>
   </table>
-  <slot name="footer"></slot>
 </template>
 
 <script setup lang="ts">

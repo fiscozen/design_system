@@ -23,8 +23,6 @@ describe.concurrent("FzSimpleTable", () => {
           h(FzColumn, { field: "user", header: "User" }),
           h(FzColumn, { field: "date", header: "Date" }),
         ],
-        header: ``,
-        footer: ``,
       },
     });
 
@@ -41,8 +39,6 @@ describe.concurrent("FzSimpleTable", () => {
           h(FzColumn, { field: "user", header: "User" }),
           h(FzColumn, { field: "date", header: "Date" }),
         ],
-        header: ``,
-        footer: ``,
       },
     });
 

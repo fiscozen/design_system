@@ -7,10 +7,6 @@ type FzSimpleTableProps = {
    * Rendered when no data gets provided
    */
   placeholder?: string;
-  /**
-   * Additional classes for the table
-   */
-  tableClass?: string;
 };
 
 type FzSimpleTableSlots = {
@@ -18,14 +14,6 @@ type FzSimpleTableSlots = {
    * Default template where columns must be defined as FzColumn components
    */
   default(props: {}): any;
-  /**
-   * Optional table header
-   */
-  header(props: {}): any;
-  /**
-   * Optional table footer
-   */
-  footer(props: {}): any;
 };
 
 type FzColumnProps = {
