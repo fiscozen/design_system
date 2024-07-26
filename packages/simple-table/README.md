@@ -1,3 +1,3 @@
 # @fiscozen/simple-table
 
-TODO
+Tables are used to organize and display data efficiently.

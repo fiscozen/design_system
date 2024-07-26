@@ -1,5 +1,5 @@
 <template>
-  <table class="w-full text-left rounded overflow-hidden">
+  <table class="w-full text-left rounded overflow-hidden bg-core-white">
     <thead>
       <slot name="header"></slot>
     </thead>
@@ -18,9 +18,15 @@
             :is="column.children.default"
             :data="rowData"
           />
-          <template v-else>
+          <template v-else-if="column.props.field">
             {{ rowData[column.props.field] }}
           </template>
+        </td>
+      </tr>
+
+      <tr v-if="!data.length" class="text-center text-grey-500">
+        <td colspan="100%" class="h-80">
+          {{ placeholder ?? "No data available" }}
         </td>
       </tr>
     </tbody>
@@ -52,12 +58,10 @@ const defaultSlot = slots.default?.();
 const columns =
   defaultSlot
     ?.filter((elem) => elem.type === FzColumn)
-    .map((column) => {
-      return {
-        props: column.props as FzColumnProps,
-        children: column.children as FzColumnSlots,
-      };
-    }) ?? [];
+    .map((column) => ({
+      props: column.props as FzColumnProps,
+      children: column.children as FzColumnSlots,
+    })) ?? [];
 </script>
 
 <style scoped></style>

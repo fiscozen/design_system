@@ -6,6 +6,7 @@ import { vueRouter } from 'storybook-vue3-router'
 const meta: Meta<typeof FzSimpleTable> = {
   title: '@fiscozen/simple-table/FzSimpleTable',
   tags: ['autodocs'],
+  component: FzSimpleTable,
   argTypes: {},
   args: {},
   decorators: [vueRouter([{
@@ -13,34 +14,40 @@ const meta: Meta<typeof FzSimpleTable> = {
     name: 'foo',
     component: () => {}
   }])],
-  render: () => ({
+}
+
+type Story = StoryObj<typeof meta>
+
+const Default: Story = {
+  args: {
+    data: [{
+      date: new Date(),
+      user: 'John Doe',
+      action: 'Ha inviato un messaggio',
+    },
+    {
+      date: new Date(),
+      user: 'John Doee',
+      action: 'Ha inviato un messaggio',
+    },
+    {
+      date: new Date(),
+      user: 'John Doeee',
+      action: 'Ha inviato un messaggio',
+    }]
+  },
+  render: (args) => ({
+    setup() {
+      return { args };
+    },
     components: {
       FzSimpleTable,
       FzColumn,
       FzLink
     },
-    data() {
-      return {
-        data: [{
-          date: new Date(),
-          user: 'John Doe',
-          action: 'Ha inviato un messaggio',
-        },
-        {
-          date: new Date(),
-          user: 'John Doee',
-          action: 'Ha inviato un messaggio',
-        },
-        {
-          date: new Date(),
-          user: 'John Doeee',
-          action: 'Ha inviato un messaggio',
-        }]
-      }
-    },
     template: `
       <div class="p-12">
-        <FzSimpleTable :data>
+        <FzSimpleTable v-bind="args">
           <FzColumn field="date" header="Data">
             <template #default="props">
               {{ props.data.date.toLocaleDateString() }}
@@ -58,12 +65,34 @@ const meta: Meta<typeof FzSimpleTable> = {
   })
 }
 
-type Story = StoryObj<typeof meta>
-
-const Default: Story = {
-  args: {}
+const Empty: Story = {
+  args: {},
+  render: () => ({
+    components: {
+      FzSimpleTable,
+      FzColumn,
+      FzLink
+    },
+    template: `
+      <div class="p-12">
+        <FzSimpleTable :data="[]">
+          <FzColumn field="date" header="Data">
+            <template #default="props">
+              {{ props.data.date.toLocaleDateString() }}
+            </template>
+          </FzColumn>
+          <FzColumn field="user" header="Utente">
+            <template #default="props">
+              <FzLink to="foo" size="md">{{ props.data.user }}</FzLink>
+            </template>
+          </FzColumn>
+          <FzColumn field="action" header="Azione" />
+        </FzSimpleTable>
+      </div>
+    `
+  })
 }
 
-export { Default }
+export { Default, Empty }
 
 export default meta
