@@ -1,0 +1,63 @@
+<template>
+  <table class="w-full text-left rounded overflow-hidden">
+    <thead>
+      <slot name="header"></slot>
+    </thead>
+
+    <tbody>
+      <tr class="bg-grey-100">
+        <th v-for="column in columns" class="px-16 h-48 font-medium">
+          {{ column.props.header }}
+        </th>
+      </tr>
+
+      <tr v-for="rowData in data">
+        <td v-for="column in columns" class="px-16 h-48 text-grey-500">
+          <component
+            v-if="column.children?.default"
+            :is="column.children.default"
+            :data="rowData"
+          />
+          <template v-else>
+            {{ rowData[column.props.field] }}
+          </template>
+        </td>
+      </tr>
+    </tbody>
+
+    <tfoot>
+      <slot name="footer"></slot>
+    </tfoot>
+  </table>
+</template>
+
+<script setup lang="ts">
+import { useSlots } from "vue";
+import {
+  FzColumnProps,
+  FzColumnSlots,
+  FzSimpleTableProps,
+  FzSimpleTableSlots,
+} from "./types";
+import FzColumn from "./FzColumn.vue";
+
+const props = withDefaults(defineProps<FzSimpleTableProps>(), {});
+
+const emit = defineEmits([]);
+
+defineSlots<FzSimpleTableSlots>();
+const slots = useSlots();
+
+const defaultSlot = slots.default?.();
+const columns =
+  defaultSlot
+    ?.filter((elem) => elem.type === FzColumn)
+    .map((column) => {
+      return {
+        props: column.props as FzColumnProps,
+        children: column.children as FzColumnSlots,
+      };
+    }) ?? [];
+</script>
+
+<style scoped></style>

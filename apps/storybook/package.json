@@ -41,6 +41,7 @@
     "@fiscozen/navlist": "workspace:^",
     "@fiscozen/radio": "workspace:^",
     "@fiscozen/select": "workspace:^",
+    "@fiscozen/simple-table": "workspace:^",
     "@fiscozen/style": "workspace:^",
     "@fiscozen/tab": "workspace:^",
     "@fiscozen/textarea": "workspace:^",

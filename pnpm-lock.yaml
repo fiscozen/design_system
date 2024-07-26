@@ -83,6 +83,9 @@ importers:
       '@fiscozen/select':
         specifier: workspace:^
         version: link:../../packages/select
+      '@fiscozen/simple-table':
+        specifier: workspace:^
+        version: link:../../packages/simple-table
       '@fiscozen/style':
         specifier: workspace:^
         version: link:../../packages/style
@@ -1601,6 +1604,70 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.3
         version: 2.4.3(@vue/server-renderer@3.4.33(vue@3.4.13(typescript@5.3.3)))(vue@3.4.13(typescript@5.3.3))
+      '@vue/tsconfig':
+        specifier: ^0.5.0
+        version: 0.5.1
+      eslint:
+        specifier: ^8.49.0
+        version: 8.57.0
+      jsdom:
+        specifier: ^23.0.1
+        version: 23.2.0
+      prettier:
+        specifier: ^3.0.3
+        version: 3.2.5
+      typescript:
+        specifier: ~5.3.0
+        version: 5.3.3
+      vite:
+        specifier: ^5.0.10
+        version: 5.0.11(@types/node@18.19.7)
+      vite-plugin-dts:
+        specifier: ^3.8.3
+        version: 3.9.1(@types/node@18.19.7)(rollup@4.9.5)(typescript@5.3.3)(vite@5.0.11(@types/node@18.19.7))
+      vitest:
+        specifier: ^1.2.0
+        version: 1.2.0(@types/node@18.19.7)(jsdom@23.2.0)
+      vue-tsc:
+        specifier: ^1.8.25
+        version: 1.8.27(typescript@5.3.3)
+
+  packages/simple-table:
+    dependencies:
+      tailwindcss:
+        specifier: ^3.4.1
+        version: 3.4.1
+      vue:
+        specifier: ^3.4.13
+        version: 3.4.33(typescript@5.3.3)
+    devDependencies:
+      '@fiscozen/eslint-config':
+        specifier: workspace:^
+        version: link:../eslint-config
+      '@fiscozen/prettier-config':
+        specifier: workspace:^
+        version: link:../prettier-config
+      '@fiscozen/tsconfig':
+        specifier: workspace:^
+        version: link:../tsconfig
+      '@rushstack/eslint-patch':
+        specifier: ^1.3.3
+        version: 1.6.1
+      '@types/jsdom':
+        specifier: ^21.1.6
+        version: 21.1.6
+      '@types/node':
+        specifier: ^18.19.3
+        version: 18.19.7
+      '@vitejs/plugin-vue':
+        specifier: ^4.5.2
+        version: 4.6.2(vite@5.0.11(@types/node@18.19.7))(vue@3.4.33(typescript@5.3.3))
+      '@vitest/coverage-v8':
+        specifier: ^1.2.1
+        version: 1.2.1(vitest@1.2.0(@types/node@18.19.7)(jsdom@23.2.0))
+      '@vue/test-utils':
+        specifier: ^2.4.3
+        version: 2.4.3(@vue/server-renderer@3.4.33(vue@3.4.33(typescript@5.3.3)))(vue@3.4.33(typescript@5.3.3))
       '@vue/tsconfig':
         specifier: ^0.5.0
         version: 0.5.1
@@ -7702,8 +7769,8 @@ packages:
   vue-component-type-helpers@2.0.17:
     resolution: {integrity: sha512-2car49m8ciqg/JjgMBkx7o/Fd2A7fHESxNqL/2vJYFLXm4VwYO4yH0rexOi4a35vwNgDyvt17B07Vj126l9rAQ==}
 
-  vue-component-type-helpers@2.0.28:
-    resolution: {integrity: sha512-hoK0UsKXrXDY9zdpdk+drqOqYHpPhbmfQUJ2mFYK57+l73mQxcYyCteQsolllwGaxhWihT077+OA/FR5ZPTceg==}
+  vue-component-type-helpers@2.0.29:
+    resolution: {integrity: sha512-58i+ZhUAUpwQ+9h5Hck0D+jr1qbYl4voRt5KffBx8qzELViQ4XdT/Tuo+mzq8u63teAG8K0lLaOiL5ofqW38rg==}
 
   vue-docgen-api@4.75.1:
     resolution: {integrity: sha512-MECZ3uExz+ssmhD/2XrFoQQs93y17IVO1KDYTp8nr6i9GNrk67AAto6QAtilW1H/pTDPMkQxJ7w/25ZIqVtfAA==}
@@ -9921,7 +9988,7 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.4.13(typescript@5.3.3)
-      vue-component-type-helpers: 2.0.28
+      vue-component-type-helpers: 2.0.29
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -14537,7 +14604,7 @@ snapshots:
 
   vue-component-type-helpers@2.0.17: {}
 
-  vue-component-type-helpers@2.0.28: {}
+  vue-component-type-helpers@2.0.29: {}
 
   vue-docgen-api@4.75.1(vue@3.4.13(typescript@5.3.3)):
     dependencies:
