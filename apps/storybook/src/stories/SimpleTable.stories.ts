@@ -48,12 +48,12 @@ const Default: Story = {
     template: `
       <div class="p-12">
         <FzSimpleTable v-bind="args">
-          <FzColumn field="date" header="Data">
+          <FzColumn header="Data">
             <template #default="props">
               {{ props.data.date.toLocaleDateString() }}
             </template>
           </FzColumn>
-          <FzColumn field="user" header="Utente">
+          <FzColumn header="Utente">
             <template #default="props">
               <FzLink to="foo" size="md">{{ props.data.user }}</FzLink>
             </template>
@@ -76,12 +76,12 @@ const Empty: Story = {
     template: `
       <div class="p-12">
         <FzSimpleTable :value="[]">
-          <FzColumn field="date" header="Data">
+          <FzColumn header="Data">
             <template #default="props">
               {{ props.data.date.toLocaleDateString() }}
             </template>
           </FzColumn>
-          <FzColumn field="user" header="Utente">
+          <FzColumn header="Utente">
             <template #default="props">
               <FzLink to="foo" size="md">{{ props.data.user }}</FzLink>
             </template>
