@@ -1,14 +1,18 @@
 <template>
   <FzFloating :isOpen :position="floatingPosition" ref="container">
     <template #opener>
-      <FzButton
-        icon-position="after"
-        :icon-name="buttonIconName"
-        :size="props.size"
-        @click="isOpen = !isOpen"
-      >
-        <slot></slot>
-      </FzButton>
+      <slot name="opener" :isOpen="isOpen">
+        <FzButton
+          icon-position="after"
+          :icon-name="buttonIconName"
+          @click="isOpen = !isOpen"
+          :size
+          :disabled="openerDisabled"
+          :class="openerClass"
+        >
+          <slot :isOpen="isOpen"></slot>
+        </FzButton>
+      </slot>
     </template>
     <FzActionlist :items="actions" :label="actionsLabel" @fzaction:click="handleActionClick" />
   </FzFloating>
@@ -16,42 +20,21 @@
 
 <script setup lang="ts">
 import { ComponentPublicInstance, computed, ref } from 'vue'
-import { FzButton, ButtonSize } from '@fiscozen/button'
-import { FzActionlist, FzActionlistProps, ActionlistItem } from '@fiscozen/actionlist'
+import { FzButton } from '@fiscozen/button'
+import { FzActionlist, ActionlistItem } from '@fiscozen/actionlist'
 import { FzFloating, useClickOutside } from '@fiscozen/composables'
+import { FzDropdownProps, FzDropdownSlots } from './types'
 
-const props = withDefaults(
-  defineProps<{
-    /**
-     * Size of the dropdown trigger
-     */
-    size: ButtonSize
-    /**
-     * Label of the action list
-     */
-    actionsLabel?: string
-    /**
-     * List of actions
-     */
-    actions: FzActionlistProps['items']
-    /**
-     * Whether to align to the left or right
-     */
-    align: 'left' | 'right'
-    /**
-     * Whether to close the action list when an action is clicked
-     */
-    closeOnActionClick?: boolean
-  }>(),
-  {
-    size: 'md',
-    closeOnActionClick: true
-  }
-)
+const props = withDefaults(defineProps<FzDropdownProps>(), {
+  size: 'md',
+  closeOnActionClick: true
+})
 
 const emit = defineEmits<{
   'fzaction:click': [index: number, action: ActionlistItem]
 }>()
+
+const slots = defineSlots<FzDropdownSlots>()
 
 const isOpen = ref(false)
 const container = ref<ComponentPublicInstance>()

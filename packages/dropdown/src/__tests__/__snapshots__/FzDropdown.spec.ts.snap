@@ -5,7 +5,9 @@ exports[`FzTopbar > matches snapshot 1`] = `
   <div class="inline-flex"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
       <div class="flex items-center justify-items-center mr-6 pl-10">
         <!--v-if-->
-      </div>This is a dropdown<div class="flex items-center justify-items-center ml-6 pr-10">
+      </div>
+      <div class="truncate">This is a dropdown</div>
+      <div class="flex items-center justify-items-center ml-6 pr-10">
         <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-angle-down fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
             <path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path>
           </svg></div>
