@@ -28,6 +28,7 @@
             :to="linkActionLocation!"
             @click="handleButtonClick"
             size="md"
+            :target="linkActionTarget"
             >{{ linkActionLabel }}</FzLink
           >
         </div>

@@ -1,6 +1,12 @@
 import { describe, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { FzAlert } from '..'
+import { createRouter, createWebHistory } from 'vue-router'
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [{ name: '', path: '/example', component: () => {} }]
+})
 
 describe.concurrent('FzAlert', () => {
   it('matches info alert', async ({ expect }) => {
@@ -261,11 +267,14 @@ describe.concurrent('FzAlert', () => {
         buttonActionLabel: 'Button action here',
         showLinkAction: true,
         linkActionLabel: 'This is a link',
-        linkActionLocation: 'example'
+        linkActionLocation: '/example'
       },
       slots: {
         default:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+      },
+      global: {
+        plugins: [router]
       }
     })
 
@@ -280,11 +289,37 @@ describe.concurrent('FzAlert', () => {
         showButtonAction: false,
         showLinkAction: true,
         linkActionLabel: 'This is a link',
-        linkActionLocation: 'example'
+        linkActionLocation: '/example'
       },
       slots: {
         default:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+      },
+      global: {
+        plugins: [router]
+      }
+    })
+
+    expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  it('matches success alert with link only and target prop', async ({ expect }) => {
+    const wrapper = mount(FzAlert, {
+      props: {
+        type: 'info',
+        title: 'Title here',
+        showButtonAction: false,
+        showLinkAction: true,
+        linkActionLabel: 'This is a link',
+        linkActionLocation: '/example',
+        linkActionTarget: '_blank'
+      },
+      slots: {
+        default:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+      },
+      global: {
+        plugins: [router]
       }
     })
 
