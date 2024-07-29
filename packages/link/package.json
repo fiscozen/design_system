@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/link",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Design System Link component",
   "scripts": {
     "coverage": "vitest run --coverage",

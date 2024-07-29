@@ -2,50 +2,22 @@
   <span v-if="disabled" :class="spanClass">
     <slot></slot>
   </span>
-  <router-link v-else :to :replace :class="linkClass">
+  <router-link v-else :to :replace :class="linkClass" :target>
     <slot></slot>
   </router-link>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { RouteLocationRaw } from 'vue-router'
+import { FzLinkProps } from './types'
 
-const props = withDefaults(
-  defineProps<{
-    /**
-     * Route Location the link should navigate to when clicked on.
-     */
-    to: RouteLocationRaw
-    /**
-     * Calls `router.replace` instead of `router.push`.
-     */
-    replace?: boolean
-    /**
-     * The purpose of the link
-     */
-    type?: 'default' | 'danger'
-    /**
-     * The appearance of the link
-     */
-    style?: 'default' | 'underline'
-    /**
-     * Size of the link
-     */
-    size?: 'xs' | 'sm' | 'md' | 'lg'
-    /**
-     * Whether the link is disabled
-     */
-    disabled?: boolean
-  }>(),
-  {
-    type: 'default',
-    style: 'default',
-    size: 'lg',
-    disabled: false,
-    replace: false
-  }
-)
+const props = withDefaults(defineProps<FzLinkProps>(), {
+  type: 'default',
+  style: 'default',
+  size: 'lg',
+  disabled: false,
+  replace: false
+})
 
 const commonClass = computed(() => [
   'border-1 border-transparent',

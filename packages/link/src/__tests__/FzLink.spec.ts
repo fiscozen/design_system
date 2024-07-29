@@ -106,4 +106,22 @@ describe.concurrent('FzLink', () => {
 
     expect(wrapper.find('a').classes()).toContain('text-md')
   })
+
+  it('should render target', async ({ expect }) => {
+    const wrapper = mount(FzLink, {
+      props: {
+        size: 'md',
+        to: '/example',
+        target: '_blank'
+      },
+      slots: {
+        default: 'This is a link'
+      },
+      global: {
+        plugins: [router]
+      }
+    })
+
+    expect(wrapper.find('a').attributes().target).toBe('_blank')
+  })
 })
