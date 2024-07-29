@@ -10,11 +10,11 @@ describe.concurrent("FzSimpleTable", () => {
         value: [
           {
             user: "John Doe",
-            date: new Date(),
+            date: '12/12/2022',
           },
           {
             user: "John Doe1",
-            date: new Date(),
+            date: '10/05/2024',
           },
         ],
       },
