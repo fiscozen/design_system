@@ -30,9 +30,13 @@ type AlertProps = {
    */
   linkActionLabel?: string
   /**
-   * Action link location (applies only if showLinkAction is true)
+   * Link action location (applies only if showLinkAction is true)
    */
   linkActionLocation?: RouteLocationRaw
+  /**
+   * Link action target, for example _blank
+   */
+  linkActionTarget?: string
   /**
    * Size of the alert (applies only if style is simple)
    */

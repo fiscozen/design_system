@@ -3,7 +3,7 @@
 exports[`FzAlert > matches danger alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -12,7 +12,8 @@ exports[`FzAlert > matches danger alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -24,7 +25,7 @@ exports[`FzAlert > matches danger alert 1`] = `
 exports[`FzAlert > matches danger collapsable alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -33,7 +34,8 @@ exports[`FzAlert > matches danger collapsable alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -45,7 +47,7 @@ exports[`FzAlert > matches danger collapsable alert 1`] = `
 exports[`FzAlert > matches danger simple alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -54,7 +56,8 @@ exports[`FzAlert > matches danger simple alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -66,7 +69,7 @@ exports[`FzAlert > matches danger simple alert 1`] = `
 exports[`FzAlert > matches error alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -75,7 +78,8 @@ exports[`FzAlert > matches error alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -87,7 +91,7 @@ exports[`FzAlert > matches error alert 1`] = `
 exports[`FzAlert > matches error collapsable alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -96,7 +100,8 @@ exports[`FzAlert > matches error collapsable alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -108,7 +113,7 @@ exports[`FzAlert > matches error collapsable alert 1`] = `
 exports[`FzAlert > matches error simple alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -117,7 +122,8 @@ exports[`FzAlert > matches error simple alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -129,7 +135,7 @@ exports[`FzAlert > matches error simple alert 1`] = `
 exports[`FzAlert > matches info alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -138,7 +144,8 @@ exports[`FzAlert > matches info alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -150,7 +157,7 @@ exports[`FzAlert > matches info alert 1`] = `
 exports[`FzAlert > matches info collapsable alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -159,7 +166,8 @@ exports[`FzAlert > matches info collapsable alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -171,7 +179,7 @@ exports[`FzAlert > matches info collapsable alert 1`] = `
 exports[`FzAlert > matches info simple alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -180,7 +188,8 @@ exports[`FzAlert > matches info simple alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -192,7 +201,7 @@ exports[`FzAlert > matches info simple alert 1`] = `
 exports[`FzAlert > matches success alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -201,7 +210,8 @@ exports[`FzAlert > matches success alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -213,7 +223,7 @@ exports[`FzAlert > matches success alert 1`] = `
 exports[`FzAlert > matches success alert with button and link 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -222,11 +232,10 @@ exports[`FzAlert > matches success alert with button and link 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
-      </button>
-      <router-link data-v-9babd5cc="" to="example" replace="false" class="border-1 border-transparent text-md hover:underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600">This is a link</router-link>
-    </div>
+      </button><a data-v-9babd5cc="" href="/example" class="border-1 border-transparent text-md hover:underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600">This is a link</a></div>
   </div>
 </div>"
 `;
@@ -234,7 +243,7 @@ exports[`FzAlert > matches success alert with button and link 1`] = `
 exports[`FzAlert > matches success alert with link only 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -243,8 +252,25 @@ exports[`FzAlert > matches success alert with link only 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16">
+      <!--v-if--><a data-v-9babd5cc="" href="/example" class="border-1 border-transparent text-md hover:underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600">This is a link</a>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`FzAlert > matches success alert with link only and target prop 1`] = `
+"<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
+  <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+    </svg></div>
+  <div data-v-9babd5cc="" class="flex-1">
+    <div data-v-9babd5cc="" class="flex">
+      <p data-v-9babd5cc="" class="flex-1 text-lg">Title here</p>
       <!--v-if-->
-      <router-link data-v-9babd5cc="" to="example" replace="false" class="border-1 border-transparent text-md hover:underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600">This is a link</router-link>
+    </div>
+    <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <div data-v-9babd5cc="" class="flex gap-16">
+      <!--v-if--><a data-v-9babd5cc="" href="/example" class="border-1 border-transparent text-md hover:underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600" target="_blank">This is a link</a>
     </div>
   </div>
 </div>"
@@ -253,7 +279,7 @@ exports[`FzAlert > matches success alert with link only 1`] = `
 exports[`FzAlert > matches success collapsable alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -262,7 +288,8 @@ exports[`FzAlert > matches success collapsable alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -274,7 +301,7 @@ exports[`FzAlert > matches success collapsable alert 1`] = `
 exports[`FzAlert > matches success simple alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -283,7 +310,8 @@ exports[`FzAlert > matches success simple alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -295,7 +323,7 @@ exports[`FzAlert > matches success simple alert 1`] = `
 exports[`FzAlert > matches warning alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -304,7 +332,8 @@ exports[`FzAlert > matches warning alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -316,7 +345,7 @@ exports[`FzAlert > matches warning alert 1`] = `
 exports[`FzAlert > matches warning collapsable alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -325,7 +354,8 @@ exports[`FzAlert > matches warning collapsable alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
@@ -337,7 +367,7 @@ exports[`FzAlert > matches warning collapsable alert 1`] = `
 exports[`FzAlert > matches warning simple alert 1`] = `
 "<div data-v-9babd5cc="" class="flex select-none bg-semantic-info-50 border-semantic-info border-l-4 p-12 gap-12 rounded">
   <div data-v-9babd5cc="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
+      <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
     </svg></div>
   <div data-v-9babd5cc="" class="flex-1">
     <div data-v-9babd5cc="" class="flex">
@@ -346,7 +376,8 @@ exports[`FzAlert > matches warning simple alert 1`] = `
     </div>
     <p data-v-9babd5cc="" class="font-normal mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     <div data-v-9babd5cc="" class="flex gap-16"><button data-v-9babd5cc="" type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-        <!--v-if-->Button action here
+        <!--v-if-->
+        <div class="truncate">Button action here</div>
         <!--v-if--><span class="hidden h-0 w-0"></span>
       </button>
       <!--v-if-->
