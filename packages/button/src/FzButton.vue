@@ -9,7 +9,7 @@
         />
       </slot>
     </div>
-    <div :class="['truncate', containerClass]">
+    <div :class="containerClass">
       <slot>
         {{ label }}
       </slot>
@@ -72,6 +72,10 @@ const props = withDefaults(
      * Define the css class for the default slot container
      */
     containerClass?: string
+    /**
+     * Whether to override internal container classes
+     */
+    overrideContainerClass?: boolean
   }>(),
   {
     variant: 'primary',
@@ -184,6 +188,14 @@ const afterClasses = computed(() => ({
   'pr-10': (props.size === 'md' || props.size === 'sm') && iconAndLabel.value,
   'pr-8': props.size === 'xs' && iconAndLabel.value
 }))
+
+const containerClass = computed(() => {
+  if (props.overrideContainerClass) {
+    return props.containerClass
+  }
+
+  return ["truncate", props.containerClass]
+});
 </script>
 
 <style>
