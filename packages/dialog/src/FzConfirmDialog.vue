@@ -7,7 +7,7 @@
           <FzIconButton
             @click="handleCancel"
             class="ml-12"
-            iconName="xmark"
+            iconName="xmark-large"
             size="sm"
             variant="invisible"
           ></FzIconButton>
