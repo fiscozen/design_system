@@ -37,6 +37,7 @@
               @click.prevent="handleConfirm"
               :disabled="disableConfirm"
               value="true"
+              :variant="confirmButtonVariant"
             >
               {{ confirmLabel }}
             </FzButton>

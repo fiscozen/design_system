@@ -56,7 +56,7 @@ const handleBackdropClick = (event: MouseEvent) => {
     event.clientX <= rect.left + rect.width;
   if (!isInDialog && props.closeOnBackdrop) {
     dialog.value!.close();
-    emit('cancel');
+    emit("cancel");
   }
 };
 onMounted(() => {

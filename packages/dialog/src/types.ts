@@ -1,3 +1,5 @@
+import { ButtonVariant } from "@fiscozen/button";
+
 export type FzDialogSizes = "sm" | "md" | "lg" | "xl";
 
 export type FzDialogProps = {
@@ -56,6 +58,10 @@ export type FzConfirmDialogProps = FzDialogProps & {
    * Whether to show the confirm button
    */
   confirmButtonEnabled?: boolean;
+  /**
+   * Custom variant of the confirm button
+   */
+  confirmButtonVariant?: ButtonVariant;
   /**
    * classes to apply to footer
    */
