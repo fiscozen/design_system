@@ -7,6 +7,7 @@
     :size="size"
     :tooltip="tooltip"
     :variant="variantMap"
+    overrideContainerClass
   >
     <FzIcon :name="iconName" :size="mappedIconSize" @click="(e) => $emit('click', e)" />
     <div class="-mr-2 -mt-2" v-if="variant === 'notification'" :class="notificationClasses"></div>
