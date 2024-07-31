@@ -8,7 +8,7 @@ export interface FzSelectProps extends FzFloatingProps {
   /**
    * The label displayed on top of the input
    */
-  label: string;
+  label?: string;
   /**
    * The placeholder displayed in the input
    */
