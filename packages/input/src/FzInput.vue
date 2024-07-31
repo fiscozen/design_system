@@ -25,6 +25,7 @@
         :class="[staticInputClass]"
         :pattern="pattern"
         :name
+        @focus="(e) => $emit('focus', e)"
       />
       <FzIcon
         v-if="valid"
@@ -90,7 +91,11 @@ const {
   containerWidth,
 } = useInputStyle(props, containerRef);
 
-const emit = defineEmits([]);
+const emit = defineEmits(['input', 'focus']);
+defineExpose({
+  inputRef,
+  containerRef
+})
 </script>
 
 <style scoped></style>

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import { FzTypeahead } from '@fiscozen/typeahead'
+import { FzTypeahead, FzTypeaheadProps } from '@fiscozen/typeahead'
 import { ref } from 'vue'
 
 const meta: Meta<typeof FzTypeahead> = {
@@ -7,7 +7,15 @@ const meta: Meta<typeof FzTypeahead> = {
   component: FzTypeahead,
   tags: ['autodocs'],
   argTypes: {},
-  args: {},
+  args: {
+    selectProps: {
+      options: [],
+      isOpen: false
+    },
+    inputProps: {
+      label: 'This is a label'
+    }
+  } satisfies FzTypeaheadProps,
   decorators: []
 }
 
@@ -25,7 +33,7 @@ const Template: Story = {
     },
     template: `
       <div class="h-[100vh] w-[100-vw] p-16">
-        <FzTypeahead v-bind="args" v-model="text" label="This is a typeahead"/>
+        <FzTypeahead v-bind="args" v-model="text" />
       </div>
     `
   }),
@@ -35,7 +43,14 @@ const options = [{label: 'one', value: '1'}, {label: 'two', value: '2'}, {label:
 const Default: Story = {
   ...Template,
   args: {
-    options
+    selectProps: {
+      options,
+      isOpen: false
+    },
+    inputProps: {
+      label: 'This is a label',
+      placeholder: 'This is a placeholder'
+    }
   }
 }
 

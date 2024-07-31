@@ -1,23 +1,13 @@
 <template>
-  <FzSelect
-    position="bottom"
-    :options="internalOptions"
-    :ext-opener="opener"
-    @select="handleSelect"
-  >
+  <FzSelect v-bind="safeSelectOpts" v-model="modelValue" @select="handleSelect">
     <template #opener="{ handlePickerClick, isOpen }">
-      <label :for="id" class="text-core-black mb-8">
-        {{ label }}
-      </label>
-      <input
+      <FzInput
         ref="opener"
-        :id="id"
-        v-model="modelValue"
-        type="text"
+        v-bind="inputProps"
+        :modelValue="inputValue"
         @focus="() => !isOpen && handlePickerClick()"
-        @input="handleInput"
-        class="w-[176px] border-1 border-gray-300 h-32 px-10"
-      />
+        @update:modelValue="handleInput"
+      ></FzInput>
     </template>
   </FzSelect>
 </template>
@@ -25,48 +15,68 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { FzTypeaheadProps } from "./types";
-import { FzSelect, FzSelectOptionsProps } from "@fiscozen/select";
+import {
+  FzSelect,
+  FzSelectOptionsProps,
+  FzSelectProps,
+} from "@fiscozen/select";
+import { FzInput } from "@fiscozen/input";
 import Fuse from "fuse.js";
 
 const props = withDefaults(defineProps<FzTypeaheadProps>(), {});
 const emit = defineEmits(["update:modelValue"]);
 
-const modelValue = ref<string | undefined>();
+const modelValue = ref<FzSelectOptionsProps>();
+const inputValue = ref<string | undefined>();
 const fuseOptions = {
   keys: ["label"],
 };
-const opener = ref<HTMLElement>();
-
-const getId = () => Math.floor(Math.random() * 1000).toString();
-const id = getId();
+const opener = ref<any>();
 
 const dynFuse = computed(() => {
-  return new Fuse(props.options, fuseOptions);
+  return new Fuse(props.selectProps.options, fuseOptions);
 });
 
-const handleInput = (e: InputEvent) => {
-  emit("update:modelValue", e.target?.value);
+const safeInputContainer = computed(() => {
+  return opener.value?.containerRef;
+});
+
+const handleInput = (val: string) => {
+  inputValue.value = val;
 };
 
 const handleSelect = (val: string) => {
-  modelValue.value = props.options.find((opt) => opt.value === val)?.label;
+  const selected = props.selectProps.options.find((opt) => opt.value === val);
+  inputValue.value = selected?.label;
+  emit("update:modelValue", selected);
 };
 
 const internalOptions = computed<FzSelectOptionsProps[]>(() => {
-  let res = props.options;
+  let res = props.selectProps.options;
 
   if (props.filteredOptions) {
     res = props.filteredOptions;
   } else if (props.filterFn) {
-    res = props.filterFn(modelValue.value);
-  } else if (modelValue.value) {
+    res = props.filterFn(inputValue.value);
+  } else if (inputValue.value) {
     res = dynFuse.value
-      .search(modelValue.value)
+      .search(inputValue.value)
       .map((searchRes) => searchRes.item);
   }
 
   return res;
 });
+
+const computedModel = computed(() => {
+  return modelValue.value;
+});
+
+const safeSelectOpts = computed<FzSelectProps>(() => ({
+  position: "bottom",
+  ...props.selectProps,
+  options: internalOptions.value,
+  extOpener: safeInputContainer.value,
+}));
 </script>
 
 <style scoped></style>
