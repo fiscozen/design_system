@@ -5,7 +5,7 @@ type FzDropdownProps = {
   /**
    * Size of the dropdown trigger
    */
-  size: ButtonSize
+  size?: ButtonSize
   /**
    * Label of the action list
    */
