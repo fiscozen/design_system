@@ -28,7 +28,7 @@
 import { ComponentPublicInstance, computed, ref } from 'vue'
 import { FzButton } from '@fiscozen/button'
 import { FzActionlist, ActionlistItem } from '@fiscozen/actionlist'
-import { FzFloating, useClickOutside } from '@fiscozen/composables'
+import { FzFloating, useClickOutside, useKeyDown } from '@fiscozen/composables'
 import { FzDropdownProps, FzDropdownSlots } from './types'
 
 const props = withDefaults(defineProps<FzDropdownProps>(), {
@@ -49,6 +49,11 @@ const buttonIconName = computed(() => (isOpen.value ? 'angle-up' : 'angle-down')
 const floatingPosition = computed(() => (props.align === 'left' ? 'bottom-start' : 'bottom-end'))
 
 useClickOutside(containerDom, () => {
+  isOpen.value = false
+})
+
+useKeyDown(containerDom, (event) => {
+  if (event.key !== 'Escape') return
   isOpen.value = false
 })
 
