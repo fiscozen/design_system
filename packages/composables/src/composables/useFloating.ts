@@ -61,8 +61,8 @@ export const useFloating = (
       rect.value = safeElementDomRef.value.getBoundingClientRect()
       const openerRect = safeOpenerDomRef.value?.getBoundingClientRect()
       const containerRect = safeContainerDomRef.value.getBoundingClientRect()
-     
-      const elStyle = window.getComputedStyle(safeElementDomRef.value);
+
+      const elStyle = window.getComputedStyle(safeElementDomRef.value)
 
       // multiple observer calls on same target do not cause multiple registrations
       floatObserver.value.observe(safeElementDomRef.value)
@@ -74,11 +74,12 @@ export const useFloating = (
       let translateX = 0
 
       if (args.opener && safeOpenerDomRef.value && openerRect) {
-
-        const leftWithoutXMargin = openerRect.left - parseFloat(elStyle.marginLeft) - parseFloat(elStyle.marginRight);
-        const leftWithoutLeftMargin = openerRect.left - parseFloat(elStyle.marginLeft); 
-        const topWithoutYMargin = openerRect.top - parseFloat(elStyle.marginTop) - parseFloat(elStyle.marginBottom);
-        const topWithoutTopMargin = openerRect.top - parseFloat(elStyle.marginTop);
+        const leftWithoutXMargin =
+          openerRect.left - parseFloat(elStyle.marginLeft) - parseFloat(elStyle.marginRight)
+        const leftWithoutLeftMargin = openerRect.left - parseFloat(elStyle.marginLeft)
+        const topWithoutYMargin =
+          openerRect.top - parseFloat(elStyle.marginTop) - parseFloat(elStyle.marginBottom)
+        const topWithoutTopMargin = openerRect.top - parseFloat(elStyle.marginTop)
 
         switch (position) {
           case 'auto':
@@ -228,7 +229,7 @@ export const useFloating = (
 
       const realPos = calcRealPos(rect.value, float.position, translateX, translateY)
 
-      float.position.x = realPos.x 
+      float.position.x = realPos.x
       float.position.y = realPos.y
 
       if (realPos.x < containerRect.left) {

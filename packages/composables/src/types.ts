@@ -8,8 +8,17 @@ export interface FzFloatingProps {
   isOpen: boolean
   position?: FzFloatingPosition
   container?: string | null
-  contentClass?: string | string[] | Record<string, boolean|undefined> | Array<string|Record<string,boolean|undefined>>
-  openerClass?: string | string[] | Record<string, boolean|undefined> | Array<string|Record<string,boolean|undefined>>
+  contentClass?:
+    | string
+    | string[]
+    | Record<string, boolean | undefined>
+    | Array<string | Record<string, boolean | undefined>>
+  openerClass?:
+    | string
+    | string[]
+    | Record<string, boolean | undefined>
+    | Array<string | Record<string, boolean | undefined>>
+  overrideContentClass?: boolean
 }
 
 export interface FzAbsolutePosition {

@@ -1,5 +1,5 @@
 <template>
-  <div class="fz__actionlist inline-flex grow-0 flex-col rounded p-4">
+  <div class="fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4">
     <div v-if="label" class="text-grey-400 flex h-32 items-center px-12 text-xs">
       <span>{{ label }}</span>
     </div>

@@ -46,6 +46,14 @@ watch(
     floating.setPosition()
   }
 )
+
+const contentClass = computed(() => {
+  if (props.overrideContentClass) {
+    return props.contentClass
+  }
+
+  return ['bg-core-white fixed p-4 z-10', props.contentClass]
+})
 </script>
 
 <template>
@@ -57,7 +65,6 @@ watch(
     <div
       ref="content"
       v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
-      class="bg-core-white fixed p-4 z-10"
       :class="contentClass"
     >
       <slot :isOpen :floating></slot>
