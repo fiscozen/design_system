@@ -1,5 +1,11 @@
 <template>
-  <FzFloating :isOpen :position="floatingPosition" ref="container">
+  <FzFloating
+    :isOpen
+    :position="floatingPosition"
+    ref="container"
+    overrideContentClass
+    contentClass="fixed pt-4 z-10"
+  >
     <template #opener>
       <slot name="opener" :isOpen="isOpen">
         <FzButton
