@@ -29,6 +29,10 @@ type FzToastQueueProps = {
    * Whether to align to the left or right
    */
   align?: "left" | "right";
+  /**
+   * Whether to briefly (2s) open the stack when a new toast is added
+   */
+  openOnNewToast?: boolean;
 };
 
 export { ToastType, Toast, NewToast, FzToastProps, FzToastQueueProps };

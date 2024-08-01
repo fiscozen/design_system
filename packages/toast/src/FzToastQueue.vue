@@ -1,6 +1,7 @@
 <template>
   <div
     class="hoverable group"
+    :class="{ hovering: isHovering }"
     @mouseenter="isHovering = true"
     @mouseleave="isHovering = false"
   >
@@ -16,9 +17,13 @@
           :style="getToastStyle(index)"
           @close="handleToastClose(toast)"
         >
-          <span :class="{ 'truncate group-hover:whitespace-normal': index }">{{
-            toast.message
-          }}</span>
+          <span
+            :class="{
+              'truncated-toast-message truncate group-hover:whitespace-normal':
+                index,
+            }"
+            >{{ toast.message }}</span
+          >
         </FzToast>
       </TransitionGroup>
     </div>
@@ -37,16 +42,29 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef } from "vue";
+import { computed, ref, watch } from "vue";
 import { FzToast, FzToastQueueProps, Toast } from "./index";
 import { toasts as internalToasts, removeToast } from "./queue";
 
 const props = withDefaults(defineProps<FzToastQueueProps>(), {
   align: "right",
+  openOnNewToast: true,
 });
-const toasts = props.toasts ? toRef(props.toasts) : internalToasts;
+
+const toasts = computed(() => props.toasts ?? internalToasts.value);
 const toastsHeight = ref<number[]>([]);
 const isHovering = ref(false);
+const toastsLength = computed(() => toasts.value.length);
+let currentTimeoutId: number | undefined = undefined;
+
+watch(toastsLength, (newValue, oldValue) => {
+  if (!props.openOnNewToast) return;
+  if (newValue <= oldValue) return;
+  if (currentTimeoutId != null) window.clearTimeout(currentTimeoutId);
+  
+  isHovering.value = true;
+  currentTimeoutId = window.setTimeout(() => (isHovering.value = false), 2000);
+});
 
 const toastClass = computed(() => [
   {
@@ -117,11 +135,17 @@ function handleToastClose(toast: Toast) {
   opacity: 0;
 }
 
-.hoverable:hover .toast:nth-child(n + 2) {
+.hoverable:hover .toast:nth-child(n + 2),
+.hoverable.hovering .toast:nth-child(n + 2) {
   transform: translateY(var(--fz-translate-y-hover));
 }
 
-.hoverable:hover .toast:nth-child(n + 2):not(.list-leave-to) {
+.hoverable:hover .toast:nth-child(n + 2):not(.list-leave-to),
+.hoverable.hovering .toast:nth-child(n + 2):not(.list-leave-to) {
   opacity: 1;
+}
+
+.hoverable.hovering .truncated-toast-message {
+  @apply whitespace-normal;
 }
 </style>
