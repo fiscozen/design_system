@@ -1,26 +1,30 @@
 <template>
-  <dialog
-    ref="dialog"
-    @close="visible = false"
-    :class="[dialogStaticClasses, dialogClasses]"
-  >
-    <div ref="innerDialog" :class="[staticClasses, classes]">
-      <div
-        class="flex items-center p-12 w-full border-b-1 border-grey-100 border-solid"
-      >
-        <slot name="header"></slot>
+  <div
+    v-show="visible"
+    class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-center">
+    <dialog
+      ref="dialog"
+      @close="visible = false"
+      :class="[dialogStaticClasses, dialogClasses]"
+    >
+      <div ref="innerDialog" :class="[staticClasses, classes]">
+        <div
+          class="flex items-center p-12 w-full border-b-1 border-grey-100 border-solid"
+        >
+          <slot name="header"></slot>
+        </div>
+        <div :class="['grow', 'p-12', bodyClasses]">
+          <slot name="body"></slot>
+        </div>
+        <div
+          v-if="$slots.footer"
+          class="flex flex-row p-12 border-t-1 border-grey-100 items-center border-solid"
+        >
+          <slot name="footer"></slot>
+        </div>
       </div>
-      <div :class="['grow', 'p-12', bodyClasses]">
-        <slot name="body"></slot>
-      </div>
-      <div
-        v-if="$slots.footer"
-        class="flex flex-row p-12 border-t-1 border-grey-100 items-center border-solid"
-      >
-        <slot name="footer"></slot>
-      </div>
-    </div>
-  </dialog>
+    </dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -39,8 +43,14 @@ const dialog = ref<HTMLDialogElement>();
 const innerDialog = ref<HTMLDivElement>();
 const visible = ref(false);
 
+let backdropClickTimeout = false;
+
 const showModal = () => {
-  dialog.value!.showModal();
+  backdropClickTimeout = true;
+  setTimeout(() => {
+    backdropClickTimeout = false;
+  }, 100)
+  dialog.value!.show();
   visible.value = true;
 };
 
@@ -68,6 +78,13 @@ const handleKeyUp = (e: KeyboardEvent) => {
 };
 
 useKeyUp(handleKeyUp);
+
+onMounted(() => {
+  dialog.value?.addEventListener("click", handleBackdropClick);
+});
+onUnmounted(() => {
+  document.removeEventListener("click", handleBackdropClick);
+});
 
 const staticClasses = ["flex", "flex-col", "bg-core-white"];
 
@@ -166,5 +183,10 @@ const classes = computed(() => {
 dialog::backdrop {
   background: var(--core-black, #2c282f);
   opacity: 0.8;
+}
+.fz-dialog__backdrop {
+  background-color: rgba(44, 40, 47, 0.8);
+  top: 0;
+  left: 0;
 }
 </style>
