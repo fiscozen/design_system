@@ -1,5 +1,5 @@
 <template>
-  <FzDialog v-bind="props" ref="dialog" @cancel="emit('fzmodal:cancel')">
+  <FzDialog v-bind="props" ref="dialog" @fzmodal:cancel="emit('fzmodal:cancel')">
     <template #header>
       <slot name="header">
         <div :class="[titleStaticClasses, titleClasses]">

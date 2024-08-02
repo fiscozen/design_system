@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<FzDialogProps>(), {
   size: "md",
   closeOnBackdrop: true,
 });
-const emit = defineEmits(["cancel"]);
+const emit = defineEmits(["fzmodal:cancel"]);
 
 const dialog = ref<HTMLDialogElement>();
 const visible = ref(false);
@@ -56,14 +56,24 @@ const handleBackdropClick = (event: MouseEvent) => {
     event.clientX <= rect.left + rect.width;
   if (!isInDialog && props.closeOnBackdrop) {
     dialog.value!.close();
-    emit("cancel");
+    emit("fzmodal:cancel");
   }
 };
+
+const handleKeyUp = (e: KeyboardEvent) => {
+  if (!visible.value || e.key !== 'Escape') {
+    return;
+  }
+  emit("fzmodal:cancel");
+};
+
 onMounted(() => {
   dialog.value?.addEventListener("click", handleBackdropClick);
+  document.addEventListener('keyup', handleKeyUp);
 });
 onUnmounted(() => {
   dialog.value?.removeEventListener("click", handleBackdropClick);
+  document.removeEventListener('keyup', handleKeyUp);
 });
 
 const staticClasses = ["flex", "flex-col", "bg-core-white"];
