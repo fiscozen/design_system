@@ -8,7 +8,7 @@
       <TransitionGroup name="list">
         <FzToast
           v-for="(toast, index) in toasts"
-          :key="toast.createdAt.getTime()"
+          :key="toast.id"
           :ref="(el: any) => handleToastRef(el, index, isHovering)"
           :type="toast.type"
           class="toast absolute origin-bottom transition-all duration-300"

@@ -4,9 +4,10 @@ type Toast = {
   type: ToastType;
   message: string;
   createdAt: Date;
+  id: number;
 };
 
-type NewToast = Omit<Toast, "createdAt">;
+type NewToast = Pick<Toast, "type" | "message">;
 
 type FzToastProps = {
   /**
