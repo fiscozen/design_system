@@ -74,6 +74,7 @@ const handleKeyUp = (e: KeyboardEvent) => {
   if (!visible.value || e.key !== "Escape") {
     return;
   }
+  dialog.value!.close();
   emit("fzmodal:cancel");
 };
 
