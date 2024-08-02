@@ -24,7 +24,7 @@
     </div>
 
     <div class="flex flex-col">
-      <template v-for="toast in toasts" :key="toast.createdAt.getTime()">
+      <template v-for="toast in toasts" :key="toast.id">
         <FzToast
           :type="toast.type"
           class="[&:nth-child(n+2)]:mt-12 invisible hidden group-hover:flex"
