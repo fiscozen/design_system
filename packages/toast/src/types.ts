@@ -33,6 +33,10 @@ type FzToastQueueProps = {
    * Whether to briefly (2s) open the stack when a new toast is added
    */
   openOnNewToast?: boolean;
+  /**
+   * How many milliseconds for the toast remains open, applies only if openOnNewToast is true
+   */
+  openOnNewToastTimeout?: number
 };
 
 export { ToastType, Toast, NewToast, FzToastProps, FzToastQueueProps };

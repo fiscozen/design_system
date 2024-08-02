@@ -49,6 +49,7 @@ import { toasts as internalToasts, removeToast } from "./queue";
 const props = withDefaults(defineProps<FzToastQueueProps>(), {
   align: "right",
   openOnNewToast: true,
+  openOnNewToastTimeout: 2000
 });
 
 const toasts = computed(() => props.toasts ?? internalToasts.value);
@@ -63,7 +64,7 @@ watch(toastsLength, (newValue, oldValue) => {
   if (currentTimeoutId != null) window.clearTimeout(currentTimeoutId);
   
   isHovering.value = true;
-  currentTimeoutId = window.setTimeout(() => (isHovering.value = false), 2000);
+  currentTimeoutId = window.setTimeout(() => (isHovering.value = false), props.openOnNewToastTimeout);
 });
 
 const toastClass = computed(() => [
