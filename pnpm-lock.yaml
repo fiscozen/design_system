@@ -21,8 +21,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.131
-        version: 1.0.131
+        specifier: ^1.0.134
+        version: 1.0.134
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
@@ -1099,8 +1099,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.131
-        version: 1.0.131
+        specifier: ^1.0.134
+        version: 1.0.134
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.6.0
@@ -2279,8 +2279,8 @@ packages:
     resolution: {integrity: sha512-Xk1sIhyNC/esHGGVjL/niHLowM0csl/kFO5uawBy4IrWwy0o1G8LGt3jP6nmWGz+USxeeqbihAmp/oVZju6wug==}
     hasBin: true
 
-  '@awesome.me/kit-8137893ad3@1.0.131':
-    resolution: {integrity: sha512-Is4z/ZFIZFpbh7gU+C18Tg2RJg0as/keTK4WHJNogOl+llDB072BSNZxuBTXWDv37JZ729N+grtTAif1w1b8IA==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.131/kit-8137893ad3-1.0.131.tgz}
+  '@awesome.me/kit-8137893ad3@1.0.134':
+    resolution: {integrity: sha512-pYlOxu3gMXdJjG5dZxiHHVuZdDeuM3L/U9NLM8GP2/El3c5iOd1rOepNbj52n2UI44Wxzt9Too4IW8PAgTDlwg==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.134/kit-8137893ad3-1.0.134.tgz}
     engines: {node: '>=16'}
 
   '@awesome.me/kit-8137893ad3@1.0.71':
@@ -6931,8 +6931,8 @@ packages:
     resolution: {integrity: sha512-trVZiI6RMOkO476zLGaBIzszOdFPnCCXHPG9kn0yuS1uz6xdVxPfZdB3vUig9pxPFDM9BRAgz/YUIVQ1/vuiUg==}
     engines: {node: '>=0.6'}
 
-  qs@6.12.3:
-    resolution: {integrity: sha512-AWJm14H1vVaO/iNZ4/hO+HyaTehuy9nRqVdkTqlJt0HWvBiBIEXFmb4C0DGeYo3Xes9rrEW+TxHsaigCbN5ICQ==}
+  qs@6.13.0:
+    resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
     engines: {node: '>=0.6'}
 
   querystringify@2.2.0:
@@ -8087,7 +8087,7 @@ snapshots:
     dependencies:
       default-browser-id: 3.0.0
 
-  '@awesome.me/kit-8137893ad3@1.0.131':
+  '@awesome.me/kit-8137893ad3@1.0.134':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.6.0
 
@@ -9134,7 +9134,7 @@ snapshots:
 
   '@fiscozen/icons@0.1.6(vue@3.4.13(typescript@5.3.3))':
     dependencies:
-      '@awesome.me/kit-8137893ad3': 1.0.131
+      '@awesome.me/kit-8137893ad3': 1.0.134
       '@fortawesome/fontawesome-svg-core': 6.5.1
       '@fortawesome/vue-fontawesome': 3.0.6(@fortawesome/fontawesome-svg-core@6.5.1)(vue@3.4.13(typescript@5.3.3))
       vue: 3.4.13(typescript@5.3.3)
@@ -9965,7 +9965,7 @@ snapshots:
       dequal: 2.0.3
       lodash: 4.17.21
       memoizerific: 1.11.3
-      qs: 6.12.3
+      qs: 6.13.0
       tiny-invariant: 1.3.3
       ts-dedent: 2.2.0
       util-deprecate: 1.0.2
@@ -13680,7 +13680,7 @@ snapshots:
     dependencies:
       side-channel: 1.0.6
 
-  qs@6.12.3:
+  qs@6.13.0:
     dependencies:
       side-channel: 1.0.6
 
