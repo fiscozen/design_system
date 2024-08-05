@@ -1,6 +1,10 @@
 import { onBeforeUnmount, onMounted, Ref } from 'vue'
 
-function useClickOutside(component: Ref<HTMLElement | undefined>, callback: () => void) {
+function useClickOutside(
+  component: Ref<HTMLElement | undefined>, 
+  callback: () => void,
+  elementToListenClicksOn?: Ref<HTMLElement | undefined>,
+) {
   // fail early if any of the required params is missing
   if (!component) {
     throw new Error('A target component has to be provided.')
@@ -24,11 +28,11 @@ function useClickOutside(component: Ref<HTMLElement | undefined>, callback: () =
   }
 
   onMounted(() => {
-    window.addEventListener('click', listener)
+    (elementToListenClicksOn ?? component).value!.addEventListener('click', listener)
   })
 
   onBeforeUnmount(() => {
-    window.removeEventListener('click', listener)
+    (elementToListenClicksOn ?? component).value!.removeEventListener('click', listener)
   })
 }
 
