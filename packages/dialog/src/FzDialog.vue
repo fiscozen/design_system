@@ -26,6 +26,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import { FzDialogProps } from "./types";
+import { useKeyUp } from "@fiscozen/composables";
 
 const props = withDefaults(defineProps<FzDialogProps>(), {
   size: "md",
@@ -61,19 +62,19 @@ const handleBackdropClick = (event: MouseEvent) => {
 };
 
 const handleKeyUp = (e: KeyboardEvent) => {
-  if (!visible.value || e.key !== 'Escape') {
+  if (!visible.value || e.key !== "Escape") {
     return;
   }
   emit("fzmodal:cancel");
 };
 
+useKeyUp(handleKeyUp);
+
 onMounted(() => {
   dialog.value?.addEventListener("click", handleBackdropClick);
-  document.addEventListener('keyup', handleKeyUp);
 });
 onUnmounted(() => {
   dialog.value?.removeEventListener("click", handleBackdropClick);
-  document.removeEventListener('keyup', handleKeyUp);
 });
 
 const staticClasses = ["flex", "flex-col", "bg-core-white"];

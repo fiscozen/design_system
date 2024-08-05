@@ -940,6 +940,9 @@ importers:
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
+      '@fiscozen/composables':
+        specifier: workspace:^
+        version: link:../composables
       '@fiscozen/style':
         specifier: workspace:^
         version: link:../style
