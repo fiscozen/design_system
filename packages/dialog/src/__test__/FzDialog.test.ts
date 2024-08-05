@@ -1,7 +1,7 @@
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import figmaTokens from "@fiscozen/style/tokens.json";
 import { describe, it, expect } from "vitest";
-import { FzConfirmDialog } from "../";
+import { FzConfirmDialog, FzDialog } from "../";
 
 const viewports: Record<string, number> = Object.entries(
   figmaTokens.global.breakpoint,
