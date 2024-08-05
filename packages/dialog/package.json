@@ -15,6 +15,7 @@
   "peerDependencies": {
     "@fiscozen/button": "workspace:^",
     "@fiscozen/style": "workspace:^",
+    "@fiscozen/composables": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },

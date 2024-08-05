@@ -7,7 +7,7 @@ exports[`FzDialog > should match snapshot - drawer 1`] = `
       <div class="flex flex-row items-center text-xl grow h-32">
         <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-12">
           <!--v-if-->
-          <div class="truncate">
+          <div class="">
             <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark-large h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark-large" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path class="" fill="currentColor" d="M41 39C31.6 29.7 16.4 29.7 7 39S-2.3 63.6 7 73l183 183L7 439c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l183-183L407 473c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-183-183L441 73c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-183 183L41 39z"></path>
               </svg></div>
@@ -42,7 +42,7 @@ exports[`FzDialog > should match snapshot - lg 1`] = `
       <div class="flex flex-row items-center text-xl grow h-28">
         <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-12">
           <!--v-if-->
-          <div class="truncate">
+          <div class="">
             <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark-large h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark-large" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path class="" fill="currentColor" d="M41 39C31.6 29.7 16.4 29.7 7 39S-2.3 63.6 7 73l183 183L7 439c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l183-183L407 473c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-183-183L441 73c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-183 183L41 39z"></path>
               </svg></div>
@@ -77,7 +77,7 @@ exports[`FzDialog > should match snapshot - md - xs screen 1`] = `
       <div class="flex flex-row items-center text-xl grow h-28">
         <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-12">
           <!--v-if-->
-          <div class="truncate">
+          <div class="">
             <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark-large h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark-large" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path class="" fill="currentColor" d="M41 39C31.6 29.7 16.4 29.7 7 39S-2.3 63.6 7 73l183 183L7 439c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l183-183L407 473c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-183-183L441 73c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-183 183L41 39z"></path>
               </svg></div>
@@ -112,7 +112,7 @@ exports[`FzDialog > should match snapshot - md 1`] = `
       <div class="flex flex-row items-center text-xl grow h-28">
         <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-12">
           <!--v-if-->
-          <div class="truncate">
+          <div class="">
             <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark-large h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark-large" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path class="" fill="currentColor" d="M41 39C31.6 29.7 16.4 29.7 7 39S-2.3 63.6 7 73l183 183L7 439c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l183-183L407 473c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-183-183L441 73c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-183 183L41 39z"></path>
               </svg></div>
@@ -147,7 +147,7 @@ exports[`FzDialog > should match snapshot - sm 1`] = `
       <div class="flex flex-row items-center text-xl grow h-28">
         <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-12">
           <!--v-if-->
-          <div class="truncate">
+          <div class="">
             <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark-large h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark-large" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path class="" fill="currentColor" d="M41 39C31.6 29.7 16.4 29.7 7 39S-2.3 63.6 7 73l183 183L7 439c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l183-183L407 473c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-183-183L441 73c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-183 183L41 39z"></path>
               </svg></div>
@@ -182,7 +182,7 @@ exports[`FzDialog > should match snapshot - xl 1`] = `
       <div class="flex flex-row items-center text-xl grow h-28">
         <div class="grow h-28 font-medium"></div><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28 ml-12">
           <!--v-if-->
-          <div class="truncate">
+          <div class="">
             <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark-large h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark-large" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path class="" fill="currentColor" d="M41 39C31.6 29.7 16.4 29.7 7 39S-2.3 63.6 7 73l183 183L7 439c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l183-183L407 473c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-183-183L441 73c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-183 183L41 39z"></path>
               </svg></div>
