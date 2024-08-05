@@ -81,7 +81,7 @@ const handleKeyUp = (e: KeyboardEvent) => {
 useKeyUp(handleKeyUp);
 
 onMounted(() => {
-  dialog.value?.addEventListener("click", handleBackdropClick);
+  document.addEventListener("click", handleBackdropClick);
 });
 onUnmounted(() => {
   document.removeEventListener("click", handleBackdropClick);
