@@ -12,6 +12,7 @@
           >
           <button
             @click="handlePickerClick"
+            type="button"
             :size="size"
             :class="[staticPickerClass, computedPickerClass, pickerClass]"
             ref="opener"
