@@ -1,7 +1,7 @@
 <template>
   <div
     v-show="visible"
-    class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-center">
+    class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-center z-10">
     <dialog
       ref="dialog"
       @close="visible = false"
