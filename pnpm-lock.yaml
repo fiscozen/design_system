@@ -21,8 +21,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.134
-        version: 1.0.134
+        specifier: ^1.0.140
+        version: 1.0.140
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
@@ -1102,8 +1102,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.134
-        version: 1.0.134
+        specifier: ^1.0.140
+        version: 1.0.140
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.6.0
@@ -2282,8 +2282,8 @@ packages:
     resolution: {integrity: sha512-Xk1sIhyNC/esHGGVjL/niHLowM0csl/kFO5uawBy4IrWwy0o1G8LGt3jP6nmWGz+USxeeqbihAmp/oVZju6wug==}
     hasBin: true
 
-  '@awesome.me/kit-8137893ad3@1.0.134':
-    resolution: {integrity: sha512-pYlOxu3gMXdJjG5dZxiHHVuZdDeuM3L/U9NLM8GP2/El3c5iOd1rOepNbj52n2UI44Wxzt9Too4IW8PAgTDlwg==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.134/kit-8137893ad3-1.0.134.tgz}
+  '@awesome.me/kit-8137893ad3@1.0.140':
+    resolution: {integrity: sha512-Fse+3n2GWdSg0F5tu0c8LlenyxDmVyujL9B1amSSU6Wq5z//gK7LsFadmzy8om/pXxU6iZGx8brx5J+1UvDjXA==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.140/kit-8137893ad3-1.0.140.tgz}
     engines: {node: '>=16'}
 
   '@awesome.me/kit-8137893ad3@1.0.71':
@@ -8090,7 +8090,7 @@ snapshots:
     dependencies:
       default-browser-id: 3.0.0
 
-  '@awesome.me/kit-8137893ad3@1.0.134':
+  '@awesome.me/kit-8137893ad3@1.0.140':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.6.0
 
@@ -9137,7 +9137,7 @@ snapshots:
 
   '@fiscozen/icons@0.1.6(vue@3.4.13(typescript@5.3.3))':
     dependencies:
-      '@awesome.me/kit-8137893ad3': 1.0.134
+      '@awesome.me/kit-8137893ad3': 1.0.140
       '@fortawesome/fontawesome-svg-core': 6.5.1
       '@fortawesome/vue-fontawesome': 3.0.6(@fortawesome/fontawesome-svg-core@6.5.1)(vue@3.4.13(typescript@5.3.3))
       vue: 3.4.13(typescript@5.3.3)
