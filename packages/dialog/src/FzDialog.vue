@@ -4,7 +4,7 @@
     @close="visible = false"
     :class="[dialogStaticClasses, dialogClasses]"
   >
-    <div :class="[staticClasses, classes]">
+    <div ref="innerDialog" :class="[staticClasses, classes]">
       <div
         class="flex items-center p-12 w-full border-b-1 border-grey-100 border-solid"
       >
@@ -24,9 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from "vue";
+import { computed, ref } from "vue";
 import { FzDialogProps } from "./types";
 import { useKeyUp } from "@fiscozen/composables";
+import { useClickOutside } from "@fiscozen/composables";
 
 const props = withDefaults(defineProps<FzDialogProps>(), {
   size: "md",
@@ -35,6 +36,7 @@ const props = withDefaults(defineProps<FzDialogProps>(), {
 const emit = defineEmits(["fzmodal:cancel"]);
 
 const dialog = ref<HTMLDialogElement>();
+const innerDialog = ref<HTMLDivElement>();
 const visible = ref(false);
 
 const showModal = () => {
@@ -48,18 +50,15 @@ defineExpose({
   visible,
 });
 
-const handleBackdropClick = (event: MouseEvent) => {
-  var rect = dialog.value!.getBoundingClientRect();
-  var isInDialog =
-    rect.top <= event.clientY &&
-    event.clientY <= rect.top + rect.height &&
-    rect.left <= event.clientX &&
-    event.clientX <= rect.left + rect.width;
-  if (!isInDialog && props.closeOnBackdrop) {
+useClickOutside(
+  innerDialog,
+  () => {
+    if (!props.closeOnBackdrop) return;
     dialog.value!.close();
     emit("fzmodal:cancel");
-  }
-};
+  },
+  dialog,
+);
 
 const handleKeyUp = (e: KeyboardEvent) => {
   if (!visible.value || e.key !== "Escape") {
@@ -69,13 +68,6 @@ const handleKeyUp = (e: KeyboardEvent) => {
 };
 
 useKeyUp(handleKeyUp);
-
-onMounted(() => {
-  dialog.value?.addEventListener("click", handleBackdropClick);
-});
-onUnmounted(() => {
-  dialog.value?.removeEventListener("click", handleBackdropClick);
-});
 
 const staticClasses = ["flex", "flex-col", "bg-core-white"];
 
