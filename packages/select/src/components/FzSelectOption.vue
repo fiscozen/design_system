@@ -1,6 +1,7 @@
 <template>
   <button
     :class="[staticClass, computedClass]"
+    type="button"
     :title="option.label"
     @click="
       () => {
