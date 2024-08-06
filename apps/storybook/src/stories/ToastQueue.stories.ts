@@ -1,11 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import { FzToastQueue, enqueueToast } from '@fiscozen/toast'
+import { FzToastQueue, FzToastQueueProps, enqueueToast } from '@fiscozen/toast'
 import { FzButton } from '@fiscozen/button'
 import { ref } from 'vue'
 
 const meta: Meta<typeof FzToastQueue> = {
   title: '@fiscozen/toast/FzToastQueue',
   tags: ['autodocs'],
+  component: FzToastQueue,
+  argTypes: {
+    align: {
+      control: 'select',
+      options: ['left', 'right']
+    }
+  }
 }
 
 type Story = StoryObj<typeof meta>
@@ -13,7 +20,7 @@ type Story = StoryObj<typeof meta>
 const Default: Story = {
   args: {
   },
-  render: () => ({
+  render: (args: FzToastQueueProps) => ({
     components: {FzToastQueue, FzButton},
     setup: () => {
       function handleEnqueue(type: 'success' | 'warning' | 'success') {
@@ -26,7 +33,8 @@ const Default: Story = {
 
       return {
         handleEnqueue,
-        handleEnqueueLong
+        handleEnqueueLong,
+        args
       }
     },
     template: `
@@ -35,7 +43,7 @@ const Default: Story = {
           <FzButton @click="handleEnqueue('warning')">Warning</FzButton>
           <FzButton @click="handleEnqueue('error')" class="mb-6">Error</FzButton>
           <FzButton @click="handleEnqueueLong('error')" class="mb-6 mr-auto">Error long</FzButton>
-          <FzToastQueue />
+          <FzToastQueue v-bind="args" />
         </div>
       `
   })
@@ -44,7 +52,7 @@ const Default: Story = {
 const CustomQueue: Story = {
   args: {
   },
-  render: () => ({
+  render: (args: FzToastQueueProps) => ({
     components: {FzToastQueue, FzButton},
     setup: () => {
       const toasts = ref([]);
@@ -63,7 +71,8 @@ const CustomQueue: Story = {
       return {
         handleEnqueue,
         handleEnqueueLong,
-        toasts
+        toasts,
+        args
       }
     },
     template: `
@@ -72,7 +81,7 @@ const CustomQueue: Story = {
           <FzButton @click="handleEnqueue('warning')">Warning</FzButton>
           <FzButton @click="handleEnqueue('error')" class="mb-6">Error</FzButton>
           <FzButton @click="handleEnqueueLong('error')" class="mb-6 mr-auto">Error long</FzButton>
-          <FzToastQueue :toasts="toasts" />
+          <FzToastQueue :toasts="toasts" v-bind="args" />
         </div>
       `
   })
