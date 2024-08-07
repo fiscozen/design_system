@@ -1,7 +1,7 @@
 <template>
   <div
     v-show="visible"
-    class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-center z-10">
+    class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-center z-30">
     <dialog
       ref="dialog"
       @close="visible = false"
@@ -79,13 +79,6 @@ const handleKeyUp = (e: KeyboardEvent) => {
 };
 
 useKeyUp(handleKeyUp);
-
-onMounted(() => {
-  document.addEventListener("click", handleBackdropClick);
-});
-onUnmounted(() => {
-  document.removeEventListener("click", handleBackdropClick);
-});
 
 const staticClasses = ["flex", "flex-col", "bg-core-white"];
 
