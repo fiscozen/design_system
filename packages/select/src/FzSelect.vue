@@ -156,6 +156,7 @@ onMounted(() => {
 const handleSelect = (value: string) => {
   model.value = value;
   emit("select", value);
+  isOpen.value = false;
 };
 
 const handlePickerClick = () => {
