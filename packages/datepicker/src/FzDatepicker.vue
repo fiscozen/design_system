@@ -1,5 +1,6 @@
 <template>
   <VueDatePicker
+    ref="dp"
     v-bind="props"
     :ui="{ menu: calendarClassName }"
     @update:model-value="(e) => $emit('update:model-value', e)"
@@ -17,6 +18,10 @@
     <template #tp-inline-arrow-up>
       <FzIconButton iconName="angle-up" size="sm" variant="secondary"></FzIconButton>
     </template>
+     <template #action-buttons>
+        <FzButton size="xs" variant="invisible" @click="closeMenu">Cancella</FzButton>
+        <FzButton size="xs" @click="selectDate" class="ml-4">Seleziona</FzButton>
+      </template>
   </VueDatePicker>
 </template>
 
@@ -26,7 +31,7 @@ import { FzDatepickerProps } from "./types";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import { useBreakpoints } from "@fiscozen/composables";
 import { breakpoints } from "@fiscozen/style";
-import { FzIconButton } from "@fiscozen/button";
+import { FzIconButton, FzButton } from "@fiscozen/button";
 import { it } from "date-fns/locale";
 import "@vuepic/vue-datepicker/dist/main.css";
 
@@ -35,6 +40,16 @@ const props = withDefaults(defineProps<FzDatepickerProps>(), {
   format: "dd/MM/yyyy",
   formatLocale: () => it,
 });
+
+const dp = ref();
+
+const selectDate = () => {
+  dp.value.selectDate();
+}
+
+const closeMenu = () => {
+  dp.value.closeMenu();
+}
 
 const emit = defineEmits([
   "update:model-value",
@@ -90,6 +105,11 @@ const calendarClassName = computed(() => {
   --dp-hover-text-color: var(--core-white, #fff);
   --dp-secondary-color: var(--grey-400, #6e777e);
 }
+.dp__menu {
+  border: none;
+  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 1px 3px 0px rgba(0, 0, 0, 0.10);
+}
+
 .dp__range_start,
 .dp__range_end,
 .dp__range_between,
@@ -105,11 +125,23 @@ const calendarClassName = computed(() => {
 .dp__cell_auto_range,
 .dp__cell_auto_range_start,
 .dp__cell_auto_range_end {
-  @apply border-2 border-dashed border-blue-400;
+  @apply border-2 border-dashed border-blue-400 rounded;
+}
+
+.dp__cell_inner:hover {
+  transition: none;
+}
+
+.dp__range_between {
+  @apply border-none;
 }
 
 .is-mobile .dp__flex_display {
   @apply flex-col;
+}
+
+.dp__overlay_container {
+  @apply h-full;
 }
 
 .dp__overlay {
@@ -139,5 +171,33 @@ const calendarClassName = computed(() => {
 
 .dp__month_year_wrap {
   @apply h-32;
+}
+
+.dp__calendar_header_separator, .dp__arrow_top {
+  @apply hidden;
+}
+
+.dp--menu--inner-stretched {
+  @apply p-0;
+}
+
+.dp__menu:focus {
+  border: none;
+}
+
+.dp__inner_nav {
+  width: unset;
+}
+
+button.dp__overlay_action.dp__button_bottom {
+  @apply hidden;
+}
+
+.dp__cell_offset.dp__active_date {
+  @apply text-core-white;
+}
+
+.dp__action_row {
+  @apply justify-between;
 }
 </style>
