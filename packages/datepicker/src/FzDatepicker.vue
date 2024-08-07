@@ -57,6 +57,7 @@ const props = withDefaults(defineProps<FzDatepickerProps>(), {
   autoApply: true,
   format: "dd/MM/yyyy",
   formatLocale: () => it,
+  state: undefined
 });
 
 const dp = ref();
