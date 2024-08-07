@@ -1,5 +1,6 @@
 <template>
   <FzFloating
+    :teleport="true"
     :is-open="isOpen"
     :position="position"
     class="fz__tooltip flex h-max"

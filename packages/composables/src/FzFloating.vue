@@ -5,7 +5,8 @@ import { FzFloatingProps, FzUseFloatingArgs } from './types'
 
 const props = withDefaults(defineProps<FzFloatingProps>(), {
   position: 'auto',
-  isOpen: false
+  isOpen: false,
+  teleport: false
 })
 
 const opener = ref(null)
@@ -62,7 +63,16 @@ const contentClass = computed(() => {
       <slot name="opener" :isOpen :floating></slot>
     </div>
     <slot name="opener-end"></slot>
-    <Teleport to="body">
+    <div
+      v-if="!teleport"
+      ref="content"
+      v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
+      class="fz__floating__content bg-core-white fixed p-4 z-10"
+      :class="contentClass"
+    >
+      <slot :isOpen :floating></slot>
+    </div>
+    <Teleport to="body" v-if="teleport">
       <div
         ref="content"
         v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
