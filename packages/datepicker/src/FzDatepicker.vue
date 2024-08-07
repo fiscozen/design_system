@@ -7,21 +7,39 @@
     :model-value="modelValue"
   >
     <template #arrow-left>
-      <FzIconButton iconName="angle-left" size="md" variant="secondary"></FzIconButton>
+      <FzIconButton
+        iconName="angle-left"
+        size="md"
+        variant="secondary"
+      ></FzIconButton>
     </template>
     <template #arrow-right>
-      <FzIconButton iconName="angle-right" size="md" variant="secondary"></FzIconButton>
+      <FzIconButton
+        iconName="angle-right"
+        size="md"
+        variant="secondary"
+      ></FzIconButton>
     </template>
     <template #tp-inline-arrow-down>
-      <FzIconButton iconName="angle-down" size="sm" variant="secondary"></FzIconButton>
+      <FzIconButton
+        iconName="angle-down"
+        size="sm"
+        variant="secondary"
+      ></FzIconButton>
     </template>
     <template #tp-inline-arrow-up>
-      <FzIconButton iconName="angle-up" size="sm" variant="secondary"></FzIconButton>
+      <FzIconButton
+        iconName="angle-up"
+        size="sm"
+        variant="secondary"
+      ></FzIconButton>
     </template>
-     <template #action-buttons>
-        <FzButton size="xs" variant="invisible" @click="closeMenu">Cancella</FzButton>
-        <FzButton size="xs" @click="selectDate" class="ml-4">Seleziona</FzButton>
-      </template>
+    <template #action-buttons>
+      <FzButton size="xs" variant="invisible" @click="closeMenu"
+        >Cancella</FzButton
+      >
+      <FzButton size="xs" @click="selectDate" class="ml-4">Seleziona</FzButton>
+    </template>
   </VueDatePicker>
 </template>
 
@@ -45,11 +63,11 @@ const dp = ref();
 
 const selectDate = () => {
   dp.value.selectDate();
-}
+};
 
 const closeMenu = () => {
   dp.value.closeMenu();
-}
+};
 
 const emit = defineEmits([
   "update:model-value",
@@ -107,7 +125,9 @@ const calendarClassName = computed(() => {
 }
 .dp__menu {
   border: none;
-  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 1px 3px 0px rgba(0, 0, 0, 0.10);
+  box-shadow:
+    0px 1px 2px 0px rgba(0, 0, 0, 0.06),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.1);
 }
 
 .dp__range_start,
@@ -145,7 +165,7 @@ const calendarClassName = computed(() => {
 }
 
 .dp__overlay {
-  @apply !w-[320px]; 
+  @apply !w-[320px];
 }
 
 .dp__time_col {
@@ -173,7 +193,8 @@ const calendarClassName = computed(() => {
   @apply h-32;
 }
 
-.dp__calendar_header_separator, .dp__arrow_top {
+.dp__calendar_header_separator,
+.dp__arrow_top {
   @apply hidden;
 }
 
