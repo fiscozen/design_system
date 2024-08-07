@@ -19,6 +19,7 @@ export interface FzFloatingProps {
     | Record<string, boolean | undefined>
     | Array<string | Record<string, boolean | undefined>>
   overrideContentClass?: boolean
+  teleport?: boolean
 }
 
 export interface FzAbsolutePosition {
