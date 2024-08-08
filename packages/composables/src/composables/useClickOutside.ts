@@ -1,4 +1,4 @@
-import { onBeforeUnmount, onMounted, Ref } from 'vue'
+import { onBeforeUnmount, onMounted, Ref, watch } from 'vue'
 
 function useClickOutside(
   component: Ref<HTMLElement | undefined>, 
@@ -27,12 +27,23 @@ function useClickOutside(
     }
   }
 
-  onMounted(() => {
-    (elementToListenClicksOn ?? component).value!.addEventListener('click', listener)
-  })
+  watch(elementToListenClicksOn ?? component, (newVal: HTMLElement | undefined, oldVal: HTMLElement | undefined) => {
+    if (oldVal) {
+      oldVal.removeEventListener('click', listener)
+    }
+    if (elementToListenClicksOn) {
+      elementToListenClicksOn.value!.addEventListener('click', listener)
+      return;
+    }
+    document.addEventListener('click', listener)
+  });
 
   onBeforeUnmount(() => {
-    (elementToListenClicksOn ?? component).value!.removeEventListener('click', listener)
+    if (elementToListenClicksOn) {
+      elementToListenClicksOn.value!.removeEventListener('click', listener)
+      return;
+    }
+    document.removeEventListener('click', listener)
   })
 }
 
