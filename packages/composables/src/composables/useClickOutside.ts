@@ -27,16 +27,20 @@ function useClickOutside(
     }
   }
 
-  watch(elementToListenClicksOn ?? component, (newVal: HTMLElement | undefined, oldVal: HTMLElement | undefined) => {
-    if (oldVal) {
-      oldVal.removeEventListener('click', listener)
+  if (elementToListenClicksOn) {
+    watch(elementToListenClicksOn, (newVal: HTMLElement | undefined, oldVal: HTMLElement | undefined) => {
+      if (oldVal) {
+        oldVal.removeEventListener('click', listener)
+      }
+      newVal?.addEventListener('click', listener)
+    });
+  }
+
+  onMounted(() => {
+    if (!elementToListenClicksOn) {
+      document.addEventListener('click', listener)
     }
-    if (elementToListenClicksOn) {
-      elementToListenClicksOn.value!.addEventListener('click', listener)
-      return;
-    }
-    document.addEventListener('click', listener)
-  });
+  })
 
   onBeforeUnmount(() => {
     if (elementToListenClicksOn) {
