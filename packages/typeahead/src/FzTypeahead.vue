@@ -23,6 +23,10 @@ import {
 import { FzInput } from "@fiscozen/input";
 import Fuse from "fuse.js";
 
+FzInput.compatConfig = {
+  MODE: 3,
+};
+
 const props = withDefaults(defineProps<FzTypeaheadProps>(), {});
 const emit = defineEmits(["update:modelValue"]);
 
