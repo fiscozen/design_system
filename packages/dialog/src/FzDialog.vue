@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="backdrop"
     v-show="visible"
     class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-center z-30">
     <dialog
@@ -40,6 +41,7 @@ const props = withDefaults(defineProps<FzDialogProps>(), {
 const emit = defineEmits(["fzmodal:cancel"]);
 
 const dialog = ref<HTMLDialogElement>();
+const backdrop = ref<HTMLDialogElement>();
 const innerDialog = ref<HTMLDivElement>();
 const visible = ref(false);
 
@@ -67,7 +69,7 @@ useClickOutside(
     dialog.value!.close();
     emit("fzmodal:cancel");
   },
-  dialog,
+  backdrop,
 );
 
 const handleKeyUp = (e: KeyboardEvent) => {
