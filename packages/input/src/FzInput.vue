@@ -18,6 +18,7 @@
         :type="type"
         :required="required ? required : false"
         :disabled="disabled"
+        :readonly="readonly"
         :placeholder="placeholder"
         v-model="model"
         :id="uniqueId"
