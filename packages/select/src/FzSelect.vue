@@ -3,6 +3,7 @@
     :position="position ?? 'bottom-start'"
     :isOpen
     class="flex flex-col gap-8 overflow-visible"
+    :teleport="teleport"
   >
     <template #opener-start>
       <label :class="['text-sm', computedLabelClass]">
@@ -85,6 +86,7 @@ import FzSelectOption from "./components/FzSelectOption.vue";
 const props = withDefaults(defineProps<FzSelectProps>(), {
   size: "md",
   optionsToShow: 25,
+  teleport: true
 });
 const model = defineModel({
   required: true,
