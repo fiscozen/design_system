@@ -20,6 +20,7 @@ describe("FzSelect", () => {
         label: "Test Select",
         required: true,
         modelValue: "",
+        isOpen: false,
         size: "md",
         placeholder: "Select an option",
         options: [
@@ -38,6 +39,7 @@ describe("FzSelect", () => {
         label: "Test Select",
         required: true,
         modelValue: "",
+        isOpen: false,
         size: "md",
         placeholder: "Select an option",
         options: [
@@ -58,6 +60,7 @@ describe("FzSelect", () => {
         size: "md",
         placeholder: "Select an option",
         modelValue: "",
+        isOpen: false,
         options: [
           { value: "option1", label: "Option 1" },
           { value: "option2", label: "Option 2" },
@@ -81,6 +84,7 @@ describe("FzSelect", () => {
         size: "md",
         placeholder: "Select an option",
         modelValue: "",
+        isOpen: false,
         options: [
           { value: "option1", label: "Option 1" },
           { value: "option2", label: "Option 2" },
@@ -104,6 +108,7 @@ describe("FzSelect", () => {
         size: "md",
         placeholder: "Select an option",
         modelValue: "",
+        isOpen: false,
         options: [
           { value: "option1", label: "Option 1" },
           { value: "option2", label: "Option 2" },
@@ -126,6 +131,7 @@ describe("FzSelect", () => {
       props: {
         label: "Test Select",
         required: true,
+        isOpen: false,
         size: "md",
         placeholder: "Select an option",
         modelValue: "",
@@ -147,6 +153,7 @@ describe("FzSelect", () => {
         label: "Test Select",
         required: true,
         size: "md",
+        isOpen: false,
         placeholder: "Select an option",
         modelValue: "",
         options: [
@@ -160,5 +167,61 @@ describe("FzSelect", () => {
 
     await wrapper.vm.$nextTick();
     expect(wrapper.find("svg").classes()).toContain("fa-bell");
+  });
+
+  it("should render only the first 25 options", async () => {
+    const wrapper = mount(FzSelect, {
+      props: {
+        size: "md",
+        isOpen: false,
+        placeholder: "Select an option",
+        modelValue: "",
+        options: Array.from({ length: 100 }, (_, i) => ({
+          label: `option ${i % 3}`,
+          value: `${i}`,
+        })),
+      },
+    });
+
+    await wrapper.vm.$nextTick();
+    wrapper.find('button[test-id="fzselect-opener"]').trigger("click");
+    expect(wrapper.findAll('button[test-id="fzselect-option"]').length).toBe(
+      25,
+    );
+  });
+
+  it("should render another 25 options when scrolling down", async () => {
+    const wrapper = mount(FzSelect, {
+      props: {
+        size: "md",
+        isOpen: false,
+        placeholder: "Select an option",
+        modelValue: "",
+        options: Array.from({ length: 100 }, (_, i) => ({
+          label: `option ${i % 3}`,
+          value: `${i}`,
+        })),
+      },
+    });
+
+    await wrapper.vm.$nextTick();
+    wrapper.find('button[test-id="fzselect-opener"]').trigger("click");
+    expect(wrapper.findAll('button[test-id="fzselect-option"]').length).toBe(
+      25,
+    );
+
+    const container = wrapper.find(
+      '[test-id="fzselect-options-container"]',
+    ).element;
+    container.scrollTop = container.scrollHeight;
+    await wrapper
+      .find('[test-id="fzselect-options-container"]')
+      .trigger("scroll");
+
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.findAll('button[test-id="fzselect-option"]').length).toBe(
+      50,
+    );
   });
 });

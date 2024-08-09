@@ -49,7 +49,11 @@ export interface FzSelectProps extends FzFloatingProps {
    * Set the max height of the floating panel
    */
   floatingPanelMaxHeight?: string;
-};
+  /**
+   * Size of the options to render each time in the floating panel
+   */
+  optionsToShow?: number;
+}
 
 export type FzSelectOptionsProps = {
   /**
