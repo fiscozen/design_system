@@ -115,3 +115,14 @@ export const SelectWithHundredsOfOptionsAndMaxHeight: SelectStory = {
     floatingPanelMaxHeight: '200px'
   }
 }
+
+export const OpenOnTop: SelectStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    position: 'top'
+  },
+  decorators: [() => ({
+    template: "<div style='padding-top:200px'><story/></div>"
+    })]
+}

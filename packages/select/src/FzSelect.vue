@@ -1,17 +1,21 @@
 <template>
   <FzFloating
-    position="bottom-start"
+    :position="position ?? 'bottom-start'"
     :isOpen
     class="flex flex-col gap-8 overflow-visible"
+    :teleport="teleport"
   >
+    <template #opener-start>
+      <label :class="['text-sm', computedLabelClass]">
+        {{ label }}{{ required ? " *" : "" }}
+      </label>
+    </template>
     <template #opener class="flex">
       <div class="w-full flex flex-col gap-8" ref="openerContainer">
         <slot name="opener" :handlePickerClick :isOpen>
-          <label :class="['text-sm', computedLabelClass]">
-            {{ label }}{{ required ? " *" : "" }}</label
-          >
           <button
             @click="handlePickerClick"
+            test-id="fzselect-opener"
             type="button"
             :size="size"
             :class="[staticPickerClass, computedPickerClass, pickerClass]"
@@ -23,7 +27,10 @@
               {{ selectedOption ? selectedOption.label : placeholder }}
             </span>
             <FzIcon v-if="rightIcon" :name="rightIcon" :size="size" />
-            <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" :size="size" />
+            <FzIcon
+              :name="isOpen ? 'chevron-up' : 'chevron-down'"
+              :size="size"
+            />
           </button>
         </slot>
       </div>
@@ -55,9 +62,10 @@
       class="flex flex-col p-4 rounded shadow overflow-auto ml-[-2px] min-w-[120px] w-full max-h-min"
       :style="{ width: containerWidth ?? 'auto', maxHeight: maxHeight }"
       ref="containerRef"
+      test-id="fzselect-options-container"
     >
       <FzSelectOption
-        v-for="option in options"
+        v-for="option in visibleOptions"
         :key="option.value"
         @click="() => handleSelect(option.value)"
         :option="option"
@@ -70,13 +78,15 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, nextTick, onMounted } from "vue";
-import { FzSelectProps } from "./types";
+import { FzSelectProps, FzSelectOptionsProps } from "./types";
 import { FzIcon } from "@fiscozen/icons";
 import { FzFloating, useClickOutside } from "@fiscozen/composables";
 import FzSelectOption from "./components/FzSelectOption.vue";
 
 const props = withDefaults(defineProps<FzSelectProps>(), {
   size: "md",
+  optionsToShow: 25,
+  teleport: true
 });
 const model = defineModel({
   required: true,
@@ -88,16 +98,20 @@ const containerRef = ref<HTMLElement>();
 const containerWidth = ref<string>("auto");
 const openerContainer = ref<HTMLElement>();
 const containerTopPosition = ref<number>(0);
+const visibleOptions = ref<FzSelectOptionsProps[]>([]);
+const OPTIONS_HEIGHT = 20;
+const OPTIONS_BUFFER = 5;
 
 const maxHeight = computed(
   () =>
     props.floatingPanelMaxHeight ??
-    "calc(100vh - " + containerTopPosition.value + "px)",
+    `calc(100vh - ${containerTopPosition.value}px - ${OPTIONS_BUFFER * OPTIONS_HEIGHT}px)`,
 );
 
 const safeOpener = computed(() => {
   return props.extOpener ? props.extOpener : opener.value;
-})
+});
+
 useClickOutside(safeOpener, () => {
   isOpen.value = false;
 });
@@ -147,10 +161,18 @@ const selectedOption = computed(() => {
 });
 
 watch(() => [props.size, model.value], calculateContainerWidth);
+watch(
+  () => props.options,
+  () => {
+    visibleOptions.value = props.options.slice(0, props.optionsToShow);
+  },
+);
 
 onMounted(() => {
   calculateContainerWidth();
   calculateTopPosition();
+  addScrollListener();
+  updateVisibleOptions();
 });
 
 const handleSelect = (value: string) => {
@@ -179,15 +201,38 @@ const evaluateProps = () => {
 
 async function calculateContainerWidth() {
   await nextTick();
-  if (!opener.value) containerWidth.value = "auto";
-  else containerWidth.value = `${opener.value.clientWidth}px`;
+  if (!safeOpener.value) containerWidth.value = "auto";
+  else containerWidth.value = `${safeOpener.value.clientWidth}px`;
 }
 
 function calculateTopPosition() {
-  if (!opener.value || !openerContainer.value) return;
+  if (!safeOpener.value || !openerContainer.value) return;
   const { top, height } =
     openerContainer.value.parentElement!.parentElement!.getBoundingClientRect();
   containerTopPosition.value = top + height;
+}
+
+function addScrollListener() {
+  containerRef.value?.addEventListener("scroll", handleScroll);
+}
+
+function handleScroll() {
+  const container = containerRef.value!;
+  const { scrollTop, scrollHeight, clientHeight } = container;
+  if (
+    scrollTop + clientHeight >=
+    scrollHeight - OPTIONS_BUFFER * OPTIONS_HEIGHT
+  ) {
+    updateVisibleOptions();
+  }
+}
+
+function updateVisibleOptions() {
+  const nextItems = props.options.slice(
+    visibleOptions.value.length,
+    visibleOptions.value.length + props.optionsToShow,
+  );
+  visibleOptions.value.push(...nextItems);
 }
 </script>
 <style scoped></style>

@@ -59,6 +59,7 @@ const contentClass = computed(() => {
 
 <template>
   <div>
+    <slot name="opener-start"></slot>
     <div ref="opener" class="inline-flex">
       <slot name="opener" :isOpen :floating></slot>
     </div>
@@ -76,7 +77,7 @@ const contentClass = computed(() => {
       <div
         ref="content"
         v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
-        class="fz__floating__content bg-core-white fixed p-4 z-10"
+        class="fz__floating__content bg-core-white absolute p-4 z-10"
         :class="contentClass"
       >
         <slot :isOpen :floating></slot>

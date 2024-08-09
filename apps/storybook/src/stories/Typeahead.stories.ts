@@ -54,7 +54,21 @@ const Default: Story = {
   }
 }
 
+const hundredOptionsRepeated = Array.from({length: 100}, (_, i) => ({label: `option ${i % 3}`, value: `${i}`}))
+const HundredOptions: Story = {
+  ...Template,
+  args: {
+    selectProps: {
+      options: hundredOptionsRepeated,
+      isOpen:false
+    },
+    inputProps: {
+      label: 'This is a label',
+      placeholder: 'This is a placeholder'
+    }
+  }
+}
 
-export { Default }
+export { Default, HundredOptions }
 
 export default meta
