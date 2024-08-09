@@ -1,11 +1,18 @@
 <template>
   <VueDatePicker
+    class="fz-dialog"
     ref="dp"
     v-bind="props"
     :ui="{ menu: calendarClassName }"
     @update:model-value="(e) => $emit('update:model-value', e)"
     :model-value="modelValue"
   >
+    <template #dp-input="{value}">
+      <FzInput
+        v-bind="safeInputProps"
+        :modelValue="value">
+      </FzInput>
+    </template>
     <template #arrow-left>
       <FzIconButton
         iconName="angle-left"
@@ -50,6 +57,7 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import { useBreakpoints } from "@fiscozen/composables";
 import { breakpoints } from "@fiscozen/style";
 import { FzIconButton, FzButton } from "@fiscozen/button";
+import { FzInput, FzInputProps } from "@fiscozen/input";
 import { it } from "date-fns/locale";
 import "@vuepic/vue-datepicker/dist/main.css";
 
@@ -108,6 +116,14 @@ const calendarClassName = computed(() => {
   }
 
   return classString;
+});
+
+const safeInputProps = computed<FzInputProps>(() => {
+  return {
+    leftIcon: "calendar-lines",
+    ...props.inputProps,
+    readonly: true
+  }
 });
 </script>
 
