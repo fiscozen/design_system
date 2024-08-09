@@ -254,7 +254,7 @@ export const useFloating = (
 
       safeElementDomRef.value.style.top = `${float.position.y}px`
       safeElementDomRef.value.style.left = `${float.position.x}px`
-      safeElementDomRef.value.style.position = 'fixed'
+      // safeElementDomRef.value.style.position = 'fixed'
       safeElementDomRef.value.style.display = 'flex'
 
       rect.value = safeElementDomRef.value.getBoundingClientRect()
