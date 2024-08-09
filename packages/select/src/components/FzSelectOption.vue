@@ -1,6 +1,7 @@
 <template>
   <button
     :class="[staticClass, computedClass]"
+    test-id="fzselect-option"
     type="button"
     :title="option.label"
     @click="
