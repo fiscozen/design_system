@@ -130,6 +130,7 @@ const safeInputProps = computed<FzInputProps>(() => {
 <style>
 :root {
   --dp-menu-min-width: 320px;
+  --dp-font-family: var(--font-sans-inter, "Inter", sans-serif);
 }
 .dp__theme_light {
   --dp-range-between-dates-background-color: var(--blue-100, #dee2ff);
