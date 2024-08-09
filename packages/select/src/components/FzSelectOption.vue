@@ -10,10 +10,9 @@
       }
     "
   >
-    <span
-      class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm"
-      >{{ option.label }}</span
-    >
+    <span class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">{{
+      option.label
+    }}</span>
   </button>
 </template>
 
@@ -28,10 +27,17 @@ const props = defineProps<{
 }>();
 
 const staticClass =
-  "flex items-center text-left h-40 font-medium cursor-pointer py-6 px-12 rounded text-md";
+  "flex items-center text-left h-40 font-medium cursor-pointer py-6 px-12 rounded";
+
+const mappedClass = {
+  sm: "text-sm",
+  md: "text-md",
+  lg: "text-lg",
+};
 const computedClass = computed(() => [
   props.selectedValue === props.option.value
     ? "bg-background-alice-blue text-blue-500"
     : "bg-white hover:!bg-background-alice-blue text-core-black hover:text-blue-500",
+  mappedClass[props.size],
 ]);
 </script>

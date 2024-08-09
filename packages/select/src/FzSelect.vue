@@ -1,15 +1,17 @@
 <template>
   <FzFloating
-    position="bottom-start"
+    :position="position ?? 'bottom-start'"
     :isOpen
     class="flex flex-col gap-8 overflow-visible"
   >
+    <template #opener-start>
+      <label :class="['text-sm', computedLabelClass]">
+        {{ label }}{{ required ? " *" : "" }}
+      </label>
+    </template>
     <template #opener class="flex">
       <div class="w-full flex flex-col gap-8" ref="openerContainer">
         <slot name="opener" :handlePickerClick :isOpen>
-          <label :class="['text-sm', computedLabelClass]">
-            {{ label }}{{ required ? " *" : "" }}</label
-          >
           <button
             @click="handlePickerClick"
             test-id="fzselect-opener"
@@ -75,7 +77,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, nextTick, onMounted } from "vue";
-import { FzSelectProps } from "./types";
+import { FzSelectProps, FzSelectOptionsProps } from "./types";
 import { FzIcon } from "@fiscozen/icons";
 import { FzFloating, useClickOutside } from "@fiscozen/composables";
 import FzSelectOption from "./components/FzSelectOption.vue";
@@ -94,7 +96,7 @@ const containerRef = ref<HTMLElement>();
 const containerWidth = ref<string>("auto");
 const openerContainer = ref<HTMLElement>();
 const containerTopPosition = ref<number>(0);
-const visibleOptions = ref(props.options.slice(0, props.optionsToShow));
+const visibleOptions = ref<FzSelectOptionsProps[]>([]);
 const OPTIONS_HEIGHT = 20;
 const OPTIONS_BUFFER = 5;
 
