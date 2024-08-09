@@ -949,6 +949,9 @@ importers:
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      '@fiscozen/input':
+        specifier: workspace:^
+        version: link:../input
       '@fiscozen/style':
         specifier: workspace:^
         version: link:../style

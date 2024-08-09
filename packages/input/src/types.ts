@@ -57,6 +57,12 @@ type FzInputProps = {
    * Defines the textarea key in a form
    */
   name?: string;
+
+  /**
+   * native readonly input value
+   */
+  readonly?: boolean;
+
 };
 
 export { FzInputProps };

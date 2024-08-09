@@ -7,7 +7,11 @@ const meta: Meta<typeof FzDatepicker> = {
   component: FzDatepicker,
   tags: ['autodocs'],
   argTypes: {},
-  args: {},
+  args: {
+    inputProps: {
+      label: 'datepicker label'
+    }
+  },
   decorators: []
 }
 
