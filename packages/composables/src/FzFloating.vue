@@ -59,6 +59,7 @@ const contentClass = computed(() => {
 
 <template>
   <div>
+    <slot name="opener-start"></slot>
     <div ref="opener" class="inline-flex">
       <slot name="opener" :isOpen :floating></slot>
     </div>
