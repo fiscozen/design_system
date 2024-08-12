@@ -10,11 +10,12 @@ export const getHighestAvailableSpacePos = (
   container: HTMLElement,
   el: HTMLElement,
   opener: HTMLElement,
-  justify?: 'start' | 'end'
+  justify?: 'start' | 'end',
+  verticalOnly?: boolean
 ): FzFloatingPosition => {
-  let mainPosition: MainPosition = 'right'
+  let mainPosition: MainPosition = verticalOnly ? 'bottom' : 'right'
 
-  let positionRes: FzFloatingPosition = 'right-start'
+  let positionRes: FzFloatingPosition = verticalOnly ? 'bottom-start' : 'right-start'
 
   const containerRect = container.getBoundingClientRect()
   const elRect = el.getBoundingClientRect()
@@ -29,7 +30,7 @@ export const getHighestAvailableSpacePos = (
   const spaceBottomNormalized =
     (containerRect.bottom - openerRect.bottom - elRect.height) / containerRect.height
 
-  const positionList = [
+  let positionList = [
     {
       key: 'right',
       space: spaceRightNormalized
@@ -47,6 +48,10 @@ export const getHighestAvailableSpacePos = (
       space: spaceLeftNormalized
     } as PositionListItem
   ].sort((a, b) => b.space - a.space)
+
+  if (verticalOnly) {
+    positionList = positionList.filter((pos) => pos.key === 'top' || pos.key === 'bottom')
+  }
 
   mainPosition = positionList[0].key
 
