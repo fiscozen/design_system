@@ -1,18 +1,19 @@
 <template>
   <FzFloating
-    :position="position ?? 'bottom-start'"
+    :position="position ?? 'auto-vertical-start'"
     :isOpen
     class="flex flex-col gap-8 overflow-visible"
     :teleport="teleport"
+    @fzfloating:setPosition="calculateMaxHeight"
   >
     <template #opener-start>
       <label :class="['text-sm', computedLabelClass]">
         {{ label }}{{ required ? " *" : "" }}
       </label>
     </template>
-    <template #opener class="flex">
+    <template #opener="{ floating }" class="flex">
       <div class="w-full flex flex-col gap-8" ref="openerContainer">
-        <slot name="opener" :handlePickerClick :isOpen>
+        <slot name="opener" :handlePickerClick :isOpen :floating>
           <button
             @click="handlePickerClick"
             test-id="fzselect-opener"
@@ -60,7 +61,7 @@
     </template>
     <div
       class="flex flex-col p-4 rounded shadow overflow-auto ml-[-2px] min-w-[120px] w-full max-h-min"
-      :style="{ width: containerWidth ?? 'auto', maxHeight: maxHeight }"
+      :style="{ width: containerWidth ?? 'auto', maxHeight }"
       ref="containerRef"
       test-id="fzselect-options-container"
     >
@@ -77,16 +78,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, nextTick, onMounted } from "vue";
+import { computed, ref, watch, nextTick, onMounted, Ref } from "vue";
 import { FzSelectProps, FzSelectOptionsProps } from "./types";
 import { FzIcon } from "@fiscozen/icons";
-import { FzFloating, useClickOutside } from "@fiscozen/composables";
+import {
+  FzFloating,
+  FzFloatingPosition,
+  FzRect,
+  useClickOutside,
+} from "@fiscozen/composables";
 import FzSelectOption from "./components/FzSelectOption.vue";
 
 const props = withDefaults(defineProps<FzSelectProps>(), {
   size: "md",
   optionsToShow: 25,
-  teleport: true
+  teleport: true,
 });
 const model = defineModel({
   required: true,
@@ -97,16 +103,28 @@ const opener = ref<HTMLElement>();
 const containerRef = ref<HTMLElement>();
 const containerWidth = ref<string>("auto");
 const openerContainer = ref<HTMLElement>();
-const containerTopPosition = ref<number>(0);
 const visibleOptions = ref<FzSelectOptionsProps[]>([]);
 const OPTIONS_HEIGHT = 20;
 const OPTIONS_BUFFER = 5;
+const maxHeight = ref("");
 
-const maxHeight = computed(
-  () =>
-    props.floatingPanelMaxHeight ??
-    `calc(100vh - ${containerTopPosition.value}px - ${OPTIONS_BUFFER * OPTIONS_HEIGHT}px)`,
-);
+const calculateMaxHeight = (
+  rect: Ref<DOMRect | undefined>,
+  openerRect: Ref<DOMRect | undefined>,
+  containerRect: Ref<DOMRect | undefined>,
+  position: Ref<FzFloatingPosition>,
+): void => {
+  nextTick(() => {
+    if (props.floatingPanelMaxHeight) {
+      return;
+    }
+    const bottom = openerRect.value?.bottom ?? 0;
+    const top = openerRect.value?.top ?? 0;
+    maxHeight.value = position.value.includes("bottom")
+      ? `calc(100vh - ${bottom}px - ${OPTIONS_BUFFER * OPTIONS_HEIGHT}px)`
+      : `${top}px`;
+  });
+};
 
 const safeOpener = computed(() => {
   return props.extOpener ? props.extOpener : opener.value;
@@ -169,8 +187,10 @@ watch(
 );
 
 onMounted(() => {
+  if (props.floatingPanelMaxHeight) {
+    maxHeight.value = props.floatingPanelMaxHeight;
+  }
   calculateContainerWidth();
-  calculateTopPosition();
   addScrollListener();
   updateVisibleOptions();
 });
@@ -183,7 +203,6 @@ const handleSelect = (value: string) => {
 
 const handlePickerClick = () => {
   if (props.disabled) return;
-  calculateTopPosition();
   isOpen.value = !isOpen.value;
   calculateContainerWidth();
 };
@@ -203,13 +222,6 @@ async function calculateContainerWidth() {
   await nextTick();
   if (!safeOpener.value) containerWidth.value = "auto";
   else containerWidth.value = `${safeOpener.value.clientWidth}px`;
-}
-
-function calculateTopPosition() {
-  if (!safeOpener.value || !openerContainer.value) return;
-  const { top, height } =
-    openerContainer.value.parentElement!.parentElement!.getBoundingClientRect();
-  containerTopPosition.value = top + height;
 }
 
 function addScrollListener() {

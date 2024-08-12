@@ -1,9 +1,9 @@
 import { onBeforeUnmount, onMounted, Ref, watch } from 'vue'
 
 function useClickOutside(
-  component: Ref<HTMLElement | undefined>, 
+  component: Ref<HTMLElement | undefined>,
   callback: () => void,
-  elementToListenClicksOn?: Ref<HTMLElement | undefined>,
+  elementToListenClicksOn?: Ref<HTMLElement | undefined>
 ) {
   // fail early if any of the required params is missing
   if (!component) {
@@ -14,7 +14,7 @@ function useClickOutside(
     throw new Error('A callback has to be provided.')
   }
 
-  const listener = (event: MouseEvent) => {
+  const listener = (event: Event) => {
     if (
       !component.value ||
       event.target === component.value ||
@@ -28,12 +28,15 @@ function useClickOutside(
   }
 
   if (elementToListenClicksOn) {
-    watch(elementToListenClicksOn, (newVal: HTMLElement | undefined, oldVal: HTMLElement | undefined) => {
-      if (oldVal) {
-        oldVal.removeEventListener('click', listener)
+    watch(
+      elementToListenClicksOn,
+      (newVal: Element | undefined, oldVal: Element | undefined) => {
+        if (oldVal) {
+          oldVal.removeEventListener('click', listener)
+        }
+        newVal?.addEventListener('click', listener)
       }
-      newVal?.addEventListener('click', listener)
-    });
+    )
   }
 
   onMounted(() => {
@@ -45,7 +48,7 @@ function useClickOutside(
   onBeforeUnmount(() => {
     if (elementToListenClicksOn) {
       elementToListenClicksOn.value!.removeEventListener('click', listener)
-      return;
+      return
     }
     document.removeEventListener('click', listener)
   })

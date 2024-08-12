@@ -1,7 +1,9 @@
 import { onBeforeUnmount, onMounted, Ref } from 'vue'
 
-function useKeyUp(callback: (event: KeyboardEvent) => void, component?: Ref<HTMLElement | undefined>) {
-
+function useKeyUp(
+  callback: (event: KeyboardEvent) => void,
+  component?: Ref<HTMLElement | undefined>
+) {
   if (!callback || typeof callback !== 'function') {
     throw new Error('A callback has to be provided.')
   }
@@ -13,7 +15,7 @@ function useKeyUp(callback: (event: KeyboardEvent) => void, component?: Ref<HTML
   onMounted(() => {
     if (!component) {
       document.addEventListener('keyup', listener)
-      return;
+      return
     }
     component.value!.addEventListener('keyup', listener)
   })
@@ -21,7 +23,7 @@ function useKeyUp(callback: (event: KeyboardEvent) => void, component?: Ref<HTML
   onBeforeUnmount(() => {
     if (!component) {
       document.removeEventListener('keyup', listener)
-      return;
+      return
     }
     component.value!.removeEventListener('keyup', listener)
   })
