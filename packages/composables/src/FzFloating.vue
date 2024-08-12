@@ -9,6 +9,8 @@ const props = withDefaults(defineProps<FzFloatingProps>(), {
   teleport: false
 })
 
+const emits = defineEmits(['fzfloating:setPosition'])
+
 const opener = ref(null)
 const content = ref<HTMLElement | null>(null)
 
@@ -17,10 +19,15 @@ const slots = useSlots()
 const useFloatingOpts: FzUseFloatingArgs = {
   position: computed(() => props.position),
   element: {
+    // @ts-ignore
     domRef: content
   },
   container: {
+    // @ts-ignore
     domRef: toRef(props.container || document.body)
+  },
+  callback(...args) {
+    emits('fzfloating:setPosition', ...args)
   }
 }
 if (slots.opener) {

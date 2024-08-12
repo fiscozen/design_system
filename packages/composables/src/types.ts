@@ -1,6 +1,6 @@
 import { Ref } from 'vue'
 
-type PositionPrimary = 'bottom' | 'left' | 'top' | 'right' | 'auto'
+type PositionPrimary = 'bottom' | 'left' | 'top' | 'right' | 'auto' | 'auto-vertical'
 type PositionSecondary = 'start' | 'end'
 export type FzFloatingPosition = PositionPrimary | `${PositionPrimary}-${PositionSecondary}`
 
@@ -40,4 +40,10 @@ export interface FzUseFloatingArgs {
   container?: FzFloatElement
   opener?: FzFloatElement
   position?: Ref<FzFloatingPosition>
+  callback?: (
+    rect: Ref<DOMRect | undefined>,
+    openerRect: Ref<DOMRect | undefined>,
+    containerRect: Ref<DOMRect | undefined>,
+    position: Ref<FzFloatingPosition>
+  ) => void
 }
