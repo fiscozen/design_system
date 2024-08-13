@@ -1,15 +1,24 @@
 <template>
     <FzInput
-        :props
+        ref="fzInputRef"
+        v-bind="props"
+        :model-value="model"
     ></FzInput>
 </template>
 
-<script>
+<script setup lang="ts">
+import {onMounted, ref} from 'vue'
 import FzInput from './FzInput.vue'
-import {FzCurrencyInputProps} from './types'
+import {FzInputProps} from './types'
+import {useCurrency} from '@fiscozen/composables'
 
-const props = withDefaults(defineProps<FzCurrencyInputProps>(), {
-    decimalSeparator: ','
+const fzInputRef = ref();
+const props = defineProps<Omit<FzInputProps, 'type'>>();
+const {inputRef} = useCurrency();
+
+onMounted(() => {
+    inputRef.value = fzInputRef.value.inputRef
 })
-const emit = defineEmits(['input', 'focus']);
+const model = defineModel()
+
 </script>
