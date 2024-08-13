@@ -65,4 +65,11 @@ type FzInputProps = {
 
 };
 
-export { FzInputProps };
+type FzCurrencyInputProps = FzInputProps & {
+  /**
+   * character that will be used to separate decimal places
+   */
+  decimalSeparator?: string;
+};
+
+export { FzInputProps, FzCurrencyInputProps };
