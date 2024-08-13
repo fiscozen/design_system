@@ -15,8 +15,8 @@
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13",
-    "@fiscozen/composables": "^workspace",
-    "@fiscozen/icons": "^workspace"
+    "@fiscozen/composables": "workspace:^",
+    "@fiscozen/icons": "workspace:^"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",
