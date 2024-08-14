@@ -18,8 +18,15 @@ type Story = StoryObj<typeof meta>
 
 const Default: Story = {}
 
+const ModelValue: Story = {
+  args: {
+    modelValue: 1.23
+  }
+}
+
 export {
-  Default
+  Default,
+  ModelValue
 }
 
 export default meta

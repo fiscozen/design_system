@@ -1,10 +1,10 @@
-import {Ref, watch, getCurrentInstance, computed, ref} from 'vue' 
+import {Ref, watch, getCurrentInstance, computed, ref, onMounted} from 'vue' 
 
 export const useCurrency = () => {
     const inputRef: Ref<HTMLInputElement|null> = ref(null)
     const vm = getCurrentInstance()
 
-    const modelValue = computed(() => vm?.props.modelValue)
+    const modelValue = computed<number|undefined>(() => vm?.props.modelValue as unknown as number|undefined)
 
     const format = (input: number) => {
         return input.toLocaleString('it-IT', {
@@ -63,7 +63,12 @@ export const useCurrency = () => {
         newVal.addEventListener('input', onInput(newVal))
         newVal.addEventListener('blur', onBlur)
 
+        if (modelValue.value) {
+            newVal.value = format(modelValue.value)
+        }
+
     })
+
 
 
     return {
