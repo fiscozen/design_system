@@ -27,16 +27,24 @@ export const useCurrency = () => {
     }
 
     const onInput = (el: HTMLInputElement) => (e: Event) => {
-        const {value} = el;
+        if (!inputRef.value || !e.target) {
+            return
+        }
+        let {value} = el;
+        value = value.replace(/[^0-9,.]/g, '')
+        inputRef.value.value = value;
         const number = parse(value)
-        setValue(number)
+        setValue(Number.isNaN(number) ? 0 : number)
     }
 
     const onBlur = (e: FocusEvent) => {
         if (!inputRef.value || !e.target) {
             return
         }
-        const number = parse((e.target as HTMLInputElement).value.replace(/,/g,"."))
+        let number = parse((e.target as HTMLInputElement).value.replace(/,/g,"."))
+        if (Number.isNaN(number)) {
+            number = 0;
+        } 
         const text = format(number)
 
         inputRef.value.value = text;
