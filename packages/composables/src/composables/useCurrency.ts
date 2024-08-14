@@ -40,7 +40,7 @@ export const useCurrency = () => {
         const text = format(number)
 
         inputRef.value.value = text;
-        setValue(modelValue.value as number)
+        setValue(number)
     }
 
     watch(inputRef, (newVal, oldVal) => {
