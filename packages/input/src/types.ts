@@ -62,7 +62,6 @@ type FzInputProps = {
    * native readonly input value
    */
   readonly?: boolean;
-
 };
 
 interface FzCurrencyInputProps extends Omit<FzInputProps, 'type'> {
