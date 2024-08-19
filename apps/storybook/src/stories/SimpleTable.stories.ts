@@ -7,6 +7,7 @@ const meta: Meta<typeof FzSimpleTable> = {
   title: '@fiscozen/simple-table/FzSimpleTable',
   tags: ['autodocs'],
   component: FzSimpleTable,
+  subcomponents: { FzColumn },
   argTypes: {},
   args: {},
   decorators: [vueRouter([{
