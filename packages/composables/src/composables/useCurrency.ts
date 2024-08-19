@@ -7,7 +7,7 @@ export const useCurrency = () => {
     const computedModel = computed<number|undefined>(() => vm?.props.amount as unknown as number|undefined)
     const internalVal = ref<number|null>()
 
-    const format = (input: number) => {
+    const format = (input: number|null) => {
         if (input === null) {
             return '';
         }
