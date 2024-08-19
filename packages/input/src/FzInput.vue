@@ -92,11 +92,11 @@ const {
   containerWidth,
 } = useInputStyle(props, containerRef);
 
-const emit = defineEmits(['input', 'focus']);
+const emit = defineEmits(["input", "focus"]);
 defineExpose({
   inputRef,
-  containerRef
-})
+  containerRef,
+});
 </script>
 
 <style scoped></style>

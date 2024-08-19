@@ -1,7 +1,7 @@
 
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzCurrencyInput } from '@fiscozen/input'
-import { all } from '@awesome.me/kit-8137893ad3/icons'
+import {ref} from 'vue'
 
 const meta = {
   title: '@fiscozen/input/FzCurrencyInput',
@@ -20,8 +20,31 @@ const Default: Story = {}
 
 const ModelValue: Story = {
   args: {
-    modelValue: 1.23
-  }
+  },
+  render: (args) => ({
+    components: {FzCurrencyInput},
+    setup() {
+      const data = ref(1.23)
+
+      setTimeout(() => {
+        data.value = 23.34
+      }, 2000)
+
+      const onSet = () => {
+        data.value = 1234.56
+      }
+
+      return {
+        data,
+        onSet
+      }
+    },
+    template: `
+      <FzCurrencyInput v-model:amount="data" label="currency input"/>
+      <pre>{{data}}</pre>
+      <button @click="onSet">SET</button>
+    `,
+  })
 }
 
 export {

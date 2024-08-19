@@ -1,29 +1,43 @@
-import {Ref, watch, getCurrentInstance, computed, ref, onMounted} from 'vue' 
+import {Ref, watch, getCurrentInstance, computed, ref, nextTick} from 'vue' 
 
 export const useCurrency = () => {
     const inputRef: Ref<HTMLInputElement|null> = ref(null)
     const vm = getCurrentInstance()
 
-    const modelValue = computed<number|undefined>(() => vm?.props.modelValue as unknown as number|undefined)
+    const computedModel = computed<number|undefined>(() => vm?.props.amount as unknown as number|undefined)
+    const internalVal = ref<number>()
 
     const format = (input: number) => {
         return input.toLocaleString('it-IT', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
+            useGrouping: false
         })
     }
 
     const parse = (text: string) => {
         // strip currency, handle edge cases...
-        return parseFloat(text)
+        return parseFloat(text.replace(/,/g,"."))
     }
 
-    const setValue = (val: number) => {
+    const emitAmount = (val: number) => {
         if (Number.isNaN(val)) {
             return;
         }
+        if (vm) {
+            internalVal.value = val
+            vm.emit('update:amount', val)
+        }
+    }
 
-        vm && vm.emit('update:modelValue', val)
+    const setValue = (val: string) => {
+        // nextTick doesn't seem to work
+        setTimeout(() => {
+            if (!inputRef.value) {
+                return
+            }
+            inputRef.value.value = val;
+        }, 0)
     }
 
     const onInput = (el: HTMLInputElement) => (e: Event) => {
@@ -32,23 +46,22 @@ export const useCurrency = () => {
         }
         let {value} = el;
         value = value.replace(/[^0-9,.]/g, '')
-        inputRef.value.value = value;
+        setValue(value)
         const number = parse(value)
-        setValue(Number.isNaN(number) ? 0 : number)
+        emitAmount(Number.isNaN(number) ? 0 : number)
     }
 
     const onBlur = (e: FocusEvent) => {
         if (!inputRef.value || !e.target) {
             return
         }
-        let number = parse((e.target as HTMLInputElement).value.replace(/,/g,"."))
+        let number = parse((e.target as HTMLInputElement).value)
         if (Number.isNaN(number)) {
             number = 0;
         } 
         const text = format(number)
-
-        inputRef.value.value = text;
-        setValue(number)
+        setValue(text)
+        emitAmount(parse(text))
     }
 
     watch(inputRef, (newVal, oldVal) => {
@@ -63,18 +76,33 @@ export const useCurrency = () => {
         newVal.addEventListener('input', onInput(newVal))
         newVal.addEventListener('blur', onBlur)
 
-        if (modelValue.value) {
-            newVal.value = format(modelValue.value)
+        if (computedModel.value) {
+            newVal.value = format(computedModel.value)
         }
 
     })
 
+    watch(computedModel, (newVal) => {
+        nextTick(() => {
+            if (!inputRef.value || !newVal) {
+                return
+            }
+            // we need to format here only if someone externally set the
+            // value of the amount model
+            if (internalVal.value !== newVal) {
+                const formatted = format(newVal)
+                inputRef.value.value = formatted
+                internalVal.value = newVal
+            }
+        })
+    })
 
 
     return {
         inputRef,
         parse,
         format,
+        emitAmount,
         setValue
     }
 }
