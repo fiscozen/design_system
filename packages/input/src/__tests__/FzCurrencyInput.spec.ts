@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { flushPromises, mount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import { FzCurrencyInput } from "..";
-import {ref} from 'vue'
 
 describe.concurrent("FzCurrencyInput", () => {
   it("renders floating numbers as currency", async () => {
