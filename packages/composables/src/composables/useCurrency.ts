@@ -29,7 +29,7 @@ export const useCurrency = () => {
         }
         if (vm) {
             internalVal.value = val
-            vm.emit('update:amount', val)
+            vm.emit('update:amount', typeof computedModel.value === 'number' ? val : val.toString()) 
         }
     }
 
@@ -85,11 +85,6 @@ export const useCurrency = () => {
         }
         newVal.addEventListener('input', onInput(newVal))
         newVal.addEventListener('blur', onBlur)
-
-        if (computedModel.value) {
-            newVal.value = format(computedModel.value)
-        }
-
     })
 
     watch(computedModel, (newVal) => {
