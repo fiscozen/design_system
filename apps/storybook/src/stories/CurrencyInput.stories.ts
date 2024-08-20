@@ -16,19 +16,13 @@ const meta = {
 
 type Story = StoryObj<typeof meta>
 
-const Default: Story = {}
-
-const ModelValue: Story = {
+const Default: Story = {
   args: {
   },
   render: (args) => ({
     components: {FzCurrencyInput},
     setup() {
       const data = ref(1.23)
-
-      setTimeout(() => {
-        data.value = 23.34
-      }, 2000)
 
       const onSet = () => {
         data.value = 1234.56
@@ -48,8 +42,7 @@ const ModelValue: Story = {
 }
 
 export {
-  Default,
-  ModelValue
+  Default
 }
 
 export default meta

@@ -4,10 +4,10 @@ export const useCurrency = () => {
     const inputRef: Ref<HTMLInputElement|null> = ref(null)
     const vm = getCurrentInstance()
 
-    const computedModel = computed<number|undefined>(() => vm?.props.amount as unknown as number|undefined)
-    const internalVal = ref<number>()
+    const computedModel = computed<number|string|undefined>(() => vm?.props.amount as unknown as number|undefined)
+    const internalVal = ref<number|string>()
 
-    const format = (input: number) => {
+    const format = (input: number|string) => {
         return input.toLocaleString('it-IT', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
@@ -26,7 +26,7 @@ export const useCurrency = () => {
         }
         if (vm) {
             internalVal.value = val
-            vm.emit('update:amount', val)
+            vm.emit('update:amount', typeof computedModel.value === 'number' ? val : val.toString()) 
         }
     }
 
@@ -75,11 +75,6 @@ export const useCurrency = () => {
         }
         newVal.addEventListener('input', onInput(newVal))
         newVal.addEventListener('blur', onBlur)
-
-        if (computedModel.value) {
-            newVal.value = format(computedModel.value)
-        }
-
     })
 
     watch(computedModel, (newVal) => {
