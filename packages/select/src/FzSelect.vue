@@ -4,6 +4,7 @@
     :isOpen
     class="flex flex-col gap-8 overflow-visible"
     :teleport="teleport"
+    :useViewport="true"
     @fzfloating:setPosition="calculateMaxHeight"
   >
     <template #opener-start>
@@ -113,6 +114,7 @@ const calculateMaxHeight = (
   openerRect: Ref<DOMRect | undefined>,
   containerRect: Ref<DOMRect | undefined>,
   position: Ref<FzFloatingPosition>,
+  actualPosition: Ref<FzFloatingPosition|undefined>,
 ): void => {
   nextTick(() => {
     if (props.floatingPanelMaxHeight) {
@@ -120,7 +122,8 @@ const calculateMaxHeight = (
     }
     const bottom = openerRect.value?.bottom ?? 0;
     const top = openerRect.value?.top ?? 0;
-    maxHeight.value = position.value.includes("bottom")
+    const pos = actualPosition.value ? actualPosition.value : position.value;
+    maxHeight.value = pos.includes("bottom")
       ? `calc(100vh - ${bottom}px - ${OPTIONS_BUFFER * OPTIONS_HEIGHT}px)`
       : `${top}px`;
   });
