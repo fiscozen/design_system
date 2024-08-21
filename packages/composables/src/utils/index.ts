@@ -5,9 +5,9 @@ interface PositionListItem {
   key: MainPosition
   space: number
 }
-const windowDOMrect = new DOMRect(0,0,window.innerWidth, window.innerHeight);
+const windowDOMrect = new DOMRect(0, 0, window.innerWidth, window.innerHeight)
 export const getHighestAvailableSpacePos = (
-  container: HTMLElement|null,
+  container: HTMLElement | null,
   el: HTMLElement,
   opener: HTMLElement,
   justify?: 'start' | 'end',
@@ -17,11 +17,11 @@ export const getHighestAvailableSpacePos = (
 
   let positionRes: FzFloatingPosition = verticalOnly ? 'bottom-start' : 'right-start'
 
-  windowDOMrect.width = window.innerWidth;
-  windowDOMrect.height = window.innerHeight;
-  windowDOMrect.x = 0;
-  windowDOMrect.y = 0;
-  const containerRect = container ?  container.getBoundingClientRect() : windowDOMrect;
+  windowDOMrect.width = window.innerWidth
+  windowDOMrect.height = window.innerHeight
+  windowDOMrect.x = 0
+  windowDOMrect.y = 0
+  const containerRect = container ? container.getBoundingClientRect() : windowDOMrect
   const elRect = el.getBoundingClientRect()
   const openerRect = opener.getBoundingClientRect()
 

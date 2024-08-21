@@ -16,7 +16,7 @@ const content = ref<HTMLElement | null>(null)
 
 const slots = useSlots()
 
-let scheduledAnimationFrame = false;
+let scheduledAnimationFrame = false
 
 const useFloatingOpts: FzUseFloatingArgs = {
   position: computed(() => props.position),
@@ -42,15 +42,15 @@ if (slots.opener) {
 const floating = useFloating(useFloatingOpts)
 
 const setPositionWhenOpen = () => {
-  if (scheduledAnimationFrame){
-    return;
+  if (scheduledAnimationFrame) {
+    return
   }
 
-  scheduledAnimationFrame = true;
+  scheduledAnimationFrame = true
   requestAnimationFrame(() => {
-    props.isOpen && floating.setPosition();
-    scheduledAnimationFrame = false;
-  });
+    props.isOpen && floating.setPosition()
+    scheduledAnimationFrame = false
+  })
 }
 
 watch(
@@ -61,10 +61,10 @@ watch(
   () => props.isOpen,
   (newVal) => {
     if (!newVal || !content.value) {
-      window.removeEventListener('scroll', setPositionWhenOpen);
+      window.removeEventListener('scroll', setPositionWhenOpen)
       return
     }
-    window.addEventListener('scroll', setPositionWhenOpen);
+    window.addEventListener('scroll', setPositionWhenOpen)
     content.value.style.top = '0px'
     content.value.style.left = '0px'
     content.value.style.transform = 'none'
@@ -72,7 +72,7 @@ watch(
   }
 )
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', setPositionWhenOpen);
+  window.removeEventListener('scroll', setPositionWhenOpen)
 })
 
 const contentClass = computed(() => {
@@ -95,7 +95,7 @@ const contentClass = computed(() => {
       v-if="!teleport"
       ref="content"
       v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
-      class="fz__floating__content bg-core-white fixed p-4 z-10"
+      class="fz__floating__content bg-core-white fixed z-10 p-4"
       :class="contentClass"
     >
       <slot :isOpen :floating></slot>
@@ -104,7 +104,7 @@ const contentClass = computed(() => {
       <div
         ref="content"
         v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
-        class="fz__floating__content bg-core-white fixed p-4 z-10"
+        class="fz__floating__content bg-core-white fixed z-10 p-4"
         :class="contentClass"
       >
         <slot :isOpen :floating></slot>

@@ -114,7 +114,7 @@ const calculateMaxHeight = (
   openerRect: Ref<DOMRect | undefined>,
   containerRect: Ref<DOMRect | undefined>,
   position: Ref<FzFloatingPosition>,
-  actualPosition: Ref<FzFloatingPosition|undefined>,
+  actualPosition: Ref<FzFloatingPosition | undefined>,
 ): void => {
   nextTick(() => {
     if (props.floatingPanelMaxHeight) {
