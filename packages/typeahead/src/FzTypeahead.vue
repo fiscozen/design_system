@@ -15,6 +15,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { FzTypeaheadProps } from "./types";
+import { debounce } from "./utils";
 import {
   FzSelect,
   FzSelectOptionsProps,
@@ -23,8 +24,8 @@ import {
 import { FzInput } from "@fiscozen/input";
 import Fuse from "fuse.js";
 
-const props = withDefaults(defineProps<FzTypeaheadProps>(), {});
-const emit = defineEmits(["update:modelValue"]);
+const props = withDefaults(defineProps<FzTypeaheadProps>(), { delayTime: 500 });
+const emit = defineEmits(["update:modelValue", "fztypeahead:input"]);
 
 const modelValue = ref<FzSelectOptionsProps>();
 const inputValue = ref<string | undefined>();
@@ -41,12 +42,13 @@ const safeInputContainer = computed(() => {
   return opener.value?.containerRef;
 });
 
-const handleInput = (val: string) => {
+const handleInput = debounce((val: string) => {
   inputValue.value = val;
-};
+  emit("fztypeahead:input", val);
+}, props.delayTime);
 
 const handleSelect = (val: string) => {
-  const selected = props.selectProps.options.find((opt) => opt.value === val);
+  const selected = internalOptions.value.find((opt) => opt.value === val);
   inputValue.value = selected?.label;
   emit("update:modelValue", selected);
 };

@@ -6,6 +6,7 @@ interface FzTypeaheadProps {
   inputProps: FzInputProps;
   filteredOptions?: FzSelectOptionsProps[];
   filterFn?: (text?: string) => FzSelectOptionsProps[];
+  delayTime?: number;
 }
 
 export { FzTypeaheadProps };
