@@ -28,15 +28,12 @@ function useClickOutside(
   }
 
   if (elementToListenClicksOn) {
-    watch(
-      elementToListenClicksOn,
-      (newVal: Element | undefined, oldVal: Element | undefined) => {
-        if (oldVal) {
-          oldVal.removeEventListener('click', listener)
-        }
-        newVal?.addEventListener('click', listener)
+    watch(elementToListenClicksOn, (newVal: Element | undefined, oldVal: Element | undefined) => {
+      if (oldVal) {
+        oldVal.removeEventListener('click', listener)
       }
-    )
+      newVal?.addEventListener('click', listener)
+    })
   }
 
   onMounted(() => {
