@@ -33,7 +33,7 @@ const Template: Story = {
     },
     methods: {
       onInputChange() {
-        console.log("Base");
+        console.log("Input changed");
       }
     },
     template: `
@@ -93,14 +93,11 @@ const remoteOptions = [{label: 'Foo', value: 'foo'}, {label: 'Bar', value: 'bar'
 const filteredOptions = ref([]);
 
 async function remoteLoader(searchString) {
-  console.log("Pippo", searchString);
   const result = await new Promise((resolve) => {
     setTimeout(() => {
-      console.log("RRR", remoteOptions);
       resolve(remoteOptions.filter((record) => {return record.value.toLowerCase().indexOf(searchString.toLowerCase()) >= 0}));
     }, 500);
   });
-  console.log(result);
   filteredOptions.value = result;
 }
 
