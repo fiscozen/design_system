@@ -20,6 +20,7 @@ export interface FzFloatingProps {
     | Array<string | Record<string, boolean | undefined>>
   overrideContentClass?: boolean
   teleport?: boolean
+  useViewport?: boolean
 }
 
 export interface FzAbsolutePosition {
@@ -40,10 +41,12 @@ export interface FzUseFloatingArgs {
   container?: FzFloatElement
   opener?: FzFloatElement
   position?: Ref<FzFloatingPosition>
+  useViewport?: Ref<boolean>
   callback?: (
     rect: Ref<DOMRect | undefined>,
     openerRect: Ref<DOMRect | undefined>,
     containerRect: Ref<DOMRect | undefined>,
-    position: Ref<FzFloatingPosition>
+    position: Ref<FzFloatingPosition>,
+    actualPosition: Ref<FzFloatingPosition|undefined>
   ) => void
 }

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, useSlots, watch, toRef, computed } from 'vue'
+import { ref, useSlots, watch, toRef, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useFloating } from './composables'
 import { FzFloatingProps, FzUseFloatingArgs } from './types'
 
@@ -16,6 +16,8 @@ const content = ref<HTMLElement | null>(null)
 
 const slots = useSlots()
 
+let scheduledAnimationFrame = false;
+
 const useFloatingOpts: FzUseFloatingArgs = {
   position: computed(() => props.position),
   element: {
@@ -26,6 +28,7 @@ const useFloatingOpts: FzUseFloatingArgs = {
     // @ts-ignore
     domRef: toRef(props.container || document.body)
   },
+  useViewport: computed(() => props.useViewport),
   callback(...args) {
     emits('fzfloating:setPosition', ...args)
   }
@@ -38,9 +41,21 @@ if (slots.opener) {
 
 const floating = useFloating(useFloatingOpts)
 
+const setPositionWhenOpen = () => {
+  if (scheduledAnimationFrame){
+    return;
+  }
+
+  scheduledAnimationFrame = true;
+  requestAnimationFrame(() => {
+    props.isOpen && floating.setPosition();
+    scheduledAnimationFrame = false;
+  });
+}
+
 watch(
   () => props.position,
-  () => props.isOpen && floating.setPosition()
+  () => setPositionWhenOpen()
 )
 watch(
   () => props.isOpen,
@@ -54,6 +69,12 @@ watch(
     floating.setPosition()
   }
 )
+onMounted(() => {
+  window.addEventListener('scroll', setPositionWhenOpen);
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', setPositionWhenOpen);
+})
 
 const contentClass = computed(() => {
   if (props.overrideContentClass) {
@@ -84,7 +105,7 @@ const contentClass = computed(() => {
       <div
         ref="content"
         v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
-        class="fz__floating__content bg-core-white absolute p-4 z-10"
+        class="fz__floating__content bg-core-white fixed p-4 z-10"
         :class="contentClass"
       >
         <slot :isOpen :floating></slot>

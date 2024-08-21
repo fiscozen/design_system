@@ -9,6 +9,7 @@ export const useFloating = (
   rect: Ref<DOMRect | undefined>
   setPosition: () => Promise<void>
   position: Ref<FzFloatingPosition>
+  actualPosition?: Ref<FzFloatingPosition|undefined>
   openerRect: Ref<DOMRect | undefined>
   containerRect: Ref<DOMRect | undefined>
 } => {
@@ -35,10 +36,12 @@ export const useFloating = (
   ) => {}
 
   const floatObserver = ref(new IntersectionObserver(handleIntersect, options))
-  position.value = args.position ? args.position.value : 'auto'
+  const actualPosition = ref<FzFloatingPosition>();
+
 
   const setPosition = () =>
     nextTick(() => {
+      actualPosition.value = args.position ? args.position.value : 'auto';
       safeElementDomRef.value =
         (typeof args.element.domRef.value === 'string'
           ? document.querySelector(args.element.domRef.value) 
@@ -85,17 +88,17 @@ export const useFloating = (
           openerRect.value.top - parseFloat(elStyle.marginTop) - parseFloat(elStyle.marginBottom)
         const topWithoutTopMargin = openerRect.value.top - parseFloat(elStyle.marginTop)
 
-        switch (position.value) {
+        switch (actualPosition.value) {
           case 'auto':
-            position.value = getHighestAvailableSpacePos(
-              safeContainerDomRef.value as HTMLElement,
+            actualPosition.value = getHighestAvailableSpacePos(
+              args.useViewport ? null : safeContainerDomRef.value as HTMLElement,
               safeElementDomRef.value as HTMLElement,
               safeOpenerDomRef.value as HTMLElement
             )
             break
           case 'auto-vertical':
-            position.value = getHighestAvailableSpacePos(
-              safeContainerDomRef.value as HTMLElement,
+            actualPosition.value = getHighestAvailableSpacePos(
+              args.useViewport ? null : safeContainerDomRef.value as HTMLElement,
               safeElementDomRef.value as HTMLElement,
               safeOpenerDomRef.value as HTMLElement,
               undefined,
@@ -103,16 +106,16 @@ export const useFloating = (
             )
             break
           case 'auto-start':
-            position.value = getHighestAvailableSpacePos(
-              safeContainerDomRef.value as HTMLElement,
+            actualPosition.value = getHighestAvailableSpacePos(
+              args.useViewport ? null : safeContainerDomRef.value as HTMLElement,
               safeElementDomRef.value as HTMLElement,
               safeOpenerDomRef.value as HTMLElement,
               'start'
             )
             break
           case 'auto-vertical-start':
-            position.value = getHighestAvailableSpacePos(
-              safeContainerDomRef.value as HTMLElement,
+            actualPosition.value = getHighestAvailableSpacePos(
+              args.useViewport ? null : safeContainerDomRef.value as HTMLElement,
               safeElementDomRef.value as HTMLElement,
               safeOpenerDomRef.value as HTMLElement,
               'start',
@@ -120,16 +123,16 @@ export const useFloating = (
             )
             break
           case 'auto-end':
-            position.value = getHighestAvailableSpacePos(
-              safeContainerDomRef.value as HTMLElement,
+            actualPosition.value = getHighestAvailableSpacePos(
+              args.useViewport ? null : safeContainerDomRef.value as HTMLElement,
               safeElementDomRef.value as HTMLElement,
               safeOpenerDomRef.value as HTMLElement,
               'end'
             )
             break
           case 'auto-vertical-end':
-            position.value = getHighestAvailableSpacePos(
-              safeContainerDomRef.value as HTMLElement,
+            actualPosition.value = getHighestAvailableSpacePos(
+              args.useViewport ? null : safeContainerDomRef.value as HTMLElement,
               safeElementDomRef.value as HTMLElement,
               safeOpenerDomRef.value as HTMLElement,
               'end',
@@ -139,7 +142,7 @@ export const useFloating = (
           default:
             break
         }
-        switch (position.value) {
+        switch (actualPosition.value) {
           case 'bottom':
             float.position.y = openerRect.value.bottom
             float.position.x = leftWithoutLeftMargin + openerRect.value.width / 2
@@ -216,7 +219,7 @@ export const useFloating = (
             break
         }
       } else {
-        switch (position.value) {
+        switch (actualPosition.value) {
           case 'bottom':
             float.position.y = containerRect.value.bottom - rect.value.height
             float.position.x = containerRect.value.left + containerRect.value.width / 2
@@ -294,12 +297,12 @@ export const useFloating = (
 
       safeElementDomRef.value.style.top = `${float.position.y}px`
       safeElementDomRef.value.style.left = `${float.position.x}px`
-      // safeElementDomRef.value.style.position = 'fixed'
+      safeElementDomRef.value.style.position = 'fixed'
       safeElementDomRef.value.style.display = 'flex'
 
       rect.value = safeElementDomRef.value.getBoundingClientRect()
 
-      args.callback && args.callback(rect, openerRect, containerRect, position)
+      args.callback && args.callback(rect, openerRect, containerRect, position, actualPosition)
     })
 
   onUnmounted(() => {
@@ -311,6 +314,7 @@ export const useFloating = (
     rect,
     setPosition,
     position,
+    actualPosition,
     openerRect,
     containerRect
   }
