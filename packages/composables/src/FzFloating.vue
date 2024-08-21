@@ -61,17 +61,16 @@ watch(
   () => props.isOpen,
   (newVal) => {
     if (!newVal || !content.value) {
+      window.removeEventListener('scroll', setPositionWhenOpen);
       return
     }
+    window.addEventListener('scroll', setPositionWhenOpen);
     content.value.style.top = '0px'
     content.value.style.left = '0px'
     content.value.style.transform = 'none'
     floating.setPosition()
   }
 )
-onMounted(() => {
-  window.addEventListener('scroll', setPositionWhenOpen);
-})
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', setPositionWhenOpen);
 })
