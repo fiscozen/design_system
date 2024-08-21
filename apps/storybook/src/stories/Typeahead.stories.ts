@@ -31,9 +31,14 @@ const Template: Story = {
         args
       }
     },
+    methods: {
+      onInputChange() {
+        console.log("Input changed");
+      }
+    },
     template: `
       <div class="h-[100vh] w-[100-vw] p-16">
-        <FzTypeahead v-bind="args" v-model="text" />
+        <FzTypeahead v-bind="args" v-model="text" @fztypeahead:input="onInputChange"/>
       </div>
     `
   }),
@@ -54,6 +59,21 @@ const Default: Story = {
   }
 }
 
+const NoDelayTime: Story = {
+  ...Template,
+  args: {
+    selectProps: {
+      options,
+      isOpen: false
+    },
+    inputProps: {
+      label: 'This is a label',
+      placeholder: 'This is a placeholder'
+    },
+    delayTime: 0
+  }
+}
+
 const hundredOptionsRepeated = Array.from({length: 100}, (_, i) => ({label: `option ${i % 3}`, value: `${i}`}))
 const HundredOptions: Story = {
   ...Template,
@@ -69,6 +89,49 @@ const HundredOptions: Story = {
   }
 }
 
-export { Default, HundredOptions }
+const remoteOptions = [{label: 'Foo', value: 'foo'}, {label: 'Bar', value: 'bar'}, {label: 'Baz', value: 'baz'}, {label: 'Qux', value: 'qux'}];
+const filteredOptions = ref([]);
+
+async function remoteLoader(searchString) {
+  const result = await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(remoteOptions.filter((record) => {return record.value.toLowerCase().indexOf(searchString.toLowerCase()) >= 0}));
+    }, 500);
+  });
+  filteredOptions.value = result;
+}
+
+const RemoteLoading: Story = {
+  render: (args) => ({
+    components: {FzTypeahead},
+    setup() {
+      const text = ref();
+      return {
+        text,
+        args
+      }
+    },
+    methods: {
+      onInputChange: remoteLoader
+    },
+    template: `
+      <div class="h-[100vh] w-[100-vw] p-16">
+        <FzTypeahead v-bind="args" v-model="text" @fztypeahead:input="onInputChange"/>
+      </div>
+    `
+  }),
+  args: {
+    inputProps: {
+      label: 'This is a label',
+      placeholder: 'This is a placeholder'
+    },
+    selectProps: {
+      isOpen: false
+    },
+    filteredOptions: filteredOptions
+  }
+}
+
+export { Default, NoDelayTime, HundredOptions, RemoteLoading }
 
 export default meta
