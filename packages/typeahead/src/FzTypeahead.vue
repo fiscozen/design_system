@@ -1,19 +1,19 @@
 <template>
-  <FzSelect v-bind="safeSelectOpts" v-model="modelValue" @select="handleSelect">
+  <FzSelect v-bind="safeSelectOpts" v-model="model">
     <template #opener="{ handlePickerClick, isOpen }">
       <FzInput
         ref="opener"
         v-bind="inputProps"
         :modelValue="inputValue"
-        @focus="() => !isOpen && handlePickerClick()"
         @update:modelValue="handleInput"
+        @focus="() => !isOpen && handlePickerClick()"
       ></FzInput>
     </template>
   </FzSelect>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { FzTypeaheadProps } from "./types";
 import { debounce } from "./utils";
 import {
@@ -25,10 +25,24 @@ import { FzInput } from "@fiscozen/input";
 import Fuse from "fuse.js";
 
 const props = withDefaults(defineProps<FzTypeaheadProps>(), { delayTime: 500 });
-const emit = defineEmits(["update:modelValue", "fztypeahead:input"]);
+const emit = defineEmits(["fztypeahead:input"]);
 
-const modelValue = ref<FzSelectOptionsProps>();
-const inputValue = ref<string | undefined>();
+const [model, modelModifiers] = defineModel<string, "object">({
+  set(value) {
+    if (modelModifiers.object) {
+      const selected = internalOptions.value.find((opt) => opt.value === value);
+      return selected;
+    }
+    return value;
+  },
+  get(value) {
+    if (modelModifiers.object) {
+      return (value as unknown as FzSelectOptionsProps)?.value;
+    }
+    return value;
+  },
+});
+const inputValue = ref<string>("");
 const fuseOptions = {
   keys: ["label"],
 };
@@ -42,16 +56,38 @@ const safeInputContainer = computed(() => {
   return opener.value?.containerRef;
 });
 
-const handleInput = debounce((val: string) => {
-  inputValue.value = val;
-  emit("fztypeahead:input", val);
-}, props.delayTime);
+onMounted(() => {
+  updateModelDependencies(model.value);
+});
 
-const handleSelect = (val: string) => {
+watch(model, (value) => {
+  updateModelDependencies(value);
+});
+
+function updateModelDependencies(value?: string) {
+  if (!value) {
+    return;
+  }
+
+  const selected = internalOptions.value.find((opt) => opt.value === value);
+
+  if (!selected) {
+    console.warn(`Could not find option with value: ${value}`);
+    return;
+  }
+
+  inputValue.value = selected.label;
+}
+
+function handleInput(val: string) {
+  inputValue.value = val;
   const selected = internalOptions.value.find((opt) => opt.value === val);
-  inputValue.value = selected?.label;
-  emit("update:modelValue", selected);
-};
+  if (!selected) model.value = undefined;
+  debounce(
+    (val: string) => emit("fztypeahead:input", val),
+    props.delayTime,
+  )(val);
+}
 
 const internalOptions = computed<FzSelectOptionsProps[]>(() => {
   let res = props.selectProps.options;
@@ -69,8 +105,8 @@ const internalOptions = computed<FzSelectOptionsProps[]>(() => {
   return res;
 });
 
-const computedModel = computed(() => {
-  return modelValue.value;
+watch(internalOptions, () => {
+  updateModelDependencies(model.value);
 });
 
 const safeSelectOpts = computed<FzSelectProps>(() => ({
