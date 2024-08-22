@@ -10,7 +10,8 @@ const meta: Meta<typeof FzDatepicker> = {
   args: {
     inputProps: {
       label: 'datepicker label'
-    }
+    },
+    name: 'fz-datepicker'
   },
   decorators: []
 }
