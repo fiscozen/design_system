@@ -4,7 +4,7 @@
     ref="dp"
     v-bind="props"
     :ui="{ menu: calendarClassName }"
-    @update:model-value="(e) => $emit('update:model-value', e)"
+    @update:model-value="(e) => $emit('update:model-value', props.valueFormat ? format(e, props.valueFormat) : e)"
     :model-value="modelValue"
   >
     <template #dp-input="{value}">
@@ -59,6 +59,7 @@ import { breakpoints } from "@fiscozen/style";
 import { FzIconButton, FzButton } from "@fiscozen/button";
 import { FzInput, FzInputProps } from "@fiscozen/input";
 import { it } from "date-fns/locale";
+import { format } from "date-fns";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = withDefaults(defineProps<FzDatepickerProps>(), {
