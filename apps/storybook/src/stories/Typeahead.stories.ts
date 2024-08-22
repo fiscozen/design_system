@@ -55,8 +55,70 @@ const Default: Story = {
     inputProps: {
       label: 'This is a label',
       placeholder: 'This is a placeholder'
-    }
+    },
   }
+}
+
+const Precompiled: Story = {
+  ...Template,
+  args: {
+    selectProps: {
+      options,
+      isOpen: false
+    },
+    inputProps: {
+      label: 'This is a label',
+      placeholder: 'This is a placeholder'
+    },
+  },
+  render: (args) => ({
+    components: {FzTypeahead},
+    setup() {
+      const model = ref("1");
+      return { model, args }
+    },
+    methods: {
+      onInputChange() {
+        console.log("Input changed");
+      }
+    },
+    template: `
+      <div class="h-[100vh] w-[100-vw] p-16">
+        <FzTypeahead v-bind="args" v-model="model" @fztypeahead:input="onInputChange"/>
+      </div>
+    `
+  }),
+}
+
+const PrecompiledObject: Story = {
+  ...Template,
+  args: {
+    selectProps: {
+      options,
+      isOpen: false
+    },
+    inputProps: {
+      label: 'This is a label',
+      placeholder: 'This is a placeholder'
+    },
+  },
+  render: (args) => ({
+    components: {FzTypeahead},
+    setup() {
+      const model = ref(options[0]);
+      return { model, args }
+    },
+    methods: {
+      onInputChange() {
+        console.log("Input changed");
+      }
+    },
+    template: `
+      <div class="h-[100vh] w-[100-vw] p-16">
+        <FzTypeahead v-bind="args" v-model.object="model" @fztypeahead:input="onInputChange"/>
+      </div>
+    `
+  }),
 }
 
 const NoDelayTime: Story = {
@@ -132,6 +194,6 @@ const RemoteLoading: Story = {
   }
 }
 
-export { Default, NoDelayTime, HundredOptions, RemoteLoading }
+export { Default, Precompiled, PrecompiledObject, NoDelayTime, HundredOptions, RemoteLoading }
 
 export default meta
