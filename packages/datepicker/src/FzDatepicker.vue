@@ -122,6 +122,7 @@ const calendarClassName = computed(() => {
 const safeInputProps = computed<FzInputProps>(() => {
   return {
     leftIcon: "calendar-lines",
+    name: props.name,
     ...props.inputProps,
     readonly: true
   }
