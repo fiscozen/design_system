@@ -125,6 +125,24 @@ const InlineTimePicker: Story = {
     is24: true
   }
 }
+
+const StringValueFormat: Story = {
+  render: (args) => ({
+    components: {FzDatepicker},
+    setup() {
+      const date = ref();
+      return {
+        date,
+        args
+      }
+    },
+    template: `<p>{{ date }}</p><FzDatepicker v-bind="args" v-model="date" />`
+  }),
+  args: {
+    valueFormat: 'yyyy-MM-dd'
+  }
+}
+
 export {
   Default,
   Range,
@@ -136,7 +154,8 @@ export {
   MultiDates,
   DisabledDates,
   ComplexDisabledDates,
-  InlineTimePicker
+  InlineTimePicker,
+  StringValueFormat
 }
 
 export default meta
