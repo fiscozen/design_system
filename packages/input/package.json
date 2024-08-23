@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/input",
-  "version": "0.1.4",
+  "version": "0.1.5-currencynullonempty.1",
   "description": "Design System Input component",
   "scripts": {
     "coverage": "vitest run --coverage",
