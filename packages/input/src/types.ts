@@ -65,6 +65,11 @@ type FzInputProps = {
 
 };
 
-type FzCurrencyInputProps = Omit<FzInputProps, 'type'>
+interface FzCurrencyInputProps extends Omit<FzInputProps, 'type'> {
+  /**
+   * Is set to true, an empty string will be casted to null
+   */
+  nullOnEmpty?: boolean;
+}
 
 export { FzInputProps, FzCurrencyInputProps };
