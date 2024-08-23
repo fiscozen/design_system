@@ -8,7 +8,7 @@
     @fzfloating:setPosition="calculateMaxHeight"
   >
     <template #opener-start>
-      <label :class="['text-sm', computedLabelClass]">
+      <label v-if="label" :class="['text-sm', computedLabelClass]">
         {{ label }}{{ required ? " *" : "" }}
       </label>
     </template>
