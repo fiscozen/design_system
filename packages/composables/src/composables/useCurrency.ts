@@ -8,7 +8,10 @@ export const useCurrency = () => {
     () => vm?.props.modelValue as unknown as number | undefined
   )
 
-  const format = (input: number) => {
+  const format = (input: number | null) => {
+    if (input === null) {
+      return '';
+    }
     return input.toLocaleString('it-IT', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
@@ -20,7 +23,7 @@ export const useCurrency = () => {
     return parseFloat(text)
   }
 
-  const setValue = (val: number) => {
+  const setValue = (val: number | null) => {
     if (Number.isNaN(val)) {
       return
     }
@@ -35,17 +38,25 @@ export const useCurrency = () => {
     let { value } = el
     value = value.replace(/[^0-9,.]/g, '')
     inputRef.value.value = value
-    const number = parse(value)
-    setValue(Number.isNaN(number) ? 0 : number)
+    const numberValue = (vm?.props.nullOnEmpty && value === '') ? null : parse(value)
+    setValue(Number.isNaN(numberValue) ? 0 : numberValue)
   }
 
   const onBlur = (e: FocusEvent) => {
     if (!inputRef.value || !e.target) {
       return
     }
-    let number = parse((e.target as HTMLInputElement).value.replace(/,/g, '.'))
-    if (Number.isNaN(number)) {
-      number = 0
+    let rawValue = (e.target as HTMLInputElement).value.replace(/,/g, '.');
+    let number: number | null;
+
+    if (rawValue === '' && vm?.props.nullOnEmpty) {
+      number = null
+    }
+    else {
+      number = parse(rawValue)
+      if (Number.isNaN(number)) {
+        number = 0
+      }
     }
     const text = format(number)
 
