@@ -80,7 +80,7 @@ const contentClass = computed(() => {
     return props.contentClass
   }
 
-  return ['bg-core-white fixed p-4 z-10', props.contentClass]
+  return ['fz__floating__content bg-core-white fixed p-4 z-10', props.contentClass]
 })
 </script>
 
@@ -95,7 +95,6 @@ const contentClass = computed(() => {
       v-if="!teleport"
       ref="content"
       v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
-      class="fz__floating__content bg-core-white fixed z-10 p-4"
       :class="contentClass"
     >
       <slot :isOpen :floating></slot>
@@ -104,7 +103,6 @@ const contentClass = computed(() => {
       <div
         ref="content"
         v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
-        class="fz__floating__content bg-core-white fixed z-10 p-4"
         :class="contentClass"
       >
         <slot :isOpen :floating></slot>
