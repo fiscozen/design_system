@@ -5,11 +5,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import FzInput from "./FzInput.vue";
-import { FzInputProps } from "./types";
+import { FzCurrencyInputProps } from "./types";
 import { useCurrency } from "@fiscozen/composables";
 
 const fzInputRef = ref();
-const props = defineProps<Omit<FzInputProps, "type" | "modelValue">>();
+const props = defineProps<FzCurrencyInputProps>();
 const { inputRef } = useCurrency();
 
 defineEmits(["update:amount"]);

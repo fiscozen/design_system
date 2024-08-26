@@ -64,7 +64,8 @@ type FzInputProps = {
   readonly?: boolean;
 };
 
-interface FzCurrencyInputProps extends Omit<FzInputProps, 'type'> {
+interface FzCurrencyInputProps
+  extends Omit<FzInputProps, "type" | "modelValue"> {
   /**
    * Is set to true, an empty string will be casted to null
    */
