@@ -18,4 +18,9 @@ onMounted(() => {
   inputRef.value = fzInputRef.value.inputRef;
 });
 const model = defineModel("amount");
+
+defineExpose({
+  inputRef: fzInputRef.value?.inputRef,
+  containerRef: fzInputRef.value?.containerRef,
+});
 </script>
