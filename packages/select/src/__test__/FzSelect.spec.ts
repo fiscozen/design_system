@@ -1,5 +1,5 @@
 // FzSelect.spec.ts
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import FzSelect from "../FzSelect.vue";
 
@@ -11,6 +11,10 @@ beforeEach(() => {
     disconnect: () => null,
   });
   window.IntersectionObserver = mockIntersectionObserver;
+});
+
+afterEach(() => {
+  document.body.innerHTML = "";
 });
 
 describe("FzSelect", () => {
@@ -185,7 +189,7 @@ describe("FzSelect", () => {
 
     await wrapper.vm.$nextTick();
     wrapper.find('button[test-id="fzselect-opener"]').trigger("click");
-    expect(wrapper.findAll('button[test-id="fzselect-option"]').length).toBe(
+    expect(document.querySelectorAll('button[test-id="fzselect-option"]').length).toBe(
       25,
     );
   });
@@ -206,21 +210,18 @@ describe("FzSelect", () => {
 
     await wrapper.vm.$nextTick();
     wrapper.find('button[test-id="fzselect-opener"]').trigger("click");
-    expect(wrapper.findAll('button[test-id="fzselect-option"]').length).toBe(
+    expect(document.querySelectorAll('button[test-id="fzselect-option"]').length).toBe(
       25,
     );
 
-    const container = wrapper.find(
+    const container = document.querySelector(
       '[test-id="fzselect-options-container"]',
-    ).element;
+    )!;
     container.scrollTop = container.scrollHeight;
-    await wrapper
-      .find('[test-id="fzselect-options-container"]')
-      .trigger("scroll");
+    container.dispatchEvent(new Event("scroll"));
 
     await wrapper.vm.$nextTick();
-
-    expect(wrapper.findAll('button[test-id="fzselect-option"]').length).toBe(
+    expect(document.querySelectorAll('button[test-id="fzselect-option"]').length).toBe(
       50,
     );
   });
