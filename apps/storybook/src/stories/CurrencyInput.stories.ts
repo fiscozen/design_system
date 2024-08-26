@@ -30,11 +30,12 @@ const Default: Story = {
 
       return {
         data,
-        onSet
+        onSet,
+        args
       }
     },
     template: `
-      <FzCurrencyInput v-model:amount="data" label="currency input"/>
+      <FzCurrencyInput v-bind="args" v-model:amount="data" label="currency input"/>
       <pre>{{data}}</pre>
       <button @click="onSet">SET</button>
     `,
@@ -51,7 +52,7 @@ const NullOnEmpty: Story = {
         args
       }
     },
-    template: `<FzCurrencyInput v-bind="args" v-model="value" />`
+    template: `<FzCurrencyInput v-bind="args" v-model:amount="value" />`
   }),
   args: {
     nullOnEmpty: true
