@@ -4,7 +4,6 @@ import { FzCurrencyInput } from "..";
 
 describe.concurrent("FzCurrencyInput", () => {
   it("renders floating numbers as currency", async () => {
-
     const wrapper = mount(FzCurrencyInput, {
       props: {
         label: "Label",
@@ -15,7 +14,7 @@ describe.concurrent("FzCurrencyInput", () => {
 
     const inputElement = wrapper.find("input");
     await inputElement.trigger("blur");
-    // flushPromises doesn't seem to be enoughsince the implementation 
+    // flushPromises doesn't seem to be enoughsince the implementation
     // of the composable uses setTimeout itself
     await new Promise((resolve) => window.setTimeout(resolve, 100));
     expect(inputElement.element.value).toBe("1234,56");
@@ -24,7 +23,7 @@ describe.concurrent("FzCurrencyInput", () => {
     const wrapper = mount(FzCurrencyInput, {
       props: {
         label: "Label",
-        amount: '',
+        amount: "",
         "onUpdate:amount": (e) => wrapper.setProps({ amount: e }),
       },
     });
