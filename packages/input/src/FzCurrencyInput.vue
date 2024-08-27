@@ -3,24 +3,26 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import FzInput from "./FzInput.vue";
 import { FzCurrencyInputProps } from "./types";
 import { useCurrency } from "@fiscozen/composables";
 
-const fzInputRef = ref();
+const fzInputRef = ref<InstanceType<typeof FzInput>>();
+const containerRef = computed(() => fzInputRef.value?.containerRef);
+const inputRef = computed(() => fzInputRef.value?.inputRef);
 const props = defineProps<FzCurrencyInputProps>();
-const { inputRef } = useCurrency();
+const { inputRef: currencyInputRef } = useCurrency();
 
 defineEmits(["update:amount"]);
 
 onMounted(() => {
-  inputRef.value = fzInputRef.value.inputRef;
+  currencyInputRef.value = inputRef.value;
 });
 const model = defineModel("amount");
 
 defineExpose({
-  inputRef: fzInputRef.value?.inputRef,
-  containerRef: fzInputRef.value?.containerRef,
+  inputRef,
+  containerRef,
 });
 </script>
