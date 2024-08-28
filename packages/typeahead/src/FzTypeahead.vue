@@ -83,20 +83,41 @@ function updateModelDependencies(value?: string) {
   inputValue.value = selected.label;
 }
 
+const debounceHandleInput = debounce(
+  (val: string) => emit("fztypeahead:input", val),
+  props.delayTime,
+);
+
 function handleInput(val: string) {
   inputValue.value = val;
+  if (props.remoteFn) {
+    debounceRemoteFn(val);
+    return;
+  }
+
   const selected = internalOptions.value.find((opt) => opt.value === val);
   if (!selected) model.value = undefined;
-  debounce(
-    (val: string) => emit("fztypeahead:input", val),
-    props.delayTime,
-  )(val);
+  debounceHandleInput(val);
 }
+
+const remoteOptions = ref<FzSelectOptionsProps[] | undefined>(undefined);
+const debounceRemoteFn = debounce((search) => {
+  if (search === "") {
+    // TODO: when there will be a disabled option, here we should add it with a message like "No results found"
+    remoteOptions.value = [];
+    return;
+  }
+  props.remoteFn!(search).then((res) => {
+    remoteOptions.value = res;
+  });
+}, props.delayTime);
 
 const internalOptions = computed<FzSelectOptionsProps[]>(() => {
   let res = props.selectProps.options;
 
-  if (props.filteredOptions) {
+  if (remoteOptions.value) {
+    res = remoteOptions.value;
+  } else if (props.filteredOptions) {
     res = props.filteredOptions;
   } else if (props.filterFn) {
     res = props.filterFn(inputValue.value);
