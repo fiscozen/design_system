@@ -194,17 +194,24 @@ const RemoteLoading: Story = {
   }
 }
 
-async function remoteCallback(text?: string) {
-  const res = await fetch(`https://dummyjson.com/users/search?q=${text}`)
-  const data = await res.json()
-
-  return data.users.map((user: any) => ({
-    label: user.firstName + ' ' + user.lastName,
-    value: user.id
-  }))
+function remoteCallback(this: typeof FzTypeahead, text?: string) {
+  if(!text) {
+    this.args.selectProps.options = []
+    return
+  }
+  
+  const asyncCall = async () => {
+    const res = await fetch(`https://dummyjson.com/users/search?q=${text}`)
+    const data = await res.json()
+    this.args.selectProps.options = data.users.map((user: any) => ({
+        label: user.firstName + ' ' + user.lastName,
+        value: user.id
+    }))
+  }
+  asyncCall()
 }
 
-const RemoteLoadingWithRemoteFunction: Story = {
+const RemoteLoadingWithAPICall: Story = {
   render: (args) => ({
     components: {FzTypeahead},
     setup() {
@@ -215,6 +222,7 @@ const RemoteLoadingWithRemoteFunction: Story = {
       }
     },
     methods: {
+      onInputChange: remoteCallback
     },
     template: `
       <div class="h-[100vh] w-[100-vw] p-16">
@@ -230,12 +238,11 @@ const RemoteLoadingWithRemoteFunction: Story = {
     selectProps: {
       isOpen: false,
       options: []
-    },
-    remoteFn: remoteCallback
+    }
   }
 
 }
 
-export { Default, Precompiled, PrecompiledObject, NoDelayTime, HundredOptions, RemoteLoading, RemoteLoadingWithRemoteFunction }
+export { Default, Precompiled, PrecompiledObject, NoDelayTime, HundredOptions, RemoteLoading, RemoteLoadingWithAPICall }
 
 export default meta
