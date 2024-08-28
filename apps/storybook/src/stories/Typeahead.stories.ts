@@ -194,6 +194,48 @@ const RemoteLoading: Story = {
   }
 }
 
-export { Default, Precompiled, PrecompiledObject, NoDelayTime, HundredOptions, RemoteLoading }
+async function remoteCallback(text?: string) {
+  const res = await fetch(`https://dummyjson.com/users/search?q=${text}`)
+  const data = await res.json()
+
+  return data.users.map((user: any) => ({
+    label: user.firstName + ' ' + user.lastName,
+    value: user.id
+  }))
+}
+
+const RemoteLoadingWithRemoteFunction: Story = {
+  render: (args) => ({
+    components: {FzTypeahead},
+    setup() {
+      const text = ref();
+      return {
+        text,
+        args
+      }
+    },
+    methods: {
+    },
+    template: `
+      <div class="h-[100vh] w-[100-vw] p-16">
+        <FzTypeahead v-bind="args" v-model="text" @fztypeahead:input="onInputChange"/>
+      </div>
+    `
+  }),
+  args: {
+    inputProps: {
+      label: 'This is a label',
+      placeholder: 'This is a placeholder'
+    },
+    selectProps: {
+      isOpen: false,
+      options: []
+    },
+    remoteFn: remoteCallback
+  }
+
+}
+
+export { Default, Precompiled, PrecompiledObject, NoDelayTime, HundredOptions, RemoteLoading, RemoteLoadingWithRemoteFunction }
 
 export default meta
