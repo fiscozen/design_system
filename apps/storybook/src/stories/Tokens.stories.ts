@@ -56,8 +56,8 @@ const convertObjectToBoxShadow = (value: BoxShadowObjType | BoxShadowObjType[]) 
 const exludeTokens = ['avatar', 'button', 'nav-link', 'breadcrumbs', 'path']
 const groups : any = tokens.reduce((acc : any, token) => {
     const key = token.type
-    if(exludeTokens.includes(key))
-        return acc;
+    if (exludeTokens.some((exclude) => token.name.includes(exclude))) 
+        return acc
 
     if (!acc[key]) {
         acc[key] = []
