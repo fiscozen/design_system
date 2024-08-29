@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzTypeahead, FzTypeaheadProps } from '@fiscozen/typeahead'
 import { ref } from 'vue'
+import { FzSelectOptionsProps } from '@fiscozen/select'
 
 const meta: Meta<typeof FzTypeahead> = {
   title: '@fiscozen/typeahead/FzTypeahead',
@@ -152,10 +153,10 @@ const HundredOptions: Story = {
 }
 
 const remoteOptions = [{label: 'Foo', value: 'foo'}, {label: 'Bar', value: 'bar'}, {label: 'Baz', value: 'baz'}, {label: 'Qux', value: 'qux'}];
-const filteredOptions = ref([]);
+const filteredOptions = ref<FzSelectOptionsProps[]>([]);
 
-async function remoteLoader(searchString) {
-  const result = await new Promise((resolve) => {
+async function remoteLoader(searchString: string) {
+  const result : FzSelectOptionsProps[] = await new Promise((resolve) => {
     setTimeout(() => {
       resolve(remoteOptions.filter((record) => {return record.value.toLowerCase().indexOf(searchString.toLowerCase()) >= 0}));
     }, 500);
@@ -188,9 +189,10 @@ const RemoteLoading: Story = {
       placeholder: 'This is a placeholder'
     },
     selectProps: {
+      options: [],
       isOpen: false
     },
-    filteredOptions: filteredOptions
+    filteredOptions: filteredOptions.value
   }
 }
 
