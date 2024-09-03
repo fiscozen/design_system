@@ -35,9 +35,9 @@ const props = withDefaults(defineProps<FzRadioProps>(), {
 
 const model = defineModel();
 const value = props.value ?? props.label;
-const checked = ref(props.checked)
+const checked = ref(props.checked);
 const computedId = computed(() =>
-  props.name ? `${props.name}-${props.label}` : props.label,
+  props.name ? `${props.name}-${props.label}` : props.label
 );
 
 const radioContainer = ref<HTMLInputElement | null>(null);
@@ -56,7 +56,7 @@ const staticLabelClass = `
   peer-focus:before:outline-1 
   peer-focus:before:outline-blue-600
 `;
-const staticInputClass = "peer h-0 w-0 absolute";
+const staticInputClass = "peer h-0 w-0 absolute fz-hidden-input";
 
 const computedInputClass = computed(() => ({
   "radio--small": props.size === "sm",
@@ -98,4 +98,12 @@ onMounted(() => {
   }
 });
 </script>
-<style scoped></style>
+<style scoped>
+.fz-hidden-input {
+  opacity:0;
+  margin:0;
+  height:0;
+  border:0 none;
+  appearance:none;
+}
+</style>
