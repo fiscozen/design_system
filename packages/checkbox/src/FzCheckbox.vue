@@ -142,8 +142,7 @@ onMounted(() => {
   opacity: 0;
   margin:0;
   height:0;
-  border:none;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
+  border:0 none;
+  appearance: none;
 }
 </style>
