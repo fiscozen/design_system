@@ -47,7 +47,9 @@ const id = computed(
   () => `fz-checkbox-${Math.random().toString(36).slice(2, 9)}`,
 );
 
-const model = defineModel<boolean | (string | number | boolean)[]>({
+const model = defineModel<
+  null | undefined | boolean | (string | number | boolean)[]
+>({
   required: true,
 });
 
@@ -94,6 +96,8 @@ const computedVariant = computed(() => {
 });
 
 const checkValueIsInModel = () => {
+  if (model.value == null) return false;
+
   if (typeof model.value === "boolean") {
     return model.value;
   } else {
@@ -127,6 +131,7 @@ const getTextClassForIcon = () => {
 };
 
 onMounted(() => {
+  if (model.value == null) return;
   if (typeof model.value === "boolean") {
     if (model.value) refCheckbox.value?.dispatchEvent(new Event("change"));
     else if (props.checked !== undefined) model.value = props.checked;
@@ -140,9 +145,9 @@ onMounted(() => {
 <style scoped>
 .fz-hidden-input {
   opacity: 0;
-  margin:0;
-  height:0;
-  border:0 none;
+  margin: 0;
+  height: 0;
+  border: 0 none;
   appearance: none;
 }
 </style>
