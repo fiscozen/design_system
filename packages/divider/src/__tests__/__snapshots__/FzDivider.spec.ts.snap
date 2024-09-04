@@ -1,0 +1,8 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzDivider > matches snaphost 1`] = `
+"<div class="w-full my-16 relative">
+  <hr>
+  <!--v-if-->
+</div>"
+`;
