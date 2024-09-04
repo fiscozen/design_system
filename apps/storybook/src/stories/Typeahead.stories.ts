@@ -240,7 +240,8 @@ const RemoteLoadingWithAPICall: Story = {
     selectProps: {
       isOpen: false,
       options: []
-    }
+    },
+    filtrable: false
   }
 
 }

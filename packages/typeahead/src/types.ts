@@ -5,6 +5,10 @@ interface FzTypeaheadProps {
   selectProps: FzSelectProps;
   inputProps: FzInputProps;
   /**
+   * If true, writing in the input will filter the options
+   */
+  filtrable?: boolean;
+  /**
    * @deprecated use `selectProps.options` instead
    */
   filteredOptions?: FzSelectOptionsProps[];
