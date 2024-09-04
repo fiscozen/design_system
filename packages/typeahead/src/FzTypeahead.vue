@@ -28,7 +28,10 @@ import {
 import { FzInput } from "@fiscozen/input";
 import Fuse from "fuse.js";
 
-const props = withDefaults(defineProps<FzTypeaheadProps>(), { delayTime: 500 });
+const props = withDefaults(defineProps<FzTypeaheadProps>(), {
+  delayTime: 500,
+  filtrable: true,
+});
 const emit = defineEmits(["fztypeahead:input", "fztypeahead:select"]);
 
 const [model, modelModifiers] = defineModel<string, "object">({
@@ -105,6 +108,8 @@ const internalOptions = computed<FzSelectOptionsProps[]>(() => {
 
   if (props.filteredOptions) {
     res = props.filteredOptions;
+  } else if (!props.filtrable) {
+    res = props.selectProps.options;
   } else if (props.filterFn) {
     res = props.filterFn(inputValue.value);
   } else if (inputValue.value) {
