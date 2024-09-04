@@ -105,4 +105,30 @@ describe("FzCheckbox", () => {
     expect(new Set(ids).size).toBe(MAX_CHECKBOX);
     expect(new Set(labelFor).size).toBe(MAX_CHECKBOX);
   });
+
+  it("should not throw error when modelValue is undefined", async () => {
+    const wrapper = mount(FzCheckbox, {
+      props: {
+        label: "Test Checkbox",
+        value: "test",
+        size: "md",
+        modelValue: undefined,
+      },
+    });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("input").element.checked).toBe(false);
+  });
+
+  it("should not throw error when modelValue is null", async () => {
+    const wrapper = mount(FzCheckbox, {
+      props: {
+        label: "Test Checkbox",
+        value: "test",
+        size: "md",
+        modelValue: null,
+      },
+    });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("input").element.checked).toBe(false);
+  });
 });
