@@ -33,6 +33,7 @@
     "@fiscozen/composables": "workspace:^",
     "@fiscozen/datepicker": "workspace:^",
     "@fiscozen/dialog": "workspace:^",
+    "@fiscozen/divider": "workspace:^",
     "@fiscozen/dropdown": "workspace:^",
     "@fiscozen/icons": "workspace:^",
     "@fiscozen/input": "workspace:^",
