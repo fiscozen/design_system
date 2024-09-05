@@ -25,7 +25,7 @@ const Default: Story = {
       const data = ref(1.23)
 
       const onSet = () => {
-        data.value = 1234.56
+        data.value = 0
       }
 
       return {
