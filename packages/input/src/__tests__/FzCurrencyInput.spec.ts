@@ -37,4 +37,22 @@ describe.concurrent("FzCurrencyInput", () => {
     await new Promise((resolve) => window.setTimeout(resolve, 100));
     expect(inputElement.element.value).toBe("12,30");
   });
+  
+  it("should allow to set value at 0", async () => {
+    const wrapper = mount(FzCurrencyInput, {
+      props: {
+        label: "Label",
+        amount: 10,
+        "onUpdate:amount": (e) => wrapper.setProps({ amount: e }),
+      },
+    });
+
+    const inputElement = wrapper.find("input");
+    await inputElement.trigger("blur");
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    expect(inputElement.element.value).toBe("10,00");
+    wrapper.setProps({amount: 0})
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    expect(inputElement.element.value).toBe("0,00");
+  });
 });
