@@ -97,7 +97,7 @@ export const useCurrency = () => {
 
   watch(computedModel, (newVal) => {
     nextTick(() => {
-      if (!inputRef.value || !newVal) {
+      if (!inputRef.value || newVal === null || newVal === undefined) {
         return
       }
       // we need to format here only if someone externally set the
