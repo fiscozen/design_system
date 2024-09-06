@@ -57,14 +57,15 @@ export const PreviewAllIcons: Story = {
       copyCode(icon : string, variant: string) {
         // add to clipboard the icon code
         const el = document.createElement('textarea');
-        el.value = '<FzIcon :name="' + icon + '" size=\"lg\" :variant="'+variant+'"/>';
+        const value = `<FzIcon name="${icon}" variant="${variant}"/>`;
+        el.value = value;
         document.body.appendChild(el);
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
 
         // show toast
-        alert('Copied to clipboard: <FzIcon name="' + icon + '" size=\"lg\" variant="'+variant+'"/>');
+        alert('Copied to clipboard: ' + value);
       }
     },
     template: `
