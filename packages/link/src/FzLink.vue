@@ -2,6 +2,9 @@
   <span v-if="disabled" :class="spanClass">
     <slot></slot>
   </span>
+  <a v-else-if="external" :href="to.toString()" :class="linkClass" :target>
+    <slot></slot>
+  </a>
   <router-link v-else :to :replace :class="linkClass" :target>
     <slot></slot>
   </router-link>
@@ -16,7 +19,8 @@ const props = withDefaults(defineProps<FzLinkProps>(), {
   style: 'default',
   size: 'lg',
   disabled: false,
-  replace: false
+  replace: false,
+  external: false,
 })
 
 const commonClass = computed(() => [
