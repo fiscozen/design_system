@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzIcon } from '@fiscozen/icons'
-import {all} from '@awesome.me/kit-8137893ad3/icons'
+import { all } from '@awesome.me/kit-8137893ad3/icons'
 import { FzButton } from '@fiscozen/button'
-import { FzToastQueue } from '@fiscozen/toast'
 
 const meta: Meta<typeof FzIcon> = {
   title: '@fiscozen/icon/FzIcon',
@@ -36,7 +35,7 @@ export const Primary: Story = {}
 
 export const PreviewAllIcons: Story = {
   render: () => ({
-    components: { FzIcon, FzButton, FzToastQueue },
+    components: { FzIcon, FzButton },
     setup() {
       const mappedIconsByPrefix : {
         [key:string]: string[]
