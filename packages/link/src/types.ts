@@ -29,6 +29,10 @@ type FzLinkProps = {
    * Target of the link
    */
   target?: string
+  /**
+   * Whether the link is for an external page or not
+   */
+  external?: boolean
 }
 
 export { FzLinkProps }

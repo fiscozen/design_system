@@ -50,6 +50,14 @@ const DangerUnderline: Story = {
   }
 }
 
-export { Default, Danger, DefaultUnderline, DangerUnderline }
+const DefaultExternal: Story = {
+  args: {
+    external: true,
+    to: 'https://example.com',
+    target: '_blank'
+  }
+}
+
+export { Default, Danger, DefaultUnderline, DangerUnderline, DefaultExternal }
 
 export default meta
