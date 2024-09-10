@@ -12,10 +12,20 @@ const props = withDefaults(
     /**
      * Color variant
      */
-    color: "black" | "blue" | "error" | "warning" | "success" | "info";
+    color: "black" | "blue" | "error" | "warning" | "success" | "info" | "light" | "dark";
+    /**
+     * The badge content variant
+     */
+    variant: "default" | "rounded";
+    /**
+     * The badge size
+     */
+    size: "sm" | "md" | "lg";
   }>(),
   {
     color: "black",
+    variant: "default",
+    size: "md",
   },
 );
 
@@ -26,10 +36,30 @@ const mapColorToClasses = {
   success: "bg-semantic-success text-core-white",
   info: "bg-semantic-info text-core-white",
   blue: "bg-blue-500 text-core-white",
+  light: "bg-grey-100 text-core-black",
+  dark: "bg-grey-500 text-core-white",
+};
+
+const mapSizeToClasses = {
+  sm: "text-xs h-16 px-8",
+  md: "text-sm h-20 px-12",
+  lg: "text-base h-28 px-14",
+};
+
+const mapVariantToClasses = {
+  default: "rounded-xl",
+  rounded: "rounded-full !px-7",
 };
 
 const classes = computed(() => [
-  "text-xs px-12 rounded-xl w-fit h-20 flex items-center font-medium",
+  "h-20 w-fit flex items-center justify-center font-medium",
+  mapSizeToClasses[props.size],
+  mapVariantToClasses[props.variant],
   mapColorToClasses[props.color],
 ]);
 </script>
+<style scoped>
+.\!px-7 {
+  padding: 0 7px !important;
+}
+</style>
