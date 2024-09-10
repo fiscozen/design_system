@@ -2,7 +2,7 @@
   <div
     ref="backdrop"
     v-show="visible"
-    class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-center z-30">
+    class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-start sm:justify-center z-30">
     <dialog
       ref="dialog"
       @close="visible = false"
@@ -104,8 +104,8 @@ const dialogClasses = computed(() => {
       res = [
         "xs:max-sm:m-0",
         "xs:max-sm:max-h-screen",
-        "xs:max-sm:h-screen",
-        "xs:max-sm:w-screen",
+        "xs:max-sm:h-dvh",
+        "xs:max-sm:w-dvw",
         "xs:max-sm:max-w-screen-xl",
       ];
       break;
@@ -113,8 +113,8 @@ const dialogClasses = computed(() => {
       res = [
         "xs:max-md:m-0",
         "xs:max-md:max-h-screen",
-        "xs:max-md:h-screen",
-        "xs:max-md:w-screen",
+        "xs:max-md:h-dvh",
+        "xs:max-md:w-dvw",
         "xs:max-md:max-w-screen-xl",
       ];
       break;
@@ -122,8 +122,8 @@ const dialogClasses = computed(() => {
       res = [
         "xs:max-xl:m-0",
         "xs:max-xl:max-h-screen",
-        "xs:max-xl:h-screen",
-        "xs:max-xl:w-screen",
+        "xs:max-xl:h-dvh",
+        "xs:max-xl:w-dvw",
         "xs:max-xl:max-w-screen-xl",
       ];
       break;
@@ -137,7 +137,7 @@ const dialogClasses = computed(() => {
 const classes = computed(() => {
   let res: string[] = [];
   if (props.isDrawer) {
-    res = ["w-[480px]", "h-screen"];
+    res = ["w-[480px]", "h-dvh"];
     return res;
   }
   switch (props.size) {
@@ -146,26 +146,26 @@ const classes = computed(() => {
       break;
     case "md":
       res = [
-        "w-screen sm:w-[480px]",
+        "w-dvw sm:w-[480px]",
         "min-h-[300px]",
         "sm:max-h-[600px]",
-        "h-screen sm:h-auto",
+        "h-dvh sm:h-auto",
       ];
       break;
     case "lg":
       res = [
-        "w-screen md:w-[640px]",
+        "w-dvw md:w-[640px]",
         "min-h-[300px]",
         "md:max-h-[600px]",
-        "h-screen md:h-auto",
+        "h-dvh md:h-auto",
       ];
       break;
     case "xl":
       res = [
-        "w-screen xl:w-[960px]",
+        "w-dvw xl:w-[960px]",
         "min-h-[400px]",
         "xl:max-h-[600px]",
-        "h-screen xl:h-auto",
+        "h-dvh xl:h-auto",
       ];
       break;
     default:
