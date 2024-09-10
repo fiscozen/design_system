@@ -99,6 +99,17 @@ const LinkAndButton: Story = {
   decorators: [vueRouter()]
 }
 
+const LinkExternal : Story = {
+  args: {
+    type: 'info',
+    showLinkAction: true,
+    linkActionLocation: 'https://example.com',
+    linkActionLabel: 'This is an external link',
+    linkActionTarget: '_blank',
+    linkActionExternal: true
+  }
+}
+
 const OnlyLink: Story = {
   args: {
     type: 'info',
@@ -117,6 +128,6 @@ const WithoutAction: Story = {
   }
 }
 
-export { Info, Error, Danger, Warning, Success, Simple, Collapsable, CollapsableDefaultClosed, LinkAndButton, OnlyLink, WithoutAction}
+export { Info, Error, Danger, Warning, Success, Simple, Collapsable, CollapsableDefaultClosed, LinkAndButton, LinkExternal, OnlyLink, WithoutAction}
 
 export default meta

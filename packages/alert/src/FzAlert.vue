@@ -29,6 +29,7 @@
             @click="handleButtonClick"
             size="md"
             :target="linkActionTarget"
+            :external="linkActionExternal"
             >{{ linkActionLabel }}</FzLink
           >
         </div>

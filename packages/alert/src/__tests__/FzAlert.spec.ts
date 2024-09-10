@@ -1,4 +1,4 @@
-import { describe, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { FzAlert } from '..'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -324,5 +324,30 @@ describe.concurrent('FzAlert', () => {
     })
 
     expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  it('should have the correct href attribute', async () => {
+    const wrapper = mount(FzAlert, {
+      props: {
+        type: 'info',
+        title: 'Title here',
+        showButtonAction: false,
+        showLinkAction: true,
+        linkActionLabel: 'This is a link',
+        linkActionLocation: 'http://google.com',
+        linkActionExternal: true
+      },
+      slots: {
+        default:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+      }
+    })
+
+    // Ensure the link is found
+    const link = wrapper.find('a')
+    expect(link.exists()).toBe(true)
+
+    // Ensure the href attribute is correct
+    expect(link.attributes('href')).toBe('http://google.com')
   })
 })
