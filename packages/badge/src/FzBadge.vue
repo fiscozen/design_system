@@ -46,7 +46,7 @@ const mapSizeToClasses = {
 };
 
 const mapVariantToClasses = {
-  default: "rounded-xl !w-fit",
+  default: "rounded-2xl !w-fit",
   rounded: "rounded-full !px-0",
 };
 
