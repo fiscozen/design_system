@@ -38,6 +38,10 @@ type AlertProps = {
    */
   linkActionTarget?: string
   /**
+   * Link action external, for redirecting to external links
+   */
+  linkActionExternal?: boolean
+  /**
    * Size of the alert (applies only if style is simple)
    */
   size?: 'sm' | 'md' | 'lg'
