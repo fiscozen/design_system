@@ -57,31 +57,45 @@ export const Light: Story = {
   }
 }
 
-export const Number: Story = {
+export const OneNumberSmall: Story = {
   args: {
     default: 1,
-    variant: 'rounded'
+    size: 'sm'
   }
 }
 
-export const TwoNumber: Story = {
+export const OneNumberMedium: Story = {
   args: {
-    default: 12,
-    variant: 'rounded'
+    default: 1,
+    size: 'md'
   }
 }
 
-export const ThreeNumber: Story = {
+export const OneNumberLarge: Story = {
   args: {
-    default: 123,
-    variant: 'rounded'
+    default: 1,
+    size: 'lg'
   }
 }
 
-export const FourNumber: Story = {
+export const OneLetterSmall: Story = {
   args: {
-    default: 1234,
-    variant: 'rounded'
+    default: "A",
+    size: 'sm'
+  }
+}
+
+export const OneLetterMedium: Story = {
+  args: {
+    default: "A",
+    size: 'md'
+  }
+}
+
+export const OneLetterLarge: Story = {
+  args: {
+    default: "A",
+    size: 'lg'
   }
 }
 

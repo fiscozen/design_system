@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useSlots } from "vue";
 
 const props = withDefaults(
   defineProps<{
@@ -14,20 +14,19 @@ const props = withDefaults(
      */
     color: "black" | "blue" | "error" | "warning" | "success" | "info" | "light" | "dark";
     /**
-     * The badge content variant
-     */
-    variant: "default" | "rounded";
-    /**
      * The badge size
      */
     size: "sm" | "md" | "lg";
   }>(),
   {
     color: "black",
-    variant: "default",
     size: "md",
   },
 );
+
+const slots = useSlots();
+const label = computed(() => slots.default?.()[0].children?.toString());
+const variant = computed(() => label.value && label.value.length === 1 ? "rounded" : "default");
 
 const mapColorToClasses = {
   black: "bg-core-black text-core-white",
@@ -41,25 +40,20 @@ const mapColorToClasses = {
 };
 
 const mapSizeToClasses = {
-  sm: "text-xs h-16 px-8",
-  md: "text-sm h-20 px-12",
-  lg: "text-base h-28 px-14",
+  sm: "text-xs px-8 h-16 w-16",
+  md: "text-sm px-12 h-20 w-20",
+  lg: "text-base px-14 h-28 w-28",
 };
 
 const mapVariantToClasses = {
-  default: "rounded-xl",
-  rounded: "rounded-full !px-7",
+  default: "rounded-xl !w-fit",
+  rounded: "rounded-full !px-0",
 };
 
 const classes = computed(() => [
-  "h-20 w-fit flex items-center justify-center font-medium",
+  "flex items-center justify-center font-medium",
   mapSizeToClasses[props.size],
-  mapVariantToClasses[props.variant],
+  mapVariantToClasses[variant.value],
   mapColorToClasses[props.color],
 ]);
 </script>
-<style scoped>
-.\!px-7 {
-  padding: 0 7px !important;
-}
-</style>
