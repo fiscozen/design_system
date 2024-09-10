@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/badge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Design System Badge component",
   "scripts": {
     "coverage": "vitest run --coverage",
