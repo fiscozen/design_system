@@ -26,7 +26,6 @@ const props = withDefaults(
 
 const slots = useSlots();
 const label = computed(() => slots.default?.()[0].children?.toString());
-const variant = computed(() => label.value && label.value.length === 1 ? "rounded" : "default");
 
 const mapColorToClasses = {
   black: "bg-core-black text-core-white",
@@ -45,15 +44,11 @@ const mapSizeToClasses = {
   lg: "text-base px-14 h-28 w-28",
 };
 
-const mapVariantToClasses = {
-  default: "rounded-2xl !w-fit",
-  rounded: "rounded-full !px-0",
-};
 
 const classes = computed(() => [
   "flex items-center justify-center font-medium",
   mapSizeToClasses[props.size],
-  mapVariantToClasses[variant.value],
   mapColorToClasses[props.color],
+  label.value && label.value.length === 1 ? "rounded-full !px-0" : "rounded-2xl !w-fit",
 ]);
 </script>
