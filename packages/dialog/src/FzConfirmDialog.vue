@@ -64,6 +64,8 @@ const props = withDefaults(defineProps<FzConfirmDialogProps>(), {
   cancelButtonEnabled: true,
   disableConfirm: false,
   confirmButtonEnabled: true,
+  doesCancelButtonCloseDialog: true,
+  doesConfirmButtonCloseDialog: true
 });
 const emit = defineEmits(["fzmodal:confirm", "fzmodal:cancel"]);
 
@@ -96,14 +98,18 @@ const close = () => {
 };
 
 const handleCancel = () => {
-  dialog.value?.close();
-  visible.value = false;
+  if (props.doesCancelButtonCloseDialog) {
+    dialog.value?.close();
+    visible.value = false;
+  }
   emit("fzmodal:cancel");
 };
 
 const handleConfirm = () => {
-  dialog.value?.close();
-  visible.value = false;
+  if (props.doesConfirmButtonCloseDialog) {
+    dialog.value?.close();
+    visible.value = false;
+  }
   emit("fzmodal:confirm");
 };
 
