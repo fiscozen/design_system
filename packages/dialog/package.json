@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/dialog",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Design System Dialog component",
   "scripts": {
     "coverage": "vitest run --coverage",

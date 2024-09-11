@@ -63,6 +63,14 @@ export type FzConfirmDialogProps = FzDialogProps & {
    */
   confirmButtonVariant?: ButtonVariant;
   /**
+   * Whether confirm button should close dialog
+   */
+  doesConfirmButtonCloseDialog?: boolean;
+  /**
+   * Whether cancel button should close dialog
+   */
+  doesCancelButtonCloseDialog?: boolean;
+  /**
    * classes to apply to footer
    */
   footerClasses?:
