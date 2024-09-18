@@ -1,5 +1,9 @@
 <template>
-  <FzSelect v-bind="safeSelectOpts" v-model="model">
+  <FzSelect
+    @select="(val) => emit('fztypeahead:select', val)"
+    v-bind="safeSelectOpts"
+    v-model="model"
+  >
     <template #opener="{ handlePickerClick, isOpen }">
       <FzInput
         ref="opener"
@@ -25,7 +29,7 @@ import { FzInput } from "@fiscozen/input";
 import Fuse from "fuse.js";
 
 const props = withDefaults(defineProps<FzTypeaheadProps>(), { delayTime: 500 });
-const emit = defineEmits(["fztypeahead:input"]);
+const emit = defineEmits(["fztypeahead:input", "fztypeahead:select"]);
 
 const [model, modelModifiers] = defineModel<string, "object">({
   set(value) {
