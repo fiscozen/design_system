@@ -1,7 +1,7 @@
 import { Ref, watch, getCurrentInstance, computed, ref, nextTick } from 'vue'
 
 export const useCurrency = () => {
-  const inputRef: Ref<HTMLInputElement | null> = ref(null)
+  const inputRef: Ref<HTMLInputElement | null | undefined> = ref(null)
   const vm = getCurrentInstance()
 
   const computedModel = computed<number | null>(() => vm?.props.amount as unknown as number | null)
@@ -33,7 +33,7 @@ export const useCurrency = () => {
         vm.emit('update:amount', null)
         return
       }
-      vm.emit('update:amount', typeof computedModel.value === 'number' ? val : val.toString())
+      vm.emit('update:amount', typeof computedModel.value === 'number' ? val : val?.toString())
     }
   }
 

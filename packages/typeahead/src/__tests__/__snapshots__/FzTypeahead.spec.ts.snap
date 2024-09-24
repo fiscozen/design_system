@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzTypeahead > matches snaphost 1`] = `
+"<div class="flex flex-col gap-8 overflow-visible">
+  <div class="inline-flex">
+    <div class="w-full flex flex-col gap-8">
+      <div class="fz-input w-full flex flex-col gap-8"><label class="text-sm text-core-black" for="fz-input-4dfxxaf"></label>
+        <div class="flex justify-between w-full items-center px-10 border-1 rounded gap-8 text-left has-[:focus]:border-blue-600 h-32 text-base border-grey-300 bg-white text-core-black cursor-text">
+          <!--v-if--><input type="text" id="fz-input-4dfxxaf" class="peer w-full bg-transparent border-0 focus:outline-none cursor-[inherit] focus:ring-0 truncate">
+          <!--v-if-->
+          <!--v-if-->
+        </div>
+        <!--v-if-->
+      </div>
+    </div>
+  </div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
+</div>"
+`;
