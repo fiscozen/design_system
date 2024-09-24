@@ -144,6 +144,28 @@ const StringValueFormat: Story = {
   }
 }
 
+const OverflowDatepickerFromBody: Story = {
+  render: (args) => ({
+    components: {FzDatepicker},
+    setup() {
+      const date = ref();
+      return {
+        date,
+        args
+      }
+    },
+    template: `
+        <FzDatepicker v-bind="args" v-model="date" style="width:150px" />
+    `
+  }),
+  args: {},
+  parameters: {
+    viewport: {
+      defaultViewport: 'xs'
+    }
+  }
+}
+
 export {
   Default,
   Range,
@@ -156,7 +178,8 @@ export {
   DisabledDates,
   ComplexDisabledDates,
   InlineTimePicker,
-  StringValueFormat
+  StringValueFormat,
+  OverflowDatepickerFromBody
 }
 
 export default meta
