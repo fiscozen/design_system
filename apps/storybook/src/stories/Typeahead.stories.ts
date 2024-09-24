@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzTypeahead, FzTypeaheadProps } from '@fiscozen/typeahead'
+import { FzButton } from '@fiscozen/button'
 import { ref } from 'vue'
 import { FzSelectOptionsProps } from '@fiscozen/select'
 
@@ -86,6 +87,37 @@ const Precompiled: Story = {
     template: `
       <div class="h-[100vh] w-[100-vw] p-16">
         <FzTypeahead v-bind="args" v-model="model" @fztypeahead:input="onInputChange"/>
+      </div>
+    `
+  }),
+}
+
+const Reset: Story = {
+  ...Template,
+  args: {
+    selectProps: {
+      options,
+      isOpen: false
+    },
+    inputProps: {
+      label: 'This is a label',
+      placeholder: 'This is a placeholder'
+    },
+  },
+  render: (args) => ({
+    components: {FzTypeahead, FzButton},
+    setup() {
+      const model = ref("");
+      const reset = () => {
+        model.value = '';
+      }
+      return { model, args, reset }
+
+    },
+    template: `
+      <div class="h-[100vh] w-[100-vw] p-16">
+        <FzTypeahead v-bind="args" v-model="model" />
+        <FzButton @click="reset">Reset</FzButton>
       </div>
     `
   }),
@@ -192,7 +224,7 @@ const RemoteLoading: Story = {
       options: [],
       isOpen: false
     },
-    filteredOptions: filteredOptions.value
+    filteredOptions,
   }
 }
 
@@ -246,6 +278,6 @@ const RemoteLoadingWithAPICall: Story = {
 
 }
 
-export { Default, Precompiled, PrecompiledObject, NoDelayTime, HundredOptions, RemoteLoading, RemoteLoadingWithAPICall }
+export { Default, Precompiled, Reset, PrecompiledObject, NoDelayTime, HundredOptions, RemoteLoading, RemoteLoadingWithAPICall }
 
 export default meta

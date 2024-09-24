@@ -77,6 +77,9 @@ watch(model, (value) => {
 });
 
 function updateModelDependencies(value?: string) {
+  if (value === '') {
+    inputValue.value = '';
+  }
   if (!value) {
     return;
   }
