@@ -27,7 +27,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, provide, useSlots, watch, VNode } from "vue";
+import {
+  computed,
+  ref,
+  onMounted,
+  provide,
+  useSlots,
+  watch,
+  VNode,
+  onUnmounted,
+  onBeforeUnmount,
+} from "vue";
 import { FzTabsProps, FzTabProps } from "./types";
 import FzTabPicker from "./components/FzTabPicker.vue";
 import FzTabName from "./components/FzTabName.vue";
@@ -42,7 +52,8 @@ const emit = defineEmits(["change"]);
 
 const slots = useSlots();
 
-const tabContainer = ref<HTMLElement | null>(null);
+const tabContainer = ref<HTMLElement>();
+const isOverflowing = ref(false);
 const selectedTab = ref("");
 provide("selectedTab", selectedTab);
 
@@ -58,8 +69,8 @@ const tabs = computed(() => {
       if (tab.type === FzTab) return tab.props as FzTabProps;
 
       if (typeof tab.type === "symbol") {
-        const children = tab.children as VNode[];
-        if (!children) return null;
+        const children = tab.children as VNode[] | "v-if";
+        if (!children || children === "v-if") return null;
 
         return children
           .filter((child) => child.type === FzTab)
@@ -68,13 +79,6 @@ const tabs = computed(() => {
     })
     .flat()
     .filter((el): el is FzTabProps => el != null);
-});
-
-const isOverflowing = computed(() => {
-  if (!tabContainer.value) return false;
-
-  const parent = tabContainer.value.parentElement ?? document.body;
-  return tabContainer.value.scrollWidth > parent.clientWidth;
 });
 
 const staticTabContainerClass =
@@ -96,30 +100,43 @@ function onWheel(e: WheelEvent) {
   else tabContainer.value!.scrollLeft -= 100;
 }
 
+function updateIsOverflowing() {
+  if (!tabContainer.value) return false;
+
+  const parent = tabContainer.value.parentElement ?? document.body;
+  isOverflowing.value = tabContainer.value.scrollWidth > parent.clientWidth;
+}
+
 onMounted(() => {
   if (tabs.value.length === 0) {
-    console.error(
+    console.warn(
       "[Fiscozen Design System]: FzTabs must have at least one FzTab child",
     );
-    return;
-  }
-
-  const findSelected = tabs.value.find((tab) => tab.initialSelected);
-  if (findSelected) {
-    selectedTab.value = findSelected.title;
   } else {
-    selectedTab.value = tabs.value[0].title;
+    const findSelected = tabs.value.find((tab) => tab.initialSelected);
+    if (findSelected) {
+      selectedTab.value = findSelected.title;
+    } else {
+      selectedTab.value = tabs.value[0].title;
+    }
+
+    const duplicateTitles = tabs.value
+      .map((tab) => tab.title)
+      .filter((title, index, self) => self.indexOf(title) !== index);
+
+    if (duplicateTitles.length) {
+      console.warn(
+        `[Fiscozen Design System]: FzTabs has duplicate titles: ${duplicateTitles.join(", ")}, this may cause unexpected behavior.`,
+      );
+    }
   }
 
-  const duplicateTitles = tabs.value
-    .map((tab) => tab.title)
-    .filter((title, index, self) => self.indexOf(title) !== index);
+  updateIsOverflowing();
+  window.addEventListener("resize", updateIsOverflowing);
+});
 
-  if (duplicateTitles.length) {
-    console.warn(
-      `[Fiscozen Design System]: FzTabs has duplicate titles: ${duplicateTitles.join(", ")}, this may cause unexpected behavior.`,
-    );
-  }
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", updateIsOverflowing);
 });
 
 watch(
@@ -136,7 +153,7 @@ watch(
       `button[title="${selectedTab.value}"]`,
     );
 
-    if (selectedTabElement) {
+    if (selectedTabElement && isOverflowing.value) {
       selectedTabElement.scrollIntoView({
         behavior: "smooth",
         block: "nearest",

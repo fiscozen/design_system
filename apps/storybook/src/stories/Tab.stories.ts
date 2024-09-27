@@ -237,6 +237,7 @@ const TemplateWithTabArray: TabStory = {
   render: (args) => ({
     components: { FzTabs, FzTab, FzBadge, FzIcon },
     setup() {
+      const toggleTab = ref(false)
       return {
         args,
         customProps: {
@@ -257,16 +258,18 @@ const TemplateWithTabArray: TabStory = {
               title: 'tab4',
               badgeContent: '3'
             }
-          ]
-        }
+          ],
+        },
+        toggleTab
       }
     },
     template: `
             <div style='height:800px'>
                 <FzTabs v-bind="args" > 
                     <FzTab v-for="tab in customProps.tabs" v-bind="tab"> Content {{tab.title}} </FzTab> 
-                    <FzTab title="static tab"> Content tab static</FzTab>
+                    <FzTab v-if="toggleTab" title="static tab"> Content tab static</FzTab>
                 </FzTabs>
+                <button @click="toggleTab = !toggleTab">Toggle tab</button>
             </div>`
   }),
   args: {
