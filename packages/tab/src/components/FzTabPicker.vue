@@ -1,5 +1,10 @@
 <template>
-  <FzFloating position="bottom" :isOpen class="w-full overflow-hidden" contentClass="bg-transparent">
+  <FzFloating
+    position="bottom"
+    :isOpen
+    class="w-full overflow-hidden"
+    contentClass="bg-transparent"
+  >
     <template #opener>
       <button
         @click="isOpen = !isOpen"
