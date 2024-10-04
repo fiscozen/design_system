@@ -40,7 +40,7 @@ export type FzDialogProps = {
     | Record<string, boolean | undefined>
     | Array<string | Record<string, boolean | undefined>>;
   /**
-   * Whether the component gets unrender on close
+   * Whether the component gets unrendered on close
    */
   unrenderOnClose?: boolean;
 };
