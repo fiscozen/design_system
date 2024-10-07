@@ -61,8 +61,8 @@
       </span>
     </template>
     <div
-      class="flex flex-col p-4 rounded shadow overflow-auto ml-[-2px] min-w-[120px] w-full max-h-min"
-      :style="{ width: containerWidth ?? 'auto', maxHeight }"
+      class="flex flex-col p-4 rounded shadow overflow-auto ml-[-2px] box-border max-h-min"
+      :style="{ minWidth: containerWidth, maxWidth: openerMaxWidth, maxHeight }"
       ref="containerRef"
       test-id="fzselect-options-container"
     >
@@ -90,6 +90,8 @@ import {
 } from "@fiscozen/composables";
 import FzSelectOption from "./components/FzSelectOption.vue";
 
+const MIN_WIDTH = 240;
+
 const props = withDefaults(defineProps<FzSelectProps>(), {
   size: "md",
   optionsToShow: 25,
@@ -102,7 +104,8 @@ const model = defineModel({
 const isOpen = ref(false);
 const opener = ref<HTMLElement>();
 const containerRef = ref<HTMLElement>();
-const containerWidth = ref<string>("auto");
+const containerWidth = ref<string>(`${MIN_WIDTH}px`);
+const openerMaxWidth = ref<string>("none");
 const openerContainer = ref<HTMLElement>();
 const visibleOptions = ref<FzSelectOptionsProps[]>([]);
 const OPTIONS_HEIGHT = 20;
@@ -222,9 +225,18 @@ const evaluateProps = () => {
 };
 
 async function calculateContainerWidth() {
-  await nextTick();
-  if (!safeOpener.value) containerWidth.value = "auto";
-  else containerWidth.value = `${safeOpener.value.clientWidth}px`;
+  if (!safeOpener.value) 
+    return;
+
+  const rect = safeOpener.value.getBoundingClientRect();
+  const minimumWidth = rect.width > MIN_WIDTH ? rect.width : MIN_WIDTH;
+  const spaceOnRight = window.innerWidth - (rect.right + window.scrollX);
+  const spaceOnLeft = rect.left + window.scrollX;
+  const maxSpaceAvailable = rect.width + Math.max(spaceOnRight, spaceOnLeft);
+
+
+  containerWidth.value = `${minimumWidth}px`;
+  openerMaxWidth.value = `${maxSpaceAvailable}px`;
 }
 
 function addScrollListener() {
