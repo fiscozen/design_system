@@ -52,7 +52,7 @@ export const useCurrency = () => {
       return
     }
     let { value } = el
-    value = value.replace(/[^0-9,.]/g, '')
+    value = value.replace(/[^0-9,.-]/g, '')
     setValue(value)
     const numberValue = vm?.props.nullOnEmpty && value === '' ? null : parse(value)
     emitAmount(Number.isNaN(numberValue) ? 0 : numberValue)
