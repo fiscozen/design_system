@@ -225,15 +225,14 @@ const evaluateProps = () => {
 };
 
 async function calculateContainerWidth() {
-  if (!safeOpener.value) 
-    return;
+  if (!safeOpener.value) return;
 
   const rect = safeOpener.value.getBoundingClientRect();
+
   const minimumWidth = rect.width > MIN_WIDTH ? rect.width : MIN_WIDTH;
   const spaceOnRight = window.innerWidth - (rect.right + window.scrollX);
   const spaceOnLeft = rect.left + window.scrollX;
   const maxSpaceAvailable = rect.width + Math.max(spaceOnRight, spaceOnLeft);
-
 
   containerWidth.value = `${minimumWidth}px`;
   openerMaxWidth.value = `${maxSpaceAvailable}px`;
