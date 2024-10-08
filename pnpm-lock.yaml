@@ -1257,8 +1257,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.146
-        version: 1.0.146
+        specifier: ^1.0.167
+        version: 1.0.167
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.6.0
@@ -2442,6 +2442,10 @@ packages:
 
   '@awesome.me/kit-8137893ad3@1.0.146':
     resolution: {integrity: sha512-oFdnMJTpJZ2uvP5VG8f7T7Wb+/s+AWBLKDoZFweeExTsqFDw8F5fmwWEMBnVSRGJ9h8pdudDspq3wFi/fsVeUw==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.146/kit-8137893ad3-1.0.146.tgz}
+    engines: {node: '>=16'}
+
+  '@awesome.me/kit-8137893ad3@1.0.167':
+    resolution: {integrity: sha512-HrtL6eGqk+cSmioOchYB3wD0So4IIG8IBdW0sqqa0pYggfj/ubRNSLwbnVzOXIwV9/HyfpB9F3NNRc4+k584uA==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.167/kit-8137893ad3-1.0.167.tgz}
     engines: {node: '>=16'}
 
   '@awesome.me/kit-8137893ad3@1.0.71':
@@ -4013,8 +4017,8 @@ packages:
   '@types/qs@6.9.14':
     resolution: {integrity: sha512-5khscbd3SwWMhFqylJBLQ0zIu7c1K6Vz0uBIt915BI3zV0q1nfjRQD3RqSBcPaO6PHEF4ov/t9y89fSiyThlPA==}
 
-  '@types/qs@6.9.15':
-    resolution: {integrity: sha512-uXHQKES6DQKKCLh441Xv/dwxOq1TVS3JPUMlEqoEglvlhR6Mxnlew/Xq/LRVHpLyk7iK3zODe1qYHIMltO7XGg==}
+  '@types/qs@6.9.16':
+    resolution: {integrity: sha512-7i+zxXdPD0T4cKDuxCUXJ4wHcsJLwENa6Z3dCu8cfCK743OGy5Nu1RmAGqDPsoTDINVEcdXKRvR/zre+P2Ku1A==}
 
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
@@ -8258,6 +8262,10 @@ snapshots:
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.6.0
 
+  '@awesome.me/kit-8137893ad3@1.0.167':
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.6.0
+
   '@awesome.me/kit-8137893ad3@1.0.71':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.5.2
@@ -10126,7 +10134,7 @@ snapshots:
       '@storybook/csf': 0.1.11
       '@storybook/global': 5.0.0
       '@storybook/types': 8.1.2
-      '@types/qs': 6.9.15
+      '@types/qs': 6.9.16
       dequal: 2.0.3
       lodash: 4.17.21
       memoizerific: 1.11.3
@@ -10362,7 +10370,7 @@ snapshots:
 
   '@types/qs@6.9.14': {}
 
-  '@types/qs@6.9.15': {}
+  '@types/qs@6.9.16': {}
 
   '@types/range-parser@1.2.7': {}
 
