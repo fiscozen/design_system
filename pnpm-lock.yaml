@@ -2444,6 +2444,10 @@ packages:
     resolution: {integrity: sha512-HrtL6eGqk+cSmioOchYB3wD0So4IIG8IBdW0sqqa0pYggfj/ubRNSLwbnVzOXIwV9/HyfpB9F3NNRc4+k584uA==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.167/kit-8137893ad3-1.0.167.tgz}
     engines: {node: '>=16'}
 
+  '@awesome.me/kit-8137893ad3@1.0.167':
+    resolution: {integrity: sha512-HrtL6eGqk+cSmioOchYB3wD0So4IIG8IBdW0sqqa0pYggfj/ubRNSLwbnVzOXIwV9/HyfpB9F3NNRc4+k584uA==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.167/kit-8137893ad3-1.0.167.tgz}
+    engines: {node: '>=16'}
+
   '@awesome.me/kit-8137893ad3@1.0.71':
     resolution: {integrity: sha512-hWXmRY5x4E1jArOdcw9bN64Neeb55jIam9aZYXeF3ETcdGgT99NfNXPKLRra9K5FqJY2w0ljFlk5RkaOz1LaxQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.71/kit-8137893ad3-1.0.71.tgz}
     engines: {node: '>=16'}
@@ -8253,6 +8257,10 @@ snapshots:
   '@aw-web-design/x-default-browser@1.4.126':
     dependencies:
       default-browser-id: 3.0.0
+
+  '@awesome.me/kit-8137893ad3@1.0.167':
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.6.0
 
   '@awesome.me/kit-8137893ad3@1.0.167':
     dependencies:
