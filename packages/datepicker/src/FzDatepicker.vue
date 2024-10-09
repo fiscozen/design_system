@@ -4,7 +4,7 @@
     ref="dp"
     v-bind="props"
     :ui="{ menu: calendarClassName }"
-    @date-update="(e) => $emit('update:model-value', props.valueFormat ? format(e, props.valueFormat) : e)"
+    @date-update="handleDateUpdate"
     @update:model-value="(e) => $emit('update:model-value', props.valueFormat ? format(e, props.valueFormat) : e)"
     :model-value="modelValue"
   >
@@ -80,6 +80,16 @@ const selectDate = () => {
 const closeMenu = () => {
   dp.value.closeMenu();
 };
+
+const handleDateUpdate = (e: string|Date) => {
+  let res = e;
+  if(props.valueFormat) {
+    res = format(e, props.valueFormat);
+  } else if (props.modelType === 'iso' && e instanceof Date) {
+    res = e.toISOString();
+  }
+  emit('update:model-value', res);
+}
 
 const emit = defineEmits([
   "update:model-value",
