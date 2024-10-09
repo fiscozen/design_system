@@ -70,6 +70,18 @@ interface FzCurrencyInputProps
    * Is set to true, an empty string will be casted to null
    */
   nullOnEmpty?: boolean;
+  /**
+   * Minimum number of decimal places allowed, set null to allow arbitrary decimal values length
+   * note that limits from Intl.NumberFormat still apply
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#digit_options
+   */
+  minimumFractionDigits?: number;
+  /**
+   * Maximum number of decimal places allowed, set null to allow arbitrary decimal values length
+   * note that limits from Intl.NumberFormat still apply
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#digit_options
+   */
+  maximumFractionDigits?: number | null;
 }
 
 export { FzInputProps, FzCurrencyInputProps };
