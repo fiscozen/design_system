@@ -50,3 +50,8 @@ export interface FzUseFloatingArgs {
     actualPosition: Ref<FzFloatingPosition | undefined>
   ) => void
 }
+
+export interface FzUseCurrencyOptions {
+  minimumFractionDigits: number,
+  maximumFractionDigits: number|null,
+}

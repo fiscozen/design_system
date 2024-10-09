@@ -1,6 +1,7 @@
 import { Ref, watch, getCurrentInstance, computed, ref, nextTick } from 'vue'
+import { FzUseCurrencyOptions } from '../types'
 
-export const useCurrency = () => {
+export const useCurrency = (options: FzUseCurrencyOptions) => {
   const inputRef: Ref<HTMLInputElement | null | undefined> = ref(null)
   const vm = getCurrentInstance()
 
@@ -11,11 +12,14 @@ export const useCurrency = () => {
     if (input === null) {
       return ''
     }
-    return input.toLocaleString('it-IT', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+    const safeOptions: Intl.NumberFormatOptions = {
+      minimumFractionDigits: options.minimumFractionDigits,
       useGrouping: false
-    })
+    };
+    if (options.maximumFractionDigits !== null) {
+      safeOptions.maximumFractionDigits = options.maximumFractionDigits
+    }
+    return input.toLocaleString('it-IT', safeOptions)
   }
 
   const parse = (text: string) => {
@@ -62,7 +66,7 @@ export const useCurrency = () => {
     if (!inputRef.value || !e.target) {
       return
     }
-    let rawValue = (e.target as HTMLInputElement).value.replace(/,/g, '.')
+    const rawValue = (e.target as HTMLInputElement).value.replace(/,/g, '.')
     let number: number | null
 
     if (rawValue === '' && vm?.props.nullOnEmpty) {

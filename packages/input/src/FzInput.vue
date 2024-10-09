@@ -27,6 +27,7 @@
         :pattern="pattern"
         :name
         @focus="(e) => $emit('focus', e)"
+        @paste="(e) => $emit('paste', e)"
       />
       <FzIcon
         v-if="valid"
@@ -92,7 +93,7 @@ const {
   containerWidth,
 } = useInputStyle(props, containerRef);
 
-const emit = defineEmits(["input", "focus"]);
+const emit = defineEmits(["input", "focus", "paste"]);
 defineExpose({
   inputRef,
   containerRef,
