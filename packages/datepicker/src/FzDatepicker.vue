@@ -4,6 +4,7 @@
     ref="dp"
     v-bind="props"
     :ui="{ menu: calendarClassName }"
+    @date-update="(e) => $emit('update:model-value', props.valueFormat ? format(e, props.valueFormat) : e)"
     @update:model-value="(e) => $emit('update:model-value', props.valueFormat ? format(e, props.valueFormat) : e)"
     :model-value="modelValue"
   >
