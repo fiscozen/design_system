@@ -225,4 +225,138 @@ describe("FzSelect", () => {
       50,
     );
   });
+  it('toggles isOpen state when handlePickerClick is called', async () => {
+    const wrapper = mount(FzSelect, {
+      props: {
+        label: 'Test Select',
+        required: true,
+        size: 'md',
+        placeholder: 'Select an option',
+        modelValue: '',
+        isOpen: false,
+        options: [
+          { value: 'option1', label: 'Option 1' },
+          { value: 'option2', label: 'Option 2' },
+        ],
+      },
+    });
+
+    expect(wrapper.vm.isOpen).toBe(false);
+    await wrapper.vm.handlePickerClick();
+    expect(wrapper.vm.isOpen).toBe(true);
+  });
+
+  it('calculates container width correctly', async () => {
+    const wrapper = mount(FzSelect, {
+      props: {
+        label: 'Test Select',
+        required: true,
+        size: 'md',
+        placeholder: 'Select an option',
+        modelValue: '',
+        isOpen: false,
+        options: [
+          { value: 'option1', label: 'Option 1' },
+          { value: 'option2', label: 'Option 2' },
+        ],
+      },
+    });
+
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.calculateContainerWidth();
+    expect(wrapper.vm.openerMaxWidth).toBe(`${window.innerWidth}px`);
+  });
+
+  it('calculates container width correctly when element is in the center', async () => {
+    const left = window.innerWidth / 2 - 50;
+    const right = window.innerWidth / 2 + 50;
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(() => ({
+      width: 100,
+      right,
+      left,
+    }) as DOMRect);
+
+    const wrapper = mount(FzSelect, {
+      props: {
+        label: 'Test Select',
+        required: true,
+        size: 'md',
+        placeholder: 'Select an option',
+        modelValue: '',
+        isOpen: false,
+        options: [
+          { value: 'option1', label: 'Option 1' },
+          { value: 'option2', label: 'Option 2' },
+        ],
+      },
+    });
+
+    await wrapper.vm.calculateContainerWidth();
+    expect(wrapper.vm.openerMaxWidth).toBe(`${right}px`);
+  });
+
+  it("calculates container width correctly when element is on the left", async () => {
+    const left = 29;
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(() => ({
+      bottom: 228,
+      height: 32,
+      left,
+      right: 213,
+      top: 196,
+      width: 184,
+      x: 29,
+      y: 196
+    }) as DOMRect);
+
+    const wrapper = mount(FzSelect, {
+      props: {
+        label: "Test Select",
+        required: true,
+        size: "md",
+        placeholder: "Select an option",
+        modelValue: "",
+        isOpen: false,
+        options: [
+          { value: "option1", label: "Option 1" },
+          { value: "option2", label: "Option 2" },
+        ],
+      },
+    });
+
+    await wrapper.vm.calculateContainerWidth();
+    expect(wrapper.vm.openerMaxWidth).toBe(`${window.innerWidth - left}px`);
+  });
+
+  it("calculates container width correctly when element is on the right", async () => {
+    const right = 1016;
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(() => ({
+      "x": 832,
+      "y": 34,
+      "width": 184,
+      "height": 32,
+      "top": 34,
+      right,
+      "bottom": 66,
+      "left": 832
+    }) as DOMRect);
+
+    const wrapper = mount(FzSelect, {
+      props: {
+        label: "Test Select",
+        required: true,
+        size: "md",
+        placeholder: "Select an option",
+        modelValue: "",
+        isOpen: false,
+        options: [
+          { value: "option1", label: "Option 1" },
+          { value: "option2", label: "Option 2" },
+        ],
+      },
+    });
+
+    await wrapper.vm.calculateContainerWidth();
+    expect(wrapper.vm.openerMaxWidth).toBe(`${right}px`);
+  });
+
 });
