@@ -9,6 +9,10 @@ type FzUploadProps = {
   accept?: string;
   /** Size of the component */
   size?: 'sm' | 'md';
+  /** Label of the file uploading button */
+  buttonLabel?: string;
+  /** Label of the drag and drop zone */
+  dragAndDropLabel?: string;
 };
 
 export { FzUploadProps };
