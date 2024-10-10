@@ -33,6 +33,7 @@
       <li
         v-for="file in model"
         class="border-b-1 last:border-b-0 py-8 flex items-center justify-between"
+        :key="getFileUrl(file)"
       >
         <FzLink
           size="sm"
