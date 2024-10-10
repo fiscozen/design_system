@@ -25,9 +25,9 @@
         :size
         @click="input?.click()"
       >
-        Carica file
+        {{ buttonLabel }}
       </FzButton>
-      o trascina qui
+      {{ dragAndDropLabel }}
     </div>
 
     <ul v-if="model?.length" class="mt-8 border-1 border-grey-300 rounded px-8">
@@ -64,7 +64,9 @@ import { FzButton, FzIconButton } from "@fiscozen/button";
 import { FzLink } from "@fiscozen/link";
 
 const props = withDefaults(defineProps<FzUploadProps>(), {
-    size: 'md'
+    size: 'md',
+    buttonLabel: 'Carica',
+    dragAndDropLabel: 'o trascina qui'
 });
 const emit = defineEmits([]);
 const model = defineModel<File[]>();
