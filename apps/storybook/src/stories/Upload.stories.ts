@@ -5,7 +5,12 @@ const meta: Meta<typeof FzUpload> = {
   title: '@fiscozen/upload/FzUpload',
   component: FzUpload,
   tags: ['autodocs'],
-  argTypes: {},
+  argTypes: {
+    size: {
+      control: 'select',
+      options: ['sm', 'md']
+    }
+  },
   args: {
     id: 'example-id'
   },

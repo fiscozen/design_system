@@ -7,6 +7,8 @@ type FzUploadProps = {
   multiple?: boolean;
   /** Pattern that dictates what files the input accepts */
   accept?: string;
+  /** Size of the component */
+  size?: 'sm' | 'md';
 };
 
 export { FzUploadProps };
