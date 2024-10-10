@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div :class="{'text-sm': size === 'sm', 'text-md': size === 'md'}">
     <div
       class="relative flex items-center gap-8 p-12 border-1 border-dashed rounded border-grey-300 bg-background-alice-blue"
       @drop="handleDrop"
@@ -22,6 +22,7 @@
         iconPosition="before"
         iconVariant="fas"
         class="select-none"
+        :size
         @click="input?.click()"
       >
         Carica file
@@ -36,7 +37,7 @@
         :key="getFileUrl(file)"
       >
         <FzLink
-          size="sm"
+          :size="size === 'sm' ? 'xs' : 'sm'"
           :to="getFileUrl(file)"
           external
           target="_blank"
@@ -48,6 +49,7 @@
         <FzIconButton
           iconName="xmark-circle"
           variant="invisible"
+          :size="size === 'sm' ? 'xs' : 'sm'"
           @click="deleteFile(file)"
         />
       </li>
@@ -61,7 +63,9 @@ import { FzUploadProps } from "./types";
 import { FzButton, FzIconButton } from "@fiscozen/button";
 import { FzLink } from "@fiscozen/link";
 
-const props = withDefaults(defineProps<FzUploadProps>(), {});
+const props = withDefaults(defineProps<FzUploadProps>(), {
+    size: 'md'
+});
 const emit = defineEmits([]);
 const model = defineModel<File[]>();
 
