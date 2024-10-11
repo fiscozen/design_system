@@ -28,7 +28,7 @@ const Template: Story = {
         args
       }
     },
-    template: `<FzDatepicker v-bind="args" v-model="date" />`
+    template: `<div class="p-12"><FzDatepicker v-bind="args" v-model="date" /></div>`
   }),
 }
 
@@ -166,6 +166,20 @@ const OverflowDatepickerFromBody: Story = {
   }
 }
 
+const DatepickerFlow: Story = {
+  ...Template,
+  args: {
+    timePickerInline: true,
+    enableTimePicker: true,
+    enableMinutes: true,
+    is24: true,
+    flow: ['calendar', 'hours', 'minutes'],
+    format: "dd/MM/yyyy HH:mm",
+    textInput: true,
+    arrowNavigation: true
+  }
+}
+
 export {
   Default,
   Range,
@@ -179,7 +193,8 @@ export {
   ComplexDisabledDates,
   InlineTimePicker,
   StringValueFormat,
-  OverflowDatepickerFromBody
+  OverflowDatepickerFromBody,
+  DatepickerFlow
 }
 
 export default meta
