@@ -6,10 +6,13 @@
     :ui="{ menu: calendarClassName }"
     @date-update="handleDateUpdate"
     @update:model-value="(e) => $emit('update:model-value', props.valueFormat ? format(e, props.valueFormat) : e)"
+    @flow-step="handleFlowStep"
     :model-value="modelValue"
   >
-    <template #dp-input="{value}">
+    <template #dp-input="{value, onInput, onEnter}">
       <FzInput
+        @update:modelValue="(e) => onInput(e)"
+        @keyup.enter="onEnter"
         v-bind="safeInputProps"
         :modelValue="value">
       </FzInput>
@@ -136,9 +139,15 @@ const safeInputProps = computed<FzInputProps>(() => {
     leftIcon: "calendar-lines",
     name: props.name,
     ...props.inputProps,
-    readonly: true
+    readonly: !props.textInput
   }
 });
+
+const handleFlowStep = (step: number) => {
+  if (props.flow?.length === step) {
+    dp.value.closeMenu()
+  }
+}
 </script>
 
 <style>
