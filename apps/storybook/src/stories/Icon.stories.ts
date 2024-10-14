@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzIcon } from '@fiscozen/icons'
-import { all } from '@awesome.me/kit-8137893ad3/icons'
+import { all, byPrefixAndName } from '@awesome.me/kit-8137893ad3/icons'
 import { FzButton } from '@fiscozen/button'
 
 const meta: Meta<typeof FzIcon> = {
@@ -15,10 +15,12 @@ const meta: Meta<typeof FzIcon> = {
       },
     },
     size: {
-      control: {
-        type: 'select',
-        options: ['xs', 'sm', 'md', 'lg'],
-      }
+      control: 'select',
+      options: ['xs', 'sm', 'md', 'lg']
+    },
+    variant: {
+      control: 'select',
+      options: Object.keys(byPrefixAndName)
     }
   },
   args: {
@@ -79,7 +81,7 @@ export const PreviewAllIcons: Story = {
                 :key="icon" 
                 @click="copyCode(icon, prefix)"
                 class='p-10 gap-4 rounded-base border-1 flex items-center flex-col justify-center w-128 h-128 hover:bg-grey-100 cursor-pointer'>
-              <FzIcon :name="icon" size="lg" :variant="prefix" />
+              <FzIcon :name="icon" :size="size" :variant="prefix" />
               <span class='text-xs'>{{icon}} {{filter}}</span>
             </div>
           </div>
