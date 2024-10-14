@@ -39,14 +39,14 @@ const Danger: Story = {
 
 const DefaultUnderline: Story = {
   args: {
-    style: 'underline'
+    linkStyle: 'underline'
   }
 }
 
 const DangerUnderline: Story = {
   args: {
     type: 'danger',
-    style: 'underline'
+    linkStyle: 'underline'
   }
 }
 
