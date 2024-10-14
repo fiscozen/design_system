@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzUpload } from '@fiscozen/upload'
+import { ref } from 'vue';
 
 const meta: Meta<typeof FzUpload> = {
   title: '@fiscozen/upload/FzUpload',
@@ -15,7 +16,19 @@ const meta: Meta<typeof FzUpload> = {
     id: 'example-id'
   },
   decorators: [() => ({
-    template: '<div class="p-16 max-w-[400px]"><story/></div>'
+    setup () {
+      const files = ref([]);
+      return { files };
+    },
+    template: `
+      <div class="p-16 max-w-[400px]">
+        <story v-model="files"/>
+        <h3 class="mt-10">v-model:</h3>
+        <ul>
+          <li v-for="file in files">{{ file.name }}</div>
+        </ul>
+      </div>
+    `
   })]
 }
 
