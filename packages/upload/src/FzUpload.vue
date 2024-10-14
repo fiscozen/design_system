@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'text-sm': size === 'sm', 'text-md': size === 'md'}">
+  <div :class="{ 'text-sm': size === 'sm', 'text-md': size === 'md' }">
     <div
       class="relative flex items-center gap-8 p-12 border-1 border-dashed rounded border-grey-300 bg-background-alice-blue"
       @drop="handleDrop"
@@ -64,9 +64,9 @@ import { FzButton, FzIconButton } from "@fiscozen/button";
 import { FzLink } from "@fiscozen/link";
 
 const props = withDefaults(defineProps<FzUploadProps>(), {
-    size: 'md',
-    buttonLabel: 'Carica',
-    dragAndDropLabel: 'o trascina qui'
+  size: "md",
+  buttonLabel: "Carica",
+  dragAndDropLabel: "o trascina qui",
 });
 const emit = defineEmits([]);
 const model = defineModel<File[]>();
