@@ -6,6 +6,7 @@
           v-if="iconName && iconPosition === 'before'"
           :name="iconName"
           :size="mappedIconSize"
+          :variant="iconVariant"
         />
       </slot>
     </div>
