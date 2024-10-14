@@ -2,7 +2,9 @@ import { describe, it, expect } from 'vitest'
 
 import { mount } from '@vue/test-utils'
 import FzNavlist from '../FzNavlist.vue'
-const sections = [
+import { FzNavlistSection } from '../types'
+
+const sections: FzNavlistSection[] = [
   {
     label: 'Label 1',
     items: [
@@ -11,7 +13,8 @@ const sections = [
         meta: {
           path: '/foo',
           name: 'foo'
-        }
+        },
+        type: 'link'
       },
       {
         summary: 'Item #2',
@@ -21,14 +24,16 @@ const sections = [
             meta: {
               path: '/foo',
               name: 'foo'
-            }
+            },
+            type: 'link'
           },
           {
             label: 'Sub-Item #2',
             meta: {
               path: '/foo',
               name: 'foo'
-            }
+            },
+            type: 'link'
           }
         ]
       }
@@ -43,18 +48,35 @@ const sections = [
         meta: {
           path: '/foo',
           name: 'foo'
-        }
+        },
+        type: 'link'
       },
       {
         label: 'Item #2',
         meta: {
           path: '/foo',
           name: 'foo'
-        }
+        },
+        type: 'link'
+      }
+    ]
+  },
+  {
+    label: 'Label 3',
+    items: [
+      {
+        label: 'Item #1',
+        disabled: true,
+        type: 'button'
+      },
+      {
+        label: 'Item #2',
+        type: 'button'
       }
     ]
   }
 ]
+
 describe('FzNavlist', () => {
   it('should match snapshot', () => {
     const wrapper = mount(FzNavlist, {

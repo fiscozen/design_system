@@ -1,9 +1,13 @@
 <script lang="ts" setup>
-import { FzNavlink } from '@fiscozen/navlink'
+import { FzNavlink, FzNavlinkProps, FzRouterNavlink, FzRouterNavlinkProps } from '@fiscozen/navlink'
 import { FzCollapse } from '@fiscozen/collapse'
-import { FzNavlistProps, isSubMenu } from './types'
+import { FzNavlistItem, FzNavlistProps, isSubMenu } from './types'
 
 defineProps<FzNavlistProps>()
+
+const emit = defineEmits<{
+  'fznavlink:click': [index: number, item: FzNavlistItem]
+}>()
 </script>
 
 <template>
@@ -16,26 +20,48 @@ defineProps<FzNavlistProps>()
       <div class="text-grey-400 flex h-32 items-center px-12 text-xs">
         <span>{{ section.label }}</span>
       </div>
-      <div class="flex flex-col" v-for="(item, itemIndex) in section.items" :key="itemIndex">
-        <FzCollapse v-if="isSubMenu(item)" :summary-class="'px-12'">
-          <template #summary
-            ><span class="grow">{{ item.summary }}</span></template
+      <div class="flex flex-col">
+        <template v-for="(item, itemIndex) in section.items" :key="itemIndex">
+          <FzCollapse v-if="isSubMenu(item)" :summary-class="'px-12'">
+            <template #summary
+              ><span class="grow">{{ item.summary }}</span></template
+            >
+            <template #content>
+              <div class="flex flex-col">
+                <template v-for="(subitem, subIndex) in item.subitems" :key="subIndex">
+                  <FzNavlink
+                    v-if="subitem.type === 'button'"
+                    class="grow-1 flex justify-start pl-24 !font-normal"
+                    v-bind="subitem"
+                    @click="emit('fznavlink:click', itemIndex, subitem)"
+                    >{{ subitem.label }}</FzNavlink
+                  >
+                  <FzRouterNavlink
+                    v-if="subitem.type === 'link'"
+                    class="grow-1 flex justify-start pl-24 !font-normal"
+                    v-bind="subitem"
+                    @click="emit('fznavlink:click', itemIndex, subitem)"
+                    >{{ subitem.label }}</FzRouterNavlink
+                  >
+                </template>
+              </div>
+            </template>
+          </FzCollapse>
+          <FzNavlink
+            class="grow-1 flex justify-start"
+            v-else-if="item.type === 'button'"
+            v-bind="item"
+            @click="emit('fznavlink:click', itemIndex, item)"
+            >{{ item.label }}</FzNavlink
           >
-          <template #content>
-            <div class="flex flex-col">
-              <FzNavlink
-                class="grow-1 flex justify-start pl-24 !font-normal"
-                v-for="(subitem, subIndex) in item.subitems"
-                :key="subIndex"
-                v-bind="subitem"
-                >{{ subitem.label }}</FzNavlink
-              >
-            </div>
-          </template>
-        </FzCollapse>
-        <FzNavlink class="grow-1 flex justify-start" v-else v-bind="item">{{
-          item.label
-        }}</FzNavlink>
+          <FzRouterNavlink
+            v-else
+            v-bind="item"
+            class="grow-1 flex justify-start"
+            @click="emit('fznavlink:click', itemIndex, item)"
+            >{{ item.label }}
+          </FzRouterNavlink>
+        </template>
       </div>
       <hr
         v-if="sectionIndex !== sections.length - 1"
