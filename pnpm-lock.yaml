@@ -2357,9 +2357,6 @@ importers:
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
-      '@fiscozen/icons':
-        specifier: workspace:^
-        version: link:../icons
       '@fiscozen/link':
         specifier: workspace:^
         version: link:../link
