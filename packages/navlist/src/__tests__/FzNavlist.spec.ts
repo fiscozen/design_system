@@ -3,6 +3,12 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import FzNavlist from '../FzNavlist.vue'
 import { FzNavlistSection } from '../types'
+import { createRouter, createWebHistory } from 'vue-router'
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [{ name: 'foo', path: '/foo', component: () => {} }]
+})
 
 const sections: FzNavlistSection[] = [
   {
@@ -82,6 +88,9 @@ describe('FzNavlist', () => {
     const wrapper = mount(FzNavlist, {
       props: {
         sections
+      },
+      global: {
+        plugins: [router]
       }
     })
 
