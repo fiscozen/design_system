@@ -5,7 +5,7 @@ type PositionSecondary = 'start' | 'end'
 export type FzFloatingPosition = PositionPrimary | `${PositionPrimary}-${PositionSecondary}`
 
 export interface FzFloatingProps {
-  isOpen: boolean
+  isOpen?: boolean
   position?: FzFloatingPosition
   container?: string | null
   contentClass?:
