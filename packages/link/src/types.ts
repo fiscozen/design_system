@@ -16,7 +16,7 @@ type FzLinkProps = {
   /**
    * The appearance of the link
    */
-  style?: 'default' | 'underline'
+  linkStyle?: 'default' | 'underline'
   /**
    * Size of the link
    */

@@ -16,7 +16,7 @@ import { FzLinkProps } from './types'
 
 const props = withDefaults(defineProps<FzLinkProps>(), {
   type: 'default',
-  style: 'default',
+  linkStyle: 'default',
   size: 'lg',
   disabled: false,
   replace: false,
@@ -30,7 +30,7 @@ const commonClass = computed(() => [
     'text-sm': props.size === 'sm',
     'text-md': props.size === 'md',
     'text-lg': props.size === 'lg',
-    underline: props.style === 'underline'
+    underline: props.linkStyle === 'underline'
   }
 ])
 
