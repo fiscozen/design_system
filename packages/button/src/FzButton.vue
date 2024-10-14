@@ -1,5 +1,5 @@
 <template>
-  <button :type="type" :disabled="disabled" :class="[staticClasses, classes]">
+  <button type="button" :disabled="disabled" :class="[staticClasses, classes]">
     <div v-if="iconAndLabel" :class="[staticIconClasses, beforeClasses]">
       <slot name="before">
         <FzIcon
