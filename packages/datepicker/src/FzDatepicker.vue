@@ -9,10 +9,11 @@
     @flow-step="handleFlowStep"
     :model-value="modelValue"
   >
-    <template #dp-input="{value, onInput, onEnter}">
+    <template #dp-input="{value, onInput, onEnter, onPaste, closeMenu}">
       <FzInput
         @update:modelValue="(e) => onInput(e)"
         @keyup.enter="onEnter"
+        @paste="(e) => handlePaste(onPaste, closeMenu, e, value)"
         v-bind="safeInputProps"
         :modelValue="value">
       </FzInput>
@@ -55,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { FzDatepickerProps } from "./types";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import { useBreakpoints } from "@fiscozen/composables";
@@ -63,7 +64,7 @@ import { breakpoints } from "@fiscozen/style";
 import { FzIconButton, FzButton } from "@fiscozen/button";
 import { FzInput, FzInputProps } from "@fiscozen/input";
 import { it } from "date-fns/locale";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = withDefaults(defineProps<FzDatepickerProps>(), {
@@ -90,6 +91,10 @@ const handleDateUpdate = (e: string|Date) => {
     res = format(e, props.valueFormat);
   } else if (props.modelType === 'iso' && e instanceof Date) {
     res = e.toISOString();
+  } else if (typeof e === 'string')  {
+    if (typeof props.format === 'string') {
+      res = parse(e, props.format, new Date())
+    }
   }
   emit('update:model-value', res);
 }
@@ -147,6 +152,17 @@ const handleFlowStep = (step: number) => {
   if (props.flow?.length === step) {
     dp.value.closeMenu()
   }
+}
+
+const handlePaste = (onPaste: (e: ClipboardEvent) => any, closeMenu: () => void, e: ClipboardEvent, value: string) => {
+  e.stopPropagation();
+  e.preventDefault();
+  const rawPastedText = e.clipboardData?.getData("text/plain");
+  //@ts-ignore
+  handleDateUpdate(rawPastedText);
+  nextTick(() => {
+    closeMenu();
+  });
 }
 </script>
 
@@ -237,6 +253,10 @@ const handleFlowStep = (step: number) => {
 .dp__calendar_header_separator,
 .dp__arrow_top {
   @apply hidden;
+}
+
+.dp__calendar_item {
+  @apply flex justify-center;
 }
 
 .dp--menu--inner-stretched {
