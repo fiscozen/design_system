@@ -37,7 +37,7 @@ const breads: ComputedRef<Breadcrumb<CustomRouteLocation>[]> = computed(() => {
     <fz-breadcrumbs :breadcrumbs="breads" :separator="separator">
       <template #bread-label="{ bread, isActive }">
         <router-link
-          :to="bread.metadata.path"
+          :to="bread.metadata"
           class="text-blue-500"
           :class="{ 'text-grey-500': isActive }"
           >{{ bread.label }}</router-link
