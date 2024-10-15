@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 
 import { FzNavlist } from '@fiscozen/navlist'
+import { vueRouter } from 'storybook-vue3-router'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
@@ -9,7 +10,12 @@ const meta = {
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
   argTypes: {},
-  args: {}
+  args: {},
+  decorators: [vueRouter([{
+    path: '/foo',
+    name: 'foo',
+    component: () => {}
+  }])]
 } satisfies Meta<typeof FzNavlist>
 
 export default meta
@@ -30,7 +36,8 @@ export const Default: Story = {
             meta: {
               path: '/foo',
               name: 'foo'
-            }
+            },
+            type: 'link'
           },
           {
             summary: 'Item #2',
@@ -40,14 +47,16 @@ export const Default: Story = {
                 meta: {
                   path: '/foo',
                   name: 'foo'
-                }
+                },
+                type: 'link'
               },
               {
                 label: 'Sub-Item #2',
                 meta: {
                   path: '/foo',
                   name: 'foo'
-                }
+                },
+                type: 'link'
               }
             ]
           }
@@ -62,14 +71,30 @@ export const Default: Story = {
             meta: {
               path: '/foo',
               name: 'foo'
-            }
+            },
+            type: 'link'
           },
           {
             label: 'Item #2',
             meta: {
               path: '/foo',
               name: 'foo'
-            }
+            },
+            type: 'link'
+          }
+        ]
+      },
+      {
+        label: 'Label 3',
+        items: [
+          {
+            label: 'Item #1',
+            disabled: true,
+            type: 'button'
+          },
+          {
+            label: 'Item #2',
+            type: 'button'
           }
         ]
       }

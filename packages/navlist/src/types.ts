@@ -1,19 +1,23 @@
 import { FzCollapseProps } from '@fiscozen/collapse'
-import { FzRouterNavlinkProps } from '@fiscozen/navlink'
+import { FzNavlinkProps, FzRouterNavlinkProps } from '@fiscozen/navlink'
+
+export type FzNavlistItem =
+  | (FzRouterNavlinkProps & { type: 'link' })
+  | (FzNavlinkProps & { type: 'button' })
 
 export interface FzNavlistSub extends FzCollapseProps {
-  subitems: FzRouterNavlinkProps[]
+  subitems: FzNavlistItem[]
 }
 
 export interface FzNavlistSection {
   label: string
-  items: (FzRouterNavlinkProps | FzNavlistSub)[]
+  items: (FzNavlistItem | FzNavlistSub)[]
 }
 
 export interface FzNavlistProps {
   sections: FzNavlistSection[]
 }
- 
-export const isSubMenu = (item: FzRouterNavlinkProps | FzNavlistSub): item is FzNavlistSub => {
-  return "subitems" in item
+
+export const isSubMenu = (item: FzNavlistItem | FzNavlistSub): item is FzNavlistSub => {
+  return 'subitems' in item
 }

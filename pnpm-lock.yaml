@@ -1572,7 +1572,10 @@ importers:
         version: 3.4.1
       vue:
         specifier: ^3.4.13
-        version: 3.4.13(typescript@5.3.3)
+        version: 3.4.33(typescript@5.3.3)
+      vue-router:
+        specifier: ^4.3.0
+        version: 4.3.0(vue@3.4.33(typescript@5.3.3))
     devDependencies:
       '@fiscozen/eslint-config':
         specifier: workspace:^
@@ -1594,13 +1597,13 @@ importers:
         version: 18.19.7
       '@vitejs/plugin-vue':
         specifier: ^4.5.2
-        version: 4.6.2(vite@5.0.11(@types/node@18.19.7))(vue@3.4.13(typescript@5.3.3))
+        version: 4.6.2(vite@5.0.11(@types/node@18.19.7))(vue@3.4.33(typescript@5.3.3))
       '@vitest/coverage-v8':
         specifier: ^1.2.1
         version: 1.2.1(vitest@1.2.0(@types/node@18.19.7)(jsdom@23.2.0))
       '@vue/test-utils':
         specifier: ^2.4.3
-        version: 2.4.3(@vue/server-renderer@3.4.33(vue@3.4.13(typescript@5.3.3)))(vue@3.4.13(typescript@5.3.3))
+        version: 2.4.3(@vue/server-renderer@3.4.33(vue@3.4.33(typescript@5.3.3)))(vue@3.4.33(typescript@5.3.3))
       '@vue/tsconfig':
         specifier: ^0.5.0
         version: 0.5.1
@@ -14972,6 +14975,11 @@ snapshots:
     dependencies:
       '@vue/devtools-api': 6.5.1
       vue: 3.4.13(typescript@5.3.3)
+
+  vue-router@4.3.0(vue@3.4.33(typescript@5.3.3)):
+    dependencies:
+      '@vue/devtools-api': 6.5.1
+      vue: 3.4.33(typescript@5.3.3)
 
   vue-template-compiler@2.7.16:
     dependencies:
