@@ -5,17 +5,24 @@
     v-bind="props"
     :ui="{ menu: calendarClassName }"
     @date-update="handleDateUpdate"
-    @update:model-value="(e) => $emit('update:model-value', props.valueFormat ? format(e, props.valueFormat) : e)"
+    @update:model-value="
+      (e) =>
+        $emit(
+          'update:model-value',
+          props.valueFormat ? format(e, props.valueFormat) : e,
+        )
+    "
     @flow-step="handleFlowStep"
     :model-value="modelValue"
   >
-    <template #dp-input="{value, onInput, onEnter, onPaste, closeMenu}">
+    <template #dp-input="{ value, onInput, onEnter, onPaste, closeMenu }">
       <FzInput
-        @update:modelValue="(e) => onInput(e)"
+        @update:modelValue="(e: string) => onInput(e)"
         @keyup.enter="onEnter"
-        @paste="(e) => handlePaste(onPaste, closeMenu, e, value)"
+        @paste="(e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)"
         v-bind="safeInputProps"
-        :modelValue="value">
+        :modelValue="value"
+      >
       </FzInput>
     </template>
     <template #arrow-left>
@@ -72,7 +79,7 @@ const props = withDefaults(defineProps<FzDatepickerProps>(), {
   format: "dd/MM/yyyy",
   formatLocale: () => it,
   state: undefined,
-  autoPosition: true
+  autoPosition: true,
 });
 
 const dp = ref();
@@ -85,19 +92,21 @@ const closeMenu = () => {
   dp.value.closeMenu();
 };
 
-const handleDateUpdate = (e: string|Date) => {
+const handleDateUpdate = (e: string | Date) => {
   let res = e;
-  if(props.valueFormat) {
+  if (props.valueFormat) {
     res = format(e, props.valueFormat);
-  } else if (props.modelType === 'iso' && e instanceof Date) {
+  } else if (props.modelType === "iso" && e instanceof Date) {
     res = e.toISOString();
-  } else if (typeof e === 'string')  {
-    if (typeof props.format === 'string') {
-      res = parse(e, props.format, new Date())
+  } else if ((typeof e === "string") && (typeof props.format === "string")) {
+    res = parse(e, props.format, new Date());
+    if (props.modelType === "iso") {
+      res = res.toISOString()
     }
+    // TODO handle custom props.format functions
   }
-  emit('update:model-value', res);
-}
+  emit("update:model-value", res);
+};
 
 const emit = defineEmits([
   "update:model-value",
@@ -144,17 +153,22 @@ const safeInputProps = computed<FzInputProps>(() => {
     leftIcon: "calendar-lines",
     name: props.name,
     ...props.inputProps,
-    readonly: !props.textInput
-  }
+    readonly: !props.textInput,
+  };
 });
 
 const handleFlowStep = (step: number) => {
   if (props.flow?.length === step) {
-    dp.value.closeMenu()
+    dp.value.closeMenu();
   }
-}
+};
 
-const handlePaste = (onPaste: (e: ClipboardEvent) => any, closeMenu: () => void, e: ClipboardEvent, value: string) => {
+const handlePaste = (
+  onPaste: (e: ClipboardEvent) => any,
+  closeMenu: () => void,
+  e: ClipboardEvent,
+  value: string,
+) => {
   e.stopPropagation();
   e.preventDefault();
   const rawPastedText = e.clipboardData?.getData("text/plain");
@@ -163,7 +177,7 @@ const handlePaste = (onPaste: (e: ClipboardEvent) => any, closeMenu: () => void,
   nextTick(() => {
     closeMenu();
   });
-}
+};
 </script>
 
 <style>
