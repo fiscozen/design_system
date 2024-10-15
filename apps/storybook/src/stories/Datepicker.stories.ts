@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzDatepicker } from '@fiscozen/datepicker'
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
 
 const meta: Meta<typeof FzDatepicker> = {
   title: '@fiscozen/datepicker/FzDatepicker',
@@ -167,7 +167,23 @@ const OverflowDatepickerFromBody: Story = {
 }
 
 const DatepickerFlow: Story = {
-  ...Template,
+  render: (args) => ({
+    components: {FzDatepicker},
+    setup() {
+      const date = ref();
+      watch(date, console.log)
+      return {
+        date,
+        args
+      }
+    },
+    template: `
+      <div class="p-12">
+        <FzDatepicker v-bind="args" v-model="date"  />
+        <pre>{{date}}</pre>
+      </div>
+    `
+  }),
   args: {
     timePickerInline: true,
     enableTimePicker: true,
