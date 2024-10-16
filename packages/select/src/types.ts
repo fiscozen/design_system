@@ -64,4 +64,12 @@ export type FzSelectOptionsProps = {
    * the option label
    */
   label: string;
+  /**
+   * if true the option will not be selectable
+   */
+  disabled?: boolean;
+  /**
+   * same as disabled, but without grey text
+   */
+  readonly?: boolean;
 };

@@ -2284,6 +2284,9 @@ importers:
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
+      '@fiscozen/icons':
+        specifier: workspace:^
+        version: link:../icons
       '@fiscozen/input':
         specifier: workspace:^
         version: link:../input

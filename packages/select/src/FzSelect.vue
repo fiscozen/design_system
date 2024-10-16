@@ -66,14 +66,23 @@
       ref="containerRef"
       test-id="fzselect-options-container"
     >
-      <FzSelectOption
-        v-for="option in visibleOptions"
-        :key="option.value"
-        @click="() => handleSelect(option.value)"
-        :option="option"
-        :size="size"
-        :selectedValue="model"
-      />
+      <template v-if="visibleOptions.length">
+        <FzSelectOption
+          v-for="option in visibleOptions"
+          :key="option.value"
+          @click="() => handleSelect(option.value)"
+          :option="option"
+          :size="size"
+          :selectedValue="model"
+        />
+      </template>
+      <template v-else>
+        <FzSelectOption
+          :option="{label: 'Nessun risultato trovato', readonly: true, value: ''}"
+          :size="size"
+          :selectedValue="model"
+        />
+      </template>
     </div>
   </FzFloating>
 </template>
