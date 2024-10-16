@@ -8,15 +8,20 @@ const meta: Meta<typeof FzTypeahead> = {
   title: '@fiscozen/typeahead/FzTypeahead',
   component: FzTypeahead,
   tags: ['autodocs'],
-  argTypes: {},
+  argTypes: {
+    size: {
+      options: ['sm', 'md', 'lg'],
+      control: {
+        type: 'select'
+      }
+    },
+  },
   args: {
     selectProps: {
       options: [],
       isOpen: false
     },
-    inputProps: {
-      label: 'This is a label'
-    }
+    label: 'This is a label'
   } satisfies FzTypeaheadProps,
   decorators: []
 }
@@ -46,7 +51,7 @@ const Template: Story = {
   }),
 }
 
-const options = [{label: 'one', value: '1'}, {label: 'two', value: '2'}, {label: 'three', value: '3'}]
+const options = [{label: 'one', value: '1'}, {label: 'two', value: '2'}, {label: 'disabled option', value: 'disabled', disabled: true}, {label: 'three', value: '3'}]
 const Default: Story = {
   ...Template,
   args: {
@@ -54,10 +59,63 @@ const Default: Story = {
       options,
       isOpen: false
     },
-    inputProps: {
-      label: 'This is a label',
-      placeholder: 'This is a placeholder'
+    label: 'This is a label',
+    placeholder: 'This is a placeholder'
+  }
+}
+
+const Error: Story = {
+  ...Template,
+  args: {
+    selectProps: {
+      options,
+      isOpen: false
     },
+    label: 'This is a label',
+    placeholder: 'This is a placeholder',
+    errorMessage: 'This is an error message'
+  },
+}
+
+const Disabled: Story = {
+  ...Template,
+  args: {
+    selectProps: {
+      options,
+      isOpen: false
+    },
+    disabled: true,
+    label: 'This is a label',
+    placeholder: 'This is a placeholder',
+  },
+}
+
+const WithIcons: Story = {
+  ...Template,
+  args: {
+    selectProps: {
+      options,
+      isOpen: false
+    },
+    label: 'This is a label',
+    placeholder: 'This is a placeholder',
+    rightIcon: 'credit-card',
+    leftIcon: 'credit-card',
+  }
+}
+
+
+const HelpText: Story = {
+  ...Template,
+  args: {
+    selectProps: {
+      options,
+      isOpen: false
+    },
+    label: 'This is a label',
+    placeholder: 'This is a placeholder',
+    helpText:
+      'This is a helper text with a lot of content and it will be displayed in more than one line'
   }
 }
 
@@ -68,10 +126,8 @@ const Precompiled: Story = {
       options,
       isOpen: false
     },
-    inputProps: {
-      label: 'This is a label',
-      placeholder: 'This is a placeholder'
-    },
+    label: 'This is a label',
+    placeholder: 'This is a placeholder'
   },
   render: (args) => ({
     components: {FzTypeahead},
@@ -99,10 +155,8 @@ const Reset: Story = {
       options,
       isOpen: false
     },
-    inputProps: {
-      label: 'This is a label',
-      placeholder: 'This is a placeholder'
-    },
+    label: 'This is a label',
+    placeholder: 'This is a placeholder'
   },
   render: (args) => ({
     components: {FzTypeahead, FzButton},
@@ -130,10 +184,8 @@ const PrecompiledObject: Story = {
       options,
       isOpen: false
     },
-    inputProps: {
-      label: 'This is a label',
-      placeholder: 'This is a placeholder'
-    },
+    label: 'This is a label',
+    placeholder: 'This is a placeholder'
   },
   render: (args) => ({
     components: {FzTypeahead},
@@ -161,10 +213,8 @@ const NoDelayTime: Story = {
       options,
       isOpen: false
     },
-    inputProps: {
-      label: 'This is a label',
-      placeholder: 'This is a placeholder'
-    },
+    label: 'This is a label',
+    placeholder: 'This is a placeholder',
     delayTime: 0
   }
 }
@@ -177,10 +227,8 @@ const HundredOptions: Story = {
       options: hundredOptionsRepeated,
       isOpen:false
     },
-    inputProps: {
-      label: 'This is a label',
-      placeholder: 'This is a placeholder'
-    }
+    label: 'This is a label',
+    placeholder: 'This is a placeholder'
   }
 }
 
@@ -216,10 +264,8 @@ const RemoteLoading: Story = {
     `
   }),
   args: {
-    inputProps: {
-      label: 'This is a label',
-      placeholder: 'This is a placeholder'
-    },
+    label: 'This is a label',
+    placeholder: 'This is a placeholder',
     selectProps: {
       options: [],
       isOpen: false
@@ -265,10 +311,8 @@ const RemoteLoadingWithAPICall: Story = {
     `
   }),
   args: {
-    inputProps: {
-      label: 'This is a label',
-      placeholder: 'This is a placeholder'
-    },
+    label: 'This is a label',
+    placeholder: 'This is a placeholder',
     selectProps: {
       isOpen: false,
       options: []
@@ -278,6 +322,6 @@ const RemoteLoadingWithAPICall: Story = {
 
 }
 
-export { Default, Precompiled, Reset, PrecompiledObject, NoDelayTime, HundredOptions, RemoteLoading, RemoteLoadingWithAPICall }
+export { Default, Error, Disabled, HelpText, WithIcons, Precompiled, Reset, PrecompiledObject, NoDelayTime, HundredOptions, RemoteLoading, RemoteLoadingWithAPICall }
 
 export default meta

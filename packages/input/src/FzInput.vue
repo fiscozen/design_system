@@ -8,12 +8,14 @@
       ref="containerRef"
       @click="inputRef?.focus()"
     >
-      <FzIcon
-        v-if="leftIcon"
-        :name="leftIcon"
-        :size="size"
-        :variant="leftIconVariant"
-      />
+      <slot name="left-icon">
+        <FzIcon
+          v-if="leftIcon"
+          :name="leftIcon"
+          :size="size"
+          :variant="leftIconVariant"
+        />
+      </slot>
       <input
         :type="type"
         :required="required ? required : false"
@@ -29,18 +31,20 @@
         @focus="(e) => $emit('focus', e)"
         @paste="(e) => $emit('paste', e)"
       />
-      <FzIcon
-        v-if="valid"
-        name="check"
-        :size="size"
-        class="text-semantic-success"
-      />
-      <FzIcon
-        v-if="rightIcon"
-        :name="rightIcon"
-        :size="size"
-        :variant="rightIconVariant"
-      />
+      <slot name="right-icon">
+        <FzIcon
+          v-if="valid"
+          name="check"
+          :size="size"
+          class="text-semantic-success"
+        />
+        <FzIcon
+          v-if="rightIcon"
+          :name="rightIcon"
+          :size="size"
+          :variant="rightIconVariant"
+        />
+      </slot>
     </div>
     <div
       v-if="error && $slots.errorMessage"
