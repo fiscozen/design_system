@@ -38,6 +38,7 @@ import { useClickOutside } from "@fiscozen/composables";
 const props = withDefaults(defineProps<FzDialogProps>(), {
   size: "md",
   closeOnBackdrop: true,
+  unrenderOnClose: true
 });
 const emit = defineEmits(["fzmodal:cancel"]);
 
