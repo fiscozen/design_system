@@ -5,13 +5,24 @@
     v-bind="props"
     :ui="{ menu: calendarClassName }"
     @date-update="handleDateUpdate"
-    @update:model-value="(e) => $emit('update:model-value', props.valueFormat ? format(e, props.valueFormat) : e)"
+    @update:model-value="
+      (e) =>
+        $emit(
+          'update:model-value',
+          props.valueFormat ? format(e, props.valueFormat) : e,
+        )
+    "
+    @flow-step="handleFlowStep"
     :model-value="modelValue"
   >
-    <template #dp-input="{value}">
+    <template #dp-input="{ value, onInput, onEnter, onPaste, closeMenu }">
       <FzInput
+        @update:modelValue="(e: string) => onInput(e)"
+        @keyup.enter="onEnter"
+        @paste="(e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)"
         v-bind="safeInputProps"
-        :modelValue="value">
+        :modelValue="value"
+      >
       </FzInput>
     </template>
     <template #arrow-left>
@@ -52,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { FzDatepickerProps } from "./types";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import { useBreakpoints } from "@fiscozen/composables";
@@ -60,7 +71,7 @@ import { breakpoints } from "@fiscozen/style";
 import { FzIconButton, FzButton } from "@fiscozen/button";
 import { FzInput, FzInputProps } from "@fiscozen/input";
 import { it } from "date-fns/locale";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = withDefaults(defineProps<FzDatepickerProps>(), {
@@ -68,7 +79,9 @@ const props = withDefaults(defineProps<FzDatepickerProps>(), {
   format: "dd/MM/yyyy",
   formatLocale: () => it,
   state: undefined,
-  autoPosition: true
+  autoPosition: true,
+  textInput: true,
+  arrowNavigation: true
 });
 
 const dp = ref();
@@ -81,15 +94,21 @@ const closeMenu = () => {
   dp.value.closeMenu();
 };
 
-const handleDateUpdate = (e: string|Date) => {
+const handleDateUpdate = (e: string | Date) => {
   let res = e;
-  if(props.valueFormat) {
+  if (props.valueFormat) {
     res = format(e, props.valueFormat);
-  } else if (props.modelType === 'iso' && e instanceof Date) {
+  } else if (props.modelType === "iso" && e instanceof Date) {
     res = e.toISOString();
+  } else if ((typeof e === "string") && (typeof props.format === "string")) {
+    res = parse(e, props.format, new Date());
+    if (props.modelType === "iso") {
+      res = res.toISOString()
+    }
+    // TODO handle custom props.format functions
   }
-  emit('update:model-value', res);
-}
+  emit("update:model-value", res);
+};
 
 const emit = defineEmits([
   "update:model-value",
@@ -136,9 +155,31 @@ const safeInputProps = computed<FzInputProps>(() => {
     leftIcon: "calendar-lines",
     name: props.name,
     ...props.inputProps,
-    readonly: true
-  }
+    readonly: !props.textInput,
+  };
 });
+
+const handleFlowStep = (step: number) => {
+  if (props.flow?.length === step) {
+    dp.value.closeMenu();
+  }
+};
+
+const handlePaste = (
+  onPaste: (e: ClipboardEvent) => any,
+  closeMenu: () => void,
+  e: ClipboardEvent,
+  value: string,
+) => {
+  e.stopPropagation();
+  e.preventDefault();
+  const rawPastedText = e.clipboardData?.getData("text/plain");
+  //@ts-ignore
+  handleDateUpdate(rawPastedText);
+  nextTick(() => {
+    closeMenu();
+  });
+};
 </script>
 
 <style>
@@ -228,6 +269,10 @@ const safeInputProps = computed<FzInputProps>(() => {
 .dp__calendar_header_separator,
 .dp__arrow_top {
   @apply hidden;
+}
+
+.dp__calendar_item {
+  @apply flex justify-center;
 }
 
 .dp--menu--inner-stretched {

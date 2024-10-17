@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzDatepicker } from '@fiscozen/datepicker'
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
 
 const meta: Meta<typeof FzDatepicker> = {
   title: '@fiscozen/datepicker/FzDatepicker',
@@ -28,7 +28,7 @@ const Template: Story = {
         args
       }
     },
-    template: `<FzDatepicker v-bind="args" v-model="date" />`
+    template: `<div class="p-12"><FzDatepicker v-bind="args" v-model="date" /></div>`
   }),
 }
 
@@ -166,6 +166,36 @@ const OverflowDatepickerFromBody: Story = {
   }
 }
 
+const DatepickerFlow: Story = {
+  render: (args) => ({
+    components: {FzDatepicker},
+    setup() {
+      const date = ref();
+      watch(date, console.log)
+      return {
+        date,
+        args
+      }
+    },
+    template: `
+      <div class="p-12">
+        <FzDatepicker v-bind="args" v-model="date"  />
+        <pre>{{date}}</pre>
+      </div>
+    `
+  }),
+  args: {
+    timePickerInline: true,
+    enableTimePicker: true,
+    enableMinutes: true,
+    is24: true,
+    flow: ['calendar', 'hours', 'minutes'],
+    format: "dd/MM/yyyy HH:mm",
+    textInput: true,
+    arrowNavigation: true
+  }
+}
+
 export {
   Default,
   Range,
@@ -179,7 +209,8 @@ export {
   ComplexDisabledDates,
   InlineTimePicker,
   StringValueFormat,
-  OverflowDatepickerFromBody
+  OverflowDatepickerFromBody,
+  DatepickerFlow
 }
 
 export default meta
