@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="shouldRender || !props.unrenderOnClose"
+    v-if="shouldRender || shouldAlwaysRender"
     ref="backdrop"
     v-show="visible"
     class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-start sm:justify-center z-30">
@@ -37,8 +37,7 @@ import { useClickOutside } from "@fiscozen/composables";
 
 const props = withDefaults(defineProps<FzDialogProps>(), {
   size: "md",
-  closeOnBackdrop: true,
-  unrenderOnClose: true
+  closeOnBackdrop: true
 });
 const emit = defineEmits(["fzmodal:cancel"]);
 
@@ -56,11 +55,11 @@ const showModal = () => {
     backdropClickTimeout = false;
   }, 100);
   
-  if (props.unrenderOnClose) {
-    shouldRender.value = true;
-  } else {
+  if (props.shouldAlwaysRender) {
     dialog.value!.show();
     visible.value = true;
+  } else {
+    shouldRender.value = true;
   }
 };
 
@@ -70,7 +69,7 @@ const closeModal = (returnVal?: string) => {
 
 function handleModalClose() {
   visible.value = false;
-  if (props.unrenderOnClose) {
+  if (!props.shouldAlwaysRender) {
     shouldRender.value = false;
   }
 }
