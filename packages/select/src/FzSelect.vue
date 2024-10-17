@@ -227,6 +227,11 @@ const handlePickerClick = () => {
   updateContainerWidth();
 };
 
+const forceOpen = () => {
+  isOpen.value = true;
+  calculateContainerWidth();
+}
+
 const evaluateProps = () => {
   switch (true) {
     case props.disabled:
@@ -269,5 +274,12 @@ function updateVisibleOptions() {
   );
   visibleOptions.value.push(...nextItems);
 }
+
+defineExpose({
+  handlePickerClick,
+  calculateContainerWidth,
+  openerMaxWidth,
+  forceOpen
+})
 </script>
 <style scoped></style>

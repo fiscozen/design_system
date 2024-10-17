@@ -6,6 +6,7 @@ function debounce(func: FuncToDebounce, timeout: number = 300): FuncToDebounce {
   return (...args: any[]) => {
     clearTimeout(timer);
     timer = setTimeout(() => {
+      //@ts-ignore
       func.apply(this, args);
     }, timeout);
   };
