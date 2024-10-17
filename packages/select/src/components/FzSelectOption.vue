@@ -40,15 +40,15 @@ const mappedClass = {
 const computedClass = computed(() => {
   let res: string[] = [];
   if (props.option.disabled) {
-    res = ['text-grey-200']
+    res = ["text-grey-200"];
   } else if (props.option.readonly) {
-    res = ['text-core-black']
+    res = ["text-core-black"];
   } else {
     res = [
       props.selectedValue === props.option.value
         ? "bg-background-alice-blue text-blue-500"
         : "bg-white hover:!bg-background-alice-blue text-core-black hover:text-blue-500",
-    ]
+    ];
   }
   res.push(mappedClass[props.size]);
   return res;
