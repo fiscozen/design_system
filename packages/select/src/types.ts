@@ -1,4 +1,5 @@
 import { FzFloatingProps } from "@fiscozen/composables";
+import { Ref } from "vue";
 
 export interface FzSelectProps extends FzFloatingProps {
   /**
@@ -53,6 +54,10 @@ export interface FzSelectProps extends FzFloatingProps {
    * Size of the options to render each time in the floating panel
    */
   optionsToShow?: number;
+  /**
+   * will be used in the floating composable overriding other values
+   */
+  overrideOpener?: Ref<HTMLElement>;
 }
 
 export type FzSelectOptionsProps = {
