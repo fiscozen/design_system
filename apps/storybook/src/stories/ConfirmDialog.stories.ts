@@ -16,6 +16,7 @@ const meta = {
     closeOnBackdrop: { control: 'boolean' },
     footerEnabled: { control: 'boolean' },
     confirmButtonVariant: { control: 'select', options: ['primary', 'secondary', 'invisible', 'danger', 'success'] },
+    shouldAlwaysRender: { control: 'boolean' }
   },
   args: {}
 } satisfies Meta<typeof FzConfirmDialog>
