@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, useSlots, watch, toRef, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, useSlots, watch, toRef, computed, onBeforeUnmount, toRefs } from 'vue'
 import { useFloating } from './composables'
 import { FzFloatingProps, FzUseFloatingArgs } from './types'
 
@@ -11,15 +11,15 @@ const props = withDefaults(defineProps<FzFloatingProps>(), {
 
 const emits = defineEmits(['fzfloating:setPosition'])
 
-const opener = ref(null)
 const content = ref<HTMLElement | null>(null)
+const opener = ref(null)
 
 const slots = useSlots()
 
 let scheduledAnimationFrame = false
 
 const useFloatingOpts: FzUseFloatingArgs = {
-  position: computed(() => props.position),
+  position: props.position,
   element: {
     // @ts-ignore
     domRef: content
@@ -28,18 +28,23 @@ const useFloatingOpts: FzUseFloatingArgs = {
     // @ts-ignore
     domRef: toRef(props.container || document.body)
   },
-  useViewport: computed(() => props.useViewport),
+  opener: {
+    domRef: toRef(null)
+  },
+  useViewport: props.useViewport,
   callback(...args) {
     emits('fzfloating:setPosition', ...args)
   }
 }
+
+const testOpts = toRefs(useFloatingOpts)
 if (slots.opener) {
   useFloatingOpts.opener = {
     domRef: opener
   }
 }
 
-const floating = useFloating(useFloatingOpts)
+const floating = useFloating(testOpts)
 
 const setPositionWhenOpen = () => {
   if (scheduledAnimationFrame) {
@@ -69,6 +74,19 @@ watch(
     content.value.style.left = '0px'
     content.value.style.transform = 'none'
     floating.setPosition()
+  }
+)
+watch(
+  () => props.overrideOpener,
+  (newVal) => {
+    if (!newVal) {
+      return
+    }
+    if (testOpts.opener && testOpts.opener.value) {
+      testOpts.opener.value = {
+        domRef: newVal
+      }
+    }
   }
 )
 onBeforeUnmount(() => {

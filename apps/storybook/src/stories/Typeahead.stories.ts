@@ -14,7 +14,7 @@ const meta: Meta<typeof FzTypeahead> = {
       control: {
         type: 'select'
       }
-    },
+    }
   },
   args: {
     selectProps: {
@@ -30,9 +30,9 @@ type Story = StoryObj<typeof meta>
 
 const Template: Story = {
   render: (args) => ({
-    components: {FzTypeahead},
+    components: { FzTypeahead },
     setup() {
-      const text = ref();
+      const text = ref()
       return {
         text,
         args
@@ -40,7 +40,7 @@ const Template: Story = {
     },
     methods: {
       onInputChange() {
-        console.log("Input changed");
+        console.log('Input changed')
       }
     },
     template: `
@@ -48,10 +48,15 @@ const Template: Story = {
         <FzTypeahead v-bind="args" v-model="text" @fztypeahead:input="onInputChange"/>
       </div>
     `
-  }),
+  })
 }
 
-const options = [{label: 'one', value: '1'}, {label: 'two', value: '2'}, {label: 'disabled option', value: 'disabled', disabled: true}, {label: 'three', value: '3'}]
+const options = [
+  { label: 'one', value: '1' },
+  { label: 'two', value: '2' },
+  { label: 'disabled option', value: 'disabled', disabled: true },
+  { label: 'three', value: '3' }
+]
 const Default: Story = {
   ...Template,
   args: {
@@ -74,7 +79,7 @@ const Error: Story = {
     label: 'This is a label',
     placeholder: 'This is a placeholder',
     errorMessage: 'This is an error message'
-  },
+  }
 }
 
 const Disabled: Story = {
@@ -86,8 +91,8 @@ const Disabled: Story = {
     },
     disabled: true,
     label: 'This is a label',
-    placeholder: 'This is a placeholder',
-  },
+    placeholder: 'This is a placeholder'
+  }
 }
 
 const WithIcons: Story = {
@@ -100,10 +105,9 @@ const WithIcons: Story = {
     label: 'This is a label',
     placeholder: 'This is a placeholder',
     rightIcon: 'credit-card',
-    leftIcon: 'credit-card',
+    leftIcon: 'credit-card'
   }
 }
-
 
 const HelpText: Story = {
   ...Template,
@@ -130,14 +134,14 @@ const Precompiled: Story = {
     placeholder: 'This is a placeholder'
   },
   render: (args) => ({
-    components: {FzTypeahead},
+    components: { FzTypeahead },
     setup() {
-      const model = ref("1");
+      const model = ref('1')
       return { model, args }
     },
     methods: {
       onInputChange() {
-        console.log("Input changed");
+        console.log('Input changed')
       }
     },
     template: `
@@ -145,7 +149,7 @@ const Precompiled: Story = {
         <FzTypeahead v-bind="args" v-model="model" @fztypeahead:input="onInputChange"/>
       </div>
     `
-  }),
+  })
 }
 
 const Reset: Story = {
@@ -159,14 +163,13 @@ const Reset: Story = {
     placeholder: 'This is a placeholder'
   },
   render: (args) => ({
-    components: {FzTypeahead, FzButton},
+    components: { FzTypeahead, FzButton },
     setup() {
-      const model = ref("");
+      const model = ref('')
       const reset = () => {
-        model.value = '';
+        model.value = ''
       }
       return { model, args, reset }
-
     },
     template: `
       <div class="h-[100vh] w-[100-vw] p-16">
@@ -174,7 +177,7 @@ const Reset: Story = {
         <FzButton @click="reset">Reset</FzButton>
       </div>
     `
-  }),
+  })
 }
 
 const PrecompiledObject: Story = {
@@ -188,14 +191,14 @@ const PrecompiledObject: Story = {
     placeholder: 'This is a placeholder'
   },
   render: (args) => ({
-    components: {FzTypeahead},
+    components: { FzTypeahead },
     setup() {
-      const model = ref(options[0]);
+      const model = ref(options[0])
       return { model, args }
     },
     methods: {
       onInputChange() {
-        console.log("Input changed");
+        console.log('Input changed')
       }
     },
     template: `
@@ -203,7 +206,7 @@ const PrecompiledObject: Story = {
         <FzTypeahead v-bind="args" v-model.object="model" @fztypeahead:input="onInputChange"/>
       </div>
     `
-  }),
+  })
 }
 
 const NoDelayTime: Story = {
@@ -219,36 +222,48 @@ const NoDelayTime: Story = {
   }
 }
 
-const hundredOptionsRepeated = Array.from({length: 100}, (_, i) => ({label: `option ${i % 3}`, value: `${i}`}))
+const hundredOptionsRepeated = Array.from({ length: 100 }, (_, i) => ({
+  label: `option ${i % 3}`,
+  value: `${i}`
+}))
 const HundredOptions: Story = {
   ...Template,
   args: {
     selectProps: {
       options: hundredOptionsRepeated,
-      isOpen:false
+      isOpen: false
     },
     label: 'This is a label',
     placeholder: 'This is a placeholder'
   }
 }
 
-const remoteOptions = [{label: 'Foo', value: 'foo'}, {label: 'Bar', value: 'bar'}, {label: 'Baz', value: 'baz'}, {label: 'Qux', value: 'qux'}];
-const filteredOptions = ref<FzSelectOptionsProps[]>([]);
+const remoteOptions = [
+  { label: 'Foo', value: 'foo' },
+  { label: 'Bar', value: 'bar' },
+  { label: 'Baz', value: 'baz' },
+  { label: 'Qux', value: 'qux' }
+]
+const filteredOptions = ref<FzSelectOptionsProps[]>([])
 
 async function remoteLoader(searchString: string) {
-  const result : FzSelectOptionsProps[] = await new Promise((resolve) => {
+  const result: FzSelectOptionsProps[] = await new Promise((resolve) => {
     setTimeout(() => {
-      resolve(remoteOptions.filter((record) => {return record.value.toLowerCase().indexOf(searchString.toLowerCase()) >= 0}));
-    }, 500);
-  });
-  filteredOptions.value = result;
+      resolve(
+        remoteOptions.filter((record) => {
+          return record.value.toLowerCase().indexOf(searchString.toLowerCase()) >= 0
+        })
+      )
+    }, 500)
+  })
+  filteredOptions.value = result
 }
 
 const RemoteLoading: Story = {
   render: (args) => ({
-    components: {FzTypeahead},
+    components: { FzTypeahead },
     setup() {
-      const text = ref();
+      const text = ref()
       return {
         text,
         args
@@ -270,22 +285,22 @@ const RemoteLoading: Story = {
       options: [],
       isOpen: false
     },
-    filteredOptions,
+    filteredOptions
   }
 }
 
 function remoteCallback(this: typeof FzTypeahead, text?: string) {
-  if(!text) {
+  if (!text) {
     this.args.selectProps.options = []
     return
   }
-  
+
   const asyncCall = async () => {
     const res = await fetch(`https://dummyjson.com/users/search?q=${text}`)
     const data = await res.json()
     this.args.selectProps.options = data.users.map((user: any) => ({
-        label: user.firstName + ' ' + user.lastName,
-        value: user.id
+      label: user.firstName + ' ' + user.lastName,
+      value: user.id
     }))
   }
   asyncCall()
@@ -293,9 +308,9 @@ function remoteCallback(this: typeof FzTypeahead, text?: string) {
 
 const RemoteLoadingWithAPICall: Story = {
   render: (args) => ({
-    components: {FzTypeahead},
+    components: { FzTypeahead },
     setup() {
-      const text = ref();
+      const text = ref()
       return {
         text,
         args
@@ -319,9 +334,21 @@ const RemoteLoadingWithAPICall: Story = {
     },
     filtrable: false
   }
-
 }
 
-export { Default, Error, Disabled, HelpText, WithIcons, Precompiled, Reset, PrecompiledObject, NoDelayTime, HundredOptions, RemoteLoading, RemoteLoadingWithAPICall }
+export {
+  Default,
+  Error,
+  Disabled,
+  HelpText,
+  WithIcons,
+  Precompiled,
+  Reset,
+  PrecompiledObject,
+  NoDelayTime,
+  HundredOptions,
+  RemoteLoading,
+  RemoteLoadingWithAPICall
+}
 
 export default meta

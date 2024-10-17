@@ -5,6 +5,7 @@
     class="flex flex-col gap-8 overflow-visible"
     :teleport="teleport"
     :useViewport="true"
+    :overrideOpener
     @fzfloating:setPosition="calculateMaxHeight"
   >
     <template #opener-start>
@@ -78,7 +79,11 @@
       </template>
       <template v-else>
         <FzSelectOption
-          :option="{label: 'Nessun risultato trovato', readonly: true, value: ''}"
+          :option="{
+            label: 'Nessun risultato trovato',
+            readonly: true,
+            value: '',
+          }"
           :size="size"
           :selectedValue="model"
         />

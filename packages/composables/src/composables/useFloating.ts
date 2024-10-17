@@ -1,9 +1,9 @@
 import { FzFloatingPosition, FzRect, FzUseFloatingArgs } from '../types'
-import { ref, reactive, onUnmounted, Ref, nextTick } from 'vue'
+import { ref, reactive, onUnmounted, Ref, nextTick, ToRefs } from 'vue'
 import { calcRealPos, getHighestAvailableSpacePos } from '../utils'
 
 export const useFloating = (
-  args: FzUseFloatingArgs
+  args: ToRefs<FzUseFloatingArgs>
 ): {
   float: FzRect
   rect: Ref<DOMRect | undefined>
@@ -27,7 +27,7 @@ export const useFloating = (
     root: null,
     rootMargin: '0px',
     threshold: 1.0,
-    ...args.element.intersectionOptions
+    ...args.element.value.intersectionOptions
   }
 
   const handleIntersect = (
@@ -42,17 +42,17 @@ export const useFloating = (
     nextTick(() => {
       actualPosition.value = args.position ? args.position.value : 'auto'
       safeElementDomRef.value = (
-        typeof args.element.domRef.value === 'string'
-          ? document.querySelector(args.element.domRef.value)
-          : args.element.domRef.value
+        typeof args.element.value.domRef.value === 'string'
+          ? document.querySelector(args.element.value.domRef.value)
+          : args.element.value.domRef.value
       ) as HTMLElement
-      if (!args.container) {
+      if (!args.container?.value) {
         safeContainerDomRef.value = document.body
       } else {
         safeContainerDomRef.value = (
-          typeof args.container.domRef.value === 'string'
-            ? document.querySelector(args.container.domRef.value)
-            : args.container.domRef.value
+          typeof args.container.value?.domRef.value === 'string'
+            ? document.querySelector(args.container.value.domRef.value)
+            : args.container.value?.domRef.value
         ) as HTMLElement
         safeContainerDomRef.value ??= document.body
       }
@@ -61,11 +61,11 @@ export const useFloating = (
         throw new Error('missing reference element for floating behavior')
       }
 
-      if (args.opener) {
+      if (args.opener?.value) {
         safeOpenerDomRef.value = (
-          typeof args.opener.domRef.value === 'string'
-            ? document.querySelector(args.opener.domRef.value)
-            : args.opener.domRef.value
+          typeof args.opener.value?.domRef.value === 'string'
+            ? document.querySelector(args.opener.value.domRef.value)
+            : args.opener.value?.domRef.value
         ) as HTMLElement
       }
 
@@ -82,7 +82,13 @@ export const useFloating = (
       let translateY = 0
       let translateX = 0
 
-      if (args.opener && safeOpenerDomRef.value && openerRect && openerRect.value) {
+      if (
+        args.opener &&
+        args.opener.value &&
+        safeOpenerDomRef.value &&
+        openerRect &&
+        openerRect.value
+      ) {
         const leftWithoutXMargin =
           openerRect.value.left - parseFloat(elStyle.marginLeft) - parseFloat(elStyle.marginRight)
         const leftWithoutLeftMargin = openerRect.value.left - parseFloat(elStyle.marginLeft)
@@ -93,14 +99,14 @@ export const useFloating = (
         switch (actualPosition.value) {
           case 'auto':
             actualPosition.value = getHighestAvailableSpacePos(
-              args.useViewport ? null : (safeContainerDomRef.value as HTMLElement),
+              args.useViewport?.value ? null : (safeContainerDomRef.value as HTMLElement),
               safeElementDomRef.value as HTMLElement,
               safeOpenerDomRef.value as HTMLElement
             )
             break
           case 'auto-vertical':
             actualPosition.value = getHighestAvailableSpacePos(
-              args.useViewport ? null : (safeContainerDomRef.value as HTMLElement),
+              args.useViewport?.value ? null : (safeContainerDomRef.value as HTMLElement),
               safeElementDomRef.value as HTMLElement,
               safeOpenerDomRef.value as HTMLElement,
               undefined,
@@ -109,7 +115,7 @@ export const useFloating = (
             break
           case 'auto-start':
             actualPosition.value = getHighestAvailableSpacePos(
-              args.useViewport ? null : (safeContainerDomRef.value as HTMLElement),
+              args.useViewport?.value ? null : (safeContainerDomRef.value as HTMLElement),
               safeElementDomRef.value as HTMLElement,
               safeOpenerDomRef.value as HTMLElement,
               'start'
@@ -117,7 +123,7 @@ export const useFloating = (
             break
           case 'auto-vertical-start':
             actualPosition.value = getHighestAvailableSpacePos(
-              args.useViewport ? null : (safeContainerDomRef.value as HTMLElement),
+              args.useViewport?.value ? null : (safeContainerDomRef.value as HTMLElement),
               safeElementDomRef.value as HTMLElement,
               safeOpenerDomRef.value as HTMLElement,
               'start',
@@ -126,7 +132,7 @@ export const useFloating = (
             break
           case 'auto-end':
             actualPosition.value = getHighestAvailableSpacePos(
-              args.useViewport ? null : (safeContainerDomRef.value as HTMLElement),
+              args.useViewport?.value ? null : (safeContainerDomRef.value as HTMLElement),
               safeElementDomRef.value as HTMLElement,
               safeOpenerDomRef.value as HTMLElement,
               'end'
@@ -134,7 +140,7 @@ export const useFloating = (
             break
           case 'auto-vertical-end':
             actualPosition.value = getHighestAvailableSpacePos(
-              args.useViewport ? null : (safeContainerDomRef.value as HTMLElement),
+              args.useViewport?.value ? null : (safeContainerDomRef.value as HTMLElement),
               safeElementDomRef.value as HTMLElement,
               safeOpenerDomRef.value as HTMLElement,
               'end',
@@ -304,7 +310,9 @@ export const useFloating = (
 
       rect.value = safeElementDomRef.value.getBoundingClientRect()
 
-      args.callback && args.callback(rect, openerRect, containerRect, position, actualPosition)
+      args.callback &&
+        args.callback.value &&
+        args.callback.value(rect, openerRect, containerRect, position, actualPosition)
     })
 
   onUnmounted(() => {
