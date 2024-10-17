@@ -44,7 +44,7 @@ function useClickOutside(
 
   onBeforeUnmount(() => {
     if (elementToListenClicksOn) {
-      elementToListenClicksOn.value!.removeEventListener('click', listener)
+      elementToListenClicksOn.value?.removeEventListener('click', listener)
       return
     }
     document.removeEventListener('click', listener)
