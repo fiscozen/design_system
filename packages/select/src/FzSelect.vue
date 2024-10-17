@@ -61,8 +61,8 @@
       </span>
     </template>
     <div
-      class="flex flex-col p-4 rounded shadow overflow-auto ml-[-2px] min-w-[120px] w-full max-h-min"
-      :style="{ width: containerWidth ?? 'auto', maxHeight }"
+      class="flex flex-col p-4 rounded shadow overflow-auto ml-[-2px] box-border max-h-min"
+      :style="{ minWidth: containerWidth, maxWidth: openerMaxWidth, maxHeight }"
       ref="containerRef"
       test-id="fzselect-options-container"
     >
@@ -89,6 +89,8 @@ import {
   useClickOutside,
 } from "@fiscozen/composables";
 import FzSelectOption from "./components/FzSelectOption.vue";
+import { calculateContainerWidth, MIN_WIDTH } from "./common";
+
 
 const props = withDefaults(defineProps<FzSelectProps>(), {
   size: "md",
@@ -102,7 +104,8 @@ const model = defineModel({
 const isOpen = ref(false);
 const opener = ref<HTMLElement>();
 const containerRef = ref<HTMLElement>();
-const containerWidth = ref<string>("auto");
+const containerWidth = ref<string>(`${MIN_WIDTH}px`);
+const openerMaxWidth = ref<string>("none");
 const openerContainer = ref<HTMLElement>();
 const visibleOptions = ref<FzSelectOptionsProps[]>([]);
 const OPTIONS_HEIGHT = 20;
@@ -181,7 +184,7 @@ const selectedOption = computed(() => {
   return props.options.find((option) => option.value === model.value);
 });
 
-watch(() => [props.size, model.value], calculateContainerWidth);
+watch(() => [props.size, model.value], updateContainerWidth);
 watch(
   () => props.options,
   () => {
@@ -193,7 +196,7 @@ onMounted(() => {
   if (props.floatingPanelMaxHeight) {
     maxHeight.value = props.floatingPanelMaxHeight;
   }
-  calculateContainerWidth();
+  updateContainerWidth();
   addScrollListener();
   updateVisibleOptions();
 });
@@ -207,7 +210,7 @@ const handleSelect = (value: string) => {
 const handlePickerClick = () => {
   if (props.disabled) return;
   isOpen.value = !isOpen.value;
-  calculateContainerWidth();
+  updateContainerWidth();
 };
 
 const evaluateProps = () => {
@@ -221,10 +224,13 @@ const evaluateProps = () => {
   }
 };
 
-async function calculateContainerWidth() {
-  await nextTick();
-  if (!safeOpener.value) containerWidth.value = "auto";
-  else containerWidth.value = `${safeOpener.value.clientWidth}px`;
+function updateContainerWidth() {
+  if(!safeOpener.value) return;
+
+  const {minWidth, maxWidth} = calculateContainerWidth(safeOpener.value);
+
+  containerWidth.value = `${minWidth}px`;
+  openerMaxWidth.value = `${maxWidth}px`;
 }
 
 function addScrollListener() {
