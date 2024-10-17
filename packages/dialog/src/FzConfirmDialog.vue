@@ -65,8 +65,7 @@ const props = withDefaults(defineProps<FzConfirmDialogProps>(), {
   disableConfirm: false,
   confirmButtonEnabled: true,
   doesCancelButtonCloseDialog: true,
-  doesConfirmButtonCloseDialog: true,
-  unrenderOnClose: true
+  doesConfirmButtonCloseDialog: true
 });
 const emit = defineEmits(["fzmodal:confirm", "fzmodal:cancel"]);
 
