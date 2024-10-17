@@ -89,8 +89,8 @@ import {
   useClickOutside,
 } from "@fiscozen/composables";
 import FzSelectOption from "./components/FzSelectOption.vue";
+import { calculateContainerWidth, MIN_WIDTH } from "./common";
 
-const MIN_WIDTH = 240;
 
 const props = withDefaults(defineProps<FzSelectProps>(), {
   size: "md",
@@ -184,7 +184,7 @@ const selectedOption = computed(() => {
   return props.options.find((option) => option.value === model.value);
 });
 
-watch(() => [props.size, model.value], calculateContainerWidth);
+watch(() => [props.size, model.value], updateContainerWidth);
 watch(
   () => props.options,
   () => {
@@ -196,7 +196,7 @@ onMounted(() => {
   if (props.floatingPanelMaxHeight) {
     maxHeight.value = props.floatingPanelMaxHeight;
   }
-  calculateContainerWidth();
+  updateContainerWidth();
   addScrollListener();
   updateVisibleOptions();
 });
@@ -210,7 +210,7 @@ const handleSelect = (value: string) => {
 const handlePickerClick = () => {
   if (props.disabled) return;
   isOpen.value = !isOpen.value;
-  calculateContainerWidth();
+  updateContainerWidth();
 };
 
 const evaluateProps = () => {
@@ -224,18 +224,13 @@ const evaluateProps = () => {
   }
 };
 
-async function calculateContainerWidth() {
-  if (!safeOpener.value) return;
+function updateContainerWidth() {
+  if(!safeOpener.value) return;
 
-  const rect = safeOpener.value.getBoundingClientRect();
+  const {minWidth, maxWidth} = calculateContainerWidth(safeOpener.value);
 
-  const minimumWidth = rect.width > MIN_WIDTH ? rect.width : MIN_WIDTH;
-  const spaceOnRight = window.innerWidth - (rect.right + window.scrollX);
-  const spaceOnLeft = rect.left + window.scrollX;
-  const maxSpaceAvailable = rect.width + Math.max(spaceOnRight, spaceOnLeft);
-
-  containerWidth.value = `${minimumWidth}px`;
-  openerMaxWidth.value = `${maxSpaceAvailable}px`;
+  containerWidth.value = `${minWidth}px`;
+  openerMaxWidth.value = `${maxWidth}px`;
 }
 
 function addScrollListener() {
