@@ -1,5 +1,6 @@
 <template>
   <FzSelect
+    ref="fzselect"
     @select="(val) => emit('fztypeahead:select', val)"
     :disabled
     v-bind="safeSelectOpts"
@@ -18,7 +19,7 @@
           :disabled
           :size
           :modelValue="inputValue"
-          @update:modelValue="handleInput"
+          @update:modelValue="(e) => handleInput(e, isOpen)"
           @focus="() => !isOpen && handlePickerClick()"
           :rightIcon="isOpen ? 'chevron-up' : 'chevron-down'"
         >
@@ -90,6 +91,7 @@ const [model, modelModifiers] = defineModel<string, "object">({
 });
 
 const opener = ref<any>();
+const fzselect = ref<any>();
 
 const overrideOpener = computed(() => {
   return (props.helpText || props.errorMessage) && opener.value
@@ -154,11 +156,14 @@ const debounceHandleInput = debounce(
   props.delayTime,
 );
 
-function handleInput(val: string) {
+function handleInput(val: string, isOpen: boolean) {
   inputValue.value = val;
   const selected = internalOptions.value?.find((opt) => opt.value === val);
   if (!selected) model.value = undefined;
   debounceHandleInput(val);
+  if (!isOpen) {
+    fzselect.value.forceOpen();
+  }
 }
 
 const internalOptions = computed<FzSelectOptionsProps[] | undefined>(() => {
