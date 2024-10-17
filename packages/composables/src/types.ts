@@ -19,6 +19,7 @@ export interface FzFloatingProps {
     | Record<string, boolean | undefined>
     | Array<string | Record<string, boolean | undefined>>
   overrideContentClass?: boolean
+  overrideOpener?: Ref<HTMLElement>
   teleport?: boolean
   useViewport?: boolean
 }
@@ -39,9 +40,9 @@ export interface FzFloatElement {
 export interface FzUseFloatingArgs {
   element: FzFloatElement
   container?: FzFloatElement
-  opener?: FzFloatElement
-  position?: Ref<FzFloatingPosition>
-  useViewport?: Ref<boolean>
+  opener: FzFloatElement
+  position?: FzFloatingPosition
+  useViewport?: boolean
   callback?: (
     rect: Ref<DOMRect | undefined>,
     openerRect: Ref<DOMRect | undefined>,
@@ -52,6 +53,6 @@ export interface FzUseFloatingArgs {
 }
 
 export interface FzUseCurrencyOptions {
-  minimumFractionDigits: number,
-  maximumFractionDigits: number|null,
+  minimumFractionDigits: number
+  maximumFractionDigits: number | null
 }

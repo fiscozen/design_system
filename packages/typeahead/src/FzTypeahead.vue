@@ -4,6 +4,7 @@
     :disabled
     v-bind="safeSelectOpts"
     v-model="model"
+    :overrideOpener
   >
     <template #opener="{ handlePickerClick, isOpen }">
       <div class="w-full flex gap-8" ref="openerContainer">
@@ -19,7 +20,8 @@
           :modelValue="inputValue"
           @update:modelValue="handleInput"
           @focus="() => !isOpen && handlePickerClick()"
-          :rightIcon="isOpen ? 'chevron-up' : 'chevron-down'">
+          :rightIcon="isOpen ? 'chevron-up' : 'chevron-down'"
+        >
           <template #left-icon>
             <FzIcon
               v-if="leftIcon"
@@ -35,10 +37,7 @@
               :size
               :variant="rightIconVariant"
             />
-            <FzIcon
-              :name="isOpen ? 'chevron-up' : 'chevron-down'"
-              :size
-            />
+            <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" :size />
           </template>
           <template #errorMessage>
             <slot name="errorMessage">{{ errorMessage }}</slot>
@@ -66,7 +65,7 @@ import { FzIcon } from "@fiscozen/icons";
 import Fuse from "fuse.js";
 
 const props = withDefaults(defineProps<FzTypeaheadProps>(), {
-  size: 'md',
+  size: "md",
   delayTime: 500,
   filtrable: true,
 });
@@ -75,7 +74,9 @@ const emit = defineEmits(["fztypeahead:input", "fztypeahead:select"]);
 const [model, modelModifiers] = defineModel<string, "object">({
   set(value) {
     if (modelModifiers.object) {
-      const selected = internalOptions.value?.find((opt) => opt.value === value);
+      const selected = internalOptions.value?.find(
+        (opt) => opt.value === value,
+      );
       return selected;
     }
     return value;
@@ -88,10 +89,18 @@ const [model, modelModifiers] = defineModel<string, "object">({
   },
 });
 
+const opener = ref<any>();
+
+const overrideOpener = computed(() => {
+  return (props.helpText || props.errorMessage) && opener.value
+    ? ref(opener.value.containerRef)
+    : ref(undefined);
+});
+
 const flatProps = computed(() => {
-  const res = {...props};
+  const res = { ...props };
   res.placeholder = res.placeholder || res.inputProps?.placeholder;
-  res.label = res.label || res.inputProps?.label || '';
+  res.label = res.label || res.inputProps?.label || "";
 
   return res;
 });
@@ -99,7 +108,6 @@ const inputValue = ref<string>("");
 const fuseOptions = {
   keys: ["label"],
 };
-const opener = ref<any>();
 
 const dynFuse = computed(() => {
   const res = props.selectProps ? props.selectProps?.options : props.options;
@@ -124,8 +132,8 @@ watch(model, (value) => {
 });
 
 function updateModelDependencies(value?: string) {
-  if (value === '') {
-    inputValue.value = '';
+  if (value === "") {
+    inputValue.value = "";
   }
   if (!value) {
     return;
@@ -153,7 +161,7 @@ function handleInput(val: string) {
   debounceHandleInput(val);
 }
 
-const internalOptions = computed<FzSelectOptionsProps[]|undefined>(() => {
+const internalOptions = computed<FzSelectOptionsProps[] | undefined>(() => {
   let res = props.selectProps?.options;
 
   if (props.filteredOptions) {

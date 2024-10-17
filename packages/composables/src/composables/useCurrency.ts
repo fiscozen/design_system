@@ -15,7 +15,7 @@ export const useCurrency = (options: FzUseCurrencyOptions) => {
     const safeOptions: Intl.NumberFormatOptions = {
       minimumFractionDigits: options.minimumFractionDigits,
       useGrouping: false
-    };
+    }
     if (options.maximumFractionDigits !== null) {
       safeOptions.maximumFractionDigits = options.maximumFractionDigits
     }

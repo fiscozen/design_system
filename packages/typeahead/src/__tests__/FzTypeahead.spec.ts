@@ -7,16 +7,20 @@ const IntersectionObserverMock = vi.fn(() => ({
   observe: vi.fn(),
   takeRecords: vi.fn(),
   unobserve: vi.fn(),
-}))
+}));
 
-vi.stubGlobal('IntersectionObserver', IntersectionObserverMock)
-
+vi.stubGlobal("IntersectionObserver", IntersectionObserverMock);
 
 describe.concurrent("FzTypeahead", () => {
   it("matches snaphost", async ({ expect }) => {
     const wrapper = mount(FzTypeahead, {
       props: {
-        selectProps: {options: [{label: 'some', value: 'some'}, {label: 'other', value: 'other'}]}
+        selectProps: {
+          options: [
+            { label: "some", value: "some" },
+            { label: "other", value: "other" },
+          ],
+        },
       },
       slots: {},
     });
@@ -26,15 +30,20 @@ describe.concurrent("FzTypeahead", () => {
   it("should reset if programmatically set to empty", async ({ expect }) => {
     const wrapper = mount(FzTypeahead, {
       props: {
-        modelValue: 'some',
-        selectProps: {options: [{label: 'some', value: 'some'}, {label: 'other', value: 'other'}]}
+        modelValue: "some",
+        selectProps: {
+          options: [
+            { label: "some", value: "some" },
+            { label: "other", value: "other" },
+          ],
+        },
       },
       slots: {},
     });
 
-    const input = await wrapper.find('input');
-    expect(input.element.value).toBe('some');
-    await wrapper.setProps({modelValue: ''});
-    expect(input.element.value).toBe('');
+    const input = await wrapper.find("input");
+    expect(input.element.value).toBe("some");
+    await wrapper.setProps({ modelValue: "" });
+    expect(input.element.value).toBe("");
   });
 });
