@@ -2,22 +2,23 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import FzSelect from "../FzSelect.vue";
-
-beforeEach(() => {
-  const mockIntersectionObserver = vi.fn();
-  mockIntersectionObserver.mockReturnValue({
-    observe: () => null,
-    unobserve: () => null,
-    disconnect: () => null,
-  });
-  window.IntersectionObserver = mockIntersectionObserver;
-});
-
-afterEach(() => {
-  document.body.innerHTML = "";
-});
+import { calculateContainerWidth } from "../common";
 
 describe("FzSelect", () => {
+  beforeEach(() => {
+    const mockIntersectionObserver = vi.fn();
+    mockIntersectionObserver.mockReturnValue({
+      observe: () => null,
+      unobserve: () => null,
+      disconnect: () => null,
+    });
+    window.IntersectionObserver = mockIntersectionObserver;
+  });
+
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   it("renders correctly", () => {
     const wrapper = mount(FzSelect, {
       props: {
@@ -225,6 +226,7 @@ describe("FzSelect", () => {
       50,
     );
   });
+
   it('toggles isOpen state when handlePickerClick is called', async () => {
     const wrapper = mount(FzSelect, {
       props: {
@@ -242,6 +244,7 @@ describe("FzSelect", () => {
     });
 
     expect(wrapper.vm.isOpen).toBe(false);
+    // @ts-ignore
     await wrapper.vm.handlePickerClick();
     expect(wrapper.vm.isOpen).toBe(true);
   });
@@ -263,8 +266,8 @@ describe("FzSelect", () => {
     });
 
     await wrapper.vm.$nextTick();
-    await wrapper.vm.calculateContainerWidth();
-    expect(wrapper.vm.openerMaxWidth).toBe(`${window.innerWidth}px`);
+    const {maxWidth} = calculateContainerWidth(wrapper.vm.$refs.opener as HTMLElement);
+    expect(maxWidth).toBe(window.innerWidth);
   });
 
   it('calculates container width correctly when element is in the center', async () => {
@@ -291,8 +294,8 @@ describe("FzSelect", () => {
       },
     });
 
-    await wrapper.vm.calculateContainerWidth();
-    expect(wrapper.vm.openerMaxWidth).toBe(`${right}px`);
+    const {maxWidth} = calculateContainerWidth(wrapper.vm.$refs.opener as HTMLElement);
+    expect(maxWidth).toBe(right);
   });
 
   it("calculates container width correctly when element is on the left", async () => {
@@ -323,8 +326,8 @@ describe("FzSelect", () => {
       },
     });
 
-    await wrapper.vm.calculateContainerWidth();
-    expect(wrapper.vm.openerMaxWidth).toBe(`${window.innerWidth - left}px`);
+    const {maxWidth} = calculateContainerWidth(wrapper.vm.$refs.opener as HTMLElement);
+    expect(maxWidth).toBe(window.innerWidth - left);
   });
 
   it("calculates container width correctly when element is on the right", async () => {
@@ -355,8 +358,7 @@ describe("FzSelect", () => {
       },
     });
 
-    await wrapper.vm.calculateContainerWidth();
-    expect(wrapper.vm.openerMaxWidth).toBe(`${right}px`);
+    const {maxWidth} = calculateContainerWidth(wrapper.vm.$refs.opener as HTMLElement);
+    expect(maxWidth).toBe(right);
   });
-
 });
