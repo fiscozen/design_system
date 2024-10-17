@@ -6,7 +6,7 @@
     class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-start sm:justify-center z-30">
     <dialog
       ref="dialog"
-      @close="closeModal"
+      @close="handleModalClose"
       :class="[dialogStaticClasses, dialogClasses]"
     >
       <div ref="innerDialog" :class="[staticClasses, classes]">
@@ -66,11 +66,14 @@ const showModal = () => {
 
 const closeModal = (returnVal?: string) => {
   dialog.value!.close(returnVal);
+};
+
+function handleModalClose() {
   visible.value = false;
   if (props.unrenderOnClose) {
     shouldRender.value = false;
   }
-};
+}
 
 watch(dialog, (dialog) => {
   if (dialog && shouldRender.value) {
