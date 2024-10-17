@@ -1,11 +1,12 @@
 <template>
   <div
+    v-if="shouldRender || shouldAlwaysRender"
     ref="backdrop"
     v-show="visible"
     class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-start sm:justify-center z-30">
     <dialog
       ref="dialog"
-      @close="visible = false"
+      @close="handleModalClose"
       :class="[dialogStaticClasses, dialogClasses]"
     >
       <div ref="innerDialog" :class="[staticClasses, classes]">
@@ -29,14 +30,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { FzDialogProps } from "./types";
 import { useKeyUp } from "@fiscozen/composables";
 import { useClickOutside } from "@fiscozen/composables";
 
 const props = withDefaults(defineProps<FzDialogProps>(), {
   size: "md",
-  closeOnBackdrop: true,
+  closeOnBackdrop: true
 });
 const emit = defineEmits(["fzmodal:cancel"]);
 
@@ -44,6 +45,7 @@ const dialog = ref<HTMLDialogElement>();
 const backdrop = ref<HTMLDialogElement>();
 const innerDialog = ref<HTMLDivElement>();
 const visible = ref(false);
+const shouldRender = ref(false);
 
 let backdropClickTimeout = false;
 
@@ -51,14 +53,37 @@ const showModal = () => {
   backdropClickTimeout = true;
   setTimeout(() => {
     backdropClickTimeout = false;
-  }, 100)
-  dialog.value!.show();
-  visible.value = true;
+  }, 100);
+  
+  if (props.shouldAlwaysRender) {
+    dialog.value!.show();
+    visible.value = true;
+  } else {
+    shouldRender.value = true;
+  }
 };
+
+const closeModal = (returnVal?: string) => {
+  dialog.value!.close(returnVal);
+};
+
+function handleModalClose() {
+  visible.value = false;
+  if (!props.shouldAlwaysRender) {
+    shouldRender.value = false;
+  }
+}
+
+watch(dialog, (dialog) => {
+  if (dialog && shouldRender.value) {
+    dialog.show();
+    visible.value = true;
+  }
+});
 
 defineExpose({
   show: showModal,
-  close: (returnVal?: string): void => dialog.value!.close(returnVal),
+  close: closeModal,
   visible,
 });
 
