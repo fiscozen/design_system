@@ -80,6 +80,8 @@ const props = withDefaults(defineProps<FzDatepickerProps>(), {
   formatLocale: () => it,
   state: undefined,
   autoPosition: true,
+  textInput: true,
+  arrowNavigation: true
 });
 
 const dp = ref();
