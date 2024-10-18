@@ -29,6 +29,7 @@ const simpleDialog = (args: FzConfirmDialogProps) => ({
   template: `
     <div class="w-screen h-screen">
       <FzButton @click="dialog.show()">Open Modal</FzButton>
+      <FzButton @click="dialog.close()">Close modal</FzButton>
       <FzDialog v-bind="args" ref="dialog"><template #header>{{args.title}}</template></FzDialog>
     </div>
   `
