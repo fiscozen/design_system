@@ -64,7 +64,7 @@ const showModal = () => {
 };
 
 const closeModal = (returnVal?: string) => {
-  dialog.value!.close(returnVal);
+  dialog.value?.close(returnVal);
 };
 
 function handleModalClose() {
