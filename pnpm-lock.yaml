@@ -159,9 +159,15 @@ importers:
       '@storybook/blocks':
         specifier: ^8.0.10
         version: 8.0.10(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@storybook/manager-api':
+        specifier: ^8.3.5
+        version: 8.3.5(storybook@8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@storybook/test':
         specifier: ^8.0.10
         version: 8.0.10(vitest@1.2.0(@types/node@18.19.7)(jsdom@23.2.0))
+      '@storybook/theming':
+        specifier: ^8.3.5
+        version: 8.3.5(storybook@8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@storybook/vue3':
         specifier: ^8.0.10
         version: 8.0.10(vue@3.4.13(typescript@5.3.3))
@@ -3906,6 +3912,11 @@ packages:
   '@storybook/manager-api@8.0.10':
     resolution: {integrity: sha512-LLu6YKQLWf5QB3h3RO8IevjLrSOew7aidIQPr9DIr9xC8wA7N2fQabr+qrJdE306p3cHZ0nzhYNYZxSjm4Dvdw==}
 
+  '@storybook/manager-api@8.3.5':
+    resolution: {integrity: sha512-fEQoKKi7h7pzh2z9RfuzatJxubrsfL/CB99fNXQ0wshMSY/7O4ckd18pK4fzG9ErnCtLAO9qsim4N/4eQC+/8Q==}
+    peerDependencies:
+      storybook: ^8.3.5
+
   '@storybook/manager@8.0.10':
     resolution: {integrity: sha512-bojGglUQNry48L4siURc2zQKswavLzMh69rqsfL3ZXx+i+USfRfB7593azTlaZh0q6HO4bUAjB24RfQCyifLLQ==}
 
@@ -3946,6 +3957,11 @@ packages:
         optional: true
       react-dom:
         optional: true
+
+  '@storybook/theming@8.3.5':
+    resolution: {integrity: sha512-9HmDDyC691oqfg4RziIM9ElsS2HITaxmH7n/yeUPtuirkPdAQzqOzhvH/Sa0qOhifzs8VjR+Gd/a/ZQ+S38r7w==}
+    peerDependencies:
+      storybook: ^8.3.5
 
   '@storybook/types@8.0.10':
     resolution: {integrity: sha512-S/hKS7+SqNnYIehwxdQ4M2nnlfGDdYWAXdtPCVJCmS+YF2amgAxeuisiHbUg7eypds6VL0Oxk/j2nPEHOHk9pg==}
@@ -10173,6 +10189,10 @@ snapshots:
       - react
       - react-dom
 
+  '@storybook/manager-api@8.3.5(storybook@8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+    dependencies:
+      storybook: 8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+
   '@storybook/manager@8.0.10': {}
 
   '@storybook/node-logger@8.0.10': {}
@@ -10266,6 +10286,10 @@ snapshots:
     optionalDependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@storybook/theming@8.3.5(storybook@8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+    dependencies:
+      storybook: 8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
   '@storybook/types@8.0.10':
     dependencies:
