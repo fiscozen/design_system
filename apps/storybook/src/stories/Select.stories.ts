@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { ref } from 'vue'
 import { FzSelect } from '@fiscozen/select'
-import { disabled } from './RadioGroup.stories'
 
 const meta = {
   title: '@fiscozen/select/FzSelect',
@@ -44,7 +43,7 @@ const Template: SelectStory = {
     options: [
       { value: '1', label: 'One' },
       { value: '2', label: 'Two' },
-      { value: '3', label: 'Options with a very long text' }
+      { value: '3', label: 'Options with a very long text that is very very very long and unreadable' }
     ]
   }
 }
@@ -77,6 +76,7 @@ const BottomTemplate: SelectStory = {
     ]
   }
 }
+
 export const Medium: SelectStory = {
   ...Template,
   decorators: [() => ({
@@ -235,6 +235,21 @@ export const AutoVertical: SelectStory = {
       `
       <div style="width:100vw;height:100vh;">
         <div style='position: absolute; bottom: 8px; width: 200px;'><story/></div>
+      </div>
+      `
+  })]
+}
+
+export const LongTextOnRight: SelectStory = {
+  ...Template,
+  args: {
+    ...Template.args
+  },
+  decorators: [() => ({
+    template:
+      `
+      <div class="flex w-full justify-end">
+        <story/>
       </div>
       `
   })]
