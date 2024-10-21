@@ -39,8 +39,8 @@ const mapColorToClasses = {
 };
 
 const mapSizeToClasses = {
-  sm: "text-xs px-8 h-16 w-16",
-  md: "text-sm px-12 h-20 w-20",
+  sm: "text-xs px-8 h-20 w-16",
+  md: "text-sm px-12 h-24 w-20",
   lg: "text-base px-14 h-28 w-28",
 };
 
