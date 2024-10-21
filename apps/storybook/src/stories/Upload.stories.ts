@@ -25,7 +25,7 @@ const meta: Meta<typeof FzUpload> = {
         <story v-model="files"/>
         <h3 class="mt-10">v-model:</h3>
         <ul>
-          <li v-for="file in files">{{ file.name }}</div>
+          <li v-for="file in files">{{ file.name }}</li>
         </ul>
       </div>
     `
