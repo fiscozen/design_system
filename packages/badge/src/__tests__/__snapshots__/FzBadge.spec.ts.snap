@@ -1,11 +1,11 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzBadge > black color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 h-20 w-20 rounded-2xl !w-fit bg-core-black text-core-white">Fiscozen</div>"`;
+exports[`FzBadge > black color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-core-black text-core-white rounded-2xl !w-fit">Fiscozen</div>"`;
 
-exports[`FzBadge > error color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 h-20 w-20 rounded-2xl !w-fit bg-semantic-error text-core-white">Fiscozen</div>"`;
+exports[`FzBadge > error color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-semantic-error text-core-white rounded-2xl !w-fit">Fiscozen</div>"`;
 
-exports[`FzBadge > info color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 h-20 w-20 rounded-2xl !w-fit bg-semantic-info text-core-white">Fiscozen</div>"`;
+exports[`FzBadge > info color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-semantic-info text-core-white rounded-2xl !w-fit">Fiscozen</div>"`;
 
-exports[`FzBadge > success color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 h-20 w-20 rounded-2xl !w-fit bg-semantic-success text-core-white">Fiscozen</div>"`;
+exports[`FzBadge > success color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-semantic-success text-core-white rounded-2xl !w-fit">Fiscozen</div>"`;
 
-exports[`FzBadge > warning color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 h-20 w-20 rounded-2xl !w-fit bg-semantic-warning">Fiscozen</div>"`;
+exports[`FzBadge > warning color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-semantic-warning rounded-2xl !w-fit">Fiscozen</div>"`;
