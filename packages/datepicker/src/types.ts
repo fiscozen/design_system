@@ -3,7 +3,6 @@ import type { FzInputProps } from "@fiscozen/input";
 
 interface FzDatepickerProps extends VueDatePickerProps {
   inputProps: FzInputProps;
-  valueFormat?: string;
 }
 
 export { FzDatepickerProps };
