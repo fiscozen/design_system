@@ -40,7 +40,7 @@ const mapColorToClasses = {
 
 const mapSizeToClasses = {
   sm: "text-xs px-8 h-20 w-20",
-  md: "text-sm px-12 h-24 w-20",
+  md: "text-sm px-12 size-24",
   lg: "text-base px-14 h-28 w-28",
 };
 
