@@ -96,9 +96,7 @@ const closeMenu = () => {
 
 const handleDateUpdate = (e: string | Date) => {
   let res = e;
-  if (props.valueFormat) {
-    res = format(e, props.valueFormat);
-  } else if (props.modelType === "iso" && e instanceof Date) {
+  if (props.modelType === "iso" && e instanceof Date) {
     res = e.toISOString();
   } else if ((typeof e === "string") && (typeof props.format === "string")) {
     res = parse(e, props.format, new Date());
@@ -106,6 +104,8 @@ const handleDateUpdate = (e: string | Date) => {
       res = res.toISOString()
     }
     // TODO handle custom props.format functions
+  } else if (typeof props.modelType === 'string') {
+    res = format(e, props.modelType)
   }
   emit("update:model-value", res);
 };

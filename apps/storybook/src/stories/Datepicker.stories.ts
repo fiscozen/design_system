@@ -140,7 +140,7 @@ const StringValueFormat: Story = {
     template: `<p>{{ date }}</p><FzDatepicker v-bind="args" v-model="date" />`
   }),
   args: {
-    valueFormat: 'yyyy-MM-dd'
+    modelType: 'yyyy-MM-dd'
   }
 }
 
