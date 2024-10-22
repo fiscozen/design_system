@@ -4,11 +4,9 @@
     test-id="fzselect-option"
     type="button"
     :title="option.label"
+    :disabled="option.disabled || option.readonly"
     @click="
       () => {
-        if (option.disabled || option.readonly) {
-          return;
-        }
         $emit('click');
       }
     "
