@@ -290,10 +290,6 @@ const RemoteLoading: Story = {
 }
 
 function remoteCallback(this: typeof FzTypeahead, text?: string) {
-  if (!text) {
-    this.args.selectProps.options = []
-    return
-  }
 
   const asyncCall = async () => {
     const res = await fetch(`https://dummyjson.com/users/search?q=${text}`)

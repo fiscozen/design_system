@@ -3,7 +3,7 @@
 exports[`FzFloating > should match snapshot 1`] = `
 "<div>
   <div class="inline-flex"><button>opener</button></div>
-  <div class="fz__floating__content bg-core-white fixed z-10 p-4 bg-core-white fixed p-4 z-10">
+  <div class="fz__floating__content bg-core-white fixed p-4 z-10">
     <div>content</div>
   </div>
   <!--v-if-->
@@ -13,7 +13,7 @@ exports[`FzFloating > should match snapshot 1`] = `
 exports[`FzFloating > should match snapshot 2`] = `
 "<div>
   <div class="inline-flex"><button>opener</button></div>
-  <div class="fz__floating__content bg-core-white fixed z-10 p-4 bg-core-white fixed p-4 z-10">
+  <div class="fz__floating__content bg-core-white fixed p-4 z-10">
     <div>content</div>
   </div>
   <!--v-if-->
@@ -23,7 +23,7 @@ exports[`FzFloating > should match snapshot 2`] = `
 exports[`FzFloating > should match snapshot 3`] = `
 "<div>
   <div class="inline-flex"><button>opener</button></div>
-  <div class="fz__floating__content bg-core-white fixed z-10 p-4 bg-core-white fixed p-4 z-10">
+  <div class="fz__floating__content bg-core-white fixed p-4 z-10">
     <div>content</div>
   </div>
   <!--v-if-->
@@ -33,7 +33,7 @@ exports[`FzFloating > should match snapshot 3`] = `
 exports[`FzFloating > should match snapshot 4`] = `
 "<div>
   <div class="inline-flex"><button>opener</button></div>
-  <div class="fz__floating__content bg-core-white fixed z-10 p-4 bg-core-white fixed p-4 z-10">
+  <div class="fz__floating__content bg-core-white fixed p-4 z-10">
     <div>content</div>
   </div>
   <!--v-if-->
@@ -43,7 +43,7 @@ exports[`FzFloating > should match snapshot 4`] = `
 exports[`FzFloating > should match snapshot 5`] = `
 "<div>
   <div class="inline-flex"><button>opener</button></div>
-  <div class="fz__floating__content bg-core-white fixed z-10 p-4 bg-core-white fixed p-4 z-10">
+  <div class="fz__floating__content bg-core-white fixed p-4 z-10">
     <div>content</div>
   </div>
   <!--v-if-->
@@ -53,7 +53,7 @@ exports[`FzFloating > should match snapshot 5`] = `
 exports[`FzFloating > should match snapshot 6`] = `
 "<div>
   <div class="inline-flex"><button>opener</button></div>
-  <div class="fz__floating__content bg-core-white fixed z-10 p-4 bg-core-white fixed p-4 z-10">
+  <div class="fz__floating__content bg-core-white fixed p-4 z-10">
     <div>content</div>
   </div>
   <!--v-if-->
@@ -63,7 +63,7 @@ exports[`FzFloating > should match snapshot 6`] = `
 exports[`FzFloating > should match snapshot 7`] = `
 "<div>
   <div class="inline-flex"><button>opener</button></div>
-  <div class="fz__floating__content bg-core-white fixed z-10 p-4 bg-core-white fixed p-4 z-10">
+  <div class="fz__floating__content bg-core-white fixed p-4 z-10">
     <div>content</div>
   </div>
   <!--v-if-->
@@ -73,7 +73,7 @@ exports[`FzFloating > should match snapshot 7`] = `
 exports[`FzFloating > should match snapshot 8`] = `
 "<div>
   <div class="inline-flex"><button>opener</button></div>
-  <div class="fz__floating__content bg-core-white fixed z-10 p-4 bg-core-white fixed p-4 z-10">
+  <div class="fz__floating__content bg-core-white fixed p-4 z-10">
     <div>content</div>
   </div>
   <!--v-if-->
@@ -83,7 +83,7 @@ exports[`FzFloating > should match snapshot 8`] = `
 exports[`FzFloating > should match snapshot 9`] = `
 "<div>
   <div class="inline-flex"><button>opener</button></div>
-  <div class="fz__floating__content bg-core-white fixed z-10 p-4 bg-core-white fixed p-4 z-10">
+  <div class="fz__floating__content bg-core-white fixed p-4 z-10">
     <div>content</div>
   </div>
   <!--v-if-->
@@ -93,7 +93,7 @@ exports[`FzFloating > should match snapshot 9`] = `
 exports[`FzFloating > should match snapshot 10`] = `
 "<div>
   <div class="inline-flex"><button>opener</button></div>
-  <div class="fz__floating__content bg-core-white fixed z-10 p-4 bg-core-white fixed p-4 z-10">
+  <div class="fz__floating__content bg-core-white fixed p-4 z-10">
     <div>content</div>
   </div>
   <!--v-if-->
@@ -103,7 +103,7 @@ exports[`FzFloating > should match snapshot 10`] = `
 exports[`FzFloating > should match snapshot 11`] = `
 "<div>
   <div class="inline-flex"><button>opener</button></div>
-  <div class="fz__floating__content bg-core-white fixed z-10 p-4 bg-core-white fixed p-4 z-10">
+  <div class="fz__floating__content bg-core-white fixed p-4 z-10">
     <div>content</div>
   </div>
   <!--v-if-->
@@ -113,7 +113,7 @@ exports[`FzFloating > should match snapshot 11`] = `
 exports[`FzFloating > should match snapshot 12`] = `
 "<div>
   <div class="inline-flex"><button>opener</button></div>
-  <div class="fz__floating__content bg-core-white fixed z-10 p-4 bg-core-white fixed p-4 z-10">
+  <div class="fz__floating__content bg-core-white fixed p-4 z-10">
     <div>content</div>
   </div>
   <!--v-if-->
