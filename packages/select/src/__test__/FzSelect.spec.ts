@@ -266,7 +266,9 @@ describe("FzSelect", () => {
     });
 
     await wrapper.vm.$nextTick();
-    const {maxWidth} = calculateContainerWidth(wrapper.vm.$refs.opener as HTMLElement);
+    const { maxWidth } = calculateContainerWidth(
+      wrapper.vm.$refs.opener as HTMLElement,
+    );
     expect(maxWidth).toBe(window.innerWidth);
   });
 
@@ -297,7 +299,9 @@ describe("FzSelect", () => {
       },
     });
 
-    const {maxWidth} = calculateContainerWidth(wrapper.vm.$refs.opener as HTMLElement);
+    const { maxWidth } = calculateContainerWidth(
+      wrapper.vm.$refs.opener as HTMLElement,
+    );
     expect(maxWidth).toBe(right);
   });
 
@@ -332,7 +336,9 @@ describe("FzSelect", () => {
       },
     });
 
-    const {maxWidth} = calculateContainerWidth(wrapper.vm.$refs.opener as HTMLElement);
+    const { maxWidth } = calculateContainerWidth(
+      wrapper.vm.$refs.opener as HTMLElement,
+    );
     expect(maxWidth).toBe(window.innerWidth - left);
   });
 
@@ -367,7 +373,9 @@ describe("FzSelect", () => {
       },
     });
 
-    const {maxWidth} = calculateContainerWidth(wrapper.vm.$refs.opener as HTMLElement);
+    const { maxWidth } = calculateContainerWidth(
+      wrapper.vm.$refs.opener as HTMLElement,
+    );
     expect(maxWidth).toBe(right);
   });
 });

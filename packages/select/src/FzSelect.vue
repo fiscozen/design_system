@@ -105,7 +105,6 @@ import {
 import FzSelectOption from "./components/FzSelectOption.vue";
 import { calculateContainerWidth, MIN_WIDTH } from "./common";
 
-
 const props = withDefaults(defineProps<FzSelectProps>(), {
   size: "md",
   optionsToShow: 25,
@@ -229,8 +228,10 @@ const handlePickerClick = () => {
 
 const forceOpen = () => {
   isOpen.value = true;
-  calculateContainerWidth();
-}
+  if (safeOpener.value) {
+    calculateContainerWidth(safeOpener.value);
+  }
+};
 
 const evaluateProps = () => {
   switch (true) {
@@ -244,9 +245,9 @@ const evaluateProps = () => {
 };
 
 function updateContainerWidth() {
-  if(!safeOpener.value) return;
+  if (!safeOpener.value) return;
 
-  const {minWidth, maxWidth} = calculateContainerWidth(safeOpener.value);
+  const { minWidth, maxWidth } = calculateContainerWidth(safeOpener.value);
 
   containerWidth.value = `${minWidth}px`;
   openerMaxWidth.value = `${maxWidth}px`;
@@ -279,7 +280,7 @@ defineExpose({
   handlePickerClick,
   calculateContainerWidth,
   openerMaxWidth,
-  forceOpen
-})
+  forceOpen,
+});
 </script>
 <style scoped></style>

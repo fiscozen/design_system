@@ -19,8 +19,8 @@
           :disabled
           :size
           :modelValue="inputValue"
-          @update:modelValue="(e) => handleInput(e, isOpen)"
-          @focus="() => !isOpen && handlePickerClick()"
+          @update:modelValue="(e: string) => handleInput(e, isOpen)"
+          @focus="handleInputFocus(isOpen, handlePickerClick)"
           :rightIcon="isOpen ? 'chevron-up' : 'chevron-down'"
         >
           <template #left-icon>
@@ -119,6 +119,11 @@ const dynFuse = computed(() => {
 const safeInputContainer = computed(() => {
   return opener.value?.containerRef;
 });
+
+const handleInputFocus = (isOpen: boolean, handlePickerClick: () => void) => {
+  !isOpen && handlePickerClick();
+  handleInput(inputValue.value, isOpen);
+};
 
 onMounted(() => {
   updateModelDependencies(model.value);
