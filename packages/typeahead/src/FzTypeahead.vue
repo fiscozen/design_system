@@ -11,13 +11,7 @@
       <div class="w-full flex gap-8" ref="openerContainer">
         <FzInput
           ref="opener"
-          v-bind="inputProps"
-          :label="flatProps.label"
-          :placeholder="flatProps.placeholder"
-          :required
-          :error="!!errorMessage"
-          :disabled
-          :size
+          v-bind="safeInputProps"
           :modelValue="inputValue"
           @update:modelValue="(e: string) => handleInput(e, isOpen)"
           @focus="handleInputFocus(isOpen, handlePickerClick)"
@@ -61,7 +55,7 @@ import {
   FzSelectOptionsProps,
   FzSelectProps,
 } from "@fiscozen/select";
-import { FzInput } from "@fiscozen/input";
+import { FzInput, FzInputProps } from "@fiscozen/input";
 import { FzIcon } from "@fiscozen/icons";
 import Fuse from "fuse.js";
 
@@ -99,13 +93,6 @@ const overrideOpener = computed(() => {
     : ref(undefined);
 });
 
-const flatProps = computed(() => {
-  const res = { ...props };
-  res.placeholder = res.placeholder || res.inputProps?.placeholder;
-  res.label = res.label || res.inputProps?.label || "";
-
-  return res;
-});
 const inputValue = ref<string>("");
 const fuseOptions = {
   keys: ["label"],
@@ -199,6 +186,16 @@ const safeSelectOpts = computed<FzSelectProps>(() => ({
   options: internalOptions.value || [],
   extOpener: safeInputContainer.value,
 }));
+
+const safeInputProps = computed<FzInputProps>(() => ({
+  placeholder: props.placeholder,
+  label: props.label,
+  required: props.required,
+  error: !!props.errorMessage,
+  disabled: props.disabled,
+  size: props.size,
+  ...props.inputProps
+}))
 </script>
 
 <style scoped></style>
