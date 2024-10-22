@@ -194,8 +194,8 @@ const safeInputProps = computed<FzInputProps>(() => ({
   error: !!props.errorMessage,
   disabled: props.disabled,
   size: props.size,
-  ...props.inputProps
-}))
+  ...props.inputProps,
+}));
 </script>
 
 <style scoped></style>
