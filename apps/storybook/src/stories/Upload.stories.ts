@@ -13,7 +13,7 @@ const meta: Meta<typeof FzUpload> = {
     }
   },
   args: {
-    id: 'example-id'
+    id: 'example-id',
   },
   decorators: [() => ({
     setup () {
@@ -38,6 +38,12 @@ const Default: Story = {
   args: {}
 }
 
-export { Default }
+const Multiple: Story = {
+  args: {
+    multiple: true
+  }
+}
+
+export { Default, Multiple }
 
 export default meta

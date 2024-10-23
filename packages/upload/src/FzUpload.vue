@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { FzUploadProps } from "./types";
 import { FzButton, FzIconButton } from "@fiscozen/button";
 import { FzLink } from "@fiscozen/link";
@@ -68,11 +68,17 @@ const props = withDefaults(defineProps<FzUploadProps>(), {
   buttonLabel: "Carica",
   dragAndDropLabel: "o trascina qui",
 });
-const emit = defineEmits([]);
+const emit = defineEmits(["fzupload:change"]);
 const model = defineModel<File[]>();
 
 const input = ref<HTMLInputElement | null>(null);
 const urlByFileMap = ref(new Map<File, string>());
+
+onMounted(() => {
+  if(model.value && model.value.length > 0 && !props.multiple) {
+    console.warn("[Fiscozen Design System]: FzUpload prop 'multiple' is set to false, but multiple files are provided. Only the first file will be used.");
+  }
+})
 
 onUnmounted(() => {
   urlByFileMap.value.forEach((value) => {
@@ -93,11 +99,16 @@ function handleDrop(event: DragEvent) {
 function handleInputChange(event: Event) {
   if (!input.value?.files) return;
   addFiles([...input.value.files]);
+  emit("fzupload:change", model.value);
   input.value.value = "";
 }
 
 function addFiles(filesToAdd: File[]) {
-  model.value = [...(model.value ?? []), ...filesToAdd];
+  if(props.multiple) {
+    model.value = [...(model.value ?? []), ...filesToAdd];
+  } else {
+    model.value = [...filesToAdd];
+  }
 }
 
 function getFileUrl(file: File) {
