@@ -19,9 +19,7 @@ describe.concurrent("FzUpload", () => {
 
     const wrapper = mount(FzUpload, {
       props: {
-        modelValue: [
-          new File([], "test-image1.png"),
-        ],
+        modelValue: [new File([], "test-image1.png")],
       },
       slots: {},
     });
@@ -49,7 +47,9 @@ describe.concurrent("FzUpload", () => {
     expect(wrapper.html()).toMatchSnapshot();
   });
 
-  it("should print a warning message if multiple values are passed without multiple prop", async ({ expect }) => {
+  it("should print a warning message if multiple values are passed without multiple prop", async ({
+    expect,
+  }) => {
     const warn = vi.spyOn(console, "warn");
     warn.mockImplementation(() => {});
 
@@ -99,10 +99,10 @@ describe.concurrent("FzUpload", () => {
       slots: {},
     });
 
-    const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+    const file = new File(["content"], "test.txt", { type: "text/plain" });
 
     const input = wrapper.get("input").element as HTMLInputElement;
-    Object.defineProperty(input, 'files', {
+    Object.defineProperty(input, "files", {
       value: [file],
       writable: false,
     });
