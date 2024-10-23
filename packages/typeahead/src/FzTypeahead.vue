@@ -108,7 +108,7 @@ const safeInputContainer = computed(() => {
 });
 
 const handleInputFocus = (isOpen: boolean, handlePickerClick: () => void) => {
-  !isOpen && handlePickerClick();
+  if (!isOpen) handlePickerClick();
   handleInput(inputValue.value, isOpen);
 };
 
