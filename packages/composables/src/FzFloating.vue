@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<FzFloatingProps>(), {
 const emits = defineEmits(['fzfloating:setPosition'])
 
 const content = ref<HTMLElement | null>(null)
-const opener = ref(null)
+const opener = ref<HTMLElement | null>(null)
 
 const slots = useSlots()
 
@@ -37,14 +37,14 @@ const useFloatingOpts: FzUseFloatingArgs = {
   }
 }
 
-const testOpts = toRefs(useFloatingOpts)
+const dynamicOpts = toRefs(useFloatingOpts)
 if (slots.opener) {
   useFloatingOpts.opener = {
     domRef: opener
   }
 }
 
-const floating = useFloating(testOpts)
+const floating = useFloating(dynamicOpts)
 
 const setPositionWhenOpen = () => {
   if (scheduledAnimationFrame) {
@@ -82,8 +82,8 @@ watch(
     if (!newVal) {
       return
     }
-    if (testOpts.opener && testOpts.opener.value) {
-      testOpts.opener.value = {
+    if (dynamicOpts.opener && dynamicOpts.opener.value) {
+      dynamicOpts.opener.value = {
         domRef: newVal
       }
     }
