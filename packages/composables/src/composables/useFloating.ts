@@ -83,11 +83,9 @@ export const useFloating = (
       let translateX = 0
 
       if (
-        args.opener &&
-        args.opener.value &&
+        args.opener?.value &&
         safeOpenerDomRef.value &&
-        openerRect &&
-        openerRect.value
+        openerRect?.value
       ) {
         const leftWithoutXMargin =
           openerRect.value.left - parseFloat(elStyle.marginLeft) - parseFloat(elStyle.marginRight)
