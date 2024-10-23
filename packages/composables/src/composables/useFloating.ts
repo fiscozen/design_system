@@ -308,9 +308,9 @@ export const useFloating = (
 
       rect.value = safeElementDomRef.value.getBoundingClientRect()
 
-      args.callback &&
-        args.callback.value &&
+      if (args.callback?.value) {
         args.callback.value(rect, openerRect, containerRect, position, actualPosition)
+      } 
     })
 
   onUnmounted(() => {
