@@ -68,7 +68,9 @@ const props = withDefaults(defineProps<FzUploadProps>(), {
   buttonLabel: "Carica",
   dragAndDropLabel: "o trascina qui",
 });
-const emit = defineEmits(["fzupload:change"]);
+const emit = defineEmits<{ 
+  'fzupload:change': [files: File[]]  
+}>(); 
 
 function modelSetter(value: File[]) {
   if (value.length > 1 && !props.multiple) {
@@ -90,7 +92,9 @@ const urlByFileMap = ref(new Map<File, string>());
 
 onMounted(() => {
   // this call is needed to make sure the model is correctly set when passed as a prop
-  model.value = modelSetter(model.value);
+  nextTick(() => {
+    model.value = modelSetter(model.value);
+  });
 });
 
 onUnmounted(() => {
@@ -116,13 +120,15 @@ function handleInputChange(event: Event) {
 }
 
 function addFiles(filesToAdd: File[]) {
+  let newFiles = [];
   if (props.multiple) {
-    model.value = [...(model.value ?? []), ...filesToAdd];
+    newFiles = [...(model.value ?? []), ...filesToAdd];
   } else {
-    model.value = [filesToAdd[0]];
+    newFiles = [filesToAdd[0]];
   }
 
-  emit("fzupload:change", model.value);
+  model.value = newFiles;
+  emit("fzupload:change", newFiles);
 }
 
 function getFileUrl(file: File) {
