@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { FzDialogProps } from "./types";
 import { useKeyUp } from "@fiscozen/composables";
 import { useClickOutside } from "@fiscozen/composables";
