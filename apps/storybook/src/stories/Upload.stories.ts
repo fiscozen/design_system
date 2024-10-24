@@ -13,7 +13,7 @@ const meta: Meta<typeof FzUpload> = {
     }
   },
   args: {
-    id: 'example-id'
+    id: 'example-id',
   },
   decorators: [() => ({
     setup () {
@@ -22,7 +22,7 @@ const meta: Meta<typeof FzUpload> = {
     },
     template: `
       <div class="p-16 max-w-[400px]">
-        <story v-model="files"/>
+        <story v-model="files" @fzupload:change="(e) => console.log(e)"/>
         <h3 class="mt-10">v-model:</h3>
         <ul>
           <li v-for="file in files">{{ file.name }}</li>
@@ -35,9 +35,28 @@ const meta: Meta<typeof FzUpload> = {
 type Story = StoryObj<typeof meta>
 
 const Default: Story = {
-  args: {}
+  render: (args) =>({
+    components: { FzUpload },
+    setup() {
+      const files = ref([
+        new File([], 'test-image1.png'),
+        new File([], 'test-image2.png'),
+        new File([], 'test-image3.png')
+      ]);
+      return { files, args };
+    },
+    template: `
+      <FzUpload v-bind="args" v-model="files"/>
+    `
+  })
 }
 
-export { Default }
+const Multiple: Story = {
+  args: {
+    multiple: true
+  }
+}
+
+export { Default, Multiple }
 
 export default meta
