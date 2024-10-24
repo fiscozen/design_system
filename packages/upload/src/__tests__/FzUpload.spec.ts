@@ -60,11 +60,18 @@ describe.concurrent("FzUpload", () => {
           new File([], "test-image2.png"),
           new File([], "test-image3.png"),
         ],
+        "onUpdate:modelValue": (modelValue: any) =>
+          wrapper.setProps({ modelValue }),
       },
       slots: {},
     });
 
     expect(warn).toHaveBeenCalled();
+
+    // awaiting to be sure the ui is updated. Using "await wrapper.vm.$nextTick" didn't work
+    setTimeout(() => {
+      expect(wrapper.findAll("ul > li").length).toBe(1);
+    }, 50);
   });
 
   it("delete works", async ({ expect }) => {

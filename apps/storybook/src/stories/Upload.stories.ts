@@ -35,7 +35,20 @@ const meta: Meta<typeof FzUpload> = {
 type Story = StoryObj<typeof meta>
 
 const Default: Story = {
-  args: {}
+  render: (args) =>({
+    components: { FzUpload },
+    setup() {
+      const files = ref([
+        new File([], 'test-image1.png'),
+        new File([], 'test-image2.png'),
+        new File([], 'test-image3.png')
+      ]);
+      return { files, args };
+    },
+    template: `
+      <FzUpload v-bind="args" v-model="files"/>
+    `
+  })
 }
 
 const Multiple: Story = {
