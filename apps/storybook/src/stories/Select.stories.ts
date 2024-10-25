@@ -254,3 +254,17 @@ export const LongTextOnRight: SelectStory = {
       `
   })]
 }
+
+export const SelectWithOptionLabel: SelectStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    options: [
+      { label: 'Group 1', kind: 'label' },
+      { value: '1', label: 'One' },
+      { value: '2', label: 'Two' },
+      { label: 'Group 2', kind: 'label' },
+      { value: '3', label: 'Three' }
+    ]
+  }
+}

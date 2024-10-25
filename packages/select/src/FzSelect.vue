@@ -67,10 +67,18 @@
       ref="containerRef"
       test-id="fzselect-options-container"
     >
-      <template v-if="visibleOptions.length">
+      <template
+        v-if="visibleOptions.length"
+        v-for="option in visibleOptions"
+        :key="option.kind === 'label' ? option.label : option.value"
+      >
+        <FzSelectLabel
+          v-if="option.kind === 'label'"
+          :option="option"
+          :size="size"
+        />
         <FzSelectOption
-          v-for="option in visibleOptions"
-          :key="option.value"
+          v-else
           @click="() => handleSelect(option.value)"
           :option="option"
           :size="size"
@@ -104,6 +112,7 @@ import {
 } from "@fiscozen/composables";
 import FzSelectOption from "./components/FzSelectOption.vue";
 import { calculateContainerWidth, MIN_WIDTH } from "./common";
+import FzSelectLabel from "./components/FzSelectLabel.vue";
 
 const props = withDefaults(defineProps<FzSelectProps>(), {
   size: "md",
