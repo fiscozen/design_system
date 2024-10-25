@@ -1,12 +1,7 @@
 <template>
   <button
     disabled
-    @click.prevent.stop="
-      () => {
-        $emit('click', 'label');
-      }
-    "
-    test-id="fzselect-option"
+    test-id="fzselect-label"
     :title="option.label"
     :class="computedClass"
   >
