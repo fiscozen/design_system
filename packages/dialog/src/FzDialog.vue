@@ -34,6 +34,8 @@ import { computed, ref, watch } from "vue";
 import { FzDialogProps } from "./types";
 import { useKeyUp } from "@fiscozen/composables";
 import { useClickOutside } from "@fiscozen/composables";
+import dialogPolyfill from 'dialog-polyfill';
+import 'dialog-polyfill/dist/dialog-polyfill.css';
 
 const props = withDefaults(defineProps<FzDialogProps>(), {
   size: "md",
@@ -56,6 +58,7 @@ const showModal = () => {
   }, 100);
   
   if (props.shouldAlwaysRender) {
+    dialogPolyfill.registerDialog(dialog.value!);
     dialog.value!.show();
     visible.value = true;
   } else {
@@ -76,6 +79,7 @@ function handleModalClose() {
 
 watch(dialog, (dialog) => {
   if (dialog && shouldRender.value) {
+    dialogPolyfill.registerDialog(dialog);
     dialog.show();
     visible.value = true;
   }
@@ -107,13 +111,8 @@ const handleKeyUp = (e: KeyboardEvent) => {
 
 useKeyUp(handleKeyUp);
 
-const staticClasses = ["flex", "flex-col", "bg-core-white"];
-
-const dialogStaticClasses = {
-  "border-1": true,
-  rounded: true,
-  "border-grey-100": true,
-};
+const staticClasses = "flex flex-col bg-core-white";
+const dialogStaticClasses = "border-1 rounded border-grey-100 p-0";
 
 const dialogClasses = computed(() => {
   let res: string[] = [];
