@@ -67,23 +67,24 @@
       ref="containerRef"
       test-id="fzselect-options-container"
     >
-      <template
-        v-if="visibleOptions.length"
-        v-for="option in visibleOptions"
-        :key="option.kind === 'label' ? option.label : option.value"
-      >
-        <FzSelectLabel
-          v-if="option.kind === 'label'"
-          :option="option"
-          :size="size"
-        />
-        <FzSelectOption
-          v-else
-          @click="() => handleSelect(option.value)"
-          :option="option"
-          :size="size"
-          :selectedValue="model"
-        />
+      <template v-if="visibleOptions.length">
+        <template
+          v-for="option in visibleOptions"
+          :key="option.kind === 'label' ? option.label : option.value"
+        >
+          <FzSelectLabel
+            v-if="option.kind === 'label'"
+            :option="option"
+            :size="size"
+          />
+          <FzSelectOption
+            v-else
+            @click="() => handleSelect(option.value)"
+            :option="option"
+            :size="size"
+            :selectedValue="model"
+          />
+        </template>
       </template>
       <template v-else>
         <FzSelectOption

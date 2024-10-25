@@ -86,6 +86,12 @@ export type FzSelectOptionProps = {
 };
 
 export type FzSelectLabelProps = {
+  /**
+   * the text of the label
+   */
   label: string;
+  /**
+   * the type of option
+   */
   kind: "label";
 };
