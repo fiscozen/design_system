@@ -2,6 +2,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzCurrencyInput } from '@fiscozen/input'
 import { ref } from 'vue';
+import { useCurrency } from '@fiscozen/composables';
 
 const meta = {
   title: '@fiscozen/input/FzCurrencyInput',
@@ -24,6 +25,12 @@ const Default: Story = {
     setup() {
       const data = ref(1.23)
 
+      const {format, parse} = useCurrency({
+        useGrouping: true,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })
+
       const onSet = () => {
         data.value = 0
       }
@@ -31,12 +38,14 @@ const Default: Story = {
       return {
         data,
         onSet,
-        args
+        args,
+        format,
+        parse
       }
     },
     template: `
       <FzCurrencyInput v-bind="args" v-model:amount="data" label="currency input"/>
-      <pre>{{data}}</pre>
+      <pre>{{format(data)}}</pre>
       <button @click="onSet">SET</button>
     `,
   })
