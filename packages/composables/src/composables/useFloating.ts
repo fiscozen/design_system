@@ -82,11 +82,7 @@ export const useFloating = (
       let translateY = 0
       let translateX = 0
 
-      if (
-        args.opener?.value &&
-        safeOpenerDomRef.value &&
-        openerRect?.value
-      ) {
+      if (args.opener?.value && safeOpenerDomRef.value && openerRect?.value) {
         const leftWithoutXMargin =
           openerRect.value.left - parseFloat(elStyle.marginLeft) - parseFloat(elStyle.marginRight)
         const leftWithoutLeftMargin = openerRect.value.left - parseFloat(elStyle.marginLeft)
@@ -310,7 +306,7 @@ export const useFloating = (
 
       if (args.callback?.value) {
         args.callback.value(rect, openerRect, containerRect, position, actualPosition)
-      } 
+      }
     })
 
   onUnmounted(() => {
