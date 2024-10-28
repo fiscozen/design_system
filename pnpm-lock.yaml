@@ -21,8 +21,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.185
-        version: 1.0.185
+        specifier: ^1.0.188
+        version: 1.0.188
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
@@ -1263,8 +1263,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.185
-        version: 1.0.185
+        specifier: ^1.0.188
+        version: 1.0.188
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.6.0
@@ -2522,8 +2522,8 @@ packages:
     resolution: {integrity: sha512-Xk1sIhyNC/esHGGVjL/niHLowM0csl/kFO5uawBy4IrWwy0o1G8LGt3jP6nmWGz+USxeeqbihAmp/oVZju6wug==}
     hasBin: true
 
-  '@awesome.me/kit-8137893ad3@1.0.185':
-    resolution: {integrity: sha512-rSnTtoEra6hmed9isTMg/P+r5YuO1ZIhTX1SxFjT/OFhDq0AnJUBhvF8lZZJw6Njl+ZN5vRTTJ11UHsK2sWwCQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.185/kit-8137893ad3-1.0.185.tgz}
+  '@awesome.me/kit-8137893ad3@1.0.188':
+    resolution: {integrity: sha512-enMWSIKPJ6Ms3LtGXgW/uAedPxTU2bRqi+riYw43GaQxHRFdwiSSan4YuYR38o2mEfjqO+8so9KBZ9dJNBoE2g==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.188/kit-8137893ad3-1.0.188.tgz}
     engines: {node: '>=16'}
 
   '@awesome.me/kit-8137893ad3@1.0.71':
@@ -5379,11 +5379,13 @@ packages:
   eslint@8.56.0:
     resolution: {integrity: sha512-Go19xM6T9puCOWntie1/P997aXxFsOi37JIHRWI514Hc6ZnaHGKY9xFhrU65RT6CcBEzZoGG1e6Nq+DT04ZtZQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   espree@9.6.1:
@@ -8167,8 +8169,8 @@ packages:
   vue-component-type-helpers@2.0.17:
     resolution: {integrity: sha512-2car49m8ciqg/JjgMBkx7o/Fd2A7fHESxNqL/2vJYFLXm4VwYO4yH0rexOi4a35vwNgDyvt17B07Vj126l9rAQ==}
 
-  vue-component-type-helpers@2.1.6:
-    resolution: {integrity: sha512-ng11B8B/ZADUMMOsRbqv0arc442q7lifSubD0v8oDXIFoMg/mXwAPUunrroIDkY+mcD0dHKccdaznSVp8EoX3w==}
+  vue-component-type-helpers@2.1.8:
+    resolution: {integrity: sha512-ii36gDzrYAfOQIkOlo44yceDdT5269gKmNGxf07Qx6seH2U50+tQ2ol02XLhYPmxrh6YabAsOdte8WDrpaO6Tw==}
 
   vue-docgen-api@4.75.1:
     resolution: {integrity: sha512-MECZ3uExz+ssmhD/2XrFoQQs93y17IVO1KDYTp8nr6i9GNrk67AAto6QAtilW1H/pTDPMkQxJ7w/25ZIqVtfAA==}
@@ -8410,7 +8412,7 @@ snapshots:
     dependencies:
       default-browser-id: 3.0.0
 
-  '@awesome.me/kit-8137893ad3@1.0.185':
+  '@awesome.me/kit-8137893ad3@1.0.188':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.6.0
 
@@ -10408,7 +10410,7 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.4.13(typescript@5.3.3)
-      vue-component-type-helpers: 2.1.6
+      vue-component-type-helpers: 2.1.8
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -15123,7 +15125,7 @@ snapshots:
 
   vue-component-type-helpers@2.0.17: {}
 
-  vue-component-type-helpers@2.1.6: {}
+  vue-component-type-helpers@2.1.8: {}
 
   vue-docgen-api@4.75.1(vue@3.4.13(typescript@5.3.3)):
     dependencies:
