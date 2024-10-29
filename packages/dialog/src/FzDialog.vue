@@ -112,7 +112,7 @@ const handleKeyUp = (e: KeyboardEvent) => {
 
 useKeyUp(handleKeyUp);
 
-const staticClasses = "flex flex-col bg-core-white h-dvh max-h-dvh-fallback";
+const staticClasses = "flex flex-col bg-core-white";
 const dialogStaticClasses = "border-1 rounded border-grey-100 p-0";
 
 const dialogClasses = computed(() => {
@@ -132,18 +132,18 @@ const dialogClasses = computed(() => {
 
 const classes = computed(() => {
   if (props.isDrawer) {
-    return "w-[480px]";
+    return "w-[480px] h-dvh";
   }
 
   switch (props.size) {
     case "sm":
       return "w-[320px] min-h-[200px] max-h-[432px]";
     case "md":
-      return "w-dvw sm:w-[480px] min-h-[300px] sm:max-h-[600px] sm:h-auto";
+      return "w-dvw sm:w-[480px] min-h-[300px] sm:max-h-[600px] h-dvh sm:h-auto";
     case "lg":
-      return "w-dvw md:w-[640px] min-h-[300px] md:max-h-[600px] md:h-auto";
+      return "w-dvw md:w-[640px] min-h-[300px] md:max-h-[600px] h-dvh md:h-auto";
     case "xl":
-      return "w-dvw xl:w-[960px] min-h-[400px] xl:max-h-[600px] xl:h-auto";
+      return "w-dvw xl:w-[960px] min-h-[400px] xl:max-h-[600px] h-dvh xl:h-auto";
   }
 });
 </script>
@@ -157,9 +157,5 @@ dialog::backdrop {
   background-color: rgba(44, 40, 47, 0.8);
   top: 0;
   left: 0;
-}
-.max-h-dvh-fallback {
-  max-height: calc(100vh - 48px); /** If dvh is supported, this gets overridden */
-  max-height: 100dvh;
 }
 </style>
