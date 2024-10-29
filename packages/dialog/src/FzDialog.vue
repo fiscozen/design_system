@@ -16,7 +16,7 @@
         >
           <slot name="header"></slot>
         </div>
-        <div :class="['grow p-12', bodyClasses]">
+        <div :class="['grow p-12 overflow-auto', bodyClasses]">
           <slot name="body"></slot>
         </div>
         <div
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 import { FzDialogProps } from "./types";
 import { useKeyUp } from "@fiscozen/composables";
 import { useClickOutside } from "@fiscozen/composables";
@@ -50,18 +50,28 @@ const innerDialog = ref<HTMLDivElement>();
 const visible = ref(false);
 const shouldRender = ref(false);
 
-let backdropClickTimeout = false;
+function updateInnerHeightVar() {
+  dialog.value?.style.setProperty('--innerHeight', `${window.innerHeight}px`);
+}
+
+function handleDialogRendered() {
+  updateInnerHeightVar();
+  dialogPolyfill.registerDialog(dialog.value!);
+  dialog.value!.show();
+  visible.value = true;
+}
+
+onMounted(() => {
+  window.addEventListener('resize', updateInnerHeightVar);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateInnerHeightVar);
+});
 
 const showModal = () => {
-  backdropClickTimeout = true;
-  setTimeout(() => {
-    backdropClickTimeout = false;
-  }, 100);
-
   if (props.shouldAlwaysRender) {
-    dialogPolyfill.registerDialog(dialog.value!);
-    dialog.value!.show();
-    visible.value = true;
+    handleDialogRendered();
   } else {
     shouldRender.value = true;
   }
@@ -80,9 +90,7 @@ function handleModalClose() {
 
 watch(dialog, (dialog) => {
   if (dialog && shouldRender.value) {
-    dialogPolyfill.registerDialog(dialog);
-    dialog.show();
-    visible.value = true;
+    handleDialogRendered();
   }
 });
 
