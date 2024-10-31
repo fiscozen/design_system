@@ -1,6 +1,6 @@
 <template>
   <div
-    class="hoverable group"
+    class="hoverable group z-60"
     :class="{ hovering: isHovering }"
     @mouseenter="isHovering = true"
     @mouseleave="isHovering = false"
@@ -116,16 +116,16 @@ function handleToastClose(toast: Toast) {
 }
 
 .toast:first-child {
-  z-index: 3;
+  z-index: 63;
 }
 
 .toast:nth-child(2) {
-  z-index: 2;
+  z-index: 62;
   transform: translateY(var(--fz-translate-y)) scale(0.9375);
 }
 
 .toast:nth-child(3) {
-  z-index: 1;
+  z-index: 61;
 }
 
 .toast:nth-child(n + 3) {

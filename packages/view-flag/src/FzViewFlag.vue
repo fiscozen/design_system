@@ -1,5 +1,5 @@
 <template>
-  <div class="border-8 border-semantic-warning fixed inset-0 grid">
+  <div class="border-8 border-semantic-warning fixed inset-0 grid z-50">
     <div
       class="h-32 bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center"
     >

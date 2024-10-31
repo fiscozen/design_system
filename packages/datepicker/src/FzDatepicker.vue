@@ -278,6 +278,10 @@ const handlePaste = (
 .dp--menu--inner-stretched {
   @apply p-0;
 }
+.dp--menu-wrapper {
+  z-index: unset;
+  @apply z-70;
+}
 
 .dp__menu:focus {
   border: none;

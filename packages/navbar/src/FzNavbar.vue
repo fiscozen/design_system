@@ -32,7 +32,7 @@ const isHorizontal = computed(() => Boolean(props.variant === 'horizontal'))
 
 <template>
   <header
-    class="flex p-12 shadow"
+    class="flex p-12 shadow z-10"
     :class="{
       'justify-between': isMobile,
       'h-full w-56 flex-col': isVertical && !isMobile,

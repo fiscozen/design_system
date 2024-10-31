@@ -20,6 +20,11 @@ module.exports = {
       extend: {
         spacing,
         colors,
+        zIndex: {
+            '60': '60',
+            '70': '70',
+            '80': '80'
+        }
       }
     },
     variants: {},
