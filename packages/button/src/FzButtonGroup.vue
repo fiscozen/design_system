@@ -43,10 +43,6 @@ const computedClasses = computed(() => {
 </script>
 
 <style scoped>
-.gap-disabled :deep(button:focus) {
-  z-index: 100;
-}
-
 .gap-disabled :deep(button:not(:first-child):not(:last-child)) {
   border-radius: 0;
 }
