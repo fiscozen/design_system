@@ -4,7 +4,7 @@
     :is-open="isOpen"
     :position="position"
     class="fz__tooltip flex h-max"
-    :contentClass="['rounded', '!p-0', 'm-4', classes]">
+    :contentClass="['rounded', '!p-0', 'm-4', classes, 'z-80']">
     <template #opener>
       <div @mouseover="isOpen = text || $slots.text ? true : false" @mouseleave="isOpen = false">
         <slot></slot>

@@ -6,6 +6,7 @@
     :teleport="teleport"
     :useViewport="true"
     :overrideOpener
+    contentClass="z-70"
     @fzfloating:setPosition="calculateMaxHeight"
   >
     <template #opener-start>

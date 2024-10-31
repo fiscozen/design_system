@@ -5,7 +5,7 @@
     ref="container"
     overrideContentClass
     :teleport="teleport"
-    contentClass="fixed pt-4 z-10"
+    contentClass="fixed pt-4 z-70"
   >
     <template #opener>
       <slot name="opener" :isOpen="isOpen" :open="open">

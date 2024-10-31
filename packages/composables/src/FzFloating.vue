@@ -99,7 +99,7 @@ const contentClass = computed(() => {
     return props.contentClass
   }
 
-  return ['bg-core-white fixed p-4 z-10', props.contentClass]
+  return ['bg-core-white fixed p-4', props.contentClass]
 })
 </script>
 

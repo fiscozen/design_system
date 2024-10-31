@@ -3,7 +3,7 @@
     v-if="shouldRender || shouldAlwaysRender"
     ref="backdrop"
     v-show="visible"
-    class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-start sm:justify-center z-30"
+    class="fz-dialog__backdrop w-screen h-screen fixed flex flex-col items-center justify-start sm:justify-center z-20"
   >
     <dialog
       ref="dialog"
@@ -121,7 +121,7 @@ const handleKeyUp = (e: KeyboardEvent) => {
 useKeyUp(handleKeyUp);
 
 const staticClasses = "flex flex-col bg-core-white";
-const dialogStaticClasses = "border-1 rounded border-grey-100 p-0";
+const dialogStaticClasses = "border-1 rounded border-grey-100 p-0 z-[42]";
 
 const dialogClasses = computed(() => {
   if (props.isDrawer) {
