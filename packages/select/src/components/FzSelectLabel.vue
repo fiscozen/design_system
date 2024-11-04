@@ -1,12 +1,13 @@
 <template>
-  <button
+  <label
     disabled
     test-id="fzselect-label"
+    @click.prevent.stop
     :title="option.label"
     :class="computedClass"
   >
     {{ option.label }}
-  </button>
+  </label>
 </template>
 
 <script setup lang="ts">
