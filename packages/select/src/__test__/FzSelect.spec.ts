@@ -399,7 +399,7 @@ describe("FzSelect", () => {
     await wrapper.vm.$nextTick();
     wrapper.find('button[test-id="fzselect-opener"]').trigger("click");
     expect(
-      document.querySelectorAll('button[test-id="fzselect-label"]').length,
+      document.querySelectorAll('label[test-id="fzselect-label"]').length,
     ).toBe(1);
   });
 });
