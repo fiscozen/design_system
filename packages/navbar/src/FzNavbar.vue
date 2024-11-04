@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import { ref, onBeforeMount, onMounted, onUnmounted, computed } from 'vue'
 import { FzIconButton } from '@fiscozen/button'
-import { FzNavbarProps } from './types'
+import { FzNavbarEmits, FzNavbarProps } from './types'
 
 const props = withDefaults(defineProps<FzNavbarProps>(), {
   variant: 'horizontal'
 })
+
+const emit = defineEmits<FzNavbarEmits>()
 
 const width = ref(0)
 
@@ -53,12 +55,22 @@ const isHorizontal = computed(() => Boolean(props.variant === 'horizontal'))
       </div>
     </template>
     <template v-else>
-      <FzIconButton iconName="bars" variant="secondary" tooltip="menu" :disabled="false" />
+      <FzIconButton
+        iconName="bars"
+        variant="secondary"
+        tooltip="menu"
+        @click="emit('fznavbar:menuButtonClick')"
+      />
       <div>
         <slot name="brand-logo" :isMobile :isHorizontal :isVertical></slot>
       </div>
       <div>
-        <slot :name="isHorizontal ? 'notifications' : 'user-menu'" :isHorizontal :isVertical :isMobile></slot>
+        <slot
+          :name="isHorizontal ? 'notifications' : 'user-menu'"
+          :isHorizontal
+          :isVertical
+          :isMobile
+        ></slot>
       </div>
     </template>
   </header>
