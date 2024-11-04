@@ -60,7 +60,9 @@ export interface FzSelectProps extends FzFloatingProps {
   overrideOpener?: Ref<HTMLElement>;
 }
 
-export type FzSelectOptionsProps = {
+export type FzSelectOptionsProps = FzSelectOptionProps | FzSelectLabelProps;
+
+export type FzSelectOptionProps = {
   /**
    * the option value
    */
@@ -77,4 +79,19 @@ export type FzSelectOptionsProps = {
    * same as disabled, but without grey text
    */
   readonly?: boolean;
+  /**
+   * the type of option
+   */
+  kind?: "option";
+};
+
+export type FzSelectLabelProps = {
+  /**
+   * the text of the label
+   */
+  label: string;
+  /**
+   * the type of option
+   */
+  kind: "label";
 };

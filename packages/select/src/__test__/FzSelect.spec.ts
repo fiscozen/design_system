@@ -378,4 +378,28 @@ describe("FzSelect", () => {
     );
     expect(maxWidth).toBe(right);
   });
+
+  it("should render labels correctly", async () => {
+    const wrapper = mount(FzSelect, {
+      props: {
+        label: "Test Select",
+        required: true,
+        size: "md",
+        placeholder: "Select an option",
+        modelValue: "",
+        isOpen: false,
+        options: [
+          { label: "Group 1", kind: "label" },
+          { value: "option1", label: "Option 1" },
+          { value: "option2", label: "Option 2" },
+        ],
+      },
+    });
+
+    await wrapper.vm.$nextTick();
+    wrapper.find('button[test-id="fzselect-opener"]').trigger("click");
+    expect(
+      document.querySelectorAll('label[test-id="fzselect-label"]').length,
+    ).toBe(1);
+  });
 });
