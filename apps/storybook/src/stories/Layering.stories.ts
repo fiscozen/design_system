@@ -10,6 +10,8 @@ import { FzToast, FzToastQueue, enqueueToast } from '@fiscozen/toast'
 import { FzTooltip } from '@fiscozen/tooltip'
 import { FzTopbar } from '@fiscozen/topbar';
 import { FzViewFlag } from '@fiscozen/view-flag';
+import { FzNavlink } from '@fiscozen/navlink';
+import { FzIcon } from '@fiscozen/icons';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
@@ -27,11 +29,23 @@ type Story = StoryObj<typeof meta>
 
 const template = `
     <div class="w-screen h-screen">
-        <!--FzViewFlag role="operatore" firstName="Mario" lastName="Rossi" environment="staging" /-->
-        <FzNavbar />
-        <FzTopbar />
-        <FzToastQueue  />
-        <FzButton @click="dialog.show()">Apri dialog</FzButton>
+        <FzViewFlag role="operatore" firstName="Mario" lastName="Rossi" environment="staging" />
+        <FzNavbar>
+            <template #brand-logo="{isMobile}">
+                <FzIcon name="fiscozen" variant="fak" size="xl" class="text-core-black text-[32px] !w-[40px] ml-[-4px] cursor-pointer" /> 
+            </template>
+            <template #navigation>
+                <FzNavlink label="Fatture" /> 
+                <FzNavlink label="Spese" /> 
+                <FzNavlink label="Corrispettivi" /> 
+                <FzNavlink label="Adempimenti" /> 
+                <FzNavlink label="Documenti" /> 
+                <FzNavlink label="Dichiarazione" /> 
+            </template>
+        </FzNavbar>
+        <FzTopbar>This is a Topbar</FzTopbar>
+        <FzToastQueue  class="fixed top-16 right-16"/>
+        <FzButton class="m-16" @click="dialog.show()">Apri dialog</FzButton>
         <FzConfirmDialog title="Title" confirmLabel="OK" cancelLabel="Cancel" ref="dialog">
             <template #body>
                 <div class="grid grid-cols-2 gap-8">
@@ -53,7 +67,7 @@ const template = `
                     <FzButton @click="handleEnqueue('error')" class="mb-6">Error</FzButton>
                     <FzButton @click="handleEnqueueLong('error')" class="mb-6 mr-auto">Error long</FzButton>
                 </div>
-                </tempate>
+            </template>
         </FzConfirmDialog>
     </div>
 `
@@ -61,6 +75,7 @@ const template = `
 export const Layering: Story = {
   render: (args) => ({
     components: {
+        FzNavlink,
         FzButton,
         FzButtonGroup,
         FzDatepicker,
@@ -72,7 +87,8 @@ export const Layering: Story = {
         FzToastQueue,
         FzTooltip,
         FzTopbar,
-        FzViewFlag
+        FzViewFlag,
+        FzIcon
     },
     setup() {
         const dialog = ref('dialog');

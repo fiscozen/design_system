@@ -1,15 +1,17 @@
 <template>
-  <div class="border-8 border-semantic-warning fixed inset-0 grid z-50">
-    <div
-      class="h-32 bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center"
-    >
-      <FzBadge v-if="props.environment">{{ props.environment }}</FzBadge>
-      <div>
-        <template v-if="props.role">{{ props.role }}: </template>
-        <template v-if="props.firstName && props.lastName"
-          >{{ props.firstName }} {{ props.lastName[0] }}.</template
-        >
-      </div>
+  <div class="w-8 h-full bg-semantic-warning fixed top-0 left-0 z-50"></div>
+  <div class="w-8 h-full bg-semantic-warning fixed top-0 right-0 z-50"></div>
+  <div class="w-full h-8 bg-semantic-warning fixed top-0 left-0 z-50"></div>
+  <div class="w-full h-8 bg-semantic-warning fixed bottom-0 left-0 z-50"></div>
+  <div
+    class="h-32 bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center bottom-8 fixed m-auto left-1/2 -translate-x-1/2"
+  >
+    <FzBadge v-if="props.environment">{{ props.environment }}</FzBadge>
+    <div>
+      <template v-if="props.role">{{ props.role }}: </template>
+      <template v-if="props.firstName && props.lastName"
+        >{{ props.firstName }} {{ props.lastName[0] }}.</template
+      >
     </div>
   </div>
 </template>
