@@ -54,13 +54,13 @@ const layoutClass = computed(() => {
             res = 'grid-rows-auto'
             break;
         case 'twoColumns':
-            res = 'grid-cols-1 grid-rows-[60px_1fr] md:grid-rows-[1fr_1px] md:grid-cols-2'
+            res = 'grid-cols-1 grid-rows-[60px_1fr] md:grid-rows-1 md:grid-cols-2'
             break;
         case 'leftShoulder':
-            res = 'grid-rows-[40px_160px_60px_1fr] grid-cols-[1fr_1px] lg:grid-rows-[40px_160px_1fr] lg:grid-cols-[260px_1fr]'
+            res = 'grid-rows-[40px_160px_60px_1fr] grid-cols-1 lg:grid-rows-[40px_160px_1fr] lg:grid-cols-[260px_1fr]'
             break;
         case 'rightShoulder':
-            res = 'grid-rows-[40px_160px_60px_1fr] grid-cols-[1fr_1px] lg:grid-rows-[40px_160px_1fr] lg:grid-cols-[1fr_260px]'
+            res = 'grid-rows-[40px_160px_60px_1fr] grid-cols-1 lg:grid-rows-[40px_160px_1fr] lg:grid-cols-[1fr_260px]'
             break;
         default:
             break;
