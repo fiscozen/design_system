@@ -20,8 +20,6 @@ const meta: Meta<typeof FzLayout> = {
   ]
 }
 
-type Story = StoryObj<typeof meta>
-
 const twoColumns = (args: FzLayoutProps) => ({
   setup() {
     return { args }
@@ -50,14 +48,73 @@ const multipleRows = (args: FzLayoutProps) => ({
   components: {FzLayout},
   template: `
     <FzLayout v-bind="args">
-      <div class="w-full bg-red-100"></div>
-      <div class="w-full bg-green-100"></div>
-      <div class="w-full bg-orange-200"></div>
-      <div class="w-full bg-cyan-100"></div>
+      <div class="w-full h-full bg-red-100"></div>
+      <div class="w-full h-full bg-green-100"></div>
+      <div class="w-full h-full bg-orange-200"></div>
+      <div class="w-full h-full bg-cyan-100"></div>
     </FzLayout>
   `
 })
 
+const leftShoulder = (args: FzLayoutProps) => ({
+  setup() {
+    return { args }
+  },
+  components: {FzLayout},
+  template: `
+    <FzLayout v-bind="args">
+      <template #navbar>
+        <div class="w-full h-full bg-red-100"></div>
+      </template>
+      <template #header>
+        <div class="w-full h-full bg-green-100"></div>
+      </template>
+      <template #left-shoulder>
+        <div class="w-full h-full bg-orange-200"></div>
+      </template>
+      <template #default>
+        <div class="w-full h-full bg-cyan-100"></div>
+      </template>
+    </FzLayout>
+  `
+})
+
+export const LeftShoulder = {
+  render: leftShoulder,
+  args: {
+    layout: 'leftShoulder'
+  }
+}
+
+const rightShoulder = (args: FzLayoutProps) => ({
+  setup() {
+    return { args }
+  },
+  components: {FzLayout},
+  template: `
+    <FzLayout v-bind="args">
+      <template #navbar>
+        <div class="w-full h-full bg-red-100"></div>
+      </template>
+      <template #header>
+        <div class="w-full h-full bg-green-100"></div>
+      </template>
+      <template #right-shoulder>
+        <div class="w-full h-full bg-orange-200"></div>
+      </template>
+      <template #default>
+        <div class="w-full h-full bg-cyan-100"></div>
+      </template>
+    </FzLayout>
+  `
+})
+
+export const RightShoulder = {
+  render: rightShoulder,
+  args: {
+    layout: 'rightShoulder'
+  }
+}
 
 export const MultipleRows = {
   render: multipleRows,
