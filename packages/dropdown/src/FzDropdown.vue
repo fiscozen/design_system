@@ -4,6 +4,7 @@
     :position="floatingPosition"
     ref="container"
     overrideContentClass
+    :teleport="teleport"
     contentClass="fixed pt-4 z-10"
   >
     <template #opener>
@@ -33,6 +34,7 @@ import { FzDropdownProps, FzDropdownSlots } from './types'
 
 const props = withDefaults(defineProps<FzDropdownProps>(), {
   size: 'md',
+  actions: () => [],
   closeOnActionClick: true
 })
 
@@ -46,7 +48,16 @@ const isOpen = ref(false)
 const container = ref<ComponentPublicInstance>()
 const containerDom = computed(() => container.value?.$el)
 const buttonIconName = computed(() => (isOpen.value ? 'angle-up' : 'angle-down'))
-const floatingPosition = computed(() => (props.align === 'left' ? 'bottom-start' : 'bottom-end'))
+const floatingPosition = computed(() => {
+  switch (props.align) {
+    case 'left':
+      return 'bottom-start'
+    case 'right':
+      return 'bottom-end'
+    default:
+      return 'bottom'
+  }
+})
 
 useClickOutside(containerDom, () => {
   isOpen.value = false
@@ -63,4 +74,12 @@ function handleActionClick(index: number, action: ActionlistItem) {
     isOpen.value = false
   }
 }
+
+function open() {
+  isOpen.value = true
+}
+
+defineExpose({
+  open
+});
 </script>
