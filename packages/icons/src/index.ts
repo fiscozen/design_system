@@ -13,4 +13,4 @@ const IconPlugin : Plugin = {
 
 export { FzIcon, IconPlugin }
 
-export type { IconVariant, IconSize } from './types'
+export type { IconVariant, IconSize, IconProps } from './types'
