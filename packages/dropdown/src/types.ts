@@ -1,5 +1,6 @@
-import { ButtonSize, ButtonVariant } from '@fiscozen/button'
+import { ButtonSize } from '@fiscozen/button'
 import { FzActionlistProps } from '@fiscozen/actionlist'
+import { VNode } from 'vue'
 
 type FzDropdownProps = {
   /**
@@ -17,7 +18,7 @@ type FzDropdownProps = {
   /**
    * Whether to align to the left or right
    */
-  align: 'left' | 'right'
+  align?: 'left' | 'right'
   /**
    * Whether to close the action list when an action is clicked
    */
@@ -37,12 +38,16 @@ type FzDropdownSlots = {
    *
    * Label of the standard button opener
    */
-  default(props: { isOpen: boolean }): any
+  default(props: { isOpen: boolean }): VNode | VNode[]
   /**
    *
    * Use this to replace the button opener entirely
    */
-  opener(props: { isOpen: boolean }): any
+  opener(props: { isOpen: boolean }): VNode | VNode[]
 }
 
-export type { FzDropdownProps, FzDropdownSlots }
+type FzIconDropdownProps = FzDropdownProps & {
+  iconName: string
+}
+
+export type { FzDropdownProps, FzDropdownSlots, FzIconDropdownProps }
