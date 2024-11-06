@@ -1,5 +1,6 @@
 import { ButtonSize } from '@fiscozen/button'
 import { FzActionlistProps } from '@fiscozen/actionlist'
+import { IconButtonVariant } from '@fiscozen/button'
 import { VNode } from 'vue'
 
 type FzDropdownProps = {
@@ -18,7 +19,7 @@ type FzDropdownProps = {
   /**
    * Whether to align to the left or right
    */
-  align?: 'left' | 'right'
+  align?: 'left' | 'right' | 'center'
   /**
    * Whether to close the action list when an action is clicked
    */
@@ -31,6 +32,10 @@ type FzDropdownProps = {
    * Class binded to opener
    */
   openerClass?: string
+  /**
+   * teleport floating to body
+   */
+  teleport?: boolean
 }
 
 type FzDropdownSlots = {
@@ -46,8 +51,15 @@ type FzDropdownSlots = {
   opener(props: { isOpen: boolean }): VNode | VNode[]
 }
 
-type FzIconDropdownProps = FzDropdownProps & {
+interface FzIconDropdownProps extends FzDropdownProps {
+  /**
+   * icon name
+   */
   iconName: string
+  /**
+   * button variant
+   */
+  buttonVariant?: IconButtonVariant
 }
 
 export type { FzDropdownProps, FzDropdownSlots, FzIconDropdownProps }
