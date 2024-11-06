@@ -40,6 +40,7 @@ const useFloatingOpts: FzUseFloatingArgs = {
 const dynamicOpts = toRefs(useFloatingOpts)
 if (slots.opener) {
   useFloatingOpts.opener = {
+    // @ts-ignore
     domRef: opener
   }
 }

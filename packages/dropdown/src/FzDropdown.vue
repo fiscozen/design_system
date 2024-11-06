@@ -40,7 +40,7 @@ const emit = defineEmits<{
   'fzaction:click': [index: number, action: ActionlistItem]
 }>()
 
-const slots = defineSlots<FzDropdownSlots>()
+defineSlots<FzDropdownSlots>()
 
 const isOpen = ref(false)
 const container = ref<ComponentPublicInstance>()
