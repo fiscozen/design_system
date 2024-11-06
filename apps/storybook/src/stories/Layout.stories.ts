@@ -20,6 +20,26 @@ const meta: Meta<typeof FzLayout> = {
   ]
 }
 
+const leftShoulder = (args: FzLayoutProps) => ({
+  setup() {
+    return { args }
+  },
+  components: {FzLayout},
+  template: `
+    <FzLayout v-bind="args">
+      <div class="w-full h-full bg-red-100"></div>
+      <div class="w-full h-full bg-green-100"></div>
+    </FzLayout>
+  `
+})
+
+export const LeftShoulder = {
+  render: leftShoulder,
+  args: {
+    layout: 'leftShoulder'
+  }
+}
+
 const twoColumns = (args: FzLayoutProps) => ({
   setup() {
     return { args }
@@ -56,7 +76,7 @@ const multipleRows = (args: FzLayoutProps) => ({
   `
 })
 
-const leftShoulder = (args: FzLayoutProps) => ({
+const leftShoulderNavbar = (args: FzLayoutProps) => ({
   setup() {
     return { args }
   },
@@ -79,14 +99,14 @@ const leftShoulder = (args: FzLayoutProps) => ({
   `
 })
 
-export const LeftShoulder = {
-  render: leftShoulder,
+export const LeftShoulderNavbar = {
+  render: leftShoulderNavbar,
   args: {
-    layout: 'leftShoulder'
+    layout: 'leftShoulderNavbar'
   }
 }
 
-const rightShoulder = (args: FzLayoutProps) => ({
+const rightShoulderNavbar = (args: FzLayoutProps) => ({
   setup() {
     return { args }
   },
@@ -109,10 +129,10 @@ const rightShoulder = (args: FzLayoutProps) => ({
   `
 })
 
-export const RightShoulder = {
-  render: rightShoulder,
+export const RightShoulderNavbar = {
+  render: rightShoulderNavbar,
   args: {
-    layout: 'rightShoulder'
+    layout: 'rightShoulderNavbar'
   }
 }
 
@@ -122,4 +142,29 @@ export const MultipleRows = {
     layout: 'multipleRows'
   }
 }
+
+const squares = (args: FzLayoutProps) => ({
+  setup() {
+    return { args }
+  },
+  components: {FzLayout},
+  template: `
+    <FzLayout v-bind="args">
+      <div class="w-full h-full bg-red-100"></div>
+      <div class="w-full h-full bg-green-100"></div>
+      <div class="w-full h-full bg-orange-200"></div>
+      <div class="w-full h-full bg-cyan-100"></div>
+      <div class="w-full h-full bg-slate-100"></div>
+      <div class="w-full h-full bg-purple-100"></div>
+    </FzLayout>
+  `
+})
+
+export const Squares = {
+  render: squares,
+  args: {
+    layout: 'squares'
+  }
+}
+
 export default meta

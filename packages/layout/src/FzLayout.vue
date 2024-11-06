@@ -1,14 +1,9 @@
 <template>
     <div class="fz-layout w-dvw h-dvh grid gap-10 p-16" :class="layoutClass">
-        <template v-if="props.layout === 'twoColumns'">
-            <!--div><slot name="fz-col-left"></slot></div>
-            <div><slot name="fz-col-right"></slot></div-->
+        <template v-if="['twoColumns', 'leftShoulder', 'rightShoulderNavbar', 'squares'].includes(props.layout)">
             <slot></slot>
         </template>
-        <template v-if="props.layout === 'multipleRows'">
-            <slot></slot>
-        </template>
-        <template v-if="props.layout === 'leftShoulder'">
+        <template v-if="props.layout === 'leftShoulderNavbar'">
             <div class="col-span-2">
                 <slot name="navbar"></slot>
             </div>
@@ -22,7 +17,7 @@
                 <slot></slot>
             </div>
         </template>
-        <template v-if="props.layout === 'rightShoulder'">
+        <template v-if="props.layout === 'rightShoulderNavbar'">
             <div class="col-span-2">
                 <slot name="navbar"></slot>
             </div>
@@ -54,13 +49,19 @@ const layoutClass = computed(() => {
             res = 'grid-rows-auto'
             break;
         case 'twoColumns':
-            res = 'grid-cols-1 grid-rows-[60px_1fr] md:grid-rows-1 md:grid-cols-2'
+            res = 'grid-cols-1 grid-rows-[60px_1fr] lg:grid-rows-1 lg:grid-cols-2'
             break;
         case 'leftShoulder':
+            res = 'grid-rows-[60px_1fr] grid-cols-1 lg:grid-rows-1 lg:grid-cols-[260px_1fr]'
+            break;
+        case 'leftShoulderNavbar':
             res = 'grid-rows-[40px_160px_60px_1fr] grid-cols-1 lg:grid-rows-[40px_160px_1fr] lg:grid-cols-[260px_1fr]'
             break;
-        case 'rightShoulder':
+        case 'rightShoulderNavbar':
             res = 'grid-rows-[40px_160px_60px_1fr] grid-cols-1 lg:grid-rows-[40px_160px_1fr] lg:grid-cols-[1fr_260px]'
+            break;
+        case 'squares':
+            res = 'grid-cols-1 grid-rows-auto sm:grid-cols-2 sm:grid-rows-auto md:grid-cols-3 md:grid-rows-auto auto-rows-[332px]'
             break;
         default:
             break;
