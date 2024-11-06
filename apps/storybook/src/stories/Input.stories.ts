@@ -161,6 +161,13 @@ const Url: Story = {
   decorators: [() => ({ template: templateForm })]
 }
 
+const MaxLength: Story = {
+  args: {
+    maxlength: 4
+  },
+  decorators: [() => ({ template: templateForm })]
+}
+
 export {
   Default,
   LeftIcon,
@@ -176,7 +183,8 @@ export {
   Error,
   Valid,
   LeftAndRightWithValid,
-  WithDefaultValues
+  WithDefaultValues,
+  MaxLength
 }
 
 export default meta

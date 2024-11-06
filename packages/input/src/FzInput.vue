@@ -28,6 +28,7 @@
         :class="[staticInputClass]"
         :pattern="pattern"
         :name
+        :maxlength
         @focus="(e) => $emit('focus', e)"
         @paste="(e) => $emit('paste', e)"
       />
