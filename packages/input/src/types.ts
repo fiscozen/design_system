@@ -62,6 +62,11 @@ type FzInputProps = {
    * native readonly input value
    */
   readonly?: boolean;
+
+  /**
+   * native maxlength input value
+   */
+  maxlength?: number;
 };
 
 interface FzCurrencyInputProps
