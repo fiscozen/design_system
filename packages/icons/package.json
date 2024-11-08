@@ -3,7 +3,7 @@
   "version": "0.1.13",
   "description": "Design system icon plugin and component",
   "scripts": {
-    "format": "prettier --write src/",
+    "format": "prettier --config prettierrc.js --write src/",
     "test": "exit 0;",
     "build": "exit 0;"
   },
