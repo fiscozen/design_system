@@ -1,0 +1,20 @@
+{
+  "name": "@fiscozen/stylelint-config",
+  "version": "0.1.0",
+  "description": "Common stylelint configuration",
+  "main": ".stylelintrc.js",
+  "type": "module",
+  "scripts": {
+    "test": "exit 0;",
+    "build": "exit 0;"
+  },
+  "devDependencies": {
+    "stylelint": "^16.10.0",
+    "stylelint-config-standard": "^36.0.1",
+    "stylelint-config-standard-scss": "^13.1.0",
+    "stylelint-config-standard-vue": "^1.0.0"
+  },
+  "keywords": [],
+  "author": "Francesco Panico",
+  "license": "ISC"
+}

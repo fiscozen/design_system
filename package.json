@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "nx run-many --target=build",
     "storybook": "nx run @fiscozen/storybook:storybook",
-    "generate:component": "plop component"
+    "generate:component": "plop component",
+    "prepare": "husky install"
   },
   "engines": {
     "pnpm": "^9.3.0",
@@ -18,8 +19,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "husky": "^8.0.0",
     "nx": "17.2.8",
     "plop": "^4.0.1",
     "vitest": "^1.0.4"
+  },
+  "dependencies": {
+    "lint-staged": "^15.2.10"
   }
 }

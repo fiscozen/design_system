@@ -4,8 +4,11 @@
   "description": "Design System Navbar Component",
   "scripts": {
     "coverage": "vitest run --coverage",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
-    "format": "prettier --write src/",
+    "format": "prettier --write",
+    "lint": "eslint --fix",
+    "lint-staged": "npx lint-staged --relative",
+    "stylelint": "stylelint --fix",
+    "type-check": "vue-tsc --noEmit",
     "test:unit": "vitest run",
     "build": "vue-tsc && vite build"
   },

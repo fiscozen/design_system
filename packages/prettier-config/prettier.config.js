@@ -1,9 +1,11 @@
 export default {
   $schema: 'https://json.schemastore.org/prettierrc',
+  bracketSameLine: true,
   semi: false,
-  tabWidth: 2,
+  tabWidth: 4,
   singleQuote: true,
-  printWidth: 100,
+  printWidth: 120,
   trailingComma: 'none',
+  vueIndentScriptAndStyle: true,
   plugins: ['prettier-plugin-tailwindcss']
 };

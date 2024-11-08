@@ -3,7 +3,11 @@
   "version": "0.1.17",
   "description": "Design system icon plugin and component",
   "scripts": {
-    "format": "prettier --write src/",
+    "format": "prettier --write",
+    "lint": "eslint --fix",
+    "lint-staged": "npx lint-staged --relative",
+    "stylelint": "stylelint --fix",
+    "type-check": "vue-tsc --noEmit",
     "test": "exit 0;",
     "build": "exit 0;"
   },

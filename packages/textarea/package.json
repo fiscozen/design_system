@@ -4,7 +4,11 @@
   "description": "Design System Textarea component",
   "scripts": {
     "coverage": "vitest run --coverage",
-    "format": "prettier --write src/",
+    "format": "prettier --write",
+    "lint": "eslint --fix",
+    "lint-staged": "npx lint-staged --relative",
+    "stylelint": "stylelint --fix",
+    "type-check": "vue-tsc --noEmit",
     "test:unit": "vitest run",
     "build": "vue-tsc && vite build"
   },
