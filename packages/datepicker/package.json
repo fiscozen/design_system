@@ -4,7 +4,8 @@
   "description": "Design System Datepicker component",
   "scripts": {
     "coverage": "vitest run --coverage",
-    "format": "prettier --config prettierrc.js --write src/",
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "test:unit": "vitest run",
     "build": "vue-tsc --noEmit && vite build"
   },
@@ -38,10 +39,10 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@fiscozen/button": "workspace:^",
     "@fiscozen/composables": "workspace:^",
     "@fiscozen/icons": "workspace:^",
     "@fiscozen/input": "workspace:^",
-    "@fiscozen/button": "workspace:^",
     "@fiscozen/style": "workspace:^",
     "@vuepic/vue-datepicker": "^8.8.1",
     "date-fns": "^3.6.0"

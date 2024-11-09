@@ -4,7 +4,8 @@
   "description": "Design System Toast component",
   "scripts": {
     "coverage": "vitest run --coverage",
-    "format": "prettier --config prettierrc.js --write src/",
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "test:unit": "vitest run",
     "build": "vue-tsc && vite build"
   },
@@ -17,8 +18,8 @@
     "vue": "^3.4.13"
   },
   "dependencies": {
-    "@fiscozen/icons": "workspace:^",
-    "@fiscozen/button": "workspace:^"
+    "@fiscozen/button": "workspace:^",
+    "@fiscozen/icons": "workspace:^"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",
