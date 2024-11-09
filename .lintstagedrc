@@ -1,0 +1,11 @@
+{
+    "*.ts": [
+        "npx nx affected -t lint --files"
+    ],
+    "*.vue": [
+        "npx nx affected -t lint --files"
+    ],
+    "*": [
+        "npx nx affected -t format --files"
+    ]
+}
