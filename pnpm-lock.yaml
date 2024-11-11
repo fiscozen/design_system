@@ -125,6 +125,9 @@ importers:
       '@fiscozen/view-flag':
         specifier: workspace:^
         version: link:../../packages/view-flag
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       vue:
         specifier: ^3.4.13
         version: 3.4.13(typescript@5.3.3)
@@ -141,6 +144,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../../packages/prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../../packages/stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../../packages/tsconfig
@@ -261,6 +267,9 @@ importers:
       '@fiscozen/navlink':
         specifier: workspace:^
         version: link:../navlink
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -274,6 +283,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -334,6 +346,9 @@ importers:
       '@fiscozen/link':
         specifier: workspace:^
         version: link:../link
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -350,6 +365,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -401,6 +419,9 @@ importers:
 
   packages/avatar:
     dependencies:
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -414,6 +435,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -465,6 +489,9 @@ importers:
 
   packages/badge:
     dependencies:
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -478,6 +505,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -529,6 +559,9 @@ importers:
 
   packages/breadcrumbs:
     dependencies:
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -545,6 +578,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -599,6 +635,9 @@ importers:
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -612,6 +651,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -669,6 +711,9 @@ importers:
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -685,6 +730,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -748,6 +796,9 @@ importers:
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -767,6 +818,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -824,6 +878,9 @@ importers:
 
   packages/collapse:
     dependencies:
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -840,6 +897,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -891,6 +951,9 @@ importers:
 
   packages/composables:
     dependencies:
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -904,6 +967,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -973,6 +1039,9 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -986,6 +1055,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1049,6 +1121,9 @@ importers:
       dialog-polyfill:
         specifier: ^0.5.6
         version: 0.5.6
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -1062,6 +1137,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1119,6 +1197,9 @@ importers:
 
   packages/divider:
     dependencies:
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -1132,6 +1213,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1192,6 +1276,9 @@ importers:
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -1205,6 +1292,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1255,6 +1345,10 @@ importers:
         version: 1.8.27(typescript@5.3.3)
 
   packages/eslint-config:
+    dependencies:
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.4.2)
     devDependencies:
       '@vue/eslint-config-prettier':
         specifier: ^8.0.0
@@ -1277,6 +1371,9 @@ importers:
       '@fortawesome/vue-fontawesome':
         specifier: ^3.0.8
         version: 3.0.8(@fortawesome/fontawesome-svg-core@6.6.0)(vue@3.5.12(typescript@5.4.2))
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.4.2)
       vue:
         specifier: ^3.4.13
         version: 3.5.12(typescript@5.4.2)
@@ -1287,6 +1384,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1299,6 +1399,9 @@ importers:
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -1312,6 +1415,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1363,6 +1469,9 @@ importers:
 
   packages/link:
     dependencies:
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -1379,6 +1488,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1433,6 +1545,9 @@ importers:
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -1446,6 +1561,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1503,6 +1621,9 @@ importers:
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -1519,6 +1640,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1576,6 +1700,9 @@ importers:
       '@fiscozen/navlink':
         specifier: workspace:^
         version: link:../navlink
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -1592,6 +1719,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1642,6 +1772,10 @@ importers:
         version: 1.8.27(typescript@5.3.3)
 
   packages/prettier-config:
+    dependencies:
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.4.2)
     devDependencies:
       prettier-plugin-tailwindcss:
         specifier: ^0.5.11
@@ -1655,6 +1789,9 @@ importers:
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -1674,6 +1811,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1737,6 +1877,9 @@ importers:
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -1756,6 +1899,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1813,6 +1959,9 @@ importers:
 
   packages/simple-table:
     dependencies:
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -1826,6 +1975,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1876,6 +2028,10 @@ importers:
         version: 1.8.27(typescript@5.3.3)
 
   packages/style:
+    dependencies:
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
     devDependencies:
       '@fiscozen/eslint-config':
         specifier: workspace:^
@@ -1883,6 +2039,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -1931,6 +2090,9 @@ importers:
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -1950,6 +2112,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -2010,6 +2175,9 @@ importers:
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -2023,6 +2191,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -2080,6 +2251,9 @@ importers:
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -2093,6 +2267,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -2150,6 +2327,9 @@ importers:
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -2163,6 +2343,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -2226,6 +2409,9 @@ importers:
       '@fiscozen/style':
         specifier: workspace:^
         version: link:../style
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -2242,6 +2428,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -2292,6 +2481,10 @@ importers:
         version: 1.8.27(typescript@5.3.3)
 
   packages/tsconfig:
+    dependencies:
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.4.2)
     devDependencies:
       '@tsconfig/node18':
         specifier: ^18.2.2
@@ -2320,6 +2513,9 @@ importers:
       fuse.js:
         specifier: ^7.0.0
         version: 7.0.0
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -2333,6 +2529,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -2390,6 +2589,9 @@ importers:
       '@fiscozen/link':
         specifier: workspace:^
         version: link:../link
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -2403,6 +2605,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -2457,6 +2662,9 @@ importers:
       '@fiscozen/badge':
         specifier: workspace:^
         version: link:../badge
+      stylelint:
+        specifier: ^16.10.0
+        version: 16.10.0(typescript@5.3.3)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
@@ -2470,6 +2678,9 @@ importers:
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/stylelint-config':
+        specifier: workspace:^
+        version: link:../stylelint-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
@@ -11942,6 +12153,15 @@ snapshots:
 
   core-util-is@1.0.2: {}
 
+  cosmiconfig@9.0.0(typescript@5.3.3):
+    dependencies:
+      env-paths: 2.2.1
+      import-fresh: 3.3.0
+      js-yaml: 4.1.0
+      parse-json: 5.2.0
+    optionalDependencies:
+      typescript: 5.3.3
+
   cosmiconfig@9.0.0(typescript@5.4.2):
     dependencies:
       env-paths: 2.2.1
@@ -15205,6 +15425,50 @@ snapshots:
       postcss-selector-parser: 6.1.2
       postcss-value-parser: 4.2.0
       stylelint: 16.10.0(typescript@5.4.2)
+
+  stylelint@16.10.0(typescript@5.3.3):
+    dependencies:
+      '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
+      '@csstools/css-tokenizer': 3.0.3
+      '@csstools/media-query-list-parser': 3.0.1(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
+      '@csstools/selector-specificity': 4.0.0(postcss-selector-parser@6.1.2)
+      '@dual-bundle/import-meta-resolve': 4.1.0
+      balanced-match: 2.0.0
+      colord: 2.9.3
+      cosmiconfig: 9.0.0(typescript@5.3.3)
+      css-functions-list: 3.2.3
+      css-tree: 3.0.1
+      debug: 4.3.7
+      fast-glob: 3.3.2
+      fastest-levenshtein: 1.0.16
+      file-entry-cache: 9.1.0
+      global-modules: 2.0.0
+      globby: 11.1.0
+      globjoin: 0.1.4
+      html-tags: 3.3.1
+      ignore: 6.0.2
+      imurmurhash: 0.1.4
+      is-plain-object: 5.0.0
+      known-css-properties: 0.34.0
+      mathml-tag-names: 2.1.3
+      meow: 13.2.0
+      micromatch: 4.0.8
+      normalize-path: 3.0.0
+      picocolors: 1.1.1
+      postcss: 8.4.47
+      postcss-resolve-nested-selector: 0.1.6
+      postcss-safe-parser: 7.0.1(postcss@8.4.47)
+      postcss-selector-parser: 6.1.2
+      postcss-value-parser: 4.2.0
+      resolve-from: 5.0.0
+      string-width: 4.2.3
+      supports-hyperlinks: 3.1.0
+      svg-tags: 1.0.0
+      table: 6.8.2
+      write-file-atomic: 5.0.1
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
 
   stylelint@16.10.0(typescript@5.4.2):
     dependencies:

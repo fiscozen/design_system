@@ -6,6 +6,7 @@
     "coverage": "vitest run --coverage",
     "format": "prettier --write .",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "stylelint": "stylelint --fix '**/*.{css,vue}'",
     "test:unit": "vitest run",
     "build": "vue-tsc && vite build"
   },
@@ -15,7 +16,8 @@
   "author": "Cristian Barraco",
   "dependencies": {
     "@fiscozen/badge": "workspace:^",
-    "@fiscozen/composables": "workspace:^"
+    "@fiscozen/composables": "workspace:^",
+    "stylelint": "^16.10.0"
   },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
@@ -26,6 +28,7 @@
     "@fiscozen/eslint-config": "workspace:^",
     "@fiscozen/icons": "workspace:^",
     "@fiscozen/prettier-config": "workspace:^",
+    "@fiscozen/stylelint-config": "workspace:^",
     "@fiscozen/tsconfig": "workspace:^",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/vue-fontawesome": "^3.0.6",

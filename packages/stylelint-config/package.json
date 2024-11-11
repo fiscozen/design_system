@@ -2,7 +2,7 @@
   "name": "@fiscozen/stylelint-config",
   "version": "0.1.0",
   "description": "Common stylelint configuration",
-  "main": ".stylelintrc.json",
+  "main": ".stylelintrc.js",
   "type": "module",
   "scripts": {
     "test": "exit 0;",
