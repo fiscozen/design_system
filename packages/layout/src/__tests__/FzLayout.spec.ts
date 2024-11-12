@@ -9,15 +9,18 @@ describe.concurrent('FzLayout', () => {
         layout: 'multipleRows'
       },
       template: `
-        <FzLayout layout="multipleRows">
+        <FzLayout v-bind="props">
+          <template #default>
           <div class="w-full h-full bg-red-100"></div>
           <div class="w-full h-full bg-green-100"></div>
           <div class="w-full h-full bg-orange-200"></div>
-          <div class="w-full h-full bg-cyan-100"></div>
+            <div class="w-full h-full bg-cyan-100"></div>
+          </template>
         </FzLayout>
       `
     })
 
+    await wrapper.vm.$nextTick()
     expect(wrapper.html()).toMatchSnapshot()
   })
 
@@ -27,13 +30,14 @@ describe.concurrent('FzLayout', () => {
         layout: 'leftShoulder'
       },
       template: `
-        <FzLayout layout="leftShoulder">
+        <FzLayout v-bind="props">
           <div class="w-full h-full bg-red-100"></div>
           <div class="w-full h-full bg-green-100"></div>
         </FzLayout>
       `
     })
 
+    await wrapper.vm.$nextTick()
     expect(wrapper.html()).toMatchSnapshot()
   })
 
@@ -50,6 +54,7 @@ describe.concurrent('FzLayout', () => {
       `
     })
 
+    await wrapper.vm.$nextTick()
     expect(wrapper.html()).toMatchSnapshot()
   })
 
@@ -76,6 +81,7 @@ describe.concurrent('FzLayout', () => {
       `
     })
 
+    await wrapper.vm.$nextTick()
     expect(wrapper.html()).toMatchSnapshot()
   })
 
@@ -102,6 +108,7 @@ describe.concurrent('FzLayout', () => {
       `
     })
 
+    await wrapper.vm.$nextTick()
     expect(wrapper.html()).toMatchSnapshot()
   })
 
@@ -122,6 +129,7 @@ describe.concurrent('FzLayout', () => {
       `
     })
 
+    await wrapper.vm.$nextTick()
     expect(wrapper.html()).toMatchSnapshot()
   })
 })

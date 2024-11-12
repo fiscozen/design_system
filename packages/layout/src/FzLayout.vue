@@ -1,6 +1,6 @@
 <template>
     <div class="fz-layout w-dvw h-dvh grid gap-10 p-16" :class="layoutClass">
-        <template v-if="['multipleRows', 'twoColumns', 'leftShoulder', 'rightShoulderNavbar', 'squares'].includes(props.layout)">
+        <template v-if="['multipleRows', 'twoColumns', 'leftShoulder', 'squares'].includes(props.layout)">
             <slot></slot>
         </template>
         <template v-if="props.layout === 'leftShoulderNavbar'">
