@@ -22,5 +22,8 @@
     "nx": "17.2.8",
     "plop": "^4.0.1",
     "vitest": "^1.0.4"
+  },
+  "dependencies": {
+    "lint-staged": "^15.2.10"
   }
 }

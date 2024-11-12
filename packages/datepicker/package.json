@@ -8,6 +8,7 @@
         "lint": "eslint --fix",
         "lint-staged": "npx lint-staged --relative",
         "stylelint": "stylelint --fix",
+        "type-check": "vue-tsc --noEmit",
         "test:unit": "vitest run",
         "build": "vue-tsc --noEmit && vite build"
     },

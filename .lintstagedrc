@@ -1,0 +1,4 @@
+{
+    "*.ts": ["npx nx affected -t type-check --files"],
+    "*.vue": ["npx nx affected -t type-check --files"]
+}
