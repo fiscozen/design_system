@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta } from '@storybook/vue3'
 import { FzLayout, FzLayoutProps } from '@fiscozen/layout'
 
 const meta: Meta<typeof FzLayout> = {
