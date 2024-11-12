@@ -1,0 +1,6 @@
+{
+    "*.ts": ["pnpm run lint"],
+    "*.vue": ["pnpm run lint", "pnpm run stylelint"],
+    "*.css": ["pnpm run format stylelint"],
+    "*": ["pnpm run format"]
+}

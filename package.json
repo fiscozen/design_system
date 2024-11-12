@@ -19,7 +19,6 @@
   "license": "ISC",
   "devDependencies": {
     "husky": "^8.0.0",
-    "lint-staged": "^15.2.10",
     "nx": "17.2.8",
     "plop": "^4.0.1",
     "vitest": "^1.0.4"
