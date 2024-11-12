@@ -13,8 +13,9 @@
     "coverage": "vitest run --coverage",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
-    "format": "prettier --write src/",
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "stylelint": "stylelint --fix '**/*.{css,vue}'",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "chromatic": "npx chromatic --project-token=chpt_1a654273b7f5392"
@@ -53,6 +54,7 @@
     "@fiscozen/typeahead": "workspace:^",
     "@fiscozen/upload": "workspace:^",
     "@fiscozen/view-flag": "workspace:^",
+    "stylelint": "^16.10.0",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
   },
@@ -61,6 +63,7 @@
     "@fiscozen/eslint-config": "workspace:^",
     "@fiscozen/prettier-config": "workspace:^",
     "@fiscozen/style": "workspace:^",
+    "@fiscozen/stylelint-config": "workspace:^",
     "@fiscozen/tsconfig": "workspace:^",
     "@rushstack/eslint-patch": "^1.3.3",
     "@storybook/addon-essentials": "^8.0.10",
