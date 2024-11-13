@@ -81,5 +81,5 @@ function open() {
 
 defineExpose({
   open
-});
+})
 </script>
