@@ -31,6 +31,14 @@
                 <slot name="right-shoulder"></slot>
             </div>
         </template>
+        <template v-if="props.layout === 'rightShoulder'">
+            <div class="col-span-2 row-start-2 lg:col-span-1 lg:row-start-1">
+                <slot name="main"></slot>
+            </div>
+            <div class="fz-layout__shoulder gap-10 overflow-auto col-span-2 lg:col-span-1 flex flex-row lg:flex-col">
+                <slot name="shoulder"></slot>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -43,7 +51,7 @@ const props = withDefaults(defineProps<FzLayoutProps>(), {})
 const emit = defineEmits([])
 
 const layoutClass = computed(() => {
-    let res = '';
+    let res = undefined;
     switch (props.layout) {
         case 'multipleRows':
             res = 'grid-rows-auto'
@@ -63,6 +71,9 @@ const layoutClass = computed(() => {
         case 'squares':
             res = 'grid-cols-1 grid-rows-auto sm:grid-cols-2 sm:grid-rows-auto md:grid-cols-3 md:grid-rows-auto auto-rows-[332px]'
             break;
+        case 'rightShoulder':
+            res = 'grid-cols-1 grid-rows-[216px_1fr] lg:grid-cols-[1fr_260px] lg:grid-rows-1 no-scrollbar'
+            break;
         default:
             break;
     }
@@ -72,4 +83,14 @@ const layoutClass = computed(() => {
 </script>
 
 <style scoped>
+:deep(.fz-layout__shoulder > *) {
+    @apply h-[216px] w-[260px] shrink-0;
+}
+.fz-layout__shoulder::-webkit-scrollbar {
+    display: none;
+}
+.fz-layout__shoulder {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 </style>
