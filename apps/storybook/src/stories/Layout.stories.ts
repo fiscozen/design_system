@@ -167,4 +167,31 @@ export const Squares = {
   }
 }
 
+const shoulderWithSquares = (args: FzLayoutProps) => ({
+  setup() {
+    return { args }
+  },
+  components: {FzLayout},
+  template: `
+    <FzLayout v-bind="args">
+      <template #main>
+        <div class="w-full h-full bg-red-100"></div>
+      </template>
+      <template #shoulder>
+        <div class="h-full w-full bg-green-100"></div>
+        <div class="h-full w-full bg-orange-200"></div>
+        <div class="h-full w-full bg-cyan-100"></div>
+        <div class="h-full w-full bg-slate-100"></div>
+      </template>
+    </FzLayout>
+  `
+})
+
+export const ShoulderWithSquares = {
+  render: shoulderWithSquares,
+  args: {
+    layout: 'rightShoulder',
+  }
+}
+
 export default meta
