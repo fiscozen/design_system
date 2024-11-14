@@ -8,7 +8,7 @@
     contentClass="fixed pt-4 z-10"
   >
     <template #opener>
-      <slot name="opener" :isOpen="isOpen">
+      <slot name="opener" :isOpen="isOpen" :open="open">
         <FzButton
           icon-position="after"
           :icon-name="buttonIconName"
