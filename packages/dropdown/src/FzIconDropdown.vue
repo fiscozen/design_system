@@ -1,5 +1,5 @@
 <template>
-  <FzDropdown v-bind="props" ref="dropdown">
+  <FzDropdown v-bind="props" ref="dropdown" @fzaction:click="(...args) => emit('fzaction:click', ...args)">
     <template #opener="{ open }">
       <FzIconButton :iconName="iconName" @click="open()" :variant="buttonVariant" />
     </template>
@@ -10,6 +10,7 @@
 import FzDropdown from './FzDropdown.vue'
 import { type FzIconDropdownProps } from './types'
 import { FzIconButton } from '@fiscozen/button'
+import { ActionlistItem } from '@fiscozen/actionlist'
 
 const props = withDefaults(defineProps<FzIconDropdownProps>(), {
   iconName: 'bars',
@@ -18,4 +19,8 @@ const props = withDefaults(defineProps<FzIconDropdownProps>(), {
   teleport: true,
   buttonVariant: 'secondary'
 })
+
+const emit = defineEmits<{
+  'fzaction:click': [index: number, action: ActionlistItem]
+}>()
 </script>
