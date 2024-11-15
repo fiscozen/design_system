@@ -54,6 +54,6 @@ export interface FzUseFloatingArgs {
 
 export interface FzUseCurrencyOptions {
   minimumFractionDigits: number
-  maximumFractionDigits: number | null
+  maximumFractionDigits?: number
   useGrouping?: boolean
 }
