@@ -1,5 +1,6 @@
 import { Ref, watch, getCurrentInstance, computed, ref, nextTick } from 'vue'
 import { FzUseCurrencyOptions } from '../types'
+import { format as formatNumber, parse } from '../utils'
 
 export const useCurrency = (options: FzUseCurrencyOptions) => {
   const inputRef: Ref<HTMLInputElement | null | undefined> = ref(null)
@@ -8,24 +9,7 @@ export const useCurrency = (options: FzUseCurrencyOptions) => {
   const computedModel = computed<number | null>(() => vm?.props.amount as unknown as number | null)
   const internalVal = ref<number | null>()
 
-  const format = (input: number | null) => {
-    if (input === null) {
-      return ''
-    }
-    const safeOptions: Intl.NumberFormatOptions = {
-      minimumFractionDigits: options.minimumFractionDigits,
-      useGrouping: options.useGrouping || false
-    }
-    if (options.maximumFractionDigits !== null) {
-      safeOptions.maximumFractionDigits = options.maximumFractionDigits
-    }
-    return input.toLocaleString('it-IT', safeOptions)
-  }
-
-  const parse = (text: string) => {
-    // strip currency, handle edge cases...
-    return parseFloat(text.replace(/,/g, '.'))
-  }
+  const format = formatNumber(options)
 
   const emitAmount = (val: number | null) => {
     if (Number.isNaN(val)) {
