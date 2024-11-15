@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/composables",
-  "version": "0.1.31",
+  "version": "0.1.32",
   "description": "Design System utility composables",
   "scripts": {
     "coverage": "vitest run --coverage",
