@@ -20,7 +20,7 @@
         :class="[staticIconClass, computedIconClasses]"
         :variant="computedVariant"
       />
-      <span class="w-fit">{{ standalone ? "" : label }}</span>
+      {{ standalone ? "" : label }}
     </label>
     <FzRadioErrorText :size="size" v-if="error && $slots.error">
       <slot name="error" />
@@ -58,7 +58,7 @@ const refCheckbox = ref<HTMLInputElement | null>(null);
 
 const staticInputClass = "w-0 h-0 peer fz-hidden-input";
 const staticLabelClass = `
-  flex items-start gap-4 hover:cursor-pointer
+  flex gap-4 hover:cursor-pointer
   peer-focus:[&_div]:after:border-1
   peer-focus:[&_div]:after:border-solid
   peer-focus:[&_div]:after:rounded-[3px]
@@ -79,7 +79,6 @@ const computedLabelClass = computed(() => [
 
 const computedIconClasses = computed(() => [
   props.size === "sm" ? "mt-1" : "",
-  props.size === "md" ? "mt-2" : "",
   getTextClassForIcon(),
 ]);
 
@@ -112,9 +111,9 @@ const getTextClassForLabel = () => {
     case props.error:
       return "text-semantic-error";
     case props.emphasis:
-      return "text-grey-500 peer-checked:[&_div]:text-blue-500 peer-indeterminate:[&_div]:text-blue-500";
+      return "text-core-black peer-checked:[&_div]:text-blue-500 peer-indeterminate:[&_div]:text-blue-500";
     default:
-      return "text-grey-500";
+      return "text-core-black";
   }
 };
 
