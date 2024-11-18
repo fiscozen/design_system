@@ -40,4 +40,9 @@ const handleSummaryClick = () => {
 .v-leave-to {
   opacity: 0;
 }
+
+/* Removes the default arrow icon for Webkit based browsers */
+details > summary::-webkit-details-marker {
+  display: none;
+}
 </style>
