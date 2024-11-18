@@ -8,6 +8,7 @@ const config: StorybookConfig = {
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     '@storybook/addon-viewport',
+    'storybook-addon-vue-mdx',
     '@chromatic-com/storybook'
   ],
   framework: {

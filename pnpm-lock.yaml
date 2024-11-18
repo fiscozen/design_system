@@ -243,6 +243,9 @@ importers:
       storybook:
         specifier: ^8.0.10
         version: 8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      storybook-addon-vue-mdx:
+        specifier: ^1.0.4
+        version: 1.0.4(@storybook/blocks@8.0.10(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@storybook/builder-vite@8.0.10(typescript@5.3.3)(vite@5.0.11(@types/node@18.19.7)))(@storybook/components@8.0.10(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@storybook/core-events@8.1.2)(@storybook/manager-api@8.3.5(storybook@8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@storybook/mdx2-csf@1.1.0)(@storybook/preview-api@8.1.2)(@storybook/theming@8.3.5(storybook@8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@storybook/types@8.1.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vue@3.4.13(typescript@5.3.3))
       storybook-vue3-router:
         specifier: ^5.0.0
         version: 5.0.0(@storybook/preview-api@8.1.2)(@storybook/vue3@8.0.10(vue@3.4.13(typescript@5.3.3)))(vue-router@4.3.0(vue@3.4.13(typescript@5.3.3)))(vue@3.4.13(typescript@5.3.3))
@@ -4126,6 +4129,9 @@ packages:
   '@storybook/manager@8.0.10':
     resolution: {integrity: sha512-bojGglUQNry48L4siURc2zQKswavLzMh69rqsfL3ZXx+i+USfRfB7593azTlaZh0q6HO4bUAjB24RfQCyifLLQ==}
 
+  '@storybook/mdx2-csf@1.1.0':
+    resolution: {integrity: sha512-TXJJd5RAKakWx4BtpwvSNdgTDkKM6RkXU8GK34S/LhidQ5Pjz3wcnqb0TxEkfhK/ztbP8nKHqXFwLfa2CYkvQw==}
+
   '@storybook/node-logger@8.0.10':
     resolution: {integrity: sha512-UMmaUaA3VOX/mKLsSvOnbZre2/1tZ6hazA6H0eAnClKb51jRD1AJrsBYK+uHr/CAp7t710bB5U8apPov7hayDw==}
 
@@ -4343,9 +4349,6 @@ packages:
 
   '@types/tough-cookie@4.0.5':
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
-
-  '@types/unist@2.0.10':
-    resolution: {integrity: sha512-IfYcSBWE3hLpBg8+X2SEa8LVkJdJEkT2Ese2aaLs3ptGdVtABxndrMaxuFlQ1qdFf9Q5rDvDpxI3WwgvKFAsQA==}
 
   '@types/unist@3.0.2':
     resolution: {integrity: sha512-dqId9J8K/vGi5Zr7oo212BGii5m3q5Hxlkwy3WpYuKPklmBEvsbMYYyLxAQpSffdLl/gdW0XUpKWFvYmyoWCoQ==}
@@ -7798,6 +7801,22 @@ packages:
   store2@2.14.2:
     resolution: {integrity: sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==}
 
+  storybook-addon-vue-mdx@1.0.4:
+    resolution: {integrity: sha512-WyeIvbu4t3EeJijS8sGbnS8zjRFUD41145He39u9e5vkChPsBF9JlAjB/i7be2VQUuXPuv5wmfn+tSOA0sCoBw==}
+    peerDependencies:
+      '@storybook/blocks': ^8.0.0
+      '@storybook/builder-vite': ^8.0.0
+      '@storybook/components': ^8.0.0
+      '@storybook/core-events': ^8.0.0
+      '@storybook/manager-api': ^8.0.0
+      '@storybook/mdx2-csf': ^1.1.0
+      '@storybook/preview-api': ^8.0.0
+      '@storybook/theming': ^8.0.0
+      '@storybook/types': ^8.0.0
+      react: ^18.0.0
+      react-dom: ^18.0.0
+      vue: ^3.4.31
+
   storybook-vue3-router@5.0.0:
     resolution: {integrity: sha512-Q5ePPv8xyYT+9IzcEMSAQeCT8OlPDX0rfUfYCmiYDXsGPvvDej2Oyid3wyaxZmU/LXt1XzMDRO3v9qk/EN6pXg==}
     peerDependencies:
@@ -8248,6 +8267,12 @@ packages:
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
+
+  veaury@2.5.1:
+    resolution: {integrity: sha512-EO9zpxHEXg1ojLK51Osn46AYLH6zoHXYav5BrUr2IYWmlYIa7TBr45FfaxL1edAE+m5qUHLEJJ6Hw/bKMIyUGg==}
+    peerDependencies:
+      react: '>= 16.4.0'
+      react-dom: '>= 16.4.0'
 
   verror@1.10.0:
     resolution: {integrity: sha512-ZZKSmDAEFOijERBLkmYfJ+vmk3w+7hOLYDNkRCuRuMJGEmqYNCNLyBBFwWKVMhfwaEF3WOd0Zlw86U/WC/+nYw==}
@@ -9986,7 +10011,7 @@ snapshots:
 
   '@storybook/addon-docs@8.0.10':
     dependencies:
-      '@babel/core': 7.23.7
+      '@babel/core': 7.24.5
       '@mdx-js/react': 3.0.1(@types/react@18.2.48)(react@18.2.0)
       '@storybook/blocks': 8.0.10(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@storybook/client-logger': 8.0.10
@@ -10372,11 +10397,11 @@ snapshots:
 
   '@storybook/csf-tools@8.0.10':
     dependencies:
-      '@babel/generator': 7.23.6
-      '@babel/parser': 7.23.6
-      '@babel/traverse': 7.23.7
-      '@babel/types': 7.23.6
-      '@storybook/csf': 0.1.7
+      '@babel/generator': 7.24.5
+      '@babel/parser': 7.25.8
+      '@babel/traverse': 7.24.5
+      '@babel/types': 7.25.8
+      '@storybook/csf': 0.1.11
       '@storybook/types': 8.0.10
       fs-extra: 11.2.0
       recast: 0.23.7
@@ -10455,6 +10480,8 @@ snapshots:
       storybook: 8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
   '@storybook/manager@8.0.10': {}
+
+  '@storybook/mdx2-csf@1.1.0': {}
 
   '@storybook/node-logger@8.0.10': {}
 
@@ -10679,7 +10706,7 @@ snapshots:
 
   '@types/hast@3.0.4':
     dependencies:
-      '@types/unist': 2.0.10
+      '@types/unist': 3.0.2
 
   '@types/http-errors@2.0.4': {}
 
@@ -10757,8 +10784,6 @@ snapshots:
       '@types/node': 18.19.7
 
   '@types/tough-cookie@4.0.5': {}
-
-  '@types/unist@2.0.10': {}
 
   '@types/unist@3.0.2': {}
 
@@ -14718,6 +14743,22 @@ snapshots:
 
   store2@2.14.2: {}
 
+  storybook-addon-vue-mdx@1.0.4(@storybook/blocks@8.0.10(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@storybook/builder-vite@8.0.10(typescript@5.3.3)(vite@5.0.11(@types/node@18.19.7)))(@storybook/components@8.0.10(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@storybook/core-events@8.1.2)(@storybook/manager-api@8.3.5(storybook@8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@storybook/mdx2-csf@1.1.0)(@storybook/preview-api@8.1.2)(@storybook/theming@8.3.5(storybook@8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@storybook/types@8.1.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vue@3.4.13(typescript@5.3.3)):
+    dependencies:
+      '@storybook/blocks': 8.0.10(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@storybook/builder-vite': 8.0.10(typescript@5.3.3)(vite@5.0.11(@types/node@18.19.7))
+      '@storybook/components': 8.0.10(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@storybook/core-events': 8.1.2
+      '@storybook/manager-api': 8.3.5(storybook@8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+      '@storybook/mdx2-csf': 1.1.0
+      '@storybook/preview-api': 8.1.2
+      '@storybook/theming': 8.3.5(storybook@8.0.10(@babel/preset-env@7.23.8(@babel/core@7.23.7))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+      '@storybook/types': 8.1.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      veaury: 2.5.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      vue: 3.4.13(typescript@5.3.3)
+
   storybook-vue3-router@5.0.0(@storybook/preview-api@8.1.2)(@storybook/vue3@8.0.10(vue@3.4.13(typescript@5.3.3)))(vue-router@4.3.0(vue@3.4.13(typescript@5.3.3)))(vue@3.4.13(typescript@5.3.3)):
     dependencies:
       '@storybook/preview-api': 8.1.2
@@ -15172,6 +15213,11 @@ snapshots:
   validator@13.12.0: {}
 
   vary@1.1.2: {}
+
+  veaury@2.5.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
 
   verror@1.10.0:
     dependencies:
