@@ -49,7 +49,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { computed, ref, onMounted } from 'vue'
 import tokens from '@fiscozen/style/output/global.json'
 
@@ -58,7 +58,7 @@ const exludeTokens = ['avatar', 'button', 'nav-link', 'breadcrumbs', 'path']
 const groups = ref({})
 
 onMounted(() => {
-  groups.value = tokens.reduce((acc: Record<string, unknown>, token) => {
+  groups.value = tokens.reduce((acc, token) => {
     const key = token.type
     if (exludeTokens.some((exclude) => token.name.includes(exclude))) return acc
 
@@ -88,7 +88,7 @@ const sortedGroups = computed(() =>
     }, {})
 )
 
-const convertObjectToBoxShadow = (value: string | BoxShadowObjType | BoxShadowObjType[]) => {
+const convertObjectToBoxShadow = (value) => {
   let values = ''
 
   if (Array.isArray(value)) {
