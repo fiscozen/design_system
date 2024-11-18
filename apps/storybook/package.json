@@ -64,6 +64,7 @@
     "@fiscozen/prettier-config": "workspace:^",
     "@fiscozen/tsconfig": "workspace:^",
     "@rushstack/eslint-patch": "^1.3.3",
+    "storybook-addon-vue-mdx": "^1.0.4",
     "@storybook/addon-essentials": "^8.0.10",
     "@storybook/addon-interactions": "^8.0.10",
     "@storybook/addon-links": "^8.0.10",
