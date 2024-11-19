@@ -56,7 +56,7 @@ const isHorizontal = computed(() => Boolean(props.variant === 'horizontal'))
     </template>
     <template v-else>
       <FzIconButton
-        iconName="bars"
+        :iconName="isMenuOpen ? 'xmark' : 'bars'"
         variant="secondary"
         tooltip="menu"
         @click="emit('fznavbar:menuButtonClick')"
