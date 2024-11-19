@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/datepicker",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Design System Datepicker component",
   "scripts": {
     "coverage": "vitest run --coverage",
