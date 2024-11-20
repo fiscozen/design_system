@@ -67,6 +67,14 @@ type FzInputProps = {
    * native maxlength input value
    */
   maxlength?: number;
+  /**
+   * Handler of left icon click
+   */
+  onLeftIconClick?: () => void;
+  /**
+   * Handler of right icon click
+   */
+  onRightIconClick?: () => void;
 };
 
 interface FzCurrencyInputProps

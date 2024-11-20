@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzInput } from '@fiscozen/input'
 import { all } from '@awesome.me/kit-8137893ad3/icons'
+import { ref } from 'vue'
 
 const templateForm =
   '<form action="javascript:void(0);"><story/> <button type="submit" class="mt-10 border-1 px-10 py-4 rounded ">Submit</button></form>'
@@ -168,6 +169,43 @@ const MaxLength: Story = {
   decorators: [() => ({ template: templateForm })]
 }
 
+const ShowHidePassword: Story = {
+  args: {
+    rightIcon: 'eye'
+  },
+  render: (args) => ({
+    components: { FzInput },
+    setup() {
+      return {
+        args
+      }
+    },
+    data() {
+      return {
+        icon: 'eye',
+        type: 'password'
+      }
+    },
+    methods: {
+      onRighClick() {
+        if(this.icon === 'eye') {
+          this.icon = 'eye-slash'
+          this.type = 'text'
+        }
+        else {
+          this.icon = 'eye'
+          this.type = 'password'
+        }
+      }
+    },
+    template: `
+      <div>
+        <FzInput v-bind="args" :rightIcon="icon" :type="type" :onRightIconClick="onRighClick" />
+      </div>
+    `
+  })
+}
+
 export {
   Default,
   LeftIcon,
@@ -184,7 +222,8 @@ export {
   Valid,
   LeftAndRightWithValid,
   WithDefaultValues,
-  MaxLength
+  MaxLength,
+  ShowHidePassword
 }
 
 export default meta

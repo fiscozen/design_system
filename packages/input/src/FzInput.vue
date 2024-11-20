@@ -14,6 +14,8 @@
           :name="leftIcon"
           :size="size"
           :variant="leftIconVariant"
+          :class="onLeftIconClick ? 'cursor-pointer' : ''"
+          @click="onLeftIconClick"
         />
       </slot>
       <input
@@ -45,6 +47,8 @@
           :name="rightIcon"
           :size="size"
           :variant="rightIconVariant"
+          :class="onRightIconClick ? 'cursor-pointer' : ''"
+          @click.stop="onRightIconClick"
         />
       </slot>
     </div>
