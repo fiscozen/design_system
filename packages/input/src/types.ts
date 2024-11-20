@@ -86,7 +86,7 @@ interface FzCurrencyInputProps
    * note that limits from Intl.NumberFormat still apply
    * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#digit_options
    */
-  maximumFractionDigits?: number | null;
+  maximumFractionDigits?: number;
 }
 
 export { FzInputProps, FzCurrencyInputProps };

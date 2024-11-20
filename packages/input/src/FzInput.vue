@@ -29,6 +29,7 @@
         :pattern="pattern"
         :name
         :maxlength
+        @blur="(e) => $emit('blur', e)"
         @focus="(e) => $emit('focus', e)"
         @paste="(e) => $emit('paste', e)"
       />
@@ -98,7 +99,7 @@ const {
   containerWidth,
 } = useInputStyle(props, containerRef);
 
-const emit = defineEmits(["input", "focus", "paste"]);
+const emit = defineEmits(["input", "focus", "paste", "blur"]);
 defineExpose({
   inputRef,
   containerRef,
