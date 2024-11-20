@@ -171,7 +171,7 @@ const MaxLength: Story = {
 
 const ShowHidePassword: Story = {
   args: {
-    rightIcon: 'eye'
+    rightIconClass: 'cursor-pointer',
   },
   render: (args) => ({
     components: { FzInput },
@@ -200,7 +200,7 @@ const ShowHidePassword: Story = {
     },
     template: `
       <div>
-        <FzInput v-bind="args" :rightIcon="icon" :type="type" :onRightIconClick="onRighClick" />
+        <FzInput v-bind="args" :rightIcon="icon" :type="type" @fzinput:right-icon-click="onRighClick" />
       </div>
     `
   })

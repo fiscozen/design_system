@@ -14,8 +14,8 @@
           :name="leftIcon"
           :size="size"
           :variant="leftIconVariant"
-          :class="onLeftIconClick ? 'cursor-pointer' : ''"
-          @click="onLeftIconClick"
+          @click.stop="emit('fzinput:left-icon-click')"
+          :class="leftIconClass"
         />
       </slot>
       <input
@@ -47,8 +47,8 @@
           :name="rightIcon"
           :size="size"
           :variant="rightIconVariant"
-          :class="onRightIconClick ? 'cursor-pointer' : ''"
-          @click.stop="onRightIconClick"
+          @click.stop="emit('fzinput:right-icon-click')"
+          :class="rightIconClass"
         />
       </slot>
     </div>
@@ -103,7 +103,14 @@ const {
   containerWidth,
 } = useInputStyle(props, containerRef);
 
-const emit = defineEmits(["input", "focus", "paste", "blur"]);
+const emit = defineEmits([
+  "input",
+  "focus",
+  "paste",
+  "blur",
+  "fzinput:left-icon-click",
+  "fzinput:right-icon-click",
+]);
 defineExpose({
   inputRef,
   containerRef,
