@@ -150,4 +150,32 @@ describe.concurrent("FzInput", () => {
 
     expect(new Set(ids).size).toBe(NUMBER_OF_INPUTS);
   });
+
+  it("emits fzinput:right-icon-click event", async ({ expect }) => {
+    const wrapper = mount(FzInput, {
+      props: {
+        label: "Label",
+        rightIcon: "eye",
+      },
+      slots: {},
+    });
+
+    await wrapper.find(".fa-eye").trigger("click");
+
+    expect(wrapper.emitted("fzinput:right-icon-click")).toBeTruthy();
+  });
+
+  it("emits fzinput:left-icon-click event", async ({ expect }) => {
+    const wrapper = mount(FzInput, {
+      props: {
+        label: "Label",
+        leftIcon: "eye",
+      },
+      slots: {},
+    });
+
+    await wrapper.find(".fa-eye").trigger("click");
+
+    expect(wrapper.emitted("fzinput:left-icon-click")).toBeTruthy();
+  });
 });

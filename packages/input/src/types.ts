@@ -67,6 +67,16 @@ type FzInputProps = {
    * native maxlength input value
    */
   maxlength?: number;
+
+  /**
+   * right icon class
+   */
+  rightIconClass?: string;
+
+  /**
+   * left icon class
+   */
+  leftIconClass?: string;
 };
 
 interface FzCurrencyInputProps

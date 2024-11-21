@@ -23,25 +23,25 @@ const meta = {
       }
     },
     leftIcon: {
-      options: all.map((icon) => icon.iconName) as String[],
+      options: all.map((icon) => icon.iconName) as string[],
       control: {
         type: 'select'
       }
     },
     leftIconVariant: {
-      options: all.map((icon) => icon.prefix) as String[],
+      options: all.map((icon) => icon.prefix) as string[],
       control: {
         type: 'select'
       }
     },
     rightIcon: {
-      options: all.map((icon) => icon.iconName) as String[],
+      options: all.map((icon) => icon.iconName) as string[],
       control: {
         type: 'select'
       }
     },
     rightIconVariant: {
-      options: all.map((icon) => icon.prefix) as String[],
+      options: all.map((icon) => icon.prefix) as string[],
       control: {
         type: 'select'
       }
@@ -168,6 +168,43 @@ const MaxLength: Story = {
   decorators: [() => ({ template: templateForm })]
 }
 
+const ShowHidePassword: Story = {
+  args: {
+    rightIconClass: 'cursor-pointer',
+  },
+  render: (args) => ({
+    components: { FzInput },
+    setup() {
+      return {
+        args
+      }
+    },
+    data() {
+      return {
+        icon: 'eye',
+        type: 'password'
+      }
+    },
+    methods: {
+      onRighClick() {
+        if(this.icon === 'eye') {
+          this.icon = 'eye-slash'
+          this.type = 'text'
+        }
+        else {
+          this.icon = 'eye'
+          this.type = 'password'
+        }
+      }
+    },
+    template: `
+      <div>
+        <FzInput v-bind="args" :rightIcon="icon" :type="type" @fzinput:right-icon-click="onRighClick" />
+      </div>
+    `
+  })
+}
+
 export {
   Default,
   LeftIcon,
@@ -184,7 +221,8 @@ export {
   Valid,
   LeftAndRightWithValid,
   WithDefaultValues,
-  MaxLength
+  MaxLength,
+  ShowHidePassword
 }
 
 export default meta
