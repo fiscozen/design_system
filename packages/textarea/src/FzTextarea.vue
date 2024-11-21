@@ -16,6 +16,9 @@
         :minlength
         :maxlength
         :readonly
+        @blur="emit('blur', $event)"
+        @focus="emit('focus', $event)"
+        @paste="emit('paste', $event)"
         v-model="model"
       ></textarea>
       <FzIcon
@@ -50,6 +53,8 @@ const props = withDefaults(defineProps<FzTextareaProps>(), {
   size: "md",
   resize: "all",
 });
+
+const emit = defineEmits(["focus", "paste", "blur"]);
 
 const model = defineModel<string>();
 
