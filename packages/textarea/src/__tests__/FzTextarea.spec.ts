@@ -11,4 +11,15 @@ describe.concurrent("FzTextarea", () => {
 
     expect(wrapper.html()).toMatchSnapshot();
   });
+
+  it("should handle blur event", async ({ expect }) => {
+    const wrapper = mount(FzTextarea, {
+      props: {},
+      slots: {},
+    });
+
+    await wrapper.find("textarea").trigger("blur");
+
+    expect(wrapper.emitted("blur")).toBeTruthy();
+  });
 });

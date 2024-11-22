@@ -16,6 +16,9 @@
         :minlength
         :maxlength
         :readonly
+        @blur="emit('blur', $event)"
+        @focus="emit('focus', $event)"
+        @paste="emit('paste', $event)"
         v-model="model"
       ></textarea>
       <FzIcon
@@ -43,13 +46,15 @@
 
 <script setup lang="ts">
 import { computed, defineModel } from "vue";
-import { FzTextareaProps } from "./types";
+import { FzTextareaEvents, FzTextareaProps } from "./types";
 import { FzIcon } from "@fiscozen/icons";
 
 const props = withDefaults(defineProps<FzTextareaProps>(), {
   size: "md",
   resize: "all",
 });
+
+const emit = defineEmits<FzTextareaEvents>();
 
 const model = defineModel<string>();
 
