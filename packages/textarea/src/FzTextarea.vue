@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { computed, defineModel } from "vue";
-import { FzTextareaProps } from "./types";
+import { FzTextareaEvents, FzTextareaProps } from "./types";
 import { FzIcon } from "@fiscozen/icons";
 
 const props = withDefaults(defineProps<FzTextareaProps>(), {
@@ -54,7 +54,7 @@ const props = withDefaults(defineProps<FzTextareaProps>(), {
   resize: "all",
 });
 
-const emit = defineEmits(["focus", "paste", "blur"]);
+const emit = defineEmits<FzTextareaEvents>();
 
 const model = defineModel<string>();
 
