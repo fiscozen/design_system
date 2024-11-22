@@ -69,4 +69,19 @@ type FzTextareaProps = {
   readonly?: boolean;
 };
 
-export { FzTextareaProps };
+interface FzTextareaEvents {
+  /**
+   * Blur event emitted when the textarea loses focus
+   */
+  (event: "blur", e: FocusEvent): void;
+  /**
+   * Focus event emitted when the textarea gains focus
+   */
+  (event: "focus", e: FocusEvent): void;
+  /**
+   * Paste event emitted when the user pastes text in the textarea
+   */
+  (event: "paste", e: ClipboardEvent): void;
+}
+
+export { FzTextareaProps, FzTextareaEvents };
