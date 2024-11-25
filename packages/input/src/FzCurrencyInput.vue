@@ -31,6 +31,8 @@ const {
 } = useCurrency({
   minimumFractionDigits: props.minimumFractionDigits,
   maximumFractionDigits: props.maximumFractionDigits,
+  min: props.min,
+  max: props.max
 });
 
 defineEmits(["update:amount"]);

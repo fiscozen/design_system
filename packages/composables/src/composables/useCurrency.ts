@@ -41,8 +41,16 @@ export const useCurrency = (options: FzUseCurrencyOptions) => {
     }
     let { value } = el
     value = value.replace(/[^0-9,.-]/g, '')
-    setValue(value)
-    const numberValue = vm?.props.nullOnEmpty && value === '' ? null : parse(value)
+    let parsed: number = parse(value);
+    if (options.min && options.min > parsed) {
+      parsed = options.min
+    }
+    if (options.max && options.max < parsed) {
+      parsed = options.max
+    }
+
+    setValue(format(parsed))
+    const numberValue = vm?.props.nullOnEmpty && value === '' ? null : parsed
     emitAmount(Number.isNaN(numberValue) ? 0 : numberValue)
   }
 

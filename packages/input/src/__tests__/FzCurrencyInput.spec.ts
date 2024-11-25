@@ -126,4 +126,27 @@ describe.concurrent("FzCurrencyInput", () => {
     await new Promise((resolve) => window.setTimeout(resolve, 100));
     expect(inputElement.element.value).toBe("1,23");
   });
+
+  it("should limit value according to min/max setting", async () => {
+    const wrapper = mount(FzCurrencyInput, {
+      props: {
+        label: "Label",
+        amount: 10,
+        "onUpdate:amount": (e) => wrapper.setProps({ amount: e }),
+        min: 2,
+        max: 20
+      },
+    });
+
+    const inputElement = wrapper.find("input");
+    await wrapper.trigger('blur');
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    expect(inputElement.element.value).toBe("10,00");
+    wrapper.setProps({ amount: 1 });
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    expect(inputElement.element.value).toBe("2,00");
+    wrapper.setProps({ amount: 23 });
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    expect(inputElement.element.value).toBe("20,00");
+  });
 });

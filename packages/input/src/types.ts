@@ -97,6 +97,14 @@ interface FzCurrencyInputProps
    * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#digit_options
    */
   maximumFractionDigits?: number;
+  /**
+   * Minimum number value
+   */
+  min?: number;
+  /**
+   * Maximum number value
+   */
+  max?: number;
 }
 
 export { FzInputProps, FzCurrencyInputProps };
