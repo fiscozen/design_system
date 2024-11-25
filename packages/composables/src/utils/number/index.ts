@@ -13,7 +13,7 @@ export const format = (options: FzUseCurrencyOptions) => (input: number | null) 
   return input.toLocaleString('it-IT', safeOptions)
 }
 
-export const parse = (text: string) => {
+export const parse = (text: string): number => {
   // strip currency, handle edge cases...
   return parseFloat(text.replace(/,/g, '.'))
 }

@@ -56,4 +56,6 @@ export interface FzUseCurrencyOptions {
   minimumFractionDigits: number
   maximumFractionDigits?: number
   useGrouping?: boolean
+  min?: number
+  max?: number
 }

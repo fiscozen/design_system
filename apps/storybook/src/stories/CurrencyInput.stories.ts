@@ -68,9 +68,28 @@ const NullOnEmpty: Story = {
   }
 }
 
+const MinMax: Story = {
+  render: (args) => ({
+    components: {FzCurrencyInput},
+    setup() {
+      const value = ref();
+      return {
+        value,
+        args
+      }
+    },
+    template: `<FzCurrencyInput v-bind="args" v-model:amount="value" />`
+  }),
+  args: {
+    min: 3,
+    max: 20
+  }
+}
+
 export {
   Default,
-  NullOnEmpty
+  NullOnEmpty,
+  MinMax
 }
 
 export default meta
