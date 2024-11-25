@@ -26,6 +26,10 @@ type FzColumnProps = {
    * The header label of this column
    */
   header: string;
+  /**
+   * should be sticked to either left or right 
+   */
+  sticky?: 'left' | 'right';
 };
 
 type FzColumnSlots = {
