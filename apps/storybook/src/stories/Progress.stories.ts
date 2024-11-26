@@ -5,7 +5,12 @@ const meta: Meta<typeof FzProgress> = {
   title: '@fiscozen/progress/FzProgress',
   component: FzProgress,
   tags: ['autodocs'],
-  argTypes: {},
+  argTypes: {
+    size: {
+      control: 'select',
+      options: ['xs', 'sm', 'md', 'lg', 'xl', '2xl']
+    },
+  },
   args: {},
   decorators: []
 }
@@ -13,7 +18,21 @@ const meta: Meta<typeof FzProgress> = {
 type Story = StoryObj<typeof meta>
 
 const Default: Story = {
-  args: {}
+  render: (args) => ({
+    components: {
+      FzProgress
+    },
+    setup() {
+      return {
+        args
+      }
+    },
+    template: `
+        <div class="flex w-dvw h-dvh justify-center items-center">
+          <FzProgress v-bind="args"/> 
+        </div>
+      `
+  })
 }
 
 export { Default }
