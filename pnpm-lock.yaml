@@ -21,8 +21,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.194
-        version: 1.0.194
+        specifier: ^1.0.197
+        version: 1.0.197
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
@@ -1272,8 +1272,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.194
-        version: 1.0.194
+        specifier: ^1.0.197
+        version: 1.0.197
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.6.0
@@ -1659,7 +1659,7 @@ importers:
   packages/progress:
     dependencies:
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       tailwindcss:
         specifier: ^3.4.1
@@ -2604,8 +2604,8 @@ packages:
     resolution: {integrity: sha512-Xk1sIhyNC/esHGGVjL/niHLowM0csl/kFO5uawBy4IrWwy0o1G8LGt3jP6nmWGz+USxeeqbihAmp/oVZju6wug==}
     hasBin: true
 
-  '@awesome.me/kit-8137893ad3@1.0.194':
-    resolution: {integrity: sha512-4auy3wTh+IVR0KLPMyDHyhD0ll67yrOLVeD/ujoo50yGa0ZnMkd0HSZZX+ChyGFO+hVs76qEaEiT6ymgGHhcVg==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.194/kit-8137893ad3-1.0.194.tgz}
+  '@awesome.me/kit-8137893ad3@1.0.197':
+    resolution: {integrity: sha512-nm/Kji25tTUbwaMUQWghv3DUPZWazmvK0tn8hmEdq3KlZWKC1P+qxZTrH7hIg1cPUeJpRV81K7sEnxrkUNeJMQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.197/kit-8137893ad3-1.0.197.tgz}
     engines: {node: '>=16'}
 
   '@awesome.me/kit-8137893ad3@1.0.71':
@@ -3552,8 +3552,8 @@ packages:
     resolution: {integrity: sha512-xyX0X9mc0kyz9plIyryrRbl7ngsA9jz77mCZJsUkLl+ZKs0KWObgaEBoSgQiYWAsSmjz/yjl0F++Got0Mdp4Rw==}
     engines: {node: '>=6'}
 
-  '@fortawesome/fontawesome-common-types@6.7.0':
-    resolution: {integrity: sha512-AUetZXU6cQdAe21p8j3mg2aD40MMDKfFNUNgq/G7gR3HMDp0BsQskAudLDSgq6d0SbCY0QKP0g4s5Y02S1kkhw==}
+  '@fortawesome/fontawesome-common-types@6.7.1':
+    resolution: {integrity: sha512-gbDz3TwRrIPT3i0cDfujhshnXO9z03IT1UKRIVi/VEjpNHtSBIP2o5XSm+e816FzzCFEzAxPw09Z13n20PaQJQ==}
     engines: {node: '>=6'}
 
   '@fortawesome/fontawesome-svg-core@6.5.1':
@@ -7524,10 +7524,12 @@ packages:
 
   rimraf@2.6.3:
     resolution: {integrity: sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   rollup@4.9.5:
@@ -8517,9 +8519,9 @@ snapshots:
     dependencies:
       default-browser-id: 3.0.0
 
-  '@awesome.me/kit-8137893ad3@1.0.194':
+  '@awesome.me/kit-8137893ad3@1.0.197':
     dependencies:
-      '@fortawesome/fontawesome-common-types': 6.7.0
+      '@fortawesome/fontawesome-common-types': 6.7.1
 
   '@awesome.me/kit-8137893ad3@1.0.71':
     dependencies:
@@ -9589,7 +9591,7 @@ snapshots:
 
   '@fortawesome/fontawesome-common-types@6.6.0': {}
 
-  '@fortawesome/fontawesome-common-types@6.7.0': {}
+  '@fortawesome/fontawesome-common-types@6.7.1': {}
 
   '@fortawesome/fontawesome-svg-core@6.5.1':
     dependencies:

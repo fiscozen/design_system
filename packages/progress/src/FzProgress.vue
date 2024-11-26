@@ -1,5 +1,10 @@
 <template>
-    <FzIcon name="bell" spin  v-bind="props"/>
+    <FzIcon
+        v-bind="props"
+        name="spinner-third"
+        variant="fas"
+        spin
+        style="--fa-animation-duration: 0.86s; --fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85)"/>
 </template>
 
 <script setup lang="ts">
