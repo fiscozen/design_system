@@ -23,7 +23,7 @@ describe.concurrent("FzCurrencyInput", () => {
     const wrapper = mount(FzCurrencyInput, {
       props: {
         label: "Label",
-        amount: "",
+        amount: 0,
         "onUpdate:amount": (e) => wrapper.setProps({ amount: e }),
       },
     });
@@ -139,14 +139,67 @@ describe.concurrent("FzCurrencyInput", () => {
     });
 
     const inputElement = wrapper.find("input");
-    await wrapper.trigger('blur');
+    await inputElement.trigger('blur');
     await new Promise((resolve) => window.setTimeout(resolve, 100));
     expect(inputElement.element.value).toBe("10,00");
-    wrapper.setProps({ amount: 1 });
-    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    await wrapper.setProps({ amount: 1 });
+    await inputElement.trigger('blur');
     expect(inputElement.element.value).toBe("2,00");
-    wrapper.setProps({ amount: 23 });
-    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    await wrapper.setProps({ amount: 23 });
+    await inputElement.trigger('blur');
     expect(inputElement.element.value).toBe("20,00");
+  });
+
+
+  it("should step correctly when using quantization via the 'step' prop", async () => {
+    const wrapper = mount(FzCurrencyInput, {
+      props: {
+        label: "Label",
+        amount: 1,
+        "onUpdate:amount": (e) => wrapper.setProps({ amount: e }),
+        step: 4
+      },
+    });
+
+    const inputElement = wrapper.find("input");
+    const arrowUp = wrapper.find('.fz__currencyinput__arrowup')
+    const arrowDown = wrapper.find('.fz__currencyinput__arrowdown')
+
+    await inputElement.trigger('blur');
+    expect(inputElement.element.value).toBe("1,00");
+    await arrowUp.trigger('click')
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    expect(inputElement.element.value).toBe("5,00");
+    await arrowDown.trigger('click')
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    expect(inputElement.element.value).toBe("1,00");
+    await arrowDown.trigger('click')
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    expect(inputElement.element.value).toBe("-3,00");
+  });
+
+  it("should enforce quantization via the 'forcedStep' prop", async () => {
+    const wrapper = mount(FzCurrencyInput, {
+      props: {
+        label: "Label",
+        amount: 8,
+        "onUpdate:amount": (e) => wrapper.setProps({ amount: e }),
+        step: 4,
+        forceStep: true
+      },
+    });
+
+    const inputElement = wrapper.find("input");
+    await inputElement.trigger('blur');
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    expect(inputElement.element.value).toBe("8,00");
+    await wrapper.setProps({ amount: 5 });
+    await inputElement.trigger('blur');
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    expect(inputElement.element.value).toBe("4,00");
+    await wrapper.setProps({ amount: -7 });
+    await inputElement.trigger('blur');
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    expect(inputElement.element.value).toBe("-8,00");
   });
 });
