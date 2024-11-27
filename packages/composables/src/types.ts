@@ -58,4 +58,5 @@ export interface FzUseCurrencyOptions {
   useGrouping?: boolean
   min?: number
   max?: number
+  step?: number
 }

@@ -105,6 +105,14 @@ interface FzCurrencyInputProps
    * Maximum number value
    */
   max?: number;
+  /**
+   * Quantized step
+   */
+  step?: number;
+  /**
+   * Allow only mutiples of step
+   */
+  forceStep?: boolean;
 }
 
 export { FzInputProps, FzCurrencyInputProps };

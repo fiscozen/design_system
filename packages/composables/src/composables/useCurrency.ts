@@ -1,12 +1,12 @@
 import { Ref, watch, getCurrentInstance, computed, ref, nextTick } from 'vue'
 import { FzUseCurrencyOptions } from '../types'
-import { format as formatNumber, parse } from '../utils'
+import { format as formatNumber, parse, roundTo } from '../utils'
 
 export const useCurrency = (options: FzUseCurrencyOptions) => {
   const inputRef: Ref<HTMLInputElement | null | undefined> = ref(null)
   const vm = getCurrentInstance()
 
-  const computedModel = computed<number | null>(() => vm?.props.amount as unknown as number | null)
+  const computedModel = computed<number | null>(() => vm?.props.amount as number | null)
   const internalVal = ref<number | null>()
 
   const format = formatNumber(options)
@@ -21,7 +21,7 @@ export const useCurrency = (options: FzUseCurrencyOptions) => {
         vm.emit('update:amount', null)
         return
       }
-      vm.emit('update:amount', typeof computedModel.value === 'number' ? val : val?.toString())
+      vm.emit('update:amount', val)
     }
   }
 
@@ -41,15 +41,9 @@ export const useCurrency = (options: FzUseCurrencyOptions) => {
     }
     let { value } = el
     value = value.replace(/[^0-9,.-]/g, '')
-    let parsed: number = parse(value);
-    if (options.min && options.min > parsed) {
-      parsed = options.min
-    }
-    if (options.max && options.max < parsed) {
-      parsed = options.max
-    }
+    const parsed: number = parse(value);
 
-    setValue(format(parsed))
+    setValue(value)
     const numberValue = vm?.props.nullOnEmpty && value === '' ? null : parsed
     emitAmount(Number.isNaN(numberValue) ? 0 : numberValue)
   }
@@ -67,6 +61,15 @@ export const useCurrency = (options: FzUseCurrencyOptions) => {
       number = parse(rawValue)
       if (Number.isNaN(number)) {
         number = 0
+      }
+      if (options.step && vm?.props.forceStep) {
+        number = roundTo(options.step, number)
+      }
+      if (options.min && options.min > number) {
+        number = options.min
+      }
+      if (options.max && options.max < number) {
+        number = options.max
       }
     }
     const text = format(number)
