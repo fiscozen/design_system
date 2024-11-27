@@ -86,10 +86,47 @@ const MinMax: Story = {
   }
 }
 
+const Step: Story = {
+  render: (args) => ({
+    components: {FzCurrencyInput},
+    setup() {
+      const value = ref();
+      return {
+        value,
+        args
+      }
+    },
+    template: `<FzCurrencyInput v-bind="args" v-model:amount="value" />`
+  }),
+  args: {
+    step: 4
+  }
+}
+
+const ForcedStep: Story = {
+  render: (args) => ({
+    components: {FzCurrencyInput},
+    setup() {
+      const value = ref();
+      return {
+        value,
+        args
+      }
+    },
+    template: `<FzCurrencyInput v-bind="args" v-model:amount="value" />`
+  }),
+  args: {
+    step: 4,
+    forceStep: true
+  }
+}
+
 export {
   Default,
   NullOnEmpty,
-  MinMax
+  MinMax,
+  Step,
+  ForcedStep
 }
 
 export default meta
