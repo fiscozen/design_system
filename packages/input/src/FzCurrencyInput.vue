@@ -124,7 +124,8 @@ const stepUpDown = (amount: number) => {
   if (!props.step) {
     return;
   }
-  let stepVal = props.forceStep ? roundTo(props.step, model.value || 0) : model.value || 0
+  const value = model.value || 0;
+  let stepVal = props.forceStep ? roundTo(props.step, value) : value
   stepVal += amount
   const safeText = format(stepVal);
   setValue(safeText);
