@@ -1,5 +1,5 @@
-import type { IconProps } from '@fiscozen/icons';
+import type { IconProps } from "@fiscozen/icons";
 
-type FzProgressProps = IconProps
+type FzProgressProps = IconProps;
 
-export { FzProgressProps }
+export { FzProgressProps };
