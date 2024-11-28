@@ -121,7 +121,7 @@ const handleKeyUp = (e: KeyboardEvent) => {
 useKeyUp(handleKeyUp);
 
 const staticClasses = "flex flex-col bg-core-white";
-const dialogStaticClasses = "border-1 rounded border-grey-100 p-0 z-[42]";
+const dialogStaticClasses = "border-1 rounded border-grey-100 p-0 z-[42] top-0 bottom-0";
 
 const dialogClasses = computed(() => {
   if (props.isDrawer) {
