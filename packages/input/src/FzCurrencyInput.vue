@@ -4,14 +4,24 @@
     v-bind="props"
     :modelValue="fzInputModel"
     type="text"
-    @paste="onPaste">
+    @paste="onPaste"
+  >
     <template #right-icon v-if="step">
       <div class="flex flex-col justify-between items-center">
-        <FzIcon name="angle-up" size="xs" class="fz__currencyinput__arrowup cursor-pointer" @click="stepUpDown(step)"></FzIcon>
-        <FzIcon name="angle-down" size="xs" class="fz__currencyinput__arrowdown cursor-pointer" @click="stepUpDown(-step)"></FzIcon>
+        <FzIcon
+          name="angle-up"
+          size="xs"
+          class="fz__currencyinput__arrowup cursor-pointer"
+          @click="stepUpDown(step)"
+        ></FzIcon>
+        <FzIcon
+          name="angle-down"
+          size="xs"
+          class="fz__currencyinput__arrowdown cursor-pointer"
+          @click="stepUpDown(-step)"
+        ></FzIcon>
       </div>
     </template>
-
   </FzInput>
 </template>
 
@@ -20,7 +30,7 @@ import { computed, nextTick, onMounted, ref, watch } from "vue";
 import FzInput from "./FzInput.vue";
 import { FzCurrencyInputProps } from "./types";
 import { roundTo, useCurrency } from "@fiscozen/composables";
-import {FzIcon} from '@fiscozen/icons';
+import { FzIcon } from "@fiscozen/icons";
 
 const fzInputRef = ref<InstanceType<typeof FzInput>>();
 const fzInputModel = ref();
@@ -41,7 +51,7 @@ const {
   maximumFractionDigits: props.maximumFractionDigits,
   min: props.min,
   max: props.max,
-  step: props.step
+  step: props.step,
 });
 
 defineEmits(["update:amount"]);
@@ -125,12 +135,12 @@ const stepUpDown = (amount: number) => {
     return;
   }
   const value = model.value || 0;
-  let stepVal = props.forceStep ? roundTo(props.step, value) : value
-  stepVal += amount
+  let stepVal = props.forceStep ? roundTo(props.step, value) : value;
+  stepVal += amount;
   const safeText = format(stepVal);
   setValue(safeText);
   emitAmount(stepVal);
-}
+};
 
 watch(model, (newVal) => {
   fzInputModel.value = newVal;

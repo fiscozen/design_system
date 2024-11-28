@@ -134,22 +134,21 @@ describe.concurrent("FzCurrencyInput", () => {
         amount: 10,
         "onUpdate:amount": (e) => wrapper.setProps({ amount: e }),
         min: 2,
-        max: 20
+        max: 20,
       },
     });
 
     const inputElement = wrapper.find("input");
-    await inputElement.trigger('blur');
+    await inputElement.trigger("blur");
     await new Promise((resolve) => window.setTimeout(resolve, 100));
     expect(inputElement.element.value).toBe("10,00");
     await wrapper.setProps({ amount: 1 });
-    await inputElement.trigger('blur');
+    await inputElement.trigger("blur");
     expect(inputElement.element.value).toBe("2,00");
     await wrapper.setProps({ amount: 23 });
-    await inputElement.trigger('blur');
+    await inputElement.trigger("blur");
     expect(inputElement.element.value).toBe("20,00");
   });
-
 
   it("should step correctly when using quantization via the 'step' prop", async () => {
     const wrapper = mount(FzCurrencyInput, {
@@ -157,23 +156,23 @@ describe.concurrent("FzCurrencyInput", () => {
         label: "Label",
         amount: 1,
         "onUpdate:amount": (e) => wrapper.setProps({ amount: e }),
-        step: 4
+        step: 4,
       },
     });
 
     const inputElement = wrapper.find("input");
-    const arrowUp = wrapper.find('.fz__currencyinput__arrowup')
-    const arrowDown = wrapper.find('.fz__currencyinput__arrowdown')
+    const arrowUp = wrapper.find(".fz__currencyinput__arrowup");
+    const arrowDown = wrapper.find(".fz__currencyinput__arrowdown");
 
-    await inputElement.trigger('blur');
+    await inputElement.trigger("blur");
     expect(inputElement.element.value).toBe("1,00");
-    await arrowUp.trigger('click')
+    await arrowUp.trigger("click");
     await new Promise((resolve) => window.setTimeout(resolve, 100));
     expect(inputElement.element.value).toBe("5,00");
-    await arrowDown.trigger('click')
+    await arrowDown.trigger("click");
     await new Promise((resolve) => window.setTimeout(resolve, 100));
     expect(inputElement.element.value).toBe("1,00");
-    await arrowDown.trigger('click')
+    await arrowDown.trigger("click");
     await new Promise((resolve) => window.setTimeout(resolve, 100));
     expect(inputElement.element.value).toBe("-3,00");
   });
@@ -185,20 +184,20 @@ describe.concurrent("FzCurrencyInput", () => {
         amount: 8,
         "onUpdate:amount": (e) => wrapper.setProps({ amount: e }),
         step: 4,
-        forceStep: true
+        forceStep: true,
       },
     });
 
     const inputElement = wrapper.find("input");
-    await inputElement.trigger('blur');
+    await inputElement.trigger("blur");
     await new Promise((resolve) => window.setTimeout(resolve, 100));
     expect(inputElement.element.value).toBe("8,00");
     await wrapper.setProps({ amount: 5 });
-    await inputElement.trigger('blur');
+    await inputElement.trigger("blur");
     await new Promise((resolve) => window.setTimeout(resolve, 100));
     expect(inputElement.element.value).toBe("4,00");
     await wrapper.setProps({ amount: -7 });
-    await inputElement.trigger('blur');
+    await inputElement.trigger("blur");
     await new Promise((resolve) => window.setTimeout(resolve, 100));
     expect(inputElement.element.value).toBe("-8,00");
   });
