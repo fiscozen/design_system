@@ -1,7 +1,7 @@
 import {type FzSimpleTableProps} from '@fiscozen/simple-table'
 import {type FzActionlistProps} from '@fiscozen/actionlist';
 
-type FzTableProps = FzSimpleTableProps & {
+interface FzTableProps extends FzSimpleTableProps {
   /**
    * Actions to show in the dropdown in the action column
    */
