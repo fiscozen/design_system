@@ -13,6 +13,7 @@ export default {
         "./node_modules/@fiscozen/divider/src/**/*.{html,js,ts,vue}",
         "./node_modules/@fiscozen/composables/src/**/*.{html,js,ts,vue}",
         "./node_modules/@fiscozen/tooltip/src/**/*.{html,js,ts,vue}",
-        "./node_modules/@fiscozen/select/src/**/*.{html,js,ts,vue}"
+        "./node_modules/@fiscozen/select/src/**/*.{html,js,ts,vue}",
+        "./node_modules/@fiscozen/pdf-viewer/src/**/*.{html,js,ts,vue}"
     ],
 }
