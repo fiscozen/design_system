@@ -214,7 +214,7 @@ onUpdated(updateClasses)
   </div>
   
 </div>
-<div class="fz__table__footer w-full flex flex-row justify-end m-8" v-if="pages && value && value.length">
+<div class="fz__table__footer w-full flex flex-row justify-end m-8" v-if="pages && value?.length">
   <div class="fz__table__pagination flex flex-row justify-between items-center gap-8">
     <FzButton
       @click="activePage = 0"
