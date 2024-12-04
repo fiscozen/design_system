@@ -177,7 +177,7 @@ onUpdated(updateClasses)
 </script>
 
 <template>
-<div class="fz__table overflow-auto h-full w-full">
+<div class="fz__table overflow-auto size-full">
   <div
     :class="[staticClasses, classes]"
     ref="grid"
