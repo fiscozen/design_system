@@ -41,6 +41,7 @@
     "@fiscozen/navbar": "workspace:^",
     "@fiscozen/navlink": "workspace:^",
     "@fiscozen/navlist": "workspace:^",
+    "@fiscozen/pdf-viewer": "workspace:^",
     "@fiscozen/progress": "workspace:^",
     "@fiscozen/radio": "workspace:^",
     "@fiscozen/select": "workspace:^",
