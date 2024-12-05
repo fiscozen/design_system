@@ -50,7 +50,6 @@ const Template: RadioGroupStory = {
                 </FzRadioGroup>`
   }),
   args: {
-    size: 'sm',
     label: 'Radio Group'
   }
 }
@@ -58,7 +57,6 @@ const Template: RadioGroupStory = {
 export const Medium: RadioGroupStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Radio Group Medium'
   }
 }
@@ -101,7 +99,6 @@ export const helpText: RadioGroupStory = {
                 </FzRadioGroup>`
   }),
   args: {
-    size: 'sm',
     label: 'Radio Group'
   }
 }
@@ -136,7 +133,6 @@ export const Error: RadioGroupStory = {
                 </FzRadioGroup>`
   }),
   args: {
-    size: 'sm',
     label: 'Radio Group',
     error: true
   }
@@ -145,7 +141,6 @@ export const Error: RadioGroupStory = {
 export const disabled: RadioGroupStory = {
   ...Template,
   args: {
-    size: 'sm',
     label: 'Radio Group Small',
     disabled: true
   }
@@ -154,7 +149,6 @@ export const disabled: RadioGroupStory = {
 export const emphasis: RadioGroupStory = {
   ...Template,
   args: {
-    size: 'sm',
     label: 'Radio Group Small',
     emphasis: true
   }
@@ -178,7 +172,6 @@ export const Required: RadioGroupStory = {
                 </form>`
   }),
   args: {
-    size: 'sm',
     label: 'Radio Group',
     required: true
   }
@@ -206,7 +199,6 @@ export const helpTextAndError: RadioGroupStory = {
                 </FzRadioGroup>`
   }),
   args: {
-    size: 'md',
     label: 'Radio Group',
     error: true
   }
@@ -232,7 +224,6 @@ export const valueWithNumber: RadioGroupStory = {
                 </FzRadioGroup>`
   }),
   args: {
-    size: 'sm',
     label: 'Radio Group'
   }
 }
@@ -262,7 +253,6 @@ export const doesNotTriggerChangeOnCreation: RadioGroupStory = {
                 </FzRadioGroup>`
   }),
   args: {
-    size: 'sm',
     label: 'Radio Group'
   }
 }

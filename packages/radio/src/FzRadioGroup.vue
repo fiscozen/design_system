@@ -26,6 +26,7 @@ import { mapSizeToClasses } from "./common";
 
 const props = withDefaults(defineProps<FzRadioGroupProps>(), {
   name: `radio-group-${Math.random().toString(36).slice(2, 9)}`,
+  size: "md",
 });
 
 const controlledProps = computed(() => ({
