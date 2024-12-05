@@ -50,7 +50,6 @@ const Template: RadioGroupStory = {
                 </FzRadioGroup>`
   }),
   args: {
-    size: 'sm',
     label: 'Radio Group'
   }
 }
@@ -58,7 +57,6 @@ const Template: RadioGroupStory = {
 export const Medium: RadioGroupStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Radio Group Medium'
   }
 }
@@ -71,7 +69,7 @@ export const Small: RadioGroupStory = {
   }
 }
 
-export const helpText: RadioGroupStory = {
+export const HelpText: RadioGroupStory = {
   render: (args) => ({
     components: { FzRadioGroup, FzRadio, FzIcon },
     setup() {
@@ -101,7 +99,6 @@ export const helpText: RadioGroupStory = {
                 </FzRadioGroup>`
   }),
   args: {
-    size: 'sm',
     label: 'Radio Group'
   }
 }
@@ -136,25 +133,22 @@ export const Error: RadioGroupStory = {
                 </FzRadioGroup>`
   }),
   args: {
-    size: 'sm',
     label: 'Radio Group',
     error: true
   }
 }
 
-export const disabled: RadioGroupStory = {
+export const Disabled: RadioGroupStory = {
   ...Template,
   args: {
-    size: 'sm',
     label: 'Radio Group Small',
     disabled: true
   }
 }
 
-export const emphasis: RadioGroupStory = {
+export const Emphasis: RadioGroupStory = {
   ...Template,
   args: {
-    size: 'sm',
     label: 'Radio Group Small',
     emphasis: true
   }
@@ -178,13 +172,12 @@ export const Required: RadioGroupStory = {
                 </form>`
   }),
   args: {
-    size: 'sm',
     label: 'Radio Group',
     required: true
   }
 }
 
-export const helpTextAndError: RadioGroupStory = {
+export const HelpTextAndError: RadioGroupStory = {
   render: (args) => ({
     components: { FzRadioGroup, FzRadio, FzIcon },
     setup() {
@@ -206,13 +199,12 @@ export const helpTextAndError: RadioGroupStory = {
                 </FzRadioGroup>`
   }),
   args: {
-    size: 'md',
     label: 'Radio Group',
     error: true
   }
 }
 
-export const valueWithNumber: RadioGroupStory = {
+export const ValueWithNumber: RadioGroupStory = {
   render: (args) => ({
     components: { FzRadioGroup, FzRadio, FzIcon },
     setup() {
@@ -232,12 +224,11 @@ export const valueWithNumber: RadioGroupStory = {
                 </FzRadioGroup>`
   }),
   args: {
-    size: 'sm',
     label: 'Radio Group'
   }
 }
 
-export const doesNotTriggerChangeOnCreation: RadioGroupStory = {
+export const DoesNotTriggerChangeOnCreation: RadioGroupStory = {
   render: (args) => ({
     components: { FzRadioGroup, FzRadio, FzIcon },
     setup() {
@@ -262,7 +253,6 @@ export const doesNotTriggerChangeOnCreation: RadioGroupStory = {
                 </FzRadioGroup>`
   }),
   args: {
-    size: 'sm',
     label: 'Radio Group'
   }
 }
