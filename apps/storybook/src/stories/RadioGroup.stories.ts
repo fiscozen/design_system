@@ -69,7 +69,7 @@ export const Small: RadioGroupStory = {
   }
 }
 
-export const helpText: RadioGroupStory = {
+export const HelpText: RadioGroupStory = {
   render: (args) => ({
     components: { FzRadioGroup, FzRadio, FzIcon },
     setup() {
@@ -138,7 +138,7 @@ export const Error: RadioGroupStory = {
   }
 }
 
-export const disabled: RadioGroupStory = {
+export const Disabled: RadioGroupStory = {
   ...Template,
   args: {
     label: 'Radio Group Small',
@@ -146,7 +146,7 @@ export const disabled: RadioGroupStory = {
   }
 }
 
-export const emphasis: RadioGroupStory = {
+export const Emphasis: RadioGroupStory = {
   ...Template,
   args: {
     label: 'Radio Group Small',
@@ -177,7 +177,7 @@ export const Required: RadioGroupStory = {
   }
 }
 
-export const helpTextAndError: RadioGroupStory = {
+export const HelpTextAndError: RadioGroupStory = {
   render: (args) => ({
     components: { FzRadioGroup, FzRadio, FzIcon },
     setup() {
@@ -204,7 +204,7 @@ export const helpTextAndError: RadioGroupStory = {
   }
 }
 
-export const valueWithNumber: RadioGroupStory = {
+export const ValueWithNumber: RadioGroupStory = {
   render: (args) => ({
     components: { FzRadioGroup, FzRadio, FzIcon },
     setup() {
@@ -228,7 +228,7 @@ export const valueWithNumber: RadioGroupStory = {
   }
 }
 
-export const doesNotTriggerChangeOnCreation: RadioGroupStory = {
+export const DoesNotTriggerChangeOnCreation: RadioGroupStory = {
   render: (args) => ({
     components: { FzRadioGroup, FzRadio, FzIcon },
     setup() {

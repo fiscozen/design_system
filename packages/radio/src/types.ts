@@ -49,7 +49,7 @@ export type FzRadioGroupProps = {
   /**
    * The size of the radio button
    */
-  size: "sm" | "md";
+  size?: "sm" | "md";
   /**
    * If true, the radio button will be emphasized
    */
