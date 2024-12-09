@@ -105,8 +105,7 @@ const customVariantClasses = computed(() => {
         '!border-grey-200': true,
         'hover:bg-grey-100': !props.disabled,
         'focus:!border-blue-600': !props.disabled,
-        'disabled:text-grey-500': true,
-        'disabled:bg-grey-100': true
+        'disabled:text-grey-100': true,
       }
       break
     case 'invisible':

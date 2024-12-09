@@ -15,7 +15,6 @@ type Story = StoryObj<typeof meta>
 const Default: Story = {
   args: {
     src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
-    containerClass: "w-[550px] h-[768px]"
   }
 }
 
