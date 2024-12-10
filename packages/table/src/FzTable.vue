@@ -82,6 +82,18 @@ const updateClasses = () => {
   grid.value.style.width = `${tableWidth}px`;
 };
 
+const tableWidth = computed(() => {
+  if (!grid.value) {
+    return;
+  }
+  const tableWidth = columns.reduce((acc, el, index) => {
+    const colWidth = grid.value.children[index].getBoundingClientRect().width;
+    acc += colWidth;
+    return acc;
+  }, 0);
+  return `${tableWidth}px`;
+});
+
 const centerPageList = computed(() => {
   if (!props.pages) {
     return [];
@@ -107,10 +119,9 @@ const totalColumns = computed(() => {
   return res;
 });
 
-onMounted(() => {
-  updateClasses();
-});
-onUpdated(updateClasses);
+const colSpan = computed(() => ({
+  "grid-column": `span ${totalColumns.value} / span ${totalColumns.value}`,
+}));
 </script>
 
 <template>
@@ -119,6 +130,7 @@ onUpdated(updateClasses);
       :class="[staticClasses]"
       :style="{
         'grid-template-columns': `repeat(${totalColumns}, minmax(min-content, 1fr))`,
+        width: tableWidth,
       }"
       ref="grid"
       role="table"
@@ -147,30 +159,36 @@ onUpdated(updateClasses);
       >
         Azioni
       </div>
-      <template v-if="value && value.length" v-for="(row, index) in value">
-        <div
-          :aria-rowindex="index"
-          :class="[bodyStaticClasses, getBodyClasses(column)]"
-          role="cell"
-          v-for="column in columns"
-        >
-          {{
-            row[
-              column.props.field?.toLowerCase() ||
-                column.props.header.toLowerCase()
-            ]
-          }}
-        </div>
-        <div v-if="actions" :class="bodyStaticClasses">
-          <FzIconDropdown :actions="actions.items"></FzIconDropdown>
-        </div>
-      </template>
+      <div
+        class="grid grid-cols-subgrid"
+        v-if="value && value.length"
+        v-for="(row, index) in value"
+        :aria-rowindex="index + 1"
+        :style="colSpan"
+        role="row"
+      >
+        <slot :name="`row-${index}`">
+          <div
+            :class="[bodyStaticClasses, getBodyClasses(column)]"
+            role="cell"
+            v-for="column in columns"
+          >
+            {{
+              row[
+                column.props.field?.toLowerCase() ||
+                  column.props.header.toLowerCase()
+              ]
+            }}
+          </div>
+          <div v-if="actions" :class="bodyStaticClasses">
+            <FzIconDropdown :actions="actions.items"></FzIconDropdown>
+          </div>
+        </slot>
+      </div>
       <div
         v-else
         class="fz__table__empty h-full mt-80 justify-self-center"
-        :style="{
-          'grid-column': `span ${columns.length} / span ${columns.length}`,
-        }"
+        :style="colSpan"
       >
         {{ placeholder ?? "No data available" }}
       </div>
