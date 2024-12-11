@@ -248,7 +248,8 @@ const TemplateWithTabArray: TabStory = {
             },
             {
               title: 'very long tab text',
-              badgeContent: '1'
+              badgeContent: '1',
+              icon: 'bell'
             },
             {
               title: 'tab3',
