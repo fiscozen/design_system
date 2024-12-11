@@ -6,18 +6,17 @@
         ref="tabContainer"
         @wheel="onWheel"
       >
-        <FzTabPicker
-          v-if="!horizontalOverflow && isOverflowing"
-          :tabs="tabs"
-          :size="size"
-        />
-        <FzTabName
-          v-else
-          v-for="tab in tabs"
-          :tab="tab"
-          :key="tab.title"
-          :size="size"
-        />
+        <template v-if="!horizontalOverflow && isOverflowing">
+          <FzTabPicker :tabs="tabs" :size="size" />
+        </template>
+        <template v-else>
+          <FzTabButton
+            v-for="tab in tabs"
+            :tab="tab"
+            :key="tab.title"
+            :size="size"
+          />
+        </template>
         <slot name="tabs-container-end" />
       </div>
       <slot name="tabs-end" />
@@ -35,12 +34,11 @@ import {
   useSlots,
   watch,
   VNode,
-  onUnmounted,
   onBeforeUnmount,
 } from "vue";
 import { FzTabsProps, FzTabProps } from "./types";
 import FzTabPicker from "./components/FzTabPicker.vue";
-import FzTabName from "./components/FzTabName.vue";
+import FzTabButton from "./components/FzTabButton.vue";
 import FzTab from "./FzTab.vue";
 
 const props = withDefaults(defineProps<FzTabsProps>(), {
