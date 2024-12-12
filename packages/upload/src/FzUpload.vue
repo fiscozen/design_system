@@ -68,9 +68,11 @@ const props = withDefaults(defineProps<FzUploadProps>(), {
   buttonLabel: "Carica",
   dragAndDropLabel: "o trascina qui",
 });
-const emit = defineEmits<{ 
-  'fzupload:change': [files: File[]]  
-}>(); 
+const emit = defineEmits<{
+  "fzupload:change": [files: File[]];
+  "fzupload:add": [files: File[]];
+  "fzupload:delete": [File];
+}>();
 
 function modelSetter(value: File[]) {
   if (value.length > 1 && !props.multiple) {
@@ -128,6 +130,7 @@ function addFiles(filesToAdd: File[]) {
   }
 
   model.value = newFiles;
+  emit("fzupload:add", filesToAdd);
   emit("fzupload:change", newFiles);
 }
 
@@ -148,6 +151,8 @@ function deleteFile(file: File) {
     newArr.splice(index, 1);
     model.value = newArr;
   }
+  emit("fzupload:delete", file);
+  emit("fzupload:change", model.value);
 }
 </script>
 
