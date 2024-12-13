@@ -10644,7 +10644,7 @@ snapshots:
       '@babel/parser': 7.25.8
       '@babel/traverse': 7.24.5
       '@babel/types': 7.25.8
-      '@storybook/csf': 0.1.11
+      '@storybook/csf': 0.1.12
       '@storybook/types': 8.0.10
       fs-extra: 11.2.0
       recast: 0.23.7
