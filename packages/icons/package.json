@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/icons",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "Design system icon plugin and component",
   "scripts": {
     "format": "prettier --write src/",
