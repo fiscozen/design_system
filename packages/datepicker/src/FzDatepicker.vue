@@ -6,7 +6,7 @@
     :ui="{ menu: calendarClassName }"
     @date-update="handleDateUpdate"
     @update:model-value="
-      (e) =>
+      (e: any) =>
         $emit(
           'update:model-value',
           props.valueFormat ? format(e, props.valueFormat) : e,
@@ -19,7 +19,9 @@
       <FzInput
         @update:modelValue="(e: string) => onInput(e)"
         @keyup.enter="onEnter"
-        @paste="(e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)"
+        @paste="
+          (e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)
+        "
         v-bind="safeInputProps"
         :modelValue="value"
       >
@@ -81,7 +83,7 @@ const props = withDefaults(defineProps<FzDatepickerProps>(), {
   state: undefined,
   autoPosition: true,
   textInput: true,
-  arrowNavigation: true
+  arrowNavigation: true,
 });
 
 const dp = ref();
@@ -98,14 +100,14 @@ const handleDateUpdate = (e: string | Date) => {
   let res = e;
   if (props.modelType === "iso" && e instanceof Date) {
     res = e.toISOString();
-  } else if ((typeof e === "string") && (typeof props.format === "string")) {
+  } else if (typeof e === "string" && typeof props.format === "string") {
     res = parse(e, props.format, new Date());
     if (props.modelType === "iso") {
-      res = res.toISOString()
+      res = res.toISOString();
     }
     // TODO handle custom props.format functions
-  } else if (typeof props.modelType === 'string') {
-    res = format(e, props.modelType)
+  } else if (typeof props.modelType === "string") {
+    res = format(e, props.modelType);
   }
   emit("update:model-value", res);
 };
@@ -155,7 +157,8 @@ const safeInputProps = computed<FzInputProps>(() => {
     leftIcon: "calendar-lines",
     name: props.name,
     ...props.inputProps,
-    readonly: !props.textInput,
+    readonly: !props.textInput || props.disabled,
+    disabled: !props.textInput || props.disabled,
   };
 });
 
