@@ -21,8 +21,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.206
-        version: 1.0.206
+        specifier: ^1.0.212
+        version: 1.0.212
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
@@ -1284,8 +1284,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.206
-        version: 1.0.206
+        specifier: ^1.0.212
+        version: 1.0.212
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.6.0
@@ -2838,8 +2838,8 @@ packages:
     resolution: {integrity: sha512-Xk1sIhyNC/esHGGVjL/niHLowM0csl/kFO5uawBy4IrWwy0o1G8LGt3jP6nmWGz+USxeeqbihAmp/oVZju6wug==}
     hasBin: true
 
-  '@awesome.me/kit-8137893ad3@1.0.206':
-    resolution: {integrity: sha512-uByv2ZCMTG3vFwc7TCWcCkYIemQGt+vcR9YNY1vYUjMTDNEJsNdBG0woq6lp9HHAmMfCeoE6893vQW9WBgmzQg==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.206/kit-8137893ad3-1.0.206.tgz}
+  '@awesome.me/kit-8137893ad3@1.0.212':
+    resolution: {integrity: sha512-TrSFAiQW/nJ/rwL1X6py/pFq/uNc8tLcJLjBKr3kIcLDq580TlRa4I6asTEdtqrLmXCBUIh4d46Al++dY11zqg==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.212/kit-8137893ad3-1.0.212.tgz}
     engines: {node: '>=16'}
 
   '@awesome.me/kit-8137893ad3@1.0.71':
@@ -4239,6 +4239,9 @@ packages:
 
   '@storybook/csf@0.1.12':
     resolution: {integrity: sha512-9/exVhabisyIVL0VxTCxo01Tdm8wefIXKXfltAPTSr8cbLn5JAxGQ6QV3mjdecLGEOucfoVhAKtJfVHxEK1iqw==}
+
+  '@storybook/csf@0.1.13':
+    resolution: {integrity: sha512-7xOOwCLGB3ebM87eemep89MYRFTko+D8qE7EdAAq74lgdqRR5cOUtYWJLjO2dLtP94nqoOdHJo6MdLLKzg412Q==}
 
   '@storybook/csf@0.1.7':
     resolution: {integrity: sha512-53JeLZBibjQxi0Ep+/AJTfxlofJlxy1jXcSKENlnKxHjWEYyHQCumMP5yTFjf7vhNnMjEpV3zx6t23ssFiGRyw==}
@@ -6093,13 +6096,17 @@ packages:
     resolution: {integrity: sha512-5uYhsJH8VJBTv7oslg4BznJYhDoRI6waYCxMmCdnTrcCrHA/fCFKoTFz2JKKE0HdDFUF7/oQuhzumXJK7paBRQ==}
     engines: {node: '>= 0.4'}
 
-  get-intrinsic@1.2.6:
-    resolution: {integrity: sha512-qxsEs+9A+u85HhllWJJFicJfPDhRmjzoYdl64aMWW9yRIJmSyxdn8IEkuIM530/7T+lv0TIHd8L6Q/ra0tEoeA==}
+  get-intrinsic@1.2.7:
+    resolution: {integrity: sha512-VW6Pxhsrk0KAOqs3WEd0klDiF/+V7gQOpAvY1jVU/LHmaD/kQO4523aiJuikX/QAKYiW6x8Jh+RJej1almdtCA==}
     engines: {node: '>= 0.4'}
 
   get-npm-tarball-url@2.1.0:
     resolution: {integrity: sha512-ro+DiMu5DXgRBabqXupW38h7WPZ9+Ad8UjwhvsmmN8w1sU7ab0nzAXvVZ4kqYg57OrqomRtJvepX5/xvFKNtjA==}
     engines: {node: '>=12.17'}
+
+  get-proto@1.0.1:
+    resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
+    engines: {node: '>= 0.4'}
 
   get-stream@5.2.0:
     resolution: {integrity: sha512-nBF+F1rAZVCu/p7rjzgA+Yb4lfYXrpl7a6VmJrU8wF9I1CKvP/QwPNZHnOlwbTkY6dvtFIzFMSyQXbLoTQPRpA==}
@@ -6917,8 +6924,8 @@ packages:
     peerDependencies:
       react: '>= 0.14.0'
 
-  math-intrinsics@1.0.0:
-    resolution: {integrity: sha512-4MqMiKP90ybymYvsut0CH2g4XWbfLtmlCkXmtmdcDCxNB+mQcu1w/1+L/VD7vi/PSv7X2JYV7SCcR+jiPXnQtA==}
+  math-intrinsics@1.1.0:
+    resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
 
   mdn-data@2.0.30:
@@ -8897,7 +8904,7 @@ snapshots:
     dependencies:
       default-browser-id: 3.0.0
 
-  '@awesome.me/kit-8137893ad3@1.0.206':
+  '@awesome.me/kit-8137893ad3@1.0.212':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
@@ -10638,7 +10645,7 @@ snapshots:
 
   '@storybook/core-events@8.1.2':
     dependencies:
-      '@storybook/csf': 0.1.12
+      '@storybook/csf': 0.1.13
       ts-dedent: 2.2.0
 
   '@storybook/core-server@8.0.10(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
@@ -10720,6 +10727,10 @@ snapshots:
       lodash: 4.17.21
 
   '@storybook/csf@0.1.12':
+    dependencies:
+      type-fest: 2.19.0
+
+  '@storybook/csf@0.1.13':
     dependencies:
       type-fest: 2.19.0
 
@@ -10813,7 +10824,7 @@ snapshots:
       '@storybook/channels': 8.1.2
       '@storybook/client-logger': 8.1.2
       '@storybook/core-events': 8.1.2
-      '@storybook/csf': 0.1.12
+      '@storybook/csf': 0.1.13
       '@storybook/global': 5.0.0
       '@storybook/types': 8.1.2
       '@types/qs': 6.9.17
@@ -11970,7 +11981,7 @@ snapshots:
   call-bound@1.0.3:
     dependencies:
       call-bind-apply-helpers: 1.0.1
-      get-intrinsic: 1.2.6
+      get-intrinsic: 1.2.7
 
   callsites@3.1.0: {}
 
@@ -13127,20 +13138,25 @@ snapshots:
       has-symbols: 1.0.3
       hasown: 2.0.2
 
-  get-intrinsic@1.2.6:
+  get-intrinsic@1.2.7:
     dependencies:
       call-bind-apply-helpers: 1.0.1
-      dunder-proto: 1.0.1
       es-define-property: 1.0.1
       es-errors: 1.3.0
       es-object-atoms: 1.0.0
       function-bind: 1.1.2
+      get-proto: 1.0.1
       gopd: 1.2.0
       has-symbols: 1.1.0
       hasown: 2.0.2
-      math-intrinsics: 1.0.0
+      math-intrinsics: 1.1.0
 
   get-npm-tarball-url@2.1.0: {}
+
+  get-proto@1.0.1:
+    dependencies:
+      dunder-proto: 1.0.1
+      es-object-atoms: 1.0.0
 
   get-stream@5.2.0:
     dependencies:
@@ -13984,7 +14000,7 @@ snapshots:
     dependencies:
       react: 18.2.0
 
-  math-intrinsics@1.0.0: {}
+  math-intrinsics@1.1.0: {}
 
   mdn-data@2.0.30: {}
 
@@ -15106,14 +15122,14 @@ snapshots:
     dependencies:
       call-bound: 1.0.3
       es-errors: 1.3.0
-      get-intrinsic: 1.2.6
+      get-intrinsic: 1.2.7
       object-inspect: 1.13.3
 
   side-channel-weakmap@1.0.2:
     dependencies:
       call-bound: 1.0.3
       es-errors: 1.3.0
-      get-intrinsic: 1.2.6
+      get-intrinsic: 1.2.7
       object-inspect: 1.13.3
       side-channel-map: 1.0.1
 
