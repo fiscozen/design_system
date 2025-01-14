@@ -88,11 +88,14 @@ const tableWidth = computed(() => {
   if (!grid.value) {
     return;
   }
-  const tableWidth = columns.reduce((acc, el, index) => {
+  let tableWidth = columns.reduce((acc, el, index) => {
     const colWidth = grid.value.children[index].getBoundingClientRect().width;
     acc += colWidth;
     return acc;
   }, 0);
+  if (props.actions?.items.length) {
+    tableWidth += grid.value.children[grid.value.children.length - 1].getBoundingClientRect().width;
+  }
   return `${tableWidth}px`;
 });
 
