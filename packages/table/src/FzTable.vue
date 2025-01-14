@@ -10,7 +10,9 @@ const props = withDefaults(defineProps<FzTableProps>(), {
   activePage: 0,
 });
 
-const emit = defineEmits([]);
+const emit = defineEmits<{
+  "fztable:rowactionclick": [actionIndex: number, rowData: Record<string, any>];
+}>();
 const activePage = defineModel<number>("activePage");
 
 const slots = useSlots();
@@ -47,7 +49,7 @@ const bodyStaticClasses = [
   "fz__body",
   "z-[1]",
   "px-16",
-  "h-48",
+  "min-h-48",
   "bg-core-white",
   "flex",
   "justify-start",
@@ -59,7 +61,7 @@ const bodyStaticClasses = [
 
 const getBodyClasses = (
   column: { props: FzColumnProps; children: FzColumnSlots },
-  isHeader?: boolean,
+  isHeader?: boolean
 ) => {
   return {
     relative: !column.props.sticky,
@@ -139,11 +141,7 @@ const colSpan = computed(() => ({
     >
       <div
         v-for="column in columns"
-        :class="[
-          headerStaticClasses,
-          headerClasses,
-          getBodyClasses(column, true),
-        ]"
+        :class="[headerStaticClasses, headerClasses, getBodyClasses(column, true)]"
         role="columnheader"
         aria-sort="none"
       >
@@ -151,11 +149,7 @@ const colSpan = computed(() => ({
       </div>
       <div
         v-if="actions"
-        :class="[
-          'fz__table__header--actions',
-          headerStaticClasses,
-          headerClasses,
-        ]"
+        :class="['fz__table__header--actions', headerStaticClasses, headerClasses]"
       >
         Azioni
       </div>
@@ -174,14 +168,14 @@ const colSpan = computed(() => ({
             v-for="column in columns"
           >
             {{
-              row[
-                column.props.field?.toLowerCase() ||
-                  column.props.header.toLowerCase()
-              ]
+              row[column.props.field?.toLowerCase() || column.props.header.toLowerCase()]
             }}
           </div>
           <div v-if="actions" :class="bodyStaticClasses">
-            <FzIconDropdown :actions="actions.items"></FzIconDropdown>
+            <FzIconDropdown
+              :actions="actions.items"
+              @fzaction:click="(actionIndex: number) => emit('fztable:rowactionclick', actionIndex, row)"
+            ></FzIconDropdown>
           </div>
         </slot>
       </div>
@@ -198,19 +192,14 @@ const colSpan = computed(() => ({
     class="fz__table__footer w-full flex flex-row justify-end m-8"
     v-if="pages && value?.length"
   >
-    <div
-      class="fz__table__pagination flex flex-row justify-between items-center gap-8"
-    >
+    <div class="fz__table__pagination flex flex-row justify-between items-center gap-8">
       <FzButton
         @click="activePage = 0"
         :variant="activePage === 0 ? 'primary' : 'secondary'"
         size="sm"
         >1</FzButton
       >
-      <div
-        class="fz__pagination__separator"
-        v-if="activePage - pageInterval - 1 > 0"
-      >
+      <div class="fz__pagination__separator" v-if="activePage - pageInterval - 1 > 0">
         ...
       </div>
       <FzButton
