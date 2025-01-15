@@ -72,18 +72,6 @@ const getBodyClasses = (
   };
 };
 
-const updateClasses = () => {
-  if (!grid.value) {
-    return;
-  }
-  const tableWidth = columns.reduce((acc, el, index) => {
-    const colWidth = grid.value.children[index].getBoundingClientRect().width;
-    acc += colWidth;
-    return acc;
-  }, 0);
-  grid.value.style.width = `${tableWidth}px`;
-};
-
 const tableWidth = computed(() => {
   if (!grid.value) {
     return;
