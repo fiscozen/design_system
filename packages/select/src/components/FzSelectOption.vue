@@ -11,9 +11,12 @@
       }
     "
   >
-    <span class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">{{
+    <span :class="computedValueClass">{{
       option.label
     }}</span>
+    <span v-if="option.subtitle" :class="computedSubtitleClass">
+      {{ option.subtitle }}
+    </span>
   </button>
 </template>
 
@@ -25,16 +28,24 @@ const props = defineProps<{
   option: FzSelectOptionProps;
   size: "sm" | "md" | "lg";
   selectedValue: string;
+  disableTruncate?: boolean;
 }>();
 
 const staticClass =
-  "flex items-center text-left h-40 font-medium cursor-pointer py-6 rounded";
+  "group flex flex-col justify-center text-left min-h-40 font-normal cursor-pointer rounded";
 
 const mappedClass = {
-  sm: "text-sm px-12",
-  md: "text-md px-14",
-  lg: "text-lg px-16",
+  sm: "text-sm px-14 py-4",
+  md: "text-base px-16 py-6",
+  lg: "text-lg px-20 py-8",
 };
+
+const mappedSubtitleClass = {
+  sm: 'text-xs',
+  md: 'text-sm',
+  lg: 'text-base'
+}
+
 const computedClass = computed(() => {
   const { disabled, readonly, value } = props.option;
   const isSelected = props.selectedValue === value;
@@ -45,9 +56,26 @@ const computedClass = computed(() => {
       "bg-background-alice-blue text-blue-500":
         !disabled && !readonly && isSelected,
       "bg-white hover:!bg-background-alice-blue text-core-black hover:text-blue-500":
-        !disabled && !readonly && !isSelected,
+        !disabled && !readonly && !isSelected
     },
     mappedClass[props.size],
   ];
 });
+
+const computedValueClass = computed(() => ({
+  "w-full overflow-hidden text-ellipsis whitespace-nowrap": !props.disableTruncate,
+}))
+
+const computedSubtitleClass = computed(() => {
+  const { disabled, value } = props.option;
+  const isSelected = props.selectedValue === value;
+  return [
+    {
+      "w-full overflow-hidden text-ellipsis whitespace-nowrap": !props.disableTruncate,
+      "text-grey-500 group-hover:text-blue-500":
+      !disabled && !isSelected,
+    },
+    mappedSubtitleClass[props.size]
+  ]
+})
 </script>
