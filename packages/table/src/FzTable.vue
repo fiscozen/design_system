@@ -72,21 +72,6 @@ const getBodyClasses = (
   };
 };
 
-const tableWidth = computed(() => {
-  if (!grid.value) {
-    return;
-  }
-  let tableWidth = columns.reduce((acc, el, index) => {
-    const colWidth = grid.value.children[index].getBoundingClientRect().width;
-    acc += colWidth;
-    return acc;
-  }, 0);
-  if (props.actions?.items.length) {
-    tableWidth += grid.value.children[grid.value.children.length - 1].getBoundingClientRect().width;
-  }
-  return `${tableWidth}px`;
-});
-
 const centerPageList = computed(() => {
   if (!props.pages) {
     return [];
@@ -118,101 +103,102 @@ const colSpan = computed(() => ({
 </script>
 
 <template>
-  <div class="fz__table overflow-auto size-full">
-    <div
-      :class="[staticClasses]"
-      :style="{
-        'grid-template-columns': `repeat(${totalColumns}, minmax(min-content, 1fr))`,
-        width: tableWidth,
-      }"
-      ref="grid"
-      role="table"
-      :aria-rowcount="value.length"
-      :aria-colcount="columns.length"
-    >
+  <div class="m-0 p-0 size-full">
+    <div class="fz__table overflow-auto size-full">
       <div
-        v-for="column in columns"
-        :class="[headerStaticClasses, headerClasses, getBodyClasses(column, true)]"
-        role="columnheader"
-        aria-sort="none"
+        :class="[staticClasses]"
+        :style="{
+          'grid-template-columns': `repeat(${totalColumns}, minmax(min-content, 1fr))`
+        }"
+        ref="grid"
+        role="table"
+        :aria-rowcount="value.length"
+        :aria-colcount="columns.length"
       >
-        {{ column.props.header }}
-      </div>
-      <div
-        v-if="actions"
-        :class="['fz__table__header--actions', headerStaticClasses, headerClasses]"
-      >
-        Azioni
-      </div>
-      <div
-        class="grid grid-cols-subgrid"
-        v-if="value && value.length"
-        v-for="(row, index) in value"
-        :aria-rowindex="index + 1"
-        :style="colSpan"
-        role="row"
-      >
-        <slot :name="`row-${index}`">
-          <div
-            :class="[bodyStaticClasses, getBodyClasses(column)]"
-            role="cell"
-            v-for="column in columns"
-          >
-            {{
-              row[column.props.field?.toLowerCase() || column.props.header.toLowerCase()]
-            }}
-          </div>
-          <div v-if="actions" :class="bodyStaticClasses">
-            <FzIconDropdown
-              :actions="actions.items"
-              @fzaction:click="(actionIndex: number) => emit('fztable:rowactionclick', actionIndex, row)"
-            ></FzIconDropdown>
-          </div>
-        </slot>
-      </div>
-      <div
-        v-else
-        class="fz__table__empty h-full mt-80 justify-self-center"
-        :style="colSpan"
-      >
-        {{ placeholder ?? "No data available" }}
+        <div
+          v-for="column in columns"
+          :class="[headerStaticClasses, headerClasses, getBodyClasses(column, true)]"
+          role="columnheader"
+          aria-sort="none"
+        >
+          {{ column.props.header }}
+        </div>
+        <div
+          v-if="actions"
+          :class="['fz__table__header--actions w-[80px]', headerStaticClasses, headerClasses]"
+        >
+          Azioni
+        </div>
+        <div
+          class="grid grid-cols-subgrid"
+          v-if="value && value.length"
+          v-for="(row, index) in value"
+          :aria-rowindex="index + 1"
+          :style="colSpan"
+          role="row"
+        >
+          <slot :name="`row-${index}`">
+            <div
+              :class="[bodyStaticClasses, getBodyClasses(column)]"
+              role="cell"
+              v-for="column in columns"
+            >
+              {{
+                row[column.props.field?.toLowerCase() || column.props.header.toLowerCase()]
+              }}
+            </div>
+            <div v-if="actions" :class="['w-[80px]', bodyStaticClasses]">
+              <FzIconDropdown
+                :actions="actions.items"
+                @fzaction:click="(actionIndex: number) => emit('fztable:rowactionclick', actionIndex, row)"
+              ></FzIconDropdown>
+            </div>
+          </slot>
+        </div>
+        <div
+          v-else
+          class="fz__table__empty h-full mt-80 justify-self-center"
+          :style="colSpan"
+        >
+          {{ placeholder ?? "No data available" }}
+        </div>
       </div>
     </div>
-  </div>
-  <div
-    class="fz__table__footer w-full flex flex-row justify-end m-8"
-    v-if="pages && value?.length"
-  >
-    <div class="fz__table__pagination flex flex-row justify-between items-center gap-8">
-      <FzButton
-        @click="activePage = 0"
-        :variant="activePage === 0 ? 'primary' : 'secondary'"
-        size="sm"
-        >1</FzButton
-      >
-      <div class="fz__pagination__separator" v-if="activePage - pageInterval - 1 > 0">
-        ...
+    <div
+      class="fz__table__footer w-full flex flex-row justify-end m-8"
+      v-if="pages && value?.length"
+    >
+      <div class="fz__table__pagination flex flex-row justify-between items-center gap-8">
+        <FzButton
+          @click="activePage = 0"
+          :variant="activePage === 0 ? 'primary' : 'secondary'"
+          size="sm"
+          >1</FzButton
+        >
+        <div class="fz__pagination__separator" v-if="activePage - pageInterval - 1 > 0">
+          ...
+        </div>
+        <FzButton
+          v-for="page in centerPageList"
+          @click="activePage = page"
+          :variant="activePage === page ? 'primary' : 'secondary'"
+          size="sm"
+        >
+          {{ page + 1 }}
+        </FzButton>
+        <div
+          class="fz__pagination__separator"
+          v-if="pages - activePage - pageInterval - 2 > 0"
+        >
+          ...
+        </div>
+        <FzButton
+          @click="activePage = pages - 1"
+          :variant="activePage === pages - 1 ? 'primary' : 'secondary'"
+          size="sm"
+          >{{ pages }}</FzButton
+        >
       </div>
-      <FzButton
-        v-for="page in centerPageList"
-        @click="activePage = page"
-        :variant="activePage === page ? 'primary' : 'secondary'"
-        size="sm"
-      >
-        {{ page + 1 }}
-      </FzButton>
-      <div
-        class="fz__pagination__separator"
-        v-if="pages - activePage - pageInterval - 2 > 0"
-      >
-        ...
-      </div>
-      <FzButton
-        @click="activePage = pages - 1"
-        :variant="activePage === pages - 1 ? 'primary' : 'secondary'"
-        size="sm"
-        >{{ pages }}</FzButton
-      >
     </div>
   </div>
 </template>
