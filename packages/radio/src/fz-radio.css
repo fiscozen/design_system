@@ -1,0 +1,3 @@
+.fz-radio__label {
+  @apply before:content-[''] before:inline-block before:border-solid before:border-1 before:rounded-full before:m-2 peer-checked:before:bg-transparent peer-focus:before:outline peer-focus:before:outline-offset-1 peer-focus:before:outline-1 peer-focus:before:outline-blue-600;
+}
