@@ -108,7 +108,7 @@ const colSpan = computed(() => ({
       <div
         :class="[staticClasses]"
         :style="{
-          'grid-template-columns': `repeat(${totalColumns}, minmax(min-content, 1fr))`
+          'grid-template-columns': `repeat(${columns.length}, minmax(min-content, 1fr))`
         }"
         ref="grid"
         role="table"
