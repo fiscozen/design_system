@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/radio",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Design System Radio and Radiogroup component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -19,7 +19,8 @@
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13",
-    "@fiscozen/icons": "workspace:^"
+    "@fiscozen/icons": "workspace:^",
+    "@fiscozen/tooltip": "workspace:^"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",
