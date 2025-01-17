@@ -8,6 +8,10 @@ export type FzRadioProps = {
    */
   value?: string;
   /**
+   * Value of the currently selected value
+   */
+  modelValue?: string;
+  /**
    * Whether the radio button is checked
    */
   checked?: boolean;
@@ -73,3 +77,11 @@ export type FzRadioGroupProps = {
 };
 
 export type FzRadioSharedProps = {};
+
+export type FzRadioCardProps = FzRadioProps & {
+  orientation?: "horizontal" | "vertical";
+  title: string;
+  subtitle?: string;
+  imageUrl?: string;
+  tooltip?: string;
+};

@@ -5,12 +5,11 @@
       :id="computedId"
       :value="value"
       :disabled="disabled"
-      :checked="checked"
+      :checked="modelValue === value"
       :class="[staticInputClass, computedInputClass]"
       :name="name"
       :required="required"
-      v-model="model"
-      @change="onChange"
+      @change="emits('update:modelValue', value)"
       tabindex="0"
       ref="radioContainer"
     />
@@ -24,37 +23,28 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, ref, toRefs } from "vue";
 import { FzRadioProps } from "./types";
 import { mapSizeToClasses } from "./common";
 import FzRadioErrorText from "./components/FzRadioErrorText.vue";
+import { useRadio } from "../composables";
+import "./fz-radio.css";
 
 const props = withDefaults(defineProps<FzRadioProps>(), {
   size: "md",
 });
 
-const model = defineModel();
-const value = props.value ?? props.label;
-const checked = ref(props.checked);
+const emits = defineEmits(["update:modelValue"]);
+
 const computedId = computed(() =>
-  props.name ? `${props.name}-${props.label}` : props.label
+  props.name ? `${props.name}-${props.label}` : props.label,
 );
 
 const radioContainer = ref<HTMLInputElement | null>(null);
 const staticLabelClass = `
   flex items-start gap-4 
   text-core-black
-  before:content-[''] 
-  before:inline-block 
-  before:border-solid 
-  before:border-1 
-  before:rounded-full 
-  before:m-2
-  peer-checked:before:bg-transparent 
-  peer-focus:before:outline 
-  peer-focus:before:outline-offset-1 
-  peer-focus:before:outline-1 
-  peer-focus:before:outline-blue-600
+  fz-radio__label
 `;
 const staticInputClass = "peer h-0 w-0 absolute fz-hidden-input";
 
@@ -74,10 +64,6 @@ const computedLabelClass = computed(() => [
   getBorderAndTextColorForLabel(),
 ]);
 
-const onChange = () => {
-  model.value = value;
-};
-
 const getBorderAndTextColorForLabel = () => {
   switch (true) {
     case props.disabled:
@@ -90,20 +76,13 @@ const getBorderAndTextColorForLabel = () => {
       return "before:border-grey-500";
   }
 };
-
-onMounted(() => {
-  if (props.checked) onChange();
-  if (model.value === value) {
-    checked.value = true;
-  }
-});
 </script>
 <style scoped>
 .fz-hidden-input {
-  opacity:0;
-  margin:0;
-  height:0;
-  border:0 none;
-  appearance:none;
+  opacity: 0;
+  margin: 0;
+  height: 0;
+  border: 0 none;
+  appearance: none;
 }
 </style>
