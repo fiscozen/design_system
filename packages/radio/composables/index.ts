@@ -29,9 +29,16 @@ export const useRadio = (props: {
     }
   };
 
+  const computedId = computed(() =>
+    props.name?.value
+      ? `${props.name?.value}-${props.label.value}`
+      : props.label.value,
+  );
+
   return {
     computedInputClass,
     computedLabelClass,
     getBorderAndTextColorForLabel,
+    computedId,
   };
 };

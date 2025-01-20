@@ -16,6 +16,7 @@ export default {
     './node_modules/@fiscozen/select/src/**/*.{html,js,ts,vue}',
     './node_modules/@fiscozen/table/src/**/*.{html,js,ts,vue}',
     './node_modules/@fiscozen/pdf-viewer/src/**/*.{html,js,ts,vue}',
-    './node_modules/@fiscozen/layout/src/**/*.{html,js,ts,vue}'
+    './node_modules/@fiscozen/layout/src/**/*.{html,js,ts,vue}',
+    './node_modules/@fiscozen/radio/src/**/*.{html,js,ts,vue}'
   ]
 }
