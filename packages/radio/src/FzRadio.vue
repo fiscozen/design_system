@@ -27,7 +27,6 @@ import { computed, ref, toRefs } from "vue";
 import { FzRadioProps } from "./types";
 import { mapSizeToClasses } from "./common";
 import FzRadioErrorText from "./components/FzRadioErrorText.vue";
-import { useRadio } from "../composables";
 import "./fz-radio.css";
 
 const props = withDefaults(defineProps<FzRadioProps>(), {
