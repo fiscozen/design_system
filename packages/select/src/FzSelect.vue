@@ -76,6 +76,7 @@
           <FzSelectLabel
             v-if="option.kind === 'label'"
             :option="option"
+            :disableTruncate="disableTruncate"
             :size="size"
           />
           <FzSelectOption
@@ -83,6 +84,7 @@
             @click="() => handleSelect(option.value)"
             :option="option"
             :size="size"
+            :disableTruncate="disableTruncate"
             :selectedValue="model"
           />
         </template>
@@ -94,6 +96,7 @@
             readonly: true,
             value: '',
           }"
+          :disableTruncate="disableTruncate"
           :size="size"
           :selectedValue="model"
         />
@@ -205,8 +208,9 @@ const computedErrorClass = computed(() => [
 ]);
 
 const selectedOption = computed(() => {
-  return props.options.find((option) => option.value === model.value);
-});
+  const options = props.options.filter((option) => option.kind !== "label");
+  return options.find((option) => option.value === model.value);
+}); 
 
 watch(() => [props.size, model.value], updateContainerWidth);
 watch(

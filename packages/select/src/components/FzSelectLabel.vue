@@ -23,9 +23,9 @@ const staticClass =
   "text-grey-400 flex items-center text-ellipsis whitespace-nowrap";
 
 const mappedClass = {
-  sm: "text-xs h-24 px-12",
-  md: "text-sm h-32 px-14",
-  lg: "text-md h-40 px-16",
+  sm: "text-[10px] min-h-24 px-14",
+  md: "text-xs min-h-32 px-16",
+  lg: "text-sm min-h-40 px-20",
 };
 const computedClass = computed(() => {
   return [staticClass, mappedClass[props.size]];
