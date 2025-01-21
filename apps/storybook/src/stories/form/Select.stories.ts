@@ -282,3 +282,20 @@ export const SelectWithOptionLabel: SelectStory = {
     ]
   }
 }
+
+
+export const SelectWithOptionLabelAndSubtitle: SelectStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    disableTruncate: true,
+    options: [
+      { label: 'Consigliate', kind: 'label' },
+      { value: '1', label: 'Reverse Charge - Cessione di rottami e altri materiali di recupero', subtitle: 'Per vendite di materiali di recupero come rottami metallici o carta da macero.' },
+      { value: '2', label: 'Escluso - Art. 1, Art. 2, Art. 3, Art. 5, Art. 26', subtitle: 'Per rimborsi spese sostenuti in nome e per conto del cliente.' },
+      { label: 'Tutte le normative', kind: 'label' },
+      { value: '3', label: 'Fuori campo - Art. 3, comma 4a', subtitle: 'Per operazioni di cessione di diritti d\'autore.' },
+      { value: '4', label: 'Fuori campo - Art. 3, comma 4b', subtitle: 'Per cessione di beni verso San Marino e Vaticano.' }
+    ]
+  }
+}

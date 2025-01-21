@@ -58,6 +58,10 @@ export interface FzSelectProps extends FzFloatingProps {
    * will be used in the floating composable overriding other values
    */
   overrideOpener?: Ref<HTMLElement>;
+  /**
+   * Disable the truncation of any text in the options. False by default
+   */
+  disableTruncate?: boolean;
 }
 
 export type FzSelectOptionsProps = FzSelectOptionProps | FzSelectLabelProps;
@@ -71,6 +75,10 @@ export type FzSelectOptionProps = {
    * the option label
    */
   label: string;
+  /**
+   * the subtitle of the option
+   */
+  subtitle?: string;
   /**
    * if true the option will not be selectable
    */
