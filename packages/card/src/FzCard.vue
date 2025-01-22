@@ -23,25 +23,27 @@
     <article v-if="isAlive" :class="['p-20', contentClass]" v-show="showContent">
       <slot></slot>
     </article>
-    <footer v-if="atLeastOneButton && isAlive" :class="[footerStaticClass, borderColor]" v-show="showContent">
-      <FzIconButton
-        v-if="tertiaryAction"
-        @click="emit('fztertiary:click')"
-        :iconName="tertiaryAction.icon"
-        variant="invisible"
-      />
-      <FzButton
-        v-if="secondaryAction"
-        @click="emit('fzsecondary:click')"
-        :label="secondaryAction.label"
-        variant="secondary"
-      />
-      <FzButton
-        v-if="primaryAction"
-        @click="emit('fzprimary:click')"
-        :label="primaryAction.label"
-        variant="primary"
-      />
+    <footer v-if="(slots.footer || atLeastOneButton) && isAlive" :class="[footerStaticClass, borderColor]" v-show="showContent">
+      <slot name="footer">
+        <FzIconButton
+          v-if="tertiaryAction"
+          @click="emit('fztertiary:click')"
+          :iconName="tertiaryAction.icon"
+          variant="invisible"
+        />
+        <FzButton
+          v-if="secondaryAction"
+          @click="emit('fzsecondary:click')"
+          :label="secondaryAction.label"
+          variant="secondary"
+        />
+        <FzButton
+          v-if="primaryAction"
+          @click="emit('fzprimary:click')"
+          :label="primaryAction.label"
+          variant="primary"
+        />
+      </slot>
     </footer>
   </section>
 </template>
@@ -53,7 +55,7 @@ import { FzButton, FzIconButton } from "@fiscozen/button";
 
 const props = defineProps<FzCardProps>();
 const emit = defineEmits<FzCardEvents>();
-defineSlots<FzCardSlots>();
+const slots = defineSlots<FzCardSlots>();
 const isOpen = ref(props.defaultExpanded ?? false);
 
 const sectionStaticClass =

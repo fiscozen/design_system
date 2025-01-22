@@ -78,4 +78,8 @@ export interface FzCardSlots {
    * Slot for the header content, it will be displayed below the title
    */
   'header-content'(props:{}): any;
+  /**
+   * Slot for the footer of the card
+   */
+  footer(props:{}): any;
 }
