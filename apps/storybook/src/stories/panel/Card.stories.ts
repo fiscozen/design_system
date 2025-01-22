@@ -198,3 +198,25 @@ export const AlwaysAliveCard: CardStory = {
     collapsible: true
   }
 }
+
+export const CardWithFooter: CardStory = {
+  render: (args) => ({
+    components: { FzCard, FzBadge },
+    setup() {
+      return {
+        args
+      }
+    },
+
+    template: `<FzCard v-bind="args" class="w-[500px] m-8">
+                 <div> Content </div>
+                 <template #footer>
+                   Footer
+                 </template>
+               </FzCard>`
+  }),
+  args: {
+    title: 'Title',
+    collapsible: true
+  }
+}
