@@ -3,19 +3,14 @@ import { mount } from '@vue/test-utils'
 import { FzLayout } from '..'
 
 describe.concurrent('FzLayout', () => {
-  it('matches snaphost for multipleRows', async ({ expect }) => {
+  it('matches snaphost for oneColumn', async ({ expect }) => {
     const wrapper = mount(FzLayout, {
       props: {
-        layout: 'multipleRows'
+        layout: 'oneColumn'
       },
       template: `
         <FzLayout v-bind="props">
-          <template #default>
-          <div class="w-full h-full bg-red-100"></div>
-          <div class="w-full h-full bg-green-100"></div>
-          <div class="w-full h-full bg-orange-200"></div>
-            <div class="w-full h-full bg-cyan-100"></div>
-          </template>
+          <div class="w-full h-full bg-red-100">main</div>
         </FzLayout>
       `
     })
@@ -31,8 +26,10 @@ describe.concurrent('FzLayout', () => {
       },
       template: `
         <FzLayout v-bind="props">
-          <div class="w-full h-full bg-red-100"></div>
-          <div class="w-full h-full bg-green-100"></div>
+          <template #sidebar>
+            <div class="bg-blue-50 size-full flex justify-center items-center">side</div>
+          </template>
+          <div class="bg-blue-50 size-full flex justify-center items-center">main</div>
         </FzLayout>
       `
     })
@@ -48,83 +45,15 @@ describe.concurrent('FzLayout', () => {
       },
       template: `
         <FzLayout layout="twoColumns">
-          <div class="w-full h-full bg-red-100"></div>
-          <div class="w-full h-full bg-green-100"></div>
-        </FzLayout>
-      `
-    })
-
-    await wrapper.vm.$nextTick()
-    expect(wrapper.html()).toMatchSnapshot()
-  })
-
-  it('matches snapshot for leftShoulderNavbar', async ({ expect }) => {
-    const wrapper = mount(FzLayout, {
-      props: {
-        layout: 'leftShoulderNavbar'
-      },
-      template: `
-        <FzLayout layout="leftShoulderNavbar">
-          <template #navbar>
-            <div class="w-full h-full bg-red-100"></div>
-          </template>
           <template #header>
-            <div class="w-full h-full bg-green-100"></div>
+            <div class="bg-blue-50 size-full flex justify-center items-center">header</div>
           </template>
-          <template #left-shoulder>
-            <div class="w-full h-full bg-orange-200"></div>
+          <template #left>
+            <div class="h-[1000px] bg-blue-50 w-full flex justify-center items-center">left</div>
           </template>
-          <template #default>
-            <div class="w-full h-full bg-cyan-100"></div>
+          <template #right>
+            <div class="bg-blue-50 size-full flex justify-center items-center">right</div>
           </template>
-        </FzLayout>
-      `
-    })
-
-    await wrapper.vm.$nextTick()
-    expect(wrapper.html()).toMatchSnapshot()
-  })
-
-  it('matches snapshot for rightShoulderNavbar', async ({ expect }) => {
-    const wrapper = mount(FzLayout, {
-      props: {
-        layout: 'rightShoulderNavbar'
-      },
-      template: `
-        <FzLayout layout="rightShoulderNavbar">
-          <template #navbar>
-            <div class="w-full h-full bg-red-100"></div>
-          </template>
-          <template #header>
-            <div class="w-full h-full bg-green-100"></div>
-          </template>
-          <template #right-shoulder>
-            <div class="w-full h-full bg-orange-200"></div>
-          </template>
-          <template #default>
-            <div class="w-full h-full bg-cyan-100"></div>
-          </template>
-        </FzLayout>
-      `
-    })
-
-    await wrapper.vm.$nextTick()
-    expect(wrapper.html()).toMatchSnapshot()
-  })
-
-  it('matches snapshot for squares', async ({ expect }) => {
-    const wrapper = mount(FzLayout, {
-      props: {
-        layout: 'squares'
-      },
-      template: `
-        <FzLayout layout="squares">
-          <div class="w-full h-full bg-red-100"></div>
-          <div class="w-full h-full bg-green-100"></div>
-          <div class="w-full h-full bg-orange-200"></div>
-          <div class="w-full h-full bg-cyan-100"></div>
-          <div class="w-full h-full bg-slate-100"></div>
-          <div class="w-full h-full bg-purple-100"></div>
         </FzLayout>
       `
     })
