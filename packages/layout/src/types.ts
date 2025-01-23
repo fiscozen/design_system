@@ -1,5 +1,5 @@
 type FzLayoutProps = {
-    layout: 'twoColumns' | 'multipleRows' | 'leftShoulder' | 'leftShoulderNavbar' | 'rightShoulderNavbar' | 'squares' | 'rightShoulder'
+    layout: 'oneColumn' | 'oneColumnHeader' | 'twoColumns' | 'leftShoulder' | 'multipleAreas' | 'rightShoulder'
 }
 
 export { FzLayoutProps }

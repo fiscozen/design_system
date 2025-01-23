@@ -1,5 +1,9 @@
 import type { Meta } from '@storybook/vue3'
 import { FzLayout, FzLayoutProps } from '@fiscozen/layout'
+import { FzBadge } from '@fiscozen/badge'
+import { useBreakpoints } from '@fiscozen/composables'
+import { breakpoints } from '@fiscozen/style'
+import { FzButton } from '@fiscozen/button';
 
 const meta: Meta<typeof FzLayout> = {
   title: '@fiscozen/layout/FzLayout',
@@ -20,15 +24,68 @@ const meta: Meta<typeof FzLayout> = {
   ]
 }
 
+const oneColumn = (args: FzLayoutProps) => ({
+  setup() {
+    return { args }
+  },
+  components: { FzLayout, FzBadge },
+  template: `
+    <FzLayout v-bind="args" class="bg-blue-100">
+      <div class="bg-blue-50 h-full flex justify-center items-center">
+        <FzBadge color="info">main</FzBadge>
+      </div>
+    </FzLayout>
+  `
+})
+
+export const OneColumn = {
+  render: oneColumn,
+  args: {
+    layout: 'oneColumn'
+  }
+}
+
+const oneColumnHeader = (args: FzLayoutProps) => ({
+  setup() {
+    return { args }
+  },
+  components: { FzLayout, FzBadge },
+  template: `
+    <FzLayout v-bind="args" class="bg-blue-100">
+      <template #header>
+        <div class="bg-blue-50 size-full flex justify-center items-center">
+          <FzBadge color="info">header</FzBadge>
+        </div>
+      </template>
+      <div class="bg-blue-50 size-full flex justify-center items-center">
+        <FzBadge color="info">main</FzBadge>
+      </div>
+    </FzLayout>
+  `
+})
+
+export const OneColumnHeader = {
+  render: oneColumnHeader,
+  args: {
+    layout: 'oneColumnHeader'
+  }
+}
+
 const leftShoulder = (args: FzLayoutProps) => ({
   setup() {
     return { args }
   },
-  components: {FzLayout},
+  components: { FzLayout, FzBadge },
   template: `
-    <FzLayout v-bind="args">
-      <div class="w-full h-full bg-red-100"></div>
-      <div class="w-full h-full bg-green-100"></div>
+    <FzLayout v-bind="args" class="bg-blue-100">
+      <template #sidebar>
+        <div class="bg-blue-50 size-full flex justify-center items-center">
+          <FzBadge color="info">Sidebar</FzBadge>
+        </div>
+      </template>
+      <div class="bg-blue-50 size-full flex justify-center items-center">
+        <FzBadge color="info">main</FzBadge>
+      </div>
     </FzLayout>
   `
 })
@@ -40,15 +97,54 @@ export const LeftShoulder = {
   }
 }
 
+const rightShoulder = (args: FzLayoutProps) => ({
+  setup() {
+    return { args }
+  },
+  components: { FzLayout, FzBadge },
+  template: `
+    <FzLayout v-bind="args" class="bg-blue-100">
+      <template #sidebar="{sidebarToggle}">
+        <div class="bg-blue-50 size-full flex justify-center items-center">
+          <FzBadge color="info">Sidebar</FzBadge>
+        </div>
+      </template>
+      <div class="bg-blue-50 size-full flex justify-center items-center">
+        <FzBadge color="info">main</FzBadge>
+      </div>
+    </FzLayout>
+  `
+})
+
+export const RightShoulder = {
+  render: rightShoulder,
+  args: {
+    layout: 'rightShoulder'
+  }
+}
+
 const twoColumns = (args: FzLayoutProps) => ({
   setup() {
     return { args }
   },
-  components: {FzLayout},
+  components: { FzLayout, FzBadge },
   template: `
-    <FzLayout v-bind="args">
-      <div class="w-full h-full bg-red-100"></div>
-      <div class="w-full h-full bg-green-100"></div>
+    <FzLayout v-bind="args" class="bg-blue-100">
+      <template #header>
+        <div class="bg-blue-50 size-full flex justify-center items-center">
+          <FzBadge color="info">header</FzBadge>
+        </div>
+      </template>
+      <template #left>
+        <div class="h-[1000px] bg-blue-50 w-full flex justify-center items-center">
+          <FzBadge color="info">left</FzBadge>
+        </div>
+      </template>
+      <template #right>
+        <div class="bg-blue-50 size-full flex justify-center items-center">
+          <FzBadge color="info">right</FzBadge>
+        </div>
+      </template>
     </FzLayout>
   `
 })
@@ -60,137 +156,41 @@ export const TwoColumns = {
   }
 }
 
-
-const multipleRows = (args: FzLayoutProps) => ({
+const multipleAreas = (args: FzLayoutProps) => ({
   setup() {
-    return { args }
+    const { isGreater, isSmaller } = useBreakpoints(breakpoints);
+    return { args, isGreater, isSmaller }
   },
-  components: {FzLayout},
+  components: { FzLayout, FzBadge, FzButton },
   template: `
-    <FzLayout v-bind="args">
-      <div class="w-full h-full bg-red-100"></div>
-      <div class="w-full h-full bg-green-100"></div>
-      <div class="w-full h-full bg-orange-200"></div>
-      <div class="w-full h-full bg-cyan-100"></div>
+    <FzLayout v-bind="args" class="bg-blue-100">
+      <template #header="{sidebarToggle}">
+        <div class="bg-blue-50 size-full flex justify-center items-center">
+          <FzBadge color="info">Header</FzBadge>
+        </div>
+      </template>
+      <template #sidebarTrigger="{sidebarToggle}">
+        <div class="bg-blue-50 size-full flex justify-center items-center" @click="sidebarToggle()">
+          <FzBadge color="info" :style="isGreater('sm').value ? 'transform: rotate(270deg)' : ''" class="whitespace-nowrap">Sidebar trigger</FzBadge>
+        </div>
+      </template>
+      <template #sidebar="{sidebarToggle}">
+        <div class="bg-blue-50 size-full flex justify-center items-center flex-col">
+          <FzBadge color="info">Sidebar</FzBadge>
+          <FzButton v-if="isSmaller('md').value" @click="sidebarToggle()" class="mt-8">close</FzButton>
+        </div>
+      </template>
+      <div class="bg-blue-50 size-full flex justify-center items-center">
+        <FzBadge color="info">Main</FzBadge>
+      </div>
     </FzLayout>
   `
 })
 
-const leftShoulderNavbar = (args: FzLayoutProps) => ({
-  setup() {
-    return { args }
-  },
-  components: {FzLayout},
-  template: `
-    <FzLayout v-bind="args">
-      <template #navbar>
-        <div class="w-full h-full bg-red-100"></div>
-      </template>
-      <template #header>
-        <div class="w-full h-full bg-green-100"></div>
-      </template>
-      <template #left-shoulder>
-        <div class="w-full h-full bg-orange-200"></div>
-      </template>
-      <template #default>
-        <div class="w-full h-full bg-cyan-100"></div>
-      </template>
-    </FzLayout>
-  `
-})
-
-export const LeftShoulderNavbar = {
-  render: leftShoulderNavbar,
+export const MultipleAreas = {
+  render: multipleAreas,
   args: {
-    layout: 'leftShoulderNavbar'
-  }
-}
-
-const rightShoulderNavbar = (args: FzLayoutProps) => ({
-  setup() {
-    return { args }
-  },
-  components: {FzLayout},
-  template: `
-    <FzLayout v-bind="args">
-      <template #navbar>
-        <div class="w-full h-full bg-red-100"></div>
-      </template>
-      <template #header>
-        <div class="w-full h-full bg-green-100"></div>
-      </template>
-      <template #right-shoulder>
-        <div class="w-full h-full bg-orange-200"></div>
-      </template>
-      <template #default>
-        <div class="w-full h-full bg-cyan-100"></div>
-      </template>
-    </FzLayout>
-  `
-})
-
-export const RightShoulderNavbar = {
-  render: rightShoulderNavbar,
-  args: {
-    layout: 'rightShoulderNavbar'
-  }
-}
-
-export const MultipleRows = {
-  render: multipleRows,
-  args: {
-    layout: 'multipleRows'
-  }
-}
-
-const squares = (args: FzLayoutProps) => ({
-  setup() {
-    return { args }
-  },
-  components: {FzLayout},
-  template: `
-    <FzLayout v-bind="args">
-      <div class="w-full h-full bg-red-100"></div>
-      <div class="w-full h-full bg-green-100"></div>
-      <div class="w-full h-full bg-orange-200"></div>
-      <div class="w-full h-full bg-cyan-100"></div>
-      <div class="w-full h-full bg-slate-100"></div>
-      <div class="w-full h-full bg-purple-100"></div>
-    </FzLayout>
-  `
-})
-
-export const Squares = {
-  render: squares,
-  args: {
-    layout: 'squares'
-  }
-}
-
-const shoulderWithSquares = (args: FzLayoutProps) => ({
-  setup() {
-    return { args }
-  },
-  components: {FzLayout},
-  template: `
-    <FzLayout v-bind="args">
-      <template #main>
-        <div class="w-full h-full bg-red-100"></div>
-      </template>
-      <template #shoulder>
-        <div class="h-full w-full bg-green-100"></div>
-        <div class="h-full w-full bg-orange-200"></div>
-        <div class="h-full w-full bg-cyan-100"></div>
-        <div class="h-full w-full bg-slate-100"></div>
-      </template>
-    </FzLayout>
-  `
-})
-
-export const ShoulderWithSquares = {
-  render: shoulderWithSquares,
-  args: {
-    layout: 'rightShoulder',
+    layout: 'multipleAreas'
   }
 }
 
