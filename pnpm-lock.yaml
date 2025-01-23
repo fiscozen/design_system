@@ -1378,6 +1378,12 @@ importers:
 
   packages/layout:
     dependencies:
+      '@fiscozen/composables':
+        specifier: workspace:^
+        version: link:../composables
+      '@fiscozen/style':
+        specifier: workspace:^
+        version: link:../style
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
