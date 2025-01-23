@@ -10,8 +10,8 @@ const emit = defineEmits([]);
 
 const currentBreakpoint = ref('');
 const getCurrentBreakpoint = () => {
-  const activeBreakpoints = Object.keys(breakpoints).filter((key: string) => window.innerWidth >= parseInt(breakpoints[key]));
-  currentBreakpoint.value = activeBreakpoints[activeBreakpoints.length - 1];
+  const activeBreakpoints = Object.entries(breakpoints).filter(([key, value]) => window.innerWidth >= parseInt(value));
+  currentBreakpoint.value = activeBreakpoints[activeBreakpoints.length - 1][0];
 }
 const {isGreater} = useBreakpoints(breakpoints);
 
@@ -38,7 +38,7 @@ const layoutClass = computed(() => {
       break;
     case "twoColumns":
       res =
-        "grid-rows-[56px_1fr] sm:grid-rows-[56px_1fr_1fr] lg:grid-rows-[56px_1fr] grid-cols-1 lg:grid-cols-2";
+        "grid-rows-[56px_100vh_100vh] sm:grid-rows-[56px_1fr_1fr] lg:grid-rows-[56px_1fr] grid-cols-1 lg:grid-cols-2 fz-layout__overflow";
       break;
     case "rightShoulder":
       res =
@@ -84,10 +84,10 @@ const sidebarToggle = () => {
       <div class="fz-layout__header p-12">
         <slot name="header"></slot>
       </div>
-      <div class="fz-layout__left p-12 fz-layout__overflow">
+      <div class="fz-layout__left p-12">
         <slot name="left"></slot>
       </div>
-      <div v-if="currentBreakpoint !== 'xs'" class="fz-layout__right p-12 fz-layout__overflow">
+      <div class="fz-layout__right p-12">
         <slot name="right"></slot>
       </div>
     </template>
@@ -229,8 +229,9 @@ const sidebarToggle = () => {
 }
 .fz-layout__twoColumns--xs {
   grid-template-areas:
-    "header header"
-    "left left";
+    "header"
+    "left"
+    "right";
 }
 .fz-layout__twoColumns--sm,
 .fz-layout__twoColumns--md {
@@ -264,6 +265,9 @@ const sidebarToggle = () => {
 }
 
 .fz-layout__overflow .fz-layout__main,
+.fz-layout__overflow .fz-layout__left,
+.fz-layout__overflow .fz-layout__right,
+.fz-layout__overflow .fz-layout__header,
 .fz-layout__overflow .fz-layout__sidebar {
   @apply pr-0;
 }
