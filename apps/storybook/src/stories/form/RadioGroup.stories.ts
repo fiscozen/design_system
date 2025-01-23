@@ -314,9 +314,9 @@ export const HorizontalRadioCardGroup: RadioGroupStory = {
     },
     template: `<FzRadioGroup v-bind="args" >
                     <template v-slot="{radioGroupProps}"> 
-                        <FzRadioCard label="Option 1" title="Option 1" subtitle="lorem ipsum this is a description" value="option1" v-model="selected" v-bind="radioGroupProps" orientation="horizontal" :imageUrl="checker" />
-                        <FzRadioCard label="Option 2" title="Option 2" subtitle="lorem ipsum this is a description" value="option2" v-model="selected" v-bind="radioGroupProps" orientation="horizontal" :imageUrl="checker" />
-                        <FzRadioCard label="Option 3" title="Option 3" subtitle="lorem ipsum this is a description" value="option3" v-model="selected" v-bind="radioGroupProps" orientation="horizontal" :imageUrl="checker" />
+                        <FzRadioCard label="Option 1" title="Option 1" subtitle="lorem ipsum this is a description" value="option1" v-model="selected" v-bind="radioGroupProps" orientation="horizontal" :imageUrl="checker" tooltip="this is a tooltip" />
+                        <FzRadioCard label="Option 2" title="Option 2" subtitle="lorem ipsum this is a description" value="option2" v-model="selected" v-bind="radioGroupProps" orientation="horizontal" :imageUrl="checker" tooltip="this is a tooltip" />
+                        <FzRadioCard label="Option 3" title="Option 3" subtitle="lorem ipsum this is a description" value="option3" v-model="selected" v-bind="radioGroupProps" orientation="horizontal" :imageUrl="checker" tooltip="this is a tooltip" />
                     </template>
                     
                 </FzRadioGroup>`
