@@ -136,7 +136,7 @@ const twoColumns = (args: FzLayoutProps) => ({
         </div>
       </template>
       <template #left>
-        <div class="h-[1000px] bg-blue-50 w-full flex justify-center items-center">
+        <div class="bg-blue-50 size-full flex justify-center items-center">
           <FzBadge color="info">left</FzBadge>
         </div>
       </template>
