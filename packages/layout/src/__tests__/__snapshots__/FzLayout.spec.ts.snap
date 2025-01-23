@@ -1,50 +1,33 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzLayout > matches snaphost for multipleRows 1`] = `
-"<div class="fz-layout w-dvw h-dvh grid gap-10 p-16 grid-rows-auto">
+exports[`FzLayout > matches snaphost for oneColumn 1`] = `
+"<div data-v-c8fca887="" class="fz-layout w-dvw h-dvh grid grid-rows-1 grid-cols-1 fz-layout__oneColumn--lg">
+  <div data-v-c8fca887="" class="fz-layout__main p-12 fz-layout__overflow"></div>
+  <!--v-if-->
+  <!--v-if-->
   <!--v-if-->
   <!--v-if-->
 </div>"
 `;
 
 exports[`FzLayout > matches snapshot for leftShoulder 1`] = `
-"<div class="fz-layout w-dvw h-dvh grid gap-10 p-16 grid-rows-[60px_1fr] grid-cols-1 lg:grid-rows-1 lg:grid-cols-[260px_1fr]">
+"<div data-v-c8fca887="" class="fz-layout w-dvw h-dvh grid grid-cols-1 lg:grid-cols-[340px_1fr] grid-rows-[100vh_100vh] lg:grid-rows-1 fz-layout__overflow fz-layout__leftShoulder--lg">
   <!--v-if-->
   <!--v-if-->
-</div>"
-`;
-
-exports[`FzLayout > matches snapshot for leftShoulderNavbar 1`] = `
-"<div class="fz-layout w-dvw h-dvh grid gap-10 p-16 grid-rows-[40px_160px_60px_1fr] grid-cols-1 lg:grid-rows-[40px_160px_1fr] lg:grid-cols-[260px_1fr]">
   <!--v-if-->
-  <div class="col-span-2"></div>
-  <div class="col-span-2"></div>
-  <div class="col-span-2 lg:col-span-1"></div>
-  <div class="col-span-2 lg:col-span-1"></div>
-  <!--v-if-->
-</div>"
-`;
-
-exports[`FzLayout > matches snapshot for rightShoulderNavbar 1`] = `
-"<div class="fz-layout w-dvw h-dvh grid gap-10 p-16 grid-rows-[40px_160px_60px_1fr] grid-cols-1 lg:grid-rows-[40px_160px_1fr] lg:grid-cols-[1fr_260px]">
-  <!--v-if-->
-  <!--v-if-->
-  <div class="col-span-2"></div>
-  <div class="col-span-2"></div>
-  <div class="col-span-2 lg:col-span-1"></div>
-  <div class="col-span-2 lg:col-span-1"></div>
-</div>"
-`;
-
-exports[`FzLayout > matches snapshot for squares 1`] = `
-"<div class="fz-layout w-dvw h-dvh grid gap-10 p-16 grid-cols-1 grid-rows-auto sm:grid-cols-2 sm:grid-rows-auto md:grid-cols-3 md:grid-rows-auto auto-rows-[332px]">
-  <!--v-if-->
+  <div data-v-c8fca887="" class="fz-layout__sidebar p-12"></div>
+  <div data-v-c8fca887="" class="fz-layout__main p-12"></div>
   <!--v-if-->
 </div>"
 `;
 
 exports[`FzLayout > matches snapshot for twoColumns  1`] = `
-"<div class="fz-layout w-dvw h-dvh grid gap-10 p-16 grid-cols-1 grid-rows-[60px_1fr] lg:grid-rows-1 lg:grid-cols-2">
+"<div data-v-c8fca887="" class="fz-layout w-dvw h-dvh grid grid-rows-[56px_100vh_100vh] sm:grid-rows-[56px_1fr_1fr] lg:grid-rows-[56px_1fr] grid-cols-1 lg:grid-cols-2 fz-layout__overflow fz-layout__twoColumns--lg">
+  <!--v-if-->
+  <!--v-if-->
+  <div data-v-c8fca887="" class="fz-layout__header p-12"></div>
+  <div data-v-c8fca887="" class="fz-layout__left p-12"></div>
+  <div data-v-c8fca887="" class="fz-layout__right p-12"></div>
   <!--v-if-->
   <!--v-if-->
 </div>"
