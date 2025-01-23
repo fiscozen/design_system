@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRefs } from "vue";
+import { computed, ref } from "vue";
 import { FzRadioProps } from "./types";
 import { mapSizeToClasses } from "./common";
 import FzRadioErrorText from "./components/FzRadioErrorText.vue";
