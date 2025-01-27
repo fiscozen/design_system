@@ -159,4 +159,29 @@ describe("FzCard", () => {
     await wrapper.find("header").find("button").trigger("click");
     expect(wrapper.find("article").exists()).toBeTruthy();
   });
+
+  it("should hide the header when hideHeader is true", async () => {
+    const wrapper = mount(FzCard, {
+      props: {
+        title: "Test Card",
+        hideHeader: true,
+      },
+    });
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find("header").exists()).toBeFalsy();
+  });
+
+  it("should show the body if hideHeader is true and collapsible is true", async () => {
+    const wrapper = mount(FzCard, {
+      props: {
+        title: "Test Card",
+        hideHeader: true,
+        collapsible: true,
+      },
+    });
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find("article").exists()).toBeTruthy();
+  });
 });

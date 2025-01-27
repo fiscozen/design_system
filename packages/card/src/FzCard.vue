@@ -1,6 +1,10 @@
 <template>
   <section :class="[sectionStaticClass, backgroundColor]">
-    <header :class="[headerContainerComputedClass, borderColor]" @click="toggleOpen">
+    <header
+      :class="[headerContainerComputedClass, borderColor]"
+      @click="toggleOpen"
+      v-if="!props.hideHeader"
+    >
       <div :class="headerStaticClass">
         <div class="flex flex-row gap-12 items-center">
           <h2
@@ -20,10 +24,18 @@
       </div>
       <slot name="header-content"></slot>
     </header>
-    <article v-if="isAlive" :class="['p-20', contentClass]" v-show="showContent">
+    <article
+      v-if="isAlive"
+      :class="['p-20', contentClass]"
+      v-show="showContent"
+    >
       <slot></slot>
     </article>
-    <footer v-if="(slots.footer || atLeastOneButton) && isAlive" :class="[footerStaticClass, borderColor]" v-show="showContent">
+    <footer
+      v-if="(slots.footer || atLeastOneButton) && isAlive"
+      :class="[footerStaticClass, borderColor]"
+      v-show="showContent"
+    >
       <slot name="footer">
         <FzIconButton
           v-if="tertiaryAction"
@@ -65,7 +77,9 @@ const headerStaticClass =
 const footerStaticClass =
   "h-64 border-t-1 border-solid p-16 flex justify-end gap-8 items-center";
 
-const showContent = computed(() => isOpen.value || !props.collapsible);
+const showContent = computed(
+  () => isOpen.value || !props.collapsible || props.hideHeader,
+);
 const isAlive = computed(() => props.alwaysAlive || showContent.value);
 const headerContainerComputedClass = computed(() => [
   showContent.value ? "border-b-1" : "border-b-0",
@@ -106,8 +120,7 @@ const atLeastOneButton = computed(
 );
 
 function toggleOpen() {
-  if (props.collapsible) 
-    isOpen.value = !isOpen.value;
+  if (props.collapsible) isOpen.value = !isOpen.value;
 }
 
 onMounted(() => {
@@ -121,10 +134,10 @@ onMounted(() => {
     );
 });
 
-defineExpose({ 
+defineExpose({
   /**
    * Method to toggle the card open/closed state
    */
-  toggleOpen
+  toggleOpen,
 });
 </script>
