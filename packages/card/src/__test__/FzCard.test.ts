@@ -159,4 +159,35 @@ describe("FzCard", () => {
     await wrapper.find("header").find("button").trigger("click");
     expect(wrapper.find("article").exists()).toBeTruthy();
   });
+
+  it("should hide the header when no title is defined", async () => {
+    const wrapper = mount(FzCard, {
+      props: {},
+    });
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find("header").exists()).toBeFalsy();
+  });
+
+  it("should show the header when no title is defined but header slot is", async () => {
+    const wrapper = mount(FzCard, {
+      slots: {
+        header: "<div>Header</div>",
+      },
+    });
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find("header").exists()).toBeTruthy();
+  });
+
+  it("should show the header when no title is defined but header-content slot is", async () => {
+    const wrapper = mount(FzCard, {
+      slots: {
+        "header-content": "<div>Header</div>",
+      },
+    });
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find("header").exists()).toBeTruthy();
+  });
 });
