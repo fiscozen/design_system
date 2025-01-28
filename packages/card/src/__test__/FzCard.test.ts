@@ -160,28 +160,34 @@ describe("FzCard", () => {
     expect(wrapper.find("article").exists()).toBeTruthy();
   });
 
-  it("should hide the header when hideHeader is true", async () => {
+  it("should hide the header when no title is defined", async () => {
     const wrapper = mount(FzCard, {
-      props: {
-        title: "Test Card",
-        hideHeader: true,
-      },
+      props: {},
     });
     await wrapper.vm.$nextTick();
 
     expect(wrapper.find("header").exists()).toBeFalsy();
   });
 
-  it("should show the body if hideHeader is true and collapsible is true", async () => {
+  it("should show the header when no title is defined but header slot is", async () => {
     const wrapper = mount(FzCard, {
-      props: {
-        title: "Test Card",
-        hideHeader: true,
-        collapsible: true,
+      slots: {
+        header: "<div>Header</div>",
       },
     });
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.find("article").exists()).toBeTruthy();
+    expect(wrapper.find("header").exists()).toBeTruthy();
+  });
+
+  it("should show the header when no title is defined but header-content slot is", async () => {
+    const wrapper = mount(FzCard, {
+      slots: {
+        "header-content": "<div>Header</div>",
+      },
+    });
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find("header").exists()).toBeTruthy();
   });
 });

@@ -2,11 +2,7 @@ export type FzCardProps = {
   /**
    * The title of the card
    */
-  title: string;
-  /**
-   * Hide the header of the card
-   */
-  hideHeader?: boolean;
+  title?: string;
   /**
    * The background color of the card
    */

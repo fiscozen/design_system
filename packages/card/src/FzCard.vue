@@ -1,9 +1,9 @@
 <template>
   <section :class="[sectionStaticClass, backgroundColor]">
     <header
+      v-if="existHeader"
       :class="[headerContainerComputedClass, borderColor]"
       @click="toggleOpen"
-      v-if="!props.hideHeader"
     >
       <div :class="headerStaticClass">
         <div class="flex flex-row gap-12 items-center">
@@ -77,10 +77,11 @@ const headerStaticClass =
 const footerStaticClass =
   "h-64 border-t-1 border-solid p-16 flex justify-end gap-8 items-center";
 
-const showContent = computed(
-  () => isOpen.value || !props.collapsible || props.hideHeader,
-);
+const showContent = computed(() => isOpen.value || !props.collapsible);
 const isAlive = computed(() => props.alwaysAlive || showContent.value);
+const existHeader = computed(
+  () => props.title || slots["header"] || slots["header-content"],
+);
 const headerContainerComputedClass = computed(() => [
   showContent.value ? "border-b-1" : "border-b-0",
   props.collapsible ? "cursor-pointer" : "",

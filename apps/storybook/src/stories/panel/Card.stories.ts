@@ -235,7 +235,5 @@ export const CardWithoutHeader: CardStory = {
                </FzCard>`
   }),
   args: {
-    title: 'Title',
-    hideHeader: true
   }
 }
