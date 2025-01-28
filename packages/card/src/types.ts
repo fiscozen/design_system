@@ -2,7 +2,7 @@ export type FzCardProps = {
   /**
    * The title of the card
    */
-  title: string;
+  title?: string;
   /**
    * The background color of the card
    */
@@ -52,34 +52,34 @@ export interface FzCardEvents {
    * Event emitted when the primary action is clicked
    * @type {() => void}
    */
-  (event: 'fzprimary:click'): void
+  (event: "fzprimary:click"): void;
   /**
    * Event emitted when the secondary action is clicked
    * @type {() => void}
    */
-  (event:'fzsecondary:click'): void,
+  (event: "fzsecondary:click"): void;
   /**
    * Event emitted when the tertiary action is clicked
    * @type {() => void}
    */
-  (event:'fztertiary:click'): void,
+  (event: "fztertiary:click"): void;
 }
 
 export interface FzCardSlots {
   /**
    * Slot for the content of the card
    */
-  default(props:{}): any;
+  default(props: {}): any;
   /**
    * Slot for the header, it will be displayed on the left of the title
    */
-  header(props:{}): any;
+  header(props: {}): any;
   /**
    * Slot for the header content, it will be displayed below the title
    */
-  'header-content'(props:{}): any;
+  "header-content"(props: {}): any;
   /**
    * Slot for the footer of the card
    */
-  footer(props:{}): any;
+  footer(props: {}): any;
 }

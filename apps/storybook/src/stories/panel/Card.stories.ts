@@ -220,3 +220,20 @@ export const CardWithFooter: CardStory = {
     collapsible: true
   }
 }
+
+export const CardWithoutHeader: CardStory = {
+  render: (args) => ({
+    components: { FzCard },
+    setup() {
+      return {
+        args
+      }
+    },
+
+    template: `<FzCard v-bind="args" class="w-[500px] m-8">
+                 <div> Content </div>
+               </FzCard>`
+  }),
+  args: {
+  }
+}
