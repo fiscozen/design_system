@@ -143,9 +143,16 @@ const colSpan = computed(() => ({
               role="cell"
               v-for="column in columns"
             >
-              {{
-                row[column.props.field?.toLowerCase() || column.props.header.toLowerCase()]
-              }}
+              <component
+                v-if="column.children?.default"
+                :is="column.children.default"
+                :data="row"
+              />
+              <template v-else-if="column.props.field || column.props.header">
+                {{
+                  row[column.props.field?.toLowerCase() || column.props.header.toLowerCase()]
+                }}
+              </template>
             </div>
             <div v-if="actions" :class="['w-[80px]', bodyStaticClasses]">
               <FzIconDropdown
