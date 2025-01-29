@@ -54,9 +54,7 @@ const bodyStaticClasses = [
   "flex",
   "justify-start",
   "items-center",
-  "min-w-min",
-  "border-b-1",
-  "border-grey-100",
+  "min-w-min"
 ];
 
 const getBodyClasses = (
@@ -130,7 +128,7 @@ const colSpan = computed(() => ({
           Azioni
         </div>
         <div
-          class="grid grid-cols-subgrid"
+          class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100"
           v-if="value && value.length"
           v-for="(row, index) in value"
           :aria-rowindex="index + 1"
