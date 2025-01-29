@@ -66,7 +66,9 @@ const Default: Story = {
         <FzTable v-bind="args">
           <FzColumn header="Nome" sticky="left" />
           <FzColumn header="Cognome" />
-          <FzColumn header="Email" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
           <FzColumn header="Numero di telefono" field="phone_number" />
           <template #row-2>
             <FzCollapse class="col-span-5 w-full py-8">
