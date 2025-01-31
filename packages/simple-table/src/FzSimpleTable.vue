@@ -2,7 +2,7 @@
   <table class="w-full text-left rounded overflow-hidden bg-core-white">
     <thead>
       <tr class="bg-grey-100">
-        <th v-for="column in columns" class="px-16 h-48 font-medium">
+        <th v-for="column in columns" class="px-16 h-48 font-medium" :style="{'width': column.props.width}">
           {{ column.props.header }}
         </th>
       </tr>
