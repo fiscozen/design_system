@@ -82,6 +82,48 @@ const Default: Story = {
   })
 }
 
+const FixedColumnWidth: Story = {
+  args: {
+    value: Array(50)
+      .fill({})
+      .map(() => sampleObj),
+    placeholder: 'Nessun valore',
+    actions: {
+      items
+    },
+    pages: 10,
+    activePage: 2
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: {
+      FzColumn,
+      FzTable,
+      FzCollapse
+    },
+    template: `
+      <div class="p-12">
+        <FzTable v-bind="args" gridTemplateColumns="120px 1fr 1fr 1fr">
+          <FzColumn header="Nome" sticky="left" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+          <template #row-2>
+            <FzCollapse class="col-span-5 w-full py-8">
+              <template #summary>custom collapsible row summary</template>
+              <template #content>custom collapsible row content</template>
+            </FzCollapse>
+          </template>
+        </FzTable>
+      </div>
+    `
+  })
+}
+
 const longTextSampleObj = {
   nome: 'Documento di prova',
   descrizione: 
@@ -179,6 +221,6 @@ const ActionClick: Story = {
   })
 }
 
-export { Default, LongText, ActionClick }
+export { Default, FixedColumnWidth, LongText, ActionClick }
 
 export default meta

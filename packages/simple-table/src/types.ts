@@ -27,6 +27,10 @@ type FzColumnProps = {
    */
   header: string;
   /**
+   * The width of this column
+   */
+  width?: string;
+  /**
    * should be sticked to either left or right 
    */
   sticky?: 'left' | 'right';
