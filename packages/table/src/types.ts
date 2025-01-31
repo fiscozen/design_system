@@ -1,19 +1,23 @@
-import {type FzSimpleTableProps} from '@fiscozen/simple-table'
-import {type FzActionlistProps} from '@fiscozen/actionlist';
+import { type FzSimpleTableProps } from "@fiscozen/simple-table";
+import { type FzActionlistProps } from "@fiscozen/actionlist";
 
 interface FzTableProps extends FzSimpleTableProps {
   /**
    * Actions to show in the dropdown in the action column
    */
-  actions?: FzActionlistProps
+  actions?: FzActionlistProps;
   /**
    * Number of pages to show in the pagination section
    */
-  pages?: number
+  pages?: number;
   /**
    * Number of pages to show around the selected one
    */
-  pageInterval?: number
+  pageInterval?: number;
+  /**
+   * Grid template columns css property that will override default
+   */
+  gridTemplateColumns?: string;
 }
 
 type FzTableSlots = {
@@ -23,4 +27,4 @@ type FzTableSlots = {
   default(props: {}): any;
 };
 
-export { FzTableProps, FzTableSlots }
+export { FzTableProps, FzTableSlots };

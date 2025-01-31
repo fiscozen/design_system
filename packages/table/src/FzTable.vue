@@ -40,7 +40,7 @@ const headerStaticClasses = [
   "h-48",
   "font-medium",
   "flex",
-  "justify-start",
+  "justify-center",
   "items-center",
 ];
 const headerClasses = computed(() => {});
@@ -54,12 +54,12 @@ const bodyStaticClasses = [
   "flex",
   "justify-start",
   "items-center",
-  "min-w-min"
+  "min-w-min",
 ];
 
 const getBodyClasses = (
   column: { props: FzColumnProps; children: FzColumnSlots },
-  isHeader?: boolean
+  isHeader?: boolean,
 ) => {
   return {
     relative: !column.props.sticky,
@@ -106,7 +106,7 @@ const colSpan = computed(() => ({
       <div
         :class="[staticClasses]"
         :style="{
-          'grid-template-columns': `repeat(${columns.length}, minmax(min-content, 1fr))`
+          'grid-template-columns': props.gridTemplateColumns ?? `repeat(${columns.length}, minmax(min-content, 1fr))`,
         }"
         ref="grid"
         role="table"
@@ -115,7 +115,11 @@ const colSpan = computed(() => ({
       >
         <div
           v-for="column in columns"
-          :class="[headerStaticClasses, headerClasses, getBodyClasses(column, true)]"
+          :class="[
+            headerStaticClasses,
+            headerClasses,
+            getBodyClasses(column, true),
+          ]"
           role="columnheader"
           aria-sort="none"
         >
@@ -123,7 +127,11 @@ const colSpan = computed(() => ({
         </div>
         <div
           v-if="actions"
-          :class="['fz__table__header--actions w-[80px]', headerStaticClasses, headerClasses]"
+          :class="[
+            'fz__table__header--actions w-[80px]',
+            headerStaticClasses,
+            headerClasses,
+          ]"
         >
           Azioni
         </div>
@@ -148,14 +156,20 @@ const colSpan = computed(() => ({
               />
               <template v-else-if="column.props.field || column.props.header">
                 {{
-                  row[column.props.field?.toLowerCase() || column.props.header.toLowerCase()]
+                  row[
+                    column.props.field?.toLowerCase() ||
+                      column.props.header.toLowerCase()
+                  ]
                 }}
               </template>
             </div>
             <div v-if="actions" :class="['w-[80px]', bodyStaticClasses]">
               <FzIconDropdown
                 :actions="actions.items"
-                @fzaction:click="(actionIndex: number) => emit('fztable:rowactionclick', actionIndex, row)"
+                @fzaction:click="
+                  (actionIndex: number) =>
+                    emit('fztable:rowactionclick', actionIndex, row)
+                "
               ></FzIconDropdown>
             </div>
           </slot>
@@ -173,14 +187,19 @@ const colSpan = computed(() => ({
       class="fz__table__footer w-full flex flex-row justify-end m-8"
       v-if="pages && value?.length"
     >
-      <div class="fz__table__pagination flex flex-row justify-between items-center gap-8">
+      <div
+        class="fz__table__pagination flex flex-row justify-between items-center gap-8"
+      >
         <FzButton
           @click="activePage = 0"
           :variant="activePage === 0 ? 'primary' : 'secondary'"
           size="sm"
           >1</FzButton
         >
-        <div class="fz__pagination__separator" v-if="activePage - pageInterval - 1 > 0">
+        <div
+          class="fz__pagination__separator"
+          v-if="activePage - pageInterval - 1 > 0"
+        >
           ...
         </div>
         <FzButton
