@@ -17,7 +17,7 @@ const emit = defineEmits<{
       v-for="(section, sectionIndex) in sections"
       :key="sectionIndex"
     >
-      <div class="text-grey-400 flex h-32 items-center px-12 text-xs">
+      <div v-if="section.label" class="text-grey-400 flex h-32 items-center px-12 text-xs">
         <span>{{ section.label }}</span>
       </div>
       <div class="flex flex-col">
