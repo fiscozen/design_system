@@ -2,7 +2,7 @@
 import { FzIcon } from '@fiscozen/icons'
 import { computed, useSlots } from 'vue'
 import { FzRouterNavlinkProps } from './types'
-import { commonClasses } from './classUtils'
+import { commonClasses, disabledClasses } from './classUtils'
 
 const props = defineProps<FzRouterNavlinkProps>()
 const slots = useSlots()
@@ -11,12 +11,12 @@ const iconOnly = computed(() => !slots.default && !props.label)
 </script>
 
 <template>
-  <router-link
-    :to="meta"
-    :disabled="disabled"
+  <component
+    :is="disabled ? 'span' : 'router-link'"
+    :to="disabled ? undefined : meta"
     :class="[
       { 'block flex w-32 items-center justify-center': iconOnly, 'px-12 py-6': !iconOnly },
-      commonClasses
+      disabled ? disabledClasses : commonClasses
     ]"
   >
     <FzIcon
@@ -28,5 +28,5 @@ const iconOnly = computed(() => !slots.default && !props.label)
     <slot>
       <span v-if="label">{{ label }}</span>
     </slot>
-  </router-link>
+  </component>
 </template>

@@ -129,6 +129,23 @@ RouterNavlink.decorators = [
   })
 ]
 
+export const DisabledRouterNavlink: Story = {
+  ...navlinkRouterLink,
+  args: {
+    label: 'router navlink',
+    disabled: true,
+    meta: {
+      path: '/foo/bar'
+    }
+  }
+}
+
+DisabledRouterNavlink.decorators = [
+  vueRouter(routes, {
+    initialRoute: '/foo'
+  })
+]
+
 const navlinkRouterLinkIcon: Story = {
   render: (args) => ({
     setup() {
