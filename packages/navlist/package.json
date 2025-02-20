@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/navlist",
-  "version": "0.1.2-beta.1",
+  "version": "0.1.2",
   "description": "Design System Navlist Component",
   "scripts": {
     "coverage": "vitest run --coverage",
