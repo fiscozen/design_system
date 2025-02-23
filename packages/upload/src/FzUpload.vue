@@ -47,7 +47,8 @@
         </FzLink>
 
         <FzIconButton
-          iconName="xmark-circle"
+          iconName="trash-xmark"
+          iconVariant="fas"
           variant="invisible"
           :size="size === 'sm' ? 'xs' : 'sm'"
           @click="deleteFile(file)"
