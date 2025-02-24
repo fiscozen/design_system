@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import { FzTable } from '@fiscozen/table'
+import { FzTable, FzRow, Ordering } from '@fiscozen/table'
 import { FzColumn } from '@fiscozen/simple-table'
 import { FzCollapse } from '@fiscozen/collapse'
+import { ref, reactive, computed } from 'vue'
 
 const meta: Meta<typeof FzTable> = {
   title: 'Data/FzTable',
@@ -221,6 +222,145 @@ const ActionClick: Story = {
   })
 }
 
-export { Default, FixedColumnWidth, LongText, ActionClick }
+const CustomRows: Story = {
+  args: {
+    placeholder: 'Nessun valore'
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: {
+      FzCollapse,
+      FzColumn,
+      FzRow,
+      FzTable
+    },
+    template: `
+      <div class="p-12 h-[800px]">
+        <FzTable v-bind="args">
+          <FzColumn header="Nome" sticky="left" />
+          <FzColumn header="Descrizione" />
+          <FzRow>
+            <div>Riccardo</div>
+            <div>description text for Riccardo</div>
+          </FzRow>
+          <FzRow>
+            <div>Francesco</div>
+            <div>description text for Francesco</div>
+          </FzRow>
+          <FzRow>
+            <div>Cristian</div>
+            <div>description text for Cristian</div>
+          </FzRow>
+          <FzRow>
+            <div class="col-span-2 h-32 bg-blue-200 flex flex-row justify-center items-center">Custom row</div>
+          </FzRow>
+        </FzTable>
+      </div>
+    `
+  })
+}
+
+const ColumnOrdering: Story = {
+  args: {
+    value: Array(50)
+      .fill({})
+      .map(() => sampleObj),
+    placeholder: 'Nessun valore',
+    actions: {
+      items
+    },
+    pages: 10,
+    activePage: 2,
+  },
+  render: (args) => ({
+    setup() {
+      const ordering = reactive({
+        nome: {
+          field: 'Nome',
+          orderable: true,
+          direction: 'asc'
+        }
+      });
+      const handleNameOrdering = (ordering: Ordering, direction: Ordering['direction']) => {
+        ordering.direction = direction;
+      }
+      return { args, handleNameOrdering, ordering }
+    },
+    components: {
+      FzColumn,
+      FzTable,
+      FzCollapse
+    },
+    template: `
+      <div class="p-12">
+        <FzTable v-bind="args" gridTemplateColumns="120px 1fr 1fr 1fr" :ordering @fztable:ordering="handleNameOrdering">
+          <FzColumn header="Nome" sticky="left" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+        </FzTable>
+      </div>
+    `
+  })
+}
+
+const Filters: Story = {
+  args: {
+    placeholder: 'Nessun valore',
+    actions: {
+      items
+    },
+    pages: 10,
+    activePage: 2,
+    filterable: true,
+    searchFilterLabel: 'Ricerca'
+  },
+  render: (args) => ({
+    setup() {
+      const data = Array(10)
+        .fill({})
+        .map(() => sampleObj);
+      data[1] = {
+        nome: 'Francesco',
+        cognome: 'Panico',
+        email: 'francesco.panico@fiscozen.it',
+        phone_number: '123456789'
+      }
+            
+      const searchTerm = ref('');
+      const filteredData = computed(() => {
+        return data.filter((el) => {
+          let res = false;
+          const found = Object.values(el).find((col) => col.includes(searchTerm.value))
+          res = !!found;
+          return res;
+        })
+      })
+      return { args, filteredData, searchTerm }
+    },
+    components: {
+      FzColumn,
+      FzTable
+    },
+    template: `
+      <div class="p-12">
+        <FzTable gridTemplateColumns="120px 1fr 1fr 1fr" v-bind="args" v-model:searchTerm="searchTerm" :value="filteredData">
+          <FzColumn header="Nome" sticky="left" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+        </FzTable>
+      </div>
+    `
+  })
+}
+
+export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters }
 
 export default meta

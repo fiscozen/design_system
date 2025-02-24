@@ -1,7 +1,7 @@
-import { h } from "vue";
+import { h, ref, Ref } from "vue";
 import FzTable from "./FzTable.vue";
 import { FzColumn } from "@fiscozen/simple-table";
-import { FzTableProps } from "./types";
+import { FzTableProps, Ordering } from "./types";
 
 const sampleObj = {
   nome: "Riccardo",
@@ -29,8 +29,9 @@ const items = [
   },
 ];
 
-const defaultTemplate = (props: FzTableProps) => () =>
-  h(
+const defaultTemplate = (props: FzTableProps) => () => {
+
+  return h(
     h("div", { class: "h-[600px] max-w-[800px] pt-16" }, [
       h(FzTable, props, [
         h(FzColumn, { header: "Nome", sticky: "left" }),
@@ -46,7 +47,7 @@ const defaultTemplate = (props: FzTableProps) => () =>
         h(FzColumn, { header: "Phone Number", field: "phone_number" }),
       ]),
     ]),
-  );
+  )};
 
 describe("<FzTable />", () => {
   it("renders", () => {
@@ -79,6 +80,48 @@ describe("<FzTable />", () => {
     cy.mount(defaultTemplate(props));
     cy.get(".fz__table__empty").should("be.visible");
     cy.get(".fz__table__empty").should("have.text", props.placeholder);
+  });
+
+  it("should emit ordering event", () => {
+    const onOrderChange = cy.spy().as('onOrderChangeSpy')
+    const props = {
+      value: Array(50)
+        .fill({})
+        .map(() => sampleObj),
+      placeholder: "Nessun valore",
+      pages: 10,
+      activePage: 0,
+      'onFztable:ordering': onOrderChange,
+      ordering: {
+        'Cognome': {
+          field: 'Cognome',
+          direction: 'desc' satisfies Ordering['direction'],
+          orderable: true
+        }
+      }
+    };
+    cy.mount(defaultTemplate(props));
+
+    cy.get('[data-cy=fztable-ordering]').click();
+    cy.get('@onOrderChangeSpy').should('have.been.calledWith', {field: 'Cognome', direction: 'desc', orderable: true}, 'asc')
+  });
+
+  it("should emit search event", () => {
+    const onSearch = cy.spy().as('onSearchSpy')
+    const props = {
+      value: Array(50)
+        .fill({})
+        .map(() => sampleObj),
+      placeholder: "Nessun valore",
+      pages: 10,
+      activePage: 0,
+      filterable: true,
+      'onUpdate:searchTerm': onSearch
+    };
+    cy.mount(defaultTemplate(props));
+
+    cy.get('[data-cy=fztable-search]').type('asd');
+    cy.get('@onSearchSpy').should('have.been.calledWith', 'asd')
   });
 });
 

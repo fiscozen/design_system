@@ -16,6 +16,8 @@
     "@fiscozen/actionlist": "workspace:^",
     "@fiscozen/button": "workspace:^",
     "@fiscozen/dropdown": "workspace:^",
+    "@fiscozen/icons": "workspace:^",
+    "@fiscozen/input": "workspace:^",
     "@fiscozen/simple-table": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"

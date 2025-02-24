@@ -1,5 +1,20 @@
-import { type FzSimpleTableProps } from "@fiscozen/simple-table";
+import { FzColumnSlots, type FzColumnProps, type FzSimpleTableProps } from "@fiscozen/simple-table";
 import { type FzActionlistProps } from "@fiscozen/actionlist";
+
+export interface Ordering {
+  /**
+   *  Should a column be orderable
+   */
+  orderable?: boolean;
+  /**
+   *  field to be ordered
+   */
+  field: string;
+  /**
+   *  Type of ordering 
+   */
+  direction?: 'asc' | 'desc';
+}
 
 interface FzTableProps extends FzSimpleTableProps {
   /**
@@ -18,6 +33,22 @@ interface FzTableProps extends FzSimpleTableProps {
    * Grid template columns css property that will override default
    */
   gridTemplateColumns?: string;
+  /**
+   * Shows a fulltext input search filter
+   */
+  filterable?: boolean;
+  /**
+   * search input value
+   */
+  searchTerm?: string;
+  /**
+   * label for search filter input
+   */
+  searchFilterLabel?: string;
+  /**
+   * ordering configuration
+   */
+  ordering?: Record<string, Ordering>;
 }
 
 type FzTableSlots = {
@@ -27,4 +58,23 @@ type FzTableSlots = {
   default(props: {}): any;
 };
 
-export { FzTableProps, FzTableSlots };
+type FzRowProps<T> = {
+  /**
+   * Actions to show in the dropdown in the action column
+   */
+  actions?: FzActionlistProps;
+  /**
+   * Actions to show in the dropdown in the action column
+   */
+  data?: T;
+  /**
+   * Column configuration
+   */
+  columns: {props: FzColumnProps, children: FzColumnSlots}[];
+};
+
+type FzRowSlots = {
+  default(props: { data: any }): any;
+};
+
+export { FzTableProps, FzTableSlots, FzRowProps, FzRowSlots };
