@@ -1,7 +1,7 @@
 import { h, ref, Ref } from "vue";
 import FzTable from "./FzTable.vue";
-import { FzColumn, FzColumnProps } from "@fiscozen/simple-table";
-import { FzTableProps } from "./types";
+import { FzColumn } from "@fiscozen/simple-table";
+import { FzTableProps, Ordering } from "./types";
 
 const sampleObj = {
   nome: "Riccardo",
@@ -35,7 +35,7 @@ const defaultTemplate = (props: FzTableProps) => () => {
     h("div", { class: "h-[600px] max-w-[800px] pt-16" }, [
       h(FzTable, props, [
         h(FzColumn, { header: "Nome", sticky: "left" }),
-        h(FzColumn, { header: "Cognome", ordering: 'asc' }),
+        h(FzColumn, { header: "Cognome" }),
         h(FzColumn, { header: "Email" }),
         h(FzColumn, { header: "Email" }),
         h(FzColumn, { header: "Email" }),
@@ -91,12 +91,19 @@ describe("<FzTable />", () => {
       placeholder: "Nessun valore",
       pages: 10,
       activePage: 0,
-      'onFztable:ordering': onOrderChange
+      'onFztable:ordering': onOrderChange,
+      ordering: {
+        'Cognome': {
+          field: 'Cognome',
+          direction: 'desc' satisfies Ordering['direction'],
+          orderable: true
+        }
+      }
     };
     cy.mount(defaultTemplate(props));
 
     cy.get('[data-cy=fztable-ordering]').click();
-    cy.get('@onOrderChangeSpy').should('have.been.calledWith', {header: 'Cognome', ordering: 'asc'}, 'desc')
+    cy.get('@onOrderChangeSpy').should('have.been.calledWith', {field: 'Cognome', direction: 'desc', orderable: true}, 'asc')
   });
 
   it("should emit search event", () => {
