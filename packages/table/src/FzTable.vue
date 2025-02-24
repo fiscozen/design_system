@@ -1,17 +1,25 @@
 <script setup lang="ts">
-import { computed, ref, useSlots, onMounted, onUpdated } from "vue";
-import { FzTableProps } from "./types";
-import { FzColumn, FzColumnSlots, FzColumnProps } from "@fiscozen/simple-table";
-import { FzIconDropdown } from "@fiscozen/dropdown";
+import { computed, ref, useSlots } from "vue";
+import { FzRow, FzRowProps, FzRowSlots, FzTableProps, Ordering } from "./";
+import { getBodyClasses } from "./utils";
 import { FzButton } from "@fiscozen/button";
+import { FzColumn, FzColumnSlots, FzColumnProps } from "@fiscozen/simple-table";
+import { FzIcon } from "@fiscozen/icons";
+import { FzInput } from "@fiscozen/input";
 
 const props = withDefaults(defineProps<FzTableProps>(), {
   pageInterval: 2,
   activePage: 0,
+  searchFilterLabel: 'Ricerca'
 });
 
 const emit = defineEmits<{
   "fztable:rowactionclick": [actionIndex: number, rowData: Record<string, any>];
+  "fztable:ordering": [
+    ordering: Ordering,
+    newOrderingDirection: Ordering['direction'],
+  ];
+  "update:searchTerm": [searchTerm: string];
 }>();
 const activePage = defineModel<number>("activePage");
 
@@ -26,6 +34,13 @@ const columns =
       children: column.children as FzColumnSlots,
     })) ?? [];
 
+const rows =
+  defaultSlot
+    ?.filter((elem) => elem.type === FzRow)
+    .map((row) => ({
+      props: row.props as FzRowProps,
+      children: row.children as FzRowSlots,
+    })) ?? [];
 const grid = ref<HTMLDivElement>();
 
 const staticClasses = ref(["grid"]);
@@ -44,31 +59,6 @@ const headerStaticClasses = [
   "items-center",
 ];
 const headerClasses = computed(() => {});
-
-const bodyStaticClasses = [
-  "fz__body",
-  "z-[1]",
-  "px-16",
-  "min-h-48",
-  "bg-core-white",
-  "flex",
-  "justify-start",
-  "items-center",
-  "min-w-min",
-];
-
-const getBodyClasses = (
-  column: { props: FzColumnProps; children: FzColumnSlots },
-  isHeader?: boolean,
-) => {
-  return {
-    relative: !column.props.sticky,
-    sticky: column.props.sticky,
-    "left-0 z-[2]": column.props.sticky === "left",
-    "z-[3]": column.props.sticky && isHeader,
-    "right-0": column.props.sticky === "right",
-  };
-};
 
 const centerPageList = computed(() => {
   if (!props.pages) {
@@ -98,19 +88,42 @@ const totalColumns = computed(() => {
 const colSpan = computed(() => ({
   "grid-column": `span ${totalColumns.value} / span ${totalColumns.value}`,
 }));
+
+const getOrdering = (column: FzColumnProps): Ordering|undefined => {
+  const safeKey = column.field || column.header;
+  return props.ordering && props.ordering[safeKey.toLowerCase()];
+}
+
+
+const handleOrderingClick = (colProps: FzColumnProps) => {
+  const ordering = getOrdering(colProps);
+  if(!ordering) {
+    return;
+  }
+  if (ordering.direction=== "asc") {
+    emit("fztable:ordering", ordering, "desc");
+  } else {
+    emit("fztable:ordering", ordering, "asc");
+  }
+};
 </script>
 
 <template>
   <div class="m-0 p-0 size-full">
+    <div class="flex flex-row justify-end">
+      <FzInput v-if="props.filterable" data-cy="fztable-search" class="mb-8 max-w-xs" :label="props.searchFilterLabel" @update:modelValue="(e: string) => emit('update:searchTerm', e)"/>
+    </div>
     <div class="fz__table overflow-auto size-full">
       <div
         :class="[staticClasses]"
         :style="{
-          'grid-template-columns': props.gridTemplateColumns ?? `repeat(${columns.length}, minmax(min-content, 1fr))`,
+          'grid-template-columns':
+            props.gridTemplateColumns ??
+            `repeat(${columns.length}, minmax(min-content, 1fr))`,
         }"
         ref="grid"
         role="table"
-        :aria-rowcount="value.length"
+        :aria-rowcount="value?.length || rows.length"
         :aria-colcount="columns.length"
       >
         <div
@@ -124,6 +137,16 @@ const colSpan = computed(() => ({
           aria-sort="none"
         >
           {{ column.props.header }}
+          <FzIcon
+            v-if="getOrdering(column.props)?.orderable"
+            data-cy="fztable-ordering"
+            :name="
+              getOrdering(column.props).direction === 'asc' ? 'chevron-up' : 'chevron-down'
+            "
+            @click="handleOrderingClick(column.props)"
+            size="sm"
+            class="ml-4 cursor-pointer"
+          ></FzIcon>
         </div>
         <div
           v-if="actions"
@@ -143,36 +166,24 @@ const colSpan = computed(() => ({
           :style="colSpan"
           role="row"
         >
-          <slot :name="`row-${index}`">
-            <div
-              :class="[bodyStaticClasses, getBodyClasses(column)]"
-              role="cell"
-              v-for="column in columns"
-            >
-              <component
-                v-if="column.children?.default"
-                :is="column.children.default"
-                :data="row"
-              />
-              <template v-else-if="column.props.field || column.props.header">
-                {{
-                  row[
-                    column.props.field?.toLowerCase() ||
-                      column.props.header.toLowerCase()
-                  ]
-                }}
-              </template>
-            </div>
-            <div v-if="actions" :class="['w-[80px]', bodyStaticClasses]">
-              <FzIconDropdown
-                :actions="actions.items"
-                @fzaction:click="
-                  (actionIndex: number) =>
-                    emit('fztable:rowactionclick', actionIndex, row)
-                "
-              ></FzIconDropdown>
-            </div>
+          <slot :name="`row-${index}`" :columns :data="row" :actions>
+            <FzRow :columns :data="row" :actions> </FzRow>
           </slot>
+        </div>
+        <div
+          v-else-if="rows && rows.length"
+          class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100"
+          v-for="(row, index) in rows"
+          :aria-rowindex="index + 1"
+          :style="colSpan"
+          role="row"
+        >
+          <component
+            v-if="row.children?.default"
+            :is="row.children.default"
+            :actions
+            :columns
+          />
         </div>
         <div
           v-else
