@@ -91,7 +91,7 @@ const colSpan = computed(() => ({
 
 const getOrdering = (column: FzColumnProps): Ordering|undefined => {
   const safeKey = column.field || column.header;
-  return props.ordering && props.ordering[safeKey.toLowerCase()];
+  return props.ordering && props.ordering[safeKey];
 }
 
 
