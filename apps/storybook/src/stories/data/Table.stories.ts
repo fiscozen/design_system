@@ -254,7 +254,7 @@ const CustomRows: Story = {
             <div>description text for Cristian</div>
           </FzRow>
           <FzRow>
-            <div class="col-span-2 h-32 bg-blue-200 flex flex-row justify-center items-center">Custom row</div>
+            <div class="col-span-2 bg-blue-200 flex flex-row justify-center items-center h-full">Custom row</div>
           </FzRow>
         </FzTable>
       </div>
@@ -277,7 +277,7 @@ const ColumnOrdering: Story = {
   render: (args) => ({
     setup() {
       const ordering = reactive({
-        nome: {
+        'Nome': {
           field: 'Nome',
           orderable: true,
           direction: 'asc'
