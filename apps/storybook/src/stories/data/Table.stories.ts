@@ -43,7 +43,7 @@ type Story = StoryObj<typeof meta>
 
 const Default: Story = {
   args: {
-    value: Array(50)
+    modelValue: Array(50)
       .fill({})
       .map(() => sampleObj),
     placeholder: 'Nessun valore',
@@ -85,7 +85,7 @@ const Default: Story = {
 
 const FixedColumnWidth: Story = {
   args: {
-    value: Array(50)
+    modelValue: Array(50)
       .fill({})
       .map(() => sampleObj),
     placeholder: 'Nessun valore',
@@ -144,7 +144,7 @@ const longTextSampleObj = {
 
 const LongText: Story = {
   args: {
-    value: Array(10)
+    modelValue: Array(10)
       .fill({})
       .map(() => longTextSampleObj),
     placeholder: 'Nessun valore'
@@ -181,7 +181,7 @@ const rows = [{
 
 const ActionClick: Story = {
   args: {
-    value: rows,
+    modelValue: rows,
     placeholder: 'Nessun valore',
     actions: {
       items: [
@@ -264,26 +264,43 @@ const CustomRows: Story = {
 
 const ColumnOrdering: Story = {
   args: {
-    value: Array(50)
-      .fill({})
-      .map(() => sampleObj),
+    modelValue: [
+      {
+        nome: 'Francesco',
+        cognome: 'Panico',
+        email: 'francesco.panico@fiscozen.it',
+        phone_number: '123456789'
+      },
+      {
+        nome: 'Riccardo',
+        cognome: 'Agnoletto',
+        email: 'riccardo.agnoletto@fiscozen.it',
+        phone_number: '2345'
+      },
+      {
+        nome: 'Cristian',
+        cognome: 'Barraco',
+        email: 'cristian.barraco@fiscozen.it',
+        phone_number: '111111'
+      },
+    ],
     placeholder: 'Nessun valore',
     actions: {
       items
     },
-    pages: 10,
-    activePage: 2,
+    internalOrdering: true
   },
   render: (args) => ({
     setup() {
       const ordering = reactive({
         nome: {
+          field: 'Nome',
           orderable: true,
           direction: 'asc'
         }
       });
       const handleNameOrdering = (ordering: Ordering, direction: Ordering['direction']) => {
-        ordering.direction = direction;
+        console.log('ordering', ordering, direction)
       }
       return { args, handleNameOrdering, ordering }
     },
@@ -294,7 +311,7 @@ const ColumnOrdering: Story = {
     },
     template: `
       <div class="p-12">
-        <FzTable v-bind="args" gridTemplateColumns="120px 1fr 1fr 1fr" :ordering @fztable:ordering="handleNameOrdering">
+        <FzTable v-bind="args" gridTemplateColumns="120px 1fr 1fr 1fr" v-model:ordering="ordering" @fztable:ordering="handleNameOrdering">
           <FzColumn header="Nome" sticky="left" />
           <FzColumn header="Cognome" />
           <FzColumn header="Email">
@@ -347,7 +364,7 @@ const Filters: Story = {
     },
     template: `
       <div class="p-12">
-        <FzTable gridTemplateColumns="120px 1fr 1fr 1fr" v-bind="args" v-model:searchTerm="searchTerm" :value="filteredData">
+        <FzTable gridTemplateColumns="120px 1fr 1fr 1fr" v-bind="args" v-model:searchTerm="searchTerm" :modelValue="filteredData">
           <FzColumn header="Nome" sticky="left" />
           <FzColumn header="Cognome" />
           <FzColumn header="Email">

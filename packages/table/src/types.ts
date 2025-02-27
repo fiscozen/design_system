@@ -10,9 +10,13 @@ export interface Ordering {
    *  Type of ordering 
    */
   direction?: 'asc' | 'desc';
+  /**
+   *  field to be ordered
+   */
+  field?: boolean
 }
 
-interface FzTableProps extends FzSimpleTableProps {
+interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
   /**
    * Actions to show in the dropdown in the action column
    */
@@ -42,9 +46,9 @@ interface FzTableProps extends FzSimpleTableProps {
    */
   searchFilterLabel?: string;
   /**
-   * ordering configuration
+   * internal ordering (natural sort)
    */
-  ordering?: Record<string, Ordering>;
+  internalOrdering?: boolean;
 }
 
 type FzTableSlots = {
