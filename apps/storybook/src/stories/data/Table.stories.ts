@@ -277,8 +277,7 @@ const ColumnOrdering: Story = {
   render: (args) => ({
     setup() {
       const ordering = reactive({
-        'Nome': {
-          field: 'Nome',
+        nome: {
           orderable: true,
           direction: 'asc'
         }
