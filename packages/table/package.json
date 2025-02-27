@@ -47,5 +47,9 @@
     "vue-router": "^4.3.0",
     "vue-tsc": "^1.8.25"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@types/ramda": "^0.30.2",
+    "ramda": "^0.30.1"
+  }
 }

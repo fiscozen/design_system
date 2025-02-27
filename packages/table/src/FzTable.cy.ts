@@ -53,7 +53,7 @@ describe("<FzTable />", () => {
   it("renders", () => {
     // see: https://on.cypress.io/mounting-vue
     const props = {
-      value: Array(50)
+      modelValue: Array(50)
         .fill({})
         .map(() => sampleObj),
       placeholder: "Nessun valore",
@@ -69,7 +69,7 @@ describe("<FzTable />", () => {
   it("shows placeholder when no data is available", () => {
     // see: https://on.cypress.io/mounting-vue
     const props = {
-      value: [],
+      modelValue: [],
       placeholder: "Nessun valore",
       actions: {
         items,
@@ -85,7 +85,7 @@ describe("<FzTable />", () => {
   it("should emit ordering event", () => {
     const onOrderChange = cy.spy().as('onOrderChangeSpy')
     const props = {
-      value: Array(50)
+      modelValue: Array(50)
         .fill({})
         .map(() => sampleObj),
       placeholder: "Nessun valore",
@@ -93,7 +93,7 @@ describe("<FzTable />", () => {
       activePage: 0,
       'onFztable:ordering': onOrderChange,
       ordering: {
-        'Cognome': {
+        cognome: {
           field: 'Cognome',
           direction: 'desc' satisfies Ordering['direction'],
           orderable: true
@@ -109,7 +109,7 @@ describe("<FzTable />", () => {
   it("should emit search event", () => {
     const onSearch = cy.spy().as('onSearchSpy')
     const props = {
-      value: Array(50)
+      modelValue: Array(50)
         .fill({})
         .map(() => sampleObj),
       placeholder: "Nessun valore",
