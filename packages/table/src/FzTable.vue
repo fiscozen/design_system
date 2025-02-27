@@ -6,22 +6,28 @@ import { FzButton } from "@fiscozen/button";
 import { FzColumn, FzColumnSlots, FzColumnProps } from "@fiscozen/simple-table";
 import { FzIcon } from "@fiscozen/icons";
 import { FzInput } from "@fiscozen/input";
+import { ascend, descend, sortWith, prop } from "ramda";
 
 const props = withDefaults(defineProps<FzTableProps>(), {
   pageInterval: 2,
   activePage: 0,
-  searchFilterLabel: 'Ricerca'
+  searchFilterLabel: "Ricerca",
 });
+
+const modelValue = defineModel<Record<string, any>[]>();
+const ordering = defineModel<Record<string, Ordering>>("ordering", {
+  default: {},
+});
+const activePage = defineModel<number>("activePage");
 
 const emit = defineEmits<{
   "fztable:rowactionclick": [actionIndex: number, rowData: Record<string, any>];
   "fztable:ordering": [
     ordering: Ordering,
-    newOrderingDirection: Ordering['direction'],
+    newOrderingDirection: Ordering["direction"],
   ];
   "update:searchTerm": [searchTerm: string];
 }>();
-const activePage = defineModel<number>("activePage");
 
 const slots = useSlots();
 
@@ -90,21 +96,40 @@ const colSpan = computed(() => ({
   "grid-column": `span ${totalColumns.value} / span ${totalColumns.value}`,
 }));
 
-const getOrdering = (column: FzColumnProps): Ordering|undefined => {
-  const safeKey = column.field || column.header;
-  return props.ordering && props.ordering[safeKey.toLowerCase()];
-}
+const internalValue = computed(() => {
+  let res = modelValue.value || [];
+  const safeOrdering = Object.entries(ordering.value)
+    .filter(([key, val]) => !!val.orderable && !!val.direction)
+    .map(([key, val]) => {
+      let dirFn = val.direction === "asc" ? ascend : descend;
+      return dirFn(prop(key));
+    });
+  if (props.internalOrdering) {
+    res = sortWith(safeOrdering)(res) as Record<string, any>[];
+  }
+  return res;
+});
 
+const getOrdering = (column: FzColumnProps): Ordering | undefined => {
+  const safeKey = column.field || column.header;
+  return ordering?.value && ordering.value[safeKey.toLowerCase()];
+};
 
 const handleOrderingClick = (colProps: FzColumnProps) => {
-  const ordering = getOrdering(colProps);
-  if(!ordering) {
+  const colOrdering = getOrdering(colProps);
+  if (!colOrdering) {
     return;
   }
-  if (ordering.direction=== "asc") {
-    emit("fztable:ordering", ordering, "desc");
+  if (colOrdering.direction === "asc") {
+    emit("fztable:ordering", colOrdering, "desc");
+    if (props.internalOrdering) {
+      colOrdering.direction = "desc";
+    }
   } else {
-    emit("fztable:ordering", ordering, "asc");
+    emit("fztable:ordering", colOrdering, "asc");
+    if (props.internalOrdering) {
+      colOrdering.direction = "asc";
+    }
   }
 };
 </script>
@@ -112,7 +137,13 @@ const handleOrderingClick = (colProps: FzColumnProps) => {
 <template>
   <div class="m-0 p-0 size-full">
     <div class="flex flex-row justify-end">
-      <FzInput v-if="props.filterable" data-cy="fztable-search" class="mb-8 max-w-xs" :label="props.searchFilterLabel" @update:modelValue="(e: string) => emit('update:searchTerm', e)"/>
+      <FzInput
+        v-if="props.filterable"
+        data-cy="fztable-search"
+        class="mb-8 max-w-xs"
+        :label="props.searchFilterLabel"
+        @update:modelValue="(e: string) => emit('update:searchTerm', e)"
+      />
     </div>
     <div class="fz__table overflow-auto size-full">
       <div
@@ -124,7 +155,7 @@ const handleOrderingClick = (colProps: FzColumnProps) => {
         }"
         ref="grid"
         role="table"
-        :aria-rowcount="value?.length || rows.length"
+        :aria-rowcount="internalValue?.length || rows.length"
         :aria-colcount="columns.length"
       >
         <div
@@ -143,7 +174,9 @@ const handleOrderingClick = (colProps: FzColumnProps) => {
             v-if="getOrdering(column.props)?.orderable"
             data-cy="fztable-ordering"
             :name="
-              getOrdering(column.props).direction === 'asc' ? 'chevron-up' : 'chevron-down'
+              getOrdering(column.props).direction === 'asc'
+                ? 'chevron-up'
+                : 'chevron-down'
             "
             size="sm"
             class="ml-4 cursor-pointer"
@@ -161,8 +194,8 @@ const handleOrderingClick = (colProps: FzColumnProps) => {
         </div>
         <div
           class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100"
-          v-if="value && value.length"
-          v-for="(row, index) in value"
+          v-if="internalValue?.length"
+          v-for="(row, index) in internalValue"
           :aria-rowindex="index + 1"
           :style="colSpan"
           role="row"
@@ -173,7 +206,10 @@ const handleOrderingClick = (colProps: FzColumnProps) => {
         </div>
         <div
           v-else-if="rows && rows.length"
-          :class="['grid grid-cols-subgrid border-b-1 border-solid border-grey-100', bodyStaticClasses]"
+          :class="[
+            'grid grid-cols-subgrid border-b-1 border-solid border-grey-100',
+            bodyStaticClasses,
+          ]"
           v-for="(row, index) in rows"
           :aria-rowindex="index + 1"
           :style="colSpan"
@@ -197,7 +233,7 @@ const handleOrderingClick = (colProps: FzColumnProps) => {
     </div>
     <div
       class="fz__table__footer w-full flex flex-row justify-end m-8"
-      v-if="pages && value?.length"
+      v-if="pages && internalValue?.length"
     >
       <div
         class="fz__table__pagination flex flex-row justify-between items-center gap-8"
