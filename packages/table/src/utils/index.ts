@@ -12,3 +12,15 @@ export const getBodyClasses = (
     "right-0": column.props.sticky === "right",
   };
 };
+
+export const bodyStaticClasses = [
+  "fz__body",
+  "z-[1]",
+  "px-16",
+  "min-h-48",
+  "bg-core-white",
+  "flex",
+  "justify-start",
+  "items-center",
+  "min-w-min",
+];
