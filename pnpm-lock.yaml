@@ -21,8 +21,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.242
-        version: 1.0.242
+        specifier: ^1.0.248
+        version: 1.0.248
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
@@ -1284,8 +1284,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.242
-        version: 1.0.242
+        specifier: ^1.0.248
+        version: 1.0.248
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.6.0
@@ -2847,8 +2847,8 @@ packages:
     resolution: {integrity: sha512-Xk1sIhyNC/esHGGVjL/niHLowM0csl/kFO5uawBy4IrWwy0o1G8LGt3jP6nmWGz+USxeeqbihAmp/oVZju6wug==}
     hasBin: true
 
-  '@awesome.me/kit-8137893ad3@1.0.242':
-    resolution: {integrity: sha512-WOuuzZy5R47dhcQ4YbaMaHsQ6oAgWYEdMrdp/W+4mq05IVubOH8hpW53cZzddWLm/cMMw51WCpAM9t/vqSlHdg==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.242/kit-8137893ad3-1.0.242.tgz}
+  '@awesome.me/kit-8137893ad3@1.0.248':
+    resolution: {integrity: sha512-eIEjYWLWEqGWOvTuCBOOUgtYyxjyaURULQYvjB9nrLaKiTnHpx9unR/oGfWZbI5x9qEc9aXtP2q0hEue7VhheQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.248/kit-8137893ad3-1.0.248.tgz}
     engines: {node: '>=16'}
 
   '@awesome.me/kit-8137893ad3@1.0.71':
@@ -3828,6 +3828,7 @@ packages:
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
 
   '@humanwhocodes/module-importer@1.0.1':
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
@@ -6371,6 +6372,7 @@ packages:
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -6834,9 +6836,11 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -8913,7 +8917,7 @@ snapshots:
     dependencies:
       default-browser-id: 3.0.0
 
-  '@awesome.me/kit-8137893ad3@1.0.242':
+  '@awesome.me/kit-8137893ad3@1.0.248':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
