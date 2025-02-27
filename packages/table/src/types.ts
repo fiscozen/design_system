@@ -7,10 +7,6 @@ export interface Ordering {
    */
   orderable?: boolean;
   /**
-   *  field to be ordered
-   */
-  field: string;
-  /**
    *  Type of ordering 
    */
   direction?: 'asc' | 'desc';
