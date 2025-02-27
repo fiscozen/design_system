@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, useSlots } from "vue";
 import { FzRow, FzRowProps, FzRowSlots, FzTableProps, Ordering } from "./";
-import { getBodyClasses } from "./utils";
+import { getBodyClasses, bodyStaticClasses } from "./utils";
 import { FzButton } from "@fiscozen/button";
 import { FzColumn, FzColumnSlots, FzColumnProps } from "@fiscozen/simple-table";
 import { FzIcon } from "@fiscozen/icons";
@@ -57,6 +57,7 @@ const headerStaticClasses = [
   "flex",
   "justify-center",
   "items-center",
+  "cursor-pointer",
 ];
 const headerClasses = computed(() => {});
 
@@ -133,6 +134,7 @@ const handleOrderingClick = (colProps: FzColumnProps) => {
             headerClasses,
             getBodyClasses(column, true),
           ]"
+          @click="handleOrderingClick(column.props)"
           role="columnheader"
           aria-sort="none"
         >
@@ -143,7 +145,6 @@ const handleOrderingClick = (colProps: FzColumnProps) => {
             :name="
               getOrdering(column.props).direction === 'asc' ? 'chevron-up' : 'chevron-down'
             "
-            @click="handleOrderingClick(column.props)"
             size="sm"
             class="ml-4 cursor-pointer"
           ></FzIcon>
@@ -172,7 +173,7 @@ const handleOrderingClick = (colProps: FzColumnProps) => {
         </div>
         <div
           v-else-if="rows && rows.length"
-          class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100"
+          :class="['grid grid-cols-subgrid border-b-1 border-solid border-grey-100', bodyStaticClasses]"
           v-for="(row, index) in rows"
           :aria-rowindex="index + 1"
           :style="colSpan"

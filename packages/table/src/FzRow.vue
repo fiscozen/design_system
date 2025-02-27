@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { FzRowProps, getBodyClasses } from "./";
+import { FzRowProps, getBodyClasses, bodyStaticClasses } from "./";
 import { FzIconDropdown } from "@fiscozen/dropdown";
 
 const props = defineProps<FzRowProps<T>>();
@@ -7,17 +7,6 @@ const emit = defineEmits<{
   "fztable:rowactionclick": [actionIndex: number, rowData: T | undefined];
 }>();
 
-const bodyStaticClasses = [
-  "fz__body",
-  "z-[1]",
-  "px-16",
-  "min-h-48",
-  "bg-core-white",
-  "flex",
-  "justify-start",
-  "items-center",
-  "min-w-min",
-];
 </script>
 
 <template>
