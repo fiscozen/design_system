@@ -80,9 +80,9 @@ interface FzTypeaheadProps {
    */
   emptySearchNoFilter?: boolean;
   /**
-   * Allow free input (not selection)
+   * Disable free input (not selection)
    */
-  allowFreeInput?: boolean;
+  disableFreeInput?: boolean;
 }
 
 export { FzTypeaheadProps };

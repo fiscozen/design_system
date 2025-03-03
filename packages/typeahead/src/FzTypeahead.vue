@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<FzTypeaheadProps>(), {
   size: "md",
   delayTime: 500,
   filtrable: true,
-  allowFreeInput: true
+  disableFreeInput: false
 });
 const emit = defineEmits(["fztypeahead:input", "fztypeahead:select"]);
 
@@ -54,7 +54,7 @@ const fuseOptions = {
 };
 
 useClickOutside(openerContainer, () => {
-  if (props.allowFreeInput) {
+  if (!props.disableFreeInput) {
     return;
   }
   const selected = internalOptions.value?.find((opt) => opt.label === inputValue.value);
@@ -118,7 +118,7 @@ const debounceHandleInput = debounce(
 function handleInput(val: string, isOpen: boolean) {
   const selected = internalOptions.value?.find((opt) => opt.value === val);
   inputValue.value = val;
-  if (!selected && props.allowFreeInput) model.value = undefined;
+  if (!selected && !props.disableFreeInput) model.value = undefined;
   debounceHandleInput(val);
   if (!isOpen) {
     fzselect.value.forceOpen();
