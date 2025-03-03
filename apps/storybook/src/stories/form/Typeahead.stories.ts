@@ -331,6 +331,39 @@ const RemoteLoadingWithAPICall: Story = {
   }
 }
 
+const AllowSelectionOnly: Story = {
+  args: {
+    selectProps: {
+      options,
+      isOpen: false,
+    },
+    label: 'This is a label',
+    placeholder: 'This is a placeholder',
+    allowFreeInput: false,
+  },
+  render: (args) => ({
+    components: { FzTypeahead },
+    setup() {
+      const text = ref()
+      return {
+        text,
+        args
+      }
+    },
+    methods: {
+      onInputChange() {
+        console.log('Input changed')
+      }
+    },
+    template: `
+      <div class="h-[100vh] w-[100-vw] p-16">
+        <pre>{{text}}</pre>
+        <FzTypeahead v-bind="args" v-model="text" @fztypeahead:input="onInputChange"/>
+      </div>
+    `,
+  })
+}
+
 export {
   Default,
   Error,
@@ -343,7 +376,8 @@ export {
   NoDelayTime,
   HundredOptions,
   RemoteLoading,
-  RemoteLoadingWithAPICall
+  RemoteLoadingWithAPICall,
+  AllowSelectionOnly
 }
 
 export default meta
