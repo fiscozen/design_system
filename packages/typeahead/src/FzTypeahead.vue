@@ -1,51 +1,3 @@
-<template>
-  <FzSelect
-    ref="fzselect"
-    @select="(val) => emit('fztypeahead:select', val)"
-    :disabled
-    v-bind="safeSelectOpts"
-    v-model="model"
-    :overrideOpener
-  >
-    <template #opener="{ handlePickerClick, isOpen }">
-      <div class="w-full flex gap-8" ref="openerContainer">
-        <FzInput
-          ref="opener"
-          v-bind="safeInputProps"
-          :modelValue="inputValue"
-          @update:modelValue="(e: string) => handleInput(e, isOpen)"
-          @focus="handleInputFocus(isOpen, handlePickerClick)"
-          :rightIcon="isOpen ? 'chevron-up' : 'chevron-down'"
-        >
-          <template #left-icon>
-            <FzIcon
-              v-if="leftIcon"
-              :name="leftIcon"
-              :size
-              :variant="leftIconVariant"
-            />
-          </template>
-          <template #right-icon>
-            <FzIcon
-              v-if="rightIcon"
-              :name="rightIcon"
-              :size
-              :variant="rightIconVariant"
-            />
-            <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" :size />
-          </template>
-          <template #errorMessage>
-            <slot name="errorMessage">{{ errorMessage }}</slot>
-          </template>
-          <template #helpText>
-            <slot name="helpText">{{ helpText }}</slot>
-          </template>
-        </FzInput>
-      </div>
-    </template>
-  </FzSelect>
-</template>
-
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { FzTypeaheadProps } from "./types";
@@ -57,12 +9,14 @@ import {
 } from "@fiscozen/select";
 import { FzInput, FzInputProps } from "@fiscozen/input";
 import { FzIcon } from "@fiscozen/icons";
+import { useClickOutside } from '@fiscozen/composables';
 import Fuse from "fuse.js";
 
 const props = withDefaults(defineProps<FzTypeaheadProps>(), {
   size: "md",
   delayTime: 500,
   filtrable: true,
+  allowFreeInput: true
 });
 const emit = defineEmits(["fztypeahead:input", "fztypeahead:select"]);
 
@@ -85,6 +39,7 @@ const [model, modelModifiers] = defineModel<string, "object">({
 });
 
 const opener = ref<any>();
+const openerContainer = ref<any>();
 const fzselect = ref<any>();
 
 const overrideOpener = computed(() => {
@@ -97,6 +52,18 @@ const inputValue = ref<string>("");
 const fuseOptions = {
   keys: ["label"],
 };
+
+useClickOutside(openerContainer, () => {
+  if (props.allowFreeInput) {
+    return;
+  }
+  const selected = internalOptions.value?.find((opt) => opt.label === inputValue.value);
+  if (!selected) {
+    inputValue.value = model.value.label;
+  } else {
+    model.value = selected;
+  }
+});
 
 const dynFuse = computed(() => {
   const res = props.selectProps ? props.selectProps?.options : props.options;
@@ -149,9 +116,9 @@ const debounceHandleInput = debounce(
 );
 
 function handleInput(val: string, isOpen: boolean) {
-  inputValue.value = val;
   const selected = internalOptions.value?.find((opt) => opt.value === val);
-  if (!selected) model.value = undefined;
+  inputValue.value = val;
+  if (!selected && props.allowFreeInput) model.value = undefined;
   debounceHandleInput(val);
   if (!isOpen) {
     fzselect.value.forceOpen();
@@ -197,5 +164,53 @@ const safeInputProps = computed<FzInputProps>(() => ({
   ...props.inputProps,
 }));
 </script>
+
+<template>
+  <FzSelect
+    ref="fzselect"
+    @select="(val) => emit('fztypeahead:select', val)"
+    :disabled
+    v-bind="safeSelectOpts"
+    v-model="model"
+    :overrideOpener
+  >
+    <template #opener="{ handlePickerClick, isOpen }">
+      <div class="w-full flex gap-8" ref="openerContainer">
+        <FzInput
+          ref="opener"
+          v-bind="safeInputProps"
+          :modelValue="inputValue"
+          @update:modelValue="(e: string) => handleInput(e, isOpen)"
+          @focus="handleInputFocus(isOpen, handlePickerClick)"
+          :rightIcon="isOpen ? 'chevron-up' : 'chevron-down'"
+        >
+          <template #left-icon>
+            <FzIcon
+              v-if="leftIcon"
+              :name="leftIcon"
+              :size
+              :variant="leftIconVariant"
+            />
+          </template>
+          <template #right-icon>
+            <FzIcon
+              v-if="rightIcon"
+              :name="rightIcon"
+              :size
+              :variant="rightIconVariant"
+            />
+            <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" :size />
+          </template>
+          <template #errorMessage>
+            <slot name="errorMessage">{{ errorMessage }}</slot>
+          </template>
+          <template #helpText>
+            <slot name="helpText">{{ helpText }}</slot>
+          </template>
+        </FzInput>
+      </div>
+    </template>
+  </FzSelect>
+</template>
 
 <style scoped></style>

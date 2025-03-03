@@ -79,6 +79,10 @@ interface FzTypeaheadProps {
    * Default empty search behavior
    */
   emptySearchNoFilter?: boolean;
+  /**
+   * Allow free input (not selection)
+   */
+  allowFreeInput?: boolean;
 }
 
 export { FzTypeaheadProps };
