@@ -339,7 +339,7 @@ const AllowSelectionOnly: Story = {
     },
     label: 'This is a label',
     placeholder: 'This is a placeholder',
-    allowFreeInput: false,
+    disableFreeInput: true,
   },
   render: (args) => ({
     components: { FzTypeahead },
