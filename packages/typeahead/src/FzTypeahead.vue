@@ -54,14 +54,21 @@ const fuseOptions = {
 };
 
 useClickOutside(openerContainer, () => {
-  if (!props.disableFreeInput) {
+  const valid = internalOptions.value?.find((opt) => opt.label === inputValue.value);
+  if (!props.disableFreeInput || (props.disableFreeInput && !valid && !model.value)) {
     return;
   }
-  const selected = internalOptions.value?.find((opt) => opt.label === inputValue.value);
-  if (!selected) {
-    inputValue.value = model.value.label;
+  if (!valid) {
+    const oldChoice = modelModifiers.object ? model.value : internalOptions.value?.find((opt) => opt.value === model.value);
+    // internal options might have changed and old choice might not be available anymore
+    if (!oldChoice) {
+      inputValue.value = undefined;
+      model.value = undefined;
+    } else {
+      inputValue.value = modelModifiers.object ? oldChoice : oldChoice.label;
+    }
   } else {
-    model.value = selected;
+    model.value = modelModifiers.object ? valid : valid.value;
   }
 });
 
@@ -100,7 +107,8 @@ function updateModelDependencies(value?: string) {
     return;
   }
 
-  const selected = internalOptions.value?.find((opt) => opt.value === value);
+  const safeVal = modelModifiers.object ? value.value : value;
+  const selected = internalOptions.value?.find((opt) => opt.value === safeVal);
 
   if (!selected) {
     console.warn(`Could not find option with value: ${value}`);
@@ -130,8 +138,10 @@ const internalOptions = computed<FzSelectOptionsProps[] | undefined>(() => {
 
   if (props.filteredOptions) {
     res = props.filteredOptions;
+    updateModelDependencies(model.value);
   } else if (!props.filtrable) {
     res = props.selectProps?.options;
+    updateModelDependencies(model.value);
   } else if (props.filterFn) {
     res = props.filterFn(inputValue.value);
   } else if (inputValue.value) {
@@ -141,10 +151,6 @@ const internalOptions = computed<FzSelectOptionsProps[] | undefined>(() => {
   }
 
   return res;
-});
-
-watch(internalOptions, () => {
-  updateModelDependencies(model.value);
 });
 
 const safeSelectOpts = computed<FzSelectProps>(() => ({

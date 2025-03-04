@@ -316,7 +316,7 @@ const RemoteLoadingWithAPICall: Story = {
     },
     template: `
       <div class="h-[100vh] w-[100-vw] p-16">
-        <FzTypeahead v-bind="args" v-model="text" @fztypeahead:input="onInputChange"/>
+        <FzTypeahead v-bind="args" v-model="text" disableFreeInput @fztypeahead:input="onInputChange"/>
       </div>
     `
   }),
