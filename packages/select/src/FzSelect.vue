@@ -1,6 +1,7 @@
 <template>
   <FzFloating
     :position="position ?? 'auto-vertical-start'"
+    ref="floatingRef"
     :isOpen
     class="flex flex-col gap-8 overflow-visible"
     :teleport="teleport"
@@ -138,6 +139,7 @@ const visibleOptions = ref<FzSelectOptionsProps[]>([]);
 const OPTIONS_HEIGHT = 20;
 const OPTIONS_BUFFER = 5;
 const maxHeight = ref("");
+const floatingRef = ref<InstanceType<typeof FzFloating>>();
 
 const calculateMaxHeight = (
   rect: Ref<DOMRect | undefined>,
@@ -156,6 +158,7 @@ const calculateMaxHeight = (
     maxHeight.value = pos.includes("bottom")
       ? `calc(100vh - ${bottom}px - ${OPTIONS_BUFFER * OPTIONS_HEIGHT}px)`
       : `${top}px`;
+    floatingRef.value?.setPosition(true);
   });
 };
 

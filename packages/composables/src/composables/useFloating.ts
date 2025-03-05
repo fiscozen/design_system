@@ -38,7 +38,7 @@ export const useFloating = (
   const floatObserver = ref(new IntersectionObserver(handleIntersect, options))
   const actualPosition = ref<FzFloatingPosition>()
 
-  const setPosition = () =>
+  const setPosition = (ignoreCallback: boolean = false) =>
     nextTick(() => {
       actualPosition.value = args.position ? args.position.value : 'auto'
       safeElementDomRef.value = (
@@ -297,9 +297,6 @@ export const useFloating = (
         translateY = 0
       }
 
-      if(float.position.y < 0) float.position.y = 0
-      if(float.position.x < 0) float.position.x = 0
-
       safeElementDomRef.value.style.top = `${float.position.y}px`
       safeElementDomRef.value.style.left = `${float.position.x}px`
       safeElementDomRef.value.style.position = 'fixed'
@@ -307,7 +304,7 @@ export const useFloating = (
 
       rect.value = safeElementDomRef.value.getBoundingClientRect()
 
-      if (args.callback?.value) {
+      if (args.callback?.value && !ignoreCallback) {
         args.callback.value(rect, openerRect, containerRect, position, actualPosition)
       }
     })

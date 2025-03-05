@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, useSlots, watch, toRef, computed, onBeforeUnmount, toRefs } from 'vue'
+import { ref, useSlots, watch, toRef, computed, onBeforeUnmount, toRefs, defineExpose } from 'vue'
 import { useFloating } from './composables'
 import { FzFloatingProps, FzUseFloatingArgs } from './types'
 
@@ -100,6 +100,10 @@ const contentClass = computed(() => {
   }
 
   return ['bg-core-white fixed p-4', props.contentClass]
+})
+
+defineExpose({
+  setPosition: floating.setPosition
 })
 </script>
 
