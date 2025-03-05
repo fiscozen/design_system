@@ -297,6 +297,9 @@ export const useFloating = (
         translateY = 0
       }
 
+      if(float.position.y < 0) float.position.y = 0
+      if(float.position.x < 0) float.position.x = 0
+
       safeElementDomRef.value.style.top = `${float.position.y}px`
       safeElementDomRef.value.style.left = `${float.position.x}px`
       safeElementDomRef.value.style.position = 'fixed'
