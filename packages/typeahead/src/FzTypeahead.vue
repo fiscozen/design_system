@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch, reactive, nextTick } from "vue";
 import { FzTypeaheadProps } from "./types";
 import { debounce } from "./utils";
 import {
@@ -138,10 +138,14 @@ const internalOptions = computed<FzSelectOptionsProps[] | undefined>(() => {
 
   if (props.filteredOptions) {
     res = props.filteredOptions;
-    updateModelDependencies(model.value);
+    nextTick(() => {
+      updateModelDependencies(model.value);
+    })
   } else if (!props.filtrable) {
     res = props.selectProps?.options;
-    updateModelDependencies(model.value);
+    nextTick(() => {
+      updateModelDependencies(model.value);
+    })
   } else if (props.filterFn) {
     res = props.filterFn(inputValue.value);
   } else if (inputValue.value) {
@@ -153,7 +157,7 @@ const internalOptions = computed<FzSelectOptionsProps[] | undefined>(() => {
   return res;
 });
 
-const safeSelectOpts = computed<FzSelectProps>(() => ({
+const safeSelectOpts = computed<FzSelectProps>(() => reactive({
   position: "bottom",
   ...props.selectProps,
   options: internalOptions.value || [],
