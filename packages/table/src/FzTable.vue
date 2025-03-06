@@ -192,36 +192,38 @@ const handleOrderingClick = (colProps: FzColumnProps) => {
         >
           Azioni
         </div>
-        <div
-          class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100"
-          v-if="internalValue?.length"
-          v-for="(row, index) in internalValue"
-          :aria-rowindex="index + 1"
-          :style="colSpan"
-          role="row"
-        >
-          <slot :name="`row-${index}`" :columns :data="row" :actions>
-            <FzRow :columns :data="row" :actions> </FzRow>
-          </slot>
-        </div>
-        <div
-          v-else-if="rows && rows.length"
-          :class="[
-            'grid grid-cols-subgrid border-b-1 border-solid border-grey-100',
-            bodyStaticClasses,
-          ]"
-          v-for="(row, index) in rows"
-          :aria-rowindex="index + 1"
-          :style="colSpan"
-          role="row"
-        >
-          <component
-            v-if="row.children?.default"
-            :is="row.children.default"
-            :actions
-            :columns
-          />
-        </div>
+        <template v-if="internalValue?.length">
+          <div
+            class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100"
+            v-for="(row, index) in internalValue"
+            :aria-rowindex="index + 1"
+            :style="colSpan"
+            role="row"
+          >
+            <slot :name="`row-${index}`" :columns :data="row" :actions>
+              <FzRow :columns :data="row" :actions> </FzRow>
+            </slot>
+          </div>
+        </template>
+        <template v-else-if="rows && rows.length">
+          <div
+            :class="[
+              'grid grid-cols-subgrid border-b-1 border-solid border-grey-100',
+              bodyStaticClasses,
+            ]"
+            v-for="(row, index) in rows"
+            :aria-rowindex="index + 1"
+            :style="colSpan"
+            role="row"
+          >
+            <component
+              v-if="row.children?.default"
+              :is="row.children.default"
+              :actions
+              :columns
+            />
+          </div>
+        </template>
         <div
           v-else
           class="fz__table__empty h-full mt-80 justify-self-center"
