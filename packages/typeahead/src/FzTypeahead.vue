@@ -53,6 +53,8 @@ const fuseOptions = {
   keys: ["label"],
 };
 
+const dirtyInput = ref(false);
+
 useClickOutside(openerContainer, () => {
   const valid = internalOptions.value?.find((opt) => opt.label === inputValue.value);
   if (!props.disableFreeInput || (props.disableFreeInput && !valid && !model.value)) {
@@ -66,6 +68,7 @@ useClickOutside(openerContainer, () => {
       model.value = undefined;
     } else {
       inputValue.value = modelModifiers.object ? oldChoice : oldChoice.label;
+      dirtyInput.value = false;
     }
   } else {
     model.value = modelModifiers.object ? valid : valid.value;
@@ -115,7 +118,9 @@ function updateModelDependencies(value?: string) {
     return;
   }
 
-  inputValue.value = selected.label;
+  if (!dirtyInput.value) {
+    inputValue.value = selected.label;
+  }
 }
 
 const debounceHandleInput = debounce(
@@ -124,6 +129,7 @@ const debounceHandleInput = debounce(
 );
 
 function handleInput(val: string, isOpen: boolean) {
+  dirtyInput.value = true;
   const selected = internalOptions.value?.find((opt) => opt.value === val);
   inputValue.value = val;
   if (!selected && !props.disableFreeInput) model.value = undefined;
@@ -131,6 +137,11 @@ function handleInput(val: string, isOpen: boolean) {
   if (!isOpen) {
     fzselect.value.forceOpen();
   }
+}
+
+function handleSelection(val: string) {
+  dirtyInput.value = false;
+  emit('fztypeahead:select', val);
 }
 
 const internalOptions = computed<FzSelectOptionsProps[] | undefined>(() => {
@@ -178,7 +189,7 @@ const safeInputProps = computed<FzInputProps>(() => ({
 <template>
   <FzSelect
     ref="fzselect"
-    @select="(val) => emit('fztypeahead:select', val)"
+    @select="handleSelection"
     :disabled
     v-bind="safeSelectOpts"
     v-model="model"
