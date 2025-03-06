@@ -293,16 +293,17 @@ const RemoteLoading: Story = {
 
 function remoteCallback(this: typeof FzTypeahead, text?: string) {
   const asyncCall = async () => {
-    const res = await fetch(`https://dummyjson.com/users/search?q=${text}`)
+    const safeText = text.replace(' ', '.');
+    const res = await fetch(`https://dummyjson.com/users/search?q=${safeText}`)
     const data = await res.json()
     const delay = ms => new Promise(res => setTimeout(res, ms));
-    await delay(5000)
+    await delay(3000)
     this.args.selectProps.options = data.users.map((user: any) => ({
       label: user.firstName + ' ' + user.lastName,
       value: user.id
     }))
   }
-  asyncCall()
+  return asyncCall()
 }
 
 const RemoteLoadingWithAPICall: Story = {
