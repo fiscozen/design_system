@@ -142,7 +142,7 @@ const handleOrderingClick = (colProps: FzColumnProps) => {
         data-cy="fztable-search"
         class="mb-8 max-w-xs"
         :label="props.searchFilterLabel"
-        @update:modelValue="(e: string) => emit('update:searchTerm', e)"
+        @update:modelValue="emit('update:searchTerm', $event)"
       />
     </div>
     <div class="fz__table overflow-auto size-full">
