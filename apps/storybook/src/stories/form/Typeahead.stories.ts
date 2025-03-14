@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzTypeahead, FzTypeaheadProps } from '@fiscozen/typeahead'
 import { FzButton } from '@fiscozen/button'
-import { ref, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import { FzSelectOptionsProps } from '@fiscozen/select'
 
 const meta: Meta<typeof FzTypeahead> = {
@@ -244,30 +244,36 @@ const remoteOptions = [
   { label: 'Baz', value: 'baz' },
   { label: 'Qux', value: 'qux' }
 ]
-const filteredOptions = ref<FzSelectOptionsProps[]>([])
+const selectProps = ref<any>({ options: [] })
 
 async function remoteLoader(searchString: string) {
   const result: FzSelectOptionsProps[] = await new Promise((resolve) => {
     setTimeout(() => {
       resolve(
-        !searchString ?
-          remoteOptions :
-          remoteOptions.filter((record) => {
-            return record.value.toLowerCase().indexOf(searchString.toLowerCase()) >= 0
-          })
+        !searchString
+          ? remoteOptions
+          : remoteOptions.filter((record) => {
+              return record.value.toLowerCase().indexOf(searchString.toLowerCase()) >= 0
+            })
       )
     }, 500)
   })
-  filteredOptions.value = result
+  return result
 }
 
 const RemoteLoading: Story = {
   render: (args) => ({
     components: { FzTypeahead },
     setup() {
-      const text = ref()
+      const text = ref('foo')
+      onMounted(() => {
+        remoteLoader('').then((res) => {
+          selectProps.value.options = res
+        })
+      })
       return {
         text,
+        selectProps,
         args
       }
     },
@@ -276,27 +282,18 @@ const RemoteLoading: Story = {
     },
     template: `
       <div class="h-[100vh] w-[100-vw] p-16">
-        <FzTypeahead v-bind="args" v-model="text" @fztypeahead:input="onInputChange"/>
+        <FzTypeahead label="label" placeholder="aaaaa" :filtrable="true" v-model="text" :selectProps @fztypeahead:input="onInputChange"/>
       </div>
     `
-  }),
-  args: {
-    label: 'This is a label',
-    placeholder: 'This is a placeholder',
-    selectProps: {
-      options: [],
-      isOpen: false
-    },
-    filteredOptions
-  }
+  })
 }
 
 function remoteCallback(this: typeof FzTypeahead, text?: string) {
   const asyncCall = async () => {
-    const safeText = text.replace(' ', '.');
+    const safeText = text.replace(' ', '.')
     const res = await fetch(`https://dummyjson.com/users/search?q=${safeText}`)
     const data = await res.json()
-    const delay = ms => new Promise(res => setTimeout(res, ms));
+    const delay = (ms) => new Promise((res) => setTimeout(res, ms))
     await delay(3000)
     this.args.selectProps.options = data.users.map((user: any) => ({
       label: user.firstName + ' ' + user.lastName,
@@ -311,10 +308,10 @@ const RemoteLoadingWithAPICall: Story = {
     components: { FzTypeahead },
     setup() {
       const text = ref()
-      const fn = remoteCallback.bind({args})
+      const fn = remoteCallback.bind({ args })
       fn('')
       setTimeout(() => {
-        text.value = 5;
+        text.value = 5
       }, 0)
       return {
         text,
@@ -346,11 +343,11 @@ const AllowSelectionOnly: Story = {
   args: {
     selectProps: {
       options,
-      isOpen: false,
+      isOpen: false
     },
     label: 'This is a label',
     placeholder: 'This is a placeholder',
-    disableFreeInput: true,
+    disableFreeInput: true
   },
   render: (args) => ({
     components: { FzTypeahead },
@@ -371,7 +368,7 @@ const AllowSelectionOnly: Story = {
         <pre>{{text}}</pre>
         <FzTypeahead v-bind="args" v-model="text" @fztypeahead:input="onInputChange"/>
       </div>
-    `,
+    `
   })
 }
 

@@ -9,14 +9,14 @@ import {
 } from "@fiscozen/select";
 import { FzInput, FzInputProps } from "@fiscozen/input";
 import { FzIcon } from "@fiscozen/icons";
-import { useClickOutside } from '@fiscozen/composables';
+import { useClickOutside } from "@fiscozen/composables";
 import Fuse from "fuse.js";
 
 const props = withDefaults(defineProps<FzTypeaheadProps>(), {
   size: "md",
   delayTime: 500,
   filtrable: true,
-  disableFreeInput: false
+  disableFreeInput: false,
 });
 const emit = defineEmits(["fztypeahead:input", "fztypeahead:select"]);
 
@@ -56,12 +56,19 @@ const fuseOptions = {
 const dirtyInput = ref(false);
 
 useClickOutside(openerContainer, () => {
-  const valid = internalOptions.value?.find((opt) => opt.label === inputValue.value);
-  if (!props.disableFreeInput || (props.disableFreeInput && !valid && !model.value)) {
+  const valid = internalOptions.value?.find(
+    (opt) => opt.label === inputValue.value,
+  );
+  if (
+    !props.disableFreeInput ||
+    (props.disableFreeInput && !valid && !model.value)
+  ) {
     return;
   }
   if (!valid) {
-    const oldChoice = modelModifiers.object ? model.value : internalOptions.value?.find((opt) => opt.value === model.value);
+    const oldChoice = modelModifiers.object
+      ? model.value
+      : internalOptions.value?.find((opt) => opt.value === model.value);
     // internal options might have changed and old choice might not be available anymore
     if (!oldChoice) {
       inputValue.value = undefined;
@@ -141,7 +148,7 @@ function handleInput(val: string, isOpen: boolean) {
 
 function handleSelection(val: string) {
   dirtyInput.value = false;
-  emit('fztypeahead:select', val);
+  emit("fztypeahead:select", val);
 }
 
 const internalOptions = computed<FzSelectOptionsProps[] | undefined>(() => {
@@ -149,14 +156,8 @@ const internalOptions = computed<FzSelectOptionsProps[] | undefined>(() => {
 
   if (props.filteredOptions) {
     res = props.filteredOptions;
-    nextTick(() => {
-      updateModelDependencies(model.value);
-    })
   } else if (!props.filtrable) {
     res = props.selectProps?.options;
-    nextTick(() => {
-      updateModelDependencies(model.value);
-    })
   } else if (props.filterFn) {
     res = props.filterFn(inputValue.value);
   } else if (inputValue.value) {
@@ -165,15 +166,21 @@ const internalOptions = computed<FzSelectOptionsProps[] | undefined>(() => {
       .map((searchRes) => searchRes.item);
   }
 
+  nextTick(() => {
+    updateModelDependencies(model.value);
+  });
+
   return res;
 });
 
-const safeSelectOpts = computed<FzSelectProps>(() => reactive({
-  position: "bottom",
-  ...props.selectProps,
-  options: internalOptions.value || [],
-  extOpener: safeInputContainer.value,
-}));
+const safeSelectOpts = computed<FzSelectProps>(() =>
+  reactive({
+    position: "bottom",
+    ...props.selectProps,
+    options: internalOptions.value || [],
+    extOpener: safeInputContainer.value,
+  }),
+);
 
 const safeInputProps = computed<FzInputProps>(() => ({
   placeholder: props.placeholder,
