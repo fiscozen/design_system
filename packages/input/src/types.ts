@@ -4,7 +4,7 @@ type FzInputProps = {
   /**
    * The label displayed on top of the input
    */
-  label: string;
+  label?: string;
   /**
    * The size of the input
    */

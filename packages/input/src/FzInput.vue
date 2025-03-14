@@ -1,6 +1,6 @@
 <template>
   <div class="fz-input w-full flex flex-col gap-8">
-    <label :class="['text-sm', computedLabelClass]" :for="uniqueId">
+    <label :class="['text-sm', computedLabelClass]" :for="uniqueId" v-if="label">
       {{ label }}{{ required ? " *" : "" }}
     </label>
     <div
