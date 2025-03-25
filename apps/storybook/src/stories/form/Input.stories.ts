@@ -170,7 +170,7 @@ const MaxLength: Story = {
 
 const ShowHidePassword: Story = {
   args: {
-    rightIconClass: 'cursor-pointer',
+    rightIconClass: 'cursor-pointer'
   },
   render: (args) => ({
     components: { FzInput },
@@ -187,11 +187,10 @@ const ShowHidePassword: Story = {
     },
     methods: {
       onRighClick() {
-        if(this.icon === 'eye') {
+        if (this.icon === 'eye') {
           this.icon = 'eye-slash'
           this.type = 'text'
-        }
-        else {
+        } else {
           this.icon = 'eye'
           this.type = 'password'
         }
@@ -205,7 +204,26 @@ const ShowHidePassword: Story = {
   })
 }
 
+const CustomLabel: Story = {
+  render: (args) => ({
+    components: { FzInput },
+    setup() {
+      return {
+        args
+      }
+    },
+    template: `
+      <div>
+        <FzInput v-bind="args">
+          <template #label><b>This is a custom label</b></template>
+        </FzInput>
+      </div>
+    `
+  })
+}
+
 export {
+  CustomLabel,
   Default,
   LeftIcon,
   RightIcon,

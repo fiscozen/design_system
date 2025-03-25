@@ -68,9 +68,9 @@ const NullOnEmpty: Story = {
 
 const MinMax: Story = {
   render: (args) => ({
-    components: {FzCurrencyInput},
+    components: { FzCurrencyInput },
     setup() {
-      const value = ref();
+      const value = ref()
       return {
         value,
         args
@@ -86,9 +86,9 @@ const MinMax: Story = {
 
 const Step: Story = {
   render: (args) => ({
-    components: {FzCurrencyInput},
+    components: { FzCurrencyInput },
     setup() {
-      const value = ref();
+      const value = ref()
       return {
         value,
         args
@@ -103,9 +103,9 @@ const Step: Story = {
 
 const ForcedStep: Story = {
   render: (args) => ({
-    components: {FzCurrencyInput},
+    components: { FzCurrencyInput },
     setup() {
-      const value = ref();
+      const value = ref()
       return {
         value,
         args
@@ -119,12 +119,26 @@ const ForcedStep: Story = {
   }
 }
 
-export {
-  Default,
-  NullOnEmpty,
-  MinMax,
-  Step,
-  ForcedStep
+const CustomLabel: Story = {
+  render: (args) => ({
+    components: { FzCurrencyInput },
+    setup() {
+      const value = ref()
+      return {
+        value,
+        args
+      }
+    },
+    template: `
+  <FzCurrencyInput v-bind="args" v-model:amount="value">
+    <template #label><b>This is a custom label</b></template>
+  </FzCurrencyInput>`
+  }),
+  args: {
+    step: 4,
+    forceStep: true
+  }
 }
+export { CustomLabel, Default, NullOnEmpty, MinMax, Step, ForcedStep }
 
 export default meta
