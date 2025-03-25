@@ -22,6 +22,9 @@
         ></FzIcon>
       </div>
     </template>
+    <template #label>
+      <slot name="label"></slot>
+    </template>
   </FzInput>
 </template>
 
