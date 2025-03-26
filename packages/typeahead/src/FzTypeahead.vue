@@ -212,6 +212,9 @@ const safeInputProps = computed<FzInputProps>(() => ({
           @focus="handleInputFocus(isOpen, handlePickerClick)"
           :rightIcon="isOpen ? 'chevron-up' : 'chevron-down'"
         >
+          <template #label>
+            <slot name="label"></slot>
+          </template>
           <template #left-icon>
             <FzIcon
               v-if="leftIcon"
