@@ -19,3 +19,20 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Primary: Story = {}
+
+export const WithSlot: Story = {
+  args: {},
+  render: () => ({
+    components: { FzViewFlag },
+    template: `
+      <FzViewFlag>
+        <template #default>
+          <div class="flex flex-col gap-8">
+            <div>Slot content</div>
+            <div>Slot content2</div>
+          </div>
+        </template>
+      </FzViewFlag>
+    `
+  })
+}

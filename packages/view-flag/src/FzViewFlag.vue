@@ -4,20 +4,26 @@
   <div class="w-full h-8 bg-semantic-warning fixed top-0 left-0 z-50"></div>
   <div class="w-full h-8 bg-semantic-warning fixed bottom-0 left-0 z-50"></div>
   <div
-    class="h-32 bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center bottom-8 fixed m-auto left-1/2 -translate-x-1/2 z-50"
+    :class="{
+      'h-32': !slots.default,
+    }"
+    class="bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center bottom-8 fixed m-auto left-1/2 -translate-x-1/2 z-50"
   >
-    <FzBadge v-if="props.environment">{{ props.environment }}</FzBadge>
-    <div>
-      <template v-if="props.role">{{ props.role }}: </template>
-      <template v-if="props.firstName && props.lastName"
-        >{{ props.firstName }} {{ props.lastName[0] }}.</template
-      >
-    </div>
+    <slot>
+      <FzBadge v-if="props.environment">{{ props.environment }}</FzBadge>
+      <div>
+        <template v-if="props.role">{{ props.role }}: </template>
+        <template v-if="props.firstName && props.lastName"
+          >{{ props.firstName }} {{ props.lastName[0] }}.</template
+        >
+      </div>
+    </slot>
   </div>
 </template>
 
 <script setup lang="ts">
 import { FzBadge } from "@fiscozen/badge";
+import { useSlots } from "vue";
 
 const props = withDefaults(
   defineProps<{
@@ -40,4 +46,6 @@ const props = withDefaults(
   }>(),
   {},
 );
+
+const slots = useSlots();
 </script>
