@@ -20,11 +20,11 @@ const props = withDefaults(defineProps<FzLinkProps>(), {
   size: 'lg',
   disabled: false,
   replace: false,
-  external: false,
+  external: false
 })
 
 const commonClass = computed(() => [
-  'border-1 border-transparent',
+  'border-1 border-transparent inline-block',
   {
     'text-xs': props.size === 'xs',
     'text-sm': props.size === 'sm',
