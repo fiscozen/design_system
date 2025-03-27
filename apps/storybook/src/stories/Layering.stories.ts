@@ -15,14 +15,14 @@ import { FzIcon } from '@fiscozen/icons';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
-  title: 'layering example',
+  title: 'Foundations/Layering',
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
   argTypes: {},
   args: {
     position: 'auto'
   }
-} 
+}
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -32,15 +32,15 @@ const template = `
         <FzViewFlag role="operatore" firstName="Mario" lastName="Rossi" environment="staging" />
         <FzNavbar>
             <template #brand-logo="{isMobile}">
-                <FzIcon name="fiscozen" variant="fak" size="xl" class="text-core-black text-[32px] !w-[40px] ml-[-4px] cursor-pointer" /> 
+                <FzIcon name="fiscozen" variant="fak" size="xl" class="text-core-black text-[32px] !w-[40px] ml-[-4px] cursor-pointer" />
             </template>
             <template #navigation>
-                <FzNavlink label="Fatture" /> 
-                <FzNavlink label="Spese" /> 
-                <FzNavlink label="Corrispettivi" /> 
-                <FzNavlink label="Adempimenti" /> 
-                <FzNavlink label="Documenti" /> 
-                <FzNavlink label="Dichiarazione" /> 
+                <FzNavlink label="Fatture" />
+                <FzNavlink label="Spese" />
+                <FzNavlink label="Corrispettivi" />
+                <FzNavlink label="Adempimenti" />
+                <FzNavlink label="Documenti" />
+                <FzNavlink label="Dichiarazione" />
             </template>
         </FzNavbar>
         <FzTopbar>This is a Topbar</FzTopbar>
@@ -60,7 +60,7 @@ const template = `
                     <FzTooltip text="tooltip text" status="neutral">
                         <FzButton>hover</FzButton>
                     </FzTooltip>
-                </div> 
+                </div>
                 <div class="flex my-4 gap-8 items-start">
                     <FzButton @click="handleEnqueue('success')">Success</FzButton>
                     <FzButton @click="handleEnqueue('warning')">Warning</FzButton>

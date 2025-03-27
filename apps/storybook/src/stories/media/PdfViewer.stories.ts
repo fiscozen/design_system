@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzPdfViewer } from '@fiscozen/pdf-viewer'
 
 const meta: Meta<typeof FzPdfViewer> = {
-  title: '@fiscozen/pdf-viewer/FzPdfViewer',
+  title: 'Media/FzPdfViewer',
   component: FzPdfViewer,
   tags: ['autodocs'],
   argTypes: {},

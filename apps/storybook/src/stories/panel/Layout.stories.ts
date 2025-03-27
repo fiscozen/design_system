@@ -6,7 +6,7 @@ import { breakpoints } from '@fiscozen/style'
 import { FzButton } from '@fiscozen/button';
 
 const meta: Meta<typeof FzLayout> = {
-  title: '@fiscozen/layout/FzLayout',
+  title: 'Panel/FzLayout',
   component: FzLayout,
   tags: ['autodocs'],
   argTypes: {},
@@ -16,7 +16,7 @@ const meta: Meta<typeof FzLayout> = {
       template: `
       <div class="opacity">
         <div>
-          <story /> 
+          <story />
         </div>
       </div>
       `
