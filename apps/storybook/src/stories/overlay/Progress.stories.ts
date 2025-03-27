@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzProgress } from '@fiscozen/progress'
 
 const meta: Meta<typeof FzProgress> = {
-  title: '@fiscozen/progress/FzProgress',
+  title: 'Overlay/FzProgress',
   component: FzProgress,
   tags: ['autodocs'],
   argTypes: {
@@ -29,7 +29,7 @@ const Default: Story = {
     },
     template: `
         <div class="flex w-dvw h-dvh justify-center items-center">
-          <FzProgress v-bind="args"/> 
+          <FzProgress v-bind="args"/>
         </div>
       `
   })
