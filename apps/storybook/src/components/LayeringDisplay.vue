@@ -63,7 +63,7 @@
         <tr>
           <td>-z-1</td>
           <td>z-index:-1</td>
-          <td>Deep z-index can be used to move an element behind everyting else</td>
+          <td>Deep z-index can be used to move an element behind everything else</td>
           <td> -/- </td>
         </tr>
         <tr>
