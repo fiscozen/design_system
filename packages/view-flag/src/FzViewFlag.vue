@@ -4,9 +4,6 @@
   <div class="w-full h-8 bg-semantic-warning fixed top-0 left-0 z-50"></div>
   <div class="w-full h-8 bg-semantic-warning fixed bottom-0 left-0 z-50"></div>
   <div
-    :class="{
-      'h-32': !slots.default,
-    }"
     class="bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center bottom-8 fixed m-auto left-1/2 -translate-x-1/2 z-50"
   >
     <slot>
@@ -46,6 +43,4 @@ const props = withDefaults(
   }>(),
   {},
 );
-
-const slots = useSlots();
 </script>
