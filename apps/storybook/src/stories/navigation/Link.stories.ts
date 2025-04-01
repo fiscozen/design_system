@@ -58,6 +58,15 @@ const DefaultExternal: Story = {
   }
 }
 
-export { Default, Danger, DefaultUnderline, DangerUnderline, DefaultExternal }
+const ExternalWithLongText: Story = {
+  args: {
+    external: true,
+    to: 'https://example.com',
+    target: '_blank',
+    default: 'This is a long text link to break the line and test the focus outline'
+  }
+}
+
+export { Default, Danger, DefaultUnderline, DangerUnderline, DefaultExternal, ExternalWithLongText }
 
 export default meta
