@@ -20,7 +20,6 @@
 
 <script setup lang="ts">
 import { FzBadge } from "@fiscozen/badge";
-import { useSlots } from "vue";
 
 const props = withDefaults(
   defineProps<{
