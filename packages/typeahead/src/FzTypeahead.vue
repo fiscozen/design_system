@@ -31,9 +31,6 @@ const [model, modelModifiers] = defineModel<string, "object">({
     return value;
   },
   get(value) {
-    if (modelModifiers.object) {
-      return (value as unknown as FzSelectOptionsProps)?.value;
-    }
     return value;
   },
 });
@@ -137,7 +134,7 @@ const debounceHandleInput = debounce(
 
 function handleInput(val: string, isOpen: boolean) {
   dirtyInput.value = true;
-  const selected = internalOptions.value?.find((opt) => opt.value === val);
+  const selected = internalOptions.value?.find((opt) => opt.label === val);
   inputValue.value = val;
   if (!selected && !props.disableFreeInput) model.value = undefined;
   debounceHandleInput(val);
@@ -191,6 +188,10 @@ const safeInputProps = computed<FzInputProps>(() => ({
   size: props.size,
   ...props.inputProps,
 }));
+
+const handleSelectUpdate = (val: string) => {
+  model.value = val;
+};
 </script>
 
 <template>
@@ -199,7 +200,8 @@ const safeInputProps = computed<FzInputProps>(() => ({
     @select="handleSelection"
     :disabled
     v-bind="safeSelectOpts"
-    v-model="model"
+    :modelValue="modelModifiers.object ? model.value : model"
+    @update:modelValue="handleSelectUpdate"
     :overrideOpener
   >
     <template #opener="{ handlePickerClick, isOpen }">
