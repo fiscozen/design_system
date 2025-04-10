@@ -1,8 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`FzButton > should match snapshot 1`] = `
-"<button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-  <!--v-if-->
-  <!--v-if--><span class="hidden h-0 w-0">some text</span>
-</button>"
-`;

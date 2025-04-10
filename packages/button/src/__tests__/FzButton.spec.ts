@@ -9,7 +9,8 @@ describe('FzButton', () => {
       props: {
         tooltip: 'some text',
         disabled: false,
-        iconName: 'bell'
+        iconName: 'bell',
+        label: 'some label',
       }
     })
 
