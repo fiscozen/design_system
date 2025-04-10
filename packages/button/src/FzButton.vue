@@ -81,10 +81,11 @@ const props = withDefaults(
   {
     variant: 'primary',
     size: 'md',
-    disabled: false
+    disabled: false,
+    iconPosition: 'before',
   }
 )
-
+console.log('FzButton', props)
 const slots = useSlots()
 
 const customVariantClasses = computed(() => {
