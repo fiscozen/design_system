@@ -7,6 +7,17 @@ describe('FzButton', () => {
   it('should match snapshot', () => {
     const wrapper = mount(FzButton, {
       props: {
+        label: 'some text',
+        disabled: false,
+      }
+    })
+
+    expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  it('should match snapshot - with icon', () => {
+    const wrapper = mount(FzButton, {
+      props: {
         tooltip: 'some text',
         disabled: false,
         iconName: 'bell',

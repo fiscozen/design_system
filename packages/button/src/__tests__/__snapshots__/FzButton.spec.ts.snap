@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzButton > should match snapshot 1`] = `
+exports[`FzButton > should match snapshot - with icon 1`] = `
 "<button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
   <div class="flex items-center justify-items-center mr-6 pl-10">
     <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-bell fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -11,5 +11,13 @@ exports[`FzButton > should match snapshot 1`] = `
   <div class="flex items-center justify-items-center ml-6 pr-10">
     <!--v-if-->
   </div><span class="hidden h-0 w-0">some text</span>
+</button>"
+`;
+
+exports[`FzButton > should match snapshot 1`] = `
+"<button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
+  <!--v-if-->
+  <div class="truncate">some text</div>
+  <!--v-if--><span class="hidden h-0 w-0"></span>
 </button>"
 `;

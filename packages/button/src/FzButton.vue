@@ -85,7 +85,6 @@ const props = withDefaults(
     iconPosition: 'before',
   }
 )
-console.log('FzButton', props)
 const slots = useSlots()
 
 const customVariantClasses = computed(() => {
