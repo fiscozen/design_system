@@ -81,10 +81,10 @@ const props = withDefaults(
   {
     variant: 'primary',
     size: 'md',
-    disabled: false
+    disabled: false,
+    iconPosition: 'before',
   }
 )
-
 const slots = useSlots()
 
 const customVariantClasses = computed(() => {
