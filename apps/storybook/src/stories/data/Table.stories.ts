@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import { FzTable, FzRow, Ordering } from '@fiscozen/table'
+import { FzTable, FzRow, FzOrdering } from '@fiscozen/table'
 import { FzColumn } from '@fiscozen/simple-table'
 import { FzCollapse } from '@fiscozen/collapse'
+import { FzSelect } from '@fiscozen/select'
 import { ref, reactive, computed } from 'vue'
 
 const meta: Meta<typeof FzTable> = {
@@ -17,7 +18,8 @@ const sampleObj = {
   nome: 'Riccardo',
   cognome: 'Agnoletto',
   email: 'riccardo.agnoletto@fiscozen.it',
-  phone_number: '123456789'
+  phone_number: '123456789',
+  state: "da_inviare"
 }
 
 const items = [
@@ -51,7 +53,10 @@ const Default: Story = {
       items
     },
     pages: 10,
-    activePage: 2
+    activePage: 2,
+    title: 'Table title',
+    subtitle: 'Table subtitle',
+    newItemButtonLabel: 'Nuova fattura'
   },
   render: (args) => ({
     setup() {
@@ -93,7 +98,9 @@ const FixedColumnWidth: Story = {
       items
     },
     pages: 10,
-    activePage: 2
+    activePage: 2,
+    title: 'Table title',
+    subtitle: 'Table subtitle'
   },
   render: (args) => ({
     setup() {
@@ -106,7 +113,7 @@ const FixedColumnWidth: Story = {
     },
     template: `
       <div class="p-12">
-        <FzTable v-bind="args" gridTemplateColumns="120px 1fr 1fr 1fr">
+        <FzTable v-bind="args" gridTemplateColumns="120px 1fr 1fr 1fr 44px">
           <FzColumn header="Nome" sticky="left" />
           <FzColumn header="Cognome" />
           <FzColumn header="Email">
@@ -127,9 +134,9 @@ const FixedColumnWidth: Story = {
 
 const longTextSampleObj = {
   nome: 'Documento di prova',
-  descrizione: 
+  descrizione:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed ' +
-    'ipsum purus. Vivamus suscipit ligula vel lacus aliquet lobortis. Nunc ' + 
+    'ipsum purus. Vivamus suscipit ligula vel lacus aliquet lobortis. Nunc ' +
     'elementum ex et eleifend dapibus. Donec sagittis efficitur mi nec pulvinar. ' +
     'Donec sit amet nulla ac ex blandit cursus eget vitae dui. Donec dapibus vel ' +
     'tellus vitae fringilla. Integer pretium hendrerit mauris nec tincidunt. ' +
@@ -147,7 +154,9 @@ const LongText: Story = {
     modelValue: Array(10)
       .fill({})
       .map(() => longTextSampleObj),
-    placeholder: 'Nessun valore'
+    placeholder: 'Nessun valore',
+    title: 'Table title',
+    subtitle: 'Table subtitle'
   },
   render: (args) => ({
     setup() {
@@ -183,6 +192,8 @@ const ActionClick: Story = {
   args: {
     modelValue: rows,
     placeholder: 'Nessun valore',
+    title: 'Table title',
+    subtitle: 'Table subtitle',
     actions: {
       items: [
         {
@@ -224,7 +235,9 @@ const ActionClick: Story = {
 
 const CustomRows: Story = {
   args: {
-    placeholder: 'Nessun valore'
+    placeholder: 'Nessun valore',
+    title: 'Table title',
+    subtitle: 'Table subtitle'
   },
   render: (args) => ({
     setup() {
@@ -288,7 +301,9 @@ const ColumnOrdering: Story = {
     actions: {
       items
     },
-    internalOrdering: true
+    internalOrdering: true,
+    title: 'Table title',
+    subtitle: 'Table subtitle'
   },
   render: (args) => ({
     setup() {
@@ -299,7 +314,7 @@ const ColumnOrdering: Story = {
           direction: 'asc'
         }
       });
-      const handleNameOrdering = (ordering: Ordering, direction: Ordering['direction']) => {
+      const handleNameOrdering = (ordering: FzOrdering, direction: FzOrdering['direction']) => {
         console.log('ordering', ordering, direction)
       }
       return { args, handleNameOrdering, ordering }
@@ -332,8 +347,13 @@ const Filters: Story = {
     },
     pages: 10,
     activePage: 2,
+    searchFilterPlaceholder: 'Ricerca',
+    title: 'Table title',
+    subtitle: 'Table subtitle',
+    newItemButton: true,
+    newItemButtonLabel: 'Nuova fattura',
+    searchable: true,
     filterable: true,
-    searchFilterLabel: 'Ricerca'
   },
   render: (args) => ({
     setup() {
@@ -344,28 +364,93 @@ const Filters: Story = {
         nome: 'Francesco',
         cognome: 'Panico',
         email: 'francesco.panico@fiscozen.it',
-        phone_number: '123456789'
+        phone_number: '123456789',
+        state: 'inviata'
       }
-            
+      data[2] = {
+        nome: 'Cristian',
+        cognome: 'Barraco',
+        email: 'cristian.barraco@fiscozen.it',
+        phone_number: '4444',
+        state: 'scaduta'
+      }
+
       const searchTerm = ref('');
+      const filters = reactive({
+        state: {
+          type: 'badge',
+          value: ''
+        }
+      });
       const filteredData = computed(() => {
-        return data.filter((el) => {
-          let res = false;
-          const found = Object.values(el).find((col) => col.includes(searchTerm.value))
-          res = !!found;
+        return data.filter((el: any) => {
+          let res = true;
+          const found = Object.values(el).find((col: any) => col.includes(searchTerm.value))
+          for (const filter in filters) {
+            res &&= !filters[filter].value || (el[filter] === filters[filter].value)
+          }
+          res &&= !!found;
           return res;
         })
       })
-      return { args, filteredData, searchTerm }
+      return { args, filteredData, searchTerm, filters }
+    },
+    components: {
+      FzColumn,
+      FzSelect,
+      FzTable
+    },
+    template: `
+      <div class="p-12">
+        <FzTable
+          gridTemplateColumns="120px 1fr 1fr 1fr 1fr 44px"
+          v-bind="args"
+          v-model:searchTerm="searchTerm"
+          :modelValue="filteredData"
+          v-model:filters="filters">
+          <FzColumn header="Nome" sticky="left" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+          <FzColumn header="Stato invio" field="state" />
+          <template #filter-state>
+            <FzSelect :options="[
+                {label: 'Da inviare', value: 'da_inviare'},
+                {label: 'Inviata', value: 'inviata'},
+                {label: 'Scaduta', value: 'scaduta'},
+              ]"
+              v-model="filters.state.value"></FzSelect>
+          </template>
+        </FzTable>
+      </div>
+    `
+  })
+}
+
+const Selectable: Story = {
+  args: {
+    modelValue: Array(10)
+      .fill({})
+      .map(() => sampleObj),
+    placeholder: 'Nessun valore',
+    title: 'Table title',
+    subtitle: 'Table subtitle',
+    selectable: true
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
     },
     components: {
       FzColumn,
       FzTable
     },
     template: `
-      <div class="p-12">
-        <FzTable gridTemplateColumns="120px 1fr 1fr 1fr" v-bind="args" v-model:searchTerm="searchTerm" :modelValue="filteredData">
-          <FzColumn header="Nome" sticky="left" />
+      <div class="p-12 h-[600px]">
+        <FzTable v-bind="args">
+          <FzColumn header="Nome" />
           <FzColumn header="Cognome" />
           <FzColumn header="Email">
             <template #default="{data}"><b>{{data.email}}</b></template>
@@ -377,6 +462,76 @@ const Filters: Story = {
   })
 }
 
-export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters }
+const Accordion: Story = {
+  args: {
+    modelValue: Array(10)
+      .fill({})
+      .map(() => ({
+        ...sampleObj,
+        subRows: Array(5).fill({}).map(() => sampleObj)
+      })),
+    placeholder: 'Nessun valore',
+    title: 'Table title',
+    subtitle: 'Table subtitle',
+    variant: 'accordion'
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: {
+      FzColumn,
+      FzTable
+    },
+    template: `
+      <div class="p-12 h-[600px]">
+        <FzTable v-bind="args">
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+        </FzTable>
+      </div>
+    `
+  })
+}
+
+const FullScreen: Story = {
+  args: {
+    modelValue: Array(10)
+      .fill({})
+      .map(() => ({
+        ...sampleObj,
+      })),
+    placeholder: 'Nessun valore',
+    title: 'Table title',
+    subtitle: 'Table subtitle',
+    allowFullscreen: true
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: {
+      FzColumn,
+      FzTable
+    },
+    template: `
+      <div class="p-12 h-[600px]">
+        <FzTable v-bind="args">
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+        </FzTable>
+      </div>
+    `
+  })
+}
+export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen }
 
 export default meta

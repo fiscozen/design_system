@@ -34,6 +34,15 @@ type FzColumnProps = {
    * should be sticked to either left or right 
    */
   sticky?: 'left' | 'right';
+  /**
+   * header text justify left or right 
+   */
+  headerTextJustify?: 'left' | 'right';
+  /**
+   * Type of filter for the column 
+   */
+  filterType?: 'select' | 'date' | 'badge';
+  filter?: any
 };
 
 type FzColumnSlots = {

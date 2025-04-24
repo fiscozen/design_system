@@ -1,7 +1,8 @@
 import { FzColumnSlots, type FzColumnProps, type FzSimpleTableProps } from "@fiscozen/simple-table";
 import { type FzActionlistProps } from "@fiscozen/actionlist";
+import { IconSize } from "@fiscozen/icons";
 
-export interface Ordering {
+export interface FzOrdering {
   /**
    *  Should a column be orderable
    */
@@ -16,7 +17,34 @@ export interface Ordering {
   field?: boolean
 }
 
+export interface FzTableFilter {
+ type: 'select' | 'date' | 'badge'
+ value: any
+}
+
+export type FzTableFilters = Record<string, FzTableFilter>
+
 interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
+  /**
+   * Title of the table
+   */
+  title?: string;
+  /**
+   * Subtitle of the table
+   */
+  subtitle?: string;
+  /**
+   * Label for data records
+   */
+  recordLabel?: string;
+  /**
+   * Wether to show the new item button
+   */
+  newItemButton?: boolean;
+  /**
+   * Label for new item button
+   */
+  newItemButtonLabel?: string;
   /**
    * Actions to show in the dropdown in the action column
    */
@@ -34,21 +62,33 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
    */
   gridTemplateColumns?: string;
   /**
-   * Shows a fulltext input search filter
+   * Shows tulltext search input
    */
-  filterable?: boolean;
+  searchable?: boolean;
   /**
-   * search input value
+   * placeholder for search filter input
    */
-  searchTerm?: string;
-  /**
-   * label for search filter input
-   */
-  searchFilterLabel?: string;
+  searchFilterPlaceholder?: string;
   /**
    * internal ordering (natural sort)
    */
   internalOrdering?: boolean;
+  /**
+   * wether to show filters icon
+   */
+  filterable?: boolean;
+  /**
+   * wether to show fullscreen icon
+   */
+  allowFullscreen?: boolean;
+  /**
+   * Whether rows can be selected
+   */
+  selectable?: boolean;
+  /**
+   * Table variant
+   */
+  variant?: 'normal' | 'accordion' | 'list';
 }
 
 type FzTableSlots = {
@@ -59,6 +99,10 @@ type FzTableSlots = {
 };
 
 type FzRowProps<T> = {
+  /**
+   * Row id
+   */
+  id: number;
   /**
    * Actions to show in the dropdown in the action column
    */
@@ -71,6 +115,30 @@ type FzRowProps<T> = {
    * Column configuration
    */
   columns: {props: FzColumnProps, children: FzColumnSlots}[];
+  /**
+   * Whether the row is selectable
+   */
+  selectable?: boolean;
+  /**
+   * CSS grid column configuration
+   */
+  colSpan?: Record<string, string>;
+  /**
+   * icon to show in a leftmost dedicated column
+   */
+  leftColIcon?: string;
+  /**
+   * left icon size
+   */
+  leftColIconSize?: IconSize;
+  /**
+   * left icon CSS class
+   */
+  leftColIconClass?: string;
+  /** 
+   * Is the row overflowing 
+   */
+  isOverflowing?: boolean;
 };
 
 type FzRowSlots = {

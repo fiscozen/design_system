@@ -21,7 +21,7 @@
     "@fiscozen/tsconfig": "workspace:^"
   },
   "dependencies": {
-    "@awesome.me/kit-8137893ad3": "^1.0.284",
+    "@awesome.me/kit-8137893ad3": "^1.0.302",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/vue-fontawesome": "^3.0.8"
   }

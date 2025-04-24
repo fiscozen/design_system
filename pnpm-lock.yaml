@@ -21,8 +21,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.284
-        version: 1.0.284
+        specifier: ^1.0.302
+        version: 1.0.302
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
@@ -1284,8 +1284,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.284
-        version: 1.0.284
+        specifier: ^1.0.302
+        version: 1.0.302
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.7.2
@@ -2229,6 +2229,15 @@ importers:
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
+      '@fiscozen/checkbox':
+        specifier: workspace:^
+        version: link:../checkbox
+      '@fiscozen/composables':
+        specifier: workspace:^
+        version: link:../composables
+      '@fiscozen/dialog':
+        specifier: workspace:^
+        version: link:../dialog
       '@fiscozen/dropdown':
         specifier: workspace:^
         version: link:../dropdown
@@ -2858,8 +2867,8 @@ packages:
     resolution: {integrity: sha512-bGAqFfqj7aGKe2sgWMpicSsLzBfq+1OX+LVWIJ1srKv1V14v9IcfjQvokwAq9C+BVtZhUez++2uu+jboKcEPPQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.236/kit-8137893ad3-1.0.236.tgz}
     engines: {node: '>=16'}
 
-  '@awesome.me/kit-8137893ad3@1.0.284':
-    resolution: {integrity: sha512-s4cmBuj2fIiqe/6APtIn+Y+CCvOgKjbrb9jfaNdaTMH8u/FV0Q5fLc5ojH5L2UNlanpjhGl9BvVvjUqBVoDDzQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.284/kit-8137893ad3-1.0.284.tgz}
+  '@awesome.me/kit-8137893ad3@1.0.302':
+    resolution: {integrity: sha512-ViuXiID0GYRN/4VYhjSBi59d3aOUOqPybKW8Sb+AkZAzy5Pq9wusNiU5t8n2KPd3+wNe62zNN7mmkJXES7W6MA==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.302/kit-8137893ad3-1.0.302.tgz}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.26.2':
@@ -7028,11 +7037,11 @@ packages:
       typescript:
         optional: true
 
+  vue-component-type-helpers@2.2.10:
+    resolution: {integrity: sha512-iDUO7uQK+Sab2tYuiP9D1oLujCWlhHELHMgV/cB13cuGbG4qwkLHvtfWb6FzvxrIOPDnU0oHsz2MlQjhYDeaHA==}
+
   vue-component-type-helpers@2.2.2:
     resolution: {integrity: sha512-6lLY+n2xz2kCYshl59mL6gy8OUUTmkscmDFMO8i7Lj+QKwgnIFUZmM1i/iTYObtrczZVdw7UakPqDTGwVSGaRg==}
-
-  vue-component-type-helpers@2.2.8:
-    resolution: {integrity: sha512-4bjIsC284coDO9om4HPA62M7wfsTvcmZyzdfR0aUlFXqq4tXxM1APyXpNVxPC8QazKw9OhmZNHBVDA6ODaZsrA==}
 
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
@@ -7244,7 +7253,7 @@ snapshots:
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
-  '@awesome.me/kit-8137893ad3@1.0.284':
+  '@awesome.me/kit-8137893ad3@1.0.302':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
@@ -8083,7 +8092,7 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.5.13(typescript@5.3.3)
-      vue-component-type-helpers: 2.2.8
+      vue-component-type-helpers: 2.2.10
 
   '@tato30/vue-pdf@1.11.3(vue@3.5.13(typescript@5.3.3))':
     dependencies:
@@ -11583,9 +11592,9 @@ snapshots:
     optionalDependencies:
       typescript: 5.3.3
 
-  vue-component-type-helpers@2.2.2: {}
+  vue-component-type-helpers@2.2.10: {}
 
-  vue-component-type-helpers@2.2.8: {}
+  vue-component-type-helpers@2.2.2: {}
 
   vue-docgen-api@4.79.2(vue@3.5.13(typescript@5.3.3)):
     dependencies:

@@ -20,7 +20,7 @@
     "chromatic": "npx chromatic --project-token=chpt_1a654273b7f5392"
   },
   "dependencies": {
-    "@awesome.me/kit-8137893ad3": "^1.0.284",
+    "@awesome.me/kit-8137893ad3": "^1.0.302",
     "@fiscozen/actionlist": "workspace:^",
     "@fiscozen/alert": "workspace:^",
     "@fiscozen/avatar": "workspace:^",
