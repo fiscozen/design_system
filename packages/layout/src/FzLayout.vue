@@ -4,7 +4,7 @@ import { FzLayoutProps } from "./types";
 import { breakpoints } from "@fiscozen/style";
 import { useBreakpoints } from "@fiscozen/composables";
 
-const props = withDefaults(defineProps<FzLayoutProps>(), {});
+const props = withDefaults(defineProps<FzLayoutProps>(), {isViewport: true});
 
 const emit = defineEmits([]);
 
@@ -56,7 +56,8 @@ const layoutClass = computed(() => {
     default:
       break;
   }
-  return [res, `fz-layout__${props.layout}--${currentBreakpoint.value}`];
+  let widthClass = props.isViewport ? 'w-dvw' : 'w-full';
+  return [res, `fz-layout__${props.layout}--${currentBreakpoint.value}`, widthClass];
 });
 
 const sidebarToggle = () => {
@@ -66,7 +67,7 @@ const sidebarToggle = () => {
 </script>
 
 <template>
-  <div class="fz-layout w-dvw h-dvh grid" :class="layoutClass">
+  <div class="fz-layout h-dvh grid" :class="layoutClass">
     <template v-if="props.layout === 'oneColumn'">
       <div class="fz-layout__main p-12 fz-layout__overflow">
         <slot></slot>
