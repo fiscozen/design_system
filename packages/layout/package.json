@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/layout",
-  "version": "0.1.2-beta.2",
+  "version": "0.1.2-beta.3",
   "description": "Design System Layout component",
   "scripts": {
     "coverage": "vitest run --coverage",
