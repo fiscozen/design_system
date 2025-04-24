@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/table",
-  "version": "0.1.7",
+  "version": "0.1.8-alpha.0",
   "description": "Design System Table component",
   "scripts": {
     "coverage": "vitest run --coverage",
