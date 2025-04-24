@@ -18,9 +18,9 @@ export const bodyStaticClasses = [
   "z-[1]",
   "px-16",
   "min-h-48",
-  "bg-core-white",
   "flex",
   "justify-start",
   "items-center",
   "min-w-min",
+  "text-grey-500"
 ];
