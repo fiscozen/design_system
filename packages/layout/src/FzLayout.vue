@@ -4,7 +4,7 @@ import { FzLayoutProps } from "./types";
 import { breakpoints } from "@fiscozen/style";
 import { useBreakpoints } from "@fiscozen/composables";
 
-const props = withDefaults(defineProps<FzLayoutProps>(), {isViewport: true});
+const props = withDefaults(defineProps<FzLayoutProps>(), {});
 
 const emit = defineEmits([]);
 
@@ -56,7 +56,7 @@ const layoutClass = computed(() => {
     default:
       break;
   }
-  let widthClass = props.isViewport ? 'w-dvw' : 'w-full';
+  let widthClass = props.disableViewport ? 'w-full' : 'w-dvwl';
   return [res, `fz-layout__${props.layout}--${currentBreakpoint.value}`, widthClass];
 });
 

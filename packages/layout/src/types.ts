@@ -1,6 +1,6 @@
 type FzLayoutProps = {
     layout: 'oneColumn' | 'oneColumnHeader' | 'twoColumns' | 'leftShoulder' | 'multipleAreas' | 'rightShoulder'
-    isViewport: boolean;
+    disableViewport?: boolean;
 }
 
 export { FzLayoutProps }
