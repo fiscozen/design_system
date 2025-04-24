@@ -1,4 +1,4 @@
-import { Ref, onMounted, onUnmounted, ref } from 'vue'
+import { Ref, onMounted, onUnmounted, ref, computed } from 'vue'
 
 function useMediaQuery(mediaQuery: string): Ref<boolean> {
   const mediaQueryList = window.matchMedia(mediaQuery)
@@ -16,7 +16,7 @@ function useMediaQuery(mediaQuery: string): Ref<boolean> {
     mediaQueryList.removeEventListener('change', handleChange)
   })
 
-  return matches
+  return computed(() => matches.value)
 }
 
 export { useMediaQuery }

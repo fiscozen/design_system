@@ -21,8 +21,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.296
-        version: 1.0.296
+        specifier: ^1.0.302
+        version: 1.0.302
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
@@ -1287,8 +1287,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.296
-        version: 1.0.296
+        specifier: ^1.0.302
+        version: 1.0.302
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.7.2
@@ -2311,6 +2311,15 @@ importers:
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
+      '@fiscozen/checkbox':
+        specifier: workspace:^
+        version: link:../checkbox
+      '@fiscozen/composables':
+        specifier: workspace:^
+        version: link:../composables
+      '@fiscozen/dialog':
+        specifier: workspace:^
+        version: link:../dialog
       '@fiscozen/dropdown':
         specifier: workspace:^
         version: link:../dropdown
@@ -2940,8 +2949,8 @@ packages:
     resolution: {integrity: sha512-bGAqFfqj7aGKe2sgWMpicSsLzBfq+1OX+LVWIJ1srKv1V14v9IcfjQvokwAq9C+BVtZhUez++2uu+jboKcEPPQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.236/kit-8137893ad3-1.0.236.tgz}
     engines: {node: '>=16'}
 
-  '@awesome.me/kit-8137893ad3@1.0.296':
-    resolution: {integrity: sha512-UpgEMU7Z/u6+kVLjcc4PcHHpluR0Pf4DpZnDn8QV8wJAqumLFHayAok/utr07vyHanNDiI1MtUGZTu/VqWyXeg==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.296/kit-8137893ad3-1.0.296.tgz}
+  '@awesome.me/kit-8137893ad3@1.0.302':
+    resolution: {integrity: sha512-ViuXiID0GYRN/4VYhjSBi59d3aOUOqPybKW8Sb+AkZAzy5Pq9wusNiU5t8n2KPd3+wNe62zNN7mmkJXES7W6MA==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.302/kit-8137893ad3-1.0.302.tgz}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.26.2':
@@ -7326,7 +7335,7 @@ snapshots:
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
-  '@awesome.me/kit-8137893ad3@1.0.296':
+  '@awesome.me/kit-8137893ad3@1.0.302':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
