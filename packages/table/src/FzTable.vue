@@ -18,13 +18,14 @@ import { breakpoints } from "@fiscozen/style";
 import { ascend, descend, sortWith, prop } from "ramda";
 import { FzCheckbox } from "@fiscozen/checkbox";
 import { FzConfirmDialog } from "@fiscozen/dialog";
+import { ActionlistItem } from "@fiscozen/actionlist";
 
 const props = withDefaults(defineProps<FzTableProps>(), {
   pageInterval: 2,
-  activePage: 0,
   searchFilterPlaceholder: "Cerca...",
   selectable: false,
   variant: "normal",
+  actionLabel: "Azione",
 });
 
 type RowData = T & {
@@ -37,14 +38,14 @@ const ordering = defineModel<Record<string, FzOrdering>>("ordering", {
 const filters = defineModel<FzTableFilters>("filters", {
   default: {},
 });
-const activePage = defineModel<number>("activePage");
+const activePage = defineModel<number>("activePage", {default: 0});
 const searchOpen = ref(false);
 const filtersOpen = ref(false);
 const grid = ref<HTMLDivElement>();
 const filtersDialog = ref();
 
 const emit = defineEmits<{
-  "fztable:rowactionclick": [actionIndex: number, rowData: Record<string, any>];
+  "fztable:rowactionclick": [actionIndex: number, actionListItem: ActionlistItem, rowData?: Record<string, any>];
   "fztable:ordering": [
     ordering: FzOrdering,
     newOrderingDirection: FzOrdering["direction"],
@@ -360,7 +361,7 @@ onUnmounted(() => {
     >
       <div class="justify-self-start grow">
         <span v-if="!selectedRows.length"
-          >{{ internalValue.length || rows.length }}
+          >{{ props.recordNumber || (internalValue.length || rows.length) }}
           {{ recordLabel || "risultati" }}</span
         >
         <span v-if="selectedRows.length"
@@ -492,6 +493,7 @@ onUnmounted(() => {
             {'left-shadow': isOverflowing},
           ]"
         >
+        {{actionLabel}}
         </div>
         <template v-if="internalValue?.length && variant === 'normal'">
           <slot v-for="(row, index) in internalValue" :name="`row-${index}`">
@@ -503,6 +505,8 @@ onUnmounted(() => {
               :data="row"
               :isOverflowing
               :actions="props.actions"
+              @fztable:rowactionclick="(...args) =>
+                emit('fztable:rowactionclick', ...args)"
               :selectable="props.selectable"
               :selected="selectedRowIds.has(index)"
               @update:selected="toggleRowSelection(index)"
@@ -524,6 +528,8 @@ onUnmounted(() => {
             :colSpan
             :leftColIconClass="openRowIds.has(index) ? 'text-blue-500' : ''"
             :leftColIcon="openRowIds.has(index) ? 'angle-up' : 'angle-right'"
+            @fztable:rowactionclick="(...args) =>
+                emit('fztable:rowactionclick', ...args)"
             @update:selected="toggleRowSelection(index)"
             @click="toggleSubRow(index)"
           />
@@ -543,6 +549,8 @@ onUnmounted(() => {
               leftColIcon="circle"
               leftColIconSize="xs"
               leftColIconClass="text-blue-500"
+              @fztable:rowactionclick="(...args) =>
+                emit('fztable:rowactionclick', ...args)"
             />
           </template>
         </template>
@@ -620,6 +628,7 @@ onUnmounted(() => {
         </div>
         <FzButton
           class="size-32 !px-0"
+          v-if="pages > 1"
           @click="activePage = pages - 1"
           :variant="activePage === pages - 1 ? 'primary' : 'secondary'"
           size="sm"

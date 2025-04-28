@@ -4,6 +4,7 @@ import { FzColumn } from '@fiscozen/simple-table'
 import { FzCollapse } from '@fiscozen/collapse'
 import { FzSelect } from '@fiscozen/select'
 import { ref, reactive, computed } from 'vue'
+import { ActionlistItem } from '@fiscozen/actionlist'
 
 const meta: Meta<typeof FzTable> = {
   title: 'Data/FzTable',
@@ -53,6 +54,7 @@ const Default: Story = {
       items
     },
     pages: 10,
+    actionLabel: '',
     activePage: 2,
     title: 'Table title',
     subtitle: 'Table subtitle',
@@ -97,8 +99,8 @@ const FixedColumnWidth: Story = {
     actions: {
       items
     },
-    pages: 10,
-    activePage: 2,
+    actionLabel: '',
+    pages: 1,
     title: 'Table title',
     subtitle: 'Table subtitle'
   },
@@ -194,6 +196,7 @@ const ActionClick: Story = {
     placeholder: 'Nessun valore',
     title: 'Table title',
     subtitle: 'Table subtitle',
+    actionLabel: '',
     actions: {
       items: [
         {
@@ -213,10 +216,8 @@ const ActionClick: Story = {
   },
   render: (args) => ({
     setup() {
-      return { args }
-    },
-    methods: {
-      onRowAction: (index: number, rowData: Record<string, any>) => console.log(`Clicked action ${index} on row "${rowData.name}"`)
+      const onRowAction = (index: number, actionListItem: ActionlistItem, rowData: Record<string, any>) => alert(`Clicked action ${index} on row "${rowData.name}"`);
+      return { args, onRowAction }
     },
     components: {
       FzColumn,
@@ -237,7 +238,7 @@ const CustomRows: Story = {
   args: {
     placeholder: 'Nessun valore',
     title: 'Table title',
-    subtitle: 'Table subtitle'
+    subtitle: 'Table subtitle',
   },
   render: (args) => ({
     setup() {
@@ -301,6 +302,7 @@ const ColumnOrdering: Story = {
     actions: {
       items
     },
+    actionLabel: '',
     internalOrdering: true,
     title: 'Table title',
     subtitle: 'Table subtitle'
@@ -345,6 +347,7 @@ const Filters: Story = {
     actions: {
       items
     },
+    actionLabel: '',
     pages: 10,
     activePage: 2,
     searchFilterPlaceholder: 'Ricerca',
@@ -378,7 +381,6 @@ const Filters: Story = {
       const searchTerm = ref('');
       const filters = reactive({
         state: {
-          type: 'badge',
           value: ''
         }
       });
@@ -437,7 +439,8 @@ const Selectable: Story = {
     placeholder: 'Nessun valore',
     title: 'Table title',
     subtitle: 'Table subtitle',
-    selectable: true
+    selectable: true,
+    recordNumber: 100
   },
   render: (args) => ({
     setup() {

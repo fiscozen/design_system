@@ -4,10 +4,11 @@ import { FzRowProps, getBodyClasses, bodyStaticClasses } from "./";
 import { FzIconDropdown } from "@fiscozen/dropdown";
 import { FzIcon } from "@fiscozen/icons";
 import { FzCheckbox } from "@fiscozen/checkbox";
+import { ActionlistItem } from "@fiscozen/actionlist";
 
 const props = defineProps<FzRowProps<T>>();
 const emit = defineEmits<{
-  "fztable:rowactionclick": [actionIndex: number, rowData: T | undefined];
+  "fztable:rowactionclick": [actionIndex: number, actionlistItem: ActionlistItem, rowData: T | undefined];
   click: [rowIndex: number, rowData: T | undefined];
 }>();
 const selected = defineModel<boolean>("selected");
@@ -63,9 +64,9 @@ const hover = ref(false);
         'sticky right-0 z-[2]',
         { 'bg-core-white': !hover, 'bg-background-alice-blue': hover, 'left-shadow': props.isOverflowing },
       ]">
-        <FzIconDropdown :actions="actions.items" iconName="ellipsis-vertical" @fzaction:click="
-          (actionIndex: number) =>
-            emit('fztable:rowactionclick', actionIndex, props.data)
+        <FzIconDropdown :actions="actions.items" buttonVariant="invisible" iconName="ellipsis-vertical" @fzaction:click="
+          (actionIndex: number, actionListItem: ActionlistItem) =>
+            emit('fztable:rowactionclick', actionIndex, actionListItem, props.data)
         "></FzIconDropdown>
       </div>
     </div>

@@ -18,8 +18,7 @@ export interface FzOrdering {
 }
 
 export interface FzTableFilter {
- type: 'select' | 'date' | 'badge'
- value: any
+  value: any
 }
 
 export type FzTableFilters = Record<string, FzTableFilter>
@@ -37,6 +36,10 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
    * Label for data records
    */
   recordLabel?: string;
+  /**
+   * Override total records number
+   */
+  recordNumber?: number;
   /**
    * Wether to show the new item button
    */
@@ -89,6 +92,12 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
    * Table variant
    */
   variant?: 'normal' | 'accordion' | 'list';
+  /**
+   * Action column label
+   *
+   * @default 'Azione'
+   */
+  actionLabel?: string;
 }
 
 type FzTableSlots = {
