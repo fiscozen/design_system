@@ -156,7 +156,7 @@ const gridTemplateStyle = computed(() => {
     return acc;
   }, res);
   if (props.actions?.items.length) {
-    res = `${res} 44px`;
+    res = `${res} min-content`;
   }
   if (props.selectable) {
     res = `40px ${res}`;
@@ -490,7 +490,7 @@ onUnmounted(() => {
             'fz__table__header--actions',
             headerStaticClasses,
             headerClasses,
-            'sticky right-0 z-[3] px-4',
+            'sticky right-0 z-[3]',
             {'left-shadow': isOverflowing},
           ]"
         >
@@ -530,6 +530,7 @@ onUnmounted(() => {
             :colSpan
             :leftColIconClass="openRowIds.has(index) ? 'text-blue-500' : ''"
             :leftColIcon="openRowIds.has(index) ? 'angle-up' : 'angle-right'"
+            :actionDisabled="props.actionsDisabled"
             @fztable:rowactionclick="(...args) =>
                 emit('fztable:rowactionclick', ...args)"
             @update:selected="toggleRowSelection(index)"
