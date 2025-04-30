@@ -573,6 +573,56 @@ const ActionsDisabled: Story = {
     `
   })
 }
-export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled }
+
+const DynamicActions: Story = {
+  args: {
+    modelValue: Array(10)
+      .fill({})
+      .map(() => sampleObj),
+    placeholder: 'Nessun valore',
+    actions: row => ({
+      items: [
+        {
+          type: 'button' as const,
+          label: `Action ${row.nome}`
+        },
+        {
+          type: 'button' as const,
+          label: `Action ${row.cognome}`
+        },
+        {
+          type: 'button' as const,
+          label: `Action ${row.email}`
+        }
+      ]
+    }),
+    title: 'Table title',
+    subtitle: 'Table subtitle',
+    newItemButtonLabel: 'Nuova fattura'
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: {
+      FzColumn,
+      FzTable,
+      FzCollapse
+    },
+    template: `
+      <div class="p-32 h-[800px]">
+        <FzTable v-bind="args">
+          <FzColumn header="Nome" sticky="left" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+        </FzTable>
+      </div>
+    `
+  })
+}
+export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions }
 
 export default meta

@@ -130,7 +130,7 @@ const centerPageList = computed(() => {
 
 const totalColumns = computed(() => {
   let res = columns.value.length;
-  if (props.actions?.items.length) {
+  if (props.actions) {
     res++;
   }
   if (props.selectable) {
@@ -155,7 +155,7 @@ const gridTemplateStyle = computed(() => {
     }
     return acc;
   }, res);
-  if (props.actions?.items.length) {
+  if (props.actions) {
     res = `${res} min-content`;
   }
   if (props.selectable) {
@@ -345,7 +345,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="fz-table-container m-0 p-0 size-full text-grey-500">
+  <div :class="['fz-table-container m-0 p-0 size-full text-grey-500',tableClass]">
     <div class="w-full flex flex-col items-start mb-20" v-if="title">
       <span class="text-xl font-medium text-core-black">
         {{ title }}
@@ -505,7 +505,7 @@ onUnmounted(() => {
               :colSpan
               :data="row"
               :isOverflowing
-              :actions="props.actions"
+              :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions"
               @fztable:rowactionclick="(...args) =>
                 emit('fztable:rowactionclick', ...args)"
               :selectable="props.selectable"
@@ -523,7 +523,7 @@ onUnmounted(() => {
             :id="index"
             :columns="columns"
             :data="row"
-            :actions="props.actions"
+            :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions"
             :selectable="props.selectable"
             :selected="selectedRowIds.has(index)"
             :isOverflowing
@@ -546,7 +546,7 @@ onUnmounted(() => {
               :id="subindex"
               :columns="columns"
               :data="subrow"
-              :actions="props.actions"
+              :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions"
               :colSpan
               :isOverflowing
               :actionsDisabled="props.actionsDisabled"

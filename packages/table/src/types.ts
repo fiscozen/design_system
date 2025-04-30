@@ -33,6 +33,10 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
    */
   subtitle?: string;
   /**
+   * CSS class for the table
+   */
+  tableClass?: string;
+  /**
    * Label for data records
    */
   recordLabel?: string;
@@ -55,7 +59,7 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
   /**
    * Actions to show in the dropdown in the action column
    */
-  actions?: FzActionlistProps;
+  actions?: FzActionlistProps | ((data: any) => FzActionlistProps);
   /**
    * Wether to disable the actions dropdown opener button
    */
@@ -123,7 +127,7 @@ type FzRowProps<T> = {
   /**
    * Actions to show in the dropdown in the action column
    */
-  actions?: FzActionlistProps;
+  actions?: ((data: T) => FzActionlistProps) | FzActionlistProps;
   /**
    * Wether to disable the actions dropdown opener button
    */
