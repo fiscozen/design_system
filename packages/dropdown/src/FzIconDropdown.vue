@@ -1,7 +1,7 @@
 <template>
   <FzDropdown v-bind="props" ref="dropdown" @fzaction:click="(...args) => emit('fzaction:click', ...args)">
     <template #opener="{ open }">
-      <FzIconButton :iconName="iconName" @click="open()" :variant="buttonVariant" />
+      <FzIconButton :iconName="iconName" @click="open()" :variant="buttonVariant" :disabled="openerDisabled" />
     </template>
   </FzDropdown>
 </template>

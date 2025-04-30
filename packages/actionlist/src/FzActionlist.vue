@@ -8,6 +8,7 @@
         v-if="item.type === 'button'"
         class="grow-1 flex justify-start"
         v-bind="item"
+        :disabled="item.disabled"
         @click="emit('fzaction:click', itemIndex, item)"
         >{{ item.label }}</FzNavlink
       >
@@ -15,6 +16,7 @@
         v-else
         class="grow-1 flex justify-start"
         v-bind="item"
+        :disabled="item.disabled"
         @click="emit('fzaction:click', itemIndex, item)"
         >{{ item.label }}</FzRouterNavlink
       >

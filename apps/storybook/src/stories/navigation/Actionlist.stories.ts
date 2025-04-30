@@ -13,7 +13,8 @@ const actions = [
   },
   {
     type: 'link' as const,
-    label: 'This is a router-nav-link',
+    label: 'This is a disabled router-nav-link',
+    disabled: true,
     meta: {
       path: '/foo',
       name: 'foo'
@@ -29,7 +30,8 @@ const actions = [
   },
   {
     type: 'button' as const,
-    label: 'This is a nav-link'
+    label: 'This is a disabled nav-link',
+    disabled: true,
   }
 ]
 
