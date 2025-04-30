@@ -59,12 +59,11 @@ const hover = ref(false);
         </slot>
       </div>
       <div v-if="actions" :class="[
-        'w-[44px] px-4',
         bodyStaticClasses,
-        'sticky right-0 z-[2]',
+        'sticky right-0 z-[2] flex justify-center items-center',
         { 'bg-core-white': !hover, 'bg-background-alice-blue': hover, 'left-shadow': props.isOverflowing },
       ]">
-        <FzIconDropdown :actions="actions.items" buttonVariant="invisible" iconName="ellipsis-vertical" @fzaction:click="
+        <FzIconDropdown :actions="actions.items" buttonVariant="invisible" :openerDisabled="actionsDisabled" iconName="ellipsis-vertical" @fzaction:click="
           (actionIndex: number, actionListItem: ActionlistItem) =>
             emit('fztable:rowactionclick', actionIndex, actionListItem, props.data)
         "></FzIconDropdown>
