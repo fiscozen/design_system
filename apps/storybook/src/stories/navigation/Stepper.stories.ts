@@ -66,7 +66,7 @@ const Default: Story = {
 const NoProgress: Story = {
   args: {
     steps,
-    progressBar: false
+    disableProgressBar: true
   },
   decorators: [() => ({ template: '<div style="padding:20px;"><story/></div>' })],
   render: (args) => ({

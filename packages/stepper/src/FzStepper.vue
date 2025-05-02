@@ -8,7 +8,7 @@ import { FzIcon } from "@fiscozen/icons";
 import { FzDropdown } from '@fiscozen/dropdown';
 
 const props = withDefaults(defineProps<FzStepperProps>(), {
-    progressBar: true,
+    disableProgressBar: false,
 })
 const smOrSmaller = useMediaQuery(`(max-width: ${breakpoints.sm})`);
 
@@ -63,13 +63,13 @@ const handleActionClick = (index: number) => {
     <div class="fz-stepper flex flex-row w-full gap-16" v-if="!smOrSmaller">
         <div @click="() => activeStep = index" class="fz-stepper__step flex flex-col grow cursor-pointer"
             v-for="(step, index) in props.steps">
-            <div :class="['fz-stepper__progress h-4 rounded-5 w-full mb-8', barClass(step, index)]" v-if="progressBar">
+            <div :class="['fz-stepper__progress h-4 rounded-5 w-full mb-8', barClass(step, index)]" v-if="!disableProgressBar">
             </div>
             <div class="flex flex-row gap-8 items-start">
                 <div class="fz-stepper__circle flex items-center justify-center">
-                    <FzIcon v-if="stepStatus[index] === 'error'" name="circle-exclamation" variant="fas" size="lg"
+                    <FzIcon v-if="stepStatus[index] === 'error'" name="circle-exclamation" variant="fas" size="md"
                         class="text-semantic-error" />
-                    <FzIcon v-else-if="stepStatus[index] === 'completed'" name="circle-check" variant="fas" size="lg"
+                    <FzIcon v-else-if="stepStatus[index] === 'completed'" name="circle-check" variant="fas" size="md"
                         class="text-grey-500" />
                     <FzBadge v-else size="sm" :color="badgeColor[index]">{{ index + 1 }}</FzBadge>
                 </div>
@@ -83,14 +83,14 @@ const handleActionClick = (index: number) => {
     <div class="fz-stepper flex flex-col w-full gap-8" v-if="smOrSmaller">
         <div class="flex flex-row gap-8">
             <div v-for="(step, index) in props.steps"
-                :class="['fz-stepper__progress h-4 rounded-5 w-full mb-8', barClass(step, index)]" v-if="progressBar">
+                :class="['fz-stepper__progress h-4 rounded-5 w-full mb-8', barClass(step, index)]" v-if="!disableProgressBar">
             </div>
         </div>
         <div class="flex flex-row gap-8 items-center">
             <div class="fz-stepper__circle flex items-center justify-center">
-                <FzIcon v-if="stepStatus[activeStep] === 'error'" name="circle-exclamation" variant="fas" size="lg"
+                <FzIcon v-if="stepStatus[activeStep] === 'error'" name="circle-exclamation" variant="fas" size="md"
                     class="text-semantic-error" />
-                <FzIcon v-else-if="stepStatus[activeStep] === 'completed'" name="circle-check" variant="fas" size="lg"
+                <FzIcon v-else-if="stepStatus[activeStep] === 'completed'" name="circle-check" variant="fas" size="md"
                     class="text-grey-500" />
                 <FzBadge v-else size="sm" :color="badgeColor[activeStep]">{{ activeStep + 1 }}</FzBadge>
             </div>
