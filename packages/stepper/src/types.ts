@@ -4,9 +4,9 @@ type FzStepperProps = {
    */
   steps: FzStepProps[];
   /**
-   *  Show stepper progress bar
+   *  Disable stepper progress bar
    */
-  progressBar?: boolean;
+  disableProgressBar?: boolean;
 }
 type FzStepStatus = 'completed' | 'error'; 
 type FzStepProps = {
