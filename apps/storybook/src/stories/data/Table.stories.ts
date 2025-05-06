@@ -623,6 +623,54 @@ const DynamicActions: Story = {
     `
   })
 }
-export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions }
+
+const DynamicColumns: Story = {
+  args: {
+    modelValue: Array(10)
+      .fill({})
+      .map(() => sampleObj),
+    placeholder: 'Nessun valore',
+    title: 'Table title',
+    subtitle: 'Table subtitle'
+  },
+  render: (args) => ({
+    setup() {
+      const columns = ref()
+      setTimeout(() => {
+        columns.value = [
+          {
+            header: 'Nome',
+            field: 'nome'
+          },
+          {
+            header: 'Cognome',
+            field: 'cognome'
+          },
+          {
+            header: 'Numero di telefono',
+            field: 'phone_number'
+          }
+        ]
+      }, 2000)
+      return { args, columns }
+    },
+    components: {
+      FzColumn,
+      FzTable,
+      FzCollapse
+    },
+    template: `
+      <div class="p-32 h-[800px]">
+        <FzTable v-bind="args">
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn v-for="(col, index) in columns" :key="index" :header="col.header" :field="col.field" />
+        </FzTable>
+      </div>
+    `
+  })
+}
+export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns }
 
 export default meta

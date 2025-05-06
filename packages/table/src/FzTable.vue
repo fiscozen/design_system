@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { computed, ref, useSlots, onMounted, onUnmounted } from "vue";
+import { computed, ref, useSlots, onMounted, onUnmounted, watch, VNode } from "vue";
 import {
   FzRow,
   FzRowProps,
@@ -57,25 +57,31 @@ const emit = defineEmits<{
 const slots = useSlots();
 const smOrSmaller = useMediaQuery(`(max-width: ${breakpoints.sm})`);
 
-const defaultSlot = slots.default?.();
+const defaultSlot = computed(() => slots.default?.());
+const getColumn = (column: VNode) => ({
+  props: column.props as FzColumnProps,
+  children: column.children as FzColumnSlots
+});
 const columns = computed(() => {
   if (!slots.default) return [];
 
   return (
-    defaultSlot
-      ?.filter((elem) => elem.type === FzColumn)
-      .map((column) => ({
-        props: column.props as FzColumnProps,
-        children: column.children as FzColumnSlots,
-        emit: column.ctx.emit,
-      })) ?? []
+    defaultSlot.value
+      ?.filter((elem) => (elem.type === FzColumn) || (typeof elem.type === 'symbol' && Array.isArray(elem.children)))
+      .flatMap((slot) => {
+        if (slot.type === FzColumn) {
+          return getColumn(slot);
+        } else {
+          return slot.children?.map(getColumn);
+        }
+      }) ?? []
   );
 });
 
 const rows = computed(() => {
   if (!slots.default) return [];
   return (
-    defaultSlot
+    defaultSlot.value
       ?.filter((elem) => elem.type === FzRow)
       .map((row) => ({
         props: row.props as FzRowProps,
@@ -327,6 +333,10 @@ const handleKeyDown = (event: KeyboardEvent) => {
   }
 };
 
+watch(() => slots.default?.(), () => {
+  console.log('slots changed');
+});
+
 onMounted(() => {
   const el = document.querySelector('.fz__table.overflow-auto');
   if (el) {
@@ -341,7 +351,6 @@ onUnmounted(() => {
   document.removeEventListener('fullscreenchange', handleFullscreenChange);
   document.removeEventListener('keydown', handleKeyDown);
 });
-
 </script>
 
 <template>
