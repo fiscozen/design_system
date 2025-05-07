@@ -47,6 +47,7 @@
     "@fiscozen/radio": "workspace:^",
     "@fiscozen/select": "workspace:^",
     "@fiscozen/simple-table": "workspace:^",
+    "@fiscozen/stepper": "workspace:^",
     "@fiscozen/style": "workspace:^",
     "@fiscozen/tab": "workspace:^",
     "@fiscozen/table": "workspace:^",

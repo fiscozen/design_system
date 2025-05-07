@@ -1,25 +1,15 @@
 <template>
-  <div class="fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4">
+  <div :class="['fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4', props.listClass]">
     <div v-if="label" class="text-grey-400 flex h-32 items-center px-12 text-xs">
       <span>{{ label }}</span>
     </div>
     <div class="flex flex-col" v-for="(item, itemIndex) in items" :key="itemIndex">
-      <FzNavlink
-        v-if="item.type === 'button'"
-        class="grow-1 flex justify-start"
-        v-bind="item"
-        :disabled="item.disabled"
-        @click="emit('fzaction:click', itemIndex, item)"
-        >{{ item.label }}</FzNavlink
-      >
-      <FzRouterNavlink
-        v-else
-        class="grow-1 flex justify-start"
-        v-bind="item"
-        :disabled="item.disabled"
-        @click="emit('fzaction:click', itemIndex, item)"
-        >{{ item.label }}</FzRouterNavlink
-      >
+      <slot :name="`fzaction-item-${itemIndex}`" :item="item">
+        <FzNavlink v-if="item.type === 'button'" class="grow-1 flex justify-start" v-bind="item"
+          :disabled="item.disabled" @click="emit('fzaction:click', itemIndex, item)">{{ item.label }}</FzNavlink>
+        <FzRouterNavlink v-else class="grow-1 flex justify-start" v-bind="item" :disabled="item.disabled"
+          @click="emit('fzaction:click', itemIndex, item)">{{ item.label }}</FzRouterNavlink>
+      </slot>
     </div>
   </div>
 </template>

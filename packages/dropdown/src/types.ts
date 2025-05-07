@@ -36,6 +36,14 @@ type FzDropdownProps = {
    * teleport floating to body
    */
   teleport?: boolean
+  /**
+   * Class binded to the action list
+   */
+  listClass?: string
+  /**
+   * Class binded to the floating element
+   */
+  floatingClass?: string
 }
 
 type FzDropdownSlots = {
@@ -48,7 +56,7 @@ type FzDropdownSlots = {
    *
    * Use this to replace the button opener entirely
    */
-  opener(props: { isOpen: boolean }): VNode | VNode[]
+  opener(props: { isOpen: boolean, open: () => void, close: () => void }): VNode | VNode[]
 }
 
 interface FzIconDropdownProps extends FzDropdownProps {
