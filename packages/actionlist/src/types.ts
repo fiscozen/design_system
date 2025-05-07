@@ -5,8 +5,9 @@ type ActionlistItem =
   | (FzNavlinkProps & { type: 'button' })
 
 interface FzActionlistProps {
-  label?: string
-  items: ActionlistItem[]
+  label?: string;
+  items: ActionlistItem[];
+  listClass?: string;
 }
 
 export { ActionlistItem, FzActionlistProps }

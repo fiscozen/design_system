@@ -8,7 +8,7 @@ type FzStepperProps = {
    */
   disableProgressBar?: boolean;
 }
-type FzStepStatus = 'completed' | 'error'; 
+type FzStepStatus = 'completed' | 'error' | 'disabled'; 
 type FzStepProps = {
   /**
    *  Title of the stepper

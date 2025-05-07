@@ -5,10 +5,10 @@
     ref="container"
     overrideContentClass
     :teleport="teleport"
-    contentClass="fixed pt-4 z-70"
+    :contentClass="['fixed pt-4 z-70', props.floatingClass || '']"
   >
     <template #opener>
-      <slot name="opener" :isOpen="isOpen" :open="open">
+      <slot name="opener" :isOpen="isOpen" :open :close>
         <FzButton
           icon-position="after"
           :icon-name="buttonIconName"
@@ -21,7 +21,11 @@
         </FzButton>
       </slot>
     </template>
-    <FzActionlist :items="actions" :label="actionsLabel" @fzaction:click="handleActionClick" />
+    <FzActionlist :items="actions" :label="actionsLabel" :listClass="props.listClass" @fzaction:click="handleActionClick">
+      <template v-for="(action, index) in actions" :key="index" #[`fzaction-item-${index}`]>
+        <slot :name="`fzaction-item-${index}`" :item="action" :open :close></slot>
+      </template>
+    </FzActionlist>
   </FzFloating>
 </template>
 
@@ -78,8 +82,12 @@ function handleActionClick(index: number, action: ActionlistItem) {
 function open() {
   isOpen.value = true
 }
+function close() {
+  isOpen.value = false
+}
 
 defineExpose({
-  open
+  open,
+  close
 })
 </script>

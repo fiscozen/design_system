@@ -18,6 +18,11 @@ const activeStep = defineModel<number>('activeStep', {
 
 const emit = defineEmits([])
 
+const dropdownContainer = ref<HTMLElement | null>(null)
+const dropdownRect = computed(() => {
+    return dropdownContainer.value?.getBoundingClientRect()
+})
+
 const stepStatus = computed(() => {
     return props.steps.map((step, index) => {
         if (index === activeStep.value) {
@@ -52,6 +57,9 @@ const badgeColor = computed(() => {
     })
 })
 const handleActionClick = (index: number) => {
+    if (props.steps[index].status === 'disabled') {
+        return
+    }
     if (index === activeStep.value) {
         return
     }
@@ -61,7 +69,7 @@ const handleActionClick = (index: number) => {
 
 <template>
     <div class="fz-stepper flex flex-row w-full gap-16" v-if="!smOrSmaller">
-        <div @click="() => activeStep = index" class="fz-stepper__step flex flex-col grow cursor-pointer"
+        <div @click="handleActionClick(index)" :class="['fz-stepper__step flex flex-col grow cursor-pointer', {'opacity-[.2] !cursor-not-allowed': step.status === 'disabled'}]"
             v-for="(step, index) in props.steps">
             <div :class="['fz-stepper__progress h-4 rounded-5 w-full mb-8', barClass(step, index)]" v-if="!disableProgressBar">
             </div>
@@ -86,7 +94,7 @@ const handleActionClick = (index: number) => {
                 :class="['fz-stepper__progress h-4 rounded-5 w-full mb-8', barClass(step, index)]" v-if="!disableProgressBar">
             </div>
         </div>
-        <div class="flex flex-row gap-8 items-center">
+        <div class="flex flex-row gap-8 items-center" ref="dropdownContainer">
             <div class="fz-stepper__circle flex items-center justify-center">
                 <FzIcon v-if="stepStatus[activeStep] === 'error'" name="circle-exclamation" variant="fas" size="md"
                     class="text-semantic-error" />
@@ -99,10 +107,12 @@ const handleActionClick = (index: number) => {
                     label: step.title,
                     type: 'button',
                 }))"
-                class="fz-stepper__dropdown w-full grow flex"
+                align="right"
+                listClass="gap-8 !p-0 w-full"
+                class="fz-stepper__dropdown grow flex"
                 @fzaction:click="handleActionClick">
                 <template #opener="{ isOpen, open }">
-                    <div class="flex flex-col w-full grow cursor-pointer" @click="open">
+                    <div class="flex flex-col grow cursor-pointer" @click="open">
                         <div class="flex flex-row size-full justify-between items-center cursor-pointer">
                             <span class="font-medium text-core-black grow">{{ props.steps[activeStep].title }}</span>
                             <FzIcon
@@ -114,6 +124,19 @@ const handleActionClick = (index: number) => {
                         <span class="text-sm">{{ props.steps[activeStep].description }}</span>
                     </div>
                 </template>
+                <template v-for="(step, index) in props.steps" #[`fzaction-item-${index}`]="{close}">
+                    <div :class="['flex flex-col grow cursor-pointer hover:bg-background-alice-blue px-16 py-6 min-w-sm', {
+                        'rounded border-2 border-solid border-blue-200': activeStep === index,
+                        '!cursor-not-allowed': step.status === 'disabled',
+                    }]"
+                    :style="{
+                        width: `${dropdownRect?.width}px`,
+                    }"
+                    @click="handleActionClick(index);close()">
+                        <span :class="['font-medium text-core-black grow', {'text-grey-200': step.status === 'disabled'}]">{{ step.title }}</span>
+                        <span :class="['text-sm', {'text-grey-200': step.status === 'disabled'}]">{{ step.description }}</span>
+                    </div>
+                </template>
             </FzDropdown>
         </div>
     </div>
@@ -122,8 +145,5 @@ const handleActionClick = (index: number) => {
 <style scoped>
 :deep(.fz-stepper__dropdown .inline-flex) {
     flex-grow: 1;
-}
-:deep(.fz__floating__content) {
-    width: 100%;
 }
 </style>
