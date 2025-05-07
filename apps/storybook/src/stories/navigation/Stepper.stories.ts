@@ -30,7 +30,8 @@ const steps = [
       },
       {
         title: 'Step 4',
-        description: 'Description 4'
+        description: 'Description 4',
+        status: 'disabled'
       },
       {
         title: 'Step 5',
@@ -42,7 +43,7 @@ const Default: Story = {
   args: {
     steps,
   },
-  decorators: [() => ({ template: '<div style="padding:20px;"><story/></div>' })],
+  decorators: [() => ({ template: '<div style="padding:20px;" class="h-screen"><story/></div>' })],
   render: (args) => ({
     components: { FzStepper },
     setup() {
@@ -68,7 +69,7 @@ const NoProgress: Story = {
     steps,
     disableProgressBar: true
   },
-  decorators: [() => ({ template: '<div style="padding:20px;"><story/></div>' })],
+  decorators: [() => ({ template: '<div style="padding:20px;" class="h-screen"><story/></div>' })],
   render: (args) => ({
     components: { FzStepper },
     setup() {
