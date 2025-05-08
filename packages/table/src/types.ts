@@ -102,6 +102,10 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
    */
   hasActiveFilters?: boolean;
   /**
+   * Additional filters not defined in the columns
+   */
+  extFilters?: Record<string, string>;
+  /**
    * Table variant
    */
   variant?: 'normal' | 'accordion' | 'list';

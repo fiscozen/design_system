@@ -20,7 +20,8 @@ const sampleObj = {
   cognome: 'Agnoletto',
   email: 'riccardo.agnoletto@fiscozen.it',
   phone_number: '123456789',
-  state: "da_inviare"
+  state: "da_inviare",
+  hiddenState: 'yes'
 }
 
 const items = [
@@ -356,7 +357,6 @@ const Filters: Story = {
     newItemButton: true,
     newItemButtonLabel: 'Nuova fattura',
     searchable: true,
-    filterable: true,
   },
   render: (args) => ({
     setup() {
@@ -368,19 +368,25 @@ const Filters: Story = {
         cognome: 'Panico',
         email: 'francesco.panico@fiscozen.it',
         phone_number: '123456789',
-        state: 'inviata'
+        state: 'inviata',
+        hiddenState: 'no'
       }
       data[2] = {
         nome: 'Cristian',
         cognome: 'Barraco',
         email: 'cristian.barraco@fiscozen.it',
         phone_number: '4444',
-        state: 'scaduta'
+        state: 'scaduta',
+        hiddenState: 'no'
       }
 
       const searchTerm = ref('');
+      const extFilters = {
+        hiddenState: 'Stato non relativo a una colonna'
+      }
       const filters = reactive<Record<string, any>>({
-        state: ''
+        state: '',
+        hiddenState: ''
       });
       const filteredData = computed(() => {
         return data.filter((el: any) => {
@@ -398,7 +404,7 @@ const Filters: Story = {
           filters[filter] = ''
         })
       }
-      return { args, filteredData, searchTerm, filters, emptyFilters }
+      return { args, filteredData, searchTerm, filters, emptyFilters, extFilters }
     },
     components: {
       FzColumn,
@@ -412,6 +418,7 @@ const Filters: Story = {
           v-bind="args"
           v-model:searchTerm="searchTerm"
           :hasActiveFilters="Object.values(filters).some((filter) => !!filter)"
+          :extFilters="extFilters"
           :modelValue="filteredData"
           @fztable:emptyFilters="emptyFilters">
           <FzColumn header="Nome" sticky="left" />
@@ -428,6 +435,13 @@ const Filters: Story = {
                 {label: 'Scaduta', value: 'scaduta'},
               ]"
               v-model="filters.state"></FzSelect>
+          </template>
+          <template #filter-hiddenState>
+            <FzSelect :options="[
+                {label: 'Si', value: 'yes'},
+                {label: 'No', value: 'no'},
+              ]"
+              v-model="filters.hiddenState"></FzSelect>
           </template>
         </FzTable>
       </div>
