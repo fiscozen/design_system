@@ -42,6 +42,10 @@ type FzColumnProps = {
    * is the column filterable
    */
   filterable?: any
+  /**
+   * Label of the filter
+   */
+  filterName?: any
 };
 
 type FzColumnSlots = {

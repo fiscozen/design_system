@@ -427,7 +427,7 @@ const Filters: Story = {
             <template #default="{data}"><b>{{data.email}}</b></template>
           </FzColumn>
           <FzColumn header="Numero di telefono" field="phone_number" />
-          <FzColumn header="Stato invio" field="state" :filterable="true" />
+          <FzColumn header="Stato invio" field="state" :filterable="true" filterName="Stato invio utente" />
           <template #filter-state>
             <FzSelect :options="[
                 {label: 'Da inviare', value: 'da_inviare'},
