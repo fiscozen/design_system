@@ -10,7 +10,7 @@ export interface FzOrdering {
   /**
    *  Type of ordering 
    */
-  direction?: 'asc' | 'desc';
+  direction?: 'asc' | 'desc' | 'none';
   /**
    *  field to be ordered
    */
@@ -18,7 +18,8 @@ export interface FzOrdering {
 }
 
 export interface FzTableFilter {
-  value: any
+  value: any;
+  label: string;
 }
 
 export type FzTableFilters = Record<string, FzTableFilter>
@@ -89,10 +90,6 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
    */
   internalOrdering?: boolean;
   /**
-   * wether to show filters icon
-   */
-  filterable?: boolean;
-  /**
    * wether to show fullscreen icon
    */
   allowFullscreen?: boolean;
@@ -100,6 +97,10 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
    * Whether rows can be selected
    */
   selectable?: boolean;
+  /**
+   * Whether there are active filters
+   */
+  hasActiveFilters?: boolean;
   /**
    * Table variant
    */

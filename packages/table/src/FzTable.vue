@@ -35,9 +35,7 @@ const modelValue = defineModel<RowData[]>();
 const ordering = defineModel<Record<string, FzOrdering>>("ordering", {
   default: {},
 });
-const filters = defineModel<FzTableFilters>("filters", {
-  default: {},
-});
+
 const activePage = defineModel<number>("activePage", {default: 0});
 const searchOpen = ref(false);
 const filtersOpen = ref(false);
@@ -52,6 +50,8 @@ const emit = defineEmits<{
   ];
   "update:searchTerm": [searchTerm: string];
   "fztable:newitem": [];
+  "fztable:updateFilters": [filters: FzTableFilters];
+  "fztable:emptyFilters": [];
 }>();
 
 const slots = useSlots();
@@ -90,13 +90,19 @@ const rows = computed(() => {
   );
 });
 
-const hasActiveFilters = computed(() => {
-  if (!filters.value) return false;
-  const activeFilter = Object.values(filters.value).find(
-    (filter) => !!filter.value,
-  );
-  return !!activeFilter;
-});
+const filters = computed({
+  get() {
+    return columns.value.filter(col => col.props.filterable).reduce((acc, column) => {
+      acc[column.props.field || column.props.header] = column.props.header
+      return acc;
+    }, {})
+  },
+  set(value: FzTableFilters) {
+    emit("fztable:updateFilters", value);
+  }
+})
+
+const hasFilters = computed(() => Object.keys(filters.value).length > 0);
 
 const staticClasses = ref(["grid"]);
 
@@ -177,7 +183,7 @@ const colSpan = computed(() => ({
 const internalValue = computed(() => {
   let res = modelValue.value || [];
   const safeOrdering = Object.entries(ordering.value)
-    .filter(([key, val]) => !!val.orderable && !!val.direction)
+    .filter(([key, val]) => !!val.orderable && !!val.direction && val.direction !== "none")
     .map(([key, val]) => {
       let dirFn = val.direction === "asc" ? ascend : descend;
       return dirFn(prop(key));
@@ -191,7 +197,7 @@ const internalValue = computed(() => {
 const iconCols = computed(() => {
   let res = 1;
   if (props.searchable && !smOrSmaller.value) res++;
-  if (props.filterable) res++;
+  if (hasFilters.value) res++;
   if (props.allowFullscreen) res++;
   if (props.newItemButton) res++;
   return res;
@@ -203,7 +209,7 @@ const inconColsStyle = computed(() => {
     res += ` auto`;
   if (props.searchable && !smOrSmaller.value && searchOpen.value)
     res += ` auto`;
-  if (props.filterable && !smOrSmaller.value) res += ` auto`;
+  if (hasFilters.value && !smOrSmaller.value) res += ` auto`;
   if (props.allowFullscreen) res += ` 32px`;
   if (props.newItemButton && !smOrSmaller.value) res += ` auto`;
   if (props.newItemButton && smOrSmaller.value) res += ` auto`;
@@ -271,28 +277,30 @@ const handleOrderingClick = (colProps: FzColumnProps) => {
   if (!colOrdering) {
     return;
   }
-  if (colOrdering.direction === "asc") {
-    emit("fztable:ordering", colOrdering, "desc");
-    if (props.internalOrdering) {
-      colOrdering.direction = "desc";
-    }
-  } else {
-    emit("fztable:ordering", colOrdering, "asc");
-    if (props.internalOrdering) {
-      colOrdering.direction = "asc";
-    }
+  switch (colOrdering.direction) {
+    case "asc":
+      emit("fztable:ordering", colOrdering, "desc");
+      if (props.internalOrdering) {
+        colOrdering.direction = "desc";
+      }
+      break;
+    case "desc":
+      emit("fztable:ordering", colOrdering, "none");
+      if (props.internalOrdering) {
+        colOrdering.direction = "none";
+      }
+      break;
+    case "none":
+      emit("fztable:ordering", colOrdering, "asc");
+      if (props.internalOrdering) {
+        colOrdering.direction = "asc";
+      }
   }
 };
 
 const emptyFilters = () => {
-  for (const filter in filters.value) {
-    filters.value[filter].value = "";
-  }
-  if (smOrSmaller.value) {
-    filtersDialog.value.close()
-  } else {
-    filtersOpen.value = false;
-  }
+  emit('fztable:emptyFilters');
+  filtersOpen.value = false;
 };
 
 const handleCloseSearch = () => {
@@ -410,7 +418,7 @@ onUnmounted(() => {
       <FzIconButton
         :class="['ml-8', { 'row-start-1': smOrSmaller }]"
         :style="smOrSmaller ? `grid-column-start: ${iconCols - 1}` : ''"
-        v-if="filterable"
+        v-if="hasFilters"
         :variant="hasActiveFilters ? 'notification' : 'invisible'"
         iconName="bars-filter"
         @click="handleOpenFilters"
@@ -482,10 +490,10 @@ onUnmounted(() => {
         >
           {{ column.props.header }}
           <FzIcon
-            v-if="getOrdering(column.props)?.orderable"
+            v-if="getOrdering(column.props)?.orderable && getOrdering(column.props)?.direction !== 'none'"
             data-cy="fztable-ordering"
             :name="
-              getOrdering(column.props).direction === 'asc'
+              getOrdering(column.props)?.direction === 'asc'
                 ? 'arrow-up'
                 : 'arrow-down'
             "
@@ -680,7 +688,7 @@ onUnmounted(() => {
         :key="filterKey"
       >
         <span class="text-xl text-core-black capitalize mb-12">{{
-          filterKey
+          filter
         }}</span>
         <slot :name="`filter-${filterKey}`"></slot>
       </div>
