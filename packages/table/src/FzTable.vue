@@ -93,7 +93,7 @@ const rows = computed(() => {
 const filters = computed({
   get() {
     const res = columns.value.filter(col => col.props.filterable).reduce((acc, column) => {
-      acc[column.props.field || column.props.header] = column.props.header
+      acc[column.props.field || column.props.header] = column.props.filterName || column.props.header
       return acc;
     }, {})
     return {
@@ -519,7 +519,7 @@ onUnmounted(() => {
       <div class="fztable__filters__container grow flex flex-col overflow-auto">
         <div class="flex flex-col w-full mt-32 px-12" v-for="(filter, filterKey) in filters" :key="filterKey">
           <span class="text-xl text-core-black capitalize mb-12">{{
-            filter
+             filter
             }}</span>
           <slot :name="`filter-${filterKey}`"></slot>
         </div>
