@@ -39,10 +39,9 @@ type FzColumnProps = {
    */
   headerTextJustify?: 'left' | 'right';
   /**
-   * Type of filter for the column 
+   * is the column filterable
    */
-  filterType?: 'select' | 'date' | 'badge';
-  filter?: any
+  filterable?: any
 };
 
 type FzColumnSlots = {

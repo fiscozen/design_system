@@ -3,7 +3,7 @@ import { FzTable, FzRow, FzOrdering } from '@fiscozen/table'
 import { FzColumn } from '@fiscozen/simple-table'
 import { FzCollapse } from '@fiscozen/collapse'
 import { FzSelect } from '@fiscozen/select'
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, toRefs } from 'vue'
 import { ActionlistItem } from '@fiscozen/actionlist'
 
 const meta: Meta<typeof FzTable> = {
@@ -115,7 +115,7 @@ const FixedColumnWidth: Story = {
     },
     template: `
       <div class="p-12">
-        <FzTable v-bind="args" gridTemplateColumns="120px 1fr 1fr 1fr 44px">
+        <FzTable v-bind="args" gridTemplateColumns="120px 1fr 1fr 1fr min-content">
           <FzColumn header="Nome" sticky="left" />
           <FzColumn header="Cognome" />
           <FzColumn header="Email">
@@ -379,23 +379,26 @@ const Filters: Story = {
       }
 
       const searchTerm = ref('');
-      const filters = reactive({
-        state: {
-          value: ''
-        }
+      const filters = reactive<Record<string, any>>({
+        state: ''
       });
       const filteredData = computed(() => {
         return data.filter((el: any) => {
           let res = true;
           const found = Object.values(el).find((col: any) => col.includes(searchTerm.value))
           for (const filter in filters) {
-            res &&= !filters[filter].value || (el[filter] === filters[filter].value)
+            res &&= !filters[filter] || (el[filter] === filters[filter])
           }
           res &&= !!found;
           return res;
         })
       })
-      return { args, filteredData, searchTerm, filters }
+      const emptyFilters = () => {
+        Object.keys(filters).forEach((filter) => {
+          filters[filter] = ''
+        })
+      }
+      return { args, filteredData, searchTerm, filters, emptyFilters }
     },
     components: {
       FzColumn,
@@ -405,25 +408,26 @@ const Filters: Story = {
     template: `
       <div class="p-12">
         <FzTable
-          gridTemplateColumns="120px 1fr 1fr 1fr 1fr 44px"
+          gridTemplateColumns="120px 1fr 1fr 1fr 1fr min-content"
           v-bind="args"
           v-model:searchTerm="searchTerm"
+          :hasActiveFilters="Object.values(filters).some((filter) => !!filter)"
           :modelValue="filteredData"
-          v-model:filters="filters">
+          @fztable:emptyFilters="emptyFilters">
           <FzColumn header="Nome" sticky="left" />
           <FzColumn header="Cognome" />
           <FzColumn header="Email">
             <template #default="{data}"><b>{{data.email}}</b></template>
           </FzColumn>
           <FzColumn header="Numero di telefono" field="phone_number" />
-          <FzColumn header="Stato invio" field="state" />
+          <FzColumn header="Stato invio" field="state" :filterable="true" />
           <template #filter-state>
             <FzSelect :options="[
                 {label: 'Da inviare', value: 'da_inviare'},
                 {label: 'Inviata', value: 'inviata'},
                 {label: 'Scaduta', value: 'scaduta'},
               ]"
-              v-model="filters.state.value"></FzSelect>
+              v-model="filters.state"></FzSelect>
           </template>
         </FzTable>
       </div>
