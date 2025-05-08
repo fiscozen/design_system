@@ -75,9 +75,9 @@ const handleActionClick = (index: number) => {
             </div>
             <div class="flex flex-row gap-8 items-start">
                 <div class="fz-stepper__circle flex items-center justify-center">
-                    <FzIcon v-if="stepStatus[index] === 'error'" name="circle-exclamation" variant="fas" size="md"
+                    <FzIcon v-if="stepStatus[index] === 'error'" name="circle-exclamation" variant="fas" size="lg"
                         class="text-semantic-error" />
-                    <FzIcon v-else-if="stepStatus[index] === 'completed'" name="circle-check" variant="fas" size="md"
+                    <FzIcon v-else-if="stepStatus[index] === 'completed'" name="circle-check" variant="fas" size="lg"
                         class="text-grey-500" />
                     <FzBadge v-else size="sm" :color="badgeColor[index]">{{ index + 1 }}</FzBadge>
                 </div>
@@ -96,9 +96,9 @@ const handleActionClick = (index: number) => {
         </div>
         <div class="flex flex-row gap-8 items-center" ref="dropdownContainer">
             <div class="fz-stepper__circle flex items-center justify-center">
-                <FzIcon v-if="stepStatus[activeStep] === 'error'" name="circle-exclamation" variant="fas" size="md"
+                <FzIcon v-if="stepStatus[activeStep] === 'error'" name="circle-exclamation" variant="fas" size="lg"
                     class="text-semantic-error" />
-                <FzIcon v-else-if="stepStatus[activeStep] === 'completed'" name="circle-check" variant="fas" size="md"
+                <FzIcon v-else-if="stepStatus[activeStep] === 'completed'" name="circle-check" variant="fas" size="lg"
                     class="text-grey-500" />
                 <FzBadge v-else size="sm" :color="badgeColor[activeStep]">{{ activeStep + 1 }}</FzBadge>
             </div>
