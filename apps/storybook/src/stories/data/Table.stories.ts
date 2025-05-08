@@ -458,11 +458,12 @@ const Selectable: Story = {
     title: 'Table title',
     subtitle: 'Table subtitle',
     selectable: true,
-    recordNumber: 100
+    recordNumber: 100,
   },
   render: (args) => ({
     setup() {
-      return { args }
+      const selectedRowIds = ref(new Set([3,7]));
+      return { args, selectedRowIds }
     },
     components: {
       FzColumn,
@@ -470,7 +471,8 @@ const Selectable: Story = {
     },
     template: `
       <div class="p-12 h-[600px]">
-        <FzTable v-bind="args">
+        <h3>Selected rows: {{selectedRowIds}}</h3>
+        <FzTable v-bind="args" v-model:selectedRowIds="selectedRowIds">
           <FzColumn header="Nome" />
           <FzColumn header="Cognome" />
           <FzColumn header="Email">

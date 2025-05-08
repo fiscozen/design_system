@@ -35,6 +35,7 @@ const modelValue = defineModel<RowData[]>();
 const ordering = defineModel<Record<string, FzOrdering>>("ordering", {
   default: {},
 });
+const selectedRowIds = defineModel<Set<string|number>>("selectedRowIds");
 
 const activePage = defineModel<number>("activePage", { default: 0 });
 const searchOpen = ref(false);
@@ -220,7 +221,6 @@ const inconColsStyle = computed(() => {
   return res;
 });
 
-const selectedRowIds = ref(new Set());
 const openRowIds = ref(new Set());
 const allSelected = ref(false);
 
@@ -238,11 +238,11 @@ const toggleSelectAll = () => {
   if (!allSelected.value) {
     allSelected.value = true;
     selectedRowIds.value = new Set(
-      internalValue.value.map((row, index) => index),
+      internalValue.value.map((row, index) => row.id || index),
     );
   } else {
     allSelected.value = false;
-    selectedRowIds.value.clear();
+    selectedRowIds.value?.clear();
   }
 };
 
@@ -250,16 +250,16 @@ const toggleRowSelection = (rowId: number) => {
   if (allSelected.value) {
     allSelected.value = false;
   }
-  if (selectedRowIds.value.has(rowId)) {
+  if (selectedRowIds.value?.has(rowId)) {
     selectedRowIds.value.delete(rowId);
   } else {
-    selectedRowIds.value.add(rowId);
+    selectedRowIds.value?.add(rowId);
   }
 };
 
 const selectedRows = computed(() => {
   return internalValue.value.filter((row, index) =>
-    selectedRowIds.value.has(index),
+    selectedRowIds.value?.has(row.id || index),
   );
 });
 
@@ -345,9 +345,9 @@ const handleKeyDown = (event: KeyboardEvent) => {
   }
 };
 
-watch(() => slots.default?.(), () => {
-  console.log('slots changed');
-});
+const isSelected = (rowId: number) => {
+  return selectedRowIds.value?.has(rowId);
+};
 
 onMounted(() => {
   const el = document.querySelector('.fz__table.overflow-auto');
@@ -449,20 +449,20 @@ onUnmounted(() => {
               :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions"
               @fztable:rowactionclick="(...args) =>
                 emit('fztable:rowactionclick', ...args)" :selectable="props.selectable"
-              :selected="selectedRowIds.has(index)" :actionsDisabled="props.actionsDisabled"
-              @update:selected="toggleRowSelection(index)" />
+              :selected="isSelected(row.id || index)" :actionsDisabled="props.actionsDisabled"
+              @update:selected="toggleRowSelection(row.id || index)" />
           </slot>
         </template>
         <template v-else-if="internalValue?.length && variant === 'accordion'" v-for="(row, index) in internalValue">
           <FzRow :id="index" :columns="columns" :data="row"
             :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions"
-            :selectable="props.selectable" :selected="selectedRowIds.has(index)" :isOverflowing :colSpan
+            :selectable="props.selectable" :selected="isSelected(row.id || index)" :isOverflowing :colSpan
             :leftColIconClass="openRowIds.has(index) ? 'text-blue-500' : ''"
             :leftColIcon="openRowIds.has(index) ? 'angle-up' : 'angle-right'" :actionDisabled="props.actionsDisabled"
             @fztable:rowactionclick="(...args) =>
-              emit('fztable:rowactionclick', ...args)" @update:selected="toggleRowSelection(index)"
-            @click="toggleSubRow(index)" />
-          <template v-for="(subrow, subindex) in row.subRows" v-if="openRowIds.has(index)" class="!bg-slate-100"
+              emit('fztable:rowactionclick', ...args)" @update:selected="toggleRowSelection(row.id || index)"
+            @click="toggleSubRow(row.id || index)" />
+          <template v-for="(subrow, subindex) in row.subRows" v-if="openRowIds.has(row.id || index)" class="!bg-slate-100"
             :key="subindex">
             <FzRow :id="subindex" :columns="columns" :data="subrow"
               :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions" :colSpan

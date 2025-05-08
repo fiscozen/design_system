@@ -43,7 +43,7 @@ type FzColumnProps = {
    */
   filterable?: any
   /**
-   * Label of the filter
+   * Title of the filter
    */
   filterName?: any
 };
