@@ -20,6 +20,10 @@ import { FzCheckbox } from "@fiscozen/checkbox";
 import { FzConfirmDialog } from "@fiscozen/dialog";
 import { ActionlistItem } from "@fiscozen/actionlist";
 
+FzCheckbox.compatConfig = {
+  MODE: 3,
+};
+
 const props = withDefaults(defineProps<FzTableProps>(), {
   pageInterval: 2,
   searchFilterPlaceholder: "Cerca...",
@@ -121,12 +125,17 @@ const headerStaticClasses = [
   "h-[52px]",
   "font-medium",
   "flex",
-  "justify-center",
   "items-center",
   "cursor-pointer",
   "text-grey-500",
 ];
-const headerClasses = computed(() => { });
+const getHeaderClasses = (column: FzColumnProps) => {
+  return {
+    'justify-start': column.headerTextJustify === "left",
+    'justify-center': column.headerTextJustify === "center",
+    'justify-end': column.headerTextJustify === "right",
+  }
+};
 
 const centerPageList = computed(() => {
   if (!props.pages) {
@@ -404,7 +413,7 @@ onUnmounted(() => {
         iconVariant="far" bars-filter @click="emit('fztable:newitem')"></FzIconButton>
     </div>
     <div class="fz__table overflow-auto size-full">
-      <div :class="[staticClasses]" :style="{
+      <div :class="[staticClasses, {'min-h-[200px]': !(internalValue?.length || rows?.length)}]" :style="{
         'grid-template-columns':
           props.gridTemplateColumns ?? gridTemplateStyle,
       }" ref="grid" role="table" :aria-rowcount="internalValue?.length || rows.length"
@@ -412,11 +421,9 @@ onUnmounted(() => {
         <div v-if="variant === 'accordion'" :class="[
           'fz__table__header--accordion',
           headerStaticClasses,
-          headerClasses,
         ]"></div>
         <div v-if="selectable" :class="[
           headerStaticClasses,
-          headerClasses,
           'sticky left-0 z-[3] w-[40px] justify-center items-center',
         ]">
           <FzCheckbox label="" class="fz__table__header--checkbox" :modelValue="allSelected" :emphasis="true"
@@ -424,7 +431,7 @@ onUnmounted(() => {
         </div>
         <div v-for="column in columns" :class="[
           headerStaticClasses,
-          headerClasses,
+          getHeaderClasses(column.props),
           getBodyClasses(column, true),
         ]" @click="handleOrderingClick(column.props)" role="columnheader" aria-sort="none">
           {{ column.props.header }}
@@ -437,7 +444,6 @@ onUnmounted(() => {
         <div v-if="actions" :class="[
           'fz__table__header--actions',
           headerStaticClasses,
-          headerClasses,
           'sticky right-0 z-[3]',
           { 'left-shadow': isOverflowing },
         ]">
@@ -479,28 +485,28 @@ onUnmounted(() => {
             <component v-if="row.children?.default" :is="row.children.default" :actions :columns />
           </div>
         </template>
-        <div v-else class="fz__table__empty h-full mt-80 justify-self-center" :style="colSpan">
+        <div v-else class="fz__table__empty h-full self-center justify-self-center mt-[-60px]" :style="colSpan">
           {{ placeholder ?? "No data available" }}
         </div>
       </div>
     </div>
     <div class="fz__table__footer w-full flex flex-row justify-end m-8" v-if="pages && internalValue?.length">
-      <div class="fz__table__pagination flex flex-row justify-between items-center gap-8">
+      <div class="fz__table__pagination flex flex-row justify-between items-center gap-4">
         <FzButton @click="activePage--" variant="invisible" :disabled="activePage === 0" size="md" iconPosition="before"
           iconName="angle-left">Indietro</FzButton>
-        <FzButton class="size-32 !px-0" @click="activePage = 0" :variant="activePage === 0 ? 'primary' : 'secondary'"
+        <FzButton class="min-w-32 min-h-32" @click="activePage = 0" :variant="activePage === 0 ? 'primary' : 'secondary'"
           size="sm">1</FzButton>
         <div class="fz__pagination__separator" v-if="activePage - pageInterval - 1 > 0">
           ...
         </div>
-        <FzButton v-for="page in centerPageList" class="size-32 !px-0" @click="activePage = page"
+        <FzButton v-for="page in centerPageList" class="min-w-32 min-h-32" @click="activePage = page"
           :variant="activePage === page ? 'primary' : 'secondary'" size="sm">
           {{ page + 1 }}
         </FzButton>
         <div class="fz__pagination__separator" v-if="pages - activePage - pageInterval - 2 > 0">
           ...
         </div>
-        <FzButton class="size-32 !px-0" v-if="pages > 1" @click="activePage = pages - 1"
+        <FzButton class="min-w-32 min-h-32" v-if="pages > 1" @click="activePage = pages - 1"
           :variant="activePage === pages - 1 ? 'primary' : 'secondary'" size="sm">{{ pages }}</FzButton>
         <FzButton @click="activePage++" variant="invisible" :disabled="activePage === pages - 1" size="md"
           iconPosition="after" iconName="angle-right">Avanti</FzButton>

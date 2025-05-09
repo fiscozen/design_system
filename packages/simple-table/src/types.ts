@@ -37,7 +37,7 @@ type FzColumnProps = {
   /**
    * header text justify left or right 
    */
-  headerTextJustify?: 'left' | 'right';
+  headerTextJustify?: 'left' | 'right' | 'center';
   /**
    * is the column filterable
    */
