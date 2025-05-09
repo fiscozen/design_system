@@ -349,7 +349,7 @@ const Filters: Story = {
       items
     },
     actionLabel: '',
-    pages: 10,
+    pages: 2345,
     activePage: 2,
     searchFilterPlaceholder: 'Ricerca',
     title: 'Table title',
@@ -691,6 +691,33 @@ const DynamicColumns: Story = {
     `
   })
 }
-export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns }
+
+const EpmtyTable: Story = {
+  args: {
+    modelValue: [],
+    placeholder: 'Nessun valore',
+    title: 'Table title',
+    subtitle: 'Table subtitle'
+  },
+  render: (args) => ({
+    setup() {
+    },
+    components: {
+      FzColumn,
+      FzTable,
+    },
+    template: `
+      <div class="p-32">
+        <FzTable v-bind="args">
+          <FzColumn header="Nome" sticky="left" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email" />
+          <FzColumn header="Numero di telefono" field="phone_number" />
+        </FzTable>
+      </div>
+    `
+  })
+}
+export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns, EpmtyTable }
 
 export default meta
