@@ -56,8 +56,8 @@ const layoutClass = computed(() => {
     default:
       break;
   }
-  let widthClass = props.disableViewport ? 'w-full' : 'w-dvw';
-  let heightClass = props.disableViewport ? 'h-full' : 'h-dvh';
+  let widthClass = props.isViewport ? 'w-dvw' : 'w-full';
+  let heightClass = props.isViewport ? 'h-dvh' : 'h-full';
   return [res, `fz-layout__${props.layout}--${currentBreakpoint.value}`, widthClass, heightClass];
 });
 
