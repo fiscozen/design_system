@@ -56,8 +56,9 @@ const layoutClass = computed(() => {
     default:
       break;
   }
-  let widthClass = props.disableViewport ? 'w-full' : 'w-dvwl';
-  return [res, `fz-layout__${props.layout}--${currentBreakpoint.value}`, widthClass];
+  let widthClass = props.disableViewport ? 'w-full' : 'w-dvw';
+  let heightClass = props.disableViewport ? 'h-full' : 'h-dvh';
+  return [res, `fz-layout__${props.layout}--${currentBreakpoint.value}`, widthClass, heightClass];
 });
 
 const sidebarToggle = () => {
@@ -67,7 +68,7 @@ const sidebarToggle = () => {
 </script>
 
 <template>
-  <div class="fz-layout h-dvh grid" :class="layoutClass">
+  <div class="fz-layout grid" :class="layoutClass">
     <template v-if="props.layout === 'oneColumn'">
       <div class="fz-layout__main p-12 fz-layout__overflow">
         <slot></slot>
