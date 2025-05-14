@@ -79,7 +79,9 @@ const handleActionClick = (index: number) => {
                         class="text-semantic-error" />
                     <FzIcon v-else-if="stepStatus[index] === 'completed'" name="circle-check" variant="fas" size="lg"
                         class="text-grey-500" />
-                    <FzBadge v-else size="sm" :color="badgeColor[index]">{{ index + 1 }}</FzBadge>
+                    <div v-else class="size-[25px] flex justify-center items-center">
+                        <FzBadge size="sm" :color="badgeColor[index]">{{ index + 1 }}</FzBadge>
+                    </div>
                 </div>
                 <div class="flex-col">
                     <div class="fz-stepper__title text-core-black font-medium">{{ step.title }}</div>
