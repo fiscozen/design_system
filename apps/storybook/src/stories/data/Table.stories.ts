@@ -198,6 +198,7 @@ const ActionClick: Story = {
     title: 'Table title',
     subtitle: 'Table subtitle',
     actionLabel: '',
+    pages: 1,
     actions: {
       items: [
         {
