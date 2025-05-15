@@ -22,5 +22,8 @@ export const bodyStaticClasses = [
   "justify-start",
   "items-center",
   "min-w-min",
-  "text-grey-500"
+  "text-grey-500",
+  "border-b-1",
+  "border-solid",
+  "border-grey-100"
 ];

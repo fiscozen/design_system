@@ -5,6 +5,7 @@ import { FzIconDropdown } from "@fiscozen/dropdown";
 import { FzIcon } from "@fiscozen/icons";
 import { FzCheckbox } from "@fiscozen/checkbox";
 import { ActionlistItem } from "@fiscozen/actionlist";
+import { FzRadio } from "@fiscozen/radio";
 
 const props = defineProps<FzRowProps<T>>();
 const emit = defineEmits<{
@@ -13,12 +14,18 @@ const emit = defineEmits<{
 }>();
 const selected = defineModel<boolean>("selected");
 const hover = ref(false);
+const handleClick = (event: MouseEvent) => {
+  emit("click", props.id, props.data);
+  if (props.selectable || props.hasRadio) {
+    selected.value = !selected.value;
+  }
+};
 </script>
 
 <template>
   <slot :columns :data :actions>
     <div class="grid grid-cols-subgrid" :style="colSpan" @mouseover="hover = true" @mouseleave="hover = false"
-      @click="emit('click', id, data)">
+      @click.stop.prevent="handleClick">
       <div v-if="leftColIcon" :class="[
         'w-[40px]',
         bodyStaticClasses,
@@ -32,12 +39,20 @@ const hover = ref(false);
         <FzIcon :name="leftColIcon" :class="leftColIconClass" variant="fas" :size="leftColIconSize || 'md'" />
       </div>
       <div v-if="props.selectable" :class="[
-        'w-[40px]',
+        'w-[36px]',
         bodyStaticClasses,
-        'sticky left-0 z-[2] justify-center',
+        'sticky left-0 z-[2] justify-center !min-w-[36px]',
         { 'bg-core-white': !hover, 'bg-background-alice-blue': hover },
       ]">
-        <FzCheckbox v-model="selected" label="" :value="`row-${props.id}`" emphasis />
+        <FzCheckbox :modelValue="selected" label="" :value="`row-${props.id}`" emphasis />
+      </div>
+      <div v-if="props.hasRadio" :class="[
+        'w-[36px]',
+        bodyStaticClasses,
+        'sticky left-0 z-[2] justify-center !min-w-[36px]',
+        { 'bg-core-white': !hover, 'bg-background-alice-blue': hover },
+      ]">
+        <FzRadio :modelValue="props.selected ? `row-${props.id}` : ''" :label="''" :value="`row-${props.id}`" emphasis />
       </div>
       <div :class="[
         bodyStaticClasses,

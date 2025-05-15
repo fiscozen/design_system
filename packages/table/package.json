@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/table",
-  "version": "0.1.8-alpha.8",
+  "version": "0.1.8-alpha.9",
   "description": "Design System Table component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -22,6 +22,7 @@
     "@fiscozen/input": "workspace:^",
     "@fiscozen/simple-table": "workspace:^",
     "@fiscozen/checkbox": "workspace:^",
+    "@fiscozen/radio": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },

@@ -39,7 +39,7 @@ const modelValue = defineModel<RowData[]>();
 const ordering = defineModel<Record<string, FzOrdering>>("ordering", {
   default: {},
 });
-const selectedRowIds = defineModel<Set<string|number>>("selectedRowIds");
+const selectedRowIds = defineModel<Set<string | number>>("selectedRowIds");
 
 const activePage = defineModel<number>("activePage", { default: 0 });
 const searchOpen = ref(false);
@@ -162,7 +162,7 @@ const totalColumns = computed(() => {
   if (props.selectable) {
     res++;
   }
-  if (props.variant === "accordion") {
+  if (['accordion', 'radio'].includes(props.variant)) {
     res++;
   }
   return res;
@@ -184,8 +184,8 @@ const gridTemplateStyle = computed(() => {
   if (props.actions) {
     res = `${res} min-content`;
   }
-  if (props.selectable) {
-    res = `40px ${res}`;
+  if (props.selectable || props.variant === "radio") {
+    res = `36px ${res}`;
   }
   return res;
 });
@@ -262,6 +262,9 @@ const toggleRowSelection = (rowId: number) => {
   if (selectedRowIds.value?.has(rowId)) {
     selectedRowIds.value.delete(rowId);
   } else {
+    if (props.variant === "radio") {
+      selectedRowIds.value?.clear();
+    }
     selectedRowIds.value?.add(rowId);
   }
 };
@@ -413,18 +416,21 @@ onUnmounted(() => {
         iconVariant="far" bars-filter @click="emit('fztable:newitem')"></FzIconButton>
     </div>
     <div class="fz__table overflow-auto size-full">
-      <div :class="[staticClasses, {'min-h-[200px]': !(internalValue?.length || rows?.length)}]" :style="{
+      <div :class="[staticClasses, { 'min-h-[200px]': !(internalValue?.length || rows?.length) }]" :style="{
         'grid-template-columns':
           props.gridTemplateColumns ?? gridTemplateStyle,
-      }" ref="grid" role="table" :aria-rowcount="internalValue?.length || rows.length"
-        :aria-colcount="columns.length">
+      }" ref="grid" role="table" :aria-rowcount="internalValue?.length || rows.length" :aria-colcount="columns.length">
         <div v-if="variant === 'accordion'" :class="[
           'fz__table__header--accordion',
           headerStaticClasses,
         ]"></div>
+        <div v-if="variant === 'radio'" :class="[
+          'fz__table__header--radio',
+          headerStaticClasses,
+        ]"></div>
         <div v-if="selectable" :class="[
           headerStaticClasses,
-          'sticky left-0 z-[3] w-[40px] justify-center items-center',
+          'sticky left-0 z-[3] w-[36px] justify-center items-center',
         ]">
           <FzCheckbox label="" class="fz__table__header--checkbox" :modelValue="allSelected" :emphasis="true"
             value="all" @change="toggleSelectAll($event)" />
@@ -437,8 +443,8 @@ onUnmounted(() => {
           {{ column.props.header }}
           <FzIcon v-if="getOrdering(column.props)?.orderable && getOrdering(column.props)?.direction !== 'none'"
             data-cy="fztable-ordering" :name="getOrdering(column.props)?.direction === 'asc'
-                ? 'arrow-up'
-                : 'arrow-down'
+              ? 'arrow-up'
+              : 'arrow-down'
               " size="md" class="ml-8 cursor-pointer"></FzIcon>
         </div>
         <div v-if="actions" :class="[
@@ -449,27 +455,27 @@ onUnmounted(() => {
         ]">
           {{ actionLabel }}
         </div>
-        <template v-if="internalValue?.length && variant === 'normal'">
+        <template v-if="internalValue?.length && ['normal', 'radio'].includes(variant)">
           <slot v-for="(row, index) in internalValue" :name="`row-${index}`">
             <FzRow :key="index" :id="index" :columns="columns" :colSpan :data="row" :isOverflowing
               :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions"
               @fztable:rowactionclick="(...args) =>
                 emit('fztable:rowactionclick', ...args)" :selectable="props.selectable"
-              :selected="isSelected(row.id || index)" :actionsDisabled="props.actionsDisabled"
-              @update:selected="toggleRowSelection(row.id || index)" />
+              :hasRadio="props.variant === 'radio'" :selected="isSelected(row.id || index)"
+              :actionsDisabled="props.actionsDisabled" @update:selected="toggleRowSelection(row.id || index)" />
           </slot>
         </template>
         <template v-else-if="internalValue?.length && variant === 'accordion'" v-for="(row, index) in internalValue">
           <FzRow :id="index" :columns="columns" :data="row"
             :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions"
-            :selectable="props.selectable" :selected="isSelected(row.id || index)" :isOverflowing :colSpan
-            :leftColIconClass="openRowIds.has(index) ? 'text-blue-500' : ''"
+            :hasRadio="props.variant === 'radio'" :selectable="props.selectable" :selected="isSelected(row.id || index)"
+            :isOverflowing :colSpan :leftColIconClass="openRowIds.has(index) ? 'text-blue-500' : ''"
             :leftColIcon="openRowIds.has(index) ? 'angle-up' : 'angle-right'" :actionDisabled="props.actionsDisabled"
             @fztable:rowactionclick="(...args) =>
               emit('fztable:rowactionclick', ...args)" @update:selected="toggleRowSelection(row.id || index)"
             @click="toggleSubRow(row.id || index)" />
-          <template v-for="(subrow, subindex) in row.subRows" v-if="openRowIds.has(row.id || index)" class="!bg-slate-100"
-            :key="subindex">
+          <template v-for="(subrow, subindex) in row.subRows" v-if="openRowIds.has(row.id || index)"
+            class="!bg-slate-100" :key="subindex">
             <FzRow :id="subindex" :columns="columns" :data="subrow"
               :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions" :colSpan
               :isOverflowing :actionsDisabled="props.actionsDisabled" leftColIcon="circle" leftColIconSize="xs"
@@ -494,8 +500,8 @@ onUnmounted(() => {
       <div class="fz__table__pagination flex flex-row justify-between items-center gap-4">
         <FzButton @click="activePage--" variant="invisible" :disabled="activePage === 0" size="md" iconPosition="before"
           iconName="angle-left">Indietro</FzButton>
-        <FzButton class="min-w-32 min-h-32" @click="activePage = 0" :variant="activePage === 0 ? 'primary' : 'secondary'"
-          size="sm">1</FzButton>
+        <FzButton class="min-w-32 min-h-32" @click="activePage = 0"
+          :variant="activePage === 0 ? 'primary' : 'secondary'" size="sm">1</FzButton>
         <div class="fz__pagination__separator" v-if="activePage - pageInterval - 1 > 0">
           ...
         </div>
@@ -525,7 +531,7 @@ onUnmounted(() => {
       <div class="fztable__filters__container grow flex flex-col overflow-auto">
         <div class="flex flex-col w-full mt-32 px-12" v-for="(filter, filterKey) in filters" :key="filterKey">
           <span class="text-xl text-core-black capitalize mb-12">{{
-             filter
+            filter
             }}</span>
           <slot :name="`filter-${filterKey}`"></slot>
         </div>
@@ -538,7 +544,8 @@ onUnmounted(() => {
   <FzConfirmDialog ref="filtersDialog" v-if="smOrSmaller" title="Filtri" cancelLabel="Indietro" confirmLabel="Salva"
     :cancelButtonEnabled="hasActiveFilters">
     <template #body>
-      <div class="flex flex-col w-full mt-32 px-12 grow overflow-auto" v-for="(filter, filterKey) in filters" :key="filterKey">
+      <div class="flex flex-col w-full mt-32 px-12 grow overflow-auto" v-for="(filter, filterKey) in filters"
+        :key="filterKey">
         <span class="text-xl text-core-black capitalize mb-12">{{
           filterKey
           }}</span>
