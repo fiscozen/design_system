@@ -718,6 +718,42 @@ const EpmtyTable: Story = {
     `
   })
 }
-export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns, EpmtyTable }
+
+const Radio: Story = {
+  args: {
+    modelValue: Array(10)
+      .fill({})
+      .map(() => sampleObj),
+    placeholder: 'Nessun valore',
+    title: 'Table title',
+    subtitle: 'Table subtitle',
+    recordNumber: 100,
+    variant: 'radio',
+  },
+  render: (args) => ({
+    setup() {
+      const selectedRowIds = ref(new Set([3]));
+      return { args, selectedRowIds }
+    },
+    components: {
+      FzColumn,
+      FzTable
+    },
+    template: `
+      <div class="p-12 h-[600px]">
+        <h3>Selected rows: {{selectedRowIds}}</h3>
+        <FzTable v-bind="args" v-model:selectedRowIds="selectedRowIds">
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+        </FzTable>
+      </div>
+    `
+  })
+}
+export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns, EpmtyTable, Radio }
 
 export default meta

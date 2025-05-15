@@ -108,7 +108,7 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
   /**
    * Table variant
    */
-  variant?: 'normal' | 'accordion' | 'list';
+  variant?: 'normal' | 'accordion' | 'list' | 'radio';
   /**
    * Action column label
    *
@@ -169,6 +169,10 @@ type FzRowProps<T> = {
    * Is the row overflowing 
    */
   isOverflowing?: boolean;
+  /**
+   * Whether the row should show a radio input
+   */
+  hasRadio?: boolean;
 };
 
 type FzRowSlots = {

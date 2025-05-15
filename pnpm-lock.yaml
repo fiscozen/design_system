@@ -2329,6 +2329,9 @@ importers:
       '@fiscozen/input':
         specifier: workspace:^
         version: link:../input
+      '@fiscozen/radio':
+        specifier: workspace:^
+        version: link:../radio
       '@fiscozen/simple-table':
         specifier: workspace:^
         version: link:../simple-table
