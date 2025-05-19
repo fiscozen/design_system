@@ -26,7 +26,7 @@ const handleClick = (event: MouseEvent) => {
   <slot :columns :data :actions>
     <div class="grid grid-cols-subgrid" :style="colSpan" @mouseover="hover = true" @mouseleave="hover = false"
       @click.stop.prevent="handleClick">
-      <div v-if="leftColIcon" :class="[
+      <div v-if="leftColIcon" role="cell" :class="[
         'w-[40px]',
         bodyStaticClasses,
         '!px-0',
@@ -38,7 +38,7 @@ const handleClick = (event: MouseEvent) => {
       ]">
         <FzIcon :name="leftColIcon" :class="leftColIconClass" variant="fas" :size="leftColIconSize || 'md'" />
       </div>
-      <div v-if="props.selectable" :class="[
+      <div v-if="props.selectable" role="cell" :class="[
         'w-[36px]',
         bodyStaticClasses,
         'sticky left-0 z-[2] justify-center !min-w-[36px]',
@@ -46,13 +46,14 @@ const handleClick = (event: MouseEvent) => {
       ]">
         <FzCheckbox :modelValue="selected" label="" :value="`row-${props.id}`" emphasis />
       </div>
-      <div v-if="props.hasRadio" :class="[
+      <div v-if="props.hasRadio" role="cell" :class="[
         'w-[36px]',
         bodyStaticClasses,
         'sticky left-0 z-[2] justify-center !min-w-[36px]',
         { 'bg-core-white': !hover, 'bg-background-alice-blue': hover },
       ]">
-        <FzRadio :modelValue="props.selected ? `row-${props.id}` : ''" :label="''" :value="`row-${props.id}`" emphasis />
+        <FzRadio :modelValue="props.selected ? `row-${props.id}` : ''" :label="''" :value="`row-${props.id}`"
+          emphasis />
       </div>
       <div :class="[
         bodyStaticClasses,
@@ -73,15 +74,16 @@ const handleClick = (event: MouseEvent) => {
           </template>
         </slot>
       </div>
-      <div v-if="actions" :class="[
+      <div v-if="actions" role="cell" :class="[
         bodyStaticClasses,
         'sticky right-0 z-[2] flex justify-center items-center',
         { 'bg-core-white': !hover, 'bg-background-alice-blue': hover, 'left-shadow': props.isOverflowing },
       ]">
-        <FzIconDropdown :actions="actions.items" buttonVariant="invisible" :openerDisabled="actionsDisabled" iconName="ellipsis-vertical" @fzaction:click="
-          (actionIndex: number, actionListItem: ActionlistItem) =>
-            emit('fztable:rowactionclick', actionIndex, actionListItem, props.data)
-        "></FzIconDropdown>
+        <FzIconDropdown :actions="actions.items" buttonVariant="invisible" :openerDisabled="actionsDisabled"
+          iconName="ellipsis-vertical" @fzaction:click="
+            (actionIndex: number, actionListItem: ActionlistItem) =>
+              emit('fztable:rowactionclick', actionIndex, actionListItem, props.data)
+          "></FzIconDropdown>
       </div>
     </div>
   </slot>

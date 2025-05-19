@@ -17,7 +17,7 @@ export const bodyStaticClasses = [
   "fz__body",
   "z-[1]",
   "px-16",
-  "min-h-48",
+  "min-h-[52px]",
   "flex",
   "justify-start",
   "items-center",
