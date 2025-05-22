@@ -20,6 +20,7 @@ const sampleObj = {
   cognome: 'Agnoletto',
   email: 'riccardo.agnoletto@fiscozen.it',
   phone_number: '123456789',
+  price: '12145,67 €',
   state: "da_inviare",
   hiddenState: 'yes'
 }
@@ -71,7 +72,7 @@ const Default: Story = {
       FzCollapse
     },
     template: `
-      <div class="p-12 h-[600px] w-[500px]">
+      <div class="p-12">
         <FzTable v-bind="args">
           <FzColumn header="Nome" sticky="left" />
           <FzColumn header="Cognome" />
@@ -79,6 +80,7 @@ const Default: Story = {
             <template #default="{data}"><b>{{data.email}}</b></template>
           </FzColumn>
           <FzColumn header="Numero di telefono" field="phone_number" />
+          <FzColumn header="Prezzo" field="price" numeric />
           <template #row-2>
             <FzCollapse class="col-span-5 w-full py-8">
               <template #summary>custom collapsible row summary</template>
@@ -123,12 +125,6 @@ const FixedColumnWidth: Story = {
             <template #default="{data}"><b>{{data.email}}</b></template>
           </FzColumn>
           <FzColumn header="Numero di telefono" field="phone_number" />
-          <template #row-2>
-            <FzCollapse class="col-span-5 w-full py-8">
-              <template #summary>custom collapsible row summary</template>
-              <template #content>custom collapsible row content</template>
-            </FzCollapse>
-          </template>
         </FzTable>
       </div>
     `
@@ -755,6 +751,43 @@ const Radio: Story = {
     `
   })
 }
-export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns, EpmtyTable, Radio }
+
+const List: Story = {
+  args: {
+    modelValue: Array(10)
+      .fill({})
+      .map(() => sampleObj),
+    placeholder: 'Nessun valore',
+    title: 'Table title',
+    subtitle: 'Table subtitle',
+    variant: 'list',
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'sm'
+    }
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: {
+      FzColumn,
+      FzTable
+    },
+    template: `
+      <div class="p-12 h-[600px]">
+        <FzTable v-bind="args">
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email"/>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+        </FzTable>
+      </div>
+    `
+  })
+}
+
+export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns, EpmtyTable, Radio, List }
 
 export default meta

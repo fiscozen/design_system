@@ -24,7 +24,7 @@ const handleClick = (event: MouseEvent) => {
 
 <template>
   <slot :columns :data :actions>
-    <div class="grid grid-cols-subgrid" :style="colSpan" @mouseover="hover = true" @mouseleave="hover = false"
+    <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100" :style="colSpan" @mouseover="hover = true" @mouseleave="hover = false"
       @click.stop.prevent="handleClick">
       <div v-if="leftColIcon" role="cell" :class="[
         'w-[40px]',
@@ -65,22 +65,23 @@ const handleClick = (event: MouseEvent) => {
           <template v-else-if="
             (column.props.field || column.props.header) && props.data
           ">
-            {{
-              props.data[
-              column.props.field?.toLowerCase() ||
-              column.props.header.toLowerCase()
-              ]
-            }}
+              {{
+                props.data[
+                column.props.field?.toLowerCase() ||
+                column.props.header.toLowerCase()
+                ]
+              }}
           </template>
         </slot>
       </div>
       <div v-if="actions" role="cell" :class="[
         bodyStaticClasses,
+        '!p-[12px]',
         'sticky right-0 z-[2] flex justify-center items-center',
         { 'bg-core-white': !hover, 'bg-background-alice-blue': hover, 'left-shadow': props.isOverflowing },
       ]">
         <FzIconDropdown :actions="actions.items" buttonVariant="invisible" :openerDisabled="actionsDisabled"
-          iconName="ellipsis-vertical" @fzaction:click="
+          iconName="ellipsis-vertical" size="sm" @fzaction:click="
             (actionIndex: number, actionListItem: ActionlistItem) =>
               emit('fztable:rowactionclick', actionIndex, actionListItem, props.data)
           "></FzIconDropdown>

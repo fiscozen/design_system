@@ -41,11 +41,15 @@ type FzColumnProps = {
   /**
    * is the column filterable
    */
-  filterable?: any
+  filterable?: boolean
   /**
    * Title of the filter
    */
-  filterName?: any
+  filterName?: string
+  /**
+   * Numeric text style
+   */
+  numeric?: boolean;
 };
 
 type FzColumnSlots = {

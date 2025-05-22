@@ -34,6 +34,7 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
    */
   subtitle?: string;
   /**
+   * https://github.com/fiscozen/it.fiscozen.app/pull/10156
    * CSS class for the table
    */
   tableClass?: string;

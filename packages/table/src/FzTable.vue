@@ -121,9 +121,9 @@ const headerStaticClasses = [
   "top-0",
   "z-[2]",
   "bg-grey-100",
-  "px-16",
-  "h-[52px]",
-  "font-medium",
+  "p-16",
+  "min-h-[52px]",
+  "text-base",
   "flex",
   "items-center",
   "cursor-pointer",
@@ -173,14 +173,18 @@ const gridTemplateStyle = computed(() => {
   if (props.variant === "accordion") {
     res = `40px`;
   }
-  columns.value.reduce((acc, column) => {
-    if (column.props.width) {
-      res += ` ${column.props.width}`;
-    } else {
-      res += ` auto`;
-    }
-    return acc;
-  }, res);
+  if (props.variant === 'list' && smOrSmaller.value) {
+    res = `1fr`; 
+  } else {
+    columns.value.reduce((acc, column) => {
+      if (column.props.width) {
+        res += ` ${column.props.width}`;
+      } else {
+        res += ` auto`;
+      }
+      return acc;
+    }, res);
+  }
   if (props.actions) {
     res = `${res} min-content`;
   }
@@ -190,9 +194,9 @@ const gridTemplateStyle = computed(() => {
   return res;
 });
 
-const colSpan = computed(() => ({
-  "grid-column": `span ${totalColumns.value} / span ${totalColumns.value}`,
-}));
+const colSpan = computed(() => {
+  return {'grid-column': `span ${(props.variant === 'list' && smOrSmaller.value) ? '1' : totalColumns.value} / span ${totalColumns.value}`}
+})
 
 const internalValue = computed(() => {
   let res = modelValue.value || [];
@@ -361,6 +365,14 @@ const isSelected = (rowId: number) => {
   return selectedRowIds.value?.has(rowId);
 };
 
+const indeterminate = computed(() => {
+  return (
+    selectedRowIds.value &&
+    selectedRowIds.value.size > 0 &&
+    !allSelected.value
+  );
+});
+
 onMounted(() => {
   const el = document.querySelector('.fz__table.overflow-auto');
   if (el) {
@@ -386,7 +398,7 @@ onUnmounted(() => {
       <span class="text-lg">{{ subtitle }}</span>
     </div>
     <div :class="[
-      'grid mb-12 items-center gap-8',
+      'grid mb-20 items-center gap-8',
       smOrSmaller && searchOpen ? 'grid-rows-2' : 'grid-rows-1',
     ]" :style="inconColsStyle">
       <div class="justify-self-start grow">
@@ -420,42 +432,46 @@ onUnmounted(() => {
         'grid-template-columns':
           props.gridTemplateColumns ?? gridTemplateStyle,
       }" ref="grid" role="table" :aria-rowcount="internalValue?.length || rows.length" :aria-colcount="columns.length">
-        <div v-if="variant === 'accordion'" :class="[
-          'fz__table__header--accordion',
-          headerStaticClasses,
-        ]"></div>
-        <div v-if="variant === 'radio'" :class="[
-          'fz__table__header--radio',
-          headerStaticClasses,
-        ]"></div>
-        <div v-if="selectable" :class="[
-          headerStaticClasses,
-          'sticky left-0 z-[3] w-[36px] justify-center items-center',
-        ]">
-          <FzCheckbox label="" class="fz__table__header--checkbox" :modelValue="allSelected" :emphasis="true"
-            value="all" @change="toggleSelectAll($event)" />
-        </div>
-        <div v-for="column in columns" :class="[
-          headerStaticClasses,
-          getHeaderClasses(column.props),
-          getBodyClasses(column, true),
-        ]" @click="handleOrderingClick(column.props)" role="columnheader" aria-sort="none">
-          {{ column.props.header }}
-          <FzIcon v-if="getOrdering(column.props)?.orderable && getOrdering(column.props)?.direction !== 'none'"
-            data-cy="fztable-ordering" :name="getOrdering(column.props)?.direction === 'asc'
-              ? 'arrow-up'
-              : 'arrow-down'
-              " size="md" class="ml-8 cursor-pointer"></FzIcon>
-        </div>
-        <div v-if="actions" :class="[
-          'fz__table__header--actions',
-          headerStaticClasses,
-          'sticky right-0 z-[3]',
-          { 'left-shadow': isOverflowing },
-        ]">
-          {{ actionLabel }}
-        </div>
-        <template v-if="internalValue?.length && ['normal', 'radio'].includes(variant)">
+        <template v-if="variant !== 'list'">
+          <div v-if="variant === 'accordion'" :class="[
+            'fz__table__header--accordion',
+            headerStaticClasses,
+          ]"></div>
+          <div v-if="variant === 'radio'" :class="[
+            'fz__table__header--radio',
+            headerStaticClasses,
+          ]"></div>
+          <div v-if="selectable" :class="[
+            headerStaticClasses,
+            'sticky left-0 z-[3] w-[36px] justify-center items-center',
+          ]">
+            <FzCheckbox label="" class="fz__table__header--checkbox" :modelValue="allSelected" :emphasis="!indeterminate"
+              :indeterminate
+              value="all" @change="toggleSelectAll($event)" />
+          </div>
+          <div v-for="column in columns" :class="[
+            headerStaticClasses,
+            getHeaderClasses(column.props),
+            getBodyClasses(column, true),
+          ]" @click="handleOrderingClick(column.props)" role="columnheader" aria-sort="none">
+            {{ column.props.header }}
+            <FzIcon v-if="getOrdering(column.props)?.orderable && getOrdering(column.props)?.direction !== 'none'"
+              :class="{'text-blue-500': getOrdering(column.props)?.direction !== 'none'}"
+              data-cy="fztable-ordering" :name="getOrdering(column.props)?.direction === 'asc'
+                ? 'arrow-up'
+                : 'arrow-down'
+                " size="md" class="ml-8 cursor-pointer"></FzIcon>
+          </div>
+          <div v-if="actions" :class="[
+            'fz__table__header--actions',
+            headerStaticClasses,
+            'sticky right-0 z-[3]',
+            { 'left-shadow': isOverflowing },
+          ]">
+            {{ actionLabel }}
+          </div>
+        </template>
+        <template v-if="internalValue?.length && ['normal', 'radio', 'list'].includes(variant)">
           <slot v-for="(row, index) in internalValue" :name="`row-${index}`">
             <FzRow :key="index" :id="index" :columns="columns" :colSpan :data="row" :isOverflowing
               :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions"
@@ -485,32 +501,32 @@ onUnmounted(() => {
         </template>
         <template v-else-if="rows && rows.length">
           <div :class="[
-            'grid grid-cols-subgrid border-b-1 border-solid border-grey-100 bg-core-white hover:bg-alice-blue',
+            'grid grid-cols-subgrid border-b-1 border-solid border-grey-100 bg-core-white hover:bg-alice-blue border-b-1 border-solid border-grey-100',
             bodyStaticClasses,
           ]" v-for="(row, index) in rows" :aria-rowindex="index + 1" :style="colSpan" role="row">
             <component v-if="row.children?.default" :is="row.children.default" :actions :columns />
           </div>
         </template>
-        <div v-else class="fz__table__empty h-full self-center justify-self-center mt-[-60px]" :style="colSpan">
+        <div v-else class="fz__table__empty h-full self-center justify-self-center min-h-[200px] flex justify-center items-center" :style="colSpan">
           {{ placeholder ?? "No data available" }}
         </div>
       </div>
     </div>
-    <div class="fz__table__footer w-full flex flex-row justify-end m-8" v-if="pages && pages > 1 && internalValue?.length">
+    <div class="fz__table__footer w-full flex flex-row justify-end mt-[20px]" v-if="pages && pages > 1 && internalValue?.length">
       <div class="fz__table__pagination flex flex-row justify-between items-center gap-4">
         <FzButton @click="activePage--" variant="invisible" :disabled="activePage === 0" size="md" iconPosition="before"
           iconName="angle-left">Indietro</FzButton>
         <FzButton class="min-w-32 min-h-32" @click="activePage = 0"
           :variant="activePage === 0 ? 'primary' : 'secondary'" size="sm">1</FzButton>
-        <div class="fz__pagination__separator" v-if="activePage - pageInterval - 1 > 0">
-          ...
+        <div class="fz__pagination__separator size-32 flex justify-center items-center" v-if="activePage - pageInterval - 1 > 0">
+          <span>...</span>
         </div>
         <FzButton v-for="page in centerPageList" class="min-w-32 min-h-32" @click="activePage = page"
           :variant="activePage === page ? 'primary' : 'secondary'" size="sm">
           {{ page + 1 }}
         </FzButton>
-        <div class="fz__pagination__separator" v-if="pages - activePage - pageInterval - 2 > 0">
-          ...
+        <div class="fz__pagination__separator size-32 flex justify-center items-center" v-if="pages - activePage - pageInterval - 2 > 0">
+          <span>...</span>
         </div>
         <FzButton class="min-w-32 min-h-32" v-if="pages > 1" @click="activePage = pages - 1"
           :variant="activePage === pages - 1 ? 'primary' : 'secondary'" size="sm">{{ pages }}</FzButton>
