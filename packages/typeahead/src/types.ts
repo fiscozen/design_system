@@ -83,6 +83,10 @@ interface FzTypeaheadProps {
    * Disable free input (not selection)
    */
   disableFreeInput?: boolean;
+  /** 
+   * Disable the input emit on focus event
+   */
+  disableEmitOnFocus?: boolean;
 }
 
 export { FzTypeaheadProps };
