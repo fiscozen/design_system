@@ -2,8 +2,9 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzTable, FzRow, FzOrdering } from '@fiscozen/table'
 import { FzColumn } from '@fiscozen/simple-table'
 import { FzCollapse } from '@fiscozen/collapse'
+import { FzLink } from '@fiscozen/link'
 import { FzSelect } from '@fiscozen/select'
-import { ref, reactive, computed, toRefs } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { ActionlistItem } from '@fiscozen/actionlist'
 
 const meta: Meta<typeof FzTable> = {
@@ -22,7 +23,8 @@ const sampleObj = {
   phone_number: '123456789',
   price: '12145,67 €',
   state: "da_inviare",
-  hiddenState: 'yes'
+  hiddenState: 'yes',
+  link: 'https://www.fiscozen.it',
 }
 
 const items = [
@@ -67,9 +69,10 @@ const Default: Story = {
       return { args }
     },
     components: {
+      FzCollapse,
       FzColumn,
-      FzTable,
-      FzCollapse
+      FzLink,
+      FzTable
     },
     template: `
       <div class="p-12">
@@ -81,6 +84,11 @@ const Default: Story = {
           </FzColumn>
           <FzColumn header="Numero di telefono" field="phone_number" />
           <FzColumn header="Prezzo" field="price" numeric />
+          <FzColumn header="link">
+            <template #default="{data}">
+              <FzLink :to="data.link" target="_blank" external>Dettaglio</FzLink>
+            </template>
+          </FzColumn>
           <template #row-2>
             <FzCollapse class="col-span-5 w-full py-8">
               <template #summary>custom collapsible row summary</template>
@@ -357,25 +365,8 @@ const Filters: Story = {
   },
   render: (args) => ({
     setup() {
-      const data = Array(10)
-        .fill({})
-        .map(() => sampleObj);
-      data[1] = {
-        nome: 'Francesco',
-        cognome: 'Panico',
-        email: 'francesco.panico@fiscozen.it',
-        phone_number: '123456789',
-        state: 'inviata',
-        hiddenState: 'no'
-      }
-      data[2] = {
-        nome: 'Cristian',
-        cognome: 'Barraco',
-        email: 'cristian.barraco@fiscozen.it',
-        phone_number: '4444',
-        state: 'scaduta',
-        hiddenState: 'no'
-      }
+      const loading = ref(false);
+      const data = ref<Record<string, string>[]>([]);
 
       const searchTerm = ref('');
       const extFilters = {
@@ -386,7 +377,7 @@ const Filters: Story = {
         hiddenState: ''
       });
       const filteredData = computed(() => {
-        return data.filter((el: any) => {
+        return data.value.filter((el: any) => {
           let res = true;
           const found = Object.values(el).find((col: any) => col.includes(searchTerm.value))
           for (const filter in filters) {
@@ -401,7 +392,32 @@ const Filters: Story = {
           filters[filter] = ''
         })
       }
-      return { args, filteredData, searchTerm, filters, emptyFilters, extFilters }
+      onMounted(() => {
+        loading.value = true;
+        setTimeout(() => {
+          data.value = Array(10)
+            .fill({})
+            .map(() => sampleObj);
+          data.value[1] = {
+            nome: 'Francesco',
+            cognome: 'Panico',
+            email: 'francesco.panico@fiscozen.it',
+            phone_number: '123456789',
+            state: 'inviata',
+            hiddenState: 'no'
+          }
+          data.value[2] = {
+            nome: 'Cristian',
+            cognome: 'Barraco',
+            email: 'cristian.barraco@fiscozen.it',
+            phone_number: '4444',
+            state: 'scaduta',
+            hiddenState: 'no'
+          }
+          loading.value = false;
+        }, 3000)
+      })
+      return { args, filteredData, searchTerm, filters, emptyFilters, extFilters, loading }
     },
     components: {
       FzColumn,
@@ -416,6 +432,7 @@ const Filters: Story = {
           v-model:searchTerm="searchTerm"
           :hasActiveFilters="Object.values(filters).some((filter) => !!filter)"
           :extFilters="extFilters"
+          :loading="loading"
           :modelValue="filteredData"
           @fztable:emptyFilters="emptyFilters">
           <FzColumn header="Nome" sticky="left" />

@@ -116,6 +116,11 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
    * @default 'Azione'
    */
   actionLabel?: string;
+  /**
+   * Wether to show the loading spinner
+   * @default false
+   * */
+  loading?: boolean;
 }
 
 type FzTableSlots = {

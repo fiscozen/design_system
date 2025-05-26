@@ -15,6 +15,10 @@ const emit = defineEmits<{
 const selected = defineModel<boolean>("selected");
 const hover = ref(false);
 const handleClick = (event: MouseEvent) => {
+  if(props.selectable || props.hasRadio) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
   emit("click", props.id, props.data);
   if (props.selectable || props.hasRadio) {
     selected.value = !selected.value;
@@ -25,7 +29,7 @@ const handleClick = (event: MouseEvent) => {
 <template>
   <slot :columns :data :actions>
     <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100" :style="colSpan" @mouseover="hover = true" @mouseleave="hover = false"
-      @click.stop.prevent="handleClick">
+      @click="handleClick">
       <div v-if="leftColIcon" role="cell" :class="[
         'w-[40px]',
         bodyStaticClasses,

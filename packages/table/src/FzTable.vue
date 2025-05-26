@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { computed, ref, useSlots, onMounted, onUnmounted, watch, VNode } from "vue";
+import { computed, ref, useSlots, onMounted, onUnmounted, VNode } from "vue";
 import {
   FzRow,
   FzRowProps,
@@ -19,6 +19,7 @@ import { ascend, descend, sortWith, prop } from "ramda";
 import { FzCheckbox } from "@fiscozen/checkbox";
 import { FzConfirmDialog } from "@fiscozen/dialog";
 import { ActionlistItem } from "@fiscozen/actionlist";
+import { FzProgress } from "@fiscozen/progress";
 
 FzCheckbox.compatConfig = {
   MODE: 3,
@@ -30,6 +31,7 @@ const props = withDefaults(defineProps<FzTableProps>(), {
   selectable: false,
   variant: "normal",
   actionLabel: "Azione",
+  loading: false,
 });
 
 type RowData = T & {
@@ -113,7 +115,7 @@ const filters = computed({
 
 const hasFilters = computed(() => Object.keys(filters.value).length > 0);
 
-const staticClasses = ref(["grid"]);
+const staticClasses = ref(["grid relative"]);
 
 const headerStaticClasses = [
   "fz__header__cell",
@@ -274,6 +276,9 @@ const toggleRowSelection = (rowId: number) => {
 };
 
 const selectedRows = computed(() => {
+  if (!selectedRowIds.value || !internalValue.value) {
+    return [];
+  }
   return internalValue.value.filter((row, index) =>
     selectedRowIds.value?.has(row.id || index),
   );
@@ -427,7 +432,14 @@ onUnmounted(() => {
         :style="smOrSmaller ? `grid-column-start: ${iconCols}` : ''" v-if="newItemButton && smOrSmaller" iconName="plus"
         iconVariant="far" bars-filter @click="emit('fztable:newitem')"></FzIconButton>
     </div>
-    <div class="fz__table overflow-auto size-full">
+    <div class="fz__table overflow-auto size-full relative">
+      <template v-if="loading">
+        <div class="fz__table__loading h-full w-full flex justify-center items-center min-h-[200px] absolute z-20 bg-gray-100/60" :style="colSpan">
+          <slot name="loading">
+            <FzProgress />
+          </slot>
+        </div>
+      </template>
       <div :class="[staticClasses, { 'min-h-[200px]': !(internalValue?.length || rows?.length) }]" :style="{
         'grid-template-columns':
           props.gridTemplateColumns ?? gridTemplateStyle,
@@ -546,7 +558,7 @@ onUnmounted(() => {
       </div>
       <div class="fztable__filters__container grow flex flex-col overflow-auto">
         <div class="flex flex-col w-full mt-32 px-12" v-for="(filter, filterKey) in filters" :key="filterKey">
-          <span class="text-xl text-core-black capitalize mb-12">{{
+          <span class="text-lg text-core-black capitalize mb-12">{{
             filter
             }}</span>
           <slot :name="`filter-${filterKey}`"></slot>
