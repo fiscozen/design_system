@@ -21,8 +21,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.296
-        version: 1.0.296
+        specifier: ^1.0.317
+        version: 1.0.317
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
@@ -1287,8 +1287,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.296
-        version: 1.0.296
+        specifier: ^1.0.317
+        version: 1.0.317
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.7.2
@@ -2937,11 +2937,11 @@ packages:
     resolution: {integrity: sha512-x1KXOatwofR6ZAYzXRBL5wrdV0vwNxlTCK9NCuLqAzQYARqGcvFwiJA6A1ERuh+dgeA4Dxm3JBYictIes+SqUQ==}
 
   '@awesome.me/kit-8137893ad3@1.0.236':
-    resolution: {integrity: sha512-bGAqFfqj7aGKe2sgWMpicSsLzBfq+1OX+LVWIJ1srKv1V14v9IcfjQvokwAq9C+BVtZhUez++2uu+jboKcEPPQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.236/kit-8137893ad3-1.0.236.tgz}
+    resolution: {integrity: sha512-bGAqFfqj7aGKe2sgWMpicSsLzBfq+1OX+LVWIJ1srKv1V14v9IcfjQvokwAq9C+BVtZhUez++2uu+jboKcEPPQ==}
     engines: {node: '>=16'}
 
-  '@awesome.me/kit-8137893ad3@1.0.296':
-    resolution: {integrity: sha512-UpgEMU7Z/u6+kVLjcc4PcHHpluR0Pf4DpZnDn8QV8wJAqumLFHayAok/utr07vyHanNDiI1MtUGZTu/VqWyXeg==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.296/kit-8137893ad3-1.0.296.tgz}
+  '@awesome.me/kit-8137893ad3@1.0.317':
+    resolution: {integrity: sha512-R71Jk1yhj1K4mY3/fTklKckpn93LCuBH56feQSyzMZlrcCoHZwRNeLlWNOUzdLdo7mV2qDNJx34FCzXoP1VchA==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.26.2':
@@ -7326,7 +7326,7 @@ snapshots:
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
-  '@awesome.me/kit-8137893ad3@1.0.296':
+  '@awesome.me/kit-8137893ad3@1.0.317':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
