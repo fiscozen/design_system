@@ -90,7 +90,7 @@ const safeInputContainer = computed(() => {
 
 const handleInputFocus = (isOpen: boolean, handlePickerClick: () => void) => {
   if (!isOpen) handlePickerClick();
-  handleInput(inputValue.value, isOpen, props.disableEmitOnFocus);
+  handleInput(inputValue.value, isOpen);
 };
 
 onMounted(() => {
@@ -115,7 +115,8 @@ function updateModelDependencies(value?: string) {
   }
 
   const safeVal = modelModifiers.object ? value.value : value;
-  const selected = internalOptions.value?.find((opt) => opt.value === safeVal);
+  const options = props.selectProps?.options || internalOptions.value;
+  const selected = options?.find((opt) => opt.value === safeVal);
 
   if (!selected) {
     console.warn(`Could not find option with value: ${value}`);
@@ -132,12 +133,12 @@ const debounceHandleInput = debounce(
   props.delayTime,
 );
 
-function handleInput(val: string, isOpen: boolean, disableEmitOnFocus = false) {
+function handleInput(val: string, isOpen: boolean) {
   dirtyInput.value = true;
   const selected = internalOptions.value?.find((opt) => opt.label === val);
   inputValue.value = val;
   if (!selected && !props.disableFreeInput) model.value = undefined;
-  if (!disableEmitOnFocus) debounceHandleInput(val);
+  debounceHandleInput(val);
   if (!isOpen) {
     fzselect.value.forceOpen();
   }
@@ -171,7 +172,7 @@ const internalOptions = computed<FzSelectOptionsProps[] | undefined>(() => {
 });
 
 const safeSelectOpts = computed<FzSelectProps>(() =>
-  ({
+  reactive({
     position: "bottom",
     ...props.selectProps,
     options: internalOptions.value || [],
