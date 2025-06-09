@@ -17,7 +17,7 @@
   >
     <template #dp-input="{ value, onInput, onEnter, onPaste, closeMenu }">
       <FzInput
-        @update:modelValue="(e: string) => onInput(e)"
+        @update:modelValue="(e) => handleInputModelUpdate(onInput, e)"
         @keyup.enter="onEnter"
         @paste="
           (e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)
@@ -131,6 +131,7 @@ const emit = defineEmits([
   "invalid-fixed-range",
   "time-picker-open",
   "time-picker-close",
+  "text-input",
   "am-pm-change",
   "range-start",
   "range-end",
@@ -182,6 +183,14 @@ const handlePaste = (
   nextTick(() => {
     closeMenu();
   });
+};
+
+const handleInputModelUpdate = (onInput: (val: string) => void, value: string) => {
+  onInput(value);
+  emit('text-input', value);
+  if (!value) {
+    emit("cleared", value);
+  }
 };
 </script>
 
