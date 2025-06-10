@@ -21,6 +21,7 @@
           v-if="iconName && iconPosition === 'after'"
           :name="iconName"
           :size="mappedIconSize"
+          :variant="iconVariant"
         />
       </slot>
     </div>
