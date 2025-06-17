@@ -1,7 +1,7 @@
 import { h, ref, Ref } from "vue";
 import FzTable from "./FzTable.vue";
 import { FzColumn } from "@fiscozen/simple-table";
-import { FzTableProps, Ordering } from "./types";
+import { FzTableProps, FzOrdering } from "./types";
 
 const sampleObj = {
   nome: "Riccardo",
@@ -95,7 +95,7 @@ describe("<FzTable />", () => {
       ordering: {
         cognome: {
           field: 'Cognome',
-          direction: 'desc' satisfies Ordering['direction'],
+          direction: 'desc' satisfies FzOrdering['direction'],
           orderable: true
         }
       }

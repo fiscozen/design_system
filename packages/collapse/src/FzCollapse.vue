@@ -22,11 +22,9 @@ const handleSummaryClick = () => {
         <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" class="ml-32" size="md"></FzIcon>
       </slot>
     </summary>
-    <Transition>
-      <div data-e2e="content" v-show="isOpen" class="text-sm">
-        <slot name="content">{{ content }}</slot>
-      </div>
-    </Transition>
+    <div data-e2e="content" v-show="isOpen" :class="['text-sm', contentClass]">
+      <slot name="content">{{ content }}</slot>
+    </div>
   </details>
 </template>
 
