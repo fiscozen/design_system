@@ -10,17 +10,21 @@ export const getBodyClasses = (
     "left-0 z-[2]": column.props.sticky === "left",
     "z-[3]": column.props.sticky && isHeader,
     "right-0": column.props.sticky === "right",
+    "justify-end": !isHeader && typeof column.props.numeric !== "undefined",
+    "justify-start": !isHeader && !(typeof column.props.numeric === 'undefined'),
+    "lining-nums": !isHeader && !(typeof column.props.numeric === 'undefined'),
+    "tabular-nums": !isHeader && !(typeof column.props.numeric === 'undefined'),
   };
 };
 
 export const bodyStaticClasses = [
   "fz__body",
   "z-[1]",
-  "px-16",
-  "min-h-48",
-  "bg-core-white",
+  "p-16",
+  "min-h-[52px]",
+  "text-base",
   "flex",
-  "justify-start",
-  "items-center",
+  "items-start",
   "min-w-min",
+  "text-grey-500"
 ];

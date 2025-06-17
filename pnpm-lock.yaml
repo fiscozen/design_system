@@ -21,8 +21,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.296
-        version: 1.0.296
+        specifier: ^1.0.329
+        version: 1.0.329
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
@@ -1287,8 +1287,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.296
-        version: 1.0.296
+        specifier: ^1.0.329
+        version: 1.0.329
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.7.2
@@ -2311,6 +2311,15 @@ importers:
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
+      '@fiscozen/checkbox':
+        specifier: workspace:^
+        version: link:../checkbox
+      '@fiscozen/composables':
+        specifier: workspace:^
+        version: link:../composables
+      '@fiscozen/dialog':
+        specifier: workspace:^
+        version: link:../dialog
       '@fiscozen/dropdown':
         specifier: workspace:^
         version: link:../dropdown
@@ -2320,6 +2329,12 @@ importers:
       '@fiscozen/input':
         specifier: workspace:^
         version: link:../input
+      '@fiscozen/progress':
+        specifier: workspace:^
+        version: link:../progress
+      '@fiscozen/radio':
+        specifier: workspace:^
+        version: link:../radio
       '@fiscozen/simple-table':
         specifier: workspace:^
         version: link:../simple-table
@@ -2937,11 +2952,11 @@ packages:
     resolution: {integrity: sha512-x1KXOatwofR6ZAYzXRBL5wrdV0vwNxlTCK9NCuLqAzQYARqGcvFwiJA6A1ERuh+dgeA4Dxm3JBYictIes+SqUQ==}
 
   '@awesome.me/kit-8137893ad3@1.0.236':
-    resolution: {integrity: sha512-bGAqFfqj7aGKe2sgWMpicSsLzBfq+1OX+LVWIJ1srKv1V14v9IcfjQvokwAq9C+BVtZhUez++2uu+jboKcEPPQ==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.236/kit-8137893ad3-1.0.236.tgz}
+    resolution: {integrity: sha512-bGAqFfqj7aGKe2sgWMpicSsLzBfq+1OX+LVWIJ1srKv1V14v9IcfjQvokwAq9C+BVtZhUez++2uu+jboKcEPPQ==}
     engines: {node: '>=16'}
 
-  '@awesome.me/kit-8137893ad3@1.0.296':
-    resolution: {integrity: sha512-UpgEMU7Z/u6+kVLjcc4PcHHpluR0Pf4DpZnDn8QV8wJAqumLFHayAok/utr07vyHanNDiI1MtUGZTu/VqWyXeg==, tarball: https://npm.fontawesome.com/@awesome.me/kit-8137893ad3/-/1.0.296/kit-8137893ad3-1.0.296.tgz}
+  '@awesome.me/kit-8137893ad3@1.0.329':
+    resolution: {integrity: sha512-lqAMwSr/KccXFju1Lxhwcbxb/DgFG7UDqf81vtNjeDgF7v/c3GQB7iXCBczynsUqSKPP1e77o2MtPnOxuKiRSg==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.26.2':
@@ -6844,6 +6859,7 @@ packages:
 
   token-transformer@0.0.33:
     resolution: {integrity: sha512-0h7Cvo8trUcv6sZPyA+iNHsFEwIhN4FhXtYqgndHQNYub+dTDW8ZCQURBNDNa0PvJ8Xg2wqG1V/5WSwV0l6yOw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     hasBin: true
 
   tough-cookie@4.1.4:
@@ -7326,7 +7342,7 @@ snapshots:
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
-  '@awesome.me/kit-8137893ad3@1.0.296':
+  '@awesome.me/kit-8137893ad3@1.0.329':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
