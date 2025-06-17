@@ -1,7 +1,6 @@
 <template>
   <FzIcon
     v-bind="props"
-    name="spinner-third"
     variant="fas"
     spin
     style="
@@ -16,7 +15,9 @@ import { computed, ref } from "vue";
 import { FzProgressProps } from "./types";
 import { FzIcon } from "@fiscozen/icons";
 
-const props = withDefaults(defineProps<FzProgressProps>(), {});
+const props = withDefaults(defineProps<FzProgressProps>(), {
+  name: "spinner-third"
+});
 
 const emit = defineEmits([]);
 </script>
