@@ -201,11 +201,6 @@ const gridTemplateStyle = computed(() => {
   return res;
 });
 
-const colSpan = computed(() => {
-  //return {'grid-column': `${(props.variant === 'list' && smOrSmaller.value) ? '1' : totalColumns.value} / ${totalColumns.value}`}
-  return ''
-})
-
 const internalValue = computed(() => {
   let res = modelValue.value || [];
   const safeOrdering = Object.entries(ordering.value)
@@ -454,7 +449,7 @@ onUnmounted(() => {
     </div>
     <div class="fz__table overflow-auto size-full relative">
       <template v-if="loading">
-        <div class="fz__table__loading h-full w-full flex justify-center items-center min-h-[200px] absolute z-20 bg-gray-100/60" :style="colSpan">
+        <div class="fz__table__loading h-full w-full flex justify-center items-center min-h-[200px] absolute z-20 bg-gray-100/60">
           <slot name="loading">
             <FzProgress />
           </slot>
@@ -514,14 +509,14 @@ onUnmounted(() => {
           <FzRow :id="index" :columns="columns" :data="row"
             :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions" :isList="['radio', 'list'].includes(variant)"
             :hasRadio="props.variant === 'radio'" :selectable="props.selectable" :selected="isSelected(row.id || index)"
-            :isOverflowing :colSpan :leftColIconClass="openRowIds.has(index) ? 'text-blue-500' : ''"
+            :isOverflowing :leftColIconClass="openRowIds.has(index) ? 'text-blue-500' : ''"
             :leftColIcon="openRowIds.has(index) ? 'angle-up' : 'angle-right'" :actionDisabled="props.actionsDisabled"
             @fztable:rowactionclick="(...args) =>
               emit('fztable:rowactionclick', ...args)" @update:selected="toggleRowSelection(row.id || index)"
             @click="toggleSubRow(row.id || index)" />
           <template v-for="(subrow, subindex) in row.subRows" v-if="openRowIds.has(row.id || index)" :key="subindex">
             <FzRow :id="subindex" :columns="columns" :data="subrow"
-              :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions" :colSpan
+              :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions"
               :isOverflowing :actionsDisabled="props.actionsDisabled" leftColIcon="circle" leftColIconSize="xs"
               leftColIconClass="text-blue-500" rowClass="subrow-grey" @fztable:rowactionclick="(...args) =>
                 emit('fztable:rowactionclick', ...args)" />
@@ -531,11 +526,13 @@ onUnmounted(() => {
           <div :class="[
             'grid grid-cols-subgrid border-b-1 border-solid border-grey-100 bg-core-white hover:bg-alice-blue border-b-1 border-solid border-grey-100',
             bodyStaticClasses,
-          ]" v-for="(row, index) in rows" :aria-rowindex="index + 1" :style="colSpan" role="row">
+            'col-span-full',
+            row.props?.rowClass,
+          ]" v-for="(row, index) in rows" :aria-rowindex="index + 1" role="row">
             <component v-if="row.children?.default" :is="row.children.default" :actions :columns />
           </div>
         </template>
-        <div v-else class="fz__table__empty h-full self-center justify-self-center min-h-[200px] flex justify-center items-center" :style="colSpan">
+        <div v-else class="fz__table__empty h-full self-center justify-self-center min-h-[200px] flex justify-center items-center">
           {{ placeholder ?? "No data available" }}
         </div>
       </div>

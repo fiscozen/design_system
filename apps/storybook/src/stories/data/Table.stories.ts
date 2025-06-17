@@ -273,8 +273,8 @@ const CustomRows: Story = {
             <div>Cristian</div>
             <div>description text for Cristian</div>
           </FzRow>
-          <FzRow>
-            <div class="col-span-2 bg-blue-200 flex flex-row justify-center items-center h-full">Custom row</div>
+          <FzRow rowClass="!bg-blue-200">
+            <div class="col-span-2 flex flex-row justify-center items-center h-full">Custom row</div>
           </FzRow>
         </FzTable>
       </div>
@@ -334,7 +334,7 @@ const ColumnOrdering: Story = {
     },
     template: `
       <div class="p-12">
-        <FzTable v-bind="args" gridTemplateColumns="120px 1fr 1fr 1fr" v-model:ordering="ordering" @fztable:ordering="handleNameOrdering">
+        <FzTable v-bind="args" gridTemplateColumns="120px 1fr 1fr 1fr min-content" v-model:ordering="ordering" @fztable:ordering="handleNameOrdering">
           <FzColumn header="Nome" sticky="left" />
           <FzColumn header="Cognome" />
           <FzColumn header="Email">
