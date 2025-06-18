@@ -410,7 +410,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div :class="['fz-table-container m-0 p-0 size-full text-grey-500', tableClass]">
+  <div :class="['fz-table-container m-0 p-0 size-full text-grey-500 relative flex flex-col', tableClass]">
     <div class="w-full flex flex-col items-start mb-20" v-if="title">
       <span class="text-xl font-medium text-core-black">
         {{ title }}
@@ -447,7 +447,7 @@ onUnmounted(() => {
         :style="smOrSmaller ? `grid-column-start: ${iconCols}` : ''" v-if="newItemButton && smOrSmaller" iconName="plus"
         iconVariant="far" bars-filter @click="emit('fztable:newitem')"></FzIconButton>
     </div>
-    <div class="fz__table overflow-auto size-full relative">
+    <div class="fz__table overflow-auto relative">
       <template v-if="loading">
         <div class="fz__table__loading h-full w-full flex justify-center items-center min-h-[200px] absolute z-20 bg-gray-100/60">
           <slot name="loading">
