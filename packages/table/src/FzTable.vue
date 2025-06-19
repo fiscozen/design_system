@@ -532,7 +532,7 @@ onUnmounted(() => {
             <component v-if="row.children?.default" :is="row.children.default" :actions :columns />
           </div>
         </template>
-        <div v-else class="fz__table__empty h-full self-center justify-self-center min-h-[200px] flex justify-center items-center">
+        <div v-else class="fz__table__empty h-full self-center justify-self-center min-h-[200px] flex justify-center items-center col-span-full">
           {{ placeholder ?? "No data available" }}
         </div>
       </div>
