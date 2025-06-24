@@ -14,6 +14,7 @@
           :icon-name="buttonIconName"
           @click="isOpen = !isOpen"
           :size
+          :variant="buttonVariant"
           :disabled="openerDisabled"
           :class="openerClass"
         >
@@ -39,7 +40,8 @@ import { FzDropdownProps, FzDropdownSlots } from './types'
 const props = withDefaults(defineProps<FzDropdownProps>(), {
   size: 'md',
   actions: () => [],
-  closeOnActionClick: true
+  closeOnActionClick: true,
+  buttonVariant: 'primary'
 })
 
 const emit = defineEmits<{

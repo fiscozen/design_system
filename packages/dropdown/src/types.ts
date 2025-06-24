@@ -1,6 +1,6 @@
 import { ButtonSize } from '@fiscozen/button'
 import { FzActionlistProps } from '@fiscozen/actionlist'
-import { IconButtonVariant } from '@fiscozen/button'
+import { IconButtonVariant, CommonButtonVariant } from '@fiscozen/button'
 import { VNode } from 'vue'
 
 type FzDropdownProps = {
@@ -44,6 +44,10 @@ type FzDropdownProps = {
    * Class binded to the floating element
    */
   floatingClass?: string
+  /**
+   * Variant of the button opener
+   */
+  buttonVariant?: CommonButtonVariant
 }
 
 type FzDropdownSlots = {
