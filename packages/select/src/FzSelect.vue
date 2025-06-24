@@ -58,6 +58,7 @@
               :iconName="rightIcon"
               :size="mappedSize"
               :variant="disabled ? 'invisible' : rightIconButtonVariant"
+              @click.stop="emit('fzselect:right-icon-click')"
             />
           </button>
         </slot>
@@ -213,7 +214,7 @@ useClickOutside(safeOpener, () => {
   isOpen.value = false;
 });
 
-const emit = defineEmits(["select"]);
+const emit = defineEmits(["select", "fzselect:right-icon-click"]);
 
 const staticPickerClass =
   "flex justify-between items-center px-10 border-1 w-full rounded gap-8 text-left relative";
