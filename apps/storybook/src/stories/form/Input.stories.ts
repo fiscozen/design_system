@@ -222,6 +222,18 @@ const CustomLabel: Story = {
   })
 }
 
+const FloatingLabel: Story = {
+  args: {
+    label: 'Label',
+    size: 'md',
+    rightIcon: 'calendar-lines',
+    rightIconButtonVariant: 'secondary',
+    rightIconButton: true,
+    rightIconSize: 'sm',
+    variant: 'floating-label'
+  }
+}
+
 export {
   CustomLabel,
   Default,
@@ -240,7 +252,8 @@ export {
   LeftAndRightWithValid,
   WithDefaultValues,
   MaxLength,
-  ShowHidePassword
+  ShowHidePassword,
+  FloatingLabel
 }
 
 export default meta

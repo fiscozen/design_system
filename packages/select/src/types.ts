@@ -1,4 +1,5 @@
 import { FzFloatingProps } from "@fiscozen/composables";
+import { IconButtonVariant } from '@fiscozen/button';
 import { Ref } from "vue";
 
 export interface FzSelectProps extends FzFloatingProps {
@@ -39,6 +40,14 @@ export interface FzSelectProps extends FzFloatingProps {
    */
   rightIcon?: string;
   /**
+   * Right icon variant
+   */
+  rightIconButtonVariant?: IconButtonVariant;
+  /**
+   * Right icon button vs simple icon
+   */
+  rightIconButton?: boolean;
+  /**
    * The class applied to the input
    */
   pickerClass?: string;
@@ -62,6 +71,14 @@ export interface FzSelectProps extends FzFloatingProps {
    * Disable the truncation of any text in the options. False by default
    */
   disableTruncate?: boolean;
+  /**
+   * Select variant
+   */
+  variant?: 'normal' | 'floating-label';
+  /**
+   * Whether to position right icon before or after chevron
+   */
+  rightIconLast?: boolean;
 }
 
 export type FzSelectOptionsProps = FzSelectOptionProps | FzSelectLabelProps;

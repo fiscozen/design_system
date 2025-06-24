@@ -299,3 +299,24 @@ export const SelectWithOptionLabelAndSubtitle: SelectStory = {
     ]
   }
 }
+
+export const FloatingLabel: SelectStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    rightIcon: 'bell',
+    rightIconButton: true,
+    rightIconLast: true,
+    variant: 'floating-label',
+    rightIconButtonVariant: 'secondary'
+  },
+  decorators: [
+    () => ({
+      template: `
+      <div style="width:100vw;height:100vh;">
+        <story/>
+      </div>
+      `
+    })
+  ]
+}

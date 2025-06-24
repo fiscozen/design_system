@@ -1,9 +1,10 @@
-import { computed, Ref } from "vue";
+import { computed, ToRefs, Ref } from "vue";
 import { FzInputProps } from "./types";
 
 export default function useInputStyle(
-  props: FzInputProps,
+  props: ToRefs<FzInputProps>,
   container: Ref<HTMLElement | null>,
+  model: Ref<string>
 ) {
   const containerWidth = computed(() =>
     container.value ? `${container.value.clientWidth}px` : "auto",
@@ -15,37 +16,53 @@ export default function useInputStyle(
     lg: "h-40 text-lg",
   };
 
-  const staticContainerClass = `flex justify-between w-full items-center px-10 border-1 rounded gap-8 text-left has-[:focus]:border-blue-600`;
+  const staticContainerClass = `flex justify-between w-full items-center px-10 border-1 rounded gap-8 text-left has-[:focus]:border-blue-600 relative`;
 
   const computedContainerClass = computed(() => [
-    mapContainerClass[props.size!],
+    props.variant?.value === 'normal' ? mapContainerClass[props.size?.value!] : 'h-40 pr-6',
     evaluateProps(),
   ]);
 
   const computedLabelClass = computed(() => [
-    props.disabled ? "text-grey-300" : "text-core-black",
+    props.disabled?.value ? "text-grey-300" : "text-core-black",
   ]);
 
   const staticInputClass = `peer w-full bg-transparent border-0 focus:outline-none cursor-[inherit] focus:ring-0 truncate`;
 
+  const textSizeMap = {
+    xl: 'text-lg',
+    lg: 'text-base',
+    md: 'text-sm',
+    sm: 'text-xs'
+  }
+
+  const showNormalPlaceholder = computed(() => {
+    return !(props.variant?.value === 'floating-label') ||
+    ((props.variant?.value === 'floating-label') && !model.value)
+  });
+
+  const computedInputClass = computed(() => [
+    props.variant?.value === 'floating-label' ? textSizeMap[props.size?.value] : '',
+  ]);
+
   const computedHelpClass = computed(() => [
-    props.size === "sm" ? "text-xs" : "",
-    props.size === "md" ? "text-sm" : "",
-    props.size === "lg" ? "text-base" : "",
-    props.disabled ? "text-grey-300" : "text-grey-500",
+    props.size?.value === "sm" ? "text-xs" : "",
+    props.size?.value === "md" ? "text-sm" : "",
+    props.size?.value === "lg" ? "text-base" : "",
+    props.disabled?.value ? "text-grey-300" : "text-grey-500",
   ]);
   const computedErrorClass = computed(() => [
-    props.size === "sm" ? "text-xs" : "",
-    props.size === "md" ? "text-sm" : "",
-    props.size === "lg" ? "text-base" : "",
-    props.disabled ? "text-grey-300" : "text-core-black",
+    props.size?.value === "sm" ? "text-xs" : "",
+    props.size?.value === "md" ? "text-sm" : "",
+    props.size?.value === "lg" ? "text-base" : "",
+    props.disabled?.value ? "text-grey-300" : "text-core-black",
   ]);
 
   const evaluateProps = () => {
     switch (true) {
-      case props.disabled:
+      case props.disabled?.value:
         return "bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed";
-      case props.error:
+      case props.error?.value:
         return "border-semantic-error bg-white text-core-black cursor-text";
       default:
         return "border-grey-300 bg-white text-core-black cursor-text";
@@ -57,8 +74,10 @@ export default function useInputStyle(
     computedContainerClass,
     computedLabelClass,
     staticInputClass,
+    computedInputClass,
     computedHelpClass,
     computedErrorClass,
     containerWidth,
+    showNormalPlaceholder
   };
 }
