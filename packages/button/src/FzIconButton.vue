@@ -9,7 +9,7 @@
     :variant="variantMap"
     overrideContainerClass
   >
-    <FzIcon :name="iconName" :size="mappedIconSize" :variant="iconVariant" />
+    <FzIcon :name="iconName" :size="iconSize || mappedIconSize" :variant="iconVariant" />
     <div class="-mr-2 -mt-2" v-if="variant === 'notification'" :class="notificationClasses"></div>
   </FzButton>
 </template>
@@ -17,7 +17,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import type { IconButtonVariant, ButtonSize } from './types'
-import { FzIcon, IconVariant } from '@fiscozen/icons'
+import { FzIcon, IconSize, IconVariant } from '@fiscozen/icons'
 import FzButton from './FzButton.vue'
 import { iconSizeMap } from './utils'
 
@@ -52,6 +52,10 @@ const props = withDefaults(
      * Fontawesome icon variant: solid, regular, light, thin. Sharp subvariants are available as well
      */
     iconVariant?: IconVariant
+    /**
+     * Icon size
+     */
+    iconSize?: IconSize
     /**
      * Positioning of the icon
      */

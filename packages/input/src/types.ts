@@ -1,4 +1,5 @@
-import { IconVariant } from "@fiscozen/icons";
+import { IconButtonVariant } from "@fiscozen/button";
+import { IconSize , IconVariant } from "@fiscozen/icons";
 
 type FzInputProps = {
   /**
@@ -13,6 +14,10 @@ type FzInputProps = {
    * The placeholder displayed in the input
    */
   placeholder?: string;
+  /**
+   * Secondary - floating like placeholder
+   */
+  secondaryPlaceholder?: string;
   /**
    * If set to true, the input is required
    */
@@ -34,13 +39,29 @@ type FzInputProps = {
    */
   leftIconVariant?: IconVariant;
   /**
+   * Left icon button variant
+   */
+  leftIconButtonVariant?: IconButtonVariant;
+  /**
    * Right icon name
    */
   rightIcon?: string;
   /**
+   * Right icon name
+   */
+  rightIconSize?: IconSize;
+  /**
    * Right icon variant
    */
   rightIconVariant?: IconVariant;
+  /**
+   * Right icon button vs normal icon
+   */
+  rightIconButton?: boolean;
+  /**
+   * Right icon button variant
+   */
+  rightIconButtonVariant?: IconButtonVariant;
   /**
    * The input type
    */
@@ -49,6 +70,10 @@ type FzInputProps = {
    * If set to true, the input is valid
    */
   valid?: boolean;
+  /**
+   * Input variant
+   */
+  variant?: 'normal' | 'floating-label';
   /**
    * Pattern to validate the input
    */

@@ -1320,6 +1320,9 @@ importers:
 
   packages/input:
     dependencies:
+      '@fiscozen/button':
+        specifier: workspace:^
+        version: link:../button
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables

@@ -28,13 +28,36 @@
             :title="selectedOption ? selectedOption.label : placeholder"
           >
             <FzIcon v-if="leftIcon" :name="leftIcon" :size="size" />
-            <span :class="[staticSpanClass, computedSpanClass]">
-              {{ selectedOption ? selectedOption.label : placeholder }}
-            </span>
-            <FzIcon v-if="rightIcon" :name="rightIcon" :size="size" />
+            <div class="flex flex-col min-w-0">
+              <span
+                v-if="!showNormalPlaceholder"
+                :class="[staticSpanClass, 'text-grey-300 text-xs']"
+                >{{ placeholder }}</span
+              >
+              <span :class="[staticSpanClass, computedSpanClass]">
+                {{ selectedOption ? selectedOption.label : placeholder }}
+              </span>
+            </div>
+            <FzIcon
+              v-if="rightIcon && !rightIconLast"
+              :name="rightIcon"
+              :size="size"
+            />
             <FzIcon
               :name="isOpen ? 'chevron-up' : 'chevron-down'"
               :size="size"
+            />
+            <FzIcon
+              v-if="rightIcon && rightIconLast && !rightIconButton"
+              :iconName="rightIcon"
+              :size="mappedSize"
+            />
+            <FzIconButton
+              v-if="rightIconButton && rightIconLast"
+              :class="{'bg-grey-100 text-gray-300': disabled}"
+              :iconName="rightIcon"
+              :size="mappedSize"
+              :variant="disabled ? 'invisible' : rightIconButtonVariant"
             />
           </button>
         </slot>
@@ -110,6 +133,7 @@
 import { computed, ref, watch, nextTick, onMounted, Ref } from "vue";
 import { FzSelectProps, FzSelectOptionsProps } from "./types";
 import { FzIcon } from "@fiscozen/icons";
+import { FzIconButton } from "@fiscozen/button";
 import {
   FzFloating,
   FzFloatingPosition,
@@ -124,6 +148,8 @@ const props = withDefaults(defineProps<FzSelectProps>(), {
   size: "md",
   optionsToShow: 25,
   teleport: true,
+  variant: "normal",
+  rightIconVariant: "invisible",
 });
 const model = defineModel({
   required: true,
@@ -140,6 +166,23 @@ const OPTIONS_HEIGHT = 20;
 const OPTIONS_BUFFER = 5;
 const maxHeight = ref("");
 const floatingRef = ref<InstanceType<typeof FzFloating>>();
+
+const sizeMap = {
+  xl: "lg",
+  lg: "md",
+  md: "sm",
+  sm: "xs",
+};
+const mappedSize = computed(() => {
+  return sizeMap[props.size];
+});
+
+const showNormalPlaceholder = computed(() => {
+  return (
+    !(props.variant === "floating-label") ||
+    (props.variant === "floating-label" && !model.value)
+  );
+});
 
 const calculateMaxHeight = (
   rect: Ref<DOMRect | undefined>,
@@ -173,14 +216,16 @@ useClickOutside(safeOpener, () => {
 const emit = defineEmits(["select"]);
 
 const staticPickerClass =
-  "flex justify-between items-center px-10 border-1 w-full rounded gap-8 text-left";
+  "flex justify-between items-center px-10 border-1 w-full rounded gap-8 text-left relative";
 const mapPickerClass = {
   sm: "h-24 text-sm",
   md: "h-32 text-base",
   lg: "h-40 text-lg",
 };
 const computedPickerClass = computed(() => [
-  mapPickerClass[props.size],
+  props.variant === "floating-label"
+    ? "h-40 text-sm pr-6"
+    : mapPickerClass[props.size],
   evaluateProps(),
 ]);
 
@@ -213,7 +258,7 @@ const computedErrorClass = computed(() => [
 const selectedOption = computed(() => {
   const options = props.options.filter((option) => option.kind !== "label");
   return options.find((option) => option.value === model.value);
-}); 
+});
 
 watch(() => [props.size, model.value], updateContainerWidth);
 watch(

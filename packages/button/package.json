@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/button",
-  "version": "0.1.11",
+  "version": "0.1.12-beta.1",
   "description": "Design System Icon Button Component",
   "scripts": {
     "coverage": "vitest run --coverage",

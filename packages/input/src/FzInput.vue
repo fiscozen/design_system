@@ -24,23 +24,26 @@
           :class="leftIconClass"
         />
       </slot>
-      <input
-        :type="type"
-        :required="required ? required : false"
-        :disabled="disabled"
-        :readonly="readonly"
-        :placeholder="placeholder"
-        v-model="model"
-        :id="uniqueId"
-        ref="inputRef"
-        :class="[staticInputClass]"
-        :pattern="pattern"
-        :name
-        :maxlength
-        @blur="(e) => $emit('blur', e)"
-        @focus="(e) => $emit('focus', e)"
-        @paste="(e) => $emit('paste', e)"
-      />
+      <div class="flex flex-col space-around min-w-0">
+        <span v-if="!showNormalPlaceholder" class="text-xs text-gray-300 grow-0 overflow-hidden text-ellipsis whitespace-nowrap">{{ placeholder }}</span>
+        <input
+          :type="type"
+          :required="required ? required : false"
+          :disabled="disabled"
+          :readonly="readonly"
+          :placeholder="showNormalPlaceholder ? placeholder : ''"
+          v-model="model"
+          :id="uniqueId"
+          ref="inputRef"
+          :class="[staticInputClass, computedInputClass]"
+          :pattern="pattern"
+          :name
+          :maxlength
+          @blur="(e) => $emit('blur', e)"
+          @focus="(e) => $emit('focus', e)"
+          @paste="(e) => $emit('paste', e)"
+        />
+      </div>
       <slot name="right-icon">
         <FzIcon
           v-if="valid"
@@ -49,12 +52,21 @@
           class="text-semantic-success"
         />
         <FzIcon
-          v-if="rightIcon"
+          v-if="rightIcon && !rightIconButton"
           :name="rightIcon"
           :size="size"
           :variant="rightIconVariant"
           @click.stop="emit('fzinput:right-icon-click')"
           :class="rightIconClass"
+        />
+        <FzIconButton
+          v-if="rightIcon && rightIconButton"
+          :iconName="rightIcon"
+          :size="mappedSize"
+          :iconVariant="rightIconVariant"
+          :variant="disabled ? 'invisible' : rightIconButtonVariant"
+          @click.stop="emit('fzinput:right-icon-click')"
+          :class="[{'bg-grey-100 !text-gray-300': disabled}, rightIconClass]"
         />
       </slot>
     </div>
@@ -83,15 +95,18 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref } from "vue";
+import { computed, toRefs, Ref, ref } from "vue";
 import { FzInputProps } from "./types";
 import { FzIcon } from "@fiscozen/icons";
+import { FzIconButton } from "@fiscozen/button";
 import useInputStyle from "./useInputStyle";
 
 const props = withDefaults(defineProps<FzInputProps>(), {
   size: "md",
   error: false,
   type: "text",
+  rightIconButtonVariant: 'invisible',
+  variant: 'normal'
 });
 
 const model = defineModel();
@@ -104,10 +119,24 @@ const {
   computedContainerClass,
   computedLabelClass,
   staticInputClass,
+  computedInputClass,
   computedHelpClass,
   computedErrorClass,
   containerWidth,
-} = useInputStyle(props, containerRef);
+  showNormalPlaceholder
+} = useInputStyle(toRefs(props), containerRef, model);
+
+
+const sizeMap = {
+  xl: 'lg',
+  lg: 'md',
+  md: 'sm',
+  sm: 'xs',
+}
+
+const mappedSize = computed(() => {
+  return sizeMap[props.size];
+});
 
 const emit = defineEmits([
   "input",
