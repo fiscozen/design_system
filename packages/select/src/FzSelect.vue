@@ -28,7 +28,7 @@
             :title="selectedOption ? selectedOption.label : placeholder"
           >
             <FzIcon v-if="leftIcon" :name="leftIcon" :size="size" />
-            <div class="flex flex-col min-w-0">
+            <div class="flex flex-col min-w-0 grow">
               <span
                 v-if="!showNormalPlaceholder"
                 :class="[staticSpanClass, 'text-grey-300 text-xs']"
