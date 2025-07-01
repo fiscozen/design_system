@@ -260,6 +260,7 @@ const toggleSelectAll = () => {
     allSelected.value = false;
     selectedRowIds.value?.clear();
   }
+  selectedRowIds.value = new Set(selectedRowIds.value);
 };
 
 const toggleRowSelection = (rowId: number) => {
@@ -274,6 +275,7 @@ const toggleRowSelection = (rowId: number) => {
     }
     selectedRowIds.value?.add(rowId);
   }
+  selectedRowIds.value = new Set(selectedRowIds.value);
 };
 
 const selectedRows = computed(() => {
