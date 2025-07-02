@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/simple-table",
-  "version": "0.1.1",
+  "version": "0.1.5",
   "description": "Design System SimpleTable component",
   "scripts": {
     "coverage": "vitest run --coverage",
