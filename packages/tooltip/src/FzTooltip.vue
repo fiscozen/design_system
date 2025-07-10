@@ -8,7 +8,7 @@
     </template>
     <div :class="staticClasses">
       <FzIcon v-if="showIcon" size="sm" :name="iconName"
-        :class="['mr-8 grow-0 shrink-0', { 'text-core-black': props.status === 'alert' }]"></FzIcon>
+        :class="['mr-8 grow-0 shrink-0', { 'text-core-black': props.status === 'alert' }]" />
       <span :class="['basis-0 grow shrink-0 fz__tooltip__text', { 'text-core-black': props.status === 'alert' }]">
         <slot name="text">
           {{ text }}
