@@ -7,7 +7,32 @@ const meta = {
   component: FzTooltip,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
-  argTypes: {},
+  argTypes: {
+    status: {
+      control: { type: 'select' },
+      options: ['neutral', 'informative', 'positive', 'alert', 'error']
+    },
+    position: {
+      control: { type: 'select' },
+      options: [
+        'auto',
+        'top',
+        'top-start',
+        'top-end',
+        'bottom',
+        'bottom-start',
+        'bottom-end',
+        'left',
+        'left-start',
+        'left-end',
+        'right',
+        'right-start',
+        'right-end'
+      ]
+    },
+    text: { control: { type: 'text' } },
+    withIcon: { control: { type: 'boolean' } }
+  },
   args: {
     position: 'auto'
   }
