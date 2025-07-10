@@ -1,6 +1,6 @@
 <template>
-  <FzButton @click="(e) => $emit('click', e)" :class="classes" :disabled="disabled" :label="label" :size="size"
-    :tooltip="tooltip" :variant="variantMap" overrideContainerClass>
+  <FzButton @click="(e) => $emit('click', e)" :class="classes" :disabled="disabled" :size="size" :tooltip="tooltip"
+    :variant="variantMap" overrideContainerClass>
     <FzIcon :name="iconName" :size="iconSize || mappedIconSize" :variant="iconVariant" :class="props.iconClass" />
     <div class="-mr-2 -mt-2" v-if="variant === 'notification'" :class="notificationClasses"></div>
   </FzButton>
@@ -15,10 +15,6 @@
 
   const props = withDefaults(
     defineProps<{
-      /**
-       * The label of the button
-       */
-      label?: string
       /**
        * The tooltip of the button will be shown on hover
        */
