@@ -4,16 +4,25 @@
       type="checkbox"
       :id="id"
       :disabled="disabled"
-      :checked="checked"
       :class="staticInputClass"
       :required="required"
       :value="value"
       @change="emit('change', $event)"
       v-model="model"
       :indeterminate="indeterminate"
+      :aria-checked="indeterminate ? 'mixed' : isChecked"
+      :aria-label="label"
+      :aria-required="required"
+      :aria-invalid="error"
+      :aria-describedby="error ? `${id}-error` : undefined"
+      :aria-labelledby="standalone ? undefined : `${id}-label`"
       ref="refCheckbox"
     />
-    <label :for="id" :class="[staticLabelClass, computedLabelClass]">
+    <label
+      :id="`${id}-label`"
+      :for="id"
+      :class="[staticLabelClass, computedLabelClass]"
+    >
       <FzIcon
         :name="computedName"
         :size="size"
@@ -22,9 +31,14 @@
       />
       {{ standalone ? "" : label }}
     </label>
-    <FzRadioErrorText :size="size" v-if="error && $slots.error">
+    <FzCheckboxErrorText
+      v-if="error && $slots.error"
+      :id="`${id}-error`"
+      :size="size"
+      :class="computedMarginSize"
+    >
       <slot name="error" />
-    </FzRadioErrorText>
+    </FzCheckboxErrorText>
     <slot name="children" />
   </div>
 </template>
@@ -33,7 +47,7 @@
 import { computed, onMounted, ref } from "vue";
 import { FzCheckboxProps } from "./types";
 import { mapSizeToClasses } from "./common";
-import FzRadioErrorText from "./components/FzCheckboxErrorText.vue";
+import FzCheckboxErrorText from "./components/FzCheckboxErrorText.vue";
 import { FzIcon } from "@fiscozen/icons";
 
 const props = withDefaults(defineProps<FzCheckboxProps>(), {
@@ -43,9 +57,7 @@ const props = withDefaults(defineProps<FzCheckboxProps>(), {
 
 const currentValue = computed(() => props.value ?? props.label);
 
-const id = computed(
-  () => `fz-checkbox-${Math.random().toString(36).slice(2, 9)}`,
-);
+const id = `fz-checkbox-${Math.random().toString(36).slice(2, 9)}`;
 
 const model = defineModel<
   null | undefined | boolean | (string | number | boolean)[]
@@ -58,7 +70,7 @@ const refCheckbox = ref<HTMLInputElement | null>(null);
 
 const staticInputClass = "w-0 h-0 peer fz-hidden-input";
 const staticLabelClass = `
-  flex gap-4 hover:cursor-pointer
+  flex gap-4 hover:cursor-pointer text-core-black
   peer-focus:[&_div]:after:border-1
   peer-focus:[&_div]:after:border-solid
   peer-focus:[&_div]:after:rounded-[3px]
@@ -71,6 +83,16 @@ const staticLabelClass = `
   peer-focus:[&_div]:after:absolute
 `;
 const staticIconClass = "relative";
+
+const isChecked = computed(() => {
+  if (model.value == null) return false;
+
+  if (typeof model.value === "boolean") {
+    return model.value;
+  } else {
+    return model.value.includes(currentValue.value);
+  }
+});
 
 const computedLabelClass = computed(() => [
   mapSizeToClasses[props.size],
@@ -87,22 +109,19 @@ const computedName = computed(() => {
     return "square-minus";
   }
 
-  return checkValueIsInModel() ? "square-check" : "square";
+  return isChecked.value ? "square-check" : "square";
 });
 
 const computedVariant = computed(() => {
-  return !props.indeterminate && !checkValueIsInModel() ? "far" : "fas";
+  if (props.disabled) return "fas";
+
+  return !props.indeterminate && !isChecked.value ? "far" : "fas";
 });
 
-const checkValueIsInModel = () => {
-  if (model.value == null) return false;
-
-  if (typeof model.value === "boolean") {
-    return model.value;
-  } else {
-    return model.value.includes(currentValue.value);
-  }
-};
+const computedMarginSize = computed(() => ({
+  "mt-4": props.size === "sm",
+  "mt-6": props.size === "md",
+}));
 
 const getTextClassForLabel = () => {
   switch (true) {
@@ -133,11 +152,9 @@ onMounted(() => {
   if (model.value == null) return;
   if (typeof model.value === "boolean") {
     if (model.value) refCheckbox.value?.dispatchEvent(new Event("change"));
-    else if (props.checked !== undefined) model.value = props.checked;
   } else {
     if (model.value.includes(currentValue.value))
       refCheckbox.value?.dispatchEvent(new Event("change"));
-    else if (props.checked) model.value.push(currentValue.value);
   }
 });
 </script>

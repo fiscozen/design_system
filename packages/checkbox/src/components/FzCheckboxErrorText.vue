@@ -15,6 +15,6 @@ import { mapSizeToClasses } from "../common";
 import { FzIcon } from "@fiscozen/icons";
 
 const props = defineProps<{ errorText?: string; size: "sm" | "md" }>();
-const staticErrorTextClass = "flex w-full gap-4 items-center";
+const staticErrorTextClass = "flex w-full gap-6 items-center";
 const computedErrorTextClass = computed(() => [mapSizeToClasses[props.size]]);
 </script>
