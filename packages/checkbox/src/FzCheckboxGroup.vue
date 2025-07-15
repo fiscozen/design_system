@@ -1,12 +1,22 @@
 <template>
-  <div :class="[staticContainerClass, computedContainerClass]" :id="id">
-    <label :for="id" :class="[staticLabeldClass, computedLabelClass]">
+  <div :class="[staticContainerClass, computedContainerClass]">
+    <label
+      :id="id + '-label'"
+      :for="id"
+      :class="[staticLabeldClass, computedLabelClass]"
+    >
       <span>{{ label }}<span v-if="required"> *</span></span>
       <p :class="computedHelpTextClass" v-if="$slots.help">
         <slot name="help" />
       </p>
     </label>
-    <div :class="[staticSlotContainerClass, computedSlotContainerClass]">
+    <div
+      :class="[staticSlotContainerClass, computedSlotContainerClass]"
+      :id="id"
+      role="group"
+      :aria-labelledby="id + '-label'"
+      :aria-describedby="error && $slots.error ? id + '-error' : undefined"
+    >
       <FzCheckboxGroupOption
         v-for="option in options"
         :key="option.value ? option.value.toString() : option.label"
@@ -14,11 +24,14 @@
         :disabled="disabled"
         v-bind="option"
         :emphasis="emphasis"
-        :error="error"
         :size="size"
       />
     </div>
-    <FzCheckboxErrorText :size="size" v-if="error && $slots.error">
+    <FzCheckboxErrorText
+      :id="id + '-error'"
+      :size="size"
+      v-if="error && $slots.error"
+    >
       <slot name="error" />
     </FzCheckboxErrorText>
   </div>
@@ -56,8 +69,7 @@ const computedLabelClass = computed(() => [
   mapSizeToClasses[props.size],
   props.size === "sm" ? "gap-4" : "",
   props.size === "md" ? "gap-6" : "",
-  props.disabled ? "text-grey-400" : "",
-  !props.disabled ? "text-grey-500" : "",
+  props.disabled ? "text-grey-400" : "text-core-black",
 ]);
 
 const computedContainerClass = computed(() => [

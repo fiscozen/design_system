@@ -10,11 +10,7 @@ export type FzCheckboxProps = {
   /**
    * The size of the checkbox
    */
-  size: "sm" | "md";
-  /**
-   * If the checkbox is checked
-   */
-  checked?: boolean;
+  size?: "sm" | "md";
   /**
    * if the checkbox is indeterminate
    */

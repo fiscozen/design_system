@@ -24,20 +24,11 @@ const Template: CheckboxStory = {
   render: (args) => ({
     components: { FzCheckbox, FzIcon },
     setup() {
-      const model = ref('')
       return {
-        args,
-        model
+        args
       }
     },
-    watch: {
-      model: {
-        handler(newValue) {
-          console.log(newValue)
-        }
-      }
-    },
-    template: `<FzCheckbox v-bind="args" v-model="model"/>`
+    template: `<FzCheckbox v-bind="args" @update:modelValue="console.log('update model value', $event)" />`
   }),
   args: {
     size: 'sm',
@@ -99,8 +90,7 @@ export const Disabled: CheckboxStory = {
   args: {
     size: 'md',
     label: 'Checkbox',
-    disabled: true,
-    checked: false
+    disabled: true
   }
 }
 
@@ -109,7 +99,7 @@ export const CheckedDefault: CheckboxStory = {
   args: {
     size: 'md',
     label: 'Checkbox',
-    checked: true
+    modelValue: true
   }
 }
 
@@ -117,13 +107,11 @@ export const Error: CheckboxStory = {
   render: (args) => ({
     components: { FzCheckbox, FzIcon },
     setup() {
-      const model = ref('')
       return {
-        args,
-        model
+        args
       }
     },
-    template: `<FzCheckbox v-bind="args" v-model="model">
+    template: `<FzCheckbox v-bind="args">
             <template #error>
                 Error
             </template>
@@ -133,60 +121,5 @@ export const Error: CheckboxStory = {
     size: 'sm',
     label: 'Checkbox',
     error: true
-  }
-}
-
-export const ModelValueTrue: CheckboxStory = {
-  render: (args) => ({
-    components: { FzCheckbox, FzIcon },
-    setup() {
-      const model = ref(true)
-      return {
-        args,
-        model
-      }
-    },
-    watch: {
-      model: {
-        handler(newValue) {
-          console.log(newValue)
-        }
-      }
-    },
-    template: `<FzCheckbox v-bind="args" v-model="model"/>`
-  }),
-  args: {
-    size: 'md',
-    label: 'Checkbox'
-  }
-}
-
-export const CheckboxesWithSameValue: CheckboxStory = {
-  render: (args) => ({
-    components: { FzCheckbox, FzIcon },
-    setup() {
-      const model = ref('')
-      const model2 = ref('')
-      return {
-        args,
-        model,
-        model2
-      }
-    },
-    watch: {
-      model: {
-        handler(newValue) {
-          console.log(newValue)
-        }
-      }
-    },
-    template: `<div>
-            <FzCheckbox v-bind="args" v-model="model" value="false"/>
-            <FzCheckbox v-bind="args" v-model="model2" value="false"/>
-        </div>`
-  }),
-  args: {
-    size: 'md',
-    label: 'Checkbox'
   }
 }
