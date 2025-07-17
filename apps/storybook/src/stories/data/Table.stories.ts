@@ -747,6 +747,9 @@ const Radio: Story = {
     subtitle: 'Table subtitle',
     recordNumber: 100,
     variant: 'radio',
+    actions: {
+      items
+    },
   },
   render: (args) => ({
     setup() {
