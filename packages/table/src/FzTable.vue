@@ -260,7 +260,6 @@ const toggleSelectAll = () => {
     allSelected.value = false;
     selectedRowIds.value?.clear();
   }
-  selectedRowIds.value = new Set(selectedRowIds.value);
 };
 
 const toggleRowSelection = (rowId: number) => {
