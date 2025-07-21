@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/pdf-viewer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Design System PdfViewer component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -39,6 +39,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@tato30/vue-pdf": "^1.11.2"
+    "@tato30/vue-pdf": "^1.11.4"
   }
 }

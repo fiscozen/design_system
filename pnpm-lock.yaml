@@ -1753,8 +1753,8 @@ importers:
         specifier: workspace:^
         version: link:../button
       '@tato30/vue-pdf':
-        specifier: ^1.11.2
-        version: 1.11.3(vue@3.5.13(typescript@5.3.3))
+        specifier: ^1.11.4
+        version: 1.11.4(vue@3.5.13(typescript@5.3.3))
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.17
@@ -3935,8 +3935,8 @@ packages:
       storybook: ^8.5.8
       vue: ^3.0.0
 
-  '@tato30/vue-pdf@1.11.3':
-    resolution: {integrity: sha512-YKEmy3NKAy+UsgYCu+GkKQ1VaIovjP/5lO5NmiKRjv9Jbl1LqJYGafZUt3QXp5Ijg0DN2gYDf8Jl949Lr9E7mA==}
+  '@tato30/vue-pdf@1.11.4':
+    resolution: {integrity: sha512-Z+Et+21q35pw34mIM8L7hbhzVw+q9T1nrPeXPIvha+a0a/X48P9Br73jGOgKdB1EWPkPeZtKzMCEe//TyFwAfw==}
     peerDependencies:
       vue: ^3.2.33
 
@@ -6481,9 +6481,9 @@ packages:
   pause-stream@0.0.11:
     resolution: {integrity: sha512-e3FBlXLmN/D1S+zHzanP4E/4Z60oFAa3O051qt1pxa7DEJWKAyil6upYVXCWadEnuoqa4Pkc9oUx9zsxYeRv8A==}
 
-  pdfjs-dist@4.9.124:
-    resolution: {integrity: sha512-yAoM7C+IYIG23dAZHE2KqtE5exEj067Ef6oblb+AHiqLwTJSQOMB+e8ftBA3pp1+6TyE4xeofoHcu9t7XaOE0g==}
-    engines: {node: '>=20'}
+  pdfjs-dist@5.3.31:
+    resolution: {integrity: sha512-EhPdIjNX0fcdwYQO+e3BAAJPXt+XI29TZWC7COhIXs/K0JHcUt1Gdz1ITpebTwVMFiLsukdUZ3u0oTO7jij+VA==}
+    engines: {node: '>=20.16.0 || >=22.3.0'}
 
   pend@1.2.0:
     resolution: {integrity: sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==}
@@ -7539,11 +7539,11 @@ packages:
       typescript:
         optional: true
 
-  vue-component-type-helpers@2.2.10:
-    resolution: {integrity: sha512-iDUO7uQK+Sab2tYuiP9D1oLujCWlhHELHMgV/cB13cuGbG4qwkLHvtfWb6FzvxrIOPDnU0oHsz2MlQjhYDeaHA==}
-
   vue-component-type-helpers@2.2.2:
     resolution: {integrity: sha512-6lLY+n2xz2kCYshl59mL6gy8OUUTmkscmDFMO8i7Lj+QKwgnIFUZmM1i/iTYObtrczZVdw7UakPqDTGwVSGaRg==}
+
+  vue-component-type-helpers@3.0.3:
+    resolution: {integrity: sha512-koiBu7lO8e6w/UlbZAAIW11qcFQocYIl7Nh/SVwGZ804ej5KrncU32bRxi2zfU2Kyf6HWuk1CeeVP2rhIL+vyQ==}
 
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
@@ -8597,11 +8597,11 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.5.13(typescript@5.3.3)
-      vue-component-type-helpers: 2.2.10
+      vue-component-type-helpers: 3.0.3
 
-  '@tato30/vue-pdf@1.11.3(vue@3.5.13(typescript@5.3.3))':
+  '@tato30/vue-pdf@1.11.4(vue@3.5.13(typescript@5.3.3))':
     dependencies:
-      pdfjs-dist: 4.9.124
+      pdfjs-dist: 5.3.31
       vue: 3.5.13(typescript@5.3.3)
 
   '@testing-library/dom@10.4.0':
@@ -11738,7 +11738,7 @@ snapshots:
     dependencies:
       through: 2.3.8
 
-  pdfjs-dist@4.9.124:
+  pdfjs-dist@5.3.31:
     optionalDependencies:
       '@napi-rs/canvas': 0.1.67
 
@@ -12767,9 +12767,9 @@ snapshots:
     optionalDependencies:
       typescript: 5.3.3
 
-  vue-component-type-helpers@2.2.10: {}
-
   vue-component-type-helpers@2.2.2: {}
+
+  vue-component-type-helpers@3.0.3: {}
 
   vue-docgen-api@4.79.2(vue@3.5.13(typescript@5.3.3)):
     dependencies:
