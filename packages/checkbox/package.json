@@ -19,7 +19,9 @@
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13",
-    "@fiscozen/icons": "workspace:^"
+    "@fiscozen/icons": "workspace:^",
+    "@fiscozen/tooltip": "workspace:^",
+    "@fiscozen/alert": "workspace:^"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",
