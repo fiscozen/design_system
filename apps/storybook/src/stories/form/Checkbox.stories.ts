@@ -123,3 +123,14 @@ export const Error: CheckboxStory = {
     error: true
   }
 }
+
+export const Tooltip: CheckboxStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Checkbox',
+    tooltip: {
+      text: 'Tooltip'
+    }
+  }
+}

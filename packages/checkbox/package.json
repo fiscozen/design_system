@@ -18,6 +18,8 @@
   },
   "peerDependencies": {
     "@fiscozen/icons": "workspace:^",
+    "@fiscozen/tooltip": "workspace:^",
+    "@fiscozen/alert": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },

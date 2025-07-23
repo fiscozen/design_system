@@ -27,20 +27,22 @@
         :size="size"
       />
     </div>
-    <FzCheckboxErrorText
+    <FzAlert
+      v-if="error && $slots.error"
       :id="id + '-error'"
       :size="size"
-      v-if="error && $slots.error"
+      type="error"
+      alertStyle="simple"
     >
       <slot name="error" />
-    </FzCheckboxErrorText>
+    </FzAlert>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import { FzCheckboxGroupProps } from "./types";
-import FzCheckboxErrorText from "./components/FzCheckboxErrorText.vue";
+import { FzAlert } from "@fiscozen/alert";
 import { mapSizeToClasses } from "./common";
 import FzCheckboxGroupOption from "./components/FzCheckboxGroupOption.vue";
 
@@ -63,7 +65,7 @@ const model = defineModel<string[]>({
 
 const staticLabeldClass = "flex flex-col";
 const staticContainerClass = "flex flex-col";
-const staticSlotContainerClass = "flex flex-col";
+const staticSlotContainerClass = "flex items-start";
 
 const computedLabelClass = computed(() => [
   mapSizeToClasses[props.size],
@@ -81,7 +83,8 @@ const computedContainerClass = computed(() => [
 const computedSlotContainerClass = computed(() => [
   mapSizeToClasses[props.size],
   props.size === "sm" ? "gap-6" : "",
-  props.size === "md" ? "gap-8" : "",
+  props.size === "md" ? (props.horizontal ? "gap-16" : "gap-8") : "",
+  props.horizontal ? "flex-row" : "flex-col",
 ]);
 
 function generateRandomId() {

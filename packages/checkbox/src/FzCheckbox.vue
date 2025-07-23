@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center flex-col w-fit">
+  <div class="flex justify-center flex-col w-fit gap-4">
     <input
       type="checkbox"
       :id="id"
@@ -18,27 +18,33 @@
       :aria-labelledby="standalone ? undefined : `${id}-label`"
       ref="refCheckbox"
     />
-    <label
-      :id="`${id}-label`"
-      :for="id"
-      :class="[staticLabelClass, computedLabelClass]"
-    >
-      <FzIcon
-        :name="computedName"
-        :size="size"
-        :class="[staticIconClass, computedIconClasses]"
-        :variant="computedVariant"
-      />
-      {{ standalone ? "" : label }}
-    </label>
-    <FzCheckboxErrorText
+    <div class="flex gap-4">
+      <label
+        :id="`${id}-label`"
+        :for="id"
+        :class="[staticLabelClass, computedLabelClass]"
+      >
+        <FzIcon
+          :name="computedName"
+          :size="size"
+          :class="[staticIconClass, computedIconClasses]"
+          :variant="computedVariant"
+        />
+        {{ standalone ? "" : label }}
+      </label>
+      <FzTooltip v-if="tooltip" v-bind="tooltip">
+        <FzIcon name="info-circle" :size="size" class="text-semantic-info" />
+      </FzTooltip>
+    </div>
+    <FzAlert
       v-if="error && $slots.error"
       :id="`${id}-error`"
       :size="size"
-      :class="computedMarginSize"
+      type="error"
+      alertStyle="simple"
     >
       <slot name="error" />
-    </FzCheckboxErrorText>
+    </FzAlert>
     <slot name="children" />
   </div>
 </template>
@@ -47,8 +53,9 @@
 import { computed, onMounted, ref } from "vue";
 import { FzCheckboxProps } from "./types";
 import { mapSizeToClasses } from "./common";
-import FzCheckboxErrorText from "./components/FzCheckboxErrorText.vue";
 import { FzIcon } from "@fiscozen/icons";
+import { FzTooltip } from "@fiscozen/tooltip";
+import { FzAlert } from "@fiscozen/alert";
 
 const props = withDefaults(defineProps<FzCheckboxProps>(), {
   size: "md",
