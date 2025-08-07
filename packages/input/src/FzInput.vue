@@ -24,7 +24,7 @@
           :class="leftIconClass"
         />
       </slot>
-      <div class="flex flex-col space-around min-w-0">
+      <div class="flex flex-col space-around min-w-0 grow">
         <span v-if="!showNormalPlaceholder" class="text-xs text-gray-300 grow-0 overflow-hidden text-ellipsis whitespace-nowrap">{{ placeholder }}</span>
         <input
           :type="type"
