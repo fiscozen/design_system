@@ -1,6 +1,6 @@
 <template>
   <VueDatePicker
-    class="fz-dialog"
+    class="fz-datepicker"
     ref="dp"
     v-bind="props"
     :ui="{ menu: calendarClassName }"
@@ -9,7 +9,7 @@
       (e: any) =>
         $emit(
           'update:model-value',
-          props.valueFormat ? format(e, props.valueFormat) : e,
+          props.valueFormat && e instanceof Date ? format(e, props.valueFormat) : e,
         )
     "
     @flow-step="handleFlowStep"
@@ -314,4 +314,9 @@ button.dp__overlay_action.dp__button_bottom {
 .dp__action_row {
   @apply justify-between;
 }
+
+.dp__clear_icon {
+  @apply absolute right-0 top-1/2 cursor-pointer transform-none;
+}
+
 </style>
