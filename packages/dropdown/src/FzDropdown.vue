@@ -14,6 +14,7 @@
           :icon-name="buttonIconName"
           @click="isOpen = !isOpen"
           :size
+          :variant
           :disabled="openerDisabled"
           :class="openerClass"
         >
