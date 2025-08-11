@@ -1,3 +1,5 @@
+import { FzTooltipProps } from "@fiscozen/tooltip";
+
 export type FzCheckboxProps = {
   /**
    * The label of the checkbox
@@ -10,11 +12,7 @@ export type FzCheckboxProps = {
   /**
    * The size of the checkbox
    */
-  size: "sm" | "md";
-  /**
-   * If the checkbox is checked
-   */
-  checked?: boolean;
+  size?: "sm" | "md";
   /**
    * if the checkbox is indeterminate
    */
@@ -39,6 +37,10 @@ export type FzCheckboxProps = {
    * If the checkbox is standalone
    */
   standalone?: boolean;
+  /**
+   * Tooltip props for the checkbox
+   */
+  tooltip?: FzTooltipProps;
 };
 
 export type FzCheckboxGroupProps = {
@@ -70,6 +72,10 @@ export type FzCheckboxGroupProps = {
    * If the checkbox group is required
    */
   required?: boolean;
+  /**
+   * If true, the checkbox group will be horizontal
+   */
+  horizontal?: boolean;
 };
 export type ParentCheckbox = ChildCheckbox & { children?: ChildCheckbox[] };
 export type ChildCheckbox = Omit<FzCheckboxProps, "size">;

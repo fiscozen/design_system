@@ -1,12 +1,22 @@
 <template>
-  <div :class="[staticContainerClass, computedContainerClass]" :id="id">
-    <label :for="id" :class="[staticLabeldClass, computedLabelClass]">
+  <div :class="[staticContainerClass, computedContainerClass]">
+    <label
+      :id="id + '-label'"
+      :for="id"
+      :class="[staticLabeldClass, computedLabelClass]"
+    >
       <span>{{ label }}<span v-if="required"> *</span></span>
       <p :class="computedHelpTextClass" v-if="$slots.help">
         <slot name="help" />
       </p>
     </label>
-    <div :class="[staticSlotContainerClass, computedSlotContainerClass]">
+    <div
+      :class="[staticSlotContainerClass, computedSlotContainerClass]"
+      :id="id"
+      role="group"
+      :aria-labelledby="id + '-label'"
+      :aria-describedby="error && $slots.error ? id + '-error' : undefined"
+    >
       <FzCheckboxGroupOption
         v-for="option in options"
         :key="option.value ? option.value.toString() : option.label"
@@ -14,20 +24,25 @@
         :disabled="disabled"
         v-bind="option"
         :emphasis="emphasis"
-        :error="error"
         :size="size"
       />
     </div>
-    <FzCheckboxErrorText :size="size" v-if="error && $slots.error">
+    <FzAlert
+      v-if="error && $slots.error"
+      :id="id + '-error'"
+      :size="size"
+      type="error"
+      alertStyle="simple"
+    >
       <slot name="error" />
-    </FzCheckboxErrorText>
+    </FzAlert>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import { FzCheckboxGroupProps } from "./types";
-import FzCheckboxErrorText from "./components/FzCheckboxErrorText.vue";
+import { FzAlert } from "@fiscozen/alert";
 import { mapSizeToClasses } from "./common";
 import FzCheckboxGroupOption from "./components/FzCheckboxGroupOption.vue";
 
@@ -50,14 +65,13 @@ const model = defineModel<string[]>({
 
 const staticLabeldClass = "flex flex-col";
 const staticContainerClass = "flex flex-col";
-const staticSlotContainerClass = "flex flex-col";
+const staticSlotContainerClass = "flex items-start";
 
 const computedLabelClass = computed(() => [
   mapSizeToClasses[props.size],
   props.size === "sm" ? "gap-4" : "",
   props.size === "md" ? "gap-6" : "",
-  props.disabled ? "text-grey-400" : "",
-  !props.disabled ? "text-grey-500" : "",
+  props.disabled ? "text-grey-400" : "text-core-black",
 ]);
 
 const computedContainerClass = computed(() => [
@@ -69,7 +83,8 @@ const computedContainerClass = computed(() => [
 const computedSlotContainerClass = computed(() => [
   mapSizeToClasses[props.size],
   props.size === "sm" ? "gap-6" : "",
-  props.size === "md" ? "gap-8" : "",
+  props.size === "md" ? (props.horizontal ? "gap-16" : "gap-8") : "",
+  props.horizontal ? "flex-row" : "flex-col",
 ]);
 
 function generateRandomId() {
