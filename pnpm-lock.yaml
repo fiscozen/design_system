@@ -21,8 +21,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.329
-        version: 1.0.329
+        specifier: ^1.0.335
+        version: 1.0.335
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
@@ -2965,10 +2965,6 @@ packages:
 
   '@awesome.me/kit-8137893ad3@1.0.236':
     resolution: {integrity: sha512-bGAqFfqj7aGKe2sgWMpicSsLzBfq+1OX+LVWIJ1srKv1V14v9IcfjQvokwAq9C+BVtZhUez++2uu+jboKcEPPQ==}
-    engines: {node: '>=16'}
-
-  '@awesome.me/kit-8137893ad3@1.0.329':
-    resolution: {integrity: sha512-lqAMwSr/KccXFju1Lxhwcbxb/DgFG7UDqf81vtNjeDgF7v/c3GQB7iXCBczynsUqSKPP1e77o2MtPnOxuKiRSg==}
     engines: {node: '>=16'}
 
   '@awesome.me/kit-8137893ad3@1.0.335':
@@ -7765,10 +7761,6 @@ snapshots:
       is-potential-custom-element-name: 1.0.1
 
   '@awesome.me/kit-8137893ad3@1.0.236':
-    dependencies:
-      '@fortawesome/fontawesome-common-types': 6.7.2
-
-  '@awesome.me/kit-8137893ad3@1.0.329':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
