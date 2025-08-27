@@ -1,0 +1,3 @@
+type FzContainerProps = {}
+
+export { FzContainerProps }
