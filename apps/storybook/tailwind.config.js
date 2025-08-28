@@ -3,6 +3,10 @@ import tailwindConfig from '@fiscozen/style/tailwind.config'
 /** @type {import('tailwindcss').Config} */
 export default {
   ...tailwindConfig,
+  plugins: [
+    require('@fiscozen/css-container'),
+    ...tailwindConfig.plugins,
+  ],
   content: [
     './src/**/*.{html,js,ts,vue}',
     './node_modules/@fiscozen/**/src/**/*.{html,js,ts,vue}',
