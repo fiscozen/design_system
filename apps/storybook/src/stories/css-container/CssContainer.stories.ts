@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { defineComponent } from 'vue'
 
+import { FzButton } from '@fiscozen/button'
+import { FzInput } from '@fiscozen/input'
+
 // Mock component per Storybook che mostra solo HTML
 const CssContainerDemo = defineComponent({
   name: 'CssContainerDemo',
@@ -338,36 +341,49 @@ export const StackLayouts: Story = {
 
 export const FormContainer: Story = {
   name: '📝 Form Container',
-  args: {
+  render: () => ({
+    components: { FzButton, FzInput },
     template: `
-      <div class="bg-gray-100 p-8">
-        <form class="fz-container-form fz-container-padding-lg bg-white rounded shadow max-w-md mx-auto">
-          <h3 class="text-xl font-bold text-center mb-6">Form di Contatto</h3>
-          
-          <div class="fz-container-stack-h fz-container-gap-md">
-            <div class="fz-container-form-field">
-              <label class="text-sm font-medium">Nome</label>
-              <input type="text" placeholder="Nome" class="px-3 py-2 border rounded w-full" />
-            </div>
-            <div class="fz-container-form-field">
-              <label class="text-sm font-medium">Cognome</label>
-              <input type="text" placeholder="Cognome" class="px-3 py-2 border rounded w-full" />
-            </div>
-          </div>
-          
-          <div class="fz-container-form-field">
-            <label class="text-sm font-medium">Email</label>
-            <input type="email" placeholder="email@example.com" class="px-3 py-2 border rounded w-full" />
-          </div>
-          
-          <div class="fz-container-form-actions">
-            <button type="button" class="px-4 py-2 border rounded bg-gray-100 hover:bg-gray-200">Reset</button>
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Invia</button>
-          </div>
-        </form>
-      </div>
-    `
-  }
+        <div class="bg-gray-100 p-8">
+          <form class="fz-container-stack-v fz-container-gap-md fz-container-padding-lg bg-white rounded shadow mx-auto">
+            <h3 class="text-xl font-bold text-center">Form di Contatto</h3>
+            <fieldset class="fz-container-grid-responsive-sm fz-container-gap-md">
+              <FzInput label="Grid Responsive SM" placeholder="Item A" />
+              <FzInput label="Grid Responsive SM" placeholder="Item B" />
+              <FzInput label="Grid Responsive SM" placeholder="Item C" />
+              <FzInput label="Grid Responsive SM" placeholder="Item D" />
+              <FzInput label="Grid Responsive SM" placeholder="Item E" />
+            </fieldset>
+            <fieldset class="fz-container-stack-v fz-container-gap-md">
+              <FzInput label="Stack V" placeholder="Item F" />
+              <FzInput label="Stack V" placeholder="Item G" />
+            </fieldset>
+            <fieldset class="fz-container-grid-responsive-1-2-3 fz-container-gap-md">
+              <FzInput label="grid-responsive-1-2-3" placeholder="Item 1" />
+              <FzInput label="grid-responsive-1-2-3" placeholder="Item 2" />
+              <FzInput label="grid-responsive-1-2-3" placeholder="Item 3" />
+              <FzInput label="grid-responsive-1-2-3" placeholder="Item 4" />
+              <FzInput label="grid-responsive-1-2-3" placeholder="Item 5" />
+            </fieldset>
+            <fieldset class="fz-container-stack-h fz-container-gap-md">
+              <FzInput label="stack-h" placeholder="Item 6" />
+              <FzInput label="stack-h" placeholder="Item 7" />
+            </fieldset>
+            <fieldset class="fz-container-stack-responsive-v-h fz-container-gap-md">
+              <FzInput label="stack-responsive-v-h" placeholder="Item 8" />
+              <FzInput label="stack-responsive-v-h" placeholder="Item 9" />
+              <FzInput label="stack-responsive-v-h" placeholder="Item 10" />
+              <FzInput label="stack-responsive-v-h" placeholder="Item 11" />
+              <FzInput label="stack-responsive-v-h" placeholder="Item 12" />
+            </fieldset>
+            <fieldset class="fz-container-stack-h fz-container-gap-md fz-container-stack-align-main-end">
+              <FzButton class="fz-button" variant="secondary">Reset</FzButton>
+              <FzButton class="fz-button" variant="primary">Invia</FzButton>
+            </fieldset>
+          </form>
+        </div>
+      `
+  }),
 }
 
 export const StackAlignments: Story = {
