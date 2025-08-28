@@ -2,20 +2,345 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzContainer } from '@fiscozen/container'
 
 const meta: Meta<typeof FzContainer> = {
-  title: 'Container/FzContainer',
+  title: 'Components/Container',
   component: FzContainer,
   tags: ['autodocs'],
-  argTypes: {},
-  args: {},
-  decorators: []
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: 'Un componente Container per costruire layout di pagina con supporto completo per Flexbox e CSS Grid.'
+      }
+    }
+  },
+  argTypes: {
+    display: {
+      control: 'select',
+      options: ['flex', 'grid', 'block', 'inline-flex', 'inline-grid'],
+      description: 'Tipo di display del container'
+    },
+    direction: {
+      control: 'select',
+      options: ['row', 'column', 'row-reverse', 'column-reverse'],
+      description: 'Direzione del flex (solo per flex)'
+    },
+    justify: {
+      control: 'select',
+      options: ['start', 'end', 'center', 'between', 'around', 'evenly', 'stretch'],
+      description: 'Allineamento principale'
+    },
+    align: {
+      control: 'select',
+      options: ['start', 'end', 'center', 'stretch', 'baseline'],
+      description: 'Allineamento secondario'
+    },
+    gap: {
+      control: 'select',
+      options: ['0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Gap tra elementi'
+    },
+    padding: {
+      control: 'select',
+      options: ['0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Padding interno'
+    },
+    tag: {
+      control: 'text',
+      description: 'Tag HTML da utilizzare per il container'
+    }
+  }
 }
-
-type Story = StoryObj<typeof meta>
-
-const Default: Story = {
-  args: {}
-}
-
-export { Default }
 
 export default meta
+type Story = StoryObj<typeof FzContainer>
+
+// Storia base - Stack verticale
+export const VerticalStack: Story = {
+  args: {
+    direction: 'column',
+    gap: '16',
+    padding: '20'
+  },
+  render: (args) => ({
+    components: { FzContainer },
+    setup() {
+      return { args }
+    },
+    template: `
+      <FzContainer v-bind="args">
+        <div class="bg-blue-100 p-4 rounded">Elemento 1</div>
+        <div class="bg-green-100 p-4 rounded">Elemento 2</div>
+        <div class="bg-yellow-100 p-4 rounded">Elemento 3</div>
+      </FzContainer>
+    `
+  })
+}
+
+// Storia - Stack orizzontale
+export const HorizontalStack: Story = {
+  args: {
+    direction: 'row',
+    gap: '12',
+    padding: '20',
+    align: 'center'
+  },
+  render: (args) => ({
+    components: { FzContainer },
+    setup() {
+      return { args }
+    },
+    template: `
+      <FzContainer v-bind="args">
+        <div class="bg-blue-100 p-4 rounded">Elemento 1</div>
+        <div class="bg-green-100 p-4 rounded">Elemento 2</div>
+        <div class="bg-yellow-100 p-4 rounded">Elemento 3</div>
+      </FzContainer>
+    `
+  })
+}
+
+// Storia - Centering
+export const Centered: Story = {
+  args: {
+    center: true,
+    padding: '40',
+    height: 'screen'
+  },
+  render: (args) => ({
+    components: { FzContainer },
+    setup() {
+      return { args }
+    },
+    template: `
+      <FzContainer v-bind="args" class="bg-gray-50">
+        <div class="bg-blue-500 text-white p-8 rounded-lg">
+          <h2 class="text-xl font-bold mb-2">Contenuto Centrato</h2>
+          <p>Questo contenuto è perfettamente centrato sia orizzontalmente che verticalmente.</p>
+        </div>
+      </FzContainer>
+    `
+  })
+}
+
+// Storia - Grid Layout
+export const GridLayout: Story = {
+  args: {
+    display: 'grid',
+    gridCols: '3',
+    gap: '16',
+    padding: '20'
+  },
+  render: (args) => ({
+    components: { FzContainer },
+    setup() {
+      return { args }
+    },
+    template: `
+      <FzContainer v-bind="args">
+        <div class="bg-red-100 p-4 rounded">Card 1</div>
+        <div class="bg-blue-100 p-4 rounded">Card 2</div>
+        <div class="bg-green-100 p-4 rounded">Card 3</div>
+        <div class="bg-yellow-100 p-4 rounded">Card 4</div>
+        <div class="bg-purple-100 p-4 rounded">Card 5</div>
+        <div class="bg-pink-100 p-4 rounded">Card 6</div>
+      </FzContainer>
+    `
+  })
+}
+
+// Storia - Layout di pagina
+export const PageLayout: Story = {
+  render: () => ({
+    components: { FzContainer },
+    template: `
+      <div>
+        <!-- Header -->
+        <FzContainer 
+          tag="header"
+          padding="20" 
+          justify="between" 
+          align="center"
+          class="bg-blue-600 text-white"
+        >
+          <div class="text-xl font-bold">Logo</div>
+          <nav class="flex gap-4">
+            <a href="#" class="hover:underline">Home</a>
+            <a href="#" class="hover:underline">About</a>
+            <a href="#" class="hover:underline">Contact</a>
+          </nav>
+        </FzContainer>
+
+        <!-- Main Content -->
+        <FzContainer 
+          tag="main"
+          direction="column" 
+          gap="32"
+          padding="40"
+          class="min-h-screen bg-gray-50"
+        >
+          <FzContainer direction="column" gap="16">
+            <h1 class="text-3xl font-bold">Benvenuto</h1>
+            <p class="text-gray-600">Questo è un esempio di layout di pagina creato con FzContainer.</p>
+          </FzContainer>
+
+          <!-- Content Grid -->
+          <FzContainer 
+            display="grid"
+            gridCols="2"
+            gap="24"
+          >
+            <FzContainer 
+              direction="column"
+              gap="12"
+              padding="24"
+              class="bg-white rounded-lg shadow"
+            >
+              <h3 class="text-xl font-semibold">Sezione 1</h3>
+              <p class="text-gray-600">Contenuto della prima sezione con layout verticale.</p>
+            </FzContainer>
+
+            <FzContainer 
+              direction="column"
+              gap="12"
+              padding="24"
+              class="bg-white rounded-lg shadow"
+            >
+              <h3 class="text-xl font-semibold">Sezione 2</h3>
+              <p class="text-gray-600">Contenuto della seconda sezione con layout verticale.</p>
+            </FzContainer>
+          </FzContainer>
+        </FzContainer>
+
+        <!-- Footer -->
+        <FzContainer 
+          tag="footer"
+          padding="20"
+          justify="center"
+          class="bg-gray-800 text-white"
+        >
+          <p>&copy; 2024 - Design System Container</p>
+        </FzContainer>
+      </div>
+    `
+  })
+}
+
+// Storia - Form Layout
+export const FormLayout: Story = {
+  render: () => ({
+    components: { FzContainer },
+    template: `
+      <FzContainer 
+        justify="center"
+        padding="40"
+        class="min-h-screen bg-gray-100"
+      >
+        <FzContainer 
+          tag="form"
+          direction="column" 
+          gap="20"
+          padding="32"
+          class="bg-white rounded-lg shadow-lg w-full max-w-md"
+        >
+          <h2 class="text-2xl font-bold text-center">Registrazione</h2>
+          
+          <!-- Nome e Cognome -->
+          <FzContainer gap="12">
+            <input 
+              placeholder="Nome" 
+              class="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input 
+              placeholder="Cognome" 
+              class="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </FzContainer>
+          
+          <!-- Email -->
+          <input 
+            placeholder="Email" 
+            type="email"
+            class="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          
+          <!-- Password -->
+          <input 
+            placeholder="Password" 
+            type="password"
+            class="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          
+          <!-- Buttons -->
+          <FzContainer justify="end" gap="12">
+            <button 
+              type="button"
+              class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              Annulla
+            </button>
+            <button 
+              type="submit"
+              class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              Registrati
+            </button>
+          </FzContainer>
+        </FzContainer>
+      </FzContainer>
+    `
+  })
+}
+
+// Storia - Responsive Design
+export const ResponsiveDesign: Story = {
+  render: () => ({
+    components: { FzContainer },
+    setup() {
+      const items = Array.from({ length: 8 }, (_, i) => ({
+        id: i + 1,
+        title: `Item ${i + 1}`,
+        description: `Descrizione dell'elemento ${i + 1}`
+      }))
+      return { items }
+    },
+    template: `
+      <FzContainer 
+        direction="column"
+        gap="24"
+        padding="20"
+      >
+        <div class="text-center">
+          <h2 class="text-2xl font-bold mb-4">Design Responsive</h2>
+          <p class="text-gray-600 mb-8">
+            Questo layout si adatta automaticamente alle diverse dimensioni dello schermo:
+            <br>
+            • Mobile: 1 colonna
+            <br>
+            • Tablet: 2 colonne  
+            <br>
+            • Desktop: 4 colonne
+          </p>
+        </div>
+
+        <FzContainer 
+          display="grid"
+          :gridCols="{ xs: '1', sm: '2', lg: '4' }"
+          gap="16"
+        >
+          <FzContainer 
+            v-for="item in items"
+            :key="item.id"
+            direction="column"
+            gap="8"
+            padding="16"
+            class="bg-white border rounded-lg shadow hover:shadow-md transition-shadow"
+          >
+            <div class="w-full h-20 bg-gradient-to-r from-blue-400 to-purple-500 rounded"></div>
+            <h3 class="font-semibold">{{ item.title }}</h3>
+            <p class="text-sm text-gray-600">{{ item.description }}</p>
+          </FzContainer>
+        </FzContainer>
+      </FzContainer>
+    `
+  })
+}
