@@ -2,7 +2,7 @@ export type FzContainerDisplay = 'flex' | 'grid' | 'block' | 'inline-flex' | 'in
 
 export type FzContainerDirection = 'row' | 'column' | 'row-reverse' | 'column-reverse'
 
-export type FzContainerWrap = 'wrap' | 'nowrap' | 'wrap-reverse'
+export type FzContainerWrap = 'wrap' | 'nowrap' | 'wrap-reverse' | boolean
 
 export type FzContainerJustify = 
   | 'start' 

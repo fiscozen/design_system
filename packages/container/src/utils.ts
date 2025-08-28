@@ -78,12 +78,18 @@ export const directionMapper = (direction: FzContainerDirection): string => {
 
 // Wrap mappers
 export const wrapMapper = (wrap: FzContainerWrap): string => {
-  const wrapMap: Record<FzContainerWrap, string> = {
+  // Handle boolean values
+  if (typeof wrap === 'boolean') {
+    return wrap ? 'flex-wrap' : 'flex-nowrap'
+  }
+  
+  // Handle string values
+  const wrapMap: Record<string, string> = {
     'wrap': 'flex-wrap',
     'nowrap': 'flex-nowrap',
     'wrap-reverse': 'flex-wrap-reverse'
   }
-  return wrapMap[wrap]
+  return wrapMap[wrap] || 'flex-nowrap'
 }
 
 // Justify mappers

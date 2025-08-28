@@ -39,6 +39,17 @@ npm install @fiscozen/container
     <button>Conferma</button>
   </FzContainer>
 
+  <!-- Layout con wrap abilitato -->
+  <FzContainer 
+    direction="row" 
+    :wrap="true"
+    gap="12"
+  >
+    <div>Item 1</div>
+    <div>Item 2</div>
+    <div>Item 3</div>
+  </FzContainer>
+
   <!-- Grid layout -->
   <FzContainer 
     display="grid" 
@@ -65,7 +76,7 @@ import { FzContainer } from '@fiscozen/container'
 |------|------|---------|-------------|
 | `display` | `'flex' \| 'grid' \| 'block' \| 'inline-flex' \| 'inline-grid'` | `'flex'` | Tipo di display del container |
 | `direction` | `'row' \| 'column' \| 'row-reverse' \| 'column-reverse'` | `'row'` | Direzione del flex (solo per flex) |
-| `wrap` | `'wrap' \| 'nowrap' \| 'wrap-reverse'` | `'nowrap'` | Comportamento di wrap (solo per flex) |
+| `wrap` | `'wrap' \| 'nowrap' \| 'wrap-reverse' \| boolean` | `'nowrap'` | Comportamento di wrap (solo per flex). `true` = wrap, `false` = nowrap |
 
 ### Allineamento
 

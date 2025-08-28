@@ -47,6 +47,11 @@ const meta: Meta<typeof FzContainer> = {
     tag: {
       control: 'text',
       description: 'Tag HTML da utilizzare per il container'
+    },
+    wrap: {
+      control: 'select',
+      options: ['wrap', 'nowrap', 'wrap-reverse', true, false],
+      description: 'Wrap del flex. Supporta anche valori boolean: true=wrap, false=nowrap'
     }
   }
 }
@@ -286,6 +291,31 @@ export const FormLayout: Story = {
             </button>
           </FzContainer>
         </FzContainer>
+      </FzContainer>
+    `
+  })
+}
+
+// Storia - Wrap Layout con valori boolean
+export const WrapLayout: Story = {
+  args: {
+    direction: 'row',
+    wrap: true,
+    gap: '12',
+    padding: '20'
+  },
+  render: (args) => ({
+    components: { FzContainer },
+    setup() {
+      return { args }
+    },
+    template: `
+      <FzContainer v-bind="args" class="max-w-md">
+        <div class="bg-blue-100 p-4 rounded w-32">Item largo 1</div>
+        <div class="bg-green-100 p-4 rounded w-32">Item largo 2</div>
+        <div class="bg-yellow-100 p-4 rounded w-32">Item largo 3</div>
+        <div class="bg-purple-100 p-4 rounded w-32">Item largo 4</div>
+        <div class="bg-pink-100 p-4 rounded w-32">Item largo 5</div>
       </FzContainer>
     `
   })
