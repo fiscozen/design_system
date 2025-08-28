@@ -45,7 +45,7 @@ const props = withDefaults(defineProps<FzContainerProps>(), {
   wrap: "nowrap",
   justify: "start",
   align: "stretch",
-  gap: "0",
+  gap: "none",
   tag: "div",
   fullWidth: false,
   fullHeight: false,

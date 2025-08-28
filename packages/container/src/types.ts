@@ -21,6 +21,15 @@ export type FzContainerAlign =
   | 'baseline'
 
 export type FzContainerGap = 
+  // Semantic values (recommended)
+  | 'none'
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | '2xl'
+  // Numeric Tailwind values (fallback)
   | '0' 
   | '1' 
   | '2' 
@@ -39,6 +48,15 @@ export type FzContainerGap =
   | '64'
 
 export type FzContainerSpacing = 
+  // Semantic values (recommended)
+  | 'none'
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | '2xl'
+  // Numeric Tailwind values (fallback)
   | '0' 
   | '1' 
   | '2' 
