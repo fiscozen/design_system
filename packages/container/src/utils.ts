@@ -118,27 +118,45 @@ export const alignMapper = (align: FzContainerAlign): string => {
   return alignMap[align]
 }
 
+// Semantic spacing mapping to Tailwind values
+const spacingSemanticMap: Record<string, string> = {
+  'none': '0',
+  'xs': '2',
+  'sm': '8', 
+  'md': '16',
+  'lg': '24',
+  'xl': '32',
+  '2xl': '48'
+}
+
+/**
+ * Maps semantic spacing values to Tailwind numeric values
+ */
+function mapSemanticSpacing(value: string): string {
+  return spacingSemanticMap[value] || value
+}
+
 // Gap mappers
-export const gapMapper = (gap: FzContainerGap): string => `gap-${gap}`
-export const rowGapMapper = (gap: FzContainerGap): string => `gap-y-${gap}`
-export const colGapMapper = (gap: FzContainerGap): string => `gap-x-${gap}`
+export const gapMapper = (gap: FzContainerGap): string => `gap-${mapSemanticSpacing(gap)}`
+export const rowGapMapper = (gap: FzContainerGap): string => `gap-y-${mapSemanticSpacing(gap)}`
+export const colGapMapper = (gap: FzContainerGap): string => `gap-x-${mapSemanticSpacing(gap)}`
 
 // Spacing mappers
-export const paddingMapper = (spacing: FzContainerSpacing): string => `p-${spacing}`
-export const paddingTopMapper = (spacing: FzContainerSpacing): string => `pt-${spacing}`
-export const paddingRightMapper = (spacing: FzContainerSpacing): string => `pr-${spacing}`
-export const paddingBottomMapper = (spacing: FzContainerSpacing): string => `pb-${spacing}`
-export const paddingLeftMapper = (spacing: FzContainerSpacing): string => `pl-${spacing}`
-export const paddingXMapper = (spacing: FzContainerSpacing): string => `px-${spacing}`
-export const paddingYMapper = (spacing: FzContainerSpacing): string => `py-${spacing}`
+export const paddingMapper = (spacing: FzContainerSpacing): string => `p-${mapSemanticSpacing(spacing)}`
+export const paddingTopMapper = (spacing: FzContainerSpacing): string => `pt-${mapSemanticSpacing(spacing)}`
+export const paddingRightMapper = (spacing: FzContainerSpacing): string => `pr-${mapSemanticSpacing(spacing)}`
+export const paddingBottomMapper = (spacing: FzContainerSpacing): string => `pb-${mapSemanticSpacing(spacing)}`
+export const paddingLeftMapper = (spacing: FzContainerSpacing): string => `pl-${mapSemanticSpacing(spacing)}`
+export const paddingXMapper = (spacing: FzContainerSpacing): string => `px-${mapSemanticSpacing(spacing)}`
+export const paddingYMapper = (spacing: FzContainerSpacing): string => `py-${mapSemanticSpacing(spacing)}`
 
-export const marginMapper = (spacing: FzContainerSpacing): string => `m-${spacing}`
-export const marginTopMapper = (spacing: FzContainerSpacing): string => `mt-${spacing}`
-export const marginRightMapper = (spacing: FzContainerSpacing): string => `mr-${spacing}`
-export const marginBottomMapper = (spacing: FzContainerSpacing): string => `mb-${spacing}`
-export const marginLeftMapper = (spacing: FzContainerSpacing): string => `ml-${spacing}`
-export const marginXMapper = (spacing: FzContainerSpacing): string => `mx-${spacing}`
-export const marginYMapper = (spacing: FzContainerSpacing): string => `my-${spacing}`
+export const marginMapper = (spacing: FzContainerSpacing): string => `m-${mapSemanticSpacing(spacing)}`
+export const marginTopMapper = (spacing: FzContainerSpacing): string => `mt-${mapSemanticSpacing(spacing)}`
+export const marginRightMapper = (spacing: FzContainerSpacing): string => `mr-${mapSemanticSpacing(spacing)}`
+export const marginBottomMapper = (spacing: FzContainerSpacing): string => `mb-${mapSemanticSpacing(spacing)}`
+export const marginLeftMapper = (spacing: FzContainerSpacing): string => `ml-${mapSemanticSpacing(spacing)}`
+export const marginXMapper = (spacing: FzContainerSpacing): string => `mx-${mapSemanticSpacing(spacing)}`
+export const marginYMapper = (spacing: FzContainerSpacing): string => `my-${mapSemanticSpacing(spacing)}`
 
 // Size mappers
 export const widthMapper = (size: FzContainerSize): string => {
@@ -268,3 +286,8 @@ export function getCenteredClasses(centerX?: boolean, centerY?: boolean, center?
   
   return classes
 }
+
+/**
+ * Export the semantic spacing mapping for external use
+ */
+export { spacingSemanticMap, mapSemanticSpacing }

@@ -1,13 +1,12 @@
 # @fiscozen/container
 
-Un componente Container versatile per costruire layout di pagina con supporto completo per Flexbox e CSS Grid.
+Un componente Container **semantic-first** per costruire layout di pagina con supporto completo per Flexbox e CSS Grid.
 
 ## Caratteristiche
 
 - 🚀 **Flessibile**: Supporta sia Flexbox che CSS Grid
-- 📱 **Responsive**: Tutte le proprietà supportano breakpoint responsive  
-- 🎯 **Type-safe**: Completamente tipizzato con TypeScript
-- 🎨 **Personalizzabile**: Controllo completo su spacing, allineamento e dimensioni
+- 📱 **Responsive**: Tutte le proprietà supportano breakpoint responsive
+- ⭐ **Semantic-First**: Sistema di valori semantici per spacing coerente (`none`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`)
 - ⚡ **Performante**: Generazione ottimizzata delle classi CSS
 
 ## Installazione
@@ -16,12 +15,16 @@ Un componente Container versatile per costruire layout di pagina con supporto co
 npm install @fiscozen/container
 ```
 
-## Uso Base
+## Uso Base (Semantic-First) ⭐
 
 ```vue
+<script setup>
+import { FzContainer } from '@fiscozen/container'
+</script>
+
 <template>
-  <!-- Stack verticale con gap -->
-  <FzContainer direction="column" gap="16">
+  <!-- Stack verticale con spacing semantico -->
+  <FzContainer direction="column" gap="md">
     <div>Elemento 1</div>
     <div>Elemento 2</div>
     <div>Elemento 3</div>
@@ -32,40 +35,36 @@ npm install @fiscozen/container
     direction="row" 
     justify="center" 
     align="center"
-    gap="8"
-    padding="20"
+    gap="sm"
+    padding="lg"
   >
-    <button>Annulla</button>
-    <button>Conferma</button>
+    <div>Elemento 1</div>
+    <div>Elemento 2</div>
   </FzContainer>
 
-  <!-- Layout con wrap abilitato -->
+  <!-- Layout responsive con valori semantici -->
   <FzContainer 
     direction="row" 
     :wrap="true"
-    gap="12"
+    :gap="{ xs: 'xs', md: 'md', lg: 'lg' }"
   >
-    <div>Item 1</div>
-    <div>Item 2</div>
-    <div>Item 3</div>
+    <div>Elemento 1</div>
+    <div>Elemento 2</div>
+    <div>Elemento 3</div>
   </FzContainer>
 
-  <!-- Grid layout -->
+  <!-- Grid layout semantico -->
   <FzContainer 
     display="grid" 
     gridCols="3" 
-    gap="16"
-    padding="20"
+    gap="md"
+    padding="lg"
   >
-    <div>Card 1</div>
-    <div>Card 2</div>
-    <div>Card 3</div>
+    <div>Elemento 1</div>
+    <div>Elemento 2</div>
+    <div>Elemento 3</div>
   </FzContainer>
 </template>
-
-<script setup>
-import { FzContainer } from '@fiscozen/container'
-</script>
 ```
 
 ## Proprietà
@@ -92,15 +91,33 @@ import { FzContainer } from '@fiscozen/container'
 
 | Prop | Tipo | Default | Descrizione |
 |------|------|---------|-------------|
-| `gap` | `string` | `'0'` | Gap tra elementi |
-| `rowGap` | `string` | - | Gap tra righe |
-| `colGap` | `string` | - | Gap tra colonne |
-| `padding` | `string` | - | Padding interno |
-| `paddingX` | `string` | - | Padding orizzontale |
-| `paddingY` | `string` | - | Padding verticale |
-| `margin` | `string` | - | Margin esterno |
-| `marginX` | `string` | - | Margin orizzontale |
-| `marginY` | `string` | - | Margin verticale |
+| `gap` | `string` | `'none'` | Gap tra elementi. **RACCOMANDATO**: valori semantici (`none`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`). Valori numerici Tailwind disponibili per casi specifici |
+| `rowGap` | `string` | - | Gap tra righe (supporta valori semantici) |
+| `colGap` | `string` | - | Gap tra colonne (supporta valori semantici) |
+| `padding` | `string` | - | Padding interno. **RACCOMANDATO**: valori semantici |
+| `paddingX` | `string` | - | Padding orizzontale (supporta valori semantici) |
+| `paddingY` | `string` | - | Padding verticale (supporta valori semantici) |
+| `margin` | `string` | - | Margin esterno. **RACCOMANDATO**: valori semantici |
+| `marginX` | `string` | - | Margin orizzontale (supporta valori semantici) |
+| `marginY` | `string` | - | Margin verticale (supporta valori semantici) |
+
+#### Sistema di Spacing Semantico ⭐ 
+
+**I valori semantici sono la scelta consigliata** per un design system coerente e maintainable:
+
+| Valore Semantico | Pixel | Uso Consigliato | Esempi |
+|------------------|-------|-----------------|---------|
+| **`none`** | 0px | Reset, layout compatti | `gap="none"`, `padding="none"` |
+| **`xs`** | 8px | Fine-tuning, micro-spacing | Gap tra icona e testo |
+| **`sm`** | 32px | Elementi correlati | Pulsanti in gruppo, form inline |
+| **`md`** ⭐ | 64px | **Default consigliato** | Content spacing, card padding |
+| **`lg`** | 96px | Separazione sezioni | Header padding, section gaps |
+| **`xl`** | 128px | Container principali | Page padding, hero sections |
+| **`2xl`** | 192px | Spaziature generous | Large containers, landing pages |
+
+#### Valori Numerici Tailwind (Fallback)
+
+Per casi specifici dove serve controllo granulare: `0`, `1`, `2`, `4`, `6`, `8`, `10`, `12`, `14`, `16`, `20`, `24`, `32`, `40`, `48`, `64`
 
 ### Dimensioni
 
@@ -137,6 +154,69 @@ Tutte le proprietà supportano breakpoint responsive:
 
 I breakpoint disponibili sono: `xs`, `sm`, `md`, `lg`, `xl`, `2xl`.
 
+## Best Practices: Approccio Semantic-First ⭐
+
+### ✅ Raccomandato: Valori Semantici
+
+```vue
+<template>
+  <!-- 🎯 PERFECT: Design system approach -->
+  <FzContainer 
+    direction="column" 
+    gap="lg"
+    padding="xl"
+  >
+    <h1>Titolo</h1>
+    
+    <!-- Card con spacing semantico coerente -->
+    <FzContainer 
+      direction="column"
+      gap="md"
+      padding="lg"
+      class="bg-white rounded shadow"
+    >
+      <h2>Card Title</h2>
+      <p>Contenuto della card</p>
+      
+      <!-- Actions con gap semantico -->
+      <FzContainer gap="sm" justify="end">
+        <button>Annulla</button>
+        <button>Conferma</button>
+      </FzContainer>
+    </FzContainer>
+  </FzContainer>
+
+  <!-- 🎯 PERFECT: Responsive semantico -->
+  <FzContainer 
+    :gap="{ xs: 'none', sm: 'sm', md: 'lg' }"
+    :padding="{ xs: 'md', lg: 'xl' }"
+  >
+    <!-- Scaling perfetto su tutti i device -->
+  </FzContainer>
+
+  <!-- 🎯 PERFECT: Reset semantico -->
+  <FzContainer gap="none" padding="none">
+    <!-- Layout compatto quando necessario -->
+  </FzContainer>
+</template>
+```
+
+### ⚠️ Evita: Valori Numerici (solo per casi specifici)
+
+```vue
+<template>
+  <!-- ❌ AVOID: Perdita di coerenza del design system -->
+  <FzContainer gap="12" padding="20">
+    <!-- Meglio usare gap="sm" padding="lg" -->
+  </FzContainer>
+
+  <!-- ✅ OK: Solo per fine-tuning specifico -->
+  <FzContainer gap="md" padding="6">
+    <!-- Valore numerico solo se semantico non basta -->
+  </FzContainer>
+</template>
+```
+
 ## Esempi Comuni
 
 ### Layout di Pagina
@@ -146,7 +226,7 @@ I breakpoint disponibili sono: `xs`, `sm`, `md`, `lg`, `xl`, `2xl`.
   <!-- Header -->
   <FzContainer 
     tag="header"
-    padding="20" 
+    padding="lg" 
     justify="between" 
     align="center"
     fullWidth
@@ -159,8 +239,8 @@ I breakpoint disponibili sono: `xs`, `sm`, `md`, `lg`, `xl`, `2xl`.
   <FzContainer 
     tag="main"
     direction="column" 
-    gap="32"
-    padding="40"
+    gap="xl"
+    padding="2xl"
     minHeight="screen"
   >
     <h1>Titolo</h1>
@@ -176,18 +256,18 @@ I breakpoint disponibili sono: `xs`, `sm`, `md`, `lg`, `xl`, `2xl`.
   <FzContainer 
     tag="form"
     direction="column" 
-    gap="20"
+    gap="lg"
     maxWidth="md"
-    padding="24"
+    padding="xl"
   >
-    <FzContainer gap="16">
+    <FzContainer gap="md">
       <input placeholder="Nome" />
       <input placeholder="Cognome" />
     </FzContainer>
     
     <input placeholder="Email" />
     
-    <FzContainer justify="end" gap="12">
+    <FzContainer justify="end" gap="sm">
       <button type="button">Annulla</button>
       <button type="submit">Invia</button>
     </FzContainer>
@@ -202,14 +282,14 @@ I breakpoint disponibili sono: `xs`, `sm`, `md`, `lg`, `xl`, `2xl`.
   <FzContainer 
     display="grid"
     :gridCols="{ xs: '1', sm: '2', lg: '3' }"
-    gap="20"
-    padding="20"
+    gap="lg"
+    padding="lg"
   >
     <div v-for="card in cards" :key="card.id">
       <FzContainer 
         direction="column"
-        gap="12"
-        padding="16"
+        gap="sm"
+        padding="md"
         class="border rounded"
       >
         <h3>{{ card.title }}</h3>
@@ -220,10 +300,19 @@ I breakpoint disponibili sono: `xs`, `sm`, `md`, `lg`, `xl`, `2xl`.
 </template>
 ```
 
-## Vantaggi
+## Vantaggi del Sistema Semantic-First
 
-1. **Semplicità**: Un'unica API per tutti i layout
-2. **Consistenza**: Usa il sistema di spacing del design system
-3. **Flessibilità**: Supporta qualsiasi tipo di layout
-4. **Performance**: Genera solo le classi CSS necessarie
-5. **DX**: Completamente tipizzato per un'esperienza di sviluppo ottimale
+### 🎨 Design System Benefits
+1. **Consistency**: Scale di spacing predefinita garantisce coerenza visuale
+2. **Maintainability**: Cambi globali modificando solo il mapping semantico
+3. **Designer-Friendly**: Valori pensati per designer, non pixel
+
+### 🚀 Developer Experience  
+4. **Intuitive API**: `gap="lg"` più chiaro di `gap="24"`
+5. **Type Safety**: Autocompletamento intelligente con valori semantici prioritari
+6. **Responsive Design**: Perfetta integrazione con breakpoint responsive
+
+### ⚡ Technical Advantages
+7. **Performance**: Generazione ottimizzata delle classi CSS
+8. **Flexibility**: Fallback numerico per casi edge specifici  
+9. **Future-Proof**: Facile evoluzione della scala di spacing
