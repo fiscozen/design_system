@@ -376,6 +376,13 @@ export const FormContainer: Story = {
               <FzInput label="stack-responsive-v-h" placeholder="Item 11" />
               <FzInput label="stack-responsive-v-h" placeholder="Item 12" />
             </fieldset>
+            <fieldset class="fz-container-stack-responsive-v-h-v fz-container-gap-md">
+              <FzInput label="stack-responsive-v-h-v" placeholder="Item 13" />
+              <FzInput label="stack-responsive-v-h-v" placeholder="Item 14" />
+              <FzInput label="stack-responsive-v-h-v" placeholder="Item 15" />
+              <FzInput label="stack-responsive-v-h-v" placeholder="Item 16" />
+              <FzInput label="stack-responsive-v-h-v" placeholder="Item 17" />
+            </fieldset>
             <fieldset class="fz-container-stack-h fz-container-gap-md fz-container-stack-align-main-end">
               <FzButton class="fz-button" variant="secondary">Reset</FzButton>
               <FzButton class="fz-button" variant="primary">Invia</FzButton>
