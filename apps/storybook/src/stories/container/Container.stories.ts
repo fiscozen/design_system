@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzContainer } from '@fiscozen/container'
+import { FzButton } from '@fiscozen/button'
+import { FzInput } from '@fiscozen/input'
 
 const meta: Meta<typeof FzContainer> = {
   title: 'Layout/FzContainer',
@@ -406,67 +408,62 @@ export const PageLayout: Story = {
 }
 */
 
-// Storia - Form Layout
+// Storia - Form Layout semplificato con Design System Components
 export const FormLayout: Story = {
   render: () => ({
-    components: { FzContainer },
+    components: { FzContainer, FzButton, FzInput },
     template: `
-      <FzContainer 
+      <FzContainer
+        tag="form"
+        direction="column"
+        gap="md"
         justify="center"
-        padding="40"
-        class="min-h-screen bg-gray-100"
+        class="bg-gray-100"
       >
-        <FzContainer 
-          tag="form"
-          direction="column" 
-          gap="20"
-          padding="32"
-          class="bg-white rounded-lg shadow-lg w-full max-w-md"
-        >
-          <h2 class="text-2xl font-bold text-center">Registrazione</h2>
+        <!-- Form Card -->
+          <h2 class="text-2xl font-bold text-center mb-6">Registrazione</h2>
           
-          <!-- Nome e Cognome -->
-          <FzContainer gap="12">
-            <input 
-              placeholder="Nome" 
-              class="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <input 
-              placeholder="Cognome" 
-              class="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </FzContainer>
+          <!-- Nome -->
+          <FzInput 
+            label="Nome"
+            placeholder="Inserisci il nome" 
+            required
+          />
+          
+          <!-- Cognome -->
+          <FzInput 
+            label="Cognome"
+            placeholder="Inserisci il cognome" 
+            required
+          />
           
           <!-- Email -->
-          <input 
-            placeholder="Email" 
-            type="email"
-            class="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <FzInput 
+            label="Email"
+            placeholder="Inserisci la tua email"
+            type="email" 
+            required
           />
           
           <!-- Password -->
-          <input 
-            placeholder="Password" 
-            type="password"
-            class="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <FzInput 
+            label="Password"
+            placeholder="Inserisci la password"
+            type="password" 
+            required
           />
           
           <!-- Buttons -->
-          <FzContainer justify="end" gap="12">
-            <button 
-              type="button"
-              class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
-            >
-              Annulla
-            </button>
-            <button 
-              type="submit"
-              class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              Registrati
-            </button>
+          <FzContainer direction="row" gap="sm" justify="end">
+            <FzButton 
+              label="Annulla"
+              variant="secondary"
+            />
+            <FzButton 
+              label="Registrati"
+              variant="primary"
+            />
           </FzContainer>
-        </FzContainer>
       </FzContainer>
     `
   })
