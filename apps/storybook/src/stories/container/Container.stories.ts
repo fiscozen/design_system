@@ -9,7 +9,7 @@ const meta: Meta<typeof FzContainer> = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'Un componente Container SEMANTIC-FIRST per costruire layout di pagina. Usa sempre valori semantici (none, xs, sm, md, lg, xl, 2xl) per consistency del design system.'
+        component: 'Un componente Container SEMANTIC-FIRST per costruire layout di pagina.'
       }
     }
   },
@@ -46,7 +46,7 @@ const meta: Meta<typeof FzContainer> = {
     },
     tag: {
       control: 'text',
-      description: 'Tag HTML da utilizzare per il container'
+      description: 'Tag HTML da utilizzare per il container (default: div)'
     },
     wrap: {
       control: 'select',
