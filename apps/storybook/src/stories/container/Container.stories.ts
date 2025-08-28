@@ -14,44 +14,217 @@ const meta: Meta<typeof FzContainer> = {
     }
   },
   argTypes: {
+    // Layout Basic
     display: {
       control: 'select',
       options: ['flex', 'grid', 'block', 'inline-flex', 'inline-grid'],
       description: 'Tipo di display del container'
     },
-    direction: {
-      control: 'select',
-      options: ['row', 'column', 'row-reverse', 'column-reverse'],
-      description: 'Direzione del flex (solo per flex)'
-    },
-    justify: {
-      control: 'select',
-      options: ['start', 'end', 'center', 'between', 'around', 'evenly', 'stretch'],
-      description: 'Allineamento principale'
-    },
-    align: {
-      control: 'select',
-      options: ['start', 'end', 'center', 'stretch', 'baseline'],
-      description: 'Allineamento secondario'
-    },
-    gap: {
-      control: 'select',
-      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
-      description: 'Gap tra elementi. RACCOMANDATO: usa valori semantici (none, xs, sm, md, lg, xl, 2xl). Valori numerici Tailwind disponibili per casi specifici.'
-    },
-    padding: {
-      control: 'select',
-      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
-      description: 'Padding interno. RACCOMANDATO: usa valori semantici (none, xs, sm, md, lg, xl, 2xl). Valori numerici Tailwind disponibili per casi specifici.'
-    },
     tag: {
       control: 'text',
       description: 'Tag HTML da utilizzare per il container (default: div)'
     },
+    
+    // Flex Layout
+    direction: {
+      control: 'select',
+      options: ['row', 'column', 'row-reverse', 'column-reverse'],
+      description: 'Direzione del flex (solo per display flex/inline-flex)'
+    },
     wrap: {
       control: 'select',
       options: ['wrap', 'nowrap', 'wrap-reverse', true, false],
-      description: 'Wrap del flex. Supporta anche valori boolean: true=wrap, false=nowrap'
+      description: 'Comportamento wrap del flex. Supporta valori boolean: true=wrap, false=nowrap'
+    },
+    justify: {
+      control: 'select',
+      options: ['start', 'end', 'center', 'between', 'around', 'evenly', 'stretch'],
+      description: 'Allineamento principale (justify-content)'
+    },
+    align: {
+      control: 'select',
+      options: ['start', 'end', 'center', 'stretch', 'baseline'],
+      description: 'Allineamento secondario (align-items)'
+    },
+    
+    // Grid Layout
+    gridCols: {
+      control: 'select',
+      options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'none'],
+      description: 'Numero di colonne grid (solo per display grid/inline-grid)'
+    },
+    gridRows: {
+      control: 'select',
+      options: ['1', '2', '3', '4', '5', '6', 'none'],
+      description: 'Numero di righe grid (solo per display grid/inline-grid)'
+    },
+    
+    // Gap (Semantic First)
+    gap: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: '🌟 Gap tra elementi. RACCOMANDATO: valori semantici (none, xs, sm, md, lg, xl, 2xl)'
+    },
+    rowGap: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Gap specifico tra righe. RACCOMANDATO: valori semantici'
+    },
+    colGap: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Gap specifico tra colonne. RACCOMANDATO: valori semantici'
+    },
+    
+    // Padding (Semantic First)
+    padding: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: '🌟 Padding per tutti i lati. RACCOMANDATO: valori semantici (none, xs, sm, md, lg, xl, 2xl)'
+    },
+    paddingTop: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Padding superiore. RACCOMANDATO: valori semantici'
+    },
+    paddingRight: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Padding destro. RACCOMANDATO: valori semantici'
+    },
+    paddingBottom: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Padding inferiore. RACCOMANDATO: valori semantici'
+    },
+    paddingLeft: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Padding sinistro. RACCOMANDATO: valori semantici'
+    },
+    paddingX: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Padding orizzontale (left + right). RACCOMANDATO: valori semantici'
+    },
+    paddingY: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Padding verticale (top + bottom). RACCOMANDATO: valori semantici'
+    },
+    
+    // Margin (Semantic First)
+    margin: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: '🌟 Margin per tutti i lati. RACCOMANDATO: valori semantici (none, xs, sm, md, lg, xl, 2xl)'
+    },
+    marginTop: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Margin superiore. RACCOMANDATO: valori semantici'
+    },
+    marginRight: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Margin destro. RACCOMANDATO: valori semantici'
+    },
+    marginBottom: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Margin inferiore. RACCOMANDATO: valori semantici'
+    },
+    marginLeft: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Margin sinistro. RACCOMANDATO: valori semantici'
+    },
+    marginX: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Margin orizzontale (left + right). RACCOMANDATO: valori semantici'
+    },
+    marginY: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '0', '1', '2', '4', '6', '8', '10', '12', '14', '16', '20', '24', '32', '40', '48', '64'],
+      description: 'Margin verticale (top + bottom). RACCOMANDATO: valori semantici'
+    },
+    
+    // Sizing
+    width: {
+      control: 'select',
+      options: ['auto', 'full', 'screen', 'fit', 'max', 'min'],
+      description: 'Larghezza del container'
+    },
+    height: {
+      control: 'select',
+      options: ['auto', 'full', 'screen', 'fit', 'max', 'min'],
+      description: 'Altezza del container'
+    },
+    maxWidth: {
+      control: 'select',
+      options: ['auto', 'full', 'screen', 'fit', 'max', 'min'],
+      description: 'Larghezza massima del container'
+    },
+    maxHeight: {
+      control: 'select',
+      options: ['auto', 'full', 'screen', 'fit', 'max', 'min'],
+      description: 'Altezza massima del container'
+    },
+    minWidth: {
+      control: 'select',
+      options: ['auto', 'full', 'screen', 'fit', 'max', 'min'],
+      description: 'Larghezza minima del container'
+    },
+    minHeight: {
+      control: 'select',
+      options: ['auto', 'full', 'screen', 'fit', 'max', 'min'],
+      description: 'Altezza minima del container'
+    },
+    
+    // Overflow
+    overflow: {
+      control: 'select',
+      options: ['visible', 'hidden', 'scroll', 'auto'],
+      description: 'Comportamento overflow per entrambi gli assi'
+    },
+    overflowX: {
+      control: 'select',
+      options: ['visible', 'hidden', 'scroll', 'auto'],
+      description: 'Comportamento overflow per asse X'
+    },
+    overflowY: {
+      control: 'select',
+      options: ['visible', 'hidden', 'scroll', 'auto'],
+      description: 'Comportamento overflow per asse Y'
+    },
+    
+    // Boolean Controls
+    fullWidth: {
+      control: 'boolean',
+      description: 'Se il container deve occupare tutta la larghezza disponibile'
+    },
+    fullHeight: {
+      control: 'boolean',
+      description: 'Se il container deve occupare tutta l\'altezza disponibile'
+    },
+    center: {
+      control: 'boolean',
+      description: '🎯 Centra il contenuto sia orizzontalmente che verticalmente'
+    },
+    centerX: {
+      control: 'boolean',
+      description: 'Centra il contenuto orizzontalmente'
+    },
+    centerY: {
+      control: 'boolean',
+      description: 'Centra il contenuto verticalmente'
+    },
+    
+    // Custom
+    class: {
+      control: 'text',
+      description: 'Classe CSS custom da applicare al container'
     }
   }
 }
