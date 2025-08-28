@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import { FzContainer } from '@fiscozen/container'
 
 const meta: Meta<typeof FzContainer> = {
-  title: 'Components/Container',
+  title: 'Layout/FzContainer',
   component: FzContainer,
   tags: ['autodocs'],
   parameters: {
