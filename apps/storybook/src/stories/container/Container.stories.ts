@@ -277,12 +277,12 @@ export const HorizontalStack: Story = {
   })
 }
 
+/*
 // Storia - Centering
 export const Centered: Story = {
   args: {
     center: true,
-    padding: 'xl',
-    height: 'screen'
+    height: 'screen',
   },
   render: (args) => ({
     components: { FzContainer },
@@ -290,7 +290,7 @@ export const Centered: Story = {
       return { args }
     },
     template: `
-      <FzContainer v-bind="args" class="bg-gray-50">
+      <FzContainer v-bind="args" class="bg-gray-50 min-h-screen">
         <div class="bg-blue-500 text-white p-8 rounded-lg">
           <h2 class="text-xl font-bold mb-2">Contenuto Centrato</h2>
           <p>Questo contenuto è perfettamente centrato sia orizzontalmente che verticalmente.</p>
@@ -299,6 +299,7 @@ export const Centered: Story = {
     `
   })
 }
+*/
 
 // Storia - Grid Layout
 export const GridLayout: Story = {
@@ -326,6 +327,7 @@ export const GridLayout: Story = {
   })
 }
 
+/*
 // Storia - Layout di pagina
 export const PageLayout: Story = {
   render: () => ({
@@ -402,6 +404,7 @@ export const PageLayout: Story = {
     `
   })
 }
+*/
 
 // Storia - Form Layout
 export const FormLayout: Story = {
@@ -489,76 +492,6 @@ export const WrapLayout: Story = {
         <div class="bg-yellow-100 p-4 rounded w-32">Item largo 3</div>
         <div class="bg-purple-100 p-4 rounded w-32">Item largo 4</div>
         <div class="bg-pink-100 p-4 rounded w-32">Item largo 5</div>
-      </FzContainer>
-    `
-  })
-}
-
-// Storia - Semantic Spacing Demo
-export const SemanticSpacing: Story = {
-  render: () => ({
-    components: { FzContainer },
-    template: `
-      <FzContainer direction="column" gap="lg" padding="xl">
-        <h2 class="text-2xl font-bold mb-4">Demo Spacing Semantico</h2>
-        
-        <div class="space-y-6">
-          <div>
-            <h3 class="text-lg font-semibold mb-2">Gap: none (0px)</h3>
-            <FzContainer gap="none" class="bg-gray-100 p-4 rounded">
-              <div class="bg-red-200 p-2 rounded">Item 1</div>
-              <div class="bg-red-200 p-2 rounded">Item 2</div>
-              <div class="bg-red-200 p-2 rounded">Item 3</div>
-            </FzContainer>
-          </div>
-          
-          <div>
-            <h3 class="text-lg font-semibold mb-2">Gap: xs (8px)</h3>
-            <FzContainer gap="xs" class="bg-gray-100 p-4 rounded">
-              <div class="bg-blue-200 p-2 rounded">Item 1</div>
-              <div class="bg-blue-200 p-2 rounded">Item 2</div>
-              <div class="bg-blue-200 p-2 rounded">Item 3</div>
-            </FzContainer>
-          </div>
-          
-          <div>
-            <h3 class="text-lg font-semibold mb-2">Gap: sm (32px)</h3>
-            <FzContainer gap="sm" class="bg-gray-100 p-4 rounded">
-              <div class="bg-green-200 p-2 rounded">Item 1</div>
-              <div class="bg-green-200 p-2 rounded">Item 2</div>
-              <div class="bg-green-200 p-2 rounded">Item 3</div>
-            </FzContainer>
-          </div>
-          
-          <div>
-            <h3 class="text-lg font-semibold mb-2">Gap: md (64px)</h3>
-            <FzContainer gap="md" class="bg-gray-100 p-4 rounded">
-              <div class="bg-yellow-200 p-2 rounded">Item 1</div>
-              <div class="bg-yellow-200 p-2 rounded">Item 2</div>
-              <div class="bg-yellow-200 p-2 rounded">Item 3</div>
-            </FzContainer>
-          </div>
-          
-          <div>
-            <h3 class="text-lg font-semibold mb-2">Gap: lg (96px)</h3>
-            <FzContainer gap="lg" class="bg-gray-100 p-4 rounded">
-              <div class="bg-purple-200 p-2 rounded">Item 1</div>
-              <div class="bg-purple-200 p-2 rounded">Item 2</div>
-              <div class="bg-purple-200 p-2 rounded">Item 3</div>
-            </FzContainer>
-          </div>
-          
-          <div>
-            <h3 class="text-lg font-semibold mb-2">Padding Semantico: none, xs, sm, md, lg</h3>
-            <FzContainer direction="column" gap="xs">
-              <FzContainer padding="none" class="bg-gray-100 border border-gray-300">Padding: none</FzContainer>
-              <FzContainer padding="xs" class="bg-red-100 border border-red-300">Padding: xs</FzContainer>
-              <FzContainer padding="sm" class="bg-blue-100 border border-blue-300">Padding: sm</FzContainer>
-              <FzContainer padding="md" class="bg-green-100 border border-green-300">Padding: md</FzContainer>
-              <FzContainer padding="lg" class="bg-yellow-100 border border-yellow-300">Padding: lg</FzContainer>
-            </FzContainer>
-          </div>
-        </div>
       </FzContainer>
     `
   })
