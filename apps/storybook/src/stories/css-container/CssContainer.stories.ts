@@ -576,43 +576,43 @@ export const FormContainer: Story = {
         <div class="bg-gray-100 p-8">
           <form class="fz-container-stack-v fz-container-gap-md fz-container-padding-lg bg-white rounded shadow mx-auto">
             <h3 class="text-xl font-bold text-center">Form di Contatto</h3>
-            <fieldset class="fz-container-grid-responsive-sm fz-container-gap-md bg-blue-100 hover:bg-blue-200">
+            <fieldset class="fz-container-grid-responsive-sm fz-container-gap-md bg-gray-100 hover:bg-gray-200">
               <FzInput label="Grid Responsive SM" placeholder="Item A" />
               <FzInput label="Grid Responsive SM" placeholder="Item B" />
               <FzInput label="Grid Responsive SM" placeholder="Item C" />
               <FzInput label="Grid Responsive SM" placeholder="Item D" />
               <FzInput label="Grid Responsive SM" placeholder="Item E" />
             </fieldset>
-            <fieldset class="fz-container-stack-v fz-container-gap-md bg-blue-100 hover:bg-blue-200">
+            <fieldset class="fz-container-stack-v fz-container-gap-md bg-gray-100 hover:bg-gray-200">
               <FzInput label="Stack V" placeholder="Item F" />
               <FzInput label="Stack V" placeholder="Item G" />
             </fieldset>
-            <fieldset class="fz-container-grid-responsive-1-2-3 fz-container-gap-md bg-blue-100 hover:bg-blue-200">
+            <fieldset class="fz-container-grid-responsive-1-2-3 fz-container-gap-md bg-gray-100 hover:bg-gray-200">
               <FzInput label="grid-responsive-1-2-3" placeholder="Item 1" />
               <FzInput label="grid-responsive-1-2-3" placeholder="Item 2" />
               <FzInput label="grid-responsive-1-2-3" placeholder="Item 3" />
               <FzInput label="grid-responsive-1-2-3" placeholder="Item 4" />
               <FzInput label="grid-responsive-1-2-3" placeholder="Item 5" />
             </fieldset>
-            <fieldset class="fz-container-stack-h fz-container-gap-md bg-blue-100 hover:bg-blue-200">
+            <fieldset class="fz-container-stack-h fz-container-gap-md bg-gray-100 hover:bg-gray-200">
               <FzInput label="stack-h" placeholder="Item 6" />
               <FzInput label="stack-h" placeholder="Item 7" />
             </fieldset>
-            <fieldset class="fz-container-stack-responsive-v-h fz-container-gap-md bg-blue-100 hover:bg-blue-200">
+            <fieldset class="fz-container-stack-responsive-v-h fz-container-gap-md bg-gray-100 hover:bg-gray-200">
               <FzInput label="stack-responsive-v-h" placeholder="Item 8" />
               <FzInput label="stack-responsive-v-h" placeholder="Item 9" />
               <FzInput label="stack-responsive-v-h" placeholder="Item 10" />
               <FzInput label="stack-responsive-v-h" placeholder="Item 11" />
               <FzInput label="stack-responsive-v-h" placeholder="Item 12" />
             </fieldset>
-            <fieldset class="fz-container-stack-responsive-v-h-v fz-container-gap-md bg-blue-100 hover:bg-blue-200">
+            <fieldset class="fz-container-stack-responsive-v-h-v fz-container-gap-md bg-gray-100 hover:bg-gray-200">
               <FzInput label="stack-responsive-v-h-v" placeholder="Item 13" />
               <FzInput label="stack-responsive-v-h-v" placeholder="Item 14" />
               <FzInput label="stack-responsive-v-h-v" placeholder="Item 15" />
               <FzInput label="stack-responsive-v-h-v" placeholder="Item 16" />
               <FzInput label="stack-responsive-v-h-v" placeholder="Item 17" />
             </fieldset>
-            <fieldset class="fz-container-stack-h fz-container-gap-md fz-container-stack-align-main-end bg-blue-100 hover:bg-blue-200">
+            <fieldset class="fz-container-stack-h fz-container-gap-md fz-container-stack-align-main-end bg-gray-100 hover:bg-gray-200">
               <FzButton class="fz-button" variant="secondary">Reset</FzButton>
               <FzButton class="fz-button" variant="primary">Invia</FzButton>
             </fieldset>
