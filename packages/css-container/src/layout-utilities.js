@@ -6,6 +6,53 @@ const plugin = require('tailwindcss/plugin')
  * Sistema ufficiale di layout CSS per il design system Fiscozen.
  * Tutte le classi hanno il prefisso 'fz-container-' per namespacing.
  */
+
+// ==============================================
+// CONFIGURAZIONE SISTEMA
+// ==============================================
+//
+// 🎛️ PERSONALIZZA IL SISTEMA MODIFICANDO QUESTE COSTANTI:
+//
+// - BREAKPOINTS: Cambia i breakpoint responsive (mobile/tablet/desktop)
+// - GRID.MAX_COLUMNS: Cambia il numero massimo di colonne supportate
+// - AUTODETECT: Cambia i valori minimi per le grid autodetect
+// - STACK: Aggiungi nuove direzioni stack o modifica le esistenti
+//
+// ==============================================
+
+const CONFIG = {
+  // Breakpoints Tailwind (responsive)
+  BREAKPOINTS: {
+    mobile: '',           // Default (no prefix)
+    tablet: 'sm:',        // ≥640px
+    desktop: 'lg:',       // ≥1024px
+  },
+  
+  // Colonne supportate per grid responsive
+  GRID: {
+    MAX_COLUMNS: 6,       // Numero massimo di colonne (1-6)
+  },
+  
+  // Valori minimi per grid autodetect
+  AUTODETECT: {
+    sm: '150px',          // Molti elementi piccoli
+    md: '200px',          // Default bilanciato
+    lg: '250px',          // Contenuto più ricco
+    xl: '300px',          // Widgets larghi
+  },
+  
+  // Direzioni stack supportate
+  STACK: {
+    DIRECTIONS: ['v', 'h', 'vr', 'hr'],
+    DIRECTION_MAP: {
+      v: 'flex-col',
+      h: 'flex-row', 
+      vr: 'flex-col-reverse',
+      hr: 'flex-row-reverse'
+    }
+  }
+}
+
 module.exports = plugin(function({ addUtilities, addComponents }) {
 
   // ==============================================
@@ -14,26 +61,17 @@ module.exports = plugin(function({ addUtilities, addComponents }) {
   
   const gridLayouts = {
     // Grid con colonne fisse
-    '.fz-container-grid-1': {
-      '@apply grid grid-cols-1': {},
-    },
-    '.fz-container-grid-2': {
-      '@apply grid grid-cols-2': {},
-    },
-    '.fz-container-grid-3': {
-      '@apply grid grid-cols-3': {},
-    },
-    '.fz-container-grid-4': {
-      '@apply grid grid-cols-4': {},
-    },
-    '.fz-container-grid-5': {
-      '@apply grid grid-cols-5': {},
-    },
-    '.fz-container-grid-6': {
-      '@apply grid grid-cols-6': {},
-    },
+    ...(() => {
+      const fixed = {}
+      for (let cols = 1; cols <= CONFIG.GRID.MAX_COLUMNS; cols++) {
+        fixed[`.fz-container-grid-${cols}`] = {
+          [`@apply grid grid-cols-${cols}`]: {},
+        }
+      }
+      return fixed
+    })(),
     
-    // Grid responsive sistematici: TUTTE le combinazioni (1-6 colonne)
+    // Grid responsive (1/CONFIG.GRID.MAX_COLUMNS colonne)
     // Pattern: fz-container-grid-responsive-{mobile}-{tablet}-{desktop}
     // Shortcuts: 
     //  - 1 numero = stesso per tutti i breakpoint
@@ -43,22 +81,24 @@ module.exports = plugin(function({ addUtilities, addComponents }) {
     // Generate all possible combinations programmatically
     ...(() => {
       const responsive = {}
+      const { mobile, tablet, desktop } = CONFIG.BREAKPOINTS
+      const maxCols = CONFIG.GRID.MAX_COLUMNS
         
       // 1. Single number shortcuts (same columns across all breakpoints)
-      for (let mobile = 1; mobile <= 6; mobile++) {
-        responsive[`.fz-container-grid-responsive-${mobile}`] = {
-          [`@apply grid grid-cols-${mobile}`]: {},
+      for (let mobileCol = 1; mobileCol <= maxCols; mobileCol++) {
+        responsive[`.fz-container-grid-responsive-${mobileCol}`] = {
+          [`@apply grid ${mobile}grid-cols-${mobileCol}`]: {},
         }
 
         // 2. Two number shortcuts (mobile-tablet, desktop = tablet)
-        for (let tablet = 1; tablet <= 6; tablet++) {
-          responsive[`.fz-container-grid-responsive-${mobile}-${tablet}`] = {
-            [`@apply grid grid-cols-${mobile} sm:grid-cols-${tablet}`]: {},
+        for (let tabletCol = 1; tabletCol <= maxCols; tabletCol++) {
+          responsive[`.fz-container-grid-responsive-${mobileCol}-${tabletCol}`] = {
+            [`@apply grid grid-cols-${mobileCol} ${tablet}grid-cols-${tabletCol}`]: {},
           }
           // 3. Three number combinations (mobile-tablet-desktop)
-          for (let desktop = 1; desktop <= 6; desktop++) {
-            responsive[`.fz-container-grid-responsive-${mobile}-${tablet}-${desktop}`] = {
-              [`@apply grid grid-cols-${mobile} sm:grid-cols-${tablet} lg:grid-cols-${desktop}`]: {},
+          for (let desktopCol = 1; desktopCol <= maxCols; desktopCol++) {
+            responsive[`.fz-container-grid-responsive-${mobileCol}-${tabletCol}-${desktopCol}`] = {
+              [`@apply grid grid-cols-${mobileCol} ${tablet}grid-cols-${tabletCol} ${desktop}grid-cols-${desktopCol}`]: {},
             }
           }
         }
@@ -67,24 +107,21 @@ module.exports = plugin(function({ addUtilities, addComponents }) {
       return responsive
     })(),
 
-    // Grid responsive intelligente (default autodetect)
+    // Grid responsive autodetect 
     '.fz-container-grid-responsive': {
-      '@apply grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))]': {},
+      [`@apply grid grid-cols-[repeat(auto-fit,minmax(${CONFIG.AUTODETECT.md},1fr))]`]: {},
     },
     
     // Varianti autodetect con diversi sizing minimi
-    '.fz-container-grid-responsive-sm': {
-      '@apply grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))]': {},
-    },
-    '.fz-container-grid-responsive-md': {
-      '@apply grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))]': {}, // Default
-    },
-    '.fz-container-grid-responsive-lg': {
-      '@apply grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))]': {},
-    },
-    '.fz-container-grid-responsive-xl': {
-      '@apply grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))]': {},
-    },
+    ...(() => {
+      const autodetect = {}
+      Object.entries(CONFIG.AUTODETECT).forEach(([size, minWidth]) => {
+        autodetect[`.fz-container-grid-responsive-${size}`] = {
+          [`@apply grid grid-cols-[repeat(auto-fit,minmax(${minWidth},1fr))]`]: {},
+        }
+      })
+      return autodetect
+    })(),
   }
 
   // ==============================================
@@ -93,26 +130,18 @@ module.exports = plugin(function({ addUtilities, addComponents }) {
   
   const stackLayouts = {
     // Stack direzioni base
-    '.fz-container-stack-v': {
-      '@apply flex flex-col': {},
-    },
-
-    // Stack orizzontale
-    '.fz-container-stack-h': {
-      '@apply flex flex-row': {},
-    },
-
-    // Stack verticale inversa
-    '.fz-container-stack-vr': {
-      '@apply flex flex-col-reverse': {},
-    },
-
-    // Stack orizzontale inversa
-    '.fz-container-stack-hr': {
-      '@apply flex flex-row-reverse': {},
-    },
+    ...(() => {
+      const base = {}
+      CONFIG.STACK.DIRECTIONS.forEach(direction => {
+        const flexClass = CONFIG.STACK.DIRECTION_MAP[direction]
+        base[`.fz-container-stack-${direction}`] = {
+          [`@apply flex ${flexClass}`]: {},
+        }
+      })
+      return base
+    })(),
     
-    // Stack responsive sistematici: TUTTE le combinazioni direzioni (v/h/vr/hr)
+    // Stack responsive (v/h/vr/hr)
     // Pattern: fz-container-stack-responsive-{mobile}-{tablet}-{desktop}
     // Shortcuts: 
     //  - 1 direzione = stessa per tutti i breakpoint
@@ -122,25 +151,26 @@ module.exports = plugin(function({ addUtilities, addComponents }) {
     // Generate all possible direction combinations programmatically
     ...(() => {
       const responsive = {}
-      const directions = ['v', 'h', 'vr', 'hr']
-      const directionMap = { v: 'flex-col', h: 'flex-row', vr: 'flex-col-reverse', hr: 'flex-row-reverse' }
+      const directions = CONFIG.STACK.DIRECTIONS
+      const directionMap = CONFIG.STACK.DIRECTION_MAP
+      const { mobile, tablet, desktop } = CONFIG.BREAKPOINTS
       
       // 1. Single direction shortcuts (same direction across all breakpoints)
-      for (const mobile of directions) {
-        responsive[`.fz-container-stack-responsive-${mobile}`] = {
-          [`@apply flex ${directionMap[mobile]}`]: {},
+      for (const mobileDir of directions) {
+        responsive[`.fz-container-stack-responsive-${mobileDir}`] = {
+          [`@apply flex ${directionMap[mobileDir]}`]: {},
         }
 
         // 2. Two direction shortcuts (mobile-tablet, desktop = tablet)
-        for (const tablet of directions) {
-          responsive[`.fz-container-stack-responsive-${mobile}-${tablet}`] = {
-            [`@apply flex ${directionMap[mobile]} sm:${directionMap[tablet]}`]: {},
+        for (const tabletDir of directions) {
+          responsive[`.fz-container-stack-responsive-${mobileDir}-${tabletDir}`] = {
+            [`@apply flex ${directionMap[mobileDir]} ${tablet}${directionMap[tabletDir]}`]: {},
           }
 
           // 3. Three direction combinations (mobile-tablet-desktop)
-          for (const desktop of directions) {
-            responsive[`.fz-container-stack-responsive-${mobile}-${tablet}-${desktop}`] = {
-              [`@apply flex ${directionMap[mobile]} sm:${directionMap[tablet]} lg:${directionMap[desktop]}`]: {},
+          for (const desktopDir of directions) {
+            responsive[`.fz-container-stack-responsive-${mobileDir}-${tabletDir}-${desktopDir}`] = {
+              [`@apply flex ${directionMap[mobileDir]} ${tablet}${directionMap[tabletDir]} ${desktop}${directionMap[desktopDir]}`]: {},
             }
           }
         }
