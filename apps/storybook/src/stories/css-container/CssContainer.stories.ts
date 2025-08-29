@@ -24,9 +24,7 @@ const meta: Meta<typeof CssContainerDemo> = {
     docs: {
       description: {
         component: `
-# CSS Layout Utilities
-
-Sistema ufficiale di layout CSS-first per il Design System Fiscozen. 
+# CSS Container
 
 ## Setup
 
@@ -39,7 +37,7 @@ module.exports = {
 }
 \`\`\`
 
-Tutte le classi hanno il prefisso \`fz-container-\` per il namespacing.
+Tutte le classi hanno il prefisso \`fz-container-\`.
         `
       }
     }
@@ -48,91 +46,11 @@ Tutte le classi hanno il prefisso \`fz-container-\` per il namespacing.
 
 type Story = StoryObj<typeof meta>
 
-export const Overview: Story = {
-  name: '📋 Overview & Quick Start',
-  args: {
-    template: `
-      <div class="space-y-8">
-        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-400">
-          <h2 class="text-2xl font-bold text-green-800 mb-4">🚀 CSS Layout Utilities</h2>
-          <p class="text-green-700 mb-4">
-            Sistema ufficiale di layout CSS-first per il Design System Fiscozen. 
-            Tutte le classi hanno il prefisso <code class="bg-green-200 px-2 py-1 rounded">fz-container-</code> per il namespacing.
-          </p>
-          
-          <div class="bg-white p-4 rounded border">
-            <h3 class="font-semibold mb-2">Setup Tailwind:</h3>
-            <pre class="bg-gray-800 text-green-400 p-3 rounded text-sm overflow-x-auto"><code>// tailwind.config.js
-module.exports = {
-  plugins: [
-    require('@fiscozen/css-container'),
-  ]
-}</code></pre>
-          </div>
-        </div>
-        
-        <div class="fz-container-grid-responsive fz-container-gap-md">
-          <div class="bg-blue-50 p-4 rounded border-l-4 border-blue-400">
-            <h3 class="font-semibold text-blue-800">🔲 Grid Layouts</h3>
-            <p class="text-blue-700 text-sm mt-2">
-              <strong>🔥 Autodetect:</strong> <code>fz-container-grid-responsive</code><br/>
-              <strong>258 Classi Specifiche:</strong> <code>fz-container-grid-responsive-{M}-{T}-{D}</code><br/>
-              <strong>Fissi:</strong> <code>fz-container-grid-1</code> → <code>fz-container-grid-6</code>
-            </p>
-          </div>
-          
-          <div class="bg-green-50 p-4 rounded border-l-4 border-green-400">
-            <h3 class="font-semibold text-green-800">📚 Stack Layouts</h3>
-            <p class="text-green-700 text-sm mt-2">
-              <strong>Base:</strong> <code>fz-container-stack-v/h/vr/hr</code><br/>
-              <strong>84 Responsive:</strong> <code>fz-container-stack-responsive-{M}-{T}-{D}</code>
-            </p>
-          </div>
-          
-          <div class="bg-purple-50 p-4 rounded border-l-4 border-purple-400">
-            <h3 class="font-semibold text-purple-800">🎯 Stack Alignments</h3>
-            <p class="text-purple-700 text-sm mt-2">
-              <strong>Centering:</strong> <code>fz-container-stack-center(-main/-cross)</code><br/>
-              <strong>Positioning:</strong> <code>fz-container-stack-align-main/cross-start/center/end</code><br/>
-              <strong>Distribution:</strong> <code>fz-container-stack-space-main/cross-between/around/evenly</code>
-            </p>
-          </div>
-          
-          <div class="bg-yellow-50 p-4 rounded border-l-4 border-yellow-400">
-            <h3 class="font-semibold text-yellow-800">📏 Semantic Spacing</h3>
-            <p class="text-yellow-700 text-sm mt-2">
-              <strong>Gap:</strong> <code>fz-container-gap-none/xs/sm/md/lg/xl/2xl</code><br/>
-              <strong>Padding:</strong> <code>fz-container-padding-none/xs/sm/md/lg/xl/2xl</code><br/>
-              <strong>Margin:</strong> <code>fz-container-margin-none/xs/sm/md/lg/xl/2xl</code>
-            </p>
-          </div>
-          
-          <div class="bg-red-50 p-4 rounded border-l-4 border-red-400">
-            <h3 class="font-semibold text-red-800">🏗️ Layout Patterns</h3>
-            <p class="text-red-700 text-sm mt-2">
-              <code>fz-container-form</code><br/>
-              <code>fz-container-form-field</code>
-            </p>
-          </div>
-          
-          <div class="bg-indigo-50 p-4 rounded border-l-4 border-indigo-400">
-            <h3 class="font-semibold text-indigo-800">📱 Responsive</h3>
-            <p class="text-indigo-700 text-sm mt-2">
-              <code>fz-container-stack-responsive</code><br/>
-              Mobile-first automatico
-            </p>
-          </div>
-        </div>
-      </div>
-    `
-  }
-}
-
 export const GridLayouts: Story = {
   name: '🔲 Grid Layouts',
   args: {
     template: `
-      <div class="space-y-8">
+      <div class="fz-container-stack-v fz-container-gap-2xl">
         <div>
           <h3 class="text-lg font-semibold mb-4">🔥 Grid Responsive Intelligente (Autodetect)</h3>
           <div class="fz-container-grid-responsive fz-container-gap-md">
@@ -242,7 +160,7 @@ export const StackLayouts: Story = {
   name: '📚 Stack Layouts',
   args: {
     template: `
-      <div class="space-y-8">
+      <div class="fz-container-stack-v fz-container-gap-2xl">
         <div>
           <h3 class="text-lg font-semibold mb-4">Stack Base - Direzioni</h3>
           <div class="space-y-6">
@@ -339,65 +257,157 @@ export const StackLayouts: Story = {
   }
 }
 
-export const FormContainer: Story = {
-  name: '📝 Form Container',
-  render: () => ({
-    components: { FzButton, FzInput },
+export const SemanticSpacing: Story = {
+  name: '📏 Semantic Spacing',
+  args: {
     template: `
-        <div class="bg-gray-100 p-8">
-          <form class="fz-container-stack-v fz-container-gap-md fz-container-padding-lg bg-white rounded shadow mx-auto">
-            <h3 class="text-xl font-bold text-center">Form di Contatto</h3>
-            <fieldset class="fz-container-grid-responsive-sm fz-container-gap-md bg-blue-100 hover:bg-blue-200">
-              <FzInput label="Grid Responsive SM" placeholder="Item A" />
-              <FzInput label="Grid Responsive SM" placeholder="Item B" />
-              <FzInput label="Grid Responsive SM" placeholder="Item C" />
-              <FzInput label="Grid Responsive SM" placeholder="Item D" />
-              <FzInput label="Grid Responsive SM" placeholder="Item E" />
-            </fieldset>
-            <fieldset class="fz-container-stack-v fz-container-gap-md bg-blue-100 hover:bg-blue-200">
-              <FzInput label="Stack V" placeholder="Item F" />
-              <FzInput label="Stack V" placeholder="Item G" />
-            </fieldset>
-            <fieldset class="fz-container-grid-responsive-1-2-3 fz-container-gap-md bg-blue-100 hover:bg-blue-200">
-              <FzInput label="grid-responsive-1-2-3" placeholder="Item 1" />
-              <FzInput label="grid-responsive-1-2-3" placeholder="Item 2" />
-              <FzInput label="grid-responsive-1-2-3" placeholder="Item 3" />
-              <FzInput label="grid-responsive-1-2-3" placeholder="Item 4" />
-              <FzInput label="grid-responsive-1-2-3" placeholder="Item 5" />
-            </fieldset>
-            <fieldset class="fz-container-stack-h fz-container-gap-md bg-blue-100 hover:bg-blue-200">
-              <FzInput label="stack-h" placeholder="Item 6" />
-              <FzInput label="stack-h" placeholder="Item 7" />
-            </fieldset>
-            <fieldset class="fz-container-stack-responsive-v-h fz-container-gap-md bg-blue-100 hover:bg-blue-200">
-              <FzInput label="stack-responsive-v-h" placeholder="Item 8" />
-              <FzInput label="stack-responsive-v-h" placeholder="Item 9" />
-              <FzInput label="stack-responsive-v-h" placeholder="Item 10" />
-              <FzInput label="stack-responsive-v-h" placeholder="Item 11" />
-              <FzInput label="stack-responsive-v-h" placeholder="Item 12" />
-            </fieldset>
-            <fieldset class="fz-container-stack-responsive-v-h-v fz-container-gap-md bg-blue-100 hover:bg-blue-200">
-              <FzInput label="stack-responsive-v-h-v" placeholder="Item 13" />
-              <FzInput label="stack-responsive-v-h-v" placeholder="Item 14" />
-              <FzInput label="stack-responsive-v-h-v" placeholder="Item 15" />
-              <FzInput label="stack-responsive-v-h-v" placeholder="Item 16" />
-              <FzInput label="stack-responsive-v-h-v" placeholder="Item 17" />
-            </fieldset>
-            <fieldset class="fz-container-stack-h fz-container-gap-md fz-container-stack-align-main-end bg-blue-100 hover:bg-blue-200">
-              <FzButton class="fz-button" variant="secondary">Reset</FzButton>
-              <FzButton class="fz-button" variant="primary">Invia</FzButton>
-            </fieldset>
-          </form>
+      <div class="fz-container-stack-v fz-container-gap-2xl">
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Gap - Spazio tra elementi</h3>
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-medium mb-2">fz-container-gap-none (0)</h4>
+              <div class="fz-container-stack-h fz-container-gap-none bg-gray-100 p-4">
+                <div class="bg-blue-100 p-2 border">Item 1</div>
+                <div class="bg-blue-100 p-2 border">Item 2</div>
+                <div class="bg-blue-100 p-2 border">Item 3</div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 class="font-medium mb-2">fz-container-gap-xs (0.5rem)</h4>
+              <div class="fz-container-stack-h fz-container-gap-xs bg-gray-100 p-4">
+                <div class="bg-green-100 p-2 border">Item 1</div>
+                <div class="bg-green-100 p-2 border">Item 2</div>
+                <div class="bg-green-100 p-2 border">Item 3</div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 class="font-medium mb-2">fz-container-gap-sm (2rem)</h4>
+              <div class="fz-container-stack-h fz-container-gap-sm bg-gray-100 p-4">
+                <div class="bg-purple-100 p-2 border">Item 1</div>
+                <div class="bg-purple-100 p-2 border">Item 2</div>
+                <div class="bg-purple-100 p-2 border">Item 3</div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 class="font-medium mb-2">fz-container-gap-md (4rem)</h4>
+              <div class="fz-container-stack-h fz-container-gap-md bg-gray-100 p-4">
+                <div class="bg-orange-100 p-2 border">Item 1</div>
+                <div class="bg-orange-100 p-2 border">Item 2</div>
+                <div class="bg-orange-100 p-2 border">Item 3</div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 class="font-medium mb-2">fz-container-gap-lg (6rem)</h4>
+              <div class="fz-container-stack-h fz-container-gap-lg bg-gray-100 p-4">
+                <div class="bg-red-100 p-2 border">Item 1</div>
+                <div class="bg-red-100 p-2 border">Item 2</div>
+                <div class="bg-red-100 p-2 border">Item 3</div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 class="font-medium mb-2">fz-container-gap-xl (8rem)</h4>
+              <div class="fz-container-stack-h fz-container-gap-xl bg-gray-100 p-4">
+                <div class="bg-teal-100 p-2 border">Large</div>
+                <div class="bg-teal-100 p-2 border">Gap</div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 class="font-medium mb-2">fz-container-gap-2xl (12rem)</h4>
+              <div class="fz-container-stack-h fz-container-gap-2xl bg-gray-100 p-4">
+                <div class="bg-indigo-100 p-2 border">Huge</div>
+                <div class="bg-indigo-100 p-2 border">Gap</div>
+              </div>
+            </div>
+          </div>
         </div>
-      `
-  }),
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Padding - Spazio interno</h3>
+          <div class="space-y-4">
+            <div class="fz-container-stack-h fz-container-gap-md">
+              <div>
+                <h4 class="font-medium mb-2">fz-container-padding-none</h4>
+                <div class="fz-container-padding-none bg-blue-100 border-2 border-blue-300">
+                  <div class="bg-white">No padding</div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 class="font-medium mb-2">fz-container-padding-xs</h4>
+                <div class="fz-container-padding-xs bg-green-100 border-2 border-green-300">
+                  <div class="bg-white">XS padding</div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 class="font-medium mb-2">fz-container-padding-sm</h4>
+                <div class="fz-container-padding-sm bg-purple-100 border-2 border-purple-300">
+                  <div class="bg-white">SM padding</div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 class="font-medium mb-2">fz-container-padding-md</h4>
+                <div class="fz-container-padding-md bg-orange-100 border-2 border-orange-300">
+                  <div class="bg-white">MD padding</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="fz-container-stack-h fz-container-gap-md">
+              <div>
+                <h4 class="font-medium mb-2">fz-container-padding-lg</h4>
+                <div class="fz-container-padding-lg bg-red-100 border-2 border-red-300">
+                  <div class="bg-white">LG padding</div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 class="font-medium mb-2">fz-container-padding-xl</h4>
+                <div class="fz-container-padding-xl bg-teal-100 border-2 border-teal-300">
+                  <div class="bg-white">XL padding</div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 class="font-medium mb-2">fz-container-padding-2xl</h4>
+                <div class="fz-container-padding-2xl bg-indigo-100 border-2 border-indigo-300">
+                  <div class="bg-white">2XL padding</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Margin - Spazio esterno</h3>
+          <div class="bg-gray-200 p-4">
+            <div class="space-y-1">
+              <div class="fz-container-margin-none bg-blue-100 border text-center">fz-container-margin-none</div>
+              <div class="fz-container-margin-xs bg-green-100 border text-center">fz-container-margin-xs</div>
+              <div class="fz-container-margin-sm bg-purple-100 border text-center">fz-container-margin-sm</div>
+              <div class="fz-container-margin-md bg-orange-100 border text-center">fz-container-margin-md</div>
+              <div class="fz-container-margin-lg bg-red-100 border text-center">fz-container-margin-lg</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `
+  }
 }
 
 export const StackAlignments: Story = {
   name: '🎯 Stack Alignments',
   args: {
     template: `
-      <div class="space-y-8">
+      <div class="fz-container-stack-v fz-container-gap-2xl">
         <div>
           <h3 class="text-lg font-semibold mb-4">Centering Shortcuts</h3>
           <div class="space-y-4">
@@ -558,7 +568,61 @@ export const StackAlignments: Story = {
   }
 }
 
-export const GenericLayout: Story = {
+export const FormContainer: Story = {
+  name: '📝 Form Container',
+  render: () => ({
+    components: { FzButton, FzInput },
+    template: `
+        <div class="bg-gray-100 p-8">
+          <form class="fz-container-stack-v fz-container-gap-md fz-container-padding-lg bg-white rounded shadow mx-auto">
+            <h3 class="text-xl font-bold text-center">Form di Contatto</h3>
+            <fieldset class="fz-container-grid-responsive-sm fz-container-gap-md bg-blue-100 hover:bg-blue-200">
+              <FzInput label="Grid Responsive SM" placeholder="Item A" />
+              <FzInput label="Grid Responsive SM" placeholder="Item B" />
+              <FzInput label="Grid Responsive SM" placeholder="Item C" />
+              <FzInput label="Grid Responsive SM" placeholder="Item D" />
+              <FzInput label="Grid Responsive SM" placeholder="Item E" />
+            </fieldset>
+            <fieldset class="fz-container-stack-v fz-container-gap-md bg-blue-100 hover:bg-blue-200">
+              <FzInput label="Stack V" placeholder="Item F" />
+              <FzInput label="Stack V" placeholder="Item G" />
+            </fieldset>
+            <fieldset class="fz-container-grid-responsive-1-2-3 fz-container-gap-md bg-blue-100 hover:bg-blue-200">
+              <FzInput label="grid-responsive-1-2-3" placeholder="Item 1" />
+              <FzInput label="grid-responsive-1-2-3" placeholder="Item 2" />
+              <FzInput label="grid-responsive-1-2-3" placeholder="Item 3" />
+              <FzInput label="grid-responsive-1-2-3" placeholder="Item 4" />
+              <FzInput label="grid-responsive-1-2-3" placeholder="Item 5" />
+            </fieldset>
+            <fieldset class="fz-container-stack-h fz-container-gap-md bg-blue-100 hover:bg-blue-200">
+              <FzInput label="stack-h" placeholder="Item 6" />
+              <FzInput label="stack-h" placeholder="Item 7" />
+            </fieldset>
+            <fieldset class="fz-container-stack-responsive-v-h fz-container-gap-md bg-blue-100 hover:bg-blue-200">
+              <FzInput label="stack-responsive-v-h" placeholder="Item 8" />
+              <FzInput label="stack-responsive-v-h" placeholder="Item 9" />
+              <FzInput label="stack-responsive-v-h" placeholder="Item 10" />
+              <FzInput label="stack-responsive-v-h" placeholder="Item 11" />
+              <FzInput label="stack-responsive-v-h" placeholder="Item 12" />
+            </fieldset>
+            <fieldset class="fz-container-stack-responsive-v-h-v fz-container-gap-md bg-blue-100 hover:bg-blue-200">
+              <FzInput label="stack-responsive-v-h-v" placeholder="Item 13" />
+              <FzInput label="stack-responsive-v-h-v" placeholder="Item 14" />
+              <FzInput label="stack-responsive-v-h-v" placeholder="Item 15" />
+              <FzInput label="stack-responsive-v-h-v" placeholder="Item 16" />
+              <FzInput label="stack-responsive-v-h-v" placeholder="Item 17" />
+            </fieldset>
+            <fieldset class="fz-container-stack-h fz-container-gap-md fz-container-stack-align-main-end bg-blue-100 hover:bg-blue-200">
+              <FzButton class="fz-button" variant="secondary">Reset</FzButton>
+              <FzButton class="fz-button" variant="primary">Invia</FzButton>
+            </fieldset>
+          </form>
+        </div>
+      `
+  }),
+}
+
+/*export */const GenericLayout: Story = {
   name: '🏗️ Generic Layout',
   args: {
     template: `
@@ -599,178 +663,7 @@ export const GenericLayout: Story = {
   }
 }
 
-export const SemanticSpacing: Story = {
-  name: '📏 Semantic Spacing',
-  args: {
-    template: `
-      <div class="space-y-8">
-        <div>
-          <h3 class="text-lg font-semibold mb-4">Gap - Spazio tra elementi</h3>
-          <div class="space-y-4">
-            <div>
-              <h4 class="font-medium mb-2">gap-none (0)</h4>
-              <div class="fz-container-stack-h fz-container-gap-none bg-gray-100 p-4">
-                <div class="bg-blue-100 p-2 border">Item 1</div>
-                <div class="bg-blue-100 p-2 border">Item 2</div>
-                <div class="bg-blue-100 p-2 border">Item 3</div>
-              </div>
-            </div>
-            
-            <div>
-              <h4 class="font-medium mb-2">gap-xs (0.5rem)</h4>
-              <div class="fz-container-stack-h fz-container-gap-xs bg-gray-100 p-4">
-                <div class="bg-green-100 p-2 border">Item 1</div>
-                <div class="bg-green-100 p-2 border">Item 2</div>
-                <div class="bg-green-100 p-2 border">Item 3</div>
-              </div>
-            </div>
-            
-            <div>
-              <h4 class="font-medium mb-2">gap-sm (2rem)</h4>
-              <div class="fz-container-stack-h fz-container-gap-sm bg-gray-100 p-4">
-                <div class="bg-purple-100 p-2 border">Item 1</div>
-                <div class="bg-purple-100 p-2 border">Item 2</div>
-                <div class="bg-purple-100 p-2 border">Item 3</div>
-              </div>
-            </div>
-            
-            <div>
-              <h4 class="font-medium mb-2">gap-md (4rem)</h4>
-              <div class="fz-container-stack-h fz-container-gap-md bg-gray-100 p-4">
-                <div class="bg-orange-100 p-2 border">Item 1</div>
-                <div class="bg-orange-100 p-2 border">Item 2</div>
-                <div class="bg-orange-100 p-2 border">Item 3</div>
-              </div>
-            </div>
-            
-            <div>
-              <h4 class="font-medium mb-2">gap-lg (6rem)</h4>
-              <div class="fz-container-stack-h fz-container-gap-lg bg-gray-100 p-4">
-                <div class="bg-red-100 p-2 border">Item 1</div>
-                <div class="bg-red-100 p-2 border">Item 2</div>
-                <div class="bg-red-100 p-2 border">Item 3</div>
-              </div>
-            </div>
-            
-            <div>
-              <h4 class="font-medium mb-2">gap-xl (8rem)</h4>
-              <div class="fz-container-stack-h fz-container-gap-xl bg-gray-100 p-4">
-                <div class="bg-teal-100 p-2 border">Large</div>
-                <div class="bg-teal-100 p-2 border">Gap</div>
-              </div>
-            </div>
-            
-            <div>
-              <h4 class="font-medium mb-2">gap-2xl (12rem)</h4>
-              <div class="fz-container-stack-h fz-container-gap-2xl bg-gray-100 p-4">
-                <div class="bg-indigo-100 p-2 border">Huge</div>
-                <div class="bg-indigo-100 p-2 border">Gap</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div>
-          <h3 class="text-lg font-semibold mb-4">Padding - Spazio interno</h3>
-          <div class="space-y-4">
-            <div class="fz-container-stack-h fz-container-gap-md">
-              <div>
-                <h4 class="font-medium mb-2">padding-none</h4>
-                <div class="fz-container-padding-none bg-blue-100 border-2 border-blue-300">
-                  <div class="bg-white">No padding</div>
-                </div>
-              </div>
-              
-              <div>
-                <h4 class="font-medium mb-2">padding-xs</h4>
-                <div class="fz-container-padding-xs bg-green-100 border-2 border-green-300">
-                  <div class="bg-white">XS padding</div>
-                </div>
-              </div>
-              
-              <div>
-                <h4 class="font-medium mb-2">padding-sm</h4>
-                <div class="fz-container-padding-sm bg-purple-100 border-2 border-purple-300">
-                  <div class="bg-white">SM padding</div>
-                </div>
-              </div>
-              
-              <div>
-                <h4 class="font-medium mb-2">padding-md</h4>
-                <div class="fz-container-padding-md bg-orange-100 border-2 border-orange-300">
-                  <div class="bg-white">MD padding</div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="fz-container-stack-h fz-container-gap-md">
-              <div>
-                <h4 class="font-medium mb-2">padding-lg</h4>
-                <div class="fz-container-padding-lg bg-red-100 border-2 border-red-300">
-                  <div class="bg-white">LG padding</div>
-                </div>
-              </div>
-              
-              <div>
-                <h4 class="font-medium mb-2">padding-xl</h4>
-                <div class="fz-container-padding-xl bg-teal-100 border-2 border-teal-300">
-                  <div class="bg-white">XL padding</div>
-                </div>
-              </div>
-              
-              <div>
-                <h4 class="font-medium mb-2">padding-2xl</h4>
-                <div class="fz-container-padding-2xl bg-indigo-100 border-2 border-indigo-300">
-                  <div class="bg-white">2XL padding</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div>
-          <h3 class="text-lg font-semibold mb-4">Margin - Spazio esterno</h3>
-          <div class="bg-gray-200 p-4">
-            <div class="space-y-1">
-              <div class="fz-container-margin-none bg-blue-100 border text-center">margin-none</div>
-              <div class="fz-container-margin-xs bg-green-100 border text-center">margin-xs</div>
-              <div class="fz-container-margin-sm bg-purple-100 border text-center">margin-sm</div>
-              <div class="fz-container-margin-md bg-orange-100 border text-center">margin-md</div>
-              <div class="fz-container-margin-lg bg-red-100 border text-center">margin-lg</div>
-            </div>
-          </div>
-        </div>
-        
-        <div>
-          <h3 class="text-lg font-semibold mb-4">Combinazioni - Esempi Pratici</h3>
-          <div class="space-y-6">
-            <div class="fz-container-stack-v fz-container-gap-md fz-container-padding-lg bg-white border rounded shadow">
-              <h4 class="font-medium">Card con spacing semantico</h4>
-              <div class="fz-container-stack-h fz-container-gap-sm">
-                <div class="bg-blue-100 p-3 rounded">Button 1</div>
-                <div class="bg-blue-100 p-3 rounded">Button 2</div>
-              </div>
-              <p class="text-gray-600">gap-md + padding-lg + gap-sm interno</p>
-            </div>
-            
-            <div class="fz-container-grid-responsive-1-2 fz-container-gap-lg fz-container-padding-md">
-              <div class="fz-container-stack-v fz-container-gap-xs fz-container-padding-sm bg-blue-50 rounded">
-                <h5 class="font-medium">Feature A</h5>
-                <p class="text-sm text-gray-600">gap-xs, padding-sm</p>
-              </div>
-              <div class="fz-container-stack-v fz-container-gap-xs fz-container-padding-sm bg-green-50 rounded">
-                <h5 class="font-medium">Feature B</h5>
-                <p class="text-sm text-gray-600">gap-xs, padding-sm</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    `
-  }
-}
-
-export const RealWorldExamples: Story = {
+/*export */const RealWorldExamples: Story = {
   name: '🌍 Real World Examples',
   args: {
     template: `
