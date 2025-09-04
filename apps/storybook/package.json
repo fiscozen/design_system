@@ -21,7 +21,7 @@
     "chromatic": "dotenv -- pnpm run chromatic-cross"
   },
   "dependencies": {
-    "@awesome.me/kit-8137893ad3": "^1.0.335",
+    "@awesome.me/kit-8137893ad3": "^1.0.356",
     "@fiscozen/actionlist": "workspace:^",
     "@fiscozen/alert": "workspace:^",
     "@fiscozen/avatar": "workspace:^",
