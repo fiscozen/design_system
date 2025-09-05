@@ -71,6 +71,9 @@ importers:
       '@fiscozen/dropdown':
         specifier: workspace:^
         version: link:../../packages/dropdown
+      '@fiscozen/form-container':
+        specifier: workspace:^
+        version: link:../../packages/form-container
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../../packages/icons
@@ -1375,6 +1378,19 @@ importers:
       eslint-plugin-vue:
         specifier: ^9.17.0
         version: 9.32.0(eslint@8.57.1)
+
+  packages/form-container:
+    dependencies:
+      tailwindcss:
+        specifier: ^3.4.1
+        version: 3.4.17
+    devDependencies:
+      '@fiscozen/prettier-config':
+        specifier: workspace:^
+        version: link:../prettier-config
+      prettier:
+        specifier: ^3.0.3
+        version: 3.5.1
 
   packages/icons:
     dependencies:

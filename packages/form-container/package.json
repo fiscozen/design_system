@@ -1,0 +1,38 @@
+{
+  "name": "@fiscozen/form-container",
+  "version": "0.1.0",
+  "description": "Form Container Utilities - Sistema ufficiale di container per form nel Design System Fiscozen",
+  "scripts": {
+    "format": "prettier --write src/",
+    "test": "echo \"Form container utilities - no tests needed\"",
+    "build": "echo \"Form container utilities - no build needed\""
+  },
+  "main": "src/form-utilities.js",
+  "type": "commonjs",
+  "keywords": [
+    "css",
+    "tailwind",
+    "form",
+    "container",
+    "utilities",
+    "design-system",
+    "fiscozen",
+    "responsive",
+    "flexbox",
+    "grid"
+  ],
+  "author": "Fiscozen Design System Team",
+  "peerDependencies": {
+    "tailwindcss": "^3.4.1"
+  },
+  "devDependencies": {
+    "@fiscozen/prettier-config": "workspace:^",
+    "prettier": "^3.0.3"
+  },
+  "files": [
+    "src/form-utilities.js",
+    "src/index.js",
+    "README.md"
+  ],
+  "license": "MIT"
+}

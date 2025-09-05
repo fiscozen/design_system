@@ -38,6 +38,7 @@
     "@fiscozen/dialog": "workspace:^",
     "@fiscozen/divider": "workspace:^",
     "@fiscozen/dropdown": "workspace:^",
+    "@fiscozen/form-container": "workspace:^",
     "@fiscozen/icons": "workspace:^",
     "@fiscozen/input": "workspace:^",
     "@fiscozen/layout": "workspace:^",
