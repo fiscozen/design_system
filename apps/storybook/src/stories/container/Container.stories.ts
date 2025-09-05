@@ -4,7 +4,7 @@ import { FzButton } from '@fiscozen/button'
 import { FzInput } from '@fiscozen/input'
 
 const meta: Meta<typeof FzContainer> = {
-  title: 'Layout/FzContainer',
+  title: 'Layout/[DEPRECATED] FzContainer',
   component: FzContainer,
   tags: ['autodocs'],
   parameters: {
