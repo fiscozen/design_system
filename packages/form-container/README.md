@@ -237,8 +237,8 @@ Le **textarea** (`FzTextarea` con classe `.fz-textarea`) sono gestite automatica
     <label><input type="radio" name="notif" /> Tutte</label>
     <label><input type="radio" name="notif" /> Solo importanti</label>
     <label><input type="radio" name="notif" /> Disabilitate</label>
-</div>
-
+  </div>
+  
   <!-- Toggle privacy -->
   <div class="fz-form-group-vertical">
     <h3>Privacy</h3>
