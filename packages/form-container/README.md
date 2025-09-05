@@ -1,175 +1,172 @@
 # @fiscozen/form-container
 
-**Form Container Utilities** - Sistema semplificato e intelligente per layout di form responsive. Una soluzione CSS-first per creare form perfetti con layout automatico e raggruppamenti semantici.
+**CSS Grid-based Form Layout System** - High-performance Tailwind CSS plugin for responsive form layouts with intelligent auto-fitting grid behavior and semantic field grouping.
 
-## 🚀 Installazione
+## Installation
 
 ```bash
 npm install @fiscozen/form-container
 ```
 
-## 📋 Setup
+## Configuration
 
-Nel tuo `tailwind.config.js`:
+### Tailwind Plugin Registration
+
+Add the plugin to your `tailwind.config.js`:
 
 ```js
 module.exports = {
-  // ... altre configurazioni
+  content: ['./src/**/*.{js,ts,jsx,tsx,vue}'],
   plugins: [
     require('@fiscozen/form-container'),
-    // ... altri plugin
-  ]
+  ],
 }
 ```
 
-## 🎯 Sistema Form Container
+### Plugin Architecture
 
-### 🌟 Filosofia Simple-First
+The plugin generates utility classes using Tailwind's `@apply` directive with responsive breakpoints and configurable parameters.
 
-Una classe fa tutto quello che serve. Zero cognitive load, zero configurazione manuale.
+## API Reference
 
-### 📋 `.fz-form-container` - Layout Principale
+> **⚠️ Architecture Guidance**: 90% of forms should use only `.fz-form-container` + `.fz-form-actions`. The grouping classes (`.fz-form-group-*`) are designed for edge cases and complex layouts only. Start simple and add complexity only when the auto-fit behavior is insufficient.
 
-**La classe principale**: Layout intelligente che si adatta automaticamente.
+### Core Layout Classes
 
+#### `.fz-form-container`
+
+**Primary form layout container** with intelligent responsive grid behavior.
+
+**Algorithm:** Uses `repeat(auto-fit, minmax(max(min-width, percentage), 1fr))` to balance minimum usable field width with maximum column constraints.
+
+**Usage:**
 ```html
 <form class="fz-form-container">
-  <FzInput label="Nome" placeholder="Nome" />
-  <FzInput label="Email" placeholder="Email" type="email" />
-  <FzInput label="Telefono" placeholder="Telefono" type="tel" />
+  <FzInput type="text" placeholder="Field 1" />
+  <FzInput type="text" placeholder="Field 2" />
+  <FzInput type="text" placeholder="Field 3" />
+  <!-- Auto-arranges in 1-3 columns based on viewport -->
 </form>
 ```
 
-**Comportamento responsive automatico:**
-- 📱 **Mobile**: 1 colonna, gap compatto
-- 📱 **Tablet**: Auto-fit min 200px, gap medio
-- 🖥️ **Desktop**: Auto-fit min 250px, gap ampio
+#### `.fz-form-group-vertical` ⚠️ **Edge Case Only**
 
-### 🎬 `.fz-form-actions` - Action Buttons (Full Width)
+**Flexbox-based vertical grouping** for semantically related fields that must maintain vertical stacking regardless of viewport. Use only when the natural grid flow breaks semantic grouping (e.g., radio button groups, wizard steps).
 
-**Per i button di azione del form**: sempre allineati a destra, occupano tutta la larghezza del form.
-
+**Usage (Edge Case):**
 ```html
-<fieldset class="fz-form-actions">
-  <FzButton type="button">Annulla</FzButton>
-  <FzButton type="button">Salva</FzButton>
-  <FzButton type="submit">Invia</FzButton>
-</fieldset>
-```
-
-### 🎨 `.fz-form-actions-inline` - Action Buttons (Inline)
-
-**Per button integrati nel grid**: si comportano come qualsiasi altro campo del form.
-
-```html
-<fieldset class="fz-form-actions-inline">
-  <FzButton type="reset">Reset</FzButton>
-  <FzButton type="submit">🔍</FzButton>
-</fieldset>
-```
-
-### 📦 `.fz-form-group-vertical` - Raggruppamento Verticale
-
-**Per elementi che devono stare sempre in colonna**: checkbox, radio, steps sequenziali.
-
-```html
-<fieldset class="fz-form-group-vertical">
-  <h3>Preferenze</h3>
-  <FzInput label="Nome" placeholder="Nome" />
-  <FzInput label="Email" placeholder="Email" type="email" />
-  <FzInput label="Telefono" placeholder="Telefono" type="tel" />
-</fieldset>
-```
-
-### 📦 `.fz-form-group-horizontal` - Raggruppamento Orizzontale
-
-**Per elementi che devono stare sempre in riga**: controlli correlati, piccoli input.
-
-```html
-<fieldset class="fz-form-group-horizontal">
-  <FzInput label="Cerca" placeholder="Cerca..." />
-  <FzButton>Cerca</FzButton>
-</fieldset>
-```
-
-## ⚡ Quick Start
-
-```html
-<!-- Form base - tutto automatico -->
 <form class="fz-form-container">
-  <FzInput type="email" placeholder="Email" label="Email" />
-  <FzInput type="password" placeholder="Password" label="Password" />
-  
-  <fieldset class="fz-form-actions">
-    <FzButton type="submit">Login</FzButton>
+  <fieldset class="fz-form-group-vertical">
+    <legend>Contact Preferences</legend><!-- or <h1-6> -->
+    <FzInput type="radio" name="contact" value="email" label="Email" />
+    <FzInput type="radio" name="contact" value="phone" label="Phone" />
+    <FzInput type="radio" name="contact" value="both" label="Both" />
   </fieldset>
 </form>
 ```
 
-## 🎯 Vantaggi del Sistema
+#### `.fz-form-group-horizontal` ⚠️ **Edge Case Only**
 
-### Simple-First Approach
-- **🧠 Zero cognitive load**: 4 classi per tutti i casi
-- **⚡ Automatic**: Layout intelligente, niente configurazione manuale
-- **📱 Responsive**: Progressive enhancement automatico
-- **🎯 Semantic**: Nomi che descrivono esattamente l'uso
+**Flexbox-based horizontal grouping** for fields that should remain inline across all viewports. Use only for tightly coupled controls (e.g., search input + button, date range pairs).
 
-### Perfect Form UX
-- **📐 Spacing progressivo**: Gap cresce con dimensione schermo
-- **🎨 Layout intelligente**: Si adatta al contenuto automaticamente
-- **🎯 Actions sempre a posto**: Button sempre ben posizionati
-- **📦 Raggruppamenti logici**: Semantica chiara e accessibile
-
-### Developer Experience
-- **💡 Intuitive**: Nomi auto-documentanti
-- **🔍 Discoverable**: Pattern facile da ricordare
-- **🏷️ Namespaced**: Prefisso `fz-form-` evita conflitti
-- **🎛️ Composable**: Combina liberamente per layout complessi
-
-
-## 🛠️ Configurazione
-
-Il sistema è configurabile modificando le costanti nel plugin.
-
-## 💡 Tips & Best Practices
-
-### 🏆 Pattern Comuni
-- **📋 Form classico**: `fz-form-container` + `fz-form-actions` (barra finale)
-- **🔍 Search integrato**: `fz-form-container` + `fz-form-actions-inline` (controlli inline)
-- **⚙️ Settings**: `fz-form-container` + `fz-form-group-vertical` per radio/checkbox
-- **📝 Form lungo**: Usa `FzTextarea` con classe `fz-textarea` (full-width automatico)
-- **🏢 Wizard**: Multiple `fz-form-group-vertical` per steps
-
-### ⚡ Performance Tips
-- **🎯 Semantic HTML**: Usa `<fieldset>` e `<legend>` per raggruppamenti
-- **📱 Mobile-first**: Il sistema è ottimizzato mobile-first
-- **🔧 Combina liberamente**: Mix con utility Tailwind esistenti
-- **🤖 Automazione**: `FzTextarea` è automaticamente full-width
-
-### 🎨 Scegliere il Tipo di Actions
-- **`fz-form-actions`**: Per azioni finali del form (Submit/Cancel)
-- **`fz-form-actions-inline`**: Per controlli integrati nel flusso (Search/Reset)
-
-### 🚫 Cosa Evitare
-- **❌ Non annidare form-container**: Usa solo alla radice del form
-- **❌ Non mischiare group types**: Vertical e horizontal hanno scopi diversi
-- **❌ Actions ridondanti**: Scegli tra full-width o inline, non entrambi
-
-## 🌟 Classi Disponibili (Riassunto)
-
-```css
-.fz-form-container           /* Layout principale intelligente */
-.fz-form-group-vertical      /* Raggruppamento sempre verticale */
-.fz-form-group-horizontal    /* Raggruppamento sempre orizzontale */
-.fz-form-actions             /* Action buttons full-width */
-.fz-form-actions-inline      /* Action buttons inline al grid */
+**Usage (Edge Case):**
+```html
+<form class="fz-form-container">
+  <fieldset class="fz-form-group-horizontal">
+    <FzInput type="text" placeholder="Search..." />
+    <FzButton type="submit">Search</FzButton>
+  </fieldset>
+</form>
 ```
 
-## 🔗 Links
+### Action Button Classes
 
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Fiscozen Design System](../README.md)
+#### `.fz-form-actions`
 
----
+**Full-width action bar** that spans entire form width and right-aligns buttons.
 
-**Developed with ❤️ by Fiscozen Design System Team**
+**Usage:**
+```html
+<form class="fz-form-container">
+  <fieldset class="fz-form-actions">
+    <FzButton type="button">Cancel</FzButton>
+    <FzButton type="submit">Submit</FzButton>
+  </fieldset>
+</form>
+```
+
+#### `.fz-form-actions-inline`
+
+**Inline action controls** that participate in the grid layout as regular form elements.
+
+**Usage:**
+```html
+<form class="fz-form-container">
+  <fieldset class="fz-form-actions-inline">
+    <FzButton type="button">Cancel</FzButton>
+    <FzButton type="submit">Submit</FzButton>
+  </fieldset>
+</form>
+```
+
+### Automatic Layout Behaviors
+
+#### Textarea Auto-Spanning
+
+Elements with class `.fz-textarea` automatically span the full width of the form container:
+
+**Usage:**
+```html
+<form class="fz-form-container">
+  <FzInput type="text" placeholder="Name" />
+  <FzInput type="email" placeholder="Email" />
+  
+  <FzTextarea class="fz-textarea" placeholder="Description..." />
+
+  <!-- Grid resumes normal behavior after textarea -->
+  <FzInput type="date" placeholder="Date" />
+  <FzInput type="url" placeholder="Website" />
+</form>
+```
+
+## Usage Guidelines
+
+### Simple vs Complex
+
+**✅ PREFERRED (90% of cases):**
+```html
+<form class="fz-form-container">
+  <FzInput type="text" name="name" placeholder="Name" label="Name" />
+  <FzInput type="email" name="email" placeholder="Email" label="Email" />
+  <FzInput type="tel" name="phone" placeholder="Phone" label="Phone" />
+  
+  <fieldset class="fz-form-actions">
+    <FzButton type="submit">Submit</FzButton>
+  </fieldset>
+</form>
+```
+
+**⚠️ COMPLEX (Edge cases only):**
+```html
+<form class="fz-form-container">
+  <!-- Most fields use auto-layout -->
+  <FzInput type="text" name="name" placeholder="Name" label="Name" />
+  <FzInput type="email" name="email" placeholder="Email" label="Email" />
+  
+  <!-- Only group when semantic meaning requires it -->
+  <fieldset class="fz-form-group-vertical">
+    <FzInput type="text" placeholder="Nome" label="Nome" />
+    <FzInput type="text" placeholder="Cognome" label="Cognome" />
+  </fieldset>
+  
+  <fieldset class="fz-form-actions">
+    <FzButton type="submit">Submit</FzButton>
+  </fieldset>
+</form>
+```
+
+### Performance Impact
+
+- **`.fz-form-container`**: Optimal CSS Grid performance, minimal DOM
+- **`.fz-form-group-*`**: Additional flex container, increased layout cost
+- **Recommendation**: Use grouping sparingly to maintain performance
