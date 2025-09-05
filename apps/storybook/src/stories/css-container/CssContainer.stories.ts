@@ -17,7 +17,7 @@ const CssContainerDemo = defineComponent({
 })
 
 const meta: Meta<typeof CssContainerDemo> = {
-  title: 'Layout/FzCssContainer',
+  title: 'Layout/[DEPRECATED] FzCssContainer',
   component: CssContainerDemo,
   tags: ['autodocs'],
   parameters: {

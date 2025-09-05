@@ -52,10 +52,10 @@ export const BasicForm: Story = {
         <FzInput type="password" placeholder="••••••" label="Password" />
         <FzInput type="password" placeholder="••••••" label="Conferma Password" />
         
-        <div class="fz-form-actions">
+        <fieldset class="fz-form-actions">
           <FzButton>Annulla</FzButton>
           <FzButton type="submit">Crea Account</FzButton>
-        </div>
+        </fieldset>
       </form>
     `
   }),
@@ -79,10 +79,10 @@ export const TextareaForm: Story = {
           <FzInput type="password" placeholder="••••••" label="Password" />
           <FzInput type="password" placeholder="••••••" label="Conferma Password" />
 
-          <div class="fz-form-actions">
+          <fieldset class="fz-form-actions">
             <FzButton>Annulla</FzButton>
             <FzButton type="submit">Crea Account</FzButton>
-          </div>
+          </fieldset>
         </form>
       `
     }),
@@ -94,29 +94,29 @@ export const AdvancedForm: Story = {
       components: { FzButton, FzInput },
       template: `
         <form class="fz-form-container">
-          <div class="fz-form-group-vertical bg-gray-100">
+          <fieldset class="fz-form-group-vertical bg-gray-100">
             <FzInput type="text" placeholder="Mario" label="Nome" />
             <FzInput type="text" placeholder="Rossi" label="Cognome" />
-          </div>
+          </fieldset>
         
-          <div class="fz-form-group-vertical bg-gray-100">
-            <div class="fz-form-group-horizontal">
+          <fieldset class="fz-form-group-vertical bg-gray-100">
+            <fieldset class="fz-form-group-horizontal">
               <FzInput type="tel" placeholder="+01" label="Prefisso" />
               <FzInput type="tel" placeholder="5551234567" label="Telefono" />
-            </div>
+            </fieldset>
         
             <FzInput type="email" placeholder="mario.rossi@example.com" label="Email" />
-          </div>
+          </fieldset>
 
-          <div class="fz-form-group-vertical bg-gray-100">
+          <fieldset class="fz-form-group-vertical bg-gray-100">
             <FzInput type="password" placeholder="••••••" label="Password" />
             <FzInput type="password" placeholder="••••••" label="Conferma Password" />
-          </div>
+          </fieldset>
 
-          <div class="fz-form-actions bg-gray-100">
+          <fieldset class="fz-form-actions bg-gray-100">
             <FzButton>Annulla</FzButton>
             <FzButton type="submit">Crea Account</FzButton>
-          </div>
+          </fieldset>
         </form>
       `
     }),
