@@ -49,7 +49,7 @@ module.exports = plugin(function({ addUtilities }) {
     // Formula: minmax(max(min-width, 100%/max-cols), 1fr) 
     // Combina dimensione minima con percentuale massima per limitare le colonne
     '.fz-form-container': {
-      [`@apply grid grid-cols-1 ${CONFIG.GAP.mobile} ${CONFIG.BREAKPOINTS.tablet}grid-cols-[repeat(auto-fit,minmax(max(${CONFIG.COLUMN_MIN_WIDTH.tablet},${100/CONFIG.MAX_COLUMNS.tablet}%),1fr))] ${CONFIG.BREAKPOINTS.tablet}${CONFIG.GAP.tablet} ${CONFIG.BREAKPOINTS.desktop}grid-cols-[repeat(auto-fit,minmax(max(${CONFIG.COLUMN_MIN_WIDTH.desktop},${100/CONFIG.MAX_COLUMNS.desktop}%),1fr))] ${CONFIG.BREAKPOINTS.desktop}${CONFIG.GAP.desktop}`]: {},
+      [`@apply grid grid-cols-1 ${CONFIG.GAP.mobile} ${CONFIG.BREAKPOINTS.tablet}grid-cols-[repeat(auto-fit,minmax(max(${CONFIG.COLUMN_MIN_WIDTH.tablet},${100/(CONFIG.MAX_COLUMNS.tablet + 1)}%),1fr))] ${CONFIG.BREAKPOINTS.tablet}${CONFIG.GAP.tablet} ${CONFIG.BREAKPOINTS.desktop}grid-cols-[repeat(auto-fit,minmax(max(${CONFIG.COLUMN_MIN_WIDTH.desktop},${100/(CONFIG.MAX_COLUMNS.desktop + 1)}%),1fr))] ${CONFIG.BREAKPOINTS.desktop}${CONFIG.GAP.desktop}`]: {},
     },
     
     // Gruppo sempre verticale
