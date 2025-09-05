@@ -23,6 +23,13 @@ const CONFIG = {
     desktop: '250px',
   },
   
+  // Numero massimo di colonne per breakpoint
+  // Limita il numero di colonne per evitare sprecchi di spazio su schermi grandi
+  MAX_COLUMNS: {
+    tablet: 2,
+    desktop: 3,
+  },
+  
   // Gap (spacing) per breakpoint - usa classi Tailwind
   GAP: {
     mobile: 'gap-2',
@@ -34,13 +41,15 @@ const CONFIG = {
 // ==============================================
 // PLUGIN
 // ==============================================
-
+  
 module.exports = plugin(function({ addUtilities }) {
   
   const formContainer = {
-    // Layout intelligente principale - responsive auto-fit
+    // Layout intelligente principale - responsive auto-fit con limite massimo colonne
+    // Formula: minmax(max(min-width, 100%/max-cols), 1fr) 
+    // Combina dimensione minima con percentuale massima per limitare le colonne
     '.fz-form-container': {
-      [`@apply grid grid-cols-1 ${CONFIG.GAP.mobile} ${CONFIG.BREAKPOINTS.tablet}grid-cols-[repeat(auto-fit,minmax(${CONFIG.COLUMN_MIN_WIDTH.tablet},1fr))] ${CONFIG.BREAKPOINTS.tablet}${CONFIG.GAP.tablet} ${CONFIG.BREAKPOINTS.desktop}grid-cols-[repeat(auto-fit,minmax(${CONFIG.COLUMN_MIN_WIDTH.desktop},1fr))] ${CONFIG.BREAKPOINTS.desktop}${CONFIG.GAP.desktop}`]: {},
+      [`@apply grid grid-cols-1 ${CONFIG.GAP.mobile} ${CONFIG.BREAKPOINTS.tablet}grid-cols-[repeat(auto-fit,minmax(max(${CONFIG.COLUMN_MIN_WIDTH.tablet},${100/CONFIG.MAX_COLUMNS.tablet}%),1fr))] ${CONFIG.BREAKPOINTS.tablet}${CONFIG.GAP.tablet} ${CONFIG.BREAKPOINTS.desktop}grid-cols-[repeat(auto-fit,minmax(max(${CONFIG.COLUMN_MIN_WIDTH.desktop},${100/CONFIG.MAX_COLUMNS.desktop}%),1fr))] ${CONFIG.BREAKPOINTS.desktop}${CONFIG.GAP.desktop}`]: {},
     },
     
     // Gruppo sempre verticale
