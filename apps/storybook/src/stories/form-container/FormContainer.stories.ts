@@ -43,16 +43,15 @@ export const BasicForm: Story = {
   render: () => ({
     components: { FzButton, FzInput },
     template: `
-      <form class="fz-form-container">
+      <form class="fz-form-container bg-gray-100">
 
         <FzInput type="text" placeholder="Nome" />
         <FzInput type="text" placeholder="Cognome" />
         <FzInput type="email" placeholder="Email" />
-        <FzInput type="tel" placeholder="Telefono" />
         <FzInput type="password" placeholder="Password" />
         <FzInput type="password" placeholder="Conferma Password" />
         
-        <div class="fz-form-actions">
+        <div class="fz-form-actions bg-gray-200">
           <FzButton>Annulla</FzButton>
           <FzButton type="submit">Crea Account</FzButton>
         </div>
@@ -66,12 +65,13 @@ export const AdvancedForm: Story = {
     render: () => ({
       components: { FzButton, FzInput },
       template: `
-        <form class="fz-form-container">
-
-          <FzInput type="text" placeholder="Nome" />
-          <FzInput type="text" placeholder="Cognome" />
+        <form class="fz-form-container" bg-gray-100>
+          <div class="fz-form-group-vertical bg-gray-200">
+            <FzInput type="text" placeholder="Nome" />
+            <FzInput type="text" placeholder="Cognome" />
+          </div>
         
-          <div class="fz-form-group-vertical">
+          <div class="fz-form-group-vertical bg-gray-200">
             <div class="fz-form-group-horizontal">
               <FzInput type="tel" placeholder="+01" />
               <FzInput type="tel" placeholder="5551234567" />
@@ -80,12 +80,12 @@ export const AdvancedForm: Story = {
             <FzInput type="email" placeholder="Email" />
           </div>
 
-          <div class="fz-form-group-vertical">
+          <div class="fz-form-group-vertical bg-gray-200">
             <FzInput type="password" placeholder="Password" />
             <FzInput type="password" placeholder="Conferma Password" />
           </div>
 
-          <div class="fz-form-actions">
+          <div class="fz-form-actions bg-gray-200">
             <FzButton>Annulla</FzButton>
             <FzButton type="submit">Crea Account</FzButton>
           </div>
