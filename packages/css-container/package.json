@@ -1,0 +1,37 @@
+{
+  "name": "@fiscozen/css-container",
+  "version": "0.1.0",
+  "description": "CSS Layout Utilities - Sistema ufficiale di layout per il Design System Fiscozen",
+  "scripts": {
+    "format": "prettier --write src/",
+    "test": "echo \"CSS utilities - no tests needed\"",
+    "build": "echo \"CSS utilities - no build needed\""
+  },
+  "main": "src/layout-utilities.js",
+  "type": "commonjs",
+  "keywords": [
+    "css",
+    "tailwind",
+    "layout",
+    "utilities",
+    "design-system",
+    "fiscozen",
+    "responsive",
+    "flexbox",
+    "grid"
+  ],
+  "author": "Fiscozen Design System Team",
+  "peerDependencies": {
+    "tailwindcss": "^3.4.1"
+  },
+  "devDependencies": {
+    "@fiscozen/prettier-config": "workspace:^",
+    "prettier": "^3.0.3"
+  },
+  "files": [
+    "src/layout-utilities.js",
+    "src/index.js",
+    "README.md"
+  ],
+  "license": "MIT"
+}

@@ -3,6 +3,11 @@ import tailwindConfig from '@fiscozen/style/tailwind.config'
 /** @type {import('tailwindcss').Config} */
 export default {
   ...tailwindConfig,
+  plugins: [
+    require('@fiscozen/css-container'),
+    require('@fiscozen/form-container'),
+    ...tailwindConfig.plugins,
+  ],
   content: [
     './src/**/*.{html,js,ts,vue}',
     './node_modules/@fiscozen/**/src/**/*.{html,js,ts,vue}',
@@ -17,6 +22,7 @@ export default {
     './node_modules/@fiscozen/table/src/**/*.{html,js,ts,vue}',
     './node_modules/@fiscozen/pdf-viewer/src/**/*.{html,js,ts,vue}',
     './node_modules/@fiscozen/layout/src/**/*.{html,js,ts,vue}',
-    './node_modules/@fiscozen/radio/src/**/*.{html,js,ts,vue}'
+    './node_modules/@fiscozen/radio/src/**/*.{html,js,ts,vue}',
+    './node_modules/@fiscozen/container/src/**/*.{html,js,ts,vue}'
   ]
 }
