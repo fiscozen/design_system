@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 
 import { FzButton } from '@fiscozen/button'
 import { FzInput } from '@fiscozen/input'
+import { FzTextarea } from '@fiscozen/textarea'
 
 const meta: Meta = {
   title: 'Layout/FzFormContainer',
@@ -39,19 +40,19 @@ Sistema semplificato con **5 classi intelligenti** per form responsive:
 type Story = StoryObj<typeof meta>
 
 export const BasicForm: Story = {
-  name: 'Form Base',
+  name: 'Basic Form',
   render: () => ({
     components: { FzButton, FzInput },
     template: `
-      <form class="fz-form-container bg-gray-100">
+      <form class="fz-form-container">
 
-        <FzInput type="text" placeholder="Nome" />
-        <FzInput type="text" placeholder="Cognome" />
-        <FzInput type="email" placeholder="Email" />
-        <FzInput type="password" placeholder="Password" />
-        <FzInput type="password" placeholder="Conferma Password" />
+        <FzInput type="text" placeholder="Mario" label="Nome" />
+        <FzInput type="text" placeholder="Rossi" label="Cognome" />
+        <FzInput type="email" placeholder="mario.rossi@example.com" label="Email" />
+        <FzInput type="password" placeholder="••••••" label="Password" />
+        <FzInput type="password" placeholder="••••••" label="Conferma Password" />
         
-        <div class="fz-form-actions bg-gray-200">
+        <div class="fz-form-actions">
           <FzButton>Annulla</FzButton>
           <FzButton type="submit">Crea Account</FzButton>
         </div>
@@ -60,32 +61,59 @@ export const BasicForm: Story = {
   }),
 }
 
+export const TextareaForm: Story = {
+    name: 'Textarea Form',
+    render: () => ({
+      components: { FzButton, FzInput, FzTextarea },
+      template: `
+        <form class="fz-form-container">
+          <FzInput type="text" placeholder="Mario" label="Nome" />
+          <FzInput type="text" placeholder="Rossi" label="Cognome" />
+
+          <FzInput type="tel" placeholder="5551234567" label="Telefono" />
+
+          <FzInput type="email" placeholder="mario.rossi@example.com" label="Email" />
+
+          <FzTextarea class="fz-textarea" placeholder="Descrivi la tua richiesta..." rows="4" label="Richiesta" />
+
+          <FzInput type="password" placeholder="••••••" label="Password" />
+          <FzInput type="password" placeholder="••••••" label="Conferma Password" />
+
+          <div class="fz-form-actions">
+            <FzButton>Annulla</FzButton>
+            <FzButton type="submit">Crea Account</FzButton>
+          </div>
+        </form>
+      `
+    }),
+  }
+
 export const AdvancedForm: Story = {
-    name: 'Advanced Base',
+    name: 'Advanced Form',
     render: () => ({
       components: { FzButton, FzInput },
       template: `
-        <form class="fz-form-container" bg-gray-100>
-          <div class="fz-form-group-vertical bg-gray-200">
-            <FzInput type="text" placeholder="Nome" />
-            <FzInput type="text" placeholder="Cognome" />
+        <form class="fz-form-container">
+          <div class="fz-form-group-vertical bg-gray-100">
+            <FzInput type="text" placeholder="Mario" label="Nome" />
+            <FzInput type="text" placeholder="Rossi" label="Cognome" />
           </div>
         
-          <div class="fz-form-group-vertical bg-gray-200">
+          <div class="fz-form-group-vertical bg-gray-100">
             <div class="fz-form-group-horizontal">
-              <FzInput type="tel" placeholder="+01" />
-              <FzInput type="tel" placeholder="5551234567" />
+              <FzInput type="tel" placeholder="+01" label="Prefisso" />
+              <FzInput type="tel" placeholder="5551234567" label="Telefono" />
             </div>
         
-            <FzInput type="email" placeholder="Email" />
+            <FzInput type="email" placeholder="mario.rossi@example.com" label="Email" />
           </div>
 
-          <div class="fz-form-group-vertical bg-gray-200">
-            <FzInput type="password" placeholder="Password" />
-            <FzInput type="password" placeholder="Conferma Password" />
+          <div class="fz-form-group-vertical bg-gray-100">
+            <FzInput type="password" placeholder="••••••" label="Password" />
+            <FzInput type="password" placeholder="••••••" label="Conferma Password" />
           </div>
 
-          <div class="fz-form-actions bg-gray-200">
+          <div class="fz-form-actions bg-gray-100">
             <FzButton>Annulla</FzButton>
             <FzButton type="submit">Crea Account</FzButton>
           </div>
