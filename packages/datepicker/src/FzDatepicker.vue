@@ -9,14 +9,19 @@
       (e: any) =>
         $emit(
           'update:model-value',
-          props.valueFormat && e instanceof Date ? format(e, props.valueFormat) : e,
+          props.valueFormat && e instanceof Date
+            ? format(e, props.valueFormat)
+            : e
         )
     "
     @flow-step="handleFlowStep"
     :model-value="modelValue"
   >
-    <template #dp-input="{ value, onInput, onEnter, onPaste, closeMenu }">
+    <template
+      #dp-input="{ value, onBlur, onInput, onEnter, onPaste, closeMenu }"
+    >
       <FzInput
+        @blur="onBlur"
         @update:modelValue="(e) => handleInputModelUpdate(onInput, e)"
         @keyup.enter="onEnter"
         @paste="
@@ -173,7 +178,7 @@ const handlePaste = (
   onPaste: (e: ClipboardEvent) => any,
   closeMenu: () => void,
   e: ClipboardEvent,
-  value: string,
+  value: string
 ) => {
   e.stopPropagation();
   e.preventDefault();
@@ -185,9 +190,12 @@ const handlePaste = (
   });
 };
 
-const handleInputModelUpdate = (onInput: (val: string) => void, value: string) => {
+const handleInputModelUpdate = (
+  onInput: (val: string) => void,
+  value: string
+) => {
   onInput(value);
-  emit('text-input', value);
+  emit("text-input", value);
   if (!value) {
     emit("cleared", value);
   }
@@ -318,5 +326,4 @@ button.dp__overlay_action.dp__button_bottom {
 .dp__clear_icon {
   @apply absolute right-0 top-1/2 cursor-pointer transform-none;
 }
-
 </style>
