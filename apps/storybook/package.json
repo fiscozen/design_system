@@ -32,6 +32,7 @@
     "@fiscozen/checkbox": "workspace:^",
     "@fiscozen/collapse": "workspace:^",
     "@fiscozen/composables": "workspace:^",
+    "@fiscozen/data": "workspace:*",
     "@fiscozen/datepicker": "workspace:^",
     "@fiscozen/dialog": "workspace:^",
     "@fiscozen/divider": "workspace:^",
