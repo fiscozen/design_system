@@ -1,5 +1,5 @@
 import { useFzFetch } from '../dao';
-import { computed } from 'vue';
+import { computed, toValue, watch } from 'vue';
 
 import type { UseFzFetchOptions, UseFzFetchReturn } from '../dao/types';
 
@@ -23,7 +23,10 @@ const normalizeResponse = <T>(response: UseFzFetchReturn<T>): UseActionReturn<T>
 export const useActions: UseActions = <T>(basePath: string) => {
     return {
         useRetrieve: (pk, options) => {
-            const response = useFzFetch<T>(`${basePath}/${pk}`, normalizeOptions(options));
+            // URL reattivo che si aggiorna quando pk cambia
+            const url = computed(() => `${basePath}/${toValue(pk)}`);
+            
+            const response = useFzFetch<T>(url, normalizeOptions(options));
 
             return normalizeResponse<T>(response);
         },
