@@ -21,8 +21,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.362
-        version: 1.0.362
+        specifier: ^1.0.368
+        version: 1.0.368
       '@fiscozen/actionlist':
         specifier: workspace:^
         version: link:../../packages/actionlist
@@ -1296,8 +1296,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.362
-        version: 1.0.362
+        specifier: ^1.0.368
+        version: 1.0.368
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.7.2
         version: 6.7.2
@@ -2967,8 +2967,8 @@ packages:
     resolution: {integrity: sha512-bGAqFfqj7aGKe2sgWMpicSsLzBfq+1OX+LVWIJ1srKv1V14v9IcfjQvokwAq9C+BVtZhUez++2uu+jboKcEPPQ==}
     engines: {node: '>=16'}
 
-  '@awesome.me/kit-8137893ad3@1.0.362':
-    resolution: {integrity: sha512-LPVj752PjOb0lJfJYrZnouD8t6LF+j2RIiCxJvl1n8qFOrI/3VbuX6gITrsDsgGRMzymTK0QNm5d7MZ/vIEvFQ==}
+  '@awesome.me/kit-8137893ad3@1.0.368':
+    resolution: {integrity: sha512-fcBjR5ZLbu9OwGSQUmA4u/lEQVKX8ZJ9kE9hGPoGdQGCKSaKFYod6PqwrJJRgTGNN/fYi0WD33+AqvVb6cEOJg==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.26.2':
@@ -7764,7 +7764,7 @@ snapshots:
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
-  '@awesome.me/kit-8137893ad3@1.0.362':
+  '@awesome.me/kit-8137893ad3@1.0.368':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
