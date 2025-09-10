@@ -7,12 +7,12 @@ const DEFAULT_BASE_URL = 'http://localhost:3000';
 let fzFetcher: ReturnType<typeof createFetch> | null = null;
 
 export const setupFzFetcher: SetupFzFetcher = (options) => {
-    console.debug('setupFzFetcher', options);
+    // console.debug('setupFzFetcher', options);
     fzFetcher = createFetch({
         baseUrl: DEFAULT_BASE_URL,
         ...options,
     });
-    console.debug('fzFetcher initialized', fzFetcher);
+    // console.debug('fzFetcher initialized', fzFetcher);
 };
 
 export const useFzFetch: UseFzFetch = <T>(
