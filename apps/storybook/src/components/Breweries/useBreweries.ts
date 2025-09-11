@@ -5,10 +5,10 @@ export const useBreweries = () => {
 
     const { useActions } = rest
 
-    const { useRetrieve, useAll } = useActions<Brewery>('breweries')
+    const { useRetrieve, useList } = useActions<Brewery>('breweries')
 
     return {
         useRetrieveBreweryById: useRetrieve,
-        useAllBreweries: useAll,
+        useListBreweries: useList,
     }
 }
