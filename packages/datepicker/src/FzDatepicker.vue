@@ -18,12 +18,13 @@
     :model-value="modelValue"
   >
     <template
-      #dp-input="{ value, onBlur, onInput, onEnter, onPaste, closeMenu }"
+      #dp-input="{ value, onBlur, onInput, onEnter, onPaste, onTab, closeMenu }"
     >
       <FzInput
         @blur="onBlur"
         @update:modelValue="(e) => handleInputModelUpdate(onInput, e)"
         @keyup.enter="onEnter"
+        @keydown.tab="onTab"
         @paste="
           (e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)
         "
