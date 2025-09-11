@@ -1,15 +1,53 @@
 import { useFzFetch } from '../dao';
 import { computed, toValue, watch } from 'vue';
 
-import type { UseFzFetchOptions, UseFzFetchReturn } from '../dao/types';
+import type { UseFzFetchOptions, UseFzFetchReturn, UseFzFetchParams } from '../dao/types';
 
-import type { UseActions, UseActionOptions, UseActionReturn, UseAllAction } from './types';
+import type { UseActions, UseActionOptions, UseActionReturn, UseAllAction, AllActionParams } from './types';
 
 const normalizeOptions = (options: UseActionOptions = {}): UseFzFetchOptions => ({
     immediate: options.onMount ?? true,
     refetch: options.autoUpdate ?? true,
     initialData: options.initialData ?? null,
 });
+
+// Converte AllActionParams in UseFzFetchParams
+const normalizeParams = (params: AllActionParams = {}): UseFzFetchParams => {
+    const queryParams: UseFzFetchParams['queryParams'] = {};
+
+    console.log(params)
+    
+    // Filters: { by_city: 'san_diego' } → queryParams.by_city = 'san_diego'
+    if (params.filters) {
+        Object.entries(params.filters).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+                queryParams[key] = value;
+            }
+        });
+    }
+    
+    // Sort: { name: 'asc', created_at: 'desc' } → queryParams.sort = 'name:asc,created_at:desc'
+    if (params.sort) {
+        const sortEntries = Object.entries(params.sort).map(([key, direction]) => 
+            `${key}:${direction}`
+        );
+        if (sortEntries.length > 0) {
+            queryParams.sort = sortEntries.join(',');
+        }
+    }
+    
+    // Pagination
+    if (params.page !== undefined) {
+        queryParams.page = params.page;
+    }
+    if (params.pageSize !== undefined) {
+        queryParams.per_page = params.pageSize;
+    }
+    
+    return {
+        queryParams,
+    };
+};
 
 const normalizeResponse = <T>(response: UseFzFetchReturn<T>): UseActionReturn<T> => {
     return {
@@ -23,7 +61,6 @@ const normalizeResponse = <T>(response: UseFzFetchReturn<T>): UseActionReturn<T>
 export const useActions: UseActions = <T>(basePath: string) => {
     return {
         useRetrieve: (pk, options) => {
-            // URL reattivo che si aggiorna quando pk cambia
             const url = computed(() => `${basePath}/${toValue(pk)}`);
             
             const response = useFzFetch<T>(url, normalizeOptions(options));
@@ -31,13 +68,32 @@ export const useActions: UseActions = <T>(basePath: string) => {
             return normalizeResponse<T>(response);
         },
         useAll: ((paramsOrOptions, options) => {
-            if (paramsOrOptions !== undefined && options !== undefined) {
-                const response = useFzFetch<T>(`${basePath}`, {/*paramsOrOptions*/}, normalizeOptions(options));
-                return normalizeResponse<T>(response);
-            } else {
-                const response = useFzFetch<T>(`${basePath}`, normalizeOptions(paramsOrOptions as UseActionOptions));
+            // Caso 3: useAll(params, options)
+            if (options !== undefined) {
+                const params = paramsOrOptions as AllActionParams;
+                const response = useFzFetch<T>(`${basePath}`, normalizeParams(params), normalizeOptions(options));
                 return normalizeResponse<T>(response);
             }
+
+            // Caso 2: useAll(paramsOrOptions)
+            if (paramsOrOptions !== undefined) {
+                // Distingui tra AllActionParams e UseActionOptions
+                if ('filters' in paramsOrOptions || 'sort' in paramsOrOptions || 'page' in paramsOrOptions || 'pageSize' in paramsOrOptions) {
+                    // È AllActionParams
+                    const params = paramsOrOptions as AllActionParams;
+                    const response = useFzFetch<T>(`${basePath}`, normalizeParams(params));
+                    return normalizeResponse<T>(response);
+                } else {
+                    // È UseActionOptions
+                    const actionOptions = paramsOrOptions as UseActionOptions;
+                    const response = useFzFetch<T>(`${basePath}`, normalizeOptions(actionOptions));
+                    return normalizeResponse<T>(response);
+                }
+            }
+
+            // Caso 1: useAll()
+            const response = useFzFetch<T>(`${basePath}`);
+            return normalizeResponse<T>(response);
         }) as UseAllAction<T>,
         /*
         add: () => null,

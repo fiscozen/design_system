@@ -1,6 +1,7 @@
 import type { ShallowRef, ComputedRef, MaybeRefOrGetter } from 'vue'
+import type { CreateFetchOptions, UseFetchOptions } from '@vueuse/core'
 
-interface UseFzFetchOptions {
+interface UseFzFetchOptions extends UseFetchOptions {
     /**
      * Will automatically run fetch when `useFetch` is used
      *
@@ -26,6 +27,13 @@ interface UseFzFetchOptions {
 
     // TODO: add interceptors
     // TODO: add error handling
+}
+
+interface UseFzFetchParams {
+    queryParams?: Record<string, string | number | boolean>;
+    body?: any;
+    headers?: Record<string, string>;
+    method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
 }
 
 interface UseFzFetchReturn<T> {
@@ -97,7 +105,7 @@ interface UseFzFetchReturn<T> {
 export interface UseFzFetch {
     <T>(url: MaybeRefOrGetter<string>): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>
     <T>(url: MaybeRefOrGetter<string>, UseFzFetchOptions: UseFzFetchOptions): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>
-    <T>(url: MaybeRefOrGetter<string>, options: RequestInit, UseFzFetchOptions?: UseFzFetchOptions): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>
+    <T>(url: MaybeRefOrGetter<string>, options: UseFzFetchParams, UseFzFetchOptions?: UseFzFetchOptions): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>
 }
 
 /**
