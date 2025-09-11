@@ -14,8 +14,6 @@ const normalizeOptions = (options: UseActionOptions = {}): UseFzFetchOptions => 
 // Converte ListActionParams in UseFzFetchParams
 const normalizeParams = (params: ListActionParams = {}): UseFzFetchParams => {
     const queryParams: UseFzFetchParams['queryParams'] = {};
-
-    console.log(params)
     
     // Filters: { by_city: 'san_diego' } → queryParams.by_city = 'san_diego'
     if (params.filters) {
