@@ -57,7 +57,7 @@ export interface UseRetrieveAction<T> {
 
 // ALL ACTION
 export interface AllActionParams {
-    filters?: Record<string, any>;
+    filters?: Record<string, string | number | boolean>;
     sort?: Record<string, 'asc' | 'desc'>;
     page?: number;
     pageSize?: number;
@@ -75,8 +75,9 @@ export interface UseAllActionReturn<T> extends UseActionReturn<T> {
 }
 
 export interface UseAllAction<T> {
-    (paramsOrOptions?: UseActionOptions): UseAllActionReturn<T>;
-    (paramsOrOptions?: AllActionParams, options?: UseActionOptions): UseAllActionReturn<T>;
+    (): UseAllActionReturn<T>;
+    (paramsOrOptions: AllActionParams | UseActionOptions): UseAllActionReturn<T>;
+    (paramsOrOptions: AllActionParams, options: UseActionOptions): UseAllActionReturn<T>;
 }
 // --------------------------------------------------------
 
