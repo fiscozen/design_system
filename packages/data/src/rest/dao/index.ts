@@ -1,7 +1,7 @@
 import { createFetch } from '@vueuse/core';
 
 import type { SetupFzFetcher, UseFzFetch, UseFzFetchOptions, UseFzFetchParams } from './types';
-import { toValue, type MaybeRefOrGetter } from 'vue';
+import { toValue, type MaybeRefOrGetter, computed } from 'vue';
 
 const DEFAULT_BASE_URL = 'http://localhost:3000';
 
@@ -54,7 +54,8 @@ export const useFzFetch: UseFzFetch = <T>(
         // Caso 3: Tutti e 3 i parametri (useFetchOptions presente)
         if (useFetchOptions !== undefined) {
             const params = paramsOrUseFetchOptions as UseFzFetchParams;
-            const finalUrl = getUrlWithQueryParams(basePath, params.queryParams);
+            // Mantiene basePath reattivo e crea finalUrl reattivo se necessario
+            const finalUrl = computed(() => getUrlWithQueryParams(toValue(basePath), params.queryParams));
             const requestInit = {
                 method: params?.method || 'GET',
                 body: params?.body,
@@ -69,7 +70,7 @@ export const useFzFetch: UseFzFetch = <T>(
             if ('queryParams' in paramsOrUseFetchOptions || 'method' in paramsOrUseFetchOptions || 'body' in paramsOrUseFetchOptions) {
                 // È UseFzFetchParams
                 const params = paramsOrUseFetchOptions as UseFzFetchParams;
-                const finalUrl = getUrlWithQueryParams(basePath, params.queryParams);
+                const finalUrl = computed(() => getUrlWithQueryParams(toValue(basePath), params.queryParams));
                 const requestInit = {
                     method: params.method || 'GET',
                     body: params.body,
@@ -78,14 +79,14 @@ export const useFzFetch: UseFzFetch = <T>(
                 return fzFetcher<T>(finalUrl, requestInit).json();
             } else {
                 // È UseFzFetchOptions
-                const finalUrl = getUrlWithQueryParams(basePath, undefined);
+                const finalUrl = computed(() => getUrlWithQueryParams(toValue(basePath), undefined));
                 const requestInit = { method: 'GET' };
                 return fzFetcher<T>(finalUrl, requestInit, paramsOrUseFetchOptions as UseFzFetchOptions).json();
             }
         }
         
-        // Caso 1: Solo basePath
-        const finalUrl = getUrlWithQueryParams(basePath, undefined);
+        // Caso 1: Solo basePath - mantiene reattività dell'URL
+        const finalUrl = computed(() => getUrlWithQueryParams(toValue(basePath), undefined));
         return fzFetcher<T>(finalUrl).json();
     } else {
         throw new Error('FzFetcher not initialized! Use setupFzFetcher first.');
