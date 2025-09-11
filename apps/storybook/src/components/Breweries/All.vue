@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { FzButton } from '@fiscozen/button'
 import { FzCard } from '@fiscozen/card'
 
@@ -7,27 +6,48 @@ import { useBreweries } from './useBreweries'
 
 const { useAllBreweries } = useBreweries()
 
-const { data: autoData, error: autoError, isLoading: autoLoading } = useAllBreweries()
+const { data: autoData, error: autoError, isLoading: autoLoading } = useAllBreweries({
+  onMount: true
+})
 
 const { data: manualData, error: manualError, isLoading: manualLoading, execute: manualExecute } = useAllBreweries({
   onMount: false
 })
+
+const { data: filteredData, error: filteredError, isLoading: filteredLoading } = useAllBreweries({
+  filters: {
+    by_state: 'singapore'
+  }
+})
 </script>
 
 <template>
-  <FzCard title="All (onMount: true)" class="fz-card mb-8">
-    <p>Loading: {{ autoLoading }}</p>
-    <p v-if="autoError">Error: {{ autoError }}</p>
-    <pre v-else-if="autoData">Items count: {{ autoData.length }}</pre>
-    <pre v-else>No data</pre>
-  </FzCard>
+  <div class="space-y-6">
+    
+    <FzCard title="📄 Base Query (no params)" class="fz-card">
+      <div class="text-sm text-gray-600 mb-4">
+        <code>useAll() - No query params</code>
+      </div>
+      <p>Loading: {{ autoLoading }}</p>
+      <p v-if="autoError">Error: {{ autoError }}</p>
+      <pre v-else-if="autoData" class="text-sm">Items count: {{ autoData.length }}</pre>
+      <pre v-else>No data</pre>
+    </FzCard>
 
-  <FzCard title="All (onMount: false)" class="fz-card mb-8">
-    <FzButton @click="manualExecute" class="mb-4">Execute Manual Fetch</FzButton>
+    <FzCard title="🔧 Manual Execution" class="fz-card">
+      <FzButton @click="manualExecute" class="mb-4">Execute Manual Fetch</FzButton>
 
-    <p>Loading: {{ manualLoading }}</p>
-    <p v-if="manualError">Error: {{ manualError }}</p>
-    <pre v-else-if="manualData">Items count: {{ manualData.length }}</pre>
-    <pre v-else>No data</pre>
-  </FzCard>
+      <p>Loading: {{ manualLoading }}</p>
+      <p v-if="manualError">Error: {{ manualError }}</p>
+      <pre v-else-if="manualData" class="text-sm">Items count: {{ manualData.length }}</pre>
+      <pre v-else>No data</pre>
+    </FzCard>
+
+    <FzCard title="🔍 Query Filters: ?by_state=singapore" class="fz-card">
+      <p>Loading: {{ filteredLoading }}</p>
+      <p v-if="filteredError">Error: {{ filteredError }}</p>
+      <pre v-else-if="filteredData" class="text-sm">Items count: {{ filteredData.length }} {{ typeof filteredData }}</pre>
+      <pre v-else>No data</pre>
+    </FzCard>
+  </div>
 </template>
