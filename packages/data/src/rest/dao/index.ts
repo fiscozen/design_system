@@ -1,6 +1,7 @@
 import { createFetch } from '@vueuse/core';
 
-import type { SetupFzFetcher, UseFzFetch } from './types';
+import type { SetupFzFetcher, UseFzFetch, UseFzFetchOptions, UseFzFetchParams } from './types';
+import { toValue, type MaybeRefOrGetter } from 'vue';
 
 const DEFAULT_BASE_URL = 'http://localhost:3000';
 
@@ -15,23 +16,79 @@ export const setupFzFetcher: SetupFzFetcher = (options) => {
     // console.debug('fzFetcher initialized', fzFetcher);
 };
 
+// Costruisce URL con query parameters mergiando quelli esistenti nel basePath
+const getUrlWithQueryParams = (basePath: MaybeRefOrGetter<string>, queryParams?: Record<string, any>): string => {
+    const searchParams = new URLSearchParams();
+    
+    // Estrai query parameters esistenti dal basePath
+    const [baseUrl, existingQuery] = toValue(basePath).split('?');
+    if (existingQuery) {
+        // Aggiungi parametri esistenti
+        const existing = new URLSearchParams(existingQuery);
+        existing.forEach((value, key) => {
+            searchParams.append(key, value);
+        });
+    }
+    
+    // Aggiungi nuovi queryParams se presenti (hanno priorità)
+    if (queryParams) {
+        Object.entries(queryParams).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+                // Rimuovi il parametro esistente e aggiungi quello nuovo (priorità)
+                searchParams.delete(key);
+                searchParams.append(key, String(value));
+            }
+        });
+    }
+    
+    const queryString = searchParams.toString();
+    return queryString ? `${baseUrl}?${queryString}` : baseUrl;
+};
+
 export const useFzFetch: UseFzFetch = <T>(
-    basePath: any,
-    optionsOrUseFetchOptions?: any,
-    useFetchOptions?: any
+    basePath: MaybeRefOrGetter<string>,
+    paramsOrUseFetchOptions?: UseFzFetchParams | UseFzFetchOptions,
+    useFetchOptions?: UseFzFetchOptions
 ) => {
     if (fzFetcher) {
+        // Caso 3: Tutti e 3 i parametri (useFetchOptions presente)
         if (useFetchOptions !== undefined) {
-            return fzFetcher<T>(basePath, optionsOrUseFetchOptions, useFetchOptions);
+            const params = paramsOrUseFetchOptions as UseFzFetchParams;
+            const finalUrl = getUrlWithQueryParams(basePath, params.queryParams);
+            const requestInit = {
+                method: params?.method || 'GET',
+                body: params?.body,
+                headers: params?.headers,
+            };
+            return fzFetcher<T>(finalUrl, requestInit, useFetchOptions).json();
         }
         
-        if (optionsOrUseFetchOptions !== undefined) {
-            return fzFetcher<T>(basePath, optionsOrUseFetchOptions);
+        // Caso 2: basePath + secondo parametro (useFetchOptions assente)
+        if (paramsOrUseFetchOptions !== undefined) {
+            // Distingui tra UseFzFetchParams e UseFzFetchOptions
+            if ('queryParams' in paramsOrUseFetchOptions || 'method' in paramsOrUseFetchOptions || 'body' in paramsOrUseFetchOptions) {
+                // È UseFzFetchParams
+                const params = paramsOrUseFetchOptions as UseFzFetchParams;
+                const finalUrl = getUrlWithQueryParams(basePath, params.queryParams);
+                const requestInit = {
+                    method: params.method || 'GET',
+                    body: params.body,
+                    headers: params.headers,
+                };
+                return fzFetcher<T>(finalUrl, requestInit).json();
+            } else {
+                // È UseFzFetchOptions
+                const finalUrl = getUrlWithQueryParams(basePath, undefined);
+                const requestInit = { method: 'GET' };
+                return fzFetcher<T>(finalUrl, requestInit, paramsOrUseFetchOptions as UseFzFetchOptions).json();
+            }
         }
         
-        return fzFetcher<T>(basePath);
+        // Caso 1: Solo basePath
+        const finalUrl = getUrlWithQueryParams(basePath, undefined);
+        return fzFetcher<T>(finalUrl).json();
+    } else {
+        throw new Error('FzFetcher not initialized! Use setupFzFetcher first.');
     }
-
-    throw new Error('FzFetcher not initialized! Use setupFzFetcher first.');
 };
 
