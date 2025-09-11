@@ -3,7 +3,7 @@ import { computed, toValue, watch } from 'vue';
 
 import type { UseFzFetchOptions, UseFzFetchReturn, UseFzFetchParams } from '../dao/types';
 
-import type { UseActions, UseActionOptions, UseActionReturn, UseAllAction, AllActionParams } from './types';
+import type { UseActions, UseActionOptions, UseActionReturn, UseListAction, ListActionParams } from './types';
 
 const normalizeOptions = (options: UseActionOptions = {}): UseFzFetchOptions => ({
     immediate: options.onMount ?? true,
@@ -11,8 +11,8 @@ const normalizeOptions = (options: UseActionOptions = {}): UseFzFetchOptions => 
     initialData: options.initialData ?? null,
 });
 
-// Converte AllActionParams in UseFzFetchParams
-const normalizeParams = (params: AllActionParams = {}): UseFzFetchParams => {
+// Converte ListActionParams in UseFzFetchParams
+const normalizeParams = (params: ListActionParams = {}): UseFzFetchParams => {
     const queryParams: UseFzFetchParams['queryParams'] = {};
 
     console.log(params)
@@ -67,20 +67,20 @@ export const useActions: UseActions = <T>(basePath: string) => {
 
             return normalizeResponse<T>(response);
         },
-        useAll: ((paramsOrOptions, options) => {
-            // Caso 3: useAll(params, options)
+        useList: ((paramsOrOptions, options) => {
+            // Caso 3: useList(params, options)
             if (options !== undefined) {
-                const params = paramsOrOptions as AllActionParams;
+                const params = paramsOrOptions as ListActionParams;
                 const response = useFzFetch<T>(`${basePath}`, normalizeParams(params), normalizeOptions(options));
                 return normalizeResponse<T>(response);
             }
 
-            // Caso 2: useAll(paramsOrOptions)
+            // Caso 2: useList(paramsOrOptions)
             if (paramsOrOptions !== undefined) {
-                // Distingui tra AllActionParams e UseActionOptions
+                // Distingui tra ListActionParams e UseActionOptions
                 if ('filters' in paramsOrOptions || 'sort' in paramsOrOptions || 'page' in paramsOrOptions || 'pageSize' in paramsOrOptions) {
-                    // È AllActionParams
-                    const params = paramsOrOptions as AllActionParams;
+                    // È ListActionParams
+                    const params = paramsOrOptions as ListActionParams;
                     const response = useFzFetch<T>(`${basePath}`, normalizeParams(params));
                     return normalizeResponse<T>(response);
                 } else {
@@ -91,10 +91,10 @@ export const useActions: UseActions = <T>(basePath: string) => {
                 }
             }
 
-            // Caso 1: useAll()
+            // Caso 1: useList()
             const response = useFzFetch<T>(`${basePath}`);
             return normalizeResponse<T>(response);
-        }) as UseAllAction<T>,
+        }) as UseListAction<T>,
         /*
         add: () => null,
         modify: () => null,

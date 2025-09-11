@@ -4,17 +4,17 @@ import { FzCard } from '@fiscozen/card'
 
 import { useBreweries } from './useBreweries'
 
-const { useAllBreweries } = useBreweries()
+const { useListBreweries } = useBreweries()
 
-const { data: autoData, error: autoError, isLoading: autoLoading } = useAllBreweries({
+const { data: autoData, error: autoError, isLoading: autoLoading } = useListBreweries({
   onMount: true
 })
 
-const { data: manualData, error: manualError, isLoading: manualLoading, execute: manualExecute } = useAllBreweries({
+const { data: manualData, error: manualError, isLoading: manualLoading, execute: manualExecute } = useListBreweries({
   onMount: false
 })
 
-const { data: filteredData, error: filteredError, isLoading: filteredLoading } = useAllBreweries({
+const { data: filteredData, error: filteredError, isLoading: filteredLoading } = useListBreweries({
   filters: {
     by_state: 'singapore'
   }
@@ -26,7 +26,7 @@ const { data: filteredData, error: filteredError, isLoading: filteredLoading } =
     
     <FzCard title="📄 Base Query (no params)" class="fz-card">
       <div class="text-sm text-gray-600 mb-4">
-        <code>useAll() - No query params</code>
+        <code>useList() - No query params</code>
       </div>
       <p>Loading: {{ autoLoading }}</p>
       <p v-if="autoError">Error: {{ autoError }}</p>
