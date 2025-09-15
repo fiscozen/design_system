@@ -1,6 +1,7 @@
 import type { Preview, VueRenderer } from '@storybook/vue3'
 import isChromatic from "chromatic/isChromatic";
 import '../src/assets/main.css';
+import '@fiscozen/style/output/global.css';
 import { withThemeByClassName } from '@storybook/addon-themes';
 import figmaTokens from '@fiscozen/style/tokens.json'
 
