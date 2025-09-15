@@ -30,26 +30,26 @@ const containerClass = computed(() => {
 }
 
 .fz-container--main-sm {
-  gap: var(--spacing-fz-container-main-content-sm);
+  gap: var(--main-content-sm);
 }
 
 .fz-container--main-base {
-  gap: var(--spacing-fz-container-main-content-base);
+  gap: var(--main-content-base);
 }
 
 .fz-container--main-lg {
-  gap: var(--spacing-fz-container-main-content-lg);
+  gap: var(--main-content-lg);
 }
 
 .fz-container--section-sm {
-  gap: var(--spacing-fz-container-section-content-sm);
+  gap: var(--section-content-sm);
 }
 
 .fz-container--section-base {
-  gap: var(--spacing-fz-container-section-content-base);
+  gap: var(--section-content-base);
 }
 
 .fz-container--section-lg {
-  gap: var(--spacing-fz-container-section-content-lg);
+  gap: var(--section-content-lg);
 }
 </style>
