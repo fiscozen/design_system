@@ -697,6 +697,34 @@
       "type": "fontSizes"
     }
   },
+  "main-content": {
+    "sm": {
+      "value": "32px",
+      "type": "spacing"
+    },
+    "base": {
+      "value": "48px",
+      "type": "spacing"
+    },
+    "lg": {
+      "value": "64px",
+      "type": "spacing"
+    }
+  },
+  "section-content": {
+    "sm": {
+      "value": "16px",
+      "type": "spacing"
+    },
+    "base": {
+      "value": "24px",
+      "type": "spacing"
+    },
+    "lg": {
+      "value": "32px",
+      "type": "spacing"
+    }
+  },
   "blue": {
     "50": {
       "value": "#eff1ff",

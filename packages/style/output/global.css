@@ -145,6 +145,12 @@
   --breadcrumbs-font-weight: 400;
   --breadcrumbs-line-height: 18px;
   --breadcrumbs-font-size: 14px;
+  --main-content-sm: 32px;
+  --main-content-base: 48px;
+  --main-content-lg: 64px;
+  --section-content-sm: 16px;
+  --section-content-base: 24px;
+  --section-content-lg: 32px;
   --blue-50: #eff1ff;
   --blue-100: #dee2ff;
   --blue-200: #bdc5ff;
