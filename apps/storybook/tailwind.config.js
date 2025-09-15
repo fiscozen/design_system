@@ -4,8 +4,6 @@ import tailwindConfig from '@fiscozen/style/tailwind.config'
 export default {
   ...tailwindConfig,
   plugins: [
-    require('@fiscozen/css-container'),
-    require('@fiscozen/form-container'),
     ...tailwindConfig.plugins,
   ],
   content: [
