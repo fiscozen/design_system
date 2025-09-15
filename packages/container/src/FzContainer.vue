@@ -50,6 +50,6 @@ const containerClass = computed(() => {
 }
 
 .fz-container--section-lg {
-  gap: var(--spacing-fz-container-section-content-sm);
+  gap: var(--spacing-fz-container-section-content-lg);
 }
 </style>
