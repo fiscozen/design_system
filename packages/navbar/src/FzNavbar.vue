@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onBeforeMount, onMounted, onUnmounted, computed } from 'vue'
+import { computed } from 'vue'
 import { FzIconButton } from '@fiscozen/button'
 import { FzNavbarEmits, FzNavbarProps } from './types'
 import {breakpoints} from '@fiscozen/style';
@@ -10,6 +10,8 @@ const props = withDefaults(defineProps<FzNavbarProps>(), {
 })
 
 const emit = defineEmits<FzNavbarEmits>()
+
+breakpoints['lg'] = '1200px'
 
 const {isGreater} = useBreakpoints(breakpoints);
 const isGreaterThanLg = isGreater('lg');
@@ -45,7 +47,7 @@ const isHorizontal = computed(() => Boolean(props.variant === 'horizontal'))
     <template v-else>
       <FzIconButton
         :iconName="isMenuOpen ? 'xmark' : 'bars'"
-        variant="secondary"
+        variant="invisible"
         tooltip="menu"
         @click="emit('fznavbar:menuButtonClick')"
       />
