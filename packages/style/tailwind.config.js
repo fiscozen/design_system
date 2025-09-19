@@ -3,7 +3,8 @@ const { filterTokensByType, buildFontSizesObj } = require("./fns");
 const plugin = require("tailwindcss/plugin");
 
 const colors = filterTokensByType('color', globals);
-const spacing = filterTokensByType('spacing', globals).spacing;
+const allSpacing = filterTokensByType('spacing', globals);
+const spacing = allSpacing.spacing;
 const fontSize = buildFontSizesObj(globals);
 const borderWidth = filterTokensByType('borderWidth', globals)['border'];
 const borderRadius = filterTokensByType('borderRadius', globals)['rounded'];
@@ -11,6 +12,15 @@ borderRadius.DEFAULT = borderRadius.base
 const screens = filterTokensByType('sizing', globals, true)['breakpoint'];
 
 module.exports = {
+    // Safelist per includere sempre le utility classes semantiche
+    safelist: [
+      'gap-main-content-sm',
+      'gap-main-content-base', 
+      'gap-main-content-lg',
+      'gap-section-content-sm',
+      'gap-section-content-base',
+      'gap-section-content-lg'
+    ],
     theme: {
       fontSize,
       spacing,
@@ -18,7 +28,16 @@ module.exports = {
       borderRadius,
       screens,
       extend: {
-        spacing,
+        spacing: {
+          ...spacing,
+          // Add semantic spacing tokens as utilities
+          ...allSpacing['main-content'] && Object.fromEntries(
+            Object.entries(allSpacing['main-content']).map(([key, value]) => [`main-content-${key}`, value])
+          ),
+          ...allSpacing['section-content'] && Object.fromEntries(
+            Object.entries(allSpacing['section-content']).map(([key, value]) => [`section-content-${key}`, value])
+          )
+        },
         colors,
         zIndex: {
             '60': '60',
