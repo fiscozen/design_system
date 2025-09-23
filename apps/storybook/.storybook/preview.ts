@@ -6,6 +6,11 @@ import '@fiscozen/style/output/global.css';
 
 import { withThemeByClassName } from '@storybook/addon-themes';
 import figmaTokens from '@fiscozen/style/tokens.json'
+import { setupFzStyle } from '@fiscozen/style/src/index'
+import { setup } from '@storybook/vue3'
+
+// Setup FiscoZen style globally in Storybook
+setup(setupFzStyle)
 
 const viewports = Object.entries(figmaTokens.global.breakpoint)
   .reduce((acc, curr) => {
