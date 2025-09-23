@@ -37,15 +37,44 @@ function deepen(obj) {
     return deep
   }
   
-  function buildFontSizesObj(tokens) {
-    const fontSizes = tokens.reduce((acc, curr, index, arr) => {
-      if (curr.type === 'fontSizes') {
-        const lineHeight = arr.find((el) => el.type === 'lineHeights' && el.attributes.type === curr.attributes.type);
-        acc[curr.attributes.type] = lineHeight ? [curr.value, {lineHeight: lineHeight.value}] : [curr.value];
-      }
-      return acc;
-    }, {});
-    return fontSizes;
-  }
+function buildFontSizesObj(tokens) {
+  const fontSizes = tokens.reduce((acc, curr, index, arr) => {
+    if (curr.type === 'fontSizes') {
+      const lineHeight = arr.find((el) => el.type === 'lineHeights' && el.attributes.type === curr.attributes.type);
+      acc[curr.attributes.type] = lineHeight ? [curr.value, {lineHeight: lineHeight.value}] : [curr.value];
+    }
+    return acc;
+  }, {});
+  return fontSizes;
+}
+
+function appendAdditionalCSSFiles(cssOutputPath, srcDirectory, additionalCSSFiles) {
+  const fs = require('fs');
+  const path = require('path');
   
-  module.exports = { createArray, filterTokensByType, buildFontSizesObj };
+  // Read the base generated CSS
+  let generatedCSS = fs.readFileSync(cssOutputPath, 'utf8');
+  
+  // Process each additional CSS file
+  additionalCSSFiles.forEach(filename => {
+    const filePath = path.join(srcDirectory, filename);
+    
+    if (fs.existsSync(filePath)) {
+      console.log(`\nAppending ${filename}...`);
+      
+      const fileCSS = fs.readFileSync(filePath, 'utf8');
+      generatedCSS += '\n\n' + fileCSS;
+      
+      console.log(`${filename} appended successfully`);
+    } else {
+      console.log(`${filename} not found, skipping...`);
+    }
+  });
+  
+  // Write the combined CSS back to the output file
+  fs.writeFileSync(cssOutputPath, generatedCSS);
+  
+  return generatedCSS;
+}
+
+module.exports = { createArray, filterTokensByType, buildFontSizesObj, appendAdditionalCSSFiles };
