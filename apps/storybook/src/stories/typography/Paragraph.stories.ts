@@ -109,3 +109,17 @@ export const ASequenceOfParagraphs: Story = {
     }
   }
 }
+
+
+export const ParagraphDirectives: Story = {
+  args: {
+    text: 'Questo è un paragrafo con v-bold',
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: { ParagraphComponent },
+    template: '<ParagraphComponent :text="args.text" v-bold />'
+  }),
+}
