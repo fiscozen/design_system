@@ -1,5 +1,7 @@
 const StyleDictionaryPackage = require('style-dictionary');
 const {createArray} = require('./fns');
+const fs = require('fs');
+const path = require('path');
 
 // HAVE THE STYLE DICTIONARY CONFIG DYNAMICALLY GENERATED
 
@@ -60,6 +62,24 @@ console.log('Build started...');
     const StyleDictionary = StyleDictionaryPackage.extend(getStyleDictionaryConfig(theme));
 
     StyleDictionary.buildPlatform('web');
+
+    // Append typography styles to the generated CSS
+    const cssOutputPath = path.join(__dirname, 'output', `${theme}.css`);
+    const typographyPath = path.join(__dirname, 'src', 'typography.css');
+    
+    if (fs.existsSync(typographyPath)) {
+        console.log('\nAppending typography styles...');
+        
+        const generatedCSS = fs.readFileSync(cssOutputPath, 'utf8');
+        const typographyCSS = fs.readFileSync(typographyPath, 'utf8');
+        
+        const combinedCSS = generatedCSS + '\n\n' + typographyCSS;
+        
+        fs.writeFileSync(cssOutputPath, combinedCSS);
+        console.log('Typography styles appended successfully');
+    } else {
+        console.log('Typography CSS file not found, skipping...');
+    }
 
     console.log('\nEnd processing');
 })

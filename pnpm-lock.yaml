@@ -16,7 +16,7 @@ importers:
         version: 4.0.1
       vitest:
         specifier: ^1.0.4
-        version: 1.6.1(@types/node@18.19.76)(jsdom@23.2.0)
+        version: 1.6.1(@types/node@20.19.17)(jsdom@23.2.0)
 
   apps/storybook:
     dependencies:
@@ -4063,6 +4063,9 @@ packages:
   '@types/node@18.19.76':
     resolution: {integrity: sha512-yvR7Q9LdPz2vGpmpJX5LolrgRdWvB67MJKDPSgIIzpFbaf9a1j/f5DnLp5VDyHGMR0QZHlTr1afsD87QCXFHKw==}
 
+  '@types/node@20.19.17':
+    resolution: {integrity: sha512-gfehUI8N1z92kygssiuWvLiwcbOB3IRktR6hTDgJlXMYh5OvkPSRmgfoBUmfZt+vhwJtX7v1Yw4KvvAf7c5QKQ==}
+
   '@types/ramda@0.30.2':
     resolution: {integrity: sha512-PyzHvjCalm2BRYjAU6nIB3TprYwMNOUY/7P/N8bSzp9W/yM2YrtGtAnnVtaCNSeOZ8DzKyFDvaqQs7LnWwwmBA==}
 
@@ -7456,6 +7459,9 @@ packages:
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
+  undici-types@6.21.0:
+    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+
   universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
     engines: {node: '>= 4.0.0'}
@@ -7615,8 +7621,8 @@ packages:
   vue-component-type-helpers@2.2.2:
     resolution: {integrity: sha512-6lLY+n2xz2kCYshl59mL6gy8OUUTmkscmDFMO8i7Lj+QKwgnIFUZmM1i/iTYObtrczZVdw7UakPqDTGwVSGaRg==}
 
-  vue-component-type-helpers@3.0.7:
-    resolution: {integrity: sha512-TvyUcFXmjZcXUvU+r1MOyn4/vv4iF+tPwg5Ig33l/FJ3myZkxeQpzzQMLMFWcQAjr6Xs7BRwVy/TwbmNZUA/4w==}
+  vue-component-type-helpers@3.0.8:
+    resolution: {integrity: sha512-WyR30Eq15Y/+odrUUMax6FmPbZwAp/HnC7qgR1r3lVFAcqwQ4wUoV79Mbh4SxDy3NiqDa+G4TOKD5xXSgBHo5A==}
 
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
@@ -8670,7 +8676,7 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.5.13(typescript@5.3.3)
-      vue-component-type-helpers: 3.0.7
+      vue-component-type-helpers: 3.0.8
 
   '@tato30/vue-pdf@1.11.4(vue@3.5.13(typescript@5.3.3))':
     dependencies:
@@ -8739,6 +8745,11 @@ snapshots:
   '@types/node@18.19.76':
     dependencies:
       undici-types: 5.26.5
+
+  '@types/node@20.19.17':
+    dependencies:
+      undici-types: 6.21.0
+    optional: true
 
   '@types/ramda@0.30.2':
     dependencies:
@@ -12683,6 +12694,9 @@ snapshots:
 
   undici-types@5.26.5: {}
 
+  undici-types@6.21.0:
+    optional: true
+
   universalify@0.1.2: {}
 
   universalify@0.2.0: {}
@@ -12766,6 +12780,24 @@ snapshots:
       - supports-color
       - terser
 
+  vite-node@1.6.1(@types/node@20.19.17):
+    dependencies:
+      cac: 6.7.14
+      debug: 4.4.0(supports-color@8.1.1)
+      pathe: 1.1.2
+      picocolors: 1.1.1
+      vite: 5.4.14(@types/node@20.19.17)
+    transitivePeerDependencies:
+      - '@types/node'
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
   vite-plugin-dts@3.9.1(@types/node@18.19.76)(rollup@4.34.8)(typescript@5.3.3)(vite@5.4.14(@types/node@18.19.76)):
     dependencies:
       '@microsoft/api-extractor': 7.43.0(@types/node@18.19.76)
@@ -12790,6 +12822,15 @@ snapshots:
       rollup: 4.34.8
     optionalDependencies:
       '@types/node': 18.19.76
+      fsevents: 2.3.3
+
+  vite@5.4.14(@types/node@20.19.17):
+    dependencies:
+      esbuild: 0.21.5
+      postcss: 8.5.3
+      rollup: 4.34.8
+    optionalDependencies:
+      '@types/node': 20.19.17
       fsevents: 2.3.3
 
   vitest@1.6.1(@types/node@18.19.76)(jsdom@23.2.0):
@@ -12827,6 +12868,41 @@ snapshots:
       - supports-color
       - terser
 
+  vitest@1.6.1(@types/node@20.19.17)(jsdom@23.2.0):
+    dependencies:
+      '@vitest/expect': 1.6.1
+      '@vitest/runner': 1.6.1
+      '@vitest/snapshot': 1.6.1
+      '@vitest/spy': 1.6.1
+      '@vitest/utils': 1.6.1
+      acorn-walk: 8.3.4
+      chai: 4.5.0
+      debug: 4.4.0(supports-color@8.1.1)
+      execa: 8.0.1
+      local-pkg: 0.5.1
+      magic-string: 0.30.17
+      pathe: 1.1.2
+      picocolors: 1.1.1
+      std-env: 3.8.0
+      strip-literal: 2.1.1
+      tinybench: 2.9.0
+      tinypool: 0.8.4
+      vite: 5.4.14(@types/node@20.19.17)
+      vite-node: 1.6.1(@types/node@20.19.17)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 20.19.17
+      jsdom: 23.2.0
+    transitivePeerDependencies:
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
   void-elements@3.1.0: {}
 
   vscode-uri@3.1.0: {}
@@ -12842,7 +12918,7 @@ snapshots:
 
   vue-component-type-helpers@2.2.2: {}
 
-  vue-component-type-helpers@3.0.7: {}
+  vue-component-type-helpers@3.0.8: {}
 
   vue-docgen-api@4.79.2(vue@3.5.13(typescript@5.3.3)):
     dependencies:
