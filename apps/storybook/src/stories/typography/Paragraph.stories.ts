@@ -36,26 +36,6 @@ export default meta
 
 type Story = StoryObj<ParagraphArgs>
 
-export const Default: Story = {
-  render: (args) => ({
-    setup() {
-      return { args }
-    },
-    components: { ParagraphComponent },
-    template: '<ParagraphComponent :text="args.text" />'
-  }),
-  parameters: {
-    docs: {
-      source: {
-        transform: (_code: string, storyContext: any) => {
-          const { text } = storyContext.args
-          return `<p>${text}</p>`
-        }
-      }
-    }
-  }
-}
-
 export const Paragraph: Story = {
   args: {
     text: 'Questo è un paragrafo',
@@ -110,8 +90,7 @@ export const ASequenceOfParagraphs: Story = {
   }
 }
 
-
-export const ParagraphDirectives: Story = {
+export const ParagraphDirectivesVBold: Story = {
   args: {
     text: 'Questo è un paragrafo con v-bold',
   },
@@ -122,4 +101,60 @@ export const ParagraphDirectives: Story = {
     components: { ParagraphComponent },
     template: '<ParagraphComponent :text="args.text" v-bold />'
   }),
+  parameters: {
+    docs: {
+      source: {
+        transform: (_code: string, storyContext: any) => {
+          const { text } = storyContext.args
+          return `<p v-bold>${text}</p>`
+        }
+      }
+    }
+  }
+}
+
+export const ParagraphDirectivesVSmall: Story = {
+  args: {
+    text: 'Questo è un paragrafo con v-small',
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: { ParagraphComponent },
+    template: '<ParagraphComponent :text="args.text" v-small />'
+  }),
+  parameters: {
+    docs: {
+      source: {
+        transform: (_code: string, storyContext: any) => {
+          const { text } = storyContext.args
+          return `<p v-small>${text}</p>`
+        }
+      }
+    }
+  }
+}
+
+export const ParagraphDirectivesVBoldAndVSmall: Story = {
+  args: {
+    text: 'Questo è un paragrafo con v-bold e v-small',
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: { ParagraphComponent },
+    template: '<ParagraphComponent :text="args.text" v-bold v-small />'
+  }),
+  parameters: {
+    docs: {
+      source: {
+        transform: (_code: string, storyContext: any) => {
+          const { text } = storyContext.args
+          return `<p v-bold v-small>${text}</p>`
+        }
+      }
+    }
+  }
 }
