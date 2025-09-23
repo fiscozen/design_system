@@ -2,7 +2,7 @@ import type { DirectiveBinding, ObjectDirective } from 'vue'
 
 /**
  * Custom directive that adds 'font-bold' class to p elements
- * Usage: <p v-bold="true">Paragraph</p>
+ * Usage: <p v-bold>Paragraph</p>
  */
 const vBold: ObjectDirective<HTMLElement, boolean> = {
   mounted(el: HTMLElement, binding: DirectiveBinding<boolean>) {
@@ -17,7 +17,7 @@ const vBold: ObjectDirective<HTMLElement, boolean> = {
 
 /**
  * Custom directive that adds 'font-small' class to p elements  
- * Usage: <p v-small="true">Paragraph</è>
+ * Usage: <p v-small>Paragraph</p>
  */
 const vSmall: ObjectDirective<HTMLElement, boolean> = {
   mounted(el: HTMLElement, binding: DirectiveBinding<boolean>) {
