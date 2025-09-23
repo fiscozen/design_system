@@ -1,0 +1,40 @@
+/* title/big */
+h1 {
+  color: var(--core-black, #2C282F);
+  font-family: var(--font-sans-inter);
+  font-size: var(--text-2xl);
+  font-style: normal;
+  font-weight: 600;
+  line-height: var(--leading-2xl);
+}
+
+/* title/normal */
+h2 {
+  color: var(--core-black, #2C282F);
+  font-family: var(--font-sans-inter);
+  font-size: var(--text-xl);
+  font-style: normal;
+  font-weight: 600;
+  line-height: var(--leading-xl);
+}
+
+/* title/small */
+h3 {
+  color: var(--core-black, #2C282F);
+  font-family: var(--font-sans-inter);
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: var(--leading-lg);
+}
+
+/* paragraph/normal */
+p {
+  color: var(--core-black, #2C282F);
+  font-family: var(--font-sans-inter);
+  font-size: var(--text-base);
+  font-style: normal;
+  font-weight: var(--font-normal);
+  line-height: var(--leading-lg);
+  margin-bottom: 8px;
+}
