@@ -46,26 +46,6 @@ export default meta
 
 type Story = StoryObj<TitleArgs>
 
-export const Default: Story = {
-  render: (args) => ({
-    setup() {
-      return { args }
-    },
-    components: { TitleComponent },
-    template: '<TitleComponent :tag="args.tag" :text="args.text" />'
-  }),
-  parameters: {
-    docs: {
-      source: {
-        transform: (_code: string, storyContext: any) => {
-          const { tag, text } = storyContext.args
-          return `<${tag}>${text}</${tag}>`
-        }
-      }
-    }
-  }
-}
-
 export const H1: Story = {
   args: {
     tag: 'h1',

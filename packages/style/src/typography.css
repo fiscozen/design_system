@@ -4,7 +4,7 @@ h1 {
   font-family: var(--font-sans-inter);
   font-size: var(--text-2xl);
   font-style: normal;
-  font-weight: 600;
+  font-weight: var(--font-semibold, 600);
   line-height: var(--leading-2xl);
 }
 
@@ -14,7 +14,7 @@ h2 {
   font-family: var(--font-sans-inter);
   font-size: var(--text-xl);
   font-style: normal;
-  font-weight: 600;
+  font-weight: var(--font-semibold, 600);
   line-height: var(--leading-xl);
 }
 
@@ -24,7 +24,7 @@ h3 {
   font-family: var(--font-sans-inter);
   font-size: 17px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: var(--font-semibold, 600);
   line-height: var(--leading-lg);
 }
 
@@ -37,4 +37,11 @@ p {
   font-weight: var(--font-normal);
   line-height: var(--leading-lg);
   margin-bottom: 8px;
+}
+
+/* paragraph/small */
+p.text-sm {
+  font-size: var(--text-sm);
+  line-height: var(--leading-sm);
+  letter-spacing: var(--letter-spacing-sm, 0.07px);
 }
