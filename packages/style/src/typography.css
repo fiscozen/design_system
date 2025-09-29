@@ -36,7 +36,11 @@ p {
   font-style: normal;
   font-weight: var(--font-normal);
   line-height: var(--leading-lg);
-  margin-bottom: 8px;
+}
+
+/* Applica margin-bottom solo ai paragrafi seguiti da altri paragrafi */
+p + p {
+  margin-top: 8px;
 }
 
 /* paragraph/small */
