@@ -38,9 +38,10 @@ p {
   line-height: var(--leading-lg);
 }
 
-/* Applica margin-bottom solo ai paragrafi seguiti da altri paragrafi */
+/* Applica margin-top solo ai paragrafi seguiti da altri paragrafi */
 p + p {
-  margin-top: 8px;
+  --paragraph-gap: 8px;
+  margin-top: var(--paragraph-gap);
 }
 
 /* paragraph/small */
