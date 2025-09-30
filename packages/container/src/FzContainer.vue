@@ -36,27 +36,27 @@ const containerClass = computed(() => {
  * Elimina il gap tra gli elementi p (0px - --gap)
  * Aggiunge il margine desiderato (8px)
  */
-.fz-container.gap-main-content-sm :deep(p + p) {
+.fz-container.gap-main-content-sm :deep(> p + p) {
   margin-top: calc((0px - var(--main-content-sm)) + var(--paragraph-gap));
 }
 
-.fz-container.gap-main-content-base :deep(p + p) {
+.fz-container.gap-main-content-base :deep(> p + p) {
   margin-top: calc((0px - var(--main-content-base)) + var(--paragraph-gap));
 }
 
-.fz-container.gap-main-content-lg :deep(p + p) {
+.fz-container.gap-main-content-lg :deep(> p + p) {
   margin-top: calc((0px - var(--main-content-lg)) + var(--paragraph-gap));
 }
 
-.fz-container.gap-section-content-sm :deep(p + p) {
+.fz-container.gap-section-content-sm :deep(> p + p) {
   margin-top: calc((0px - var(--section-content-sm)) + var(--paragraph-gap));
 }
 
-.fz-container.gap-section-content-base :deep(p + p) {
+.fz-container.gap-section-content-base :deep(> p + p) {
   margin-top: calc((0px - var(--section-content-base)) + var(--paragraph-gap));
 }
 
-.fz-container.gap-section-content-lg :deep(p + p) {
+.fz-container.gap-section-content-lg :deep(> p + p) {
   margin-top: calc((0px - var(--section-content-lg)) + var(--paragraph-gap));
 }
 </style>
