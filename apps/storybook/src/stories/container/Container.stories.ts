@@ -71,3 +71,49 @@ export const Demo: Story = {
      `
     })
 }
+
+export const Paragraphs: Story = {
+  args: {
+    mainGap: 'base',
+    sectionGap: 'base'
+  },
+  render: (args: any) => ({
+    components: { FzContainer, FzInput },
+    setup() {
+      return { args }
+    },
+    template: `
+        <FzContainer main :gap="args.mainGap">
+          
+          <FzContainer :gap="args.sectionGap">
+            <h2 class="text-xl font-semibold mb-2">Prima Sezione</h2>
+            <p>Questo è un paragrafo</p>
+            <p>Questo è un paragrafo</p>
+          </FzContainer>
+          
+          <FzContainer :gap="args.sectionGap">
+            <h2 class="text-xl font-semibold mb-2">Seconda Sezione</h2>
+            <p>Questo è un paragrafo</p>
+            <FzInput label="Input A" placeholder="Campo A" />
+            <FzInput label="Input B" placeholder="Campo B" />
+            <FzInput label="Input C" placeholder="Campo C" />
+            <p>Questo è un paragrafo</p>
+            <FzInput label="Input D" placeholder="Campo D" />
+            <p>Questo è un paragrafo</p>
+            <p>Questo è un paragrafo</p>
+            <p>Questo è un paragrafo</p>
+            <FzInput label="Input E" placeholder="Campo E" />
+            <FzInput label="Input F" placeholder="Campo F" />
+            <p>Questo è un paragrafo</p>
+            <p>Questo è un paragrafo</p>
+            <p>Questo è un paragrafo</p>
+            <FzInput label="Input G" placeholder="Campo G" />
+            <FzInput label="Input H" placeholder="Campo H" />
+            <p>Questo è un paragrafo</p>
+            <p>Questo è un paragrafo</p>
+          </FzContainer>
+          
+        </FzContainer>
+     `
+    })
+}
