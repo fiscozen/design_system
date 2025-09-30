@@ -23,9 +23,40 @@ const containerClass = computed(() => {
   </component>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .fz-container {
   display: flex;
   flex-direction: column;
+}
+
+/**
+ * Applica margin-top solo ai paragrafi seguiti da altri paragrafi negli slot
+ * 
+ * :deep() permette di applicare gli stili solo a elementi negli slot mantenendo l'incapsulamento
+ * Elimina il gap tra gli elementi p (0px - --gap)
+ * Aggiunge il margine desiderato (8px)
+ */
+.fz-container.gap-main-content-sm :deep(p + p) {
+  margin-top: calc((0px - var(--main-content-sm)) + 8px);
+}
+
+.fz-container.gap-main-content-base :deep(p + p) {
+  margin-top: calc((0px - var(--main-content-base)) + 8px);
+}
+
+.fz-container.gap-main-content-lg :deep(p + p) {
+  margin-top: calc((0px - var(--main-content-lg)) + 8px);
+}
+
+.fz-container.gap-section-content-sm :deep(p + p) {
+  margin-top: calc((0px - var(--section-content-sm)) + 8px);
+}
+
+.fz-container.gap-section-content-base :deep(p + p) {
+  margin-top: calc((0px - var(--section-content-base)) + 8px);
+}
+
+.fz-container.gap-section-content-lg :deep(p + p) {
+  margin-top: calc((0px - var(--section-content-lg)) + 8px);
 }
 </style>
