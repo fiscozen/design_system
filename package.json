@@ -5,11 +5,11 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "nx run-many --target=build",
-    "storybook": "nx run @fiscozen/storybook:storybook",
+    "test": "pnpm run test:storybook",
     "test:storybook": "nx run @fiscozen/storybook:test:storybook",
     "test:storybook:dev": "nx run @fiscozen/storybook:test:storybook:dev",
+    "build": "nx run-many --target=build",
+    "storybook": "nx run @fiscozen/storybook:storybook",
     "generate:component": "plop component"
   },
   "engines": {
