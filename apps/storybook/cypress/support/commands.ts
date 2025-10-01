@@ -1,39 +1,66 @@
 /// <reference types="cypress" />
+
 // ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
+// Custom Commands for Storybook + Component Testing
+// Optimized for FzTooltip and Vue components
 // ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Navigate to a specific Storybook story
+       * @param storyId - Story ID in format: component-story--variant
+       * @example cy.visitStory('overlay-fztooltip--neutral-tooltip')
+       */
+      visitStory(storyId: string): Chainable<void>
+      
+      /**
+       * Wait for Storybook to load completely
+       */
+      waitForStorybook(): Chainable<void>
+      
+      /**
+       * Get story canvas content
+       */
+      getStoryCanvas(): Chainable<JQuery<HTMLElement>>
+    }
+  }
+}
+
+/**
+ * Navigate to a Storybook story by ID
+ * Handles iframe navigation and story loading
+ */
+Cypress.Commands.add('visitStory', (storyId: string) => {
+  // Navigate to story in iframe mode (direct story view)
+  cy.visit(`/iframe.html?id=${storyId}&viewMode=story`)
+  
+  // Wait for story to load
+  cy.waitForStorybook()
+})
+
+/**
+ * Wait for Storybook iframe to be fully loaded
+ * Ensures story content is ready for interaction
+ */
+Cypress.Commands.add('waitForStorybook', () => {
+  // Wait for basic DOM structure
+  cy.get('body').should('exist')
+  
+  // Wait for any potential loading states to complete
+  cy.get('body').should('not.have.class', 'loading')
+  
+  // Additional wait for story rendering
+  cy.wait(500)
+})
+
+/**
+ * Get story canvas content (for complex story structures)
+ * Useful when stories have multiple canvases
+ */
+Cypress.Commands.add('getStoryCanvas', () => {
+  return cy.get('#storybook-root, #root, body').first()
+})
 
 export {}
