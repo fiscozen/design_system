@@ -26,3 +26,12 @@ npx nx run-many -t build // executes the "build" task on all projects
 npx run affected:test // execute the "test" task only on packages that are affected in this branch vs main, and on all dependent packages
 ```
 Please refer to Nx documentation for full usage explanation.
+
+### Testing
+We use [Cypress](https://cypress.io) integrated with Storybook for component testing. Tests run against existing Storybook stories, ensuring consistency between documentation and testing.
+
+**Developer workflow:**
+```bash
+pnpm test:storybook:dev  # Interactive test runner for development/debugging
+pnpm test:storybook      # Headless execution for verification/CI
+```
