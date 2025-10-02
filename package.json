@@ -11,7 +11,7 @@
     "generate:component": "plop component"
   },
   "engines": {
-    "pnpm": "^10.0.0",
+    "pnpm": "^10.17.1",
     "node": "^22.12.0"
   },
   "keywords": [],
