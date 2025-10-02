@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref } from 'vue'
 import { FzCheckbox } from '@fiscozen/checkbox'
 import { FzIcon } from '@fiscozen/icons'
@@ -68,9 +68,10 @@ export const MediumWithLongLabel: CheckboxStory = {
     label:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec purus nec nisl fermentum aliquam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec purus nec nisl fermentum aliquam.'
   },
-  parameters: {
+  globals: {
     viewport: {
-      defaultViewport: 'xs'
+      value: "xs",
+      isRotated: false
     }
   }
 }

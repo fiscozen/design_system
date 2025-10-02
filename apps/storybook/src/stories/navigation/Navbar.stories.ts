@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 import { FzNavbar, FzNavbarProps } from '@fiscozen/navbar'
 import { FzIcon } from '@fiscozen/icons'

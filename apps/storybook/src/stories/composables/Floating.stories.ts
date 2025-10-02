@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { reactive, ref } from 'vue'
 
 import { FzFloating } from '@fiscozen/composables'

@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadioGroup, FzRadio, FzRadioCard } from '@fiscozen/radio'
 import { FzIcon } from '@fiscozen/icons'
 import checker from '../../assets/checker.png'

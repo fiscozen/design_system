@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzDatepicker } from '@fiscozen/datepicker'
 import { ref, watch } from 'vue'
 

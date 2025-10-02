@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadioCard } from '@fiscozen/radio'
 import checkrimg from '../../assets/checker.png'
 import {ref} from 'vue';

@@ -1,22 +1,27 @@
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
 import type { StorybookConfig } from '@storybook/vue3-vite'
+
+const require = createRequire(import.meta.url);
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   staticDirs: ['../public'],
+
   addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-    '@storybook/addon-viewport',
-    'storybook-addon-vue-mdx',
-    '@chromatic-com/storybook'
+    getAbsolutePath("@storybook/addon-links"),
+    getAbsolutePath("storybook-addon-vue-mdx"),
+    getAbsolutePath("@chromatic-com/storybook"),
+    getAbsolutePath("@storybook/addon-docs")
   ],
+
   framework: {
-    name: '@storybook/vue3-vite',
+    name: getAbsolutePath("@storybook/vue3-vite"),
     options: {}
-  },
-  docs: {
-    autodocs: 'tag'
   }
 }
 export default config
+
+function getAbsolutePath(value: string): any {
+  return dirname(require.resolve(join(value, "package.json")));
+}
