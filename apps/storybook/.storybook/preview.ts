@@ -1,4 +1,4 @@
-import type { Preview, VueRenderer } from '@storybook/vue3'
+import type { Preview, VueRenderer } from '@storybook/vue3-vite'
 import isChromatic from "chromatic/isChromatic";
 import '../src/assets/main.css';
 
@@ -7,7 +7,7 @@ import '@fiscozen/style/output/global.css';
 import { withThemeByClassName } from '@storybook/addon-themes';
 import figmaTokens from '@fiscozen/style/tokens.json'
 import { setupFzStyle } from '@fiscozen/style/src/index'
-import { setup } from '@storybook/vue3'
+import { setup } from '@storybook/vue3-vite'
 
 // Setup FiscoZen style globally in Storybook
 setup(setupFzStyle)
@@ -30,17 +30,24 @@ const preview: Preview = {
       }
     },
     viewport: {
-      viewports,
-      defaultViewport: 'xl'
+      options: viewports
     },
     layout: 'fullscreen'
   },
+
   decorators: [
     withThemeByClassName<VueRenderer>({
       themes: {global: 'global-theme'},
       defaultTheme: 'global'
     })
-  ]
+  ],
+
+  initialGlobals: {
+    viewport: {
+      value: 'xl',
+      isRotated: false
+    }
+  }
 }
 
 const fontLoader = async () => ({

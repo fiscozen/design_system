@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzCurrencyInput } from '@fiscozen/input'
 import { ref } from 'vue'
 import { useCurrency } from '@fiscozen/composables'

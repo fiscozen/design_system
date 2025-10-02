@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzLink } from '@fiscozen/link'
 import { vueRouter } from 'storybook-vue3-router'
 

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzTypeahead, FzTypeaheadProps } from '@fiscozen/typeahead'
 import { FzButton } from '@fiscozen/button'
 import { ref, onMounted } from 'vue'

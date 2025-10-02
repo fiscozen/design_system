@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzToastQueue, FzToastQueueProps, enqueueToast } from '@fiscozen/toast'
 import { FzButton } from '@fiscozen/button'
 import { ref } from 'vue'

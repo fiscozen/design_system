@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadio } from '@fiscozen/radio'
 import { FzIcon } from '@fiscozen/icons'
 
@@ -124,9 +124,10 @@ export const VeryLongLabel: RadioStory = {
     label:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
   },
-  parameters: {
+  globals: {
     viewport: {
-      defaultViewport: 'xs'
+      value: "xs",
+      isRotated: false
     }
   }
 }

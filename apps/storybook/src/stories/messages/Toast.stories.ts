@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzToast } from '@fiscozen/toast'
 
 const meta: Meta<typeof FzToast> = {

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 import { FzButton } from '@fiscozen/button'
 import { FzIcon } from '@fiscozen/icons'
@@ -145,9 +145,10 @@ export const ButtonWithLongTextOverflowing: Story = {
     label: 'This is a very long text that should overflow the button',
     class: 'w-full'
   },
-  parameters: {
+  globals: {
     viewport: {
-      defaultViewport: 'xs'
+      value: "xs",
+      isRotated: false
     }
   }
 }

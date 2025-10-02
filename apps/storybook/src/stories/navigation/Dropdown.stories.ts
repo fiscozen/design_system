@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzDropdown } from '@fiscozen/dropdown'
 import { vueRouter } from 'storybook-vue3-router'
 

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzContainer } from '@fiscozen/container'
 import { FzInput } from '@fiscozen/input'
 

@@ -1,4 +1,4 @@
-import type { Meta } from '@storybook/vue3'
+import type { Meta } from '@storybook/vue3-vite'
 import { FzLayout, FzLayoutProps } from '@fiscozen/layout'
 import { FzBadge } from '@fiscozen/badge'
 import { useBreakpoints } from '@fiscozen/composables'
