@@ -10,7 +10,8 @@
     "test:storybook:dev": "nx run @fiscozen/storybook:test:storybook:dev",
     "build": "nx run-many --target=build",
     "storybook": "nx run @fiscozen/storybook:storybook",
-    "generate:component": "plop component"
+    "generate:component": "plop component",
+    "postinstall": "cd apps/storybook && pnpm exec cypress install || true"
   },
   "engines": {
     "pnpm": "^10.17.1",
