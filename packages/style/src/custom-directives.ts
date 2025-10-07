@@ -1,21 +1,15 @@
 import type { DirectiveBinding, ObjectDirective } from 'vue';
 
 import tokens from "../tokens.json";
+import safeColorsConfig from "../safe-colors.json";
 
-export const COLOR_NAMES = [
-  'blue',
-  'purple',
-  'orange',
-  'pink',
-  'yellow',
-  'grey',
-  'core',
-] as const;
+// Importa la lista centralizzata dei colori
+export const SAFE_COLOR_NAMES = safeColorsConfig.safeColorNames as readonly string[];
 
 const colors: Record<string, Record<string, string>> = {};
 
-COLOR_NAMES.forEach((color) => {
-  const colorObj = tokens.global[color];
+SAFE_COLOR_NAMES.forEach((color) => {
+  const colorObj = (tokens.global as any)[color];
   
   if (!colorObj) return;
 
@@ -137,10 +131,10 @@ function validateParagraphElement(el: HTMLElement, directive: {name: string} & D
  * @returns The default color and value for the v-color directive
  */
 function getDefaultColorAndValue(colorName?: string, value?: boolean | string): { colorName?: string, value?: string | boolean, valid: boolean } {
-  if (!colorName || !COLOR_NAMES.includes(colorName as typeof COLOR_NAMES[number])) {
+  if (!colorName || !SAFE_COLOR_NAMES.includes(colorName as typeof SAFE_COLOR_NAMES[number])) {
     console.error(
       `[v-color] Invalid or missing color name: ${colorName || 'undefined'}. ` +
-      `Available colors are: ${COLOR_NAMES.join(', ')}`
+      `Available colors are: ${SAFE_COLOR_NAMES.join(', ')}`
     );
     return { valid: false };
   }

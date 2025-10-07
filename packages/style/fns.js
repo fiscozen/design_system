@@ -1,4 +1,4 @@
-const { COLOR_NAMES: SAFE_COLOR_NAME } = require('./src/custom-directives');
+const { safeColorNames: SAFE_COLOR_NAMES } = require('./safe-colors.json');
 
 function deepen(obj) {
     const result = {};
@@ -102,17 +102,17 @@ function generateColorSafelist(colors) {
   }
   
   const colorNames = getColorNames(colors).filter(name => 
-    SAFE_COLOR_NAME.some(safe => name.startsWith(safe))
+    SAFE_COLOR_NAMES.some(safe => name.startsWith(safe))
   );
   
   // Genera pattern per text, background e border
   colorNames.forEach(colorName => {
     patterns.push(`text-${colorName}`);
+    patterns.push(`bg-${colorName}`);
+    patterns.push(`border-${colorName}`);
     patterns.push(`hover:text-${colorName}`);
-    //patterns.push(`bg-${colorName}`);
-    //patterns.push(`hover:bg-${colorName}`);
-    //patterns.push(`border-${colorName}`);
-    //patterns.push(`hover:border-${colorName}`);
+    patterns.push(`hover:bg-${colorName}`);
+    patterns.push(`hover:border-${colorName}`);
   });
   
   return patterns;

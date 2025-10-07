@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Lista dei colori da includere nella safelist di Tailwind. Per aggiungere un nuovo colore, aggiungi il suo nome qui e rigenera il build con 'pnpm run build'.",
+  "safeColorNames": [
+    "blue",
+    "purple",
+    "orange",
+    "pink",
+    "yellow",
+    "grey",
+    "core",
+    "semantic",
+    "background"
+  ]
+}
