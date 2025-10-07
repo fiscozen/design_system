@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@awesome.me/kit-8137893ad3": "^1.0.386",
+    "@fiscozen/action": "workspace:^",
     "@fiscozen/actionlist": "workspace:^",
     "@fiscozen/alert": "workspace:^",
     "@fiscozen/avatar": "workspace:^",
