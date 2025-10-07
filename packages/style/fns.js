@@ -1,3 +1,5 @@
+const { COLOR_NAMES: SAFE_COLOR_NAME } = require('./src/custom-directives');
+
 function deepen(obj) {
     const result = {};
   
@@ -77,4 +79,49 @@ function appendAdditionalCSSFiles(cssOutputPath, srcDirectory, additionalCSSFile
   return generatedCSS;
 }
 
-module.exports = { createArray, filterTokensByType, buildFontSizesObj, appendAdditionalCSSFiles };
+/**
+ * Genera automaticamente la safelist di Tailwind per tutti i colori
+ * @param {Object} colors - Oggetto dei colori filtrati da filterTokensByType
+ * @returns {Array<string>} Array di classi da includere nella safelist
+ */
+function generateColorSafelist(colors) {
+  const patterns = [];
+  
+  // Funzione ricorsiva per ottenere tutti i nomi dei colori
+  function getColorNames(obj, prefix = '') {
+    const names = [];
+    for (const key in obj) {
+      const fullKey = prefix ? `${prefix}-${key}` : key;
+      if (typeof obj[key] === 'object' && obj[key] !== null && !obj[key].hasOwnProperty('value')) {
+        names.push(...getColorNames(obj[key], fullKey));
+      } else {
+        names.push(fullKey);
+      }
+    }
+    return names;
+  }
+  
+  const colorNames = getColorNames(colors).filter(name => 
+    SAFE_COLOR_NAME.some(safe => name.startsWith(safe))
+  );
+  
+  // Genera pattern per text, background e border
+  colorNames.forEach(colorName => {
+    patterns.push(`text-${colorName}`);
+    patterns.push(`hover:text-${colorName}`);
+    //patterns.push(`bg-${colorName}`);
+    //patterns.push(`hover:bg-${colorName}`);
+    //patterns.push(`border-${colorName}`);
+    //patterns.push(`hover:border-${colorName}`);
+  });
+  
+  return patterns;
+}
+
+module.exports = { 
+  createArray, 
+  filterTokensByType, 
+  buildFontSizesObj, 
+  appendAdditionalCSSFiles,
+  generateColorSafelist 
+};

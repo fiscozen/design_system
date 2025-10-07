@@ -2293,6 +2293,9 @@ importers:
       style-dictionary-utils:
         specifier: ^2.0.7
         version: 2.4.1(style-dictionary@3.9.2)
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.17
       token-transformer:
         specifier: ^0.0.33
         version: 0.0.33
@@ -7624,8 +7627,8 @@ packages:
   vue-component-type-helpers@2.2.2:
     resolution: {integrity: sha512-6lLY+n2xz2kCYshl59mL6gy8OUUTmkscmDFMO8i7Lj+QKwgnIFUZmM1i/iTYObtrczZVdw7UakPqDTGwVSGaRg==}
 
-  vue-component-type-helpers@3.0.8:
-    resolution: {integrity: sha512-WyR30Eq15Y/+odrUUMax6FmPbZwAp/HnC7qgR1r3lVFAcqwQ4wUoV79Mbh4SxDy3NiqDa+G4TOKD5xXSgBHo5A==}
+  vue-component-type-helpers@3.1.1:
+    resolution: {integrity: sha512-B0kHv7qX6E7+kdc5nsaqjdGZ1KwNKSUQDWGy7XkTYT7wFsOpkEyaJ1Vq79TjwrrtuLRgizrTV7PPuC4rRQo+vw==}
 
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
@@ -8679,7 +8682,7 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.5.13(typescript@5.3.3)
-      vue-component-type-helpers: 3.0.8
+      vue-component-type-helpers: 3.1.1
 
   '@tato30/vue-pdf@1.11.4(vue@3.5.13(typescript@5.3.3))':
     dependencies:
@@ -12921,7 +12924,7 @@ snapshots:
 
   vue-component-type-helpers@2.2.2: {}
 
-  vue-component-type-helpers@3.0.8: {}
+  vue-component-type-helpers@3.1.1: {}
 
   vue-docgen-api@4.79.2(vue@3.5.13(typescript@5.3.3)):
     dependencies:

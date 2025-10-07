@@ -159,7 +159,7 @@ export const ParagraphDirectivesVBoldAndVSmall: Story = {
   }
 }
 
-export const ParagraphDirectivesVColor: Story = {
+export const ParagraphDirectivesVColorBlue: Story = {
   args: {
     text: 'Questo è un paragrafo con v-color:blue',
   },
@@ -168,14 +168,37 @@ export const ParagraphDirectivesVColor: Story = {
       return { args }
     },
     components: { ParagraphComponent },
-    template: '<ParagraphComponent :text="args.text" v-color:blue="900" />'
+    template: '<ParagraphComponent :text="args.text" v-color:blue />'
   }),
   parameters: {
     docs: {
       source: {
         transform: (_code: string, storyContext: any) => {
           const { text } = storyContext.args
-          return `<p v-color:blue="900">${text}</p>`
+          return `<p v-color:blue>${text}</p>`
+        }
+      }
+    }
+  }
+}
+
+export const ParagraphDirectivesVColorPink400: Story = {
+  args: {
+    text: 'Questo è un paragrafo con v-color:pink="400"',
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: { ParagraphComponent },
+    template: '<ParagraphComponent :text="args.text" v-color:pink="400" />'
+  }),
+  parameters: {
+    docs: {
+      source: {
+        transform: (_code: string, storyContext: any) => {
+          const { text } = storyContext.args
+          return `<p v-color:pink="400">${text}</p>`
         }
       }
     }

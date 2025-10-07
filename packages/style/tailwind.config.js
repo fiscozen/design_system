@@ -1,5 +1,5 @@
 const globals = require('./output/global.json');
-const { filterTokensByType, buildFontSizesObj } = require("./fns");
+const { filterTokensByType, buildFontSizesObj, generateColorSafelist } = require("./fns");
 const plugin = require("tailwindcss/plugin");
 
 const colors = filterTokensByType('color', globals);
@@ -12,14 +12,19 @@ borderRadius.DEFAULT = borderRadius.base
 const screens = filterTokensByType('sizing', globals, true)['breakpoint'];
 
 module.exports = {
-    // Safelist per includere sempre le utility classes semantiche
+    // Safelist per includere sempre le utility classes
     safelist: [
+      // Spacing semantico
       'gap-main-content-sm',
       'gap-main-content-base', 
       'gap-main-content-lg',
       'gap-section-content-sm',
       'gap-section-content-base',
-      'gap-section-content-lg'
+      'gap-section-content-lg',
+      // Genera automaticamente tutte le classi utility per i colori
+      // (text-*, bg-*, border-*, hover:*) per ogni colore in tokens.json
+      // Vedi fns.js -> generateColorSafelist() per i dettagli
+      ...generateColorSafelist(colors)
     ],
     theme: {
       fontSize,
