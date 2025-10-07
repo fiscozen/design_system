@@ -183,9 +183,15 @@ function getDefaultColorAndValue(
     return { valid: false };
   }
 
-  // Verifica che il colore esista nell'oggetto colors
-  if (!colors[colorName]) {
+  // Verifica che il colore esista nell'oggetto colors e non sia vuoto
+  if (!colors[colorName] || typeof colors[colorName] !== 'object') {
     console.error(`[v-color] Color '${colorName}' not found in colors object`);
+    return { valid: false };
+  }
+
+  const availableWeights = Object.keys(colors[colorName]);
+  if (availableWeights.length === 0) {
+    console.error(`[v-color] Color '${colorName}' has no available weights`);
     return { valid: false };
   }
 
@@ -213,12 +219,14 @@ function getDefaultColorAndValue(
     return { valid: false };
   }
 
-  // Validate that colors[colorName][defaultValue] is a string
+  // Validate that colors[colorName][defaultValue] exists and is a string
   const weightKey = defaultValue.toString();
-  if (typeof colors[colorName][weightKey] !== "string") {
+  const colorValue = colors[colorName]?.[weightKey];
+  
+  if (!colorValue || typeof colorValue !== "string") {
     console.error(
       `[v-color:${colorName}] Invalid color value: ${defaultValue}. ` +
-      `Available values for '${colorName}' are: ${Object.keys(colors[colorName]).join(', ')}`
+      `Available values for '${colorName}' are: ${availableWeights.join(', ')}`
     );
 
     return { valid: false };
