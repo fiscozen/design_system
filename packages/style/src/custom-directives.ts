@@ -51,10 +51,13 @@ if (semanticColors) {
 
 /**
  * Custom directive that adds 'color' class to p, h1, h2, h3 elements
- * Usage: <p v-color:blue>Paragraph</p>
+ * Usage: 
+ * - <p v-color:blue>Paragraph</p> (uses default weight 500)
+ * - <p v-color:blue="300">Paragraph</p> (uses weight 300)
+ * - <p v-color:blue="false">Paragraph</p> (removes color)
  */
-const vColor: ObjectDirective<HTMLElement, boolean | string> = {
-  mounted(el: HTMLElement, binding: DirectiveBinding<boolean | string>) {
+const vColor: ObjectDirective<HTMLElement, boolean | string | number> = {
+  mounted(el: HTMLElement, binding: DirectiveBinding<boolean | string | number>) {
     if (validateElement(el, {
       name: 'v-color',
       ...binding,
@@ -62,7 +65,7 @@ const vColor: ObjectDirective<HTMLElement, boolean | string> = {
       updateColorClass(el, binding.arg, binding.value);
     }
   },
-  updated(el: HTMLElement, binding: DirectiveBinding<boolean | string>) {
+  updated(el: HTMLElement, binding: DirectiveBinding<boolean | string | number>) {
     updateColorClass(el, binding.arg, binding.value);
   }
 }
@@ -106,14 +109,14 @@ const vSmall: ObjectDirective<HTMLElement, boolean | string> = {
 /**
  * Validates that the directive is used on the proper element
  */
-function validateElement(el: HTMLElement, directive: {name: string} & DirectiveBinding<boolean | string>): boolean {
+function validateElement(el: HTMLElement, directive: {name: string} & DirectiveBinding<any>): boolean {
   return validateParagraphElement(el, directive) || validateHeadingElement(el, directive);
 }
 
 /**
  * Validates that the directive is used only on heading elements
  */
-function validateHeadingElement(el: HTMLElement, directive: {name: string} & DirectiveBinding<boolean | string>): boolean {
+function validateHeadingElement(el: HTMLElement, directive: {name: string} & DirectiveBinding<any>): boolean {
   const validTags: string[] = ['H1', 'H2', 'H3'];
   const validDirectives = ['v-color'];
   
@@ -131,7 +134,7 @@ function validateHeadingElement(el: HTMLElement, directive: {name: string} & Dir
 /**
  * Validates that the directive is used only on p elements
  */
-function validateParagraphElement(el: HTMLElement, directive: {name: string} & DirectiveBinding<boolean | string>): boolean {
+function validateParagraphElement(el: HTMLElement, directive: {name: string} & DirectiveBinding<any>): boolean {
   const validTags = ['P'];
   const validDirectives = ['v-bold', 'v-small', 'v-color'];
   
@@ -150,10 +153,18 @@ function validateParagraphElement(el: HTMLElement, directive: {name: string} & D
  * Gets the default color and value for the v-color directive
  * 
  * @param colorName - The color name to get the default color and value for (e.g., 'blue', 'semantic-error')
- * @param value - The value to get the default color and value for
- * @returns The default color and value for the v-color directive
+ * @param value - The value to get the default color and value for (weight as string/number, true for default, false to remove)
+ * @returns The default color and value for the v-color directive. If value is false, returns valid: true but value: false to signal removal
  */
-function getDefaultColorAndValue(colorName?: string, value?: boolean | string): { colorName?: string, value?: string | boolean, valid: boolean } {
+function getDefaultColorAndValue(
+  colorName?: string, 
+  value?: boolean | string | number
+): { colorName?: string, value?: string | number | false, valid: boolean } {
+  // Se value === false, restituisci un risultato valido che segnala la rimozione
+  if (value === false) {
+    return { colorName, value: false, valid: true };
+  }
+
   if (!colorName) {
     console.error(`[v-color] Missing color name`);
     return { valid: false };
@@ -178,8 +189,9 @@ function getDefaultColorAndValue(colorName?: string, value?: boolean | string): 
     return { valid: false };
   }
 
-  let defaultValue: string | boolean;
+  let defaultValue: string | number;
 
+  // Se value è undefined, true, o null, usa il peso di default
   if (typeof value === 'undefined' || value === true || value === null) {
     if (colorName === 'core') {
       defaultValue = 'black';
@@ -189,12 +201,21 @@ function getDefaultColorAndValue(colorName?: string, value?: boolean | string): 
     } else {
       defaultValue = '500';
     }
-  } else {
+  } else if (typeof value === 'number') {
+    // Converti il numero in stringa per la validazione
+    defaultValue = value.toString();
+  } else if (typeof value === 'string') {
+    // value è già una stringa
     defaultValue = value;
+  } else {
+    // Tipo non valido
+    console.error(`[v-color:${colorName}] Invalid value type: ${typeof value}`);
+    return { valid: false };
   }
 
   // Validate that colors[colorName][defaultValue] is a string
-  if (typeof colors[colorName][defaultValue as string] !== "string") {
+  const weightKey = defaultValue.toString();
+  if (typeof colors[colorName][weightKey] !== "string") {
     console.error(
       `[v-color:${colorName}] Invalid color value: ${defaultValue}. ` +
       `Available values for '${colorName}' are: ${Object.keys(colors[colorName]).join(', ')}`
@@ -211,28 +232,34 @@ function getDefaultColorAndValue(colorName?: string, value?: boolean | string): 
  * 
  * @param el - The element to update the color class on
  * @param colorName - The color name to update the color class on
- * @param value - The value to update the color class on (false to remove, string/true to add)
+ * @param value - The value to update the color class on (false to remove, string/number/true to add)
  */
-function updateColorClass(el: HTMLElement, colorName?: string, value?: boolean | string): void {
+function updateColorClass(el: HTMLElement, colorName?: string, value?: boolean | string | number): void {
   const { colorName: defaultColorName, value: defaultValue, valid } = getDefaultColorAndValue(colorName, value);
 
-  if (valid) {
-    // Rimuovi tutte le classi di colore esistenti (text-*)
-    Array.from(el.classList).forEach((className) => {
-      if (className.startsWith('text-') && 
-          (className.match(/^text-[a-z]+-\d+$/) || 
-          className.match(/^text-semantic-[a-z]+-\d+$/) ||
-          className.match(/^text-[a-z]+$/) ||
-          className.match(/^text-semantic-[a-z]+$/))) {
-        el.classList.remove(className);
-      }
-    });
-
-    // Aggiungi la nuova classe di colore
-    if (defaultValue !== false) {
-      el.classList.add(`text-${defaultColorName}-${defaultValue}`);
-    }
+  if (!valid) {
+    return;
   }
+
+  // Rimuovi tutte le classi di colore esistenti (text-*)
+  Array.from(el.classList).forEach((className) => {
+    if (className.startsWith('text-') && 
+        (className.match(/^text-[a-z]+-\d+$/) || 
+        className.match(/^text-semantic-[a-z]+-\d+$/) ||
+        className.match(/^text-[a-z]+$/) ||
+        className.match(/^text-semantic-[a-z]+$/))) {
+      el.classList.remove(className);
+    }
+  });
+
+  // Se defaultValue === false, non aggiungere nessuna classe (solo rimozione)
+  if (defaultValue === false) {
+    return;
+  }
+
+  // Aggiungi la nuova classe di colore con il peso (sempre con peso, anche per i default)
+  // text-blue-500, text-semantic-error-200, etc.
+  el.classList.add(`text-${defaultColorName}-${defaultValue}`);
 }
 
 /**
