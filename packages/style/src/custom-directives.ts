@@ -171,8 +171,24 @@ function getDefaultColorAndValue(
   }
 
   // Verifica se il colore esiste (può essere sia in SAFE_COLOR_NAMES che semantic-*)
-  const isSemanticColor = colorName.startsWith('semantic-');
   const isSafeColor = SAFE_COLOR_NAMES.includes(colorName as typeof SAFE_COLOR_NAMES[number]);
+  
+  // Per i colori semantici, verifica che il tipo semantico sia valido
+  let isSemanticColor = false;
+  if (colorName.startsWith('semantic-')) {
+    // Estrai il tipo semantico (es: 'error' da 'semantic-error')
+    const semanticType = colorName.replace('semantic-', '');
+    isSemanticColor = SEMANTIC_COLOR_NAMES.includes(semanticType as typeof SEMANTIC_COLOR_NAMES[number]);
+    
+    if (!isSemanticColor) {
+      const semanticColorsList = SEMANTIC_COLOR_NAMES.map(name => `semantic-${name}`).join(', ');
+      console.error(
+        `[v-color] Invalid semantic color: ${colorName}. ` +
+        `Available semantic colors are: ${semanticColorsList}`
+      );
+      return { valid: false };
+    }
+  }
   
   if (!isSafeColor && !isSemanticColor) {
     const semanticColorsList = SEMANTIC_COLOR_NAMES.map(name => `semantic-${name}`).join(', ');
