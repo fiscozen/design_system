@@ -117,3 +117,27 @@ export const H3: Story = {
     }
   }
 }
+
+export const H1vColor: Story = {
+  args: {
+    tag: 'h1',
+    text: 'Questo è un titolo H1 con v-color:blue',
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: { TitleComponent },
+    template: '<TitleComponent :tag="args.tag" :text="args.text" v-color:blue />'
+  }),
+  parameters: {
+    docs: {
+      source: {
+        transform: (_code: string, storyContext: any) => {
+          const { tag, text } = storyContext.args
+          return `<${tag} v-color:blue>${text}</${tag}>`
+        }
+      }
+    }
+  }
+}
