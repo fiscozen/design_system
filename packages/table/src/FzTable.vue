@@ -38,8 +38,9 @@ const props = withDefaults(defineProps<FzTableProps>(), {
   searchFilterPlaceholder: "Cerca...",
   selectable: false,
   variant: "normal",
-  actionLabel: "Azione",
+  actionLabel: "",
   loading: false,
+  newItemButtonIcon: "plus",
 });
 
 type RowData = T & {
@@ -442,11 +443,11 @@ onUnmounted(() => {
         :style="smOrSmaller ? `grid-column-start: ${iconCols - 1}` : ''" v-if="hasFilters"
         :variant="hasActiveFilters ? 'notification' : 'invisible'" iconName="bars-filter" @click="handleOpenFilters">
       </FzIconButton>
-      <FzButton class="ml-16" v-if="newItemButton && !smOrSmaller" :disabled="newItemButtonDisabled"
+      <FzButton class="ml-16" v-if="newItemButton && !smOrSmaller" :disabled="newItemButtonDisabled" :iconAndLabel="!!newItemButtonIcon" :iconName="newItemButtonIcon" size="lg"
         @click="emit('fztable:newitem')">{{ newItemButtonLabel }}</FzButton>
       <FzIconButton :class="['ml-8', { 'row-start-1': smOrSmaller }]"
-        :style="smOrSmaller ? `grid-column-start: ${iconCols}` : ''" v-if="newItemButton && smOrSmaller" iconName="plus"
-        iconVariant="far" bars-filter @click="emit('fztable:newitem')"></FzIconButton>
+        :style="smOrSmaller ? `grid-column-start: ${iconCols}` : ''" v-if="newItemButton && smOrSmaller" :iconName="newItemButtonIcon"
+        iconVariant="far" bars-filter size="lg" @click="emit('fztable:newitem')"></FzIconButton>
     </div>
     <div class="fz__table overflow-auto relative">
       <template v-if="loading">

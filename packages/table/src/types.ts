@@ -55,6 +55,10 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
    */
   newItemButtonLabel?: string;
   /**
+   * Icon name for new item button
+   */
+  newItemButtonIcon?: string;
+  /**
    * Wether the new item button is disabled
    */
   newItemButtonDisabled?: boolean;

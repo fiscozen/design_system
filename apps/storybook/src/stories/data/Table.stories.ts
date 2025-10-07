@@ -858,7 +858,55 @@ const ListWithSelection: Story = {
   })
 }
 
+const CustomNewItemButton: Story = {
+  args: {
+    modelValue: Array(50)
+      .fill({})
+      .map(() => sampleObj),
+    placeholder: 'Nessun valore',
+    newItemButton: true,
+    newItemButtonLabel: 'Scarica tutte',
+    newItemButtonIcon: 'arrow-down-to-bracket',
+    title: 'Table title',
+    subtitle: 'Table subtitle',
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: {
+      FzCollapse,
+      FzColumn,
+      FzLink,
+      FzTable
+    },
+    template: `
+      <div class="p-12">
+        <FzTable v-bind="args">
+          <FzColumn header="Nome" sticky="left" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+          <FzColumn header="Prezzo" field="price" numeric />
+          <FzColumn header="link">
+            <template #default="{data}">
+              <FzLink :to="data.link" target="_blank" external>Dettaglio</FzLink>
+            </template>
+          </FzColumn>
+          <template #row-2>
+            <FzCollapse class="col-span-5 w-full py-8">
+              <template #summary>custom collapsible row summary</template>
+              <template #content>custom collapsible row content</template>
+            </FzCollapse>
+          </template>
+        </FzTable>
+      </div>
+    `
+  })
+}
 
-export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns, EpmtyTable, Radio, List, ListWithSelection }
+export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns, EpmtyTable, Radio, List, ListWithSelection, CustomNewItemButton }
 
 export default meta
