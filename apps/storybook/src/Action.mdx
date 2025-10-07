@@ -1,0 +1,192 @@
+import { Meta, Controls, Markdown } from '@storybook/addon-docs/blocks'
+import { FzAction } from '@fiscozen/action'
+
+<Meta title="Navigation/FzAction/Documentation" component={FzAction} />
+
+# FzAction
+
+The FzAction component is a versatile navigation and interaction element designed to navigate between pages or trigger actions in menus and lists. It supports both button and link functionality with multiple layout variants and environments.
+
+## Overview
+
+FzAction provides a consistent way to create interactive elements across the application. It can function as either a button for triggering actions or a link for navigation, with support for different environments (backoffice/frontoffice) and layout variants (textLeft/textCenter/onlyIcon).
+
+### Key Features
+
+- **Dual Functionality**: Works as both button and link components
+- **Environment Support**: Optimized for both backoffice and frontoffice contexts
+- **Flexible Layouts**: Multiple variants for different use cases
+- **Icon Support**: Optional [FontAwesome](https://fontawesome.com/) icons on left and/or right sides
+- **Accessibility**: Built-in disabled states and keyboard navigation
+- **Text Handling**: Support for main label and sub-label with truncation options
+
+## Properties
+
+### Core Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`type\` | \`'action' \| 'link'\` | \`'action'\` | Determines if component renders as button or link |
+| \`environment\` | \`'backoffice' \| 'frontoffice'\` | \`'backoffice'\` | Environment variant affecting padding and styling |
+| \`variant\` | \`'textLeft' \| 'textCenter' \| 'onlyIcon'\` | \`'textLeft'\` | Layout variant for different use cases |
+| \`disabled\` | \`boolean\` | \`false\` | Disables the action and prevents interaction |
+| \`isTextTruncated\` | \`boolean\` | \`false\` | Enables text truncation for long content |
+`}
+</Markdown>
+
+### Content Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`label\` | \`string\` | - | Main label text (can also use default slot) |
+| \`subLabel\` | \`string\` | - | Secondary text displayed below the main label |
+| \`iconName\` | \`string\` | - | Name of the [FontAwesome](https://fontawesome.com/) icon |
+| \`iconVariant\` | \`IconVariant\` | - | Variant of the [FontAwesome](https://fontawesome.com/) icon |
+| \`iconPosition\` | \`'left' \| 'right'\` | \`'right'\` | Position of the icon (only used for textLeft and textCenter variants) |
+`}
+</Markdown>
+
+### Link Properties (when type="link")
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`to\` | \`string \| RouteLocation\` | - | Destination for navigation |
+| \`replace\` | \`boolean\` | \`false\` | Uses [vue-router](https://router.vuejs.org/) replace instead of push |
+| \`target\` | \`string\` | - | Target attribute for external links |
+| \`external\` | \`boolean\` | \`false\` | Indicates if link is external |
+| \`meta\` | \`CustomRouteLocation\` | - | Metadata for the link |
+`}
+</Markdown>
+
+## Usage Examples
+
+### Basic Action Button
+
+```vue
+<template>
+  <FzAction
+    label="Save Changes"
+    subLabel="Save your current work"
+    iconName="save"
+    @click="handleSave"
+  />
+</template>
+```
+
+### Navigation Link
+
+```vue
+<template>
+  <FzAction
+    type="link"
+    to="/dashboard"
+    label="Dashboard"
+    subLabel="View your overview"
+    iconName="chart-line"
+  />
+</template>
+```
+
+### Centered Variant for Navigation
+
+```vue
+<template>
+  <FzAction
+    variant="textCenter"
+    label="Profile"
+    subLabel="Account settings"
+    iconName="user"
+    @click="openProfile"
+  />
+</template>
+```
+
+### Icon-Only Button
+
+```vue
+<template>
+  <FzAction variant="onlyIcon" iconName="settings" @click="openSettings" />
+</template>
+```
+
+### External Link
+
+```vue
+<template>
+  <FzAction
+    type="link"
+    to="https://help.example.com"
+    label="Help Center"
+    subLabel="Get support"
+    iconName="question-circle"
+    external
+    target="_blank"
+  />
+</template>
+```
+
+### Disabled State
+
+```vue
+<template>
+  <FzAction label="Delete Item" subLabel="This action cannot be undone" iconName="trash" disabled />
+</template>
+```
+
+### Text Truncation
+
+```vue
+<template>
+  <FzAction
+    label="Very Long Label That Should Be Truncated"
+    subLabel="Very Long Sub Label That Should Also Be Truncated"
+    isTextTruncated
+    iconName="file"
+  />
+</template>
+```
+
+## Best Practices
+
+### When to Use Each Variant
+
+- **textLeft**: Use in action lists, dropdown menus, and sidebars where space is limited
+- **textCenter**: Use in navigation bars and headers where visual balance is important
+- **onlyIcon**: Use in toolbars and compact interfaces where space is at a premium
+
+### Environment Selection
+
+- **backoffice**: Use for internal admin interfaces, management tools, and developer-facing applications
+- **frontoffice**: Use for customer-facing interfaces, public pages, and user-facing applications
+
+## Integration
+
+### Installation
+
+```bash
+npm install @fiscozen/action
+```
+
+### Import
+
+```typescript
+import { FzAction } from '@fiscozen/action'
+```
+
+### Additional Resources
+
+- **[Vue.js Documentation](https://vuejs.org/guide/)** - For Vue.js framework reference
+- **[Vue Router Documentation](https://router.vuejs.org/)** - For routing functionality
+- **[Storybook Documentation](https://storybook.js.org/docs/)** - For Storybook usage
+
+## Related Components
+
+- **[FzLink](?path=/docs/navigation-fzlink--docs)**: For simple text-based navigation
+- **[FzButton](?path=/docs/button-fzbutton--docs)**: For primary action buttons
+- **[FzIcon](?path=/docs/media-fzicon--docs)**: For standalone icon usage
