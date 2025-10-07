@@ -228,6 +228,39 @@ function getDefaultColorAndValue(
 }
 
 /**
+ * Checks if a class name is a color class that should be removed
+ */
+function isColorClassToRemove(className: string): boolean {
+  // Non rimuovere classi di utilità Tailwind comuni
+  const utilityClasses = ['text-left', 'text-center', 'text-right', 'text-justify', 
+                          'text-start', 'text-end', 'text-xs', 'text-sm', 'text-base', 
+                          'text-lg', 'text-xl', 'text-2xl', 'text-3xl', 'text-4xl', 
+                          'text-5xl', 'text-6xl', 'text-7xl', 'text-8xl', 'text-9xl'];
+  
+  if (utilityClasses.includes(className)) {
+    return false;
+  }
+
+  // Costruisci pattern dinamici basati sui colori effettivi
+  // Pattern per colori base: text-blue-500, text-purple-300, etc.
+  for (const colorName of SAFE_COLOR_NAMES) {
+    // text-blue-500, text-purple-300, text-core-white, text-core-black
+    if (className.startsWith(`text-${colorName}-`)) {
+      return true;
+    }
+  }
+
+  // Pattern per colori semantici: text-semantic-error-200, text-semantic-warning-100, etc.
+  for (const semanticType of SEMANTIC_COLOR_NAMES) {
+    if (className.startsWith(`text-semantic-${semanticType}-`)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
  * Updates the color class on the element
  * 
  * @param el - The element to update the color class on
@@ -241,13 +274,9 @@ function updateColorClass(el: HTMLElement, colorName?: string, value?: boolean |
     return;
   }
 
-  // Rimuovi tutte le classi di colore esistenti (text-*)
+  // Rimuovi tutte le classi di colore esistenti usando la funzione specifica
   Array.from(el.classList).forEach((className) => {
-    if (className.startsWith('text-') && 
-        (className.match(/^text-[a-z]+-\d+$/) || 
-        className.match(/^text-semantic-[a-z]+-\d+$/) ||
-        className.match(/^text-[a-z]+$/) ||
-        className.match(/^text-semantic-[a-z]+$/))) {
+    if (isColorClassToRemove(className)) {
       el.classList.remove(className);
     }
   });
@@ -258,7 +287,7 @@ function updateColorClass(el: HTMLElement, colorName?: string, value?: boolean |
   }
 
   // Aggiungi la nuova classe di colore con il peso (sempre con peso, anche per i default)
-  // text-blue-500, text-semantic-error-200, etc.
+  // text-blue-500, text-semantic-error-200, text-core-white, etc.
   el.classList.add(`text-${defaultColorName}-${defaultValue}`);
 }
 
