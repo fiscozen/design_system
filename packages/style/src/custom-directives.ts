@@ -2,9 +2,11 @@ import type { DirectiveBinding, ObjectDirective } from 'vue';
 
 import tokens from "../tokens.json";
 import safeColorsConfig from "../safe-colors.json";
+import safeSemanticColorsConfig from "../safe-semantic-colors.json";
 
-// Importa la lista centralizzata dei colori
+// Importa le liste centralizzate dei colori
 export const SAFE_COLOR_NAMES = safeColorsConfig.safeColorNames as readonly string[];
+export const SEMANTIC_COLOR_NAMES = safeSemanticColorsConfig.semanticColorNames as readonly string[];
 
 const colors: Record<string, Record<string, string>> = {};
 
@@ -25,6 +27,27 @@ SAFE_COLOR_NAMES.forEach((color) => {
     }
   });
 });
+
+// Aggiungi i colori semantici con le loro varianti (semantic-error-200, etc.)
+// Solo per i colori specificati in safe-semantic-colors.json
+const semanticColors = (tokens.global as any).semantic;
+if (semanticColors) {
+  SEMANTIC_COLOR_NAMES.forEach((semanticType) => {
+    const semanticObj = semanticColors[semanticType];
+    if (semanticObj && typeof semanticObj === 'object') {
+      Object.keys(semanticObj).forEach((weight) => {
+        const colorValue = semanticObj[weight]?.value;
+        if (colorValue) {
+          const fullColorName = `semantic-${semanticType}`;
+          if (!colors[fullColorName]) {
+            colors[fullColorName] = {};
+          }
+          colors[fullColorName]![weight] = colorValue;
+        }
+      });
+    }
+  });
+}
 
 /**
  * Custom directive that adds 'color' class to p, h1, h2, h3 elements
@@ -126,16 +149,32 @@ function validateParagraphElement(el: HTMLElement, directive: {name: string} & D
 /**
  * Gets the default color and value for the v-color directive
  * 
- * @param colorName - The color name to get the default color and value for
+ * @param colorName - The color name to get the default color and value for (e.g., 'blue', 'semantic-error')
  * @param value - The value to get the default color and value for
  * @returns The default color and value for the v-color directive
  */
 function getDefaultColorAndValue(colorName?: string, value?: boolean | string): { colorName?: string, value?: string | boolean, valid: boolean } {
-  if (!colorName || !SAFE_COLOR_NAMES.includes(colorName as typeof SAFE_COLOR_NAMES[number])) {
+  if (!colorName) {
+    console.error(`[v-color] Missing color name`);
+    return { valid: false };
+  }
+
+  // Verifica se il colore esiste (può essere sia in SAFE_COLOR_NAMES che semantic-*)
+  const isSemanticColor = colorName.startsWith('semantic-');
+  const isSafeColor = SAFE_COLOR_NAMES.includes(colorName as typeof SAFE_COLOR_NAMES[number]);
+  
+  if (!isSafeColor && !isSemanticColor) {
+    const semanticColorsList = SEMANTIC_COLOR_NAMES.map(name => `semantic-${name}`).join(', ');
     console.error(
-      `[v-color] Invalid or missing color name: ${colorName || 'undefined'}. ` +
-      `Available colors are: ${SAFE_COLOR_NAMES.join(', ')}`
+      `[v-color] Invalid color name: ${colorName}. ` +
+      `Available colors are: ${SAFE_COLOR_NAMES.join(', ')}, ${semanticColorsList}`
     );
+    return { valid: false };
+  }
+
+  // Verifica che il colore esista nell'oggetto colors
+  if (!colors[colorName]) {
+    console.error(`[v-color] Color '${colorName}' not found in colors object`);
     return { valid: false };
   }
 
@@ -144,6 +183,9 @@ function getDefaultColorAndValue(colorName?: string, value?: boolean | string): 
   if (typeof value === 'undefined' || value === true || value === null) {
     if (colorName === 'core') {
       defaultValue = 'black';
+    } else if (isSemanticColor) {
+      // Per i colori semantici, usa '200' come default
+      defaultValue = '200';
     } else {
       defaultValue = '500';
     }

@@ -1,0 +1,10 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Lista dei colori semantici da includere nella safelist di Tailwind. Per aggiungere un nuovo colore semantico, aggiungi il suo nome qui e rigenera il build con 'pnpm run build'.",
+  "semanticColorNames": [
+    "error",
+    "warning",
+    "success",
+    "info"
+  ]
+}

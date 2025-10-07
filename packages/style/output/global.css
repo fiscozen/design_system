@@ -201,10 +201,22 @@
   --yellow-700: #998157;
   --yellow-800: #806c49;
   --yellow-900: #4c402b;
-  --semantic-error: #f04242;
-  --semantic-warning: #ffae4f;
-  --semantic-success: #0fa88c;
-  --semantic-info: #4e9fff;
+  --semantic-error-50: #fef3f3;
+  --semantic-error-100: #f8baba;
+  --semantic-error-200: #f04242;
+  --semantic-error-300: #aa2f2f;
+  --semantic-warning-50: #fff8f3;
+  --semantic-warning-100: #ffdabd;
+  --semantic-warning-200: #ffae4f;
+  --semantic-warning-300: #b47b38;
+  --semantic-success-50: #f2f8f6;
+  --semantic-success-100: #b5d8ce;
+  --semantic-success-200: #0fa88c;
+  --semantic-success-300: #0b7763;
+  --semantic-info-50: #f3f7ff;
+  --semantic-info-100: #b4c8e1;
+  --semantic-info-200: #4e9fff;
+  --semantic-info-300: #3770b4;
   --background-white-smoke: #f7f6f3;
   --background-seashell: #f8ece7;
   --background-pale-purple: #f2e6ff;
@@ -314,6 +326,18 @@
   --leading-9xl: 128px;
   --token-set-order-0: global;
   --token-set-order-1: alias;
+
+  /* Default color values */
+  --blue: #5a6eff;
+  --purple: #b491ff;
+  --orange: #ff785a;
+  --pink: #ff9696;
+  --yellow: #ffd791;
+  --grey: #596167;
+  --semantic-error: #f04242;
+  --semantic-warning: #ffae4f;
+  --semantic-success: #0fa88c;
+  --semantic-info: #4e9fff;
 }
 
 /* title/big */

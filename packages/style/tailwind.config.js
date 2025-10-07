@@ -1,5 +1,7 @@
 const globals = require('./output/global.json');
 const { filterTokensByType, buildFontSizesObj, generateColorSafelist } = require("./fns");
+const { safeColorNames: SAFE_COLOR_NAMES } = require('./safe-colors.json');
+const { semanticColorNames: SEMANTIC_COLOR_NAMES } = require('./safe-semantic-colors.json');
 const plugin = require("tailwindcss/plugin");
 
 const colors = filterTokensByType('color', globals);
@@ -10,6 +12,32 @@ const borderWidth = filterTokensByType('borderWidth', globals)['border'];
 const borderRadius = filterTokensByType('borderRadius', globals)['rounded'];
 borderRadius.DEFAULT = borderRadius.base
 const screens = filterTokensByType('sizing', globals, true)['breakpoint'];
+
+// Aggiungi i valori di default per i colori
+// I colori base useranno il peso 500, i colori semantici il peso 200
+SAFE_COLOR_NAMES.forEach(colorName => {
+  if (colorName !== 'core' && colors[colorName] && colors[colorName]['500']) {
+    colors[colorName].DEFAULT = colors[colorName]['500'];
+  }
+});
+
+// Aggiungi i valori di default per i colori semantici
+if (colors.semantic) {
+  SEMANTIC_COLOR_NAMES.forEach(semanticType => {
+    if (colors.semantic[semanticType] && colors.semantic[semanticType]['200']) {
+      const fullColorName = `semantic-${semanticType}`;
+      if (!colors[fullColorName]) {
+        colors[fullColorName] = {};
+      }
+      // Copia tutte le varianti
+      Object.keys(colors.semantic[semanticType]).forEach(weight => {
+        colors[fullColorName][weight] = colors.semantic[semanticType][weight];
+      });
+      // Aggiungi il DEFAULT
+      colors[fullColorName].DEFAULT = colors.semantic[semanticType]['200'];
+    }
+  });
+}
 
 module.exports = {
     // Safelist per includere sempre le utility classes

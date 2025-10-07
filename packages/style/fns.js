@@ -1,4 +1,5 @@
 const { safeColorNames: SAFE_COLOR_NAMES } = require('./safe-colors.json');
+const { semanticColorNames: SEMANTIC_COLOR_NAMES } = require('./safe-semantic-colors.json');
 
 function deepen(obj) {
     const result = {};
@@ -114,6 +115,51 @@ function generateColorSafelist(colors) {
     patterns.push(`hover:bg-${colorName}`);
     patterns.push(`hover:border-${colorName}`);
   });
+  
+  // Aggiungi le classi di default senza peso (text-blue, text-pink, etc.)
+  // Questi useranno il peso 500 di default (definito in tailwind.config.js)
+  SAFE_COLOR_NAMES.forEach(colorName => {
+    // Salta 'core' perché non ha pesi numerici
+    if (colorName !== 'core') {
+      patterns.push(`text-${colorName}`);
+      patterns.push(`bg-${colorName}`);
+      patterns.push(`border-${colorName}`);
+      patterns.push(`hover:text-${colorName}`);
+      patterns.push(`hover:bg-${colorName}`);
+      patterns.push(`hover:border-${colorName}`);
+    }
+  });
+  
+  // Aggiungi i colori semantici con le loro varianti (semantic-error-200, etc.)
+  // Solo per i colori specificati in safe-semantic-colors.json
+  if (colors.semantic) {
+    SEMANTIC_COLOR_NAMES.forEach(semanticType => {
+      const semanticObj = colors.semantic[semanticType];
+      if (semanticObj && typeof semanticObj === 'object') {
+        Object.keys(semanticObj).forEach(weight => {
+          const fullColorName = `semantic-${semanticType}-${weight}`;
+          patterns.push(`text-${fullColorName}`);
+          patterns.push(`bg-${fullColorName}`);
+          patterns.push(`border-${fullColorName}`);
+          patterns.push(`hover:text-${fullColorName}`);
+          patterns.push(`hover:bg-${fullColorName}`);
+          patterns.push(`hover:border-${fullColorName}`);
+        });
+      }
+    });
+    
+    // Aggiungi anche le classi di default per i colori semantici (text-semantic-error, etc.)
+    // Questi useranno il peso 200 di default (definito in tailwind.config.js)
+    SEMANTIC_COLOR_NAMES.forEach(semanticType => {
+      const fullColorName = `semantic-${semanticType}`;
+      patterns.push(`text-${fullColorName}`);
+      patterns.push(`bg-${fullColorName}`);
+      patterns.push(`border-${fullColorName}`);
+      patterns.push(`hover:text-${fullColorName}`);
+      patterns.push(`hover:bg-${fullColorName}`);
+      patterns.push(`hover:border-${fullColorName}`);
+    });
+  }
   
   return patterns;
 }
