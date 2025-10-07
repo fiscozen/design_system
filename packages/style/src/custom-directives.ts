@@ -2,7 +2,7 @@ import type { DirectiveBinding, ObjectDirective } from 'vue';
 
 import tokens from "../tokens.json";
 
-const colorNames = [
+export const COLOR_NAMES = [
   'blue',
   'purple',
   'orange',
@@ -14,7 +14,7 @@ const colorNames = [
 
 const colors: Record<string, Record<string, string>> = {};
 
-colorNames.forEach((color) => {
+COLOR_NAMES.forEach((color) => {
   const colorObj = tokens.global[color];
   
   if (!colorObj) return;
@@ -31,8 +31,6 @@ colorNames.forEach((color) => {
     }
   });
 });
-
-console.log(colors);
 
 /**
  * Custom directive that adds 'color' class to p, h1, h2, h3 elements
@@ -139,10 +137,10 @@ function validateParagraphElement(el: HTMLElement, directive: {name: string} & D
  * @returns The default color and value for the v-color directive
  */
 function getDefaultColorAndValue(colorName?: string, value?: boolean | string): { colorName?: string, value?: string | boolean, valid: boolean } {
-  if (!colorName || !colorNames.includes(colorName as typeof colorNames[number])) {
+  if (!colorName || !COLOR_NAMES.includes(colorName as typeof COLOR_NAMES[number])) {
     console.error(
       `[v-color] Invalid or missing color name: ${colorName || 'undefined'}. ` +
-      `Available colors are: ${colorNames.join(', ')}`
+      `Available colors are: ${COLOR_NAMES.join(', ')}`
     );
     return { valid: false };
   }
