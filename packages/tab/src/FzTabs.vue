@@ -87,7 +87,7 @@ const computedClass = computed(() => [
 ]);
 
 const computedClassWrapper = computed(() => [
-  "flex",
+  "flex gap-16",
   !props.vertical ? "flex-col" : "flex-row",
 ]);
 
