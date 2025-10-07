@@ -216,11 +216,13 @@ function getDefaultColorAndValue(
   // Se value è undefined, true, o null, usa il peso di default
   if (typeof value === 'undefined' || value === true || value === null) {
     if (colorName === 'core') {
+      // Core colors use named values (white, black) instead of numeric weights
       defaultValue = 'black';
     } else if (isSemanticColor) {
       // Per i colori semantici, usa '200' come default
       defaultValue = '200';
     } else {
+      // Per i colori base, usa '500' come default
       defaultValue = '500';
     }
   } else if (typeof value === 'number') {
