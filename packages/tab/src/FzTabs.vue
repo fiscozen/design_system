@@ -15,6 +15,7 @@
             :tab="tab"
             :key="tab.title"
             :size="size"
+            :maxWidth="tab.maxWidth"
           />
         </template>
         <slot name="tabs-container-end" />

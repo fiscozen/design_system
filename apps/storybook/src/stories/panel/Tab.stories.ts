@@ -427,3 +427,44 @@ export const TabWithActionOnContainerEnd: TabStory = {
     size: 'sm'
   }
 }
+
+export const TabWithMaxWidth: TabStory = {
+  render: (args) => ({
+    components: { FzTabs, FzTab, FzBadge, FzIcon, FzButton },
+    setup() {
+      const tabs = ref([
+        {
+          title: 'tab1',
+          badgeContent: 'testo'
+        },
+        {
+          title: 'very long tab text',
+          badgeContent: '1',
+          initialSelected: true,
+          maxWidth: ''
+        },
+        {
+          title: 'tab3',
+          badgeContent: '2'
+        },
+        {
+          title: 'tab4',
+          badgeContent: '3'
+        }
+      ])
+
+      return {
+        args,
+        tabs
+      }
+    },
+    template: `<FzTabs v-bind="args" > 
+                    <template v-slot="data" #default>
+                        <FzTab v-for="tab in tabs" v-bind="tab" :maxWidth="tab.maxWidth"> Content {{tab.title}} </FzTab> 
+                    </template>
+                </FzTabs>`
+  }),
+  args: {
+    size: 'sm'
+  }
+}

@@ -34,4 +34,8 @@ export type FzTabProps = {
    * Show the tab content
    */
   initialSelected?: boolean;
-};
+  /**
+   * Max width of the tab
+   */
+  maxWidth?: string;
+}

@@ -31,10 +31,12 @@ const props = withDefaults(
     size: "sm" | "md";
     type: "picker" | "tab";
     readonly: boolean;
+    maxWidth?: string;
   }>(),
   {
     type: "tab",
     readonly: false,
+    maxWidth: "136px",
   },
 );
 
@@ -42,13 +44,14 @@ const selectedTab = inject<Ref<string>>("selectedTab");
 const emit = defineEmits(["click"]);
 
 const classes = computed(() => [
-  "w-auto flex font-medium items-center max-w-[136px] rounded-md",
+  "w-auto flex font-medium items-center  rounded-md",
   mapSizeToClasses[props.size],
   props.type === "picker" ? "text-left" : "",
   selectedTab?.value === props.tab.title
     ? mapSelectedTabToClasses[props.type]
     : mapUnselectedTabToClasses[props.type],
   props.tab.disabled ? "cursor-not-allowed" : "cursor-pointer",
+  props.maxWidth ? `max-w-[${props.maxWidth}]` : "",
 ]);
 
 const onClickTab = () => {
