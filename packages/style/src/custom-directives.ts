@@ -211,20 +211,26 @@ function getDefaultColorAndValue(colorName?: string, value?: boolean | string): 
  * 
  * @param el - The element to update the color class on
  * @param colorName - The color name to update the color class on
- * @param value - The value to update the color class on
+ * @param value - The value to update the color class on (false to remove, string/true to add)
  */
 function updateColorClass(el: HTMLElement, colorName?: string, value?: boolean | string): void {
   const { colorName: defaultColorName, value: defaultValue, valid } = getDefaultColorAndValue(colorName, value);
 
   if (valid) {
-    if (defaultValue) {
+    // Rimuovi tutte le classi di colore esistenti (text-*)
+    Array.from(el.classList).forEach((className) => {
+      if (className.startsWith('text-') && 
+          (className.match(/^text-[a-z]+-\d+$/) || 
+          className.match(/^text-semantic-[a-z]+-\d+$/) ||
+          className.match(/^text-[a-z]+$/) ||
+          className.match(/^text-semantic-[a-z]+$/))) {
+        el.classList.remove(className);
+      }
+    });
+
+    // Aggiungi la nuova classe di colore
+    if (defaultValue !== false) {
       el.classList.add(`text-${defaultColorName}-${defaultValue}`);
-    } else {
-      Array.from(el.classList.entries()).forEach(([_index, className]) => {
-        if (className.startsWith(`text-${defaultColorName}-`)) {
-          el.classList.remove(className);
-        }
-      });
     }
   }
 }
