@@ -1,5 +1,7 @@
 const StyleDictionaryPackage = require('style-dictionary');
 const {createArray, appendAdditionalCSSFiles} = require('./fns');
+const { safeColorNames: SAFE_COLOR_NAMES } = require('./safe-colors.json');
+const { semanticColorNames: SEMANTIC_COLOR_NAMES } = require('./safe-semantic-colors.json');
 const fs = require('fs');
 const path = require('path');
 
@@ -16,7 +18,38 @@ const ADDITIONAL_CSS_FILES = [
 StyleDictionaryPackage.registerFormat({
   name: 'css/variables',
   formatter: function (dictionary, config) {
-    return `${this.selector} {\n${dictionary.allProperties.map(prop => `  --${prop.name}: ${prop.value};`).join('\n')}\n}`
+    const cssVars = dictionary.allProperties.map(prop => `  --${prop.name}: ${prop.value};`).join('\n');
+    
+    // Aggiungi i valori di default per i colori
+    const defaultColorVars = [];
+    
+    // Colori base (peso 500)
+    SAFE_COLOR_NAMES.forEach(colorName => {
+      if (colorName !== 'core') {
+        const color500Prop = dictionary.allProperties.find(
+          prop => prop.path && prop.path.join('-') === `${colorName}-500`
+        );
+        if (color500Prop) {
+          defaultColorVars.push(`  --${colorName}: ${color500Prop.value};`);
+        }
+      }
+    });
+    
+    // Colori semantici (peso 200)
+    SEMANTIC_COLOR_NAMES.forEach(semanticType => {
+      const semanticColor200Prop = dictionary.allProperties.find(
+        prop => prop.path && prop.path.join('-') === `semantic-${semanticType}-200`
+      );
+      if (semanticColor200Prop) {
+        defaultColorVars.push(`  --semantic-${semanticType}: ${semanticColor200Prop.value};`);
+      }
+    });
+    
+    const allVars = defaultColorVars.length > 0 
+      ? `${cssVars}\n\n  /* Default color values */\n${defaultColorVars.join('\n')}`
+      : cssVars;
+    
+    return `${this.selector} {\n${allVars}\n}`
   }
 });
 
