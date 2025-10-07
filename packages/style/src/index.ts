@@ -1,4 +1,4 @@
-import { directives as paragraphDirectives } from "./paragraph";
+import { directives } from "./custom-directives";
 
 import type { App } from "vue";
 
@@ -9,13 +9,8 @@ export * from "./constants";
  * Usage: setupFzStyle(app) in your main.ts
  */
 export function setupFzStyle(app: App) {
-
-    // Register paragraph directives
-    paragraphDirectives.forEach(paragraphDirective => {
-        app.directive(paragraphDirective.name, paragraphDirective.directive);
+    // Register custom directives
+    directives.forEach(directive => {
+        app.directive(directive.name, directive.directive);
     });
-    
-    // Future directives can be added here
-    // app.directive('highlight', vHighlight)
-    // app.directive('uppercase', vUppercase)
 }
