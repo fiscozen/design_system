@@ -4,10 +4,40 @@ import tokens from "../tokens.json";
 import safeColorsConfig from "../safe-colors.json";
 import safeSemanticColorsConfig from "../safe-semantic-colors.json";
 
-// Importa le liste centralizzate dei colori
+// ============================================================================
+// TYPES & CONSTANTS
+// ============================================================================
+
+/**
+ * Centralized color name lists used across the design system.
+ * 
+ * These are stored in JSON files (not TypeScript) to ensure they can be consumed
+ * by both CommonJS build scripts (build.js, fns.js) and TypeScript source files,
+ * avoiding module system conflicts during the build process.
+ * 
+ * @see safe-colors.json - Base color names (blue, purple, orange, etc.)
+ * @see safe-semantic-colors.json - Semantic color types (error, warning, success, info)
+ */
 export const SAFE_COLOR_NAMES = safeColorsConfig.safeColorNames as readonly string[];
 export const SEMANTIC_COLOR_NAMES = safeSemanticColorsConfig.semanticColorNames as readonly string[];
 
+// ============================================================================
+// COLOR INITIALIZATION
+// ============================================================================
+
+/**
+ * Color registry built from tokens.json at module initialization.
+ * 
+ * Structure: { colorName: { weight: hexValue } }
+ * Examples:
+ *   - Base colors: colors['blue']['500'] = '#5a6eff'
+ *   - Semantic colors: colors['semantic-error']['200'] = '#f04242'
+ *   - Core colors: colors['core']['black'] = '#000000'
+ * 
+ * Semantic colors are flattened from tokens.global.semantic.error to 
+ * colors['semantic-error'] to match the directive's expected naming convention
+ * (v-color:semantic-error).
+ */
 const colors: Record<string, Record<string, string>> = {};
 
 SAFE_COLOR_NAMES.forEach((color) => {
@@ -28,8 +58,10 @@ SAFE_COLOR_NAMES.forEach((color) => {
   });
 });
 
-// Aggiungi i colori semantici con le loro varianti (semantic-error-200, etc.)
-// Solo per i colori specificati in safe-semantic-colors.json
+/**
+ * Flatten semantic colors from tokens.global.semantic.{type} to colors['semantic-{type}'].
+ * This allows v-color:semantic-error to work consistently with base colors.
+ */
 const semanticColors = (tokens.global as any).semantic;
 if (semanticColors) {
   SEMANTIC_COLOR_NAMES.forEach((semanticType) => {
@@ -49,12 +81,33 @@ if (semanticColors) {
   });
 }
 
+// ============================================================================
+// DIRECTIVES DEFINITIONS
+// ============================================================================
+
 /**
- * Custom directive that adds 'color' class to p, h1, h2, h3 elements
- * Usage: 
- * - <p v-color:blue>Paragraph</p> (uses default weight 500)
- * - <p v-color:blue="300">Paragraph</p> (uses weight 300)
- * - <p v-color:blue="false">Paragraph</p> (removes color)
+ * v-color Directive
+ * 
+ * Applies design system text colors to heading and paragraph elements.
+ * 
+ * @example Basic usage with default weight
+ * <p v-color:blue>Text</p>              // Applies text-blue-500
+ * <h1 v-color:semantic-error>Error</h1> // Applies text-semantic-error-200
+ * 
+ * @example Explicit weight
+ * <p v-color:blue="300">Text</p>        // Applies text-blue-300
+ * 
+ * @example Remove color classes
+ * <p v-color:blue="false">Text</p>      // Removes all text-color-* classes
+ * 
+ * Default weights:
+ * - Base colors (blue, purple, etc.): 500
+ * - Semantic colors (semantic-error, etc.): 200
+ * - Core colors: 'black'
+ * 
+ * Implementation note: Always generates classes with explicit weights 
+ * (e.g., text-blue-500) to ensure consistency with Tailwind's safelist
+ * and avoid ambiguous class generation.
  */
 const vColor: ObjectDirective<HTMLElement, boolean | string | number> = {
   mounted(el: HTMLElement, binding: DirectiveBinding<boolean | string | number>) {
@@ -71,8 +124,13 @@ const vColor: ObjectDirective<HTMLElement, boolean | string | number> = {
 }
 
 /**
- * Custom directive that adds 'font-bold' class to p elements
- * Usage: <p v-bold>Paragraph</p>
+ * v-bold Directive
+ * 
+ * Applies semibold font weight to text elements.
+ * 
+ * @example
+ * <p v-bold>Bold text</p>         // Applies font-semibold
+ * <p v-bold="false">Normal</p>    // Removes font-semibold
  */
 const vBold: ObjectDirective<HTMLElement, boolean | string> = {
   mounted(el: HTMLElement, binding: DirectiveBinding<boolean | string>) {
@@ -89,8 +147,13 @@ const vBold: ObjectDirective<HTMLElement, boolean | string> = {
 }
 
 /**
- * Custom directive that adds 'font-small' class to p elements  
- * Usage: <p v-small>Paragraph</p>
+ * v-small Directive
+ * 
+ * Applies small font size to text elements.
+ * 
+ * @example
+ * <p v-small>Small text</p>       // Applies text-sm
+ * <p v-small="false">Normal</p>   // Removes text-sm
  */
 const vSmall: ObjectDirective<HTMLElement, boolean | string> = {
   mounted(el: HTMLElement, binding: DirectiveBinding<boolean | string>) {
@@ -106,15 +169,35 @@ const vSmall: ObjectDirective<HTMLElement, boolean | string> = {
   }
 }
 
+// ============================================================================
+// VALIDATION UTILITIES (Shared across directives)
+// ============================================================================
+
 /**
- * Validates that the directive is used on the proper element
+ * Validates that a directive is applied to an appropriate HTML element.
+ * 
+ * Uses an OR-based validation approach to avoid duplicate error messages:
+ * - Silently checks both paragraph and heading validity
+ * - Only logs an error if both checks fail
+ * - Returns true if either check passes
+ * 
+ * This prevents confusing console output where v-color on an H1 would
+ * log a paragraph validation error even though heading validation passed.
+ * 
+ * @param el - The HTML element the directive is applied to
+ * @param directive - The directive binding with name and value
+ * @returns true if the element is valid for this directive
  */
 function validateElement(el: HTMLElement, directive: {name: string} & DirectiveBinding<any>): boolean {
   return validateParagraphElement(el, directive) || validateHeadingElement(el, directive);
 }
 
 /**
- * Validates that the directive is used only on heading elements
+ * Validates that a directive is applied to a heading element (H1, H2, H3).
+ * 
+ * @param el - The HTML element to validate
+ * @param directive - The directive binding
+ * @returns true if valid, false otherwise
  */
 function validateHeadingElement(el: HTMLElement, directive: {name: string} & DirectiveBinding<any>): boolean {
   const validTags: string[] = ['H1', 'H2', 'H3'];
@@ -132,7 +215,11 @@ function validateHeadingElement(el: HTMLElement, directive: {name: string} & Dir
 }
 
 /**
- * Validates that the directive is used only on p elements
+ * Validates that a directive is applied to a paragraph element.
+ * 
+ * @param el - The HTML element to validate
+ * @param directive - The directive binding
+ * @returns true if valid, false otherwise
  */
 function validateParagraphElement(el: HTMLElement, directive: {name: string} & DirectiveBinding<any>): boolean {
   const validTags = ['P'];
@@ -149,18 +236,33 @@ function validateParagraphElement(el: HTMLElement, directive: {name: string} & D
   return false;
 }
 
+// ============================================================================
+// COLOR DIRECTIVE - Logic & Helpers
+// ============================================================================
+
 /**
- * Gets the default color and value for the v-color directive
+ * Normalizes and validates color directive parameters.
  * 
- * @param colorName - The color name to get the default color and value for (e.g., 'blue', 'semantic-error')
- * @param value - The value to get the default color and value for (weight as string/number, true for default, false to remove)
- * @returns The default color and value for the v-color directive. If value is false, returns valid: true but value: false to signal removal
+ * This function is the core validation logic for v-color, handling:
+ * - Color name validation (base colors, semantic colors, core colors)
+ * - Weight/value normalization (default weights vs explicit values)
+ * - Special case handling (false for removal, core color naming)
+ * - Comprehensive error reporting for invalid inputs
+ * 
+ * Default weight rules:
+ * - Base colors (blue, purple, etc.): 500
+ * - Semantic colors (semantic-error, etc.): 200
+ * - Core colors: 'black' (core uses named values, not numeric weights)
+ * 
+ * @param colorName - Color identifier from directive arg (e.g., 'blue', 'semantic-error')
+ * @param value - Weight specification: number/string for explicit weight, true/undefined for default, false for removal
+ * @returns Normalized color data or validation failure indicator
  */
 function getDefaultColorAndValue(
   colorName?: string, 
   value?: boolean | string | number
 ): { colorName?: string, value?: string | number | false, valid: boolean } {
-  // Se value === false, restituisci un risultato valido che segnala la rimozione
+  // Early return for removal case - value:false signals "remove all color classes"
   if (value === false) {
     return { colorName, value: false, valid: true };
   }
@@ -170,13 +272,12 @@ function getDefaultColorAndValue(
     return { valid: false };
   }
 
-  // Verifica se il colore esiste (può essere sia in SAFE_COLOR_NAMES che semantic-*)
   const isSafeColor = SAFE_COLOR_NAMES.includes(colorName as typeof SAFE_COLOR_NAMES[number]);
   
-  // Per i colori semantici, verifica che il tipo semantico sia valido
+  // Semantic colors require additional validation: the semantic type must be in our registry
+  // This prevents typos like v-color:semantic-errorr from silently failing
   let isSemanticColor = false;
   if (colorName.startsWith('semantic-')) {
-    // Estrai il tipo semantico (es: 'error' da 'semantic-error')
     const semanticType = colorName.replace('semantic-', '');
     isSemanticColor = SEMANTIC_COLOR_NAMES.includes(semanticType as typeof SEMANTIC_COLOR_NAMES[number]);
     
@@ -199,7 +300,6 @@ function getDefaultColorAndValue(
     return { valid: false };
   }
 
-  // Verifica che il colore esista nell'oggetto colors e non sia vuoto
   if (!colors[colorName] || typeof colors[colorName] !== 'object') {
     console.error(`[v-color] Color '${colorName}' not found in colors object`);
     return { valid: false };
@@ -213,31 +313,24 @@ function getDefaultColorAndValue(
 
   let defaultValue: string | number;
 
-  // Se value è undefined, true, o null, usa il peso di default
   if (typeof value === 'undefined' || value === true || value === null) {
     if (colorName === 'core') {
       // Core colors use named values (white, black) instead of numeric weights
       defaultValue = 'black';
     } else if (isSemanticColor) {
-      // Per i colori semantici, usa '200' come default
       defaultValue = '200';
     } else {
-      // Per i colori base, usa '500' come default
       defaultValue = '500';
     }
   } else if (typeof value === 'number') {
-    // Converti il numero in stringa per la validazione
     defaultValue = value.toString();
   } else if (typeof value === 'string') {
-    // value è già una stringa
     defaultValue = value;
   } else {
-    // Tipo non valido
     console.error(`[v-color:${colorName}] Invalid value type: ${typeof value}`);
     return { valid: false };
   }
 
-  // Validate that colors[colorName][defaultValue] exists and is a string
   const weightKey = defaultValue.toString();
   const colorValue = colors[colorName]?.[weightKey];
   
@@ -254,10 +347,20 @@ function getDefaultColorAndValue(
 }
 
 /**
- * Checks if a class name is a color class that should be removed
+ * Determines if a class name is a color class that should be removed by v-color.
+ * 
+ * This function uses a whitelist approach for common Tailwind utilities to avoid
+ * accidentally removing non-color text classes (like text-left, text-sm).
+ * 
+ * Implementation rationale:
+ * - Regex patterns would be too broad and remove alignment utilities
+ * - Simple string matching on all text patterns could remove size utilities
+ * - Dynamic checking against SAFE_COLOR_NAMES ensures we only remove actual color classes
+ * 
+ * @param className - The class name to check
+ * @returns true if the class should be removed, false otherwise
  */
 function isColorClassToRemove(className: string): boolean {
-  // Non rimuovere classi di utilità Tailwind comuni
   const utilityClasses = ['text-left', 'text-center', 'text-right', 'text-justify', 
                           'text-start', 'text-end', 'text-xs', 'text-sm', 'text-base', 
                           'text-lg', 'text-xl', 'text-2xl', 'text-3xl', 'text-4xl', 
@@ -267,16 +370,13 @@ function isColorClassToRemove(className: string): boolean {
     return false;
   }
 
-  // Costruisci pattern dinamici basati sui colori effettivi
-  // Pattern per colori base: text-blue-500, text-purple-300, etc.
+  // Check against actual color names to avoid false positives
   for (const colorName of SAFE_COLOR_NAMES) {
-    // text-blue-500, text-purple-300, text-core-white, text-core-black
     if (className.startsWith(`text-${colorName}-`)) {
       return true;
     }
   }
 
-  // Pattern per colori semantici: text-semantic-error-200, text-semantic-warning-100, etc.
   for (const semanticType of SEMANTIC_COLOR_NAMES) {
     if (className.startsWith(`text-semantic-${semanticType}-`)) {
       return true;
@@ -287,11 +387,16 @@ function isColorClassToRemove(className: string): boolean {
 }
 
 /**
- * Updates the color class on the element
+ * Applies or removes color classes from an element.
  * 
- * @param el - The element to update the color class on
- * @param colorName - The color name to update the color class on
- * @param value - The value to update the color class on (false to remove, string/number/true to add)
+ * Implementation strategy:
+ * 1. Always remove existing color classes first (clean slate approach)
+ * 2. Add new class only if not in removal mode (value !== false)
+ * 3. Always use explicit weights (text-blue-500, never text-blue) for consistency
+ * 
+ * @param el - The element to modify
+ * @param colorName - Color identifier (e.g., 'blue', 'semantic-error')
+ * @param value - Weight value, true for default, false for removal
  */
 function updateColorClass(el: HTMLElement, colorName?: string, value?: boolean | string | number): void {
   const { colorName: defaultColorName, value: defaultValue, valid } = getDefaultColorAndValue(colorName, value);
@@ -300,25 +405,31 @@ function updateColorClass(el: HTMLElement, colorName?: string, value?: boolean |
     return;
   }
 
-  // Rimuovi tutte le classi di colore esistenti usando la funzione specifica
+  // Clean slate: remove all existing color classes before applying new ones
   Array.from(el.classList).forEach((className) => {
     if (isColorClassToRemove(className)) {
       el.classList.remove(className);
     }
   });
 
-  // Se defaultValue === false, non aggiungere nessuna classe (solo rimozione)
+  // Exit early if in removal mode
   if (defaultValue === false) {
     return;
   }
 
-  // Aggiungi la nuova classe di colore con il peso (sempre con peso, anche per i default)
-  // text-blue-500, text-semantic-error-200, text-core-white, etc.
+  // Apply color class with explicit weight (e.g., text-blue-500, text-semantic-error-200)
   el.classList.add(`text-${defaultColorName}-${defaultValue}`);
 }
 
+// ============================================================================
+// SIMPLE DIRECTIVES - Bold & Small
+// ============================================================================
+
 /**
- * Updates the 'font-bold' class based on the binding value
+ * Toggles the semibold font weight class.
+ * 
+ * @param el - The element to modify
+ * @param value - true to add, false to remove
  */
 function updateBoldClass(el: HTMLElement, value: boolean = true): void {
   if (value === false) {
@@ -329,7 +440,10 @@ function updateBoldClass(el: HTMLElement, value: boolean = true): void {
 }
 
 /**
- * Updates the 'font-small' class based on the binding value
+ * Toggles the small text size class.
+ * 
+ * @param el - The element to modify
+ * @param value - true to add, false to remove
  */
 function updateSmallClass(el: HTMLElement, value: boolean = true): void {
   if (value === false) {
@@ -339,7 +453,21 @@ function updateSmallClass(el: HTMLElement, value: boolean = true): void {
   }
 }
 
-// Export individual directives only for internal use or advanced cases
+// ============================================================================
+// EXPORTS
+// ============================================================================
+
+/**
+ * Registry of all custom directives for easy registration in Vue applications.
+ * 
+ * Usage in Vue app:
+ * ```ts
+ * import { directives } from '@fiscozen/style';
+ * directives.forEach(({ name, directive }) => {
+ *   app.directive(name, directive);
+ * });
+ * ```
+ */
 export const directives = [
     {name: 'bold', directive: vBold},
     {name: 'small', directive: vSmall},
