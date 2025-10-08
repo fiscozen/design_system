@@ -1,0 +1,149 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Typography/Getting started" />
+
+# @fiscozen/style
+
+This package provides a comprehensive set of design tokens, CSS variables, and Vue.js directives to maintain visual consistency across all Fiscozen projects.
+
+## What's Included
+
+- **Design Tokens**: Single source of truth for colors, spacing, typography, and more
+- **CSS Variables**: All tokens available as CSS custom properties
+- **Vue Directives**: Custom directives for typography styling (`v-color`, `v-bold`, `v-small`)
+- **Tailwind Integration**: Seamless integration with Tailwind CSS utility classes
+
+## Quick Start
+
+### Installation
+
+Install the package via npm or pnpm:
+
+```bash
+npm install @fiscozen/style
+# or
+pnpm add @fiscozen/style
+```
+
+### Setup in Your Vue Application
+
+Add the following to your Vue application's entry point (e.g., `main.ts`):
+
+```typescript
+import { createApp } from 'vue'
+import { setupFzStyle } from '@fiscozen/style'
+import '@fiscozen/style/output/global.css'
+import App from './App.vue'
+
+const app = createApp(App)
+
+// Register Fiscozen custom directives
+setupFzStyle(app)
+
+app.mount('#app')
+```
+
+That's it! You now have access to custom Vue directives (`v-color`, `v-bold`, `v-small`).
+
+## Vue Custom Directives
+
+Fiscozen Style provides custom Vue directives to apply typography styles consistently across your application.
+
+### Available Directives
+
+#### v-color
+Apply design system colors to text elements. Supports base colors, semantic colors, and multiple weight variants.
+
+**Base Colors with Default Weights:**
+```vue
+<p v-color:blue>Blue text (weight 500)</p>
+<p v-color:purple>Purple text (weight 500)</p>
+<p v-color:orange>Orange text (weight 500)</p>
+<p v-color:pink>Pink text (weight 500)</p>
+<p v-color:grey>Grey text (weight 500)</p>
+```
+
+**Explicit Weight Control:**
+```vue
+<!-- Lighter shades -->
+<p v-color:blue="300">Light blue text</p>
+<p v-color:purple="200">Very light purple</p>
+
+<!-- Darker shades -->
+<p v-color:blue="700">Dark blue text</p>
+<p v-color:purple="900">Very dark purple</p>
+```
+
+**Semantic Colors for User Feedback:**
+```vue
+<!-- Default semantic weights (200) -->
+<p v-color:semantic-error>Error message</p>
+<p v-color:semantic-warning>Warning message</p>
+<p v-color:semantic-success>Success message</p>
+<p v-color:semantic-info>Info message</p>
+
+<!-- Explicit semantic weights for emphasis -->
+<h3 v-color:semantic-error="300">Critical Error</h3>
+<p v-color:semantic-success="100">Subtle success hint</p>
+```
+
+**Headings with Colors:**
+```vue
+<h1 v-color:blue="700">Main Page Title</h1>
+<h2 v-color:grey="600">Section Subtitle</h2>
+<h3 v-color:purple="500">Feature Heading</h3>
+```
+
+**Core Colors (Black & White):**
+```vue
+<p v-color:core="black">Primary text color</p>
+<p v-color:core="white">Text for dark backgrounds</p>
+```
+
+#### v-bold
+Apply semibold font weight to paragraphs.
+
+**[See Typography/Paragraphs for v-bold examples](../?path=/docs/typography-paragraphs--docs)**
+
+```vue
+<p v-bold>This text is bold</p>
+```
+
+#### v-small
+Apply small font size to paragraphs.
+
+**[See Typography/Paragraphs for v-small examples](../?path=/docs/typography-paragraphs--docs)**
+
+```vue
+<p v-small>This text is small</p>
+```
+
+## Usage Examples
+
+### Basic Text Styling
+
+```vue
+<template>
+  <FzContainer>
+    <!-- Headings with colors -->
+    <h1 v-color:blue>Welcome to Fiscozen</h1>
+    <h2 v-color:grey="600">Your Financial Partner</h2>
+    
+    <!-- Paragraphs with modifiers -->
+    <p>Standard paragraph text</p>
+    <p v-bold>Bold paragraph for emphasis</p>
+    <p v-small>Small paragraph for secondary information</p>
+    
+    <!-- Semantic colors for feedback -->
+    <p v-color:semantic-error>Error: Please check your input</p>
+    <p v-color:semantic-success>Success: Changes saved!</p>
+  </FzContainer>
+</template>
+```
+
+## Learn More
+
+### Directive Documentation
+- **[Typography/Paragraphs](../?path=/docs/typography-paragraphs--docs)** - Examples of `v-bold` and `v-small` directives
+- **[Typography/Titles](../?path=/docs/typography-titles--docs)** - Heading styles and examples
+
