@@ -2,6 +2,8 @@
 import { ref, useSlots, watch, toRef, computed, onBeforeUnmount, toRefs, defineExpose } from 'vue'
 import { useFloating } from './composables'
 import { FzFloatingProps, FzUseFloatingArgs } from './types'
+import { useMediaQuery } from './composables'
+import { breakpoints } from '@fiscozen/style'
 
 const props = withDefaults(defineProps<FzFloatingProps>(), {
   position: 'auto',
@@ -15,6 +17,8 @@ const content = ref<HTMLElement | null>(null)
 const opener = ref<HTMLElement | null>(null)
 
 const slots = useSlots()
+
+const xs = useMediaQuery(`(max-width: ${breakpoints.xs})`)
 
 let scheduledAnimationFrame = false
 
@@ -71,9 +75,11 @@ watch(
       return
     }
     window.addEventListener('scroll', setPositionWhenOpen)
+    const openerRect = opener.value?.getBoundingClientRect()
     content.value.style.top = '0px'
     content.value.style.left = '0px'
     content.value.style.transform = 'none'
+    content.value.style.width = xs.value ? openerRect?.width + 'px' : 'auto'
     floating.setPosition()
   }
 )
@@ -110,7 +116,7 @@ defineExpose({
 <template>
   <div>
     <slot name="opener-start"></slot>
-    <div ref="opener" class="inline-flex">
+    <div ref="opener" class="inline-flex w-full sm:w-auto">
       <slot name="opener" :isOpen :floating></slot>
     </div>
     <slot name="opener-end"></slot>
@@ -118,7 +124,7 @@ defineExpose({
       v-if="!teleport"
       ref="content"
       v-show="$slots.default && (!$slots.opener || ($slots.opener && isOpen))"
-      class="fz__floating__content"
+      class="fz__floating__content w-full sm:w-auto"
       :class="contentClass"
     >
       <slot :isOpen :floating></slot>

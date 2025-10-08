@@ -40,7 +40,7 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@fiscozen/composables": "^0.1.33",
-    "@fiscozen/style": "^0.1.3"
+    "@fiscozen/composables": "workspace:^",
+    "@fiscozen/style": "workspace:^"
   }
 }

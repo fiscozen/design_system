@@ -18,12 +18,16 @@
 import { inject, computed, Ref } from "vue";
 import { FzBadge } from "@fiscozen/badge";
 import { FzIcon } from "@fiscozen/icons";
+import { useMediaQuery } from "@fiscozen/composables";
+import { breakpoints } from "@fiscozen/style";
 import { FzTabProps } from "../types";
 import {
   mapSelectedTabToClasses,
   mapSizeToClasses,
   mapUnselectedTabToClasses,
 } from "../common";
+
+const xs = useMediaQuery(`(max-width: ${breakpoints.xs})`);
 
 const props = withDefaults(
   defineProps<{
@@ -51,7 +55,8 @@ const classes = computed(() => [
     ? mapSelectedTabToClasses[props.type]
     : mapUnselectedTabToClasses[props.type],
   props.tab.disabled ? "cursor-not-allowed" : "cursor-pointer",
-  props.maxWidth ? `max-w-[${props.maxWidth}]` : "",
+  props.maxWidth && !xs.value ? `max-w-[${props.maxWidth}]` : "",
+  xs.value ? "!max-w-full !w-full" : "",
 ]);
 
 const onClickTab = () => {

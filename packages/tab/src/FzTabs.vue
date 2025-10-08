@@ -81,7 +81,7 @@ const tabs = computed(() => {
 });
 
 const staticTabContainerClass =
-  "tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto";
+  "tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto w-full sm:w-auto";
 
 const computedClass = computed(() => [
   props.vertical ? "flex-col" : "flex-row",

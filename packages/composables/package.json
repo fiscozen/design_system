@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/composables",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "Design System utility composables",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -13,6 +13,9 @@
   "type": "module",
   "keywords": [],
   "author": "Riccardo Agnoletto",
+  "dependencies": {
+    "@fiscozen/style": "workspace:^"
+  },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"

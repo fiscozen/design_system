@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/tab",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Design System Tab component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -14,7 +14,8 @@
   "author": "Cristian Barraco",
   "dependencies": {
     "@fiscozen/badge": "workspace:^",
-    "@fiscozen/composables": "workspace:^"
+    "@fiscozen/composables": "workspace:^",
+    "@fiscozen/style": "workspace:^"
   },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",

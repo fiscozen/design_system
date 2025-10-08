@@ -9,6 +9,7 @@
       <FzTabButton
         :tab="selectedTabProps!"
         :size="size"
+        class="w-full sm:w-auto"
         type="tab"
         readonly
         @click="isOpen = !isOpen"
@@ -17,8 +18,7 @@
       </FzTabButton>
     </template>
     <div
-      class="flex flex-col p-4 rounded shadow overflow-hidden bg-core-white z-10"
-      :style="{ width: containerWidth }"
+      class="flex flex-col p-4 rounded shadow overflow-hidden bg-core-white z-10 w-full"
     >
       <FzTabButton
         v-for="tab in tabs"
@@ -56,11 +56,6 @@ const computedClasses = computed(() => [
   "flex items-center text-left max-w-[136px] rounded-md h-auto bg-white text-blue-500 font-medium cursor-pointer capitalize ",
   mapSizeToClasses[props.size],
 ]);
-
-const containerWidth = computed(() => {
-  if (!opener.value) return "auto";
-  return `${opener.value.offsetWidth}px`;
-});
 
 const closePicker = () => {
   isOpen.value = false;
