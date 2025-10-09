@@ -166,15 +166,15 @@ const ExternalLink: Story = {
   }
 }
 
-export { 
-  Default, 
-  TextLeft, 
-  TextCenter, 
-  OnlyIcon, 
-  Disabled, 
-  TextTruncated, 
-  Frontoffice, 
-  Link, 
+export {
+  Default,
+  TextLeft,
+  TextCenter,
+  OnlyIcon,
+  Disabled,
+  TextTruncated,
+  Frontoffice,
+  Link,
   ExternalLink
 }
 

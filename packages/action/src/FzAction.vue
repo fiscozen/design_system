@@ -21,6 +21,7 @@
         v-if="iconName && variant === 'textLeft'"
         :name="iconName"
         :variant="iconVariant"
+        size="md"
         :class="iconClasses"
       />
     </template>
@@ -37,6 +38,7 @@
           v-if="iconName"
           :name="iconName"
           :variant="iconVariant"
+          size="md"
           :class="iconClasses"
         />
       </div>
@@ -48,6 +50,7 @@
       v-else-if="variant === 'onlyIcon' && iconName"
       :name="iconName"
       :variant="iconVariant"
+      size="md"
       :class="iconClasses"
     />
   </component>

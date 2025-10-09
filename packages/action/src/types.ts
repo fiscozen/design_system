@@ -61,3 +61,19 @@ export type FzActionProps =
 type PartialExcept<T, K extends keyof T> = Pick<Required<T>, K> & Partial<T>;
 
 export type CustomRouteLocation = PartialExcept<RouteLocation, "path" | "name">;
+
+// ActionList component props
+export interface FzActionListProps {
+  /**
+   * Additional CSS classes to apply to the action list container
+   */
+  listClass?: string;
+}
+
+// ActionLabel component props
+export interface FzActionSectionProps {
+  /**
+   * Label text content
+   */
+  label?: string;
+}
