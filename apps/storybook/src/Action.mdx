@@ -25,7 +25,7 @@ FzAction provides a consistent way to create interactive elements across the app
 ### Core Properties
 
 <Markdown>
-{`
+  {`
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
 | \`type\` | \`'action' \| 'link'\` | \`'action'\` | Determines if component renders as button or link |
@@ -39,7 +39,7 @@ FzAction provides a consistent way to create interactive elements across the app
 ### Content Properties
 
 <Markdown>
-{`
+  {`
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
 | \`label\` | \`string\` | - | Main label text (can also use default slot) |
@@ -52,7 +52,7 @@ FzAction provides a consistent way to create interactive elements across the app
 ### Link Properties (when type="link")
 
 <Markdown>
-{`
+  {`
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
 | \`to\` | \`string \| RouteLocation\` | - | Destination for navigation |
@@ -110,11 +110,7 @@ FzAction provides a consistent way to create interactive elements across the app
 
 ```vue
 <template>
-  <FzAction
-    variant="onlyIcon"
-    iconName="settings"
-    @click="openSettings"
-  />
+  <FzAction variant="onlyIcon" iconName="settings" @click="openSettings" />
 </template>
 ```
 
@@ -138,12 +134,7 @@ FzAction provides a consistent way to create interactive elements across the app
 
 ```vue
 <template>
-  <FzAction
-    label="Delete Item"
-    subLabel="This action cannot be undone"
-    iconName="trash"
-    disabled
-  />
+  <FzAction label="Delete Item" subLabel="This action cannot be undone" iconName="trash" disabled />
 </template>
 ```
 

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzAction } from '@fiscozen/action'
 import { vueRouter } from 'storybook-vue3-router'
 
@@ -166,15 +166,15 @@ const ExternalLink: Story = {
   }
 }
 
-export { 
-  Default, 
-  TextLeft, 
-  TextCenter, 
-  OnlyIcon, 
-  Disabled, 
-  TextTruncated, 
-  Frontoffice, 
-  Link, 
+export {
+  Default,
+  TextLeft,
+  TextCenter,
+  OnlyIcon,
+  Disabled,
+  TextTruncated,
+  Frontoffice,
+  Link,
   ExternalLink
 }
 
