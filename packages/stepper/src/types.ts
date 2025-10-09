@@ -7,6 +7,10 @@ type FzStepperProps = {
    *  Disable stepper progress bar
    */
   disableProgressBar?: boolean;
+  /**
+   * force the mobile version
+   */
+  forceMobile?: boolean;
 }
 type FzStepStatus = 'completed' | 'error' | 'disabled'; 
 type FzStepProps = {

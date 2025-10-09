@@ -9,6 +9,7 @@ import { FzDropdown } from '@fiscozen/dropdown';
 
 const props = withDefaults(defineProps<FzStepperProps>(), {
     disableProgressBar: false,
+    forceMobile: false,
 })
 const smOrSmaller = useMediaQuery(`(max-width: ${breakpoints.sm})`);
 
@@ -68,7 +69,7 @@ const handleActionClick = (index: number) => {
 </script>
 
 <template>
-    <div class="fz-stepper flex flex-row w-full gap-16" v-if="!smOrSmaller">
+    <div class="fz-stepper flex flex-row w-full gap-16" v-if="!smOrSmaller && !props.forceMobile">
         <div @click="handleActionClick(index)" :class="['fz-stepper__step flex flex-col grow cursor-pointer', {'opacity-[.2] !cursor-not-allowed': step.status === 'disabled'}]"
             v-for="(step, index) in props.steps">
             <div :class="['fz-stepper__progress h-4 rounded-5 w-full mb-8', barClass(step, index)]" v-if="!disableProgressBar">
@@ -90,7 +91,7 @@ const handleActionClick = (index: number) => {
             </div>
         </div>
     </div>
-    <div class="fz-stepper flex flex-col w-full gap-8" v-if="smOrSmaller">
+    <div class="fz-stepper flex flex-col w-full gap-8" v-if="smOrSmaller || props.forceMobile">
         <div class="flex flex-row gap-8">
             <div v-for="(step, index) in props.steps"
                 :class="['fz-stepper__progress h-4 rounded-5 w-full mb-8', barClass(step, index)]" v-if="!disableProgressBar">

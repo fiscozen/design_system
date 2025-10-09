@@ -6,8 +6,14 @@ const meta: Meta<typeof FzStepper> = {
   title: 'Navigation/FzStepper',
   component: FzStepper,
   tags: ['autodocs'],
-  argTypes: {},
-  args: {},
+  argTypes: {
+    forceMobile: {
+      control: 'boolean'
+    }
+  },
+  args: {
+    forceMobile: false
+  },
   decorators: []
 }
 
