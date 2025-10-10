@@ -11,7 +11,7 @@
     "build": "nx run-many --target=build",
     "storybook": "nx run @fiscozen/storybook:storybook",
     "generate:component": "plop component",
-    "postinstall": "cd apps/storybook && pnpm exec cypress install || true"
+    "postinstall": "node scripts/postinstall.js"
   },
   "engines": {
     "pnpm": "^10.17.1",
