@@ -17,8 +17,8 @@
     "vue": "^3.4.13"
   },
   "dependencies": {
-    "@fiscozen/icons": "workspace:^",
-    "@fiscozen/button": "workspace:^"
+    "@fiscozen/button": "workspace:^",
+    "@fiscozen/icons": "workspace:^"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",

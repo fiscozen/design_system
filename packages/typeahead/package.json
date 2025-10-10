@@ -38,10 +38,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@fiscozen/select": "workspace:^",
+    "@fiscozen/composables": "workspace:^",
     "@fiscozen/icons": "workspace:^",
     "@fiscozen/input": "workspace:^",
-    "@fiscozen/composables": "workspace:^",
+    "@fiscozen/select": "workspace:^",
     "fuse.js": "^7.0.0"
   }
 }

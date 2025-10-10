@@ -5,13 +5,16 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "pnpm run test:storybook",
+    "test:storybook": "nx run @fiscozen/storybook:test:storybook",
+    "test:storybook:dev": "nx run @fiscozen/storybook:test:storybook:dev",
     "build": "nx run-many --target=build",
     "storybook": "nx run @fiscozen/storybook:storybook",
-    "generate:component": "plop component"
+    "generate:component": "plop component",
+    "postinstall": "node scripts/postinstall.js"
   },
   "engines": {
-    "pnpm": "^10.0.0",
+    "pnpm": "^10.17.1",
     "node": "^22.12.0"
   },
   "keywords": [],
