@@ -23,5 +23,9 @@ const config: StorybookConfig = {
 export default config
 
 function getAbsolutePath(value: string): any {
+  if (value.includes('..') || value.startsWith('/')) {
+    throw new Error('Invalid package path');
+  }
+  
   return dirname(require.resolve(join(value, "package.json")));
 }
