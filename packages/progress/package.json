@@ -13,9 +13,9 @@
   "keywords": [],
   "author": "Riccardo Agnoletto",
   "peerDependencies": {
+    "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
-    "vue": "^3.4.13",
-    "@fiscozen/icons": "workspace:^"
+    "vue": "^3.4.13"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",

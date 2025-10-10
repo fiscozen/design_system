@@ -13,11 +13,11 @@
   "keywords": [],
   "author": "Cristian Barraco",
   "peerDependencies": {
-    "tailwindcss": "^3.4.1",
-    "vue": "^3.4.13",
     "@fiscozen/button": "workspace:^",
     "@fiscozen/composables": "workspace:^",
-    "@fiscozen/icons": "workspace:^"
+    "@fiscozen/icons": "workspace:^",
+    "tailwindcss": "^3.4.1",
+    "vue": "^3.4.13"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",

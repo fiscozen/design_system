@@ -1,3 +1,9 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
+  - apps/*
+  - packages/*
+
+onlyBuiltDependencies:
+  - core-js
+  - cypress
+  - esbuild
+  - nx
