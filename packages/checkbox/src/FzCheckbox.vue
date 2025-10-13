@@ -24,6 +24,7 @@
         :for="id"
         :class="[staticLabelClass, computedLabelClass]"
       >
+        <!-- @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop -->
         <FzIcon
           :name="computedName"
           :size="size"
@@ -33,7 +34,9 @@
         />
         <template v-if="!standalone">{{ label }}</template>
       </label>
+      <!-- @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation -->
       <FzTooltip v-if="tooltip" v-bind="tooltip" class="ml-4">
+        <!-- @TODO: When FzIcon natively supports role and ariaLabel props, use them instead of HTML attributes -->
         <FzIcon
           name="info-circle"
           :size="size"
@@ -43,6 +46,7 @@
         />
       </FzTooltip>
     </div>
+    <!-- @TODO: When FzAlert natively supports role, ariaLive, ariaAtomic as props, remove HTML attributes and use typed props -->
     <FzAlert
       v-if="error && $slots.error"
       :id="`${id}-error`"

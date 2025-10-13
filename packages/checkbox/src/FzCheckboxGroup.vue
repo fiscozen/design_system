@@ -29,6 +29,7 @@
         :size="size"
       />
     </div>
+    <!-- @TODO: When FzAlert natively supports role, ariaLive, ariaAtomic as props, remove HTML attributes and use typed props -->
     <FzAlert
       v-if="error && $slots.error"
       :id="id + '-error'"
