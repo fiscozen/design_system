@@ -16,6 +16,7 @@
         :aria-invalid="error"
         :aria-describedby="error ? `${id}-error` : undefined"
         :aria-labelledby="standalone ? undefined : `${id}-label`"
+        :aria-owns="props.ariaOwns"
         ref="refCheckbox"
       />
       <label
@@ -73,7 +74,8 @@ const props = withDefaults(defineProps<FzCheckboxProps>(), {
 
 const currentValue = computed(() => props.value ?? props.label);
 
-const id = `fz-checkbox-${Math.random().toString(36).slice(2, 9)}`;
+const id =
+  props.checkboxId || `fz-checkbox-${Math.random().toString(36).slice(2, 9)}`;
 
 const model = defineModel<
   null | undefined | boolean | (string | number | boolean)[]

@@ -8,12 +8,13 @@
     :error="error"
     :size="size"
     :indeterminate="isIndeterminate"
+    :aria-owns="children?.length ? childrenIds : undefined"
     @change="onCheckboxParentChange"
   >
     <template #children v-if="children?.length">
       <div :class="[staticChildContainerClass, computedChildContainerClasses]">
         <FzCheckbox
-          v-for="child in children"
+          v-for="(child, index) in children"
           :key="child.value ? child.value.toString() : child.label"
           v-model="model"
           :disabled="disabled"
@@ -21,6 +22,7 @@
           :emphasis="emphasis"
           :error="error"
           :size="size"
+          :checkbox-id="`${parentId}-child-${index}`"
           @change="handleCheckboxParentChange"
         />
       </div>
@@ -43,6 +45,12 @@ const model = defineModel<(string | number | boolean)[]>({
   default: [],
 });
 
+const parentId = `fz-checkbox-parent-${Math.random().toString(36).slice(2, 9)}`;
+
+const childrenIds = computed(() =>
+  props.children?.map((child, index) => `${parentId}-child-${index}`).join(" ")
+);
+
 const staticChildContainerClass = "flex flex-col justify-center pl-24";
 
 const computedChildContainerClasses = computed(() => [
@@ -54,7 +62,7 @@ const isIndeterminate = computed(() => {
   if (!props.children) return false;
 
   const numChecked = props.children.filter((child) =>
-    model.value.includes(child.value ?? child.label),
+    model.value.includes(child.value ?? child.label)
   ).length;
   return numChecked > 0 && numChecked < props.children.length;
 });
@@ -62,7 +70,7 @@ const isIndeterminate = computed(() => {
 function handleCheckboxParentChange() {
   if (!props.children) return;
   const numChecked = props.children.filter((child) =>
-    model.value.includes(child.value ?? child.label),
+    model.value.includes(child.value ?? child.label)
   ).length;
 
   if (numChecked === props.children.length) {
@@ -82,7 +90,7 @@ function onCheckboxParentChange() {
     model.value = model.value.concat(
       props.children
         ?.map((child) => child.value ?? child.label)
-        .filter((value) => !model.value.includes(value)),
+        .filter((value) => !model.value.includes(value))
     );
   } else {
     // remove all children values from model
@@ -90,7 +98,7 @@ function onCheckboxParentChange() {
       (value) =>
         !props.children
           ?.map((child) => child.value ?? child.label)
-          .includes(value),
+          .includes(value)
     );
   }
 }

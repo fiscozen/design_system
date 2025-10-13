@@ -41,6 +41,14 @@ export type FzCheckboxProps = {
    * Tooltip props for the checkbox
    */
   tooltip?: FzTooltipProps;
+  /**
+   * ARIA owns attribute for hierarchical checkboxes
+   */
+  ariaOwns?: string;
+  /**
+   * Custom ID for the checkbox (if not provided, a random ID will be generated)
+   */
+  checkboxId?: string;
 };
 
 export type FzCheckboxGroupProps = {
