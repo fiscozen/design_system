@@ -18,7 +18,7 @@
  * // Indeterminate checkbox (parent with children)
  * <FzCheckbox v-model="selection" :indeterminate="true" label="Select All" />
  */
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, shallowRef } from "vue";
 import { FzCheckboxProps } from "./types";
 import { mapSizeToClasses } from "./common";
 import { generateCheckboxId } from "./utils";
@@ -60,8 +60,15 @@ const model = defineModel<
 
 const emit = defineEmits(["change"]);
 
-/** Reference to the native checkbox input element */
-const refCheckbox = ref<HTMLInputElement | null>(null);
+/**
+ * Reference to the native checkbox input element.
+ * Uses shallowRef for optimal performance with DOM element references.
+ * ShallowRef avoids deep reactivity tracking of all DOM element properties.
+ *
+ * @see https://vuejs.org/api/reactivity-advanced.html#shallowref
+ * @note When upgrading to Vue 3.5+, consider migrating to useTemplateRef()
+ */
+const refCheckbox = shallowRef<HTMLInputElement | null>(null);
 
 /**
  * CSS classes for the hidden native checkbox input.
