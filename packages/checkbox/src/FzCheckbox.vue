@@ -1,24 +1,24 @@
 <template>
   <div class="flex justify-center flex-col w-fit gap-4">
-    <input
-      type="checkbox"
-      :id="id"
-      :disabled="disabled"
-      :class="staticInputClass"
-      :required="required"
-      :value="value"
-      @change="emit('change', $event)"
-      v-model="model"
-      :indeterminate="indeterminate"
-      :aria-checked="indeterminate ? 'mixed' : isChecked"
-      :aria-label="label"
-      :aria-required="required"
-      :aria-invalid="error"
-      :aria-describedby="error ? `${id}-error` : undefined"
-      :aria-labelledby="standalone ? undefined : `${id}-label`"
-      ref="refCheckbox"
-    />
-    <div class="flex gap-4 items-center">
+    <div class="flex gap-0 items-center">
+      <input
+        type="checkbox"
+        :id="id"
+        :disabled="disabled"
+        :class="staticInputClass"
+        :required="required"
+        :value="value"
+        @change="emit('change', $event)"
+        v-model="model"
+        :indeterminate="indeterminate"
+        :aria-checked="indeterminate ? 'mixed' : isChecked"
+        :aria-label="label"
+        :aria-required="required"
+        :aria-invalid="error"
+        :aria-describedby="error ? `${id}-error` : undefined"
+        :aria-labelledby="standalone ? undefined : `${id}-label`"
+        ref="refCheckbox"
+      />
       <label
         :id="`${id}-label`"
         :for="id"
@@ -30,9 +30,9 @@
           :class="[staticIconClass, computedIconClasses]"
           :variant="computedVariant"
         />
-        {{ standalone ? "" : label }}
+        <template v-if="!standalone">{{ label }}</template>
       </label>
-      <FzTooltip v-if="tooltip" v-bind="tooltip">
+      <FzTooltip v-if="tooltip" v-bind="tooltip" class="ml-4">
         <FzIcon name="info-circle" :size="size" class="text-semantic-info" />
       </FzTooltip>
     </div>
