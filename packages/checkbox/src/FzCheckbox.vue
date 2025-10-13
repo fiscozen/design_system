@@ -1,68 +1,3 @@
-<template>
-  <div class="flex justify-center flex-col w-fit gap-4">
-    <div class="flex gap-0 items-center">
-      <input
-        type="checkbox"
-        :id="id"
-        :disabled="disabled"
-        :class="staticInputClass"
-        :required="required"
-        :value="value"
-        @change="emit('change', $event)"
-        v-model="model"
-        :aria-checked="indeterminate ? 'mixed' : isChecked"
-        :aria-label="label"
-        :aria-required="required"
-        :aria-invalid="error"
-        :aria-describedby="error ? `${id}-error` : undefined"
-        :aria-labelledby="standalone ? undefined : `${id}-label`"
-        :aria-owns="props.ariaOwns"
-        ref="refCheckbox"
-      />
-      <label
-        :id="`${id}-label`"
-        :for="id"
-        :class="[staticLabelClass, computedLabelClass]"
-      >
-        <!-- @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop -->
-        <FzIcon
-          :name="computedName"
-          :size="size"
-          :class="[staticIconClass, computedIconClasses]"
-          :variant="computedVariant"
-          aria-hidden="true"
-        />
-        <template v-if="!standalone">{{ label }}</template>
-      </label>
-      <!-- @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation -->
-      <FzTooltip v-if="tooltip" v-bind="tooltip" class="ml-4">
-        <!-- @TODO: When FzIcon natively supports role and ariaLabel props, use them instead of HTML attributes -->
-        <FzIcon
-          name="info-circle"
-          :size="size"
-          class="text-semantic-info"
-          role="img"
-          aria-label="Informazioni aggiuntive"
-        />
-      </FzTooltip>
-    </div>
-    <!-- @TODO: When FzAlert natively supports role, ariaLive, ariaAtomic as props, remove HTML attributes and use typed props -->
-    <FzAlert
-      v-if="error && $slots.error"
-      :id="`${id}-error`"
-      :size="size"
-      type="error"
-      alertStyle="simple"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
-      <slot name="error" />
-    </FzAlert>
-    <slot name="children" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { FzCheckboxProps } from "./types";
@@ -178,6 +113,72 @@ onMounted(() => {
   }
 });
 </script>
+
+<template>
+  <div class="flex justify-center flex-col w-fit gap-4">
+    <div class="flex gap-0 items-center">
+      <input
+        type="checkbox"
+        :id="id"
+        :disabled="disabled"
+        :class="staticInputClass"
+        :required="required"
+        :value="value"
+        @change="emit('change', $event)"
+        v-model="model"
+        :aria-checked="indeterminate ? 'mixed' : isChecked"
+        :aria-label="label"
+        :aria-required="required"
+        :aria-invalid="error"
+        :aria-describedby="error ? `${id}-error` : undefined"
+        :aria-labelledby="standalone ? undefined : `${id}-label`"
+        :aria-owns="props.ariaOwns"
+        ref="refCheckbox"
+      />
+      <label
+        :id="`${id}-label`"
+        :for="id"
+        :class="[staticLabelClass, computedLabelClass]"
+      >
+        <!-- @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop -->
+        <FzIcon
+          :name="computedName"
+          :size="size"
+          :class="[staticIconClass, computedIconClasses]"
+          :variant="computedVariant"
+          aria-hidden="true"
+        />
+        <template v-if="!standalone">{{ label }}</template>
+      </label>
+      <!-- @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation -->
+      <FzTooltip v-if="tooltip" v-bind="tooltip" class="ml-4">
+        <!-- @TODO: When FzIcon natively supports role and ariaLabel props, use them instead of HTML attributes -->
+        <FzIcon
+          name="info-circle"
+          :size="size"
+          class="text-semantic-info"
+          role="img"
+          aria-label="Informazioni aggiuntive"
+        />
+      </FzTooltip>
+    </div>
+    <!-- @TODO: When FzAlert natively supports role, ariaLive, ariaAtomic as props, remove HTML attributes and use typed props -->
+    <FzAlert
+      v-if="error && $slots.error"
+      :id="`${id}-error`"
+      :size="size"
+      type="error"
+      alertStyle="simple"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <slot name="error" />
+    </FzAlert>
+    <slot name="children" />
+  </div>
+</template>
+
 <style scoped>
 .fz-hidden-input {
   opacity: 0;

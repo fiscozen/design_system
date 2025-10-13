@@ -1,50 +1,3 @@
-<template>
-  <div :class="[staticContainerClass, computedContainerClass]">
-    <label
-      :id="id + '-label'"
-      :for="id"
-      :class="[staticLabeldClass, computedLabelClass]"
-    >
-      <span>{{ label }}<span v-if="required"> *</span></span>
-      <p :class="computedHelpTextClass" v-if="$slots.help">
-        <slot name="help" />
-      </p>
-    </label>
-    <div
-      :class="[staticSlotContainerClass, computedSlotContainerClass]"
-      :id="id"
-      role="group"
-      :aria-labelledby="id + '-label'"
-      :aria-describedby="error && $slots.error ? id + '-error' : undefined"
-      :aria-required="required"
-      :aria-invalid="error"
-    >
-      <FzCheckboxGroupOption
-        v-for="option in options"
-        :key="option.value ? option.value.toString() : option.label"
-        v-model="model"
-        :disabled="disabled"
-        v-bind="option"
-        :emphasis="emphasis"
-        :size="size"
-      />
-    </div>
-    <!-- @TODO: When FzAlert natively supports role, ariaLive, ariaAtomic as props, remove HTML attributes and use typed props -->
-    <FzAlert
-      v-if="error && $slots.error"
-      :id="id + '-error'"
-      :size="size"
-      type="error"
-      alertStyle="simple"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
-      <slot name="error" />
-    </FzAlert>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from "vue";
 import { FzCheckboxGroupProps } from "./types";
@@ -97,3 +50,50 @@ function generateRandomId() {
   return Math.random().toString(36).slice(2, 9);
 }
 </script>
+
+<template>
+  <div :class="[staticContainerClass, computedContainerClass]">
+    <label
+      :id="id + '-label'"
+      :for="id"
+      :class="[staticLabeldClass, computedLabelClass]"
+    >
+      <span>{{ label }}<span v-if="required"> *</span></span>
+      <p :class="computedHelpTextClass" v-if="$slots.help">
+        <slot name="help" />
+      </p>
+    </label>
+    <div
+      :class="[staticSlotContainerClass, computedSlotContainerClass]"
+      :id="id"
+      role="group"
+      :aria-labelledby="id + '-label'"
+      :aria-describedby="error && $slots.error ? id + '-error' : undefined"
+      :aria-required="required"
+      :aria-invalid="error"
+    >
+      <FzCheckboxGroupOption
+        v-for="option in options"
+        :key="option.value ? option.value.toString() : option.label"
+        v-model="model"
+        :disabled="disabled"
+        v-bind="option"
+        :emphasis="emphasis"
+        :size="size"
+      />
+    </div>
+    <!-- @TODO: When FzAlert natively supports role, ariaLive, ariaAtomic as props, remove HTML attributes and use typed props -->
+    <FzAlert
+      v-if="error && $slots.error"
+      :id="id + '-error'"
+      :size="size"
+      type="error"
+      alertStyle="simple"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <slot name="error" />
+    </FzAlert>
+  </div>
+</template>

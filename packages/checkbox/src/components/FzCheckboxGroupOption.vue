@@ -1,34 +1,3 @@
-<template>
-  <FzCheckbox
-    v-model="model"
-    :value="props.value"
-    :label="props.label"
-    :disabled="disabled"
-    :emphasis="emphasis"
-    :error="error"
-    :size="size"
-    :indeterminate="isIndeterminate"
-    :aria-owns="children?.length ? childrenIds : undefined"
-    @change="onCheckboxParentChange"
-  >
-    <template #children v-if="children?.length">
-      <div :class="[staticChildContainerClass, computedChildContainerClasses]">
-        <FzCheckbox
-          v-for="(child, index) in children"
-          :key="child.value ? child.value.toString() : child.label"
-          v-model="model"
-          :disabled="disabled"
-          v-bind="child"
-          :emphasis="emphasis"
-          :error="error"
-          :size="size"
-          :checkbox-id="`${parentId}-child-${index}`"
-          @change="handleCheckboxParentChange"
-        />
-      </div>
-    </template>
-  </FzCheckbox>
-</template>
 <script setup lang="ts">
 import { computed } from "vue";
 import FzCheckbox from "../FzCheckbox.vue";
@@ -103,4 +72,35 @@ function onCheckboxParentChange() {
   }
 }
 </script>
-<style scoped></style>
+
+<template>
+  <FzCheckbox
+    v-model="model"
+    :value="props.value"
+    :label="props.label"
+    :disabled="disabled"
+    :emphasis="emphasis"
+    :error="error"
+    :size="size"
+    :indeterminate="isIndeterminate"
+    :aria-owns="children?.length ? childrenIds : undefined"
+    @change="onCheckboxParentChange"
+  >
+    <template #children v-if="children?.length">
+      <div :class="[staticChildContainerClass, computedChildContainerClasses]">
+        <FzCheckbox
+          v-for="(child, index) in children"
+          :key="child.value ? child.value.toString() : child.label"
+          v-model="model"
+          :disabled="disabled"
+          v-bind="child"
+          :emphasis="emphasis"
+          :error="error"
+          :size="size"
+          :checkbox-id="`${parentId}-child-${index}`"
+          @change="handleCheckboxParentChange"
+        />
+      </div>
+    </template>
+  </FzCheckbox>
+</template>
