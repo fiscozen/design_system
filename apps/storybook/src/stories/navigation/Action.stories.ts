@@ -34,6 +34,14 @@ const meta: Meta<typeof FzAction> = {
       control: { type: 'text' },
       description: 'Name of the icon'
     },
+    iconPosition: {
+      control: { type: 'select' },
+      options: ['left', 'right'],
+      description: 'Position of the icon'
+    },
+    iconVariant: {
+      description: 'Variant of the icon'
+    },
     label: {
       control: { type: 'text' },
       description: 'Main label text'
@@ -43,24 +51,13 @@ const meta: Meta<typeof FzAction> = {
       description: 'Sub-label text'
     },
     // FzLink specific props
+    to: {
+      control: { type: 'text' },
+      description: 'Target of the link'
+    },
     replace: {
       control: { type: 'boolean' },
       description: 'Calls router.replace instead of router.push'
-    },
-    linkType: {
-      control: { type: 'select' },
-      options: ['default', 'danger'],
-      description: 'The purpose of the link'
-    },
-    linkStyle: {
-      control: { type: 'select' },
-      options: ['default', 'underline'],
-      description: 'The appearance of the link'
-    },
-    linkSize: {
-      control: { type: 'select' },
-      options: ['xs', 'sm', 'md', 'lg'],
-      description: 'Size of the link'
     },
     target: {
       control: { type: 'text' },
@@ -69,7 +66,7 @@ const meta: Meta<typeof FzAction> = {
     external: {
       control: { type: 'boolean' },
       description: 'Whether the link is for an external page or not'
-    }
+    },
   },
   args: {
     type: 'action',
@@ -166,10 +163,20 @@ const ExternalLink: Story = {
   }
 }
 
+// Icon position to the right
+const IconPositionLeft: Story = {
+  args: {
+    iconPosition: 'left',
+    label: 'Icon Position Right',
+    subLabel: 'Icon position to the right'
+  }
+}
+
 export {
   Default,
   TextLeft,
   TextCenter,
+  IconPositionLeft,
   OnlyIcon,
   Disabled,
   TextTruncated,
