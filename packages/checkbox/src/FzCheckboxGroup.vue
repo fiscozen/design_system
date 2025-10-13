@@ -16,6 +16,8 @@
       role="group"
       :aria-labelledby="id + '-label'"
       :aria-describedby="error && $slots.error ? id + '-error' : undefined"
+      :aria-required="required"
+      :aria-invalid="error"
     >
       <FzCheckboxGroupOption
         v-for="option in options"
