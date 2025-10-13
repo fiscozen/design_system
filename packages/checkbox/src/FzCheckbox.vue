@@ -18,7 +18,7 @@
       :aria-labelledby="standalone ? undefined : `${id}-label`"
       ref="refCheckbox"
     />
-    <div class="flex gap-4">
+    <div class="flex gap-4 items-center">
       <label
         :id="`${id}-label`"
         :for="id"
@@ -77,7 +77,7 @@ const refCheckbox = ref<HTMLInputElement | null>(null);
 
 const staticInputClass = "w-0 h-0 peer fz-hidden-input";
 const staticLabelClass = `
-  flex gap-4 hover:cursor-pointer text-core-black
+  flex gap-4 items-center hover:cursor-pointer text-core-black
   peer-focus:[&_div]:after:border-1
   peer-focus:[&_div]:after:border-solid
   peer-focus:[&_div]:after:rounded-[3px]
