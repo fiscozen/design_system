@@ -39,6 +39,7 @@ import { computed } from "vue";
 import { FzCheckboxGroupProps } from "./types";
 import { FzAlert } from "@fiscozen/alert";
 import { mapSizeToClasses } from "./common";
+import { generateGroupId } from "./utils";
 import FzCheckboxGroupOption from "./components/FzCheckboxGroupOption.vue";
 
 // Vue 3 compatibility config for child component
@@ -49,7 +50,7 @@ FzCheckboxGroupOption.compatConfig = {
 const props = defineProps<FzCheckboxGroupProps>();
 
 /** Unique identifier for the checkbox group, used for ARIA relationships */
-const id = `fz-checkbox-group-${generateRandomId()}`;
+const id = generateGroupId();
 
 /** Dynamic classes for help text based on size and disabled state */
 const computedHelpTextClass = computed(() => [
@@ -100,16 +101,6 @@ const computedSlotContainerClass = computed(() => [
   props.size === "md" ? (props.horizontal ? "gap-16" : "gap-8") : "",
   props.horizontal ? "flex-row" : "flex-col",
 ]);
-
-/**
- * Generates a random 7-character alphanumeric ID.
- * Used for creating unique identifiers for ARIA relationships.
- *
- * @returns Random ID string
- */
-function generateRandomId() {
-  return Math.random().toString(36).slice(2, 9);
-}
 </script>
 
 <template>

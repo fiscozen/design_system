@@ -21,6 +21,7 @@
 import { computed, onMounted, ref } from "vue";
 import { FzCheckboxProps } from "./types";
 import { mapSizeToClasses } from "./common";
+import { generateCheckboxId } from "./utils";
 import { FzIcon } from "@fiscozen/icons";
 import { FzTooltip } from "@fiscozen/tooltip";
 import { FzAlert } from "@fiscozen/alert";
@@ -38,11 +39,11 @@ const currentValue = computed(() => props.value ?? props.label);
 
 /**
  * Unique identifier for the checkbox input.
- * Uses provided checkboxId prop if available, otherwise generates random ID.
+ * Uses provided checkboxId prop if available, otherwise generates unique ID
+ * using timestamp + random suffix strategy.
  * Deterministic IDs are important for aria-owns relationships in hierarchical structures.
  */
-const id =
-  props.checkboxId || `fz-checkbox-${Math.random().toString(36).slice(2, 9)}`;
+const id = props.checkboxId || generateCheckboxId();
 
 /**
  * Two-way binding for checkbox state.

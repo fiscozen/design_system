@@ -18,6 +18,7 @@
 import { computed } from "vue";
 import FzCheckbox from "../FzCheckbox.vue";
 import { ParentCheckbox } from "../types";
+import { generateCheckboxId } from "../utils";
 
 // Vue 3 compatibility config
 FzCheckbox.compatConfig = {
@@ -42,7 +43,7 @@ const model = defineModel<(string | number | boolean)[]>({
  * Unique identifier for this parent checkbox.
  * Used as a prefix for child checkbox IDs to establish ARIA relationships.
  */
-const parentId = `fz-checkbox-parent-${Math.random().toString(36).slice(2, 9)}`;
+const parentId = generateCheckboxId();
 
 /**
  * Computes space-separated list of child checkbox IDs.
