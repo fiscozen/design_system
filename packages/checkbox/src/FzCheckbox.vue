@@ -33,7 +33,13 @@
         <template v-if="!standalone">{{ label }}</template>
       </label>
       <FzTooltip v-if="tooltip" v-bind="tooltip" class="ml-4">
-        <FzIcon name="info-circle" :size="size" class="text-semantic-info" />
+        <FzIcon
+          name="info-circle"
+          :size="size"
+          class="text-semantic-info"
+          role="img"
+          aria-label="Informazioni aggiuntive"
+        />
       </FzTooltip>
     </div>
     <FzAlert
