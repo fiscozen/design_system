@@ -120,9 +120,7 @@ const computedName = computed(() => {
 });
 
 const computedVariant = computed(() => {
-  if (props.disabled) return "fas";
-
-  return !props.indeterminate && !isChecked.value ? "far" : "fas";
+  return props.indeterminate || isChecked.value ? "fas" : "far";
 });
 
 const computedMarginSize = computed(() => ({
