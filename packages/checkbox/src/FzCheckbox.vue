@@ -20,11 +20,7 @@
  */
 import { computed, onMounted, shallowRef } from "vue";
 import { FzCheckboxProps } from "./types";
-import {
-  mapSizeToClasses,
-  CHECKBOX_ICONS,
-  CHECKBOX_ICON_VARIANTS,
-} from "./common";
+import { mapSizeToClasses } from "./common";
 import { generateCheckboxId } from "./utils";
 import { FzIcon } from "@fiscozen/icons";
 import { FzTooltip } from "@fiscozen/tooltip";
@@ -34,6 +30,36 @@ const props = withDefaults(defineProps<FzCheckboxProps>(), {
   size: "md",
   indeterminate: false,
 });
+
+/**
+ * FontAwesome icon names for different checkbox states.
+ * Frozen for optimal memory usage - string literals are interned once and reused.
+ *
+ * @constant
+ *
+ * @example
+ * const icon = isChecked ? CHECKBOX_ICONS.CHECKED : CHECKBOX_ICONS.UNCHECKED;
+ */
+const CHECKBOX_ICONS = Object.freeze({
+  /** Icon for indeterminate state (partial selection) */
+  INDETERMINATE: "square-minus",
+  /** Icon for checked state */
+  CHECKED: "square-check",
+  /** Icon for unchecked state */
+  UNCHECKED: "square",
+} as const);
+
+/**
+ * FontAwesome icon variant prefixes for checkbox icons.
+ *
+ * @constant
+ */
+const CHECKBOX_ICON_VARIANTS = Object.freeze({
+  /** Solid variant (filled) - used for checked and indeterminate states */
+  SOLID: "fas",
+  /** Regular variant (outline) - used for unchecked state */
+  REGULAR: "far",
+} as const);
 
 /**
  * Computes the actual value to use for the checkbox.
