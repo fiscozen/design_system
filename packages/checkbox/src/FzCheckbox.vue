@@ -10,7 +10,6 @@
         :value="value"
         @change="emit('change', $event)"
         v-model="model"
-        :indeterminate="indeterminate"
         :aria-checked="indeterminate ? 'mixed' : isChecked"
         :aria-label="label"
         :aria-required="required"
