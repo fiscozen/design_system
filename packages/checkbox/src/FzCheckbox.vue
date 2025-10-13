@@ -20,7 +20,11 @@
  */
 import { computed, onMounted, shallowRef } from "vue";
 import { FzCheckboxProps } from "./types";
-import { mapSizeToClasses } from "./common";
+import {
+  mapSizeToClasses,
+  CHECKBOX_ICONS,
+  CHECKBOX_ICON_VARIANTS,
+} from "./common";
 import { generateCheckboxId } from "./utils";
 import { FzIcon } from "@fiscozen/icons";
 import { FzTooltip } from "@fiscozen/tooltip";
@@ -136,10 +140,10 @@ const computedIconClasses = computed(() => [
  */
 const computedName = computed(() => {
   if (props.indeterminate) {
-    return "square-minus";
+    return CHECKBOX_ICONS.INDETERMINATE;
   }
 
-  return isChecked.value ? "square-check" : "square";
+  return isChecked.value ? CHECKBOX_ICONS.CHECKED : CHECKBOX_ICONS.UNCHECKED;
 });
 
 /**
@@ -148,7 +152,9 @@ const computedName = computed(() => {
  * - "far" (regular): For unchecked state
  */
 const computedVariant = computed(() => {
-  return props.indeterminate || isChecked.value ? "fas" : "far";
+  return props.indeterminate || isChecked.value
+    ? CHECKBOX_ICON_VARIANTS.SOLID
+    : CHECKBOX_ICON_VARIANTS.REGULAR;
 });
 
 /**
