@@ -129,6 +129,12 @@ const TextTruncated: Story = {
     isTextTruncated: true,
     label: 'Very Long Label That Should Be Truncated',
     subLabel: 'Very Long Sub Label That Should Also Be Truncated'
+  },
+  globals: {
+    viewport: {
+      value: "xs",
+      isRotated: false
+    }
   }
 }
 

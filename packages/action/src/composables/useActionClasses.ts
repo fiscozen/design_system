@@ -11,7 +11,7 @@ export interface UseActionClassesProps {
 export function useActionClasses(props: UseActionClassesProps) {
   const baseClasses = computed(() =>
     [
-      "group inline-flex max-w-full rounded border border-transparent transition-colors duration-200 gap-2",
+      "group inline-flex max-w-full rounded border border-transparent border-2 transition-colors duration-200 gap-2",
       // Environment padding
       props.variant === "onlyIcon"
         ? props.environment === "backoffice"
@@ -30,7 +30,7 @@ export function useActionClasses(props: UseActionClassesProps) {
       // States
       props.disabled ? "text-grey-200 cursor-not-allowed" : "",
       !props.disabled
-        ? "text-core-black hover:bg-background-alice-blue hover:text-blue-500 focus:border-blue-200 border-2 focus:outline-none"
+        ? "text-core-black hover:bg-background-alice-blue hover:text-blue-500 focus:border-blue-200 focus:outline-none"
         : "",
     ]
       .filter(Boolean)

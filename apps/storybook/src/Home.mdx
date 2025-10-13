@@ -1,4 +1,4 @@
-import { Meta, Controls } from '@storybook/addon-docs/blocks'
+import { Meta, Controls, Markdown } from '@storybook/addon-docs/blocks'
 
 <Meta title="Welcome" />
 
@@ -32,7 +32,8 @@ Each package is scoped under **@fiscozen** followed by the specific component na
 
 Here is the current list of available packages with their corresponding components:
 
-- **@fiscozen/actionlist**: `FzActionList`.
+- **@fiscozen/action**: `FzAction`, `FzActionList`, `FzActionSection`. <Markdown>{`<span style="color: green;">New</span>`}</Markdown>
+- <Markdown>{`~~**@fiscozen/actionlist**: FzActionList.~~   <span style="color: gold;">Deprecated</span> use @fiscozen/action instead`}</Markdown>
 - **@fiscozen/alert**: `FzAlert`.
 - **@fiscozen/avatar**: `FzAvatar`.
 - **@fiscozen/badge**: `FzBadge`.
@@ -48,8 +49,8 @@ Here is the current list of available packages with their corresponding componen
 - **@fiscozen/input**: `FzInput`, `FzCurrencyInput`.
 - **@fiscozen/link**: `FzLink`.
 - **@fiscozen/navbar**: `FzNavbar`.
-- **@fiscozen/navlink**: `FzNavLink`.
-- **@fiscozen/navlist**: `FzNavList`.
+- <Markdown>{`~~**@fiscozen/navlink**: FzNavLink.~~   <span style="color: gold;">Deprecated</span> use @fiscozen/action instead`}</Markdown>
+- <Markdown>{`~~**@fiscozen/navlist**: FzNavList.~~   <span style="color: gold;">Deprecated</span> use @fiscozen/action instead`}</Markdown>
 - **@fiscozen/radio**: `FzRadio`, `FzRadioGroup`.
 - **@fiscozen/select**: `FzSelect`.
 - **@fiscozen/simple-table**: `FzSimpleTable`.
