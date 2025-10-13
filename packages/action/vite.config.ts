@@ -23,7 +23,7 @@ export default defineConfig({
       name: 'FzAction',
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', '@fiscozen/icons', '@fiscozen/link'],
       output: {
         globals: {
           vue: 'Vue',

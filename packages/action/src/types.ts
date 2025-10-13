@@ -1,6 +1,6 @@
 import { IconVariant } from "@fiscozen/icons";
 import { FzLinkProps } from "@fiscozen/link";
-import { RouteLocation } from "vue-router";
+import { RouteLocation, RouteLocationRaw } from "vue-router";
 
 // Environment variants
 export type FzActionEnvironment = "backoffice" | "frontoffice";
@@ -18,6 +18,10 @@ export interface FzActionCommonProps {
    * Variant of the fontawesome icon
    */
   iconVariant?: IconVariant;
+  /**
+   * Icon position (left/right)
+   */
+  iconPosition?: "left" | "right";
   /**
    * Alternative prop to default label slot
    */
@@ -42,25 +46,33 @@ export interface FzActionCommonProps {
    * Whether text should be truncated
    */
   isTextTruncated?: boolean;
+  /**
+   * Type of the action (link/action)
+   */
+  type?: "link" | "action";
 }
 
 // Props specific to link actions (from FzLink)
 
 // Discriminated union for action props
-export type FzActionProps =
-  | (FzActionCommonProps &
-      FzLinkProps & {
-        type: "link";
-        meta: CustomRouteLocation;
-      })
-  | (FzActionCommonProps & {
-      type: "action";
-    });
+export type FzActionProps = FzActionLinkProps | FzActionButtonProps;
 
-// Helper type for Vue Router route locations
-type PartialExcept<T, K extends keyof T> = Pick<Required<T>, K> & Partial<T>;
+export type FzActionLinkProps = FzActionCommonProps & {
+  type: "link";
+  meta?: CustomRouteLocation;
+  to: RouteLocationRaw;
+  replace?: boolean;
+  target?: string;
+  external?: boolean;
+};
 
-export type CustomRouteLocation = PartialExcept<RouteLocation, "path" | "name">;
+export type FzActionButtonProps = FzActionCommonProps & {
+  type: "action";
+};
+
+export type CustomRouteLocation =
+  | { path: string; name?: string }
+  | { name: string; path?: string };
 
 // ActionList component props
 export interface FzActionListProps {
