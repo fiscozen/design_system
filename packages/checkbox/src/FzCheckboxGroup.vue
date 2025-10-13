@@ -35,6 +35,9 @@
       :size="size"
       type="error"
       alertStyle="simple"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
     >
       <slot name="error" />
     </FzAlert>
