@@ -144,12 +144,6 @@ const computedVariant = computed(() => {
   return props.indeterminate || isChecked.value ? "fas" : "far";
 });
 
-/** Size-specific margin utilities (currently unused, candidate for removal) */
-const computedMarginSize = computed(() => ({
-  "mt-4": props.size === "sm",
-  "mt-6": props.size === "md",
-}));
-
 /**
  * Computes text color classes for the label based on checkbox state.
  * Priority order: disabled > error > emphasis > default
