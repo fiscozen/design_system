@@ -28,6 +28,7 @@
           :size="size"
           :class="[staticIconClass, computedIconClasses]"
           :variant="computedVariant"
+          aria-hidden="true"
         />
         <template v-if="!standalone">{{ label }}</template>
       </label>
