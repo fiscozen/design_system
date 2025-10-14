@@ -71,7 +71,7 @@ const model = defineModel<string[]>({
 const staticLabeldClass: string = "flex flex-col";
 
 /** Base layout for the root container */
-const staticContainerClass: string = "flex flex-col";
+const staticContainerClass: string = "flex flex-col gap-10";
 
 /** Base layout for the checkboxes container */
 const staticSlotContainerClass: string = "flex items-start";
@@ -87,8 +87,6 @@ const computedLabelClass = computed<string[]>(() => [
 /** Dynamic container classes with size-specific spacing */
 const computedContainerClass = computed<string[]>(() => [
   mapSizeToClasses[props.size],
-  props.size === "sm" ? "gap-10" : "",
-  props.size === "md" ? "gap-12" : "",
 ]);
 
 /**
