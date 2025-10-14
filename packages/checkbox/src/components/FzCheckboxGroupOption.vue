@@ -58,13 +58,11 @@ const childrenIds = computed<string | undefined>(() =>
 );
 
 /** Base layout classes for the children container (indented and vertical) */
-const staticChildContainerClass: string = "flex flex-col justify-center pl-24";
+const staticChildContainerClass: string =
+  "flex flex-col justify-center gap-8 pl-24";
 
 /** Size-specific spacing for child checkboxes */
-const computedChildContainerClasses = computed<string[]>(() => [
-  props.size === "sm" ? "gap-6 mt-6" : "",
-  props.size === "md" ? "gap-8 mt-8" : "",
-]);
+const computedChildContainerClasses = computed<string[]>(() => []);
 
 /**
  * Determines if parent checkbox should be in indeterminate state.

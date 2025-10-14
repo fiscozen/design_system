@@ -117,7 +117,7 @@ const staticInputClass: string = "w-0 h-0 peer fz-hidden-input";
  * The pseudo-element (after:) creates a visible focus indicator for keyboard navigation.
  */
 const staticLabelClass: string = `
-  flex gap-4 items-center hover:cursor-pointer text-core-black
+  flex gap-4 items-baseline hover:cursor-pointer text-core-black
   peer-focus:[&_div]:after:border-1
   peer-focus:[&_div]:after:border-solid
   peer-focus:[&_div]:after:rounded-[3px]
