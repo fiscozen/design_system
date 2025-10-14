@@ -13,6 +13,28 @@
 const EPOCH_OFFSET = 1600000000000;
 
 /**
+ * Base for converting numbers to alphanumeric strings.
+ * Base 36 uses digits 0-9 and letters a-z.
+ * 
+ * @internal
+ */
+const ALPHANUMERIC_BASE = 36;
+
+/**
+ * Start index for slicing random string (skips "0." prefix from Math.random()).
+ * 
+ * @internal
+ */
+const RANDOM_SLICE_START = 2;
+
+/**
+ * End index for slicing random string, producing a 5-character suffix.
+ * 
+ * @internal
+ */
+const RANDOM_SLICE_END = 7;
+
+/**
  * Generates a unique ID for checkbox components.
  * 
  * The ID is composed of:
@@ -32,7 +54,7 @@ const EPOCH_OFFSET = 1600000000000;
  */
 export function generateCheckboxId(): string {
   const timestamp = Date.now() - EPOCH_OFFSET;
-  const random = Math.random().toString(36).slice(2, 7);
+  const random = Math.random().toString(ALPHANUMERIC_BASE).slice(RANDOM_SLICE_START, RANDOM_SLICE_END);
   return `fz-checkbox-${timestamp}-${random}`;
 }
 
@@ -49,7 +71,7 @@ export function generateCheckboxId(): string {
  */
 export function generateGroupId(): string {
   const timestamp = Date.now() - EPOCH_OFFSET;
-  const random = Math.random().toString(36).slice(2, 7);
+  const random = Math.random().toString(ALPHANUMERIC_BASE).slice(RANDOM_SLICE_START, RANDOM_SLICE_END);
   return `fz-checkbox-group-${timestamp}-${random}`;
 }
 
