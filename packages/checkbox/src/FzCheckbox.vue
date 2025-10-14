@@ -146,16 +146,63 @@ const isChecked = computed(() => {
   }
 });
 
+/**
+ * Computes text color classes for the label based on checkbox state.
+ * Priority order: disabled > error > emphasis > default
+ *
+ * Memoized as a computed property for optimal performance.
+ *
+ * @returns Tailwind CSS classes for label text color
+ */
+const textClassForLabel = computed(() => {
+  if (props.disabled) {
+    return "text-grey-300";
+  }
+
+  if (props.error) {
+    return "text-semantic-error";
+  }
+
+  if (props.emphasis) {
+    // Emphasis mode: icon changes to blue when checked/indeterminate
+    return "text-core-black peer-checked:[&_div]:text-blue-500 peer-indeterminate:[&_div]:text-blue-500";
+  }
+
+  return "text-core-black";
+});
+
+/**
+ * Computes text color classes for the checkbox icon.
+ * Priority order: disabled > error > default
+ * Note: Emphasis state falls through to default (grey) for unchecked state
+ *
+ * Memoized as a computed property for optimal performance.
+ *
+ * @returns Tailwind CSS classes for icon color
+ */
+const textClassForIcon = computed(() => {
+  if (props.disabled) {
+    return "text-grey-300";
+  }
+
+  if (props.error) {
+    return "text-semantic-error";
+  }
+
+  // Default includes emphasis state (grey for unchecked)
+  return "text-grey-500";
+});
+
 /** Dynamic label classes based on size and state (disabled, error, emphasis) */
 const computedLabelClass = computed(() => [
   mapSizeToClasses[props.size],
-  getTextClassForLabel(),
+  textClassForLabel.value,
 ]);
 
 /** Dynamic icon classes based on size and state */
 const computedIconClasses = computed(() => [
   props.size === "sm" ? "mt-1" : "",
-  getTextClassForIcon(),
+  textClassForIcon.value,
 ]);
 
 /**
@@ -182,45 +229,6 @@ const computedVariant = computed(() => {
     ? CHECKBOX_ICON_VARIANTS.SOLID
     : CHECKBOX_ICON_VARIANTS.REGULAR;
 });
-
-/**
- * Computes text color classes for the label based on checkbox state.
- * Priority order: disabled > error > emphasis > default
- *
- * @returns Tailwind CSS classes for label text color
- */
-const getTextClassForLabel = () => {
-  switch (true) {
-    case props.disabled:
-      return "text-grey-300";
-    case props.error:
-      return "text-semantic-error";
-    case props.emphasis:
-      // Emphasis mode: icon changes to blue when checked/indeterminate
-      return "text-core-black peer-checked:[&_div]:text-blue-500 peer-indeterminate:[&_div]:text-blue-500";
-    default:
-      return "text-core-black";
-  }
-};
-
-/**
- * Computes text color classes for the checkbox icon.
- * Priority order: disabled > error > default
- * Note: Emphasis state falls through to default (grey) for unchecked state
- *
- * @returns Tailwind CSS classes for icon color
- */
-const getTextClassForIcon = () => {
-  switch (true) {
-    case props.disabled:
-      return "text-grey-300";
-    case props.error:
-      return "text-semantic-error";
-    case props.emphasis:
-    default:
-      return "text-grey-500";
-  }
-};
 
 /**
  * Lifecycle hook: Triggers change event on mount if checkbox is initially checked.
