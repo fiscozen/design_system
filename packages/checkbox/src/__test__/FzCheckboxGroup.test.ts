@@ -43,6 +43,14 @@ describe("FzCheckboxGroup", () => {
     expect(wrapper.html()).toContain("Test error message");
     expect(wrapper.findAllComponents(FzCheckbox).length).toBe(2);
     expect(wrapper.props("error")).toBe(true);
+    
+    // Verify error prop is propagated to individual checkboxes
+    expect(wrapper.findAllComponents(FzCheckbox).at(0)!.props("error")).toBe(
+      true,
+    );
+    expect(wrapper.findAllComponents(FzCheckbox).at(1)!.props("error")).toBe(
+      true,
+    );
   });
 
   it("has disabled checkboxes when disabled prop is true", async () => {
@@ -141,5 +149,40 @@ describe("FzCheckboxGroup", () => {
       errorId,
     );
     expect(wrapper.find(`#${errorId}`).exists()).toBe(true);
+  });
+
+  it("propagates error prop to child checkboxes in hierarchical structure", async () => {
+    const wrapper = mount(FzCheckboxGroup, {
+      props: {
+        label: "Test Checkbox Group",
+        size: "md",
+        modelValue: [],
+        options: [
+          {
+            label: "Parent Option",
+            value: "parent",
+            children: [
+              { label: "Child 1", value: "child1" },
+              { label: "Child 2", value: "child2" },
+            ],
+          },
+        ],
+        error: true,
+      },
+      slots: {
+        error: "Test error message",
+      },
+    });
+
+    await wrapper.vm.$nextTick();
+    const allCheckboxes = wrapper.findAllComponents(FzCheckbox);
+    
+    // Should have parent + 2 children = 3 checkboxes
+    expect(allCheckboxes.length).toBe(3);
+    
+    // All checkboxes should have error prop set to true
+    allCheckboxes.forEach((checkbox) => {
+      expect(checkbox.props("error")).toBe(true);
+    });
   });
 });

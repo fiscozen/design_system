@@ -149,6 +149,7 @@ const computedSlotContainerClass = computed<string[]>(() => [
         :disabled="disabled"
         v-bind="option"
         :emphasis="emphasis"
+        :error="error"
         :size="size"
       />
     </div>
