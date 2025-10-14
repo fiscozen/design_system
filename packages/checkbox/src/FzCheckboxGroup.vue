@@ -110,11 +110,7 @@ const computedSlotContainerClass = computed<string[]>(() => [
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
     -->
-    <label
-      :id="id + '-label'"
-      :for="id"
-      :class="[staticLabeldClass, computedLabelClass]"
-    >
+    <label :id="id + '-label'" :class="[staticLabeldClass, computedLabelClass]">
       <!-- Main label text with required asterisk if applicable -->
       <span>{{ label }}<span v-if="required"> *</span></span>
 
