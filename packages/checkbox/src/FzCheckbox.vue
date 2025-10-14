@@ -22,7 +22,7 @@ import { computed, onMounted, shallowRef } from "vue";
 import { FzCheckboxProps } from "./types";
 import { mapSizeToClasses } from "./common";
 import { generateCheckboxId } from "./utils";
-import { FzIcon } from "@fiscozen/icons";
+import { FzIcon, type IconVariant } from "@fiscozen/icons";
 import { FzTooltip } from "@fiscozen/tooltip";
 import { FzAlert } from "@fiscozen/alert";
 
@@ -65,7 +65,9 @@ const CHECKBOX_ICON_VARIANTS = Object.freeze({
  * Computes the actual value to use for the checkbox.
  * Falls back to label if no explicit value is provided.
  */
-const currentValue = computed(() => props.value ?? props.label);
+const currentValue = computed<string | number | boolean>(
+  () => props.value ?? props.label
+);
 
 /**
  * Unique identifier for the checkbox input.
@@ -73,7 +75,7 @@ const currentValue = computed(() => props.value ?? props.label);
  * using timestamp + random suffix strategy.
  * Deterministic IDs are important for aria-owns relationships in hierarchical structures.
  */
-const id = props.checkboxId || generateCheckboxId();
+const id: string = props.checkboxId || generateCheckboxId();
 
 /**
  * Two-way binding for checkbox state.
@@ -88,7 +90,9 @@ const model = defineModel<
   required: true,
 });
 
-const emit = defineEmits(["change"]);
+const emit = defineEmits<{
+  change: [event: Event];
+}>();
 
 /**
  * Reference to the native checkbox input element.
@@ -105,14 +109,14 @@ const refCheckbox = shallowRef<HTMLInputElement | null>(null);
  * Uses "peer" for Tailwind's peer selector to style adjacent elements based on input state.
  * Input is visually hidden but remains accessible to screen readers and keyboard navigation.
  */
-const staticInputClass = "w-0 h-0 peer fz-hidden-input";
+const staticInputClass: string = "w-0 h-0 peer fz-hidden-input";
 
 /**
  * CSS classes for the label element.
  * Includes focus ring styles that appear on the icon when the hidden input receives focus.
  * The pseudo-element (after:) creates a visible focus indicator for keyboard navigation.
  */
-const staticLabelClass = `
+const staticLabelClass: string = `
   flex gap-4 items-center hover:cursor-pointer text-core-black
   peer-focus:[&_div]:after:border-1
   peer-focus:[&_div]:after:border-solid
@@ -127,7 +131,7 @@ const staticLabelClass = `
 `;
 
 /** Position context for the focus ring pseudo-element */
-const staticIconClass = "relative";
+const staticIconClass: string = "relative";
 
 /**
  * Determines if the checkbox is currently checked.
@@ -136,7 +140,7 @@ const staticIconClass = "relative";
  * - Array model: Returns true if the array contains this checkbox's value
  * - Null/undefined: Returns false
  */
-const isChecked = computed(() => {
+const isChecked = computed<boolean>(() => {
   if (model.value == null) return false;
 
   if (typeof model.value === "boolean") {
@@ -154,7 +158,7 @@ const isChecked = computed(() => {
  *
  * @returns Tailwind CSS classes for label text color
  */
-const textClassForLabel = computed(() => {
+const textClassForLabel = computed<string>(() => {
   if (props.disabled) {
     return "text-grey-300";
   }
@@ -180,7 +184,7 @@ const textClassForLabel = computed(() => {
  *
  * @returns Tailwind CSS classes for icon color
  */
-const textClassForIcon = computed(() => {
+const textClassForIcon = computed<string>(() => {
   if (props.disabled) {
     return "text-grey-300";
   }
@@ -194,13 +198,13 @@ const textClassForIcon = computed(() => {
 });
 
 /** Dynamic label classes based on size and state (disabled, error, emphasis) */
-const computedLabelClass = computed(() => [
+const computedLabelClass = computed<string[]>(() => [
   mapSizeToClasses[props.size],
   textClassForLabel.value,
 ]);
 
 /** Dynamic icon classes based on size and state */
-const computedIconClasses = computed(() => [
+const computedIconClasses = computed<string[]>(() => [
   props.size === "sm" ? "mt-1" : "",
   textClassForIcon.value,
 ]);
@@ -211,7 +215,7 @@ const computedIconClasses = computed(() => [
  * - Checked: square with check
  * - Unchecked: empty square
  */
-const computedName = computed(() => {
+const computedName = computed<string>(() => {
   if (props.indeterminate) {
     return CHECKBOX_ICONS.INDETERMINATE;
   }
@@ -224,7 +228,7 @@ const computedName = computed(() => {
  * - "fas" (solid): For checked or indeterminate states
  * - "far" (regular): For unchecked state
  */
-const computedVariant = computed(() => {
+const computedVariant = computed<IconVariant>(() => {
   return props.indeterminate || isChecked.value
     ? CHECKBOX_ICON_VARIANTS.SOLID
     : CHECKBOX_ICON_VARIANTS.REGULAR;

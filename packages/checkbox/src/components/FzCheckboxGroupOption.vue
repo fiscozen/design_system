@@ -28,7 +28,9 @@ FzCheckbox.compatConfig = {
 const props = defineProps<ParentCheckbox & { size: "sm" | "md" }>();
 
 /** The actual value used for this checkbox (falls back to label if no value provided) */
-const currentValue = computed(() => props.value ?? props.label);
+const currentValue = computed<string | number | boolean>(
+  () => props.value ?? props.label
+);
 
 /**
  * Two-way binding for selected values.
@@ -43,7 +45,7 @@ const model = defineModel<(string | number | boolean)[]>({
  * Unique identifier for this parent checkbox.
  * Used as a prefix for child checkbox IDs to establish ARIA relationships.
  */
-const parentId = generateCheckboxId();
+const parentId: string = generateCheckboxId();
 
 /**
  * Computes space-separated list of child checkbox IDs.
@@ -51,15 +53,15 @@ const parentId = generateCheckboxId();
  *
  * @returns Space-separated string of child IDs, or undefined if no children
  */
-const childrenIds = computed(() =>
+const childrenIds = computed<string | undefined>(() =>
   props.children?.map((child, index) => `${parentId}-child-${index}`).join(" ")
 );
 
 /** Base layout classes for the children container (indented and vertical) */
-const staticChildContainerClass = "flex flex-col justify-center pl-24";
+const staticChildContainerClass: string = "flex flex-col justify-center pl-24";
 
 /** Size-specific spacing for child checkboxes */
-const computedChildContainerClasses = computed(() => [
+const computedChildContainerClasses = computed<string[]>(() => [
   props.size === "sm" ? "gap-6 mt-6" : "",
   props.size === "md" ? "gap-8 mt-8" : "",
 ]);
@@ -76,7 +78,7 @@ const computedChildContainerClasses = computed(() => [
  *
  * @returns true if parent should display indeterminate state
  */
-const isIndeterminate = computed(() => {
+const isIndeterminate = computed<boolean>(() => {
   if (!props.children) return false;
 
   const numChecked = props.children.filter((child) =>

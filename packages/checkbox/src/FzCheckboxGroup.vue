@@ -50,10 +50,10 @@ FzCheckboxGroupOption.compatConfig = {
 const props = defineProps<FzCheckboxGroupProps>();
 
 /** Unique identifier for the checkbox group, used for ARIA relationships */
-const id = generateGroupId();
+const id: string = generateGroupId();
 
 /** Dynamic classes for help text based on size and disabled state */
-const computedHelpTextClass = computed(() => [
+const computedHelpTextClass = computed<string[]>(() => [
   props.size === "sm" ? "text-xs" : "text-sm",
   props.disabled ? "text-grey-400" : "text-grey-500",
 ]);
@@ -68,16 +68,16 @@ const model = defineModel<string[]>({
 });
 
 /** Base layout for the label element */
-const staticLabeldClass = "flex flex-col";
+const staticLabeldClass: string = "flex flex-col";
 
 /** Base layout for the root container */
-const staticContainerClass = "flex flex-col";
+const staticContainerClass: string = "flex flex-col";
 
 /** Base layout for the checkboxes container */
-const staticSlotContainerClass = "flex items-start";
+const staticSlotContainerClass: string = "flex items-start";
 
 /** Dynamic label classes based on size, spacing, and disabled state */
-const computedLabelClass = computed(() => [
+const computedLabelClass = computed<string[]>(() => [
   mapSizeToClasses[props.size],
   props.size === "sm" ? "gap-4" : "",
   props.size === "md" ? "gap-6" : "",
@@ -85,7 +85,7 @@ const computedLabelClass = computed(() => [
 ]);
 
 /** Dynamic container classes with size-specific spacing */
-const computedContainerClass = computed(() => [
+const computedContainerClass = computed<string[]>(() => [
   mapSizeToClasses[props.size],
   props.size === "sm" ? "gap-10" : "",
   props.size === "md" ? "gap-12" : "",
@@ -95,7 +95,7 @@ const computedContainerClass = computed(() => [
  * Dynamic classes for the checkbox container.
  * Handles both horizontal and vertical layouts with appropriate spacing.
  */
-const computedSlotContainerClass = computed(() => [
+const computedSlotContainerClass = computed<string[]>(() => [
   mapSizeToClasses[props.size],
   props.size === "sm" ? "gap-6" : "",
   props.size === "md" ? (props.horizontal ? "gap-16" : "gap-8") : "",
