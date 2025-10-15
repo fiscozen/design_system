@@ -42,6 +42,9 @@ describe("FzCheckboxGroup", () => {
     await wrapper.vm.$nextTick();
     expect(wrapper.html()).toContain("Test error message");
     expect(wrapper.findAllComponents(FzCheckbox).length).toBe(2);
+    expect(wrapper.props("error")).toBe(true);
+    
+    // Verify error prop is propagated to individual checkboxes
     expect(wrapper.findAllComponents(FzCheckbox).at(0)!.props("error")).toBe(
       true,
     );
@@ -96,5 +99,90 @@ describe("FzCheckboxGroup", () => {
     expect(wrapper.findAllComponents(FzCheckbox).at(1)!.props("emphasis")).toBe(
       true,
     );
+  });
+
+  it("has correct ARIA attributes for accessibility", async () => {
+    const wrapper = mount(FzCheckboxGroup, {
+      props: {
+        label: "Test Checkbox Group",
+        size: "md",
+        modelValue: [],
+        options: [
+          { label: "Option 1", value: "option1" },
+          { label: "Option 2", value: "option2" },
+        ],
+      },
+    });
+    await wrapper.vm.$nextTick();
+    const groupId = wrapper.find("[role='group']").attributes("id");
+    const labelId = groupId + "-label";
+    expect(wrapper.find("[role='group']").exists()).toBe(true);
+    expect(wrapper.find("[role='group']").attributes("aria-labelledby")).toBe(
+      labelId,
+    );
+    expect(wrapper.find(`#${labelId}`).exists()).toBe(true);
+    expect(
+      wrapper.find("[role='group']").attributes("aria-describedby"),
+    ).toBeUndefined();
+  });
+
+  it("has aria-describedby when error is present", async () => {
+    const wrapper = mount(FzCheckboxGroup, {
+      props: {
+        label: "Test Checkbox Group",
+        size: "md",
+        modelValue: [],
+        options: [
+          { label: "Option 1", value: "option1" },
+          { label: "Option 2", value: "option2" },
+        ],
+        error: true,
+      },
+      slots: {
+        error: "Test error message",
+      },
+    });
+    await wrapper.vm.$nextTick();
+    const groupId = wrapper.find("[role='group']").attributes("id");
+    const errorId = groupId + "-error";
+    expect(wrapper.find("[role='group']").attributes("aria-describedby")).toBe(
+      errorId,
+    );
+    expect(wrapper.find(`#${errorId}`).exists()).toBe(true);
+  });
+
+  it("propagates error prop to child checkboxes in hierarchical structure", async () => {
+    const wrapper = mount(FzCheckboxGroup, {
+      props: {
+        label: "Test Checkbox Group",
+        size: "md",
+        modelValue: [],
+        options: [
+          {
+            label: "Parent Option",
+            value: "parent",
+            children: [
+              { label: "Child 1", value: "child1" },
+              { label: "Child 2", value: "child2" },
+            ],
+          },
+        ],
+        error: true,
+      },
+      slots: {
+        error: "Test error message",
+      },
+    });
+
+    await wrapper.vm.$nextTick();
+    const allCheckboxes = wrapper.findAllComponents(FzCheckbox);
+    
+    // Should have parent + 2 children = 3 checkboxes
+    expect(allCheckboxes.length).toBe(3);
+    
+    // All checkboxes should have error prop set to true
+    allCheckboxes.forEach((checkbox) => {
+      expect(checkbox.props("error")).toBe(true);
+    });
   });
 });
