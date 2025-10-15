@@ -17,6 +17,8 @@ We handle dependencies with `pnpm`. Please refer to its [documentation](https://
 ### Dependency installation
 Run `pnpm install`.
 
+**Note**: Playwright browsers (Chromium) will be installed automatically via postinstall script. This is necessary for running Storybook interaction tests.
+
 ### Running tasks
 Our task runner of choice is [nx](https://nx.dev/).
 In order to run tasks you can, for example
@@ -26,3 +28,51 @@ npx nx run-many -t build // executes the "build" task on all projects
 npx run affected:test // execute the "test" task only on packages that are affected in this branch vs main, and on all dependent packages
 ```
 Please refer to Nx documentation for full usage explanation.
+
+## Testing
+
+### Storybook Tests
+The project uses [Storybook Test](https://storybook.js.org/docs/writing-tests) for component testing with:
+- **Interaction tests** - User behavior simulation with play functions
+- **Accessibility tests** - WCAG compliance checks with @storybook/addon-a11y
+- **Visual tests** - UI snapshot comparison with Chromatic
+
+```bash
+# Start Storybook dev server
+pnpm storybook
+
+# Run all Storybook tests (from root)
+pnpm test:storybook
+
+# Run tests in watch mode (recommended for development)
+pnpm test:storybook:watch
+
+# Run tests with coverage report
+pnpm test:storybook:coverage
+
+# Run tests with Vitest UI
+pnpm test:storybook:ui
+```
+
+**Alternative (from apps/storybook directory):**
+```bash
+cd apps/storybook
+
+pnpm test:storybook           # Run once
+pnpm test:storybook:watch     # Watch mode
+pnpm test:storybook:coverage  # With coverage
+```
+
+#### Visual Tests with Chromatic
+
+To run visual tests with Chromatic:
+
+1. Get your project token from [chromatic.com](https://www.chromatic.com/start)
+2. Add to `.env` file in project root:
+   ```
+   CHROMATIC_TOKEN=your-project-token-here
+   ```
+3. Update `apps/storybook/chromatic.config.json` with your project ID
+4. Run: `cd apps/storybook && pnpm chromatic`
+
+Visual tests can also be run directly in Storybook UI via the Visual Tests addon panel.
