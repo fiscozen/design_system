@@ -35,7 +35,6 @@ Please refer to Nx documentation for full usage explanation.
 The project uses [Storybook Test](https://storybook.js.org/docs/writing-tests) for component testing with:
 - **Interaction tests** - User behavior simulation with play functions
 - **Accessibility tests** - WCAG compliance checks with @storybook/addon-a11y
-- **Visual tests** - UI snapshot comparison with Chromatic
 
 ```bash
 # Start Storybook dev server
@@ -62,17 +61,3 @@ pnpm test:storybook           # Run once
 pnpm test:storybook:watch     # Watch mode
 pnpm test:storybook:coverage  # With coverage
 ```
-
-#### Visual Tests with Chromatic
-
-To run visual tests with Chromatic:
-
-1. Get your project token from [chromatic.com](https://www.chromatic.com/start)
-2. Add to `.env` file in project root:
-   ```
-   CHROMATIC_TOKEN=your-project-token-here
-   ```
-3. Update `apps/storybook/chromatic.config.json` with your project ID
-4. Run: `cd apps/storybook && pnpm chromatic`
-
-Visual tests can also be run directly in Storybook UI via the Visual Tests addon panel.
