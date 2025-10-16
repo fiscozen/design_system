@@ -7,7 +7,32 @@ const meta = {
   component: FzTooltip,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
-  argTypes: {},
+  argTypes: {
+    status: {
+      control: { type: 'select' },
+      options: ['neutral', 'informative', 'positive', 'alert', 'error']
+    },
+    position: {
+      control: { type: 'select' },
+      options: [
+        'auto',
+        'top',
+        'top-start',
+        'top-end',
+        'bottom',
+        'bottom-start',
+        'bottom-end',
+        'left',
+        'left-start',
+        'left-end',
+        'right',
+        'right-start',
+        'right-end'
+      ]
+    },
+    text: { control: { type: 'text' } },
+    withIcon: { control: { type: 'boolean' } }
+  },
   args: {
     position: 'auto'
   }
@@ -35,7 +60,7 @@ const gridClasses = {
 const simpletemplate = `
   <div class="h-11/12 w-11/12" :class="args.classes"> 
     <FzTooltip :text="args.text" :status="args.status">
-      <button>test</button>
+      <span>hover</span>
     </FzTooltip>
   </div>
 `
@@ -43,10 +68,10 @@ const template = `
   <div class="h-[200vh] w-[100vw]" :class="['grid', 'grid-cols-3', 'grid-rows-3', 'grow-0', args.classes]"> 
     <div v-for="(gridClass, key) in gridClasses" :class="['container', 'flex', 'flex-row', gridClass]">
       <FzTooltip :text="args.text" :status="args.status">
-        <button>hover</button>
+        <span>hover</span>
       </FzTooltip>
       <FzTooltip :text="args.text" :status="args.status" class="ml-12" :withIcon="true">
-          <button>hover, with icon</button>
+          <span>hover, with icon</span>
       </FzTooltip>
     </div>
   </div>
