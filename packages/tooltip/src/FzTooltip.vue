@@ -2,12 +2,21 @@
   /**
    * FzTooltip - Accessible tooltip component
    * 
-   * A fully accessible tooltip component compliant with WCAG 2.1 AA standards.
-   * Features keyboard navigation, screen reader support, and hover persistence
+   * A tooltip component with WCAG 2.1 AA compliance features including
+   * keyboard navigation, screen reader support, and hover persistence
    * as per WCAG 1.4.13 Content on Hover or Focus criteria.
    * 
-   * @example
-   * <FzTooltip text="User settings" aria-label="Open settings menu">
+   * Note: The wrapper adds tabindex="0" for keyboard accessibility.
+   * When wrapping already-interactive elements (buttons, links), this creates
+   * an extra tab stop - a known limitation accepted for implementation simplicity.
+   * 
+   * @example With non-interactive element (recommended)
+   * <FzTooltip text="User settings">
+   *   <span>Settings</span>
+   * </FzTooltip>
+   * 
+   * @example With interactive element (works but creates extra tab stop)
+   * <FzTooltip text="User settings">
    *   <button>Settings</button>
    * </FzTooltip>
    */
@@ -230,19 +239,17 @@
     class="fz__tooltip flex h-max"
     :contentClass="['rounded', '!p-0', 'm-4', classes, 'z-80']">
     <template #opener>
-      <div
+      <span
         :aria-describedby="ariaDescribedby"
-        :aria-label="props.ariaLabel"
-        :tabindex="0"
+        tabindex="0"
         @mouseover="handleMouseover"
         @mouseleave="handleMouseleave"
         @focus="handleFocus"
         @blur="handleBlur"
         @keydown="handleKeydown"
-        role="button"
       >
         <slot></slot>
-      </div>
+      </span>
     </template>
     <div
       :id="tooltipId"
