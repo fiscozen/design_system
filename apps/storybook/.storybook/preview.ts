@@ -32,7 +32,21 @@ const preview: Preview = {
     viewport: {
       options: viewports
     },
-    layout: 'fullscreen'
+    layout: 'fullscreen',
+    a11y: {
+      // Configurazione axe-core
+      config: {
+        rules: [
+          {
+            // Disabilita la regola 'region' che non si applica ai componenti isolati
+            id: 'region',
+            enabled: false
+          }
+        ]
+      },
+      // Esegui test a11y automaticamente e genera errori in caso di violazioni
+      test: 'error'
+    }
   },
 
   decorators: [
