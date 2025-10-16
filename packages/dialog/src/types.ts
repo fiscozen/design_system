@@ -34,6 +34,13 @@ export type FzDialogProps = {
   /**
    * classes to apply to body
    */
+  /**
+   * Whether to close the dialog on escape key press
+   */
+  closeOnEscape?: boolean;
+  /**
+   * classes to apply to body
+   */
   bodyClasses?:
     | string
     | string[]

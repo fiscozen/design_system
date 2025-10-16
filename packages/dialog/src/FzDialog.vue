@@ -111,7 +111,7 @@ useClickOutside(
 );
 
 const handleKeyUp = (e: KeyboardEvent) => {
-  if (!visible.value || e.key !== "Escape") {
+  if (!visible.value || e.key !== "Escape" || !props.closeOnEscape) {
     return;
   }
   dialog.value!.close();
