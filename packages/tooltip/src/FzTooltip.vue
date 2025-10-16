@@ -240,6 +240,7 @@
     :contentClass="['rounded', '!p-0', 'm-4', classes, 'z-80']">
     <template #opener>
       <span
+        :aria-label="ariaLabel"
         :aria-describedby="ariaDescribedby"
         tabindex="0"
         @mouseover="handleMouseover"
