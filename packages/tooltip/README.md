@@ -143,17 +143,22 @@ type FzTooltipStatus =
 
 This component implements comprehensive accessibility features:
 
-- **Keyboard Navigation**: Full support for Tab, Enter, and Escape keys
-- **Screen Reader Support**: Proper ARIA roles, labels, and descriptions
+- **Keyboard Navigation**: Support for Tab, focus, and Escape keys
+- **Screen Reader Support**: Proper ARIA roles and descriptions
 - **Focus Management**: Accessible focus indicators and logical tab order
 - **Hover Persistence**: WCAG 1.4.13 compliant hover behavior
 - **High Contrast**: Color combinations meeting WCAG AA contrast ratios
+
+### Known Limitations
+
+⚠️ **Nested Interactive Elements**: When wrapping already-interactive elements (buttons, links), the tooltip adds a wrapper with `tabindex="0"`, creating an extra tab stop. This is a known limitation that doesn't break functionality but may cause minor UX friction. For optimal accessibility, prefer wrapping non-interactive elements (spans, images, icons).
 
 ### Keyboard Interactions
 
 | Key | Action |
 |-----|--------|
-| `Tab` | Focus trigger element and show tooltip |
+| `Tab` | Focus wrapper and show tooltip |
 | `Shift + Tab` | Focus previous element and hide tooltip |  
-| `Escape` | Hide tooltip while maintaining trigger focus |
-| `Enter` / `Space` | Activate trigger element (delegates to wrapped element) |
+| `Escape` | Hide tooltip while maintaining focus |
+
+**Note**: When the wrapped element is interactive (button/link), its native keyboard behavior (Enter/Space activation) continues to work normally.

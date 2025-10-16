@@ -2,140 +2,90 @@
 
 exports[`FzTooltip > should match alert snapshot 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex">
-    <div data-v-be4a804f=""></div>
-  </div>
-  <div class="bg-core-white absolute p-4 z-10 rounded bg-semantic-warning" style="display: none;">
-    <div data-v-be4a804f="" class="text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center">
-      <!--v-if--><span data-v-be4a804f="" class="basis-0 grow shrink-0 fz__tooltip__text">sample text</span>
-    </div>
-  </div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
 </div>"
 `;
 
 exports[`FzTooltip > should match alert snapshot with icon 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex">
-    <div data-v-be4a804f=""></div>
-  </div>
-  <div class="bg-core-white absolute p-4 z-10 rounded bg-semantic-warning" style="display: none;">
-    <div data-v-be4a804f="" class="text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center">
-      <div data-v-be4a804f="" class="flex items-center justify-center w-[25px] h-[25px] mr-8 grow-0 shrink-0"><svg class="svg-inline--fa fa-triangle-exclamation fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="triangle-exclamation" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <path class="" fill="currentColor" d="M248.4 84.3c1.6-2.7 4.5-4.3 7.6-4.3s6 1.6 7.6 4.3L461.9 410c1.4 2.3 2.1 4.9 2.1 7.5c0 8-6.5 14.5-14.5 14.5H62.5c-8 0-14.5-6.5-14.5-14.5c0-2.7 .7-5.3 2.1-7.5L248.4 84.3zm-41-25L9.1 385c-6 9.8-9.1 21-9.1 32.5C0 452 28 480 62.5 480h387c34.5 0 62.5-28 62.5-62.5c0-11.5-3.2-22.7-9.1-32.5L304.6 59.3C294.3 42.4 275.9 32 256 32s-38.3 10.4-48.6 27.3zM288 368a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm-8-184c0-13.3-10.7-24-24-24s-24 10.7-24 24v96c0 13.3 10.7 24 24 24s24-10.7 24-24V184z"></path>
-        </svg></div><span data-v-be4a804f="" class="basis-0 grow shrink-0 fz__tooltip__text">sample text</span>
-    </div>
-  </div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
 </div>"
 `;
 
 exports[`FzTooltip > should match error snapshot 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex">
-    <div data-v-be4a804f=""></div>
-  </div>
-  <div class="bg-core-white absolute p-4 z-10 rounded bg-semantic-error" style="display: none;">
-    <div data-v-be4a804f="" class="text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center">
-      <!--v-if--><span data-v-be4a804f="" class="basis-0 grow shrink-0 fz__tooltip__text">sample text</span>
-    </div>
-  </div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
 </div>"
 `;
 
 exports[`FzTooltip > should match error snapshot with icon 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex">
-    <div data-v-be4a804f=""></div>
-  </div>
-  <div class="bg-core-white absolute p-4 z-10 rounded bg-semantic-error" style="display: none;">
-    <div data-v-be4a804f="" class="text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center">
-      <div data-v-be4a804f="" class="flex items-center justify-center w-[25px] h-[25px] mr-8 grow-0 shrink-0"><svg class="svg-inline--fa fa-circle-exclamation fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-exclamation" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c-13.3 0-24 10.7-24 24V264c0 13.3 10.7 24 24 24s24-10.7 24-24V152c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path>
-        </svg></div><span data-v-be4a804f="" class="basis-0 grow shrink-0 fz__tooltip__text">sample text</span>
-    </div>
-  </div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
 </div>"
 `;
 
 exports[`FzTooltip > should match informative snapshot 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex">
-    <div data-v-be4a804f=""></div>
-  </div>
-  <div class="bg-core-white absolute p-4 z-10 rounded bg-semantic-info" style="display: none;">
-    <div data-v-be4a804f="" class="text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center">
-      <!--v-if--><span data-v-be4a804f="" class="basis-0 grow shrink-0 fz__tooltip__text">sample text</span>
-    </div>
-  </div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
 </div>"
 `;
 
 exports[`FzTooltip > should match informative snapshot with icon 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex">
-    <div data-v-be4a804f=""></div>
-  </div>
-  <div class="bg-core-white absolute p-4 z-10 rounded bg-semantic-info" style="display: none;">
-    <div data-v-be4a804f="" class="text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center">
-      <div data-v-be4a804f="" class="flex items-center justify-center w-[25px] h-[25px] mr-8 grow-0 shrink-0"><svg class="svg-inline--fa fa-circle-info fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24h80c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V248c0-13.3-10.7-24-24-24H216c-13.3 0-24 10.7-24 24s10.7 24 24 24h24v64H216zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path>
-        </svg></div><span data-v-be4a804f="" class="basis-0 grow shrink-0 fz__tooltip__text">sample text</span>
-    </div>
-  </div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
 </div>"
 `;
 
 exports[`FzTooltip > should match neutral snapshot 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex">
-    <div data-v-be4a804f=""></div>
-  </div>
-  <div class="bg-core-white absolute p-4 z-10 rounded bg-grey-500" style="display: none;">
-    <div data-v-be4a804f="" class="text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center">
-      <!--v-if--><span data-v-be4a804f="" class="basis-0 grow shrink-0 fz__tooltip__text">sample text</span>
-    </div>
-  </div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
 </div>"
 `;
 
 exports[`FzTooltip > should match neutral snapshot with icon 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex">
-    <div data-v-be4a804f=""></div>
-  </div>
-  <div class="bg-core-white absolute p-4 z-10 rounded bg-grey-500" style="display: none;">
-    <div data-v-be4a804f="" class="text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center">
-      <div data-v-be4a804f="" class="flex items-center justify-center w-[25px] h-[25px] mr-8 grow-0 shrink-0">
-        <!---->
-      </div><span data-v-be4a804f="" class="basis-0 grow shrink-0 fz__tooltip__text">sample text</span>
-    </div>
-  </div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
 </div>"
 `;
 
 exports[`FzTooltip > should match positive snapshot 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex">
-    <div data-v-be4a804f=""></div>
-  </div>
-  <div class="bg-core-white absolute p-4 z-10 rounded bg-semantic-success" style="display: none;">
-    <div data-v-be4a804f="" class="text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center">
-      <!--v-if--><span data-v-be4a804f="" class="basis-0 grow shrink-0 fz__tooltip__text">sample text</span>
-    </div>
-  </div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
 </div>"
 `;
 
 exports[`FzTooltip > should match positive snapshot with icon 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex">
-    <div data-v-be4a804f=""></div>
-  </div>
-  <div class="bg-core-white absolute p-4 z-10 rounded bg-semantic-success" style="display: none;">
-    <div data-v-be4a804f="" class="text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center">
-      <div data-v-be4a804f="" class="flex items-center justify-center w-[25px] h-[25px] mr-8 grow-0 shrink-0"><svg class="svg-inline--fa fa-circle-check fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"></path>
-        </svg></div><span data-v-be4a804f="" class="basis-0 grow shrink-0 fz__tooltip__text">sample text</span>
-    </div>
-  </div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
 </div>"
 `;
