@@ -146,3 +146,57 @@ export const ErrorTooltip: Story = {
     text: 'this is a error tooltip with a very long text that lets us test overflow'
   }
 }
+
+export const WithInteractiveElements: Story = {
+  render: (args) => ({
+    setup() {
+      const handleClick = (label: string) => alert(`Clicked: ${label}`)
+      return { args, handleClick }
+    },
+    components: { FzTooltip },
+    template: `
+      <div class="flex flex-col gap-16 p-16">
+        <div>
+          <h3 class="text-lg font-semibold mb-8">Recommended: Non-interactive elements</h3>
+          <div class="flex gap-16">
+            <FzTooltip text="This is an icon with tooltip">
+              <span class="text-2xl">⚙️</span>
+            </FzTooltip>
+            
+            <FzTooltip text="Image with tooltip">
+              <img src="https://via.placeholder.com/40" alt="User avatar" class="rounded-full" />
+            </FzTooltip>
+            
+            <FzTooltip text="Text with tooltip" status="informative" :withIcon="true">
+              <span class="text-sm font-medium">Hover me</span>
+            </FzTooltip>
+          </div>
+          <p class="text-sm text-gray-600 mt-8">
+            ✅ Clean tab order: wrapper + content are non-interactive
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-8">Works but creates extra tab stop</h3>
+          <div class="flex gap-16">
+            <FzTooltip text="Button with tooltip">
+              <button @click="handleClick('Save')" class="px-12 py-6 bg-blue-500 text-white rounded">
+                Save
+              </button>
+            </FzTooltip>
+            
+            <FzTooltip text="Link with tooltip" status="informative">
+              <a href="#" @click.prevent="handleClick('Link')" class="text-blue-600 underline">
+                Click me
+              </a>
+            </FzTooltip>
+          </div>
+          <p class="text-sm text-gray-600 mt-8">
+            ⚠️ Nested interactive elements: 2 tab stops (wrapper + button/link)
+          </p>
+        </div>
+      </div>
+    `
+  }),
+  args: {}
+}
