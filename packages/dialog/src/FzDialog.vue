@@ -41,6 +41,7 @@ import "dialog-polyfill/dist/dialog-polyfill.css";
 const props = withDefaults(defineProps<FzDialogProps>(), {
   size: "md",
   closeOnBackdrop: true,
+  closeOnEscape: true,
 });
 const emit = defineEmits(["fzmodal:cancel"]);
 
