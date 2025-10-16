@@ -8,7 +8,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "nx run-many --target=build",
     "storybook": "nx run @fiscozen/storybook:storybook",
-    "generate:component": "plop component"
+    "generate:component": "plop component",
+    "test:storybook": "cd apps/storybook && pnpm test:storybook",
+    "test:storybook:watch": "cd apps/storybook && pnpm test:storybook:watch",
+    "test:storybook:coverage": "cd apps/storybook && pnpm test:storybook:coverage",
+    "test:storybook:ui": "cd apps/storybook && pnpm test:storybook --ui"
   },
   "engines": {
     "pnpm": "^10.0.0",
