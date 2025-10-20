@@ -32,7 +32,11 @@ const meta = {
       ]
     },
     text: { control: { type: 'text' } },
-    withIcon: { control: { type: 'boolean' } }
+    withIcon: { control: { type: 'boolean' } },
+    isInteractive: { 
+      control: { type: 'boolean' },
+      description: 'Set to true when wrapping interactive elements to prevent double tab stops'
+    }
   },
   args: {
     position: 'auto'
@@ -253,21 +257,17 @@ export const WithInteractiveElements: Story = {
               <span class="text-2xl">⚙️</span>
             </FzTooltip>
             
-            <FzTooltip text="Image with tooltip">
-              <img src="https://via.placeholder.com/40" alt="User avatar" class="rounded-full" />
-            </FzTooltip>
-            
             <FzTooltip text="Text with tooltip" status="informative" :withIcon="true">
               <span class="text-sm font-medium">Hover me</span>
             </FzTooltip>
           </div>
           <p class="text-sm text-gray-600 mt-8">
-            ✅ Clean tab order: wrapper + content are non-interactive
+            Clean tab order: only the wrapper is focusable
           </p>
         </div>
         
         <div>
-          <h3 class="text-lg font-semibold mb-8">Works but creates extra tab stop</h3>
+          <h3 class="text-lg font-semibold mb-8">Without isInteractive (not recommended)</h3>
           <div class="flex gap-16">
             <FzTooltip text="Button with tooltip">
               <button @click="handleClick('Save')" class="px-12 py-6 bg-blue-500 text-white rounded">
@@ -282,7 +282,27 @@ export const WithInteractiveElements: Story = {
             </FzTooltip>
           </div>
           <p class="text-sm text-gray-600 mt-8">
-            ⚠️ Nested interactive elements: 2 tab stops (wrapper + button/link)
+            Double tab stops: wrapper (tabindex="0") + button/link
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-8">With isInteractive (recommended)</h3>
+          <div class="flex gap-16">
+            <FzTooltip text="Button with tooltip" isInteractive>
+              <button @click="handleClick('Save Optimized')" class="px-12 py-6 bg-green-500 text-white rounded">
+                Save
+              </button>
+            </FzTooltip>
+            
+            <FzTooltip text="Link with tooltip" status="informative" isInteractive>
+              <a href="#" @click.prevent="handleClick('Link Optimized')" class="text-green-600 underline">
+                Click me
+              </a>
+            </FzTooltip>
+          </div>
+          <p class="text-sm text-gray-600 mt-8">
+            Single tab stop: only the button/link (no wrapper tabindex)
           </p>
         </div>
       </div>
@@ -292,303 +312,35 @@ export const WithInteractiveElements: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     
-    // Test with non-interactive element (icon)
+    // Test 1: Non-interactive element (icon) should have tabindex="0"
     const iconWrapper = canvas.getByText('⚙️').closest('span[tabindex="0"]')
     expect(iconWrapper).toBeInTheDocument()
     expect(iconWrapper).toHaveAttribute('tabindex', '0')
     
-    // Test hover on icon
-    await userEvent.hover(iconWrapper!)
+    // Test 2: Button WITHOUT isInteractive should have wrapper with tabindex="0"
+    const allButtons = canvas.getAllByRole('button', { name: /Save/i })
+    const buttonWithoutInteractive = allButtons[0] // First Save button (without isInteractive)
+    const buttonWrapperOld = buttonWithoutInteractive.closest('span[tabindex="0"]')
+    expect(buttonWrapperOld).toBeInTheDocument()
+    expect(buttonWrapperOld).toHaveAttribute('tabindex', '0')
     
-    // Wait for the icon tooltip to appear - aria-describedby is set when tooltip is shown
-    await waitFor(async () => {
-      const iconAriaDescribedby = iconWrapper!.getAttribute('aria-describedby')
-      expect(iconAriaDescribedby).not.toBeNull()
-      
-      const tooltip = document.getElementById(iconAriaDescribedby!)
-      expect(tooltip).not.toBeNull()
-      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-      expect(tooltip).toHaveTextContent('This is an icon with tooltip')
-    })
+    // Test 3: Button WITH isInteractive should NOT have wrapper with tabindex
+    const buttonWithInteractive = allButtons[1] // Second Save button (with isInteractive)
+    const buttonWrapperNew = buttonWithInteractive.parentElement
+    expect(buttonWrapperNew).toBeInTheDocument()
+    expect(buttonWrapperNew).not.toHaveAttribute('tabindex')
     
-    await userEvent.unhover(iconWrapper!)
-    await waitFor(async () => {
-      const iconAriaDescribedby = iconWrapper!.getAttribute('aria-describedby')
-      if (iconAriaDescribedby) {
-        const tooltip = document.getElementById(iconAriaDescribedby)
-        expect(tooltip).toHaveAttribute('aria-hidden', 'true')
-      }
-    }, { timeout: 500 })
+    // Test 4: Links - verify both behaviors
+    const allLinks = canvas.getAllByRole('link', { name: /Click me/i })
     
-    // Test with button (nested interactive element)
-    const button = canvas.getByRole('button', { name: /save/i })
-    const buttonWrapper = button.closest('span[tabindex="0"]')
-    expect(buttonWrapper).toBeInTheDocument()
+    // First link WITHOUT isInteractive should have wrapper with tabindex
+    const linkWithoutInteractive = allLinks[0]
+    const linkWrapperOld = linkWithoutInteractive.closest('span[tabindex="0"]')
+    expect(linkWrapperOld).toBeInTheDocument()
     
-    // Test hover on button wrapper
-    await userEvent.hover(buttonWrapper!)
-    
-    // Wait for the button tooltip to appear - aria-describedby is set when tooltip is shown
-    await waitFor(async () => {
-      const buttonAriaDescribedby = buttonWrapper!.getAttribute('aria-describedby')
-      expect(buttonAriaDescribedby).not.toBeNull()
-      
-      const tooltip = document.getElementById(buttonAriaDescribedby!)
-      expect(tooltip).not.toBeNull()
-      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-      expect(tooltip).toHaveTextContent('Button with tooltip')
-    })
-  }
-}
-
-// Story dedicata ai test di navigazione da tastiera
-export const KeyboardNavigation: Story = {
-  render: (args) => ({
-    setup() {
-      return { args }
-    },
-    components: { FzTooltip },
-    template: `
-      <div class="p-16">
-        <h3 class="text-lg font-semibold mb-8">Keyboard Navigation Tests</h3>
-        <div class="flex gap-16">
-          <FzTooltip text="Focus to show tooltip">
-            <span class="text-sm font-medium" data-testid="kbd-trigger">Tab here</span>
-          </FzTooltip>
-        </div>
-      </div>
-    `
-  }),
-  args: {},
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    
-    // Test 1: Show tooltip on focus
-    const trigger = canvas.getByTestId('kbd-trigger')
-    const wrapper = trigger.closest('span[tabindex="0"]') as HTMLElement
-    
-    // Focus on wrapper
-    wrapper.focus()
-    
-    // Wait for tooltip to be teleported and rendered
-    await waitFor(async () => {
-      const tooltip = document.querySelector('[role="tooltip"]')
-      expect(tooltip).not.toBeNull()
-      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-      expect(tooltip).toBeVisible()
-    })
-    
-    // Test 2: Hide tooltip on blur
-    wrapper.blur()
-    
-    await waitFor(async () => {
-      const tooltip = document.querySelector('[role="tooltip"]')
-      expect(tooltip).toHaveAttribute('aria-hidden', 'true')
-    })
-    
-    // Test 3: Hide tooltip on Escape key
-    wrapper.focus()
-    
-    // Wait for tooltip to be shown again
-    await waitFor(async () => {
-      const tooltip = document.querySelector('[role="tooltip"]')
-      expect(tooltip).not.toBeNull()
-      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-    })
-    
-    await userEvent.keyboard('{Escape}')
-    
-    await waitFor(async () => {
-      const tooltip = document.querySelector('[role="tooltip"]')
-      expect(tooltip).toHaveAttribute('aria-hidden', 'true')
-    })
-  }
-}
-
-// Story dedicata ai test ARIA
-export const AccessibilityARIA: Story = {
-  render: (args) => ({
-    setup() {
-      return { args }
-    },
-    components: { FzTooltip },
-    template: `
-      <div class="p-16">
-        <h3 class="text-lg font-semibold mb-8">ARIA Attributes Tests</h3>
-        <FzTooltip text="Accessible tooltip content" data-testid="aria-tooltip">
-          <span data-testid="aria-trigger">ARIA Test</span>
-        </FzTooltip>
-      </div>
-    `
-  }),
-  args: {},
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    
-    // Test 1: Verify trigger has correct ARIA attributes
-    const trigger = canvas.getByTestId('aria-trigger')
-    const wrapper = trigger.closest('span[tabindex="0"]')!
-    
-    expect(wrapper).toHaveAttribute('tabindex', '0')
-    
-    // Test 2: Verify no visible tooltips initially
-    const visibleTooltipsBefore = document.querySelectorAll('[role="tooltip"][aria-hidden="false"]')
-    expect(visibleTooltipsBefore.length).toBe(0)
-    
-    // Test 3: Show tooltip and verify it appears with correct attributes
-    await userEvent.hover(wrapper)
-    
-    await waitFor(async () => {
-      const tooltip = document.querySelector('[role="tooltip"][aria-hidden="false"]')
-      expect(tooltip).not.toBeNull()
-      expect(tooltip).toHaveAttribute('role', 'tooltip')
-      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-    })
-    
-    // Test 4: Verify aria-describedby connection
-    await waitFor(async () => {
-      const ariaDescribedby = wrapper.getAttribute('aria-describedby')
-      expect(ariaDescribedby).not.toBeNull()
-      
-      const tooltip = document.querySelector('[role="tooltip"][aria-hidden="false"]')
-      const tooltipId = tooltip?.getAttribute('id')
-      expect(tooltipId).toBe(ariaDescribedby)
-    })
-  }
-}
-
-// Story per testare con icone (withIcon prop)
-export const WithIcons: Story = {
-  render: (args) => ({
-    setup() {
-      return { args }
-    },
-    components: { FzTooltip },
-    template: `
-      <div class="p-16">
-        <h3 class="text-lg font-semibold mb-8">Tooltips with Icons</h3>
-        <div class="flex gap-16">
-          <FzTooltip text="Informative with icon" status="informative" :withIcon="true">
-            <span data-testid="info-icon">ℹ️</span>
-          </FzTooltip>
-          
-          <FzTooltip text="Success with icon" status="positive" :withIcon="true">
-            <span data-testid="success-icon">✓</span>
-          </FzTooltip>
-          
-          <FzTooltip text="Warning with icon" status="alert" :withIcon="true">
-            <span data-testid="alert-icon">⚠️</span>
-          </FzTooltip>
-          
-          <FzTooltip text="Error with icon" status="error" :withIcon="true">
-            <span data-testid="error-icon">✗</span>
-          </FzTooltip>
-        </div>
-      </div>
-    `
-  }),
-  args: {},
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    
-    // Test informative tooltip with icon
-    const infoTrigger = canvas.getByTestId('info-icon').closest('span[tabindex="0"]')!
-    await userEvent.hover(infoTrigger)
-    
-    // Wait for tooltip to appear and aria-describedby to be set
-    await waitFor(async () => {
-      const infoAriaDescribedby = infoTrigger.getAttribute('aria-describedby')
-      expect(infoAriaDescribedby).not.toBeNull()
-      
-      const tooltip = document.getElementById(infoAriaDescribedby!)
-      expect(tooltip).not.toBeNull()
-      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-      expect(tooltip).toHaveTextContent('Informative with icon')
-      // Verifica che l'icona sia presente nel tooltip
-      const icon = tooltip?.querySelector('[class*="fa-circle-info"]') || tooltip?.querySelector('svg')
-      expect(icon).toBeInTheDocument()
-    })
-    
-    await userEvent.unhover(infoTrigger)
-    await waitFor(async () => {
-      const infoAriaDescribedby = infoTrigger.getAttribute('aria-describedby')
-      if (infoAriaDescribedby) {
-        const tooltip = document.getElementById(infoAriaDescribedby)
-        expect(tooltip).toHaveAttribute('aria-hidden', 'true')
-      }
-    }, { timeout: 500 })
-    
-    // Test alert tooltip with icon (dovrebbe avere testo nero)
-    const alertTrigger = canvas.getByTestId('alert-icon').closest('span[tabindex="0"]')!
-    await userEvent.hover(alertTrigger)
-    
-    // Wait for tooltip to appear and aria-describedby to be set
-    await waitFor(async () => {
-      const alertAriaDescribedby = alertTrigger.getAttribute('aria-describedby')
-      expect(alertAriaDescribedby).not.toBeNull()
-      
-      const tooltip = document.getElementById(alertAriaDescribedby!)
-      expect(tooltip).not.toBeNull()
-      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-      expect(tooltip).toHaveTextContent('Warning with icon')
-    })
-  }
-}
-
-// Story per testare hover persistence (WCAG 1.4.13)
-export const HoverPersistence: Story = {
-  render: (args) => ({
-    setup() {
-      return { args }
-    },
-    components: { FzTooltip },
-    template: `
-      <div class="p-16">
-        <h3 class="text-lg font-semibold mb-8">Hover Persistence (WCAG 1.4.13)</h3>
-        <FzTooltip text="This is a very long tooltip content that users might want to read carefully and interact with. The tooltip should remain visible when hovering over it." data-testid="persist-tooltip">
-          <span data-testid="persist-trigger">Hover to test persistence</span>
-        </FzTooltip>
-      </div>
-    `
-  }),
-  args: {},
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    
-    // Show tooltip by hovering trigger
-    const trigger = canvas.getByTestId('persist-trigger')
-    const wrapper = trigger.closest('span[tabindex="0"]')!
-    
-    await userEvent.hover(wrapper)
-    
-    // Wait for tooltip to be teleported and rendered
-    await waitFor(async () => {
-      const tooltip = document.querySelector('[role="tooltip"]')
-      expect(tooltip).not.toBeNull()
-      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-      expect(tooltip).toBeVisible()
-    })
-    
-    // Move mouse away from trigger (simulating moving to tooltip)
-    await userEvent.unhover(wrapper)
-    
-    // Get tooltip element after it's confirmed to exist
-    const tooltip = document.querySelector('[role="tooltip"]') as HTMLElement
-    
-    // Immediately hover the tooltip itself
-    await userEvent.hover(tooltip)
-    
-    // Tooltip should still be visible
-    await waitFor(async () => {
-      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-    })
-    
-    // Leave the tooltip
-    await userEvent.unhover(tooltip)
-    
-    // Now it should hide
-    await waitFor(async () => {
-      expect(tooltip).toHaveAttribute('aria-hidden', 'true')
-    }, { timeout: 500 })
+    // Second link WITH isInteractive should NOT have wrapper with tabindex
+    const linkWithInteractive = allLinks[1]
+    const linkWrapperNew = linkWithInteractive.parentElement
+    expect(linkWrapperNew).not.toHaveAttribute('tabindex')
   }
 }

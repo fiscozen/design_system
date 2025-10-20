@@ -35,4 +35,24 @@ export interface FzTooltipProps {
    * Used by screen readers to describe the trigger's purpose.
    */
   ariaLabel?: string;
+
+  /**
+   * Indicates whether the wrapped element is already interactive (button, link, input, etc.).
+   * When true, the wrapper won't add tabindex="0" to avoid creating double tab stops.
+   * 
+   * @default false
+   * 
+   * @example
+   * // With interactive element (button)
+   * <FzTooltip text="Save changes" isInteractive>
+   *   <button>Save</button>
+   * </FzTooltip>
+   * 
+   * @example
+   * // With non-interactive element (default)
+   * <FzTooltip text="Additional info">
+   *   Info
+   * </FzTooltip>
+   */
+  isInteractive?: boolean;
 }

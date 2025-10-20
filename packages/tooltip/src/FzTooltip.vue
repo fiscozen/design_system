@@ -6,17 +6,20 @@
    * keyboard navigation, screen reader support, and hover persistence
    * as per WCAG 1.4.13 Content on Hover or Focus criteria.
    * 
-   * Note: The wrapper adds tabindex="0" for keyboard accessibility.
-   * When wrapping already-interactive elements (buttons, links), this creates
-   * an extra tab stop - a known limitation accepted for implementation simplicity.
+   * The wrapper adds tabindex="0" for keyboard accessibility by default.
+   * When wrapping interactive elements (buttons, links), set isInteractive={true}
+   * to prevent double tab stops while maintaining full accessibility.
    * 
-   * @example With non-interactive element (recommended)
+   * @prop {boolean} isInteractive - Set to true when wrapping interactive elements
+   * to prevent the wrapper from adding tabindex="0" and creating double tab stops.
+   * 
+   * @example With non-interactive element (default behavior)
    * <FzTooltip text="User settings">
-   *   <span>Settings</span>
+   *   Settings
    * </FzTooltip>
    * 
-   * @example With interactive element (works but creates extra tab stop)
-   * <FzTooltip text="User settings">
+   * @example With interactive element (use isInteractive)
+   * <FzTooltip text="User settings" isInteractive>
    *   <button>Settings</button>
    * </FzTooltip>
    */
@@ -31,6 +34,7 @@
     position: 'auto',
     status: 'neutral',
     withIcon: false,
+    isInteractive: false,
   })
 
   const slots = useSlots()
@@ -84,6 +88,15 @@
    * screen readers from announcing hidden content.
    */
   const ariaDescribedby = computed(() => isOpen.value ? tooltipId : undefined);
+
+  /**
+   * Dynamic tabindex based on isInteractive prop.
+   * - undefined: when the inner element is already interactive (no extra tab stop)
+   * - 0: when the inner element is not interactive (required for keyboard accessibility)
+   * 
+   * This prevents double tab stops when wrapping interactive elements like buttons or links.
+   */
+  const computedTabindex = computed(() => props.isInteractive ? undefined : 0);
   
   /* ========================================================================
    * TOOLTIP VISIBILITY CONTROL
@@ -140,8 +153,14 @@
    * Ensures full keyboard accessibility for screen readers and power users
    * ======================================================================== */
 
-  const handleFocus = showTooltip;
-  const handleBlur = hideTooltip;
+  /**
+   * Focus handlers using focusin/focusout instead of focus/blur.
+   * focusin and focusout bubble up from child elements, ensuring the tooltip
+   * shows even when an interactive child element (like a button) receives focus.
+   * This is essential for the isInteractive prop to work correctly.
+   */
+  const handleFocusIn = showTooltip;
+  const handleFocusOut = hideTooltip;
 
   /**
    * Global keydown handler for tooltip dismissal.
@@ -182,11 +201,11 @@
       <span
         :aria-label="props.ariaLabel"
         :aria-describedby="ariaDescribedby"
-        tabindex="0"
+        :tabindex="computedTabindex"
         @mouseover="handleMouseover"
         @mouseleave="handleMouseleave"
-        @focus="handleFocus"
-        @blur="handleBlur"
+        @focusin="handleFocusIn"
+        @focusout="handleFocusOut"
         @keydown="handleKeydown"
       >
         <slot></slot>
