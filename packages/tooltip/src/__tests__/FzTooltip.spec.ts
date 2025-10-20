@@ -13,6 +13,9 @@ const wrapperGen = (status: FzTooltipStatus, withIcon = false) =>
       status,
       withIcon,
       position: 'auto'
+    },
+    slots: {
+      default: 'sample text'
     }
   })
 
