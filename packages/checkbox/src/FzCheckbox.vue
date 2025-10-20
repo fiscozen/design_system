@@ -215,7 +215,7 @@ const computedIconClasses = computed<string[]>(() => [
  * - Checked: square with check
  * - Unchecked: empty square
  */
-const computedName = computed<string>(() => {
+const computedIconName = computed<string>(() => {
   if (props.indeterminate) {
     return CHECKBOX_ICONS.INDETERMINATE;
   }
@@ -299,7 +299,7 @@ onMounted(() => {
           @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
         -->
         <FzIcon
-          :name="computedName"
+          :name="computedIconName"
           :size="size"
           :class="[staticIconClass, computedIconClasses]"
           :variant="computedVariant"
