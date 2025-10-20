@@ -329,12 +329,19 @@ onMounted(() => {
       </FzTooltip>
     </div>
     <!-- 
-      Error message display
-      Uses ARIA live region to announce errors to screen readers immediately
-      - role="alert": Identifies as important message
-      - aria-live="assertive": Interrupts current screen reader announcement
-      - aria-atomic="true": Reads entire message, not just changes
-      @TODO: When FzAlert natively supports role, ariaLive, ariaAtomic as props, remove HTML attributes and use typed props
+      Error message display with ARIA live region
+      Announces validation errors immediately to screen readers
+      - role="alert": High-priority message
+      - aria-live="assertive": Interrupts current announcements
+      - aria-atomic="true": Reads complete message
+      
+      @TODO: When FzAlert supports automatic ARIA handling based on `type` 
+      (e.g., via an `announce` prop or similar semantic API), we can remove 
+      these manual attributes.
+      
+      Proposed future API:
+        FzAlert with type="error" and announce prop
+        would automatically get role="alert" and aria-live="assertive"
     -->
     <FzAlert
       v-if="error && $slots.error"
