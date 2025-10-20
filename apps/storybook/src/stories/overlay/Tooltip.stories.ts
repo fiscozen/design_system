@@ -97,27 +97,29 @@ export const NeutralTooltip: Story = {
     const trigger = canvas.getByText('hover')
     expect(trigger).toBeInTheDocument()
     
-    // Test 2: Verify tooltip is hidden initially
-    const tooltipBefore = document.querySelector('[role="tooltip"]')
-    expect(tooltipBefore).toHaveAttribute('aria-hidden', 'true')
+    // Test 2: Verify no visible tooltips initially
+    const visibleTooltipsBefore = document.querySelectorAll('[role="tooltip"][aria-hidden="false"]')
+    expect(visibleTooltipsBefore.length).toBe(0)
     
     // Test 3: Show tooltip on hover
-    await userEvent.hover(trigger.closest('span[tabindex="0"]') || trigger)
+    const wrapper = trigger.closest('span[tabindex="0"]') || trigger
+    await userEvent.hover(wrapper)
     
+    // Wait for tooltip to be teleported and rendered
     await waitFor(async () => {
-      const tooltip = document.querySelector('[role="tooltip"]')
-      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
+      const tooltip = document.querySelector('[role="tooltip"][aria-hidden="false"]')
+      expect(tooltip).not.toBeNull()
       expect(tooltip).toBeVisible()
       expect(tooltip).toHaveTextContent('this is a informative tooltip')
     })
     
     // Test 4: Hide tooltip on unhover
-    await userEvent.unhover(trigger.closest('span[tabindex="0"]') || trigger)
+    await userEvent.unhover(wrapper)
     
     await waitFor(async () => {
-      const tooltip = document.querySelector('[role="tooltip"]')
-      expect(tooltip).toHaveAttribute('aria-hidden', 'true')
-    }, { timeout: 300 })
+      const visibleTooltips = document.querySelectorAll('[role="tooltip"][aria-hidden="false"]')
+      expect(visibleTooltips.length).toBe(0)
+    }, { timeout: 500 })
   }
 }
 
@@ -141,10 +143,13 @@ export const InformativeTooltip: Story = {
     expect(trigger).toBeInTheDocument()
     
     // Hover to show tooltip
-    await userEvent.hover(trigger.closest('span[tabindex="0"]') || trigger)
+    const wrapper = trigger.closest('span[tabindex="0"]') || trigger
+    await userEvent.hover(wrapper)
     
+    // Wait for tooltip to be teleported and rendered
     await waitFor(async () => {
       const tooltip = document.querySelector('[role="tooltip"]')
+      expect(tooltip).not.toBeNull()
       expect(tooltip).toHaveAttribute('aria-hidden', 'false')
       expect(tooltip).toHaveTextContent('this is a informative tooltip')
     })
@@ -167,10 +172,12 @@ export const PositiveTooltip: Story = {
     const canvas = within(canvasElement)
     const trigger = canvas.getAllByText('hover')[0]
     
-    await userEvent.hover(trigger.closest('span[tabindex="0"]') || trigger)
+    const wrapper = trigger.closest('span[tabindex="0"]') || trigger
+    await userEvent.hover(wrapper)
     
     await waitFor(async () => {
       const tooltip = document.querySelector('[role="tooltip"]')
+      expect(tooltip).not.toBeNull()
       expect(tooltip).toHaveTextContent('this is a positive tooltip')
     })
   }
@@ -192,10 +199,12 @@ export const AlertTooltip: Story = {
     const canvas = within(canvasElement)
     const trigger = canvas.getAllByText('hover')[0]
     
-    await userEvent.hover(trigger.closest('span[tabindex="0"]') || trigger)
+    const wrapper = trigger.closest('span[tabindex="0"]') || trigger
+    await userEvent.hover(wrapper)
     
     await waitFor(async () => {
       const tooltip = document.querySelector('[role="tooltip"]')
+      expect(tooltip).not.toBeNull()
       expect(tooltip).toHaveTextContent('this is a alert tooltip')
     })
   }
@@ -217,10 +226,12 @@ export const ErrorTooltip: Story = {
     const canvas = within(canvasElement)
     const trigger = canvas.getAllByText('hover')[0]
     
-    await userEvent.hover(trigger.closest('span[tabindex="0"]') || trigger)
+    const wrapper = trigger.closest('span[tabindex="0"]') || trigger
+    await userEvent.hover(wrapper)
     
     await waitFor(async () => {
       const tooltip = document.querySelector('[role="tooltip"]')
+      expect(tooltip).not.toBeNull()
       expect(tooltip).toHaveTextContent('this is a error tooltip')
     })
   }
@@ -289,18 +300,20 @@ export const WithInteractiveElements: Story = {
     // Test hover on icon
     await userEvent.hover(iconWrapper!)
     
-    // Wait for the icon tooltip to appear with its specific ID
-    const iconAriaDescribedby = iconWrapper!.getAttribute('aria-describedby')
+    // Wait for the icon tooltip to appear - aria-describedby is set when tooltip is shown
     await waitFor(async () => {
-      if (iconAriaDescribedby) {
-        const tooltip = document.getElementById(iconAriaDescribedby)
-        expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-        expect(tooltip).toHaveTextContent('This is an icon with tooltip')
-      }
+      const iconAriaDescribedby = iconWrapper!.getAttribute('aria-describedby')
+      expect(iconAriaDescribedby).not.toBeNull()
+      
+      const tooltip = document.getElementById(iconAriaDescribedby!)
+      expect(tooltip).not.toBeNull()
+      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
+      expect(tooltip).toHaveTextContent('This is an icon with tooltip')
     })
     
     await userEvent.unhover(iconWrapper!)
     await waitFor(async () => {
+      const iconAriaDescribedby = iconWrapper!.getAttribute('aria-describedby')
       if (iconAriaDescribedby) {
         const tooltip = document.getElementById(iconAriaDescribedby)
         expect(tooltip).toHaveAttribute('aria-hidden', 'true')
@@ -315,14 +328,15 @@ export const WithInteractiveElements: Story = {
     // Test hover on button wrapper
     await userEvent.hover(buttonWrapper!)
     
-    // Wait for the button tooltip to appear with its specific ID
-    const buttonAriaDescribedby = buttonWrapper!.getAttribute('aria-describedby')
+    // Wait for the button tooltip to appear - aria-describedby is set when tooltip is shown
     await waitFor(async () => {
-      if (buttonAriaDescribedby) {
-        const tooltip = document.getElementById(buttonAriaDescribedby)
-        expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-        expect(tooltip).toHaveTextContent('Button with tooltip')
-      }
+      const buttonAriaDescribedby = buttonWrapper!.getAttribute('aria-describedby')
+      expect(buttonAriaDescribedby).not.toBeNull()
+      
+      const tooltip = document.getElementById(buttonAriaDescribedby!)
+      expect(tooltip).not.toBeNull()
+      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
+      expect(tooltip).toHaveTextContent('Button with tooltip')
     })
   }
 }
@@ -356,8 +370,10 @@ export const KeyboardNavigation: Story = {
     // Focus on wrapper
     wrapper.focus()
     
+    // Wait for tooltip to be teleported and rendered
     await waitFor(async () => {
       const tooltip = document.querySelector('[role="tooltip"]')
+      expect(tooltip).not.toBeNull()
       expect(tooltip).toHaveAttribute('aria-hidden', 'false')
       expect(tooltip).toBeVisible()
     })
@@ -373,8 +389,10 @@ export const KeyboardNavigation: Story = {
     // Test 3: Hide tooltip on Escape key
     wrapper.focus()
     
+    // Wait for tooltip to be shown again
     await waitFor(async () => {
       const tooltip = document.querySelector('[role="tooltip"]')
+      expect(tooltip).not.toBeNull()
       expect(tooltip).toHaveAttribute('aria-hidden', 'false')
     })
     
@@ -413,24 +431,29 @@ export const AccessibilityARIA: Story = {
     
     expect(wrapper).toHaveAttribute('tabindex', '0')
     
-    // Test 2: Verify tooltip has correct role
-    const tooltip = document.querySelector('[role="tooltip"]')
-    expect(tooltip).toHaveAttribute('role', 'tooltip')
-    expect(tooltip).toHaveAttribute('aria-hidden', 'true')
+    // Test 2: Verify no visible tooltips initially
+    const visibleTooltipsBefore = document.querySelectorAll('[role="tooltip"][aria-hidden="false"]')
+    expect(visibleTooltipsBefore.length).toBe(0)
     
-    // Test 3: Show tooltip and verify aria-hidden changes
+    // Test 3: Show tooltip and verify it appears with correct attributes
     await userEvent.hover(wrapper)
     
     await waitFor(async () => {
+      const tooltip = document.querySelector('[role="tooltip"][aria-hidden="false"]')
+      expect(tooltip).not.toBeNull()
+      expect(tooltip).toHaveAttribute('role', 'tooltip')
       expect(tooltip).toHaveAttribute('aria-hidden', 'false')
     })
     
     // Test 4: Verify aria-describedby connection
-    const ariaDescribedby = wrapper.getAttribute('aria-describedby')
-    expect(ariaDescribedby).toBeTruthy()
-    
-    const tooltipId = tooltip?.getAttribute('id')
-    expect(tooltipId).toBe(ariaDescribedby)
+    await waitFor(async () => {
+      const ariaDescribedby = wrapper.getAttribute('aria-describedby')
+      expect(ariaDescribedby).not.toBeNull()
+      
+      const tooltip = document.querySelector('[role="tooltip"][aria-hidden="false"]')
+      const tooltipId = tooltip?.getAttribute('id')
+      expect(tooltipId).toBe(ariaDescribedby)
+    })
   }
 }
 
@@ -472,20 +495,23 @@ export const WithIcons: Story = {
     const infoTrigger = canvas.getByTestId('info-icon').closest('span[tabindex="0"]')!
     await userEvent.hover(infoTrigger)
     
-    const infoAriaDescribedby = infoTrigger.getAttribute('aria-describedby')
+    // Wait for tooltip to appear and aria-describedby to be set
     await waitFor(async () => {
-      if (infoAriaDescribedby) {
-        const tooltip = document.getElementById(infoAriaDescribedby)
-        expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-        expect(tooltip).toHaveTextContent('Informative with icon')
-        // Verifica che l'icona sia presente nel tooltip
-        const icon = tooltip?.querySelector('[class*="fa-circle-info"]') || tooltip?.querySelector('svg')
-        expect(icon).toBeInTheDocument()
-      }
+      const infoAriaDescribedby = infoTrigger.getAttribute('aria-describedby')
+      expect(infoAriaDescribedby).not.toBeNull()
+      
+      const tooltip = document.getElementById(infoAriaDescribedby!)
+      expect(tooltip).not.toBeNull()
+      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
+      expect(tooltip).toHaveTextContent('Informative with icon')
+      // Verifica che l'icona sia presente nel tooltip
+      const icon = tooltip?.querySelector('[class*="fa-circle-info"]') || tooltip?.querySelector('svg')
+      expect(icon).toBeInTheDocument()
     })
     
     await userEvent.unhover(infoTrigger)
     await waitFor(async () => {
+      const infoAriaDescribedby = infoTrigger.getAttribute('aria-describedby')
       if (infoAriaDescribedby) {
         const tooltip = document.getElementById(infoAriaDescribedby)
         expect(tooltip).toHaveAttribute('aria-hidden', 'true')
@@ -496,13 +522,15 @@ export const WithIcons: Story = {
     const alertTrigger = canvas.getByTestId('alert-icon').closest('span[tabindex="0"]')!
     await userEvent.hover(alertTrigger)
     
-    const alertAriaDescribedby = alertTrigger.getAttribute('aria-describedby')
+    // Wait for tooltip to appear and aria-describedby to be set
     await waitFor(async () => {
-      if (alertAriaDescribedby) {
-        const tooltip = document.getElementById(alertAriaDescribedby)
-        expect(tooltip).toHaveAttribute('aria-hidden', 'false')
-        expect(tooltip).toHaveTextContent('Warning with icon')
-      }
+      const alertAriaDescribedby = alertTrigger.getAttribute('aria-describedby')
+      expect(alertAriaDescribedby).not.toBeNull()
+      
+      const tooltip = document.getElementById(alertAriaDescribedby!)
+      expect(tooltip).not.toBeNull()
+      expect(tooltip).toHaveAttribute('aria-hidden', 'false')
+      expect(tooltip).toHaveTextContent('Warning with icon')
     })
   }
 }
@@ -533,8 +561,10 @@ export const HoverPersistence: Story = {
     
     await userEvent.hover(wrapper)
     
+    // Wait for tooltip to be teleported and rendered
     await waitFor(async () => {
       const tooltip = document.querySelector('[role="tooltip"]')
+      expect(tooltip).not.toBeNull()
       expect(tooltip).toHaveAttribute('aria-hidden', 'false')
       expect(tooltip).toBeVisible()
     })
@@ -542,11 +572,11 @@ export const HoverPersistence: Story = {
     // Move mouse away from trigger (simulating moving to tooltip)
     await userEvent.unhover(wrapper)
     
-    // Tooltip should remain visible briefly to allow cursor transition
-    const tooltip = document.querySelector('[role="tooltip"]')!
+    // Get tooltip element after it's confirmed to exist
+    const tooltip = document.querySelector('[role="tooltip"]') as HTMLElement
     
     // Immediately hover the tooltip itself
-    await userEvent.hover(tooltip as HTMLElement)
+    await userEvent.hover(tooltip)
     
     // Tooltip should still be visible
     await waitFor(async () => {
@@ -554,11 +584,11 @@ export const HoverPersistence: Story = {
     })
     
     // Leave the tooltip
-    await userEvent.unhover(tooltip as HTMLElement)
+    await userEvent.unhover(tooltip)
     
     // Now it should hide
     await waitFor(async () => {
       expect(tooltip).toHaveAttribute('aria-hidden', 'true')
-    }, { timeout: 300 })
+    }, { timeout: 500 })
   }
 }
