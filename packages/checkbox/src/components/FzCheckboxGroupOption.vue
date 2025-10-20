@@ -103,9 +103,10 @@ function handleCheckboxParentChange() {
   ).length;
 
   if (numChecked === props.children.length) {
-    // All children checked: add parent value to model
-    // Using concat to force reactivity (push doesn't always trigger updates)
-    model.value = model.value.concat(currentValue.value);
+    // All children checked: add parent value to model if not already present
+    if (!model.value.includes(currentValue.value)) {
+      model.value = model.value.concat(currentValue.value);
+    }
   } else {
     // Not all children checked: remove parent value if present
     if (model.value.includes(currentValue.value))
