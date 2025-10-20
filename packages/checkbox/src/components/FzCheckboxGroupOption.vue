@@ -20,11 +20,6 @@ import FzCheckbox from "../FzCheckbox.vue";
 import { ParentCheckbox } from "../types";
 import { generateCheckboxId } from "../utils";
 
-// Vue 3 compatibility config
-FzCheckbox.compatConfig = {
-  MODE: 3,
-};
-
 const props = defineProps<ParentCheckbox & { size: "sm" | "md" }>();
 
 /** The actual value used for this checkbox (falls back to label if no value provided) */
