@@ -27,9 +27,6 @@
   
   import { FzTooltipProps, FzTooltipStatus } from './types'
 
-  /**
-   * Component props with sensible defaults for common use cases
-   */
   const props = withDefaults(defineProps<FzTooltipProps>(), {
     position: 'auto',
     status: 'neutral',
@@ -51,16 +48,8 @@
     positive: { icon: 'circle-check', bgClass: 'bg-semantic-success' }
   }
 
-  /**
-   * Computed icon name based on tooltip status.
-   * Returns empty string for neutral status (no icon needed).
-   */
-  const iconName = computed(() => statusConfig[props.status]?.icon || '')
+  const computedIconName = computed(() => statusConfig[props.status]?.icon || '')
 
-  /**
-   * Dynamic CSS classes computed from status configuration.
-   * Returns object format for Vue's class binding reactivity.
-   */
   const classes = computed(() => {
     const bgClass = statusConfig[props.status]?.bgClass
     return bgClass ? { [bgClass]: true } : {}
@@ -73,15 +62,10 @@
    */
   const tooltipId = `tooltip-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
 
-  // Reactive state management for tooltip visibility and hover tracking
   const isOpen = ref(false)
   const isHoveringTooltip = ref(false)
   const hoverTimeout = ref<number | null>(null)
 
-  /**
-   * Determines icon visibility based on withIcon prop and status.
-   * Neutral status tooltips never show icons regardless of withIcon prop.
-   */
   const showIcon = computed(() => props.withIcon && props.status !== 'neutral');
 
   /**
@@ -91,10 +75,6 @@
    */
   const DEFAULT_HOVER_DELAY = 100; // ms
 
-  /**
-   * Static CSS classes for consistent tooltip styling.
-   * Max-width prevents excessive tooltip expansion on long content.
-   */
   const staticClasses =
     'text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center'
 
@@ -110,20 +90,12 @@
    * Core methods for managing tooltip show/hide state
    * ======================================================================== */
 
-  /**
-   * Shows the tooltip if content is available.
-   * Validates content presence from either prop or slot before displaying.
-   */
   function showTooltip() {
     if (props.text || slots.text) {
       isOpen.value = true
     }
   }
 
-  /**
-   * Immediately hides the tooltip.
-   * Used for direct dismissal (blur, escape key, etc.)
-   */
   function hideTooltip() {
     isOpen.value = false
   }
@@ -134,13 +106,7 @@
    * from trigger element to tooltip content without dismissal
    * ======================================================================== */
 
-  /**
-   * Trigger element mouseenter handler.
-   * Cancels any pending hide timeout and immediately shows tooltip.
-   * Ensures responsive tooltip appearance on hover.
-   */
   function handleMouseover() {
-    // Clear pending hide timeout to prevent premature dismissal
     if (hoverTimeout.value) {
       clearTimeout(hoverTimeout.value)
       hoverTimeout.value = null
@@ -148,13 +114,7 @@
     showTooltip()
   }
 
-  /**
-   * Trigger element mouseleave handler.
-   * Implements graceful delay before hiding to allow cursor transition
-   * to tooltip content, ensuring WCAG 1.4.13 compliance.
-   */
   function handleMouseleave() {
-    // Delayed hide allows cursor transition to tooltip content
     hoverTimeout.value = setTimeout(() => {
       if (!isHoveringTooltip.value) {
         hideTooltip()
@@ -162,25 +122,14 @@
     }, DEFAULT_HOVER_DELAY)
   }
 
-  /**
-   * Tooltip content mouseenter handler.
-   * Prevents tooltip dismissal when user hovers over tooltip itself.
-   * Critical for long tooltip content readability.
-   */
   function handleTooltipMouseenter() {
     isHoveringTooltip.value = true
-    // Cancel any pending hide timeout when hovering tooltip content
     if (hoverTimeout.value) {
       clearTimeout(hoverTimeout.value)
       hoverTimeout.value = null
     }
   }
 
-  /**
-   * Tooltip content mouseleave handler.
-   * Immediately hides tooltip when user leaves tooltip content area.
-   * No delay needed since user has completed tooltip interaction.
-   */
   function handleTooltipMouseleave() {
     isHoveringTooltip.value = false
     hideTooltip()
@@ -191,22 +140,13 @@
    * Ensures full keyboard accessibility for screen readers and power users
    * ======================================================================== */
 
-  /**
-   * Trigger element focus handler - shows tooltip for keyboard navigation
-   */
   const handleFocus = showTooltip;
-
-  /**
-   * Trigger element blur handler - hides tooltip when focus moves away
-   */
   const handleBlur = hideTooltip;
 
   /**
    * Global keydown handler for tooltip dismissal.
    * Handles Escape key for explicit tooltip dismissal, improving UX
    * for keyboard users who want to clear tooltip content.
-   * 
-   * @param e - KeyboardEvent from trigger element
    */
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Escape') {
@@ -263,7 +203,7 @@
       <FzIcon
         v-if="showIcon"
         size="sm"
-        :name="iconName"
+        :name="computedIconName"
         :class="['mr-8 grow-0 shrink-0', { 'text-core-black': props.status === 'alert' }]"
         :aria-hidden="true"
       />
