@@ -31,11 +31,14 @@ const Template: CheckboxStory = {
   render: (args) => ({
     components: { FzCheckbox, FzIcon },
     setup() {
+      const { modelValue: initialValue, ...restArgs } = args
+      const modelValue = ref(initialValue)
       return {
-        args
+        restArgs,
+        modelValue
       }
     },
-    template: `<FzCheckbox v-bind="args" @update:modelValue="console.log('update model value', $event)" />`
+    template: `<FzCheckbox v-bind="restArgs" v-model="modelValue" @update:modelValue="console.log('update model value', $event)" />`
   }),
   args: {
     size: 'sm',
