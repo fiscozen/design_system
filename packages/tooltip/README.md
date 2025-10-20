@@ -26,7 +26,13 @@ import { FzTooltip } from '@fiscozen/tooltip'
 </script>
 
 <template>
+  <!-- Non-interactive element (default) -->
   <FzTooltip text="User profile settings">
+    Settings
+  </FzTooltip>
+  
+  <!-- Interactive element (use isInteractive) -->
+  <FzTooltip text="User profile settings" isInteractive>
     <button>Settings</button>
   </FzTooltip>
 </template>
@@ -106,6 +112,7 @@ import { FzTooltip } from '@fiscozen/tooltip'
 | `position` | `FzFloatingPosition` | `'auto'` | Tooltip positioning relative to trigger element |
 | `withIcon` | `boolean` | `false` | Display status-appropriate icon in tooltip content |
 | `ariaLabel` | `string` | `undefined` | Accessible label for the trigger element |
+| `isInteractive` | `boolean` | `false` | Set to `true` when wrapping interactive elements (buttons, links) to prevent double tab stops |
 
 ### Slots
 
@@ -149,9 +156,24 @@ This component implements comprehensive accessibility features:
 - **Hover Persistence**: WCAG 1.4.13 compliant hover behavior
 - **High Contrast**: Color combinations meeting WCAG AA contrast ratios
 
-### Known Limitations
+### Interactive Elements
 
-⚠️ **Nested Interactive Elements**: When wrapping already-interactive elements (buttons, links), the tooltip adds a wrapper with `tabindex="0"`, creating an extra tab stop. This is a known limitation that doesn't break functionality but may cause minor UX friction. For optimal accessibility, prefer wrapping non-interactive elements (spans, images, icons).
+When wrapping interactive elements (buttons, links, inputs), use the `isInteractive` prop to prevent double tab stops:
+
+```vue
+<!-- Recommended: With isInteractive prop -->
+<FzTooltip text="Save your changes" isInteractive>
+  <button @click="save">Save</button>
+</FzTooltip>
+```
+
+**When to use `isInteractive`:**
+- ✅ Wrapping `<button>`, `<a>`, `<input>`, `<select>`, `<textarea>`
+- ✅ Any element with `tabindex` attribute
+- ❌ Not needed for `<span>`, `<div>`, `<img>`, icons, or text content
+
+**Why it matters:**
+Without `isInteractive`, the tooltip wrapper adds `tabindex="0"` for keyboard accessibility, creating two consecutive tab stops (wrapper + inner element). Setting `isInteractive={true}` removes the wrapper's tabindex, resulting in clean keyboard navigation with a single tab stop.
 
 ### Keyboard Interactions
 
