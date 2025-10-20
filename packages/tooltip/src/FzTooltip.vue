@@ -71,7 +71,7 @@
    * Uses timestamp + random string for collision-resistant ID generation.
    * Format: tooltip-{timestamp}-{random7chars}
    */
-  const tooltipId = ref(`tooltip-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`)
+  const tooltipId = `tooltip-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
 
   // Reactive state management for tooltip visibility and hover tracking
   const isOpen = ref(false)
@@ -103,7 +103,7 @@
    * Only returns tooltip ID when tooltip is visible to prevent
    * screen readers from announcing hidden content.
    */
-  const ariaDescribedby = computed(() => isOpen.value ? tooltipId.value : undefined);
+  const ariaDescribedby = computed(() => isOpen.value ? tooltipId : undefined);
   
   /* ========================================================================
    * TOOLTIP VISIBILITY CONTROL
