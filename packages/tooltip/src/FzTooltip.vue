@@ -180,7 +180,7 @@
     :contentClass="['rounded', '!p-0', 'm-4', classes, 'z-80']">
     <template #opener>
       <span
-        :aria-label="ariaLabel"
+        :aria-label="props.ariaLabel"
         :aria-describedby="ariaDescribedby"
         tabindex="0"
         @mouseover="handleMouseover"
@@ -209,7 +209,7 @@
       />
       <span :class="['basis-0 grow shrink-0 fz__tooltip__text', { 'text-core-black': props.status === 'alert' }]">
         <slot name="text">
-          {{ text }}
+          {{ props.text }}
         </slot>
       </span>
     </div>
