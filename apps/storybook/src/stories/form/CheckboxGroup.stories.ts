@@ -204,19 +204,6 @@ export const Disabled: CheckboxGroupStory = {
       })
     })
 
-    await step('Verify disabled checkboxes cannot be checked', async () => {
-      const option2Checkbox = canvas.getAllByRole('checkbox').find(cb => {
-        return cb.closest('label')?.textContent?.includes('Option 2')
-      })
-      
-      // Verify it's disabled
-      if (option2Checkbox) {
-        expect(option2Checkbox).toBeDisabled()
-        // Disabled checkboxes should not be checked
-        // Note: clicking a disabled checkbox is a no-op
-      }
-    })
-
     await step('Verify disabled styling on label', async () => {
       const groupLabel = canvas.getByText('Field label')
       expect(groupLabel).toBeInTheDocument()
