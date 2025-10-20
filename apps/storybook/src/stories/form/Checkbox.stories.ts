@@ -131,8 +131,9 @@ export const MediumWithLongLabel: CheckboxStory = {
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
+    // @TODO: verify the effective length of the checkbox label
     await step('Verify long label renders correctly', async () => {
-      const label = canvas.getByText(/Lorem ipsum/i)
+      const label = canvas.getByText(/Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec purus nec nisl fermentum aliquam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec purus nec nisl fermentum aliquam./i)
       expect(label).toBeVisible()
     })
 
