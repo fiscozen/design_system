@@ -152,7 +152,14 @@ const computedSlotContainerClass = computed<string[]>(() => [
       - role="alert": High-priority message
       - aria-live="assertive": Interrupts current announcements
       - aria-atomic="true": Reads complete message
-      @TODO: When FzAlert natively supports role, ariaLive, ariaAtomic as props, remove HTML attributes and use typed props
+      
+      @TODO: When FzAlert supports automatic ARIA handling based on `type` 
+      (e.g., via an `announce` prop or similar semantic API), we can remove 
+      these manual attributes.
+      
+      Proposed future API:
+        FzAlert with type="error" and announce prop
+        would automatically get role="alert" and aria-live="assertive"
     -->
     <FzAlert
       v-if="error && $slots.error"
