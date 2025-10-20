@@ -45,20 +45,24 @@ pnpm build
 pnpm test:unit
 ```
 
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+### Run Storybook Tests
+
+Run component interaction tests with Vitest and Playwright:
 
 ```sh
-pnpm test:e2e:dev
+pnpm test:storybook
 ```
 
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
+For development with watch mode:
 
 ```sh
-pnpm build
-pnpm test:e2e
+pnpm test:storybook:watch
+```
+
+For coverage reports:
+
+```sh
+pnpm test:storybook:coverage
 ```
 
 ### Lint with [ESLint](https://eslint.org/)
