@@ -2,7 +2,7 @@
 
 exports[`FzTooltip > should match alert snapshot 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0">sample text</span></div>
   <!--v-if-->
   <!--teleport start-->
   <!--teleport end-->
@@ -11,7 +11,7 @@ exports[`FzTooltip > should match alert snapshot 1`] = `
 
 exports[`FzTooltip > should match alert snapshot with icon 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0">sample text</span></div>
   <!--v-if-->
   <!--teleport start-->
   <!--teleport end-->
@@ -20,7 +20,7 @@ exports[`FzTooltip > should match alert snapshot with icon 1`] = `
 
 exports[`FzTooltip > should match error snapshot 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0">sample text</span></div>
   <!--v-if-->
   <!--teleport start-->
   <!--teleport end-->
@@ -29,7 +29,7 @@ exports[`FzTooltip > should match error snapshot 1`] = `
 
 exports[`FzTooltip > should match error snapshot with icon 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0">sample text</span></div>
   <!--v-if-->
   <!--teleport start-->
   <!--teleport end-->
@@ -38,7 +38,7 @@ exports[`FzTooltip > should match error snapshot with icon 1`] = `
 
 exports[`FzTooltip > should match informative snapshot 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0">sample text</span></div>
   <!--v-if-->
   <!--teleport start-->
   <!--teleport end-->
@@ -47,7 +47,7 @@ exports[`FzTooltip > should match informative snapshot 1`] = `
 
 exports[`FzTooltip > should match informative snapshot with icon 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0">sample text</span></div>
   <!--v-if-->
   <!--teleport start-->
   <!--teleport end-->
@@ -56,7 +56,7 @@ exports[`FzTooltip > should match informative snapshot with icon 1`] = `
 
 exports[`FzTooltip > should match neutral snapshot 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0">sample text</span></div>
   <!--v-if-->
   <!--teleport start-->
   <!--teleport end-->
@@ -65,7 +65,7 @@ exports[`FzTooltip > should match neutral snapshot 1`] = `
 
 exports[`FzTooltip > should match neutral snapshot with icon 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0">sample text</span></div>
   <!--v-if-->
   <!--teleport start-->
   <!--teleport end-->
@@ -74,7 +74,7 @@ exports[`FzTooltip > should match neutral snapshot with icon 1`] = `
 
 exports[`FzTooltip > should match positive snapshot 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0">sample text</span></div>
   <!--v-if-->
   <!--teleport start-->
   <!--teleport end-->
@@ -83,7 +83,7 @@ exports[`FzTooltip > should match positive snapshot 1`] = `
 
 exports[`FzTooltip > should match positive snapshot with icon 1`] = `
 "<div data-v-be4a804f="" class="fz__tooltip flex h-max">
-  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0"></span></div>
+  <div class="inline-flex w-full sm:w-auto"><span data-v-be4a804f="" tabindex="0">sample text</span></div>
   <!--v-if-->
   <!--teleport start-->
   <!--teleport end-->
