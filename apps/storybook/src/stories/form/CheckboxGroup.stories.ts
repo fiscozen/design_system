@@ -157,10 +157,18 @@ export const Small: CheckboxGroupStory = {
       const option2Label = canvas.getByText('Option 2')
       await userEvent.click(option2Label)
       
-      const option3Checkbox = canvas.getAllByRole('checkbox').find(cb => {
-        return cb.getAttribute('aria-label')?.includes('Option 3') || 
-               cb.closest('label')?.textContent?.includes('Option 3')
+      // Find Option 3 checkbox by finding the label and getting its associated input
+      const allCheckboxes = canvas.getAllByRole('checkbox')
+      const option3Checkbox = allCheckboxes.find(cb => {
+        const labelId = cb.getAttribute('aria-labelledby')
+        if (labelId) {
+          const label = canvasElement.querySelector(`#${labelId}`)
+          return label?.textContent?.includes('Option 3')
+        }
+        return false
       })
+      
+      expect(option3Checkbox).toBeDefined()
       expect(option3Checkbox).toBeChecked()
     })
   }
