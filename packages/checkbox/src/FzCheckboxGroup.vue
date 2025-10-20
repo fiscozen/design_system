@@ -35,7 +35,7 @@
  *   ]"
  * />
  */
-import { computed } from "vue";
+import { computed, useSlots } from "vue";
 import { FzCheckboxGroupProps } from "./types";
 import { FzAlert } from "@fiscozen/alert";
 import { mapSizeToClasses } from "./common";
@@ -43,6 +43,7 @@ import { generateGroupId } from "./utils";
 import FzCheckboxGroupOption from "./components/FzCheckboxGroupOption.vue";
 
 const props = defineProps<FzCheckboxGroupProps>();
+const slots = useSlots();
 
 /** Unique identifier for the checkbox group, used for ARIA relationships */
 const id: string = generateGroupId();
@@ -94,6 +95,38 @@ const computedSlotContainerClass = computed<string[]>(() => [
   props.size === "md" ? (props.horizontal ? "gap-16" : "gap-8") : "",
   props.horizontal ? "flex-row" : "flex-col",
 ]);
+
+/**
+ * Computes the aria-describedby attribute value for the checkbox group.
+ * Combines help text and error message IDs when present.
+ *
+ * @returns Space-separated string of IDs, or undefined if no descriptions
+ *
+ * @example
+ * // Only help text
+ * "fz-checkbox-group-123-help"
+ *
+ * @example
+ * // Only error
+ * "fz-checkbox-group-123-error"
+ *
+ * @example
+ * // Both help and error
+ * "fz-checkbox-group-123-help fz-checkbox-group-123-error"
+ */
+const computedAriaDescribedby = computed<string | undefined>(() => {
+  const descriptions: string[] = [];
+
+  if (slots.help) {
+    descriptions.push(`${id}-help`);
+  }
+
+  if (props.error && slots.error) {
+    descriptions.push(`${id}-error`);
+  }
+
+  return descriptions.length > 0 ? descriptions.join(" ") : undefined;
+});
 </script>
 
 <template>
@@ -108,7 +141,7 @@ const computedSlotContainerClass = computed<string[]>(() => [
       <span>{{ label }}<span v-if="required"> *</span></span>
 
       <!-- Optional help text slot for additional context -->
-      <p :class="computedHelpTextClass" v-if="$slots.help">
+      <p :id="id + '-help'" :class="computedHelpTextClass" v-if="$slots.help">
         <slot name="help" />
       </p>
     </label>
@@ -117,7 +150,7 @@ const computedSlotContainerClass = computed<string[]>(() => [
       Checkbox group container with ARIA group role
       - role="group": Identifies this as a group of related form controls
       - aria-labelledby: Links to the label element
-      - aria-describedby: Links to error message when present
+      - aria-describedby: Links to help text and/or error message for screen readers
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
@@ -126,7 +159,7 @@ const computedSlotContainerClass = computed<string[]>(() => [
       :id="id"
       role="group"
       :aria-labelledby="id + '-label'"
-      :aria-describedby="error && $slots.error ? id + '-error' : undefined"
+      :aria-describedby="computedAriaDescribedby"
       :aria-required="required"
       :aria-invalid="error"
     >
