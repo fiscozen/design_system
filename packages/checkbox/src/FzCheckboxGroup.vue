@@ -42,11 +42,6 @@ import { mapSizeToClasses } from "./common";
 import { generateGroupId } from "./utils";
 import FzCheckboxGroupOption from "./components/FzCheckboxGroupOption.vue";
 
-// Vue 3 compatibility config for child component
-FzCheckboxGroupOption.compatConfig = {
-  MODE: 3,
-};
-
 const props = defineProps<FzCheckboxGroupProps>();
 
 /** Unique identifier for the checkbox group, used for ARIA relationships */
