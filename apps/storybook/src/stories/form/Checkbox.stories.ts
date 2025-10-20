@@ -81,7 +81,8 @@ export const Medium: CheckboxStory = {
     await step('Verify ARIA attributes', async () => {
       const checkbox = canvas.getByRole('checkbox', { name: 'Checkbox' })
       expect(checkbox).toHaveAttribute('type', 'checkbox')
-      expect(checkbox).toHaveAttribute('aria-label', 'Checkbox')
+      // When not standalone, checkbox uses aria-labelledby instead of aria-label
+      expect(checkbox).toHaveAttribute('aria-labelledby')
     })
   }
 }
