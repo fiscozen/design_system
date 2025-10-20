@@ -24,7 +24,7 @@ import { mapSizeToClasses } from "./common";
 import { generateCheckboxId } from "./utils";
 import { FzIcon, type IconVariant } from "@fiscozen/icons";
 import { FzTooltip } from "@fiscozen/tooltip";
-import { FzAlert } from "@fiscozen/alert";
+import ErrorAlert from "./components/ErrorAlert.vue";
 
 const props = withDefaults(defineProps<FzCheckboxProps>(), {
   size: "md",
@@ -328,33 +328,10 @@ onMounted(() => {
         />
       </FzTooltip>
     </div>
-    <!-- 
-      Error message display with ARIA live region
-      Announces validation errors immediately to screen readers
-      - role="alert": High-priority message
-      - aria-live="assertive": Interrupts current announcements
-      - aria-atomic="true": Reads complete message
-      
-      @TODO: When FzAlert supports automatic ARIA handling based on `type` 
-      (e.g., via an `announce` prop or similar semantic API), we can remove 
-      these manual attributes.
-      
-      Proposed future API:
-        FzAlert with type="error" and announce prop
-        would automatically get role="alert" and aria-live="assertive"
-    -->
-    <FzAlert
-      v-if="error && $slots.error"
-      :id="`${id}-error`"
-      :size="size"
-      type="error"
-      alertStyle="simple"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
+    <!-- Error message display with accessible ARIA live region -->
+    <ErrorAlert v-if="error && $slots.error" :id="`${id}-error`" :size="size">
       <slot name="error" />
-    </FzAlert>
+    </ErrorAlert>
 
     <!-- 
       Children slot for nested checkboxes
