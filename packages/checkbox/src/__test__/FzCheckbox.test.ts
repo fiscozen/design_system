@@ -134,7 +134,7 @@ describe("FzCheckbox", () => {
     const input = wrapper.find("input[type='checkbox']");
     const id = input.attributes("id");
     expect(input.attributes("aria-checked")).toBe("false");
-    expect(input.attributes("aria-label")).toBe("Test Checkbox");
+    expect(input.attributes("aria-label")).toBeUndefined();
     expect(input.attributes("aria-required")).toBe("true");
     expect(input.attributes("aria-invalid")).toBe("false");
     expect(input.attributes("aria-describedby")).toBeUndefined();
