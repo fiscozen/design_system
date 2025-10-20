@@ -151,6 +151,60 @@ describe("FzCheckboxGroup", () => {
     expect(wrapper.find(`#${errorId}`).exists()).toBe(true);
   });
 
+  it("has aria-describedby when help text is present", async () => {
+    const wrapper = mount(FzCheckboxGroup, {
+      props: {
+        label: "Test Checkbox Group",
+        size: "md",
+        modelValue: [],
+        options: [
+          { label: "Option 1", value: "option1" },
+          { label: "Option 2", value: "option2" },
+        ],
+      },
+      slots: {
+        help: "This is help text",
+      },
+    });
+    await wrapper.vm.$nextTick();
+    const groupId = wrapper.find("[role='group']").attributes("id");
+    const helpId = groupId + "-help";
+    expect(wrapper.find("[role='group']").attributes("aria-describedby")).toBe(
+      helpId,
+    );
+    expect(wrapper.find(`#${helpId}`).exists()).toBe(true);
+    expect(wrapper.find(`#${helpId}`).text()).toBe("This is help text");
+  });
+
+  it("has aria-describedby with both help and error", async () => {
+    const wrapper = mount(FzCheckboxGroup, {
+      props: {
+        label: "Test Checkbox Group",
+        size: "md",
+        modelValue: [],
+        options: [
+          { label: "Option 1", value: "option1" },
+          { label: "Option 2", value: "option2" },
+        ],
+        error: true,
+      },
+      slots: {
+        help: "This is help text",
+        error: "This is an error",
+      },
+    });
+    await wrapper.vm.$nextTick();
+    const groupId = wrapper.find("[role='group']").attributes("id");
+    const helpId = groupId + "-help";
+    const errorId = groupId + "-error";
+    const describedby = wrapper.find("[role='group']").attributes("aria-describedby");
+    
+    // Should contain both IDs separated by space
+    expect(describedby).toContain(helpId);
+    expect(describedby).toContain(errorId);
+    expect(describedby).toBe(`${helpId} ${errorId}`);
+  });
+
   it("propagates error prop to child checkboxes in hierarchical structure", async () => {
     const wrapper = mount(FzCheckboxGroup, {
       props: {
