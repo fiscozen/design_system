@@ -252,11 +252,14 @@ export const Error: CheckboxStory = {
   render: (args) => ({
     components: { FzCheckbox, FzIcon },
     setup() {
+      const { modelValue: initialValue, ...restArgs } = args
+      const modelValue = ref(initialValue)
       return {
-        args
+        restArgs,
+        modelValue
       }
     },
-    template: `<FzCheckbox v-bind="args">
+    template: `<FzCheckbox v-bind="restArgs" v-model="modelValue">
             <template #error>
                 Error
             </template>
@@ -265,7 +268,8 @@ export const Error: CheckboxStory = {
   args: {
     size: 'sm',
     label: 'Checkbox',
-    error: true
+    error: true,
+    modelValue: false
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
