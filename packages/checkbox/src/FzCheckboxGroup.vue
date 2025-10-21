@@ -56,9 +56,10 @@ const computedHelpTextClass = computed<string[]>(() => [
 
 /**
  * Two-way binding for selected checkbox values.
- * Always an array of strings, even when empty.
+ * Supports string, number, and boolean values.
+ * Always an array, even when empty.
  */
-const model = defineModel<string[]>({
+const model = defineModel<(string | number | boolean)[]>({
   required: true,
   default: [],
 });
