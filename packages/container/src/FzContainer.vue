@@ -99,4 +99,14 @@ const containerClass = computed(() => {
 .fz-container--vertical.gap-section-content-lg :deep(> p + p) {
   margin-top: calc((0px - var(--section-content-lg)) + var(--paragraph-gap));
 }
+
+/**
+ * Reset paragraph spacing for horizontal orientation
+ * 
+ * In horizontal layouts, paragraphs are aligned side-by-side, so the vertical
+ * margin-top from the global p + p rule (defined in typography.css) must be removed.
+ */
+.fz-container--horizontal :deep(> p + p) {
+  margin-top: 0;
+}
 </style>
