@@ -76,7 +76,7 @@
     "@storybook/addon-links": "^9.1.10",
     "@storybook/addon-themes": "^9.1.10",
     "@storybook/addon-vitest": "^9.1.10",
-    "@storybook/test": "^9.1.10",
+    "@storybook/test": "^8.6.14",
     "@storybook/vue3-vite": "^9.1.10",
     "@types/jsdom": "^21.1.6",
     "@types/node": "^18.19.3",

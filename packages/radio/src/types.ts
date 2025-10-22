@@ -83,6 +83,7 @@ export type FzRadioCardProps = FzRadioProps & {
   title: string;
   subtitle?: string;
   imageUrl?: string;
+  imageAlt?: string;
   tooltip?: string;
   radioIcon?: boolean;
 };

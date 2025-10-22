@@ -63,8 +63,9 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
     >
       <img
         v-if="imageUrl"
+        class="object-contain"
         :src="imageUrl"
-        alt=""
+        :alt="imageAlt || ''"
         :width="orientation === 'horizontal' ? 58 : 336"
         :height="orientation === 'horizontal' ? 58 : 252"
         :class="[
@@ -75,6 +76,7 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
           },
         ]"
       />
+
       <div
         :class="[
           'flex flex-row w-full justify-between min-w-0',
