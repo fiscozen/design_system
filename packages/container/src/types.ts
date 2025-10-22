@@ -1,5 +1,7 @@
 export type FzContainerGap = 'sm' | 'base' | 'lg'
 
+export type FzContainerOrientation = 'vertical' | 'horizontal'
+
 export interface FzContainerProps {
   /**
    * Whether to use main container styles instead of section styles
@@ -13,6 +15,11 @@ export interface FzContainerProps {
    */
   gap?: FzContainerGap
 
+  /**
+   * Layout orientation of the container
+   * @default 'vertical'
+   */
+  orientation?: FzContainerOrientation
   
   /**
    * Custom HTML tag to use for the container

@@ -1,4 +1,10 @@
 <script setup lang="ts">
+/**
+ * FzContainer - A flexible layout component for organizing content with controlled spacing
+ *
+ * Supports both vertical and horizontal orientations with customizable gap sizes.
+ * Uses CSS custom properties for consistent spacing across the design system.
+ */
 import { computed } from "vue";
 
 import type { FzContainerProps, FzContainerSlots } from "./types";
@@ -6,14 +12,22 @@ import type { FzContainerProps, FzContainerSlots } from "./types";
 const props = withDefaults(defineProps<FzContainerProps>(), {
   main: false,
   gap: "base",
+  orientation: "vertical",
   tag: "div",
 });
 
 defineSlots<FzContainerSlots>();
 
+/**
+ * Computes CSS classes based on props
+ *
+ * Generates orientation-specific class and gap class based on container type.
+ * Main containers use --main-content spacing, sections use --section-content spacing.
+ */
 const containerClass = computed(() => {
   const type = props.main ? "main-content" : "section-content";
-  return `gap-${type}-${props.gap}`;
+  const orientationClass = `fz-container--${props.orientation}`;
+  return [orientationClass, `gap-${type}-${props.gap}`];
 });
 </script>
 
@@ -24,39 +38,65 @@ const containerClass = computed(() => {
 </template>
 
 <style scoped lang="css">
+/**
+ * Base container styles
+ * Common flexbox setup for both orientations
+ */
 .fz-container {
   display: flex;
+}
+
+/**
+ * Vertical orientation (default)
+ * Elements stack vertically with gap applied between them
+ */
+.fz-container--vertical {
   flex-direction: column;
 }
 
 /**
- * Applica margin-top solo ai paragrafi seguiti da altri paragrafi negli slot
- * 
- * :deep() permette di applicare gli stili solo a elementi negli slot mantenendo l'incapsulamento
- * Elimina il gap tra gli elementi p (0px - --gap)
- * Aggiunge il margine desiderato (8px)
+ * Horizontal orientation
+ * Elements align horizontally with:
+ * - center vertical alignment
+ * - no wrapping (elements shrink to fit)
+ * - gap applied horizontally between elements
  */
-.fz-container.gap-main-content-sm :deep(> p + p) {
+.fz-container--horizontal {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+/**
+ * Special paragraph spacing for vertical orientation
+ * 
+ * Applies custom spacing between consecutive paragraphs (p + p) to improve readability.
+ * Overrides the default gap with a smaller, typography-specific spacing (--paragraph-gap).
+ * 
+ * Only applies in vertical orientation as horizontal paragraph layouts are uncommon.
+ * Uses :deep() to target slotted content while maintaining style encapsulation.
+ */
+.fz-container--vertical.gap-main-content-sm :deep(> p + p) {
   margin-top: calc((0px - var(--main-content-sm)) + var(--paragraph-gap));
 }
 
-.fz-container.gap-main-content-base :deep(> p + p) {
+.fz-container--vertical.gap-main-content-base :deep(> p + p) {
   margin-top: calc((0px - var(--main-content-base)) + var(--paragraph-gap));
 }
 
-.fz-container.gap-main-content-lg :deep(> p + p) {
+.fz-container--vertical.gap-main-content-lg :deep(> p + p) {
   margin-top: calc((0px - var(--main-content-lg)) + var(--paragraph-gap));
 }
 
-.fz-container.gap-section-content-sm :deep(> p + p) {
+.fz-container--vertical.gap-section-content-sm :deep(> p + p) {
   margin-top: calc((0px - var(--section-content-sm)) + var(--paragraph-gap));
 }
 
-.fz-container.gap-section-content-base :deep(> p + p) {
+.fz-container--vertical.gap-section-content-base :deep(> p + p) {
   margin-top: calc((0px - var(--section-content-base)) + var(--paragraph-gap));
 }
 
-.fz-container.gap-section-content-lg :deep(> p + p) {
+.fz-container--vertical.gap-section-content-lg :deep(> p + p) {
   margin-top: calc((0px - var(--section-content-lg)) + var(--paragraph-gap));
 }
 </style>
