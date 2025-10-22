@@ -50,7 +50,7 @@ export const Vertical: RadioCardStory = {
     label: 'Radio',
     orientation: 'vertical',
     title: 'RadioCard',
-    imageUrl: 'https://blog.stockvault.net/wp-content/uploads/2013/11/Portrait-8.jpg',
+    imageUrl: checkrimg,
     subtitle: 'This is a Radioccard label',
     tooltip: 'this is a tooltip',
     value: 'test1',
@@ -65,7 +65,7 @@ export const Horizontal: RadioCardStory = {
     label: 'Radio',
     orientation: 'horizontal',
     title: 'RadioCard',
-    imageUrl: 'https://blog.stockvault.net/wp-content/uploads/2013/11/Portrait-8.jpg',
+    imageUrl: checkrimg,
     subtitle: 'This is a Radioccard label',
     tooltip: 'this is a tooltip',
     value: 'test2'
