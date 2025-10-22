@@ -13,21 +13,43 @@ const props = withDefaults(defineProps<FzContainerProps>(), {
   main: false,
   gap: "base",
   orientation: "vertical",
+  layout: "default",
   tag: "div",
 });
 
 defineSlots<FzContainerSlots>();
 
 /**
+ * Validate layout prop usage
+ *
+ * The layout prop only works with horizontal orientation.
+ * Logs an error to console to alert developers of incorrect usage.
+ */
+if (props.layout !== "default" && props.orientation !== "horizontal") {
+  console.error(
+    '[FzContainer] The "layout" prop only works with orientation="horizontal". ' +
+      `Current orientation: "${props.orientation}", layout: "${props.layout}".`
+  );
+}
+
+/**
  * Computes CSS classes based on props
  *
  * Generates orientation-specific class and gap class based on container type.
  * Main containers use --main-content spacing, sections use --section-content spacing.
+ * For horizontal orientation, also includes layout class.
  */
 const containerClass = computed(() => {
   const type = props.main ? "main-content" : "section-content";
   const orientationClass = `fz-container--${props.orientation}`;
-  return [orientationClass, `gap-${type}-${props.gap}`];
+  const classes = [orientationClass, `gap-${type}-${props.gap}`];
+
+  // Add layout class only for horizontal orientation
+  if (props.orientation === "horizontal") {
+    classes.push(`layout-${props.layout}`);
+  }
+
+  return classes;
 });
 </script>
 
@@ -65,6 +87,31 @@ const containerClass = computed(() => {
   flex-direction: row;
   align-items: center;
   flex-wrap: nowrap;
+}
+
+/**
+ * Layout variants for horizontal orientation
+ * 
+ * Control how child elements expand to fill available space.
+ * 
+ * Currently implemented:
+ * - layout-expand-first: First element expands to fill available space
+ * 
+ * Future layouts (not yet implemented):
+ * - layout-expand-last: Last element expands to fill available space
+ * - layout-space-between: Elements distributed with space between them
+ * - layout-expand-all: All elements expand equally to fill available space
+ */
+
+/**
+ * Expand first element
+ * 
+ * The first child element expands to fill all available horizontal space,
+ * while other elements maintain their natural size.
+ * Useful for layouts like: [expanding content | action buttons]
+ */
+.fz-container--horizontal.layout-expand-first :deep(> *:first-child) {
+  flex-grow: 1;
 }
 
 /**

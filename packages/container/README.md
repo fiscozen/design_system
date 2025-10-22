@@ -5,6 +5,7 @@ A flexible layout component for organizing content with controlled spacing. Supp
 ## Features
 
 - Vertical and horizontal layout orientations
+- Layout variants for horizontal containers (expand-first, with more coming)
 - Customizable gap sizes (sm, base, lg)
 - Main and section container variants with different spacing scales
 - Flexible HTML tag rendering
@@ -60,6 +61,7 @@ import { FzContainer } from '@fiscozen/container'
 | `main` | `boolean` | `false` | If `true`, uses main container spacing (larger gaps for page-level sections) |
 | `gap` | `'sm' \| 'base' \| 'lg'` | `'base'` | Gap size between elements |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout orientation |
+| `layout` | `'default' \| 'expand-first'` | `'default'` | Layout behavior for horizontal containers (controls how child elements expand). Only applies when `orientation="horizontal"` |
 | `tag` | `string` | `'div'` | HTML tag to use for the container element |
 
 ## Gap Sizes
@@ -91,6 +93,30 @@ The component uses CSS custom properties for consistent spacing across the desig
 - Elements are vertically centered (`align-items: center`)
 - No wrapping (`flex-wrap: nowrap`) - elements will shrink to fit
 - Ideal for action buttons, inline controls, or horizontal navigation
+- Supports layout variants via the `layout` prop (see Layout Behavior section below)
+
+## Layout Behavior (Horizontal Only)
+
+The `layout` prop controls how child elements expand to fill available space in horizontal containers. This prop only works when `orientation="horizontal"`.
+
+### Available Layouts
+
+| Layout | Status | Description |
+|--------|--------|-------------|
+| `default` | Implemented | All elements maintain their natural size (`flex-grow: 0`). This is the default behavior. |
+| `expand-first` | Implemented | The first element expands to fill available space (`flex-grow: 1`), while other elements maintain their natural size. |
+| `expand-last` | Future | The last element will expand to fill available space, while other elements maintain their natural size. |
+| `space-between` | Future | Elements will be distributed with space between them (`justify-content: space-between`). |
+| `expand-all` | Future | All elements will expand equally to fill available space (`flex-grow: 1` on all children). |
+
+### When to Use Each Layout
+
+**`default`**: Use when all elements should maintain their natural size. Good for button groups, navigation items, or any horizontal list where elements should not grow.
+
+**`expand-first`**: Use when you want the first element to take up all remaining space. Common use cases:
+- Task lists with an action button on the right
+- Form rows with expanding content and fixed-width actions
+- Headers with expanding title and fixed-width controls
 
 ## Examples
 
@@ -135,6 +161,50 @@ The component uses CSS custom properties for consistent spacing across the desig
   <FzContainer tag="section" main>
     <h1>Section Content</h1>
     <p>This container renders as a section element</p>
+  </FzContainer>
+</template>
+```
+
+### Layout: Expand First (Task List)
+
+```vue
+<template>
+  <FzContainer gap="sm">
+    <FzContainer orientation="horizontal" layout="expand-first" gap="base">
+      <FzContainer gap="sm">
+        <p>Task name that can be very long</p>
+        <p>Task description that will expand to fill available space</p>
+      </FzContainer>
+      <button>Complete</button>
+    </FzContainer>
+    
+    <FzContainer orientation="horizontal" layout="expand-first" gap="base">
+      <FzContainer gap="sm">
+        <p>Another task</p>
+        <p>With another description</p>
+      </FzContainer>
+      <button>Complete</button>
+    </FzContainer>
+  </FzContainer>
+</template>
+```
+
+### Layout: Expand First (Form Actions)
+
+```vue
+<template>
+  <FzContainer gap="base">
+    <input type="text" placeholder="Form field..." />
+    <input type="text" placeholder="Another field..." />
+    
+    <!-- Actions aligned to the right -->
+    <FzContainer orientation="horizontal" layout="expand-first" gap="base">
+      <FzContainer></FzContainer>
+      <FzContainer orientation="horizontal" gap="sm">
+        <button>Cancel</button>
+        <button>Save</button>
+      </FzContainer>
+    </FzContainer>
   </FzContainer>
 </template>
 ```
