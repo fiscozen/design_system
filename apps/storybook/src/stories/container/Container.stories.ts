@@ -56,7 +56,7 @@ export const Demo: Story = {
         <FzContainer main :gap="args.mainGap" :orientation="args.orientation">
           
           <FzContainer :gap="args.sectionGap" :orientation="args.orientation">
-            <h2 class="text-xl font-semibold mb-2">Prima Sezione</h2>
+            <h2>Prima Sezione</h2>
             <FzInput label="Input 1" placeholder="Primo campo" />
             <FzInput label="Input 2" placeholder="Secondo campo" />
             <FzInput label="Input 3" placeholder="Terzo campo" />
@@ -65,7 +65,7 @@ export const Demo: Story = {
           </FzContainer>
           
           <FzContainer :gap="args.sectionGap" :orientation="args.orientation">
-            <h2 class="text-xl font-semibold mb-2">Seconda Sezione</h2>
+            <h2>Seconda Sezione</h2>
             <FzInput label="Input A" placeholder="Campo A" />
             <FzInput label="Input B" placeholder="Campo B" />
             <FzInput label="Input C" placeholder="Campo C" />
@@ -94,13 +94,13 @@ export const Paragraphs: Story = {
         <FzContainer main :gap="args.mainGap">
           
           <FzContainer :gap="args.sectionGap">
-            <h2 class="text-xl font-semibold mb-2">Prima Sezione</h2>
+            <h2>Prima Sezione</h2>
             <p>Questo è un paragrafo</p>
             <p>Questo è un paragrafo</p>
           </FzContainer>
           
           <FzContainer :gap="args.sectionGap">
-            <h2 class="text-xl font-semibold mb-2">Seconda Sezione</h2>
+            <h2>Seconda Sezione</h2>
             <p>Questo è un paragrafo</p>
             <FzInput label="Input A" placeholder="Campo A" />
             <FzInput label="Input B" placeholder="Campo B" />
@@ -146,8 +146,8 @@ export const HorizontalButtons: Story = {
       return { args }
     },
     template: `
-      <div class="p-4">
-        <h2 class="text-xl font-semibold mb-4">Horizontal Container with Buttons</h2>
+      <div>
+        <h2>Horizontal Container with Buttons</h2>
         
         <FzContainer orientation="horizontal" :gap="args.gap">
           <FzButton>Button 1</FzButton>
@@ -187,12 +187,12 @@ export const HorizontalWithGaps: Story = {
   render: () => ({
     components: { FzContainer, FzButton },
     template: `
-      <div class="p-4">
-        <h2 class="text-xl font-semibold mb-6">Horizontal Containers with Different Gaps</h2>
+      <div>
+        <h2>Horizontal Containers with Different Gaps</h2>
         
         <FzContainer gap="lg">
           <div>
-            <h3 class="text-lg font-medium mb-2">Gap: Small</h3>
+            <h3>Gap: Small</h3>
             <FzContainer orientation="horizontal" gap="sm">
               <FzButton size="sm">Small Gap 1</FzButton>
               <FzButton size="sm">Small Gap 2</FzButton>
@@ -201,7 +201,7 @@ export const HorizontalWithGaps: Story = {
           </div>
           
           <div>
-            <h3 class="text-lg font-medium mb-2">Gap: Base</h3>
+            <h3>Gap: Base</h3>
             <FzContainer orientation="horizontal" gap="base">
               <FzButton>Base Gap 1</FzButton>
               <FzButton>Base Gap 2</FzButton>
@@ -210,7 +210,7 @@ export const HorizontalWithGaps: Story = {
           </div>
           
           <div>
-            <h3 class="text-lg font-medium mb-2">Gap: Large</h3>
+            <h3>Gap: Large</h3>
             <FzContainer orientation="horizontal" gap="lg">
               <FzButton>Large Gap 1</FzButton>
               <FzButton>Large Gap 2</FzButton>
@@ -247,16 +247,16 @@ export const HorizontalParagraphs: Story = {
   render: () => ({
     components: { FzContainer },
     template: `
-      <div class="p-4">
-        <h2 class="text-xl font-semibold mb-4">Horizontal Container with Paragraphs</h2>
+      <div>
+        <h2>Horizontal Container with Paragraphs</h2>
         
         <FzContainer orientation="horizontal" gap="base">
-          <p class="border border-gray-300 p-2 rounded">Paragraph 1</p>
-          <p class="border border-gray-300 p-2 rounded">Paragraph 2</p>
-          <p class="border border-gray-300 p-2 rounded">Paragraph 3</p>
+          <p>Paragraph 1</p>
+          <p>Paragraph 2</p>
+          <p>Paragraph 3</p>
         </FzContainer>
         
-        <p class="mt-4 text-sm text-gray-600">
+        <p>
           Note: In horizontal orientation, the special p+p spacing is not applied.
         </p>
       </div>
