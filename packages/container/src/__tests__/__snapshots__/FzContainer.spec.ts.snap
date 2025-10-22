@@ -1,8 +1,16 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzContainer > Snapshots > matches snapshot - horizontal default 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base"><button>Button 1</button><button>Button 2</button></div>"`;
+exports[`FzContainer > Snapshots > matches snapshot - horizontal default 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base layout-default"><button>Button 1</button><button>Button 2</button></div>"`;
 
-exports[`FzContainer > Snapshots > matches snapshot - horizontal with main and sm gap 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-main-content-sm"><button>Button 1</button><button>Button 2</button></div>"`;
+exports[`FzContainer > Snapshots > matches snapshot - horizontal with layout default 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base layout-default"><button>Button 1</button><button>Button 2</button></div>"`;
+
+exports[`FzContainer > Snapshots > matches snapshot - horizontal with layout expand-first 1`] = `
+"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base layout-expand-first">
+  <div>Expanding content</div><button>Action</button>
+</div>"
+`;
+
+exports[`FzContainer > Snapshots > matches snapshot - horizontal with main and sm gap 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-main-content-sm layout-default"><button>Button 1</button><button>Button 2</button></div>"`;
 
 exports[`FzContainer > Snapshots > matches snapshot - vertical default 1`] = `
 "<div data-v-22dc0b85="" class="fz-container fz-container--vertical gap-section-content-base">

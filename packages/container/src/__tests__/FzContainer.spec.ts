@@ -1,4 +1,4 @@
-import { describe, it } from 'vitest'
+import { describe, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { FzContainer } from '..'
 
@@ -222,6 +222,85 @@ describe.concurrent('FzContainer', () => {
     })
   })
 
+  describe('Layout - Horizontal only', () => {
+    it('applies layout-default class by default in horizontal', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { orientation: 'horizontal' }
+      })
+
+      expect(wrapper.classes()).toContain('layout-default')
+      expect(wrapper.classes()).not.toContain('layout-expand-first')
+    })
+
+    it('applies layout-default class when explicitly set', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { orientation: 'horizontal', layout: 'default' }
+      })
+
+      expect(wrapper.classes()).toContain('layout-default')
+      expect(wrapper.classes()).not.toContain('layout-expand-first')
+    })
+
+    it('applies layout-expand-first class', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { orientation: 'horizontal', layout: 'expand-first' }
+      })
+
+      expect(wrapper.classes()).toContain('layout-expand-first')
+      expect(wrapper.classes()).not.toContain('layout-default')
+    })
+
+    it('does not apply layout class for vertical orientation', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { orientation: 'vertical' }
+      })
+
+      expect(wrapper.classes()).not.toContain('layout-default')
+      expect(wrapper.classes()).not.toContain('layout-expand-first')
+    })
+
+    it('logs console.error when layout is used with vertical orientation', async ({ expect }) => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+      mount(FzContainer, {
+        props: { orientation: 'vertical', layout: 'expand-first' }
+      })
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        expect.stringContaining('[FzContainer] The "layout" prop only works with orientation="horizontal"')
+      )
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Current orientation: "vertical", layout: "expand-first"')
+      )
+
+      consoleErrorSpy.mockRestore()
+    })
+
+    it('does not log console.error when layout is default with vertical', async ({ expect }) => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+      mount(FzContainer, {
+        props: { orientation: 'vertical', layout: 'default' }
+      })
+
+      expect(consoleErrorSpy).not.toHaveBeenCalled()
+
+      consoleErrorSpy.mockRestore()
+    })
+
+    it('does not log console.error when layout is used with horizontal', async ({ expect }) => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+      mount(FzContainer, {
+        props: { orientation: 'horizontal', layout: 'expand-first' }
+      })
+
+      expect(consoleErrorSpy).not.toHaveBeenCalled()
+
+      consoleErrorSpy.mockRestore()
+    })
+  })
+
   describe('Props combinations', () => {
     it('combines main, gap, and orientation correctly', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
@@ -252,6 +331,21 @@ describe.concurrent('FzContainer', () => {
       expect(classes).toContain('fz-container')
       expect(classes).toContain('fz-container--vertical')
       expect(classes).toContain('gap-section-content-sm')
+    })
+
+    it('combines orientation, gap, and layout correctly', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: {
+          orientation: 'horizontal',
+          gap: 'lg',
+          layout: 'expand-first'
+        }
+      })
+
+      expect(wrapper.classes()).toContain('fz-container')
+      expect(wrapper.classes()).toContain('fz-container--horizontal')
+      expect(wrapper.classes()).toContain('gap-section-content-lg')
+      expect(wrapper.classes()).toContain('layout-expand-first')
     })
   })
 
@@ -297,6 +391,28 @@ describe.concurrent('FzContainer', () => {
     })
 
     expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot - horizontal with layout expand-first', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { orientation: 'horizontal', layout: 'expand-first' },
+        slots: {
+          default: '<div>Expanding content</div><button>Action</button>'
+        }
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot - horizontal with layout default', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { orientation: 'horizontal', layout: 'default' },
+        slots: {
+          default: '<button>Button 1</button><button>Button 2</button>'
+        }
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
     })
   })
 })
