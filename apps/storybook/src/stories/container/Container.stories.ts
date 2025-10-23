@@ -30,15 +30,17 @@ const meta: Meta<any> = {
     },
 
     mainGap: {
+      name: 'gap',
       control: 'select',
       options: ['sm', 'base', 'lg'],
-      description: '📏 Dimensione del gap del main container (tra le sezioni)'
+      description: 'gap del main container (tra le sezioni)'
     },
 
     sectionGap: {
+      name: 'gap',
       control: 'select',
       options: ['sm', 'base', 'lg'],
-      description: '📏 Dimensione del gap dei section container (tra gli elementi interni)'
+      description: 'gap dei section container (tra gli elementi interni)'
     },
   }
 }
