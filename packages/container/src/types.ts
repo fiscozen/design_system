@@ -1,12 +1,10 @@
 export type FzContainerGap = 'sm' | 'base' | 'lg'
 
-export type FzContainerOrientation = 'vertical' | 'horizontal'
-
 /**
  * Layout behavior for horizontal containers
  * 
  * Controls how child elements expand to fill available space.
- * Only applies when orientation is 'horizontal'.
+ * Only applies when horizontal is true.
  * 
  * **Currently implemented:**
  * - `default`: All elements maintain their natural size (flex-grow: 0)
@@ -35,16 +33,16 @@ export interface FzContainerProps {
   gap?: FzContainerGap
 
   /**
-   * Layout orientation of the container
-   * @default 'vertical'
+   * If true, elements align horizontally. Otherwise, vertically (default)
+   * @default false
    */
-  orientation?: FzContainerOrientation
+  horizontal?: boolean
   
   /**
    * Layout behavior for horizontal containers
    * 
    * Controls how child elements expand to fill available space.
-   * Only applies when orientation is 'horizontal'.
+   * Only applies when horizontal is true.
    * 
    * @default 'default'
    * @see FzContainerLayout for available options and implementation status

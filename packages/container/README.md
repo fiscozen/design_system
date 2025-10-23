@@ -46,7 +46,7 @@ import { FzContainer } from '@fiscozen/container'
 
 ```vue
 <template>
-  <FzContainer orientation="horizontal">
+  <FzContainer horizontal>
     <button>Action 1</button>
     <button>Action 2</button>
     <button>Action 3</button>
@@ -60,8 +60,8 @@ import { FzContainer } from '@fiscozen/container'
 |------|------|---------|-------------|
 | `main` | `boolean` | `false` | If `true`, uses main container spacing (larger gaps for page-level sections) |
 | `gap` | `'sm' \| 'base' \| 'lg'` | `'base'` | Gap size between elements |
-| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout orientation |
-| `layout` | `'default' \| 'expand-first'` | `'default'` | Layout behavior for horizontal containers (controls how child elements expand). Only applies when `orientation="horizontal"` |
+| `horizontal` | `boolean` | `false` | If `true`, elements align horizontally. Otherwise, vertically (default) |
+| `layout` | `'default' \| 'expand-first'` | `'default'` | Layout behavior for horizontal containers (controls how child elements expand). Only applies when `horizontal` is `true` |
 | `tag` | `string` | `'div'` | HTML tag to use for the container element |
 
 ## Gap Sizes
@@ -97,7 +97,7 @@ The component uses CSS custom properties for consistent spacing across the desig
 
 ## Layout Behavior (Horizontal Only)
 
-The `layout` prop controls how child elements expand to fill available space in horizontal containers. This prop only works when `orientation="horizontal"`.
+The `layout` prop controls how child elements expand to fill available space in horizontal containers. This prop only works when `horizontal` is `true`.
 
 ### Available Layouts
 
@@ -146,7 +146,7 @@ The `layout` prop controls how child elements expand to fill available space in 
 
 ```vue
 <template>
-  <FzContainer orientation="horizontal" gap="sm">
+  <FzContainer horizontal gap="sm">
     <button>Cancel</button>
     <button>Save Draft</button>
     <button>Publish</button>
@@ -170,7 +170,7 @@ The `layout` prop controls how child elements expand to fill available space in 
 ```vue
 <template>
   <FzContainer gap="sm">
-    <FzContainer orientation="horizontal" layout="expand-first" gap="base">
+    <FzContainer horizontal layout="expand-first" gap="base">
       <FzContainer gap="sm">
         <p>Task name that can be very long</p>
         <p>Task description that will expand to fill available space</p>
@@ -178,7 +178,7 @@ The `layout` prop controls how child elements expand to fill available space in 
       <button>Complete</button>
     </FzContainer>
     
-    <FzContainer orientation="horizontal" layout="expand-first" gap="base">
+    <FzContainer horizontal layout="expand-first" gap="base">
       <FzContainer gap="sm">
         <p>Another task</p>
         <p>With another description</p>
@@ -198,9 +198,9 @@ The `layout` prop controls how child elements expand to fill available space in 
     <input type="text" placeholder="Another field..." />
     
     <!-- Actions aligned to the right -->
-    <FzContainer orientation="horizontal" layout="expand-first" gap="base">
+    <FzContainer horizontal layout="expand-first" gap="base">
       <FzContainer></FzContainer>
-      <FzContainer orientation="horizontal" gap="sm">
+      <FzContainer horizontal gap="sm">
         <button>Cancel</button>
         <button>Save</button>
       </FzContainer>

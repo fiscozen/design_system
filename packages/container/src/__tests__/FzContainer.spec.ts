@@ -61,9 +61,9 @@ describe.concurrent('FzContainer', () => {
       expect(wrapper.classes()).not.toContain('fz-container--horizontal')
     })
 
-    it('applies vertical class when explicitly set', async ({ expect }) => {
+    it('applies vertical class when horizontal is false', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'vertical' }
+        props: { horizontal: false }
       })
 
       expect(wrapper.classes()).toContain('fz-container--vertical')
@@ -158,7 +158,7 @@ describe.concurrent('FzContainer', () => {
   describe('Orientation - Horizontal', () => {
     it('applies horizontal class', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal' }
+        props: { horizontal: true }
       })
 
       expect(wrapper.classes()).toContain('fz-container--horizontal')
@@ -167,7 +167,7 @@ describe.concurrent('FzContainer', () => {
 
     it('applies section-content gap in horizontal', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal' }
+        props: { horizontal: true }
       })
 
       expect(wrapper.classes()).toContain('gap-section-content-base')
@@ -180,7 +180,7 @@ describe.concurrent('FzContainer', () => {
 
     it('applies main-content gap in horizontal', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal', main: true }
+        props: { horizontal: true, main: true }
       })
 
       expect(wrapper.classes()).toContain('gap-main-content-base')
@@ -193,7 +193,7 @@ describe.concurrent('FzContainer', () => {
 
     it('applies sm gap size in horizontal', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal', gap: 'sm' }
+        props: { horizontal: true, gap: 'sm' }
       })
 
       expect(wrapper.classes()).toContain('gap-section-content-sm')
@@ -203,7 +203,7 @@ describe.concurrent('FzContainer', () => {
 
     it('applies base gap size in horizontal', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal', gap: 'base' }
+        props: { horizontal: true, gap: 'base' }
       })
 
       expect(wrapper.classes()).toContain('gap-section-content-base')
@@ -213,7 +213,7 @@ describe.concurrent('FzContainer', () => {
 
     it('applies lg gap size in horizontal', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal', gap: 'lg' }
+        props: { horizontal: true, gap: 'lg' }
       })
 
       expect(wrapper.classes()).toContain('gap-section-content-lg')
@@ -225,7 +225,7 @@ describe.concurrent('FzContainer', () => {
   describe('Layout - Horizontal only', () => {
     it('applies layout-default class by default in horizontal', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal' }
+        props: { horizontal: true }
       })
 
       expect(wrapper.classes()).toContain('layout-default')
@@ -234,7 +234,7 @@ describe.concurrent('FzContainer', () => {
 
     it('applies layout-default class when explicitly set', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal', layout: 'default' }
+        props: { horizontal: true, layout: 'default' }
       })
 
       expect(wrapper.classes()).toContain('layout-default')
@@ -243,7 +243,7 @@ describe.concurrent('FzContainer', () => {
 
     it('applies layout-expand-first class', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal', layout: 'expand-first' }
+        props: { horizontal: true, layout: 'expand-first' }
       })
 
       expect(wrapper.classes()).toContain('layout-expand-first')
@@ -251,36 +251,34 @@ describe.concurrent('FzContainer', () => {
     })
 
     it('does not apply layout class for vertical orientation', async ({ expect }) => {
-      const wrapper = mount(FzContainer, {
-        props: { orientation: 'vertical' }
-      })
+      const wrapper = mount(FzContainer)
 
       expect(wrapper.classes()).not.toContain('layout-default')
       expect(wrapper.classes()).not.toContain('layout-expand-first')
     })
 
-    it('logs console.error when layout is used with vertical orientation', async ({ expect }) => {
+    it('logs console.error when layout is used without horizontal', async ({ expect }) => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       mount(FzContainer, {
-        props: { orientation: 'vertical', layout: 'expand-first' }
+        props: { layout: 'expand-first' }
       })
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        expect.stringContaining('[FzContainer] The "layout" prop only works with orientation="horizontal"')
+        expect.stringContaining('[FzContainer] The "layout" prop only works when horizontal is true')
       )
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Current orientation: "vertical", layout: "expand-first"')
+        expect.stringContaining('Current horizontal: false, layout: "expand-first"')
       )
 
       consoleErrorSpy.mockRestore()
     })
 
-    it('does not log console.error when layout is default with vertical', async ({ expect }) => {
+    it('does not log console.error when layout is default without horizontal', async ({ expect }) => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       mount(FzContainer, {
-        props: { orientation: 'vertical', layout: 'default' }
+        props: { layout: 'default' }
       })
 
       expect(consoleErrorSpy).not.toHaveBeenCalled()
@@ -292,7 +290,7 @@ describe.concurrent('FzContainer', () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       mount(FzContainer, {
-        props: { orientation: 'horizontal', layout: 'expand-first' }
+        props: { horizontal: true, layout: 'expand-first' }
       })
 
       expect(consoleErrorSpy).not.toHaveBeenCalled()
@@ -302,12 +300,12 @@ describe.concurrent('FzContainer', () => {
   })
 
   describe('Props combinations', () => {
-    it('combines main, gap, and orientation correctly', async ({ expect }) => {
+    it('combines main, gap, and horizontal correctly', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
         props: {
           main: true,
           gap: 'lg',
-          orientation: 'horizontal',
+          horizontal: true,
           tag: 'form'
         }
       })
@@ -321,7 +319,6 @@ describe.concurrent('FzContainer', () => {
     it('applies all classes in correct order', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
         props: {
-          orientation: 'vertical',
           gap: 'sm',
           main: false
         }
@@ -333,10 +330,10 @@ describe.concurrent('FzContainer', () => {
       expect(classes).toContain('gap-section-content-sm')
     })
 
-    it('combines orientation, gap, and layout correctly', async ({ expect }) => {
+    it('combines horizontal, gap, and layout correctly', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
         props: {
-          orientation: 'horizontal',
+          horizontal: true,
           gap: 'lg',
           layout: 'expand-first'
         }
@@ -373,7 +370,7 @@ describe.concurrent('FzContainer', () => {
 
     it('matches snapshot - horizontal default', async ({ expect }) => {
     const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal' },
+        props: { horizontal: true },
         slots: {
           default: '<button>Button 1</button><button>Button 2</button>'
         }
@@ -384,7 +381,7 @@ describe.concurrent('FzContainer', () => {
 
     it('matches snapshot - horizontal with main and sm gap', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal', main: true, gap: 'sm' },
+        props: { horizontal: true, main: true, gap: 'sm' },
         slots: {
           default: '<button>Button 1</button><button>Button 2</button>'
         }
@@ -395,7 +392,7 @@ describe.concurrent('FzContainer', () => {
 
     it('matches snapshot - horizontal with layout expand-first', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal', layout: 'expand-first' },
+        props: { horizontal: true, layout: 'expand-first' },
         slots: {
           default: '<div>Expanding content</div><button>Action</button>'
         }
@@ -406,7 +403,7 @@ describe.concurrent('FzContainer', () => {
 
     it('matches snapshot - horizontal with layout default', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
-        props: { orientation: 'horizontal', layout: 'default' },
+        props: { horizontal: true, layout: 'default' },
         slots: {
           default: '<button>Button 1</button><button>Button 2</button>'
         }
