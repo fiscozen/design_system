@@ -12,7 +12,6 @@ import type { FzContainerProps, FzContainerSlots } from "./types";
 const props = withDefaults(defineProps<FzContainerProps>(), {
   main: false,
   gap: "base",
-  layout: "default",
   tag: "div",
 });
 
@@ -24,11 +23,14 @@ defineSlots<FzContainerSlots>();
  * The layout prop only works when horizontal is true.
  * Logs an error to console to alert developers of incorrect usage.
  */
-if (props.layout !== "default" && !props.horizontal) {
-  console.error(
-    '[FzContainer] The "layout" prop only works when horizontal is true. ' +
-      `Current horizontal: ${props.horizontal}, layout: "${props.layout}".`
-  );
+if (!props.horizontal && "layout" in props) {
+  const layout = (props as any).layout;
+  if (layout && layout !== "default") {
+    console.error(
+      '[FzContainer] The "layout" prop only works when horizontal is true. ' +
+        `Current horizontal: ${props.horizontal}, layout: "${layout}".`
+    );
+  }
 }
 
 /**
@@ -45,9 +47,10 @@ const containerClass = computed(() => {
     : "fz-container--vertical";
   const classes = [orientationClass, `gap-${type}-${props.gap}`];
 
-  // Add layout class only for horizontal containers
   if (props.horizontal) {
-    classes.push(`layout-${props.layout}`);
+    const layout =
+      ("layout" in props ? (props as any).layout : undefined) || "default";
+    classes.push(`layout-${layout}`);
   }
 
   return classes;
