@@ -12,6 +12,7 @@ import type { FzContainerProps, FzContainerSlots } from "./types";
 const props = withDefaults(defineProps<FzContainerProps>(), {
   main: false,
   gap: "base",
+  horizontal: false,
   tag: "div",
 });
 
