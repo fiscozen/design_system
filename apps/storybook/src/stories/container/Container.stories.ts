@@ -358,10 +358,10 @@ export const LayoutExpandFirst: Story = {
     await expect(expandFirstContainers.length).toBe(5)
     
     // Verify they are all horizontal
-    expandFirstContainers.forEach((container: Element) => {
-      expect(container.classList.contains('fz-container--horizontal')).toBe(true)
-      expect(container.classList.contains('layout-expand-first')).toBe(true)
-    })
+    for (const container of expandFirstContainers) {
+      await expect(container.classList.contains('fz-container--horizontal')).toBe(true)
+      await expect(container.classList.contains('layout-expand-first')).toBe(true)
+    }
     
     // Verify buttons are rendered
     const buttons = canvas.getAllByRole('button')
