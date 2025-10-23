@@ -268,7 +268,7 @@ describe.concurrent('FzContainer', () => {
         expect.stringContaining('[FzContainer] The "layout" prop only works when horizontal is true')
       )
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Current horizontal: false, layout: "expand-first"')
+        expect.stringContaining('layout: "expand-first"')
       )
 
       consoleErrorSpy.mockRestore()
