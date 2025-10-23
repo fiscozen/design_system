@@ -17,17 +17,16 @@ const meta: Meta<any> = {
     }
   },
   argTypes: {
-    orientation: {
-      control: 'select',
-      options: ['vertical', 'horizontal'],
-      description: 'Layout orientation of the container'
+    horizontal: {
+      control: 'boolean',
+      description: 'If true, elements align horizontally. Otherwise, vertically (default)'
     },
 
     layout: {
       control: 'select',
       options: ['default', 'expand-first'],
       description: 'Layout behavior for horizontal containers (controls how child elements expand)',
-      if: { arg: 'orientation', eq: 'horizontal' }
+      if: { arg: 'horizontal', eq: true }
     },
 
     mainGap: {
@@ -52,7 +51,7 @@ export const Demo: Story = {
   args: {
     mainGap: 'base',
     sectionGap: 'base',
-    orientation: 'vertical'
+    horizontal: false
   },
   render: (args: any) => ({
     components: { FzContainer, FzInput },
@@ -60,9 +59,9 @@ export const Demo: Story = {
       return { args }
     },
     template: `
-        <FzContainer main :gap="args.mainGap" :orientation="args.orientation">
+        <FzContainer main :gap="args.mainGap" :horizontal="args.horizontal">
           
-          <FzContainer :gap="args.sectionGap" :orientation="args.orientation">
+          <FzContainer :gap="args.sectionGap" :horizontal="args.horizontal">
             <h2>Prima Sezione</h2>
             <FzInput label="Input 1" placeholder="Primo campo" />
             <FzInput label="Input 2" placeholder="Secondo campo" />
@@ -71,7 +70,7 @@ export const Demo: Story = {
             <FzInput label="Input 5" placeholder="Quinto campo" />
           </FzContainer>
           
-          <FzContainer :gap="args.sectionGap" :orientation="args.orientation">
+          <FzContainer :gap="args.sectionGap" :horizontal="args.horizontal">
             <h2>Seconda Sezione</h2>
             <FzInput label="Input A" placeholder="Campo A" />
             <FzInput label="Input B" placeholder="Campo B" />
@@ -156,7 +155,7 @@ export const HorizontalButtons: Story = {
       <FzContainer main gap="lg">
         <h2>Horizontal Container with Buttons</h2>
         
-        <FzContainer orientation="horizontal" :gap="args.gap">
+        <FzContainer horizontal :gap="args.gap">
           <FzButton>Button 1</FzButton>
           <FzButton variant="secondary">Button 2</FzButton>
           <FzButton variant="tertiary">Button 3</FzButton>
@@ -200,7 +199,7 @@ export const HorizontalWithGaps: Story = {
         <FzContainer gap="lg">
           <FzContainer gap="sm">
             <h3>Gap: Small</h3>
-            <FzContainer orientation="horizontal" gap="sm">
+            <FzContainer horizontal gap="sm">
               <FzButton size="sm">Small Gap 1</FzButton>
               <FzButton size="sm">Small Gap 2</FzButton>
               <FzButton size="sm">Small Gap 3</FzButton>
@@ -209,7 +208,7 @@ export const HorizontalWithGaps: Story = {
           
           <FzContainer gap="sm">
             <h3>Gap: Base</h3>
-            <FzContainer orientation="horizontal" gap="base">
+            <FzContainer horizontal gap="base">
               <FzButton>Base Gap 1</FzButton>
               <FzButton>Base Gap 2</FzButton>
               <FzButton>Base Gap 3</FzButton>
@@ -218,7 +217,7 @@ export const HorizontalWithGaps: Story = {
           
           <FzContainer gap="sm">
             <h3>Gap: Large</h3>
-            <FzContainer orientation="horizontal" gap="lg">
+            <FzContainer horizontal gap="lg">
               <FzButton>Large Gap 1</FzButton>
               <FzButton>Large Gap 2</FzButton>
               <FzButton>Large Gap 3</FzButton>
@@ -257,7 +256,7 @@ export const HorizontalParagraphs: Story = {
       <FzContainer main gap="lg">
         <h2>Horizontal Container with Paragraphs</h2>
         
-        <FzContainer orientation="horizontal" gap="base">
+        <FzContainer horizontal gap="base">
           <p>Paragraph 1</p>
           <p>Paragraph 2</p>
           <p>Paragraph 3</p>
@@ -293,7 +292,7 @@ export const LayoutExpandFirst: Story = {
         <FzContainer gap="lg">
           <FzContainer gap="sm">
             <h3>Task List Example</h3>
-            <FzContainer orientation="horizontal" layout="expand-first" gap="base">
+            <FzContainer horizontal layout="expand-first" gap="base">
               <FzContainer gap="sm">
                 <p>Task name that can be very long</p>
                 <p>This task description can contain a lot of text and will expand to fill the available space</p>
@@ -305,7 +304,7 @@ export const LayoutExpandFirst: Story = {
           <FzContainer gap="sm">
             <h3>Multiple Tasks</h3>
             <FzContainer gap="sm">
-              <FzContainer orientation="horizontal" layout="expand-first" gap="base">
+              <FzContainer horizontal layout="expand-first" gap="base">
                 <FzContainer gap="sm">
                   <p>Task 1</p>
                   <p>Short description</p>
@@ -313,7 +312,7 @@ export const LayoutExpandFirst: Story = {
                 <FzButton variant="secondary" size="sm">Edit</FzButton>
               </FzContainer>
               
-              <FzContainer orientation="horizontal" layout="expand-first" gap="base">
+              <FzContainer horizontal layout="expand-first" gap="base">
                 <FzContainer gap="sm">
                   <p>Task 2</p>
                   <p>Another task with a longer description that will expand</p>
@@ -321,7 +320,7 @@ export const LayoutExpandFirst: Story = {
                 <FzButton variant="secondary" size="sm">Edit</FzButton>
               </FzContainer>
               
-              <FzContainer orientation="horizontal" layout="expand-first" gap="base">
+              <FzContainer horizontal layout="expand-first" gap="base">
                 <FzContainer gap="sm">
                   <p>Task 3</p>
                   <p>Final task</p>
@@ -336,9 +335,9 @@ export const LayoutExpandFirst: Story = {
             <FzContainer gap="base">
               <p>Form content goes here...</p>
               
-              <FzContainer orientation="horizontal" layout="expand-first" gap="base">
+              <FzContainer horizontal layout="expand-first" gap="base">
                 <FzContainer></FzContainer>
-                <FzContainer orientation="horizontal" gap="sm">
+                <FzContainer horizontal gap="sm">
                   <FzButton variant="tertiary">Cancel</FzButton>
                   <FzButton variant="primary">Save</FzButton>
                 </FzContainer>

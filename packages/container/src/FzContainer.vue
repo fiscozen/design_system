@@ -12,7 +12,6 @@ import type { FzContainerProps, FzContainerSlots } from "./types";
 const props = withDefaults(defineProps<FzContainerProps>(), {
   main: false,
   gap: "base",
-  orientation: "vertical",
   layout: "default",
   tag: "div",
 });
@@ -22,13 +21,13 @@ defineSlots<FzContainerSlots>();
 /**
  * Validate layout prop usage
  *
- * The layout prop only works with horizontal orientation.
+ * The layout prop only works when horizontal is true.
  * Logs an error to console to alert developers of incorrect usage.
  */
-if (props.layout !== "default" && props.orientation !== "horizontal") {
+if (props.layout !== "default" && !props.horizontal) {
   console.error(
-    '[FzContainer] The "layout" prop only works with orientation="horizontal". ' +
-      `Current orientation: "${props.orientation}", layout: "${props.layout}".`
+    '[FzContainer] The "layout" prop only works when horizontal is true. ' +
+      `Current horizontal: ${props.horizontal}, layout: "${props.layout}".`
   );
 }
 
@@ -37,15 +36,17 @@ if (props.layout !== "default" && props.orientation !== "horizontal") {
  *
  * Generates orientation-specific class and gap class based on container type.
  * Main containers use --main-content spacing, sections use --section-content spacing.
- * For horizontal orientation, also includes layout class.
+ * For horizontal containers, also includes layout class.
  */
 const containerClass = computed(() => {
   const type = props.main ? "main-content" : "section-content";
-  const orientationClass = `fz-container--${props.orientation}`;
+  const orientationClass = props.horizontal
+    ? "fz-container--horizontal"
+    : "fz-container--vertical";
   const classes = [orientationClass, `gap-${type}-${props.gap}`];
 
-  // Add layout class only for horizontal orientation
-  if (props.orientation === "horizontal") {
+  // Add layout class only for horizontal containers
+  if (props.horizontal) {
     classes.push(`layout-${props.layout}`);
   }
 
