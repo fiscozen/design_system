@@ -6,24 +6,30 @@
    * keyboard navigation, screen reader support, and hover persistence
    * as per WCAG 1.4.13 Content on Hover or Focus criteria.
    * 
-   * The wrapper adds tabindex="0" for keyboard accessibility by default.
-   * When wrapping interactive elements (buttons, links), set isInteractive={true}
-   * to prevent double tab stops while maintaining full accessibility.
+   * Automatically detects interactive components (FzButton, FzLink) to prevent
+   * double tab stops. The wrapper adds tabindex="0" only for non-interactive content.
    * 
-   * @prop {boolean} isInteractive - Set to true when wrapping interactive elements
-   * to prevent the wrapper from adding tabindex="0" and creating double tab stops.
+   * @prop {boolean | 'auto'} interactive - Controls interactive behavior:
+   *   - undefined/'auto': Auto-detects FzButton and FzLink (recommended)
+   *   - true: Forces interactive (no wrapper tabindex)
+   *   - false: Forces non-interactive (adds wrapper tabindex="0")
    * 
-   * @example With non-interactive element (default behavior)
-   * <FzTooltip text="User settings">
-   *   Settings
+   * @example Auto-detection (recommended)
+   * <FzTooltip text="Save changes">
+   *   <FzButton>Save</FzButton> // Automatically detected
    * </FzTooltip>
    * 
-   * @example With interactive element (use isInteractive)
-   * <FzTooltip text="User settings" isInteractive>
-   *   <button>Settings</button>
+   * @example Non-interactive element
+   * <FzTooltip text="User settings">
+   *   Settings // Wrapper gets tabindex="0"
+   * </FzTooltip>
+   * 
+   * @example Force interactive override
+   * <FzTooltip text="Custom action" :interactive="true">
+   *   <span @click="handleClick">Action</span>
    * </FzTooltip>
    */
-  import { computed, ref, useSlots, onUnmounted } from 'vue'
+  import { computed, ref, useSlots, onUnmounted, VNode } from 'vue'
 
   import { FzFloating } from '@fiscozen/composables'
   import { FzIcon } from '@fiscozen/icons'
@@ -34,10 +40,110 @@
     position: 'auto',
     status: 'neutral',
     withIcon: false,
-    isInteractive: false,
+    interactive: 'auto',
   })
 
   const slots = useSlots()
+
+  /* ========================================================================
+   * AUTO-DETECTION OF INTERACTIVE ELEMENTS
+   * Automatically detects components listed in INTERACTIVE_COMPONENTS
+   * to prevent double tab stops without requiring manual interactive prop.
+   * ======================================================================== */
+
+  /**
+   * List of interactive component names for auto-detection.
+   * These components are considered interactive and won't receive
+   * an additional tabindex="0" on the tooltip wrapper.
+   * 
+   * Add component names here to extend auto-detection support.
+   */
+  const INTERACTIVE_COMPONENTS = ['FzButton', 'FzLink'] as const;
+
+  /**
+   * Checks if a VNode represents an interactive component.
+   * 
+   * Vue 3 components with <script setup> have a `__name` property
+   * accessible via vnode.type. This allows component identification
+   * without importing them directly, avoiding circular dependencies
+   * and reducing bundle size.
+   * 
+   * @param vnode - The VNode to check
+   * @returns true if the VNode matches a component in INTERACTIVE_COMPONENTS
+   */
+  function isInteractiveComponent(vnode: VNode): boolean {
+    const componentType = vnode.type as any;
+    
+    // Components using <script setup> generate a __name property.
+    // We check this property to identify the component without importing it directly.
+    const componentName = componentType?.__name;
+    
+    return componentName && INTERACTIVE_COMPONENTS.includes(componentName);
+  }
+
+  /**
+   * Recursively searches for interactive components in a VNode tree.
+   * 
+   * Handles nested structures created by Vue directives (v-if, v-else, v-for)
+   * and template wrappers, which create Symbol(Fragment) nodes that wrap
+   * the actual component VNodes.
+   * 
+   * @param vnode - The VNode to analyze recursively
+   * @returns true if a component from INTERACTIVE_COMPONENTS is found at any depth
+   * 
+   * @example Direct component
+   * <FzButton>Click</FzButton> // → true
+   * 
+   * @example Nested with v-if
+   * <FzButton v-if="condition">Click</FzButton> // → true
+   * 
+   * @example Deeply nested
+   * <template v-if="outer">
+   *   <FzButton v-if="inner">Click</FzButton>
+   * </template> // → true
+   */
+  function hasInteractiveComponent(vnode: VNode): boolean {
+    if (isInteractiveComponent(vnode)) {
+      return true;
+    }
+    
+    // Recursive case: if it's a Symbol (Fragment from v-if/v-else/template),
+    // we need to search within its children.
+    // Vue uses Symbol types for internal nodes like Fragment, Text, Comment.
+    if (typeof vnode.type === 'symbol') {
+      const children = vnode.children;
+      
+      // Ensure children is an array of VNodes (not string/number/null)
+      if (Array.isArray(children)) {
+        return children.some((child) => {
+          // Children can be VNode, string, number, or other primitives.
+          // Only VNodes have a 'type' property we can inspect.
+          if (typeof child === 'object' && child !== null && 'type' in child) {
+            return hasInteractiveComponent(child as VNode);
+          }
+          return false;
+        });
+      }
+    }
+    
+    // Base case: not an interactive component
+    return false;
+  }
+
+  /**
+   * Auto-detects if the default slot contains interactive elements.
+   * Searches recursively through all VNodes in the slot to find
+   * components listed in INTERACTIVE_COMPONENTS at any nesting level.
+   */
+  const isInteractiveElement = computed(() => {
+    if (!slots.default) return false;
+    
+    const vnodes = slots.default();
+    if (vnodes.length === 0) return false;
+    
+    // Search recursively in all slot VNodes
+    return vnodes.some((vnode) => hasInteractiveComponent(vnode));
+  });
 
   /**
    * Configuration object for status-based styling and iconography.
@@ -90,13 +196,27 @@
   const ariaDescribedby = computed(() => isOpen.value ? tooltipId : undefined);
 
   /**
-   * Dynamic tabindex based on isInteractive prop.
-   * - undefined: when the inner element is already interactive (no extra tab stop)
-   * - 0: when the inner element is not interactive (required for keyboard accessibility)
+   * Dynamic tabindex based on interactive prop and auto-detection.
    * 
-   * This prevents double tab stops when wrapping interactive elements like buttons or links.
+   * Logic:
+   * - Explicit boolean (true/false): Override auto-detection
+   * - undefined or 'auto': Use auto-detection (isInteractiveElement)
+   * 
+   * Returns:
+   * - undefined: Element is interactive (no wrapper tabindex, single tab stop)
+   * - 0: Element is not interactive (adds wrapper tabindex for keyboard accessibility)
+   * 
+   * This prevents double tab stops when wrapping interactive components.
    */
-  const computedTabindex = computed(() => props.isInteractive ? undefined : 0);
+  const computedTabindex = computed(() => {
+    // Explicit boolean override takes precedence over auto-detection
+    if (typeof props.interactive === 'boolean') {
+      return props.interactive ? undefined : 0;
+    }
+    
+    // undefined or 'auto': use auto-detection
+    return isInteractiveElement.value ? undefined : 0;
+  });
   
   /* ========================================================================
    * TOOLTIP VISIBILITY CONTROL
@@ -157,7 +277,7 @@
    * Focus handlers using focusin/focusout instead of focus/blur.
    * focusin and focusout bubble up from child elements, ensuring the tooltip
    * shows even when an interactive child element (like a button) receives focus.
-   * This is essential for the isInteractive prop to work correctly.
+   * This is essential for auto-detection and the interactive prop to work correctly.
    */
   const handleFocusIn = showTooltip;
   const handleFocusOut = hideTooltip;

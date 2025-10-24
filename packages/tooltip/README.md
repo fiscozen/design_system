@@ -4,6 +4,7 @@ A fully accessible, WCAG 2.1 AA compliant tooltip component for Vue 3 applicatio
 
 ## Features
 
+- **Auto-detection** - Automatically detects interactive components (FzButton, FzLink) to prevent double tab stops
 - **Status-based Styling** - Visual variants with semantic color coding
 - **Flexible Content** - Support for both text props and rich slot content
 - **WCAG 2.1 AA Compliant** - Full accessibility support with ARIA roles and properties
@@ -23,17 +24,28 @@ npm install @fiscozen/tooltip
 ```vue
 <script setup>
 import { FzTooltip } from '@fiscozen/tooltip'
+import { FzButton } from '@fiscozen/button'
 </script>
 
 <template>
-  <!-- Non-interactive element (default) -->
+  <!-- Non-interactive element (wrapper gets tabindex="0") -->
   <FzTooltip text="User profile settings">
     Settings
   </FzTooltip>
   
-  <!-- Interactive element (use isInteractive) -->
-  <FzTooltip text="User profile settings" isInteractive>
-    <button>Settings</button>
+  <!-- Interactive component - auto-detected (no wrapper tabindex) -->
+  <FzTooltip text="Save your changes">
+    <FzButton>Save</FzButton>
+  </FzTooltip>
+  
+  <!-- Native HTML element (not auto-detected, wrapper gets tabindex="0") -->
+  <FzTooltip text="Submit form">
+    <span @click="someAction">Submit</span>
+  </FzTooltip>
+  
+  <!-- Native HTML element with manual override (no wrapper tabindex) -->
+  <FzTooltip text="Submit form" :interactive="true">
+    <span @click="someAction">Submit</span>
   </FzTooltip>
 </template>
 ```
@@ -112,7 +124,7 @@ import { FzTooltip } from '@fiscozen/tooltip'
 | `position` | `FzFloatingPosition` | `'auto'` | Tooltip positioning relative to trigger element |
 | `withIcon` | `boolean` | `false` | Display status-appropriate icon in tooltip content |
 | `ariaLabel` | `string` | `undefined` | Accessible label for the trigger element |
-| `isInteractive` | `boolean` | `false` | Set to `true` when wrapping interactive elements (buttons, links) to prevent double tab stops |
+| `interactive` | `boolean \| 'auto'` | `'auto'` | Controls keyboard accessibility: `undefined`/`'auto'` for auto-detection (FzButton, FzLink), `true` to force interactive, `false` to force non-interactive |
 
 ### Slots
 
@@ -156,24 +168,47 @@ This component implements comprehensive accessibility features:
 - **Hover Persistence**: WCAG 1.4.13 compliant hover behavior
 - **High Contrast**: Color combinations meeting WCAG AA contrast ratios
 
-### Interactive Elements
+### Interactive Elements & Auto-detection
 
-When wrapping interactive elements (buttons, links, inputs), use the `isInteractive` prop to prevent double tab stops:
+The tooltip automatically detects interactive components to prevent double tab stops:
+
+**Auto-detected Components:**
+- ✅ `FzButton` - Automatically recognized as interactive
+- ✅ `FzLink` - Automatically recognized as interactive
+
+**Not Auto-detected (require manual override if needed):**
+- ❌ Native HTML elements: `<button>`, `<a>`, `<input>`, `<select>`, `<textarea>`
+- ❌ Custom interactive elements with `@click` handlers
 
 ```vue
-<!-- Recommended: With isInteractive prop -->
-<FzTooltip text="Save your changes" isInteractive>
-  <button @click="save">Save</button>
+<!-- Auto-detection (recommended) - no prop needed -->
+<FzTooltip text="Save your changes">
+  <FzButton>Save</FzButton>
+</FzTooltip>
+
+<!-- Span with @click - not auto-detected, creates double tab stop -->
+<FzTooltip text="Submit form">
+  <span @click="someAction">Submit</span>
+</FzTooltip>
+
+<!-- Manual override - prevents double tab stop -->
+<FzTooltip text="Submit form" :interactive="true">
+  <span @click="someAction">Submit</span>
+</FzTooltip>
+
+<!-- Force non-interactive (e.g., disabled button) -->
+<FzTooltip text="Action disabled" :interactive="false">
+  <FzButton disabled>Save</FzButton>
 </FzTooltip>
 ```
 
-**When to use `isInteractive`:**
-- ✅ Wrapping `<button>`, `<a>`, `<input>`, `<select>`, `<textarea>`
-- ✅ Any element with `tabindex` attribute
-- ❌ Not needed for `<span>`, `<div>`, `<img>`, icons, or text content
+**The `interactive` prop:**
+- `undefined` or `'auto'` (default): Auto-detects FzButton and FzLink
+- `true`: Forces interactive behavior (removes wrapper tabindex)
+- `false`: Forces non-interactive behavior (adds wrapper tabindex="0")
 
 **Why it matters:**
-Without `isInteractive`, the tooltip wrapper adds `tabindex="0"` for keyboard accessibility, creating two consecutive tab stops (wrapper + inner element). Setting `isInteractive={true}` removes the wrapper's tabindex, resulting in clean keyboard navigation with a single tab stop.
+Without proper interactive handling, the tooltip wrapper adds `tabindex="0"` for keyboard accessibility, creating two consecutive tab stops (wrapper + inner element). Auto-detection or explicit `interactive={true}` removes the wrapper's tabindex, resulting in clean keyboard navigation with a single tab stop.
 
 ### Keyboard Interactions
 

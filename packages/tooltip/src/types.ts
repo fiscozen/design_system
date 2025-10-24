@@ -37,22 +37,42 @@ export interface FzTooltipProps {
   ariaLabel?: string;
 
   /**
-   * Indicates whether the wrapped element is already interactive (button, link, input, etc.).
-   * When true, the wrapper won't add tabindex="0" to avoid creating double tab stops.
+   * Controls interactive behavior and keyboard accessibility.
    * 
-   * @default false
+   * **Auto-detection support:** FzButton, FzLink
+   * 
+   * - `undefined` or `'auto'` (default): Auto-detects supported components
+   * - `true`: Forces interactive behavior (removes wrapper tabindex)
+   * - `false`: Forces non-interactive behavior (adds wrapper tabindex="0")
+   * 
+   * Auto-detection handles nested structures (v-if, v-else, templates).
+   * Use explicit true/false only to override auto-detection in edge cases.
+   * 
+   * @default undefined (auto-detection)
    * 
    * @example
-   * // With interactive element (button)
-   * <FzTooltip text="Save changes" isInteractive>
-   *   <button>Save</button>
+   * // Auto-detection (recommended)
+   * <FzTooltip text="Save changes">
+   *   <FzButton>Save</FzButton> // Auto-detected as interactive
    * </FzTooltip>
    * 
    * @example
-   * // With non-interactive element (default)
-   * <FzTooltip text="Additional info">
-   *   Info
+   * // Explicit auto-detection
+   * <FzTooltip text="Save changes" interactive="auto">
+   *   <FzButton>Save</FzButton>
+   * </FzTooltip>
+   * 
+   * @example
+   * // Force interactive (override auto-detection)
+   * <FzTooltip text="Info" :interactive="true">
+   *   <span @click="handleClick">Info</span> // Treated as interactive
+   * </FzTooltip>
+   * 
+   * @example
+   * // Force non-interactive (override auto-detection)
+   * <FzTooltip text="Disabled action" :interactive="false">
+   *   <FzButton disabled>Save</FzButton> // Adds extra tab stop
    * </FzTooltip>
    */
-  isInteractive?: boolean;
+  interactive?: boolean | 'auto';
 }

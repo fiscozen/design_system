@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzTooltip } from '@fiscozen/tooltip'
+import { FzButton } from '@fiscozen/button'
+import { FzLink } from '@fiscozen/link'
 import { expect, userEvent, within, waitFor } from '@storybook/test'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
@@ -33,9 +35,10 @@ const meta = {
     },
     text: { control: { type: 'text' } },
     withIcon: { control: { type: 'boolean' } },
-    isInteractive: { 
-      control: { type: 'boolean' },
-      description: 'Set to true when wrapping interactive elements to prevent double tab stops'
+    interactive: { 
+      control: { type: 'select' },
+      options: [undefined, 'auto', true, false],
+      description: 'Controls interactive behavior: undefined/"auto" (auto-detect FzButton/FzLink), true (force interactive), false (force non-interactive)'
     }
   },
   args: {
@@ -245,13 +248,22 @@ export const WithInteractiveElements: Story = {
   render: (args) => ({
     setup() {
       const handleClick = (label: string) => alert(`Clicked: ${label}`)
-      return { args, handleClick }
+      return { args, handleClick, FzButton, FzLink }
     },
-    components: { FzTooltip },
+    components: { FzTooltip, FzButton, FzLink },
     template: `
       <div class="flex flex-col gap-16 p-16">
         <div>
-          <h3 class="text-lg font-semibold mb-8">Recommended: Non-interactive elements</h3>
+          <h3 class="text-lg font-semibold mb-8">Auto-detection (Recommended)</h3>
+          <div class="flex gap-16 mb-12">
+            <FzTooltip text="Save your changes">
+              <FzButton @click="handleClick('Auto FzButton')">Save</FzButton>
+            </FzTooltip>
+            
+            <FzTooltip text="Go to settings" status="informative">
+              <FzLink to="/settings" @click.prevent="handleClick('Auto FzLink')">Settings</FzLink>
+            </FzTooltip>
+          </div>
           <div class="flex gap-16">
             <FzTooltip text="This is an icon with tooltip">
               <span class="text-2xl">⚙️</span>
@@ -262,47 +274,56 @@ export const WithInteractiveElements: Story = {
             </FzTooltip>
           </div>
           <p class="text-sm text-gray-600 mt-8">
-            Clean tab order: only the wrapper is focusable
+            FzButton and FzLink are automatically detected as interactive (no wrapper tabindex).<br/>
+            Non-interactive elements get tabindex="0" for keyboard accessibility.
           </p>
         </div>
         
         <div>
-          <h3 class="text-lg font-semibold mb-8">Without isInteractive (not recommended)</h3>
+          <h3 class="text-lg font-semibold mb-8">Native HTML elements (not auto-detected)</h3>
           <div class="flex gap-16">
-            <FzTooltip text="Button with tooltip">
-              <button @click="handleClick('Save')" class="px-12 py-6 bg-blue-500 text-white rounded">
-                Save
+            <FzTooltip text="Native button with tooltip">
+              <button @click="handleClick('Native Button')" class="px-12 py-6 bg-orange-500 text-white rounded">
+                Native Button
               </button>
             </FzTooltip>
             
-            <FzTooltip text="Link with tooltip" status="informative">
-              <a href="#" @click.prevent="handleClick('Link')" class="text-blue-600 underline">
-                Click me
+            <FzTooltip text="Native link with tooltip" status="informative">
+              <a href="#" @click.prevent="handleClick('Native Link')" class="text-orange-600 underline">
+                Native Link
               </a>
             </FzTooltip>
           </div>
           <p class="text-sm text-gray-600 mt-8">
-            Double tab stops: wrapper (tabindex="0") + button/link
+            Warning: Double tab stops (wrapper + native element).<br/>
+            Use FzButton/FzLink for auto-detection or set :interactive="true" to fix.
           </p>
         </div>
         
         <div>
-          <h3 class="text-lg font-semibold mb-8">With isInteractive (recommended)</h3>
-          <div class="flex gap-16">
-            <FzTooltip text="Button with tooltip" isInteractive>
-              <button @click="handleClick('Save Optimized')" class="px-12 py-6 bg-green-500 text-white rounded">
-                Save
-              </button>
+          <h3 class="text-lg font-semibold mb-8">Manual Override</h3>
+          <div class="flex gap-16 mb-12">
+            <FzTooltip text="Custom interactive element" :interactive="true">
+              <span @click="handleClick('Custom')" class="cursor-pointer px-12 py-6 bg-purple-500 text-white rounded inline-block">
+                Custom Interactive
+              </span>
             </FzTooltip>
             
-            <FzTooltip text="Link with tooltip" status="informative" isInteractive>
-              <a href="#" @click.prevent="handleClick('Link Optimized')" class="text-green-600 underline">
-                Click me
-              </a>
+            <FzTooltip text="Native button optimized" :interactive="true">
+              <button @click="handleClick('Native Optimized')" class="px-12 py-6 bg-green-500 text-white rounded">
+                Native Optimized
+              </button>
+            </FzTooltip>
+          </div>
+          <div class="flex gap-16">
+            <FzTooltip text="Disabled button info" :interactive="false">
+              <FzButton disabled>Disabled</FzButton>
             </FzTooltip>
           </div>
           <p class="text-sm text-gray-600 mt-8">
-            Single tab stop: only the button/link (no wrapper tabindex)
+            :interactive="true" forces interactive behavior (removes wrapper tabindex).<br/>
+            :interactive="false" forces non-interactive behavior (adds wrapper tabindex).<br/>
+            Useful for disabled buttons that need to show tooltip on focus.
           </p>
         </div>
       </div>
@@ -312,35 +333,33 @@ export const WithInteractiveElements: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     
-    // Test 1: Non-interactive element (icon) should have tabindex="0"
+    // Test 1: Auto-detected FzButton should NOT have wrapper tabindex
+    const autoButton = canvas.getByRole('button', { name: 'Save' })
+    const autoButtonWrapper = autoButton.parentElement
+    expect(autoButtonWrapper).toBeInTheDocument()
+    expect(autoButtonWrapper).not.toHaveAttribute('tabindex')
+    
+    // Test 2: Non-interactive span should have wrapper tabindex="0"
     const iconWrapper = canvas.getByText('⚙️').closest('span[tabindex="0"]')
     expect(iconWrapper).toBeInTheDocument()
     expect(iconWrapper).toHaveAttribute('tabindex', '0')
     
-    // Test 2: Button WITHOUT isInteractive should have wrapper with tabindex="0"
-    const allButtons = canvas.getAllByRole('button', { name: /Save/i })
-    const buttonWithoutInteractive = allButtons[0] // First Save button (without isInteractive)
-    const buttonWrapperOld = buttonWithoutInteractive.closest('span[tabindex="0"]')
-    expect(buttonWrapperOld).toBeInTheDocument()
-    expect(buttonWrapperOld).toHaveAttribute('tabindex', '0')
+    // Test 3: Native button (not auto-detected) should have wrapper tabindex="0"
+    const nativeButton = canvas.getByRole('button', { name: 'Native Button' })
+    const nativeButtonWrapper = nativeButton.closest('span[tabindex="0"]')
+    expect(nativeButtonWrapper).toBeInTheDocument()
+    expect(nativeButtonWrapper).toHaveAttribute('tabindex', '0')
     
-    // Test 3: Button WITH isInteractive should NOT have wrapper with tabindex
-    const buttonWithInteractive = allButtons[1] // Second Save button (with isInteractive)
-    const buttonWrapperNew = buttonWithInteractive.parentElement
-    expect(buttonWrapperNew).toBeInTheDocument()
-    expect(buttonWrapperNew).not.toHaveAttribute('tabindex')
+    // Test 4: Native button with :interactive="true" should NOT have wrapper tabindex
+    const nativeOptimized = canvas.getByRole('button', { name: 'Native Optimized' })
+    const nativeOptimizedWrapper = nativeOptimized.parentElement
+    expect(nativeOptimizedWrapper).toBeInTheDocument()
+    expect(nativeOptimizedWrapper).not.toHaveAttribute('tabindex')
     
-    // Test 4: Links - verify both behaviors
-    const allLinks = canvas.getAllByRole('link', { name: /Click me/i })
-    
-    // First link WITHOUT isInteractive should have wrapper with tabindex
-    const linkWithoutInteractive = allLinks[0]
-    const linkWrapperOld = linkWithoutInteractive.closest('span[tabindex="0"]')
-    expect(linkWrapperOld).toBeInTheDocument()
-    
-    // Second link WITH isInteractive should NOT have wrapper with tabindex
-    const linkWithInteractive = allLinks[1]
-    const linkWrapperNew = linkWithInteractive.parentElement
-    expect(linkWrapperNew).not.toHaveAttribute('tabindex')
+    // Test 5: FzButton with :interactive="false" should have wrapper tabindex="0"
+    const disabledButton = canvas.getByRole('button', { name: 'Disabled' })
+    const disabledButtonWrapper = disabledButton.closest('span[tabindex="0"]')
+    expect(disabledButtonWrapper).toBeInTheDocument()
+    expect(disabledButtonWrapper).toHaveAttribute('tabindex', '0')
   }
 }
