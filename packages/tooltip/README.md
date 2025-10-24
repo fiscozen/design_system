@@ -170,15 +170,34 @@ This component implements comprehensive accessibility features:
 
 ### Interactive Elements & Auto-detection
 
-The tooltip automatically detects interactive components to prevent double tab stops:
+The tooltip automatically detects interactive components to prevent double tab stops by directly comparing component types at runtime.
 
 **Auto-detected Components:**
 - ✅ `FzButton` - Automatically recognized as interactive
+- ✅ `FzIconButton` - Automatically recognized as interactive
 - ✅ `FzLink` - Automatically recognized as interactive
+
+**How it works:**
+The auto-detection uses direct component type comparison, which is production-safe and works regardless of build configuration or minification settings. When you wrap an `FzButton`, `FzIconButton`, or `FzLink` in a tooltip, the wrapper automatically omits the `tabindex="0"` attribute to prevent double tab stops.
+
+**Extending auto-detection:**
+To add support for new interactive components:
+1. Import the component in `FzTooltip.vue`
+2. Add it to the `INTERACTIVE_COMPONENTS` array
+3. Add it as a peerDependency in `package.json`
+
+Example:
+```typescript
+// In FzTooltip.vue
+import { FzNewComponent } from '@fiscozen/newComponent'
+
+const INTERACTIVE_COMPONENTS = [FzButton, FzLink, FzNewComponent] as const;
+```
 
 **Not Auto-detected (require manual override if needed):**
 - ❌ Native HTML elements: `<button>`, `<a>`, `<input>`, `<select>`, `<textarea>`
 - ❌ Custom interactive elements with `@click` handlers
+- ❌ Other custom components (even if interactive)
 
 ```vue
 <!-- Auto-detection (recommended) - no prop needed -->

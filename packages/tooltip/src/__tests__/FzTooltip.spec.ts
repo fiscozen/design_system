@@ -1,29 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { h } from 'vue'
 
 import { mount } from '@vue/test-utils'
 import FzTooltip from '../FzTooltip.vue'
 import { FzTooltipStatus } from '../types'
-
-// Mock components with __name for auto-detection testing
-const MockFzButton = defineComponent({
-  name: 'FzButton',
-  setup(_, { slots }) {
-    // Manually set __name to simulate <script setup> behavior
-    return () => h('button', { type: 'button' }, slots.default?.())
-  }
-})
-// Set __name explicitly for auto-detection
-Object.defineProperty(MockFzButton, '__name', { value: 'FzButton' })
-
-const MockFzLink = defineComponent({
-  name: 'FzLink',
-  props: ['to'],
-  setup(_, { slots }) {
-    return () => h('a', { href: '#' }, slots.default?.())
-  }
-})
-Object.defineProperty(MockFzLink, '__name', { value: 'FzLink' })
+import { FzButton } from '@fiscozen/button'
+import { FzLink } from '@fiscozen/link'
 
 const statuses: FzTooltipStatus[] = ['neutral', 'informative', 'positive', 'alert', 'error']
 
@@ -83,7 +65,7 @@ describe('FzTooltip', () => {
       const wrapper = mount(FzTooltip, {
         props: { text: 'Tooltip text' },
         slots: { 
-          default: () => h(MockFzButton, {}, { default: () => 'Click me' })
+          default: () => h(FzButton, { label: 'Click me' })
         }
       })
       
@@ -97,7 +79,7 @@ describe('FzTooltip', () => {
       const wrapper = mount(FzTooltip, {
         props: { text: 'Tooltip text' },
         slots: { 
-          default: () => h(MockFzLink, { to: '/test' }, { default: () => 'Link' })
+          default: () => h(FzLink, { to: '/test', external: true }, { default: () => 'Link' })
         }
       })
       
@@ -152,7 +134,7 @@ describe('FzTooltip', () => {
       const wrapper = mount(FzTooltip, {
         props: { text: 'Tooltip text', interactive: false },
         slots: { 
-          default: () => h(MockFzButton, {}, { default: () => 'Click me' })
+          default: () => h(FzButton, { label: 'Click me' })
         }
       })
       
@@ -166,7 +148,7 @@ describe('FzTooltip', () => {
       const wrapper = mount(FzTooltip, {
         props: { text: 'Tooltip text', interactive: false },
         slots: { 
-          default: () => h(MockFzButton, {}, { default: () => 'Button' })
+          default: () => h(FzButton, { label: 'Button' })
         }
       })
       

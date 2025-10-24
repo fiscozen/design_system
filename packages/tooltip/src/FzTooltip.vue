@@ -33,6 +33,8 @@
 
   import { FzFloating } from '@fiscozen/composables'
   import { FzIcon } from '@fiscozen/icons'
+  import { FzButton, FzIconButton } from '@fiscozen/button'
+  import { FzLink } from '@fiscozen/link'
   
   import { FzTooltipProps, FzTooltipStatus } from './types'
 
@@ -47,38 +49,34 @@
 
   /* ========================================================================
    * AUTO-DETECTION OF INTERACTIVE ELEMENTS
-   * Automatically detects components listed in INTERACTIVE_COMPONENTS
-   * to prevent double tab stops without requiring manual interactive prop.
+   * Automatically detects interactive components to prevent double tab stops
+   * without requiring manual interactive prop.
+   * 
+   * To extend auto-detection for new components:
+   * 1. Import the component: import { FzNewComponent } from '@fiscozen/...'
+   * 2. Add to INTERACTIVE_COMPONENTS array
+   * 3. Add to peerDependencies in package.json
    * ======================================================================== */
 
   /**
-   * List of interactive component names for auto-detection.
-   * These components are considered interactive and won't receive
+   * List of interactive components for auto-detection.
+   * Components in this array are recognized as interactive and won't receive
    * an additional tabindex="0" on the tooltip wrapper.
-   * 
-   * Add component names here to extend auto-detection support.
    */
-  const INTERACTIVE_COMPONENTS = ['FzButton', 'FzLink'] as const;
+  const INTERACTIVE_COMPONENTS = [FzButton, FzIconButton, FzLink] as const;
 
   /**
    * Checks if a VNode represents an interactive component.
    * 
-   * Vue 3 components with <script setup> have a `__name` property
-   * accessible via vnode.type. This allows component identification
-   * without importing them directly, avoiding circular dependencies
-   * and reducing bundle size.
+   * Compares the VNode type against the INTERACTIVE_COMPONENTS array
+   * using direct component reference comparison.
    * 
    * @param vnode - The VNode to check
-   * @returns true if the VNode matches a component in INTERACTIVE_COMPONENTS
+   * @returns true if the VNode is in INTERACTIVE_COMPONENTS
    */
   function isInteractiveComponent(vnode: VNode): boolean {
-    const componentType = vnode.type as any;
-    
-    // Components using <script setup> generate a __name property.
-    // We check this property to identify the component without importing it directly.
-    const componentName = componentType?.__name;
-    
-    return componentName && INTERACTIVE_COMPONENTS.includes(componentName);
+    const componentType = vnode.type;
+    return INTERACTIVE_COMPONENTS.includes(componentType as any);
   }
 
   /**
@@ -89,7 +87,7 @@
    * the actual component VNodes.
    * 
    * @param vnode - The VNode to analyze recursively
-   * @returns true if a component from INTERACTIVE_COMPONENTS is found at any depth
+   * @returns true if any component from INTERACTIVE_COMPONENTS is found at any depth
    * 
    * @example Direct component
    * <FzButton>Click</FzButton> // → true
@@ -133,7 +131,7 @@
   /**
    * Auto-detects if the default slot contains interactive elements.
    * Searches recursively through all VNodes in the slot to find
-   * components listed in INTERACTIVE_COMPONENTS at any nesting level.
+   * any component from INTERACTIVE_COMPONENTS at any nesting level.
    */
   const isInteractiveElement = computed(() => {
     if (!slots.default) return false;
