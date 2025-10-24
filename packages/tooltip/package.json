@@ -14,8 +14,10 @@
   "keywords": [],
   "author": "Riccardo Agnoletto",
   "peerDependencies": {
+    "@fiscozen/button": "workspace:^",
     "@fiscozen/composables": "workspace:^",
     "@fiscozen/icons": "workspace:^",
+    "@fiscozen/link": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
