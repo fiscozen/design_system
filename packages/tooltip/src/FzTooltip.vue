@@ -145,11 +145,6 @@
     return vnodes.some((vnode) => hasInteractiveComponent(vnode));
   });
 
-  /**
-   * Configuration object for status-based styling and iconography.
-   * Centralizes visual mapping to ensure consistency and maintainability.
-   * Using semantic color tokens for design system compliance.
-   */
   const statusConfig: Record<FzTooltipStatus, { icon: string; bgClass: string }> = {
     neutral: { icon: '', bgClass: '!bg-core-black' },
     informative: { icon: 'circle-info', bgClass: 'bg-semantic-info' },
@@ -165,11 +160,6 @@
     return bgClass ? { [bgClass]: true } : {}
   })
 
-  /**
-   * Unique tooltip identifier generated once at component initialization.
-   * Uses timestamp + random string for collision-resistant ID generation.
-   * Format: tooltip-{timestamp}-{random7chars}
-   */
   const tooltipId = `tooltip-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
 
   const isOpen = ref(false)
@@ -189,9 +179,8 @@
     'text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center'
 
   /**
-   * ARIA describedby attribute for screen reader association.
-   * Only returns tooltip ID when tooltip is visible to prevent
-   * screen readers from announcing hidden content.
+   * Returns tooltip ID only when visible to prevent screen readers
+   * from announcing hidden content.
    */
   const ariaDescribedby = computed(() => isOpen.value ? tooltipId : undefined);
 
@@ -218,11 +207,6 @@
     return isInteractiveElement.value ? undefined : 0;
   });
   
-  /* ========================================================================
-   * TOOLTIP VISIBILITY CONTROL
-   * Core methods for managing tooltip show/hide state
-   * ======================================================================== */
-
   function showTooltip() {
     if (props.text || slots.text) {
       isOpen.value = true
@@ -274,35 +258,19 @@
    * ======================================================================== */
 
   /**
-   * Focus handlers using focusin/focusout instead of focus/blur.
-   * focusin and focusout bubble up from child elements, ensuring the tooltip
-   * shows even when an interactive child element (like a button) receives focus.
-   * This is essential for auto-detection and the interactive prop to work correctly.
+   * Use focusin/focusout instead of focus/blur for event bubbling.
+   * This ensures tooltip shows when interactive children (buttons) receive focus,
+   * which is critical for auto-detection to work correctly.
    */
   const handleFocusIn = showTooltip;
   const handleFocusOut = hideTooltip;
 
-  /**
-   * Global keydown handler for tooltip dismissal.
-   * Handles Escape key for explicit tooltip dismissal, improving UX
-   * for keyboard users who want to clear tooltip content.
-   */
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Escape') {
       hideTooltip()
     }
   }
 
-  /* ========================================================================
-   * LIFECYCLE MANAGEMENT
-   * Ensures proper cleanup to prevent memory leaks and timing issues
-   * ======================================================================== */
-
-  /**
-   * Component unmount cleanup.
-   * Clears pending timeouts to prevent execution on destroyed component.
-   * Essential for preventing runtime errors in SPA environments.
-   */
   onUnmounted(() => {
     if (hoverTimeout.value) {
       clearTimeout(hoverTimeout.value)
