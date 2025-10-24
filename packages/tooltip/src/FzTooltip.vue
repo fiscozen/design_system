@@ -232,6 +232,10 @@
   }
 
   function handleMouseleave() {
+    if (hoverTimeout.value) {
+      clearTimeout(hoverTimeout.value)
+      hoverTimeout.value = null
+    }
     hoverTimeout.value = setTimeout(() => {
       if (!isHoveringTooltip.value) {
         hideTooltip()
