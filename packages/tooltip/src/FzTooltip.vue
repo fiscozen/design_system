@@ -164,6 +164,7 @@
 
   const isOpen = ref(false)
   const isHoveringTooltip = ref(false)
+  const isFocused = ref(false)
   const hoverTimeout = ref<number | null>(null)
 
   const showIcon = computed(() => props.withIcon && props.status !== 'neutral');
@@ -237,7 +238,7 @@
       hoverTimeout.value = null
     }
     hoverTimeout.value = setTimeout(() => {
-      if (!isHoveringTooltip.value) {
+      if (!isHoveringTooltip.value && !isFocused.value) {
         hideTooltip()
       }
     }, DEFAULT_HOVER_DELAY)
@@ -265,9 +266,19 @@
    * Use focusin/focusout instead of focus/blur for event bubbling.
    * This ensures tooltip shows when interactive children (buttons) receive focus,
    * which is critical for auto-detection to work correctly.
+   * 
+   * Track focus state to prevent tooltip from hiding when element is focused
+   * but mouse has moved away (WCAG compliance for keyboard users).
    */
-  const handleFocusIn = showTooltip;
-  const handleFocusOut = hideTooltip;
+  function handleFocusIn() {
+    isFocused.value = true
+    showTooltip()
+  }
+
+  function handleFocusOut() {
+    isFocused.value = false
+    hideTooltip()
+  }
 
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Escape') {
