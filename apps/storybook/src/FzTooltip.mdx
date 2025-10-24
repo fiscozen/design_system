@@ -1,3 +1,7 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Overlay/FzTooltip" />
+
 # @fiscozen/tooltip
 
 A fully accessible, WCAG 2.1 AA compliant tooltip component for Vue 3 applications. Built with enterprise-grade accessibility features, keyboard navigation support, and optimized for screen readers.
@@ -16,11 +20,14 @@ A fully accessible, WCAG 2.1 AA compliant tooltip component for Vue 3 applicatio
 
 ```bash
 npm install @fiscozen/tooltip
+# or
+pnpm add @fiscozen/tooltip
 ```
 
 ## Basic Usage
 
 ### Simple Text Tooltip
+
 ```vue
 <script setup>
 import { FzTooltip } from '@fiscozen/tooltip'
@@ -51,21 +58,23 @@ import { FzButton } from '@fiscozen/button'
 ```
 
 ### Rich Content with Slots
+
 ```vue
 <template>
   <FzTooltip aria-label="Account information">
     <img src="/avatar.jpg" alt="User avatar" class="avatar" />
     
     <template #text>
-      <strong>John Doe</strong><br>
-      <span>Premium Member</span><br>
-      <small>Last active: 2 hours ago</small>
+      <p>John Doe</p>
+      <p>Premium Member</p>
+      <p>Last active: 2 hours ago</p>
     </template>
   </FzTooltip>
 </template>
 ```
 
 ### Status-based Tooltips
+
 ```vue
 <template>
   <div class="dashboard-actions">
@@ -75,8 +84,9 @@ import { FzButton } from '@fiscozen/button'
       :with-icon="true"
       text="Action failed: Insufficient permissions"
       aria-label="Delete operation status"
+      :interactive="false"
     >
-      <button disabled>Delete Item</button>
+      <FzButton disabled>Delete Item</FzButton>
     </FzTooltip>
     
     <!-- Success state -->
@@ -85,7 +95,7 @@ import { FzButton } from '@fiscozen/button'
       :with-icon="true"
       text="Backup completed successfully at 14:32"
     >
-      <span class="status-badge success">Backup Complete</span>
+      <p>Backup Complete</p>
     </FzTooltip>
     
     <!-- Alert/Warning state -->
@@ -95,7 +105,7 @@ import { FzButton } from '@fiscozen/button'
       text="System maintenance scheduled for tonight"
       aria-label="Maintenance warning"
     >
-      <strong class="warning-text">Maintenance Notice</strong>
+      <p>Maintenance Notice</p>
     </FzTooltip>
     
     <!-- Informative state -->
@@ -104,8 +114,8 @@ import { FzButton } from '@fiscozen/button'
       :with-icon="true"
       text="This feature is currently in beta testing"
     >
-      <div class="feature-card">
-        <span class="beta-label">BETA</span>
+      <div>
+        <p class="beta-label">BETA</p>
         <p>New Analytics Dashboard</p>
       </div>
     </FzTooltip>
@@ -178,20 +188,29 @@ The tooltip automatically detects interactive components to prevent double tab s
 - ✅ `FzLink` - Automatically recognized as interactive
 
 **How it works:**
+
 The auto-detection uses direct component type comparison, which is production-safe and works regardless of build configuration or minification settings. When you wrap an `FzButton`, `FzIconButton`, or `FzLink` in a tooltip, the wrapper automatically omits the `tabindex="0"` attribute to prevent double tab stops.
 
 **Extending auto-detection:**
-To add support for new interactive components:
+
+To add support for new interactive components, follow these steps:
+
 1. Import the component in `FzTooltip.vue`
 2. Add it to the `INTERACTIVE_COMPONENTS` array
 3. Add it as a peerDependency in `package.json`
 
 Example:
 ```typescript
-// In FzTooltip.vue
+// In packages/tooltip/src/FzTooltip.vue
+import { FzButton } from '@fiscozen/button'
+import { FzLink } from '@fiscozen/link'
 import { FzNewComponent } from '@fiscozen/newComponent'
 
-const INTERACTIVE_COMPONENTS = [FzButton, FzLink, FzNewComponent] as const;
+const INTERACTIVE_COMPONENTS = [
+  FzButton, 
+  FzLink,
+  FzNewComponent  // Added to array
+] as const;
 ```
 
 **Not Auto-detected (require manual override if needed):**
@@ -227,6 +246,7 @@ const INTERACTIVE_COMPONENTS = [FzButton, FzLink, FzNewComponent] as const;
 - `false`: Forces non-interactive behavior (adds wrapper tabindex="0")
 
 **Why it matters:**
+
 Without proper interactive handling, the tooltip wrapper adds `tabindex="0"` for keyboard accessibility, creating two consecutive tab stops (wrapper + inner element). Auto-detection or explicit `interactive={true}` removes the wrapper's tabindex, resulting in clean keyboard navigation with a single tab stop.
 
 ### Keyboard Interactions
@@ -238,3 +258,16 @@ Without proper interactive handling, the tooltip wrapper adds `tabindex="0"` for
 | `Escape` | Hide tooltip while maintaining focus |
 
 **Note**: When the wrapped element is interactive (button/link), its native keyboard behavior (Enter/Space activation) continues to work normally.
+
+## Learn More
+
+### Interactive Examples
+- **[Tooltip Stories](../?path=/docs/overlay-fztooltip--docs)** - Live examples and interactive demos
+- **[Neutral Tooltip](../?path=/story/overlay-fztooltip--neutral-tooltip)** - Basic tooltip example
+- **[With Interactive Elements](../?path=/story/overlay-fztooltip--with-interactive-elements)** - Auto-detection demo
+
+### Related Components
+- **[FzButton](../?path=/docs/button-fzbutton--docs)** - Button component (auto-detected)
+- **[FzLink](../?path=/docs/navigation-fzlink--docs)** - Link component (auto-detected)
+- **[FzFloating](../?path=/docs/composables-fzfloating--docs)** - Floating positioning system
+
