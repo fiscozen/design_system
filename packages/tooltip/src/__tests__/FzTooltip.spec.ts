@@ -1,8 +1,29 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { defineComponent, h } from 'vue'
 
 import { mount } from '@vue/test-utils'
 import FzTooltip from '../FzTooltip.vue'
 import { FzTooltipStatus } from '../types'
+
+// Mock components with __name for auto-detection testing
+const MockFzButton = defineComponent({
+  name: 'FzButton',
+  setup(_, { slots }) {
+    // Manually set __name to simulate <script setup> behavior
+    return () => h('button', { type: 'button' }, slots.default?.())
+  }
+})
+// Set __name explicitly for auto-detection
+Object.defineProperty(MockFzButton, '__name', { value: 'FzButton' })
+
+const MockFzLink = defineComponent({
+  name: 'FzLink',
+  props: ['to'],
+  setup(_, { slots }) {
+    return () => h('a', { href: '#' }, slots.default?.())
+  }
+})
+Object.defineProperty(MockFzLink, '__name', { value: 'FzLink' })
 
 const statuses: FzTooltipStatus[] = ['neutral', 'informative', 'positive', 'alert', 'error']
 
@@ -57,67 +78,113 @@ describe('FzTooltip', () => {
     })
   })
 
-  describe('isInteractive prop', () => {
-    it('should add tabindex="0" when isInteractive is false (default)', () => {
+  describe('Auto-detection of interactive elements', () => {
+    it('should auto-detect FzButton as interactive (no tabindex on wrapper)', () => {
       const wrapper = mount(FzTooltip, {
         props: { text: 'Tooltip text' },
-        slots: { default: 'Non-interactive text' },
-        attachTo: document.body
+        slots: { 
+          default: () => h(MockFzButton, {}, { default: () => 'Click me' })
+        }
       })
       
-      // Find the span wrapper that contains the slot content
-      const triggerElement = wrapper.find('span[tabindex]')
-      expect(triggerElement.attributes('tabindex')).toBe('0')
-      
-      wrapper.unmount()
+      // Check that wrapper has no tabindex attribute (auto-detected as interactive)
+      const html = wrapper.html()
+      expect(html).toContain('<button')
+      expect(html).not.toMatch(/<span[^>]*tabindex="0"/)
     })
 
-    it('should NOT add tabindex when isInteractive is true', () => {
-      const wrapper = mount(FzTooltip, {
-        props: { text: 'Tooltip text', isInteractive: true },
-        slots: { default: '<button>Interactive</button>' }
-      })
-      
-      // Find the span wrapper - it should exist but without tabindex
-      const triggerElement = wrapper.find('.fz__tooltip span')
-      expect(triggerElement.exists()).toBe(true)
-      expect(triggerElement.attributes('tabindex')).toBeUndefined()
-    })
-
-    it('should hide tooltip on focusout when isInteractive is false', async () => {
+    it('should auto-detect FzLink as interactive (no tabindex on wrapper)', () => {
       const wrapper = mount(FzTooltip, {
         props: { text: 'Tooltip text' },
-        slots: { default: 'Non-interactive text' },
-        attachTo: document.body
+        slots: { 
+          default: () => h(MockFzLink, { to: '/test' }, { default: () => 'Link' })
+        }
       })
       
-      const triggerElement = wrapper.find('.fz__tooltip span')
-      await triggerElement.trigger('focusin')
-      await triggerElement.trigger('focusout')
-      
-      // Tooltip is teleported to body
-      const tooltip = document.querySelector('[role="tooltip"]')
-      expect(tooltip?.getAttribute('aria-hidden')).toBe('true')
-      
-      wrapper.unmount()
+      const html = wrapper.html()
+      expect(html).toContain('<a')
+      expect(html).not.toMatch(/<span[^>]*tabindex="0"/)
     })
 
-    it('should hide tooltip on focusout when isInteractive is true', async () => {
+    it('should NOT auto-detect span as interactive (adds tabindex="0")', () => {
       const wrapper = mount(FzTooltip, {
-        props: { text: 'Tooltip text', isInteractive: true },
-        slots: { default: '<button>Click me</button>' },
-        attachTo: document.body
+        props: { text: 'Tooltip text' },
+        slots: { default: 'Non-interactive text' }
       })
       
-      const triggerElement = wrapper.find('.fz__tooltip span')
-      await triggerElement.trigger('focusin')
-      await triggerElement.trigger('focusout')
+      const html = wrapper.html()
+      expect(html).toMatch(/<span[^>]*tabindex="0"/)
+    })
+
+    it('should NOT auto-detect plain HTML elements as interactive', () => {
+      const wrapper = mount(FzTooltip, {
+        props: { text: 'Tooltip text' },
+        slots: { default: '<div>Content</div>' }
+      })
       
-      // Tooltip is teleported to body
-      const tooltip = document.querySelector('[role="tooltip"]')
-      expect(tooltip?.getAttribute('aria-hidden')).toBe('true')
+      const html = wrapper.html()
+      expect(html).toMatch(/<span[^>]*tabindex="0"/)
+    })
+  })
+
+  describe('interactive prop - explicit values', () => {
+    it('should respect interactive="auto" (same as default)', () => {
+      const wrapper = mount(FzTooltip, {
+        props: { text: 'Tooltip text', interactive: 'auto' },
+        slots: { default: 'Non-interactive text' }
+      })
       
-      wrapper.unmount()
+      const html = wrapper.html()
+      expect(html).toMatch(/<span[^>]*tabindex="0"/)
+    })
+
+    it('should force interactive with :interactive="true" on non-interactive element', () => {
+      const wrapper = mount(FzTooltip, {
+        props: { text: 'Tooltip text', interactive: true },
+        slots: { default: '<span>Non-interactive</span>' }
+      })
+      
+      const html = wrapper.html()
+      expect(html).not.toMatch(/<span[^>]*tabindex="0"/)
+    })
+
+    it('should force non-interactive with :interactive="false" on interactive element', () => {
+      const wrapper = mount(FzTooltip, {
+        props: { text: 'Tooltip text', interactive: false },
+        slots: { 
+          default: () => h(MockFzButton, {}, { default: () => 'Click me' })
+        }
+      })
+      
+      const html = wrapper.html()
+      expect(html).toMatch(/<span[^>]*tabindex="0"/)
+    })
+  })
+
+  describe('interactive prop - override auto-detection', () => {
+    it('should override auto-detection: FzButton with :interactive="false"', () => {
+      const wrapper = mount(FzTooltip, {
+        props: { text: 'Tooltip text', interactive: false },
+        slots: { 
+          default: () => h(MockFzButton, {}, { default: () => 'Button' })
+        }
+      })
+      
+      // Despite FzButton being auto-detected, interactive=false forces tabindex
+      const html = wrapper.html()
+      expect(html).toContain('<button')
+      expect(html).toMatch(/<span[^>]*tabindex="0"/)
+    })
+
+    it('should override auto-detection: span with :interactive="true"', () => {
+      const wrapper = mount(FzTooltip, {
+        props: { text: 'Tooltip text', interactive: true },
+        slots: { default: '<span>Text</span>' }
+      })
+      
+      // Despite span not being auto-detected, interactive=true removes tabindex
+      const html = wrapper.html()
+      expect(html).not.toMatch(/<span[^>]*tabindex="0"/)
     })
   })
 })
