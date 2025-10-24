@@ -252,7 +252,14 @@
 
   function handleTooltipMouseleave() {
     isHoveringTooltip.value = false
-    hideTooltip()
+    if (hoverTimeout.value) {
+      clearTimeout(hoverTimeout.value)
+      hoverTimeout.value = null
+    }
+    // This maintains WCAG 1.4.13 compliance for focus persistence
+    if (!isFocused.value) {
+      hideTooltip()
+    }
   }
     
   /* ========================================================================
@@ -275,7 +282,14 @@
 
   function handleFocusOut() {
     isFocused.value = false
-    hideTooltip()
+    if (hoverTimeout.value) {
+      clearTimeout(hoverTimeout.value)
+      hoverTimeout.value = null
+    }
+    // This maintains WCAG 1.4.13 compliance for hover persistence
+    if (!isHoveringTooltip.value) {
+      hideTooltip()
+    }
   }
 
   function handleKeydown(e: KeyboardEvent) {
