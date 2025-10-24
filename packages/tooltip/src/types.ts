@@ -39,7 +39,7 @@ export interface FzTooltipProps {
   /**
    * Controls interactive behavior and keyboard accessibility.
    * 
-   * **Auto-detection support:** FzButton, FzLink
+   * **Auto-detection support:** FzButton, FzIconButton, FzLink
    * 
    * - `undefined` or `'auto'` (default): Auto-detects supported components
    * - `true`: Forces interactive behavior (removes wrapper tabindex)

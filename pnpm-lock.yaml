@@ -2639,12 +2639,18 @@ importers:
 
   packages/tooltip:
     dependencies:
+      '@fiscozen/button':
+        specifier: workspace:^
+        version: link:../button
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      '@fiscozen/link':
+        specifier: workspace:^
+        version: link:../link
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.17
