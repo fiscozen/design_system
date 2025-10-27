@@ -61,7 +61,7 @@ import { FzContainer } from '@fiscozen/container'
 | `main` | `boolean` | `false` | If `true`, uses main container spacing (larger gaps for page-level sections) |
 | `gap` | `'sm' \| 'base' \| 'lg'` (when `main={true}`)<br>`'none' \| 'xs' \| 'sm' \| 'base' \| 'lg'` (when `main={false}`) | `'base'` | Gap size between elements. Available values depend on container type |
 | `horizontal` | `boolean` | `false` | If `true`, elements align horizontally. Otherwise, vertically (default) |
-| `layout` | `'default' \| 'expand-first'` | `'default'` | Layout behavior for horizontal containers (controls how child elements expand). Only applies when `horizontal` is `true` |
+| `layout` | `'default' \| 'expand-first' \| 'expand-all' \| 'space-between'` | `'default'` | Layout behavior for horizontal containers (controls how child elements expand). Only applies when `horizontal` is `true` |
 | `tag` | `string` | `'div'` | HTML tag to use for the container element |
 
 ## Gap Sizes
@@ -117,18 +117,19 @@ The `layout` prop controls how child elements expand to fill available space in 
 |--------|--------|-------------|
 | `default` | Implemented | All elements maintain their natural size (`flex-grow: 0`). This is the default behavior. |
 | `expand-first` | Implemented | The first element expands to fill available space (`flex-grow: 1`), while other elements maintain their natural size. |
+| `expand-all` | Implemented | All elements expand equally to fill available space (`flex-grow: 1` on all children). |
+| `space-between` | Implemented | Elements are distributed with space between them (`justify-content: space-between`). Elements maintain their natural size. |
 | `expand-last` | Future | The last element will expand to fill available space, while other elements maintain their natural size. |
-| `space-between` | Future | Elements will be distributed with space between them (`justify-content: space-between`). |
-| `expand-all` | Future | All elements will expand equally to fill available space (`flex-grow: 1` on all children). |
 
 ### When to Use Each Layout
 
 **`default`**: Use when all elements should maintain their natural size. Good for button groups, navigation items, or any horizontal list where elements should not grow.
 
-**`expand-first`**: Use when you want the first element to take up all remaining space. Common use cases:
-- Task lists with an action button on the right
-- Form rows with expanding content and fixed-width actions
-- Headers with expanding title and fixed-width controls
+**`expand-first`**: Use when you want the first element to take up all remaining space.
+
+**`expand-all`**: Use when you want all elements to have equal width.
+
+**`space-between`**: Use when you want elements to maintain their natural size but be distributed across the available space.
 
 ## Examples
 
@@ -216,6 +217,73 @@ The `layout` prop controls how child elements expand to fill available space in 
         <button>Cancel</button>
         <button>Save</button>
       </FzContainer>
+    </FzContainer>
+  </FzContainer>
+</template>
+```
+
+### Layout: Expand All
+
+```vue
+<template>
+  <FzContainer horizontal layout="expand-all" gap="base">
+    <button>Button 1</button>
+    <button>Button 2</button>
+    <button>Button 3</button>
+  </FzContainer>
+</template>
+```
+
+### Layout: Expand All
+
+```vue
+<template>
+  <FzContainer horizontal layout="expand-all" gap="lg">
+    <div class="card">
+      <h3>Card 1</h3>
+      <p>Content here</p>
+    </div>
+    <div class="card">
+      <h3>Card 2</h3>
+      <p>Content here</p>
+    </div>
+    <div class="card">
+      <h3>Card 3</h3>
+      <p>Content here</p>
+    </div>
+  </FzContainer>
+</template>
+```
+
+### Layout: Space Between
+
+```vue
+<template>
+  <FzContainer horizontal layout="space-between" gap="base">
+    <div class="logo">Logo</div>
+    <nav>
+      <FzContainer horizontal gap="sm">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </FzContainer>
+    </nav>
+  </FzContainer>
+</template>
+```
+
+### Layout: Space Between
+
+```vue
+<template>
+  <FzContainer horizontal layout="space-between" gap="base">
+    <FzContainer gap="xs">
+      <h1>Page Title</h1>
+      <p>Subtitle or description</p>
+    </FzContainer>
+    <FzContainer horizontal gap="sm">
+      <button>Cancel</button>
+      <button>Save</button>
     </FzContainer>
   </FzContainer>
 </template>

@@ -24,7 +24,7 @@ const meta: Meta<any> = {
 
     layout: {
       control: 'select',
-      options: ['default', 'expand-first'],
+      options: ['default', 'expand-first', 'expand-all', 'space-between'],
       description: 'Layout behavior for horizontal containers (controls how child elements expand)',
       if: { arg: 'horizontal', eq: true }
     },
@@ -374,5 +374,187 @@ export const LayoutExpandFirst: Story = {
     
     // First child should be wider than last child (the button)
     await expect(firstChild.offsetWidth).toBeGreaterThan(lastChild.offsetWidth)
+  }
+}
+
+export const LayoutExpandAll: Story = {
+  render: () => ({
+    components: { FzContainer, FzButton },
+    template: `
+      <FzContainer main gap="lg">
+        <h2>Layout: Expand All</h2>
+        <p>All elements expand equally to fill available space. Each element gets the same width.</p>
+        
+        <FzContainer gap="lg">
+          <FzContainer gap="sm">
+            <h3>Equal Width Buttons</h3>
+            <FzContainer horizontal layout="expand-all" gap="base">
+              <FzButton variant="primary">Button 1</FzButton>
+              <FzButton variant="secondary">Button 2</FzButton>
+              <FzButton variant="tertiary">Button 3</FzButton>
+            </FzContainer>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>Toolbar with Equal Sections</h3>
+            <FzContainer horizontal layout="expand-all" gap="base">
+              <FzContainer gap="xs">
+                <p style="font-weight: bold;">Section 1</p>
+                <p style="font-size: 0.875rem;">Content here</p>
+              </FzContainer>
+              <FzContainer gap="xs">
+                <p style="font-weight: bold;">Section 2</p>
+                <p style="font-size: 0.875rem;">Content here</p>
+              </FzContainer>
+              <FzContainer gap="xs">
+                <p style="font-weight: bold;">Section 3</p>
+                <p style="font-size: 0.875rem;">Content here</p>
+              </FzContainer>
+            </FzContainer>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>Dashboard Cards</h3>
+            <FzContainer horizontal layout="expand-all" gap="base">
+              <div style="padding: 1rem; border: 1px solid #ccc; border-radius: 4px;">
+                <p style="font-weight: bold;">Card 1</p>
+                <p>Equal width card</p>
+              </div>
+              <div style="padding: 1rem; border: 1px solid #ccc; border-radius: 4px;">
+                <p style="font-weight: bold;">Card 2</p>
+                <p>Equal width card</p>
+              </div>
+              <div style="padding: 1rem; border: 1px solid #ccc; border-radius: 4px;">
+                <p style="font-weight: bold;">Card 3</p>
+                <p>Equal width card</p>
+              </div>
+            </FzContainer>
+          </FzContainer>
+        </FzContainer>
+      </FzContainer>
+    `
+  }),
+  play: async ({ canvasElement }: any) => {
+    const canvas = within(canvasElement)
+    
+    // Verify all containers with layout-expand-all have the correct class
+    const expandAllContainers = canvasElement.querySelectorAll('.fz-container--horizontal.layout-expand-all')
+    await expect(expandAllContainers.length).toBe(3)
+    
+    // Verify they are all horizontal
+    for (const container of expandAllContainers) {
+      await expect(container.classList.contains('fz-container--horizontal')).toBe(true)
+      await expect(container.classList.contains('layout-expand-all')).toBe(true)
+    }
+    
+    // Verify the first container has equal width children
+    const firstContainer = expandAllContainers[0] as HTMLElement
+    const children = Array.from(firstContainer.children) as HTMLElement[]
+    
+    // All children should have similar widths (allowing small differences for rounding)
+    if (children.length > 1) {
+      const firstWidth = children[0].offsetWidth
+      for (let i = 1; i < children.length; i++) {
+        const widthDiff = Math.abs(children[i].offsetWidth - firstWidth)
+        await expect(widthDiff).toBeLessThan(5)
+      }
+    }
+  }
+}
+
+export const LayoutSpaceBetween: Story = {
+  render: () => ({
+    components: { FzContainer, FzButton },
+    template: `
+      <FzContainer main gap="lg">
+        <h2>Layout: Space Between</h2>
+        <p>Elements maintain their natural size but are distributed with space between them. First element aligns to the start, last element aligns to the end.</p>
+        
+        <FzContainer gap="lg">
+          <FzContainer gap="sm">
+            <h3>Navbar Example</h3>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px;">
+              <FzContainer horizontal layout="space-between" gap="base">
+                <div style="font-weight: bold; font-size: 1.25rem;">Logo</div>
+                <FzContainer horizontal gap="sm">
+                  <FzButton variant="tertiary" size="sm">Home</FzButton>
+                  <FzButton variant="tertiary" size="sm">About</FzButton>
+                  <FzButton variant="tertiary" size="sm">Contact</FzButton>
+                </FzContainer>
+              </FzContainer>
+            </div>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>Header with Actions</h3>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px;">
+              <FzContainer horizontal layout="space-between" gap="base">
+                <FzContainer gap="xs">
+                  <p style="font-weight: bold; margin: 0;">Page Title</p>
+                  <p style="font-size: 0.875rem; margin: 0; color: #666;">Subtitle or description</p>
+                </FzContainer>
+                <FzContainer horizontal gap="sm">
+                  <FzButton variant="tertiary" size="sm">Cancel</FzButton>
+                  <FzButton variant="primary" size="sm">Save</FzButton>
+                </FzContainer>
+              </FzContainer>
+            </div>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>List Item with Action</h3>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px;">
+              <FzContainer horizontal layout="space-between" gap="base">
+                <p style="margin: 0;">Item name or description</p>
+                <FzButton variant="secondary" size="sm">Edit</FzButton>
+              </FzContainer>
+            </div>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>Footer Example</h3>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px;">
+              <FzContainer horizontal layout="space-between" gap="base">
+                <p style="margin: 0; font-size: 0.875rem; color: #666;">© 2025 Company Name</p>
+                <FzContainer horizontal gap="sm">
+                  <a href="#" style="font-size: 0.875rem; color: #666;">Privacy</a>
+                  <a href="#" style="font-size: 0.875rem; color: #666;">Terms</a>
+                  <a href="#" style="font-size: 0.875rem; color: #666;">Contact</a>
+                </FzContainer>
+              </FzContainer>
+            </div>
+          </FzContainer>
+        </FzContainer>
+      </FzContainer>
+    `
+  }),
+  play: async ({ canvasElement }: any) => {
+    const canvas = within(canvasElement)
+    
+    // Verify all containers with layout-space-between have the correct class
+    const spaceBetweenContainers = canvasElement.querySelectorAll('.fz-container--horizontal.layout-space-between')
+    await expect(spaceBetweenContainers.length).toBe(4)
+    
+    // Verify they are all horizontal
+    for (const container of spaceBetweenContainers) {
+      await expect(container.classList.contains('fz-container--horizontal')).toBe(true)
+      await expect(container.classList.contains('layout-space-between')).toBe(true)
+    }
+    
+    // Verify the first container has space between children
+    const firstContainer = spaceBetweenContainers[0] as HTMLElement
+    const firstChild = firstContainer.children[0] as HTMLElement
+    const lastChild = firstContainer.children[firstContainer.children.length - 1] as HTMLElement
+    
+    // First child should be at the left edge
+    const containerRect = firstContainer.getBoundingClientRect()
+    const firstChildRect = firstChild.getBoundingClientRect()
+    const lastChildRect = lastChild.getBoundingClientRect()
+    
+    // First child should be near the left edge (allowing small padding)
+    await expect(Math.abs(firstChildRect.left - containerRect.left)).toBeLessThan(5)
+    
+    // Last child should be near the right edge (allowing small padding)
+    await expect(Math.abs(containerRect.right - lastChildRect.right)).toBeLessThan(5)
   }
 }
