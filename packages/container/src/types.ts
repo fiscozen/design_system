@@ -23,15 +23,17 @@ export type FzContainerSectionGap = 'none' | 'xs' | 'sm' | 'base' | 'lg'
  * **Currently implemented:**
  * - `default`: All elements maintain their natural size (flex-grow: 0)
  * - `expand-first`: First element expands to fill available space, others maintain natural size
+ * - `expand-all`: All elements expand equally to fill available space (flex-grow: 1 on all children)
+ * - `space-between`: Elements distributed with space between them (justify-content: space-between)
  * 
  * **Future layouts (not yet implemented):**
  * - `expand-last`: Last element expands to fill available space
- * - `space-between`: Elements distributed with space between them
- * - `expand-all`: All elements expand equally to fill available space
  */
 export type FzContainerLayout = 
   | 'default'
   | 'expand-first'
+  | 'expand-all'
+  | 'space-between'
 
 /**
  * Common props shared by all container variants

@@ -101,11 +101,11 @@ const containerClass = computed(() => {
  * 
  * Currently implemented:
  * - layout-expand-first: First element expands to fill available space
+ * - layout-expand-all: All elements expand equally to fill available space
+ * - layout-space-between: Elements distributed with space between them
  * 
  * Future layouts (not yet implemented):
  * - layout-expand-last: Last element expands to fill available space
- * - layout-space-between: Elements distributed with space between them
- * - layout-expand-all: All elements expand equally to fill available space
  */
 
 /**
@@ -117,6 +117,28 @@ const containerClass = computed(() => {
  */
 .fz-container--horizontal.layout-expand-first :deep(> *:first-child) {
   flex-grow: 1;
+}
+
+/**
+ * Expand all elements
+ * 
+ * All child elements expand equally to fill available horizontal space.
+ * Each element gets the same amount of space (flex-grow: 1).
+ * Useful for layouts like: [button | button | button] with equal widths
+ */
+.fz-container--horizontal.layout-expand-all :deep(> *) {
+  flex-grow: 1;
+}
+
+/**
+ * Space between elements
+ * 
+ * Elements maintain their natural size but are distributed with space between them.
+ * First element aligns to the start, last element aligns to the end.
+ * Useful for layouts like: [logo | navigation menu] in a navbar
+ */
+.fz-container--horizontal.layout-space-between {
+  justify-content: space-between;
 }
 
 /**

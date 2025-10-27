@@ -278,6 +278,30 @@ describe.concurrent('FzContainer', () => {
 
       expect(wrapper.classes()).toContain('layout-expand-first')
       expect(wrapper.classes()).not.toContain('layout-default')
+      expect(wrapper.classes()).not.toContain('layout-expand-all')
+      expect(wrapper.classes()).not.toContain('layout-space-between')
+    })
+
+    it('applies layout-expand-all class', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { horizontal: true, layout: 'expand-all' }
+      })
+
+      expect(wrapper.classes()).toContain('layout-expand-all')
+      expect(wrapper.classes()).not.toContain('layout-default')
+      expect(wrapper.classes()).not.toContain('layout-expand-first')
+      expect(wrapper.classes()).not.toContain('layout-space-between')
+    })
+
+    it('applies layout-space-between class', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { horizontal: true, layout: 'space-between' }
+      })
+
+      expect(wrapper.classes()).toContain('layout-space-between')
+      expect(wrapper.classes()).not.toContain('layout-default')
+      expect(wrapper.classes()).not.toContain('layout-expand-first')
+      expect(wrapper.classes()).not.toContain('layout-expand-all')
     })
 
     it('does not apply layout class for vertical orientation', async ({ expect }) => {
@@ -285,6 +309,8 @@ describe.concurrent('FzContainer', () => {
 
       expect(wrapper.classes()).not.toContain('layout-default')
       expect(wrapper.classes()).not.toContain('layout-expand-first')
+      expect(wrapper.classes()).not.toContain('layout-expand-all')
+      expect(wrapper.classes()).not.toContain('layout-space-between')
     })
 
     it('logs console.error when layout is used without horizontal', async ({ expect }) => {
@@ -436,6 +462,28 @@ describe.concurrent('FzContainer', () => {
         props: { horizontal: true, layout: 'default' },
         slots: {
           default: '<button>Button 1</button><button>Button 2</button>'
+        }
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot - horizontal with layout expand-all', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { horizontal: true, layout: 'expand-all' },
+        slots: {
+          default: '<button>Button 1</button><button>Button 2</button><button>Button 3</button>'
+        }
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot - horizontal with layout space-between', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { horizontal: true, layout: 'space-between' },
+        slots: {
+          default: '<div>Logo</div><nav>Navigation</nav>'
         }
       })
 
