@@ -59,7 +59,7 @@ import { FzContainer } from '@fiscozen/container'
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `main` | `boolean` | `false` | If `true`, uses main container spacing (larger gaps for page-level sections) |
-| `gap` | `'sm' \| 'base' \| 'lg'` | `'base'` | Gap size between elements |
+| `gap` | `'sm' \| 'base' \| 'lg'` (when `main={true}`)<br>`'none' \| 'xs' \| 'sm' \| 'base' \| 'lg'` (when `main={false}`) | `'base'` | Gap size between elements. Available values depend on container type |
 | `horizontal` | `boolean` | `false` | If `true`, elements align horizontally. Otherwise, vertically (default) |
 | `layout` | `'default' \| 'expand-first'` | `'default'` | Layout behavior for horizontal containers (controls how child elements expand). Only applies when `horizontal` is `true` |
 | `tag` | `string` | `'div'` | HTML tag to use for the container element |
@@ -68,14 +68,26 @@ import { FzContainer } from '@fiscozen/container'
 
 The component uses CSS custom properties for consistent spacing across the design system.
 
-| Size | Main Container | Section Container |
-|------|----------------|-------------------|
-| `sm` | `--main-content-sm` | `--section-content-sm` |
-| `base` | `--main-content-base` | `--section-content-base` |
-| `lg` | `--main-content-lg` | `--section-content-lg` |
+### Main Containers (`main={true}`)
+
+| Size | CSS Variable | Value |
+|------|--------------|-------|
+| `sm` | `--main-content-sm` | 32px |
+| `base` | `--main-content-base` | 48px |
+| `lg` | `--main-content-lg` | 64px |
+
+### Section Containers (`main={false}` or default)
+
+| Size | CSS Variable | Value |
+|------|--------------|-------|
+| `none` | `--section-content-none` | 0px |
+| `xs` | `--section-content-xs` | 8px |
+| `sm` | `--section-content-sm` | 16px |
+| `base` | `--section-content-base` | 24px |
+| `lg` | `--section-content-lg` | 32px |
 
 **Main containers** are intended for page-level sections and use larger spacing values.
-**Section containers** are for content within sections and use smaller spacing values.
+**Section containers** are for content within sections and use smaller spacing values, with additional `none` and `xs` options for tighter layouts.
 
 ## Orientation Behavior
 

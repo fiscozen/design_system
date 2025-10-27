@@ -81,12 +81,38 @@ describe.concurrent('FzContainer', () => {
       expect(wrapper.classes()).not.toContain('gap-main-content-lg')
     })
 
+    it('applies correct gap size - none', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { gap: 'none' }
+      })
+
+      expect(wrapper.classes()).toContain('gap-section-content-none')
+      expect(wrapper.classes()).not.toContain('gap-section-content-xs')
+      expect(wrapper.classes()).not.toContain('gap-section-content-sm')
+      expect(wrapper.classes()).not.toContain('gap-section-content-base')
+      expect(wrapper.classes()).not.toContain('gap-section-content-lg')
+    })
+
+    it('applies correct gap size - xs', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { gap: 'xs' }
+      })
+
+      expect(wrapper.classes()).toContain('gap-section-content-xs')
+      expect(wrapper.classes()).not.toContain('gap-section-content-none')
+      expect(wrapper.classes()).not.toContain('gap-section-content-sm')
+      expect(wrapper.classes()).not.toContain('gap-section-content-base')
+      expect(wrapper.classes()).not.toContain('gap-section-content-lg')
+    })
+
     it('applies correct gap size - sm', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
         props: { gap: 'sm' }
       })
 
       expect(wrapper.classes()).toContain('gap-section-content-sm')
+      expect(wrapper.classes()).not.toContain('gap-section-content-none')
+      expect(wrapper.classes()).not.toContain('gap-section-content-xs')
       expect(wrapper.classes()).not.toContain('gap-section-content-base')
       expect(wrapper.classes()).not.toContain('gap-section-content-lg')
     })
@@ -97,6 +123,8 @@ describe.concurrent('FzContainer', () => {
       })
 
       expect(wrapper.classes()).toContain('gap-section-content-base')
+      expect(wrapper.classes()).not.toContain('gap-section-content-none')
+      expect(wrapper.classes()).not.toContain('gap-section-content-xs')
       expect(wrapper.classes()).not.toContain('gap-section-content-sm')
       expect(wrapper.classes()).not.toContain('gap-section-content-lg')
     })
@@ -107,6 +135,8 @@ describe.concurrent('FzContainer', () => {
       })
 
       expect(wrapper.classes()).toContain('gap-section-content-lg')
+      expect(wrapper.classes()).not.toContain('gap-section-content-none')
+      expect(wrapper.classes()).not.toContain('gap-section-content-xs')
       expect(wrapper.classes()).not.toContain('gap-section-content-sm')
       expect(wrapper.classes()).not.toContain('gap-section-content-base')
     })
