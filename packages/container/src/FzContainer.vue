@@ -14,9 +14,20 @@ const props = withDefaults(defineProps<FzContainerProps>(), {
   gap: "base",
   horizontal: false,
   tag: "div",
+  alignItems: undefined,
 });
 
 defineSlots<FzContainerSlots>();
+
+/**
+ * Computes the default alignItems value based on orientation
+ *
+ * Horizontal containers default to 'center' for better visual alignment.
+ * Vertical containers default to 'start' (left-aligned) as the most common use case.
+ */
+const alignItemsValue = computed(() => {
+  return props.alignItems ?? (props.horizontal ? "center" : "start");
+});
 
 /**
  * Validate layout prop usage
@@ -40,13 +51,18 @@ if (!props.horizontal && "layout" in props) {
  * Generates orientation-specific class and gap class based on container type.
  * Main containers use --main-content spacing, sections use --section-content spacing.
  * For horizontal containers, also includes layout class.
+ * Includes alignItems class for cross-axis alignment.
  */
 const containerClass = computed(() => {
   const type = props.main ? "main-content" : "section-content";
   const orientationClass = props.horizontal
     ? "fz-container--horizontal"
     : "fz-container--vertical";
-  const classes = [orientationClass, `gap-${type}-${props.gap}`];
+  const classes = [
+    orientationClass,
+    `gap-${type}-${props.gap}`,
+    `align-items-${alignItemsValue.value}`,
+  ];
 
   if (props.horizontal) {
     const layout =
@@ -84,14 +100,45 @@ const containerClass = computed(() => {
 /**
  * Horizontal orientation
  * Elements align horizontally with:
- * - center vertical alignment
  * - no wrapping (elements shrink to fit)
  * - gap applied horizontally between elements
+ * - vertical alignment controlled by align-items-* class
  */
 .fz-container--horizontal {
   flex-direction: row;
-  align-items: center;
   flex-wrap: nowrap;
+}
+
+/**
+ * Cross-axis alignment variants
+ * 
+ * Control how child elements are aligned on the cross-axis (perpendicular to main axis).
+ * Works for both vertical and horizontal orientations.
+ * 
+ * - align-items-start: Align to start (left for vertical, top for horizontal)
+ * - align-items-center: Center alignment
+ * - align-items-end: Align to end (right for vertical, bottom for horizontal)
+ * - align-items-stretch: Stretch to fill container on cross-axis
+ * - align-items-baseline: Align along text baseline (useful for horizontal text)
+ */
+.fz-container.align-items-start {
+  align-items: flex-start;
+}
+
+.fz-container.align-items-center {
+  align-items: center;
+}
+
+.fz-container.align-items-end {
+  align-items: flex-end;
+}
+
+.fz-container.align-items-stretch {
+  align-items: stretch;
+}
+
+.fz-container.align-items-baseline {
+  align-items: baseline;
 }
 
 /**

@@ -29,6 +29,12 @@ const meta: Meta<any> = {
       if: { arg: 'horizontal', eq: true }
     },
 
+    alignItems: {
+      control: 'select',
+      options: ['start', 'center', 'end', 'stretch', 'baseline'],
+      description: 'Alignment of child elements on the cross-axis (horizontal for vertical containers, vertical for horizontal containers)'
+    },
+
     mainGap: {
       name: 'gap',
       control: 'select',
@@ -556,5 +562,161 @@ export const LayoutSpaceBetween: Story = {
     
     // Last child should be near the right edge (allowing small padding)
     await expect(Math.abs(containerRect.right - lastChildRect.right)).toBeLessThan(5)
+  }
+}
+
+export const AlignItemsVertical: Story = {
+  render: () => ({
+    components: { FzContainer, FzButton },
+    template: `
+      <FzContainer main gap="lg">
+        <h2>AlignItems for Vertical Containers</h2>
+        <p>Controls horizontal alignment of elements (left/center/right)</p>
+        
+        <FzContainer gap="lg">
+          <FzContainer gap="sm">
+            <h3>alignItems="start" (default)</h3>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px;">
+              <FzContainer alignItems="start" gap="sm">
+                <FzButton size="sm">Short</FzButton>
+                <FzButton>Medium Button</FzButton>
+                <FzButton size="lg">Very Long Button Text</FzButton>
+              </FzContainer>
+            </div>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>alignItems="center"</h3>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px;">
+              <FzContainer alignItems="center" gap="sm">
+                <FzButton size="sm">Short</FzButton>
+                <FzButton>Medium Button</FzButton>
+                <FzButton size="lg">Very Long Button Text</FzButton>
+              </FzContainer>
+            </div>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>alignItems="end"</h3>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px;">
+              <FzContainer alignItems="end" gap="sm">
+                <FzButton size="sm">Short</FzButton>
+                <FzButton>Medium Button</FzButton>
+                <FzButton size="lg">Very Long Button Text</FzButton>
+              </FzContainer>
+            </div>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>alignItems="stretch"</h3>
+            <p style="font-size: 0.875rem; color: #666;">Elements stretch to fill container width</p>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px;">
+              <FzContainer alignItems="stretch" gap="sm">
+                <FzButton size="sm">Short</FzButton>
+                <FzButton>Medium Button</FzButton>
+                <FzButton size="lg">Very Long Button Text</FzButton>
+              </FzContainer>
+            </div>
+          </FzContainer>
+        </FzContainer>
+      </FzContainer>
+    `
+  }),
+  play: async ({ canvasElement }: any) => {
+    // Verify align-items classes are applied
+    const startContainer = canvasElement.querySelector('.align-items-start')
+    const centerContainer = canvasElement.querySelector('.align-items-center')
+    const endContainer = canvasElement.querySelector('.align-items-end')
+    const stretchContainer = canvasElement.querySelector('.align-items-stretch')
+    
+    await expect(startContainer).toBeTruthy()
+    await expect(centerContainer).toBeTruthy()
+    await expect(endContainer).toBeTruthy()
+    await expect(stretchContainer).toBeTruthy()
+  }
+}
+
+export const AlignItemsHorizontal: Story = {
+  render: () => ({
+    components: { FzContainer, FzButton },
+    template: `
+      <FzContainer main gap="lg">
+        <h2>AlignItems for Horizontal Containers</h2>
+        <p>Controls vertical alignment of elements (top/center/bottom)</p>
+        
+        <FzContainer gap="lg">
+          <FzContainer gap="sm">
+            <h3>alignItems="start" (top)</h3>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px; min-height: 120px;">
+              <FzContainer horizontal alignItems="start" gap="base">
+                <FzButton size="sm">Small</FzButton>
+                <FzButton>Medium</FzButton>
+                <FzButton size="lg">Large</FzButton>
+              </FzContainer>
+            </div>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>alignItems="center" (default)</h3>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px; min-height: 120px;">
+              <FzContainer horizontal alignItems="center" gap="base">
+                <FzButton size="sm">Small</FzButton>
+                <FzButton>Medium</FzButton>
+                <FzButton size="lg">Large</FzButton>
+              </FzContainer>
+            </div>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>alignItems="end" (bottom)</h3>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px; min-height: 120px;">
+              <FzContainer horizontal alignItems="end" gap="base">
+                <FzButton size="sm">Small</FzButton>
+                <FzButton>Medium</FzButton>
+                <FzButton size="lg">Large</FzButton>
+              </FzContainer>
+            </div>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>alignItems="baseline"</h3>
+            <p style="font-size: 0.875rem; color: #666;">Useful for aligning text on baseline</p>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px;">
+              <FzContainer horizontal alignItems="baseline" gap="base">
+                <span style="font-size: 0.75rem;">Small text</span>
+                <span style="font-size: 1rem;">Medium text</span>
+                <span style="font-size: 1.5rem;">Large text</span>
+              </FzContainer>
+            </div>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>alignItems="stretch"</h3>
+            <p style="font-size: 0.875rem; color: #666;">Elements stretch to fill container height</p>
+            <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px; min-height: 120px;">
+              <FzContainer horizontal alignItems="stretch" gap="base">
+                <div style="padding: 0.5rem; background: white; border: 1px solid #ccc;">Item 1</div>
+                <div style="padding: 0.5rem; background: white; border: 1px solid #ccc;">Item 2</div>
+                <div style="padding: 0.5rem; background: white; border: 1px solid #ccc;">Item 3</div>
+              </FzContainer>
+            </div>
+          </FzContainer>
+        </FzContainer>
+      </FzContainer>
+    `
+  }),
+  play: async ({ canvasElement }: any) => {
+    // Verify align-items classes are applied
+    const startContainer = canvasElement.querySelector('.fz-container--horizontal.align-items-start')
+    const centerContainer = canvasElement.querySelector('.fz-container--horizontal.align-items-center')
+    const endContainer = canvasElement.querySelector('.fz-container--horizontal.align-items-end')
+    const baselineContainer = canvasElement.querySelector('.fz-container--horizontal.align-items-baseline')
+    const stretchContainer = canvasElement.querySelector('.fz-container--horizontal.align-items-stretch')
+    
+    await expect(startContainer).toBeTruthy()
+    await expect(centerContainer).toBeTruthy()
+    await expect(endContainer).toBeTruthy()
+    await expect(baselineContainer).toBeTruthy()
+    await expect(stretchContainer).toBeTruthy()
   }
 }

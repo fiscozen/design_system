@@ -1,34 +1,52 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzContainer > Snapshots > matches snapshot - horizontal default 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base layout-default"><button>Button 1</button><button>Button 2</button></div>"`;
+exports[`FzContainer > Snapshots > matches snapshot - horizontal default 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-default"><button>Button 1</button><button>Button 2</button></div>"`;
 
-exports[`FzContainer > Snapshots > matches snapshot - horizontal with layout default 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base layout-default"><button>Button 1</button><button>Button 2</button></div>"`;
+exports[`FzContainer > Snapshots > matches snapshot - horizontal with alignItems baseline 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base align-items-baseline layout-default"><span>Text 1</span><span>Text 2</span></div>"`;
 
-exports[`FzContainer > Snapshots > matches snapshot - horizontal with layout expand-all 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base layout-expand-all"><button>Button 1</button><button>Button 2</button><button>Button 3</button></div>"`;
+exports[`FzContainer > Snapshots > matches snapshot - horizontal with alignItems end 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base align-items-end layout-default"><button>Button 1</button><button>Button 2</button></div>"`;
+
+exports[`FzContainer > Snapshots > matches snapshot - horizontal with alignItems start 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base align-items-start layout-default"><button>Button 1</button><button>Button 2</button></div>"`;
+
+exports[`FzContainer > Snapshots > matches snapshot - horizontal with layout default 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-default"><button>Button 1</button><button>Button 2</button></div>"`;
+
+exports[`FzContainer > Snapshots > matches snapshot - horizontal with layout expand-all 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-expand-all"><button>Button 1</button><button>Button 2</button><button>Button 3</button></div>"`;
 
 exports[`FzContainer > Snapshots > matches snapshot - horizontal with layout expand-first 1`] = `
-"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base layout-expand-first">
+"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-expand-first">
   <div>Expanding content</div><button>Action</button>
 </div>"
 `;
 
 exports[`FzContainer > Snapshots > matches snapshot - horizontal with layout space-between 1`] = `
-"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base layout-space-between">
+"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-space-between">
   <div>Logo</div>
   <nav>Navigation</nav>
 </div>"
 `;
 
-exports[`FzContainer > Snapshots > matches snapshot - horizontal with main and sm gap 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-main-content-sm layout-default"><button>Button 1</button><button>Button 2</button></div>"`;
+exports[`FzContainer > Snapshots > matches snapshot - horizontal with main and sm gap 1`] = `"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-main-content-sm align-items-center layout-default"><button>Button 1</button><button>Button 2</button></div>"`;
 
 exports[`FzContainer > Snapshots > matches snapshot - vertical default 1`] = `
-"<div data-v-22dc0b85="" class="fz-container fz-container--vertical gap-section-content-base">
+"<div data-v-22dc0b85="" class="fz-container fz-container--vertical gap-section-content-base align-items-start">
   <p>Content</p>
 </div>"
 `;
 
+exports[`FzContainer > Snapshots > matches snapshot - vertical with alignItems center 1`] = `
+"<div data-v-22dc0b85="" class="fz-container fz-container--vertical gap-section-content-base align-items-center">
+  <p>Centered content</p>
+</div>"
+`;
+
+exports[`FzContainer > Snapshots > matches snapshot - vertical with alignItems end 1`] = `
+"<div data-v-22dc0b85="" class="fz-container fz-container--vertical gap-section-content-base align-items-end">
+  <p>Right-aligned content</p>
+</div>"
+`;
+
 exports[`FzContainer > Snapshots > matches snapshot - vertical with main and lg gap 1`] = `
-"<div data-v-22dc0b85="" class="fz-container fz-container--vertical gap-main-content-lg">
+"<div data-v-22dc0b85="" class="fz-container fz-container--vertical gap-main-content-lg align-items-start">
   <p>Content</p>
 </div>"
 `;
