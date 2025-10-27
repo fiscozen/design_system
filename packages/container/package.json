@@ -14,6 +14,7 @@
   "keywords": [],
   "author": "Sergio Terrasi",
   "peerDependencies": {
+    "@fiscozen/style": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
