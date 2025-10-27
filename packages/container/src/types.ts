@@ -36,6 +36,22 @@ export type FzContainerLayout =
   | 'space-between'
 
 /**
+ * Alignment options for container items on the cross-axis
+ * 
+ * Controls how child elements are aligned perpendicular to the main axis:
+ * - In vertical containers: controls horizontal alignment (left/center/right)
+ * - In horizontal containers: controls vertical alignment (top/center/bottom)
+ * 
+ * **Values:**
+ * - `start`: Align items to the start of the cross-axis (left for vertical, top for horizontal)
+ * - `center`: Center items on the cross-axis
+ * - `end`: Align items to the end of the cross-axis (right for vertical, bottom for horizontal)
+ * - `stretch`: Stretch items to fill the container on the cross-axis
+ * - `baseline`: Align items along their text baseline (useful for horizontal containers with text)
+ */
+export type FzContainerAlignItems = 'start' | 'center' | 'end' | 'stretch' | 'baseline'
+
+/**
  * Common props shared by all container variants
  */
 interface FzContainerCommonProps {
@@ -44,6 +60,14 @@ interface FzContainerCommonProps {
    * @default 'div'
    */
   tag?: string
+  
+  /**
+   * Alignment of child elements on the cross-axis
+   * 
+   * @default 'start' for vertical containers, 'center' for horizontal containers
+   * @see FzContainerAlignItems for available options
+   */
+  alignItems?: FzContainerAlignItems
 }
 
 /**

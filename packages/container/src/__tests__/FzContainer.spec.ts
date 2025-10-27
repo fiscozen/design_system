@@ -53,6 +53,99 @@ describe.concurrent('FzContainer', () => {
     })
   })
 
+  describe('AlignItems', () => {
+    it('applies align-items-start by default for vertical', async ({ expect }) => {
+      const wrapper = mount(FzContainer)
+
+      expect(wrapper.classes()).toContain('align-items-start')
+      expect(wrapper.classes()).not.toContain('align-items-center')
+      expect(wrapper.classes()).not.toContain('align-items-end')
+      expect(wrapper.classes()).not.toContain('align-items-stretch')
+      expect(wrapper.classes()).not.toContain('align-items-baseline')
+    })
+
+    it('applies align-items-center by default for horizontal', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { horizontal: true }
+      })
+
+      expect(wrapper.classes()).toContain('align-items-center')
+      expect(wrapper.classes()).not.toContain('align-items-start')
+      expect(wrapper.classes()).not.toContain('align-items-end')
+      expect(wrapper.classes()).not.toContain('align-items-stretch')
+      expect(wrapper.classes()).not.toContain('align-items-baseline')
+    })
+
+    it('applies align-items-start when explicitly set', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { alignItems: 'start' }
+      })
+
+      expect(wrapper.classes()).toContain('align-items-start')
+      expect(wrapper.classes()).not.toContain('align-items-center')
+    })
+
+    it('applies align-items-center when explicitly set', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { alignItems: 'center' }
+      })
+
+      expect(wrapper.classes()).toContain('align-items-center')
+      expect(wrapper.classes()).not.toContain('align-items-start')
+    })
+
+    it('applies align-items-end when explicitly set', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { alignItems: 'end' }
+      })
+
+      expect(wrapper.classes()).toContain('align-items-end')
+      expect(wrapper.classes()).not.toContain('align-items-start')
+      expect(wrapper.classes()).not.toContain('align-items-center')
+    })
+
+    it('applies align-items-stretch when explicitly set', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { alignItems: 'stretch' }
+      })
+
+      expect(wrapper.classes()).toContain('align-items-stretch')
+      expect(wrapper.classes()).not.toContain('align-items-start')
+      expect(wrapper.classes()).not.toContain('align-items-center')
+      expect(wrapper.classes()).not.toContain('align-items-end')
+    })
+
+    it('applies align-items-baseline when explicitly set', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { alignItems: 'baseline' }
+      })
+
+      expect(wrapper.classes()).toContain('align-items-baseline')
+      expect(wrapper.classes()).not.toContain('align-items-start')
+      expect(wrapper.classes()).not.toContain('align-items-center')
+      expect(wrapper.classes()).not.toContain('align-items-end')
+      expect(wrapper.classes()).not.toContain('align-items-stretch')
+    })
+
+    it('overrides default alignment for vertical container', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { horizontal: false, alignItems: 'center' }
+      })
+
+      expect(wrapper.classes()).toContain('align-items-center')
+      expect(wrapper.classes()).not.toContain('align-items-start')
+    })
+
+    it('overrides default alignment for horizontal container', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { horizontal: true, alignItems: 'start' }
+      })
+
+      expect(wrapper.classes()).toContain('align-items-start')
+      expect(wrapper.classes()).not.toContain('align-items-center')
+    })
+  })
+
   describe('Orientation - Vertical (default)', () => {
     it('applies vertical class by default', async ({ expect }) => {
       const wrapper = mount(FzContainer)
@@ -484,6 +577,61 @@ describe.concurrent('FzContainer', () => {
         props: { horizontal: true, layout: 'space-between' },
         slots: {
           default: '<div>Logo</div><nav>Navigation</nav>'
+        }
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot - vertical with alignItems center', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { alignItems: 'center' },
+        slots: {
+          default: '<p>Centered content</p>'
+        }
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot - vertical with alignItems end', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { alignItems: 'end' },
+        slots: {
+          default: '<p>Right-aligned content</p>'
+        }
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot - horizontal with alignItems start', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { horizontal: true, alignItems: 'start' },
+        slots: {
+          default: '<button>Button 1</button><button>Button 2</button>'
+        }
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot - horizontal with alignItems end', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { horizontal: true, alignItems: 'end' },
+        slots: {
+          default: '<button>Button 1</button><button>Button 2</button>'
+        }
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot - horizontal with alignItems baseline', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { horizontal: true, alignItems: 'baseline' },
+        slots: {
+          default: '<span>Text 1</span><span>Text 2</span>'
         }
       })
 
