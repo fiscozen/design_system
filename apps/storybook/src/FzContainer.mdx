@@ -71,7 +71,7 @@ Elements align horizontally in a single row with vertical centering.
 | `gap` | `'sm' \| 'base' \| 'lg'` | `'base'` | Gap size between elements |
 | `horizontal` | `boolean` | `false` | If `true`, elements align horizontally. Otherwise, vertically (default) |
 | `layout` | `'default' \| 'expand-first' \| 'expand-all' \| 'space-between'` | `'default'` | Layout behavior for horizontal containers (controls how child elements expand). Only applies when `horizontal` is `true` |
-| `alignItems` | `'start' \| 'center' \| 'end' \| 'stretch' \| 'baseline'` | `'start'` for vertical, `'center'` for horizontal | Alignment of child elements on the cross-axis. In vertical containers: horizontal alignment (left/center/right). In horizontal containers: vertical alignment (top/center/bottom) |
+| `alignItems` | `'start' \| 'center' \| 'end' \| 'stretch' \| 'baseline'` | `'stretch'` for vertical, `'center'` for horizontal | Alignment of child elements on the cross-axis. In vertical containers: horizontal alignment (left/center/right). In horizontal containers: vertical alignment (top/center/bottom) |
 | `tag` | `string` | `'div'` | HTML tag to use for the container element |
 
 ## Gap Sizes
@@ -108,7 +108,7 @@ The component uses CSS custom properties for consistent spacing across the desig
 - Gap is applied between elements vertically
 - Special spacing for consecutive paragraphs (`p + p`) for improved readability
 - Default layout for most use cases
-- Default alignment: `alignItems="start"` (left-aligned)
+- Default alignment: `alignItems="stretch"` (elements expand to full width)
 
 ### Horizontal
 
@@ -151,10 +151,10 @@ The `alignItems` prop controls how child elements are aligned on the **cross-axi
 
 Controls **horizontal alignment** of elements:
 
-- **`start`** (default): Elements align to the left
+- **`stretch`** (default): Elements stretch to fill container width
+- **`start`**: Elements align to the left
 - **`center`**: Elements are centered horizontally
 - **`end`**: Elements align to the right
-- **`stretch`**: Elements stretch to fill container width
 - **`baseline`**: Elements align along their text baseline
 
 ### For Horizontal Containers

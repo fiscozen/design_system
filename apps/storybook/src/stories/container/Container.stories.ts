@@ -575,7 +575,7 @@ export const AlignItemsVertical: Story = {
         
         <FzContainer gap="lg">
           <FzContainer gap="sm">
-            <h3>alignItems="start" (default)</h3>
+            <h3>alignItems="start"</h3>
             <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px;">
               <FzContainer alignItems="start" gap="sm">
                 <FzButton size="sm">Short</FzButton>
@@ -608,7 +608,7 @@ export const AlignItemsVertical: Story = {
           </FzContainer>
           
           <FzContainer gap="sm">
-            <h3>alignItems="stretch"</h3>
+            <h3>alignItems="stretch" (default)</h3>
             <p style="font-size: 0.875rem; color: #666;">Elements stretch to fill container width</p>
             <div style="padding: 1rem; background: #f5f5f5; border-radius: 4px;">
               <FzContainer alignItems="stretch" gap="sm">

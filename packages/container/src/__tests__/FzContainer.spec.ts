@@ -54,13 +54,13 @@ describe.concurrent('FzContainer', () => {
   })
 
   describe('AlignItems', () => {
-    it('applies align-items-start by default for vertical', async ({ expect }) => {
+    it('applies align-items-stretch by default for vertical', async ({ expect }) => {
       const wrapper = mount(FzContainer)
 
-      expect(wrapper.classes()).toContain('align-items-start')
+      expect(wrapper.classes()).toContain('align-items-stretch')
       expect(wrapper.classes()).not.toContain('align-items-center')
       expect(wrapper.classes()).not.toContain('align-items-end')
-      expect(wrapper.classes()).not.toContain('align-items-stretch')
+      expect(wrapper.classes()).not.toContain('align-items-start')
       expect(wrapper.classes()).not.toContain('align-items-baseline')
     })
 
@@ -133,7 +133,7 @@ describe.concurrent('FzContainer', () => {
       })
 
       expect(wrapper.classes()).toContain('align-items-center')
-      expect(wrapper.classes()).not.toContain('align-items-start')
+      expect(wrapper.classes()).not.toContain('align-items-stretch')
     })
 
     it('overrides default alignment for horizontal container', async ({ expect }) => {

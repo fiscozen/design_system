@@ -23,10 +23,10 @@ defineSlots<FzContainerSlots>();
  * Computes the default alignItems value based on orientation
  *
  * Horizontal containers default to 'center' for better visual alignment.
- * Vertical containers default to 'start' (left-aligned) as the most common use case.
+ * Vertical containers default to 'stretch' so child elements expand to full width.
  */
 const alignItemsValue = computed(() => {
-  return props.alignItems ?? (props.horizontal ? "center" : "start");
+  return props.alignItems ?? (props.horizontal ? "center" : "stretch");
 });
 
 /**
