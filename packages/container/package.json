@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/container",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Design System Container component",
   "scripts": {
     "test": "pnpm run test:unit",
