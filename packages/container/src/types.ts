@@ -1,4 +1,18 @@
-export type FzContainerGap = 'sm' | 'base' | 'lg'
+/**
+ * Gap sizes available for main containers
+ * 
+ * Main containers are intended for page-level sections and use larger spacing values.
+ * Available sizes: sm (32px), base (48px), lg (64px)
+ */
+export type FzContainerMainGap = 'sm' | 'base' | 'lg'
+
+/**
+ * Gap sizes available for section containers
+ * 
+ * Section containers are for content within sections and use smaller spacing values.
+ * Available sizes: none (0px), xs (8px), sm (16px), base (24px), lg (32px)
+ */
+export type FzContainerSectionGap = 'none' | 'xs' | 'sm' | 'base' | 'lg'
 
 /**
  * Layout behavior for horizontal containers
@@ -20,21 +34,9 @@ export type FzContainerLayout =
   | 'expand-first'
 
 /**
- * Base props shared by all container variants
+ * Common props shared by all container variants
  */
-interface FzContainerBaseProps {
-  /**
-   * Whether to use main container styles instead of section styles
-   * @default false
-   */
-  main?: boolean
-  
-  /**
-   * Gap size for the container
-   * @default 'base'
-   */
-  gap?: FzContainerGap
-  
+interface FzContainerCommonProps {
   /**
    * Custom HTML tag to use for the container
    * @default 'div'
@@ -43,22 +45,65 @@ interface FzContainerBaseProps {
 }
 
 /**
- * Props for vertical container (default)
- * Layout prop is not available
+ * Props for main containers
+ * 
+ * Main containers use larger spacing values (sm, base, lg) for page-level sections.
+ * When main is true, TypeScript will restrict gap to FzContainerMainGap values.
  */
-interface FzContainerPropsVertical extends FzContainerBaseProps {
+interface FzContainerMainProps extends FzContainerCommonProps {
   /**
-   * If true, elements align horizontally. Otherwise, vertically (default)
+   * Uses main container spacing (larger gaps for page-level sections)
+   */
+  main: true
+  
+  /**
+   * Gap size for the main container
+   * @default 'base'
+   */
+  gap?: FzContainerMainGap
+}
+
+/**
+ * Props for section containers
+ * 
+ * Section containers use smaller spacing values (none, xs, sm, base, lg) for content within sections.
+ * When main is false or undefined, TypeScript will restrict gap to FzContainerSectionGap values.
+ */
+interface FzContainerSectionProps extends FzContainerCommonProps {
+  /**
+   * Uses section container spacing (smaller gaps for content within sections)
+   * @default false
+   */
+  main?: false
+  
+  /**
+   * Gap size for the section container
+   * @default 'base'
+   */
+  gap?: FzContainerSectionGap
+}
+
+/**
+ * Props for vertical container orientation (default)
+ * 
+ * Vertical containers stack elements vertically with gap applied between them.
+ * The layout prop is not available in vertical orientation.
+ */
+interface FzContainerVerticalProps {
+  /**
+   * Elements align vertically (default orientation)
    * @default false
    */
   horizontal?: false
 }
 
 /**
- * Props for horizontal container
- * Layout prop is available to control element expansion
+ * Props for horizontal container orientation
+ * 
+ * Horizontal containers align elements horizontally in a single row.
+ * The layout prop is available to control how child elements expand to fill space.
  */
-interface FzContainerPropsHorizontal extends FzContainerBaseProps {
+interface FzContainerHorizontalProps {
   /**
    * Elements align horizontally
    */
@@ -76,13 +121,29 @@ interface FzContainerPropsHorizontal extends FzContainerBaseProps {
 }
 
 /**
- * Container props - union of vertical and horizontal variants
+ * FzContainer component props
+ * 
+ * Discriminated union type that ensures type safety based on container configuration:
+ * - When main={true}: gap is restricted to 'sm' | 'base' | 'lg'
+ * - When main={false}: gap is restricted to 'none' | 'xs' | 'sm' | 'base' | 'lg'
+ * - When horizontal={true}: layout prop becomes available
+ * - When horizontal={false}: layout prop is not available
  */
-export type FzContainerProps = FzContainerPropsVertical | FzContainerPropsHorizontal
+export type FzContainerProps = 
+  | (FzContainerMainProps & FzContainerVerticalProps)
+  | (FzContainerMainProps & FzContainerHorizontalProps)
+  | (FzContainerSectionProps & FzContainerVerticalProps)
+  | (FzContainerSectionProps & FzContainerHorizontalProps)
 
+/**
+ * FzContainer component slots
+ */
 export interface FzContainerSlots {
   /**
    * Default slot for container content
+   * 
+   * Accepts any valid Vue content (components, HTML elements, text).
+   * Elements will be laid out according to the container's orientation and gap settings.
    */
   default(props: {}): any
 }

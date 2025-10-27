@@ -59,7 +59,7 @@ const containerClass = computed(() => {
 </script>
 
 <template>
-  <component :is="tag" :class="['fz-container', containerClass]">
+  <component :is="props.tag" :class="['fz-container', containerClass]">
     <slot />
   </component>
 </template>
@@ -129,27 +129,51 @@ const containerClass = computed(() => {
  * Uses :deep() to target slotted content while maintaining style encapsulation.
  */
 .fz-container--vertical.gap-main-content-sm :deep(> p + p) {
-  margin-top: calc((0px - var(--main-content-sm)) + var(--paragraph-gap));
+  margin-top: calc(
+    (0px - var(--main-content-sm, 32px)) + var(--paragraph-gap, 8px)
+  );
 }
 
 .fz-container--vertical.gap-main-content-base :deep(> p + p) {
-  margin-top: calc((0px - var(--main-content-base)) + var(--paragraph-gap));
+  margin-top: calc(
+    (0px - var(--main-content-base, 48px)) + var(--paragraph-gap, 8px)
+  );
 }
 
 .fz-container--vertical.gap-main-content-lg :deep(> p + p) {
-  margin-top: calc((0px - var(--main-content-lg)) + var(--paragraph-gap));
+  margin-top: calc(
+    (0px - var(--main-content-lg, 64px)) + var(--paragraph-gap, 8px)
+  );
+}
+
+.fz-container--vertical.gap-section-content-none :deep(> p + p) {
+  margin-top: calc(
+    (0px - var(--section-content-none, 0px)) + var(--paragraph-gap, 8px)
+  );
+}
+
+.fz-container--vertical.gap-section-content-xs :deep(> p + p) {
+  margin-top: calc(
+    (0px - var(--section-content-xs, 8px)) + var(--paragraph-gap, 8px)
+  );
 }
 
 .fz-container--vertical.gap-section-content-sm :deep(> p + p) {
-  margin-top: calc((0px - var(--section-content-sm)) + var(--paragraph-gap));
+  margin-top: calc(
+    (0px - var(--section-content-sm, 16px)) + var(--paragraph-gap, 8px)
+  );
 }
 
 .fz-container--vertical.gap-section-content-base :deep(> p + p) {
-  margin-top: calc((0px - var(--section-content-base)) + var(--paragraph-gap));
+  margin-top: calc(
+    (0px - var(--section-content-base, 24px)) + var(--paragraph-gap, 8px)
+  );
 }
 
 .fz-container--vertical.gap-section-content-lg :deep(> p + p) {
-  margin-top: calc((0px - var(--section-content-lg)) + var(--paragraph-gap));
+  margin-top: calc(
+    (0px - var(--section-content-lg, 32px)) + var(--paragraph-gap, 8px)
+  );
 }
 
 /**

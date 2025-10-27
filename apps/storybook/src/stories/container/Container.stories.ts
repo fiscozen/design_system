@@ -39,7 +39,7 @@ const meta: Meta<any> = {
     sectionGap: {
       name: 'gap',
       control: 'select',
-      options: ['sm', 'base', 'lg'],
+      options: ['none', 'xs', 'sm', 'base', 'lg'],
       description: 'gap dei section container (tra gli elementi interni)'
     },
   }
