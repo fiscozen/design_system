@@ -49,13 +49,12 @@ const props = withDefaults(
     variant?: ButtonVariant
     /**
      * Button size affecting height, padding, and text size
-     * @default 'md'
      * @deprecated Use the 'environment' prop instead. This prop will be removed in a future version.
      */
     size?: ButtonSize
     /**
      * Environment determining button size
-     * @default 'backoffice'
+     * @default 'frontoffice'
      */
     environment?: ButtonEnvironment
     /**
