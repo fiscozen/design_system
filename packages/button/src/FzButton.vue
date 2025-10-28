@@ -117,10 +117,20 @@ watch(() => props.tooltip, (tooltip) => {
 watch(() => props.size, (size) => {
   if (size !== undefined) {
     const mappedEnvironment = sizeToEnvironmentMapping[size]
-    console.warn(
-      `[FzButton] The "size" prop is deprecated and will be removed in a future version. ` +
-      `Please use environment="${mappedEnvironment}" instead of size="${size}".`
-    )
+    
+    // Check if both environment and size are provided and conflict
+    if (props.environment && props.environment !== mappedEnvironment) {
+      console.warn(
+        `[FzButton] Both "size" and "environment" props are provided. ` +
+        `"environment=${props.environment}" will be used and "size=${size}" will be ignored. ` +
+        `Please remove the deprecated "size" prop.`
+      )
+    } else {
+      console.warn(
+        `[FzButton] The "size" prop is deprecated and will be removed in a future version. ` +
+        `Please use environment="${mappedEnvironment}" instead of size="${size}".`
+      )
+    }
   }
 }, { immediate: true })
 
