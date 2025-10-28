@@ -1,9 +1,25 @@
-import { ButtonSize } from './types'
+import { ButtonSize, ButtonEnvironment } from './types'
 import { IconSize } from '@fiscozen/icons'
 
-export const iconSizeMap: {
-  [key in ButtonSize]: IconSize
-} = {
+/**
+ * Maps deprecated ButtonSize to ButtonEnvironment
+ * 
+ * Used for backward compatibility when size prop is provided instead of environment.
+ * All sizes map to environments: xs/sm/md → backoffice, lg → frontoffice
+ */
+export const sizeToEnvironmentMapping: Record<ButtonSize, ButtonEnvironment> = {
+  xs: 'backoffice',
+  sm: 'backoffice',
+  md: 'backoffice',
+  lg: 'frontoffice'
+}
+
+/**
+ * Maps ButtonSize to IconSize for FzIconButton
+ * 
+ * Used by FzIconButton to determine icon size based on button size.
+ */
+export const iconSizeMap: Record<ButtonSize, IconSize> = {
   xs: 'sm',
   sm: 'md',
   md: 'lg',
@@ -11,18 +27,16 @@ export const iconSizeMap: {
 }
 
 /**
- * Button size configuration mapping
+ * Button environment configuration mapping
  * 
- * Defines all size-related values for each button size to maintain consistent proportions.
- * - height: button height in px/tailwind units (h-24 = 96px, h-28 = 112px, etc.)
- * - textSize: text size class (text-xs, text-sm, text-lg) or null if no override
- * - padding: horizontal padding when no icon is present
- * - iconPadding: horizontal padding when icon and label are both present
- * - iconMargin: spacing between icon and label
+ * Defines all size-related values for each button environment to maintain consistent proportions.
+ * - height: fixed button height in px/tailwind units (includes padding)
+ * - paddingX: horizontal padding (always applied)
+ * - minWidth: minimum button width
+ * 
+ * Note: Spacing between icon and label (8px) is handled by gap-8 on the button element.
  */
-export const buttonSizeConfig = {
-  xs: { height: 24, textSize: 'xs', padding: 12, iconPadding: 8, iconMargin: 4 },
-  sm: { height: 28, textSize: 'sm', padding: 14, iconPadding: 10, iconMargin: 4 },
-  md: { height: 32, textSize: null, padding: 16, iconPadding: 10, iconMargin: 6 },
-  lg: { height: 40, textSize: 'lg', padding: 20, iconPadding: 12, iconMargin: 8 }
+export const buttonEnvironmentConfig = {
+  backoffice: { height: 32, paddingX: 12, minWidth: 96 },
+  frontoffice: { height: 44, paddingX: 12, minWidth: 96 }
 } as const
