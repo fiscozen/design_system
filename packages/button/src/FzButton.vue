@@ -1,81 +1,77 @@
-<template>
-  <button type="button" :disabled="disabled" :class="[staticClasses, classes]">
-    <div v-if="iconAndLabel" :class="[staticIconClasses, beforeClasses]">
-      <slot name="before">
-        <FzIcon
-          v-if="iconName && iconPosition === 'before'"
-          :name="iconName"
-          :size="mappedIconSize"
-          :variant="iconVariant"
-        />
-      </slot>
-    </div>
-    <div :class="containerClass">
-      <slot>
-        {{ label }}
-      </slot>
-    </div>
-    <div v-if="slots.after || iconAndLabel" :class="[staticIconClasses, afterClasses]">
-      <slot name="after">
-        <FzIcon
-          v-if="iconName && iconPosition === 'after'"
-          :name="iconName"
-          :size="mappedIconSize"
-          :variant="iconVariant"
-        />
-      </slot>
-    </div>
-    <span class="hidden h-0 w-0">{{ tooltip }}</span>
-  </button>
-</template>
-
+/**
+ * FzButton - Versatile button component with multiple variants and icon support
+ * 
+ * A comprehensive button component that supports multiple visual variants (primary, secondary,
+ * invisible, danger, success), flexible sizing, and optional icon integration. The component
+ * uses semantic color tokens for consistent theming and provides full accessibility support.
+ * 
+ * @example Basic usage
+ * ```vue
+ * <FzButton label="Click me" />
+ * ```
+ * 
+ * @example With icon
+ * ```vue
+ * <FzButton label="Save" iconName="save" iconPosition="before" />
+ * ```
+ * 
+ * @example Danger variant
+ * ```vue
+ * <FzButton variant="danger" label="Delete" :disabled="!confirmed" />
+ * ```
+ */
 <script lang="ts" setup>
-import { computed, useSlots } from 'vue'
+import { computed, useSlots, watch } from 'vue'
 import { type IconVariant, FzIcon } from '@fiscozen/icons'
 import type { ButtonSize, ButtonVariant } from './types'
-import { iconSizeMap } from './utils'
+import { iconSizeMap, buttonSizeConfig } from './utils'
 
 const props = withDefaults(
   defineProps<{
     /**
-     * The label of the button
+     * Text label displayed on the button. Overridden by default slot if provided.
      */
     label?: string
     /**
-     * The tooltip of the button will be shown on hover
+     * @deprecated Use FzTooltip component to wrap the button instead.
+     * A runtime warning will be displayed when this prop is used.
      */
     tooltip?: string
     /**
-     * primary or secondary button
+     * Visual style variant determining colors and interactive states
+     * @default 'primary'
      */
     variant?: ButtonVariant
     /**
-     * size of the button
+     * Button size affecting height, padding, and text size
+     * @default 'md'
      */
     size?: ButtonSize
     /**
-     * whether action is enabled or not
+     * Disables interaction and applies disabled styling
+     * @default false
      */
     disabled?: boolean
     /**
-     * Icon to be displayed. Use fontawesome search here https://fontawesome.com/v6/icons
-     * Mind that not all of the icons and variants might be available.
+     * FontAwesome icon name (e.g., 'bell', 'save'). Search: https://fontawesome.com/v6/icons
      */
     iconName?: string
     /**
-     * Fontawesome icon variant: solid, regular, light, thin. Sharp subvariants are available as well
+     * FontAwesome icon variant (e.g., 'fas', 'far', 'fal')
      */
     iconVariant?: IconVariant
     /**
-     * Positioning of the icon
+     * Icon position relative to label
+     * @default 'before'
      */
     iconPosition?: 'before' | 'after',
     /**
-     * Define the css class for the default slot container
+     * Additional CSS classes for label container. Merged with 'truncate' unless overrideContainerClass is true.
      */
     containerClass?: string
     /**
-     * Whether to override internal container classes
+     * Replaces default container classes with containerClass instead of merging
+     * @default false
      */
     overrideContainerClass?: boolean
   }>(),
@@ -88,6 +84,52 @@ const props = withDefaults(
 )
 const slots = useSlots()
 
+/**
+ * Emits deprecation warnings for deprecated props
+ * 
+ * Watches for tooltip prop usage and logs warning only when prop is provided.
+ * Warning is shown once when component mounts or when tooltip changes.
+ */
+watch(() => props.tooltip, (tooltip) => {
+  if (tooltip) {
+    console.warn(
+      '[FzButton] The "tooltip" prop is deprecated and will be removed in a future version. ' +
+      'Please use the FzTooltip component to wrap your button instead.'
+    )
+  }
+})
+
+/**
+ * Generates icon spacing classes based on position
+ * 
+ * Creates margin and padding classes for icon containers that scale with button size.
+ * Margin provides separation between icon and label, while padding maintains button
+ * dimensions when icons are present. Uses centralized buttonSizeConfig for consistent spacing.
+ * 
+ * @param position - Icon position relative to label ('before' or 'after')
+ * @returns Object with conditional Tailwind classes
+ */
+const getIconSpacingClasses = (position: 'before' | 'after') => {
+  const isBefore = position === 'before'
+  const marginClass = isBefore ? 'mr' : 'ml'
+  const paddingClass = isBefore ? 'pl' : 'pr'
+  const config = buttonSizeConfig[props.size]
+  
+  return {
+    [`${marginClass}-${config.iconMargin}`]: true,
+    [`${paddingClass}-${config.iconPadding}`]: iconAndLabel.value
+  }
+}
+
+/**
+ * Computes CSS classes based on the selected variant
+ * 
+ * Returns dynamic classes for each variant, including background colors, text colors,
+ * hover states, and focus states. Danger and success variants use semantic color tokens
+ * (bg-semantic-error, bg-semantic-success) for consistent theming. Hover and focus classes
+ * are conditionally applied based on the disabled state to prevent visual feedback on
+ * non-interactive buttons.
+ */
 const customVariantClasses = computed(() => {
   switch (props.variant) {
     case 'primary':
@@ -96,52 +138,70 @@ const customVariantClasses = computed(() => {
         'hover:bg-blue-600': true,
         'disabled:bg-blue-200': true,
         'text-core-white': true,
-        'focus:bg-blue-500': !props.disabled
+        'focus:bg-blue-500': isInteractive.value
       }
-      break
     case 'secondary':
       return {
         'text-grey-500': true,
         'bg-core-white': true,
         '!border-grey-200': true,
-        'hover:bg-grey-100': !props.disabled,
-        'focus:!border-blue-600': !props.disabled,
+        'hover:bg-grey-100': isInteractive.value,
+        'focus:!border-blue-600': isInteractive.value,
         'disabled:text-grey-100': true,
       }
-      break
     case 'invisible':
       return {
         'text-grey-500': true,
         'bg-transparent': true,
         'border-transparent': true,
-        'hover:bg-grey-100': !props.disabled,
-        'focus:!border-blue-600': !props.disabled,
+        'hover:bg-grey-100': isInteractive.value,
+        'focus:!border-blue-600': isInteractive.value,
         'disabled:text-grey-100': true
       }
-      break
     case 'danger':
       return {
         'text-core-white': true,
-        'temporary-bg-red': true,
-        'temporary-border-red': !props.disabled,
-        'bg-semantic-error': true
+        'bg-semantic-error': true,
+        'hover:bg-semantic-error-300': isInteractive.value,
+        'disabled:bg-semantic-error-100': true,
+        'focus:!border-semantic-error-300': isInteractive.value,
       }
-      break
     case 'success':
       return {
         'text-core-white': true,
-        'temporary-bg-green': true,
-        'temporary-border-green': !props.disabled,
-        'bg-semantic-success': true
+        'bg-semantic-success': true,
+        'hover:bg-semantic-success-300': isInteractive.value,
+        'disabled:bg-semantic-success-100': true,
+        'focus:!border-semantic-success-300': isInteractive.value,
       }
-      break
     default:
       return {}
-      break
   }
 })
 
+/**
+ * Determines if both icon and label/slot content are present
+ * 
+ * Icons are only rendered when accompanied by text content to ensure proper
+ * spacing and layout. This prevents icon containers from rendering unnecessarily.
+ */
 const iconAndLabel = computed(() => Boolean((props.label || slots.default) && props.iconName))
+
+/**
+ * Determines if the button is in an interactive state
+ * 
+ * Returns true when the button is not disabled, allowing hover and focus
+ * visual feedback. Used throughout the component to conditionally apply
+ * interactive classes.
+ */
+const isInteractive = computed(() => !props.disabled)
+
+/**
+ * Maps button size to appropriate icon size
+ * 
+ * Uses the iconSizeMap utility to ensure icons are proportionally sized
+ * relative to the button dimensions.
+ */
 const mappedIconSize = computed(() => iconSizeMap[props.size])
 
 const staticClasses = [
@@ -158,39 +218,39 @@ const staticClasses = [
 
 const staticIconClasses = ['flex', 'items-center', 'justify-items-center']
 
-const classes = computed(() => ({
-  'h-24 text-xs': props.size === 'xs',
-  'h-28 text-sm': props.size === 'sm',
-  'h-32': props.size === 'md',
-  'h-40 text-lg': props.size === 'lg',
-  'focus:border-blue-600': !props.disabled,
-  'focus:border-solid': !props.disabled,
-  'focus:border-1': !props.disabled,
-  'px-12': props.size === 'xs' && !iconAndLabel.value,
-  'px-14': props.size === 'sm' && !iconAndLabel.value,
-  'px-16': props.size === 'md' && !iconAndLabel.value,
-  'px-20': props.size === 'lg' && !iconAndLabel.value,
-  ...customVariantClasses.value
-}))
+/**
+ * Computes dynamic size-based classes for the button
+ * 
+ * Applies height, text size, focus states, and horizontal padding based on the size prop.
+ * Uses centralized buttonSizeConfig for consistent sizing. Padding is adjusted when icons
+ * are present to maintain visual balance. Focus border classes are only applied when the
+ * button is not disabled.
+ */
+const classes = computed(() => {
+  const config = buttonSizeConfig[props.size]
+  const heightClass = `h-${config.height}`
+  const textSizeClass = config.textSize ? `text-${config.textSize}` : null
+  const paddingClass = `px-${config.padding}`
+  
+  return {
+    [heightClass]: true,
+    ...(textSizeClass ? { [textSizeClass]: true } : {}),
+    'focus:border-blue-600': isInteractive.value,
+    'focus:border-solid': isInteractive.value,
+    'focus:border-1': isInteractive.value,
+    [paddingClass]: !iconAndLabel.value,
+    ...customVariantClasses.value
+  }
+})
 
-const beforeClasses = computed(() => ({
-  'mr-8': props.size === 'lg',
-  'mr-6': props.size === 'md',
-  'mr-4': props.size === 'sm' || props.size === 'xs',
-  'pl-12': props.size === 'lg' && iconAndLabel.value,
-  'pl-10': (props.size === 'md' || props.size === 'sm') && iconAndLabel.value,
-  'pl-8': props.size === 'xs' && iconAndLabel.value
-}))
-
-const afterClasses = computed(() => ({
-  'ml-8': props.size === 'lg',
-  'ml-6': props.size === 'md',
-  'ml-4': props.size === 'sm' || props.size === 'xs',
-  'pr-12': props.size === 'lg' && iconAndLabel.value,
-  'pr-10': (props.size === 'md' || props.size === 'sm') && iconAndLabel.value,
-  'pr-8': props.size === 'xs' && iconAndLabel.value
-}))
-
+/**
+ * Computes classes for the label/slot container
+ * 
+ * By default, includes 'truncate' class to handle text overflow with ellipsis.
+ * When overrideContainerClass is true, only the custom containerClass is applied,
+ * allowing full control over container styling. Otherwise, custom classes are merged
+ * with the default truncate behavior.
+ */
 const containerClass = computed(() => {
   if (props.overrideContainerClass) {
     return props.containerClass
@@ -200,23 +260,32 @@ const containerClass = computed(() => {
 });
 </script>
 
-<style>
-.temporary-bg-red:hover {
-  background-color: #aa2f2f;
-}
-.temporary-bg-red:disabled {
-  background-color: #f8baba;
-}
-.temporary-border-red:focus {
-  border-color: #aa2f2f;
-}
-.temporary-bg-green:hover {
-  background-color: #0b7763;
-}
-.temporary-bg-green:disabled {
-  background-color: #b5d8ce;
-}
-.temporary-border-green:focus {
-  border-color: #0b7763;
-}
-</style>
+<template>
+  <button type="button" :disabled="disabled" :class="[staticClasses, classes]">
+    <div v-if="iconAndLabel" :class="[staticIconClasses, getIconSpacingClasses('before')]">
+      <slot name="before">
+        <FzIcon
+          v-if="iconName && iconPosition === 'before'"
+          :name="iconName"
+          :size="mappedIconSize"
+          :variant="iconVariant"
+        />
+      </slot>
+    </div>
+    <div :class="containerClass">
+      <slot>
+        {{ label }}
+      </slot>
+    </div>
+    <div v-if="slots.after || iconAndLabel" :class="[staticIconClasses, getIconSpacingClasses('after')]">
+      <slot name="after">
+        <FzIcon
+          v-if="iconName && iconPosition === 'after'"
+          :name="iconName"
+          :size="mappedIconSize"
+          :variant="iconVariant"
+        />
+      </slot>
+    </div>
+  </button>
+</template>
