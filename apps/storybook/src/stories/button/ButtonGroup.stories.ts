@@ -27,10 +27,10 @@ const Template: ButtonGroupStory = {
       }
     },
     template: `<FzButtonGroup v-bind="args" :class="['m-8 pb-8', args.horizontal === false ? 'w-128' : '']"> 
-                    <FzButton variant="primary" :size="args.size"> Button 1 </FzButton>
-                    <FzButton variant="secondary" :size="args.size"> Button 2 </FzButton>
-                    <FzButton variant="secondary" :size="args.size"> Button 3 </FzButton>
-                    <FzButton variant="secondary" :size="args.size"> Button 4 </FzButton>
+                    <FzButton variant="primary" environment="backoffice"> Button 1 </FzButton>
+                    <FzButton variant="secondary" environment="backoffice"> Button 2 </FzButton>
+                    <FzButton variant="secondary" environment="backoffice"> Button 3 </FzButton>
+                    <FzButton variant="secondary" environment="backoffice"> Button 4 </FzButton>
                 </FzButtonGroup>`
   }),
   args: {
