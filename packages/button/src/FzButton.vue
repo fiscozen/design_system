@@ -286,7 +286,7 @@ const containerClass = computed(() => {
         />
       </slot>
     </div>
-    <div :class="containerClass">
+    <div v-if="label || slots.default" :class="containerClass">
       <slot>
         {{ label }}
       </slot>
