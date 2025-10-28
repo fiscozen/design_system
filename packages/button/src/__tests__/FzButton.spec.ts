@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 
 import { mount } from '@vue/test-utils'
 import FzButton from '../FzButton.vue'
+import { FzIcon } from '@fiscozen/icons'
 
 describe.concurrent('FzButton', () => {
   describe('Basic Rendering', () => {
@@ -90,7 +91,7 @@ describe.concurrent('FzButton', () => {
       })
 
       const button = wrapper.find('button')
-      expect(button.classes()).toContain('bg-semantic-error')
+      expect(button.classes()).toContain('bg-semantic-error-200')
       expect(button.classes()).toContain('text-core-white')
     })
 
@@ -103,39 +104,103 @@ describe.concurrent('FzButton', () => {
       })
 
       const button = wrapper.find('button')
-      expect(button.classes()).toContain('bg-semantic-success')
+      expect(button.classes()).toContain('bg-semantic-success-200')
       expect(button.classes()).toContain('text-core-white')
     })
   })
 
-  describe('Sizes', () => {
-    it('should render xs size with correct height', () => {
+  describe('Environment', () => {
+    it('should render backoffice environment with correct height', () => {
       const wrapper = mount(FzButton, {
         props: {
-          size: 'xs',
-          label: 'XS Button'
+          environment: 'backoffice',
+          label: 'Backoffice Button'
         }
       })
 
       const button = wrapper.find('button')
-      expect(button.classes()).toContain('h-24')
-      expect(button.classes()).toContain('text-xs')
+      expect(button.classes()).toContain('h-32')
+      expect(button.classes()).not.toContain('text-lg')
     })
 
-    it('should render sm size with correct height', () => {
+    it('should render frontoffice environment with correct height', () => {
       const wrapper = mount(FzButton, {
         props: {
-          size: 'sm',
-          label: 'SM Button'
+          environment: 'frontoffice',
+          label: 'Frontoffice Button'
         }
       })
 
       const button = wrapper.find('button')
-      expect(button.classes()).toContain('h-28')
-      expect(button.classes()).toContain('text-sm')
+      expect(button.classes()).toContain('h-44')
+      expect(button.classes()).not.toContain('text-lg')
     })
 
-    it('should render md size with correct height (default)', () => {
+    it('should use frontoffice as default environment', () => {
+      const wrapper = mount(FzButton, {
+        props: {
+          label: 'Default Button'
+        }
+      })
+
+      const button = wrapper.find('button')
+      expect(button.classes()).toContain('h-44')
+    })
+  })
+
+  describe('Size Deprecation', () => {
+    it('should log deprecation warning for any size prop', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      
+      const wrapper = mount(FzButton, {
+        props: {
+          size: 'lg',
+          label: 'Legacy Button'
+        }
+      })
+
+      await wrapper.vm.$nextTick()
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('[FzButton] The "size" prop is deprecated')
+      )
+      
+      warnSpy.mockRestore()
+    })
+
+    it('should log deprecation warning for md size', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      
+      const wrapper = mount(FzButton, {
+        props: {
+          size: 'md',
+          label: 'MD Button'
+        }
+      })
+
+      await wrapper.vm.$nextTick()
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('[FzButton] The "size" prop is deprecated')
+      )
+      
+      warnSpy.mockRestore()
+    })
+
+    it('should map lg size to frontoffice environment', () => {
+      const wrapper = mount(FzButton, {
+        props: {
+          size: 'lg',
+          label: 'LG Button'
+        }
+      })
+
+      const button = wrapper.find('button')
+      expect(button.classes()).toContain('h-44')
+      expect(button.classes()).not.toContain('text-lg')
+    })
+
+    it('should map md size to backoffice environment', () => {
       const wrapper = mount(FzButton, {
         props: {
           size: 'md',
@@ -145,19 +210,7 @@ describe.concurrent('FzButton', () => {
 
       const button = wrapper.find('button')
       expect(button.classes()).toContain('h-32')
-    })
-
-    it('should render lg size with correct height', () => {
-      const wrapper = mount(FzButton, {
-        props: {
-          size: 'lg',
-          label: 'LG Button'
-        }
-      })
-
-      const button = wrapper.find('button')
-      expect(button.classes()).toContain('h-40')
-      expect(button.classes()).toContain('text-lg')
+      expect(button.classes()).not.toContain('text-lg')
     })
   })
 
@@ -171,8 +224,11 @@ describe.concurrent('FzButton', () => {
         }
       })
 
-      const iconContainer = wrapper.find('div.mr-6')
-      expect(iconContainer.exists()).toBe(true)
+      const icon = wrapper.findComponent(FzIcon)
+      expect(icon.exists()).toBe(true)
+      const button = wrapper.find('button')
+      expect(button.classes()).toContain('gap-8')
+      expect(button.classes()).toContain('px-12')
     })
 
     it('should render icon after label', () => {
@@ -184,8 +240,11 @@ describe.concurrent('FzButton', () => {
         }
       })
 
-      const iconContainer = wrapper.find('div.ml-6')
-      expect(iconContainer.exists()).toBe(true)
+      const icon = wrapper.findComponent(FzIcon)
+      expect(icon.exists()).toBe(true)
+      const button = wrapper.find('button')
+      expect(button.classes()).toContain('gap-8')
+      expect(button.classes()).toContain('px-12')
     })
 
     it('should not render icon without iconName', () => {
@@ -195,7 +254,11 @@ describe.concurrent('FzButton', () => {
         }
       })
 
-      expect(wrapper.findAll('.mr-6, .ml-6').length).toBe(0)
+      const icon = wrapper.findComponent(FzIcon)
+      expect(icon.exists()).toBe(false)
+      const button = wrapper.find('button')
+      expect(button.classes()).toContain('gap-8')
+      expect(button.classes()).toContain('px-12')
     })
 
     it('should use before slots when provided', () => {
@@ -307,7 +370,7 @@ describe.concurrent('FzButton', () => {
       expect(button.classes()).toContain('flex')
       expect(button.classes()).toContain('items-center')
       expect(button.classes()).toContain('justify-center')
-      expect(button.classes()).toContain('font-medium')
+      expect(button.classes()).toContain('font-normal')
       expect(button.classes()).toContain('border-1')
     })
 
@@ -320,8 +383,7 @@ describe.concurrent('FzButton', () => {
       })
 
       const button = wrapper.find('button')
-      expect(button.classes()).toContain('focus:border-blue-600')
-      expect(button.classes()).toContain('focus:border-solid')
+      expect(button.classes()).toContain('focus:!border-blue-600')
     })
 
     it('should apply containerClass when provided', () => {
@@ -353,26 +415,26 @@ describe.concurrent('FzButton', () => {
   })
 
   describe('Combinations', () => {
-    it('should handle danger variant with lg size', () => {
+    it('should handle danger variant with frontoffice environment', () => {
       const wrapper = mount(FzButton, {
         props: {
           variant: 'danger',
-          size: 'lg',
+          environment: 'frontoffice',
           label: 'Large Danger'
         }
       })
 
       const button = wrapper.find('button')
-      expect(button.classes()).toContain('bg-semantic-error')
-      expect(button.classes()).toContain('h-40')
-      expect(button.classes()).toContain('text-lg')
+      expect(button.classes()).toContain('bg-semantic-error-200')
+      expect(button.classes()).toContain('h-44')
+      expect(button.classes()).not.toContain('text-lg')
     })
 
-    it('should handle success variant with icon and xs size', () => {
+    it('should handle success variant with icon and backoffice environment', () => {
       const wrapper = mount(FzButton, {
         props: {
           variant: 'success',
-          size: 'xs',
+          environment: 'backoffice',
           label: 'Success',
           iconName: 'check',
           iconPosition: 'before'
@@ -380,8 +442,8 @@ describe.concurrent('FzButton', () => {
       })
 
       const button = wrapper.find('button')
-      expect(button.classes()).toContain('bg-semantic-success')
-      expect(button.classes()).toContain('h-24')
+      expect(button.classes()).toContain('bg-semantic-success-200')
+      expect(button.classes()).toContain('h-32')
     })
 
     it('should handle secondary variant disabled with icon', () => {
@@ -396,7 +458,7 @@ describe.concurrent('FzButton', () => {
 
       const button = wrapper.find('button')
       expect(button.classes()).toContain('bg-core-white')
-      expect(button.classes()).toContain('disabled:text-grey-100')
+      expect(button.classes()).toContain('disabled:text-grey-200')
       expect(button.attributes('disabled')).toBeDefined()
     })
   })
@@ -448,22 +510,22 @@ describe.concurrent('FzButton', () => {
       expect(wrapper.html()).toMatchSnapshot()
     })
 
-    it('should match snapshot - xs size', () => {
+    it('should match snapshot - backoffice environment', () => {
       const wrapper = mount(FzButton, {
         props: {
-          size: 'xs',
-          label: 'XS Button'
+          environment: 'backoffice',
+          label: 'Backoffice Button'
         }
       })
 
       expect(wrapper.html()).toMatchSnapshot()
     })
 
-    it('should match snapshot - lg size with icon', () => {
+    it('should match snapshot - frontoffice environment with icon', () => {
       const wrapper = mount(FzButton, {
         props: {
-          size: 'lg',
-          label: 'Large Button',
+          environment: 'frontoffice',
+          label: 'Frontoffice Button',
           iconName: 'star',
           iconPosition: 'after'
         }

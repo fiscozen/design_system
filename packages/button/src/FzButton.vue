@@ -1,13 +1,18 @@
 /**
- * FzButton - Versatile button component with multiple variants and icon support
+ * FzButton - Versatile button component with multiple variants and environment-based sizing
  * 
- * A comprehensive button component that supports multiple visual variants (primary, secondary,
- * invisible, danger, success), flexible sizing, and optional icon integration. The component
- * uses semantic color tokens for consistent theming and provides full accessibility support.
+ * A comprehensive button component supporting five visual variants (primary, secondary, invisible,
+ * danger, success) and two environment-based sizes (backoffice, frontoffice). Features
+ * include icon integration, multiple interactive states, and full accessibility support.
  * 
- * @example Basic usage
+ * @example Basic usage (frontoffice default)
  * ```vue
  * <FzButton label="Click me" />
+ * ```
+ * 
+ * @example Backoffice environment
+ * ```vue
+ * <FzButton environment="backoffice" label="Save" />
  * ```
  * 
  * @example With icon
@@ -22,9 +27,9 @@
  */
 <script lang="ts" setup>
 import { computed, useSlots, watch } from 'vue'
-import { type IconVariant, FzIcon } from '@fiscozen/icons'
-import type { ButtonSize, ButtonVariant } from './types'
-import { iconSizeMap, buttonSizeConfig } from './utils'
+import { type IconVariant, type IconSize, FzIcon } from '@fiscozen/icons'
+import type { ButtonSize, ButtonVariant, ButtonEnvironment } from './types'
+import { sizeToEnvironmentMapping, buttonEnvironmentConfig } from './utils'
 
 const props = withDefaults(
   defineProps<{
@@ -45,8 +50,14 @@ const props = withDefaults(
     /**
      * Button size affecting height, padding, and text size
      * @default 'md'
+     * @deprecated Use the 'environment' prop instead. This prop will be removed in a future version.
      */
     size?: ButtonSize
+    /**
+     * Environment determining button size
+     * @default 'backoffice'
+     */
+    environment?: ButtonEnvironment
     /**
      * Disables interaction and applies disabled styling
      * @default false
@@ -77,9 +88,9 @@ const props = withDefaults(
   }>(),
   {
     variant: 'primary',
-    size: 'md',
     disabled: false,
     iconPosition: 'before',
+    // Note: environment has no default to allow deprecated size prop to work via effectiveEnvironment computed
   }
 )
 const slots = useSlots()
@@ -100,26 +111,20 @@ watch(() => props.tooltip, (tooltip) => {
 })
 
 /**
- * Generates icon spacing classes based on position
+ * Emits deprecation warnings for deprecated size prop
  * 
- * Creates margin and padding classes for icon containers that scale with button size.
- * Margin provides separation between icon and label, while padding maintains button
- * dimensions when icons are present. Uses centralized buttonSizeConfig for consistent spacing.
- * 
- * @param position - Icon position relative to label ('before' or 'after')
- * @returns Object with conditional Tailwind classes
+ * Watches for size prop usage and logs warning with migration path to environment prop.
  */
-const getIconSpacingClasses = (position: 'before' | 'after') => {
-  const isBefore = position === 'before'
-  const marginClass = isBefore ? 'mr' : 'ml'
-  const paddingClass = isBefore ? 'pl' : 'pr'
-  const config = buttonSizeConfig[props.size]
-  
-  return {
-    [`${marginClass}-${config.iconMargin}`]: true,
-    [`${paddingClass}-${config.iconPadding}`]: iconAndLabel.value
+watch(() => props.size, (size) => {
+  if (size !== undefined) {
+    const mappedEnvironment = sizeToEnvironmentMapping[size]
+    console.warn(
+      `[FzButton] The "size" prop is deprecated and will be removed in a future version. ` +
+      `Please use environment="${mappedEnvironment}" instead of size="${size}".`
+    )
   }
-}
+}, { immediate: true })
+
 
 /**
  * Computes CSS classes based on the selected variant
@@ -132,51 +137,73 @@ const getIconSpacingClasses = (position: 'before' | 'after') => {
  */
 const customVariantClasses = computed(() => {
   switch (props.variant) {
-    case 'primary':
-      return {
-        'bg-blue-500': true,
-        'hover:bg-blue-600': true,
-        'disabled:bg-blue-200': true,
-        'text-core-white': true,
-        'focus:bg-blue-500': isInteractive.value
-      }
     case 'secondary':
       return {
-        'text-grey-500': true,
         'bg-core-white': true,
+        'text-grey-500': true,
         '!border-grey-200': true,
         'hover:bg-grey-100': isInteractive.value,
-        'focus:!border-blue-600': isInteractive.value,
-        'disabled:text-grey-100': true,
+        'focus:bg-core-white': isInteractive.value,
+        'focus:!border-grey-500': isInteractive.value,
+        'disabled:bg-grey-50': true,
+        'disabled:text-grey-200': true,
+        'disabled:!border-grey-100': true,
       }
     case 'invisible':
       return {
-        'text-grey-500': true,
         'bg-transparent': true,
-        'border-transparent': true,
+        'text-grey-500': true,
+        '!border-transparent': true,
         'hover:bg-grey-100': isInteractive.value,
-        'focus:!border-blue-600': isInteractive.value,
-        'disabled:text-grey-100': true
+        'focus:bg-transparent': isInteractive.value,
+        'focus:!border-grey-500': isInteractive.value,
+        'disabled:text-grey-200': true,
       }
     case 'danger':
       return {
+        'bg-semantic-error-200': true,
         'text-core-white': true,
-        'bg-semantic-error': true,
         'hover:bg-semantic-error-300': isInteractive.value,
-        'disabled:bg-semantic-error-100': true,
+        'focus:bg-semantic-error-200': isInteractive.value,
         'focus:!border-semantic-error-300': isInteractive.value,
+        'disabled:bg-semantic-error-100': true,
       }
     case 'success':
       return {
+        'bg-semantic-success-200': true,
         'text-core-white': true,
-        'bg-semantic-success': true,
         'hover:bg-semantic-success-300': isInteractive.value,
-        'disabled:bg-semantic-success-100': true,
+        'focus:bg-semantic-success-200': isInteractive.value,
         'focus:!border-semantic-success-300': isInteractive.value,
+        'disabled:bg-semantic-success-100': true,
       }
+    case 'primary':
     default:
-      return {}
+      return {
+        'bg-blue-500': true,
+        'text-core-white': true,
+        'hover:bg-blue-600': isInteractive.value,
+        'focus:bg-blue-500': isInteractive.value,
+        'focus:!border-blue-600': isInteractive.value,
+        'disabled:bg-blue-200': true,
+      }
   }
+})
+
+/**
+ * Determines the effective environment based on environment or size prop
+ * 
+ * Priority: environment prop > size prop mapped to environment > default 'frontoffice'.
+ * The size prop is deprecated and only used for backward compatibility.
+ */
+const effectiveEnvironment = computed((): ButtonEnvironment => {
+  if (props.environment) {
+    return props.environment
+  }
+  if (props.size) {
+    return sizeToEnvironmentMapping[props.size]
+  }
+  return 'frontoffice'
 })
 
 /**
@@ -196,14 +223,6 @@ const iconAndLabel = computed(() => Boolean((props.label || slots.default) && pr
  */
 const isInteractive = computed(() => !props.disabled)
 
-/**
- * Maps button size to appropriate icon size
- * 
- * Uses the iconSizeMap utility to ensure icons are proportionally sized
- * relative to the button dimensions.
- */
-const mappedIconSize = computed(() => iconSizeMap[props.size])
-
 const staticClasses = [
   'relative',
   'rounded',
@@ -211,9 +230,10 @@ const staticClasses = [
   'flex-shrink',
   'items-center',
   'justify-center',
-  'font-medium',
+  'font-normal',
   'border-1',
-  'border-transparent'
+  'border-transparent',
+  'gap-8'
 ]
 
 const staticIconClasses = ['flex', 'items-center', 'justify-items-center']
@@ -221,24 +241,19 @@ const staticIconClasses = ['flex', 'items-center', 'justify-items-center']
 /**
  * Computes dynamic size-based classes for the button
  * 
- * Applies height, text size, focus states, and horizontal padding based on the size prop.
- * Uses centralized buttonSizeConfig for consistent sizing. Padding is adjusted when icons
- * are present to maintain visual balance. Focus border classes are only applied when the
- * button is not disabled.
+ * Applies fixed height, horizontal padding, and focus states based on the effective environment.
+ * Focus border classes are only applied when the button is not disabled.
  */
 const classes = computed(() => {
-  const config = buttonSizeConfig[props.size]
+  const config = buttonEnvironmentConfig[effectiveEnvironment.value]
   const heightClass = `h-${config.height}`
-  const textSizeClass = config.textSize ? `text-${config.textSize}` : null
-  const paddingClass = `px-${config.padding}`
+  const paddingXClass = `px-${config.paddingX}`
+  const minWidthClass = `min-w-${config.minWidth}`
   
   return {
     [heightClass]: true,
-    ...(textSizeClass ? { [textSizeClass]: true } : {}),
-    'focus:border-blue-600': isInteractive.value,
-    'focus:border-solid': isInteractive.value,
-    'focus:border-1': isInteractive.value,
-    [paddingClass]: !iconAndLabel.value,
+    [paddingXClass]: true,
+    [minWidthClass]: true,
     ...customVariantClasses.value
   }
 })
@@ -262,12 +277,12 @@ const containerClass = computed(() => {
 
 <template>
   <button type="button" :disabled="disabled" :class="[staticClasses, classes]">
-    <div v-if="iconAndLabel" :class="[staticIconClasses, getIconSpacingClasses('before')]">
+    <div v-if="slots.before || (iconAndLabel && iconPosition === 'before')" :class="staticIconClasses">
       <slot name="before">
         <FzIcon
           v-if="iconName && iconPosition === 'before'"
           :name="iconName"
-          :size="mappedIconSize"
+          size="md"
           :variant="iconVariant"
         />
       </slot>
@@ -277,12 +292,12 @@ const containerClass = computed(() => {
         {{ label }}
       </slot>
     </div>
-    <div v-if="slots.after || iconAndLabel" :class="[staticIconClasses, getIconSpacingClasses('after')]">
+    <div v-if="slots.after || (iconAndLabel && iconPosition === 'after')" :class="staticIconClasses">
       <slot name="after">
         <FzIcon
           v-if="iconName && iconPosition === 'after'"
           :name="iconName"
-          :size="mappedIconSize"
+          size="md"
           :variant="iconVariant"
         />
       </slot>

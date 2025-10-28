@@ -5,7 +5,7 @@ A comprehensive button component library for Vue 3 applications, featuring multi
 ## Features
 
 - **Multiple Variants**: Primary, Secondary, Invisible, Danger, and Success styles
-- **Flexible Sizing**: Four size options (xs, sm, md, lg) for different use cases
+- **Environment-Based Sizing**: Two environment options (backoffice, frontoffice) for different use cases
 - **Icon Support**: Built-in icon integration with customizable positioning
 - **Accessibility**: Full keyboard navigation and ARIA support
 - **Customizable**: Flexible styling with container class overrides
@@ -88,14 +88,25 @@ import { FzButton } from '@fiscozen/button'
 </template>
 ```
 
-### Sizes
+### Environment (Size)
 
 ```vue
 <template>
-  <FzButton size="xs" label="Extra Small" />
-  <FzButton size="sm" label="Small" />
-  <FzButton size="md" label="Medium" />
-  <FzButton size="lg" label="Large" />
+  <!-- Frontoffice environment (default) -->
+  <FzButton environment="frontoffice" label="Frontoffice Button" />
+  
+  <!-- Backoffice environment -->
+  <FzButton environment="backoffice" label="Backoffice Button" />
+</template>
+```
+
+### Size Prop (Deprecated)
+
+The `size` prop is deprecated but still functional for backward compatibility. Use `environment` instead:
+
+```vue
+<template>
+  <FzButton size="lg" label="Legacy Large" />
 </template>
 ```
 
@@ -138,9 +149,10 @@ import { FzButton } from '@fiscozen/button'
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `label` | `string` | `undefined` | The text label displayed on the button |
-| `tooltip` | `string` | `undefined` | Tooltip text shown on hover (currently hidden, for future implementation) |
+| `tooltip` | `string` | `undefined` | **Deprecated:** Tooltip text (use FzTooltip component instead) |
 | `variant` | `'primary' \| 'secondary' \| 'invisible' \| 'danger' \| 'success'` | `'primary'` | Visual style variant |
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg'` | `'md'` | Button size |
+| `environment` | `'backoffice' \| 'frontoffice'` | `'frontoffice'` | Button environment determining size and spacing |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg'` | `undefined` | **Deprecated:** Button size (use `environment` prop instead) |
 | `disabled` | `boolean` | `false` | Whether the button is disabled |
 | `iconName` | `string` | `undefined` | FontAwesome icon name (e.g., 'bell', 'save') |
 | `iconVariant` | `IconVariant` | `undefined` | FontAwesome icon variant (fas, far, fal, etc.) |
@@ -192,15 +204,6 @@ By default, the label container has the `truncate` class to handle text overflow
 <!-- Results in: class="custom-class" (no truncate) -->
 ```
 
-### Semantic Colors
-
-The `danger` and `success` variants use semantic color tokens from the design system:
-
-- **Danger**: `bg-semantic-error` with hover state `bg-semantic-error-300`
-- **Success**: `bg-semantic-success` with hover state `bg-semantic-success-300`
-
-These ensure consistent theming across the application.
-
 ## Examples
 
 ### Form Actions
@@ -246,14 +249,14 @@ These ensure consistent theming across the application.
       label="Back" 
       iconName="arrow-left" 
       iconPosition="before"
-      size="sm"
+      environment="backoffice"
     />
     <FzButton 
       variant="primary" 
       label="Continue" 
       iconName="arrow-right" 
       iconPosition="after"
-      size="sm"
+      environment="backoffice"
     />
   </div>
 </template>
@@ -299,23 +302,17 @@ async function handleAction() {
 
 ## Notes
 
-### Typography
 
-The button uses the following text sizes based on the `size` prop:
-- `xs`: `text-xs` (12px)
-- `sm`: `text-sm` (14px)
-- `md`: default (16px)
-- `lg`: `text-lg` (18px)
 
-Font weight is always `font-medium` for consistency.
+### Environment vs Size
 
-### Icon Sizing
+The button supports two environments that determine sizing:
+- **backoffice**: Compact button for internal applications
+- **frontoffice**: Larger button for customer-facing interfaces (default)
 
-Icons are automatically sized based on the button size:
-- `xs` → icon size `sm`
-- `sm` → icon size `md`
-- `md` → icon size `lg`
-- `lg` → icon size `lg`
+The deprecated `size` prop maps to environments as follows:
+- `xs`, `sm`, `md` → maps to `backoffice`
+- `lg` → maps to `frontoffice`
 
 ### Variant Selection
 
