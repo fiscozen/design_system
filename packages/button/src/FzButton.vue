@@ -107,7 +107,7 @@ watch(() => props.tooltip, (tooltip) => {
       'Please use the FzTooltip component to wrap your button instead.'
     )
   }
-})
+}, { immediate: true })
 
 /**
  * Emits deprecation warnings for deprecated size prop
