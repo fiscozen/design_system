@@ -65,14 +65,54 @@ Elements align horizontally in a single row with vertical centering.
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `main` | `boolean` | `false` | If `true`, uses main container spacing (larger gaps for page-level sections) |
-| `gap` | `'sm' \| 'base' \| 'lg'` | `'base'` | Gap size between elements |
-| `horizontal` | `boolean` | `false` | If `true`, elements align horizontally. Otherwise, vertically (default) |
-| `layout` | `'default' \| 'expand-first' \| 'expand-all' \| 'space-between'` | `'default'` | Layout behavior for horizontal containers (controls how child elements expand). Only applies when `horizontal` is `true` |
-| `alignItems` | `'start' \| 'center' \| 'end' \| 'stretch' \| 'baseline'` | `'stretch'` for vertical, `'center'` for horizontal | Alignment of child elements on the cross-axis. In vertical containers: horizontal alignment (left/center/right). In horizontal containers: vertical alignment (top/center/bottom) |
-| `tag` | `string` | `'div'` | HTML tag to use for the container element |
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>main</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If <code>true</code>, uses main container spacing (larger gaps for page-level sections)</td>
+    </tr>
+    <tr>
+      <td><code>gap</code></td>
+      <td><code>'sm' | 'base' | 'lg'</code></td>
+      <td><code>'base'</code></td>
+      <td>Gap size between elements</td>
+    </tr>
+    <tr>
+      <td><code>horizontal</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If <code>true</code>, elements align horizontally. Otherwise, vertically (default)</td>
+    </tr>
+    <tr>
+      <td><code>layout</code></td>
+      <td><code>'default' | 'expand-first' | 'expand-all' | 'space-between'</code></td>
+      <td><code>'default'</code></td>
+      <td>Layout behavior for horizontal containers (controls how child elements expand). Only applies when <code>horizontal</code> is <code>true</code></td>
+    </tr>
+    <tr>
+      <td><code>alignItems</code></td>
+      <td><code>'start' | 'center' | 'end' | 'stretch' | 'baseline'</code></td>
+      <td><code>'stretch'</code> for vertical, <code>'center'</code> for horizontal</td>
+      <td>Alignment of child elements on the cross-axis. In vertical containers: horizontal alignment (left/center/right). In horizontal containers: vertical alignment (top/center/bottom)</td>
+    </tr>
+    <tr>
+      <td><code>tag</code></td>
+      <td><code>string</code></td>
+      <td><code>'div'</code></td>
+      <td>HTML tag to use for the container element</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Gap Sizes
 
@@ -80,21 +120,71 @@ The component uses CSS custom properties for consistent spacing across the desig
 
 ### Main Containers (`main={true}`)
 
-| Size | CSS Variable | Value |
-|------|--------------|-------|
-| `sm` | `--main-content-sm` | 32px |
-| `base` | `--main-content-base` | 48px |
-| `lg` | `--main-content-lg` | 64px |
+<table>
+  <thead>
+    <tr>
+      <th>Size</th>
+      <th>CSS Variable</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>sm</code></td>
+      <td><code>--main-content-sm</code></td>
+      <td>32px</td>
+    </tr>
+    <tr>
+      <td><code>base</code></td>
+      <td><code>--main-content-base</code></td>
+      <td>48px</td>
+    </tr>
+    <tr>
+      <td><code>lg</code></td>
+      <td><code>--main-content-lg</code></td>
+      <td>64px</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Section Containers (`main={false}` or default)
 
-| Size | CSS Variable | Value |
-|------|--------------|-------|
-| `none` | `--section-content-none` | 0px |
-| `xs` | `--section-content-xs` | 8px |
-| `sm` | `--section-content-sm` | 16px |
-| `base` | `--section-content-base` | 24px |
-| `lg` | `--section-content-lg` | 32px |
+<table>
+  <thead>
+    <tr>
+      <th>Size</th>
+      <th>CSS Variable</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>none</code></td>
+      <td><code>--section-content-none</code></td>
+      <td>0px</td>
+    </tr>
+    <tr>
+      <td><code>xs</code></td>
+      <td><code>--section-content-xs</code></td>
+      <td>8px</td>
+    </tr>
+    <tr>
+      <td><code>sm</code></td>
+      <td><code>--section-content-sm</code></td>
+      <td>16px</td>
+    </tr>
+    <tr>
+      <td><code>base</code></td>
+      <td><code>--section-content-base</code></td>
+      <td>24px</td>
+    </tr>
+    <tr>
+      <td><code>lg</code></td>
+      <td><code>--section-content-lg</code></td>
+      <td>32px</td>
+    </tr>
+  </tbody>
+</table>
 
 **Main containers** are intended for page-level sections and use larger spacing values.
 
@@ -125,13 +215,42 @@ The `layout` prop controls how child elements expand to fill available space in 
 
 ### Available Layouts
 
-| Layout | Status | Description |
-|--------|--------|-------------|
-| `default` | Implemented | All elements maintain their natural size (`flex-grow: 0`). This is the default behavior. |
-| `expand-first` | Implemented | The first element expands to fill available space (`flex-grow: 1`), while other elements maintain their natural size. |
-| `expand-all` | Implemented | All elements expand equally to fill available space (`flex-grow: 1` on all children). |
-| `space-between` | Implemented | Elements are distributed with space between them (`justify-content: space-between`). Elements maintain their natural size. |
-| `expand-last` | Future | The last element will expand to fill available space, while other elements maintain their natural size. |
+<table>
+  <thead>
+    <tr>
+      <th>Layout</th>
+      <th>Status</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>default</code></td>
+      <td>Implemented</td>
+      <td>All elements maintain their natural size (<code>flex-grow: 0</code>). This is the default behavior.</td>
+    </tr>
+    <tr>
+      <td><code>expand-first</code></td>
+      <td>Implemented</td>
+      <td>The first element expands to fill available space (<code>flex-grow: 1</code>), while other elements maintain their natural size.</td>
+    </tr>
+    <tr>
+      <td><code>expand-all</code></td>
+      <td>Implemented</td>
+      <td>All elements expand equally to fill available space (<code>flex-grow: 1</code> on all children).</td>
+    </tr>
+    <tr>
+      <td><code>space-between</code></td>
+      <td>Implemented</td>
+      <td>Elements are distributed with space between them (<code>justify-content: space-between</code>). Elements maintain their natural size.</td>
+    </tr>
+    <tr>
+      <td><code>expand-last</code></td>
+      <td>Future</td>
+      <td>The last element will expand to fill available space, while other elements maintain their natural size.</td>
+    </tr>
+  </tbody>
+</table>
 
 ### When to Use Each Layout
 
