@@ -371,6 +371,8 @@ describe.concurrent('FzButton', () => {
       expect(button.classes()).toContain('items-center')
       expect(button.classes()).toContain('justify-center')
       expect(button.classes()).toContain('font-normal')
+      expect(button.classes()).toContain('!text-[16px]')
+      expect(button.classes()).toContain('!leading-[20px]')
       expect(button.classes()).toContain('border-1')
     })
 
