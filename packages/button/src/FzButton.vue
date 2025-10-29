@@ -152,6 +152,7 @@ const customVariantClasses = computed(() => {
         'text-grey-500': true,
         '!border-grey-200': true,
         'hover:bg-grey-100': isInteractive.value,
+        'hover:!border-blue-600': isInteractive.value,
         'focus:bg-core-white': isInteractive.value,
         'focus:!border-grey-500': isInteractive.value,
         'disabled:bg-grey-50': true,
@@ -164,9 +165,12 @@ const customVariantClasses = computed(() => {
         'text-grey-500': true,
         '!border-transparent': true,
         'hover:bg-grey-100': isInteractive.value,
+        'hover:!border-blue-600': isInteractive.value,
         'focus:bg-transparent': isInteractive.value,
         'focus:!border-grey-500': isInteractive.value,
+        'disabled:bg-grey-50': true,
         'disabled:text-grey-200': true,
+        'disabled:!border-grey-100': true,
       }
     case 'danger':
       return {
@@ -240,6 +244,8 @@ const staticClasses = [
   'items-center',
   'justify-center',
   'font-normal',
+  '!text-[16px]',
+  '!leading-[20px]',
   'border-1',
   'border-transparent',
   'gap-8'
@@ -270,17 +276,18 @@ const classes = computed(() => {
 /**
  * Computes classes for the label/slot container
  * 
- * By default, includes 'truncate' class to handle text overflow with ellipsis.
+ * By default, includes 'truncate' class to handle text overflow with ellipsis,
+ * plus typography classes (font-normal, text-16, leading-20) for consistent text styling.
  * When overrideContainerClass is true, only the custom containerClass is applied,
  * allowing full control over container styling. Otherwise, custom classes are merged
- * with the default truncate behavior.
+ * with the default truncate behavior and typography.
  */
 const containerClass = computed(() => {
   if (props.overrideContainerClass) {
     return props.containerClass
   }
 
-  return ["truncate", props.containerClass]
+  return ["truncate", "font-normal", "!text-[16px]", "!leading-[20px]", props.containerClass]
 });
 </script>
 

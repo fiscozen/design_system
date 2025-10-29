@@ -216,8 +216,9 @@ export const Secondary: Story = {
     await expect(button.classList.contains('text-grey-500')).toBe(true)
     await expect(button.classList.contains('!border-grey-200')).toBe(true)
     
-    // Verify hover state class
+    // Verify hover state classes
     await expect(button.classList.contains('hover:bg-grey-100')).toBe(true)
+    await expect(button.classList.contains('hover:!border-blue-600')).toBe(true)
     
     // Verify focus state classes
     await expect(button.classList.contains('focus:bg-core-white')).toBe(true)
@@ -245,15 +246,18 @@ export const Invisible: Story = {
     await expect(button.classList.contains('text-grey-500')).toBe(true)
     await expect(button.classList.contains('!border-transparent')).toBe(true)
     
-    // Verify hover state class
+    // Verify hover state classes
     await expect(button.classList.contains('hover:bg-grey-100')).toBe(true)
+    await expect(button.classList.contains('hover:!border-blue-600')).toBe(true)
     
     // Verify focus state classes
     await expect(button.classList.contains('focus:bg-transparent')).toBe(true)
     await expect(button.classList.contains('focus:!border-grey-500')).toBe(true)
     
-    // Verify disabled state class
+    // Verify disabled state classes (same as secondary)
+    await expect(button.classList.contains('disabled:bg-grey-50')).toBe(true)
     await expect(button.classList.contains('disabled:text-grey-200')).toBe(true)
+    await expect(button.classList.contains('disabled:!border-grey-100')).toBe(true)
   }
 }
 
@@ -355,7 +359,9 @@ export const DisabledStates: Story = {
         <div class="flex flex-row gap-12">
           <FzButton variant="primary" label="Primary Disabled" :disabled="true" />
           <FzButton variant="secondary" label="Secondary Disabled" :disabled="true" />
+          <FzButton variant="invisible" label="Invisible Disabled" :disabled="true" />
           <FzButton variant="danger" label="Danger Disabled" :disabled="true" />
+          <FzButton variant="success" label="Success Disabled" :disabled="true" />
         </div>
       </div>
     `
