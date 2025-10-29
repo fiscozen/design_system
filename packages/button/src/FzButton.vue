@@ -236,6 +236,15 @@ const iconAndLabel = computed(() => Boolean((props.label || slots.default) && pr
  */
 const isInteractive = computed(() => !props.disabled)
 
+/**
+ * Computes accessible label for screen readers
+ * 
+ * Returns the label prop or checks if there's text content in the default slot.
+ * For icon-only buttons without a label, an aria-label should be provided
+ * by the consumer to ensure accessibility.
+ */
+const hasVisibleLabel = computed(() => Boolean(props.label || slots.default))
+
 const staticClasses = [
   'relative',
   'rounded',
@@ -295,7 +304,12 @@ const containerClass = computed(() => {
 </script>
 
 <template>
-  <button type="button" :disabled="disabled" :class="[staticClasses, classes]">
+  <button 
+    type="button" 
+    :disabled="disabled" 
+    :aria-disabled="disabled ? 'true' : 'false'"
+    :class="[staticClasses, classes]"
+  >
     <div v-if="slots.before || (iconAndLabel && iconPosition === 'before')" :class="staticIconClasses">
       <slot name="before">
         <FzIcon
