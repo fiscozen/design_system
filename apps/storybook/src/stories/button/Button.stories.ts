@@ -377,18 +377,29 @@ export const DisabledStates: Story = {
       expect(button.hasAttribute('disabled')).toBe(true)
     })
     
-    // Verify primary disabled state
+    // Verify primary disabled state (index 0)
     const primaryBtn = buttons[0]
     await expect(primaryBtn.classList.contains('disabled:bg-blue-200')).toBe(true)
     
-    // Verify secondary disabled state
+    // Verify secondary disabled state (index 1)
     const secondaryBtn = buttons[1]
     await expect(secondaryBtn.classList.contains('disabled:bg-grey-50')).toBe(true)
     await expect(secondaryBtn.classList.contains('disabled:text-grey-200')).toBe(true)
+    await expect(secondaryBtn.classList.contains('disabled:!border-grey-100')).toBe(true)
     
-    // Verify danger disabled state
-    const dangerBtn = buttons[2]
+    // Verify invisible disabled state (index 2)
+    const invisibleBtn = buttons[2]
+    await expect(invisibleBtn.classList.contains('disabled:bg-grey-50')).toBe(true)
+    await expect(invisibleBtn.classList.contains('disabled:text-grey-200')).toBe(true)
+    await expect(invisibleBtn.classList.contains('disabled:!border-grey-100')).toBe(true)
+    
+    // Verify danger disabled state (index 3)
+    const dangerBtn = buttons[3]
     await expect(dangerBtn.classList.contains('disabled:bg-semantic-error-100')).toBe(true)
+    
+    // Verify success disabled state (index 4)
+    const successBtn = buttons[4]
+    await expect(successBtn.classList.contains('disabled:bg-semantic-success-100')).toBe(true)
     
     // Accessibility: Verify disabled buttons are not in tab order
     buttons.forEach(button => {
