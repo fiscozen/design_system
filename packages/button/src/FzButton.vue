@@ -29,7 +29,7 @@
 import { computed, useSlots, watch } from 'vue'
 import { type IconVariant, type IconSize, FzIcon } from '@fiscozen/icons'
 import type { ButtonSize, ButtonVariant, ButtonEnvironment } from './types'
-import { sizeToEnvironmentMapping, buttonEnvironmentConfig } from './utils'
+import { sizeToEnvironmentMapping } from './utils'
 
 const props = withDefaults(
   defineProps<{
@@ -256,19 +256,22 @@ const staticIconClasses = ['flex', 'items-center', 'justify-items-center']
 /**
  * Computes dynamic size-based classes for the button
  * 
- * Applies fixed height, horizontal padding, and focus states based on the effective environment.
  * Focus border classes are only applied when the button is not disabled.
  */
 const classes = computed(() => {
-  const config = buttonEnvironmentConfig[effectiveEnvironment.value]
-  const heightClass = `h-${config.height}`
-  const paddingXClass = `px-${config.paddingX}`
-  const minWidthClass = `min-w-${config.minWidth}`
+  const env = effectiveEnvironment.value
   
   return {
-    [heightClass]: true,
-    [paddingXClass]: true,
-    [minWidthClass]: true,
+    // Height classes (explicit for PurgeCSS detection)
+    'h-32': env === 'backoffice',
+    'h-44': env === 'frontoffice',
+    
+    // Padding classes (same for both environments)
+    'px-12': true,
+    
+    // Min-width classes (same for both environments)
+    'min-w-96': true,
+    
     ...customVariantClasses.value
   }
 })
