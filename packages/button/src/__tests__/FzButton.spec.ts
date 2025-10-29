@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import FzButton from '../FzButton.vue'
 import { FzIcon } from '@fiscozen/icons'
 
-describe.concurrent('FzButton', () => {
+describe('FzButton', () => {
   describe('Basic Rendering', () => {
     it('should render with label', () => {
       const wrapper = mount(FzButton, {
