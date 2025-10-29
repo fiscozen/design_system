@@ -32,7 +32,7 @@ const props = defineProps<{
 }>();
 
 const staticClass =
-  "group flex flex-col justify-center text-left min-h-40 font-normal cursor-pointer rounded";
+  "group flex flex-col justify-center text-left font-normal cursor-pointer rounded";
 
 const mappedClass = {
   sm: "text-sm px-14 py-4",
