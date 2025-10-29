@@ -54,11 +54,11 @@ watch(
   (size) => {
     if (size !== undefined) {
       console.warn(
-        '[FzCheckboxGroup] The "size" prop is deprecated and will be removed in a future version. Checkboxes now have a fixed size.',
+        '[FzCheckboxGroup] The "size" prop is deprecated and will be removed in a future version. Checkboxes now have a fixed size.'
       );
     }
   },
-  { immediate: true },
+  { immediate: true }
 );
 
 /** Unique identifier for the checkbox group, used for ARIA relationships */
@@ -192,7 +192,7 @@ const computedAriaDescribedby = computed<string | undefined>(() => {
       />
     </div>
     <!-- Error message display with accessible ARIA live region -->
-    <ErrorAlert v-if="error && $slots.error" :id="id + '-error'" size="md">
+    <ErrorAlert v-if="error && $slots.error" :id="id + '-error'">
       <slot name="error" />
     </ErrorAlert>
   </div>
