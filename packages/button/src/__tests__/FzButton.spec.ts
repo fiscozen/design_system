@@ -340,6 +340,30 @@ describe('FzButton', () => {
       const clickEvs = wrapper.emitted('click')
       expect(clickEvs).toBeUndefined()
     })
+
+    it('should set aria-disabled to "true" when disabled', () => {
+      const wrapper = mount(FzButton, {
+        props: {
+          label: 'Disabled Button',
+          disabled: true
+        }
+      })
+
+      const button = wrapper.find('button')
+      expect(button.attributes('aria-disabled')).toBe('true')
+    })
+
+    it('should set aria-disabled to "false" when not disabled', () => {
+      const wrapper = mount(FzButton, {
+        props: {
+          label: 'Enabled Button',
+          disabled: false
+        }
+      })
+
+      const button = wrapper.find('button')
+      expect(button.attributes('aria-disabled')).toBe('false')
+    })
   })
 
   describe('Events', () => {
