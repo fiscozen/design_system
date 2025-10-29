@@ -28,11 +28,6 @@ defineProps<{
    * @example "checkbox-123-error"
    */
   id: string;
-
-  /**
-   * Size variant matching the parent component.
-   */
-  size: "sm" | "md";
 }>();
 </script>
 
@@ -54,7 +49,6 @@ defineProps<{
   -->
   <FzAlert
     :id="id"
-    :size="size"
     type="error"
     alertStyle="simple"
     role="alert"

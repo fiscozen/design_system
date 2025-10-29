@@ -375,7 +375,7 @@ onMounted(() => {
       </FzTooltip>
     </div>
     <!-- Error message display with accessible ARIA live region -->
-    <ErrorAlert v-if="error && $slots.error" :id="`${id}-error`" size="md">
+    <ErrorAlert v-if="error && $slots.error" :id="`${id}-error`">
       <slot name="error" />
     </ErrorAlert>
 
