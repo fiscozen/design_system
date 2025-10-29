@@ -116,6 +116,9 @@ export const Primary: Story = {
     
     // Accessibility: Verify button type
     await expect(button.getAttribute('type')).toBe('button')
+    
+    // Accessibility: Verify aria-disabled is set to "false" when enabled
+    await expect(button.getAttribute('aria-disabled')).toBe('false')
   }
 }
 
@@ -405,6 +408,8 @@ export const DisabledStates: Story = {
     buttons.forEach(button => {
       // Disabled buttons should still be focusable via keyboard for accessibility
       expect(button.getAttribute('disabled')).not.toBeNull()
+      // Verify aria-disabled is set to "true" for all disabled buttons
+      expect(button.getAttribute('aria-disabled')).toBe('true')
     })
   }
 }
