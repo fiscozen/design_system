@@ -3,7 +3,7 @@
     <label :class="labelClasses" :for="id"
       >{{ label }}{{ required ? " *" : "" }}</label
     >
-    <div class="relative">
+    <div class="relative w-full">
       <textarea
         :id
         :name
@@ -59,7 +59,7 @@ const emit = defineEmits<FzTextareaEvents>();
 const model = defineModel<string>();
 
 const containerClasses = computed(() => [
-  "flex flex-col gap-8 items-start",
+  "flex flex-col gap-8 items-start w-full",
   {
     "cursor-not-allowed": props.disabled,
   },
@@ -87,7 +87,7 @@ const mapResizeToClass = {
 };
 
 const classes = computed(() => [
-  "border-1 rounded p-10 placeholder:text-gray-300 disabled:bg-grey-100 disabled:border-grey-100 block invalid:border-semantic-error",
+  "border-1 rounded p-10 placeholder:text-gray-300 disabled:bg-grey-100 disabled:border-grey-100 block invalid:border-semantic-error w-full",
   mapSizeToClass[props.size],
   props.error ? "border-semantic-error" : "border-grey-300",
   mapResizeToClass[props.resize],
