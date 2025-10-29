@@ -1,0 +1,205 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Documentation/Form/Checkbox" />
+
+# FzCheckbox
+
+A fully accessible checkbox component with support for single selection (boolean), multi-selection (array), indeterminate states, and hierarchical relationships.
+
+## Features
+
+- Single checkbox (boolean v-model)
+- Indeterminate state for parent checkboxes
+- Emphasis mode for highlighted checkboxes
+- Error state with validation messages
+- Disabled state
+- Tooltip support
+- Full keyboard navigation
+- WCAG 2.1 AA compliant
+
+## Installation
+
+```bash
+pnpm add @fiscozen/checkbox
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Text label displayed next to the checkbox</td>
+    </tr>
+    <tr>
+      <td><code>value</code></td>
+      <td><code>string | number | boolean</code></td>
+      <td>-</td>
+      <td>Value used in array mode (multi-select)</td>
+    </tr>
+    <tr>
+      <td><code>indeterminate</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows indeterminate state (partial selection)</td>
+    </tr>
+    <tr>
+      <td><code>emphasis</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Applies emphasis styling (blue color)</td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows error state with red color</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Disables the checkbox</td>
+    </tr>
+    <tr>
+      <td><code>required</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Marks the checkbox as required</td>
+    </tr>
+    <tr>
+      <td><code>standalone</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Hides the label (checkbox only)</td>
+    </tr>
+    <tr>
+      <td><code>tooltip</code></td>
+      <td><code>object</code></td>
+      <td>-</td>
+      <td>Tooltip configuration object</td>
+    </tr>
+    <tr>
+      <td><code>checkboxId</code></td>
+      <td><code>string</code></td>
+      <td>auto-generated</td>
+      <td>Custom ID for the checkbox input</td>
+    </tr>
+    <tr>
+      <td><code>ariaOwns</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>ARIA owns attribute for parent-child relationships</td>
+    </tr>
+  </tbody>
+</table>
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>error</code></td>
+      <td>Error message content (shown when <code>error={true}</code>)</td>
+    </tr>
+    <tr>
+      <td><code>children</code></td>
+      <td>Child checkboxes for hierarchical structures</td>
+    </tr>
+  </tbody>
+</table>
+
+## Usage Examples
+
+### Single Checkbox (Boolean)
+
+```vue
+<template>
+  <FzCheckbox v-model="accepted" label="I accept the terms and conditions" />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { FzCheckbox } from '@fiscozen/checkbox'
+
+const accepted = ref(false)
+</script>
+```
+
+### Emphasis Mode
+
+```vue
+<FzCheckbox v-model="selected" label="Important option" emphasis />
+```
+
+### Error State
+
+```vue
+<FzCheckbox v-model="selected" label="Required field" error>
+  <template #error>
+    This field is required
+  </template>
+</FzCheckbox>
+```
+
+### Indeterminate State
+
+```vue
+<FzCheckbox v-model="selected" label="Select all" :indeterminate="true" />
+```
+
+### With Tooltip
+
+```vue
+<FzCheckbox 
+  v-model="selected" 
+  label="Advanced option"
+  :tooltip="{ content: 'This option enables advanced features' }"
+/>
+```
+
+### Disabled
+
+```vue
+<FzCheckbox v-model="selected" label="Disabled option" disabled />
+```
+
+## Accessibility
+
+- **Keyboard navigation**: Full support for Tab, Space, and Enter keys
+- **Screen readers**: Proper ARIA labels and state announcements
+- **Focus indicators**: Visible focus ring for keyboard navigation
+- **Semantic HTML**: Uses native checkbox input for proper form behavior
+- **WCAG 2.1 AA**: Meets color contrast and accessibility requirements
+
+### ARIA Attributes
+
+- `aria-checked`: Announces checked/unchecked/mixed (indeterminate) state
+- `aria-label`: Provides accessible name when standalone
+- `aria-labelledby`: Links to visible label text
+- `aria-describedby`: Links to error messages and help text
+- `aria-required`: Indicates required fields
+- `aria-invalid`: Indicates validation errors
+- `aria-owns`: Establishes parent-child relationships
+
+## Notes
+
+### Deprecated Props
+
+- **`size`**: The size prop is deprecated and will be removed in a future version. Checkboxes now have a fixed size (md).

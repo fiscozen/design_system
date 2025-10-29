@@ -11,7 +11,6 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: false,
       },
     });
@@ -50,7 +49,6 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: false,
         emphasis: true,
       },
@@ -66,7 +64,6 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: false,
         disabled: true,
       },
@@ -81,7 +78,6 @@ describe("FzCheckbox", () => {
         props: {
           label: "Test Checkbox",
           value: "test",
-          size: "md",
           modelValue: false,
           disabled: true,
         },
@@ -99,7 +95,6 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: undefined,
       },
     });
@@ -112,7 +107,6 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: null,
       },
     });
@@ -125,7 +119,6 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: false,
         required: true,
       },
@@ -147,7 +140,6 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: false,
         standalone: true,
       },
@@ -163,7 +155,6 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: false,
         error: true,
       },
@@ -184,7 +175,6 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: false,
         indeterminate: true,
       },

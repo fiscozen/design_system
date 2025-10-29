@@ -104,7 +104,6 @@ const options = [
   <FzCheckboxGroup
     v-model="selectedOptions"
     label="Choose your options"
-    size="md"
     :options="options"
   >
     <template #help>
@@ -126,7 +125,6 @@ Core checkbox component supporting both single and multi-selection patterns. Can
 |------|------|---------|-------------|
 | `label` | `string` | **required** | Checkbox label text |
 | `value` | `string \| number \| boolean` | `label` | Value when used in array model |
-| `size` | `'sm' \| 'md'` | `'md'` | Size variant |
 | `indeterminate` | `boolean` | `false` | Shows indeterminate state (partial selection) |
 | `emphasis` | `boolean` | `false` | Applies emphasis styling (blue when checked) |
 | `disabled` | `boolean` | `false` | Disables the checkbox |
@@ -171,7 +169,6 @@ Container component for managing multiple related checkboxes with shared labelin
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `label` | `string` | **required** | Group label |
-| `size` | `'sm' \| 'md'` | **required** | Size for all checkboxes |
 | `options` | `ParentCheckbox[]` | **required** | Array of checkbox options |
 | `emphasis` | `boolean` | `false` | Applies to all checkboxes |
 | `disabled` | `boolean` | `false` | Disables all checkboxes |
@@ -258,34 +255,6 @@ const enableFeature = ref(false);
 </template>
 ```
 
-### Size Variants
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue';
-import { FzCheckbox } from '@fiscozen/checkbox';
-
-const smallCheck = ref(false);
-const mediumCheck = ref(false);
-</script>
-
-<template>
-  <div>
-    <FzCheckbox 
-      v-model="smallCheck" 
-      label="Small checkbox" 
-      size="sm" 
-    />
-    
-    <FzCheckbox 
-      v-model="mediumCheck" 
-      label="Medium checkbox" 
-      size="md" 
-    />
-  </div>
-</template>
-```
-
 ### Emphasis Mode
 
 ```vue
@@ -362,7 +331,6 @@ const permissionOptions = [
   <FzCheckboxGroup
     v-model="selectedPermissions"
     label="Select Permissions"
-    size="md"
     :options="permissionOptions"
   >
     <template #help>
@@ -394,7 +362,6 @@ const dayOptions = [
   <FzCheckboxGroup
     v-model="selectedDays"
     label="Working Days"
-    size="sm"
     :options="dayOptions"
     horizontal
   />
@@ -430,7 +397,6 @@ const options = [
     <FzCheckboxGroup
       v-model="groupSelection"
       label="Disabled Group"
-      size="md"
       :options="options"
       disabled
     />
@@ -468,7 +434,6 @@ function handleBlur() {
     <FzCheckboxGroup
       v-model="selectedOptions"
       label="Required Selection"
-      size="md"
       :options="options"
       required
       :error="hasError"
