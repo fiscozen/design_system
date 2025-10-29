@@ -1,76 +1,108 @@
 /**
  * Type definitions for the Fiscozen Checkbox component library.
- * 
+ *
+ * Provides TypeScript type definitions for checkbox components including
+ * single checkboxes, checkbox groups, and hierarchical checkbox structures.
+ *
  * @module @fiscozen/checkbox/types
  */
 import { FzTooltipProps } from "@fiscozen/tooltip";
 
 /**
  * Props for the FzCheckbox component.
- * 
+ *
  * Supports both single-selection (boolean v-model) and multi-selection (array v-model).
  * Can be used standalone or as part of a checkbox group.
  */
 export type FzCheckboxProps = {
   /**
-   * The label of the checkbox
+   * Text label displayed next to the checkbox.
+   * Used for aria-labelledby when not in standalone mode.
    */
   label: string;
+
   /**
-   * The value of the checkbox. If not provided, the value will be the label
+   * Value associated with the checkbox when used in array v-model.
+   * Falls back to label if not provided.
+   *
+   * @default label
    */
   value?: string | number | boolean;
+
   /**
-   * The size of the checkbox
+   * Visual size of the checkbox.
+   *
+   * @deprecated This prop is deprecated and will be removed in a future version.
+   * Checkboxes now have a fixed size equivalent to the former "md" size.
    */
   size?: "sm" | "md";
   /**
-   * If true, the checkbox displays an indeterminate state (partial selection).
-   * Typically used for parent checkboxes when some (but not all) children are selected.
-   * Screen readers announce this as "mixed" state via aria-checked="mixed".
+   * Displays indeterminate state (partial selection).
+   * Used for parent checkboxes when some (but not all) children are selected.
+   * Screen readers announce this as "mixed" via aria-checked="mixed".
+   *
+   * @default false
    */
   indeterminate?: boolean;
+
   /**
-   * If true, applies emphasis styling (icon turns blue when checked).
-   * Used to highlight important or primary selection options.
+   * Applies emphasis styling with blue icon when checked.
+   * Highlights important or primary selection options.
+   *
+   * @default false
    */
   emphasis?: boolean;
+
   /**
-   * If true, the checkbox will be disabled
+   * Disables the checkbox, preventing user interaction.
+   *
+   * @default false
    */
   disabled?: boolean;
+
   /**
-   * If true, the checkbox will be in an error state
+   * Shows error state with red styling.
+   * Use with error slot to display validation messages.
+   *
+   * @default false
    */
   error?: boolean;
+
   /**
-   * If the checkbox is required
+   * Marks the checkbox as required for form validation.
+   * Adds aria-required attribute for accessibility.
+   *
+   * @default false
    */
   required?: boolean;
   /**
-   * If true, renders only the checkbox icon without label text.
-   * Useful for compact UIs or when label is provided externally.
-   * Ensure aria-label is provided for accessibility.
+   * Renders only the checkbox icon without label text.
+   * Label is used for aria-label instead of being displayed.
+   * Useful for compact UIs or table cells.
+   *
+   * @default false
    */
   standalone?: boolean;
+
   /**
-   * Tooltip props for the checkbox
+   * Configuration for optional tooltip icon.
+   * Displays info icon next to checkbox with hover tooltip.
    */
   tooltip?: FzTooltipProps;
   /**
-   * Space-separated list of child checkbox IDs that this checkbox controls.
-   * Used for aria-owns attribute to establish semantic parent-child relationships.
-   * Automatically managed by FzCheckboxGroupOption for hierarchical structures.
-   * 
+   * Space-separated list of child checkbox IDs for aria-owns.
+   * Establishes semantic parent-child relationships for screen readers.
+   * Automatically managed by FzCheckboxGroupOption in hierarchical structures.
+   *
    * @example "checkbox-child-0 checkbox-child-1 checkbox-child-2"
    */
   ariaOwns?: string;
-  
+
   /**
    * Custom ID for the checkbox input element.
-   * If not provided, a random ID will be auto-generated.
-   * Used by FzCheckboxGroupOption to create deterministic IDs for ARIA relationships.
-   * 
+   * Auto-generated if not provided using timestamp + random suffix.
+   * Used by FzCheckboxGroupOption for deterministic ARIA relationships.
+   *
    * @example "my-custom-checkbox-id"
    */
   checkboxId?: string;
@@ -78,34 +110,38 @@ export type FzCheckboxProps = {
 
 /**
  * Props for the FzCheckboxGroup component.
- * 
+ *
  * Container component for managing multiple related checkboxes with shared labeling,
- * validation, and accessibility features.
+ * validation, and accessibility features. Supports both flat lists and hierarchical
+ * parent-child checkbox structures with automatic indeterminate state management.
  */
 export type FzCheckboxGroupProps = {
   /**
-   * Label for the entire checkbox group.
-   * Used for aria-labelledby to provide accessible name for the group.
+   * Label text for the entire checkbox group.
+   * Connected to group via aria-labelledby for screen reader accessibility.
    */
   label: string;
-  
+
   /**
-   * Size variant for all checkboxes in the group.
-   * @default "md"
+   * Visual size for all checkboxes in the group.
+   *
+   * @deprecated This prop is deprecated and will be removed in a future version.
+   * Checkboxes now have a fixed size equivalent to the former "md" size.
    */
-  size: "sm" | "md";
-  
+  size?: "sm" | "md";
+
   /**
    * Array of checkbox options to render.
-   * Supports both flat lists and hierarchical parent-child structures.
-   * 
+   * Supports flat lists and hierarchical parent-child structures.
+   * Parent checkboxes automatically show indeterminate state when partially selected.
+   *
    * @example
    * // Flat list
    * [
    *   { label: "Option 1", value: "opt1" },
    *   { label: "Option 2", value: "opt2" }
    * ]
-   * 
+   *
    * @example
    * // Hierarchical structure
    * [
@@ -120,44 +156,63 @@ export type FzCheckboxGroupProps = {
    * ]
    */
   options: ParentCheckbox[];
+
   /**
-   * If true, the checkbox will be emphasized
+   * Applies emphasis styling to all checkboxes in the group.
+   * Icons turn blue when checked.
+   *
+   * @default false
    */
   emphasis?: boolean;
+
   /**
-   * If true, the checkbox will be disabled
+   * Disables all checkboxes in the group.
+   *
+   * @default false
    */
   disabled?: boolean;
+
   /**
-   * If true, the checkbox will be in an error state
+   * Shows error state for all checkboxes.
+   * Use with error slot to display validation messages.
+   *
+   * @default false
    */
   error?: boolean;
+
   /**
-   * If the checkbox group is required
+   * Marks the group as required for form validation.
+   * Adds aria-required to the group container.
+   *
+   * @default false
    */
   required?: boolean;
+
   /**
-   * If true, arranges checkboxes horizontally in a row instead of vertically.
-   * @default false (vertical layout)
+   * Arranges checkboxes horizontally instead of vertically.
+   * Useful for compact layouts or inline forms.
+   *
+   * @default false
    */
   horizontal?: boolean;
 };
 
 /**
- * Checkbox option type that can optionally have child checkboxes.
- * Used for hierarchical checkbox structures with parent-child relationships.
+ * Checkbox option that can optionally have child checkboxes.
+ * Used for hierarchical structures with parent-child relationships.
+ * Parent checkboxes automatically display indeterminate state when children are partially selected.
  */
-export type ParentCheckbox = ChildCheckbox & { 
+export type ParentCheckbox = ChildCheckbox & {
   /**
-   * Optional array of child checkboxes.
-   * When present, the parent checkbox will display indeterminate state
-   * when children are partially selected.
+   * Optional array of child checkboxes for hierarchical structures.
+   * Parent shows indeterminate state when some (but not all) children are selected.
+   * Parent checkbox controls all children when toggled.
    */
-  children?: ChildCheckbox[] 
+  children?: ChildCheckbox[];
 };
 
 /**
- * Child checkbox props (omits 'size' as it's inherited from group).
- * Used for individual options within a checkbox group.
+ * Individual checkbox option within a group.
+ * Inherits all FzCheckboxProps except 'size' which is controlled by the parent group.
  */
 export type ChildCheckbox = Omit<FzCheckboxProps, "size">;

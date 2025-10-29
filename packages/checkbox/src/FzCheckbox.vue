@@ -18,18 +18,33 @@
  * // Indeterminate checkbox (parent with children)
  * <FzCheckbox v-model="selection" :indeterminate="true" label="Select All" />
  */
-import { computed, onMounted, shallowRef } from "vue";
+import { computed, onMounted, shallowRef, watch } from "vue";
 import { FzCheckboxProps } from "./types";
-import { mapSizeToClasses } from "./common";
 import { generateCheckboxId } from "./utils";
 import { FzIcon, type IconVariant } from "@fiscozen/icons";
 import { FzTooltip } from "@fiscozen/tooltip";
 import ErrorAlert from "./components/ErrorAlert.vue";
 
 const props = withDefaults(defineProps<FzCheckboxProps>(), {
-  size: "md",
   indeterminate: false,
 });
+
+/**
+ * Deprecation warning for size prop.
+ * Watches the size prop and warns once on mount if it's provided.
+ * Using watch with immediate:true ensures the warning only fires once per component instance.
+ */
+watch(
+  () => props.size,
+  (size) => {
+    if (size !== undefined) {
+      console.warn(
+        '[FzCheckbox] The "size" prop is deprecated and will be removed in a future version. Checkboxes now have a fixed size.'
+      );
+    }
+  },
+  { immediate: true }
+);
 
 /**
  * FontAwesome icon names for different checkbox states.
@@ -113,15 +128,18 @@ const staticInputClass: string = "w-0 h-0 peer fz-hidden-input";
 
 /**
  * CSS classes for the label element.
- * Includes focus ring styles that appear on the icon when the hidden input receives focus.
- * The pseudo-element (after:) creates a visible focus indicator for keyboard navigation.
+ * Includes focus ring styles.
+ *
+ * Focus: blue-200 border appears around checkbox icon
+ *
+ * Items aligned to start (top) for proper alignment with long multi-line labels.
  */
 const staticLabelClass: string = `
-  flex gap-4 items-center hover:cursor-pointer text-core-black
+  flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&_div]:after:border-1
   peer-focus:[&_div]:after:border-solid
-  peer-focus:[&_div]:after:rounded-[3px]
-  peer-focus:[&_div]:after:border-blue-500
+  peer-focus:[&_div]:after:rounded-[2px]
+  peer-focus:[&_div]:after:border-blue-200
   peer-focus:[&_div]:after:content-['']
   peer-focus:[&_div]:after:top-0
   peer-focus:[&_div]:after:left-0
@@ -151,55 +169,80 @@ const isChecked = computed<boolean>(() => {
 });
 
 /**
- * Computes text color classes for the label based on checkbox state.
- * Priority order: disabled > error > emphasis > default
+ * Computes text color classes for the label and checkbox icon.
  *
- * Memoized as a computed property for optimal performance.
+ * Uses peer-checked and peer-indeterminate selectors to apply colors based on input state.
  *
- * @returns Tailwind CSS classes for label text color
+ * Priority order (highest to lowest):
+ * 1. Disabled: grey-300 (label + checkbox)
+ * 2. Error: semantic-error-200 (label + checkbox, all states)
+ * 3. Emphasis: blue-500 (checkbox when checked/indeterminate)
+ * 4. Checked/Indeterminate: grey-500 (checkbox only)
+ * 5. Unchecked: grey-400 (checkbox only, handled by textClassForIcon)
+ *
+ * @returns Tailwind CSS classes for label text and checkbox icon
  */
 const textClassForLabel = computed<string>(() => {
+  // Priority 1: Disabled
   if (props.disabled) {
-    return "text-grey-300";
+    return "text-grey-300 [&_div]:text-grey-300";
   }
 
+  // Priority 2: Error (overrides everything except disabled)
+  // Red for checkbox icon AND label text (all states: unchecked, checked, indeterminate)
   if (props.error) {
-    return "text-semantic-error";
+    return "text-semantic-error-200 [&_div]:text-semantic-error-200 peer-checked:[&_div]:text-semantic-error-200 peer-indeterminate:[&_div]:text-semantic-error-200";
   }
 
+  // Priority 3: Emphasis (blue-500 when checked/indeterminate)
+  // Force blue color even for indeterminate state
   if (props.emphasis) {
-    // Emphasis mode: icon changes to blue when checked/indeterminate
-    return "text-core-black peer-checked:[&_div]:text-blue-500 peer-indeterminate:[&_div]:text-blue-500";
+    return "text-core-black [&_div]:text-blue-500 peer-checked:[&_div]:text-blue-500 peer-indeterminate:[&_div]:text-blue-500";
   }
 
-  return "text-core-black";
+  // Priority 4-5: Default (grey-500 when checked/indeterminate, grey-400 when unchecked)
+  // Hover: implemented in CSS (see <style> section)
+  return "text-core-black peer-checked:[&_div]:text-grey-500 peer-indeterminate:[&_div]:text-grey-500";
 });
 
 /**
- * Computes text color classes for the checkbox icon.
- * Priority order: disabled > error > default
- * Note: Emphasis state falls through to default (grey) for unchecked state
+ * Computes base text color for the checkbox icon.
  *
- * Memoized as a computed property for optimal performance.
+ * Handles disabled, error, and emphasis states. Default unchecked color is grey-400.
+ * Checked/indeterminate colors are controlled by textClassForLabel via peer-checked/peer-indeterminate.
  *
- * @returns Tailwind CSS classes for icon color
+ * Priority order:
+ * 1. Disabled: grey-300
+ * 2. Error: semantic-error-200
+ * 3. Emphasis: blue-500 (all states)
+ * 4-5. Default: grey-400 (unchecked)
+ *
+ * @returns Tailwind CSS class for checkbox icon color
  */
 const textClassForIcon = computed<string>(() => {
+  // Priority 1: Disabled
   if (props.disabled) {
     return "text-grey-300";
   }
 
+  // Priority 2: Error
   if (props.error) {
-    return "text-semantic-error";
+    return "text-semantic-error-200";
   }
 
-  // Default includes emphasis state (grey for unchecked)
-  return "text-grey-500";
+  // Priority 3: Emphasis (blue-500 for all states)
+  if (props.emphasis) {
+    return "text-blue-500";
+  }
+
+  // Priority 4-5: Default unchecked (grey-400)
+  // Checked/indeterminate colors are controlled by textClassForLabel
+  return "text-grey-400";
 });
 
-/** Dynamic label classes based on size and state (disabled, error, emphasis) */
+/** Dynamic label classes based on state (disabled, error, emphasis) */
 const computedLabelClass = computed<string[]>(() => [
-  mapSizeToClasses[props.size],
+  "text-base",
   textClassForLabel.value,
 ]);
 
@@ -255,8 +298,14 @@ onMounted(() => {
 <template>
   <!-- Root container: vertical layout with consistent spacing -->
   <div class="flex justify-center flex-col w-fit gap-4">
-    <!-- Checkbox row: input + label + optional tooltip -->
-    <div class="flex gap-0 items-center">
+    <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
+    <!-- Hover effects are handled in CSS using data attributes -->
+    <div
+      class="flex items-start group"
+      :data-emphasis="emphasis || undefined"
+      :data-error="error || undefined"
+      :data-disabled="disabled || undefined"
+    >
       <!-- 
         Native checkbox input (visually hidden but functionally present)
         - Maintains native keyboard navigation and form behavior
@@ -297,7 +346,7 @@ onMounted(() => {
         -->
         <FzIcon
           :name="computedIconName"
-          :size="size"
+          size="md"
           :class="[staticIconClass, computedIconClasses]"
           :variant="computedVariant"
           aria-hidden="true"
@@ -310,7 +359,7 @@ onMounted(() => {
         Optional tooltip for additional context
         @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation
       -->
-      <FzTooltip v-if="tooltip" v-bind="tooltip" class="ml-4">
+      <FzTooltip v-if="tooltip" v-bind="tooltip" class="ml-6">
         <!-- 
           Info icon (informative, not decorative)
           Has role="img" and aria-label because it conveys meaning
@@ -318,7 +367,7 @@ onMounted(() => {
         -->
         <FzIcon
           name="info-circle"
-          :size="size"
+          size="md"
           class="text-semantic-info"
           role="img"
           aria-label="Informazioni aggiuntive"
@@ -326,7 +375,7 @@ onMounted(() => {
       </FzTooltip>
     </div>
     <!-- Error message display with accessible ARIA live region -->
-    <ErrorAlert v-if="error && $slots.error" :id="`${id}-error`" :size="size">
+    <ErrorAlert v-if="error && $slots.error" :id="`${id}-error`" size="md">
       <slot name="error" />
     </ErrorAlert>
 
@@ -359,5 +408,61 @@ onMounted(() => {
   height: 0;
   border: 0 none;
   appearance: none;
+}
+
+/**
+ * Hover effects for checkbox icon and label.
+ * 
+ * Uses data attributes (data-emphasis, data-error, data-disabled) and pseudo-classes
+ * (:checked, :indeterminate) to apply hover colors based on state.
+ * 
+ * Priority order (highest to lowest):
+ * 1. Disabled: no hover effect
+ * 2. Error: semantic-error-300 (checkbox + label, all states)
+ * 3. Emphasis: blue-600 (checkbox only, all states)
+ * 4. Checked/Indeterminate: core-black (checkbox only, no emphasis/error)
+ * 5. Unchecked: blue-600 (checkbox only, no emphasis/error)
+ */
+
+/* Priority 1: Disabled - no hover (no rule needed) */
+
+/* Priority 2: Error hover (all states): semantic-error-300 for checkbox AND label */
+.group[data-error]:hover:not([data-disabled]) .peer ~ label > div {
+  color: var(--semantic-error-300) !important;
+}
+.group[data-error]:hover:not([data-disabled]) .peer ~ label {
+  color: var(--semantic-error-300) !important;
+}
+
+/* Priority 3: Emphasis hover (all states): blue-600 */
+.group[data-emphasis]:hover:not([data-disabled]):not([data-error])
+  .peer
+  ~ label
+  > div {
+  color: var(--blue-600) !important;
+}
+
+/* Priority 4: Checked hover (no emphasis, no error): core-black */
+.group:hover:not([data-emphasis]):not([data-error]):not([data-disabled])
+  .peer:checked
+  ~ label
+  > div {
+  color: var(--core-black) !important;
+}
+
+/* Priority 4: Indeterminate hover (no emphasis, no error): core-black */
+.group:hover:not([data-emphasis]):not([data-error]):not([data-disabled])
+  .peer:indeterminate
+  ~ label
+  > div {
+  color: var(--core-black) !important;
+}
+
+/* Priority 5: Unchecked hover (no emphasis, no error): blue-600 */
+.group:hover:not([data-emphasis]):not([data-error]):not([data-disabled])
+  .peer:not(:checked):not(:indeterminate)
+  ~ label
+  > div {
+  color: var(--blue-600) !important;
 }
 </style>

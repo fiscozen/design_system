@@ -13,15 +13,7 @@ type PlayFunctionContext = {
 const meta = {
   title: 'Form/FzCheckboxGroup',
   component: FzCheckboxGroup,
-  tags: ['autodocs'],
-  argTypes: {
-    size: {
-      options: ['sm', 'md'],
-      control: {
-        type: 'select'
-      }
-    }
-  }
+  tags: ['autodocs']
 } satisfies Meta<typeof FzCheckboxGroup>
 export default meta
 
@@ -74,16 +66,14 @@ const Template: CheckboxGroupStory = {
     template: `<FzCheckboxGroup v-bind="args" v-model="model"/>`
   }),
   args: {
-    size: 'sm',
     label: 'Field label',
     options
   }
 }
 
-export const Medium: CheckboxGroupStory = {
+export const Default: CheckboxGroupStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Field label',
     options
   },
@@ -125,17 +115,16 @@ export const Medium: CheckboxGroupStory = {
   }
 }
 
-export const Small: CheckboxGroupStory = {
+export const MultipleSelection: CheckboxGroupStory = {
   ...Template,
   args: {
-    size: 'sm',
     label: 'Field label',
     options
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
-    await step('Verify small checkbox group renders', async () => {
+    await step('Verify checkbox group renders', async () => {
       const groupLabel = canvas.getByText('Field label')
       expect(groupLabel).toBeVisible()
       const checkboxes = canvas.getAllByRole('checkbox')
@@ -177,7 +166,6 @@ export const Small: CheckboxGroupStory = {
 export const Emphasis: CheckboxGroupStory = {
   ...Template,
   args: {
-    size: 'sm',
     label: 'Field label',
     emphasis: true,
     options
@@ -197,7 +185,6 @@ export const Emphasis: CheckboxGroupStory = {
 export const Disabled: CheckboxGroupStory = {
   ...Template,
   args: {
-    size: 'sm',
     label: 'Field label',
     disabled: true,
     options
@@ -238,7 +225,6 @@ export const Error: CheckboxGroupStory = {
     template: `<FzCheckboxGroup v-bind="args" v-model="model"><template #error> Error message </template></FzCheckboxGroup>`
   }),
   args: {
-    size: 'md',
     label: 'Field label',
     error: true,
     options
@@ -281,7 +267,6 @@ export const WithHelpText: CheckboxGroupStory = {
     template: `<FzCheckboxGroup v-bind="args" v-model="model"><template #help> Description of help text </template></FzCheckboxGroup>`
   }),
   args: {
-    size: 'md',
     label: 'Field label',
     options
   },
@@ -324,7 +309,6 @@ export const Required: CheckboxGroupStory = {
     </form>`
   }),
   args: {
-    size: 'md',
     label: 'Field label',
     required: true,
     options: [
@@ -401,7 +385,6 @@ export const CheckboxGroupWithDynamicOptions: CheckboxGroupStory = {
     </form>`
   }),
   args: {
-    size: 'md',
     label: 'Field label',
     required: true
   },
@@ -449,7 +432,6 @@ export const CheckboxGroupWithDynamicOptions: CheckboxGroupStory = {
 export const IndeterminateStateTest: CheckboxGroupStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Indeterminate Test',
     options
   },
@@ -472,7 +454,6 @@ export const IndeterminateStateTest: CheckboxGroupStory = {
 export const KeyboardNavigationTest: CheckboxGroupStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Keyboard Navigation Test',
     options
   },
@@ -505,7 +486,6 @@ export const KeyboardNavigationTest: CheckboxGroupStory = {
 export const LayoutTest: CheckboxGroupStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Layout Test',
     options
   },

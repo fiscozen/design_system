@@ -35,9 +35,8 @@
  *   ]"
  * />
  */
-import { computed, useSlots } from "vue";
+import { computed, useSlots, watch } from "vue";
 import { FzCheckboxGroupProps } from "./types";
-import { mapSizeToClasses } from "./common";
 import { generateGroupId } from "./utils";
 import FzCheckboxGroupOption from "./components/FzCheckboxGroupOption.vue";
 import ErrorAlert from "./components/ErrorAlert.vue";
@@ -45,12 +44,29 @@ import ErrorAlert from "./components/ErrorAlert.vue";
 const props = defineProps<FzCheckboxGroupProps>();
 const slots = useSlots();
 
+/**
+ * Deprecation warning for size prop.
+ * Watches the size prop and warns once on mount if it's provided.
+ * Using watch with immediate:true ensures the warning only fires once per component instance.
+ */
+watch(
+  () => props.size,
+  (size) => {
+    if (size !== undefined) {
+      console.warn(
+        '[FzCheckboxGroup] The "size" prop is deprecated and will be removed in a future version. Checkboxes now have a fixed size.',
+      );
+    }
+  },
+  { immediate: true },
+);
+
 /** Unique identifier for the checkbox group, used for ARIA relationships */
 const id: string = generateGroupId();
 
-/** Dynamic classes for help text based on size and disabled state */
+/** Dynamic classes for help text based on disabled state */
 const computedHelpTextClass = computed<string[]>(() => [
-  props.size === "sm" ? "text-xs" : "text-sm",
+  "text-sm",
   props.disabled ? "text-grey-400" : "text-grey-500",
 ]);
 
@@ -73,27 +89,23 @@ const staticContainerClass: string = "flex flex-col gap-10";
 /** Base layout for the checkboxes container */
 const staticSlotContainerClass: string = "flex items-start";
 
-/** Dynamic label classes based on size, spacing, and disabled state */
+/** Dynamic label classes based on spacing and disabled state */
 const computedLabelClass = computed<string[]>(() => [
-  mapSizeToClasses[props.size],
-  props.size === "sm" ? "gap-4" : "",
-  props.size === "md" ? "gap-6" : "",
+  "text-base",
+  "gap-6",
   props.disabled ? "text-grey-400" : "text-core-black",
 ]);
 
-/** Dynamic container classes with size-specific spacing */
-const computedContainerClass = computed<string[]>(() => [
-  mapSizeToClasses[props.size],
-]);
+/** Dynamic container classes */
+const computedContainerClass = computed<string[]>(() => ["text-base"]);
 
 /**
  * Dynamic classes for the checkbox container.
  * Handles both horizontal and vertical layouts with appropriate spacing.
  */
 const computedSlotContainerClass = computed<string[]>(() => [
-  mapSizeToClasses[props.size],
-  props.size === "sm" ? "gap-6" : "",
-  props.size === "md" ? (props.horizontal ? "gap-16" : "gap-8") : "",
+  "text-base",
+  props.horizontal ? "gap-16" : "gap-8",
   props.horizontal ? "flex-row" : "flex-col",
 ]);
 
@@ -177,11 +189,10 @@ const computedAriaDescribedby = computed<string | undefined>(() => {
         v-bind="option"
         :emphasis="emphasis"
         :error="error"
-        :size="size"
       />
     </div>
     <!-- Error message display with accessible ARIA live region -->
-    <ErrorAlert v-if="error && $slots.error" :id="id + '-error'" :size="size">
+    <ErrorAlert v-if="error && $slots.error" :id="id + '-error'" size="md">
       <slot name="error" />
     </ErrorAlert>
   </div>

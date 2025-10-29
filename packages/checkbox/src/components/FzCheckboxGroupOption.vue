@@ -20,11 +20,11 @@ import FzCheckbox from "../FzCheckbox.vue";
 import { ParentCheckbox } from "../types";
 import { generateCheckboxId } from "../utils";
 
-const props = defineProps<ParentCheckbox & { size: "sm" | "md" }>();
+const props = defineProps<ParentCheckbox>();
 
 /** The actual value used for this checkbox (falls back to label if no value provided) */
 const currentValue = computed<string | number | boolean>(
-  () => props.value ?? props.label
+  () => props.value ?? props.label,
 );
 
 /**
@@ -49,7 +49,7 @@ const parentId: string = generateCheckboxId();
  * @returns Space-separated string of child IDs, or undefined if no children
  */
 const childrenIds = computed<string | undefined>(() =>
-  props.children?.map((child, index) => `${parentId}-child-${index}`).join(" ")
+  props.children?.map((child, index) => `${parentId}-child-${index}`).join(" "),
 );
 
 /** Base layout classes for the children container (indented and vertical) */
@@ -75,7 +75,7 @@ const isIndeterminate = computed<boolean>(() => {
   if (!props.children) return false;
 
   const numChecked = props.children.filter((child) =>
-    model.value.includes(child.value ?? child.label)
+    model.value.includes(child.value ?? child.label),
   ).length;
   return numChecked > 0 && numChecked < props.children.length;
 });
@@ -94,7 +94,7 @@ function handleCheckboxParentChange() {
   if (!props.children) return;
 
   const numChecked = props.children.filter((child) =>
-    model.value.includes(child.value ?? child.label)
+    model.value.includes(child.value ?? child.label),
   ).length;
 
   if (numChecked === props.children.length) {
@@ -127,7 +127,7 @@ function onCheckboxParentChange() {
     model.value = model.value.concat(
       props.children
         ?.map((child) => child.value ?? child.label)
-        .filter((value) => !model.value.includes(value))
+        .filter((value) => !model.value.includes(value)),
     );
   } else {
     // Parent is unchecked: remove all children from model
@@ -135,7 +135,7 @@ function onCheckboxParentChange() {
       (value) =>
         !props.children
           ?.map((child) => child.value ?? child.label)
-          .includes(value)
+          .includes(value),
     );
   }
 }
@@ -155,7 +155,6 @@ function onCheckboxParentChange() {
     :disabled="disabled"
     :emphasis="emphasis"
     :error="error"
-    :size="size"
     :indeterminate="isIndeterminate"
     :aria-owns="children?.length ? childrenIds : undefined"
     @change="onCheckboxParentChange"
@@ -181,7 +180,6 @@ function onCheckboxParentChange() {
           v-bind="child"
           :emphasis="emphasis"
           :error="error"
-          :size="size"
           :checkbox-id="`${parentId}-child-${index}`"
           @change="handleCheckboxParentChange"
         />

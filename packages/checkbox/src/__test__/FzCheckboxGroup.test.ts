@@ -8,7 +8,6 @@ describe("FzCheckboxGroup", () => {
     const wrapper = mount(FzCheckboxGroup, {
       props: {
         label: "Test Checkbox Group",
-        size: "md",
         modelValue: [],
         options: [
           { label: "Option 1", value: "option1" },
@@ -26,7 +25,6 @@ describe("FzCheckboxGroup", () => {
     const wrapper = mount(FzCheckboxGroup, {
       props: {
         label: "Test Checkbox Group",
-        size: "md",
         modelValue: [],
         options: [
           { label: "Option 1", value: "option1" },
@@ -43,7 +41,7 @@ describe("FzCheckboxGroup", () => {
     expect(wrapper.html()).toContain("Test error message");
     expect(wrapper.findAllComponents(FzCheckbox).length).toBe(2);
     expect(wrapper.props("error")).toBe(true);
-    
+
     // Verify error prop is propagated to individual checkboxes
     expect(wrapper.findAllComponents(FzCheckbox).at(0)!.props("error")).toBe(
       true,
@@ -57,7 +55,6 @@ describe("FzCheckboxGroup", () => {
     const wrapper = mount(FzCheckboxGroup, {
       props: {
         label: "Test Checkbox Group",
-        size: "md",
         modelValue: [],
         options: [
           { label: "Option 1", value: "option1" },
@@ -81,7 +78,6 @@ describe("FzCheckboxGroup", () => {
     const wrapper = mount(FzCheckboxGroup, {
       props: {
         label: "Test Checkbox Group",
-        size: "md",
         modelValue: [],
         options: [
           { label: "Option 1", value: "option1" },
@@ -105,7 +101,6 @@ describe("FzCheckboxGroup", () => {
     const wrapper = mount(FzCheckboxGroup, {
       props: {
         label: "Test Checkbox Group",
-        size: "md",
         modelValue: [],
         options: [
           { label: "Option 1", value: "option1" },
@@ -130,7 +125,6 @@ describe("FzCheckboxGroup", () => {
     const wrapper = mount(FzCheckboxGroup, {
       props: {
         label: "Test Checkbox Group",
-        size: "md",
         modelValue: [],
         options: [
           { label: "Option 1", value: "option1" },
@@ -155,7 +149,6 @@ describe("FzCheckboxGroup", () => {
     const wrapper = mount(FzCheckboxGroup, {
       props: {
         label: "Test Checkbox Group",
-        size: "md",
         modelValue: [],
         options: [
           { label: "Option 1", value: "option1" },
@@ -180,7 +173,6 @@ describe("FzCheckboxGroup", () => {
     const wrapper = mount(FzCheckboxGroup, {
       props: {
         label: "Test Checkbox Group",
-        size: "md",
         modelValue: [],
         options: [
           { label: "Option 1", value: "option1" },
@@ -197,8 +189,10 @@ describe("FzCheckboxGroup", () => {
     const groupId = wrapper.find("[role='group']").attributes("id");
     const helpId = groupId + "-help";
     const errorId = groupId + "-error";
-    const describedby = wrapper.find("[role='group']").attributes("aria-describedby");
-    
+    const describedby = wrapper
+      .find("[role='group']")
+      .attributes("aria-describedby");
+
     // Should contain both IDs separated by space
     expect(describedby).toContain(helpId);
     expect(describedby).toContain(errorId);
@@ -209,7 +203,6 @@ describe("FzCheckboxGroup", () => {
     const wrapper = mount(FzCheckboxGroup, {
       props: {
         label: "Test Checkbox Group",
-        size: "md",
         modelValue: [],
         options: [
           {
@@ -230,10 +223,10 @@ describe("FzCheckboxGroup", () => {
 
     await wrapper.vm.$nextTick();
     const allCheckboxes = wrapper.findAllComponents(FzCheckbox);
-    
+
     // Should have parent + 2 children = 3 checkboxes
     expect(allCheckboxes.length).toBe(3);
-    
+
     // All checkboxes should have error prop set to true
     allCheckboxes.forEach((checkbox) => {
       expect(checkbox.props("error")).toBe(true);

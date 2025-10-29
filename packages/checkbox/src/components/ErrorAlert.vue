@@ -60,6 +60,7 @@ defineProps<{
     role="alert"
     aria-live="assertive"
     aria-atomic="true"
+    size="md"
   >
     <slot />
   </FzAlert>
