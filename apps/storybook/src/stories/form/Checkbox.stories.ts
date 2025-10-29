@@ -13,15 +13,7 @@ type PlayFunctionContext = {
 const meta = {
   title: 'Form/FzCheckbox',
   component: FzCheckbox,
-  tags: ['autodocs'],
-  argTypes: {
-    size: {
-      options: ['sm', 'md'],
-      control: {
-        type: 'select'
-      }
-    }
-  }
+  tags: ['autodocs']
 } satisfies Meta<typeof FzCheckbox>
 export default meta
 
@@ -41,15 +33,13 @@ const Template: CheckboxStory = {
     template: `<FzCheckbox v-bind="restArgs" v-model="modelValue" @update:modelValue="console.log('update model value', $event)" />`
   }),
   args: {
-    size: 'sm',
     label: 'Checkbox'
   }
 }
 
-export const Medium: CheckboxStory = {
+export const Default: CheckboxStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Checkbox'
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
@@ -87,38 +77,9 @@ export const Medium: CheckboxStory = {
   }
 }
 
-export const Small: CheckboxStory = {
+export const WithLongLabel: CheckboxStory = {
   ...Template,
   args: {
-    size: 'sm',
-    label: 'Checkbox'
-  },
-  play: async ({ canvasElement, step }: PlayFunctionContext) => {
-    const canvas = within(canvasElement)
-
-    await step('Verify small checkbox renders correctly', async () => {
-      const checkbox = canvas.getByRole('checkbox', { name: 'Checkbox' })
-      expect(checkbox).toBeInTheDocument()
-      // Note: Checkbox input may have opacity:0 for styling, check existence instead
-    })
-
-    await step('Verify icon exists', async () => {
-      const svg = canvasElement.querySelector('svg')
-      expect(svg).toBeTruthy()
-    })
-
-    await step('Verify checkbox can be clicked', async () => {
-      const checkbox = canvas.getByRole('checkbox', { name: 'Checkbox' })
-      await userEvent.click(checkbox)
-      expect(checkbox).toBeChecked()
-    })
-  }
-}
-
-export const MediumWithLongLabel: CheckboxStory = {
-  ...Template,
-  args: {
-    size: 'md',
     label:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec purus nec nisl fermentum aliquam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec purus nec nisl fermentum aliquam.'
   },
@@ -148,7 +109,6 @@ export const MediumWithLongLabel: CheckboxStory = {
 export const Emphasized: CheckboxStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Checkbox',
     emphasis: true
   },
@@ -171,7 +131,6 @@ export const Emphasized: CheckboxStory = {
 export const Indeterminate: CheckboxStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Checkbox',
     indeterminate: true
   },
@@ -193,7 +152,6 @@ export const Indeterminate: CheckboxStory = {
 export const Disabled: CheckboxStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Checkbox',
     disabled: true
   },
@@ -224,7 +182,6 @@ export const Disabled: CheckboxStory = {
 export const CheckedDefault: CheckboxStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Checkbox',
     modelValue: true
   },
@@ -266,7 +223,6 @@ export const Error: CheckboxStory = {
         </FzCheckbox>`
   }),
   args: {
-    size: 'sm',
     label: 'Checkbox',
     error: true,
     modelValue: false
@@ -295,7 +251,6 @@ export const Error: CheckboxStory = {
 export const Tooltip: CheckboxStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Checkbox',
     tooltip: {
       text: 'Tooltip'
@@ -323,7 +278,6 @@ export const Tooltip: CheckboxStory = {
 export const KeyboardNavigationTest: CheckboxStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Keyboard Test'
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
@@ -353,7 +307,6 @@ export const KeyboardNavigationTest: CheckboxStory = {
 export const MultipleToggleTest: CheckboxStory = {
   ...Template,
   args: {
-    size: 'md',
     label: 'Toggle Test'
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
