@@ -760,12 +760,18 @@ importers:
 
   packages/checkbox:
     dependencies:
+      '@fiscozen/alert':
+        specifier: workspace:^
+        version: link:../alert
       '@fiscozen/badge':
         specifier: workspace:^
         version: link:../badge
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
+      '@fiscozen/tooltip':
+        specifier: workspace:^
+        version: link:../tooltip
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.17

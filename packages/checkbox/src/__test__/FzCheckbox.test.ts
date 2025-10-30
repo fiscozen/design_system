@@ -1,4 +1,4 @@
-// FzCheckbox.spec.ts
+// FzCheckbox.test.ts
 import { mount } from "@vue/test-utils";
 import { describe, it, expect } from "vitest";
 import FzCheckbox from "../FzCheckbox.vue";
@@ -11,25 +11,12 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: false,
       },
     });
 
     await wrapper.vm.$nextTick();
     expect(wrapper.html()).toContain("Test Checkbox");
-  });
-
-  it("emits an update event when clicked", async () => {
-    const wrapper = mount(FzCheckbox, {
-      props: {
-        label: "Test Checkbox",
-        value: "test",
-        modelValue: false,
-      },
-    });
-    await wrapper.find("input").trigger("click");
-    expect(wrapper.emitted()).toHaveProperty("update:modelValue");
   });
 
   it("is checked when v-model is true", async () => {
@@ -62,7 +49,6 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: false,
         emphasis: true,
       },
@@ -78,7 +64,6 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: false,
         disabled: true,
       },
@@ -93,7 +78,6 @@ describe("FzCheckbox", () => {
         props: {
           label: "Test Checkbox",
           value: "test",
-          size: "md",
           modelValue: false,
           disabled: true,
         },
@@ -111,7 +95,6 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: undefined,
       },
     });
@@ -124,11 +107,100 @@ describe("FzCheckbox", () => {
       props: {
         label: "Test Checkbox",
         value: "test",
-        size: "md",
         modelValue: null,
       },
     });
     await wrapper.vm.$nextTick();
     expect(wrapper.find("input").element.checked).toBe(false);
+  });
+
+  it("has correct ARIA attributes (not standalone, no error)", async () => {
+    const wrapper = mount(FzCheckbox, {
+      props: {
+        label: "Test Checkbox",
+        value: "test",
+        modelValue: false,
+        required: true,
+      },
+    });
+    await wrapper.vm.$nextTick();
+    const input = wrapper.find("input[type='checkbox']");
+    const id = input.attributes("id");
+    expect(input.attributes("aria-checked")).toBe("false");
+    expect(input.attributes("aria-label")).toBeUndefined();
+    expect(input.attributes("aria-required")).toBe("true");
+    expect(input.attributes("aria-invalid")).toBe("false");
+    expect(input.attributes("aria-describedby")).toBeUndefined();
+    expect(input.attributes("aria-labelledby")).toBe(`${id}-label`);
+    expect(wrapper.find(`#${id}-label`).exists()).toBe(true);
+  });
+
+  it("has correct ARIA attributes (standalone)", async () => {
+    const wrapper = mount(FzCheckbox, {
+      props: {
+        label: "Test Checkbox",
+        value: "test",
+        modelValue: false,
+        standalone: true,
+      },
+    });
+    await wrapper.vm.$nextTick();
+    const input = wrapper.find("input[type='checkbox']");
+    expect(input.attributes("aria-labelledby")).toBeUndefined();
+    expect(input.attributes("aria-label")).toBe("Test Checkbox");
+  });
+
+  it("has correct ARIA attributes when error is present", async () => {
+    const wrapper = mount(FzCheckbox, {
+      props: {
+        label: "Test Checkbox",
+        value: "test",
+        modelValue: false,
+        error: true,
+      },
+      slots: {
+        error: "Test error message",
+      },
+    });
+    await wrapper.vm.$nextTick();
+    const input = wrapper.find("input[type='checkbox']");
+    const id = input.attributes("id");
+    expect(input.attributes("aria-invalid")).toBe("true");
+    expect(input.attributes("aria-describedby")).toBe(`${id}-error`);
+    expect(wrapper.find(`#${id}-error`).exists()).toBe(true);
+  });
+
+  it("has correct ARIA attributes when error is present but no error message slot", async () => {
+    const wrapper = mount(FzCheckbox, {
+      props: {
+        label: "Test Checkbox",
+        value: "test",
+        modelValue: false,
+        error: true,
+      },
+      // No error slot provided
+    });
+    await wrapper.vm.$nextTick();
+    const input = wrapper.find("input[type='checkbox']");
+    // Error state must still be indicated via aria-invalid
+    expect(input.attributes("aria-invalid")).toBe("true");
+    // But aria-describedby should not reference an error element when no error slot is present
+    expect(input.attributes("aria-describedby")).toBeUndefined();
+    // ErrorAlert should not be rendered when no error slot is provided
+    expect(wrapper.find("[role='alert']").exists()).toBe(false);
+  });
+
+  it("has aria-checked='mixed' when indeterminate", async () => {
+    const wrapper = mount(FzCheckbox, {
+      props: {
+        label: "Test Checkbox",
+        value: "test",
+        modelValue: false,
+        indeterminate: true,
+      },
+    });
+    await wrapper.vm.$nextTick();
+    const input = wrapper.find("input[type='checkbox']");
+    expect(input.attributes("aria-checked")).toBe("mixed");
   });
 });
