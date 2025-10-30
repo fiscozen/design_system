@@ -148,6 +148,10 @@ const getHeaderClasses = (column: FzColumnProps) => {
   }
 };
 
+const effectivePageInterval = computed(() => {
+  return smOrSmaller.value ? 1 : props.pageInterval;
+});
+
 const centerPageList = computed(() => {
   if (!props.pages) {
     return [];
@@ -158,7 +162,7 @@ const centerPageList = computed(() => {
     .map((val, index) => index)
     .filter((el) => {
       const res =
-        Math.abs(el - safeActivePage) <= props.pageInterval &&
+        Math.abs(el - safeActivePage) <= effectivePageInterval.value &&
         el !== 0 &&
         el !== props.pages - 1;
       return res;
@@ -539,26 +543,30 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-    <div class="fz__table__footer w-full flex flex-row justify-end mt-[20px]" v-if="pages && pages > 1 && internalValue?.length">
-      <div class="fz__table__pagination flex flex-row justify-between items-center gap-4">
-        <FzButton @click="activePage--" variant="invisible" :disabled="activePage === 0" size="md" iconPosition="before"
+    <div class="fz__table__footer w-full overflow-x-auto mt-[20px]" v-if="pages && pages > 1 && internalValue?.length">
+      <div class="fz__table__pagination flex flex-row justify-end items-center gap-4 min-w-fit ml-auto">
+        <FzButton v-if="!smOrSmaller" @click="activePage--" variant="invisible" :disabled="activePage === 0" size="md" iconPosition="before"
           iconName="angle-left">Indietro</FzButton>
+        <FzIconButton v-else @click="activePage--" variant="invisible" :disabled="activePage === 0" size="md"
+          iconName="angle-left"></FzIconButton>
         <FzButton class="min-w-32 min-h-32" @click="activePage = 0"
           :variant="activePage === 0 ? 'primary' : 'secondary'" size="sm">1</FzButton>
-        <div class="fz__pagination__separator size-32 flex justify-center items-center" v-if="activePage - pageInterval - 1 > 0">
+        <div class="fz__pagination__separator size-32 flex justify-center items-center" v-if="activePage - effectivePageInterval - 1 > 0">
           <span>...</span>
         </div>
         <FzButton v-for="page in centerPageList" class="min-w-32 min-h-32" @click="activePage = page"
           :variant="activePage === page ? 'primary' : 'secondary'" size="sm">
           {{ page + 1 }}
         </FzButton>
-        <div class="fz__pagination__separator size-32 flex justify-center items-center" v-if="pages - activePage - pageInterval - 2 > 0">
+        <div class="fz__pagination__separator size-32 flex justify-center items-center" v-if="pages - activePage - effectivePageInterval - 2 > 0">
           <span>...</span>
         </div>
         <FzButton class="min-w-32 min-h-32" v-if="pages > 1" @click="activePage = pages - 1"
           :variant="activePage === pages - 1 ? 'primary' : 'secondary'" size="sm">{{ pages }}</FzButton>
-        <FzButton @click="activePage++" variant="invisible" :disabled="activePage === pages - 1" size="md"
+        <FzButton v-if="!smOrSmaller" @click="activePage++" variant="invisible" :disabled="activePage === pages - 1" size="md"
           iconPosition="after" iconName="angle-right">Avanti</FzButton>
+        <FzIconButton v-else @click="activePage++" variant="invisible" :disabled="activePage === pages - 1" size="md"
+          iconName="angle-right"></FzIconButton>
       </div>
     </div>
   </div>
