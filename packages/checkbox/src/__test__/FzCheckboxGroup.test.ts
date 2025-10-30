@@ -145,6 +145,34 @@ describe("FzCheckboxGroup", () => {
     expect(wrapper.find(`#${errorId}`).exists()).toBe(true);
   });
 
+  it("has aria-invalid but no aria-describedby when error is present but no error message slot", async () => {
+    const wrapper = mount(FzCheckboxGroup, {
+      props: {
+        label: "Test Checkbox Group",
+        modelValue: [],
+        options: [
+          { label: "Option 1", value: "option1" },
+          { label: "Option 2", value: "option2" },
+        ],
+        error: true,
+      },
+      // No error slot provided
+    });
+    await wrapper.vm.$nextTick();
+    const group = wrapper.find("[role='group']");
+    // Error state should still be indicated via aria-invalid
+    expect(group.attributes("aria-invalid")).toBe("true");
+    // But aria-describedby should not reference an error element when no error slot is present
+    expect(group.attributes("aria-describedby")).toBeUndefined();
+    // ErrorAlert should not be rendered when no error slot is provided
+    expect(wrapper.find("[role='alert']").exists()).toBe(false);
+    // Verify error prop is still propagated to individual checkboxes
+    const checkboxes = wrapper.findAllComponents(FzCheckbox);
+    checkboxes.forEach((checkbox) => {
+      expect(checkbox.props("error")).toBe(true);
+    });
+  });
+
   it("has aria-describedby when help text is present", async () => {
     const wrapper = mount(FzCheckboxGroup, {
       props: {
