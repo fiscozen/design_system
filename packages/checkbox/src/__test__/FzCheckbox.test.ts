@@ -170,6 +170,26 @@ describe("FzCheckbox", () => {
     expect(wrapper.find(`#${id}-error`).exists()).toBe(true);
   });
 
+  it("has correct ARIA attributes when error is present but no error message slot", async () => {
+    const wrapper = mount(FzCheckbox, {
+      props: {
+        label: "Test Checkbox",
+        value: "test",
+        modelValue: false,
+        error: true,
+      },
+      // No error slot provided
+    });
+    await wrapper.vm.$nextTick();
+    const input = wrapper.find("input[type='checkbox']");
+    // Error state must still be indicated via aria-invalid
+    expect(input.attributes("aria-invalid")).toBe("true");
+    // But aria-describedby should not reference an error element when no error slot is present
+    expect(input.attributes("aria-describedby")).toBeUndefined();
+    // ErrorAlert should not be rendered when no error slot is provided
+    expect(wrapper.find("[role='alert']").exists()).toBe(false);
+  });
+
   it("has aria-checked='mixed' when indeterminate", async () => {
     const wrapper = mount(FzCheckbox, {
       props: {

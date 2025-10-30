@@ -248,6 +248,47 @@ export const Error: CheckboxStory = {
   }
 }
 
+export const ErrorWithoutMessage: CheckboxStory = {
+  render: (args) => ({
+    components: { FzCheckbox, FzIcon },
+    setup() {
+      const { modelValue: initialValue, ...restArgs } = args
+      const modelValue = ref(initialValue)
+      return {
+        restArgs,
+        modelValue
+      }
+    },
+    template: `<FzCheckbox v-bind="restArgs" v-model="modelValue" />`
+  }),
+  args: {
+    label: 'Checkbox',
+    error: true,
+    modelValue: false
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify error ARIA attributes', async () => {
+      const checkbox = canvas.getByRole('checkbox', { name: 'Checkbox' })
+      expect(checkbox).toHaveAttribute('aria-invalid', 'true')
+      // When no error slot is provided, aria-describedby should not reference an error element
+      expect(checkbox).not.toHaveAttribute('aria-describedby')
+    })
+
+    await step('Verify error alert does not exist', async () => {
+      const alert = canvas.queryByRole('alert')
+      expect(alert).toBeNull()
+    })
+
+    await step('Verify error styling is applied', async () => {
+      const checkbox = canvas.getByRole('checkbox', { name: 'Checkbox' })
+      // The checkbox should have error styling (red color) even without error message
+      expect(checkbox).toHaveAttribute('aria-invalid', 'true')
+    })
+  }
+}
+
 export const Tooltip: CheckboxStory = {
   ...Template,
   args: {
