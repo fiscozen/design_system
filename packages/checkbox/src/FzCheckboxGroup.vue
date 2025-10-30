@@ -173,8 +173,8 @@ const computedAriaDescribedby = computed<string | undefined>(() => {
       role="group"
       :aria-labelledby="id + '-label'"
       :aria-describedby="computedAriaDescribedby"
-      :aria-required="required"
-      :aria-invalid="error"
+      :aria-required="required ? 'true' : 'false'"
+      :aria-invalid="error ? 'true' : 'false'"
     >
       <!-- 
         Render each checkbox option

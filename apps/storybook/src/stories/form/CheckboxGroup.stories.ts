@@ -207,6 +207,7 @@ export const Disabled: CheckboxGroupStory = {
   }
 }
 
+// Scenario 1: All checkboxes red + error message for the group
 export const Error: CheckboxGroupStory = {
   render: (args) => ({
     components: { FzCheckboxGroup, FzCheckbox, FzIcon },
@@ -222,7 +223,7 @@ export const Error: CheckboxGroupStory = {
         console.log(val)
       }
     },
-    template: `<FzCheckboxGroup v-bind="args" v-model="model"><template #error> Error message </template></FzCheckboxGroup>`
+    template: `<FzCheckboxGroup v-bind="args" v-model="model"><template #error> Error message for the entire group </template></FzCheckboxGroup>`
   }),
   args: {
     label: 'Field label',
@@ -232,12 +233,17 @@ export const Error: CheckboxGroupStory = {
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
-    await step('Verify error state renders', async () => {
+    await step('Verify all checkboxes have error state', async () => {
+      const checkboxes = canvas.getAllByRole('checkbox')
+      checkboxes.forEach(checkbox => {
+        expect(checkbox).toHaveAttribute('aria-invalid', 'true')
+      })
+    })
+
+    await step('Verify error message is displayed', async () => {
       const alert = canvas.queryByRole('alert')
-      if (alert) {
-        expect(alert).toBeVisible()
-        expect(alert).toHaveTextContent('Error message')
-      }
+      expect(alert).toBeVisible()
+      expect(alert).toHaveTextContent('Error message for the entire group')
     })
 
     await step('Verify ARIA attributes for error', async () => {
@@ -245,6 +251,52 @@ export const Error: CheckboxGroupStory = {
       const describedby = group.getAttribute('aria-describedby')
       expect(describedby).toBeTruthy()
       expect(describedby).toContain('error')
+    })
+  }
+}
+
+// Scenario 3: All checkboxes red + no error message
+export const ErrorAllCheckboxesNoMessage: CheckboxGroupStory = {
+  render: (args) => ({
+    components: { FzCheckboxGroup, FzCheckbox, FzIcon },
+    setup() {
+      const model = ref([])
+      return {
+        args,
+        model
+      }
+    },
+    watch: {
+      model(val) {
+        console.log(val)
+      }
+    },
+    template: `<FzCheckboxGroup v-bind="args" v-model="model" />`
+  }),
+  args: {
+    label: 'Field label',
+    error: true,
+    options
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify all checkboxes have error state', async () => {
+      const checkboxes = canvas.getAllByRole('checkbox')
+      checkboxes.forEach(checkbox => {
+        expect(checkbox).toHaveAttribute('aria-invalid', 'true')
+      })
+    })
+
+    await step('Verify no error message is displayed', async () => {
+      const alert = canvas.queryByRole('alert')
+      expect(alert).toBeNull()
+    })
+
+    await step('Verify group has aria-invalid but no aria-describedby', async () => {
+      const group = canvas.getByRole('group')
+      expect(group).toHaveAttribute('aria-invalid', 'true')
+      expect(group.getAttribute('aria-describedby')).toBeNull()
     })
   }
 }
