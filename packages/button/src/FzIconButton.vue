@@ -8,51 +8,13 @@
 
 <script lang="ts" setup>
   import { computed } from 'vue'
-  import type { IconButtonVariant, ButtonSize } from './types'
-  import { FzIcon, IconSize, IconVariant } from '@fiscozen/icons'
+  import type { FzIconButtonProps } from './types'
+  import { FzIcon } from '@fiscozen/icons'
   import FzButton from './FzButton.vue'
   import { iconSizeMap } from './utils'
 
   const props = withDefaults(
-    defineProps<{
-      /**
-       * The tooltip of the button will be shown on hover
-       */
-      tooltip?: string
-      /**
-       * primary or secondary button
-       */
-      variant?: IconButtonVariant
-      /**
-       * size of the button
-       */
-      size?: ButtonSize
-      /**
-       * whether action is enabled or not
-       */
-      disabled?: boolean
-      /**
-       * Icon to be displayed. Use fontawesome search here https://fontawesome.com/v6/icons
-       * Mind that not all of the icons and variants might be available.
-       */
-      iconName: string
-      /**
-       * Fontawesome icon variant: solid, regular, light, thin. Sharp subvariants are available as well
-       */
-      iconVariant?: IconVariant
-      /**
-       * Icon size
-       */
-      iconSize?: IconSize
-      /**
-       * Positioning of the icon
-       */
-      iconPosition?: 'before' | 'after',
-      /**
-       * Additional class for the icon
-       */
-      iconClass?: string
-    }>(),
+    defineProps<FzIconButtonProps>(),
     {
       variant: 'primary',
       size: 'md',
