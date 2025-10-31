@@ -82,6 +82,14 @@ watch(() => props.size, (size) => {
   }
 }, { immediate: true })
 
+/**
+ * Determines if the button is in an interactive state
+ * 
+ * Returns true when the button is not disabled, allowing hover and focus
+ * visual feedback. Used throughout the component to conditionally apply
+ * interactive classes.
+ */
+const isInteractive = computed(() => !props.disabled)
 
 /**
  * Computes CSS classes based on the selected variant
@@ -105,7 +113,7 @@ const customVariantClasses = computed(() => {
         'focus:!border-grey-500': isInteractive.value,
         'disabled:bg-grey-50': true,
         'disabled:text-grey-200': true,
-        'disabled:!border-grey-100': true,
+        'disabled:!border-grey-200': true,
       }
     case 'invisible':
       return {
@@ -175,24 +183,6 @@ const effectiveEnvironment = computed((): ButtonEnvironment => {
  */
 const iconAndLabel = computed(() => Boolean((props.label || slots.default) && props.iconName))
 
-/**
- * Determines if the button is in an interactive state
- * 
- * Returns true when the button is not disabled, allowing hover and focus
- * visual feedback. Used throughout the component to conditionally apply
- * interactive classes.
- */
-const isInteractive = computed(() => !props.disabled)
-
-/**
- * Computes accessible label for screen readers
- * 
- * Returns the label prop or checks if there's text content in the default slot.
- * For icon-only buttons without a label, an aria-label should be provided
- * by the consumer to ensure accessibility.
- */
-const hasVisibleLabel = computed(() => Boolean(props.label || slots.default))
-
 const staticClasses = [
   'relative',
   'rounded',
@@ -261,7 +251,7 @@ const containerClass = computed(() => {
     <div v-if="slots.before || (iconAndLabel && iconPosition === 'before')" :class="staticIconClasses">
       <slot name="before">
         <FzIcon
-          v-if="iconName && iconPosition === 'before'"
+          v-if="iconName"
           :name="iconName"
           size="md"
           :variant="iconVariant"
@@ -276,7 +266,7 @@ const containerClass = computed(() => {
     <div v-if="slots.after || (iconAndLabel && iconPosition === 'after')" :class="staticIconClasses">
       <slot name="after">
         <FzIcon
-          v-if="iconName && iconPosition === 'after'"
+          v-if="iconName"
           :name="iconName"
           size="md"
           :variant="iconVariant"
