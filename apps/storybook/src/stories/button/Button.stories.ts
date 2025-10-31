@@ -230,7 +230,7 @@ export const Secondary: Story = {
     // Verify disabled state classes
     await expect(button.classList.contains('disabled:bg-grey-50')).toBe(true)
     await expect(button.classList.contains('disabled:text-grey-200')).toBe(true)
-    await expect(button.classList.contains('disabled:!border-grey-100')).toBe(true)
+    await expect(button.classList.contains('disabled:!border-grey-200')).toBe(true)
   }
 }
 
@@ -260,7 +260,7 @@ export const Invisible: Story = {
     // Verify disabled state classes (same as secondary)
     await expect(button.classList.contains('disabled:bg-grey-50')).toBe(true)
     await expect(button.classList.contains('disabled:text-grey-200')).toBe(true)
-    await expect(button.classList.contains('disabled:!border-grey-100')).toBe(true)
+    await expect(button.classList.contains('disabled:!border-grey-200')).toBe(true)
   }
 }
 
@@ -388,13 +388,13 @@ export const DisabledStates: Story = {
     const secondaryBtn = buttons[1]
     await expect(secondaryBtn.classList.contains('disabled:bg-grey-50')).toBe(true)
     await expect(secondaryBtn.classList.contains('disabled:text-grey-200')).toBe(true)
-    await expect(secondaryBtn.classList.contains('disabled:!border-grey-100')).toBe(true)
+    await expect(secondaryBtn.classList.contains('disabled:!border-grey-200')).toBe(true)
     
     // Verify invisible disabled state (index 2)
     const invisibleBtn = buttons[2]
     await expect(invisibleBtn.classList.contains('disabled:bg-grey-50')).toBe(true)
     await expect(invisibleBtn.classList.contains('disabled:text-grey-200')).toBe(true)
-    await expect(invisibleBtn.classList.contains('disabled:!border-grey-100')).toBe(true)
+    await expect(invisibleBtn.classList.contains('disabled:!border-grey-200')).toBe(true)
     
     // Verify danger disabled state (index 3)
     const dangerBtn = buttons[3]
