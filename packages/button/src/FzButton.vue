@@ -118,7 +118,7 @@ const customVariantClasses = computed(() => {
         'focus:!border-grey-500': isInteractive.value,
         'disabled:bg-grey-50': true,
         'disabled:text-grey-200': true,
-        'disabled:!border-grey-100': true,
+        'disabled:!border-grey-200': true,
       }
     case 'danger':
       return {
