@@ -37,6 +37,14 @@ const meta = {
       control: { type: 'select' },
       options: [undefined, 'auto', true, false],
       description: 'Controls interactive behavior: undefined/"auto" (auto-detect FzButton/FzLink), true (force interactive), false (force non-interactive)'
+    },
+    _forceOpenForDesignReview: {
+      control: { type: 'boolean' },
+      description: '⚠️ FOR DESIGN REVIEW ONLY - Forces tooltip to remain visible. DO NOT USE IN PRODUCTION.',
+      table: {
+        category: 'Design Review',
+        defaultValue: { summary: 'false' }
+      }
     }
   },
   args: {
@@ -354,5 +362,150 @@ export const WithInteractiveElements: Story = {
     const disabledButtonWrapper = disabledButton.closest('span[tabindex="0"]')
     expect(disabledButtonWrapper).toBeInTheDocument()
     expect(disabledButtonWrapper).toHaveAttribute('tabindex', '0')
+  }
+}
+
+export const DesignReview: Story = {
+  render: (args) => ({
+    setup() {
+      return { args, FzButton }
+    },
+    components: { FzTooltip, FzButton },
+    template: `
+      <div class="flex flex-col items-center gap-[200px] p-16 min-h-screen">
+        <div class="bg-yellow-50 border-2 border-yellow-400 rounded p-12 max-w-2xl w-full">
+          <h3 class="text-lg font-bold text-yellow-900 mb-4">⚠️ Design Review Mode</h3>
+          <p class="text-sm text-yellow-800">
+            This story demonstrates the <code class="bg-yellow-200 px-4 py-2 rounded">_forceOpenForDesignReview</code> prop.<br/>
+            Tooltips remain visible for design inspection. <strong>DO NOT USE THIS PROP IN PRODUCTION.</strong>
+          </p>
+          <p class="text-xs text-yellow-700 mt-8">
+            Toggle the <code class="bg-yellow-200 px-4 py-2 rounded">_forceOpenForDesignReview</code> control below to see the effect.
+          </p>
+        </div>
+
+        <div class="flex flex-col items-center gap-[200px]">
+            <FzTooltip 
+              text="Neutral tooltip for design review" 
+              status="neutral"
+              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
+            >
+              <FzButton>Neutral</FzButton>
+            </FzTooltip>
+            
+            <FzTooltip 
+              text="Informative tooltip with useful context" 
+              status="informative"
+              :withIcon="true"
+              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
+            >
+              <FzButton variant="secondary">Informative</FzButton>
+            </FzTooltip>
+            
+            <FzTooltip 
+              text="Success! Operation completed successfully" 
+              status="positive"
+              :withIcon="true"
+              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
+            >
+              <FzButton variant="primary">Positive</FzButton>
+            </FzTooltip>
+            
+            <FzTooltip 
+              text="Warning: This action requires attention" 
+              status="alert"
+              :withIcon="true"
+              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
+            >
+              <FzButton variant="secondary">Alert</FzButton>
+            </FzTooltip>
+            
+            <FzTooltip 
+              text="Error: Operation failed. Please try again." 
+              status="error"
+              :withIcon="true"
+              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
+            >
+              <FzButton variant="danger">Error</FzButton>
+            </FzTooltip>
+            
+            <FzTooltip 
+              text="This is a very long tooltip text that should wrap properly and maintain readability even when it contains a lot of information that needs to be displayed to the user."
+              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
+            >
+              <span class="px-12 py-6 bg-gray-200 rounded">Long text</span>
+            </FzTooltip>
+            
+            <FzTooltip 
+              status="informative"
+              :withIcon="true"
+              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
+            >
+              <span class="px-12 py-6 bg-gray-200 rounded">Rich content</span>
+              <template #text>
+                <strong>Custom Content</strong><br/>
+                <span class="text-xs">With HTML formatting</span><br/>
+                <em>and multiple lines</em>
+              </template>
+            </FzTooltip>
+            
+            <FzTooltip 
+              text="Positioned at top"
+              position="top"
+              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
+            >
+              <span class="px-12 py-6 bg-blue-200 rounded">Top</span>
+            </FzTooltip>
+            
+            <FzTooltip 
+              text="Positioned at bottom"
+              position="bottom"
+              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
+            >
+              <span class="px-12 py-6 bg-blue-200 rounded">Bottom</span>
+            </FzTooltip>
+            
+            <FzTooltip 
+              text="Positioned at left"
+              position="left"
+              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
+            >
+              <span class="px-12 py-6 bg-blue-200 rounded">Left</span>
+            </FzTooltip>
+            
+            <FzTooltip 
+              text="Positioned at right"
+              position="right"
+              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
+            >
+              <span class="px-12 py-6 bg-blue-200 rounded">Right</span>
+            </FzTooltip>
+        </div>
+      </div>
+    `
+  }),
+  args: {
+    _forceOpenForDesignReview: true
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: '**FOR DESIGN REVIEW ONLY** - This story demonstrates tooltips with `_forceOpenForDesignReview` enabled, keeping them visible for design inspection. Toggle the control to see the effect. **Never use this prop in production code.**'
+      }
+    }
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify warning banner is present
+    const warningBanner = canvas.getByText(/Design Review Mode/i)
+    expect(warningBanner).toBeInTheDocument()
+    
+    // Verify all tooltips are visible (role="tooltip" with aria-hidden="false")
+    await waitFor(async () => {
+      const visibleTooltips = document.querySelectorAll('[role="tooltip"][aria-hidden="false"]')
+      // Should have multiple visible tooltips (at least the status variants)
+      expect(visibleTooltips.length).toBeGreaterThan(0)
+    })
   }
 }

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { h } from 'vue'
+import { h, nextTick } from 'vue'
 
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import FzTooltip from '../FzTooltip.vue'
 import { FzTooltipStatus } from '../types'
 import { FzButton } from '@fiscozen/button'
@@ -167,6 +167,61 @@ describe('FzTooltip', () => {
       // Despite span not being auto-detected, interactive=true removes tabindex
       const html = wrapper.html()
       expect(html).not.toMatch(/<span[^>]*tabindex="0"/)
+    })
+  })
+
+  describe('_forceOpenForDesignReview prop', () => {
+    it('should accept _forceOpenForDesignReview prop', () => {
+      const wrapper = mount(FzTooltip, {
+        props: { 
+          text: 'Forced tooltip',
+          _forceOpenForDesignReview: true
+        },
+        slots: { default: '<span>Trigger</span>' }
+      })
+      
+      // Verify prop is accepted and set correctly
+      expect(wrapper.props('_forceOpenForDesignReview')).toBe(true)
+      
+      wrapper.unmount()
+    })
+
+    it('should accept _forceOpenForDesignReview prop with different values', async () => {
+      const wrapper = mount(FzTooltip, {
+        props: { 
+          text: 'Toggle tooltip',
+          _forceOpenForDesignReview: false
+        },
+        slots: { default: '<span>Trigger</span>' }
+      })
+      
+      expect(wrapper.props('_forceOpenForDesignReview')).toBe(false)
+      
+      await wrapper.setProps({ _forceOpenForDesignReview: true })
+      expect(wrapper.props('_forceOpenForDesignReview')).toBe(true)
+      
+      wrapper.unmount()
+    })
+
+    it('should work with all status variants', () => {
+      const statuses: FzTooltipStatus[] = ['neutral', 'informative', 'positive', 'alert', 'error']
+      
+      statuses.forEach(status => {
+        const wrapper = mount(FzTooltip, {
+          props: { 
+            text: `${status} tooltip`,
+            status,
+            withIcon: true,
+            _forceOpenForDesignReview: true
+          },
+          slots: { default: '<span>Trigger</span>' }
+        })
+        
+        expect(wrapper.props('_forceOpenForDesignReview')).toBe(true)
+        expect(wrapper.props('status')).toBe(status)
+        
+        wrapper.unmount()
+      })
     })
   })
 })

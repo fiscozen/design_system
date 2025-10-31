@@ -9,6 +9,9 @@
    * Automatically detects interactive components (FzButton, FzLink) to prevent
    * double tab stops. The wrapper adds tabindex="0" only for non-interactive content.
    * 
+   * Supports _forceOpenForDesignReview prop for keeping tooltips visible in Storybook
+   * during design review (not for production use).
+   * 
    * @prop {boolean | 'auto'} interactive - Controls interactive behavior:
    *   - undefined/'auto': Auto-detects FzButton and FzLink (recommended)
    *   - true: Forces interactive (no wrapper tabindex)
@@ -28,8 +31,13 @@
    * <FzTooltip text="Custom action" :interactive="true">
    *   <span @click="handleClick">Action</span>
    * </FzTooltip>
+   * 
+   * @example Design review in Storybook only
+   * <FzTooltip text="Review this" _forceOpenForDesignReview>
+   *   <span>Element</span>
+   * </FzTooltip>
    */
-  import { computed, ref, useSlots, onUnmounted, VNode } from 'vue'
+  import { computed, ref, useSlots, onUnmounted, onMounted, watch, VNode } from 'vue'
 
   import { FzFloating } from '@fiscozen/composables'
   import { FzIcon } from '@fiscozen/icons'
@@ -43,6 +51,7 @@
     status: 'neutral',
     withIcon: false,
     interactive: 'auto',
+    _forceOpenForDesignReview: false,
   })
 
   const slots = useSlots()
@@ -206,14 +215,24 @@
     return isInteractiveElement.value ? undefined : 0;
   });
   
+  /**
+   * Shows the tooltip if content is available.
+   * When _forceOpenForDesignReview is true, tooltip remains visible.
+   */
   function showTooltip() {
     if (props.text || slots.text) {
       isOpen.value = true
     }
   }
 
+  /**
+   * Hides the tooltip unless _forceOpenForDesignReview is active.
+   * This allows designers to keep tooltips visible in Storybook for review.
+   */
   function hideTooltip() {
-    isOpen.value = false
+    if (!props._forceOpenForDesignReview) {
+      isOpen.value = false
+    }
   }
 
   /* ========================================================================
@@ -297,6 +316,24 @@
       hideTooltip()
     }
   }
+
+  /**
+   * Force tooltip visibility when _forceOpenForDesignReview is enabled.
+   * This runs on mount and whenever the prop changes.
+   */
+  onMounted(() => {
+    if (props._forceOpenForDesignReview) {
+      showTooltip()
+    }
+  })
+
+  watch(() => props._forceOpenForDesignReview, (newValue) => {
+    if (newValue) {
+      showTooltip()
+    } else {
+      hideTooltip()
+    }
+  })
 
   onUnmounted(() => {
     if (hoverTimeout.value) {

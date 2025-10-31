@@ -125,6 +125,7 @@ import { FzButton } from '@fiscozen/button'
 | `withIcon` | `boolean` | `false` | Display status-appropriate icon in tooltip content |
 | `ariaLabel` | `string` | `undefined` | Accessible label for the trigger element |
 | `interactive` | `boolean \| 'auto'` | `'auto'` | Controls keyboard accessibility: `undefined`/`'auto'` for auto-detection (FzButton, FzLink), `true` to force interactive, `false` to force non-interactive |
+| `_forceOpenForDesignReview` | `boolean` | `false` | ⚠️ **FOR DESIGN REVIEW ONLY** - Forces tooltip to remain visible. **DO NOT USE IN PRODUCTION** |
 
 ### Slots
 
@@ -238,3 +239,45 @@ Without proper interactive handling, the tooltip wrapper adds `tabindex="0"` for
 | `Escape` | Hide tooltip while maintaining focus |
 
 **Note**: When the wrapped element is interactive (button/link), its native keyboard behavior (Enter/Space activation) continues to work normally.
+
+## Design Review in Storybook
+
+For design inspection and review purposes, the tooltip component provides a special `_forceOpenForDesignReview` prop that keeps tooltips visible regardless of hover or focus state.
+
+### ⚠️ Important Warning
+
+**This prop is intended ONLY for design review in Storybook and should NEVER be used in production code.** The underscore prefix indicates this is an internal/development-only feature.
+
+### Usage in Storybook
+
+```vue
+<template>
+  <!-- Force tooltip to remain visible for design inspection -->
+  <FzTooltip 
+    text="Review this tooltip styling" 
+    status="informative"
+    :withIcon="true"
+    _forceOpenForDesignReview
+  >
+    <FzButton>Inspect Me</FzButton>
+  </FzTooltip>
+</template>
+```
+
+### When to Use
+
+- **Design Review**: Inspecting tooltip colors, typography, spacing, and layout
+- **Visual QA**: Comparing tooltip variants side-by-side
+- **Screenshot Documentation**: Capturing tooltip states for design systems documentation
+- **Accessibility Audit**: Reviewing tooltip content and ARIA attributes
+
+### Storybook Story
+
+The component includes a dedicated "DesignReview" story in Storybook that demonstrates all tooltip variants with `_forceOpenForDesignReview` enabled. Use the control panel to toggle the prop on/off and see the effect.
+
+### Why Not Use in Production?
+
+- Bypasses all normal tooltip visibility logic (hover, focus, keyboard)
+- Creates poor user experience with always-visible tooltips
+- Violates WCAG guidelines for dismissible content
+- Intended solely as a development/design tool

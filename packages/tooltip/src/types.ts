@@ -75,4 +75,23 @@ export interface FzTooltipProps {
    * </FzTooltip>
    */
   interactive?: boolean | 'auto';
+
+  /**
+   * **FOR DESIGN REVIEW ONLY - DO NOT USE IN PRODUCTION**
+   * 
+   * Forces the tooltip to remain visible regardless of hover/focus state.
+   * Intended exclusively for design review in Storybook and debugging purposes.
+   * 
+   * This prop bypasses all normal tooltip visibility logic (hover, focus, keyboard)
+   * and should never be used in production code. It exists solely to allow designers
+   * to inspect tooltip styling, positioning, and content in Storybook.
+   * 
+   * @default false
+   * 
+   * @example Storybook usage only
+   * <FzTooltip text="Review this design" _forceOpenForDesignReview>
+   *   <span>Element</span>
+   * </FzTooltip>
+   */
+  _forceOpenForDesignReview?: boolean;
 }
