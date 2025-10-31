@@ -184,7 +184,7 @@
   const DEFAULT_HOVER_DELAY = 100; // ms
 
   const staticClasses =
-    'text-core-white max-w-[200px] p-8 text-xs flex flex-row items-start justify-center'
+    'text-core-white max-w-[200px] p-8 text-sm leading-[16px] flex flex-row items-start justify-center'
 
   /**
    * Returns tooltip ID only when visible to prevent screen readers
