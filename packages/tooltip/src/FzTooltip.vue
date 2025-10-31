@@ -373,9 +373,9 @@
     >
       <FzIcon
         v-if="showIcon"
-        size="sm"
+        size="md"
         :name="computedIconName"
-        :class="['mr-4 grow-0 shrink-0', { 'text-core-black': props.status === 'alert' }]"
+        :class="['mr-4', '!w-[16px]', '!h-[16px]', 'grow-0', 'shrink-0', { 'text-core-black': props.status === 'alert' }]"
         :aria-hidden="true"
       />
       <span :class="['basis-0 grow shrink-0 break-normal fz__tooltip__text', { 'text-core-black': props.status === 'alert' }]">
