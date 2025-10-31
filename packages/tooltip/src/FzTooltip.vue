@@ -154,10 +154,10 @@
 
   const statusConfig: Record<FzTooltipStatus, { icon: string; bgClass: string }> = {
     neutral: { icon: '', bgClass: '!bg-core-black' },
-    informative: { icon: 'circle-info', bgClass: 'bg-semantic-info' },
-    alert: { icon: 'triangle-exclamation', bgClass: 'bg-semantic-warning' },
-    error: { icon: 'circle-exclamation', bgClass: 'bg-semantic-error' },
-    positive: { icon: 'circle-check', bgClass: 'bg-semantic-success' }
+    informative: { icon: 'circle-info', bgClass: 'bg-semantic-info-200' },
+    alert: { icon: 'triangle-exclamation', bgClass: 'bg-semantic-warning-200' },
+    error: { icon: 'circle-exclamation', bgClass: 'bg-semantic-error-200' },
+    positive: { icon: 'circle-check', bgClass: 'bg-semantic-success-200' }
   }
 
   const computedIconName = computed(() => statusConfig[props.status]?.icon || '')
@@ -184,7 +184,7 @@
   const DEFAULT_HOVER_DELAY = 100; // ms
 
   const staticClasses =
-    'text-fzwhite-100 max-w-[200px] p-6 text-xs flex flex-row items-start justify-center'
+    'text-core-white max-w-[200px] p-8 text-xs flex flex-row items-start justify-center'
 
   /**
    * Returns tooltip ID only when visible to prevent screen readers
@@ -375,10 +375,10 @@
         v-if="showIcon"
         size="sm"
         :name="computedIconName"
-        :class="['mr-8 grow-0 shrink-0', { 'text-core-black': props.status === 'alert' }]"
+        :class="['mr-4 grow-0 shrink-0', { 'text-core-black': props.status === 'alert' }]"
         :aria-hidden="true"
       />
-      <span :class="['basis-0 grow shrink-0 fz__tooltip__text', { 'text-core-black': props.status === 'alert' }]">
+      <span :class="['basis-0 grow shrink-0 break-normal fz__tooltip__text', { 'text-core-black': props.status === 'alert' }]">
         <slot name="text">
           {{ props.text }}
         </slot>
@@ -388,12 +388,7 @@
 </template>
 
 <style lang="css" scoped>
-  .text-fzwhite-100 {
-    color: #fffefd;
-  }
-
   .fz__tooltip__text {
     overflow-wrap: anywhere;
-    word-break: normal;
   }
 </style>
