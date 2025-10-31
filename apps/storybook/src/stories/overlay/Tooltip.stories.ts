@@ -388,6 +388,7 @@ export const DesignReview: Story = {
             <FzTooltip 
               text="Neutral tooltip for design review" 
               status="neutral"
+              position="top"
               :_forceOpenForDesignReview="args._forceOpenForDesignReview"
             >
               <FzButton>Neutral</FzButton>
@@ -396,6 +397,7 @@ export const DesignReview: Story = {
             <FzTooltip 
               text="Informative tooltip with useful context" 
               status="informative"
+              position="top"
               :withIcon="true"
               :_forceOpenForDesignReview="args._forceOpenForDesignReview"
             >
@@ -405,6 +407,7 @@ export const DesignReview: Story = {
             <FzTooltip 
               text="Success! Operation completed successfully" 
               status="positive"
+              position="top"
               :withIcon="true"
               :_forceOpenForDesignReview="args._forceOpenForDesignReview"
             >
@@ -414,6 +417,7 @@ export const DesignReview: Story = {
             <FzTooltip 
               text="Warning: This action requires attention" 
               status="alert"
+              position="top"
               :withIcon="true"
               :_forceOpenForDesignReview="args._forceOpenForDesignReview"
             >
@@ -423,62 +427,11 @@ export const DesignReview: Story = {
             <FzTooltip 
               text="Error: Operation failed. Please try again." 
               status="error"
+              position="top"
               :withIcon="true"
               :_forceOpenForDesignReview="args._forceOpenForDesignReview"
             >
               <FzButton variant="danger">Error</FzButton>
-            </FzTooltip>
-            
-            <FzTooltip 
-              text="This is a very long tooltip text that should wrap properly and maintain readability even when it contains a lot of information that needs to be displayed to the user."
-              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
-            >
-              <span class="px-12 py-6 bg-gray-200 rounded">Long text</span>
-            </FzTooltip>
-            
-            <FzTooltip 
-              status="informative"
-              :withIcon="true"
-              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
-            >
-              <span class="px-12 py-6 bg-gray-200 rounded">Rich content</span>
-              <template #text>
-                <strong>Custom Content</strong><br/>
-                <span class="text-xs">With HTML formatting</span><br/>
-                <em>and multiple lines</em>
-              </template>
-            </FzTooltip>
-            
-            <FzTooltip 
-              text="Positioned at top"
-              position="top"
-              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
-            >
-              <span class="px-12 py-6 bg-blue-200 rounded">Top</span>
-            </FzTooltip>
-            
-            <FzTooltip 
-              text="Positioned at bottom"
-              position="bottom"
-              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
-            >
-              <span class="px-12 py-6 bg-blue-200 rounded">Bottom</span>
-            </FzTooltip>
-            
-            <FzTooltip 
-              text="Positioned at left"
-              position="left"
-              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
-            >
-              <span class="px-12 py-6 bg-blue-200 rounded">Left</span>
-            </FzTooltip>
-            
-            <FzTooltip 
-              text="Positioned at right"
-              position="right"
-              :_forceOpenForDesignReview="args._forceOpenForDesignReview"
-            >
-              <span class="px-12 py-6 bg-blue-200 rounded">Right</span>
             </FzTooltip>
         </div>
       </div>
