@@ -225,7 +225,7 @@ export const Secondary: Story = {
     
     // Verify focus state classes
     await expect(button.classList.contains('focus:bg-core-white')).toBe(true)
-    await expect(button.classList.contains('focus:!border-grey-500')).toBe(true)
+    await expect(button.classList.contains('focus:!border-blue-600')).toBe(true)
     
     // Verify disabled state classes
     await expect(button.classList.contains('disabled:bg-grey-50')).toBe(true)
@@ -255,7 +255,7 @@ export const Invisible: Story = {
     
     // Verify focus state classes
     await expect(button.classList.contains('focus:bg-transparent')).toBe(true)
-    await expect(button.classList.contains('focus:!border-grey-500')).toBe(true)
+    await expect(button.classList.contains('focus:!border-blue-600')).toBe(true)
     
     // Verify disabled state classes (same as secondary)
     await expect(button.classList.contains('disabled:bg-grey-50')).toBe(true)
