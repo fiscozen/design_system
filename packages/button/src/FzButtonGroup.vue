@@ -6,23 +6,10 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import type { ButtonSize } from './types'
+import type { FzButtonGroupProps } from './types'
 
 const props = withDefaults(
-  defineProps<{
-    /**
-     * The direction of the button group. If true, buttons will be displayed horizontally, otherwise vertically
-     */
-    horizontal?: boolean
-    /**
-     * Whether to add a gap between buttons
-     */
-    gap?: boolean
-    /**
-     * The gap size between buttons
-     */
-    size?: ButtonSize
-  }>(),
+  defineProps<FzButtonGroupProps>(),
   {
     horizontal: true,
     size: 'md'

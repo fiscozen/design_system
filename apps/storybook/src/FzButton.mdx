@@ -1,0 +1,350 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Button/FzButton" />
+
+# FzButton
+
+A comprehensive button component supporting five visual variants and two environment-based sizes, with full icon integration and accessibility support.
+
+## Features
+
+- **5 Variants**: Primary, Secondary, Invisible, Danger, Success
+- **2 Environments**: Backoffice (compact), Frontoffice (larger - default)
+- **Icon Support**: Before, after, or both positions
+- **4 Interactive States**: Default, Hover, Focus, Disabled
+- **Full Accessibility**: Keyboard navigation, ARIA support
+- **Customizable**: Slots and class overrides
+
+## Installation
+
+```bash
+pnpm add @fiscozen/button
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { FzButton } from '@fiscozen/button'
+</script>
+
+<template>
+  <FzButton label="Click me" />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Text label displayed on the button</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'primary' | 'secondary' | 'invisible' | 'danger' | 'success'</code></td>
+      <td><code>'primary'</code></td>
+      <td>Visual style variant</td>
+    </tr>
+    <tr>
+      <td><code>environment</code></td>
+      <td><code>'backoffice' | 'frontoffice'</code></td>
+      <td><code>'frontoffice'</code></td>
+      <td>Button environment determining size and spacing</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Whether the button is disabled</td>
+    </tr>
+    <tr>
+      <td><code>iconName</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>FontAwesome icon name (e.g., 'bell', 'save')</td>
+    </tr>
+    <tr>
+      <td><code>iconVariant</code></td>
+      <td><code>IconVariant</code></td>
+      <td><code>undefined</code></td>
+      <td>FontAwesome icon variant (fas, far, fal, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>iconPosition</code></td>
+      <td><code>'before' | 'after'</code></td>
+      <td><code>'before'</code></td>
+      <td>Position of the icon relative to the label</td>
+    </tr>
+    <tr>
+      <td><code>containerClass</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Additional CSS classes for the label container</td>
+    </tr>
+    <tr>
+      <td><code>overrideContainerClass</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If true, replaces default container classes instead of merging</td>
+    </tr>
+  </tbody>
+</table>
+
+**Deprecated Props:**
+- `size` (`'xs' | 'sm' | 'md' | 'lg'`): Use `environment` instead
+- `tooltip` (`string`): Use `FzTooltip` component wrapper instead
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>default</code></td>
+      <td>Custom content for the button (overrides <code>label</code> prop)</td>
+    </tr>
+    <tr>
+      <td><code>before</code></td>
+      <td>Custom content before the label (replaces icon when provided)</td>
+    </tr>
+    <tr>
+      <td><code>after</code></td>
+      <td>Custom content after the label (replaces icon when provided)</td>
+    </tr>
+  </tbody>
+</table>
+
+## Variants
+
+### Primary (Default)
+Primary actions and main CTAs. Blue background with white text.
+
+```vue
+<FzButton variant="primary" label="Primary Action" />
+```
+
+### Secondary
+Secondary actions. White background with grey text and border.
+
+```vue
+<FzButton variant="secondary" label="Secondary Action" />
+```
+
+### Invisible
+Subtle actions. Transparent background with grey text.
+
+```vue
+<FzButton variant="invisible" label="Subtle Action" />
+```
+
+### Danger
+Destructive actions. Red semantic color background.
+
+```vue
+<FzButton variant="danger" label="Delete" />
+```
+
+### Success
+Confirmation actions. Green semantic color background.
+
+```vue
+<FzButton variant="success" label="Confirm" />
+```
+
+## With Icons
+
+Buttons support icons before, after, or on both sides of the label. Icons are always 16px (md size) for consistency.
+
+```vue
+<template>
+  <!-- Icon before label (default) -->
+  <FzButton 
+    label="Save" 
+    iconName="save" 
+    iconPosition="before" 
+  />
+  
+  <!-- Icon after label -->
+  <FzButton 
+    label="Next" 
+    iconName="arrow-right" 
+    iconPosition="after" 
+  />
+  
+  <!-- Both icons -->
+  <FzButton label="Notification">
+    <template #before>
+      <FzIcon name="bell" />
+    </template>
+    <template #after>
+      <FzIcon name="bell" />
+    </template>
+  </FzButton>
+</template>
+```
+
+## Environments
+
+### Backoffice
+Compact size for internal applications.
+
+```vue
+<FzButton environment="backoffice" label="Backoffice Button" />
+```
+
+### Frontoffice (Default)
+Larger size for customer-facing interfaces.
+
+```vue
+<FzButton environment="frontoffice" label="Frontoffice Button" />
+```
+
+## States
+
+### Disabled
+All variants support disabled state with lighter colors.
+
+```vue
+<FzButton label="Disabled Button" :disabled="true" />
+```
+
+## Special Cases
+
+### Long Text with Truncation
+Text automatically truncates with ellipsis when it exceeds button width.
+
+```vue
+<FzButton label="This is a very long button text that will be truncated with ellipsis when it exceeds the maximum width" />
+```
+
+## Interactive States
+
+All button variants support four interactive states:
+
+- **Default**: Base background color for each variant
+- **Hover**: Darker background color on mouse over
+- **Focus**: Visible colored border for keyboard navigation (no flickering)
+- **Disabled**: Lighter background with reduced opacity
+
+## Icon Behavior
+
+- Icons only render when both label and iconName are provided
+- Custom icons can be provided via `#before` and `#after` slots
+
+## Accessibility
+
+- Native `<button>` element with `type="button"`
+- Full keyboard navigation (Tab, Enter, Space)
+- Disabled state prevents interaction
+- Focus states clearly visible with colored border
+- Compatible with screen readers
+
+## Deprecation Notices
+
+### Size Prop
+The `size` prop is deprecated. Use `environment` instead:
+
+```vue
+<!-- ❌ Deprecated -->
+<FzButton size="lg" label="Button" />
+
+<!-- ✅ Recommended -->
+<FzButton environment="frontoffice" label="Button" />
+```
+
+**Size to Environment Mapping:**
+- `xs`, `sm`, `md` → `backoffice`
+- `lg` → `frontoffice`
+
+### Tooltip Prop
+The `tooltip` prop is deprecated. Use the `FzTooltip` component wrapper instead:
+
+```vue
+<!-- ❌ Deprecated -->
+<FzButton tooltip="Click me" label="Button" />
+
+<!-- ✅ Recommended -->
+<FzTooltip content="Click me">
+  <FzButton label="Button" />
+</FzTooltip>
+```
+
+## Usage Examples
+
+### Form Actions
+```vue
+<div class="flex gap-12">
+  <FzButton variant="primary" label="Submit" @click="handleSubmit" />
+  <FzButton variant="secondary" label="Cancel" @click="handleCancel" />
+</div>
+```
+
+### Destructive Action
+```vue
+<FzButton 
+  variant="danger" 
+  label="Delete Account" 
+  iconName="trash"
+  :disabled="!confirmed"
+  @click="handleDelete"
+/>
+```
+
+### Navigation
+```vue
+<div class="flex gap-8">
+  <FzButton 
+    variant="secondary" 
+    label="Back" 
+    iconName="arrow-left" 
+    environment="backoffice"
+  />
+  <FzButton 
+    variant="primary" 
+    label="Continue" 
+    iconName="arrow-right" 
+    iconPosition="after"
+    environment="backoffice"
+  />
+</div>
+```
+
+### Custom Content with Slots
+```vue
+<FzButton>
+  <span>Custom <strong>HTML</strong> Content</span>
+</FzButton>
+
+<FzButton label="Custom Icons">
+  <template #before>
+    <CustomIcon />
+  </template>
+  <template #after>
+    <CustomIcon />
+  </template>
+</FzButton>
+```
+
+## Related Components
+
+- **FzIconButton**: Icon-only button for compact interfaces
+- **FzButtonGroup**: Container for grouping related buttons
+- **FzTooltip**: Wrap buttons to add tooltips
+

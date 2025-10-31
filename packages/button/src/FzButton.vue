@@ -1,148 +1,187 @@
-<template>
-  <button type="button" :disabled="disabled" :class="[staticClasses, classes]">
-    <div v-if="iconAndLabel" :class="[staticIconClasses, beforeClasses]">
-      <slot name="before">
-        <FzIcon
-          v-if="iconName && iconPosition === 'before'"
-          :name="iconName"
-          :size="mappedIconSize"
-          :variant="iconVariant"
-        />
-      </slot>
-    </div>
-    <div :class="containerClass">
-      <slot>
-        {{ label }}
-      </slot>
-    </div>
-    <div v-if="slots.after || iconAndLabel" :class="[staticIconClasses, afterClasses]">
-      <slot name="after">
-        <FzIcon
-          v-if="iconName && iconPosition === 'after'"
-          :name="iconName"
-          :size="mappedIconSize"
-          :variant="iconVariant"
-        />
-      </slot>
-    </div>
-    <span class="hidden h-0 w-0">{{ tooltip }}</span>
-  </button>
-</template>
-
+/**
+ * FzButton - Versatile button component with multiple variants and environment-based sizing
+ * 
+ * A comprehensive button component supporting five visual variants (primary, secondary, invisible,
+ * danger, success) and two environment-based sizes (backoffice, frontoffice). Features
+ * include icon integration, multiple interactive states, and full accessibility support.
+ * 
+ * @example Basic usage (frontoffice default)
+ * ```vue
+ * <FzButton label="Click me" />
+ * ```
+ * 
+ * @example Backoffice environment
+ * ```vue
+ * <FzButton environment="backoffice" label="Save" />
+ * ```
+ * 
+ * @example With icon
+ * ```vue
+ * <FzButton label="Save" iconName="save" iconPosition="before" />
+ * ```
+ * 
+ * @example Danger variant
+ * ```vue
+ * <FzButton variant="danger" label="Delete" :disabled="!confirmed" />
+ * ```
+ */
 <script lang="ts" setup>
-import { computed, useSlots } from 'vue'
-import { type IconVariant, FzIcon } from '@fiscozen/icons'
-import type { ButtonSize, ButtonVariant } from './types'
-import { iconSizeMap } from './utils'
+import { computed, useSlots, watch } from 'vue'
+import { FzIcon } from '@fiscozen/icons'
+import type { FzButtonProps, ButtonEnvironment } from './types'
+import { sizeToEnvironmentMapping } from './utils'
 
 const props = withDefaults(
-  defineProps<{
-    /**
-     * The label of the button
-     */
-    label?: string
-    /**
-     * The tooltip of the button will be shown on hover
-     */
-    tooltip?: string
-    /**
-     * primary or secondary button
-     */
-    variant?: ButtonVariant
-    /**
-     * size of the button
-     */
-    size?: ButtonSize
-    /**
-     * whether action is enabled or not
-     */
-    disabled?: boolean
-    /**
-     * Icon to be displayed. Use fontawesome search here https://fontawesome.com/v6/icons
-     * Mind that not all of the icons and variants might be available.
-     */
-    iconName?: string
-    /**
-     * Fontawesome icon variant: solid, regular, light, thin. Sharp subvariants are available as well
-     */
-    iconVariant?: IconVariant
-    /**
-     * Positioning of the icon
-     */
-    iconPosition?: 'before' | 'after',
-    /**
-     * Define the css class for the default slot container
-     */
-    containerClass?: string
-    /**
-     * Whether to override internal container classes
-     */
-    overrideContainerClass?: boolean
-  }>(),
+  defineProps<FzButtonProps>(),
   {
     variant: 'primary',
-    size: 'md',
     disabled: false,
     iconPosition: 'before',
+    // Note: environment has no default to allow deprecated size prop to work via effectiveEnvironment computed
   }
 )
 const slots = useSlots()
 
+/**
+ * Emits deprecation warnings for deprecated props
+ * 
+ * Watches for tooltip prop usage and logs warning only when prop is provided.
+ * Warning is shown once when component mounts or when tooltip changes.
+ */
+watch(() => props.tooltip, (tooltip) => {
+  if (tooltip) {
+    console.warn(
+      '[FzButton] The "tooltip" prop is deprecated and will be removed in a future version. ' +
+      'Please use the FzTooltip component to wrap your button instead.'
+    )
+  }
+}, { immediate: true })
+
+/**
+ * Emits deprecation warnings for deprecated size prop
+ * 
+ * Watches for size prop usage and logs warning with migration path to environment prop.
+ */
+watch(() => props.size, (size) => {
+  if (size !== undefined) {
+    const mappedEnvironment = sizeToEnvironmentMapping[size]
+    
+    // Check if both environment and size are provided and conflict
+    if (props.environment && props.environment !== mappedEnvironment) {
+      console.warn(
+        `[FzButton] Both "size" and "environment" props are provided. ` +
+        `"environment=${props.environment}" will be used and "size=${size}" will be ignored. ` +
+        `Please remove the deprecated "size" prop.`
+      )
+    } else {
+      console.warn(
+        `[FzButton] The "size" prop is deprecated and will be removed in a future version. ` +
+        `Please use environment="${mappedEnvironment}" instead of size="${size}".`
+      )
+    }
+  }
+}, { immediate: true })
+
+/**
+ * Determines if the button is in an interactive state
+ * 
+ * Returns true when the button is not disabled, allowing hover and focus
+ * visual feedback. Used throughout the component to conditionally apply
+ * interactive classes.
+ */
+const isInteractive = computed(() => !props.disabled)
+
+/**
+ * Computes CSS classes based on the selected variant
+ * 
+ * Returns dynamic classes for each variant, including background colors, text colors,
+ * hover states, and focus states. Danger and success variants use semantic color tokens
+ * (bg-semantic-error, bg-semantic-success) for consistent theming. Hover and focus classes
+ * are conditionally applied based on the disabled state to prevent visual feedback on
+ * non-interactive buttons.
+ */
 const customVariantClasses = computed(() => {
   switch (props.variant) {
-    case 'primary':
-      return {
-        'bg-blue-500': true,
-        'hover:bg-blue-600': true,
-        'disabled:bg-blue-200': true,
-        'text-core-white': true,
-        'focus:bg-blue-500': !props.disabled
-      }
-      break
     case 'secondary':
       return {
-        'text-grey-500': true,
         'bg-core-white': true,
+        'text-grey-500': true,
         '!border-grey-200': true,
-        'hover:bg-grey-100': !props.disabled,
-        'focus:!border-blue-600': !props.disabled,
-        'disabled:text-grey-100': true,
+        'hover:bg-grey-100': isInteractive.value,
+        'hover:!border-blue-600': isInteractive.value,
+        'focus:bg-core-white': isInteractive.value,
+        'focus:!border-blue-600': isInteractive.value,
+        'disabled:bg-grey-50': true,
+        'disabled:text-grey-200': true,
+        'disabled:!border-grey-200': true,
       }
-      break
     case 'invisible':
       return {
-        'text-grey-500': true,
         'bg-transparent': true,
-        'border-transparent': true,
-        'hover:bg-grey-100': !props.disabled,
-        'focus:!border-blue-600': !props.disabled,
-        'disabled:text-grey-100': true
+        'text-grey-500': true,
+        '!border-transparent': true,
+        'hover:bg-grey-100': isInteractive.value,
+        'hover:!border-blue-600': isInteractive.value,
+        'focus:bg-transparent': isInteractive.value,
+        'focus:!border-blue-600': isInteractive.value,
+        'disabled:bg-grey-50': true,
+        'disabled:text-grey-200': true,
+        'disabled:!border-grey-200': true,
       }
-      break
     case 'danger':
       return {
+        'bg-semantic-error-200': true,
         'text-core-white': true,
-        'temporary-bg-red': true,
-        'temporary-border-red': !props.disabled,
-        'bg-semantic-error': true
+        'hover:bg-semantic-error-300': isInteractive.value,
+        'focus:bg-semantic-error-200': isInteractive.value,
+        'focus:!border-semantic-error-300': isInteractive.value,
+        'disabled:bg-semantic-error-100': true,
       }
-      break
     case 'success':
       return {
+        'bg-semantic-success-200': true,
         'text-core-white': true,
-        'temporary-bg-green': true,
-        'temporary-border-green': !props.disabled,
-        'bg-semantic-success': true
+        'hover:bg-semantic-success-300': isInteractive.value,
+        'focus:bg-semantic-success-200': isInteractive.value,
+        'focus:!border-semantic-success-300': isInteractive.value,
+        'disabled:bg-semantic-success-100': true,
       }
-      break
+    case 'primary':
     default:
-      return {}
-      break
+      return {
+        'bg-blue-500': true,
+        'text-core-white': true,
+        'hover:bg-blue-600': isInteractive.value,
+        'focus:bg-blue-500': isInteractive.value,
+        'focus:!border-blue-600': isInteractive.value,
+        'disabled:bg-blue-200': true,
+      }
   }
 })
 
+/**
+ * Determines the effective environment based on environment or size prop
+ * 
+ * Priority: environment prop > size prop mapped to environment > default 'frontoffice'.
+ * The size prop is deprecated and only used for backward compatibility.
+ */
+const effectiveEnvironment = computed((): ButtonEnvironment => {
+  if (props.environment) {
+    return props.environment
+  }
+  if (props.size) {
+    return sizeToEnvironmentMapping[props.size]
+  }
+  return 'frontoffice'
+})
+
+/**
+ * Determines if both icon and label/slot content are present
+ * 
+ * Icons are only rendered when accompanied by text content to ensure proper
+ * spacing and layout. This prevents icon containers from rendering unnecessarily.
+ */
 const iconAndLabel = computed(() => Boolean((props.label || slots.default) && props.iconName))
-const mappedIconSize = computed(() => iconSizeMap[props.size])
 
 const staticClasses = [
   'relative',
@@ -151,72 +190,88 @@ const staticClasses = [
   'flex-shrink',
   'items-center',
   'justify-center',
-  'font-medium',
+  'font-normal',
+  '!text-[16px]',
+  '!leading-[20px]',
   'border-1',
-  'border-transparent'
+  'border-transparent',
+  'gap-8'
 ]
 
 const staticIconClasses = ['flex', 'items-center', 'justify-items-center']
 
-const classes = computed(() => ({
-  'h-24 text-xs': props.size === 'xs',
-  'h-28 text-sm': props.size === 'sm',
-  'h-32': props.size === 'md',
-  'h-40 text-lg': props.size === 'lg',
-  'focus:border-blue-600': !props.disabled,
-  'focus:border-solid': !props.disabled,
-  'focus:border-1': !props.disabled,
-  'px-12': props.size === 'xs' && !iconAndLabel.value,
-  'px-14': props.size === 'sm' && !iconAndLabel.value,
-  'px-16': props.size === 'md' && !iconAndLabel.value,
-  'px-20': props.size === 'lg' && !iconAndLabel.value,
-  ...customVariantClasses.value
-}))
+/**
+ * Computes dynamic size-based classes for the button
+ * 
+ * Focus border classes are only applied when the button is not disabled.
+ */
+const classes = computed(() => {
+  const env = effectiveEnvironment.value
+  
+  return {
+    // Height classes (explicit for PurgeCSS detection)
+    'h-32': env === 'backoffice',
+    'h-44': env === 'frontoffice',
+    
+    // Padding classes (same for both environments)
+    'px-12': true,
+    
+    // Min-width classes (same for both environments)
+    'min-w-96': true,
+    
+    ...customVariantClasses.value
+  }
+})
 
-const beforeClasses = computed(() => ({
-  'mr-8': props.size === 'lg',
-  'mr-6': props.size === 'md',
-  'mr-4': props.size === 'sm' || props.size === 'xs',
-  'pl-12': props.size === 'lg' && iconAndLabel.value,
-  'pl-10': (props.size === 'md' || props.size === 'sm') && iconAndLabel.value,
-  'pl-8': props.size === 'xs' && iconAndLabel.value
-}))
-
-const afterClasses = computed(() => ({
-  'ml-8': props.size === 'lg',
-  'ml-6': props.size === 'md',
-  'ml-4': props.size === 'sm' || props.size === 'xs',
-  'pr-12': props.size === 'lg' && iconAndLabel.value,
-  'pr-10': (props.size === 'md' || props.size === 'sm') && iconAndLabel.value,
-  'pr-8': props.size === 'xs' && iconAndLabel.value
-}))
-
+/**
+ * Computes classes for the label/slot container
+ * 
+ * By default, includes 'truncate' class to handle text overflow with ellipsis,
+ * plus typography classes (font-normal, text-16, leading-20) for consistent text styling.
+ * When overrideContainerClass is true, only the custom containerClass is applied,
+ * allowing full control over container styling. Otherwise, custom classes are merged
+ * with the default truncate behavior and typography.
+ */
 const containerClass = computed(() => {
   if (props.overrideContainerClass) {
     return props.containerClass
   }
 
-  return ["truncate", props.containerClass]
+  return ["truncate", "font-normal", "!text-[16px]", "!leading-[20px]", props.containerClass]
 });
 </script>
 
-<style>
-.temporary-bg-red:hover {
-  background-color: #aa2f2f;
-}
-.temporary-bg-red:disabled {
-  background-color: #f8baba;
-}
-.temporary-border-red:focus {
-  border-color: #aa2f2f;
-}
-.temporary-bg-green:hover {
-  background-color: #0b7763;
-}
-.temporary-bg-green:disabled {
-  background-color: #b5d8ce;
-}
-.temporary-border-green:focus {
-  border-color: #0b7763;
-}
-</style>
+<template>
+  <button 
+    type="button" 
+    :disabled="disabled" 
+    :aria-disabled="disabled ? 'true' : 'false'"
+    :class="[staticClasses, classes]"
+  >
+    <div v-if="slots.before || (iconAndLabel && iconPosition === 'before')" :class="staticIconClasses">
+      <slot name="before">
+        <FzIcon
+          v-if="iconName"
+          :name="iconName"
+          size="md"
+          :variant="iconVariant"
+        />
+      </slot>
+    </div>
+    <div v-if="label || slots.default" :class="containerClass">
+      <slot>
+        {{ label }}
+      </slot>
+    </div>
+    <div v-if="slots.after || (iconAndLabel && iconPosition === 'after')" :class="staticIconClasses">
+      <slot name="after">
+        <FzIcon
+          v-if="iconName"
+          :name="iconName"
+          size="md"
+          :variant="iconVariant"
+        />
+      </slot>
+    </div>
+  </button>
+</template>
