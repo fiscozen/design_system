@@ -27,64 +27,12 @@
  */
 <script lang="ts" setup>
 import { computed, useSlots, watch } from 'vue'
-import { type IconVariant, type IconSize, FzIcon } from '@fiscozen/icons'
-import type { ButtonSize, ButtonVariant, ButtonEnvironment } from './types'
+import { FzIcon } from '@fiscozen/icons'
+import type { FzButtonProps, ButtonEnvironment } from './types'
 import { sizeToEnvironmentMapping } from './utils'
 
 const props = withDefaults(
-  defineProps<{
-    /**
-     * Text label displayed on the button. Overridden by default slot if provided.
-     */
-    label?: string
-    /**
-     * @deprecated Use FzTooltip component to wrap the button instead.
-     * A runtime warning will be displayed when this prop is used.
-     */
-    tooltip?: string
-    /**
-     * Visual style variant determining colors and interactive states
-     * @default 'primary'
-     */
-    variant?: ButtonVariant
-    /**
-     * Button size affecting height, padding, and text size
-     * @deprecated Use the 'environment' prop instead. This prop will be removed in a future version.
-     */
-    size?: ButtonSize
-    /**
-     * Environment determining button size
-     * @default 'frontoffice'
-     */
-    environment?: ButtonEnvironment
-    /**
-     * Disables interaction and applies disabled styling
-     * @default false
-     */
-    disabled?: boolean
-    /**
-     * FontAwesome icon name (e.g., 'bell', 'save'). Search: https://fontawesome.com/v6/icons
-     */
-    iconName?: string
-    /**
-     * FontAwesome icon variant (e.g., 'fas', 'far', 'fal')
-     */
-    iconVariant?: IconVariant
-    /**
-     * Icon position relative to label
-     * @default 'before'
-     */
-    iconPosition?: 'before' | 'after',
-    /**
-     * Additional CSS classes for label container. Merged with 'truncate' unless overrideContainerClass is true.
-     */
-    containerClass?: string
-    /**
-     * Replaces default container classes with containerClass instead of merging
-     * @default false
-     */
-    overrideContainerClass?: boolean
-  }>(),
+  defineProps<FzButtonProps>(),
   {
     variant: 'primary',
     disabled: false,
