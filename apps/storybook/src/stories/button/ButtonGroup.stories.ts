@@ -5,7 +5,18 @@ import { FzButton, FzButtonGroup } from '@fiscozen/button'
 const meta = {
   title: 'Button/FzButtonGroup',
   component: FzButtonGroup,
-  tags: ['autodocs']
+  tags: ['autodocs'],
+  argTypes: {
+    horizontal: {
+      table: { disable: true }
+    },
+    gap: {
+      table: { disable: true }
+    },
+    size: {
+      table: { disable: true }
+    }
+  }
 } satisfies Meta<typeof FzButtonGroup>
 
 export default meta
@@ -29,6 +40,7 @@ const Template: ButtonGroupStory = {
 
 export const ButtonGroup: ButtonGroupStory = {
   ...Template,
+  args: {},
   play: async ({ canvasElement, step }: any) => {
     const canvas = within(canvasElement)
 
