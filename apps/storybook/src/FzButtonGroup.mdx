@@ -1,0 +1,299 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Button/FzButtonGroup" />
+
+# FzButtonGroup
+
+Container for grouping buttons with flexible layout orientation and spacing control. Supports horizontal and vertical layouts with configurable gaps. When gap is disabled, buttons connect seamlessly with shared borders.
+
+## Features
+
+- Horizontal and vertical layout orientations
+- Configurable gap spacing (size-based: xs, sm, md, lg)
+- Seamless attached buttons mode (gap-disabled) for segmented controls
+- Gap sizes scale proportionally with button sizes
+- Full accessibility support for button children
+
+## Installation
+
+```bash
+pnpm add @fiscozen/button
+```
+
+## Basic Usage
+
+### Horizontal Layout with Gap (Default)
+
+The default horizontal layout displays buttons in a row with configurable spacing.
+
+```vue
+<script setup>
+import { FzButtonGroup, FzButton } from '@fiscozen/button'
+</script>
+
+<template>
+  <FzButtonGroup gap size="md">
+    <FzButton variant="primary">Save</FzButton>
+    <FzButton variant="secondary">Cancel</FzButton>
+    <FzButton variant="secondary">Delete</FzButton>
+  </FzButtonGroup>
+</template>
+```
+
+### Horizontal Layout without Gap (Attached Buttons)
+
+Buttons connect seamlessly with shared borders when gap is disabled, creating a unified control group.
+
+```vue
+<template>
+  <FzButtonGroup size="md">
+    <FzButton variant="primary">All</FzButton>
+    <FzButton variant="secondary">Active</FzButton>
+    <FzButton variant="secondary">Archived</FzButton>
+  </FzButtonGroup>
+</template>
+```
+
+### Vertical Layout
+
+Buttons stack vertically in a column layout.
+
+```vue
+<template>
+  <FzButtonGroup :horizontal="false" gap size="md">
+    <FzButton variant="primary">Option 1</FzButton>
+    <FzButton variant="secondary">Option 2</FzButton>
+    <FzButton variant="secondary">Option 3</FzButton>
+  </FzButtonGroup>
+</template>
+```
+
+### Vertical Layout with Attached Buttons
+
+Vertical buttons can also be attached with seamless borders.
+
+```vue
+<template>
+  <FzButtonGroup :horizontal="false" size="md">
+    <FzButton variant="primary">First</FzButton>
+    <FzButton variant="secondary">Second</FzButton>
+    <FzButton variant="secondary">Third</FzButton>
+  </FzButtonGroup>
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>horizontal</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Layout orientation for button arrangement. Controls whether buttons stack horizontally (row) or vertically (column). Horizontal layout is default for common use cases like action groups.</td>
+    </tr>
+    <tr>
+      <td><code>gap</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Enables spacing between buttons. When <code>false</code>, buttons attach seamlessly with shared borders (useful for segmented controls). When <code>true</code>, applies size-based gap spacing for separated button groups.</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'xs' | 'sm' | 'md' | 'lg'</code></td>
+      <td><code>'md'</code></td>
+      <td>Visual size affecting gap spacing and alignment with button sizes. Gap sizes scale proportionally with button sizes to maintain visual harmony. Must match button sizes for consistent spacing.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Gap Sizes
+
+When <code>gap</code> is <code>true</code>, the spacing between buttons is determined by the <code>size</code> prop:
+
+<table>
+  <thead>
+    <tr>
+      <th>Size</th>
+      <th>Tailwind Class</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>xs</code></td>
+      <td><code>gap-8</code></td>
+      <td>2rem / 32px</td>
+    </tr>
+    <tr>
+      <td><code>sm</code></td>
+      <td><code>gap-10</code></td>
+      <td>2.5rem / 40px</td>
+    </tr>
+    <tr>
+      <td><code>md</code></td>
+      <td><code>gap-12</code></td>
+      <td>3rem / 48px</td>
+    </tr>
+    <tr>
+      <td><code>lg</code></td>
+      <td><code>gap-16</code></td>
+      <td>4rem / 64px</td>
+    </tr>
+  </tbody>
+</table>
+
+Gap sizes scale proportionally with button sizes to maintain visual harmony. The <code>size</code> prop on <code>FzButtonGroup</code> should match the size of the buttons inside for consistent spacing.
+
+## Orientation Behavior
+
+### Horizontal (Default)
+
+- Buttons align horizontally in a single row
+- Gap is applied between buttons horizontally
+- Ideal for action button groups, navigation controls, or toolbar buttons
+- Default layout for most use cases
+
+### Vertical
+
+- Buttons stack vertically in a column
+- Gap is applied between buttons vertically
+- Useful for vertical menus, mobile interfaces, or compact layouts
+- All gap sizes and attached button modes work in vertical orientation
+
+## Attached Buttons (gap-disabled)
+
+When <code>gap={false}</code>, buttons connect seamlessly:
+
+- **Border radius removal**: Border radius is removed at connection points to create seamless connections
+- **Negative margins**: Adjacent buttons overlap by 1px to eliminate double borders
+- **Unified appearance**: Creates a single unified control group (useful for segmented controls)
+- **CSS targeting**: Uses <code>:deep()</code> to target button children passed via slots
+
+This mode is ideal for segmented controls where buttons represent mutually exclusive options.
+
+## Examples
+
+### Action Buttons Group
+
+```vue
+<template>
+  <FzButtonGroup gap size="md">
+    <FzButton variant="primary">Primary Action</FzButton>
+    <FzButton variant="secondary">Secondary Action</FzButton>
+    <FzButton variant="invisible">Cancel</FzButton>
+  </FzButtonGroup>
+</template>
+```
+
+### Segmented Control (Attached Buttons)
+
+```vue
+<template>
+  <FzButtonGroup size="md">
+    <FzButton 
+      variant="primary" 
+      :disabled="view === 'list'"
+      @click="view = 'list'">
+      List
+    </FzButton>
+    <FzButton 
+      variant="secondary" 
+      :disabled="view === 'grid'"
+      @click="view = 'grid'">
+      Grid
+    </FzButton>
+    <FzButton 
+      variant="secondary" 
+      :disabled="view === 'calendar'"
+      @click="view = 'calendar'">
+      Calendar
+    </FzButton>
+  </FzButtonGroup>
+</template>
+```
+
+### Different Sizes
+
+```vue
+<template>
+  <!-- Small buttons with small gap -->
+  <FzButtonGroup gap size="sm">
+    <FzButton size="sm">Small 1</FzButton>
+    <FzButton size="sm">Small 2</FzButton>
+  </FzButtonGroup>
+
+  <!-- Medium buttons with medium gap (default) -->
+  <FzButtonGroup gap size="md">
+    <FzButton size="md">Medium 1</FzButton>
+    <FzButton size="md">Medium 2</FzButton>
+  </FzButtonGroup>
+
+  <!-- Large buttons with large gap -->
+  <FzButtonGroup gap size="lg">
+    <FzButton size="lg">Large 1</FzButton>
+    <FzButton size="lg">Large 2</FzButton>
+  </FzButtonGroup>
+</template>
+```
+
+### Vertical Button Menu
+
+```vue
+<template>
+  <FzButtonGroup :horizontal="false" gap size="md">
+    <FzButton variant="primary">Main Action</FzButton>
+    <FzButton variant="secondary">Action 1</FzButton>
+    <FzButton variant="secondary">Action 2</FzButton>
+    <FzButton variant="secondary">Action 3</FzButton>
+  </FzButtonGroup>
+</template>
+```
+
+### Form Actions with Different Variants
+
+```vue
+<template>
+  <FzButtonGroup gap size="md">
+    <FzButton variant="primary" label="Submit" @click="handleSubmit" />
+    <FzButton variant="secondary" label="Cancel" @click="handleCancel" />
+    <FzButton variant="danger" label="Delete" @click="handleDelete" />
+  </FzButtonGroup>
+</template>
+```
+
+## Size Alignment
+
+The <code>size</code> prop on <code>FzButtonGroup</code> should match the size of the buttons inside for consistent spacing. Gap sizes scale proportionally with button sizes to maintain visual harmony.
+
+For example:
+- If buttons use <code>size="sm"</code>, use <code>FzButtonGroup size="sm"</code>
+- If buttons use <code>size="md"</code>, use <code>FzButtonGroup size="md"</code>
+
+Mismatched sizes will result in inconsistent visual spacing between buttons and their containers.
+
+## Accessibility
+
+The component preserves accessibility attributes of button children:
+
+- **Keyboard navigation**: Full keyboard navigation works correctly through all buttons
+- **ARIA attributes**: ARIA labels and descriptions are maintained and passed through to buttons
+- **Disabled states**: Disabled button states are preserved and functional
+- **Screen readers**: Screen readers can navigate through buttons normally
+
+The component itself is a semantic <code>div</code> container and does not interfere with button accessibility. Buttons maintain their native <code>&lt;button&gt;</code> semantics and all interactive features.
+
+## Related Components
+
+- **FzButton**: Standard button component with label and optional icon
+- **FzIconButton**: Icon-only button for compact interfaces
+- **FzTooltip**: Wrap button groups to add tooltips
+
