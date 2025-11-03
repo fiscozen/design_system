@@ -2,6 +2,7 @@
 
 import { mount } from '@vue/test-utils'
 import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest'
+import { FzContainer } from '@fiscozen/container'
 import FzButtonGroup from '../FzButtonGroup.vue'
 import FzButton from '../FzButton.vue'
 
@@ -17,7 +18,7 @@ describe('FzButtonGroup', () => {
     it('renders correctly with buttons', () => {
       const wrapper = mount(FzButtonGroup, {
         global: {
-          components: { FzButton }
+          components: { FzButton, FzContainer }
         },
         slots: {
           default: '<FzButton label="Button 1" /><FzButton label="Button 2" />'
@@ -30,18 +31,22 @@ describe('FzButtonGroup', () => {
 
     it('renders with empty slot', () => {
       const wrapper = mount(FzButtonGroup, {
+        global: {
+          components: { FzContainer }
+        },
         slots: {
           default: ''
         }
       })
       expect(wrapper.html()).toBeTruthy()
-      expect(wrapper.find('div').exists()).toBe(true)
+      const container = wrapper.findComponent(FzContainer)
+      expect(container.exists()).toBe(true)
     })
 
     it('renders single button correctly', () => {
       const wrapper = mount(FzButtonGroup, {
         global: {
-          components: { FzButton }
+          components: { FzButton, FzContainer }
         },
         slots: {
           default: '<FzButton label="Single Button" />'
@@ -52,30 +57,78 @@ describe('FzButtonGroup', () => {
   })
 
   describe('Layout', () => {
-    it('applies horizontal layout classes', () => {
-      const wrapper = mount(FzButtonGroup)
-      expect(wrapper.classes()).to.include('flex')
-      expect(wrapper.classes()).to.include('flex-row')
-      expect(wrapper.classes()).not.to.include('flex-col')
+    it('uses FzContainer with horizontal prop', () => {
+      const wrapper = mount(FzButtonGroup, {
+        global: {
+          components: { FzContainer }
+        }
+      })
+      const container = wrapper.findComponent(FzContainer)
+      expect(container.exists()).toBe(true)
+      expect(container.props('horizontal')).toBe(true)
     })
 
-    it('applies fixed gap class', () => {
-      const wrapper = mount(FzButtonGroup)
-      expect(wrapper.classes()).to.include('gap-16')
+    it('uses FzContainer with gap sm (section)', () => {
+      const wrapper = mount(FzButtonGroup, {
+        global: {
+          components: { FzContainer }
+        }
+      })
+      const container = wrapper.findComponent(FzContainer)
+      expect(container.props('gap')).toBe('sm')
+      expect(container.props('main')).toBe(false)
+    })
+
+    it('uses FzContainer with layout expand-all', () => {
+      const wrapper = mount(FzButtonGroup, {
+        global: {
+          components: { FzContainer }
+        }
+      })
+      const container = wrapper.findComponent(FzContainer)
+      expect(container.props('layout')).toBe('expand-all')
+    })
+
+    it('applies full width class', () => {
+      const wrapper = mount(FzButtonGroup, {
+        global: {
+          components: { FzContainer }
+        }
+      })
+      const container = wrapper.findComponent(FzContainer)
+      expect(container.classes()).to.include('w-full')
+    })
+
+    it('applies equal flex growth to children via layout expand-all', () => {
+      const wrapper = mount(FzButtonGroup, {
+        global: {
+          components: { FzButton, FzContainer }
+        },
+        slots: {
+          default: '<FzButton label="Button 1" /><FzButton label="Button 2" />'
+        }
+      })
+      const container = wrapper.findComponent(FzContainer)
+      expect(container.exists()).toBe(true)
+      expect(container.props('layout')).toBe('expand-all')
     })
   })
 
   describe('Accessibility', () => {
     it('renders semantic container element', () => {
-      const wrapper = mount(FzButtonGroup)
-      const container = wrapper.find('div')
+      const wrapper = mount(FzButtonGroup, {
+        global: {
+          components: { FzContainer }
+        }
+      })
+      const container = wrapper.findComponent(FzContainer)
       expect(container.exists()).toBe(true)
     })
 
     it('preserves button accessibility attributes', () => {
       const wrapper = mount(FzButtonGroup, {
         global: {
-          components: { FzButton }
+          components: { FzButton, FzContainer }
         },
         slots: {
           default: '<FzButton label="Button 1" aria-label="Action 1" /><FzButton label="Button 2" aria-label="Action 2" />'
@@ -93,7 +146,7 @@ describe('FzButtonGroup', () => {
     it('allows button children to maintain keyboard navigation', () => {
       const wrapper = mount(FzButtonGroup, {
         global: {
-          components: { FzButton }
+          components: { FzButton, FzContainer }
         },
         slots: {
           default: '<FzButton label="Button 1" /><FzButton label="Button 2" />'
@@ -109,7 +162,7 @@ describe('FzButtonGroup', () => {
     it('does not interfere with button disabled state', () => {
       const wrapper = mount(FzButtonGroup, {
         global: {
-          components: { FzButton }
+          components: { FzButton, FzContainer }
         },
         slots: {
           default: '<FzButton label="Disabled Button" :disabled="true" />'
@@ -125,7 +178,7 @@ describe('FzButtonGroup', () => {
       const buttons = Array.from({ length: 10 }, (_, i) => `<FzButton label="Button ${i + 1}" />`).join('')
       const wrapper = mount(FzButtonGroup, {
         global: {
-          components: { FzButton }
+          components: { FzButton, FzContainer }
         },
         slots: {
           default: buttons
@@ -138,7 +191,7 @@ describe('FzButtonGroup', () => {
     it('handles buttons with different content types', () => {
       const wrapper = mount(FzButtonGroup, {
         global: {
-          components: { FzButton }
+          components: { FzButton, FzContainer }
         },
         slots: {
           default: '<FzButton label="Text" /><FzButton label="HTML Content" />'

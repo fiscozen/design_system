@@ -1,15 +1,11 @@
-<template>
-  <div class="flex flex-row gap-16">
-    <slot></slot>
-  </div>
-</template>
-
 <script lang="ts" setup>
 /**
  * FzButtonGroup Component
  *
  * Container for grouping buttons in a horizontal layout with fixed spacing.
  * Displays buttons in a row with consistent 16px gap between them.
+ * Children divide available space equally and never wrap to a new line.
+ * Component occupies 100% width of its container.
  *
  * @component
  * @example
@@ -19,6 +15,7 @@
  * </FzButtonGroup>
  */
 import { watch } from 'vue'
+import { FzContainer } from '@fiscozen/container'
 import type { FzButtonGroupProps } from './types'
 
 const props = withDefaults(defineProps<FzButtonGroupProps>(), {
@@ -72,11 +69,8 @@ watch(
 )
 </script>
 
-<style scoped>
-/**
- * Horizontal button group layout
- * 
- * Displays buttons in a row with fixed 16px gap spacing between them.
- * Uses flexbox for layout and Tailwind gap utility for consistent spacing.
- */
-</style>
+<template>
+  <FzContainer horizontal gap="sm" layout="expand-all" class="w-full">
+    <slot></slot>
+  </FzContainer>
+</template>
