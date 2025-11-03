@@ -354,6 +354,16 @@ import { FzButtonGroup, FzButton } from '@fiscozen/button'
 
 No props required. The component always displays buttons horizontally with a fixed 16px gap.
 
+**Deprecated Props:**
+
+The following props are deprecated and will be removed in a future version. They are maintained for backward compatibility but have no effect:
+
+- `horizontal` - Component is always horizontal. This prop will be ignored.
+- `gap` - Component always uses fixed gap spacing. This prop will be ignored.
+- `size` - Component always uses fixed gap size. This prop will be ignored.
+
+A runtime warning will be displayed when these props are used. Please remove them from your code.
+
 ### FzButtonGroup Examples
 
 #### Action Buttons Group

@@ -1,3 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzButtonGroup > Rendering > renders correctly with buttons 1`] = `"<div data-v-830cd86f="" class="flex flex-row gap-16"><button>Button 1</button><button>Button 2</button></div>"`;
+exports[`FzButtonGroup > Rendering > renders correctly with buttons 1`] = `
+"<div data-v-830cd86f="" class="flex flex-row gap-16"><button type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-blue-500 text-core-white hover:bg-blue-600 focus:bg-blue-500 focus:!border-blue-600 disabled:bg-blue-200">
+    <!--v-if-->
+    <div class="truncate font-normal !text-[16px] !leading-[20px]">Button 1</div>
+    <!--v-if-->
+  </button><button type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-blue-500 text-core-white hover:bg-blue-600 focus:bg-blue-500 focus:!border-blue-600 disabled:bg-blue-200">
+    <!--v-if-->
+    <div class="truncate font-normal !text-[16px] !leading-[20px]">Button 2</div>
+    <!--v-if-->
+  </button></div>"
+`;
