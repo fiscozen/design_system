@@ -299,8 +299,8 @@ describe('FzButtonGroup', () => {
   })
 
   describe('Edge Cases', () => {
-    it('handles many buttons correctly', () => {
-      const buttons = Array.from({ length: 10 }, (_, i) => `<FzButton label="Button ${i + 1}" />`).join('')
+    it('handles many buttons correctly', async () => {
+      const buttons = Array.from({ length: 3 }, (_, i) => `<FzButton label="Button ${i + 1}" />`).join('')
       const wrapper = mount(FzButtonGroup, {
         global: {
           components: { FzButton, FzContainer }
@@ -309,8 +309,13 @@ describe('FzButtonGroup', () => {
           default: buttons
         }
       })
+      await flushPromises()
       const buttonElements = wrapper.findAllComponents(FzButton)
-      expect(buttonElements.length).toBe(10)
+      expect(buttonElements.length).toBe(3)
+      // Should not warn for valid 3 buttons (maximum allowed)
+      expect(console.warn).not.toHaveBeenCalledWith(
+        expect.stringContaining('[FzButtonGroup] Too many buttons')
+      )
     })
 
     it('handles buttons with different content types', () => {
