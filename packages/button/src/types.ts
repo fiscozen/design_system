@@ -142,26 +142,40 @@ export interface FzIconButtonProps {
 /**
  * Props for the FzButtonGroup component.
  * 
- * Container component for grouping multiple buttons with consistent spacing.
+ * Container for grouping buttons with flexible layout orientation and spacing control.
+ * Supports horizontal and vertical layouts with configurable gaps.
  * 
  * @example
- * <FzButtonGroup horizontal :gap="true">
- *   <FzButton label="Save" />
- *   <FzButton label="Cancel" />
+ * <FzButtonGroup gap size="md">
+ *   <FzButton>Button 1</FzButton>
+ *   <FzButton>Button 2</FzButton>
  * </FzButtonGroup>
  */
 export interface FzButtonGroupProps {
   /**
-   * The direction of the button group. If true, buttons will be displayed horizontally, otherwise vertically
+   * Layout orientation for button arrangement
+   * 
+   * Controls whether buttons stack horizontally (row) or vertically (column).
+   * Horizontal layout is default for common use cases like action groups.
+   * 
    * @default true
    */
   horizontal?: boolean
   /**
-   * Whether to add a gap between buttons
+   * Enables spacing between buttons
+   * 
+   * When false, buttons attach seamlessly with shared borders (useful for segmented controls).
+   * When true, applies size-based gap spacing for separated button groups.
+   * 
+   * @default false
    */
   gap?: boolean
   /**
-   * The gap size between buttons
+   * Visual size affecting gap spacing and alignment with button sizes
+   * 
+   * Gap sizes scale proportionally with button sizes to maintain visual harmony.
+   * Must match button sizes for consistent spacing.
+   * 
    * @default 'md'
    */
   size?: ButtonSize
