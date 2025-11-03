@@ -221,7 +221,7 @@ export const Secondary: Story = {
     
     // Verify hover state classes
     await expect(button.classList.contains('hover:bg-grey-100')).toBe(true)
-    await expect(button.classList.contains('hover:!border-blue-600')).toBe(true)
+    await expect(button.classList.contains('hover:!border-grey-200')).toBe(true)
     
     // Verify focus state classes
     await expect(button.classList.contains('focus:bg-core-white')).toBe(true)
@@ -251,7 +251,7 @@ export const Invisible: Story = {
     
     // Verify hover state classes
     await expect(button.classList.contains('hover:bg-grey-100')).toBe(true)
-    await expect(button.classList.contains('hover:!border-blue-600')).toBe(true)
+    await expect(button.classList.contains('hover:!border-grey-100')).toBe(true)
     
     // Verify focus state classes
     await expect(button.classList.contains('focus:bg-transparent')).toBe(true)
