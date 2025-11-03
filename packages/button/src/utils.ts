@@ -1,4 +1,4 @@
-import type { SizeToEnvironmentMap, IconSizeMap, ButtonSize } from './types'
+import type { SizeToEnvironmentMap, IconSizeMap } from './types'
 
 /**
  * Maps deprecated ButtonSize to ButtonEnvironment
@@ -25,21 +25,3 @@ export const iconSizeMap: IconSizeMap = {
   lg: 'lg'
 }
 
-/**
- * Gap size configuration for button groups
- * 
- * Maps button sizes to Tailwind gap classes for spacing between buttons
- * in horizontal and vertical layouts.
- * 
- * @constant
- * @example
- * const gapClass = buttonGapConfig[props.size]; // 'gap-12' for 'md'
- */
-export const buttonGapConfig: {
-  [key in ButtonSize]: string
-} = {
-  xs: 'gap-8',
-  sm: 'gap-10',
-  md: 'gap-12',
-  lg: 'gap-16'
-}
