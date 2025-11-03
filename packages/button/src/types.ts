@@ -143,7 +143,7 @@ export interface FzIconButtonProps {
  * Props for the FzButtonGroup component.
  * 
  * Container for grouping buttons in a horizontal layout with fixed spacing.
- * No props required - component always displays buttons horizontally with 16px gap.
+ * Component always displays buttons horizontally with 16px gap.
  * 
  * @example
  * <FzButtonGroup>
@@ -152,5 +152,19 @@ export interface FzIconButtonProps {
  * </FzButtonGroup>
  */
 export interface FzButtonGroupProps {
-  // No props - component is always horizontal with fixed 16px gap
+  /**
+   * @deprecated This prop is deprecated and will be removed in a future version.
+   * Component is always horizontal. Layout orientation cannot be changed.
+   */
+  horizontal?: boolean
+  /**
+   * @deprecated This prop is deprecated and will be removed in a future version.
+   * Component always uses fixed gap spacing. Gap cannot be disabled.
+   */
+  gap?: boolean
+  /**
+   * @deprecated This prop is deprecated and will be removed in a future version.
+   * Component always uses fixed gap size. Size cannot be configured.
+   */
+  size?: ButtonSize
 }
