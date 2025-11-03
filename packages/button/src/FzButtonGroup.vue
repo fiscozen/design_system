@@ -3,9 +3,11 @@
  * FzButtonGroup Component
  *
  * Container for grouping buttons in a horizontal layout with fixed spacing.
- * Displays buttons in a row with consistent 16px gap between them.
+ * Displays buttons in a row with consistent gap between them.
  * Children divide available space equally and never wrap to a new line.
  * Component occupies 100% width of its container.
+ *
+ * Validates that slot contains only FzButton components (2-3 buttons required).
  *
  * @component
  * @example
@@ -14,9 +16,10 @@
  *   <FzButton>Button 2</FzButton>
  * </FzButtonGroup>
  */
-import { watch } from 'vue'
+import { nextTick, onMounted, useSlots, watch } from 'vue'
 import { FzContainer } from '@fiscozen/container'
 import type { FzButtonGroupProps } from './types'
+import { validateButtonGroupSlot } from './utils'
 
 const props = withDefaults(defineProps<FzButtonGroupProps>(), {
   horizontal: undefined,
@@ -24,11 +27,24 @@ const props = withDefaults(defineProps<FzButtonGroupProps>(), {
   size: undefined
 })
 
+const slots = useSlots()
+
 /**
- * Emits deprecation warnings for deprecated props
+ * Validates slot content on mount and warns if invalid.
  * 
- * Warns when deprecated props are used with non-undefined values.
+ * Uses nextTick to ensure slot is available before validation.
  */
+onMounted(() => {
+  nextTick(() => {
+    const vnodes = slots.default?.()
+    const validation = validateButtonGroupSlot(vnodes || [])
+    
+    if (!validation.valid && validation.error) {
+      console.warn(validation.error)
+    }
+  })
+})
+
 watch(
   () => props.horizontal,
   (value) => {
