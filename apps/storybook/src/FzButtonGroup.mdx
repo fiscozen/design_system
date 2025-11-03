@@ -4,14 +4,16 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # FzButtonGroup
 
-Container for grouping buttons in a horizontal layout with fixed spacing. Displays buttons in a row with consistent gap between them.
+Container for grouping buttons in a horizontal layout with fixed spacing. Uses `FzContainer` component internally to display buttons in a row with consistent gap between them. Children divide available space equally and never wrap to a new line. Component occupies 100% width of its container.
 
 ## Features
 
 - Horizontal layout only
 - Fixed gap spacing
+- Children divide available space equally
+- No wrapping - buttons stay on a single row
+- 100% width of container
 - No props required
-- Simple and consistent button grouping
 - Full accessibility support for button children
 
 ## Installation
@@ -66,47 +68,54 @@ A runtime warning will be displayed when these props are used. Please remove the
 </template>
 ```
 
-### Form Actions
+### Two Buttons (Frontoffice)
 
 ```vue
 <template>
   <FzButtonGroup>
-    <FzButton variant="primary" label="Submit" @click="handleSubmit" />
-    <FzButton variant="secondary" label="Cancel" @click="handleCancel" />
+    <FzButton variant="primary" environment="frontoffice">Save</FzButton>
+    <FzButton variant="secondary" environment="frontoffice">Cancel</FzButton>
   </FzButtonGroup>
 </template>
 ```
 
-### Multiple Buttons
+### Two Buttons (Backoffice)
 
 ```vue
 <template>
   <FzButtonGroup>
-    <FzButton variant="primary">Button 1</FzButton>
-    <FzButton variant="secondary">Button 2</FzButton>
-    <FzButton variant="secondary">Button 3</FzButton>
-    <FzButton variant="secondary">Button 4</FzButton>
+    <FzButton variant="primary" environment="backoffice">Save</FzButton>
+    <FzButton variant="secondary" environment="backoffice">Cancel</FzButton>
   </FzButtonGroup>
 </template>
 ```
 
-### Form Actions with Different Variants
+### Three Buttons (Frontoffice)
 
 ```vue
 <template>
   <FzButtonGroup>
-    <FzButton variant="primary" label="Submit" @click="handleSubmit" />
-    <FzButton variant="secondary" label="Cancel" @click="handleCancel" />
-    <FzButton variant="danger" label="Delete" @click="handleDelete" />
+    <FzButton variant="primary" environment="frontoffice">Save</FzButton>
+    <FzButton variant="secondary" environment="frontoffice">Cancel</FzButton>
+    <FzButton variant="secondary" environment="frontoffice">Delete</FzButton>
+  </FzButtonGroup>
+</template>
+```
+
+### Three Buttons (Backoffice)
+
+```vue
+<template>
+  <FzButtonGroup>
+    <FzButton variant="primary" environment="backoffice">Save</FzButton>
+    <FzButton variant="secondary" environment="backoffice">Cancel</FzButton>
+    <FzButton variant="secondary" environment="backoffice">Delete</FzButton>
   </FzButtonGroup>
 </template>
 ```
 
 ## Behavior
 
-The component always displays buttons:
-- In a horizontal row (`flex flex-row`)
-- With fixed gap spacing
 - No configuration needed
 
 ## Accessibility
