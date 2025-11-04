@@ -204,17 +204,19 @@ describe('FzButtonGroup', () => {
       expect(container.props('main')).toBe(false)
     })
 
-    it('uses FzContainer with layout expand-all', () => {
+    it('uses FzContainer with layout default', () => {
       const wrapper = mount(FzButtonGroup, {
         global: {
           components: { FzContainer }
         }
       })
       const container = wrapper.findComponent(FzContainer)
-      expect(container.classes()).toContain('layout-expand-all')
+      // Layout default means no layout-expand-all class (CSS handles fixed widths)
+      expect(container.classes()).not.toContain('layout-expand-all')
+      expect(container.classes()).toContain('fz-button-group')
     })
 
-    it('applies full width class', () => {
+    it('applies full width class and button group class', () => {
       const wrapper = mount(FzButtonGroup, {
         global: {
           components: { FzContainer }
@@ -222,9 +224,10 @@ describe('FzButtonGroup', () => {
       })
       const container = wrapper.findComponent(FzContainer)
       expect(container.classes()).to.include('w-full')
+      expect(container.classes()).to.include('fz-button-group')
     })
 
-    it('applies equal flex growth to children via layout expand-all', () => {
+    it('applies fixed width sizing to children via CSS selectors', () => {
       const wrapper = mount(FzButtonGroup, {
         global: {
           components: { FzButton, FzContainer }
@@ -235,7 +238,9 @@ describe('FzButtonGroup', () => {
       })
       const container = wrapper.findComponent(FzContainer)
       expect(container.exists()).toBe(true)
-      expect(container.classes()).toContain('layout-expand-all')
+      expect(container.classes()).toContain('fz-button-group')
+      // CSS selectors apply fixed widths (50% for 2 buttons, 33.333% for 3 buttons)
+      // This is tested via visual regression in Storybook, not in unit tests
     })
   })
 
