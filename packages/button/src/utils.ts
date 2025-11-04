@@ -90,9 +90,9 @@ export function collectButtons(vnode: VNode, buttons: VNode[] = []): VNode[] {
  * 
  * @param vnode - The VNode to analyze recursively
  * @param invalidElements - Array to collect found invalid elements
- * @returns array of all non-FzButton VNodes found at any depth
+ * @returns array of all non-FzButton VNodes and text nodes found at any depth
  */
-export function collectInvalidElements(vnode: VNode, invalidElements: VNode[] = []): VNode[] {
+export function collectInvalidElements(vnode: VNode, invalidElements: (VNode | string)[] = []): (VNode | string)[] {
   if (isButtonComponent(vnode)) {
     return invalidElements
   }
@@ -105,7 +105,7 @@ export function collectInvalidElements(vnode: VNode, invalidElements: VNode[] = 
         if (typeof child === 'object' && child !== null && 'type' in child) {
           collectInvalidElements(child as VNode, invalidElements)
         } else if (typeof child === 'string' && child.trim() !== '') {
-          invalidElements.push(child as any)
+          invalidElements.push(child)
         }
       })
     }
@@ -140,7 +140,7 @@ export function validateButtonGroupSlot(vnodes: VNode[]): { valid: boolean; butt
   
   const buttonCount = buttons.length
   
-  const invalidElements: VNode[] = []
+  const invalidElements: (VNode | string)[] = []
   vnodes.forEach((vnode) => {
     collectInvalidElements(vnode, invalidElements)
   })
