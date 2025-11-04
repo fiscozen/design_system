@@ -211,8 +211,7 @@ describe('FzButtonGroup', () => {
         }
       })
       const container = wrapper.findComponent(FzContainer)
-      // Layout default means no layout-expand-all class (CSS handles fixed widths)
-      expect(container.classes()).not.toContain('layout-expand-all')
+      expect(container.classes()).toContain('layout-default')
       expect(container.classes()).toContain('fz-button-group')
     })
 
