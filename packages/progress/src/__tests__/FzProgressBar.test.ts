@@ -1,0 +1,463 @@
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
+import FzProgressBar from '../FzProgressBar.vue'
+
+describe('FzProgressBar', () => {
+  describe('Rendering', () => {
+    it('renders correctly with default props', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+        },
+      })
+
+      expect(wrapper.html()).toContain('fz-progress-bar')
+      expect(wrapper.html()).toContain('fz-progress-bar__progress-indicator')
+    })
+
+    it('renders progress bar container with correct classes', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.exists()).toBe(true)
+      expect(container.classes()).toContain('w-full')
+      expect(container.classes()).toContain('h-[20px]')
+      expect(container.classes()).toContain('rounded-[4px]')
+      expect(container.classes()).toContain('bg-grey-100')
+    })
+
+    it('renders progress fill with correct classes', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      expect(fill.exists()).toBe(true)
+      expect(fill.classes()).toContain('h-full')
+      expect(fill.classes()).toContain('rounded-[4px]')
+      expect(fill.classes()).toContain('bg-purple-500')
+      expect(fill.classes()).toContain('transition-all')
+      expect(fill.classes()).toContain('duration-300')
+    })
+  })
+
+  describe('Progress Calculation', () => {
+    it('calculates 50% progress correctly', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 50%')
+    })
+
+    it('calculates 0% progress correctly', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 0,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 0%')
+    })
+
+    it('calculates 100% progress correctly', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 100,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 100%')
+    })
+
+    it('calculates progress with custom range correctly', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 30,
+          min: -15,
+          max: 50,
+        },
+      })
+
+      // (30 - (-15)) / (50 - (-15)) * 100 = 45/65 * 100 ≈ 69%
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 69%')
+    })
+
+    it('calculates progress with negative min correctly', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 0,
+          min: -25,
+          max: 75,
+        },
+      })
+
+      // (0 - (-25)) / (75 - (-25)) * 100 = 25/100 * 100 = 25%
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 25%')
+    })
+
+    it('clamps progress to 0% when current is below min', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: -10,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 0%')
+    })
+
+    it('clamps progress to 100% when current is above max', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 150,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 100%')
+    })
+
+    it('handles range of 0 correctly', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          min: 100,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 0%')
+    })
+  })
+
+  describe('Accessibility', () => {
+    it('has role="progressbar" attribute', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('role')).toBe('progressbar')
+    })
+
+    it('has aria-valuenow with current value', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 75,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuenow')).toBe('75')
+    })
+
+    it('has aria-valuemin with min value', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          min: 10,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuemin')).toBe('10')
+    })
+
+    it('has aria-valuemax with max value', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          max: 200,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuemax')).toBe('200')
+    })
+
+    it('has aria-label with name prop', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          name: 'custom-progress',
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-label')).toBe('custom-progress')
+    })
+
+    it('has default aria-label when name not provided', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-label')).toBe('progress-bar')
+    })
+
+    it('has all ARIA attributes for complete accessibility', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 30,
+          min: -15,
+          max: 50,
+          name: 'download-progress',
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('role')).toBe('progressbar')
+      expect(container.attributes('aria-valuenow')).toBe('30')
+      expect(container.attributes('aria-valuemin')).toBe('-15')
+      expect(container.attributes('aria-valuemax')).toBe('50')
+      expect(container.attributes('aria-label')).toBe('download-progress')
+    })
+  })
+
+  describe('Props', () => {
+    it('uses default min value of 0', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuemin')).toBe('0')
+    })
+
+    it('uses default max value of 100', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuemax')).toBe('100')
+    })
+
+    it('accepts custom min value', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          min: -50,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuemin')).toBe('-50')
+    })
+
+    it('accepts custom max value', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          max: 200,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuemax')).toBe('200')
+    })
+
+    it('accepts custom name prop', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          name: 'upload-progress',
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-label')).toBe('upload-progress')
+    })
+  })
+
+  describe('Edge Cases', () => {
+    it('handles zero range correctly', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          min: 100,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 0%')
+      
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuenow')).toBe('50')
+      expect(container.attributes('aria-valuemin')).toBe('100')
+      expect(container.attributes('aria-valuemax')).toBe('100')
+    })
+
+    it('handles negative current value', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: -10,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 0%')
+    })
+
+    it('handles current value equal to min', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 0,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 0%')
+    })
+
+    it('handles current value equal to max', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 100,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 100%')
+    })
+
+    it('handles very large range', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 5000,
+          min: 0,
+          max: 10000,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 50%')
+    })
+
+    it('handles decimal values correctly', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 33.33,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      // 33.33% should round to 33%
+      expect(style).toContain('width: 33%')
+    })
+
+    it('handles NaN values gracefully', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: NaN,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 0%')
+    })
+
+    it('handles Infinity values gracefully', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: Infinity,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 0%')
+    })
+
+    it('handles -Infinity values gracefully', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: -Infinity,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 0%')
+    })
+
+    it('handles NaN in min/max values gracefully', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          min: NaN,
+          max: 100,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 0%')
+    })
+  })
+})
+
