@@ -46,7 +46,7 @@ const sharedPlayFunction = async ({ canvasElement, step, expectedButtonCount }: 
   await step('Verify FzContainer uses layout default', async () => {
     const container = canvasElement.querySelector('.fz-container--horizontal')
     await expect(container).toBeTruthy()
-    // Layout default means no layout-expand-all class (CSS handles fixed widths)
+    await expect(container?.classList.contains('layout-default')).toBe(true)
   })
 
   await step('Verify full width class is applied', async () => {
