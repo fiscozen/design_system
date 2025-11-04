@@ -45,7 +45,7 @@ type FzCardIconButton = {
   icon: string;
 };
 
-export type FzCardColor = "purple" | "orange" | "blue";
+export type FzCardColor = "purple" | "orange" | "blue" | "aliceblue";
 
 export interface FzCardEvents {
   /**

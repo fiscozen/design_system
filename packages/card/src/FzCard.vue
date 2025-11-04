@@ -1,5 +1,5 @@
 <template>
-  <section :class="[sectionStaticClass, backgroundColor]">
+  <section :class="[sectionStaticClass, backgroundColor, textColor]">
     <header
       v-if="existHeader"
       :class="[headerContainerComputedClass, borderColor]"
@@ -90,6 +90,8 @@ const headerContainerComputedClass = computed(() => [
 const backgroundColor = computed(() => {
   switch (props.color) {
     case "blue":
+      return "bg-blue-500";
+    case "aliceblue":
       return "bg-background-alice-blue";
     case "orange":
       return "bg-background-seashell";
@@ -100,10 +102,21 @@ const backgroundColor = computed(() => {
   }
 });
 
+const textColor = computed(() => {
+  switch (props.color) {
+    case "blue":
+      return "text-core-white";
+    default:
+      return "text-core-black";
+  }
+});
+
 const borderColor = computed(() => {
   switch (props.color) {
     case "blue":
-      return "border-blue-200";
+      return "border-blue-500";
+    case "aliceblue":
+      return "border-background-alice-blue";
     case "orange":
       return "border-orange-200";
     case "purple":
