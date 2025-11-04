@@ -1,0 +1,99 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Progress/FzProgress" />
+
+# FzProgress
+
+Animated loading spinner indicator component. Wraps FzIcon with spinning animation for use in loading states.
+
+## Features
+
+- Animated spinner with smooth rotation
+- Customizable icon size
+- Custom animation timing
+- FontAwesome icon integration
+- Accessible by default (FontAwesome handles ARIA)
+
+## Installation
+
+```bash
+npm install @fiscozen/progress
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzProgress } from '@fiscozen/progress'
+</script>
+
+<template>
+  <FzProgress />
+</template>
+```
+
+## Props
+
+FzProgress inherits all props from `FzIcon` (from `@fiscozen/icons`):
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>name</code></td>
+      <td><code>string</code></td>
+      <td><code>'spinner-third'</code></td>
+      <td>FontAwesome icon name</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'</code></td>
+      <td><code>'lg'</code></td>
+      <td>Icon size</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>IconVariant</code></td>
+      <td><code>'far'</code></td>
+      <td>FontAwesome icon variant (fas, far, fal, etc.)</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Default Spinner
+
+```vue
+<template>
+  <FzProgress />
+</template>
+```
+
+### Custom Size
+
+```vue
+<template>
+  <FzProgress size="sm" />
+  <FzProgress size="md" />
+  <FzProgress size="lg" />
+  <FzProgress size="xl" />
+</template>
+```
+
+## Accessibility
+
+FzProgress uses FontAwesome icons which handle ARIA attributes automatically for decorative icons. The spinner is typically decorative and should be paired with text or other indicators to provide context about what is loading.
+
+## Related Components
+
+- **FzProgressBar**: Visual progress bar with percentage display
+- **FzIcon**: Base icon component used internally
+
