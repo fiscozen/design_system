@@ -1,0 +1,153 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Progress/FzProgressBar" />
+
+# FzProgressBar
+
+Visual progress bar indicator displaying completion percentage. Supports custom min/max ranges and calculates percentage position automatically with smooth transitions.
+
+## Features
+
+- Visual progress bar with percentage display
+- Customizable min/max ranges (including negative values)
+- Automatic percentage calculation
+- Smooth CSS transitions
+- Full WCAG 2.1 AA accessibility compliance
+
+## Installation
+
+```bash
+npm install @fiscozen/progress
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzProgressBar } from '@fiscozen/progress'
+</script>
+
+<template>
+  <FzProgressBar :current="50" />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>current</code></td>
+      <td><code>number</code></td>
+      <td><strong>required</strong></td>
+      <td>Current progress value within the min-max range</td>
+    </tr>
+    <tr>
+      <td><code>max</code></td>
+      <td><code>number</code></td>
+      <td><code>100</code></td>
+      <td>Maximum value for progress calculation</td>
+    </tr>
+    <tr>
+      <td><code>min</code></td>
+      <td><code>number</code></td>
+      <td><code>0</code></td>
+      <td>Minimum value for progress calculation</td>
+    </tr>
+    <tr>
+      <td><code>name</code></td>
+      <td><code>string</code></td>
+      <td><code>'progress-bar'</code></td>
+      <td>Accessible label for screen readers</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Basic Progress
+
+```vue
+<template>
+  <!-- 0% -->
+  <FzProgressBar :current="0" />
+  
+  <!-- 50% -->
+  <FzProgressBar :current="50" />
+  
+  <!-- 100% -->
+  <FzProgressBar :current="100" />
+</template>
+```
+
+### Custom Range
+
+```vue
+<template>
+  <!-- Range from -15 to 50, current value 30 -->
+  <FzProgressBar :current="30" :min="-15" :max="50" />
+  
+  <!-- Range from 0 to 200, current value 150 -->
+  <FzProgressBar :current="150" :min="0" :max="200" />
+</template>
+```
+
+### Custom Label
+
+```vue
+<template>
+  <FzProgressBar 
+    :current="75" 
+    name="upload-progress" 
+  />
+</template>
+```
+
+## Progress Calculation
+
+The progress bar calculates the percentage position of the `current` value within the `[min, max]` range:
+
+```
+percentage = ((current - min) / (max - min)) * 100
+```
+
+The result is clamped between 0% and 100% for CSS width.
+
+**Examples:**
+
+- `current=50, min=0, max=100` → `50%`
+- `current=30, min=-15, max=50` → `(30 - (-15)) / (50 - (-15)) * 100 = 69%`
+- `current=-10, min=0, max=100` → `0%` (clamped)
+- `current=150, min=0, max=100` → `100%` (clamped)
+
+## Accessibility
+
+FzProgressBar follows WCAG 2.1 AA standards and includes:
+
+- **ARIA Attributes**: 
+  - `role="progressbar"` for semantic meaning
+  - `aria-valuenow` with current value
+  - `aria-valuemin` with minimum value
+  - `aria-valuemax` with maximum value
+  - `aria-label` for screen reader description
+- **Screen Reader Support**: Progress values are accessible when navigating to the progress bar
+- **Keyboard Navigation**: Progress bar is accessible via keyboard (though not interactive)
+
+## Notes
+
+### Why Div Instead of HTML Progress Element?
+
+We use `div` elements instead of the HTML `<progress>` element for better CSS cross-browser compatibility. The progress element requires browser-specific pseudo-elements (`::-webkit-progress-bar`, `::-moz-progress-bar`) which can be inconsistent across browsers and harder to style with Tailwind CSS.
+
+## Related Components
+
+- **FzProgress**: Animated loading spinner indicator
+

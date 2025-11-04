@@ -1,3 +1,23 @@
+<script setup lang="ts">
+/**
+ * FzProgress Component
+ *
+ * Animated loading spinner indicator component.
+ * Wraps FzIcon with spinning animation for use in loading states.
+ *
+ * @component
+ * @example
+ * <FzProgress />
+ * <FzProgress size="lg" />
+ */
+import { FzProgressProps } from "./types";
+import { FzIcon } from "@fiscozen/icons";
+
+const props = withDefaults(defineProps<FzProgressProps>(), {
+  name: "spinner-third",
+});
+</script>
+
 <template>
   <FzIcon
     v-bind="props"
@@ -9,17 +29,3 @@
     "
   />
 </template>
-
-<script setup lang="ts">
-import { computed, ref } from "vue";
-import { FzProgressProps } from "./types";
-import { FzIcon } from "@fiscozen/icons";
-
-const props = withDefaults(defineProps<FzProgressProps>(), {
-  name: "spinner-third"
-});
-
-const emit = defineEmits([]);
-</script>
-
-<style scoped></style>
