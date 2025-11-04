@@ -325,13 +325,14 @@ The `variant` attribute is used instead of `type` to avoid confusion with the HT
 
 ## FzButtonGroup
 
-Container for grouping buttons in a horizontal layout with fixed spacing. Uses `FzContainer` component internally to display buttons in a row with consistent gap between them. Children divide available space equally and never wrap to a new line. Component occupies 100% width of its container.
+Container for grouping buttons in a horizontal layout with fixed spacing. Uses `FzContainer` component internally to display buttons in a row with consistent gap between them. Buttons maintain fixed widths (50% for 2 buttons, 33.333% for 3 buttons) regardless of content, with text truncation handled by FzButton component. Component occupies 100% width of its container.
 
 ### Features
 
 - Horizontal layout only
 - Fixed gap spacing
-- Children divide available space equally
+- Fixed button widths: 50% for 2 buttons, 33.333% for 3 buttons
+- Text truncation handled automatically by FzButton component
 - No wrapping - buttons stay on a single row
 - 100% width of container
 - No props required
@@ -428,7 +429,11 @@ A runtime warning will be displayed when these props are used. Please remove the
 
 ### FzButtonGroup Behavior
 
-- No configuration needed
+- **Fixed Width Sizing**: Buttons automatically maintain fixed widths based on the number of buttons:
+  - 2 buttons: Each button occupies 50% of the container width
+  - 3 buttons: Each button occupies 33.333% of the container width
+- **Text Truncation**: Long button text is automatically truncated with ellipsis (`...`) by the FzButton component
+- **No Configuration Needed**: The component automatically detects the number of buttons and applies the appropriate sizing
 
 ### FzButtonGroup Accessibility
 
