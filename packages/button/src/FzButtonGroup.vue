@@ -4,7 +4,8 @@
  *
  * Container for grouping buttons in a horizontal layout with fixed spacing.
  * Displays buttons in a row with consistent gap between them.
- * Children divide available space equally and never wrap to a new line.
+ * Buttons maintain fixed widths (50% for 2 buttons, 33.333% for 3 buttons)
+ * regardless of content, with text truncation handled by FzButton component.
  * Component occupies 100% width of its container.
  *
  * Validates that slot contains only FzButton components (2-3 buttons required).
@@ -86,7 +87,36 @@ watch(
 </script>
 
 <template>
-  <FzContainer horizontal gap="sm" layout="expand-all" class="w-full">
+  <FzContainer horizontal gap="sm" class="fz-button-group w-full">
     <slot></slot>
   </FzContainer>
 </template>
+
+<style scoped>
+/**
+ * Fixed width sizing for button group children
+ * 
+ * Uses CSS selectors to detect number of children and apply appropriate widths:
+ * - 2 buttons: 50% each
+ * - 3 buttons: 33.333% each
+ * 
+ * flex-basis sets initial size, flex-grow: 0 and flex-shrink: 0 prevent resizing.
+ * Selectors use :nth-child() and :nth-last-child() for cross-browser compatibility.
+ */
+
+/* 2 buttons: first child is second-to-last */
+.fz-button-group :deep(> *:nth-child(1):nth-last-child(2)),
+.fz-button-group :deep(> *:nth-child(1):nth-last-child(2) ~ *) {
+  flex-basis: 50%;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+/* 3 buttons: first child is third-to-last */
+.fz-button-group :deep(> *:nth-child(1):nth-last-child(3)),
+.fz-button-group :deep(> *:nth-child(1):nth-last-child(3) ~ *) {
+  flex-basis: 33.333%;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+</style>
