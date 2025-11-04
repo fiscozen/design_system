@@ -15,7 +15,7 @@ A comprehensive button component library for Vue 3 applications, featuring multi
 ## Installation
 
 ```bash
-pnpm add @fiscozen/button
+npm install @fiscozen/button
 ```
 
 ## Components
