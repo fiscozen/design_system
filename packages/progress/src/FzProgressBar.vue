@@ -55,6 +55,40 @@ const percentageProgress = computed(() => {
 const progressBarSize = computed(() => {
   return props.size === "sm" ? "h-[8px]" : "h-[20px]";
 });
+
+/**
+ * Sanitizes value for ARIA attributes
+ *
+ * Converts NaN and Infinity to 0 to ensure valid ARIA attribute values.
+ * ARIA attributes must be valid numbers per WCAG 2.1 AA standards.
+ */
+const sanitizeAriaValue = (value: number): number => {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+  return value;
+};
+
+/**
+ * Sanitized current value for aria-valuenow
+ *
+ * Returns 0 if current is NaN or Infinity to ensure valid ARIA attribute.
+ */
+const ariaValuenow = computed(() => sanitizeAriaValue(props.current));
+
+/**
+ * Sanitized min value for aria-valuemin
+ *
+ * Returns 0 if min is NaN or Infinity to ensure valid ARIA attribute.
+ */
+const ariaValuemin = computed(() => sanitizeAriaValue(props.min));
+
+/**
+ * Sanitized max value for aria-valuemax
+ *
+ * Returns 0 if max is NaN or Infinity to ensure valid ARIA attribute.
+ */
+const ariaValuemax = computed(() => sanitizeAriaValue(props.max));
 </script>
 
 <template>
@@ -62,9 +96,9 @@ const progressBarSize = computed(() => {
     class="fz-progress-bar w-full rounded-[4px] bg-grey-100"
     :class="progressBarSize"
     role="progressbar"
-    :aria-valuenow="props.current"
-    :aria-valuemin="props.min"
-    :aria-valuemax="props.max"
+    :aria-valuenow="ariaValuenow"
+    :aria-valuemin="ariaValuemin"
+    :aria-valuemax="ariaValuemax"
     :aria-label="props.name"
   >
     <div

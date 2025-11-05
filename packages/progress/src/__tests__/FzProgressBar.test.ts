@@ -455,6 +455,19 @@ describe('FzProgressBar', () => {
       expect(style).toContain('width: 0%')
     })
 
+    it('sanitizes aria-valuenow when current is NaN', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: NaN,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuenow')).toBe('0')
+    })
+
     it('handles Infinity values gracefully', () => {
       const wrapper = mount(FzProgressBar, {
         props: {
@@ -467,6 +480,32 @@ describe('FzProgressBar', () => {
       const fill = wrapper.find('.fz-progress-bar__progress-indicator')
       const style = fill.attributes('style')
       expect(style).toContain('width: 0%')
+    })
+
+    it('sanitizes aria-valuenow when current is Infinity', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: Infinity,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuenow')).toBe('0')
+    })
+
+    it('sanitizes aria-valuenow when current is -Infinity', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: -Infinity,
+          min: 0,
+          max: 100,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuenow')).toBe('0')
     })
 
     it('handles -Infinity values gracefully', () => {
@@ -492,6 +531,77 @@ describe('FzProgressBar', () => {
         },
       })
 
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      const style = fill.attributes('style')
+      expect(style).toContain('width: 0%')
+    })
+
+    it('sanitizes aria-valuemin when min is NaN', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          min: NaN,
+          max: 100,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuemin')).toBe('0')
+    })
+
+    it('sanitizes aria-valuemax when max is NaN', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          min: 0,
+          max: NaN,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuemax')).toBe('0')
+    })
+
+    it('sanitizes aria-valuemin when min is Infinity', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          min: Infinity,
+          max: 100,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuemin')).toBe('0')
+    })
+
+    it('sanitizes aria-valuemax when max is Infinity', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          min: 0,
+          max: Infinity,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuemax')).toBe('0')
+    })
+
+    it('sanitizes all ARIA attributes when multiple values are invalid', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: NaN,
+          min: Infinity,
+          max: -Infinity,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.attributes('aria-valuenow')).toBe('0')
+      expect(container.attributes('aria-valuemin')).toBe('0')
+      expect(container.attributes('aria-valuemax')).toBe('0')
+      
       const fill = wrapper.find('.fz-progress-bar__progress-indicator')
       const style = fill.attributes('style')
       expect(style).toContain('width: 0%')
