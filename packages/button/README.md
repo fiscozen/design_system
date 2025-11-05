@@ -445,6 +445,154 @@ The component preserves accessibility attributes of button children:
 
 The component itself is a semantic `div` container and does not interfere with button accessibility.
 
+## FzIconButton
+
+Icon-only button component with notification badge support. Ideal for compact interfaces and toolbars where space is limited.
+
+### Features
+
+- Icon-only design for compact interfaces
+- Multiple variants (primary, secondary, invisible)
+- Two environments (backoffice, frontoffice)
+- Notification badge overlay support
+- Customizable icon variant
+- Full accessibility support
+- TypeScript support
+
+### Basic Usage
+
+```vue
+<template>
+  <FzIconButton iconName="bell" ariaLabel="Notifications" />
+</template>
+```
+
+### Variants
+
+```vue
+<template>
+  <div class="flex gap-8">
+    <FzIconButton iconName="bell" variant="primary" ariaLabel="Notifications" />
+    <FzIconButton iconName="settings" variant="secondary" ariaLabel="Settings" />
+    <FzIconButton iconName="trash" variant="invisible" ariaLabel="Delete" />
+  </div>
+</template>
+```
+
+### Environments
+
+```vue
+<template>
+  <div class="flex gap-8 items-center">
+    <FzIconButton 
+      iconName="settings" 
+      environment="backoffice" 
+      ariaLabel="Settings (backoffice)" 
+    />
+    <FzIconButton 
+      iconName="settings" 
+      environment="frontoffice" 
+      ariaLabel="Settings (frontoffice)" 
+    />
+  </div>
+</template>
+```
+
+### With Notification Badge
+
+```vue
+<template>
+  <FzIconButton 
+    iconName="bell" 
+    hasNotification 
+    ariaLabel="Notifications with badge"
+  />
+</template>
+```
+
+
+### With Tooltip (Recommended)
+
+```vue
+<template>
+  <FzTooltip content="Notifications">
+    <FzIconButton iconName="bell" ariaLabel="Notifications" />
+  </FzTooltip>
+</template>
+```
+
+### FzIconButton Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `iconName` | `string` | _required_ | FontAwesome icon name (e.g., 'bell', 'settings') |
+| `variant` | `'primary' \| 'secondary' \| 'invisible'` | `'primary'` | Visual style variant determining colors and interactive states |
+| `environment` | `'backoffice' \| 'frontoffice'` | `'frontoffice'` | Environment determining button size |
+| `disabled` | `boolean` | `false` | Whether the button is disabled |
+| `iconVariant` | `IconVariant` | `'far'` | FontAwesome icon variant (fas, far, fal, etc.) |
+| `hasNotification` | `boolean` | `false` | Shows a notification badge in the top-right corner of the button |
+| `ariaLabel` | `string` | `undefined` | Accessible label for screen readers. Required for icon-only buttons. If hasNotification is true, automatically appends notification status to the label |
+| `tooltip` | `string` | `undefined` | **Deprecated:** Use FzTooltip component to wrap the button instead |
+
+### FzIconButton Behavior & Concepts
+
+#### Notification Badge
+
+The notification badge appears as a circular indicator in the top-right corner when `hasNotification` is `true`.
+
+### FzIconButton Accessibility
+
+FzIconButton follows WCAG 2.1 AA standards and includes:
+
+- **ARIA Labels**: Icon buttons require explicit labels for screen readers. Use `ariaLabel` prop or wrap with `FzTooltip` for accessible labels
+- **Keyboard Navigation**: Full support for Enter and Space keys
+- **Disabled State**: Properly prevents click events and visual feedback when disabled
+- **Screen Reader Compatible**: Works with NVDA, JAWS, and VoiceOver
+- **Focus Indicators**: Visible focus states with 3:1 contrast ratio
+- **Notification Badge**: Marked as `aria-hidden="true"` to prevent screen reader announcements
+
+### FzIconButton Examples
+
+#### Toolbar Actions
+
+```vue
+<template>
+  <div class="flex gap-4">
+    <FzTooltip content="Notifications">
+      <FzIconButton iconName="bell" hasNotification ariaLabel="Notifications" />
+    </FzTooltip>
+    <FzTooltip content="Settings">
+      <FzIconButton iconName="settings" variant="secondary" ariaLabel="Settings" />
+    </FzTooltip>
+    <FzTooltip content="Help">
+      <FzIconButton iconName="question" variant="invisible" ariaLabel="Help" />
+    </FzTooltip>
+  </div>
+</template>
+```
+
+#### Form Actions
+
+```vue
+<template>
+  <div class="flex gap-4">
+    <FzIconButton 
+      iconName="save" 
+      variant="primary" 
+      ariaLabel="Save"
+      @click="handleSave"
+    />
+    <FzIconButton 
+      iconName="trash" 
+      variant="secondary" 
+      ariaLabel="Delete"
+      :disabled="!canDelete"
+      @click="handleDelete"
+    />
+  </div>
+</template>
+```
+
 ## Related Components
 
 - **FzIconButton**: Use for icon-only buttons without labels

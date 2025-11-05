@@ -7,7 +7,7 @@
 import type { IconVariant, IconSize } from '@fiscozen/icons'
 
 export type CommonButtonVariant = 'primary' | 'secondary' | 'invisible'
-export type IconButtonVariant = CommonButtonVariant | 'notification'
+export type IconButtonVariant = CommonButtonVariant
 export type ButtonVariant = CommonButtonVariant | 'danger' | 'success'
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 export type ButtonEnvironment = 'backoffice' | 'frontoffice'
@@ -16,11 +16,6 @@ export type ButtonEnvironment = 'backoffice' | 'frontoffice'
  * Type for size to environment mapping record
  */
 export type SizeToEnvironmentMap = Record<ButtonSize, ButtonEnvironment>
-
-/**
- * Type for button size to icon size mapping record
- */
-export type IconSizeMap = Record<ButtonSize, IconSize>
 
 /**
  * Props for the FzButton component.
@@ -88,55 +83,77 @@ export interface FzButtonProps {
 /**
  * Props for the FzIconButton component.
  * 
- * Icon-only button variant with notification badge support.
+ * Icon-only button variant with notification badge support. Ideal for compact interfaces
+ * and toolbars where space is limited. Features multiple variants, customizable icon sizes,
+ * and full accessibility support.
  * 
- * @example
- * <FzIconButton iconName="bell" variant="notification" />
+ * @example Basic usage
+ * ```vue
+ * <FzIconButton iconName="bell" />
+ * ```
+ * 
+ * @example With notification badge
+ * ```vue
+ * <FzIconButton iconName="bell" hasNotification />
+ * ```
+ * 
+ * @example With accessibility label
+ * ```vue
+ * <FzIconButton iconName="settings" ariaLabel="Open settings" />
+ * ```
  */
 export interface FzIconButtonProps {
   /**
-   * The tooltip of the button will be shown on hover
+   * @deprecated Use FzTooltip component to wrap the button instead.
+   * A runtime warning will be displayed when this prop is used.
+   * Tooltip text shown on hover. Used as fallback for aria-label if ariaLabel is not provided.
    */
   tooltip?: string
   /**
-   * primary or secondary button
+   * Visual style variant determining colors and interactive states
    * @default 'primary'
    */
   variant?: IconButtonVariant
   /**
-   * size of the button
-   * @default 'md'
+   * Environment determining button size
+   * @default 'frontoffice'
+   */
+  environment?: ButtonEnvironment
+  /**
+   * Button size affecting dimensions and icon size
+   * @deprecated Use the 'environment' prop instead. This prop will be removed in a future version.
    */
   size?: ButtonSize
   /**
-   * whether action is enabled or not
+   * Disables interaction and applies disabled styling
    * @default false
    */
   disabled?: boolean
   /**
-   * Icon to be displayed. Use fontawesome search here https://fontawesome.com/v6/icons
+   * FontAwesome icon name (e.g., 'bell', 'settings'). Search: https://fontawesome.com/v6/icons
    * Mind that not all of the icons and variants might be available.
    */
   iconName: string
   /**
-   * Fontawesome icon variant: solid, regular, light, thin. Sharp subvariants are available as well
+   * FontAwesome icon variant (e.g., 'fas', 'far', 'fal', 'fat')
    * @default 'far'
    */
   iconVariant?: IconVariant
   /**
-   * Icon size
+   * Custom icon size
+   * @deprecated This prop will be removed in a future version. Icon size has now a fixed dimension.
    */
   iconSize?: IconSize
   /**
-   * Positioning of the icon
-   * @default 'before'
+   * Shows a notification badge in the top-right corner of the button
+   * @default false
    */
-  iconPosition?: 'before' | 'after'
+  hasNotification?: boolean
   /**
-   * Additional class for the icon
-   * @default ''
+   * Accessible label for screen readers. Required for icon-only buttons.
+   * If hasNotification is true, automatically appends notification status to the label.
    */
-  iconClass?: string
+  ariaLabel?: string
 }
 
 /**

@@ -1,5 +1,5 @@
 import type { VNode } from 'vue'
-import type { SizeToEnvironmentMap, IconSizeMap } from './types'
+import type { SizeToEnvironmentMap, ButtonSize, ButtonEnvironment } from './types'
 import FzButton from './FzButton.vue'
 
 /**
@@ -29,18 +29,6 @@ export const sizeToEnvironmentMapping: SizeToEnvironmentMap = {
   sm: 'backoffice',
   md: 'backoffice',
   lg: 'frontoffice'
-}
-
-/**
- * Maps ButtonSize to IconSize for FzIconButton
- * 
- * Used by FzIconButton to determine icon size based on button size.
- */
-export const iconSizeMap: IconSizeMap = {
-  xs: 'sm',
-  sm: 'md',
-  md: 'lg',
-  lg: 'lg'
 }
 
 /**
