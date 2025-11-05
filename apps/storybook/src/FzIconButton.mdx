@@ -1,0 +1,190 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Button/FzIconButton" />
+
+# FzIconButton
+
+Icon-only button component with notification badge support. Ideal for compact interfaces and toolbars where space is limited.
+
+## Features
+
+- Icon-only design for compact interfaces
+- Multiple variants (primary, secondary, invisible)
+- Two environments (backoffice, frontoffice)
+- Notification badge overlay support
+- Customizable icon variant
+- Full accessibility support
+- TypeScript support
+
+## Installation
+
+```bash
+npm install @fiscozen/button
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzIconButton } from '@fiscozen/button'
+</script>
+
+<template>
+  <FzIconButton iconName="bell" />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>iconName</code></td>
+      <td><code>string</code></td>
+      <td><em>required</em></td>
+      <td>FontAwesome icon name (e.g., 'bell', 'settings'). Search: https://fontawesome.com/v6/icons</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'primary' | 'secondary' | 'invisible'</code></td>
+      <td><code>'primary'</code></td>
+      <td>Visual style variant determining colors and interactive states</td>
+    </tr>
+    <tr>
+      <td><code>environment</code></td>
+      <td><code>'backoffice' | 'frontoffice'</code></td>
+      <td><code>'frontoffice'</code></td>
+      <td>Environment determining button size</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Disables interaction and applies disabled styling</td>
+    </tr>
+    <tr>
+      <td><code>iconVariant</code></td>
+      <td><code>IconVariant</code></td>
+      <td><code>'far'</code></td>
+      <td>FontAwesome icon variant (fas, far, fal, fat, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>hasNotification</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows a notification badge in the top-right corner of the button</td>
+    </tr>
+    <tr>
+      <td><code>ariaLabel</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Accessible label for screen readers. Required for icon-only buttons. If hasNotification is true, automatically appends notification status to the label.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Variants
+
+```vue
+<template>
+  <div class="flex gap-8">
+    <FzIconButton iconName="bell" variant="primary" ariaLabel="Notifications" />
+    <FzIconButton iconName="settings" variant="secondary" ariaLabel="Settings" />
+    <FzIconButton iconName="trash" variant="invisible" ariaLabel="Delete" />
+  </div>
+</template>
+```
+
+### Environments
+
+```vue
+<template>
+  <div class="flex gap-8 items-center">
+    <FzIconButton 
+      iconName="settings" 
+      environment="backoffice" 
+      ariaLabel="Settings (backoffice)" 
+    />
+    <FzIconButton 
+      iconName="settings" 
+      environment="frontoffice" 
+      ariaLabel="Settings (frontoffice)" 
+    />
+  </div>
+</template>
+```
+
+### With Notification Badge
+
+```vue
+<template>
+  <FzIconButton 
+    iconName="bell" 
+    hasNotification 
+    ariaLabel="Notifications with badge"
+  />
+</template>
+```
+
+### Disabled State
+
+```vue
+<template>
+  <FzIconButton 
+    iconName="settings" 
+    :disabled="true" 
+    ariaLabel="Settings (disabled)"
+  />
+</template>
+```
+
+
+### With Tooltip (Recommended)
+
+```vue
+<template>
+  <FzTooltip content="Notifications">
+    <FzIconButton iconName="bell" ariaLabel="Notifications" />
+  </FzTooltip>
+</template>
+```
+
+## Behavior & Concepts
+
+### Notification Badge
+
+The notification badge appears as a circular indicator in the top-right corner when `hasNotification` is `true`.
+
+## Accessibility
+
+FzIconButton follows WCAG 2.1 AA standards and includes:
+
+- **ARIA Labels**: Icon buttons require explicit labels for screen readers. Use `ariaLabel` prop or wrap with `FzTooltip` for accessible labels
+- **Keyboard Navigation**: Full support for Enter and Space keys
+- **Disabled State**: Properly prevents click events and visual feedback when disabled
+- **Screen Reader Compatible**: Works with NVDA, JAWS, and VoiceOver
+- **Focus Indicators**: Visible focus states with 3:1 contrast ratio
+- **Notification Badge**: Marked as `aria-hidden="true"` to prevent screen reader announcements
+
+### Accessibility Best Practices
+
+1. **Always provide an accessible label**: Use `ariaLabel` prop or wrap with `FzTooltip`
+2. **Use semantic variants**: Choose variant that matches the action's importance
+3. **Test with screen readers**: Verify labels are announced correctly
+4. **Provide visual feedback**: Ensure disabled states are visually distinct
+
+## Related Components
+
+- **FzButton**: Standard button with label and optional icon
+- **FzButtonGroup**: Container for grouping related buttons
+

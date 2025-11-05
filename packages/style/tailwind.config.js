@@ -92,6 +92,8 @@ module.exports = {
       'gap-section-content-sm',
       'gap-section-content-base',
       'gap-section-content-lg',
+      '-top-[2px]',
+      '-right-[2px]',
       ...generateColorSafelist(colors)
     ],
     theme: {

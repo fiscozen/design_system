@@ -176,12 +176,20 @@ const effectiveEnvironment = computed((): ButtonEnvironment => {
 })
 
 /**
- * Determines if both icon and label/slot content are present
+ * Determines if icon should be rendered
  * 
- * Icons are only rendered when accompanied by text content to ensure proper
- * spacing and layout. This prevents icon containers from rendering unnecessarily.
+ * Icons are rendered when:
+ * 1. Both icon and label/slot content are present (standard button with icon)
+ * 2. Icon-only mode: when overrideContainerClass is true and iconName is provided
+ *    (used by FzIconButton wrapper component)
  */
-const iconAndLabel = computed(() => Boolean((props.label || slots.default) && props.iconName))
+const iconAndLabel = computed(() => {
+  const hasLabel = Boolean(props.label || slots.default)
+  const hasIconName = Boolean(props.iconName)
+  const isIconOnly = props.overrideContainerClass && hasIconName
+  
+  return (hasLabel && hasIconName) || isIconOnly
+})
 
 const staticClasses = [
   'relative',
