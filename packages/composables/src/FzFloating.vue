@@ -76,6 +76,8 @@ watch(
     }
     window.addEventListener('scroll', setPositionWhenOpen)
     const openerRect = opener.value?.getBoundingClientRect()
+    // CRITICAL: Set position fixed immediately to prevent layout shift
+    content.value.style.position = 'fixed'
     content.value.style.top = '0px'
     content.value.style.left = '0px'
     content.value.style.transform = 'none'
