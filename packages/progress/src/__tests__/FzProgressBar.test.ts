@@ -30,6 +30,44 @@ describe('FzProgressBar', () => {
       expect(container.classes()).toContain('bg-grey-100')
     })
 
+    it('renders with default size md (20px height)', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.classes()).toContain('h-[20px]')
+      expect(container.classes()).not.toContain('h-[8px]')
+    })
+
+    it('renders with size sm (8px height)', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          size: 'sm',
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.classes()).toContain('h-[8px]')
+      expect(container.classes()).not.toContain('h-[20px]')
+    })
+
+    it('renders with size md (20px height)', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          size: 'md',
+        },
+      })
+
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.classes()).toContain('h-[20px]')
+      expect(container.classes()).not.toContain('h-[8px]')
+    })
+
     it('renders progress fill with correct classes', () => {
       const wrapper = mount(FzProgressBar, {
         props: {

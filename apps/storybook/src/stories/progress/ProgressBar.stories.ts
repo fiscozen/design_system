@@ -19,12 +19,17 @@ const meta: Meta<typeof FzProgressBar> = {
     name: {
       control: 'text',
     },
+    size: {
+      control: 'select',
+      options: ['sm', 'md'],
+    },
   },
   args: {
     min: 0,
     max: 100,
     current: 50,
     name: 'progress-bar',
+    size: 'md',
   },
   decorators: []
 }
@@ -171,6 +176,64 @@ const CustomRange: Story = {
   }
 }
 
-export { Default, Full, Half, Zero, CustomRange }
+const SizeSm: Story = {
+  ...Template,
+  args: {
+    current: 50,
+    min: 0,
+    max: 100,
+    size: 'sm',
+  },
+  play: async ({ canvasElement, step }: any) => {
+    await step('Verify small size renders with 8px height', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
+      await expect(progressBar?.classList.contains('h-[8px]')).toBe(true)
+      await expect(progressBar?.classList.contains('h-[20px]')).toBe(false)
+    })
+
+    await step('Verify progress indicator renders correctly', async () => {
+      const indicator = canvasElement.querySelector('.fz-progress-bar__progress-indicator')
+      const style = indicator?.getAttribute('style')
+      await expect(style).toContain('width: 50%')
+    })
+
+    await step('Verify accessibility attributes', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
+      await expect(progressBar?.getAttribute('role')).toBe('progressbar')
+      await expect(progressBar?.getAttribute('aria-valuenow')).toBe('50')
+    })
+  }
+}
+
+const SizeMd: Story = {
+  ...Template,
+  args: {
+    current: 50,
+    min: 0,
+    max: 100,
+    size: 'md',
+  },
+  play: async ({ canvasElement, step }: any) => {
+    await step('Verify medium size renders with 20px height', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
+      await expect(progressBar?.classList.contains('h-[20px]')).toBe(true)
+      await expect(progressBar?.classList.contains('h-[8px]')).toBe(false)
+    })
+
+    await step('Verify progress indicator renders correctly', async () => {
+      const indicator = canvasElement.querySelector('.fz-progress-bar__progress-indicator')
+      const style = indicator?.getAttribute('style')
+      await expect(style).toContain('width: 50%')
+    })
+
+    await step('Verify accessibility attributes', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
+      await expect(progressBar?.getAttribute('role')).toBe('progressbar')
+      await expect(progressBar?.getAttribute('aria-valuenow')).toBe('50')
+    })
+  }
+}
+
+export { Default, Full, Half, Zero, CustomRange, SizeSm, SizeMd }
 
 export default meta

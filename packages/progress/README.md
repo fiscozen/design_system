@@ -110,6 +110,18 @@ import { FzProgressBar } from '@fiscozen/progress'
 </template>
 ```
 
+### Custom Size
+
+```vue
+<template>
+  <!-- Small size -->
+  <FzProgressBar :current="50" size="sm" />
+  
+  <!-- Medium size (default) -->
+  <FzProgressBar :current="50" size="md" />
+</template>
+```
+
 ## Props
 
 ### FzProgress Props
@@ -130,6 +142,7 @@ FzProgress inherits all props from `FzIcon` (from `@fiscozen/icons`):
 | `max` | `number` | `100` | Maximum value for progress calculation |
 | `min` | `number` | `0` | Minimum value for progress calculation |
 | `name` | `string` | `'progress-bar'` | Accessible label for screen readers |
+| `size` | `'sm' \| 'md'` | `'md'` | Height of the progress bar |
 
 ## Behavior & Concepts
 
