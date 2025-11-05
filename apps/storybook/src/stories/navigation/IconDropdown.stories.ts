@@ -1,35 +1,40 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, within, userEvent, waitFor } from '@storybook/test'
 import { FzIconDropdown } from '@fiscozen/dropdown'
 import { vueRouter } from 'storybook-vue3-router'
+import { FzActionProps, FzActionSectionProps } from '@fiscozen/action'
 
-const actions = [
+const actions: (FzActionProps | FzActionSectionProps & { type: 'section' })[] = [
   {
-    type: 'link' as const,
+    type: 'link',
     label: 'This is a router-nav-link',
+    to: '/foo',
     meta: {
       path: '/foo',
       name: 'foo'
     }
   },
   {
-    type: 'link' as const,
+    type: 'link',
     label: 'This is a disabled router-nav-link',
     disabled: true,
+    to: '/foo',
     meta: {
       path: '/foo',
       name: 'foo'
     }
   },
   {
-    type: 'link' as const,
+    type: 'link',
     label: 'This is a router-nav-link',
+    to: '/foo',
     meta: {
       path: '/foo',
       name: 'foo'
     }
   },
   {
-    type: 'button' as const,
+    type: 'action',
     label: 'This is a disabled nav-link',
     disabled: true
   }
@@ -43,13 +48,10 @@ const meta: Meta<typeof FzIconDropdown> = {
     actions
   },
   decorators: [
-    vueRouter([
-      {
-        path: '/foo',
-        name: 'foo',
-        component: () => {}
-      }
-    ])
+    vueRouter(),
+    () => ({
+      template: '<div class="h-screen flex justify-center items-start pt-20"><story/></div>'
+    })
   ]
 }
 
@@ -58,24 +60,14 @@ type Story = StoryObj<typeof meta>
 const Default: Story = {
   args: {
     iconName: 'bars'
-  },
-  decorators: [
-    () => ({
-      template: '<div class="h-screen flex justify-center"><story/></div>'
-    })
-  ]
+  }
 }
 
 const Disabled: Story = {
   args: {
     iconName: 'bars',
-    openerDisabled: true
-  },
-  decorators: [
-    () => ({
-      template: '<div class="h-screen flex justify-center"><story/></div>'
-    })
-  ]
+    disabled: true
+  }
 }
 
 export { Default, Disabled }

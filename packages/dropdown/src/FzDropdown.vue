@@ -5,7 +5,6 @@
     ref="container"
     overrideContentClass
     :teleport="teleport"
-    :contentClass="['fixed pt-4 z-70', props.floatingClass || '']"
   >
     <template #opener>
       <slot name="opener" :isOpen="isOpen" :open :close>
@@ -13,43 +12,48 @@
           icon-position="after"
           :icon-name="buttonIconName"
           @click="isOpen = !isOpen"
-          :size
-          :variant
-          :disabled="openerDisabled"
-          :class="openerClass"
+          :environment="mappedSizeToEnvironment"
+          :variant="buttonVariant"
+          :disabled="disabled"
         >
           <slot :isOpen="isOpen"></slot>
         </FzButton>
       </slot>
     </template>
-    <FzActionlist :items="actions" :label="actionsLabel" :listClass="props.listClass" @fzaction:click="handleActionClick">
-      <template v-for="(action, index) in actions" :key="index" #[`fzaction-item-${index}`]>
-        <slot :name="`fzaction-item-${index}`" :item="action" :open :close></slot>
-      </template>
-    </FzActionlist>
+    <slot name="actionList">
+      <FzActionList :listClass="props.listClass" @fzaction:click="handleActionClick">
+          <FzActionSection v-for="(section, index) in groupedActions" :key="index" :label="index !== '__default__' ? index : undefined" :environment="environment">
+            <FzAction v-for="(action, actionIndex) in section" :key="actionIndex" v-bind="action" @click="handleActionClick(actionIndex, action)" :environment="environment" />
+          </FzActionSection>
+      </FzActionList>
+    </slot>
   </FzFloating>
 </template>
 
 <script setup lang="ts">
 import { ComponentPublicInstance, computed, ref } from 'vue'
 import { FzButton } from '@fiscozen/button'
-import { FzActionlist, ActionlistItem } from '@fiscozen/actionlist'
+import { FzAction, FzActionList, FzActionProps, FzActionSection } from '@fiscozen/action'
 import { FzFloating, useClickOutside, useKeyDown } from '@fiscozen/composables'
 import { FzDropdownProps, FzDropdownSlots } from './types'
+import { sizeToEnvironmentMapping } from '@fiscozen/button/src/utils'
 
 const props = withDefaults(defineProps<FzDropdownProps>(), {
-  size: 'md',
+  environment: 'frontoffice',
   actions: () => [],
   closeOnActionClick: true
 })
 
+const mappedSizeToEnvironment = computed<'backoffice' | 'frontoffice'>(() => {
+  return props.size ? sizeToEnvironmentMapping[props.size] : props.environment
+})
 const emit = defineEmits<{
-  'fzaction:click': [index: number, action: ActionlistItem]
+  'fzaction:click': [index: number, action: FzActionProps]
 }>()
 
 defineSlots<FzDropdownSlots>()
 
-const isOpen = ref(false)
+const isOpen = defineModel<boolean>('isOpen',{ default: false })
 const container = ref<ComponentPublicInstance>()
 const containerDom = computed(() => container.value?.$el)
 const buttonIconName = computed(() => (isOpen.value ? 'angle-up' : 'angle-down'))
@@ -64,6 +68,24 @@ const floatingPosition = computed(() => {
   }
 })
 
+const groupedActions = computed(() => {
+  const sections : Record<string, FzActionProps[]> = {}
+
+  let section = '__default__'
+  props.actions.forEach((action) => {
+    if (action.type === 'section') {
+      section = action.label || '__default__'
+      return
+    }
+
+    if (!sections[section]) {
+      sections[section] = []
+    }
+    sections[section].push(action)
+  })
+  return sections
+})
+
 useClickOutside(containerDom, () => {
   isOpen.value = false
 })
@@ -73,16 +95,23 @@ useKeyDown(containerDom, (event) => {
   isOpen.value = false
 })
 
-function handleActionClick(index: number, action: ActionlistItem) {
+function handleActionClick(index: number, action: FzActionProps) {
   emit('fzaction:click', index, action)
   if (props.closeOnActionClick) {
     isOpen.value = false
   }
 }
 
+/**
+ * @deprecated Use the isOpen model instead
+ */
 function open() {
   isOpen.value = true
 }
+
+/**
+ * @deprecated Use the isOpen model instead
+ */
 function close() {
   isOpen.value = false
 }
