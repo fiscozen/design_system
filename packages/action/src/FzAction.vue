@@ -3,8 +3,9 @@
     :is="componentTag"
     v-bind="boundAttrs"
     :class="baseClasses"
+    :aria-label="ariaLabel"
     @click="handleClick"
-    :aria-label="label || subLabel || iconName"
+    @keydown="handleKeydown"
   >
     <template v-if="variant === 'textLeft'">
       <FzIcon
@@ -13,6 +14,7 @@
         :variant="iconVariant"
         size="md"
         :class="iconClasses"
+        :aria-hidden="isIconDecorative"
       />
       <div class="flex flex-col gap-4 overflow-hidden">
         <span
@@ -32,6 +34,7 @@
         :variant="iconVariant"
         size="md"
         :class="iconClasses"
+        :aria-hidden="isIconDecorative"
       />
     </template>
     <div
@@ -45,6 +48,7 @@
           :variant="iconVariant"
           size="md"
           :class="iconClasses"
+          :aria-hidden="isIconDecorative"
         />
 
         <span
@@ -61,6 +65,7 @@
           :variant="iconVariant"
           size="md"
           :class="iconClasses"
+          :aria-hidden="isIconDecorative"
         />
       </div>
       <span v-if="subLabel" :class="subLabelClasses" :title="subLabel">
@@ -73,7 +78,7 @@
       :variant="iconVariant"
       size="md"
       :class="iconClasses"
-      aria-hidden="true"
+      :aria-hidden="isIconDecorative"
     />
   </component>
 </template>
@@ -96,27 +101,83 @@ const props = withDefaults(defineProps<FzActionProps>(), {
 
 const emit = defineEmits<{
   click: [event: MouseEvent];
+  keydown: [event: KeyboardEvent];
 }>();
 
 const { baseClasses, iconClasses, labelClasses, subLabelClasses } =
   useActionClasses(props);
 
-const SPAN_ATTRS = {
-  role: "presentation",
-  "aria-disabled": "true",
-};
+/**
+ * Computed aria-label for accessibility
+ * - For icon-only variant: combine label/subLabel/iconName
+ * - For links with text: only add if external (to indicate new window)
+ * - For buttons with text: not needed (text is visible)
+ */
+const ariaLabel = computed(() => {
+  // Icon-only variant always needs aria-label
+  if (props.variant === "onlyIcon") {
+    const parts = [];
+    if (props.label) parts.push(props.label);
+    if (props.subLabel) parts.push(props.subLabel);
+    if (parts.length === 0 && props.iconName) parts.push(props.iconName);
+    return parts.join(". ") || undefined;
+  }
+
+  // For external links, add indication that it opens in new window
+  if (props.type === "link" && props.external && props.target === "_blank") {
+    const parts = [];
+    if (props.label) parts.push(props.label);
+    if (props.subLabel) parts.push(props.subLabel);
+    if (parts.length > 0) {
+      return `${parts.join(". ")} (opens in new window)`;
+    }
+  }
+
+  // When there's visible text, aria-label is not needed
+  // (screen readers will read the visible text)
+  return undefined;
+});
+
+/**
+ * Check if icon should be hidden from screen readers
+ * Icons are decorative when:
+ * - There's visible text (label/subLabel), OR
+ * - There's an aria-label (screen reader will read that instead)
+ */
+const isIconDecorative = computed(() => {
+  // If there's visible text, icon is decorative
+  if (props.label || props.subLabel) return true;
+
+  // If there's an aria-label, icon is decorative (screen reader reads aria-label)
+  if (ariaLabel.value) return true;
+
+  // Otherwise, icon provides meaning and should not be hidden
+  return false;
+});
 
 const boundAttrs = computed(() => {
-  if (props.disabled) return SPAN_ATTRS;
+  const baseAriaAttributes: Record<string, string | undefined> = {
+    "aria-disabled": props.disabled ? "true" : "false",
+    tabindex: props.disabled ? "-1" : undefined,
+    role: "button",
+  };
+
+  if (props.disabled) {
+    return {
+      ...baseAriaAttributes,
+    };
+  }
 
   if (props.type === "action") {
     return {
+      ...baseAriaAttributes,
       type: "button",
       disabled: props.disabled,
     };
   }
 
   return {
+    ...baseAriaAttributes,
     to: props.to,
     replace: props.replace,
     target: props.target,
@@ -134,9 +195,37 @@ const componentTag = computed(() => {
 
 // Event handlers
 const handleClick = (event: MouseEvent) => {
-  if (props.type !== "action" || props.disabled) return;
+  if (props.disabled) {
+    event.preventDefault();
+    event.stopPropagation();
+    return;
+  }
+
+  if (props.type !== "action") return;
 
   emit("click", event);
+};
+
+/**
+ * Handle keyboard events for accessibility
+ * - Enter and Space should trigger click for buttons
+ * - Disabled elements should not respond to keyboard
+ */
+const handleKeydown = (event: KeyboardEvent) => {
+  if (props.disabled) {
+    event.preventDefault();
+    event.stopPropagation();
+    return;
+  }
+
+  // Only handle keyboard for button type
+  if (props.type !== "action") return;
+
+  // Enter or Space should trigger keydown
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    emit("keydown", event);
+  }
 };
 </script>
 
