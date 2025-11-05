@@ -23,6 +23,7 @@ const props = withDefaults(defineProps<FzProgressBarProps>(), {
   max: 100,
   min: 0,
   name: "progress-bar",
+  size: "md",
 });
 
 /**
@@ -50,11 +51,16 @@ const percentageProgress = computed(() => {
   const progress = ((props.current - props.min) / range) * 100;
   return Math.max(0, Math.min(100, Math.round(progress)));
 });
+
+const progressBarSize = computed(() => {
+  return props.size === "sm" ? "h-[8px]" : "h-[20px]";
+});
 </script>
 
 <template>
   <div
-    class="fz-progress-bar w-full h-[20px] rounded-[4px] bg-grey-100"
+    class="fz-progress-bar w-full rounded-[4px] bg-grey-100"
+    :class="progressBarSize"
     role="progressbar"
     :aria-valuenow="props.current"
     :aria-valuemin="props.min"
