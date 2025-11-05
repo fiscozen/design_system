@@ -68,6 +68,12 @@ import { FzProgressBar } from '@fiscozen/progress'
       <td><code>'progress-bar'</code></td>
       <td>Accessible label for screen readers</td>
     </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'sm' | 'md'</code></td>
+      <td><code>'md'</code></td>
+      <td>Height of the progress bar (sm = 8px, md = 20px)</td>
+    </tr>
   </tbody>
 </table>
 
@@ -111,22 +117,17 @@ import { FzProgressBar } from '@fiscozen/progress'
 </template>
 ```
 
-## Progress Calculation
+### Custom Size
 
-The progress bar calculates the percentage position of the `current` value within the `[min, max]` range:
-
+```vue
+<template>
+  <!-- Small size (8px height) -->
+  <FzProgressBar :current="50" size="sm" />
+  
+  <!-- Medium size (20px height, default) -->
+  <FzProgressBar :current="50" size="md" />
+</template>
 ```
-percentage = ((current - min) / (max - min)) * 100
-```
-
-The result is clamped between 0% and 100% for CSS width.
-
-**Examples:**
-
-- `current=50, min=0, max=100` → `50%`
-- `current=30, min=-15, max=50` → `(30 - (-15)) / (50 - (-15)) * 100 = 69%`
-- `current=-10, min=0, max=100` → `0%` (clamped)
-- `current=150, min=0, max=100` → `100%` (clamped)
 
 ## Accessibility
 
@@ -145,7 +146,7 @@ FzProgressBar follows WCAG 2.1 AA standards and includes:
 
 ### Why Div Instead of HTML Progress Element?
 
-We use `div` elements instead of the HTML `<progress>` element for better CSS cross-browser compatibility. The progress element requires browser-specific pseudo-elements (`::-webkit-progress-bar`, `::-moz-progress-bar`) which can be inconsistent across browsers and harder to style with Tailwind CSS.
+We use `div` elements instead of the HTML `<progress>` element for better CSS cross-browser compatibility. The progress element requires browser-specific pseudo-elements (`::-webkit-progress-bar`, `::-moz-progress-bar`) which can be inconsistent across browsers.
 
 ## Related Components
 

@@ -51,4 +51,10 @@ export interface FzProgressBarProps {
    * @default 'progress-bar'
    */
   name?: string;
+
+  /**
+   * Size of the progress bar
+   * @default 'md'
+   */
+  size?: 'sm' | 'md';
 }
