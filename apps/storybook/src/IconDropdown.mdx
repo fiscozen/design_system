@@ -1,0 +1,329 @@
+import { Meta, Controls, Markdown } from '@storybook/addon-docs/blocks'
+import { FzIconDropdown } from '@fiscozen/dropdown'
+
+<Meta title="Navigation/FzIconDropdown/Documentation" component={FzIconDropdown} />
+
+# FzIconDropdown
+
+The FzIconDropdown component is a compact dropdown menu variant designed for space-constrained interfaces. It features an icon-only button trigger that opens a floating action list, perfect for toolbars, navigation bars, and mobile interfaces.
+
+## Overview
+
+FzIconDropdown extends the functionality of FzDropdown with an icon-only trigger, making it ideal for compact layouts where text labels would consume too much space. It inherits all the powerful features of FzDropdown while providing a streamlined, icon-based interface.
+
+### Key Features
+
+- **Compact Design**: Icon-only trigger saves valuable screen space
+- **Icon Flexibility**: Support for any [FontAwesome](https://fontawesome.com/) icon
+- **Environment Support**: Optimized for both backoffice and frontoffice contexts
+- **Smart Positioning**: Automatic alignment with floating positioning
+- **Customizable Content**: Full control through actionList slot
+- **Accessibility**: Built-in ARIA labels and keyboard navigation
+- **Visual Variants**: Multiple button styles including notification badge support
+
+## Properties
+
+### Core Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`iconName\` | \`string\` | \`'bars'\` | Name of the [FontAwesome](https://fontawesome.com/) icon to display |
+| \`environment\` | \`'backoffice' \| 'frontoffice'\` | \`'frontoffice'\` | Environment variant affecting button size |
+| \`align\` | \`'left' \| 'right' \| 'center'\` | \`'center'\` | Alignment of the dropdown menu relative to the button |
+| \`disabled\` | \`boolean\` | \`false\` | Disables the dropdown and prevents interaction |
+| \`closeOnActionClick\` | \`boolean\` | \`true\` | Whether to close dropdown when an action is clicked |
+| \`teleport\` | \`boolean\` | \`true\` | Whether to teleport the floating content to body |
+`}
+</Markdown>
+
+### Button Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`buttonVariant\` | \`'primary' \| 'secondary' \| 'invisible'\` | \`'secondary'\` | Visual style variant of the icon button |
+| \`label\` | \`string\` | \`'Open dropdown'\` | Accessibility label for screen readers (aria-label) |
+| \`size\` | \`'xs' \| 'sm' \| 'md' \| 'lg'\` | - | Button size (deprecated, use environment instead) |
+`}
+</Markdown>
+
+### Content Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`actions\` | \`(FzActionProps \| FzActionSectionProps)[] \` | \`[]\` | List of actions to display (deprecated, use actionList slot) |
+| \`listClass\` | \`string\` | - | Additional CSS classes for the action list container |
+`}
+</Markdown>
+
+### Model Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`v-model:isOpen\` | \`boolean\` | \`false\` | Controls the open/closed state of the dropdown |
+`}
+</Markdown>
+
+## Events
+
+<Markdown>
+  {`
+| Event | Parameters | Description |
+|-------|------------|-------------|
+| \`fzaction:click\` | \`(index: number, action: FzActionProps)\` | Emitted when an action is clicked |
+`}
+</Markdown>
+
+## Slots
+
+<Markdown>
+  {`
+| Slot | Props | Description |
+|------|-------|-------------|
+| \`actionList\` | - | Custom content for the dropdown menu |
+`}
+</Markdown>
+
+## Usage Examples
+
+### Basic Icon Dropdown
+
+```vue
+<template>
+  <FzIconDropdown
+    iconName="ellipsis-vertical"
+    :actions="actions"
+    @fzaction:click="handleActionClick"
+  />
+</template>
+
+<script setup>
+import { FzIconDropdown } from '@fiscozen/dropdown'
+
+const actions = [
+  { type: 'action', label: 'Edit', iconName: 'pen' },
+  { type: 'action', label: 'Delete', iconName: 'trash' }
+]
+
+function handleActionClick(index, action) {
+  console.log('Action clicked:', action.label)
+}
+</script>
+```
+
+### With Custom Action List (Recommended)
+
+```vue
+<template>
+  <FzIconDropdown iconName="bars">
+    <template #actionList>
+      <FzActionList>
+        <FzActionSection label="File">
+          <FzAction label="New" iconName="file" @click="handleNew" />
+          <FzAction label="Save" iconName="save" @click="handleSave" />
+        </FzActionSection>
+        <FzActionSection label="Edit">
+          <FzAction label="Copy" iconName="copy" @click="handleCopy" />
+          <FzAction label="Paste" iconName="paste" @click="handlePaste" />
+        </FzActionSection>
+      </FzActionList>
+    </template>
+  </FzIconDropdown>
+</template>
+```
+
+### Navigation Menu
+
+```vue
+<template>
+  <FzIconDropdown iconName="bars" label="Main menu">
+    <template #actionList>
+      <FzActionList>
+        <FzAction type="link" label="Home" to="/home" iconName="home" />
+        <FzAction type="link" label="Profile" to="/profile" iconName="user" />
+        <FzAction type="link" label="Settings" to="/settings" iconName="cog" />
+        <FzAction label="Logout" iconName="sign-out" @click="handleLogout" />
+      </FzActionList>
+    </template>
+  </FzIconDropdown>
+</template>
+```
+
+### User Profile Menu
+
+```vue
+<template>
+  <FzIconDropdown iconName="user-circle" align="right" label="User menu">
+    <template #actionList>
+      <FzActionList>
+        <FzActionSection label="Account">
+          <FzAction label="Profile" iconName="user" @click="goToProfile" />
+          <FzAction label="Settings" iconName="cog" @click="goToSettings" />
+        </FzActionSection>
+        <FzActionSection label="Help">
+          <FzAction label="Documentation" iconName="book" @click="openDocs" />
+          <FzAction label="Support" iconName="question-circle" @click="openSupport" />
+        </FzActionSection>
+        <FzActionSection>
+          <FzAction label="Sign Out" iconName="sign-out" @click="handleSignOut" />
+        </FzActionSection>
+      </FzActionList>
+    </template>
+  </FzIconDropdown>
+</template>
+```
+
+### Different Alignments
+
+```vue
+<template>
+  <!-- Left aligned -->
+  <FzIconDropdown align="left" iconName="bars" :actions="actions" />
+
+  <!-- Center aligned (default) -->
+  <FzIconDropdown align="center" iconName="ellipsis" :actions="actions" />
+
+  <!-- Right aligned -->
+  <FzIconDropdown align="right" iconName="ellipsis-vertical" :actions="actions" />
+</template>
+```
+
+### Button Variants
+
+```vue
+<template>
+  <!-- Primary variant -->
+  <FzIconDropdown
+    buttonVariant="primary"
+    iconName="bars"
+    :actions="actions"
+  />
+
+  <!-- Secondary variant (default) -->
+  <FzIconDropdown
+    buttonVariant="secondary"
+    iconName="bars"
+    :actions="actions"
+  />
+
+  <!-- Invisible variant -->
+  <FzIconDropdown
+    buttonVariant="invisible"
+    iconName="ellipsis-vertical"
+    :actions="actions"
+  />
+
+  <!-- Notification variant with badge -->
+  <FzIconDropdown
+    buttonVariant="notification"
+    iconName="bell"
+    :actions="notificationActions"
+  />
+</template>
+```
+
+### Common Icon Patterns
+
+```vue
+<template>
+  <!-- Hamburger menu -->
+  <FzIconDropdown iconName="bars" :actions="menuActions" />
+
+  <!-- Vertical ellipsis (more options) -->
+  <FzIconDropdown iconName="ellipsis-vertical" :actions="moreActions" />
+
+  <!-- Horizontal ellipsis -->
+  <FzIconDropdown iconName="ellipsis" :actions="moreActions" />
+
+  <!-- Settings/cog menu -->
+  <FzIconDropdown iconName="cog" :actions="settingsActions" />
+
+  <!-- User profile menu -->
+  <FzIconDropdown iconName="user-circle" :actions="profileActions" />
+
+  <!-- Notifications -->
+  <FzIconDropdown
+    iconName="bell"
+    buttonVariant="notification"
+    :actions="notifications"
+  />
+</template>
+```
+
+### Disabled State
+
+```vue
+<template>
+  <FzIconDropdown disabled iconName="bars" :actions="actions" />
+</template>
+```
+
+### Custom Accessibility Label
+
+```vue
+<template>
+  <FzIconDropdown
+    iconName="user-circle"
+    label="User profile and settings"
+    :actions="actions"
+  />
+</template>
+```
+
+## Best Practices
+
+### Accessibility Best Practices
+
+1. **Always provide a descriptive `label`** prop for screen readers
+2. **Use semantic icon names** that convey the dropdown's purpose
+3. **Group related actions** using sections in the action list
+4. **Test keyboard navigation** to ensure Escape key closes the dropdown
+
+### Environment Selection
+
+- **backoffice**: Use for internal admin interfaces
+- **frontoffice**: Use for customer-facing interfaces and mobile views
+
+## Integration
+
+### Installation
+
+```bash
+npm install @fiscozen/dropdown
+```
+
+### Import
+
+```typescript
+import { FzIconDropdown } from '@fiscozen/dropdown'
+```
+
+### Required Dependencies
+
+The icon dropdown component requires the following peer dependencies:
+
+```json
+{
+  "@fiscozen/action": "^1.0.0",
+  "@fiscozen/button": "^1.0.0",
+  "@fiscozen/composables": "^0.1.38"
+}
+```
+
+### Additional Resources
+- **[Vue.js Documentation](https://vuejs.org/guide/)** - For Vue.js framework reference
+
+## Related Components
+
+- **[FzDropdown](?path=/docs/navigation-fzdropdown-documentation--docs)**: Full dropdown with text button trigger
+- **[FzIconButton](?path=/docs/button-fziconbutton--docs)**: Standalone icon button without dropdown
+- **[FzAction](?path=/docs/navigation-fzaction-documentation--docs)**: For individual action items
+- **[FzActionList](?path=/docs/navigation-fzactionlist--docs)**: For action list composition
+
