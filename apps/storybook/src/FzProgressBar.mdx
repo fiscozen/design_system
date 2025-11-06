@@ -74,6 +74,12 @@ import { FzProgressBar } from '@fiscozen/progress'
       <td><code>'md'</code></td>
       <td>Height of the progress bar (sm = 8px, md = 20px)</td>
     </tr>
+    <tr>
+      <td><code>color</code></td>
+      <td><code>'purple' | 'blue' | 'orange' | 'pink' | 'yellow' | 'grey'</code></td>
+      <td><code>'purple'</code></td>
+      <td>Color variant of the progress indicator</td>
+    </tr>
   </tbody>
 </table>
 
@@ -126,6 +132,30 @@ import { FzProgressBar } from '@fiscozen/progress'
   
   <!-- Medium size (20px height, default) -->
   <FzProgressBar :current="50" size="md" />
+</template>
+```
+
+### Custom Color
+
+```vue
+<template>
+  <!-- Purple (default) -->
+  <FzProgressBar :current="50" color="purple" />
+  
+  <!-- Blue -->
+  <FzProgressBar :current="50" color="blue" />
+  
+  <!-- Orange -->
+  <FzProgressBar :current="50" color="orange" />
+  
+  <!-- Pink -->
+  <FzProgressBar :current="50" color="pink" />
+  
+  <!-- Yellow -->
+  <FzProgressBar :current="50" color="yellow" />
+  
+  <!-- Grey -->
+  <FzProgressBar :current="50" color="grey" />
 </template>
 ```
 

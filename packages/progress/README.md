@@ -122,6 +122,30 @@ import { FzProgressBar } from '@fiscozen/progress'
 </template>
 ```
 
+### Custom Color
+
+```vue
+<template>
+  <!-- Purple (default) -->
+  <FzProgressBar :current="50" color="purple" />
+  
+  <!-- Blue -->
+  <FzProgressBar :current="50" color="blue" />
+  
+  <!-- Orange -->
+  <FzProgressBar :current="50" color="orange" />
+  
+  <!-- Pink -->
+  <FzProgressBar :current="50" color="pink" />
+  
+  <!-- Yellow -->
+  <FzProgressBar :current="50" color="yellow" />
+  
+  <!-- Grey -->
+  <FzProgressBar :current="50" color="grey" />
+</template>
+```
+
 ## Props
 
 ### FzProgress Props
@@ -143,6 +167,7 @@ FzProgress inherits all props from `FzIcon` (from `@fiscozen/icons`):
 | `min` | `number` | `0` | Minimum value for progress calculation |
 | `name` | `string` | `'progress-bar'` | Accessible label for screen readers |
 | `size` | `'sm' \| 'md'` | `'md'` | Height of the progress bar |
+| `color` | `'purple' \| 'blue' \| 'orange' \| 'pink' \| 'yellow' \| 'grey'` | `'purple'` | Color variant of the progress indicator |
 
 ## Behavior & Concepts
 

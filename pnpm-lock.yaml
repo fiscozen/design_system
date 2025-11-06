@@ -1898,6 +1898,9 @@ importers:
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      '@fiscozen/style':
+        specifier: workspace:^
+        version: link:../style
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.17
