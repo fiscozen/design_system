@@ -19,11 +19,21 @@
 import { computed } from "vue";
 import type { FzProgressBarProps } from "./types";
 
+/**
+ * Disables automatic attribute inheritance to prevent props like 'color' from being
+ * passed as HTML attributes to the root div element. The 'color' prop is only used
+ * internally for computing the CSS class.
+ */
+defineOptions({
+  inheritAttrs: false,
+});
+
 const props = withDefaults(defineProps<FzProgressBarProps>(), {
   max: 100,
   min: 0,
   name: "progress-bar",
   size: "md",
+  color: "purple",
 });
 
 /**
@@ -54,6 +64,38 @@ const percentageProgress = computed(() => {
 
 const progressBarSize = computed(() => {
   return props.size === "sm" ? "h-[8px]" : "h-[20px]";
+});
+
+/**
+ * Color to Tailwind CSS class mapping
+ *
+ * Maps color prop values to complete Tailwind CSS background color classes.
+ * Using explicit mapping ensures Tailwind can detect and include these classes
+ * during compilation (dynamic template literals are not detected by Tailwind).
+ */
+const colorClassMap = {
+  purple: "bg-purple-500",
+  blue: "bg-blue-500",
+  orange: "bg-orange-500",
+  pink: "bg-pink-500",
+  yellow: "bg-yellow-500",
+  grey: "bg-grey-500",
+} as const;
+
+/**
+ * Computes background color class based on color prop
+ *
+ * Returns the corresponding Tailwind CSS background color class from the mapping.
+ * Falls back to 'purple' if color is undefined or not in the mapping.
+ */
+const progressBarColor = computed(() => {
+  const color = props.color;
+
+  if (!color || !(color in colorClassMap)) {
+    return colorClassMap.purple;
+  }
+
+  return colorClassMap[color as keyof typeof colorClassMap];
 });
 
 /**
@@ -102,7 +144,8 @@ const ariaValuemax = computed(() => sanitizeAriaValue(props.max));
     :aria-label="props.name"
   >
     <div
-      class="fz-progress-bar__progress-indicator h-full rounded-[4px] bg-purple-500 transition-all duration-300"
+      class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300"
+      :class="progressBarColor"
       :style="{ width: `${percentageProgress}%` }"
     ></div>
   </div>

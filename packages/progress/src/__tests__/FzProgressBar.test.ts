@@ -83,6 +83,77 @@ describe('FzProgressBar', () => {
       expect(fill.classes()).toContain('transition-all')
       expect(fill.classes()).toContain('duration-300')
     })
+
+    it('renders with default color purple', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      expect(fill.classes()).toContain('bg-purple-500')
+    })
+
+    it('renders with color blue', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'blue',
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      expect(fill.classes()).toContain('bg-blue-500')
+    })
+
+    it('renders with color orange', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'orange',
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      expect(fill.classes()).toContain('bg-orange-500')
+    })
+
+    it('renders with color pink', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'pink',
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      expect(fill.classes()).toContain('bg-pink-500')
+    })
+
+    it('renders with color yellow', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'yellow',
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      expect(fill.classes()).toContain('bg-yellow-500')
+    })
+
+    it('renders with color grey', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'grey',
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      expect(fill.classes()).toContain('bg-grey-500')
+    })
   })
 
   describe('Progress Calculation', () => {
@@ -347,6 +418,30 @@ describe('FzProgressBar', () => {
 
       const container = wrapper.find('.fz-progress-bar')
       expect(container.attributes('aria-label')).toBe('upload-progress')
+    })
+
+    it('uses default color value of purple', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      expect(fill.classes()).toContain('bg-purple-500')
+    })
+
+    it('accepts custom color prop', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'blue',
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      expect(fill.classes()).toContain('bg-blue-500')
+      expect(fill.classes()).not.toContain('bg-purple-500')
     })
   })
 
