@@ -1,7 +1,19 @@
 <template>
-  <FzDropdown v-bind="props" ref="dropdown" @fzaction:click="(...args) => emit('fzaction:click', ...args)" :environment="mappedSizeToEnvironment">
+  <FzDropdown
+    v-bind="props"
+    ref="dropdown"
+    @fzaction:click="(...args) => emit('fzaction:click', ...args)"
+    :environment="mappedSizeToEnvironment"
+  >
     <template #opener="{ open }">
-      <FzIconButton :iconName="iconName" @click.stop="open()" :variant="buttonVariant" :disabled="disabled" :environment="mappedSizeToEnvironment" />
+      <FzIconButton
+        :iconName="iconName"
+        @click.stop="open()"
+        :variant="buttonVariant"
+        :disabled="disabled"
+        :environment="mappedSizeToEnvironment"
+        :aria-label="label"
+      />
     </template>
     <template #actionList>
       <slot name="actionList"></slot>
@@ -10,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import FzDropdown from './FzDropdown.vue'
 import { type FzIconDropdownProps, type FzIconDropdownSlots } from './types'
 import { FzIconButton } from '@fiscozen/button'
@@ -23,7 +35,8 @@ const props = withDefaults(defineProps<FzIconDropdownProps>(), {
   align: 'center',
   teleport: true,
   environment: 'frontoffice',
-  buttonVariant: 'secondary'
+  buttonVariant: 'secondary',
+  label: 'Open dropdown'
 })
 
 const mappedSizeToEnvironment = computed<'backoffice' | 'frontoffice'>(() => {

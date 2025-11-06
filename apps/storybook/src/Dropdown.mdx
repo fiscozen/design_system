@@ -1,0 +1,332 @@
+import { Meta, Controls, Markdown } from '@storybook/addon-docs/blocks'
+import { FzDropdown } from '@fiscozen/dropdown'
+
+<Meta title="Navigation/FzDropdown/Documentation" component={FzDropdown} />
+
+# FzDropdown
+
+The FzDropdown component is a versatile dropdown menu designed to display a list of actions or navigation items. It features a button trigger that opens a floating action list with support for multiple environments, alignments, and customization options.
+
+## Overview
+
+FzDropdown provides a consistent way to create dropdown menus across the application. It combines a button trigger with a floating action list, offering flexible positioning, multiple visual variants, and extensive customization through slots.
+
+### Key Features
+
+- **Flexible Trigger**: Customizable button trigger with multiple variants
+- **Environment Support**: Optimized for both backoffice and frontoffice contexts
+- **Smart Positioning**: Automatic alignment (left, center, right) with floating positioning
+- **Action Lists**: Built-in support for action lists with sections
+- **Customizable Content**: Full control through slots for both trigger and content
+- **Accessibility**: Keyboard navigation (Escape to close), click-outside handling, and ARIA support
+- **Auto-close**: Optional auto-close on action selection
+
+## Properties
+
+### Core Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`environment\` | \`'backoffice' \| 'frontoffice'\` | \`'frontoffice'\` | Environment variant affecting button size and styling |
+| \`align\` | \`'left' \| 'right' \| 'center'\` | \`'center'\` | Alignment of the dropdown menu relative to the button |
+| \`disabled\` | \`boolean\` | \`false\` | Disables the dropdown and prevents interaction |
+| \`closeOnActionClick\` | \`boolean\` | \`true\` | Whether to close dropdown when an action is clicked |
+| \`teleport\` | \`boolean\` | \`true\` | Whether to teleport the floating content to body |
+`}
+</Markdown>
+
+### Button Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`buttonVariant\` | \`'primary' \| 'secondary' \| 'danger' \| 'success' \| 'invisible'\` | \`'primary'\` | Visual style variant of the button trigger |
+| \`size\` | \`'xs' \| 'sm' \| 'md' \| 'lg'\` | - | Button size (deprecated, use environment instead) |
+`}
+</Markdown>
+
+### Content Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`actions\` | \`(FzActionProps \| FzActionSectionProps)[] \` | \`[]\` | List of actions to display (deprecated, use actionList slot) |
+| \`listClass\` | \`string\` | - | Additional CSS classes for the action list container |
+`}
+</Markdown>
+
+### Model Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`v-model:isOpen\` | \`boolean\` | \`false\` | Controls the open/closed state of the dropdown |
+`}
+</Markdown>
+
+## Events
+
+<Markdown>
+  {`
+| Event | Parameters | Description |
+|-------|------------|-------------|
+| \`fzaction:click\` | \`(index: number, action: FzActionProps)\` | Emitted when an action is clicked |
+`}
+</Markdown>
+
+## Slots
+
+<Markdown>
+  {`
+| Slot | Props | Description |
+|------|-------|-------------|
+| \`default\` | \`{ isOpen: boolean }\` | Label content for the default button trigger |
+| \`opener\` | \`{ isOpen: boolean, open: () => void, close: () => void }\` | Custom button trigger (replaces default button entirely) |
+| \`actionList\` | - | Custom content for the dropdown menu (replaces default action list) |
+`}
+</Markdown>
+
+## Usage Examples
+
+### Basic Dropdown
+
+```vue
+<template>
+  <FzDropdown :actions="actions" @fzaction:click="handleActionClick">
+    Menu
+  </FzDropdown>
+</template>
+
+<script setup>
+import { FzDropdown } from '@fiscozen/dropdown'
+
+const actions = [
+  { type: 'action', label: 'Edit', iconName: 'pen' },
+  { type: 'action', label: 'Delete', iconName: 'trash' }
+]
+
+function handleActionClick(index, action) {
+  console.log('Action clicked:', action.label)
+}
+</script>
+```
+
+### With Custom Action List (Recommended)
+
+```vue
+<template>
+  <FzDropdown>
+    <template #default>Options</template>
+    <template #actionList>
+      <FzActionList>
+        <FzActionSection label="File">
+          <FzAction label="New" iconName="file" @click="handleNew" />
+          <FzAction label="Save" iconName="save" @click="handleSave" />
+        </FzActionSection>
+        <FzActionSection label="Edit">
+          <FzAction label="Copy" iconName="copy" @click="handleCopy" />
+          <FzAction label="Paste" iconName="paste" @click="handlePaste" />
+        </FzActionSection>
+      </FzActionList>
+    </template>
+  </FzDropdown>
+</template>
+```
+
+### Controlled State with v-model
+
+```vue
+<template>
+  <FzDropdown v-model:isOpen="isOpen" :actions="actions">
+    Toggle Menu
+  </FzDropdown>
+  <button @click="isOpen = !isOpen">Toggle from outside</button>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { FzDropdown } from '@fiscozen/dropdown'
+
+const isOpen = ref(false)
+const actions = [
+  { type: 'action', label: 'Option 1' },
+  { type: 'action', label: 'Option 2' }
+]
+</script>
+```
+
+### With Sections
+
+```vue
+<template>
+  <FzDropdown :actions="actions">
+    Actions Menu
+  </FzDropdown>
+</template>
+
+<script setup>
+const actions = [
+  { type: 'section', label: 'Navigation' },
+  { type: 'link', label: 'Home', to: '/home' },
+  { type: 'link', label: 'Profile', to: '/profile' },
+  { type: 'section', label: 'Actions' },
+  { type: 'action', label: 'Logout', iconName: 'sign-out' }
+]
+</script>
+```
+
+### Different Alignments
+
+```vue
+<template>
+  <!-- Left aligned -->
+  <FzDropdown align="left" :actions="actions">
+    Left Aligned
+  </FzDropdown>
+
+  <!-- Center aligned (default) -->
+  <FzDropdown align="center" :actions="actions">
+    Center Aligned
+  </FzDropdown>
+
+  <!-- Right aligned -->
+  <FzDropdown align="right" :actions="actions">
+    Right Aligned
+  </FzDropdown>
+</template>
+```
+
+### Button Variants
+
+```vue
+<template>
+  <FzDropdown buttonVariant="primary" :actions="actions">
+    Primary
+  </FzDropdown>
+
+  <FzDropdown buttonVariant="secondary" :actions="actions">
+    Secondary
+  </FzDropdown>
+
+  <FzDropdown buttonVariant="danger" :actions="actions">
+    Danger
+  </FzDropdown>
+
+  <FzDropdown buttonVariant="invisible" :actions="actions">
+    Invisible
+  </FzDropdown>
+</template>
+```
+
+### Custom Opener
+
+```vue
+<template>
+  <FzDropdown :actions="actions">
+    <template #opener="{ isOpen, open, close }">
+      <button
+        @click="isOpen ? close() : open()"
+        class="custom-trigger"
+      >
+        {{ isOpen ? 'Close' : 'Open' }} Menu
+        <i :class="isOpen ? 'fa-angle-up' : 'fa-angle-down'" />
+      </button>
+    </template>
+  </FzDropdown>
+</template>
+```
+
+### Disabled State
+
+```vue
+<template>
+  <FzDropdown disabled :actions="actions">
+    Disabled Menu
+  </FzDropdown>
+</template>
+```
+
+### Keep Open on Action Click
+
+```vue
+<template>
+  <FzDropdown :closeOnActionClick="false" :actions="actions">
+    Multi-Select Menu
+  </FzDropdown>
+</template>
+```
+
+## Best Practices
+
+### When to Use FzDropdown
+
+- **Action Menus**: Use for contextual actions related to a specific item or context
+- **Navigation Menus**: Use for primary or secondary navigation with grouped links
+- **Settings Menus**: Use for application or user settings with categorized options
+- **Filter/Sort Menus**: Use for dropdown filters or sorting options in data views
+
+### Alignment Guidelines
+
+- **left**: Use when dropdown is positioned on the left side of the screen to prevent overflow
+- **center**: Use for dropdown buttons in centered layouts or when space is abundant
+- **right**: Use when dropdown is positioned on the right side to prevent overflow
+
+### Environment Selection
+
+- **backoffice**: Use for internal admin interfaces with larger interactive elements
+- **frontoffice**: Use for customer-facing interfaces with more compact styling
+
+### Slot Usage Recommendations
+
+1. **Use `actionList` slot** for complete control over dropdown content (recommended approach)
+2. **Use `default` slot** for simple text labels on the button trigger
+3. **Use `opener` slot** only when you need complete control over the trigger element
+
+## Accessibility
+
+- **Keyboard Support**: Press `Escape` to close the dropdown
+- **Click Outside**: Clicking outside the dropdown automatically closes it
+- **Focus Management**: Dropdown maintains proper focus states
+- **ARIA Labels**: Proper ARIA attributes for screen readers
+
+## Integration
+
+### Installation
+
+```bash
+npm install @fiscozen/dropdown
+```
+
+### Import
+
+```typescript
+import { FzDropdown } from '@fiscozen/dropdown'
+```
+
+### Required Dependencies
+
+The dropdown component requires the following peer dependencies:
+
+```json
+{
+  "@fiscozen/action": "^1.0.0",
+  "@fiscozen/button": "^1.0.0",
+  "@fiscozen/composables": "^0.1.38"
+}
+```
+
+### Additional Resources
+
+- **[Vue.js Documentation](https://vuejs.org/guide/)** - For Vue.js framework reference
+
+## Related Components
+
+- **[FzIconDropdown](?path=/docs/navigation-fzicondropdown-documentation--docs)**: Icon-only variant for compact interfaces
+- **[FzAction](?path=/docs/navigation-fzaction-documentation--docs)**: For individual action items
+- **[FzButton](?path=/docs/button-fzbutton--docs)**: For standalone action buttons
+

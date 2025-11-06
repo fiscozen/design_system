@@ -43,6 +43,11 @@ const meta: Meta<typeof FzDropdown> = {
   component: FzDropdown,
   tags: ['autodocs'],
   argTypes: {
+    environment: {
+      control: 'select',
+      options: ['frontoffice', 'backoffice'],
+      description: 'Size of the dropdown button based on the environment'
+    },
     size: {
       control: 'select',
       options: ['xs', 'sm', 'md', 'lg'],
@@ -76,7 +81,7 @@ const meta: Meta<typeof FzDropdown> = {
   decorators: [
     vueRouter(),
     () => ({
-      template: '<div class="h-screen flex justify-center items-start pt-20"><story/></div>'
+      template: '<div class="flex justify-center items-start py-20"><story/></div>'
     })
   ]
 }
@@ -86,6 +91,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const parentCanvas = within(canvasElement.parentElement!)
 
     // Find the dropdown button
     const dropdownButton = canvas.getByRole('button')
@@ -99,7 +105,7 @@ export const Default: Story = {
 
     // Wait for dropdown content to appear
     await waitFor(async () => {
-      const dropdownContent = canvas.queryByText('This is a router-nav-link to /foo')
+      const dropdownContent = parentCanvas.queryByText('This is a router-nav-link to /foo')
       await expect(dropdownContent).toBeVisible()
     })
   }
@@ -111,12 +117,13 @@ export const AlignLeft: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const parentCanvas = within(canvasElement.parentElement!)
     const dropdownButton = canvas.getByRole('button')
 
     await userEvent.click(dropdownButton)
 
     await waitFor(async () => {
-      const dropdownContent = canvas.queryByText('This is a router-nav-link to /foo')
+      const dropdownContent = parentCanvas.queryByText('This is a router-nav-link to /foo')
       await expect(dropdownContent).toBeVisible()
     })
   }
@@ -128,12 +135,13 @@ export const AlignRight: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const parentCanvas = within(canvasElement.parentElement!)
     const dropdownButton = canvas.getByRole('button')
 
     await userEvent.click(dropdownButton)
 
     await waitFor(async () => {
-      const dropdownContent = canvas.queryByText('This is a router-nav-link to /baz')
+      const dropdownContent = parentCanvas.queryByText('This is a router-nav-link to /baz')
       await expect(dropdownContent).toBeVisible()
     })
   }
@@ -216,6 +224,7 @@ export const Disabled: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const parentCanvas = within(canvasElement.parentElement!)
     const button = canvas.getByRole('button')
 
     // Verify button is disabled
@@ -225,7 +234,7 @@ export const Disabled: Story = {
     await userEvent.click(button)
 
     // Verify dropdown did not open
-    const dropdownContent = canvas.queryByText('This is a action')
+    const dropdownContent = parentCanvas.queryByText('This is a action')
     await expect(dropdownContent).not.toBeVisible()
   }
 }
@@ -261,17 +270,40 @@ export const WithSections: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const parentCanvas = within(canvasElement.parentElement!)
     const dropdownButton = canvas.getByRole('button')
 
     await userEvent.click(dropdownButton)
 
     await waitFor(async () => {
-      const navigationSection = canvas.queryByText('Navigation')
-      await expect(navigationSection).toBeInTheDocument()
+      const navigationSection = parentCanvas.queryByText('Navigation')
+      await expect(navigationSection).toBeVisible()
 
-      const actionsSection = canvas.queryByText('Actions')
-      await expect(actionsSection).toBeInTheDocument()
+      const actionsSection = parentCanvas.queryByText('Actions')
+      await expect(actionsSection).toBeVisible()
     })
+  }
+}
+
+export const Frontoffice: Story = {
+  args: {
+    environment: 'frontoffice'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const button = canvas.getByRole('button')
+    await expect(button).toHaveClass('h-44')
+  }
+}
+
+export const Backoffice: Story = {
+  args: {
+    environment: 'backoffice'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const button = canvas.getByRole('button')
+    await expect(button).toHaveClass('h-32')
   }
 }
 

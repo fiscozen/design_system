@@ -1,4 +1,4 @@
-import { ButtonSize } from '@fiscozen/button'
+import { ButtonSize, IconButtonVariant } from '@fiscozen/button'
 import { FzActionProps, FzActionSectionProps } from '@fiscozen/action'
 import { ButtonVariant } from '@fiscozen/button'
 import { VNode } from 'vue'
@@ -19,7 +19,7 @@ type FzDropdownProps = {
    * @deprecated Declare your actions list inside the actionsList slot instead
    * List of actions
    */
-  actions: (FzActionProps | (FzActionSectionProps & {type: 'section'}))[]
+  actions: (FzActionProps | (FzActionSectionProps & { type: 'section' }))[]
   /**
    * Whether to align to the left or right
    * @default 'center'
@@ -41,7 +41,7 @@ type FzDropdownProps = {
    * Button variant
    * @default 'primary'
    */
-  buttonVariant?: ButtonVariant,
+  buttonVariant?: ButtonVariant
   /**
    * Teleport floating to body
    * @default true
@@ -63,15 +63,25 @@ type FzDropdownSlots = {
    *
    * Use this to replace the button opener entirely
    */
-  opener(props: { isOpen: boolean, open: () => void, close: () => void }): VNode | VNode[]
+  opener(props: { isOpen: boolean; open: () => void; close: () => void }): VNode | VNode[]
 }
 
-export type FzIconDropdownProps = FzDropdownProps & {
+export type FzIconDropdownProps = Omit<FzDropdownProps, 'buttonVariant'> & {
   /**
    * icon name
    */
-  iconName: string,
+  iconName: string
   hasNotification?: boolean
+  /**
+   * A11y label for the button opener
+   * @default 'Open dropdown'
+   */
+  label?: string
+  /**
+   * Button variant (limited to IconButton variants)
+   * @default 'secondary'
+   */
+  buttonVariant?: IconButtonVariant
 }
 
 export type FzIconDropdownSlots = {
