@@ -15,6 +15,81 @@ describe('FzProgressBar', () => {
       expect(wrapper.html()).toContain('fz-progress-bar__progress-indicator')
     })
 
+    it('matches snapshot with default props', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with size sm', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          size: 'sm',
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with size md', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          size: 'md',
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with 0% progress', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 0,
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with 100% progress', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 100,
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with custom range', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 30,
+          min: -15,
+          max: 50,
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with custom name', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          name: 'upload-progress',
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
     it('renders progress bar container with correct classes', () => {
       const wrapper = mount(FzProgressBar, {
         props: {
@@ -153,6 +228,84 @@ describe('FzProgressBar', () => {
 
       const fill = wrapper.find('.fz-progress-bar__progress-indicator')
       expect(fill.classes()).toContain('bg-grey-500')
+    })
+
+    it('matches snapshot with color purple', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'purple',
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with color blue', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'blue',
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with color orange', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'orange',
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with color pink', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'pink',
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with color yellow', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'yellow',
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with color grey', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'grey',
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with size sm and color blue', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 75,
+          size: 'sm',
+          color: 'blue',
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
     })
   })
 
