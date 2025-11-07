@@ -33,6 +33,35 @@ const props = withDefaults(defineProps<FzLinkProps>(), {
 })
 
 /**
+ * Normalizes deprecated size values and shows deprecation warnings.
+ * 
+ * Maps deprecated sizes to their replacements:
+ * - 'xs' → 'sm' (with warning)
+ * - 'lg' → 'md' (with warning)
+ * 
+ * This ensures backward compatibility while encouraging migration to new values.
+ */
+const normalizedSize = computed(() => {
+  if (props.size === 'xs') {
+    console.warn(
+      '[FzLink] The size prop value "xs" is deprecated and will be removed in a future version. ' +
+      'Please use "sm" instead. The component will automatically map "xs" to "sm" for now.'
+    )
+    return 'sm'
+  }
+  
+  if (props.size === 'lg') {
+    console.warn(
+      '[FzLink] The size prop value "lg" is deprecated and will be removed in a future version. ' +
+      'Please use "md" instead. The component will automatically map "lg" to "md" for now.'
+    )
+    return 'md'
+  }
+  
+  return props.size as 'sm' | 'md'
+})
+
+/**
  * Base classes shared between link and disabled span states.
  * 
  * Includes size-based text classes and conditional underline styling.
@@ -41,8 +70,8 @@ const props = withDefaults(defineProps<FzLinkProps>(), {
 const commonClass = computed(() => [
   'border-1 border-transparent inline-block',
   {
-    'text-sm leading-xs': props.size === 'sm',
-    'text-base leading-base': props.size === 'md',
+    'text-sm leading-xs': normalizedSize.value === 'sm',
+    'text-base leading-base': normalizedSize.value === 'md',
     underline: props.linkStyle === 'underline'
   }
 ])

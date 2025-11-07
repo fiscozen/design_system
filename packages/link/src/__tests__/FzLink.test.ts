@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import FzLink from '../FzLink.vue'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -370,6 +370,72 @@ describe('FzLink', () => {
       const link = wrapper.find('a')
       expect(link.classes()).toContain('text-base')
       expect(link.classes()).toContain('leading-base')
+    })
+
+    it('maps deprecated xs size to sm and shows warning', async () => {
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+      const wrapper = mount(FzLink, {
+        props: {
+          to: '/example',
+          size: 'xs'
+        },
+        slots: {
+          default: 'Link text'
+        },
+        global: {
+          plugins: [router]
+        }
+      })
+
+      await wrapper.vm.$nextTick()
+      const link = wrapper.find('a')
+      
+      // Verify xs is mapped to sm classes
+      expect(link.classes()).toContain('text-sm')
+      expect(link.classes()).toContain('leading-xs')
+      expect(link.classes()).not.toContain('text-xs')
+      
+      // Verify warning was shown
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
+      const warningMessage = consoleSpy.mock.calls[0][0] as string
+      expect(warningMessage).toContain('[FzLink] The size prop value "xs" is deprecated')
+      expect(warningMessage).toContain('Please use "sm" instead')
+
+      consoleSpy.mockRestore()
+    })
+
+    it('maps deprecated lg size to md and shows warning', async () => {
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+      const wrapper = mount(FzLink, {
+        props: {
+          to: '/example',
+          size: 'lg'
+        },
+        slots: {
+          default: 'Link text'
+        },
+        global: {
+          plugins: [router]
+        }
+      })
+
+      await wrapper.vm.$nextTick()
+      const link = wrapper.find('a')
+      
+      // Verify lg is mapped to md classes
+      expect(link.classes()).toContain('text-base')
+      expect(link.classes()).toContain('leading-base')
+      expect(link.classes()).not.toContain('text-lg')
+      
+      // Verify warning was shown
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
+      const warningMessage = consoleSpy.mock.calls[0][0] as string
+      expect(warningMessage).toContain('[FzLink] The size prop value "lg" is deprecated')
+      expect(warningMessage).toContain('Please use "md" instead')
+
+      consoleSpy.mockRestore()
     })
   })
 
