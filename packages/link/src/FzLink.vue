@@ -20,7 +20,7 @@
  * @example
  * <FzLink to="https://example.com" external target="_blank">External Site</FzLink>
  */
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { FzLinkProps } from './types'
 
 const props = withDefaults(defineProps<FzLinkProps>(), {
@@ -33,28 +33,59 @@ const props = withDefaults(defineProps<FzLinkProps>(), {
 })
 
 /**
- * Normalizes deprecated size values and shows deprecation warnings.
+ * Deprecation warning for 'xs' size prop value.
+ * 
+ * Watches for 'xs' size usage and logs warning once on mount or when size changes.
+ * Using watch with immediate:true ensures the warning only fires once per component instance.
+ */
+watch(
+  () => props.size === 'xs',
+  (isXs) => {
+    if (isXs) {
+      console.warn(
+        '[FzLink] The size prop value "xs" is deprecated and will be removed in a future version. ' +
+        'Please use "sm" instead. The component will automatically map "xs" to "sm" for now.'
+      )
+    }
+  },
+  { immediate: true }
+)
+
+/**
+ * Deprecation warning for 'lg' size prop value.
+ * 
+ * Watches for 'lg' size usage and logs warning once on mount or when size changes.
+ * Using watch with immediate:true ensures the warning only fires once per component instance.
+ */
+watch(
+  () => props.size === 'lg',
+  (isLg) => {
+    if (isLg) {
+      console.warn(
+        '[FzLink] The size prop value "lg" is deprecated and will be removed in a future version. ' +
+        'Please use "md" instead. The component will automatically map "lg" to "md" for now.'
+      )
+    }
+  },
+  { immediate: true }
+)
+
+/**
+ * Normalizes deprecated size values to their replacements.
  * 
  * Maps deprecated sizes to their replacements:
- * - 'xs' → 'sm' (with warning)
- * - 'lg' → 'md' (with warning)
+ * - 'xs' → 'sm'
+ * - 'lg' → 'md'
  * 
  * This ensures backward compatibility while encouraging migration to new values.
+ * Deprecation warnings are handled separately via watch hooks.
  */
 const normalizedSize = computed(() => {
   if (props.size === 'xs') {
-    console.warn(
-      '[FzLink] The size prop value "xs" is deprecated and will be removed in a future version. ' +
-      'Please use "sm" instead. The component will automatically map "xs" to "sm" for now.'
-    )
     return 'sm'
   }
   
   if (props.size === 'lg') {
-    console.warn(
-      '[FzLink] The size prop value "lg" is deprecated and will be removed in a future version. ' +
-      'Please use "md" instead. The component will automatically map "lg" to "md" for now.'
-    )
     return 'md'
   }
   
