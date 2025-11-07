@@ -23,8 +23,10 @@ type FzLinkBaseProps = {
   /**
    * Text size affecting font size and line height.
    * @default 'md'
+   * @deprecated 'xs' is deprecated and will be mapped to 'sm'. Use 'sm' instead.
+   * @deprecated 'lg' is deprecated and will be mapped to 'md'. Use 'md' instead.
    */
-  size?: 'sm' | 'md'
+  size?: 'xs' | 'sm' | 'md' | 'lg'
   /**
    * Disables the link, rendering as non-interactive span with disabled styling.
    * @default false
