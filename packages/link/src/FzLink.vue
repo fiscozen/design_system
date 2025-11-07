@@ -26,7 +26,7 @@ import { FzLinkProps } from './types'
 const props = withDefaults(defineProps<FzLinkProps>(), {
   type: 'default',
   linkStyle: 'default',
-  size: 'lg',
+  size: 'md',
   disabled: false,
   replace: false,
   external: false
@@ -41,45 +41,75 @@ const props = withDefaults(defineProps<FzLinkProps>(), {
 const commonClass = computed(() => [
   'border-1 border-transparent inline-block',
   {
-    'text-xs': props.size === 'xs',
-    'text-sm': props.size === 'sm',
-    'text-md': props.size === 'md',
-    'text-lg': props.size === 'lg',
+    'text-sm leading-xs': props.size === 'sm',
+    'text-base leading-base': props.size === 'md',
     underline: props.linkStyle === 'underline'
   }
 ])
 
 /**
- * CSS classes for interactive link states (router-link and anchor).
+ * Helper functions to identify UI states.
  * 
- * Combines common classes with type-specific color schemes and hover effects.
- * Always includes hover:underline for consistent interaction feedback.
+ * These functions explicitly describe when each UI representation should be applied,
+ * making the component logic more declarative and maintainable.
  */
-const linkClass = computed(() => [
-  ...commonClass.value,
-  'hover:underline',
-  {
-    'text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600':
-      props.type === 'default',
-    'text-semantic-error hover:text-red-600 focus:text-red-600 focus:border-red-600':
-      props.type === 'danger'
+const isDefaultUnderline = (p: typeof props) => p.type === 'default' && p.linkStyle === 'underline'
+const isDefaultNoUnderline = (p: typeof props) => p.type === 'default' && p.linkStyle !== 'underline'
+const isDangerUnderline = (p: typeof props) => p.type === 'danger' && p.linkStyle === 'underline'
+const isDangerNoUnderline = (p: typeof props) => p.type === 'danger' && p.linkStyle !== 'underline'
+const isDefaultDisabled = (p: typeof props) => p.type === 'default' && p.disabled
+const isDangerDisabled = (p: typeof props) => p.type === 'danger' && p.disabled
+
+/**
+ * CSS classes for interactive link states (router-link and anchor).
+ */
+const linkClass = computed(() => {
+  const baseClasses = [...commonClass.value]
+  
+  switch (true) {
+    case isDefaultUnderline(props):
+      baseClasses.push('text-blue-500', 'hover:text-blue-600', 'focus:text-blue-600')
+      break
+      
+    case isDefaultNoUnderline(props):
+      baseClasses.push('text-blue-500', 'hover:text-blue-600', 'hover:underline', 'focus:text-blue-600')
+      break
+      
+    case isDangerUnderline(props):
+      baseClasses.push('text-semantic-error-200', 'hover:text-semantic-error-300', 'focus:text-semantic-error-300')
+      break
+      
+    case isDangerNoUnderline(props):
+      baseClasses.push('text-semantic-error-200', 'hover:text-semantic-error-300', 'hover:underline', 'focus:text-semantic-error-300')
+      break
   }
-])
+  
+  return baseClasses
+})
 
 /**
  * CSS classes for disabled link state (rendered as span).
  * 
- * Uses muted color variants of type colors and cursor-not-allowed
- * to clearly indicate non-interactive state.
+ * Uses switch(true) pattern to explicitly map disabled UI states to their styling.
+ * Each case represents a distinct visual representation of the disabled link.
  */
-const spanClass = computed(() => [
-  ...commonClass.value,
-  'cursor-not-allowed',
-  {
-    'text-red-200': props.type === 'danger',
-    'text-blue-200': props.type === 'default'
+const spanClass = computed(() => {
+  const baseClasses = [...commonClass.value, 'cursor-not-allowed']
+  
+  switch (true) {
+    case isDefaultDisabled(props):
+      // Default type disabled: blue-200, underline preserved if linkStyle is underline
+      baseClasses.push('text-blue-200')
+      break
+      
+    case isDangerDisabled(props):
+      // Danger type disabled: semantic-error-100, underline preserved if linkStyle is underline
+      baseClasses.push('text-semantic-error-100')
+      break
   }
-])
+  
+  return baseClasses
+})
 
 /**
  * Href value for external links.

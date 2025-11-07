@@ -9,7 +9,7 @@ Flexible link component supporting internal routing (vue-router) and external na
 - **Disabled State**: Renders as non-interactive span with disabled styling
 - **Multiple Variants**: Default and danger types
 - **Text Styles**: Default (underline on hover) or always underlined
-- **Size Options**: xs, sm, md, lg
+- **Size Options**: sm, md
 - **TypeScript Type Safety**: Discriminated union types enforce correct prop combinations
 - **Full Accessibility**: ARIA support and keyboard navigation
 - **Security**: Automatic rel="noopener noreferrer" for external links with target="_blank"
@@ -71,7 +71,7 @@ import { FzLink } from '@fiscozen/link'
 | `to` | `RouteLocationRaw \| string` | - | Destination route or URL. Type depends on `external` prop: **Internal** (external=false or undefined): Accepts vue-router RouteLocationRaw (string path or object with name/path, params, query, etc.). **External** (external=true): Must be a string URL. |
 | `type` | `'default' \| 'danger'` | `'default'` | Visual variant indicating link purpose. Affects color scheme. |
 | `linkStyle` | `'default' \| 'underline'` | `'default'` | Text decoration style. 'default' shows underline on hover, 'underline' always shows underline. |
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg'` | `'lg'` | Text size affecting font size and line height. |
+| `size` | `'sm' \| 'md'` | `'md'` | Text size affecting font size and line height. |
 | `disabled` | `boolean` | `false` | Disables the link, rendering as non-interactive span with disabled styling. |
 | `target` | `string` | - | Target attribute for anchor tag (e.g., '_blank', '_self'). Can be used with both internal (router-link) and external links. |
 | `external` | `boolean` | `false` | When true, renders as anchor tag with href instead of router-link. Use for external URLs or when router navigation is not desired. |

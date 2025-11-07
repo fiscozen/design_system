@@ -13,7 +13,7 @@ Flexible link component supporting internal routing (vue-router) and external na
 - **Disabled State**: Renders as non-interactive span with disabled styling
 - **Multiple Variants**: Default and danger types
 - **Text Styles**: Default (underline on hover) or always underlined
-- **Size Options**: xs, sm, md, lg
+- **Size Options**: sm, md
 - **Accessibility**: Full ARIA support and keyboard navigation
 - **Security**: Automatic rel="noopener noreferrer" for external links with target="_blank"
 
@@ -77,8 +77,8 @@ import { FzLink } from '@fiscozen/link'
     </tr>
     <tr>
       <td><code>size</code></td>
-      <td><code>'xs' | 'sm' | 'md' | 'lg'</code></td>
-      <td><code>'lg'</code></td>
+      <td><code>'sm' | 'md'</code></td>
+      <td><code>'md'</code></td>
       <td>Text size affecting font size and line height.</td>
     </tr>
     <tr>
@@ -165,10 +165,8 @@ Always shows underline.
 
 ```vue
 <template>
-  <FzLink to="/example" size="xs">Extra Small</FzLink>
   <FzLink to="/example" size="sm">Small</FzLink>
-  <FzLink to="/example" size="md">Medium</FzLink>
-  <FzLink to="/example" size="lg">Large (Default)</FzLink>
+  <FzLink to="/example" size="md">Medium (Default)</FzLink>
 </template>
 ```
 
@@ -330,7 +328,7 @@ TypeScript will show errors if you try to:
 
 - `type`: 'default'
 - `linkStyle`: 'default'
-- `size`: 'lg'
+- `size`: 'md'
 - `disabled`: false
 - `external`: false
 - `replace`: false

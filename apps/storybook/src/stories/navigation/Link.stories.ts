@@ -24,7 +24,7 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: ['xs', 'sm', 'md', 'lg']
+      options: ['sm', 'md']
     },
     disabled: {
       control: 'boolean'
@@ -43,7 +43,7 @@ const meta = {
     to: 'example',
     type: 'default',
     linkStyle: 'default',
-    size: 'lg',
+    size: 'md',
     disabled: false,
     external: false,
     replace: false
@@ -67,7 +67,7 @@ const Template: LinkStory = {
     to: 'example',
     type: 'default',
     linkStyle: 'default',
-    size: 'lg'
+    size: 'md'
   }
 }
 
@@ -83,9 +83,12 @@ export const Default: LinkStory = {
 
     await step('Verify default classes', async () => {
       const link = canvasElement.querySelector('a')
-      expect(link?.classList.contains('text-lg')).toBe(true)
+      expect(link?.classList.contains('text-base')).toBe(true)
+      expect(link?.classList.contains('leading-base')).toBe(true)
       expect(link?.classList.contains('text-blue-500')).toBe(true)
+      expect(link?.classList.contains('hover:text-blue-600')).toBe(true)
       expect(link?.classList.contains('hover:underline')).toBe(true)
+      expect(link?.classList.contains('focus:text-blue-600')).toBe(true)
     })
 
     await step('Verify accessibility', async () => {
@@ -106,8 +109,10 @@ export const Danger: LinkStory = {
 
     await step('Verify danger type classes', async () => {
       const link = canvasElement.querySelector('a')
-      expect(link?.classList.contains('text-semantic-error')).toBe(true)
-      expect(link?.classList.contains('hover:text-red-600')).toBe(true)
+      expect(link?.classList.contains('text-semantic-error-200')).toBe(true)
+      expect(link?.classList.contains('hover:text-semantic-error-300')).toBe(true)
+      expect(link?.classList.contains('hover:underline')).toBe(true)
+      expect(link?.classList.contains('focus:text-semantic-error-300')).toBe(true)
       expect(link?.classList.contains('text-blue-500')).toBe(false)
     })
 
@@ -125,9 +130,12 @@ export const Underline: LinkStory = {
     linkStyle: 'underline'
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
-    await step('Verify underline style class', async () => {
+    await step('Verify underline style classes', async () => {
       const link = canvasElement.querySelector('a')
       expect(link?.classList.contains('underline')).toBe(true)
+      expect(link?.classList.contains('text-blue-500')).toBe(true)
+      expect(link?.classList.contains('hover:text-blue-600')).toBe(true)
+      expect(link?.classList.contains('focus:text-blue-600')).toBe(true)
     })
   }
 }
@@ -142,23 +150,10 @@ export const DangerUnderline: LinkStory = {
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
     await step('Verify danger and underline classes', async () => {
       const link = canvasElement.querySelector('a')
-      expect(link?.classList.contains('text-semantic-error')).toBe(true)
+      expect(link?.classList.contains('text-semantic-error-200')).toBe(true)
       expect(link?.classList.contains('underline')).toBe(true)
-    })
-  }
-}
-
-export const SizeXs: LinkStory = {
-  ...Template,
-  args: {
-    ...Template.args,
-    size: 'xs'
-  },
-  play: async ({ canvasElement, step }: PlayFunctionContext) => {
-    await step('Verify xs size class', async () => {
-      const link = canvasElement.querySelector('a')
-      expect(link?.classList.contains('text-xs')).toBe(true)
-      expect(link?.classList.contains('text-lg')).toBe(false)
+      expect(link?.classList.contains('hover:text-semantic-error-300')).toBe(true)
+      expect(link?.classList.contains('focus:text-semantic-error-300')).toBe(true)
     })
   }
 }
@@ -170,9 +165,10 @@ export const SizeSm: LinkStory = {
     size: 'sm'
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
-    await step('Verify sm size class', async () => {
+    await step('Verify sm size classes', async () => {
       const link = canvasElement.querySelector('a')
       expect(link?.classList.contains('text-sm')).toBe(true)
+      expect(link?.classList.contains('leading-xs')).toBe(true)
     })
   }
 }
@@ -184,9 +180,10 @@ export const SizeMd: LinkStory = {
     size: 'md'
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
-    await step('Verify md size class', async () => {
+    await step('Verify md size classes', async () => {
       const link = canvasElement.querySelector('a')
-      expect(link?.classList.contains('text-md')).toBe(true)
+      expect(link?.classList.contains('text-base')).toBe(true)
+      expect(link?.classList.contains('leading-base')).toBe(true)
     })
   }
 }
@@ -208,6 +205,8 @@ export const Disabled: LinkStory = {
       const span = canvasElement.querySelector('span')
       expect(span?.classList.contains('cursor-not-allowed')).toBe(true)
       expect(span?.classList.contains('text-blue-200')).toBe(true)
+      expect(span?.classList.contains('text-base')).toBe(true)
+      expect(span?.classList.contains('leading-base')).toBe(true)
     })
 
     await step('Verify accessibility attributes', async () => {
@@ -229,8 +228,9 @@ export const DisabledDanger: LinkStory = {
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
     await step('Verify disabled danger classes', async () => {
       const span = canvasElement.querySelector('span')
-      expect(span?.classList.contains('text-red-200')).toBe(true)
+      expect(span?.classList.contains('text-semantic-error-100')).toBe(true)
       expect(span?.classList.contains('text-blue-200')).toBe(false)
+      expect(span?.classList.contains('cursor-not-allowed')).toBe(true)
     })
   }
 }
