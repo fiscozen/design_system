@@ -111,11 +111,12 @@ describe('FzLink', () => {
   })
 
   describe('Props: type', () => {
-    it('applies default type classes', async () => {
+    it('applies default type classes with default linkStyle', async () => {
       const wrapper = mount(FzLink, {
         props: {
           to: '/example',
-          type: 'default'
+          type: 'default',
+          linkStyle: 'default'
         },
         slots: {
           default: 'Default link'
@@ -129,14 +130,40 @@ describe('FzLink', () => {
       const link = wrapper.find('a')
       expect(link.classes()).toContain('text-blue-500')
       expect(link.classes()).toContain('hover:text-blue-600')
+      expect(link.classes()).toContain('hover:underline')
       expect(link.classes()).toContain('focus:text-blue-600')
+      expect(link.classes()).not.toContain('underline')
     })
 
-    it('applies danger type classes', async () => {
+    it('applies default type classes with underline linkStyle', async () => {
       const wrapper = mount(FzLink, {
         props: {
           to: '/example',
-          type: 'danger'
+          type: 'default',
+          linkStyle: 'underline'
+        },
+        slots: {
+          default: 'Default underline link'
+        },
+        global: {
+          plugins: [router]
+        }
+      })
+
+      await wrapper.vm.$nextTick()
+      const link = wrapper.find('a')
+      expect(link.classes()).toContain('text-blue-500')
+      expect(link.classes()).toContain('underline')
+      expect(link.classes()).toContain('hover:text-blue-600')
+      expect(link.classes()).toContain('focus:text-blue-600')
+    })
+
+    it('applies danger type classes with default linkStyle', async () => {
+      const wrapper = mount(FzLink, {
+        props: {
+          to: '/example',
+          type: 'danger',
+          linkStyle: 'default'
         },
         slots: {
           default: 'Danger link'
@@ -148,12 +175,79 @@ describe('FzLink', () => {
 
       await wrapper.vm.$nextTick()
       const link = wrapper.find('a')
-      expect(link.classes()).toContain('text-semantic-error')
-      expect(link.classes()).toContain('hover:text-red-600')
-      expect(link.classes()).toContain('focus:text-red-600')
+      expect(link.classes()).toContain('text-semantic-error-200')
+      expect(link.classes()).toContain('hover:text-semantic-error-300')
+      expect(link.classes()).toContain('hover:underline')
+      expect(link.classes()).toContain('focus:text-semantic-error-300')
+      expect(link.classes()).not.toContain('underline')
     })
 
-    it('applies danger type classes to disabled span', async () => {
+    it('applies danger type classes with underline linkStyle', async () => {
+      const wrapper = mount(FzLink, {
+        props: {
+          to: '/example',
+          type: 'danger',
+          linkStyle: 'underline'
+        },
+        slots: {
+          default: 'Danger underline link'
+        },
+        global: {
+          plugins: [router]
+        }
+      })
+
+      await wrapper.vm.$nextTick()
+      const link = wrapper.find('a')
+      expect(link.classes()).toContain('text-semantic-error-200')
+      expect(link.classes()).toContain('underline')
+      expect(link.classes()).toContain('hover:text-semantic-error-300')
+      expect(link.classes()).toContain('focus:text-semantic-error-300')
+    })
+
+    it('applies default type disabled classes', async () => {
+      const wrapper = mount(FzLink, {
+        props: {
+          to: '/example',
+          type: 'default',
+          disabled: true
+        },
+        slots: {
+          default: 'Disabled default link'
+        },
+        global: {
+          plugins: [router]
+        }
+      })
+
+      await wrapper.vm.$nextTick()
+      const span = wrapper.find('span')
+      expect(span.classes()).toContain('text-blue-200')
+    })
+
+    it('applies default type disabled classes with underline', async () => {
+      const wrapper = mount(FzLink, {
+        props: {
+          to: '/example',
+          type: 'default',
+          linkStyle: 'underline',
+          disabled: true
+        },
+        slots: {
+          default: 'Disabled default underline link'
+        },
+        global: {
+          plugins: [router]
+        }
+      })
+
+      await wrapper.vm.$nextTick()
+      const span = wrapper.find('span')
+      expect(span.classes()).toContain('text-blue-200')
+      expect(span.classes()).toContain('underline')
+    })
+
+    it('applies danger type disabled classes', async () => {
       const wrapper = mount(FzLink, {
         props: {
           to: '/example',
@@ -170,7 +264,29 @@ describe('FzLink', () => {
 
       await wrapper.vm.$nextTick()
       const span = wrapper.find('span')
-      expect(span.classes()).toContain('text-red-200')
+      expect(span.classes()).toContain('text-semantic-error-100')
+    })
+
+    it('applies danger type disabled classes with underline', async () => {
+      const wrapper = mount(FzLink, {
+        props: {
+          to: '/example',
+          type: 'danger',
+          linkStyle: 'underline',
+          disabled: true
+        },
+        slots: {
+          default: 'Disabled danger underline link'
+        },
+        global: {
+          plugins: [router]
+        }
+      })
+
+      await wrapper.vm.$nextTick()
+      const span = wrapper.find('span')
+      expect(span.classes()).toContain('text-semantic-error-100')
+      expect(span.classes()).toContain('underline')
     })
   })
 
@@ -216,16 +332,11 @@ describe('FzLink', () => {
   })
 
   describe('Props: size', () => {
-    it.each([
-      ['xs', 'text-xs'],
-      ['sm', 'text-sm'],
-      ['md', 'text-md'],
-      ['lg', 'text-lg']
-    ])('applies %s size class', async (size, expectedClass) => {
+    it('applies sm size classes (text-sm + leading-xs)', async () => {
       const wrapper = mount(FzLink, {
         props: {
           to: '/example',
-          size: size as 'xs' | 'sm' | 'md' | 'lg'
+          size: 'sm'
         },
         slots: {
           default: 'Link text'
@@ -237,7 +348,28 @@ describe('FzLink', () => {
 
       await wrapper.vm.$nextTick()
       const link = wrapper.find('a')
-      expect(link.classes()).toContain(expectedClass)
+      expect(link.classes()).toContain('text-sm')
+      expect(link.classes()).toContain('leading-xs')
+    })
+
+    it('applies md size classes (text-base + leading-base)', async () => {
+      const wrapper = mount(FzLink, {
+        props: {
+          to: '/example',
+          size: 'md'
+        },
+        slots: {
+          default: 'Link text'
+        },
+        global: {
+          plugins: [router]
+        }
+      })
+
+      await wrapper.vm.$nextTick()
+      const link = wrapper.find('a')
+      expect(link.classes()).toContain('text-base')
+      expect(link.classes()).toContain('leading-base')
     })
   })
 
@@ -324,7 +456,7 @@ describe('FzLink', () => {
       expect(link.attributes('href')).toBe('https://example.com')
     })
 
-    it('uses externalHref computed for external links', async () => {
+    it('uses correct href for external links', async () => {
       const wrapper = mount(FzLink, {
         props: {
           to: 'https://example.com',
@@ -339,8 +471,7 @@ describe('FzLink', () => {
       })
 
       await wrapper.vm.$nextTick()
-      // Verify externalHref computed returns correct string
-      expect(wrapper.vm.externalHref).toBe('https://example.com')
+      // Verify href attribute is set correctly
       const link = wrapper.find('a')
       expect(link.attributes('href')).toBe('https://example.com')
     })
@@ -592,9 +723,12 @@ describe('FzLink', () => {
 
       await wrapper.vm.$nextTick()
       const link = wrapper.find('a')
-      expect(link.classes()).toContain('text-lg') // default size
+      expect(link.classes()).toContain('text-base') // default size
+      expect(link.classes()).toContain('leading-base') // default size line-height
       expect(link.classes()).toContain('text-blue-500') // default type
-      expect(link.classes()).not.toContain('underline') // default linkStyle
+      expect(link.classes()).toContain('hover:text-blue-600') // default hover
+      expect(link.classes()).toContain('hover:underline') // default hover underline
+      expect(link.classes()).not.toContain('underline') // default linkStyle (no underline by default)
     })
 
     it('renders correctly with all props combined', async () => {
@@ -617,8 +751,11 @@ describe('FzLink', () => {
       await wrapper.vm.$nextTick()
       const link = wrapper.find('a')
       expect(link.classes()).toContain('text-sm')
+      expect(link.classes()).toContain('leading-xs')
       expect(link.classes()).toContain('underline')
-      expect(link.classes()).toContain('text-semantic-error')
+      expect(link.classes()).toContain('text-semantic-error-200')
+      expect(link.classes()).toContain('hover:text-semantic-error-300')
+      expect(link.classes()).toContain('focus:text-semantic-error-300')
       expect(link.attributes('target')).toBe('_self')
     })
   })

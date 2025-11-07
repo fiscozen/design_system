@@ -22,9 +22,9 @@ type FzLinkBaseProps = {
   linkStyle?: 'default' | 'underline'
   /**
    * Text size affecting font size and line height.
-   * @default 'lg'
+   * @default 'md'
    */
-  size?: 'xs' | 'sm' | 'md' | 'lg'
+  size?: 'sm' | 'md'
   /**
    * Disables the link, rendering as non-interactive span with disabled styling.
    * @default false
