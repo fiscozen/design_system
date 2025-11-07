@@ -1,8 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, userEvent, within } from '@storybook/test'
 import { FzLink } from '@fiscozen/link'
 import { vueRouter } from 'storybook-vue3-router'
 
-const meta: Meta<typeof FzLink> = {
+type PlayFunctionContext = {
+  args: any
+  canvasElement: HTMLElement
+  step: (name: string, fn: () => Promise<void>) => void | Promise<void>
+}
+
+const meta = {
   title: 'Navigation/FzLink',
   component: FzLink,
   tags: ['autodocs'],
@@ -11,62 +18,219 @@ const meta: Meta<typeof FzLink> = {
       control: 'select',
       options: ['default', 'danger']
     },
-    style: {
+    linkStyle: {
       control: 'select',
       options: ['default', 'underline']
     },
     size: {
       control: 'select',
       options: ['xs', 'sm', 'md', 'lg']
+    },
+    disabled: {
+      control: 'boolean'
+    },
+    external: {
+      control: 'boolean'
+    },
+    target: {
+      control: 'text'
+    },
+    replace: {
+      control: 'boolean'
     }
   },
   args: {
     to: 'example',
-    default: 'This is a link'
+    type: 'default',
+    linkStyle: 'default',
+    size: 'lg',
+    disabled: false,
+    external: false,
+    replace: false
   },
   decorators: [vueRouter()]
-}
-
-type Story = StoryObj<typeof meta>
-
-const Default: Story = {}
-
-const Danger: Story = {
-  args: {
-    type: 'danger'
-  }
-}
-
-const DefaultUnderline: Story = {
-  args: {
-    linkStyle: 'underline'
-  }
-}
-
-const DangerUnderline: Story = {
-  args: {
-    type: 'danger',
-    linkStyle: 'underline'
-  }
-}
-
-const DefaultExternal: Story = {
-  args: {
-    external: true,
-    to: 'https://example.com',
-    target: '_blank'
-  }
-}
-
-const ExternalWithLongText: Story = {
-  args: {
-    external: true,
-    to: 'https://example.com',
-    target: '_blank',
-    default: 'This is a long text link to break the line and test the focus outline'
-  }
-}
-
-export { Default, Danger, DefaultUnderline, DangerUnderline, DefaultExternal, ExternalWithLongText }
+} satisfies Meta<typeof FzLink>
 
 export default meta
+
+type LinkStory = StoryObj<typeof FzLink>
+
+const Template: LinkStory = {
+  render: (args) => ({
+    components: { FzLink },
+    setup() {
+      return { args }
+    },
+    template: `<FzLink v-bind="args">This is a link</FzLink>`
+  }),
+  args: {
+    to: 'example',
+    type: 'default',
+    linkStyle: 'default',
+    size: 'lg'
+  }
+}
+
+export const Default: LinkStory = {
+  ...Template,
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify component renders', async () => {
+      const link = canvas.getByRole('link', { name: 'This is a link' })
+      expect(link).toBeInTheDocument()
+    })
+
+    await step('Verify default classes', async () => {
+      const link = canvasElement.querySelector('a')
+      expect(link?.classList.contains('text-lg')).toBe(true)
+      expect(link?.classList.contains('text-blue-500')).toBe(true)
+      expect(link?.classList.contains('hover:underline')).toBe(true)
+    })
+
+    await step('Verify accessibility', async () => {
+      const link = canvas.getByRole('link', { name: 'This is a link' })
+      expect(link).toBeVisible()
+    })
+  }
+}
+
+export const Danger: LinkStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    type: 'danger'
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify danger type classes', async () => {
+      const link = canvasElement.querySelector('a')
+      expect(link?.classList.contains('text-semantic-error')).toBe(true)
+      expect(link?.classList.contains('hover:text-red-600')).toBe(true)
+      expect(link?.classList.contains('text-blue-500')).toBe(false)
+    })
+
+    await step('Verify component renders', async () => {
+      const link = canvas.getByRole('link', { name: 'This is a link' })
+      expect(link).toBeInTheDocument()
+    })
+  }
+}
+
+export const Underline: LinkStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    linkStyle: 'underline'
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    await step('Verify underline style class', async () => {
+      const link = canvasElement.querySelector('a')
+      expect(link?.classList.contains('underline')).toBe(true)
+    })
+  }
+}
+
+export const DangerUnderline: LinkStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    type: 'danger',
+    linkStyle: 'underline'
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    await step('Verify danger and underline classes', async () => {
+      const link = canvasElement.querySelector('a')
+      expect(link?.classList.contains('text-semantic-error')).toBe(true)
+      expect(link?.classList.contains('underline')).toBe(true)
+    })
+  }
+}
+
+export const SizeXs: LinkStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    size: 'xs'
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    await step('Verify xs size class', async () => {
+      const link = canvasElement.querySelector('a')
+      expect(link?.classList.contains('text-xs')).toBe(true)
+      expect(link?.classList.contains('text-lg')).toBe(false)
+    })
+  }
+}
+
+export const SizeSm: LinkStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    size: 'sm'
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    await step('Verify sm size class', async () => {
+      const link = canvasElement.querySelector('a')
+      expect(link?.classList.contains('text-sm')).toBe(true)
+    })
+  }
+}
+
+export const SizeMd: LinkStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    size: 'md'
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    await step('Verify md size class', async () => {
+      const link = canvasElement.querySelector('a')
+      expect(link?.classList.contains('text-md')).toBe(true)
+    })
+  }
+}
+
+export const Disabled: LinkStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    disabled: true
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    await step('Verify disabled renders as span', async () => {
+      const span = canvasElement.querySelector('span')
+      expect(span).toBeInTheDocument()
+      expect(canvasElement.querySelector('a')).toBeNull()
+    })
+
+    await step('Verify disabled classes', async () => {
+      const span = canvasElement.querySelector('span')
+      expect(span?.classList.contains('cursor-not-allowed')).toBe(true)
+      expect(span?.classList.contains('text-blue-200')).toBe(true)
+    })
+
+    await step('Verify accessibility attributes', async () => {
+      const span = canvasElement.querySelector('span')
+      expect(span?.getAttribute('aria-disabled')).toBe('true')
+      expect(span?.getAttribute('role')).toBe('link')
+      expect(span?.getAttribute('aria-label')).toBe('Link disabled')
+    })
+  }
+}
+
+export const DisabledDanger: LinkStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    type: 'danger',
+    disabled: true
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    await step('Verify disabled danger classes', async () => {
+      const span = canvasElement.querySelector('span')
+      expect(span?.classList.contains('text-red-200')).toBe(true)
+      expect(span?.classList.contains('text-blue-200')).toBe(false)
+    })
+  }
+}
