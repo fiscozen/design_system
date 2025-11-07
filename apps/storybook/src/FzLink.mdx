@@ -1,0 +1,343 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Documentation/Navigation/FzLink" />
+
+# FzLink
+
+Flexible link component supporting internal routing (vue-router) and external navigation. Automatically renders as router-link for internal routes, anchor tag for external URLs, or non-interactive span when disabled. Provides consistent styling and accessibility.
+
+## Features
+
+- **Internal Routing**: Uses vue-router for SPA navigation
+- **External Navigation**: Supports external URLs with anchor tags
+- **Disabled State**: Renders as non-interactive span with disabled styling
+- **Multiple Variants**: Default and danger types
+- **Text Styles**: Default (underline on hover) or always underlined
+- **Size Options**: xs, sm, md, lg
+- **Accessibility**: Full ARIA support and keyboard navigation
+- **Security**: Automatic rel="noopener noreferrer" for external links with target="_blank"
+
+## Installation
+
+```bash
+npm install @fiscozen/link
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { FzLink } from '@fiscozen/link'
+</script>
+
+<template>
+  <!-- Internal route (string path) -->
+  <FzLink to="/dashboard" size="md">Go to Dashboard</FzLink>
+  
+  <!-- Internal route (object with name) -->
+  <FzLink :to="{ name: 'user', params: { id: 123 }}">User Profile</FzLink>
+  
+  <!-- Internal route (object with path and query) -->
+  <FzLink :to="{ path: '/search', query: { q: 'vue' }}">Search</FzLink>
+  
+  <!-- External link (must be string) -->
+  <FzLink to="https://example.com" external target="_blank">External Site</FzLink>
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>to</code></td>
+      <td><code>RouteLocationRaw | string</code></td>
+      <td>-</td>
+      <td>Destination route or URL. Type depends on <code>external</code> prop:<br/>- <strong>Internal</strong> (external=false or undefined): Accepts vue-router RouteLocationRaw (string path or object with name/path, params, query, etc.)<br/>- <strong>External</strong> (external=true): Must be a string URL (e.g., "https://example.com")</td>
+    </tr>
+    <tr>
+      <td><code>type</code></td>
+      <td><code>'default' | 'danger'</code></td>
+      <td><code>'default'</code></td>
+      <td>Visual variant indicating link purpose. Affects color scheme.</td>
+    </tr>
+    <tr>
+      <td><code>linkStyle</code></td>
+      <td><code>'default' | 'underline'</code></td>
+      <td><code>'default'</code></td>
+      <td>Text decoration style. 'default' shows underline on hover, 'underline' always shows underline.</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'xs' | 'sm' | 'md' | 'lg'</code></td>
+      <td><code>'lg'</code></td>
+      <td>Text size affecting font size and line height.</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Disables the link, rendering as non-interactive span with disabled styling.</td>
+    </tr>
+    <tr>
+      <td><code>target</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Target attribute for anchor tag (e.g., '_blank', '_self'). Can be used with both internal (router-link) and external links.</td>
+    </tr>
+    <tr>
+      <td><code>external</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>When true, renders as anchor tag with href instead of router-link. Use for external URLs or when router navigation is not desired.</td>
+    </tr>
+    <tr>
+      <td><code>replace</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Uses router.replace instead of router.push for navigation. Only applies to internal routes (when external is false).</td>
+    </tr>
+  </tbody>
+</table>
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>default</code></td>
+      <td>Link text content</td>
+    </tr>
+  </tbody>
+</table>
+
+## Variants
+
+### Default
+
+Standard link with blue color scheme.
+
+```vue
+<FzLink to="/dashboard" size="md">Go to Dashboard</FzLink>
+```
+
+### Danger
+
+Danger variant with red color scheme for destructive actions.
+
+```vue
+<FzLink to="/delete" type="danger" size="md">Delete Account</FzLink>
+```
+
+## Text Styles
+
+### Default Style
+
+Shows underline on hover only.
+
+```vue
+<FzLink to="/example" linkStyle="default">Default Style Link</FzLink>
+```
+
+### Underline Style
+
+Always shows underline.
+
+```vue
+<FzLink to="/example" linkStyle="underline">Underlined Link</FzLink>
+```
+
+## Sizes
+
+```vue
+<template>
+  <FzLink to="/example" size="xs">Extra Small</FzLink>
+  <FzLink to="/example" size="sm">Small</FzLink>
+  <FzLink to="/example" size="md">Medium</FzLink>
+  <FzLink to="/example" size="lg">Large (Default)</FzLink>
+</template>
+```
+
+## States
+
+### Disabled
+
+Disabled links render as non-interactive span with muted colors.
+
+```vue
+<FzLink to="/example" disabled>Disabled Link</FzLink>
+```
+
+### External Links
+
+External links render as anchor tags with href attribute.
+
+```vue
+<FzLink to="https://example.com" external>External Link</FzLink>
+```
+
+### External Link with Target
+
+External links with target="_blank" automatically include rel="noopener noreferrer" for security.
+
+```vue
+<FzLink to="https://example.com" external target="_blank">Open in New Tab</FzLink>
+```
+
+## Usage Examples
+
+### Internal Navigation
+
+#### String Path
+
+```vue
+<template>
+  <nav>
+    <FzLink to="/dashboard" size="md">Dashboard</FzLink>
+    <FzLink to="/settings" size="md">Settings</FzLink>
+    <FzLink to="/profile" size="md">Profile</FzLink>
+  </nav>
+</template>
+```
+
+#### Named Route with Params
+
+```vue
+<template>
+  <FzLink :to="{ name: 'user', params: { id: 123 }}">
+    User Profile
+  </FzLink>
+</template>
+```
+
+#### Path with Query Parameters
+
+```vue
+<template>
+  <FzLink :to="{ path: '/search', query: { q: 'vue', category: 'docs' }}">
+    Search Results
+  </FzLink>
+</template>
+```
+
+### External Links
+
+```vue
+<template>
+  <FzLink to="https://example.com" external target="_blank">
+    Visit Example Site
+  </FzLink>
+</template>
+```
+
+### Disabled State
+
+```vue
+<template>
+  <FzLink to="/premium" disabled>
+    Premium Feature (Requires Upgrade)
+  </FzLink>
+</template>
+```
+
+### Danger Link
+
+```vue
+<template>
+  <FzLink to="/delete-account" type="danger" size="md">
+    Delete Account
+  </FzLink>
+</template>
+```
+
+### Replace Navigation
+
+Use replace to avoid adding a new entry to browser history.
+
+```vue
+<template>
+  <FzLink to="/redirect" replace>Redirect Without History</FzLink>
+</template>
+```
+
+## Accessibility
+
+FzLink is fully accessible and meets WCAG 2.1 AA standards:
+
+- **Keyboard Navigation**: All links are keyboard accessible (Tab, Enter)
+- **Screen Readers**: Proper ARIA attributes for disabled state
+- **Focus Indicators**: Visible focus outline with proper contrast
+- **Semantic HTML**: Uses router-link for internal routes, anchor for external
+- **Disabled State**: Renders as span with aria-disabled, role="link", and aria-label
+
+### ARIA Attributes
+
+- **aria-disabled**: Set to "true" when link is disabled (string value for Vue 3 compatibility)
+- **role**: Set to "link" for disabled span to maintain semantic meaning
+- **aria-label**: Provides accessible label for disabled links
+- **rel**: Automatically adds "noopener noreferrer" for external links with target="_blank"
+
+### Security
+
+External links with `target="_blank"` automatically include `rel="noopener noreferrer"` to:
+- Prevent security vulnerabilities (window.opener access)
+- Improve privacy (no referrer information sent)
+
+## Behavior
+
+### Rendering Logic
+
+The component automatically chooses the appropriate element based on props:
+
+1. **Disabled**: Renders as `<span>` with disabled styling
+2. **External**: Renders as `<a>` with href attribute
+3. **Internal**: Renders as `<router-link>` for SPA navigation
+
+### TypeScript Type Safety
+
+The component uses discriminated union types to enforce correct prop combinations:
+
+- **Internal links** (`external=false` or `undefined`):
+  - `to` accepts `RouteLocationRaw` (string path or object with name/path, params, query, etc.)
+  - `replace` can be used
+  - `target` can be used (opens internal route in new tab/window)
+
+- **External links** (`external=true`):
+  - `to` must be a string URL
+  - `target` can be used
+  - `replace` cannot be used (not applicable for external links)
+
+TypeScript will show errors if you try to:
+- Use an object `to` with `external=true`
+- Use `replace` with `external=true`
+- Use incompatible prop combinations
+
+### Default Values
+
+- `type`: 'default'
+- `linkStyle`: 'default'
+- `size`: 'lg'
+- `disabled`: false
+- `external`: false
+- `replace`: false
+
+## Related Components
+
+- **FzNavlink**: Navigation link with active state support
+- **FzButton**: Button component for actions
+- **FzRouterNavlink**: Router-aware navigation link
+

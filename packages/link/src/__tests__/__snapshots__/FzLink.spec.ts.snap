@@ -1,3 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`FzLink > image matches snapshot 1`] = `"<a href="/example" class="border-1 border-transparent inline-block text-lg hover:underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600">This is a link</a>"`;
