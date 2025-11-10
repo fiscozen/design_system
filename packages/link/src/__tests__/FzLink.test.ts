@@ -132,6 +132,10 @@ describe('FzLink', () => {
       expect(link.classes()).toContain('hover:text-blue-600')
       expect(link.classes()).toContain('hover:underline')
       expect(link.classes()).toContain('focus:text-blue-600')
+      expect(link.classes()).toContain('focus:outline-none')
+      expect(link.classes()).toContain('focus:border-solid')
+      expect(link.classes()).toContain('focus:no-underline')
+      expect(link.classes()).toContain('focus:border-blue-600')
       expect(link.classes()).not.toContain('underline')
     })
 
@@ -156,6 +160,10 @@ describe('FzLink', () => {
       expect(link.classes()).toContain('underline')
       expect(link.classes()).toContain('hover:text-blue-600')
       expect(link.classes()).toContain('focus:text-blue-600')
+      expect(link.classes()).toContain('focus:outline-none')
+      expect(link.classes()).toContain('focus:border-solid')
+      expect(link.classes()).toContain('focus:no-underline')
+      expect(link.classes()).toContain('focus:border-blue-600')
     })
 
     it('applies danger type classes with default linkStyle', async () => {
@@ -179,6 +187,10 @@ describe('FzLink', () => {
       expect(link.classes()).toContain('hover:text-semantic-error-300')
       expect(link.classes()).toContain('hover:underline')
       expect(link.classes()).toContain('focus:text-semantic-error-300')
+      expect(link.classes()).toContain('focus:outline-none')
+      expect(link.classes()).toContain('focus:border-solid')
+      expect(link.classes()).toContain('focus:no-underline')
+      expect(link.classes()).toContain('focus:border-semantic-error-300')
       expect(link.classes()).not.toContain('underline')
     })
 
@@ -203,6 +215,10 @@ describe('FzLink', () => {
       expect(link.classes()).toContain('underline')
       expect(link.classes()).toContain('hover:text-semantic-error-300')
       expect(link.classes()).toContain('focus:text-semantic-error-300')
+      expect(link.classes()).toContain('focus:outline-none')
+      expect(link.classes()).toContain('focus:border-solid')
+      expect(link.classes()).toContain('focus:no-underline')
+      expect(link.classes()).toContain('focus:border-semantic-error-300')
     })
 
     it('applies default type disabled classes', async () => {
@@ -822,6 +838,10 @@ describe('FzLink', () => {
       expect(link.classes()).toContain('text-semantic-error-200')
       expect(link.classes()).toContain('hover:text-semantic-error-300')
       expect(link.classes()).toContain('focus:text-semantic-error-300')
+      expect(link.classes()).toContain('focus:outline-none')
+      expect(link.classes()).toContain('focus:border-solid')
+      expect(link.classes()).toContain('focus:no-underline')
+      expect(link.classes()).toContain('focus:border-semantic-error-300')
       expect(link.attributes('target')).toBe('_self')
     })
   })
