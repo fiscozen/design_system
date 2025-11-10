@@ -124,23 +124,23 @@ const isDangerDisabled = (p: typeof props) => p.type === 'danger' && p.disabled
  * CSS classes for interactive link states (router-link and anchor).
  */
 const linkClass = computed(() => {
-  const baseClasses = [...commonClass.value]
+  const baseClasses = [...commonClass.value, 'focus:outline-none', 'focus:border-solid']
   
   switch (true) {
     case isDefaultUnderline(props):
-      baseClasses.push('text-blue-500', 'hover:text-blue-600', 'focus:text-blue-600')
+      baseClasses.push('text-blue-500', 'hover:text-blue-600', 'focus:text-blue-600', 'focus:border-blue-600')
       break
       
     case isDefaultNoUnderline(props):
-      baseClasses.push('text-blue-500', 'hover:text-blue-600', 'hover:underline', 'focus:text-blue-600')
+      baseClasses.push('text-blue-500', 'hover:text-blue-600', 'hover:underline', 'focus:text-blue-600', 'focus:border-blue-600')
       break
       
     case isDangerUnderline(props):
-      baseClasses.push('text-semantic-error-200', 'hover:text-semantic-error-300', 'focus:text-semantic-error-300')
+      baseClasses.push('text-semantic-error-200', 'hover:text-semantic-error-300', 'focus:text-semantic-error-300', 'focus:border-semantic-error-300')
       break
       
     case isDangerNoUnderline(props):
-      baseClasses.push('text-semantic-error-200', 'hover:text-semantic-error-300', 'hover:underline', 'focus:text-semantic-error-300')
+      baseClasses.push('text-semantic-error-200', 'hover:text-semantic-error-300', 'hover:underline', 'focus:text-semantic-error-300', 'focus:border-semantic-error-300')
       break
   }
   
