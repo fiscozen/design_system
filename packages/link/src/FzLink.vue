@@ -124,7 +124,7 @@ const isDangerDisabled = (p: typeof props) => p.type === 'danger' && p.disabled
  * CSS classes for interactive link states (router-link and anchor).
  */
 const linkClass = computed(() => {
-  const baseClasses = [...commonClass.value, 'focus:outline-none', 'focus:border-solid']
+  const baseClasses = [...commonClass.value, 'focus:outline-none', 'focus:border-solid', 'focus:no-underline']
   
   switch (true) {
     case isDefaultUnderline(props):
