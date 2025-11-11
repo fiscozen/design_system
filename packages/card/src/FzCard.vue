@@ -204,7 +204,7 @@ defineExpose({
     </header>
     <article
       v-if="isAlive"
-      :class="['p-20', contentClass]"
+      :class="['p-16', contentClass]"
       v-show="showContent"
     >
       <slot></slot>
