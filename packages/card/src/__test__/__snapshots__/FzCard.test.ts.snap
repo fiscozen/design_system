@@ -1,13 +1,16 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzCard > renders correctly 1`] = `
-"<section class="border-1 border-solid border-grey-100 rounded flex flex-col bg-core-white">
-  <header class="border-b-1 border-grey-100">
-    <div class="h-64 border-solid p-16 flex flex-row justify-between">
+exports[`FzCard > Rendering > renders correctly and matches snapshot 1`] = `
+"<section class="border-1 border-solid border-grey-100 rounded flex flex-col bg-core-white text-core-black border-grey-100">
+  <header class="">
+    <div class="border-solid pt-16 px-16 flex flex-row justify-between">
       <div class="flex flex-row gap-12 items-center">
-        <h2 class="text-core-black font-medium text-2xl m-0 p-0 break-words" title="Test Card">Test Card</h2>
+        <h2 class="text-core-black font-medium text-xl m-0 p-0 break-words" title="Test Card">Test Card</h2>
       </div>
-      <!--v-if-->
+      <div class="flex flex-row gap-8 items-center">
+        <!--v-if-->
+        <!--v-if-->
+      </div>
     </div>
   </header>
   <article class="p-20"></article>
