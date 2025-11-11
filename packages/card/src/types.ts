@@ -35,6 +35,16 @@ export type FzCardProps = {
    * Whether the card content is always alive (never destroyed) when collapsed
    */
   alwaysAlive?: boolean;
+  /**
+   * Whether to show an info icon in the header
+   * @default false
+   */
+  hasInfoIcon?: boolean;
+  /**
+   * The environment context for the card buttons
+   * @default 'frontoffice'
+   */
+  environment?: FzCardEnvironment;
 };
 
 type FzCardButton = {
@@ -45,7 +55,29 @@ type FzCardIconButton = {
   icon: string;
 };
 
-export type FzCardColor = "purple" | "orange" | "blue" | "aliceblue";
+/**
+ * Card background color variants.
+ * 
+ * @remarks
+ * - 'default' renders a white background
+ * - 'blue' renders an alice-blue background
+ * - 'orange' renders a seashell background
+ * - 'purple' renders a pale-purple background
+ * - 'grey' renders a white-smoke background
+ * 
+ * @deprecated 'aliceblue' is deprecated and will be removed in a future version. Use 'blue' instead.
+ */
+export type FzCardColor = "default" | "blue" | "orange" | "purple" | "grey" | "aliceblue";
+
+/**
+ * Card environment context for buttons
+ * 
+ * @remarks
+ * Determines the visual style context for all buttons within the card
+ * - 'backoffice' for internal/admin interfaces
+ * - 'frontoffice' for public-facing interfaces
+ */
+export type FzCardEnvironment = "backoffice" | "frontoffice";
 
 export interface FzCardEvents {
   /**
@@ -63,6 +95,11 @@ export interface FzCardEvents {
    * @type {() => void}
    */
   (event: "fztertiary:click"): void;
+  /**
+   * Event emitted when the info icon is clicked
+   * @type {() => void}
+   */
+  (event: "fzcard:click-info"): void;
 }
 
 export interface FzCardSlots {

@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/card",
-  "version": "0.1.6",
+  "version": "1.0.0",
   "description": "Design System Card component",
   "scripts": {
     "coverage": "vitest run --coverage",
