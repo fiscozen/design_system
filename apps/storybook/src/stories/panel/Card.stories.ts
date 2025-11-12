@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, within } from '@storybook/test'
 import { FzCard } from '@fiscozen/card'
 import { FzBadge } from '@fiscozen/badge'
 
@@ -76,6 +77,32 @@ export const BasicCard: CardStory = {
   ...Template,
   args: {
     ...Template.args
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify card container exists (section element with rounded class)
+    const card = canvasElement.querySelector('section.rounded')
+    await expect(card).toBeTruthy()
+    
+    // Verify title is rendered
+    const title = canvas.getByText('Title')
+    await expect(title).toBeInTheDocument()
+    
+    // Verify badge in header slot is rendered
+    const badge = canvas.getByText('Attesa Utente')
+    await expect(badge).toBeInTheDocument()
+    
+    // Verify content is rendered
+    const content = canvas.getByText(/Lorem ipsum dolor sit amet/)
+    await expect(content).toBeInTheDocument()
+    
+    // Verify default color (white background)
+    await expect(card?.classList.contains('bg-core-white')).toBe(true)
+    
+    // Verify no action buttons are present (basic card has no actions)
+    const buttons = canvas.queryAllByRole('button')
+    await expect(buttons.length).toBe(0)
   }
 }
 
@@ -92,6 +119,34 @@ export const CardWithActions: CardStory = {
     tertiaryAction: {
       icon: 'bell'
     }
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify all three action buttons are rendered
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(3)
+    
+    // Verify primary action button
+    const primaryBtn = canvas.getByText('Action 1')
+    await expect(primaryBtn).toBeInTheDocument()
+    await expect(primaryBtn.classList.contains('bg-blue-500')).toBe(true)
+    
+    // Verify secondary action button
+    const secondaryBtn = canvas.getByText('Action 2')
+    await expect(secondaryBtn).toBeInTheDocument()
+    await expect(secondaryBtn.classList.contains('bg-core-white')).toBe(true)
+    
+    // Verify tertiary action button (icon button)
+    const tertiaryBtn = buttons[2]
+    const icon = tertiaryBtn.querySelector('svg')
+    await expect(icon).toBeTruthy()
+    await expect(tertiaryBtn.classList.contains('bg-transparent')).toBe(true)
+    
+    // Verify buttons are enabled
+    buttons.forEach(button => {
+      expect(button).toBeEnabled()
+    })
   }
 }
 
@@ -102,6 +157,19 @@ export const CardWithSecondaryActionOnly: CardStory = {
     secondaryAction: {
       label: 'Secondary Action'
     }
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify only one button is rendered (secondary)
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(1)
+    
+    // Verify secondary action button
+    const secondaryBtn = canvas.getByText('Secondary Action')
+    await expect(secondaryBtn).toBeInTheDocument()
+    await expect(secondaryBtn.classList.contains('bg-core-white')).toBe(true)
+    await expect(secondaryBtn).toBeEnabled()
   }
 }
 
@@ -123,6 +191,21 @@ export const CardPurple: CardStory = {
   args: {
     ...CardWithActions.args,
     color: 'purple'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify card has purple color (background-pale-purple)
+    const card = canvasElement.querySelector('.bg-background-pale-purple')
+    await expect(card).toBeTruthy()
+    
+    // Verify title is present
+    const title = canvas.getByText('Title')
+    await expect(title).toBeInTheDocument()
+    
+    // Verify actions are present
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(3)
   }
 }
 
@@ -131,6 +214,17 @@ export const CardOrange: CardStory = {
   args: {
     ...CardWithActions.args,
     color: 'orange'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify card has orange color (background-seashell)
+    const card = canvasElement.querySelector('.bg-background-seashell')
+    await expect(card).toBeTruthy()
+    
+    // Verify actions are present
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(3)
   }
 }
 
@@ -147,6 +241,17 @@ export const CardBlue: CardStory = {
   args: {
     ...CardWithActions.args,
     color: 'blue'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify card has blue color (background-alice-blue)
+    const card = canvasElement.querySelector('.bg-background-alice-blue')
+    await expect(card).toBeTruthy()
+    
+    // Verify actions are present
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(3)
   }
 }
 
@@ -155,6 +260,17 @@ export const CardGrey: CardStory = {
   args: {
     ...CardWithActions.args,
     color: 'grey'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify card has grey color (background-white-smoke)
+    const card = canvasElement.querySelector('.bg-background-white-smoke')
+    await expect(card).toBeTruthy()
+    
+    // Verify actions are present
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(3)
   }
 }
 
@@ -163,6 +279,24 @@ export const CardWithInfoIcon: CardStory = {
   args: {
     ...CardWithActions.args,
     hasInfoIcon: true
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify info icon button is present (4 buttons: 3 actions + 1 info icon)
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(4)
+    
+    // Verify info icon is present
+    const icons = canvasElement.querySelectorAll('svg')
+    const infoIconExists = Array.from(icons).some(icon => {
+      return icon.parentElement?.closest('button') !== null
+    })
+    await expect(infoIconExists).toBe(true)
+    
+    // Verify title is present
+    const title = canvas.getByText('Title')
+    await expect(title).toBeInTheDocument()
   }
 }
 
@@ -171,6 +305,21 @@ export const CardBackoffice: CardStory = {
   args: {
     ...CardWithActions.args,
     environment: 'backoffice'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify buttons are present
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(3)
+    
+    // Verify backoffice environment (buttons should have h-32 height)
+    const primaryBtn = canvas.getByText('Action 1')
+    await expect(primaryBtn.classList.contains('h-32')).toBe(true)
+    
+    // Verify card content is present
+    const content = canvas.getByText(/Lorem ipsum dolor sit amet/)
+    await expect(content).toBeInTheDocument()
   }
 }
 
@@ -179,6 +328,21 @@ export const CardFrontoffice: CardStory = {
   args: {
     ...CardWithActions.args,
     environment: 'frontoffice'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify buttons are present
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(3)
+    
+    // Verify frontoffice environment (buttons should have h-44 height)
+    const primaryBtn = canvas.getByText('Action 1')
+    await expect(primaryBtn.classList.contains('h-44')).toBe(true)
+    
+    // Verify card content is present
+    const content = canvas.getByText(/Lorem ipsum dolor sit amet/)
+    await expect(content).toBeInTheDocument()
   }
 }
 
@@ -188,6 +352,25 @@ export const CardCollapsible: CardStory = {
     ...CardWithActions.args,
     collapsible: true,
     hasInfoIcon: true
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify collapsible card has collapse/expand button (5 buttons: 3 actions + 1 info + 1 collapse)
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(5)
+    
+    // Verify title is present
+    const title = canvas.getByText('Title')
+    await expect(title).toBeInTheDocument()
+    
+    // Verify content is initially visible
+    const content = canvas.getByText(/Lorem ipsum dolor sit amet/)
+    await expect(content).toBeInTheDocument()
+    
+    // Verify collapse icon is present
+    const icons = canvasElement.querySelectorAll('svg')
+    await expect(icons.length).toBeGreaterThan(0)
   }
 }
 
@@ -263,6 +446,33 @@ export const CardWithHeaderContent: CardStory = {
       icon: 'bell'
     },
     collapsible: true
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify title is present
+    const title = canvas.getByText('Title')
+    await expect(title).toBeInTheDocument()
+    
+    // Verify badge in header slot
+    const badge = canvas.getByText('Attesa Utente')
+    await expect(badge).toBeInTheDocument()
+    
+    // Verify header-content slot content (wallets)
+    const wallet1 = canvas.getByText('Wallet 1')
+    const wallet2 = canvas.getByText('Wallet 2')
+    const wallet3 = canvas.getByText('Wallet 3')
+    await expect(wallet1).toBeInTheDocument()
+    await expect(wallet2).toBeInTheDocument()
+    await expect(wallet3).toBeInTheDocument()
+    
+    // Verify main content
+    const content = canvas.getByText('Content')
+    await expect(content).toBeInTheDocument()
+    
+    // Verify buttons are present (4 buttons: 3 actions + 1 collapse)
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(4)
   }
 }
 
@@ -310,6 +520,25 @@ export const CardWithFooter: CardStory = {
   args: {
     title: 'Title',
     collapsible: true
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify title is present
+    const title = canvas.getByText('Title')
+    await expect(title).toBeInTheDocument()
+    
+    // Verify content is present
+    const content = canvas.getByText('Content')
+    await expect(content).toBeInTheDocument()
+    
+    // Verify footer slot content
+    const footer = canvas.getByText('Footer')
+    await expect(footer).toBeInTheDocument()
+    
+    // Verify collapse button is present (1 button for collapsible)
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(1)
   }
 }
 
@@ -327,5 +556,24 @@ export const CardWithoutHeader: CardStory = {
                </FzCard>`
   }),
   args: {
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify content is present
+    const content = canvas.getByText('Content')
+    await expect(content).toBeInTheDocument()
+    
+    // Verify no title is present
+    const title = canvas.queryByText('Title')
+    await expect(title).not.toBeInTheDocument()
+    
+    // Verify no buttons are present (no actions, no collapse)
+    const buttons = canvas.queryAllByRole('button')
+    await expect(buttons.length).toBe(0)
+    
+    // Verify card container exists (section element with rounded class)
+    const card = canvasElement.querySelector('section.rounded')
+    await expect(card).toBeTruthy()
   }
 }
