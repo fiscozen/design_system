@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, within } from '@storybook/test'
+import { FzContainer } from '@fiscozen/container'
 import { FzCard } from '@fiscozen/card'
 import { FzBadge } from '@fiscozen/badge'
 
@@ -43,7 +44,7 @@ type CardStory = StoryObj<typeof FzCard>
 
 const Template: CardStory = {
   render: (args) => ({
-    components: { FzCard, FzBadge },
+    components: { FzCard, FzBadge, FzContainer },
     setup() {
       return {
         args
@@ -58,7 +59,7 @@ const Template: CardStory = {
     },
     template: `<FzCard v-bind="args" class="w-[500px] m-8" @fzprimary:click="onPrimaryAction" @fzsecondary:click="onSecondaryAction" @fztertiary:click="onTertiaryAction" @fzcard:click-info="onInfoClick"> 
                         <template #header>
-                            <FzBadge color="warning"> Attesa Utente </FzBadge>
+                          <FzBadge color="warning"> Attesa Utente </FzBadge>
                         </template>
                         <div class="border-2 border-dashed border-grey-200 rounded p-16 flex items-center justify-center text-center h-full w-full">
                           <p class="text-grey-500 m-0">
@@ -128,17 +129,17 @@ export const CardWithActions: CardStory = {
     await expect(buttons.length).toBe(3)
     
     // Verify primary action button
-    const primaryBtn = canvas.getByText('Action 1')
+    const primaryBtn = canvas.getByText('Action 1').closest('button')
     await expect(primaryBtn).toBeInTheDocument()
-    await expect(primaryBtn.classList.contains('bg-blue-500')).toBe(true)
+    await expect(primaryBtn?.classList.contains('bg-blue-500')).toBe(true)
     
     // Verify secondary action button
-    const secondaryBtn = canvas.getByText('Action 2')
+    const secondaryBtn = canvas.getByText('Action 2').closest('button')
     await expect(secondaryBtn).toBeInTheDocument()
-    await expect(secondaryBtn.classList.contains('bg-core-white')).toBe(true)
+    await expect(secondaryBtn?.classList.contains('bg-core-white')).toBe(true)
     
     // Verify tertiary action button (icon button)
-    const tertiaryBtn = buttons[2]
+    const tertiaryBtn = buttons[0]
     const icon = tertiaryBtn.querySelector('svg')
     await expect(icon).toBeTruthy()
     await expect(tertiaryBtn.classList.contains('bg-transparent')).toBe(true)
@@ -166,9 +167,9 @@ export const CardWithSecondaryActionOnly: CardStory = {
     await expect(buttons.length).toBe(1)
     
     // Verify secondary action button
-    const secondaryBtn = canvas.getByText('Secondary Action')
+    const secondaryBtn = canvas.getByText('Secondary Action').closest('button')
     await expect(secondaryBtn).toBeInTheDocument()
-    await expect(secondaryBtn.classList.contains('bg-core-white')).toBe(true)
+    await expect(secondaryBtn?.classList.contains('bg-core-white')).toBe(true)
     await expect(secondaryBtn).toBeEnabled()
   }
 }
@@ -314,8 +315,8 @@ export const CardBackoffice: CardStory = {
     await expect(buttons.length).toBe(3)
     
     // Verify backoffice environment (buttons should have h-32 height)
-    const primaryBtn = canvas.getByText('Action 1')
-    await expect(primaryBtn.classList.contains('h-32')).toBe(true)
+    const primaryBtn = canvas.getByText('Action 1').closest('button')
+    await expect(primaryBtn?.classList.contains('h-32')).toBe(true)
     
     // Verify card content is present
     const content = canvas.getByText(/Lorem ipsum dolor sit amet/)
@@ -337,8 +338,8 @@ export const CardFrontoffice: CardStory = {
     await expect(buttons.length).toBe(3)
     
     // Verify frontoffice environment (buttons should have h-44 height)
-    const primaryBtn = canvas.getByText('Action 1')
-    await expect(primaryBtn.classList.contains('h-44')).toBe(true)
+    const primaryBtn = canvas.getByText('Action 1').closest('button')
+    await expect(primaryBtn?.classList.contains('h-44')).toBe(true)
     
     // Verify card content is present
     const content = canvas.getByText(/Lorem ipsum dolor sit amet/)
@@ -351,7 +352,8 @@ export const CardCollapsible: CardStory = {
   args: {
     ...CardWithActions.args,
     collapsible: true,
-    hasInfoIcon: true
+    hasInfoIcon: true,
+    defaultExpanded: true
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -408,7 +410,7 @@ export const StdCard: CardStory = {
 
 export const CardWithHeaderContent: CardStory = {
   render: (args) => ({
-    components: { FzCard, FzBadge },
+    components: { FzCard, FzBadge, FzContainer },
     setup() {
       return {
         args
@@ -422,7 +424,9 @@ export const CardWithHeaderContent: CardStory = {
     },
     template: `<FzCard v-bind="args" class="m-8" @fzprimary:click="onPrimaryAction" @fzsecondary:click="onSecondaryAction" @fztertiary:click="onTertiaryAction"> 
                         <template #header>
+                          <FzContainer horizontal layout="expand-first">
                             <FzBadge color="warning"> Attesa Utente </FzBadge>
+                          </FzContainer> 
                         </template>
                         <template #header-content>
                             <div class="flex border-t-1 p-16 justify-between">
@@ -445,7 +449,8 @@ export const CardWithHeaderContent: CardStory = {
     tertiaryAction: {
       icon: 'bell'
     },
-    collapsible: true
+    collapsible: true,
+    defaultExpanded: true
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -519,7 +524,8 @@ export const CardWithFooter: CardStory = {
   }),
   args: {
     title: 'Title',
-    collapsible: true
+    collapsible: true,
+    defaultExpanded: true
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -575,5 +581,68 @@ export const CardWithoutHeader: CardStory = {
     // Verify card container exists (section element with rounded class)
     const card = canvasElement.querySelector('section.rounded')
     await expect(card).toBeTruthy()
+  }
+}
+
+export const CardWithLongTitle: CardStory = {
+  render: (args) => ({
+    components: { FzCard, FzBadge },
+    setup() {
+      return {
+        args
+      }
+    },
+
+    methods: {
+      onPrimaryAction: () => console.log('Primary action clicked'),
+      onInfoClick: () => console.log('Info icon clicked')
+    },
+    template: `<FzCard v-bind="args" class="w-[500px] m-8" @fzprimary:click="onPrimaryAction" @fzcard:click-info="onInfoClick"> 
+                        <template #header>
+                          <FzContainer horizontal layout="expand-first">
+                            <FzBadge color="warning"> Badge </FzBadge>
+                          </FzContainer> 
+                        </template>
+                        <p class="text-grey-800 m-0">
+                          Questo esempio dimostra come il titolo molto lungo vada automaticamente a capo 
+                          quando raggiunge la larghezza massima disponibile del container.
+                        </p>
+                    </FzCard>`
+  }),
+  args: {
+    title: 'Questo è un titolo estremamente lungo che dovrebbe andare a capo automaticamente quando raggiunge la larghezza massima del container della card per dimostrare la funzionalità di text wrapping',
+    primaryAction: {
+      label: 'Conferma'
+    },
+    hasInfoIcon: true,
+    color: 'blue'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify card container exists
+    const card = canvasElement.querySelector('section.rounded')
+    await expect(card).toBeTruthy()
+    
+    // Verify title is rendered and contains expected text
+    const titleElement = canvasElement.querySelector('h2')
+    await expect(titleElement).toBeTruthy()
+    await expect(titleElement?.textContent).toContain('Questo è un titolo estremamente lungo')
+    
+    // Verify title has proper wrapping classes
+    await expect(titleElement?.classList.contains('break-words')).toBe(true)
+    await expect(titleElement?.classList.contains('overflow-wrap-anywhere')).toBe(true)
+    
+    // Verify badge is present
+    const badge = canvas.getByText('Badge')
+    await expect(badge).toBeInTheDocument()
+    
+    // Verify buttons are present (info + collapse + primary = 2 buttons)
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBeGreaterThanOrEqual(2)
+    
+    // Verify content is rendered
+    const content = canvas.getByText(/Questo esempio dimostra/)
+    await expect(content).toBeInTheDocument()
   }
 }

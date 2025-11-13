@@ -87,6 +87,10 @@ const headerContainerComputedClass = computed(() => [
   props.collapsible ? "cursor-pointer" : "",
 ]);
 
+const headerTitleClass = computed(() => {
+  return props.environment === 'backoffice' ? 'py-2' : 'py-8';
+});
+
 const backgroundColor = computed(() => {
   switch (normalizedColor.value) {
     case "blue":
@@ -174,17 +178,17 @@ defineExpose({
       @click="toggleOpen"
     >
       <div :class="headerStaticClass">
-        <div class="flex flex-row gap-12 items-center">
+        <div :class="['flex flex-row gap-12 items-start', headerTitleClass]">
           <h2
             v-if="title"
-            class="text-core-black font-medium text-xl m-0 p-0 break-words"
+            class="text-core-black font-medium text-xl m-0 p-0 break-words overflow-wrap-anywhere min-w-0 flex-shrink"
             :title="title"
           >
             {{ title }}
           </h2>
           <slot name="header"></slot>
         </div>
-        <div class="flex flex-row gap-8 items-center">
+        <div class="flex flex-row gap-8 items-start">
           <FzIconButton
             v-if="hasInfoIcon"
             iconName="circle-question"
