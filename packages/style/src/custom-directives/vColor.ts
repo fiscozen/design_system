@@ -1,8 +1,10 @@
 import type { DirectiveBinding, ObjectDirective } from 'vue';
 
-import tokens from "../tokens.json";
-import safeColorsConfig from "../safe-colors.json";
-import safeSemanticColorsConfig from "../safe-semantic-colors.json";
+import tokens from "../../tokens.json";
+import safeColorsConfig from "../../safe-colors.json";
+import safeSemanticColorsConfig from "../../safe-semantic-colors.json";
+import { validateElement } from './validation';
+import { DIRECTIVE_VALIDATION_CONFIG } from './config';
 
 // ============================================================================
 // TYPES & CONSTANTS
@@ -18,8 +20,8 @@ import safeSemanticColorsConfig from "../safe-semantic-colors.json";
  * @see safe-colors.json - Base color names (blue, purple, orange, etc.)
  * @see safe-semantic-colors.json - Semantic color types (error, warning, success, info)
  */
-export const SAFE_COLOR_NAMES = safeColorsConfig.safeColorNames as readonly string[];
-export const SEMANTIC_COLOR_NAMES = safeSemanticColorsConfig.semanticColorNames as readonly string[];
+const SAFE_COLOR_NAMES = safeColorsConfig.safeColorNames as readonly string[];
+const SEMANTIC_COLOR_NAMES = safeSemanticColorsConfig.semanticColorNames as readonly string[];
 
 // ============================================================================
 // COLOR INITIALIZATION
@@ -79,161 +81,6 @@ if (semanticColors) {
       });
     }
   });
-}
-
-// ============================================================================
-// DIRECTIVES DEFINITIONS
-// ============================================================================
-
-/**
- * v-color Directive
- * 
- * Applies design system text colors to heading and paragraph elements.
- * 
- * @example Basic usage with default weight
- * <p v-color:blue>Text</p>              // Applies text-blue-500
- * <h1 v-color:semantic-error>Error</h1> // Applies text-semantic-error-200
- * 
- * @example Explicit weight
- * <p v-color:blue="300">Text</p>        // Applies text-blue-300
- * 
- * @example Remove color classes
- * <p v-color:blue="false">Text</p>      // Removes all text-color-* classes
- * 
- * Default weights:
- * - Base colors (blue, purple, etc.): 500
- * - Semantic colors (semantic-error, etc.): 200
- * - Core colors: 'black'
- * 
- * Implementation note: Always generates classes with explicit weights 
- * (e.g., text-blue-500) to ensure consistency with Tailwind's safelist
- * and avoid ambiguous class generation.
- */
-const vColor: ObjectDirective<HTMLElement, boolean | string | number> = {
-  mounted(el: HTMLElement, binding: DirectiveBinding<boolean | string | number>) {
-    if (validateElement(el, {
-      name: 'v-color',
-      ...binding,
-    })) {
-      updateColorClass(el, binding.arg, binding.value);
-    }
-  },
-  updated(el: HTMLElement, binding: DirectiveBinding<boolean | string | number>) {
-    updateColorClass(el, binding.arg, binding.value);
-  }
-}
-
-/**
- * v-bold Directive
- * 
- * Applies semibold font weight to text elements.
- * 
- * @example
- * <p v-bold>Bold text</p>         // Applies font-semibold
- * <p v-bold="false">Normal</p>    // Removes font-semibold
- */
-const vBold: ObjectDirective<HTMLElement, boolean | string> = {
-  mounted(el: HTMLElement, binding: DirectiveBinding<boolean | string>) {
-    if (validateElement(el, {
-      name: 'v-bold',
-      ...binding,
-    })) {
-      updateBoldClass(el, binding.value as boolean);
-    }
-  },
-  updated(el: HTMLElement, binding: DirectiveBinding<boolean | string>) {
-    updateBoldClass(el, binding.value as boolean);
-  }
-}
-
-/**
- * v-small Directive
- * 
- * Applies small font size to text elements.
- * 
- * @example
- * <p v-small>Small text</p>       // Applies text-sm
- * <p v-small="false">Normal</p>   // Removes text-sm
- */
-const vSmall: ObjectDirective<HTMLElement, boolean | string> = {
-  mounted(el: HTMLElement, binding: DirectiveBinding<boolean | string>) {
-    if (validateElement(el, {
-      name: 'v-small',
-      ...binding,
-    })) {
-      updateSmallClass(el, binding.value as boolean);
-    }
-  },
-  updated(el: HTMLElement, binding: DirectiveBinding<boolean | string>) {
-    updateSmallClass(el, binding.value as boolean);
-  }
-}
-
-// ============================================================================
-// VALIDATION UTILITIES (Shared across directives)
-// ============================================================================
-
-/**
- * Validates that a directive is applied to an appropriate HTML element.
- * 
- * Uses an OR-based validation approach to avoid duplicate error messages:
- * - Silently checks both paragraph and heading validity
- * - Only logs an error if both checks fail
- * - Returns true if either check passes
- * 
- * This prevents confusing console output where v-color on an H1 would
- * log a paragraph validation error even though heading validation passed.
- * 
- * @param el - The HTML element the directive is applied to
- * @param directive - The directive binding with name and value
- * @returns true if the element is valid for this directive
- */
-function validateElement(el: HTMLElement, directive: {name: string} & DirectiveBinding<any>): boolean {
-  return validateParagraphElement(el, directive) || validateHeadingElement(el, directive);
-}
-
-/**
- * Validates that a directive is applied to a heading element (H1, H2, H3).
- * 
- * @param el - The HTML element to validate
- * @param directive - The directive binding
- * @returns true if valid, false otherwise
- */
-function validateHeadingElement(el: HTMLElement, directive: {name: string} & DirectiveBinding<any>): boolean {
-  const validTags: string[] = ['H1', 'H2', 'H3'];
-  const validDirectives = ['v-color'];
-  
-  if (validTags.includes(el.tagName) && validDirectives.includes(directive.name)) {
-    return true;
-  }
-
-  console.error(
-    `[${directive.name}] Directive can not be used on: ${el.tagName.toLowerCase()}`
-  );
-
-  return false;
-}
-
-/**
- * Validates that a directive is applied to a paragraph element.
- * 
- * @param el - The HTML element to validate
- * @param directive - The directive binding
- * @returns true if valid, false otherwise
- */
-function validateParagraphElement(el: HTMLElement, directive: {name: string} & DirectiveBinding<any>): boolean {
-  const validTags = ['P'];
-  const validDirectives = ['v-bold', 'v-small', 'v-color'];
-  
-  if (validTags.includes(el.tagName) && validDirectives.includes(directive.name)) {
-    return true;
-  }
-
-  console.error(
-    `[${directive.name}] Directive can not be used on: ${el.tagName.toLowerCase()}`
-  );
-
-  return false;
 }
 
 // ============================================================================
@@ -422,54 +269,44 @@ function updateColorClass(el: HTMLElement, colorName?: string, value?: boolean |
 }
 
 // ============================================================================
-// SIMPLE DIRECTIVES - Bold & Small
+// DIRECTIVE DEFINITION
 // ============================================================================
 
 /**
- * Toggles the semibold font weight class.
+ * v-color Directive
  * 
- * @param el - The element to modify
- * @param value - true to add, false to remove
+ * Applies design system text colors to heading and paragraph elements.
+ * 
+ * @example Basic usage with default weight
+ * <p v-color:blue>Text</p>              // Applies text-blue-500
+ * <h1 v-color:semantic-error>Error</h1> // Applies text-semantic-error-200
+ * 
+ * @example Explicit weight
+ * <p v-color:blue="300">Text</p>        // Applies text-blue-300
+ * 
+ * @example Remove color classes
+ * <p v-color:blue="false">Text</p>      // Removes all text-color-* classes
+ * 
+ * Default weights:
+ * - Base colors (blue, purple, etc.): 500
+ * - Semantic colors (semantic-error, etc.): 200
+ * - Core colors: 'black'
+ * 
+ * Implementation note: Always generates classes with explicit weights 
+ * (e.g., text-blue-500) to ensure consistency with Tailwind's safelist
+ * and avoid ambiguous class generation.
  */
-function updateBoldClass(el: HTMLElement, value: boolean = true): void {
-  if (value === false) {
-    el.classList.remove('font-semibold')
-  } else {
-    el.classList.add('font-semibold')
+export const vColor: ObjectDirective<HTMLElement, boolean | string | number> = {
+  mounted(el: HTMLElement, binding: DirectiveBinding<boolean | string | number>) {
+    if (validateElement(DIRECTIVE_VALIDATION_CONFIG, el, {
+      name: 'v-color',
+      ...binding,
+    })) {
+      updateColorClass(el, binding.arg, binding.value);
+    }
+  },
+  updated(el: HTMLElement, binding: DirectiveBinding<boolean | string | number>) {
+    updateColorClass(el, binding.arg, binding.value);
   }
 }
 
-/**
- * Toggles the small text size class.
- * 
- * @param el - The element to modify
- * @param value - true to add, false to remove
- */
-function updateSmallClass(el: HTMLElement, value: boolean = true): void {
-  if (value === false) {
-    el.classList.remove('text-sm')
-  } else {
-    el.classList.add('text-sm')
-  }
-}
-
-// ============================================================================
-// EXPORTS
-// ============================================================================
-
-/**
- * Registry of all custom directives for easy registration in Vue applications.
- * 
- * Usage in Vue app:
- * ```ts
- * import { directives } from '@fiscozen/style';
- * directives.forEach(({ name, directive }) => {
- *   app.directive(name, directive);
- * });
- * ```
- */
-export const directives = [
-    {name: 'bold', directive: vBold},
-    {name: 'small', directive: vSmall},
-    {name: 'color', directive: vColor},
-];
