@@ -1,0 +1,329 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Typography/FzStyle" />
+
+# Typography
+
+The FiscoZen design system provides a consistent typography system built on semantic HTML elements and custom Vue directives. This system ensures visual consistency and accessibility across all applications.
+
+## Overview
+
+The typography system is based on semantic HTML elements (`<h1>`, `<h2>`, `<h3>`, `<p>`) with predefined styles that follow the design system tokens. These elements can be enhanced with custom Vue directives for additional styling options like colors, font weights, and text sizes.
+
+## Installation
+
+```bash
+npm install @fiscozen/style
+```
+
+## Setup
+
+Register the directives in your Vue application:
+
+```typescript
+import { createApp } from 'vue'
+import { setupFzStyle } from '@fiscozen/style'
+import '@fiscozen/style/output/global.css'
+import App from './App.vue'
+
+const app = createApp(App)
+setupFzStyle(app)
+app.mount('#app')
+```
+
+## Headings
+
+The design system provides three heading levels with consistent styling:
+
+### H1 - Title Big
+
+Main page titles and primary headings. Uses semibold weight (600) and 2xl text size.
+
+```vue
+<template>
+  <h1>Main Page Title</h1>
+</template>
+```
+
+### H2 - Title Normal
+
+Section headings and secondary titles. Uses semibold weight (600) and xl text size.
+
+```vue
+<template>
+  <h2>Section Subtitle</h2>
+</template>
+```
+
+### H3 - Title Small
+
+Feature headings and tertiary titles. Uses semibold weight (600) and 17px text size.
+
+```vue
+<template>
+  <h3>Feature Heading</h3>
+</template>
+```
+
+**[See Typography/Titles for more heading examples](../?path=/docs/typography-titles--docs)**
+
+## Paragraphs
+
+Paragraphs provide the base text styling for body content. They automatically include spacing between consecutive paragraphs.
+
+### Standard Paragraph
+
+Default paragraph styling with normal weight and base text size.
+
+```vue
+<template>
+  <p>This is a standard paragraph with default styling.</p>
+</template>
+```
+
+### Multiple Paragraphs
+
+When multiple paragraphs are used together, they automatically have spacing between them:
+
+```vue
+<template>
+  <p>First paragraph</p>
+  <p>Second paragraph (has 8px margin-top)</p>
+  <p>Third paragraph (has 8px margin-top)</p>
+</template>
+```
+
+**[See Typography/Paragraphs for more paragraph examples](../?path=/docs/typography-paragraphs--docs)**
+
+## Custom Directives
+
+Custom Vue directives for consistent typography styling across FiscoZen applications. These directives provide a declarative way to apply design system colors, font weights, and text sizes to typography elements.
+
+### v-color
+
+Applies design system text colors to heading and paragraph elements. Supports base colors, semantic colors, and explicit weight control.
+
+**Supported Elements:**
+- Paragraphs (`<p>`)
+- Headings (`<h1>`, `<h2>`, `<h3>`)
+
+**Base Colors with Default Weights:**
+
+```vue
+<template>
+  <p v-color:blue>Blue text (weight 500)</p>
+  <p v-color:purple>Purple text (weight 500)</p>
+  <p v-color:orange>Orange text (weight 500)</p>
+  <p v-color:pink>Pink text (weight 500)</p>
+  <p v-color:grey>Grey text (weight 500)</p>
+</template>
+```
+
+**Explicit Weight Control:**
+
+```vue
+<template>
+  <!-- Lighter shades -->
+  <p v-color:blue="300">Light blue text</p>
+  <p v-color:purple="200">Very light purple</p>
+  
+  <!-- Darker shades -->
+  <p v-color:blue="700">Dark blue text</p>
+  <p v-color:purple="900">Very dark purple</p>
+</template>
+```
+
+**Semantic Colors:**
+
+```vue
+<template>
+  <!-- Default semantic weights (200) -->
+  <p v-color:semantic-error>Error message</p>
+  <p v-color:semantic-warning>Warning message</p>
+  <p v-color:semantic-success>Success message</p>
+  <p v-color:semantic-info>Info message</p>
+  
+  <!-- Explicit semantic weights -->
+  <h3 v-color:semantic-error="300">Critical Error</h3>
+  <p v-color:semantic-success="100">Subtle success hint</p>
+</template>
+```
+
+**Headings with Colors:**
+
+```vue
+<template>
+  <h1 v-color:blue="700">Main Page Title</h1>
+  <h2 v-color:grey="600">Section Subtitle</h2>
+  <h3 v-color:purple="500">Feature Heading</h3>
+</template>
+```
+
+**Core Colors (Black & White):**
+
+```vue
+<template>
+  <p v-color:core="black">Primary text color</p>
+  <p v-color:core="white">Text for dark backgrounds</p>
+</template>
+```
+
+**Removing Color Classes:**
+
+```vue
+<template>
+  <p v-color:blue="false">Removes all color classes</p>
+</template>
+```
+
+**Available Colors:**
+
+**Base Colors:**
+- `blue`, `purple`, `orange`, `pink`, `yellow`, `grey`, `core`
+- Weights: `50`, `100`, `200`, `300`, `400`, `500` (default), `600`, `700`, `800`, `900`
+- For `core`: `white`, `black` (named values instead of numeric weights)
+
+**Semantic Colors:**
+- `semantic-error`, `semantic-warning`, `semantic-success`, `semantic-info`
+- Weights: `50`, `100`, `200` (default), `300`
+
+**Default Weights:**
+- **Base colors**: `500`
+- **Semantic colors**: `200`
+- **Core colors**: `black`
+
+### v-bold
+
+Applies semibold font weight (`font-semibold`) to paragraph elements.
+
+**Supported Elements:**
+- Paragraphs (`<p>`)
+
+**Usage:**
+
+```vue
+<template>
+  <p v-bold>This text is bold</p>
+  <p v-bold="false">This text is normal weight</p>
+</template>
+```
+
+### v-small
+
+Applies small text size (`text-sm`) to paragraph elements.
+
+**Supported Elements:**
+- Paragraphs (`<p>`)
+
+**Usage:**
+
+```vue
+<template>
+  <p v-small>This text is small</p>
+  <p v-small="false">This text is normal size</p>
+</template>
+```
+
+### Combining Directives
+
+You can combine multiple directives on the same element:
+
+```vue
+<template>
+  <p v-bold v-small v-color:blue>Bold, small, blue text</p>
+  <p v-bold v-color:semantic-error>Bold error message</p>
+  <h1 v-color:blue="700">Colored heading</h1>
+</template>
+```
+
+### Directive Validation
+
+The directives automatically validate that they are used on supported element types. Invalid usage will log console errors:
+
+- `v-color` can be used on `<p>`, `<h1>`, `<h2>`, `<h3>`
+- `v-bold` can only be used on `<p>`
+- `v-small` can only be used on `<p>`
+
+## Usage Examples
+
+### Basic Typography Structure
+
+```vue
+<template>
+  <FzContainer>
+    <h1>Welcome to Fiscozen</h1>
+    <h2>Your Financial Partner</h2>
+    <p>This is the main content area with standard paragraph styling.</p>
+    <p>Multiple paragraphs automatically have spacing between them.</p>
+  </FzContainer>
+</template>
+```
+
+### Typography with Colors
+
+```vue
+<template>
+  <FzContainer>
+    <h1 v-color:blue="700">Main Title</h1>
+    <h2 v-color:grey="600">Section Title</h2>
+    <p v-color:blue>Standard blue paragraph</p>
+    <p v-color:semantic-success>Success message</p>
+  </FzContainer>
+</template>
+```
+
+### Typography with Modifiers
+
+```vue
+<template>
+  <FzContainer>
+    <h1>Main Title</h1>
+    <p>Standard paragraph</p>
+    <p v-bold>Bold paragraph for emphasis</p>
+    <p v-small>Small paragraph for secondary information</p>
+    <p v-bold v-small>Bold and small combined</p>
+  </FzContainer>
+</template>
+```
+
+### Complete Example
+
+```vue
+<template>
+  <FzContainer>
+    <!-- Headings with colors -->
+    <h1 v-color:blue="700">Welcome to Fiscozen</h1>
+    <h2 v-color:grey="600">Your Financial Partner</h2>
+    
+    <!-- Paragraphs with modifiers -->
+    <p>Standard paragraph text</p>
+    <p v-bold>Bold paragraph for emphasis</p>
+    <p v-small>Small paragraph for secondary information</p>
+    
+    <!-- Semantic colors for feedback -->
+    <p v-color:semantic-error>Error: Please check your input</p>
+    <p v-color:semantic-success>Success: Changes saved!</p>
+    
+    <!-- Combined directives -->
+    <p v-bold v-small v-color:blue>Bold, small, blue text</p>
+  </FzContainer>
+</template>
+```
+
+## Accessibility
+
+The typography system maintains semantic HTML structure for proper accessibility:
+
+- Headings use proper heading hierarchy (`h1` → `h2` → `h3`)
+- Paragraphs maintain semantic meaning
+- Color directives only apply visual styling, maintaining text content
+- Bold and small directives preserve text semantics
+- Screen readers can properly navigate the content structure
+- Invalid element usage is logged but does not break functionality
+- Focus indicators are visible for interactive elements
+
+## Related Documentation
+
+- **[Typography/Titles](../?path=/docs/typography-titles--docs)**: Heading examples and variations
+- **[Typography/Paragraphs](../?path=/docs/typography-paragraphs--docs)**: Paragraph examples and modifiers
+- **Container**: Use `FzContainer` to organize typography content with proper spacing
