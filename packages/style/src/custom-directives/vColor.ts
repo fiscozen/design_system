@@ -306,7 +306,12 @@ export const vColor: ObjectDirective<HTMLElement, boolean | string | number> = {
     }
   },
   updated(el: HTMLElement, binding: DirectiveBinding<boolean | string | number>) {
-    updateColorClass(el, binding.arg, binding.value);
+    if (validateElement(DIRECTIVE_VALIDATION_CONFIG, el, {
+      name: 'v-color',
+      ...binding,
+    })) {
+      updateColorClass(el, binding.arg, binding.value);
+    }
   }
 }
 

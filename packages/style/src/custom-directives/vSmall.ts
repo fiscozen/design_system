@@ -44,7 +44,12 @@ export const vSmall: ObjectDirective<HTMLElement, boolean | string> = {
     }
   },
   updated(el: HTMLElement, binding: DirectiveBinding<boolean | string>) {
-    updateSmallClass(el, binding.value as boolean);
+    if (validateElement(DIRECTIVE_VALIDATION_CONFIG, el, {
+      name: 'v-small',
+      ...binding,
+    })) {
+      updateSmallClass(el, binding.value as boolean);
+    }
   }
 }
 
