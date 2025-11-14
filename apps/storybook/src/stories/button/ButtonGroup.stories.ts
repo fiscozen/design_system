@@ -153,7 +153,7 @@ export const TwoButtonsWithLongText: ButtonGroupStory = {
       await expect(buttons.length).toBe(2)
     })
 
-    await step('Verify buttons maintain fixed 50% width despite long text', async () => {
+    await step('Verify buttons use 50% flex-basis with flex-shrink: 1 to accommodate gaps', async () => {
       const buttons = canvas.getAllByRole('button')
       const firstButton = buttons[0]
       const secondButton = buttons[1]
@@ -162,12 +162,12 @@ export const TwoButtonsWithLongText: ButtonGroupStory = {
       const firstStyle = window.getComputedStyle(firstButton)
       const secondStyle = window.getComputedStyle(secondButton)
       
-      // Verify flex-basis is 50% for both buttons
+      // Verify flex-basis is 50% for both buttons (initial size before gap adjustment)
       await expect(firstStyle.flexBasis).toBe('50%')
       await expect(secondStyle.flexBasis).toBe('50%')
       await expect(firstStyle.flexGrow).toBe('0')
       await expect(secondStyle.flexGrow).toBe('0')
-      // flex-shrink: 1 allows shrinking to prevent overflow when content exceeds available space
+      // flex-shrink: 1 allows shrinking below flex-basis to accommodate the 16px gap between buttons
       await expect(firstStyle.flexShrink).toBe('1')
       await expect(secondStyle.flexShrink).toBe('1')
     })
@@ -207,7 +207,7 @@ export const ThreeButtonsWithLongText: ButtonGroupStory = {
       await expect(buttons.length).toBe(3)
     })
 
-    await step('Verify buttons maintain fixed 33.333% width despite long text', async () => {
+    await step('Verify buttons use 33.333% flex-basis with flex-shrink: 1 to accommodate gaps', async () => {
       const buttons = canvas.getAllByRole('button')
       const firstButton = buttons[0]
       const secondButton = buttons[1]
@@ -218,14 +218,14 @@ export const ThreeButtonsWithLongText: ButtonGroupStory = {
       const secondStyle = window.getComputedStyle(secondButton)
       const thirdStyle = window.getComputedStyle(thirdButton)
       
-      // Verify flex-basis is 33.333% for all buttons
+      // Verify flex-basis is 33.333% for all buttons (initial size before gap adjustment)
       await expect(firstStyle.flexBasis).toBe('33.333%')
       await expect(secondStyle.flexBasis).toBe('33.333%')
       await expect(thirdStyle.flexBasis).toBe('33.333%')
       await expect(firstStyle.flexGrow).toBe('0')
       await expect(secondStyle.flexGrow).toBe('0')
       await expect(thirdStyle.flexGrow).toBe('0')
-      // flex-shrink: 1 allows shrinking to prevent overflow when content exceeds available space
+      // flex-shrink: 1 allows shrinking below flex-basis to accommodate the 16px gaps between buttons
       await expect(firstStyle.flexShrink).toBe('1')
       await expect(secondStyle.flexShrink).toBe('1')
       await expect(thirdStyle.flexShrink).toBe('1')
