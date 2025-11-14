@@ -100,7 +100,8 @@ watch(
  * - 2 buttons: 50% each
  * - 3 buttons: 33.333% each
  * 
- * flex-basis sets initial size, flex-grow: 0 and flex-shrink: 0 prevent resizing.
+ * flex-basis sets initial size, flex-grow: 0 prevents expansion beyond flex-basis.
+ * flex-shrink: 1 allows shrinking to prevent overflow when content exceeds available space.
  * Selectors use :nth-child() and :nth-last-child() for cross-browser compatibility.
  */
 
@@ -109,7 +110,7 @@ watch(
 .fz-button-group :deep(> *:nth-child(1):nth-last-child(2) ~ *) {
   flex-basis: 50%;
   flex-grow: 0;
-  flex-shrink: 0;
+  flex-shrink: 1;
 }
 
 /* 3 buttons: first child is third-to-last */
@@ -117,6 +118,6 @@ watch(
 .fz-button-group :deep(> *:nth-child(1):nth-last-child(3) ~ *) {
   flex-basis: 33.333%;
   flex-grow: 0;
-  flex-shrink: 0;
+  flex-shrink: 1;
 }
 </style>
