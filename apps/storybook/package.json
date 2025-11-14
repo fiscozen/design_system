@@ -27,6 +27,7 @@
     "@awesome.me/kit-8137893ad3": "^1.0.394",
     "@fiscozen/actionlist": "workspace:^",
     "@fiscozen/alert": "workspace:^",
+    "@fiscozen/appointments": "workspace:*",
     "@fiscozen/avatar": "workspace:^",
     "@fiscozen/badge": "workspace:^",
     "@fiscozen/breadcrumbs": "workspace:^",
