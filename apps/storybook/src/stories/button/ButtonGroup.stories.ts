@@ -167,8 +167,9 @@ export const TwoButtonsWithLongText: ButtonGroupStory = {
       await expect(secondStyle.flexBasis).toBe('50%')
       await expect(firstStyle.flexGrow).toBe('0')
       await expect(secondStyle.flexGrow).toBe('0')
-      await expect(firstStyle.flexShrink).toBe('0')
-      await expect(secondStyle.flexShrink).toBe('0')
+      // flex-shrink: 1 allows shrinking to prevent overflow when content exceeds available space
+      await expect(firstStyle.flexShrink).toBe('1')
+      await expect(secondStyle.flexShrink).toBe('1')
     })
 
     await step('Verify text truncation is applied', async () => {
@@ -224,9 +225,10 @@ export const ThreeButtonsWithLongText: ButtonGroupStory = {
       await expect(firstStyle.flexGrow).toBe('0')
       await expect(secondStyle.flexGrow).toBe('0')
       await expect(thirdStyle.flexGrow).toBe('0')
-      await expect(firstStyle.flexShrink).toBe('0')
-      await expect(secondStyle.flexShrink).toBe('0')
-      await expect(thirdStyle.flexShrink).toBe('0')
+      // flex-shrink: 1 allows shrinking to prevent overflow when content exceeds available space
+      await expect(firstStyle.flexShrink).toBe('1')
+      await expect(secondStyle.flexShrink).toBe('1')
+      await expect(thirdStyle.flexShrink).toBe('1')
     })
 
     await step('Verify text truncation is applied to long text button', async () => {
