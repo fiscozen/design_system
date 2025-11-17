@@ -18,7 +18,9 @@
  * </FzButtonGroup>
  */
 import { nextTick, onMounted, useSlots, watch } from 'vue'
+import { useMediaQuery } from "@fiscozen/composables";
 import { FzContainer } from '@fiscozen/container'
+import { breakpoints } from "@fiscozen/style";
 import type { FzButtonGroupProps } from './types'
 import { validateButtonGroupSlot } from './utils'
 
@@ -84,10 +86,12 @@ watch(
   },
   { immediate: true }
 )
+
+const mdOrBigger = useMediaQuery(`(min-width: ${breakpoints.md})`);
 </script>
 
 <template>
-  <FzContainer horizontal gap="sm" class="fz-button-group w-full">
+  <FzContainer horizontal gap="sm" :class="['fz-button-group', 'w-full', {'fz-button-group--md': mdOrBigger}]">
     <slot></slot>
   </FzContainer>
 </template>
@@ -119,5 +123,22 @@ watch(
   flex-basis: 33.333%;
   flex-grow: 0;
   flex-shrink: 1;
+}
+
+/* Icon buttons maintain their original size and are not affected by flex-basis rules */
+.fz-button-group :deep(> .fz-icon-button-wrapper) {
+  flex-basis: initial !important;
+}
+
+/* Desktop: container aligns children to the right */
+.fz-button-group.fz-button-group--md {
+  justify-content: flex-end !important;
+}
+
+/* Desktop: children use natural width */
+.fz-button-group.fz-button-group--md :deep(> *) {
+  flex-basis: auto !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
 }
 </style>
