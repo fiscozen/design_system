@@ -40,7 +40,7 @@ export type FzAppointmentsProps = {
    * Slots that are already occupied and should be disabled.
    * Can be Date objects or ISO string dates with time
    */
-  disabledSlots?: (Date | string)[];
+  excludedSlots?: (Date | string)[];
   /**
    * Name for the radio group
    */

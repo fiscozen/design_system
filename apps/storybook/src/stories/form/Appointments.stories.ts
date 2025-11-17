@@ -213,7 +213,7 @@ export const WithExcludedDays: Story = {
   }
 }
 
-export const WithDisabledSlots: Story = {
+export const WithexcludedSlots: Story = {
   ...Template,
   args: (() => {
     const now = new Date()
@@ -225,7 +225,7 @@ export const WithDisabledSlots: Story = {
       slotCount: 5,
       slotInterval: 30,
       breakDuration: 0,
-      disabledSlots: [
+      excludedSlots: [
         // Disable first and second slot (current time and +30 minutes)
         (() => {
           const date = new Date()
@@ -244,12 +244,14 @@ export const WithDisabledSlots: Story = {
     await step('Verify disabled slots are present', async () => {
       await waitFor(
         () => {
-          const slots = canvasElement.querySelectorAll('input[type="radio"]')
-          expect(slots.length).toBeGreaterThan(0)
+          const slotLabels = Array.from(canvasElement.querySelectorAll('label')).map((label) =>
+            label.textContent?.trim()
+          )
+          const currentHour = getCurrentHour()
+          expect(slotLabels.length).toBeGreaterThan(0)
 
-          // Find disabled slots
-          const disabledSlots = Array.from(slots).filter((slot) => slot.hasAttribute('disabled'))
-          expect(disabledSlots.length).toBeGreaterThan(0)
+          // Inside slots container should not contain the current hour and the current hour + 30 minutes
+          expect(slotLabels.some((text) => text?.includes(currentHour))).toBe(false)
         },
         { timeout: 2000 }
       )
@@ -300,11 +302,11 @@ export const NoAvailableSlots: Story = {
     const currentHour = now.getHours()
     
     // Disable all slots by marking them as disabled
-    const disabledSlots: string[] = []
+    const excludedSlots: string[] = []
     for (let i = 0; i < 5; i++) {
       const slot = new Date(now)
       slot.setHours(currentHour, i * 30, 0, 0)
-      disabledSlots.push(formatISO(slot))
+      excludedSlots.push(formatISO(slot))
     }
     
     return {
@@ -313,7 +315,7 @@ export const NoAvailableSlots: Story = {
       slotCount: 5,
       slotInterval: 30,
       breakDuration: 0,
-      disabledSlots
+      excludedSlots
     }
   })(),
   play: async ({ canvasElement, step }: PlayFunctionContext) => {

@@ -162,7 +162,7 @@ const startDate = new Date()
     </tr>
     <tr>
       <td>
-        <code>disabledSlots</code>
+        <code>excludedSlots</code>
       </td>
       <td>
         <code>(Date | string)[]</code>
@@ -524,7 +524,7 @@ const maxDate = addDays(startDate, 30) // 30 days from now
 - Slots are generated based on `slotStartTime`, `slotCount`, `slotInterval`, and `breakDuration`
 - Each slot is a Date object combining the current date with the calculated time
 - Slots in the past are automatically disabled
-- Slots in `disabledSlots` are disabled but still visible
+- Slots in `excludedSlots` are disabled but still visible
 
 ### Empty State
 

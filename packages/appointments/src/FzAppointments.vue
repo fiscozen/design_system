@@ -37,19 +37,22 @@
       role="group"
     >
       <template v-slot="{ radioGroupProps }">
+        <template v-for="slot in availableSlots">
         <FzRadioCard
-          v-for="slot in availableSlots"
+          v-if="!isSlotDisabled(slot)"
           v-bind="radioGroupProps"
           :key="slot.toISOString()"
           :modelValue="selectedSlotValue"
           :value="slot.toISOString()"
-          :disabled="isSlotDisabled(slot)"
           :title="formatTime(slot)"
           :label="slot.toISOString()"
           orientation="horizontal"
+          :radioIcon="false"
           :required="required"
+          class="text-center"
           @update:modelValue="handleSlotSelect"
         />
+        </template>
       </template>
     </FzRadioGroup>
     <FzAlert
@@ -67,7 +70,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { format, formatISO, isSameDay, parseISO, startOfDay } from "date-fns";
+import { format, formatISO, isSameDay, isSameHour, isSameMinute, parseISO, startOfDay } from "date-fns";
 import { it } from "date-fns/locale";
 import { FzAppointmentsProps } from "./types";
 import { FzRadioCard, FzRadioGroup } from "@fiscozen/radio";
@@ -78,7 +81,7 @@ const props = withDefaults(defineProps<FzAppointmentsProps>(), {
   slotInterval: 30,
   breakDuration: 0,
   excludedDays: () => [],
-  disabledSlots: () => [],
+  excludedSlots: () => [],
   name: "fz-appointments",
   required: false,
   startDate: () => formatISO(startOfDay(new Date())),
@@ -251,42 +254,10 @@ const availableSlots = computed(() => {
   return generateTimeSlots(currentDate.value);
 });
 
-// Check if a slot is disabled
 const isSlotDisabled = (slot: Date): boolean => {
-  const now = new Date();
-
-  // Disable if slot is in the past
-  if (slot < now) {
-    return true;
-  }
-
-  // Disable if slot is in disabledSlots
-  if (props.disabledSlots && props.disabledSlots.length > 0) {
-    return props.disabledSlots.some((disabledSlot) => {
-      let disabledDate: Date;
-
-      if (typeof disabledSlot === "string") {
-        try {
-          disabledDate = parseISO(disabledSlot);
-        } catch {
-          return false;
-        }
-      } else {
-        disabledDate = disabledSlot;
-      }
-
-      // Compare dates and times
-      return (
-        slot.getFullYear() === disabledDate.getFullYear() &&
-        slot.getMonth() === disabledDate.getMonth() &&
-        slot.getDate() === disabledDate.getDate() &&
-        slot.getHours() === disabledDate.getHours() &&
-        slot.getMinutes() === disabledDate.getMinutes()
-      );
-    });
-  }
-
-  return false;
+  return props.excludedSlots.some((disabledSlot) => {
+    return isSameDay(slot, disabledSlot) && isSameHour(slot, disabledSlot) && isSameMinute(slot, disabledSlot);
+  });
 };
 
 // Filter out disabled slots
