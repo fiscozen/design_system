@@ -39,7 +39,7 @@
       <template v-slot="{ radioGroupProps }">
         <template v-for="slot in availableSlots">
         <FzRadioCard
-          v-if="!isSlotDisabled(slot)"
+          v-if="!isSlotExcluded(slot)"
           v-bind="radioGroupProps"
           :key="slot.toISOString()"
           :modelValue="selectedSlotValue"
@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { format, formatISO, isSameDay, isSameHour, isSameMinute, parseISO, startOfDay } from "date-fns";
+import { endOfDay, format, formatISO, isSameDay, isSameHour, isSameMinute, parseISO, startOfDay } from "date-fns";
 import { it } from "date-fns/locale";
 import { FzAppointmentsProps } from "./types";
 import { FzRadioCard, FzRadioGroup } from "@fiscozen/radio";
@@ -233,7 +233,11 @@ const generateTimeSlots = (date: Date): Date[] => {
   slotDate.setHours(hours, minutes, 0, 0);
 
   for (let i = 0; i < props.slotCount; i++) {
-    slots.push(new Date(slotDate));
+    const date = new Date(slotDate);
+    if (date < startOfDay(currentDate.value) || date > endOfDay(currentDate.value)) {
+      continue;
+    }
+    slots.push(date);
     slotDate.setMinutes(slotDate.getMinutes() + props.slotInterval);
 
     // Add break duration between slots (except after the last one)
@@ -254,7 +258,7 @@ const availableSlots = computed(() => {
   return generateTimeSlots(currentDate.value);
 });
 
-const isSlotDisabled = (slot: Date): boolean => {
+const isSlotExcluded = (slot: Date): boolean => {
   return props.excludedSlots.some((disabledSlot) => {
     return isSameDay(slot, disabledSlot) && isSameHour(slot, disabledSlot) && isSameMinute(slot, disabledSlot);
   });
@@ -262,7 +266,7 @@ const isSlotDisabled = (slot: Date): boolean => {
 
 // Filter out disabled slots
 const hasAvailableSlots = computed(() => {
-  return availableSlots.value.some((slot) => !isSlotDisabled(slot));
+  return availableSlots.value.some((slot) => !isSlotExcluded(slot));
 });
 
 // Selected slot value for radio group
