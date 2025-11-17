@@ -125,11 +125,6 @@ const mdOrBigger = useMediaQuery(`(min-width: ${breakpoints.md})`);
   flex-shrink: 1;
 }
 
-/* Icon buttons maintain their original size and are not affected by flex-basis rules */
-.fz-button-group :deep(> .fz-icon-button-wrapper) {
-  flex-basis: initial !important;
-}
-
 /* Desktop: container aligns children to the right */
 .fz-button-group.fz-button-group--md {
   justify-content: flex-end !important;
@@ -137,7 +132,14 @@ const mdOrBigger = useMediaQuery(`(min-width: ${breakpoints.md})`);
 
 /* Desktop: children use natural width */
 .fz-button-group.fz-button-group--md :deep(> *) {
-  flex-basis: auto !important;
+  flex-basis: initial !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+/* Icon buttons maintain their original size and are not affected by flex-basis rules */
+.fz-button-group :deep(> .fz-icon-button-wrapper) {
+  flex-basis: initial !important;
   flex-grow: 0 !important;
   flex-shrink: 0 !important;
 }
