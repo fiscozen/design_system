@@ -64,6 +64,7 @@
     "@fiscozen/typeahead": "workspace:^",
     "@fiscozen/upload": "workspace:^",
     "@fiscozen/view-flag": "workspace:^",
+    "date-fns": "^3.6.0",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
   },

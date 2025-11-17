@@ -140,6 +140,9 @@ importers:
       '@fiscozen/view-flag':
         specifier: workspace:^
         version: link:../../packages/view-flag
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
       vue:
         specifier: ^3.4.13
         version: 3.5.13(typescript@5.3.3)
