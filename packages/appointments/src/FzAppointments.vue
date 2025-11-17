@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { format, isSameDay, parseISO, startOfDay } from "date-fns";
+import { format, formatISO, isSameDay, parseISO, startOfDay } from "date-fns";
 import { it } from "date-fns/locale";
 import { FzAppointmentsProps } from "./types";
 import { FzRadioCard, FzRadioGroup } from "@fiscozen/radio";
@@ -81,18 +81,52 @@ const props = withDefaults(defineProps<FzAppointmentsProps>(), {
   disabledSlots: () => [],
   name: "fz-appointments",
   required: false,
-  startDate: () => startOfDay(new Date()),
+  startDate: () => formatISO(startOfDay(new Date())),
   slotStartTime: "09:00",
   alertTitle: "Nessuna disponibilità",
   alertDescription: "Scegli un'altro giorno e prenota la tua consulenza.",
 });
 
 const emit = defineEmits<{
-  "update:modelValue": [value: Date | undefined];
+  "update:modelValue": [value: string | undefined];
 }>();
 
+// Convert ISO-8601 strings to Date objects for internal use
+const startDateAsDate = computed(() => {
+  if (!props.startDate) {
+    return startOfDay(new Date());
+  }
+  try {
+    return parseISO(props.startDate);
+  } catch {
+    return startOfDay(new Date());
+  }
+});
+
+const maxDateAsDate = computed(() => {
+  if (!props.maxDate) {
+    return null;
+  }
+  try {
+    return parseISO(props.maxDate);
+  } catch {
+    return null;
+  }
+});
+
+const modelValueAsDate = computed(() => {
+  if (!props.modelValue) {
+    return undefined;
+  }
+  try {
+    return parseISO(props.modelValue);
+  } catch {
+    return undefined;
+  }
+});
+
 // Current date being viewed
-const currentDate = ref<Date>(new Date(props.startDate));
+const currentDate = ref<Date>(startDateAsDate.value);
 
 // Generate unique name for radio group
 const radioGroupName = computed(() => {
@@ -109,7 +143,7 @@ const canNavigateBack = computed(() => {
   const previousDate = new Date(currentDate.value);
   previousDate.setDate(previousDate.getDate() - 1);
   return (
-    previousDate >= startOfDay(props.startDate) && previousDate >= today.value
+    previousDate >= startOfDay(startDateAsDate.value) && previousDate >= today.value
   );
 });
 
@@ -117,7 +151,7 @@ const canNavigateBack = computed(() => {
 const canNavigateForward = computed(() => {
   const nextDate = new Date(currentDate.value);
   nextDate.setDate(nextDate.getDate() + 1);
-  const maxDateLimit = props.maxDate ? startOfDay(props.maxDate) : null;
+  const maxDateLimit = maxDateAsDate.value ? startOfDay(maxDateAsDate.value) : null;
   return nextDate >= today.value && (!maxDateLimit || nextDate <= maxDateLimit);
 });
 
@@ -166,12 +200,12 @@ const isCurrentDateValid = computed(() => {
   }
 
   // Cannot be before startDate
-  if (dateStart < startOfDay(props.startDate)) {
+  if (dateStart < startOfDay(startDateAsDate.value)) {
     return false;
   }
 
   // Cannot be after maxDate
-  if (props.maxDate && dateStart > startOfDay(props.maxDate)) {
+  if (maxDateAsDate.value && dateStart > startOfDay(maxDateAsDate.value)) {
     return false;
   }
 
@@ -262,13 +296,13 @@ const hasAvailableSlots = computed(() => {
 
 // Selected slot value for radio group
 const selectedSlotValue = computed(() => {
-  if (!props.modelValue) {
+  if (!modelValueAsDate.value) {
     return undefined;
   }
 
   // Check if selected slot is for current date
-  if (isSameDay(props.modelValue, currentDate.value)) {
-    return props.modelValue.toISOString();
+  if (isSameDay(modelValueAsDate.value, currentDate.value)) {
+    return props.modelValue;
   }
 
   return undefined;
@@ -299,11 +333,11 @@ const navigateBack = () => {
   newDate.setDate(newDate.getDate() - 1);
 
   // Skip excluded days
-  while (isDayExcluded(newDate) && newDate >= startOfDay(props.startDate)) {
+  while (isDayExcluded(newDate) && newDate >= startOfDay(startDateAsDate.value)) {
     newDate.setDate(newDate.getDate() - 1);
   }
 
-  if (newDate >= startOfDay(props.startDate) && newDate >= today.value) {
+  if (newDate >= startOfDay(startDateAsDate.value) && newDate >= today.value) {
     currentDate.value = newDate;
     // Reset selection when date changes
     emit("update:modelValue", undefined);
@@ -320,7 +354,7 @@ const navigateForward = () => {
   newDate.setDate(newDate.getDate() + 1);
 
   // Skip excluded days
-  const maxDateLimit = props.maxDate ? startOfDay(props.maxDate) : null;
+  const maxDateLimit = maxDateAsDate.value ? startOfDay(maxDateAsDate.value) : null;
   while (
     isDayExcluded(newDate) &&
     newDate >= today.value &&
@@ -338,13 +372,12 @@ const navigateForward = () => {
 
 // Handle slot selection
 const handleSlotSelect = (value: string) => {
-  const selectedSlot = parseISO(value);
-  emit("update:modelValue", selectedSlot);
+  emit("update:modelValue", value);
 };
 
 // Watch for startDate changes and update currentDate if needed
 watch(
-  () => props.startDate,
+  () => startDateAsDate.value,
   (newStartDate) => {
     const startDateStart = startOfDay(newStartDate);
     const currentDateStart = startOfDay(currentDate.value);
@@ -358,7 +391,7 @@ watch(
 
 // Watch for modelValue changes to update currentDate if needed
 watch(
-  () => props.modelValue,
+  () => modelValueAsDate.value,
   (newValue) => {
     if (newValue && !isSameDay(newValue, currentDate.value)) {
       currentDate.value = new Date(newValue);

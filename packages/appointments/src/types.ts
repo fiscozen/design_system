@@ -1,18 +1,18 @@
 export type FzAppointmentsProps = {
   /**
-   * The selected date and time (v-model)
+   * The selected date and time (v-model) as ISO-8601 string
    */
-  modelValue?: Date;
+  modelValue?: string;
   /**
-   * Start date for appointments
+   * Start date for appointments as ISO-8601 string
    */
-  startDate?: Date;
+  startDate?: string;
   /**
-   * Maximum date selectable
+   * Maximum date selectable as ISO-8601 string
    */
-  maxDate?: Date;
+  maxDate?: string;
   /**
-   * Start time for slots in format "HH:mm" (e.g., "09:00") (required)
+   * Start time for slots in format "HH:mm" (e.g., "09:00")
    */
   slotStartTime?: string;
   /**
