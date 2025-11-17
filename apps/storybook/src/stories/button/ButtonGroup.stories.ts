@@ -153,23 +153,36 @@ export const TwoButtonsWithLongText: ButtonGroupStory = {
       await expect(buttons.length).toBe(2)
     })
 
-    await step('Verify buttons use 50% flex-basis with flex-shrink: 1 to accommodate gaps', async () => {
+    await step('Verify responsive layout behavior', async () => {
       const buttons = canvas.getAllByRole('button')
       const firstButton = buttons[0]
       const secondButton = buttons[1]
+      const container = canvasElement.querySelector('.fz-button-group')
       
       // Get computed styles
       const firstStyle = window.getComputedStyle(firstButton)
       const secondStyle = window.getComputedStyle(secondButton)
+      const isDesktop = container?.classList.contains('fz-button-group--md')
       
-      // Verify flex-basis is 50% for both buttons (initial size before gap adjustment)
-      await expect(firstStyle.flexBasis).toBe('50%')
-      await expect(secondStyle.flexBasis).toBe('50%')
-      await expect(firstStyle.flexGrow).toBe('0')
-      await expect(secondStyle.flexGrow).toBe('0')
-      // flex-shrink: 1 allows shrinking below flex-basis to accommodate the 16px gap between buttons
-      await expect(firstStyle.flexShrink).toBe('1')
-      await expect(secondStyle.flexShrink).toBe('1')
+      if (isDesktop) {
+        // Desktop: buttons use natural width and are aligned to the right
+        await expect(firstStyle.flexBasis).toBe('auto')
+        await expect(secondStyle.flexBasis).toBe('auto')
+        await expect(firstStyle.flexGrow).toBe('0')
+        await expect(secondStyle.flexGrow).toBe('0')
+        await expect(firstStyle.flexShrink).toBe('0')
+        await expect(secondStyle.flexShrink).toBe('0')
+        await expect(container?.style.justifyContent || window.getComputedStyle(container!).justifyContent).toContain('flex-end')
+      } else {
+        // Mobile: buttons use fixed 50% width
+        await expect(firstStyle.flexBasis).toBe('50%')
+        await expect(secondStyle.flexBasis).toBe('50%')
+        await expect(firstStyle.flexGrow).toBe('0')
+        await expect(secondStyle.flexGrow).toBe('0')
+        // flex-shrink: 1 allows shrinking below flex-basis to accommodate the 16px gap between buttons
+        await expect(firstStyle.flexShrink).toBe('1')
+        await expect(secondStyle.flexShrink).toBe('1')
+      }
     })
 
     await step('Verify text truncation is applied', async () => {
@@ -207,28 +220,44 @@ export const ThreeButtonsWithLongText: ButtonGroupStory = {
       await expect(buttons.length).toBe(3)
     })
 
-    await step('Verify buttons use 33.333% flex-basis with flex-shrink: 1 to accommodate gaps', async () => {
+    await step('Verify responsive layout behavior', async () => {
       const buttons = canvas.getAllByRole('button')
       const firstButton = buttons[0]
       const secondButton = buttons[1]
       const thirdButton = buttons[2]
+      const container = canvasElement.querySelector('.fz-button-group')
       
       // Get computed styles
       const firstStyle = window.getComputedStyle(firstButton)
       const secondStyle = window.getComputedStyle(secondButton)
       const thirdStyle = window.getComputedStyle(thirdButton)
+      const isDesktop = container?.classList.contains('fz-button-group--md')
       
-      // Verify flex-basis is 33.333% for all buttons (initial size before gap adjustment)
-      await expect(firstStyle.flexBasis).toBe('33.333%')
-      await expect(secondStyle.flexBasis).toBe('33.333%')
-      await expect(thirdStyle.flexBasis).toBe('33.333%')
-      await expect(firstStyle.flexGrow).toBe('0')
-      await expect(secondStyle.flexGrow).toBe('0')
-      await expect(thirdStyle.flexGrow).toBe('0')
-      // flex-shrink: 1 allows shrinking below flex-basis to accommodate the 16px gaps between buttons
-      await expect(firstStyle.flexShrink).toBe('1')
-      await expect(secondStyle.flexShrink).toBe('1')
-      await expect(thirdStyle.flexShrink).toBe('1')
+      if (isDesktop) {
+        // Desktop: buttons use natural width and are aligned to the right
+        await expect(firstStyle.flexBasis).toBe('auto')
+        await expect(secondStyle.flexBasis).toBe('auto')
+        await expect(thirdStyle.flexBasis).toBe('auto')
+        await expect(firstStyle.flexGrow).toBe('0')
+        await expect(secondStyle.flexGrow).toBe('0')
+        await expect(thirdStyle.flexGrow).toBe('0')
+        await expect(firstStyle.flexShrink).toBe('0')
+        await expect(secondStyle.flexShrink).toBe('0')
+        await expect(thirdStyle.flexShrink).toBe('0')
+        await expect(container?.style.justifyContent || window.getComputedStyle(container!).justifyContent).toContain('flex-end')
+      } else {
+        // Mobile: buttons use fixed 33.333% width
+        await expect(firstStyle.flexBasis).toBe('33.333%')
+        await expect(secondStyle.flexBasis).toBe('33.333%')
+        await expect(thirdStyle.flexBasis).toBe('33.333%')
+        await expect(firstStyle.flexGrow).toBe('0')
+        await expect(secondStyle.flexGrow).toBe('0')
+        await expect(thirdStyle.flexGrow).toBe('0')
+        // flex-shrink: 1 allows shrinking below flex-basis to accommodate the 16px gaps between buttons
+        await expect(firstStyle.flexShrink).toBe('1')
+        await expect(secondStyle.flexShrink).toBe('1')
+        await expect(thirdStyle.flexShrink).toBe('1')
+      }
     })
 
     await step('Verify text truncation is applied to long text button', async () => {

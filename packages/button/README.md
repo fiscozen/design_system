@@ -331,7 +331,9 @@ Container for grouping buttons in a horizontal layout with fixed spacing. Uses `
 
 - Horizontal layout only
 - Fixed gap spacing
-- Fixed button widths: 50% for 2 buttons, 33.333% for 3 buttons
+- Responsive layout: fixed widths on mobile, natural widths on desktop
+- Fixed button widths on mobile: 50% for 2 buttons, 33.333% for 3 buttons
+- Desktop alignment: buttons use natural width and align to the right
 - Text truncation handled automatically by FzButton component
 - No wrapping - buttons stay on a single row
 - 100% width of container
@@ -429,9 +431,11 @@ A runtime warning will be displayed when these props are used. Please remove the
 
 ### FzButtonGroup Behavior
 
-- **Fixed Width Sizing**: Buttons automatically maintain fixed widths based on the number of buttons:
-  - 2 buttons: Each button occupies 50% of the container width
-  - 3 buttons: Each button occupies 33.333% of the container width
+- **Responsive Layout**: The component adapts its layout based on screen size:
+  - **Mobile (< md breakpoint)**: Buttons maintain fixed widths based on the number of buttons:
+    - 2 buttons: Each button occupies 50% of the container width
+    - 3 buttons: Each button occupies 33.333% of the container width
+  - **Desktop (≥ md breakpoint)**: Buttons use their natural width and are aligned to the right
 - **Text Truncation**: Long button text is automatically truncated with ellipsis (`...`) by the FzButton component
 - **No Configuration Needed**: The component automatically detects the number of buttons and applies the appropriate sizing
 
