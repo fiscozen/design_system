@@ -1,0 +1,978 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/DataLayer" />
+
+# Data Layer - @fiscozen/data
+
+Complete guide for using the `@fiscozen/data` package in your Vue 3 application.
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Installation](#installation)
+3. [Setup](#setup)
+4. [Usage Pattern](#usage-pattern)
+5. [Actions Reference](#actions-reference)
+6. [Features](#features)
+7. [Future Enhancements](#future-enhancements)
+8. [Additional Considerations](#additional-considerations)
+
+---
+
+## Introduction
+
+The `@fiscozen/data` package provides a **structured data layer** for Vue 3 applications that:
+
+- **Keeps components clean** - No embedded API logic in your Vue components
+- **Provides reactive state management** - Automatic refetching when parameters change
+- **Centralizes error handling** - Consistent error states across your app
+- **Ensures type safety** - Full TypeScript support with generics
+- **Simplifies CRUD operations** - Standardized patterns for all entities
+
+### The Pattern
+
+The package follows a **layered architecture**:
+
+1. **Setup** (once at app initialization) - Configure base URL, CSRF, interceptors
+2. **Entity Composable** (once per entity) - Create a composable that wraps `useActions` for your entity
+3. **Component Usage** - Use the entity composable in your Vue components
+
+This pattern ensures:
+- **Consistency** - All entities follow the same structure
+- **Reusability** - Entity composables can be used across multiple components
+- **Testability** - Easy to mock and test entity composables
+- **Maintainability** - Changes to API structure are centralized
+
+---
+
+## Installation
+
+```bash
+npm install @fiscozen/data
+```
+
+---
+
+## Setup
+
+Configure the data layer **once** at your app initialization (typically in `main.ts` or your app setup file).
+
+### Basic Setup
+
+```typescript
+import { setupFzFetcher } from '@fiscozen/data/rest'
+
+setupFzFetcher({
+  baseUrl: 'https://api.example.com/v1',
+  csrf: {
+    enabled: true,
+    cookieName: 'csrf_token',
+    headerName: 'X-CSRF-Token'
+  }
+})
+```
+
+### Complete Setup Options
+
+```typescript
+import { setupFzFetcher } from '@fiscozen/data/rest'
+
+setupFzFetcher({
+  // Required: Base URL for all API requests
+  baseUrl: 'https://api.example.com/v1',
+  
+  // CSRF Protection (optional)
+  csrf: {
+    enabled: true,              // Enable CSRF token injection
+    cookieName: 'csrf_token',   // Cookie name containing CSRF token
+    headerName: 'X-CSRF-Token'  // Header name to send CSRF token
+  },
+  
+  // Request Deduplication (optional)
+  deduplication: true,  // Enable globally (can be overridden per-action)
+  
+  // Global Timeout (optional)
+  timeout: 30000,  // 30 seconds (set to null for infinite timeout)
+  
+  // Debug Logging (optional)
+  debug: true,  // Enable console.debug logging for development
+  
+  // Request Interceptor (optional)
+  requestInterceptor: async (url, requestInit) => {
+    // Modify request before sending
+    // Return modified RequestInit or null to abort
+    return {
+      ...requestInit,
+      headers: {
+        ...requestInit.headers,
+        'X-Custom-Header': 'value'
+      }
+    }
+  },
+  
+  // Response Interceptor (optional)
+  responseInterceptor: async (response, url, requestInit) => {
+    // Modify response or handle errors
+    if (response.status === 401) {
+      // Handle unauthorized
+      throw new Error('Unauthorized')
+    }
+    return response
+  },
+  
+  // Default Fetch Options (optional)
+  fetchOptions: {
+    credentials: 'include',
+    mode: 'cors'
+  }
+})
+```
+
+### Setup Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `baseUrl` | `string \| Ref<string> \| ComputedRef<string>` | ✅ Yes | - | Base URL for all API requests. Can be reactive. |
+| `csrf` | `CsrfOptions` | ❌ No | - | CSRF protection configuration |
+| `csrf.enabled` | `boolean` | ❌ No | `false` | Enable CSRF token injection |
+| `csrf.cookieName` | `string` | ❌ No | `'csrf_token'` | Cookie name containing CSRF token |
+| `csrf.headerName` | `string` | ❌ No | `'X-CSRF-Token'` | Header name to send CSRF token |
+| `deduplication` | `boolean` | ❌ No | `false` | Enable request deduplication globally |
+| `timeout` | `number \| null` | ❌ No | `null` | Global timeout in milliseconds (`null` = infinite) |
+| `debug` | `boolean` | ❌ No | `false` | Enable debug logging |
+| `requestInterceptor` | `RequestInterceptor` | ❌ No | - | Function to modify/abort requests |
+| `responseInterceptor` | `ResponseInterceptor` | ❌ No | - | Function to modify/handle responses |
+| `fetchOptions` | `RequestInit` | ❌ No | - | Default options for fetch requests |
+
+---
+
+## Usage Pattern
+
+### Step 1: Create Entity Composable
+
+Create a composable for each entity type (e.g., `useUsers`, `useInvoices`, `useCreditNotes`).
+
+```typescript
+// src/composables/useUsers.ts
+import { useActions } from '@fiscozen/data/rest'
+
+interface User {
+  id: number
+  name: string
+  email: string
+  enabled: boolean
+}
+
+export const useUsers = () => {
+  const { useRetrieve, useList, useCreate, useUpdate, useDelete } = 
+    useActions<User>('users')
+  
+  return {
+    // Query actions (GET)
+    useRetrieveUserById: useRetrieve,
+    useListUsers: useList,
+    
+    // Mutation actions (POST/PUT/PATCH/DELETE)
+    useCreateUser: useCreate,
+    useUpdateUser: useUpdate,
+    useDeleteUser: useDelete
+  }
+}
+```
+
+### Step 2: Use in Components
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useUsers } from '@/composables/useUsers'
+
+const { useListUsers, useCreateUser } = useUsers()
+
+// Query: Auto-fetches on mount, auto-refetches when filters change
+const filters = ref({ enabled: true })
+const { data: users, error: listError, isLoading: isLoadingList } = useListUsers({
+  filters // Reactive - changes trigger automatic refetch
+})
+
+// Mutation: Always manual
+const { 
+  data: createdUser, 
+  error: createError, 
+  isLoading: isCreating, 
+  execute: createUser 
+} = useCreateUser()
+
+const name = ref('')
+const email = ref('')
+
+const handleCreate = async () => {
+  await createUser({ 
+    name: name.value, 
+    email: email.value 
+  })
+}
+</script>
+
+<template>
+  <div>
+    <!-- Query Loading/Error States -->
+    <div v-if="isLoadingList">Loading users...</div>
+    <div v-else-if="listError">Error loading users: {{ listError.message }}</div>
+    <ul v-else>
+      <li v-for="user in users" :key="user.id">{{ user.name }}</li>
+    </ul>
+
+    <!-- Create User Form -->
+    <form @submit.prevent="handleCreate">
+      <input v-model="name" placeholder="Name" required />
+      <input v-model="email" placeholder="Email" type="email" required />
+      
+      <button type="submit" :disabled="isCreating">
+        {{ isCreating ? 'Creating...' : 'Create User' }}
+      </button>
+      
+      <!-- Mutation Error State -->
+      <div v-if="createError" class="error">
+        Error creating user: {{ createError.message }}
+      </div>
+      
+      <!-- Mutation Success State -->
+      <div v-if="createdUser" class="success">
+        User created: {{ createdUser.name }} (ID: {{ createdUser.id }})
+      </div>
+    </form>
+  </div>
+</template>
+```
+
+---
+
+## Actions Reference
+
+### Query Actions (GET)
+
+Query actions automatically fetch data on mount and refetch when reactive parameters change.
+
+#### `useRetrieve` - Get Single Entity
+
+Retrieves a single entity by its primary key.
+
+**Signature:**
+```typescript
+useRetrieve(
+  pk?: string | number | Ref<string | number> | ComputedRef<string | number>,
+  options?: QueryActionOptions<T>
+): UseRetrieveActionReturn<T>
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `pk` | `string \| number \| Ref \| ComputedRef` | ✅ Yes | Primary key of the entity. Can be reactive - changes trigger refetch. |
+| `options` | `QueryActionOptions<T>` | ❌ No | Query options (see below) |
+
+**Returns:**
+
+```typescript
+{
+  data: ShallowRef<T | null>,      // Response data
+  error: ShallowRef<Error | null>, // Error if request failed
+  isLoading: Readonly<ShallowRef<boolean>>, // Loading state
+  execute: () => Promise<void>     // Manual execute function
+}
+```
+
+**Example:**
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { useUsers } from '@/composables/useUsers'
+
+const { useRetrieveUserById } = useUsers()
+
+// Reactive ID - auto-refetches when userId changes
+const userId = ref(1)
+const { data: user, error, isLoading } = useRetrieveUserById(userId)
+
+// Change ID to load different user
+userId.value = 2 // ✅ Automatically refetches
+</script>
+```
+
+#### `useList` - List Entities
+
+Lists entities with optional filters, sorting, and pagination.
+
+**Signature:**
+```typescript
+useList(): ListActionReturn<T>
+useList(params: ListActionParams): ListActionReturn<T>
+useList(options: QueryActionOptions<T[]>): ListActionReturn<T>
+useList(params: ListActionParams, options: QueryActionOptions<T[]>): ListActionReturn<T>
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `params` | `ListActionParams` | ❌ No | Query parameters (see below) |
+| `options` | `QueryActionOptions<T[]>` | ❌ No | Query options (see below) |
+
+**ListActionParams:**
+
+| Parameter | Type | Required | Reactive | Description |
+|-----------|------|----------|----------|-------------|
+| `filters` | `Record<string, string \| number \| boolean \| null \| undefined> \| Ref \| ComputedRef` | ❌ No | ✅ Yes | Filter parameters. `null`/`undefined` values are excluded. |
+| `sort` | `Record<string, 'asc' \| 'desc'> \| Ref \| ComputedRef` | ❌ No | ✅ Yes | Sort parameters (e.g., `{ name: 'asc', created_at: 'desc' }`) |
+| `page` | `number \| Ref<number> \| ComputedRef<number>` | ❌ No | ✅ Yes | Page number for pagination |
+| `pageSize` | `number \| Ref<number> \| ComputedRef<number>` | ❌ No | ✅ Yes | Page size for pagination |
+
+**Returns:**
+
+```typescript
+{
+  data: ShallowRef<T[] | null>,    // Array of entities
+  error: ShallowRef<Error | null>, // Error if request failed
+  isLoading: Readonly<ShallowRef<boolean>>, // Loading state
+  execute: () => Promise<void>     // Manual execute function
+}
+```
+
+**Example:**
+
+```vue
+<script setup>
+import { ref, computed } from 'vue'
+import { useUsers } from '@/composables/useUsers'
+
+const { useListUsers } = useUsers()
+
+// Reactive filters
+const enabled = ref(true)
+const searchTerm = ref('')
+
+const filters = computed(() => ({
+  enabled: enabled.value,
+  name: searchTerm.value || undefined
+}))
+
+// Auto-refetches when enabled or searchTerm changes
+const { data: users, isLoading } = useListUsers({
+  filters,
+  page: ref(1),
+  pageSize: ref(20),
+  sort: { name: 'asc' }
+})
+</script>
+```
+
+### Mutation Actions (POST/PUT/PATCH/DELETE)
+
+Mutation actions are **always manual** - they don't auto-execute on mount and don't have reactive parameters.
+
+#### `useCreate` - Create Entity
+
+Creates a new entity.
+
+**Signature:**
+```typescript
+useCreate(options?: MutationActionOptions): UseCreateActionReturn<T>
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `options` | `MutationActionOptions` | ❌ No | Mutation options (see below) |
+
+**Returns:**
+
+```typescript
+{
+  data: ShallowRef<T | null>,      // Created entity
+  error: ShallowRef<Error | null>, // Error if request failed
+  isLoading: Readonly<ShallowRef<boolean>>, // Loading state
+  execute: (payload: Partial<T>) => Promise<void> // Execute function
+}
+```
+
+**Example:**
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { useUsers } from '@/composables/useUsers'
+
+const { useCreateUser } = useUsers()
+const { data, error, isLoading, execute: createUser } = useCreateUser()
+
+const name = ref('')
+const email = ref('')
+
+const handleSubmit = async () => {
+  await createUser({
+    name: name.value,
+    email: email.value
+  })
+}
+</script>
+```
+
+#### `useUpdate` - Update Entity
+
+Updates an existing entity. Supports partial updates (PATCH) and full replacement (PUT).
+
+**Signature:**
+```typescript
+useUpdate(options?: MutationActionOptions): UseUpdateActionReturn<T>
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `options` | `MutationActionOptions` | ❌ No | Mutation options (see below) |
+
+**Returns:**
+
+```typescript
+{
+  data: ShallowRef<T | null>,      // Updated entity
+  error: ShallowRef<Error | null>, // Error if request failed
+  isLoading: Readonly<ShallowRef<boolean>>, // Loading state
+  execute: (
+    pk: string | number,
+    payload: Partial<T>,
+    updateOptions?: UpdateOptions
+  ) => Promise<void>
+}
+```
+
+**UpdateOptions:**
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `partialUpdate` | `boolean` | ❌ No | `true` | `true` = PATCH (partial), `false` = PUT (full replacement) |
+
+**Example:**
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { useUsers } from '@/composables/useUsers'
+
+const { useUpdateUser } = useUsers()
+const { data, error, isLoading, execute: updateUser } = useUpdateUser()
+
+const userId = ref(1)
+const newName = ref('')
+
+// Partial update (PATCH) - default
+const handlePartialUpdate = async () => {
+  await updateUser(
+    userId.value,
+    { name: newName.value },
+    { partialUpdate: true } // Optional, true by default
+  )
+}
+
+// Full replacement (PUT)
+const handleFullUpdate = async () => {
+  await updateUser(
+    userId.value,
+    {
+      id: userId.value,
+      name: newName.value,
+      email: 'new@email.com',
+      enabled: true
+    },
+    { partialUpdate: false } // Use PUT
+  )
+}
+</script>
+```
+
+#### `useDelete` - Delete Entity
+
+Deletes an entity.
+
+**Signature:**
+```typescript
+useDelete(options?: MutationActionOptions): UseDeleteActionReturn<T>
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `options` | `MutationActionOptions` | ❌ No | Mutation options (see below) |
+
+**Returns:**
+
+```typescript
+{
+  data: ShallowRef<T | null>,      // Deleted entity (if server returns it)
+  error: ShallowRef<Error | null>, // Error if request failed
+  isLoading: Readonly<ShallowRef<boolean>>, // Loading state
+  execute: (pk: string | number) => Promise<void>
+}
+```
+
+**Example:**
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { useUsers } from '@/composables/useUsers'
+
+const { useDeleteUser } = useUsers()
+const { error, isLoading, execute: deleteUser } = useDeleteUser()
+
+const userId = ref(1)
+
+const handleDelete = async () => {
+  if (confirm('Are you sure?')) {
+    await deleteUser(userId.value)
+  }
+}
+</script>
+```
+
+### Action Options
+
+#### QueryActionOptions
+
+Options for query actions (`useRetrieve`, `useList`).
+
+| Option | Type | Required | Default | Description |
+|--------|------|----------|---------|-------------|
+| `onMount` | `boolean` | ❌ No | `true` | Automatically execute on component mount |
+| `autoUpdate` | `boolean \| Ref<boolean> \| ComputedRef<boolean>` | ❌ No | `true` | Automatically refetch when reactive parameters change |
+| `initialData` | `T \| null` | ❌ No | `null` | Initial data before request completes |
+| `deduplication` | `boolean` | ❌ No | `undefined` | Enable request deduplication (overrides global setting) |
+| `timeout` | `number \| null` | ❌ No | `undefined` | Request timeout in milliseconds (`null` = infinite, overrides global setting) |
+| `throwOnError` | `boolean` | ❌ No | `false` | Whether to throw errors instead of storing them in the error ref |
+
+**Example:**
+
+```typescript
+const { data, execute } = useListUsers(
+  { filters: { enabled: true } },
+  {
+    onMount: false,        // Don't fetch on mount
+    autoUpdate: false,     // Don't auto-refetch when filters change
+    timeout: 10000,        // 10 second timeout
+    deduplication: true    // Enable deduplication for this action
+  }
+)
+```
+
+**Example with Reactive Filters:**
+
+```typescript
+import { ref } from 'vue'
+
+const filters = ref({ enabled: true })
+
+const { data, execute } = useListUsers(
+  { filters },  // Reactive ref - changes trigger refetch when autoUpdate is true
+  {
+    onMount: true,          // Fetch on mount
+    autoUpdate: true,       // Auto-refetch when filters ref changes
+    timeout: 10000,        // 10 second timeout
+    deduplication: true     // Enable deduplication for this action
+  }
+)
+
+// Changing filters will trigger automatic refetch (because autoUpdate: true)
+filters.value = { enabled: false } // ✅ Auto-refetches
+```
+
+#### MutationActionOptions
+
+Options for mutation actions (`useCreate`, `useUpdate`, `useDelete`).
+
+| Option | Type | Required | Default | Description |
+|--------|------|----------|---------|-------------|
+| `timeout` | `number \| null` | ❌ No | `undefined` | Request timeout in milliseconds (`null` = infinite, overrides global setting) |
+| `throwOnError` | `boolean` | ❌ No | `false` | Whether to throw errors instead of storing them in the error ref |
+
+**Example**
+
+```typescript
+import { useCreditNotes } from '@/composables/useCreditNotes'
+
+const { useCreateCreditNote } = useCreditNotes()
+
+const { execute: createCreditNote } = useCreateCreditNote({
+  timeout: 10000 // 10 second timeout for credit note creation
+})
+```
+
+---
+
+## Features
+
+### ✅ Available Features (v1.0)
+
+- **Complete CRUD Operations** - `useRetrieve`, `useList`, `useCreate`, `useUpdate`, `useDelete`
+- **Reactive Parameters** - Automatic refetching when filters, sort, page, or primary key change
+- **CSRF Protection** - Automatic token injection for mutation requests
+- **Request Deduplication** - Prevent duplicate identical requests
+- **Request/Response Interceptors** - Modify requests/responses or abort requests
+- **Configurable Timeouts** - Global and per-action timeout configuration
+- **Debug Logging** - Development logging for troubleshooting
+- **TypeScript Support** - Full type safety with generics
+- **Error Handling** - Consistent error states across all actions
+- **Loading States** - Built-in loading state management
+
+### 🔮 Nice to Have (Future)
+
+- Response caching and cache invalidation
+- Optimistic updates for mutations
+- Retry logic with exponential backoff
+- Devtools integration
+- Mock/test utilities
+- File upload support with progress tracking
+- Response pagination metadata parsing
+- Offline support with request queue
+
+---
+
+## Future Enhancements
+
+The current architecture is designed to support future protocol adapters:
+
+### GraphQL Support
+
+The package structure allows for a future `@fiscozen/data/graphql` adapter that would:
+
+- Use the same `useActions` pattern
+- Provide GraphQL-specific composables (`useQuery`, `useMutation`, `useSubscription`)
+- Share the same setup and configuration pattern
+- Maintain type safety with GraphQL code generation
+
+**Example (future):**
+```typescript
+import { useActions } from '@fiscozen/data/graphql'
+
+const { useQuery, useMutation } = useActions<User>('users')
+
+// GraphQL query
+const { data } = useQuery(gql`
+  query GetUsers($enabled: Boolean!) {
+    users(enabled: $enabled) {
+      id
+      name
+      email
+    }
+  }
+`, { enabled: true })
+```
+
+### WebSocket Support
+
+A future `@fiscozen/data/websocket` adapter could provide:
+
+- Real-time subscriptions
+- Automatic reconnection
+- Message queuing
+- Integration with existing REST actions
+
+**Example (future):**
+```typescript
+import { useSubscription } from '@fiscozen/data/websocket'
+
+// Real-time user updates
+const { data, error } = useSubscription('users:updated', {
+  onMessage: (user) => {
+    // Handle real-time update
+  }
+})
+```
+
+---
+
+## Additional Considerations
+
+### Reactive Parameters Best Practices
+
+**✅ Recommended: Use `computed()` for complex filters**
+
+```typescript
+const enabled = ref(true)
+const searchTerm = ref('')
+
+// ✅ Computed filters - auto-refetches when dependencies change
+const filters = computed(() => ({
+  enabled: enabled.value,
+  name: searchTerm.value || undefined
+}))
+
+const { data } = useListUsers({ filters })
+```
+
+**⚠️ Important: Direct object mutation doesn't trigger refetch**
+
+```typescript
+// ❌ This WON'T trigger refetch
+const filters = ref({ enabled: true })
+useListUsers({ filters })
+filters.value.enabled = false // No refetch!
+
+// ✅ Replace entire object instead
+filters.value = { enabled: false } // Triggers refetch
+
+// ✅ Or use computed()
+const enabled = ref(true)
+const filters = computed(() => ({ enabled: enabled.value }))
+```
+
+### Error Handling Patterns
+
+**Global Error Handler:**
+
+```typescript
+import { watch } from 'vue'
+import { useUsers } from '@/composables/useUsers'
+
+const { useListUsers } = useUsers()
+const { error } = useListUsers()
+
+watch(error, (newError) => {
+  if (newError) {
+    // Show toast notification
+    showToast({ type: 'error', message: newError.message })
+    
+    // Log to error tracking
+    Sentry.captureException(newError)
+  }
+})
+```
+
+**Per-Action Error Handling (Default - Error Ref):**
+
+```typescript
+const { error, execute } = useCreateUser()
+
+const handleCreate = async () => {
+  await execute({ name: 'John' })
+  
+  // Check error ref instead of try/catch (throwOnError defaults to false)
+  if (error.value) {
+    // Handle error
+    if (error.value.message.includes('duplicate')) {
+      // Handle duplicate error
+    }
+  }
+}
+```
+
+**Per-Action Error Handling (With Throw - Try/Catch):**
+
+```typescript
+const { execute } = useCreateUser({ throwOnError: true })
+
+const handleCreate = async () => {
+  try {
+    await execute({ name: 'John' })
+    // Success
+  } catch (err) {
+    // Handle error
+    if (err instanceof Error && err.message.includes('duplicate')) {
+      // Handle duplicate error
+    }
+  }
+}
+```
+
+### Manual Execution
+
+Disable auto-fetch and trigger manually:
+
+```typescript
+const { data, execute, isLoading } = useListUsers(
+  { filters: { enabled: true } },
+  { onMount: false } // Don't fetch on mount
+)
+
+// Trigger fetch manually
+const loadUsers = async () => {
+  await execute()
+}
+```
+
+### Request Deduplication
+
+Prevent duplicate identical requests:
+
+```typescript
+// Global setting
+setupFzFetcher({
+  deduplication: true // Enable globally
+})
+
+// Per-action override
+const { data } = useListUsers(
+  { filters: { enabled: true } },
+  { deduplication: false } // Disable for this action
+)
+```
+
+### Interceptors Usage
+
+**Request Interceptor - Add Custom Headers:**
+
+```typescript
+setupFzFetcher({
+  requestInterceptor: async (url, requestInit) => {
+    const token = localStorage.getItem('auth_token')
+    return {
+      ...requestInit,
+      headers: {
+        ...requestInit.headers,
+        'Authorization': `Bearer ${token}`
+      }
+    }
+  }
+})
+```
+
+**Request Interceptor - Abort Requests:**
+
+```typescript
+setupFzFetcher({
+  requestInterceptor: async (url, requestInit) => {
+    // Abort if user is offline
+    if (!navigator.onLine) {
+      return null // Abort request
+    }
+    return requestInit
+  }
+})
+```
+
+**Response Interceptor - Handle 401 Errors:**
+
+```typescript
+setupFzFetcher({
+  responseInterceptor: async (response, url, requestInit) => {
+    if (response.status === 401) {
+      // Refresh token logic
+      await refreshToken()
+      // Retry original request
+      return fetch(url, requestInit)
+    }
+    return response
+  }
+})
+```
+
+### TypeScript Best Practices
+
+**Define Entity Types:**
+
+```typescript
+// src/types/user.ts
+export interface User {
+  id: number
+  name: string
+  email: string
+  enabled: boolean
+  createdAt: string
+  updatedAt: string
+}
+```
+
+**Use in Composable:**
+
+```typescript
+import { useActions } from '@fiscozen/data/rest'
+import type { User } from '@/types/user'
+
+export const useUsers = () => {
+  const { useRetrieve, useList, useCreate, useUpdate, useDelete } = 
+    useActions<User>('users')
+  
+  return {
+    useRetrieveUserById: useRetrieve,
+    useListUsers: useList,
+    useCreateUser: useCreate,
+    useUpdateUser: useUpdate,
+    useDeleteUser: useDelete
+  }
+}
+```
+
+**Type Safety in Components:**
+
+```vue
+<script setup lang="ts">
+import { useUsers } from '@/composables/useUsers'
+import type { User } from '@/types/user'
+
+const { useListUsers } = useUsers()
+const { data: users } = useListUsers()
+
+// users is typed as ShallowRef<User[] | null>
+users.value?.forEach((user: User) => {
+  console.log(user.name) // TypeScript knows user.name exists
+})
+</script>
+```
+
+### Testing
+
+**Unit Test Entity Composable:**
+
+```typescript
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { setupFzFetcher, resetFzFetcher } from '@fiscozen/data/rest'
+import { useUsers } from './useUsers'
+
+describe('useUsers', () => {
+  beforeEach(() => {
+    resetFzFetcher()
+    setupFzFetcher({
+      baseUrl: 'https://api.test.com/v1',
+      csrf: { enabled: false }
+    })
+  })
+
+  it('should list users', async () => {
+    global.fetch = vi.fn(() =>
+      Promise.resolve(
+        new Response(JSON.stringify([{ id: 1, name: 'John' }]), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        })
+      )
+    ) as any
+
+    const { useListUsers } = useUsers()
+    const { data, execute } = useListUsers({ onMount: false })
+    
+    await execute()
+    
+    expect(data.value).toEqual([{ id: 1, name: 'John' }])
+  })
+})
+```
+
+---
+
+## Summary
+
+The `@fiscozen/data` package provides a clean, type-safe, and reactive data layer for Vue 3 applications. By following the three-step pattern (Setup → Entity Composable → Component Usage), you can:
+
+- Keep components focused on presentation
+- Centralize API logic in reusable composables
+- Leverage automatic refetching with reactive parameters
+- Handle errors and loading states consistently
+- Maintain full type safety with TypeScript
+
+For questions or issues, refer to the package README or contact the development team.
+
