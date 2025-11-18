@@ -42,6 +42,6 @@ export const createRetrieveAction = <T>(
     return `${basePath}/${resolvedPk}`;
   });
   const response = useFzFetch<T>(url, normalizeOptions(options));
-  return normalizeResponse<T>(response);
+  return normalizeResponse<T>(response, options?.throwOnError ?? false);
 };
 

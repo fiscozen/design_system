@@ -32,12 +32,13 @@ export const createDeleteAction = <T>(
             : undefined,
         );
 
-        await response.execute();
+        await response.execute(options?.throwOnError ?? false);
         return response;
       },
       data,
       error,
       isLoading,
+      options?.throwOnError ?? false,
     );
   };
 
