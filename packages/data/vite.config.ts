@@ -20,16 +20,10 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, './src/index.ts'),
-      name: 'FzData',
+      formats: ['es'], // Only ES modules, no UMD needed
     },
     rollupOptions: {
       external: ['vue', '@vueuse/core'],
-      output: {
-        globals: {
-          vue: 'Vue',
-          '@vueuse/core': 'VueUse',
-        },
-      },
     }
   }
 })
