@@ -91,16 +91,22 @@ export const normalizeParams = (params: ListActionParams = {}): UseFzFetchParams
  * Normalize UseFzFetchReturn to QueryActionReturn
  *
  * @param response - UseFzFetchReturn from useFzFetch
+ * @param throwOnError - Whether to throw errors instead of storing in error ref
  * @returns QueryActionReturn with computed properties
  */
 export const normalizeResponse = <T>(
   response: UseFzFetchReturn<T>,
+  throwOnError: boolean = false,
 ): QueryActionReturn<T> => {
+  const originalExecute = response.execute;
+  
   return {
     error: computed(() => response.error.value),
     data: computed(() => response.data.value),
     isLoading: computed(() => response.isFetching.value),
-    execute: response.execute,
+    execute: async () => {
+      await originalExecute(throwOnError);
+    },
   } as QueryActionReturn<T>;
 };
 
@@ -108,15 +114,21 @@ export const normalizeResponse = <T>(
  * Normalize UseFzFetchReturn to ListActionReturn (for list actions)
  *
  * @param response - UseFzFetchReturn from useFzFetch (expects array type)
+ * @param throwOnError - Whether to throw errors instead of storing in error ref
  * @returns ListActionReturn with computed properties
  */
 export const normalizeListResponse = <T>(
   response: UseFzFetchReturn<T[]>,
+  throwOnError: boolean = false,
 ): ListActionReturn<T> => {
+  const originalExecute = response.execute;
+  
   return {
     error: computed(() => response.error.value),
     data: computed(() => response.data.value),
     isLoading: computed(() => response.isFetching.value),
-    execute: response.execute,
+    execute: async () => {
+      await originalExecute(throwOnError);
+    },
   } as ListActionReturn<T>;
 };

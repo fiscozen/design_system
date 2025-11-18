@@ -30,7 +30,7 @@ export const createListAction = <T>(
       normalizeParams(params),
       normalizeOptions(options),
     );
-    return normalizeListResponse<T>(response);
+    return normalizeListResponse<T>(response, options.throwOnError ?? false);
   }
 
   // Case 2: useList(paramsOrOptions)
@@ -48,7 +48,7 @@ export const createListAction = <T>(
         `${basePath}`,
         normalizeParams(params),
       );
-      return normalizeListResponse<T>(response);
+      return normalizeListResponse<T>(response, false);
     } else {
       // It's UseActionOptions
       const actionOptions = paramsOrOptions as UseActionOptions;
@@ -56,12 +56,12 @@ export const createListAction = <T>(
         `${basePath}`,
         normalizeOptions(actionOptions),
       );
-      return normalizeListResponse<T>(response);
+      return normalizeListResponse<T>(response, actionOptions.throwOnError ?? false);
     }
   }
 
   // Case 1: useList()
   const response = useFzFetch<T[]>(`${basePath}`);
-  return normalizeListResponse<T>(response);
+  return normalizeListResponse<T>(response, false);
 };
 
