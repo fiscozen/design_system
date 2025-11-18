@@ -1,9 +1,12 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzRadio > should render correctly 1`] = `
-"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" tabindex="0"><label data-v-029ccdb9="" for="Radio" class="flex items-start gap-4 
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" checked="" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" tabindex="0"><label data-v-029ccdb9="" for="Radio" class="flex items-start gap-4 
   text-core-black
-  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio</span></label>
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500">
+    <!--v-if-->
+    <!--v-if-->
+  </label>
   <!--v-if-->
 </div>"
 `;

@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadio } from '@fiscozen/radio'
-import { FzIcon } from '@fiscozen/icons'
 
 const meta = {
   title: 'Form/FzRadio',
@@ -8,12 +7,24 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     size: {
-      options: ['sm', 'md'],
+      options: ['md'],
+      control: {
+        type: 'select'
+      }
+    },
+    tone: {
+      options: ['neutral', 'emphasis', 'error'],
+      control: {
+        type: 'select'
+      }
+    },
+    tooltipStatus: {
+      options: ['neutral', 'informative', 'positive', 'alert', 'error'],
       control: {
         type: 'select'
       }
     }
-  }
+  },
 } satisfies Meta<typeof FzRadio>
 
 export default meta
@@ -22,7 +33,7 @@ type RadioStory = StoryObj<typeof FzRadio>
 
 const Template: RadioStory = {
   render: (args) => ({
-    components: { FzRadio, FzIcon },
+    components: { FzRadio },
     setup() {
       return {
         args
@@ -31,8 +42,8 @@ const Template: RadioStory = {
     template: `<FzRadio v-bind="args" />`
   }),
   args: {
-    size: 'sm',
-    label: 'Radio'
+    label: 'Radio',
+    value: 'test'
   }
 }
 
@@ -44,13 +55,6 @@ export const Medium: RadioStory = {
   }
 }
 
-export const Small: RadioStory = {
-  ...Template,
-  args: {
-    size: 'sm',
-    label: 'Radio'
-  }
-}
 
 export const CheckedDefault: RadioStory = {
   ...Template,
@@ -80,40 +84,48 @@ export const CheckedDisabled: RadioStory = {
   }
 }
 
-export const Error: RadioStory = {
-  render: (args) => ({
-    components: { FzRadio, FzIcon },
-    setup() {
-      return {
-        args
-      }
-    },
-    template: `<FzRadio v-bind="args" >
-            <template #errorText> Error message </template>
-        </FzRadio>`
-  }),
-  args: {
-    size: 'sm',
-    label: 'Radio',
-    error: true
-  }
-}
-
-export const Emphasis: RadioStory = {
+export const ToneNeutral: RadioStory = {
   ...Template,
   args: {
     size: 'md',
     label: 'Radio',
-    emphasis: true
+    tone: 'neutral'
   }
 }
 
-export const Standalone: RadioStory = {
+export const ToneEmphasis: RadioStory = {
   ...Template,
   args: {
     size: 'md',
     label: 'Radio',
-    standalone: true
+    tone: 'emphasis'
+  }
+}
+
+export const ToneError: RadioStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Radio',
+    tone: 'error'
+  }
+}
+
+export const WithTooltip: RadioStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Radio',
+    tooltip: 'This is an informative tooltip'
+  }
+}
+
+export const HasTextFalse: RadioStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Radio',
+    hasText: false
   }
 }
 

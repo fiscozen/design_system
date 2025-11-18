@@ -3,73 +3,97 @@
     <input
       type="radio"
       :id="computedId"
-      :value="value"
+      :value="computedValue"
       :disabled="disabled"
-      :checked="modelValue === value"
+      :checked="modelValue === computedValue || checked"
       :class="[staticInputClass, computedInputClass]"
       :name="name"
       :required="required"
-      @change="emits('update:modelValue', value)"
+      @change="emits('update:modelValue', computedValue)"
       tabindex="0"
       ref="radioContainer"
     />
     <label :for="computedId" :class="[staticLabelClass, computedLabelClass]">
-      <span class="w-fit">{{ standalone ? "" : label }}</span>
+      <span class="w-fit" v-if="shouldShowText">{{ label }}</span>
+      <FzTooltip
+        v-if="tooltip"
+        :text="tooltip"
+        :status="tooltipStatus || 'neutral'"
+        withIcon
+      >
+        <FzIcon
+          name="circle-info"
+          variant="far"
+          size="md"
+          class="text-semantic-info"
+        />
+      </FzTooltip>
     </label>
-    <FzRadioErrorText :size="size" v-if="error && $slots.error">
-      <slot name="error" />
-    </FzRadioErrorText>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { FzRadioProps } from "./types";
-import { mapSizeToClasses } from "./common";
-import FzRadioErrorText from "./components/FzRadioErrorText.vue";
+import { mapSizeToClasses, computedLabelObject, staticInputClass, staticLabelClass } from "./common";
+import { FzIcon } from "@fiscozen/icons";
+import { FzTooltip } from "@fiscozen/tooltip";
 import "./fz-radio.css";
 
 const props = withDefaults(defineProps<FzRadioProps>(), {
   size: "md",
+  hasText: undefined
+});
+
+const computedValue = computed(() => {
+  if (props.value == null && props.label == null) {
+    console.error("[FzRadio] You must provide a value or label prop to the radio button")
+    return ''
+  }
+  return props.value ?? props.label;
 });
 
 const emits = defineEmits(["update:modelValue"]);
+
+// Compute tone from props (with fallback to deprecated emphasis/error)
+const computedTone = computed<"neutral" | "emphasis" | "error">(() => {
+  if (props.tone) return props.tone;
+  if (props.error) return "error";
+  if (props.emphasis) return "emphasis";
+  return "neutral";
+});
+
+// Compute hasText from props (with fallback to deprecated standalone)
+const shouldShowText = computed(() => { 
+  if (props.hasText !== undefined) return props.hasText;
+  return !props.standalone;
+});
 
 const computedId = computed(() =>
   props.name ? `${props.name}-${props.label}` : props.label,
 );
 
 const radioContainer = ref<HTMLInputElement | null>(null);
-const staticLabelClass = `
-  flex items-start gap-4 
-  text-core-black
-  fz-radio__label
-`;
-const staticInputClass = "peer h-0 w-0 absolute fz-hidden-input";
 
 const computedInputClass = computed(() => ({
-  "radio--small": props.size === "sm",
-  "radio--medium": props.size === "md",
+  "radio--medium": true,
 }));
 
-const computedLabelObject = {
-  sm: "before:h-12 before:w-12 before:mt-[3px] peer-checked:before:border-4",
-  md: "before:h-16 before:w-16 peer-checked:before:border-[5px]",
-};
-
 const computedLabelClass = computed(() => [
-  mapSizeToClasses[props.size],
-  computedLabelObject[props.size],
+  mapSizeToClasses["md"],
+  computedLabelObject["md"],
   getBorderAndTextColorForLabel(),
 ]);
 
 const getBorderAndTextColorForLabel = () => {
+  const tone = computedTone.value;
+
   switch (true) {
     case props.disabled:
       return "text-grey-300 before:border-grey-200 before:bg-grey-200 peer-checked:before:bg-transparent";
-    case props.error:
+    case tone === "error":
       return "before:border-semantic-error text-semantic-error";
-    case props.emphasis:
+    case tone === "emphasis":
       return "before:border-grey-500 peer-checked:before:border-blue-500";
     default:
       return "before:border-grey-500";

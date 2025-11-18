@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadioCard } from '@fiscozen/radio'
-import checkrimg from '../../assets/checker.png'
 import {ref} from 'vue';
 
+const checkrimg = 'consultant.jpg';
 const radioModel = ref('');
 
 const meta = {
@@ -11,7 +11,13 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     size: {
-      options: ['sm', 'md'],
+      options: ['md'],
+      control: {
+        type: 'select'
+      }
+    },
+    tone: {
+      options: ['neutral', 'emphasis', 'error'],
       control: {
         type: 'select'
       }
@@ -34,7 +40,6 @@ const Template: RadioCardStory = {
     template: `<FzRadioCard v-bind="args" v-model="args.modelValue" />`
   }),
   args: {
-    size: 'sm',
     label: 'Radio',
     modelValue: radioModel.value,
     value: 'test',
@@ -218,5 +223,76 @@ export const VerticalWithIconWithImageWithTooltip: RadioCardStory = {
     value: 'test12',
     modelValue: radioModel.value,
     tooltip: 'this is a tooltip'
+  }
+}
+
+
+export const WithHasRadio: RadioCardStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Radio',
+    orientation: 'horizontal',
+    title: 'RadioCard',
+    subtitle: 'This is a Radioccard label',
+    hasRadio: true,
+    value: 'test15',
+    modelValue: radioModel.value,
+  }
+}
+
+export const WithoutHasRadio: RadioCardStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Radio',
+    orientation: 'horizontal',
+    title: 'RadioCard',
+    subtitle: 'This is a Radioccard label',
+    hasRadio: false,
+    value: 'test16',
+    modelValue: radioModel.value,
+  }
+}
+
+export const ToneNeutral: RadioCardStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Radio',
+    orientation: 'horizontal',
+    title: 'RadioCard',
+    subtitle: 'This is a Radioccard label',
+    tone: 'neutral',
+    value: 'test17',
+    modelValue: radioModel.value,
+  }
+}
+
+export const ToneEmphasis: RadioCardStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Radio',
+    orientation: 'horizontal',
+    title: 'RadioCard',
+    subtitle: 'This is a Radioccard label',
+    tone: 'emphasis',
+    value: 'test18',
+    modelValue: radioModel.value,
+  }
+}
+
+export const ToneError: RadioCardStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Radio',
+    orientation: 'horizontal',
+    title: 'RadioCard',
+    subtitle: 'This is a Radioccard label',
+    tone: 'error',
+    value: 'test19',
+    modelValue: radioModel.value,
   }
 }

@@ -1,0 +1,349 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Form/FzRadio" />
+
+# FzRadio
+
+A fully accessible radio button component for selecting a single option from a group of mutually exclusive choices. Supports multiple visual tones, tooltips, and flexible text display options.
+
+## Features
+
+- **Multiple Tones**: Neutral, emphasis, and error states
+- **Tooltip Support**: Informative tooltips with customizable status
+- **Flexible Text Display**: Control label visibility with `hasText` prop
+- **Error Handling**: Built-in error state with FzAlert integration
+- **Full Accessibility**: WCAG 2.1 AA compliant with keyboard navigation
+- **Backward Compatible**: Supports deprecated props for gradual migration
+
+## Installation
+
+```bash
+npm install @fiscozen/radio
+# or
+pnpm add @fiscozen/radio
+```
+
+## Basic Usage
+
+### Single Radio Button
+
+```vue
+<script setup lang="ts">
+import { FzRadio } from '@fiscozen/radio'
+import { ref } from 'vue'
+
+const selected = ref('option1')
+</script>
+
+<template>
+  <FzRadio 
+    label="Option 1" 
+    value="option1" 
+    v-model="selected"
+    size="md"
+  />
+</template>
+```
+
+### Within Radio Group
+
+```vue
+<script setup lang="ts">
+import { FzRadio, FzRadioGroup } from '@fiscozen/radio'
+import { ref } from 'vue'
+
+const selected = ref('option2')
+</script>
+
+<template>
+  <FzRadioGroup label="Select an option" v-slot="{ radioGroupProps }">
+    <FzRadio 
+      label="Option 1" 
+      value="option1" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+    <FzRadio 
+      label="Option 2" 
+      value="option2" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+    <FzRadio 
+      label="Option 3" 
+      value="option3" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+  </FzRadioGroup>
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Text label displayed next to the radio button</td>
+    </tr>
+    <tr>
+      <td><code>value</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>The value of the radio button. Defaults to the label if not provided</td>
+    </tr>
+    <tr>
+      <td><code>modelValue</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Value of the currently selected radio button (v-model)</td>
+    </tr>
+    <tr>
+      <td><code>tone</code></td>
+      <td><code>'neutral' | 'emphasis' | 'error'</code></td>
+      <td><code>'neutral'</code></td>
+      <td>The tone/variant of the radio button. Determines visual styling</td>
+    </tr>
+    <tr>
+      <td><code>tooltip</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Text to display in the tooltip when provided. Shows an icon with tooltip on the right side of the label</td>
+    </tr>
+    <tr>
+      <td><code>tooltipStatus</code></td>
+      <td><code>'neutral' | 'informative' | 'positive' | 'alert' | 'error'</code></td>
+      <td><code>'informative'</code></td>
+      <td>Status of the tooltip (determines color and icon)</td>
+    </tr>
+    <tr>
+      <td><code>hasText</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Controls visibility of the label text. If false, only the radio icon is shown</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If true, the radio button will be disabled</td>
+    </tr>
+    <tr>
+      <td><code>name</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>The name of the radio button group to which the radio button belongs</td>
+    </tr>
+    <tr>
+      <td><code>required</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If the radio button is required</td>
+    </tr>
+  </tbody>
+</table>
+
+**Deprecated Props:**
+
+- `emphasis` (`boolean`): Use `tone="emphasis"` instead
+- `error` (`boolean`): Use `tone="error"` instead
+- `standalone` (`boolean`): Use `hasText={false}` instead
+- `size` (`'sm' | 'md'`): will always be 'md'
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>error</code></td>
+      <td>Error message content (shown when <code>tone="error"</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+## Usage Examples
+
+### Tone Variants
+
+#### Neutral (Default)
+
+```vue
+<FzRadio label="Option 1" value="option1" v-model="selected" tone="neutral" />
+```
+
+#### Emphasis
+
+```vue
+<FzRadio label="Option 1" value="option1" v-model="selected" tone="emphasis" />
+```
+
+#### Error
+
+```vue
+<FzRadio label="Option 1" value="option1" v-model="selected" tone="error">
+  <template #error>
+    This field is required
+  </template>
+</FzRadio>
+```
+
+### With Tooltip
+
+```vue
+<FzRadio 
+  label="Option with tooltip" 
+  value="option1" 
+  v-model="selected"
+  tooltip="This is an informative tooltip"
+  tooltipStatus="informative"
+/>
+```
+
+### Tooltip Status Variants
+
+```vue
+<template>
+  <!-- Informative (default) -->
+  <FzRadio 
+    label="Info" 
+    value="info" 
+    v-model="selected"
+    tooltip="This is informative"
+    tooltipStatus="informative"
+  />
+  
+  <!-- Error -->
+  <FzRadio 
+    label="Error" 
+    value="error" 
+    v-model="selected"
+    tooltip="This is an error"
+    tooltipStatus="error"
+  />
+  
+  <!-- Alert -->
+  <FzRadio 
+    label="Alert" 
+    value="alert" 
+    v-model="selected"
+    tooltip="This is an alert"
+    tooltipStatus="alert"
+  />
+  
+  <!-- Positive -->
+  <FzRadio 
+    label="Positive" 
+    value="positive" 
+    v-model="selected"
+    tooltip="This is positive"
+    tooltipStatus="positive"
+  />
+</template>
+```
+
+### Without Text (Icon Only)
+
+```vue
+<FzRadio 
+  label="Hidden label" 
+  value="option1" 
+  v-model="selected"
+  :hasText="false"
+/>
+```
+
+### Disabled State
+
+```vue
+<FzRadio label="Disabled option" value="option1" v-model="selected" disabled />
+```
+
+### Sizes
+
+```vue
+<template>
+  <!-- Small -->
+  <FzRadio label="Small" value="sm" v-model="selected" size="sm" />
+  
+  <!-- Medium (default) -->
+  <FzRadio label="Medium" value="md" v-model="selected" size="md" />
+</template>
+```
+
+## Accessibility
+
+- **Keyboard Navigation**: Full support for Tab, Space, and Enter keys
+- **Screen Readers**: Proper ARIA labels and state announcements
+- **Focus Indicators**: Visible focus ring for keyboard navigation
+- **Semantic HTML**: Uses native radio input for proper form behavior
+- **WCAG 2.1 AA**: Meets color contrast and accessibility requirements
+
+### ARIA Attributes
+
+- `aria-checked`: Announces checked/unchecked state
+- `aria-label`: Provides accessible name when `hasText={false}`
+- `aria-labelledby`: Links to visible label text
+- `aria-describedby`: Links to error messages
+- `aria-required`: Indicates required fields
+- `aria-invalid`: Indicates validation errors
+
+## Migration Guide
+
+### From `emphasis` to `tone`
+
+```vue
+<!-- ❌ Deprecated -->
+<FzRadio label="Option" value="opt" v-model="selected" emphasis />
+
+<!-- ✅ Recommended -->
+<FzRadio label="Option" value="opt" v-model="selected" tone="emphasis" />
+```
+
+### From `error` to `tone`
+
+```vue
+<!-- ❌ Deprecated -->
+<FzRadio label="Option" value="opt" v-model="selected" error>
+  <template #error>Error message</template>
+</FzRadio>
+
+<!-- ✅ Recommended -->
+<FzRadio label="Option" value="opt" v-model="selected" tone="error">
+  <template #error>Error message</template>
+</FzRadio>
+```
+
+### From `standalone` to `hasText`
+
+```vue
+<!-- ❌ Deprecated -->
+<FzRadio label="Option" value="opt" v-model="selected" standalone />
+
+<!-- ✅ Recommended -->
+<FzRadio label="Option" value="opt" v-model="selected" :hasText="false" />
+```
+
+## Related Components
+
+- **FzRadioGroup**: Container for grouping related radio buttons
+- **FzRadioCard**: Card-based radio button variant
+- **FzTooltip**: Used internally for tooltip functionality
+- **FzAlert**: Used for error message display
+

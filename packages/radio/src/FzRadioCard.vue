@@ -8,10 +8,22 @@ import { useRadio } from "../composables/index";
 import { staticInputClass } from "./common";
 
 const props = withDefaults(defineProps<FzRadioCardProps>(), {
-  emphasis: true,
-  radioIcon: (props) => props.orientation === "horizontal",
+  size: "md",
+  tone: "emphasis",
+  emphasis: true, // deprecated, kept for backward compatibility
+  radioIcon: (props: FzRadioCardProps) => props.orientation === "horizontal",
+  hasRadio: undefined,
 });
 const emits = defineEmits(["update:modelValue"]);
+
+// Compute hasRadio from props (with fallback to deprecated radioIcon)
+const computedHasRadio = computed(() => {
+  if (props.hasRadio !== undefined) return props.hasRadio;
+  if (typeof props.radioIcon === "function") {
+    return props.radioIcon(props);
+  }
+  return props.radioIcon ?? true;
+});
 
 const labelClass = computed(() => ({
   "flex-col": props.orientation === "vertical",
@@ -30,10 +42,10 @@ const labelClass = computed(() => ({
   "before:absolute": props.orientation === "vertical",
   "before:top-24": props.orientation === "vertical",
   "before:left-24": props.orientation === "vertical",
-  "before:self-start": props.orientation === "horizontal",
+  "before:self-center": props.orientation === "horizontal",
   "before:shrink-0": props.orientation === "horizontal",
   "bg-grey-hover": !props.disabled,
-  "before:!hidden": !props.radioIcon,
+  "before:!hidden": !computedHasRadio.value,
 }));
 
 const { computedLabelClass, computedId } = useRadio(toRefs(props));
@@ -55,27 +67,25 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
     />
     <label
       :class="[
-        'relative flex fz-radio__label block w-[360px] rounded-lg border-solid pt-12 px-12 cursor-pointer',
+        'relative flex fz-radio__label block rounded-lg border-solid pt-12 px-12 cursor-pointer w-[336px]',
         labelClass,
         computedLabelClass,
       ]"
       :for="computedId"
     >
-      <img
+      <picture
         v-if="imageUrl"
-        class="object-contain"
-        :src="imageUrl"
-        :alt="imageAlt || ''"
-        :width="orientation === 'horizontal' ? 58 : 336"
-        :height="orientation === 'horizontal' ? 58 : 252"
         :class="[
-          'rounded',
+          'rounded overflow-hidden',
           {
-            'size-[58px]': orientation === 'horizontal',
-            'h-[252px] w-[336px]': orientation === 'vertical',
+            'shrink-0 size-[58px]': orientation === 'horizontal',
+            'w-full h-[252px]': orientation === 'vertical',
           },
         ]"
-      />
+        :title="imageAlt || ''"
+      >
+        <img :src="imageUrl" :alt="imageAlt || ''" class="object-cover h-full w-full" />
+      </picture>
 
       <div
         :class="[
@@ -84,14 +94,13 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
         ]"
       >
         <div class="fz-input flex flex-col w-full grow-0 min-w-0">
-          <p :class="['font-medium break-words', { 'text-sm': size === 'sm' }]">
+          <p :class="['font-medium break-words']">
             {{ title }}
           </p>
           <p
             v-if="subtitle"
             :class="[
-              'font-normal text-sm text-grey-500 mt-4 break-words',
-              { 'text-xs': size === 'sm' },
+              'font-normal text-sm text-grey-500 mt-4 break-words'
             ]"
           >
             {{ subtitle }}
@@ -106,6 +115,7 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
             'ml-12': props.orientation === 'horizontal',
           }"
           :text="tooltip"
+          :status="tooltipStatus || 'neutral'"
         >
           <FzIcon
             name="circle-info"
