@@ -26,7 +26,7 @@
  */
 import { computed, onMounted, ref, watch } from "vue";
 import { FzCardEvents, FzCardProps, FzCardSlots } from "./types";
-import { FzButton, FzIconButton } from "@fiscozen/button";
+import { FzButton, FzIconButton, FzButtonGroup } from "@fiscozen/button";
 
 const props = withDefaults(defineProps<FzCardProps>(), {
   environment: 'frontoffice'
@@ -147,6 +147,10 @@ const atLeastOneButton = computed(
     props.tertiaryAction !== undefined,
 );
 
+const useButtonGroup = computed(
+  () => props.primaryAction !== undefined && props.secondaryAction !== undefined,
+);
+
 function toggleOpen() {
   if (props.collapsible) isOpen.value = !isOpen.value;
 }
@@ -219,27 +223,29 @@ defineExpose({
       v-show="showContent"
     >
       <slot name="footer">
-        <FzIconButton
-          v-if="tertiaryAction"
-          @click="emit('fztertiary:click')"
-          :iconName="tertiaryAction.icon"
-          variant="invisible"
-          :environment="environment"
-        />
-        <FzButton
-          v-if="secondaryAction"
-          @click="emit('fzsecondary:click')"
-          :label="secondaryAction.label"
-          variant="secondary"
-          :environment="environment"
-        />
-        <FzButton
-          v-if="primaryAction"
-          @click="emit('fzprimary:click')"
-          :label="primaryAction.label"
-          variant="primary"
-          :environment="environment"
-        />
+        <FzButtonGroup>
+          <FzIconButton
+            v-if="tertiaryAction"
+            @click="emit('fztertiary:click')"
+            :iconName="tertiaryAction.icon"
+            variant="invisible"
+            :environment="environment"
+          />
+          <FzButton
+            v-if="secondaryAction"
+            @click="emit('fzsecondary:click')"
+            :label="secondaryAction.label"
+            variant="secondary"
+            :environment="environment"
+          />
+          <FzButton
+            v-if="primaryAction"
+            @click="emit('fzprimary:click')"
+            :label="primaryAction.label"
+            variant="primary"
+            :environment="environment"
+          />
+        </FzButtonGroup>
       </slot>
     </footer>
   </section>
