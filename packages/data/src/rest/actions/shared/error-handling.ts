@@ -16,6 +16,7 @@ import type { UseFzFetchReturn } from "../../http/types";
  * @param data - ShallowRef to update with response data
  * @param error - ShallowRef to update with errors
  * @param isLoading - ShallowRef to update with loading state
+ * @param throwOnError - Whether to throw errors instead of storing in error ref
  * @returns Promise that resolves when the mutation completes
  */
 export async function executeMutation<T>(
@@ -23,6 +24,7 @@ export async function executeMutation<T>(
   data: ShallowRef<T | null>,
   error: ShallowRef<Error | null>,
   isLoading: ShallowRef<boolean>,
+  throwOnError: boolean = false,
 ): Promise<void> {
   isLoading.value = true;
   error.value = null;
@@ -35,14 +37,22 @@ export async function executeMutation<T>(
     error.value = response.error.value;
 
     if (response.error.value) {
-      throw response.error.value;
+      if (throwOnError) {
+        throw response.error.value;
+      }
+      // If throwOnError is false, error is already stored in error.value
+      return;
     }
   } catch (err) {
     // Normalize error to Error type
     const normalizedError =
       err instanceof Error ? err : new Error(String(err));
     error.value = normalizedError;
-    throw normalizedError;
+    
+    if (throwOnError) {
+      throw normalizedError;
+    }
+    // If throwOnError is false, error is stored in error.value, don't throw
   } finally {
     isLoading.value = false;
   }

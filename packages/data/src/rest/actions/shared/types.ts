@@ -72,6 +72,16 @@ export interface QueryActionOptions<T = unknown> {
      * @default undefined (uses global timeout setting, or null for infinite timeout if not set)
      */
     timeout?: number | null;
+
+    /**
+     * Whether to throw errors instead of storing them in the error ref
+     * 
+     * When `false` (default), errors are stored in `error` ref and can be checked reactively.
+     * When `true`, errors are thrown as exceptions and can be caught with try/catch.
+     * 
+     * @default false
+     */
+    throwOnError?: boolean;
 }
 
 /**
@@ -91,6 +101,16 @@ export interface MutationActionOptions {
    * @default undefined (uses global timeout setting, or null for infinite timeout if not set)
    */
   timeout?: number | null;
+
+  /**
+   * Whether to throw errors instead of storing them in the error ref
+   * 
+   * When `false` (default), errors are stored in `error` ref and can be checked reactively.
+   * When `true`, errors are thrown as exceptions and can be caught with try/catch.
+   * 
+   * @default false
+   */
+  throwOnError?: boolean;
 
   // Reserved for future: optimistic?, retry?, debounce?, etc.
 }
