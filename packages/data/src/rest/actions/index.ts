@@ -1,102 +1,79 @@
-import { useFzFetch } from '../dao';
-import { computed, toValue, watch } from 'vue';
+import type {
+  UseActions,
+  MutationActionOptions,
+  QueryActionOptions,
+} from "./shared/types";
+import type { UseListAction } from "./list/types";
+import type { UseCreateAction } from "./create/types";
+import type { UseUpdateAction } from "./update/types";
+import type { UseDeleteAction } from "./delete/types";
+import { createRetrieveAction } from "./retrieve";
+import { createListAction } from "./list";
+import { createCreateAction } from "./create";
+import { createUpdateAction } from "./update";
+import { createDeleteAction } from "./delete";
 
-import type { UseFzFetchOptions, UseFzFetchReturn, UseFzFetchParams } from '../dao/types';
-
-import type { UseActions, UseActionOptions, UseActionReturn, UseListAction, ListActionParams } from './types';
-
-const normalizeOptions = (options: UseActionOptions = {}): UseFzFetchOptions => ({
-    immediate: options.onMount ?? true,
-    refetch: options.autoUpdate ?? true,
-    initialData: options.initialData ?? null,
-});
-
-// Converte ListActionParams in UseFzFetchParams
-const normalizeParams = (params: ListActionParams = {}): UseFzFetchParams => {
-    const queryParams: UseFzFetchParams['queryParams'] = {};
-    
-    // Filters: { by_city: 'san_diego' } → queryParams.by_city = 'san_diego'
-    if (params.filters) {
-        Object.entries(params.filters).forEach(([key, value]) => {
-            if (value !== undefined && value !== null) {
-                queryParams[key] = value;
-            }
-        });
-    }
-    
-    // Sort: { name: 'asc', created_at: 'desc' } → queryParams.sort = 'name:asc,created_at:desc'
-    if (params.sort) {
-        const sortEntries = Object.entries(params.sort).map(([key, direction]) => 
-            `${key}:${direction}`
-        );
-        if (sortEntries.length > 0) {
-            queryParams.sort = sortEntries.join(',');
-        }
-    }
-    
-    // Pagination
-    if (params.page !== undefined) {
-        queryParams.page = params.page;
-    }
-    if (params.pageSize !== undefined) {
-        queryParams.per_page = params.pageSize;
-    }
-    
-    return {
-        queryParams,
-    };
-};
-
-const normalizeResponse = <T>(response: UseFzFetchReturn<T>): UseActionReturn<T> => {
-    return {
-        error: computed(() => response.error.value),
-        data: computed(() => response.data.value),
-        isLoading: computed(() => response.isFetching.value),
-        execute: response.execute,
-    } as UseActionReturn<T>;
-};
-
+/**
+ * Factory function to create CRUD actions for a given resource
+ *
+ * This is the main entry point for creating entity-specific composables.
+ * It provides all CRUD operations (Create, Retrieve, Update, Delete, List) with:
+ * - Type-safe operations via TypeScript generics
+ * - Reactive parameters (refs/computed automatically trigger refetch)
+ * - Automatic CSRF protection for mutations
+ * - Consistent error handling and loading states
+ *
+ * @param basePath - Base API path for the resource (e.g., 'users', 'breweries')
+ * @returns Object containing all CRUD action composables
+ *
+ * @example
+ * // Create entity-specific composable
+ * const { useRetrieve, useList, useCreate, useUpdate, useDelete } = useActions<User>('users')
+ *
+ * // Query actions (GET)
+ * const { data: user } = useRetrieve(1)
+ * const { data: users } = useList({ filters: { role: 'admin' } })
+ *
+ * // Mutation actions (POST/PUT/PATCH/DELETE)
+ * const { execute: createUser } = useCreate()
+ * await createUser({ name: 'John', email: 'john@example.com' })
+ *
+ * @see {@link UseRetrieveAction} for retrieve operation details
+ * @see {@link UseListAction} for list operation details
+ * @see {@link UseCreateAction} for create operation details
+ * @see {@link UseUpdateAction} for update operation details
+ * @see {@link UseDeleteAction} for delete operation details
+ */
 export const useActions: UseActions = <T>(basePath: string) => {
-    return {
-        useRetrieve: (pk, options) => {
-            const url = computed(() => `${basePath}/${toValue(pk)}`);
-            
-            const response = useFzFetch<T>(url, normalizeOptions(options));
+  // Validate basePath is not empty
+  if (!basePath || basePath.trim() === "") {
+    throw new Error(
+      "[useActions] basePath is required and cannot be empty",
+    );
+  }
 
-            return normalizeResponse<T>(response);
-        },
-        useList: ((paramsOrOptions, options) => {
-            // Caso 3: useList(params, options)
-            if (options !== undefined) {
-                const params = paramsOrOptions as ListActionParams;
-                const response = useFzFetch<T>(`${basePath}`, normalizeParams(params), normalizeOptions(options));
-                return normalizeResponse<T>(response);
-            }
-
-            // Caso 2: useList(paramsOrOptions)
-            if (paramsOrOptions !== undefined) {
-                // Distingui tra ListActionParams e UseActionOptions
-                if ('filters' in paramsOrOptions || 'sort' in paramsOrOptions || 'page' in paramsOrOptions || 'pageSize' in paramsOrOptions) {
-                    // È ListActionParams
-                    const params = paramsOrOptions as ListActionParams;
-                    const response = useFzFetch<T>(`${basePath}`, normalizeParams(params));
-                    return normalizeResponse<T>(response);
-                } else {
-                    // È UseActionOptions
-                    const actionOptions = paramsOrOptions as UseActionOptions;
-                    const response = useFzFetch<T>(`${basePath}`, normalizeOptions(actionOptions));
-                    return normalizeResponse<T>(response);
-                }
-            }
-
-            // Caso 1: useList()
-            const response = useFzFetch<T>(`${basePath}`);
-            return normalizeResponse<T>(response);
-        }) as UseListAction<T>,
-        /*
-        add: () => null,
-        modify: () => null,
-        remove: () => null,
-        */
-    };
+  return {
+    useRetrieve: (pk, options) =>
+      createRetrieveAction<T>(
+        basePath,
+        pk,
+        options as QueryActionOptions<T> | undefined,
+      ),
+    useList: ((paramsOrOptions, options) =>
+      createListAction<T>(basePath, paramsOrOptions, options)) as UseListAction<T>,
+    useCreate: ((options?: MutationActionOptions) =>
+      createCreateAction<T>(basePath, options)) as UseCreateAction<T>,
+    useUpdate: ((options?: MutationActionOptions) =>
+      createUpdateAction<T>(basePath, options)) as UseUpdateAction<T>,
+    useDelete: ((options?: MutationActionOptions) =>
+      createDeleteAction<T>(basePath, options)) as UseDeleteAction<T>,
+  };
 };
+
+// Re-export types for backward compatibility
+export type { UseActions, UseActionsReturn, QueryActionOptions, MutationActionOptions, UseActionOptions } from "./shared/types";
+export type { UseRetrieveAction, UseRetrieveActionReturn } from "./retrieve/types";
+export type { UseListAction, ListActionParams, ListActionReturn } from "./list/types";
+export type { UseCreateAction, UseCreateActionReturn } from "./create/types";
+export type { UseUpdateAction, UseUpdateActionReturn, UpdateOptions } from "./update/types";
+export type { UseDeleteAction, UseDeleteActionReturn } from "./delete/types";
