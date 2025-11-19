@@ -167,7 +167,7 @@ export interface UseActionsReturn<T> {
 /**
  * Factory function to create CRUD actions for a given resource
  *
- * @param basePath - Base API path for the resource (e.g., 'users', 'breweries')
+ * @param basePath - Base API path for the resource (e.g., 'users', 'invoices')
  * @returns Object containing all CRUD action composables
  *
  * @example
