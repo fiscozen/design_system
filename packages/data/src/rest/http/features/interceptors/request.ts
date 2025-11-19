@@ -63,9 +63,48 @@ const compareRequestInit = (
 };
 
 /**
+ * Normalizes Headers object to a plain object
+ *
+ * Converts Headers instance to Record<string, string> with lowercase keys.
+ *
+ * @param headers - Headers object instance
+ * @returns Normalized headers as Record<string, string>
+ */
+const normalizeHeadersObject = (
+  headers: Headers,
+): Record<string, string> => {
+  const normalized: Record<string, string> = {};
+  headers.forEach((value, key) => {
+    normalized[key.toLowerCase()] = value;
+  });
+  return normalized;
+};
+
+/**
+ * Normalizes array of header tuples to a plain object
+ *
+ * Converts [string, string][] to Record<string, string> with lowercase keys.
+ * Last value wins for duplicate keys (standard headers behavior).
+ *
+ * @param headers - Array of [key, value] tuples
+ * @returns Normalized headers as Record<string, string>
+ */
+const normalizeHeadersArray = (
+  headers: [string, string][],
+): Record<string, string> => {
+  const normalized: Record<string, string> = {};
+  for (const [key, value] of headers) {
+    // Last value wins for duplicate keys (standard headers behavior)
+    normalized[key.toLowerCase()] = value;
+  }
+  return normalized;
+};
+
+/**
  * Normalizes headers to a plain object for comparison
  *
- * Handles Headers objects, Record<string, string>, and array of tuples [string, string][]
+ * Handles Headers objects, Record<string, string>, and array of tuples [string, string][].
+ * All header keys are normalized to lowercase for consistent comparison.
  *
  * @param headers - Headers to normalize
  * @returns Normalized headers as Record<string, string>
@@ -79,21 +118,12 @@ const normalizeHeaders = (
 
   // Handle Headers object
   if (headers instanceof Headers) {
-    const normalized: Record<string, string> = {};
-    headers.forEach((value, key) => {
-      normalized[key.toLowerCase()] = value;
-    });
-    return normalized;
+    return normalizeHeadersObject(headers);
   }
 
   // Handle array of tuples [string, string][]
   if (Array.isArray(headers)) {
-    const normalized: Record<string, string> = {};
-    for (const [key, value] of headers) {
-      // Last value wins for duplicate keys (standard headers behavior)
-      normalized[key.toLowerCase()] = value;
-    }
-    return normalized;
+    return normalizeHeadersArray(headers);
   }
 
   // Handle plain object Record<string, string>
