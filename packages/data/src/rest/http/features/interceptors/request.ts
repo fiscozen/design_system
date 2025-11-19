@@ -1,4 +1,4 @@
-import { toValue, type MaybeRefOrGetter } from "vue";
+import { toValue, watch, type MaybeRefOrGetter } from "vue";
 import type { UseFzFetchOptions, UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
 import { normalizeUseFzFetchOptions } from "../../utils/options";
@@ -197,22 +197,44 @@ export const wrapWithRequestInterceptor = <T>(
             : undefined,
         ).json();
 
-        // Execute the modified fetch and update the original result
+        // Synchronize state reactively from modified fetch to original result
+        // This ensures state stays in sync even if modifiedFetchResult changes after initial sync
+        // Note: isFetching is readonly and cannot be synced, but we observe it to know when request completes
+        const unwatchSync = watch(
+          [
+            () => modifiedFetchResult.response.value,
+            () => modifiedFetchResult.statusCode.value,
+            () => modifiedFetchResult.data.value,
+            () => modifiedFetchResult.error.value,
+          ],
+          () => {
+            // Sync all state properties reactively
+            fetchResult.response.value = modifiedFetchResult.response.value;
+            fetchResult.statusCode.value = modifiedFetchResult.statusCode.value;
+            fetchResult.data.value = modifiedFetchResult.data.value;
+            fetchResult.error.value = modifiedFetchResult.error.value;
+          },
+          { immediate: true, deep: false },
+        );
+
+        // Execute the modified fetch and handle errors
         try {
           await modifiedFetchResult.execute(throwOnFailed);
-
-          // Copy results from modified fetch to original result
-          fetchResult.response.value = modifiedFetchResult.response.value;
-          fetchResult.statusCode.value = modifiedFetchResult.statusCode.value;
-          fetchResult.data.value = modifiedFetchResult.data.value;
-          fetchResult.error.value = modifiedFetchResult.error.value;
         } catch (error: unknown) {
+          // Stop watching before handling error to prevent further sync
+          unwatchSync();
+          
           const normalizedError = error instanceof Error ? error : new Error(String(error));
           fetchResult.error.value = normalizedError;
           if (throwOnFailed) {
             throw normalizedError;
           }
+          return;
         }
+
+        // Stop watching when request completes (success or error)
+        // The watch will have already synced the final state
+        unwatchSync();
 
         return;
       }
