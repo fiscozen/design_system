@@ -80,43 +80,6 @@ export interface UseFzFetchReturn<T> {
    * (default not throwing error)
    */
   execute: (throwOnFailed?: boolean) => Promise<void>;
-
-  /* -------------------------------------------------------- */
-
-  /**
-   * Indicates if the fetch request has finished
-   */
-  // isFinished: Readonly<ShallowRef<boolean>>;
-
-  /**
-   * Indicates if the fetch request is able to be aborted
-   */
-  // canAbort: ComputedRef<boolean>;
-
-  /**
-   * Indicates if the fetch request was aborted
-   */
-  // aborted: ShallowRef<boolean>;
-
-  /**
-   * Abort the fetch request
-   */
-  // abort: (reason?: any) => void;
-
-  /*
-    get: () => UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>;
-    post: (payload?: MaybeRefOrGetter<unknown>, type?: string) => UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>;
-    put: (payload?: MaybeRefOrGetter<unknown>, type?: string) => UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>;
-    delete: (payload?: MaybeRefOrGetter<unknown>, type?: string) => UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>;
-    patch: (payload?: MaybeRefOrGetter<unknown>, type?: string) => UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>;
-    head: (payload?: MaybeRefOrGetter<unknown>, type?: string) => UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>;
-    options: (payload?: MaybeRefOrGetter<unknown>, type?: string) => UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>;
-    json: <JSON = any>() => UseFzFetchReturn<JSON> & PromiseLike<UseFzFetchReturn<JSON>>;
-    text: () => UseFzFetchReturn<string> & PromiseLike<UseFzFetchReturn<string>>;
-    blob: () => UseFzFetchReturn<Blob> & PromiseLike<UseFzFetchReturn<Blob>>;
-    arrayBuffer: () => UseFzFetchReturn<ArrayBuffer> & PromiseLike<UseFzFetchReturn<ArrayBuffer>>;
-    formData: () => UseFzFetchReturn<FormData> & PromiseLike<UseFzFetchReturn<FormData>>;
-    */
 }
 
 /**
