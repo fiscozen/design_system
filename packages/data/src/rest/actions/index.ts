@@ -23,7 +23,7 @@ import { createDeleteAction } from "./delete";
  * - Automatic CSRF protection for mutations
  * - Consistent error handling and loading states
  *
- * @param basePath - Base API path for the resource (e.g., 'users', 'breweries')
+ * @param basePath - Base API path for the resource (e.g., 'users', 'invoices')
  * @returns Object containing all CRUD action composables
  *
  * @example
