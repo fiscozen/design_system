@@ -2,6 +2,15 @@ import { watch, nextTick } from "vue";
 import type { UseFzFetchReturn } from "../../types";
 
 /**
+ * Maximum number of characters to use from non-JSON body for deduplication key
+ * 
+ * Used to create a unique identifier for non-JSON request bodies.
+ * A prefix of 100 characters is sufficient to distinguish most different bodies
+ * while keeping the key size manageable.
+ */
+const NON_JSON_BODY_PREFIX_LENGTH = 100;
+
+/**
  * Manages request deduplication to prevent duplicate identical requests
  *
  * When multiple identical requests are made simultaneously, only the first one
@@ -135,8 +144,8 @@ export class DeduplicationManager {
       return JSON.stringify(parsed, Object.keys(parsed).sort());
     } catch {
       // If not JSON, create identifier to avoid collisions
-      // Use length and first 100 chars to distinguish different non-JSON bodies
-      const prefix = body.substring(0, 100);
+      // Use length and prefix to distinguish different non-JSON bodies
+      const prefix = body.substring(0, NON_JSON_BODY_PREFIX_LENGTH);
       return `non-json:${body.length}:${prefix}`;
     }
   }
