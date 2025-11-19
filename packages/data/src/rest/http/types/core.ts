@@ -5,39 +5,39 @@ import type { UseFetchOptions } from "@vueuse/core";
  * Options for useFzFetch function
  */
 export interface UseFzFetchOptions extends UseFetchOptions {
-    /**
-     * Will automatically run fetch when `useFetch` is used
-     *
-     * @default true
-     */
-    immediate?: boolean;
+  /**
+   * Will automatically run fetch when `useFetch` is used
+   *
+   * @default true
+   */
+  immediate?: boolean;
 
-    /**
-     * Will automatically refetch when:
-     * - the URL is changed if the URL is a ref
-     * - the payload is changed if the payload is a ref
-     *
-     * @default false
-     */
-    refetch?: MaybeRefOrGetter<boolean>;
+  /**
+   * Will automatically refetch when:
+   * - the URL is changed if the URL is a ref
+   * - the payload is changed if the payload is a ref
+   *
+   * @default false
+   */
+  refetch?: MaybeRefOrGetter<boolean>;
 
-    /**
-     * Initial data before the request finished
-     *
-     * @default null
-     */
-    initialData?: unknown;
+  /**
+   * Initial data before the request finished
+   *
+   * @default null
+   */
+  initialData?: unknown;
 
-    /**
-     * Enable request deduplication for this specific request
-     * 
-     * When enabled, identical requests (same URL + query + payload + method)
-     * made simultaneously will be deduplicated - only the first one executes,
-     * others wait for and share the same result.
-     * 
-     * @default undefined (uses global deduplication setting)
-     */
-    deduplication?: boolean;
+  /**
+   * Enable request deduplication for this specific request
+   *
+   * When enabled, identical requests (same URL + query + payload + method)
+   * made simultaneously will be deduplicated - only the first one executes,
+   * others wait for and share the same result.
+   *
+   * @default undefined (uses global deduplication setting)
+   */
+  deduplication?: boolean;
 }
 
 /**
@@ -99,4 +99,3 @@ export interface UseFzFetch {
     UseFzFetchOptions?: UseFzFetchOptions,
   ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>;
 }
-

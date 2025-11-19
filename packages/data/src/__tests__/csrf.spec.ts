@@ -22,7 +22,7 @@ describe("CsrfManager", () => {
       });
 
       const headers = manager.injectToken({}, "POST");
-      
+
       // Should preserve the full value including all '=' characters
       expect(headers["X-CSRF-Token"]).toBe("abc=def=ghi");
     });
@@ -37,7 +37,7 @@ describe("CsrfManager", () => {
       });
 
       const headers = manager.injectToken({}, "POST");
-      
+
       expect(headers["X-CSRF-Token"]).toBe("simple_value");
     });
 
@@ -52,13 +52,14 @@ describe("CsrfManager", () => {
       });
 
       const headers = manager.injectToken({}, "POST");
-      
+
       // Should decode the URL-encoded value correctly
       expect(headers["X-CSRF-Token"]).toBe("value=with=equals");
     });
 
     it("should handle multiple cookies and find the correct one", () => {
-      document.cookie = "other_cookie=value1; csrf_token=token=with=equals; another=value2";
+      document.cookie =
+        "other_cookie=value1; csrf_token=token=with=equals; another=value2";
 
       const manager = new CsrfManager({
         enabled: true,
@@ -67,7 +68,7 @@ describe("CsrfManager", () => {
       });
 
       const headers = manager.injectToken({}, "POST");
-      
+
       expect(headers["X-CSRF-Token"]).toBe("token=with=equals");
     });
 
@@ -81,7 +82,7 @@ describe("CsrfManager", () => {
       });
 
       const headers = manager.injectToken({}, "POST");
-      
+
       // Should trim whitespace and preserve equals in value
       expect(headers["X-CSRF-Token"]).toBe("value=with=equals");
     });
@@ -96,7 +97,7 @@ describe("CsrfManager", () => {
       });
 
       const headers = manager.injectToken({}, "POST");
-      
+
       expect(headers["X-CSRF-Token"]).toBeUndefined();
     });
 
@@ -110,7 +111,7 @@ describe("CsrfManager", () => {
       });
 
       const headers = manager.injectToken({}, "POST");
-      
+
       // Should skip invalid_cookie and find csrf_token
       expect(headers["X-CSRF-Token"]).toBe("valid=value");
     });
@@ -136,4 +137,3 @@ describe("CsrfManager", () => {
     });
   });
 });
-

@@ -398,7 +398,7 @@ userId.value = 2 // ✅ Automatically refetches
 
 #### `useList` - List Entities
 
-Lists entities with optional filters, sorting, and pagination.
+Lists entities with optional filters, ordering, and pagination.
 
 **Signature:**
 ```typescript
@@ -422,7 +422,7 @@ Initial parameters (used only for bootstrap). The composable returns reactive ob
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `filters` | `Record<string, string \| number \| boolean \| null \| undefined> \| Ref \| ComputedRef` | ❌ No | Initial filter parameters. `null`/`undefined` values are excluded. After initialization, modify the returned `filters` reactive object directly. |
-| `sort` | `Array<Record<string, 'asc' \| 'desc'>> \| Ref \| ComputedRef` | ❌ No | Initial sort parameters as array (e.g., `[{ name: 'asc' }, { created_at: 'desc' }]`). After initialization, modify the returned `sort` reactive array directly. |
+| `ordering` | `Array<Record<string, 'asc' \| 'desc' \| 'none'>> \| Ref \| ComputedRef` | ❌ No | Initial ordering parameters as array (e.g., `[{ name: 'asc' }, { created_at: 'desc' }]`). Normalized to query string format: `ordering=name,-created_at`. After initialization, modify the returned `ordering` reactive array directly. |
 | `pagination` | `{ page?: number, pageSize?: number } \| Ref \| ComputedRef` | ❌ No | Initial pagination parameters. If provided (even if empty), default values are applied: `page` defaults to `1`, `pageSize` defaults to `50`. After initialization, modify the returned `pagination` reactive object directly. |
 
 **Returns:**
@@ -434,7 +434,7 @@ Initial parameters (used only for bootstrap). The composable returns reactive ob
   isLoading: Readonly<ShallowRef<boolean>>, // Loading state
   execute: () => Promise<void>,    // Manual execute function
   filters: Reactive<Record<...>>,  // Reactive filters - modify directly
-  sort: Reactive<Array<Record<...>>>, // Reactive sort - modify directly
+  ordering: Reactive<Array<Record<...>>>, // Reactive ordering - modify directly
   pagination: Reactive<{ page?: number, pageSize?: number }> // Reactive pagination - modify directly
 }
 ```
@@ -448,13 +448,13 @@ import { useUsers } from '@/composables/useUsers'
 const { useListUsers } = useUsers()
 
 // useList returns reactive objects for direct modification
-const { data: users, isLoading, filters, pagination, sort } = useListUsers({
+const { data: users, isLoading, filters, pagination, ordering } = useListUsers({
   filters: { enabled: true },           // Initial filters (static)
   pagination: { page: 1, pageSize: 20 }, // Initial pagination (static)
   // Note: If pagination is provided (even if empty), defaults are applied:
   // - page defaults to 1 if not specified
   // - pageSize defaults to 50 if not specified
-  sort: [{ name: 'asc' }]              // Initial sort (static)
+  ordering: [{ name: 'asc' }]              // Initial ordering (static)
 })
 
 // Pagination defaults example
@@ -465,42 +465,200 @@ const { pagination: defaultPagination } = useListUsers({ pagination: {} })
 filters.enabled = false        // ✅ Auto-refetches
 filters.name = 'John'          // ✅ Auto-refetches
 pagination.page = 2            // ✅ Auto-refetches
-sort.push({ created_at: 'desc' }) // ✅ Auto-refetches
+ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches
 </script>
 ```
 
 **Reactive Parameters Best Practices:**
 
-The `useList` action returns reactive objects (`filters`, `sort`, `pagination`) that can be modified directly to trigger automatic refetches.
+The `useList` action returns reactive objects (`filters`, `ordering`, `pagination`) that can be modified directly to trigger automatic refetches.
 
 **✅ Recommended: Modify reactive objects directly**
 
 ```typescript
-const { filters, pagination, sort } = useListUsers({
+const { filters, pagination, ordering } = useListUsers({
   filters: { enabled: true },
   pagination: { page: 1, pageSize: 20 },
-  sort: [{ name: 'asc' }]
+  ordering: [{ name: 'asc' }]
 })
 
 // ✅ Modify reactive objects directly - triggers auto-refetch (if autoUpdate: true)
 filters.enabled = false        // ✅ Auto-refetches
 filters.name = 'John'          // ✅ Auto-refetches
 pagination.page = 2            // ✅ Auto-refetches
-sort.push({ created_at: 'desc' }) // ✅ Auto-refetches
+ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches
 ```
 
 **✅ Initial values are only for bootstrap**
 
 ```typescript
 // Initial values (static) - used only once at initialization
-const { filters, pagination, sort } = useListUsers({
+const { filters, pagination, ordering } = useListUsers({
   filters: { enabled: true },           // Static initial value
   pagination: { page: 1, pageSize: 20 }, // Static initial value
-  sort: [{ name: 'asc' }]               // Static initial value
+  ordering: [{ name: 'asc' }]               // Static initial value
 })
 
 // After initialization, modify the returned reactive objects directly
 filters.enabled = false // ✅ This triggers refetch, not the initial value
+```
+
+#### `usePaginatedList` - List Entities with Paginated Response
+
+Lists entities with paginated response format and metadata extraction. Works exactly like `useList` but handles paginated responses with metadata.
+
+**Signature:**
+```typescript
+usePaginatedList(): PaginatedListActionReturn<T>
+usePaginatedList(params: PaginatedListActionParams): PaginatedListActionReturn<T>
+usePaginatedList(options: PaginatedListActionOptions<T>): PaginatedListActionReturn<T>
+usePaginatedList(params: PaginatedListActionParams, options: PaginatedListActionOptions<T>): PaginatedListActionReturn<T>
+```
+
+**Response Format:**
+Expects API to return:
+```typescript
+{
+  results: T[],           // Array of entities (or custom key via dataKey option)
+  count: number,         // Total number of items across all pages
+  next: string | null,   // URL to next page (if available)
+  previous: string | null, // URL to previous page (if available)
+  pages: number,         // Total number of pages
+  page: number          // Current page number (1-indexed)
+}
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `params` | `PaginatedListActionParams` | ❌ No | Same as `ListActionParams` (filters, ordering, pagination) |
+| `options` | `PaginatedListActionOptions<T>` | ❌ No | Options including `dataKey` and `enableSingleOrdering` |
+
+**PaginatedListActionOptions:**
+
+| Option | Type | Required | Default | Description |
+|--------|------|----------|---------|-------------|
+| `dataKey` | `string` | ❌ No | `'results'` | Key name in paginated response that contains the data array |
+| `enableSingleOrdering` | `boolean` | ❌ No | `false` | When `true`, only one column can be ordered at a time |
+
+**Returns:**
+
+```typescript
+{
+  data: ShallowRef<T[] | null>,        // Array of entities (extracted from results)
+  error: ShallowRef<Error | null>,      // Error if request failed
+  isLoading: Readonly<ShallowRef<boolean>>, // Loading state
+  execute: () => Promise<void>,        // Manual execute function
+  meta: ComputedRef<PaginationMeta | null>, // Pagination metadata
+  filters: Reactive<Record<...>>,     // Reactive filters - modify directly
+  ordering: Reactive<Array<Record<...>>>, // Reactive ordering - modify directly
+  pagination: Reactive<PaginationParams>, // Reactive pagination - modify directly
+  handlePageChange: (page: number) => void, // Helper to change page
+  handleOrderingChange: (column: { field: string }, direction: 'asc' | 'desc' | 'none') => void // Helper to change ordering
+}
+```
+
+**PaginationMeta:**
+
+```typescript
+interface PaginationMeta {
+  count: number;    // Total number of items across all pages
+  pages: number;    // Total number of pages
+  page: number;    // Current page number (1-indexed, from API response)
+}
+```
+
+**Example:**
+
+```vue
+<script setup>
+import { useUsers } from '@/composables/useUsers'
+
+const { usePaginatedListUsers } = useUsers()
+
+// usePaginatedList returns reactive objects + meta
+const { 
+  data: users, 
+  meta, 
+  filters, 
+  pagination, 
+  ordering,
+  handlePageChange,
+  handleOrderingChange 
+} = usePaginatedListUsers({
+  filters: { active: true },
+  pagination: { page: 1, pageSize: 20 },
+  ordering: [{ name: 'asc' }]
+})
+
+// Access pagination metadata
+console.log(meta.value?.count)  // Total items
+console.log(meta.value?.pages)  // Total pages
+console.log(meta.value?.page)   // Current page
+
+// Change page using helper function
+const goToPage = (page: number) => {
+  handlePageChange(page) // ✅ Auto-refetches
+}
+
+// Change ordering using helper function
+const sortByName = () => {
+  handleOrderingChange({ field: 'name' }, 'asc') // ✅ Auto-refetches
+}
+
+// Or modify reactive objects directly
+filters.active = false        // ✅ Auto-refetches
+pagination.page = 2           // ✅ Auto-refetches
+ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches
+</script>
+
+<template>
+  <div>
+    <div v-if="meta">
+      <p>Total: {{ meta.count }} items</p>
+      <p>Page {{ meta.page }} of {{ meta.pages }}</p>
+    </div>
+    
+    <ul>
+      <li v-for="user in users" :key="user.id">{{ user.name }}</li>
+    </ul>
+    
+    <button @click="goToPage(2)">Go to page 2</button>
+  </div>
+</template>
+```
+
+**Custom Data Key:**
+
+If your API uses a different key name for the data array:
+
+```typescript
+// API returns { items: [...], count: 100, pages: 10 }
+const { data } = usePaginatedListUsers(
+  { filters: { active: true } },
+  { dataKey: 'items' } // Extract from 'items' instead of 'results'
+)
+```
+
+**Single Ordering Mode:**
+
+When `enableSingleOrdering: true`, only one column can be ordered at a time:
+
+```typescript
+const { handleOrderingChange } = usePaginatedListUsers(
+  { filters: { active: true } },
+  { enableSingleOrdering: true }
+)
+
+// Order by name - resets all other orderings
+handleOrderingChange({ field: 'name' }, 'asc')
+
+// Order by created_at - resets name ordering
+handleOrderingChange({ field: 'created_at' }, 'desc')
+
+// Remove ordering
+handleOrderingChange({ field: 'name' }, 'none')
 ```
 
 ### Mutation Actions (POST/PUT/PATCH/DELETE)
@@ -705,11 +863,11 @@ const { data, execute } = useListUsers(
 **Example with Reactive Objects:**
 
 ```typescript
-const { data, execute, filters, pagination, sort } = useListUsers(
+const { data, execute, filters, pagination, ordering } = useListUsers(
   { 
     filters: { enabled: true },
     pagination: { page: 1, pageSize: 20 },
-    sort: [{ name: 'asc' }]
+    ordering: [{ name: 'asc' }]
   },
   {
     onMount: true,          // Fetch on mount
@@ -722,7 +880,7 @@ const { data, execute, filters, pagination, sort } = useListUsers(
 // Modifying reactive objects will trigger automatic refetch (because autoUpdate: true)
 filters.enabled = false        // ✅ Auto-refetches
 pagination.page = 2            // ✅ Auto-refetches
-sort.push({ created_at: 'desc' }) // ✅ Auto-refetches
+ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches
 ```
 
 #### MutationActionOptions
@@ -768,11 +926,11 @@ const loadUsers = async () => {
 Since `execute()` doesn't accept parameters, modify the reactive objects returned by `useList` before calling `execute()`:
 
 ```typescript
-const { data, execute, isLoading, filters, pagination, sort } = useListUsers(
+const { data, execute, isLoading, filters, pagination, ordering } = useListUsers(
   { 
     filters: { enabled: true },
     pagination: { page: 1, pageSize: 20 },
-    sort: [{ name: 'asc' }]
+    ordering: [{ name: 'asc' }]
   },
   { 
     onMount: false,     // Don't fetch on mount
@@ -1088,7 +1246,7 @@ describe('useUsers', () => {
 ### ✅ Available Features (v1.0)
 
 - **Complete CRUD Operations** - `useRetrieve`, `useList`, `useCreate`, `useUpdate`, `useDelete`
-- **Reactive Parameters** - `useList` returns reactive objects (`filters`, `pagination`, `sort`) for direct modification. Automatic refetching when reactive objects change or when `pk` changes in `useRetrieve`
+- **Reactive Parameters** - `useList` and `usePaginatedList` return reactive objects (`filters`, `pagination`, `ordering`) for direct modification. Automatic refetching when reactive objects change or when `pk` changes in `useRetrieve`
 - **CSRF Protection** - Automatic token injection for mutation requests
 - **Request Deduplication** - Prevent duplicate identical requests
 - **Request/Response Interceptors** - Modify requests/responses or abort requests

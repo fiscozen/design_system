@@ -22,12 +22,9 @@ export const createDeleteAction = <T>(
   const execute = async (pk: string | number): Promise<void> => {
     await executeMutation<T>(
       async () => {
-        const response = useFzFetch<T>(
-          `${basePath}/${pk}`,
-          {
-            method: "DELETE",
-          },
-        );
+        const response = useFzFetch<T>(`${basePath}/${pk}`, {
+          method: "DELETE",
+        });
 
         await response.execute(options?.throwOnError ?? false);
         return response;
@@ -41,4 +38,3 @@ export const createDeleteAction = <T>(
 
   return { data, error, isLoading, execute };
 };
-

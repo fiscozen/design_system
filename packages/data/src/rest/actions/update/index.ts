@@ -33,14 +33,11 @@ export const createUpdateAction = <T>(
 
     await executeMutation<T>(
       async () => {
-        const response = useFzFetch<T>(
-          `${basePath}/${pk}`,
-          {
-            method,
-            body: JSON.stringify(payload),
-            headers: { "Content-Type": CONTENT_TYPE_JSON },
-          },
-        );
+        const response = useFzFetch<T>(`${basePath}/${pk}`, {
+          method,
+          body: JSON.stringify(payload),
+          headers: { "Content-Type": CONTENT_TYPE_JSON },
+        });
 
         await response.execute(options?.throwOnError ?? false);
         return response;
@@ -54,4 +51,3 @@ export const createUpdateAction = <T>(
 
   return { data, error, isLoading, execute };
 };
-

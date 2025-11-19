@@ -12,16 +12,13 @@ import { NON_JSON_BODY_PREFIX_LENGTH } from "../../config";
  * @internal
  */
 export class DeduplicationManager {
-  private pendingRequests: Map<
-    string,
-    UseFzFetchReturn<any>
-  > = new Map();
-  
+  private pendingRequests: Map<string, UseFzFetchReturn<any>> = new Map();
+
   private pendingWatches: Map<string, () => void> = new Map();
 
   /**
    * Base URL for resolving relative URLs during normalization
-   * 
+   *
    * Passed explicitly to avoid circular dependency with state module.
    * If not provided, relative URLs will be normalized without base URL.
    */
@@ -68,8 +65,9 @@ export class DeduplicationManager {
       if (url.startsWith("http://") || url.startsWith("https://")) {
         const urlObj = new URL(url);
         // Sort query parameters
-        const sortedParams = Array.from(urlObj.searchParams.entries())
-          .sort(([a], [b]) => a.localeCompare(b));
+        const sortedParams = Array.from(urlObj.searchParams.entries()).sort(
+          ([a], [b]) => a.localeCompare(b),
+        );
         urlObj.search = "";
         sortedParams.forEach(([key, value]) => {
           urlObj.searchParams.append(key, value);
@@ -84,8 +82,9 @@ export class DeduplicationManager {
         // Use baseUrl to create full URL
         const urlObj = new URL(url, this.baseUrl);
         // Sort query parameters
-        const sortedParams = Array.from(urlObj.searchParams.entries())
-          .sort(([a], [b]) => a.localeCompare(b));
+        const sortedParams = Array.from(urlObj.searchParams.entries()).sort(
+          ([a], [b]) => a.localeCompare(b),
+        );
         urlObj.search = "";
         sortedParams.forEach(([key, value]) => {
           urlObj.searchParams.append(key, value);
@@ -100,16 +99,17 @@ export class DeduplicationManager {
       const queryIndex = url.indexOf("?");
       const pathname = queryIndex === -1 ? url : url.substring(0, queryIndex);
       const query = queryIndex === -1 ? "" : url.substring(queryIndex + 1);
-      
+
       // Sort query parameters if present
       if (query) {
         const params = new URLSearchParams(query);
-        const sortedParams = Array.from(params.entries())
-          .sort(([a], [b]) => a.localeCompare(b));
+        const sortedParams = Array.from(params.entries()).sort(([a], [b]) =>
+          a.localeCompare(b),
+        );
         const sortedQuery = new URLSearchParams(sortedParams).toString();
         return `${pathname.replace(/\/$/, "")}${sortedQuery ? `?${sortedQuery}` : ""}`;
       }
-      
+
       return pathname.replace(/\/$/, "");
     } catch {
       // If URL parsing fails, return as-is
@@ -212,7 +212,7 @@ export class DeduplicationManager {
   private cleanupRequest(key: string): void {
     // Remove from pending requests
     this.pendingRequests.delete(key);
-    
+
     // Stop watching and remove from pending watches
     const watchCleanup = this.pendingWatches.get(key);
     if (watchCleanup) {
@@ -257,7 +257,7 @@ export class DeduplicationManager {
       },
       { immediate: true },
     );
-    
+
     // Store watch cleanup function for explicit cleanup (e.g., in clear())
     this.pendingWatches.set(key, unwatch);
   }
@@ -272,4 +272,3 @@ export class DeduplicationManager {
     this.pendingRequests.clear();
   }
 }
-

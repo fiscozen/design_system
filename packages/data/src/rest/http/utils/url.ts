@@ -16,17 +16,22 @@ export const getUrlWithQueryParams = (
   // Extract existing query parameters from basePath
   // Handle URLs with fragments (#) and multiple '?' characters
   const basePathValue = toValue(basePath);
-  
+
   // Separate fragment from the rest of the URL
   const hashIndex = basePathValue.indexOf("#");
-  const urlWithoutFragment = hashIndex === -1 ? basePathValue : basePathValue.substring(0, hashIndex);
+  const urlWithoutFragment =
+    hashIndex === -1 ? basePathValue : basePathValue.substring(0, hashIndex);
   const fragment = hashIndex === -1 ? null : basePathValue.substring(hashIndex);
-  
+
   // Extract query string (without fragment)
   const queryIndex = urlWithoutFragment.indexOf("?");
-  const baseUrl = queryIndex === -1 ? urlWithoutFragment : urlWithoutFragment.substring(0, queryIndex);
-  const existingQuery = queryIndex === -1 ? null : urlWithoutFragment.substring(queryIndex + 1);
-  
+  const baseUrl =
+    queryIndex === -1
+      ? urlWithoutFragment
+      : urlWithoutFragment.substring(0, queryIndex);
+  const existingQuery =
+    queryIndex === -1 ? null : urlWithoutFragment.substring(queryIndex + 1);
+
   if (existingQuery) {
     // Add existing parameters (fragment already excluded)
     const existing = new URLSearchParams(existingQuery);
@@ -52,4 +57,3 @@ export const getUrlWithQueryParams = (
   // Preserve fragment if it existed in the original URL
   return fragment ? `${urlWithQuery}${fragment}` : urlWithQuery;
 };
-
