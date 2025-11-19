@@ -49,7 +49,8 @@ export const wrapWithResponseInterceptor = <T>(
             // Re-parse body if response was modified
             // @vueuse/core doesn't automatically re-parse when response changes
             try {
-              const parsedData = await parseResponseBody<T>(interceptedResponse);
+              const parsedData =
+                await parseResponseBody<T>(interceptedResponse);
               fetchResult.data.value = parsedData;
 
               if (state.globalDebug) {
@@ -98,4 +99,3 @@ export const wrapWithResponseInterceptor = <T>(
 
   return fetchResult;
 };
-

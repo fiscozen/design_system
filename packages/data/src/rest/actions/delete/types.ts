@@ -21,4 +21,3 @@ export interface UseDeleteActionReturn<T> extends BaseActionReturn<T> {
 export interface UseDeleteAction<T> {
   (options?: MutationActionOptions): UseDeleteActionReturn<T>;
 }
-

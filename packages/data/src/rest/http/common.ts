@@ -21,4 +21,3 @@ export const DEFAULT_HTTP_METHOD = "GET" as const;
  * Content-Type header value for JSON requests
  */
 export const CONTENT_TYPE_JSON = "application/json" as const;
-

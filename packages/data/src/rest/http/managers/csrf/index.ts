@@ -36,7 +36,9 @@ export class CsrfManager {
   private getTokenFromCookie(): string | null {
     if (typeof document === "undefined") {
       if (this.debug) {
-        console.debug("[CsrfManager] document is undefined, cannot read cookie");
+        console.debug(
+          "[CsrfManager] document is undefined, cannot read cookie",
+        );
       }
       return null;
     }
@@ -49,21 +51,25 @@ export class CsrfManager {
       // Use indexOf to find the first occurrence, then substring to extract name and value
       const equalIndex = cookie.indexOf("=");
       if (equalIndex === -1) continue;
-      
+
       const name = cookie.substring(0, equalIndex).trim();
       // Extract everything after the first '=' as the value
       const value = cookie.substring(equalIndex + 1).trim();
-      
+
       if (name === cookieName) {
         if (this.debug) {
-          console.debug(`[CsrfManager] Found CSRF token in cookie: ${cookieName}`);
+          console.debug(
+            `[CsrfManager] Found CSRF token in cookie: ${cookieName}`,
+          );
         }
         return decodeURIComponent(value);
       }
     }
 
     if (this.debug) {
-      console.debug(`[CsrfManager] CSRF token not found in cookie: ${cookieName}`);
+      console.debug(
+        `[CsrfManager] CSRF token not found in cookie: ${cookieName}`,
+      );
     }
     return null;
   }
@@ -83,7 +89,11 @@ export class CsrfManager {
     method: string = DEFAULT_HTTP_METHOD,
   ): Record<string, string> {
     // Only inject for mutation methods
-    if (!MUTATION_METHODS.includes(method.toUpperCase() as typeof MUTATION_METHODS[number])) {
+    if (
+      !MUTATION_METHODS.includes(
+        method.toUpperCase() as (typeof MUTATION_METHODS)[number],
+      )
+    ) {
       if (this.debug) {
         console.debug(
           `[CsrfManager] Skipping CSRF injection for method: ${method}`,
@@ -118,4 +128,3 @@ export class CsrfManager {
     return headersWithToken;
   }
 }
-

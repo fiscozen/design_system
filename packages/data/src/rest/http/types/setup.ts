@@ -1,7 +1,10 @@
 import type { MaybeRefOrGetter } from "vue";
 import type { UseFzFetchOptions } from "./core";
 import type { CsrfOptions } from "../managers/csrf/types";
-import type { RequestInterceptor, ResponseInterceptor } from "../features/interceptors/types";
+import type {
+  RequestInterceptor,
+  ResponseInterceptor,
+} from "../features/interceptors/types";
 
 /**
  * Setup the fzFetcher options
@@ -9,7 +12,7 @@ import type { RequestInterceptor, ResponseInterceptor } from "../features/interc
 export interface SetupFzFetcherOptions {
   /**
    * The base URL that will be prefixed to all urls unless urls are absolute
-   * 
+   *
    * @required
    */
   baseUrl: MaybeRefOrGetter<string>;
@@ -37,23 +40,23 @@ export interface SetupFzFetcherOptions {
 
   /**
    * Enable request deduplication globally
-   * 
+   *
    * When enabled, identical requests (same URL + query + payload + method)
    * made simultaneously will be deduplicated - only the first one executes,
    * others wait for and share the same result.
-   * 
+   *
    * Can be overridden per-action via UseFzFetchOptions.deduplication
-   * 
+   *
    * @default false
    */
   deduplication?: boolean;
 
   /**
    * Request interceptor function
-   * 
+   *
    * Called before each request is sent. Can modify the request (URL, headers, body, etc.)
    * or abort it by returning null.
-   * 
+   *
    * @example
    * requestInterceptor: async (url, requestInit) => {
    *   // Add custom header
@@ -67,9 +70,9 @@ export interface SetupFzFetcherOptions {
 
   /**
    * Response interceptor function
-   * 
+   *
    * Called after each response is received. Can modify the response or handle errors.
-   * 
+   *
    * @example
    * responseInterceptor: async (response, url, requestInit) => {
    *   // Transform response
@@ -89,4 +92,3 @@ export interface SetupFzFetcherOptions {
 export interface SetupFzFetcher {
   (options: SetupFzFetcherOptions): void;
 }
-

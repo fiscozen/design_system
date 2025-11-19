@@ -80,3 +80,81 @@ describe("useList - Pagination Defaults", () => {
   });
 });
 
+describe("useList - Ordering", () => {
+  beforeEach(() => {
+    resetFzFetcher();
+    vi.clearAllMocks();
+
+    setupFzFetcher({
+      baseUrl: "https://api.example.com",
+    });
+
+    global.fetch = vi.fn(() => {
+      return Promise.resolve(
+        new Response(JSON.stringify([{ id: 1, name: "User 1" }]), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+      );
+    }) as any;
+  });
+
+  it("should format ordering query string correctly", async () => {
+    const { useList } = useActions<{ id: number; name: string }>("users");
+    const { ordering, execute } = useList();
+
+    ordering.push({ name: "asc" });
+    ordering.push({ created_at: "desc" });
+
+    await execute();
+
+    const callUrl = (global.fetch as any).mock.calls[0][0];
+    const url = new URL(callUrl);
+
+    expect(url.searchParams.get("ordering")).toBe("name,-created_at");
+  });
+
+  it("should exclude 'none' values from ordering query string", async () => {
+    const { useList } = useActions<{ id: number; name: string }>("users");
+    const { ordering, execute } = useList();
+
+    ordering.push({ name: "asc" });
+    ordering.push({ created_at: "none" });
+    ordering.push({ status: "desc" });
+
+    await execute();
+
+    const callUrl = (global.fetch as any).mock.calls[0][0];
+    const url = new URL(callUrl);
+
+    expect(url.searchParams.get("ordering")).toBe("name,-status");
+  });
+
+  it("should preserve order of ordering array in query string", async () => {
+    const { useList } = useActions<{ id: number; name: string }>("users");
+    const { ordering, execute } = useList();
+
+    ordering.push({ name: "asc" });
+    ordering.push({ created_at: "desc" });
+    ordering.push({ status: "asc" });
+
+    await execute();
+
+    const callUrl = (global.fetch as any).mock.calls[0][0];
+    const url = new URL(callUrl);
+
+    expect(url.searchParams.get("ordering")).toBe("name,-created_at,status");
+  });
+
+  it("should not include ordering in query string when array is empty", async () => {
+    const { useList } = useActions<{ id: number; name: string }>("users");
+    const { execute } = useList();
+
+    await execute();
+
+    const callUrl = (global.fetch as any).mock.calls[0][0];
+    const url = new URL(callUrl);
+
+    expect(url.searchParams.get("ordering")).toBeNull();
+  });
+});

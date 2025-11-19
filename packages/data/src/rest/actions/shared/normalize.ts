@@ -1,5 +1,9 @@
 import { computed, toValue } from "vue";
-import type { UseFzFetchOptions, UseFzFetchReturn, UseFzFetchParams } from "../../http/types";
+import type {
+  UseFzFetchOptions,
+  UseFzFetchReturn,
+  UseFzFetchParams,
+} from "../../http/types";
 import type { UseActionOptions, QueryActionReturn } from "./types";
 import type { PaginationParams, FilterParams, SortParams } from "../list/types";
 
@@ -23,15 +27,15 @@ export const normalizeOptions = (
 /**
  * Normalize list action reactive params into query parameters
  *
- * Accepts reactive objects (filters, sort, pagination) and converts them to query string format.
+ * Accepts reactive objects (filters, ordering, pagination) and converts them to query string format.
  * Returns a computed object that updates when reactive params change.
  *
- * @param params - Reactive list action params (filters, sort, pagination)
+ * @param params - Reactive list action params (filters, ordering, pagination)
  * @returns UseFzFetchParams with reactive queryParams
  */
 export const normalizeParams = (params: {
   filters?: FilterParams;
-  sort?: SortParams;
+  ordering?: SortParams;
   pagination?: PaginationParams;
 }): UseFzFetchParams => {
   return {
@@ -67,18 +71,29 @@ export const normalizeParams = (params: {
         });
       }
 
-      // Sort: [{ name: 'asc' }, { created_at: 'desc' }] → queryParams.sort = 'name:asc,created_at:desc'
-      if (params.sort && Array.isArray(params.sort) && params.sort.length > 0) {
-        const sortEntries: string[] = [];
-        
-        params.sort.forEach((sortObj) => {
+      // Ordering: [{ name: 'asc' }, { created_at: 'desc' }, { status: 'none' }] → queryParams.ordering = 'name,-created_at'
+      // Values with direction 'none' are excluded from the query string
+      // Desc fields are prefixed with '-' (e.g., '-created_at'), asc fields have no prefix (e.g., 'name')
+      if (
+        params.ordering &&
+        Array.isArray(params.ordering) &&
+        params.ordering.length > 0
+      ) {
+        const orderingEntries: string[] = [];
+
+        params.ordering.forEach((sortObj) => {
           Object.entries(sortObj).forEach(([key, direction]) => {
-            sortEntries.push(`${key}:${direction}`);
+            // Exclude 'none' values from query string
+            if (direction !== "none") {
+              // Prepend '-' for desc, no prefix for asc
+              const field = direction === "desc" ? `-${key}` : key;
+              orderingEntries.push(field);
+            }
           });
         });
-        
-        if (sortEntries.length > 0) {
-          queryParams.sort = sortEntries.join(",");
+
+        if (orderingEntries.length > 0) {
+          queryParams.ordering = orderingEntries.join(",");
         }
       }
 
@@ -109,7 +124,7 @@ export const normalizeResponse = <T>(
   throwOnError: boolean = false,
 ): QueryActionReturn<T> => {
   const originalExecute = response.execute;
-  
+
   return {
     error: computed(() => response.error.value),
     data: computed(() => response.data.value),
@@ -124,7 +139,7 @@ export const normalizeResponse = <T>(
  * Normalize UseFzFetchReturn to QueryActionReturn (for list actions)
  *
  * Note: This returns only the base QueryActionReturn. The calling code
- * (createListAction) adds filters, sort, and pagination reactive objects
+ * (createListAction) adds filters, ordering, and pagination reactive objects
  * to create the full ListActionReturn.
  *
  * @param response - UseFzFetchReturn from useFzFetch (expects array type)
@@ -136,10 +151,65 @@ export const normalizeListResponse = <T>(
   throwOnError: boolean = false,
 ): QueryActionReturn<T[]> => {
   const originalExecute = response.execute;
-  
+
   return {
     error: computed(() => response.error.value),
     data: computed(() => response.data.value),
+    isLoading: computed(() => response.isFetching.value),
+    execute: async () => {
+      await originalExecute(throwOnError);
+    },
+  } as QueryActionReturn<T[]>;
+};
+
+/**
+ * Normalize paginated response to extract data array
+ *
+ * Extracts the data array from the paginated response using the specified dataKey,
+ * and returns normalized QueryActionReturn with the extracted array as data.
+ *
+ * @param response - UseFzFetchReturn from useFzFetch (expects PaginatedResponse type)
+ * @param dataKey - Key name in response that contains the data array (default: 'results')
+ * @param throwOnError - Whether to throw errors instead of storing in error ref
+ * @returns QueryActionReturn with computed data array
+ */
+export const normalizePaginatedListResponse = <T>(
+  response: UseFzFetchReturn<{
+    results: T[];
+    count: number;
+    next: string | null;
+    previous: string | null;
+    pages: number;
+    page: number;
+    [key: string]: unknown;
+  }>,
+  dataKey: string = "results",
+  throwOnError: boolean = false,
+): QueryActionReturn<T[]> => {
+  const originalExecute = response.execute;
+
+  // Extract data array from paginated response
+  const data = computed(() => {
+    const paginatedData = response.data.value;
+    if (!paginatedData) return null;
+
+    // Extract array from response using dataKey
+    const dataArray = (paginatedData as any)[dataKey];
+
+    // Validate it's an array
+    if (!Array.isArray(dataArray)) {
+      console.warn(
+        `[normalizePaginatedListResponse] Expected array at key "${dataKey}", got ${typeof dataArray}`,
+      );
+      return null;
+    }
+
+    return dataArray as T[];
+  });
+
+  return {
+    error: computed(() => response.error.value),
+    data,
     isLoading: computed(() => response.isFetching.value),
     execute: async () => {
       await originalExecute(throwOnError);

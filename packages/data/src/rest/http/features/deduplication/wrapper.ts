@@ -25,14 +25,18 @@ export const wrapWithDeduplication = <T>(
 
   /**
    * Checks if body is serializable for deduplication purposes
-   * 
+   *
    * FormData, Blob, ArrayBuffer, and ReadableStream cannot be serialized with JSON.stringify.
    * URLSearchParams can be converted to string.
    */
   const isBodySerializable = (body: BodyInit | null | undefined): boolean => {
     if (!body || typeof body === "string") return true;
-    if (body instanceof FormData || body instanceof Blob || 
-        body instanceof ArrayBuffer || body instanceof ReadableStream) {
+    if (
+      body instanceof FormData ||
+      body instanceof Blob ||
+      body instanceof ArrayBuffer ||
+      body instanceof ReadableStream
+    ) {
       return false;
     }
     if (body instanceof URLSearchParams) return true;
@@ -158,4 +162,3 @@ export const wrapWithDeduplication = <T>(
 
   return fetchResult;
 };
-
