@@ -45,10 +45,13 @@ export class CsrfManager {
     const cookieName = this.options.cookieName.trim();
 
     for (const cookie of cookies) {
+      // Find first '=' to handle values containing '='
+      // Use indexOf to find the first occurrence, then substring to extract name and value
       const equalIndex = cookie.indexOf("=");
       if (equalIndex === -1) continue;
       
       const name = cookie.substring(0, equalIndex).trim();
+      // Extract everything after the first '=' as the value
       const value = cookie.substring(equalIndex + 1).trim();
       
       if (name === cookieName) {
