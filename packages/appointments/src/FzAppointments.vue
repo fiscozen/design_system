@@ -11,9 +11,9 @@
         ariaLabel="Giorno precedente"
         @click="navigateBack"
       />
-      <p class="flex-1 flex justify-center text-lg font-medium capitalize">
+      <h3 class="flex-1 flex justify-center capitalize">
         {{ formattedDate }}
-      </p>
+      </h3>
       <FzIconButton
         iconName="angle-right"
         variant="invisible"
@@ -24,34 +24,34 @@
     </div>
 
     <!-- Info text -->
-    <p class="text-sm text-grey-500">
+    <p class="text-grey-500">
       {{ infoText }}
     </p>
 
     <!-- Time slots or alert -->
     <FzRadioGroup
       v-if="hasAvailableSlots"
-      class="flex flex-wrap items-center"
+      class="flex flex-wrap items-center gap-0"
       emphasis
       :name="radioGroupName"
       role="group"
     >
       <template v-slot="{ radioGroupProps }">
         <template v-for="slot in availableSlots">
-        <FzRadioCard
-          v-if="!isSlotExcluded(slot)"
-          v-bind="radioGroupProps"
-          :key="slot.toISOString()"
-          :modelValue="selectedSlotValue"
-          :value="slot.toISOString()"
-          :title="formatTime(slot)"
-          :label="slot.toISOString()"
-          orientation="horizontal"
-          :radioIcon="false"
-          :required="required"
-          class="text-center"
-          @update:modelValue="handleSlotSelect"
-        />
+          <FzRadioCard
+            v-if="!isSlotExcluded(slot)"
+            v-bind="radioGroupProps"
+            :key="slot.toISOString()"
+            :modelValue="selectedSlotValue"
+            :value="slot.toISOString()"
+            :title="formatTime(slot)"
+            :label="slot.toISOString()"
+            orientation="horizontal"
+            :radioIcon="false"
+            :required="required"
+            class="text-center"
+            @update:modelValue="handleSlotSelect"
+          />
         </template>
       </template>
     </FzRadioGroup>
@@ -70,7 +70,16 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { endOfDay, format, formatISO, isSameDay, isSameHour, isSameMinute, parseISO, startOfDay } from "date-fns";
+import {
+  endOfDay,
+  format,
+  formatISO,
+  isSameDay,
+  isSameHour,
+  isSameMinute,
+  parseISO,
+  startOfDay,
+} from "date-fns";
 import { it } from "date-fns/locale";
 import { FzAppointmentsProps } from "./types";
 import { FzRadioCard, FzRadioGroup } from "@fiscozen/radio";
@@ -146,7 +155,8 @@ const canNavigateBack = computed(() => {
   const previousDate = new Date(currentDate.value);
   previousDate.setDate(previousDate.getDate() - 1);
   return (
-    previousDate >= startOfDay(startDateAsDate.value) && previousDate >= today.value
+    previousDate >= startOfDay(startDateAsDate.value) &&
+    previousDate >= today.value
   );
 });
 
@@ -154,7 +164,9 @@ const canNavigateBack = computed(() => {
 const canNavigateForward = computed(() => {
   const nextDate = new Date(currentDate.value);
   nextDate.setDate(nextDate.getDate() + 1);
-  const maxDateLimit = maxDateAsDate.value ? startOfDay(maxDateAsDate.value) : null;
+  const maxDateLimit = maxDateAsDate.value
+    ? startOfDay(maxDateAsDate.value)
+    : null;
   return nextDate >= today.value && (!maxDateLimit || nextDate <= maxDateLimit);
 });
 
@@ -234,7 +246,10 @@ const generateTimeSlots = (date: Date): Date[] => {
 
   for (let i = 0; i < props.slotCount; i++) {
     const date = new Date(slotDate);
-    if (date < startOfDay(currentDate.value) || date > endOfDay(currentDate.value)) {
+    if (
+      date < startOfDay(currentDate.value) ||
+      date > endOfDay(currentDate.value)
+    ) {
       continue;
     }
     slots.push(date);
@@ -260,7 +275,11 @@ const availableSlots = computed(() => {
 
 const isSlotExcluded = (slot: Date): boolean => {
   return props.excludedSlots.some((disabledSlot) => {
-    return isSameDay(slot, disabledSlot) && isSameHour(slot, disabledSlot) && isSameMinute(slot, disabledSlot);
+    return (
+      isSameDay(slot, disabledSlot) &&
+      isSameHour(slot, disabledSlot) &&
+      isSameMinute(slot, disabledSlot)
+    );
   });
 };
 
@@ -308,7 +327,10 @@ const navigateBack = () => {
   newDate.setDate(newDate.getDate() - 1);
 
   // Skip excluded days
-  while (isDayExcluded(newDate) && newDate >= startOfDay(startDateAsDate.value)) {
+  while (
+    isDayExcluded(newDate) &&
+    newDate >= startOfDay(startDateAsDate.value)
+  ) {
     newDate.setDate(newDate.getDate() - 1);
   }
 
@@ -329,7 +351,9 @@ const navigateForward = () => {
   newDate.setDate(newDate.getDate() + 1);
 
   // Skip excluded days
-  const maxDateLimit = maxDateAsDate.value ? startOfDay(maxDateAsDate.value) : null;
+  const maxDateLimit = maxDateAsDate.value
+    ? startOfDay(maxDateAsDate.value)
+    : null;
   while (
     isDayExcluded(newDate) &&
     newDate >= today.value &&
