@@ -65,7 +65,7 @@ const compareRequestInit = (
 /**
  * Normalizes headers to a plain object for comparison
  *
- * Handles both Headers objects and Record<string, string>
+ * Handles Headers objects, Record<string, string>, and array of tuples [string, string][]
  *
  * @param headers - Headers to normalize
  * @returns Normalized headers as Record<string, string>
@@ -77,17 +77,27 @@ const normalizeHeaders = (
     return {};
   }
 
-  // If it's already a plain object, return it
-  if (!(headers instanceof Headers)) {
-    return headers as Record<string, string>;
+  // Handle Headers object
+  if (headers instanceof Headers) {
+    const normalized: Record<string, string> = {};
+    headers.forEach((value, key) => {
+      normalized[key.toLowerCase()] = value;
+    });
+    return normalized;
   }
 
-  // Convert Headers object to plain object
-  const normalized: Record<string, string> = {};
-  headers.forEach((value, key) => {
-    normalized[key.toLowerCase()] = value;
-  });
-  return normalized;
+  // Handle array of tuples [string, string][]
+  if (Array.isArray(headers)) {
+    const normalized: Record<string, string> = {};
+    for (const [key, value] of headers) {
+      // Last value wins for duplicate keys (standard headers behavior)
+      normalized[key.toLowerCase()] = value;
+    }
+    return normalized;
+  }
+
+  // Handle plain object Record<string, string>
+  return headers as Record<string, string>;
 };
 
 /**
