@@ -58,6 +58,15 @@ export const normalizeParams = (params: {
           );
         }
 
+        // Validate that all keys are strings
+        for (const key in params.filters) {
+          if (typeof key !== "string") {
+            throw new Error(
+              `[normalizeParams] Filter keys must be strings, got ${typeof key}`,
+            );
+          }
+        }
+
         Object.entries(params.filters).forEach(([key, value]) => {
           if (value !== undefined && value !== null) {
             queryParams[key] = value;

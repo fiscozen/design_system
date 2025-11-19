@@ -94,16 +94,15 @@ export const useFzFetch: UseFzFetch = <T>(
   useFetchOptions?: UseFzFetchOptions,
 ) => {
   if (state.fzFetcher) {
-    // Determine deduplication setting
-    const deduplicationEnabled = shouldDeduplicate(
-      useFetchOptions?.deduplication,
-    );
-
-    // Resolve timeout (per-action → global → default)
-    const timeoutMs = resolveTimeout(useFetchOptions?.timeout);
-
     // Case 3: All 3 parameters (useFetchOptions present)
     if (useFetchOptions !== undefined) {
+      // Determine deduplication setting for this case
+      const deduplicationEnabled = shouldDeduplicate(
+        useFetchOptions.deduplication,
+      );
+
+      // Resolve timeout for this case (per-action → global → default)
+      const timeoutMs = resolveTimeout(useFetchOptions.timeout);
       const params = paramsOrUseFetchOptions as UseFzFetchParams;
       const method = params?.method || DEFAULT_HTTP_METHOD;
 
@@ -159,6 +158,12 @@ export const useFzFetch: UseFzFetch = <T>(
         "body" in paramsOrUseFetchOptions
       ) {
         // It's UseFzFetchParams
+        // Determine deduplication setting for this case (use global default)
+        const deduplicationEnabled = shouldDeduplicate(undefined);
+
+        // Resolve timeout for this case (use global default)
+        const timeoutMs = resolveTimeout(undefined);
+
         const params = paramsOrUseFetchOptions as UseFzFetchParams;
         const method = params.method || DEFAULT_HTTP_METHOD;
 
@@ -251,6 +256,12 @@ export const useFzFetch: UseFzFetch = <T>(
     }
 
     // Case 1: Only basePath - keep URL reactivity
+    // Determine deduplication setting for this case (use global default)
+    const deduplicationEnabled = shouldDeduplicate(undefined);
+
+    // Resolve timeout for this case (use global default)
+    const timeoutMs = resolveTimeout(undefined);
+
     const finalUrl = computed(() =>
       getUrlWithQueryParams(toValue(basePath), undefined),
     );
