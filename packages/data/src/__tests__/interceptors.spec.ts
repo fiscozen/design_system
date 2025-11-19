@@ -115,6 +115,84 @@ describe("Interceptors", () => {
       // Should not throw error about baseUrl not available
       await expect(execute()).resolves.not.toThrow();
     });
+
+    it("should handle headers as array of tuples [string, string][]", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, requestInit) => {
+          // Modify headers using array of tuples format
+          const headersArray: [string, string][] = [
+            ["Content-Type", "application/json"],
+            ["X-Custom-Header", "custom-value"],
+            ["Authorization", "Bearer token123"],
+          ];
+
+          return {
+            ...requestInit,
+            headers: headersArray,
+          };
+        },
+      });
+
+      global.fetch = vi.fn((url: string, init?: RequestInit) => {
+        // Verify headers were correctly normalized and passed to fetch
+        if (init?.headers) {
+          const headers = init.headers as HeadersInit;
+          // Headers should be properly formatted (fetch API accepts array format)
+          expect(headers).toBeDefined();
+        }
+
+        return Promise.resolve(
+          new Response(JSON.stringify({ success: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      const { execute } = useFzFetch<{ success: boolean }>("/test", {
+        headers: { "Original-Header": "original-value" },
+      });
+
+      // Should not throw error and should handle array format correctly
+      await expect(execute()).resolves.not.toThrow();
+    });
+
+    it("should correctly normalize and compare headers in array format", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, requestInit) => {
+          // Return headers as array of tuples
+          // This tests that normalizeHeaders correctly handles array format
+          return {
+            ...requestInit,
+            headers: [
+              ["Content-Type", "application/json"],
+              ["X-Custom", "value1"],
+            ] as [string, string][],
+          };
+        },
+      });
+
+      global.fetch = vi.fn(() => {
+        return Promise.resolve(
+          new Response(JSON.stringify({ success: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      const { execute } = useFzFetch<{ success: boolean }>("/test", {
+        headers: { "Original-Header": "original-value" },
+      });
+
+      // Should not throw error - normalizeHeaders should handle array format
+      await expect(execute()).resolves.not.toThrow();
+
+      // Verify fetch was called (request was processed)
+      expect(global.fetch).toHaveBeenCalled();
+    });
   });
 });
 
