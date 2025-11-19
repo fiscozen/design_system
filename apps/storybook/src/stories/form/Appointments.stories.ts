@@ -107,7 +107,7 @@ export const Default: Story = {
 
     await step('Verify formatted date is displayed', async () => {
       // Date should be formatted as "Giorno Numero Mese" (e.g., "Lunedì 3 novembre")
-      const dateText = canvasElement.querySelector('p.text-lg')
+      const dateText = canvasElement.querySelector('h3')
       expect(dateText).toBeInTheDocument()
       expect(dateText?.textContent).toBeTruthy()
     })
@@ -398,12 +398,12 @@ export const DateNavigation: Story = {
       const forwardButton = canvas.getByLabelText('Giorno successivo')
 
       if (!forwardButton.hasAttribute('disabled')) {
-        const initialDateText = canvasElement.querySelector('p.text-lg')?.textContent
+        const initialDateText = canvasElement.querySelector('h3')?.textContent
         await userEvent.click(forwardButton)
 
         await waitFor(() => {
           // Verify date text changed
-          const newDateText = canvasElement.querySelector('p.text-lg')?.textContent
+          const newDateText = canvasElement.querySelector('h3')?.textContent
           expect(newDateText).toBeTruthy()
           expect(newDateText).not.toBe(initialDateText)
         })
@@ -414,12 +414,12 @@ export const DateNavigation: Story = {
       const backButton = canvas.getByLabelText('Giorno precedente')
 
       if (!backButton.hasAttribute('disabled')) {
-        const initialDateText = canvasElement.querySelector('p.text-lg')?.textContent
+        const initialDateText = canvasElement.querySelector('h3')?.textContent
         await userEvent.click(backButton)
 
         await waitFor(() => {
           // Verify date text changed
-          const newDateText = canvasElement.querySelector('p.text-lg')?.textContent
+          const newDateText = canvasElement.querySelector('h3')?.textContent
           expect(newDateText).toBeTruthy()
           expect(newDateText).not.toBe(initialDateText)
         })
