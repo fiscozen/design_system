@@ -26,7 +26,12 @@
  */
 import { computed, onMounted, ref, watch } from "vue";
 import { FzCardEvents, FzCardProps, FzCardSlots } from "./types";
-import { FzButton, FzIconButton, FzButtonGroup } from "@fiscozen/button";
+import { FzButton, FzIconButton } from "@fiscozen/button";
+import { FzContainer } from "@fiscozen/container";
+import { useMediaQuery } from "@fiscozen/composables";
+import { breakpoints } from "@fiscozen/style";
+
+const smOrSmaller = useMediaQuery(`(max-width: ${breakpoints.sm})`);
 
 const props = withDefaults(defineProps<FzCardProps>(), {
   environment: 'frontoffice'
@@ -72,11 +77,11 @@ const normalizedColor = computed(() => {
 });
 
 const sectionStaticClass =
-  "border-1 border-solid border-grey-100 rounded flex flex-col";
+  "border-1 border-solid rounded flex flex-col";
 const headerStaticClass =
   "border-solid pt-16 px-16 flex flex-row justify-between";
 const footerStaticClass =
-  "border-solid pt-0 px-16 pb-16 flex justify-end gap-12 items-center";
+  "border-solid pt-0 px-16 pb-16 flex gap-12 items-center";
 
 const showContent = computed(() => isOpen.value || !props.collapsible);
 const isAlive = computed(() => props.alwaysAlive || showContent.value);
@@ -118,25 +123,13 @@ const borderColor = computed(() => {
     case "blue":
       return "border-background-alice-blue";
     case "orange":
-      return "border-orange-200";
+      return "border-background-seashell";
     case "purple":
-      return "border-purple-200";
+      return "border-background-pale-purple";
     case "grey":
-      return "border-grey-200";
+      return "border-background-white-smoke";
     default:
       return "border-grey-100";
-  }
-});
-
-const borderWidth = computed(() => {
-  switch (normalizedColor.value) {
-    case "blue":
-    case "orange":
-    case "purple":
-    case "grey":
-      return "border-0";
-    default:
-      return "border-1";
   }
 });
 
@@ -145,10 +138,6 @@ const atLeastOneButton = computed(
     props.primaryAction !== undefined ||
     props.secondaryAction !== undefined ||
     props.tertiaryAction !== undefined,
-);
-
-const useButtonGroup = computed(
-  () => props.primaryAction !== undefined && props.secondaryAction !== undefined,
 );
 
 function toggleOpen() {
@@ -219,11 +208,11 @@ defineExpose({
     </article>
     <footer
       v-if="(slots.footer || atLeastOneButton) && isAlive"
-      :class="[footerStaticClass]"
+      :class="[footerStaticClass, {'justify-end': !smOrSmaller}]"
       v-show="showContent"
     >
       <slot name="footer">
-        <FzButtonGroup>
+        <FzContainer horizontal gap="sm" :class="{'w-full': smOrSmaller}">
           <FzIconButton
             v-if="tertiaryAction"
             @click="emit('fztertiary:click')"
@@ -233,6 +222,7 @@ defineExpose({
           />
           <FzButton
             v-if="secondaryAction"
+            :class="{'flex-grow': smOrSmaller}"
             @click="emit('fzsecondary:click')"
             :label="secondaryAction.label"
             variant="secondary"
@@ -240,12 +230,13 @@ defineExpose({
           />
           <FzButton
             v-if="primaryAction"
+            :class="{'flex-grow': smOrSmaller}"
             @click="emit('fzprimary:click')"
             :label="primaryAction.label"
             variant="primary"
             :environment="environment"
           />
-        </FzButtonGroup>
+        </FzContainer>
       </slot>
     </footer>
   </section>
