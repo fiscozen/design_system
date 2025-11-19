@@ -57,11 +57,11 @@ export const setupFzFetcher: SetupFzFetcher = (options) => {
   }
 
   // Initialize deduplication manager if enabled
+  // Note: baseUrl is resolved after this check, so we pass it after resolution
   if (state.globalDeduplication) {
-    state.deduplicationManager = new DeduplicationManager();
-    if (state.globalDebug) {
-      console.debug("[setupFzFetcher] Request deduplication enabled");
-    }
+    // baseUrl will be set below, but we need to initialize manager after
+    // For now, create without baseUrl - it will be set before manager is used
+    state.deduplicationManager = null; // Will be set after baseUrl resolution
   } else {
     state.deduplicationManager = null;
     if (state.globalDebug) {
@@ -88,6 +88,14 @@ export const setupFzFetcher: SetupFzFetcher = (options) => {
 
   // Resolve baseUrl for interceptor use
   state.globalBaseUrl = toValue(options.baseUrl);
+
+  // Initialize deduplication manager with baseUrl now that it's resolved
+  if (state.globalDeduplication) {
+    state.deduplicationManager = new DeduplicationManager(state.globalBaseUrl);
+    if (state.globalDebug) {
+      console.debug("[setupFzFetcher] Request deduplication enabled");
+    }
+  }
 
   state.fzFetcher = createFetch({
     baseUrl: options.baseUrl,
