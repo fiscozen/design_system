@@ -25,4 +25,3 @@ export const injectCsrfToken = (
   }
   return state.csrfManager.injectToken(headers, method);
 };
-

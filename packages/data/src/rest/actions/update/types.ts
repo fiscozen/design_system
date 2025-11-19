@@ -39,4 +39,3 @@ export interface UseUpdateActionReturn<T> extends BaseActionReturn<T> {
 export interface UseUpdateAction<T> {
   (options?: MutationActionOptions): UseUpdateActionReturn<T>;
 }
-

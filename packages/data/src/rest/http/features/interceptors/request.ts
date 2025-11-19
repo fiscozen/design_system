@@ -49,10 +49,7 @@ const compareNormalizedHeaders = (
  * @param b - Second RequestInit object
  * @returns True if objects differ, false if they are equivalent
  */
-const compareRequestInit = (
-  a: RequestInit,
-  b: RequestInit,
-): boolean => {
+const compareRequestInit = (a: RequestInit, b: RequestInit): boolean => {
   // Compare method
   if (a.method !== b.method) {
     return true;
@@ -103,9 +100,7 @@ const compareRequestInit = (
  * @param headers - Headers object instance
  * @returns Normalized headers as Record<string, string>
  */
-const normalizeHeadersObject = (
-  headers: Headers,
-): Record<string, string> => {
+const normalizeHeadersObject = (headers: Headers): Record<string, string> => {
   const normalized: Record<string, string> = {};
   headers.forEach((value, key) => {
     normalized[key.toLowerCase()] = value;
@@ -252,8 +247,8 @@ export const wrapWithRequestInterceptor = <T>(
         const fullUrl = urlString.startsWith("http")
           ? urlString
           : state.globalBaseUrl
-          ? `${state.globalBaseUrl.replace(/\/$/, "")}/${urlString.replace(/^\//, "")}`
-          : urlString; // Fallback: use relative URL if globalBaseUrl not available
+            ? `${state.globalBaseUrl.replace(/\/$/, "")}/${urlString.replace(/^\//, "")}`
+            : urlString; // Fallback: use relative URL if globalBaseUrl not available
 
         if (state.globalDebug) {
           console.debug(
@@ -272,13 +267,15 @@ export const wrapWithRequestInterceptor = <T>(
           );
         }
 
-        const modifiedFetchResult = state.fzFetcher<T>(
-          fullUrl,
-          interceptedRequest,
-          useFetchOptions
-            ? normalizeUseFzFetchOptions(useFetchOptions)
-            : undefined,
-        ).json();
+        const modifiedFetchResult = state
+          .fzFetcher<T>(
+            fullUrl,
+            interceptedRequest,
+            useFetchOptions
+              ? normalizeUseFzFetchOptions(useFetchOptions)
+              : undefined,
+          )
+          .json();
 
         // Synchronize state reactively from modified fetch to original result
         // This ensures state stays in sync even if modifiedFetchResult changes after initial sync
@@ -306,7 +303,7 @@ export const wrapWithRequestInterceptor = <T>(
         } catch (error: unknown) {
           // Stop watching before handling error to prevent further sync
           unwatchSync();
-          
+
           const normalizedError = normalizeError(error);
           fetchResult.error.value = normalizedError;
           if (throwOnFailed) {
@@ -342,4 +339,3 @@ export const wrapWithRequestInterceptor = <T>(
 
   return fetchResult;
 };
-

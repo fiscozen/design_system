@@ -15,4 +15,3 @@ export const normalizeUseFzFetchOptions = (
 
   return options;
 };
-

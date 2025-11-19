@@ -15,4 +15,3 @@ export interface UseRetrieveAction<T> {
     options?: QueryActionOptions<T>,
   ): UseRetrieveActionReturn<T>;
 }
-

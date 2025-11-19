@@ -1,12 +1,12 @@
 /**
  * Request interceptor function
- * 
+ *
  * Called before the request is sent. Can modify the request or abort it.
- * 
+ *
  * @param url - Request URL
  * @param requestInit - Request configuration (method, headers, body, etc.)
  * @returns Modified RequestInit, or null to abort the request
- * 
+ *
  * @example
  * const requestInterceptor = async (url, requestInit) => {
  *   // Add custom header
@@ -18,7 +18,7 @@
  *     }
  *   }
  * }
- * 
+ *
  * @example
  * const requestInterceptor = async (url, requestInit) => {
  *   // Abort request if condition is met
@@ -35,21 +35,21 @@ export type RequestInterceptor = (
 
 /**
  * Response interceptor function
- * 
+ *
  * Called after the response is received. Can modify the response or handle errors.
- * 
+ *
  * @param response - Fetch Response object
  * @param url - Original request URL
  * @param requestInit - Original request configuration
  * @returns Modified Response, or throws error to handle failure
- * 
+ *
  * @example
  * const responseInterceptor = async (response, url, requestInit) => {
  *   // Transform response body
  *   const data = await response.json()
  *   return new Response(JSON.stringify({ ...data, transformed: true }), response)
  * }
- * 
+ *
  * @example
  * const responseInterceptor = async (response, url, requestInit) => {
  *   // Handle 401 errors globally
@@ -65,4 +65,3 @@ export type ResponseInterceptor = (
   url: string,
   requestInit: RequestInit,
 ) => Response | Promise<Response>;
-

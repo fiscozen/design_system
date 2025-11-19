@@ -57,4 +57,3 @@ export const createRetrieveAction = <T>(
   const response = useFzFetch<T>(url, normalizeOptions(options));
   return normalizeResponse<T>(response, options?.throwOnError ?? false);
 };
-

@@ -1,15 +1,18 @@
 import { createFetch } from "@vueuse/core";
 import type { CsrfOptions } from "../managers/csrf/types";
-import type { RequestInterceptor, ResponseInterceptor } from "../features/interceptors/types";
+import type {
+  RequestInterceptor,
+  ResponseInterceptor,
+} from "../features/interceptors/types";
 import type { CsrfManager } from "../managers/csrf";
 import type { DeduplicationManager } from "../managers/deduplication";
 
 /**
  * Global state management for the HTTP layer
- * 
+ *
  * All global state variables are centralized here for better organization
  * and easier testing/maintenance.
- * 
+ *
  * Using a mutable object allows modification from other modules.
  */
 export const state = {
@@ -74,4 +77,3 @@ export const getDeduplicationManager = (): DeduplicationManager | null =>
  * @internal
  */
 export const getCsrfOptions = (): CsrfOptions | null => state.globalCsrfOptions;
-

@@ -20,4 +20,3 @@ export interface CsrfOptions {
    */
   headerName: string;
 }
-

@@ -21,4 +21,3 @@ export interface UseCreateActionReturn<T> extends BaseActionReturn<T> {
 export interface UseCreateAction<T> {
   (options?: MutationActionOptions): UseCreateActionReturn<T>;
 }
-

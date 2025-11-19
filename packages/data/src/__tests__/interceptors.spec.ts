@@ -224,7 +224,7 @@ describe("Interceptors", () => {
             originalFetchCallCount++;
           }
         }
-        
+
         return Promise.resolve(
           new Response(JSON.stringify({ success: true }), {
             status: 200,
@@ -248,11 +248,10 @@ describe("Interceptors", () => {
       // and the original fetch should be used (not a new fetch call)
       // However, the interceptor still modifies requestInit (new object reference),
       // so we need to verify that header comparison works correctly
-      
+
       // With the fix, normalizeHeaders now normalizes plain object keys to lowercase,
       // so compareNormalizedHeaders will correctly identify them as equivalent
       expect(global.fetch).toHaveBeenCalled();
     });
   });
 });
-

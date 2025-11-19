@@ -3,25 +3,29 @@ import type { QueryActionOptions, QueryActionReturn } from "../shared/types";
 
 /**
  * Filter parameters
- * 
+ *
  * Key-value pairs where keys are filter field names and values can be
  * string, number, boolean, null, or undefined.
- * 
+ *
  * Values that are `null` or `undefined` are automatically excluded from the query string.
  */
-export type FilterParams = Record<string, string | number | boolean | null | undefined>;
+export type FilterParams = Record<
+  string,
+  string | number | boolean | null | undefined
+>;
 
 /**
- * Sort parameters
- * 
- * Array of objects where each object represents a sort field and direction.
- * Multiple sort fields can be specified by adding multiple objects to the array.
- * 
+ * Ordering parameters
+ *
+ * Array of objects where each object represents an ordering field and direction.
+ * Multiple ordering fields can be specified by adding multiple objects to the array.
+ * Values with direction 'none' are excluded from the query string.
+ *
  * @example
- * [{ name: 'asc' }, { created_at: 'desc' }]
- * Normalized to: sort=name:asc,created_at:desc
+ * [{ name: 'asc' }, { created_at: 'desc' }, { status: 'none' }]
+ * Normalized to: ordering=name,-created_at (status excluded)
  */
-export type SortParams = Array<Record<string, "asc" | "desc">>;
+export type SortParams = Array<Record<string, "asc" | "desc" | "none">>;
 
 /**
  * Pagination parameters
@@ -40,44 +44,46 @@ export interface PaginationParams {
 
 /**
  * Parameters for list/collection queries
- * 
+ *
  * These are initial values used only for bootstrap.
  * The composable returns reactive objects that can be modified directly.
  */
 export interface ListActionParams {
   /**
    * Initial filter parameters (e.g., { by_city: 'Rome', by_type: 'micro' })
-   * 
+   *
    * Values can be `null` or `undefined` to explicitly exclude a filter from the query string.
    * These values are automatically filtered out during normalization.
-   * 
+   *
    * After initialization, modify the returned `filters` reactive object directly.
    */
   filters?: MaybeRefOrGetter<FilterParams>;
 
   /**
-   * Initial sort parameters as array of objects (e.g., [{ name: 'asc' }, { created_at: 'desc' }])
-   * 
-   * Normalized to query string format: `sort=name:asc,created_at:desc`
-   * 
-   * After initialization, modify the returned `sort` reactive array directly.
+   * Initial ordering parameters as array of objects (e.g., [{ name: 'asc' }, { created_at: 'desc' }])
+   *
+   * Normalized to query string format: `ordering=name,-created_at`
+   * Descending fields are prefixed with '-' (e.g., '-created_at'), ascending fields have no prefix.
+   * Values with direction 'none' are excluded from the query string.
+   *
+   * After initialization, modify the returned `ordering` reactive array directly.
    */
-  sort?: MaybeRefOrGetter<SortParams>;
+  ordering?: MaybeRefOrGetter<SortParams>;
 
   /**
    * Initial pagination parameters
-   * 
+   *
    * If provided (even if empty), default values are applied:
    * - `page`: defaults to `1` if not specified
    * - `pageSize`: defaults to `50` if not specified
-   * 
+   *
    * After initialization, modify the returned `pagination` reactive object directly.
-   * 
+   *
    * @example
    * // Empty pagination → applies defaults
    * useList({ pagination: {} })
    * // → pagination = { page: 1, pageSize: 50 }
-   * 
+   *
    * // Partial pagination → applies defaults for missing values
    * useList({ pagination: { page: 2 } })
    * // → pagination = { page: 2, pageSize: 50 }
@@ -88,7 +94,8 @@ export interface ListActionParams {
 /**
  * Return type for useList action
  */
-export interface ListActionReturn<T> extends Omit<QueryActionReturn<T[]>, 'data'> {
+export interface ListActionReturn<T>
+  extends Omit<QueryActionReturn<T[]>, "data"> {
   /**
    * The response data from server (array of entities)
    */
@@ -96,23 +103,23 @@ export interface ListActionReturn<T> extends Omit<QueryActionReturn<T[]>, 'data'
 
   /**
    * Reactive filters object - modify directly to trigger refetch
-   * 
+   *
    * @example
    * filters.name = 'Paolo' // ✅ Auto-refetches (if autoUpdate: true)
    */
   filters: Reactive<FilterParams>;
 
   /**
-   * Reactive sort array - modify directly to trigger refetch
-   * 
+   * Reactive ordering array - modify directly to trigger refetch
+   *
    * @example
-   * sort.push({ created_at: 'desc' }) // ✅ Auto-refetches (if autoUpdate: true)
+   * ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches (if autoUpdate: true)
    */
-  sort: Reactive<SortParams>;
+  ordering: Reactive<SortParams>;
 
   /**
    * Reactive pagination object - modify directly to trigger refetch
-   * 
+   *
    * @example
    * pagination.page = 2 // ✅ Auto-refetches (if autoUpdate: true)
    */
@@ -132,4 +139,3 @@ export interface UseListAction<T> {
     options: QueryActionOptions<T[]>,
   ): ListActionReturn<T>;
 }
-

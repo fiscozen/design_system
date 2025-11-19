@@ -9,6 +9,7 @@ import type { UseUpdateAction } from "./update/types";
 import type { UseDeleteAction } from "./delete/types";
 import { createRetrieveAction } from "./retrieve";
 import { createListAction } from "./list";
+import { createPaginatedListAction } from "./paginated-list";
 import { createCreateAction } from "./create";
 import { createUpdateAction } from "./update";
 import { createDeleteAction } from "./delete";
@@ -47,9 +48,7 @@ import { createDeleteAction } from "./delete";
 export const useActions: UseActions = <T>(basePath: string) => {
   // Validate basePath is not empty
   if (!basePath || basePath.trim() === "") {
-    throw new Error(
-      "[useActions] basePath is required and cannot be empty",
-    );
+    throw new Error("[useActions] basePath is required and cannot be empty");
   }
 
   return {
@@ -60,7 +59,11 @@ export const useActions: UseActions = <T>(basePath: string) => {
         options as QueryActionOptions<T> | undefined,
       ),
     useList: ((paramsOrOptions, options) =>
-      createListAction<T>(basePath, paramsOrOptions, options)) as UseListAction<T>,
+      createListAction<T>(
+        basePath,
+        paramsOrOptions,
+        options,
+      )) as UseListAction<T>,
     useCreate: ((options?: MutationActionOptions) =>
       createCreateAction<T>(basePath, options)) as UseCreateAction<T>,
     useUpdate: ((options?: MutationActionOptions) =>
@@ -71,9 +74,36 @@ export const useActions: UseActions = <T>(basePath: string) => {
 };
 
 // Re-export types for backward compatibility
-export type { UseActions, UseActionsReturn, QueryActionOptions, MutationActionOptions, UseActionOptions } from "./shared/types";
-export type { UseRetrieveAction, UseRetrieveActionReturn } from "./retrieve/types";
-export type { UseListAction, ListActionParams, ListActionReturn } from "./list/types";
+export type {
+  UseActions,
+  UseActionsReturn,
+  QueryActionOptions,
+  MutationActionOptions,
+  UseActionOptions,
+} from "./shared/types";
+export type {
+  UseRetrieveAction,
+  UseRetrieveActionReturn,
+} from "./retrieve/types";
+export type {
+  UseListAction,
+  ListActionParams,
+  ListActionReturn,
+} from "./list/types";
+export type {
+  UsePaginatedListAction,
+  PaginatedListActionParams,
+  PaginatedListActionReturn,
+  PaginatedResponse,
+  PaginationMeta,
+} from "./paginated-list/types";
 export type { UseCreateAction, UseCreateActionReturn } from "./create/types";
-export type { UseUpdateAction, UseUpdateActionReturn, UpdateOptions } from "./update/types";
+export type {
+  UseUpdateAction,
+  UseUpdateActionReturn,
+  UpdateOptions,
+} from "./update/types";
 export type { UseDeleteAction, UseDeleteActionReturn } from "./delete/types";
+
+// Export paginated list action
+export { createPaginatedListAction } from "./paginated-list";

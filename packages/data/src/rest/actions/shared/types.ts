@@ -26,51 +26,51 @@ export interface BaseActionReturn<T> {
 
 /**
  * Options for query actions (GET requests)
- * 
+ *
  * Query actions support automatic execution and reactivity.
  */
 export interface QueryActionOptions<T = unknown> {
-    /**
-     * Will automatically run the action on mount
-     *
-     * @default true
-     */
-    onMount?: boolean;
+  /**
+   * Will automatically run the action on mount
+   *
+   * @default true
+   */
+  onMount?: boolean;
 
-    /**
-     * Will automatically refetch when reactive dependencies change
-     *
-     * @default false
-     */
-    autoUpdate?: MaybeRefOrGetter<boolean>;
+  /**
+   * Will automatically refetch when reactive dependencies change
+   *
+   * @default false
+   */
+  autoUpdate?: MaybeRefOrGetter<boolean>;
 
-    /**
-     * Initial data before the request finishes
-     *
-     * @default null
-     */
-    initialData?: T | null;
+  /**
+   * Initial data before the request finishes
+   *
+   * @default null
+   */
+  initialData?: T | null;
 
-    /**
-     * Enable request deduplication for this specific action
-     * 
-     * When enabled, identical requests (same URL + query + payload + method)
-     * made simultaneously will be deduplicated - only the first one executes,
-     * others wait for and share the same result.
-     * 
-     * @default undefined (uses global deduplication setting)
-     */
-    deduplication?: boolean;
+  /**
+   * Enable request deduplication for this specific action
+   *
+   * When enabled, identical requests (same URL + query + payload + method)
+   * made simultaneously will be deduplicated - only the first one executes,
+   * others wait for and share the same result.
+   *
+   * @default undefined (uses global deduplication setting)
+   */
+  deduplication?: boolean;
 
-    /**
-     * Whether to throw errors instead of storing them in the error ref
-     * 
-     * When `false` (default), errors are stored in `error` ref and can be checked reactively.
-     * When `true`, errors are thrown as exceptions and can be caught with try/catch.
-     * 
-     * @default false
-     */
-    throwOnError?: boolean;
+  /**
+   * Whether to throw errors instead of storing them in the error ref
+   *
+   * When `false` (default), errors are stored in `error` ref and can be checked reactively.
+   * When `true`, errors are thrown as exceptions and can be caught with try/catch.
+   *
+   * @default false
+   */
+  throwOnError?: boolean;
 }
 
 /**
@@ -82,10 +82,10 @@ export interface QueryActionOptions<T = unknown> {
 export interface MutationActionOptions {
   /**
    * Whether to throw errors instead of storing them in the error ref
-   * 
+   *
    * When `false` (default), errors are stored in `error` ref and can be checked reactively.
    * When `true`, errors are thrown as exceptions and can be caught with try/catch.
-   * 
+   *
    * @default false
    */
   throwOnError?: boolean;
@@ -122,7 +122,7 @@ export interface UseActionsReturn<T> {
   useRetrieve: import("../retrieve/types").UseRetrieveAction<T>;
 
   /**
-   * List/query multiple entities with filters, sorting, pagination (GET /resource)
+   * List/query multiple entities with filters, ordering, pagination (GET /resource)
    */
   useList: import("../list/types").UseListAction<T>;
 
@@ -162,4 +162,3 @@ export interface UseActionsReturn<T> {
 export interface UseActions {
   <T>(basePath: string): UseActionsReturn<T>;
 }
-

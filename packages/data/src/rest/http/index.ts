@@ -83,7 +83,6 @@ const createFetchResult = <T>(
   return wrapperChain.apply(baseFetchResult, context);
 };
 
-
 /**
  * HTTP wrapper with reactive URL support and CSRF auto-injection
  *
@@ -184,7 +183,8 @@ export const useFzFetch: UseFzFetch = <T>(
       );
     } else {
       // It's UseFzFetchOptions
-      const useFetchOptionsForThis = paramsOrUseFetchOptions as UseFzFetchOptions;
+      const useFetchOptionsForThis =
+        paramsOrUseFetchOptions as UseFzFetchOptions;
       const finalUrl = computed(() =>
         getUrlWithQueryParams(toValue(basePath), undefined),
       );
@@ -214,11 +214,5 @@ export const useFzFetch: UseFzFetch = <T>(
     headers: injectCsrfToken(method, {}),
   };
 
-  return createFetchResult<T>(
-    finalUrl,
-    requestInit,
-    method,
-    null,
-    undefined,
-  );
+  return createFetchResult<T>(finalUrl, requestInit, method, null, undefined);
 };

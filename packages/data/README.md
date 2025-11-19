@@ -96,17 +96,17 @@ import { useUsers } from '@/composables/useUsers'
 const { useListUsers, useCreateUser } = useUsers()
 
 // ✅ Auto-fetch on mount
-// ✅ Returns reactive objects (filters, pagination, sort) for direct modification
-const { data: users, error, isLoading, filters, pagination, sort } = useListUsers({
+// ✅ Returns reactive objects (filters, pagination, ordering) for direct modification
+const { data: users, error, isLoading, filters, pagination, ordering } = useListUsers({
   filters: { active: true },           // Initial filters (static)
   pagination: { page: 1, pageSize: 20 }, // Initial pagination (static)
-  sort: [{ name: 'asc' }]              // Initial sort (static)
+  ordering: [{ name: 'asc' }]              // Initial ordering (static)
 })
 
 // ✅ Modify reactive objects directly - triggers auto-refetch (if autoUpdate: true)
 filters.active = false        // ✅ Auto-refetches
 pagination.page = 2          // ✅ Auto-refetches
-sort.push({ created_at: 'desc' }) // ✅ Auto-refetches
+ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches
 
 // ✅ Manual mutation (always manual, no auto-refetch)
 const { execute: createUser } = useCreateUser()
@@ -115,7 +115,7 @@ const handleCreate = async () => {
   await createUser({ name: 'John', email: 'john@example.com' })
   
   // Optionally refetch list after creation
-  // (automatic refetch happens if you modify filters/pagination/sort)
+  // (automatic refetch happens if you modify filters/pagination/ordering)
   pagination.page = 1 // Trigger refetch
 }
 </script>
@@ -133,7 +133,8 @@ const handleCreate = async () => {
 
 **Reactive Parameters:**
 - `useRetrieve`: `pk` parameter is reactive → changing it triggers refetch
-- `useList`: Returns reactive objects (`filters`, `pagination`, `sort`) → modify directly to trigger refetch
+- `useList`: Returns reactive objects (`filters`, `pagination`, `ordering`) → modify directly to trigger refetch
+- `usePaginatedList`: Returns reactive objects (`filters`, `pagination`, `ordering`) → modify directly to trigger refetch
 - Mutation actions (`useCreate`, `useUpdate`, `useDelete`): No reactive parameters → always manual
 
 **Automatic Refetch:**
@@ -333,17 +334,17 @@ const { useRetrieveUserById, useListUsers, useCreateUser } = useUsers()
 const userId = ref(1)
 const { data: user, error, isLoading } = useRetrieveUserById(userId)
 
-// ✅ List with filters, pagination, and sort
-const { data: users, filters, pagination, sort } = useListUsers({
+// ✅ List with filters, pagination, and ordering
+const { data: users, filters, pagination, ordering } = useListUsers({
   filters: { active: true },           // Initial filters
   pagination: { page: 1, pageSize: 10 }, // Initial pagination
-  sort: [{ name: 'asc' }]              // Initial sort (array format)
+  ordering: [{ name: 'asc' }]              // Initial ordering (array format)
 })
 
 // Modify reactive objects directly
 filters.active = false        // ✅ Auto-refetches
 pagination.page = 2          // ✅ Auto-refetches
-sort.push({ created_at: 'desc' }) // ✅ Auto-refetches
+ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches
 
 // ✅ Manual mutation
 const { execute: createUser } = useCreateUser()
@@ -393,7 +394,8 @@ interface ActionReturn<T> {
 
 **Query Actions (GET):**
 - `useRetrieve(pk, options?)` - Get single entity by primary key
-- `useList(params?, options?)` - List entities with filters, sorting, pagination
+- `useList(params?, options?)` - List entities with filters, ordering, pagination
+- `usePaginatedList(params?, options?)` - List entities with paginated response and metadata
 
 **Mutation Actions:**
 - `useCreate(options?)` - Create new entity (POST)
@@ -636,7 +638,8 @@ The package automatically refetches data when **reactive parameters** change. Th
 | Action | Reactive Parameters | Refetch Trigger |
 |--------|-------------------|-----------------|
 | `useRetrieve(pk, options?)` | `pk` (primary key) | When `pk` changes |
-| `useList(params?, options?)` | Returns reactive objects: `filters`, `pagination`, `sort` | When any reactive object is modified directly |
+| `useList(params?, options?)` | Returns reactive objects: `filters`, `pagination`, `ordering` | When any reactive object is modified directly |
+| `usePaginatedList(params?, options?)` | Returns reactive objects: `filters`, `pagination`, `ordering` | When any reactive object is modified directly |
 
 **Mutation Actions (POST/PUT/PATCH/DELETE):**
 - ❌ **No reactive parameters** - Mutations are always manual via `execute()`
@@ -660,10 +663,10 @@ const { data } = useRetrieveUserById(computedId) // ✅ Auto-refetches when rout
 **useList:**
 ```typescript
 // useList returns reactive objects that you can modify directly
-const { data: users, filters, pagination, sort } = useListUsers({
+const { data: users, filters, pagination, ordering } = useListUsers({
   filters: { active: true },           // Initial values (static)
   pagination: { page: 1, pageSize: 20 }, // Initial values (static)
-  sort: [{ name: 'asc' }]              // Initial values (static)
+  ordering: [{ name: 'asc' }]              // Initial values (static)
 })
 
 // Modify reactive objects directly - triggers auto-refetch
@@ -671,8 +674,8 @@ filters.active = false        // ✅ Auto-refetch
 filters.name = 'John'         // ✅ Auto-refetch
 pagination.page = 2          // ✅ Auto-refetch
 pagination.pageSize = 50     // ✅ Auto-refetch
-sort.push({ created_at: 'desc' }) // ✅ Auto-refetch
-sort[0].name = 'desc'        // ✅ Auto-refetch (deep reactivity)
+ordering.push({ created_at: 'desc' }) // ✅ Auto-refetch
+ordering[0].name = 'desc'        // ✅ Auto-refetch (deep reactivity)
 
 // Initial values are only used for bootstrap
 // After initialization, modify the returned reactive objects directly
@@ -716,10 +719,10 @@ import { useUsers } from '@/composables/useUsers'
 const { useListUsers } = useUsers()
 
 // useList returns reactive objects for direct modification
-const { data: users, error, isLoading, filters, pagination, sort } = useListUsers({
+const { data: users, error, isLoading, filters, pagination, ordering } = useListUsers({
   filters: { active: true },           // Initial filters
   pagination: { page: 1, pageSize: 20 }, // Initial pagination (defaults: page=1, pageSize=50 if not provided)
-  sort: [{ name: 'asc' }]              // Initial sort
+  ordering: [{ name: 'asc' }]              // Initial ordering
 })
 
 // Pagination defaults are applied when pagination is provided (even if empty)
@@ -748,9 +751,11 @@ const handlePageChange = (page: number) => {
   pagination.page = page // ✅ Auto-refetches list
 }
 
-const handleSortChange = (field: string, direction: 'asc' | 'desc') => {
-  sort.length = 0 // Clear existing sort
-  sort.push({ [field]: direction }) // ✅ Auto-refetches list
+const handleOrderingChange = (field: string, direction: 'asc' | 'desc' | 'none') => {
+  ordering.length = 0 // Clear existing ordering
+  if (direction !== 'none') {
+    ordering.push({ [field]: direction }) // ✅ Auto-refetches list
+  }
 }
 ```
 
@@ -759,10 +764,10 @@ const handleSortChange = (field: string, direction: 'asc' | 'desc') => {
 Disable auto-fetch and trigger manually:
 
 ```typescript
-const { data, execute, isLoading, filters, pagination, sort } = useListUsers({
+const { data, execute, isLoading, filters, pagination, ordering } = useListUsers({
   filters: { active: true },
   pagination: { page: 1, pageSize: 20 },
-  sort: [{ name: 'asc' }],
+  ordering: [{ name: 'asc' }],
   onMount: false // Don't fetch on mount
 })
 
@@ -1104,12 +1109,14 @@ interface ListActionParams {
   filters?: MaybeRefOrGetter<Record<string, string | number | boolean | null | undefined>>
 
   /**
-   * Initial sort parameters as array (e.g., [{ name: 'asc' }, { created_at: 'desc' }])
+   * Initial ordering parameters as array (e.g., [{ name: 'asc' }, { created_at: 'desc' }])
    * 
-   * Normalized to query string format: `sort=name:asc,created_at:desc`
-   * After initialization, modify the returned `sort` reactive array directly.
+   * Normalized to query string format: `ordering=name,-created_at`
+   * Descending fields are prefixed with '-' (e.g., '-created_at'), ascending fields have no prefix.
+   * Values with direction 'none' are excluded from the query string.
+   * After initialization, modify the returned `ordering` reactive array directly.
    */
-  sort?: MaybeRefOrGetter<Array<Record<string, 'asc' | 'desc'>>>
+  ordering?: MaybeRefOrGetter<Array<Record<string, 'asc' | 'desc' | 'none'>>>
 
   /**
    * Initial pagination parameters
@@ -1166,12 +1173,12 @@ interface ListActionReturn<T> {
   filters: Reactive<Record<string, string | number | boolean | null | undefined>>
 
   /**
-   * Reactive sort array - modify directly to trigger refetch
+   * Reactive ordering array - modify directly to trigger refetch
    * 
    * @example
-   * sort.push({ created_at: 'desc' }) // ✅ Auto-refetches (if autoUpdate: true)
+   * ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches (if autoUpdate: true)
    */
-  sort: Reactive<Array<Record<string, "asc" | "desc">>>
+  ordering: Reactive<Array<Record<string, "asc" | "desc" | "none">>>
 
   /**
    * Reactive pagination object - modify directly to trigger refetch
@@ -1181,6 +1188,164 @@ interface ListActionReturn<T> {
    */
   pagination: Reactive<PaginationParams>
 }
+```
+
+#### `usePaginatedList` - List Entities with Paginated Response
+
+Lists entities with paginated response format and metadata extraction. Works exactly like `useList` but handles paginated responses with metadata.
+
+**Signature:**
+```typescript
+usePaginatedList(): PaginatedListActionReturn<T>
+usePaginatedList(params: PaginatedListActionParams): PaginatedListActionReturn<T>
+usePaginatedList(options: PaginatedListActionOptions<T>): PaginatedListActionReturn<T>
+usePaginatedList(params: PaginatedListActionParams, options: PaginatedListActionOptions<T>): PaginatedListActionReturn<T>
+```
+
+**Response Format:**
+Expects API to return:
+```typescript
+{
+  results: T[],           // Array of entities (or custom key via dataKey option)
+  count: number,         // Total number of items across all pages
+  next: string | null,   // URL to next page (if available)
+  previous: string | null, // URL to previous page (if available)
+  pages: number,         // Total number of pages
+  page: number          // Current page number (1-indexed)
+}
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `params` | `PaginatedListActionParams` | ❌ No | Same as `ListActionParams` (filters, ordering, pagination) |
+| `options` | `PaginatedListActionOptions<T>` | ❌ No | Options including `dataKey` and `enableSingleOrdering` |
+
+**PaginatedListActionOptions:**
+
+| Option | Type | Required | Default | Description |
+|--------|------|----------|---------|-------------|
+| `dataKey` | `string` | ❌ No | `'results'` | Key name in paginated response that contains the data array |
+| `enableSingleOrdering` | `boolean` | ❌ No | `false` | When `true`, only one column can be ordered at a time |
+
+**Returns:**
+
+```typescript
+{
+  data: ShallowRef<T[] | null>,        // Array of entities (extracted from results)
+  error: ShallowRef<Error | null>,      // Error if request failed
+  isLoading: Readonly<ShallowRef<boolean>>, // Loading state
+  execute: () => Promise<void>,        // Manual execute function
+  meta: ComputedRef<PaginationMeta | null>, // Pagination metadata
+  filters: Reactive<Record<...>>,     // Reactive filters - modify directly
+  ordering: Reactive<Array<Record<...>>>, // Reactive ordering - modify directly
+  pagination: Reactive<PaginationParams>, // Reactive pagination - modify directly
+  handlePageChange: (page: number) => void, // Helper to change page
+  handleOrderingChange: (column: { field: string }, direction: 'asc' | 'desc' | 'none') => void // Helper to change ordering
+}
+```
+
+**PaginationMeta:**
+
+```typescript
+interface PaginationMeta {
+  count: number;    // Total number of items across all pages
+  pages: number;    // Total number of pages
+  page: number;    // Current page number (1-indexed, from API response)
+}
+```
+
+**Example:**
+
+```vue
+<script setup>
+import { useUsers } from '@/composables/useUsers'
+
+const { usePaginatedListUsers } = useUsers()
+
+// usePaginatedList returns reactive objects + meta
+const { 
+  data: users, 
+  meta, 
+  filters, 
+  pagination, 
+  ordering,
+  handlePageChange,
+  handleOrderingChange 
+} = usePaginatedListUsers({
+  filters: { active: true },
+  pagination: { page: 1, pageSize: 20 },
+  ordering: [{ name: 'asc' }]
+})
+
+// Access pagination metadata
+console.log(meta.value?.count)  // Total items
+console.log(meta.value?.pages)  // Total pages
+console.log(meta.value?.page)   // Current page
+
+// Change page using helper function
+const goToPage = (page: number) => {
+  handlePageChange(page) // ✅ Auto-refetches
+}
+
+// Change ordering using helper function
+const sortByName = () => {
+  handleOrderingChange({ field: 'name' }, 'asc') // ✅ Auto-refetches
+}
+
+// Or modify reactive objects directly
+filters.active = false        // ✅ Auto-refetches
+pagination.page = 2           // ✅ Auto-refetches
+ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches
+</script>
+
+<template>
+  <div>
+    <div v-if="meta">
+      <p>Total: {{ meta.count }} items</p>
+      <p>Page {{ meta.page }} of {{ meta.pages }}</p>
+    </div>
+    
+    <ul>
+      <li v-for="user in users" :key="user.id">{{ user.name }}</li>
+    </ul>
+    
+    <button @click="goToPage(2)">Go to page 2</button>
+  </div>
+</template>
+```
+
+**Custom Data Key:**
+
+If your API uses a different key name for the data array:
+
+```typescript
+// API returns { items: [...], count: 100, pages: 10 }
+const { data } = usePaginatedListUsers(
+  { filters: { active: true } },
+  { dataKey: 'items' } // Extract from 'items' instead of 'results'
+)
+```
+
+**Single Ordering Mode:**
+
+When `enableSingleOrdering: true`, only one column can be ordered at a time:
+
+```typescript
+const { handleOrderingChange } = usePaginatedListUsers(
+  { filters: { active: true } },
+  { enableSingleOrdering: true }
+)
+
+// Order by name - resets all other orderings
+handleOrderingChange({ field: 'name' }, 'asc')
+
+// Order by created_at - resets name ordering
+handleOrderingChange({ field: 'created_at' }, 'desc')
+
+// Remove ordering
+handleOrderingChange({ field: 'name' }, 'none')
 ```
 
 ### Mutation Actions (POST/PUT/PATCH/DELETE)
@@ -1353,8 +1518,8 @@ This package is designed to work with REST APIs following these conventions:
 
 ### Sorting
 
-- **Format**: `sort=name:asc,created_at:desc` (comma-separated key:direction pairs)
-- **Example**: `?sort=name:asc,created_at:desc`
+- **Format**: `ordering=name,-created_at` (comma-separated fields, descending fields prefixed with '-')
+- **Example**: `?ordering=name,-created_at`
 
 ### Filtering
 
@@ -1395,7 +1560,8 @@ packages/data/
 │   │   ├── actions/          # CRUD operations layer
 │   │   │   ├── create/       # Create action (POST)
 │   │   │   ├── delete/       # Delete action (DELETE)
-│   │   │   ├── list/         # List action (GET with filters/sort/pagination)
+│   │   │   ├── list/         # List action (GET with filters/ordering/pagination)
+│   │   │   ├── paginated-list/ # Paginated list action (GET with paginated response)
 │   │   │   ├── retrieve/     # Retrieve action (GET by ID)
 │   │   │   ├── update/       # Update action (PUT/PATCH)
 │   │   │   ├── shared/       # Shared utilities for actions
@@ -1584,7 +1750,8 @@ return chain.apply(baseFetchResult, context)
 **Factory Pattern: `useActions<T>(basePath)`**
 - Returns object with 5 action creators:
   - `useRetrieve`: Get single entity by ID
-  - `useList`: List entities with filters/sort/pagination
+  - `useList`: List entities with filters/ordering/pagination
+  - `usePaginatedList`: List entities with paginated response and metadata
   - `useCreate`: Create new entity (POST)
   - `useUpdate`: Update entity (PUT/PATCH)
   - `useDelete`: Delete entity (DELETE)
@@ -2277,7 +2444,7 @@ Configurable globally and per-action:
 This package is designed to work with REST APIs following these conventions:
 
 - **Pagination**: `page` / `per_page` query parameters
-- **Sorting**: `sort=name:asc,created_at:desc` (comma-separated key:direction pairs)
+- **Ordering**: `ordering=name,-created_at` (comma-separated fields, descending fields prefixed with '-')
 - **Filtering**: Direct query parameters (e.g., `?by_city=rome&by_status=active`)
 - **API Versioning**: URL-based (e.g., `/v1/users`, `/v2/users`)
 - **Nested Relations**: Nested routes (e.g., `GET /users/1/invoices`)

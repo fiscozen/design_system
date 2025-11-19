@@ -34,4 +34,3 @@ export const parseResponseBody = async <T>(response: Response): Promise<T> => {
     return (await clonedResponse3.text()) as T;
   }
 };
-

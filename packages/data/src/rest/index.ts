@@ -1,5 +1,5 @@
 // Actions
-export { useActions } from "./actions";
+export { useActions, createPaginatedListAction } from "./actions";
 
 // HTTP
 export { setupFzFetcher, useFzFetch, resetFzFetcher } from "./http";

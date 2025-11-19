@@ -36,4 +36,3 @@ export interface Wrapper<T = any> {
     context: WrapperContext,
   ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>;
 }
-

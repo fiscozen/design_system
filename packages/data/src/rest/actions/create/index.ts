@@ -23,14 +23,11 @@ export const createCreateAction = <T>(
   const execute = async (payload: Partial<T>): Promise<void> => {
     await executeMutation<T>(
       async () => {
-        const response = useFzFetch<T>(
-          basePath,
-          {
-            method: "POST",
-            body: JSON.stringify(payload),
-            headers: { "Content-Type": CONTENT_TYPE_JSON },
-          },
-        );
+        const response = useFzFetch<T>(basePath, {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers: { "Content-Type": CONTENT_TYPE_JSON },
+        });
 
         await response.execute(options?.throwOnError ?? false);
         return response;
@@ -44,4 +41,3 @@ export const createCreateAction = <T>(
 
   return { data, error, isLoading, execute };
 };
-
