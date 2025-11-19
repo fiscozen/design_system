@@ -1,4 +1,4 @@
-import { toValue, watch, type MaybeRefOrGetter } from "vue";
+import { toValue, watch, nextTick, type MaybeRefOrGetter } from "vue";
 import type { UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
 
@@ -84,26 +84,7 @@ export const wrapWithDeduplication = <T>(
     );
 
     if (pendingFetchResult) {
-      // Wait for pending request to complete by watching isFetching
-      // We can't call execute() on pendingFetchResult because it might be the same
-      // instance wrapped, causing infinite recursion
-      if (pendingFetchResult.isFetching.value) {
-        await new Promise<void>((resolve) => {
-          const unwatch = watch(
-            () => pendingFetchResult.isFetching.value,
-            (isFetching: boolean) => {
-              if (!isFetching) {
-                unwatch();
-                resolve();
-              }
-            },
-            { immediate: true },
-          );
-        });
-      }
-
       // Synchronize reactive state from pending request to current fetchResult
-      // Use watch to keep state synchronized if pending request changes after initial sync
       const syncState = () => {
         fetchResult.statusCode.value = pendingFetchResult.statusCode.value;
         fetchResult.response.value = pendingFetchResult.response.value;
@@ -114,35 +95,51 @@ export const wrapWithDeduplication = <T>(
       // Initial sync
       syncState();
 
-      // Continue syncing if pending request state changes (e.g., from interceptors)
-      const unwatchSync = watch(
-        [
-          () => pendingFetchResult.data.value,
-          () => pendingFetchResult.error.value,
-          () => pendingFetchResult.statusCode.value,
-          () => pendingFetchResult.response.value,
-        ],
-        () => {
-          syncState();
-        },
-        { immediate: false }
-      );
+      // Wait for pending request to complete and sync state reactively
+      // We can't call execute() on pendingFetchResult because it might be the same
+      // instance wrapped, causing infinite recursion
+      if (pendingFetchResult.isFetching.value) {
+        // Create a single watch that handles both waiting and syncing
+        let unwatchSync: (() => void) | null = null;
+        let isCleanedUp = false;
 
-      // Cleanup watch when this request completes or when pending request is removed
-      // The watch will be cleaned up when pendingFetchResult.isFetching becomes false
-      // and DeduplicationManager removes it from pendingRequests
-      watch(
-        () => pendingFetchResult.isFetching.value,
-        (isFetching: boolean) => {
-          if (!isFetching) {
-            // Small delay to allow other pending requests to sync before cleanup
-            setTimeout(() => {
-              unwatchSync();
-            }, 100);
-          }
-        },
-        { immediate: true }
-      );
+        await new Promise<void>((resolve) => {
+          // Watch for completion and sync state reactively
+          unwatchSync = watch(
+            [
+              () => pendingFetchResult.isFetching.value,
+              () => pendingFetchResult.data.value,
+              () => pendingFetchResult.error.value,
+              () => pendingFetchResult.statusCode.value,
+              () => pendingFetchResult.response.value,
+            ],
+            () => {
+              // Sync state whenever it changes
+              syncState();
+
+              // Resolve promise and cleanup when request completes
+              if (!pendingFetchResult.isFetching.value && !isCleanedUp) {
+                isCleanedUp = true;
+                // Use nextTick to ensure cleanup happens after current execution
+                // This allows other pending requests to sync state before cleanup
+                nextTick(() => {
+                  if (unwatchSync) {
+                    unwatchSync();
+                    unwatchSync = null;
+                  }
+                  resolve();
+                });
+              }
+            },
+            { immediate: true },
+          );
+        });
+      } else {
+        // Request already completed, sync state once
+        // No need for reactive watch since request is done
+        // (interceptors won't modify state after completion)
+        syncState();
+      }
 
       // If there was an error and throwOnFailed is true, throw it
       if (pendingFetchResult.error.value && throwOnFailed) {
