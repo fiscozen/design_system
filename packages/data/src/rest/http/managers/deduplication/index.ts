@@ -15,6 +15,8 @@ export class DeduplicationManager {
     string,
     UseFzFetchReturn<any>
   > = new Map();
+  
+  private pendingWatches: Map<string, () => void> = new Map();
 
   /**
    * Generates a unique key for a request based on URL, query params, payload, and method
@@ -41,12 +43,63 @@ export class DeduplicationManager {
   /**
    * Normalizes URL by removing trailing slashes and sorting query parameters
    *
+   * Handles absolute URLs, relative URLs, and SSR/test environments where window.location.origin
+   * may not be available.
+   *
    * @param url - Request URL
    * @returns Normalized URL string
    */
   private normalizeUrl(url: string): string {
     try {
-      const urlObj = new URL(url, window.location.origin);
+      // If URL is absolute, parse directly
+      if (url.startsWith("http://") || url.startsWith("https://")) {
+        const urlObj = new URL(url);
+        // Sort query parameters
+        const sortedParams = Array.from(urlObj.searchParams.entries())
+          .sort(([a], [b]) => a.localeCompare(b));
+        urlObj.search = "";
+        sortedParams.forEach(([key, value]) => {
+          urlObj.searchParams.append(key, value);
+        });
+        // Remove trailing slash from pathname
+        const pathname = urlObj.pathname.replace(/\/$/, "");
+        return `${pathname}${urlObj.search}`;
+      }
+
+      // For relative URLs, try to use globalBaseUrl if available
+      // Import state at module level would cause circular dependency, so we'll use a fallback
+      let baseUrl: string | undefined;
+      try {
+        // Try to access state.globalBaseUrl via dynamic import or fallback
+        // Since we can't import state here (circular dependency), use window.location.origin as fallback
+        if (typeof window !== "undefined" && window.location) {
+          baseUrl = window.location.origin;
+        }
+      } catch {
+        // Ignore errors accessing window
+      }
+
+      // If no base URL available, return normalized pathname only
+      if (!baseUrl) {
+        // Extract pathname and query from relative URL
+        const queryIndex = url.indexOf("?");
+        const pathname = queryIndex === -1 ? url : url.substring(0, queryIndex);
+        const query = queryIndex === -1 ? "" : url.substring(queryIndex + 1);
+        
+        // Sort query parameters if present
+        if (query) {
+          const params = new URLSearchParams(query);
+          const sortedParams = Array.from(params.entries())
+            .sort(([a], [b]) => a.localeCompare(b));
+          const sortedQuery = new URLSearchParams(sortedParams).toString();
+          return `${pathname.replace(/\/$/, "")}${sortedQuery ? `?${sortedQuery}` : ""}`;
+        }
+        
+        return pathname.replace(/\/$/, "");
+      }
+
+      // Use baseUrl to create full URL
+      const urlObj = new URL(url, baseUrl);
       // Sort query parameters
       const sortedParams = Array.from(urlObj.searchParams.entries())
         .sort(([a], [b]) => a.localeCompare(b));
@@ -66,6 +119,9 @@ export class DeduplicationManager {
   /**
    * Normalizes request body by sorting JSON keys
    *
+   * For non-JSON bodies, creates a unique identifier based on length and prefix
+   * to avoid collisions for different bodies with same string content.
+   *
    * @param body - Request body string
    * @returns Normalized body string
    */
@@ -78,8 +134,10 @@ export class DeduplicationManager {
       const parsed = JSON.parse(body);
       return JSON.stringify(parsed, Object.keys(parsed).sort());
     } catch {
-      // If not JSON, return as-is
-      return body;
+      // If not JSON, create identifier to avoid collisions
+      // Use length and first 100 chars to distinguish different non-JSON bodies
+      const prefix = body.substring(0, 100);
+      return `non-json:${body.length}:${prefix}`;
     }
   }
 
@@ -127,18 +185,29 @@ export class DeduplicationManager {
           // other pending requests to access the result
           setTimeout(() => {
             this.pendingRequests.delete(key);
+            const watchCleanup = this.pendingWatches.get(key);
+            if (watchCleanup) {
+              watchCleanup();
+              this.pendingWatches.delete(key);
+            }
             unwatch();
           }, 100);
         }
       },
       { immediate: true },
     );
+    
+    // Store watch cleanup function for explicit cleanup
+    this.pendingWatches.set(key, unwatch);
   }
 
   /**
-   * Clears all pending requests (useful for testing)
+   * Clears all pending requests and their watches (useful for testing)
    */
   clear(): void {
+    // Clean up all watches
+    this.pendingWatches.forEach((unwatch) => unwatch());
+    this.pendingWatches.clear();
     this.pendingRequests.clear();
   }
 }

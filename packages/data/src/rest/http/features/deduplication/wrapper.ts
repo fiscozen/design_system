@@ -23,6 +23,33 @@ export const wrapWithDeduplication = <T>(
     return fetchResult;
   }
 
+  /**
+   * Checks if body is serializable for deduplication purposes
+   * 
+   * FormData, Blob, ArrayBuffer, and ReadableStream cannot be serialized with JSON.stringify.
+   * URLSearchParams can be converted to string.
+   */
+  const isBodySerializable = (body: BodyInit | null | undefined): boolean => {
+    if (!body || typeof body === "string") return true;
+    if (body instanceof FormData || body instanceof Blob || 
+        body instanceof ArrayBuffer || body instanceof ReadableStream) {
+      return false;
+    }
+    if (body instanceof URLSearchParams) return true;
+    // Try to serialize to check if it's a plain object/array
+    try {
+      JSON.stringify(body);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  // Skip deduplication for non-serializable bodies (FormData, Blob, ArrayBuffer, ReadableStream)
+  if (!isBodySerializable(body)) {
+    return fetchResult;
+  }
+
   // Wrap execute method to apply deduplication
   const originalExecute = fetchResult.execute;
   fetchResult.execute = async (throwOnFailed?: boolean) => {
@@ -34,9 +61,18 @@ export const wrapWithDeduplication = <T>(
     if (body !== null && body !== undefined) {
       if (typeof body === "string") {
         bodyString = body;
+      } else if (body instanceof URLSearchParams) {
+        // URLSearchParams can be converted to string
+        bodyString = body.toString();
       } else {
         // Serialize object/array to JSON string
-        bodyString = JSON.stringify(body);
+        // At this point we know it's serializable (checked above)
+        try {
+          bodyString = JSON.stringify(body);
+        } catch {
+          // Fallback: skip deduplication if serialization fails
+          return originalExecute(throwOnFailed);
+        }
       }
     }
 
@@ -67,10 +103,46 @@ export const wrapWithDeduplication = <T>(
       }
 
       // Synchronize reactive state from pending request to current fetchResult
-      fetchResult.statusCode.value = pendingFetchResult.statusCode.value;
-      fetchResult.response.value = pendingFetchResult.response.value;
-      fetchResult.error.value = pendingFetchResult.error.value;
-      fetchResult.data.value = pendingFetchResult.data.value;
+      // Use watch to keep state synchronized if pending request changes after initial sync
+      const syncState = () => {
+        fetchResult.statusCode.value = pendingFetchResult.statusCode.value;
+        fetchResult.response.value = pendingFetchResult.response.value;
+        fetchResult.error.value = pendingFetchResult.error.value;
+        fetchResult.data.value = pendingFetchResult.data.value;
+      };
+
+      // Initial sync
+      syncState();
+
+      // Continue syncing if pending request state changes (e.g., from interceptors)
+      const unwatchSync = watch(
+        [
+          () => pendingFetchResult.data.value,
+          () => pendingFetchResult.error.value,
+          () => pendingFetchResult.statusCode.value,
+          () => pendingFetchResult.response.value,
+        ],
+        () => {
+          syncState();
+        },
+        { immediate: false }
+      );
+
+      // Cleanup watch when this request completes or when pending request is removed
+      // The watch will be cleaned up when pendingFetchResult.isFetching becomes false
+      // and DeduplicationManager removes it from pendingRequests
+      watch(
+        () => pendingFetchResult.isFetching.value,
+        (isFetching: boolean) => {
+          if (!isFetching) {
+            // Small delay to allow other pending requests to sync before cleanup
+            setTimeout(() => {
+              unwatchSync();
+            }, 100);
+          }
+        },
+        { immediate: true }
+      );
 
       // If there was an error and throwOnFailed is true, throw it
       if (pendingFetchResult.error.value && throwOnFailed) {

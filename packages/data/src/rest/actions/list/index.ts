@@ -47,12 +47,12 @@ export const createListAction = <T>(
   const filters = reactive<FilterParams>({ ...initialFilters });
   const sort = reactive<SortParams>([...initialSort]);
   // Apply defaults (page: 1, pageSize: 50) if pagination is provided (even if empty)
+  // Filter out undefined values to prevent them from overriding defaults
   const pagination = reactive<PaginationParams>(
     hasPagination
       ? {
-          page: 1,
-          pageSize: 50,
-          ...initialPagination,
+          page: initialPagination.page !== undefined ? initialPagination.page : 1,
+          pageSize: initialPagination.pageSize !== undefined ? initialPagination.pageSize : 50,
         }
       : {}
   );
@@ -80,13 +80,20 @@ export const createListAction = <T>(
   // Watch reactive objects for changes and trigger refetch if autoUpdate is enabled
   const autoUpdate = toValue(normalizedOptions.refetch ?? true);
   if (autoUpdate) {
+    // Use a flag to prevent race conditions when params change rapidly
+    let isExecuting = false;
     watch(
       [filters, sort, pagination],
-      () => {
-        // Trigger refetch when reactive params change
-        // Only refetch if not already fetching to avoid duplicate requests
-        if (!response.isFetching.value) {
-          response.execute(throwOnError);
+      async () => {
+        // Prevent duplicate requests if already executing or fetching
+        if (isExecuting || response.isFetching.value) {
+          return;
+        }
+        isExecuting = true;
+        try {
+          await response.execute(throwOnError);
+        } finally {
+          isExecuting = false;
         }
       },
       { deep: true, immediate: false }

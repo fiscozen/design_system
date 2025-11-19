@@ -58,7 +58,7 @@ export const wrapWithTimeout = <T>(
       });
 
       await Promise.race([executePromise, timeoutPromise]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       // If timeout occurred, set error and throw if needed
       if (error instanceof TimeoutError) {
         fetchResult.error.value = error;
