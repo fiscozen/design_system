@@ -10,11 +10,6 @@ import { injectCsrfToken } from "./utils/csrf";
 import { normalizeUseFzFetchOptions } from "./utils/options";
 import { DEFAULT_HTTP_METHOD } from "./common";
 import {
-  wrapWithTimeout,
-  resolveTimeout,
-  TimeoutError,
-} from "./features/timeout";
-import {
   wrapWithRequestInterceptor,
   wrapWithResponseInterceptor,
 } from "./features/interceptors";
@@ -42,10 +37,6 @@ const shouldDeduplicate = (
   // Fall back to global setting
   return state.globalDeduplication;
 };
-
-
-// Re-export TimeoutError for backward compatibility
-export { TimeoutError } from "./features/timeout";
 
 
 /**
@@ -101,8 +92,6 @@ export const useFzFetch: UseFzFetch = <T>(
         useFetchOptions.deduplication,
       );
 
-      // Resolve timeout for this case (per-action → global → default)
-      const timeoutMs = resolveTimeout(useFetchOptions.timeout);
       const params = paramsOrUseFetchOptions as UseFzFetchParams;
       const method = params?.method || DEFAULT_HTTP_METHOD;
 
@@ -128,9 +117,6 @@ export const useFzFetch: UseFzFetch = <T>(
         requestInit,
         useFetchOptions,
       ) as typeof fetchResult;
-      
-      // Apply timeout wrapper
-      fetchResult = wrapWithTimeout(fetchResult, timeoutMs) as typeof fetchResult;
       
       // Apply response interceptor wrapper
       fetchResult = wrapWithResponseInterceptor(
@@ -161,9 +147,6 @@ export const useFzFetch: UseFzFetch = <T>(
         // Determine deduplication setting for this case (use global default)
         const deduplicationEnabled = shouldDeduplicate(undefined);
 
-        // Resolve timeout for this case (use global default)
-        const timeoutMs = resolveTimeout(undefined);
-
         const params = paramsOrUseFetchOptions as UseFzFetchParams;
         const method = params.method || DEFAULT_HTTP_METHOD;
 
@@ -184,9 +167,6 @@ export const useFzFetch: UseFzFetch = <T>(
           requestInit,
           undefined, // No useFetchOptions in this case
         ) as typeof fetchResult;
-        
-        // Apply timeout wrapper (use global timeout)
-        fetchResult = wrapWithTimeout(fetchResult, timeoutMs) as typeof fetchResult;
         
         // Apply response interceptor wrapper
         fetchResult = wrapWithResponseInterceptor(
@@ -216,9 +196,6 @@ export const useFzFetch: UseFzFetch = <T>(
         const deduplicationEnabledForThis = shouldDeduplicate(
           (paramsOrUseFetchOptions as UseFzFetchOptions).deduplication,
         );
-        const timeoutForThis = resolveTimeout(
-          (paramsOrUseFetchOptions as UseFzFetchOptions).timeout,
-        );
         const useFetchOptionsForThis = paramsOrUseFetchOptions as UseFzFetchOptions;
         let fetchResult = state.fzFetcher<T>(
           finalUrl,
@@ -233,9 +210,6 @@ export const useFzFetch: UseFzFetch = <T>(
           requestInit,
           useFetchOptionsForThis,
         ) as typeof fetchResult;
-        
-        // Apply timeout wrapper
-        fetchResult = wrapWithTimeout(fetchResult, timeoutForThis) as typeof fetchResult;
         
         // Apply response interceptor wrapper
         fetchResult = wrapWithResponseInterceptor(
@@ -259,9 +233,6 @@ export const useFzFetch: UseFzFetch = <T>(
     // Determine deduplication setting for this case (use global default)
     const deduplicationEnabled = shouldDeduplicate(undefined);
 
-    // Resolve timeout for this case (use global default)
-    const timeoutMs = resolveTimeout(undefined);
-
     const finalUrl = computed(() =>
       getUrlWithQueryParams(toValue(basePath), undefined),
     );
@@ -278,9 +249,6 @@ export const useFzFetch: UseFzFetch = <T>(
       finalUrl,
       requestInit,
     ) as typeof fetchResult;
-    
-    // Apply timeout wrapper (use global timeout)
-    fetchResult = wrapWithTimeout(fetchResult, timeoutMs) as typeof fetchResult;
     
     // Apply response interceptor wrapper
     fetchResult = wrapWithResponseInterceptor(

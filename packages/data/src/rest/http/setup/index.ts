@@ -34,9 +34,6 @@ export const setupFzFetcher: SetupFzFetcher = (options) => {
   state.globalCsrfOptions = options.csrf || null;
   state.globalDebug = options.debug || false;
   state.globalDeduplication = options.deduplication || false;
-  // timeout can be number (milliseconds), null (infinite), or undefined (use default)
-  // If undefined, we keep null (infinite) as default
-  state.globalTimeout = options.timeout ?? null; // Default: null (infinite timeout)
   state.globalRequestInterceptor = options.requestInterceptor || null;
   state.globalResponseInterceptor = options.responseInterceptor || null;
 
@@ -78,7 +75,6 @@ export const setupFzFetcher: SetupFzFetcher = (options) => {
       csrf: state.globalCsrfOptions,
       debug: state.globalDebug,
       deduplication: state.globalDeduplication,
-      timeout: state.globalTimeout,
       hasRequestInterceptor: !!state.globalRequestInterceptor,
       hasResponseInterceptor: !!state.globalResponseInterceptor,
     });
@@ -116,7 +112,6 @@ export const resetFzFetcher = () => {
   state.globalCsrfOptions = null;
   state.globalDebug = false;
   state.globalDeduplication = false;
-  state.globalTimeout = null; // Reset to default (infinite timeout)
   state.globalRequestInterceptor = null;
   state.globalResponseInterceptor = null;
   state.csrfManager = null;

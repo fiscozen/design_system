@@ -1,28 +1,18 @@
 import type { UseFzFetchOptions } from "../types";
 
 /**
- * Normalizes UseFzFetchOptions to remove null timeout values
- * since @vueuse/core's UseFetchOptions doesn't accept null
+ * Normalizes UseFzFetchOptions for use with @vueuse/core's createFetch
  *
- * @param options - UseFzFetchOptions that may contain null timeout
- * @returns Options with null timeout removed (if present)
+ * @param options - UseFzFetchOptions
+ * @returns Normalized options
  */
 export const normalizeUseFzFetchOptions = (
   options?: UseFzFetchOptions,
-): Omit<UseFzFetchOptions, "timeout"> & { timeout?: number } => {
+): UseFzFetchOptions => {
   if (!options) {
     return {};
   }
 
-  const { timeout, ...rest } = options;
-
-  // If timeout is null, remove it (don't pass to createFetch)
-  // If timeout is a number, keep it
-  // If timeout is undefined, keep it undefined
-  if (timeout === null) {
-    return rest;
-  }
-
-  return { ...rest, timeout };
+  return options;
 };
 

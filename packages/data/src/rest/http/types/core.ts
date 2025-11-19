@@ -38,17 +38,6 @@ export interface UseFzFetchOptions extends UseFetchOptions {
      * @default undefined (uses global deduplication setting)
      */
     deduplication?: boolean;
-
-    /**
-     * Request timeout in milliseconds
-     * 
-     * If the request takes longer than this value, it will be aborted.
-     * Note: null for infinite timeout is handled at wrapper level, not here.
-     * Can be overridden per-action via QueryActionOptions.timeout or MutationActionOptions.timeout
-     * 
-     * @default undefined (uses global timeout setting)
-     */
-    timeout?: number;
 }
 
 /**

@@ -12,19 +12,12 @@ import type { PaginationParams, FilterParams, SortParams } from "../list/types";
 export const normalizeOptions = (
   options: UseActionOptions = {},
 ): UseFzFetchOptions => {
-  const normalized: UseFzFetchOptions = {
+  return {
     immediate: options.onMount ?? true,
     refetch: options.autoUpdate ?? true,
     initialData: options.initialData ?? null,
     deduplication: options.deduplication,
   };
-  
-  // Only include timeout if it's a number (not null)
-  if (options.timeout !== null && options.timeout !== undefined) {
-    normalized.timeout = options.timeout;
-  }
-  
-  return normalized;
 };
 
 /**

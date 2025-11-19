@@ -49,17 +49,6 @@ export interface SetupFzFetcherOptions {
   deduplication?: boolean;
 
   /**
-   * Global request timeout in milliseconds
-   * 
-   * If a request takes longer than this value, it will be aborted with a timeout error.
-   * Set to `null` for infinite timeout (no timeout).
-   * Can be overridden per-action via QueryActionOptions.timeout or MutationActionOptions.timeout
-   * 
-   * @default null (infinite timeout - no timeout applied)
-   */
-  timeout?: number | null;
-
-  /**
    * Request interceptor function
    * 
    * Called before each request is sent. Can modify the request (URL, headers, body, etc.)
