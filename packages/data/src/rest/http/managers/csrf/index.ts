@@ -45,7 +45,12 @@ export class CsrfManager {
     const cookieName = this.options.cookieName.trim();
 
     for (const cookie of cookies) {
-      const [name, value] = cookie.split("=").map((s) => s.trim());
+      const equalIndex = cookie.indexOf("=");
+      if (equalIndex === -1) continue;
+      
+      const name = cookie.substring(0, equalIndex).trim();
+      const value = cookie.substring(equalIndex + 1).trim();
+      
       if (name === cookieName) {
         if (this.debug) {
           console.debug(`[CsrfManager] Found CSRF token in cookie: ${cookieName}`);
