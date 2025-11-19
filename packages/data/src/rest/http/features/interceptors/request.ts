@@ -134,6 +134,26 @@ const normalizeHeadersArray = (
 };
 
 /**
+ * Normalizes plain object headers to lowercase keys
+ *
+ * Converts Record<string, string> to Record<string, string> with lowercase keys.
+ * Last value wins for duplicate keys (standard headers behavior).
+ *
+ * @param headers - Plain object headers
+ * @returns Normalized headers as Record<string, string>
+ */
+const normalizeHeadersPlainObject = (
+  headers: Record<string, string>,
+): Record<string, string> => {
+  const normalized: Record<string, string> = {};
+  for (const [key, value] of Object.entries(headers)) {
+    // Last value wins for duplicate keys (standard headers behavior)
+    normalized[key.toLowerCase()] = value;
+  }
+  return normalized;
+};
+
+/**
  * Normalizes headers to a plain object for comparison
  *
  * Handles Headers objects, Record<string, string>, and array of tuples [string, string][].
@@ -160,7 +180,7 @@ const normalizeHeaders = (
   }
 
   // Handle plain object Record<string, string>
-  return headers as Record<string, string>;
+  return normalizeHeadersPlainObject(headers as Record<string, string>);
 };
 
 /**
