@@ -10,11 +10,13 @@ import { getUrlWithQueryParams } from "./utils/url";
 import { injectCsrfToken } from "./utils/csrf";
 import { normalizeUseFzFetchOptions } from "./utils/options";
 import { DEFAULT_HTTP_METHOD } from "./common";
+import { WrapperChain } from "./wrappers/chain";
 import {
-  wrapWithRequestInterceptor,
-  wrapWithResponseInterceptor,
-} from "./features/interceptors";
-import { wrapWithDeduplication } from "./features/deduplication/wrapper";
+  requestInterceptorWrapper,
+  responseInterceptorWrapper,
+  deduplicationWrapper,
+} from "./wrappers/adapters";
+import type { WrapperContext } from "./wrappers/types";
 
 // Re-export setup functions
 export { setupFzFetcher, resetFzFetcher } from "./setup";
@@ -23,33 +25,33 @@ export { setupFzFetcher, resetFzFetcher } from "./setup";
 export { getCsrfOptions, getGlobalDebug as getDebug } from "./setup/state";
 
 /**
- * Determines if deduplication should be enabled for a request
+ * Creates a wrapper chain with default wrappers
  *
- * @param perActionDeduplication - Per-action deduplication setting
- * @returns True if deduplication should be enabled
+ * Wrappers are applied in order:
+ * 1. Request interceptor (first to intercept before fetch)
+ * 2. Response interceptor
+ * 3. Deduplication (last to wrap the interceptor logic)
+ *
+ * @returns Configured wrapper chain
  */
-const shouldDeduplicate = (
-  perActionDeduplication?: boolean,
-): boolean => {
-  // Per-action setting takes precedence
-  if (perActionDeduplication !== undefined) {
-    return perActionDeduplication;
-  }
-  // Fall back to global setting
-  return state.globalDeduplication;
+const createDefaultWrapperChain = (): WrapperChain => {
+  const chain = new WrapperChain();
+  chain.add(requestInterceptorWrapper);
+  chain.add(responseInterceptorWrapper);
+  chain.add(deduplicationWrapper);
+  return chain;
 };
 
 /**
  * Creates a fetch result with all wrappers applied
  *
- * Applies request interceptor, response interceptor, and deduplication wrapper
- * in the correct order to ensure proper functionality.
+ * Uses a wrapper chain to apply request interceptor, response interceptor,
+ * and deduplication wrapper in the correct order.
  *
  * @param finalUrl - Computed URL for the request (can be reactive via ref/computed)
  * @param requestInit - Request configuration
  * @param method - HTTP method
  * @param body - Request body (for deduplication key)
- * @param deduplicationEnabled - Whether deduplication is enabled
  * @param useFetchOptions - Optional useFetchOptions for fzFetcher and interceptors
  * @returns Wrapped fetch result with all interceptors and deduplication applied
  */
@@ -58,39 +60,27 @@ const createFetchResult = <T>(
   requestInit: RequestInit,
   method: string,
   body: BodyInit | null | undefined,
-  deduplicationEnabled: boolean,
   useFetchOptions?: UseFzFetchOptions,
 ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> => {
   // Create base fetch result
-  let fetchResult = state.fzFetcher!<T>(
+  const baseFetchResult = state.fzFetcher!<T>(
     finalUrl,
     requestInit,
     useFetchOptions ? normalizeUseFzFetchOptions(useFetchOptions) : undefined,
   ).json();
 
-  // Apply request interceptor wrapper (must be first to intercept before fetch)
-  fetchResult = wrapWithRequestInterceptor(
-    fetchResult,
-    finalUrl,
+  // Create wrapper context
+  const context: WrapperContext = {
+    url: finalUrl,
     requestInit,
-    useFetchOptions,
-  ) as typeof fetchResult;
-
-  // Apply response interceptor wrapper
-  fetchResult = wrapWithResponseInterceptor(
-    fetchResult,
-    finalUrl,
-    requestInit,
-  ) as typeof fetchResult;
-
-  // Apply deduplication wrapper (must be last to wrap the interceptor logic)
-  return wrapWithDeduplication(
-    fetchResult,
-    finalUrl,
     method,
     body,
-    deduplicationEnabled,
-  );
+    useFetchOptions,
+  };
+
+  // Apply wrappers using chain
+  const wrapperChain = createDefaultWrapperChain();
+  return wrapperChain.apply(baseFetchResult, context);
 };
 
 
@@ -161,7 +151,6 @@ export const useFzFetch: UseFzFetch = <T>(
       requestInit,
       method,
       params?.body,
-      shouldDeduplicate(useFetchOptions.deduplication),
       useFetchOptions,
     );
   }
@@ -191,7 +180,6 @@ export const useFzFetch: UseFzFetch = <T>(
         requestInit,
         method,
         params.body,
-        shouldDeduplicate(undefined),
         undefined,
       );
     } else {
@@ -211,7 +199,6 @@ export const useFzFetch: UseFzFetch = <T>(
         requestInit,
         method,
         null,
-        shouldDeduplicate(useFetchOptionsForThis.deduplication),
         useFetchOptionsForThis,
       );
     }
@@ -232,7 +219,6 @@ export const useFzFetch: UseFzFetch = <T>(
     requestInit,
     method,
     null,
-    shouldDeduplicate(undefined),
     undefined,
   );
 };

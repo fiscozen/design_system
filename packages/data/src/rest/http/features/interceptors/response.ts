@@ -1,6 +1,8 @@
 import { toValue, type MaybeRefOrGetter } from "vue";
 import type { UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
+import { normalizeError } from "../../utils/error";
+import { parseResponseBody } from "../../utils/response";
 import type { ResponseInterceptor } from "./types";
 
 /**
@@ -46,32 +48,9 @@ export const wrapWithResponseInterceptor = <T>(
 
             // Re-parse body if response was modified
             // @vueuse/core doesn't automatically re-parse when response changes
-            // Clone response once and reuse for parsing to avoid multiple clones
             try {
-              const contentType = interceptedResponse.headers.get("content-type") || "";
-              const clonedResponse = interceptedResponse.clone();
-              
-              if (contentType.includes("application/json")) {
-                // Parse as JSON
-                const jsonData = await clonedResponse.json();
-                fetchResult.data.value = jsonData;
-              } else if (contentType.includes("text/")) {
-                // Parse as text
-                const textData = await clonedResponse.text();
-                fetchResult.data.value = textData as T;
-              } else {
-                // For other content types, try JSON first, fallback to text
-                // Clone again since we already consumed the first clone
-                try {
-                  const clonedResponse2 = interceptedResponse.clone();
-                  const jsonData = await clonedResponse2.json();
-                  fetchResult.data.value = jsonData;
-                } catch {
-                  const clonedResponse3 = interceptedResponse.clone();
-                  const textData = await clonedResponse3.text();
-                  fetchResult.data.value = textData as T;
-                }
-              }
+              const parsedData = await parseResponseBody<T>(interceptedResponse);
+              fetchResult.data.value = parsedData;
 
               if (state.globalDebug) {
                 console.debug(
@@ -81,11 +60,12 @@ export const wrapWithResponseInterceptor = <T>(
             } catch (parseError: unknown) {
               // If parsing fails, set error and stop execution
               if (state.globalDebug) {
+                const normalizedError = normalizeError(parseError);
                 console.debug(
-                  `[useFzFetch] Failed to parse modified response body: ${parseError.message}`,
+                  `[useFzFetch] Failed to parse modified response body: ${normalizedError.message}`,
                 );
               }
-              const normalizedParseError = parseError instanceof Error ? parseError : new Error(String(parseError));
+              const normalizedParseError = normalizeError(parseError);
               fetchResult.error.value = normalizedParseError;
               if (throwOnFailed) {
                 throw normalizedParseError;
@@ -96,7 +76,7 @@ export const wrapWithResponseInterceptor = <T>(
           }
         } catch (error: unknown) {
           // If response interceptor throws, treat as error and stop execution
-          const normalizedError = error instanceof Error ? error : new Error(String(error));
+          const normalizedError = normalizeError(error);
           if (state.globalDebug) {
             console.debug(
               `[useFzFetch] Response interceptor error: ${normalizedError.message}`,
