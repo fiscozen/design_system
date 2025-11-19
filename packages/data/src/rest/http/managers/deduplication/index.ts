@@ -118,10 +118,42 @@ export class DeduplicationManager {
   }
 
   /**
+   * Recursively normalizes a JSON value by sorting object keys at all levels
+   *
+   * This function ensures that identical JSON structures with different key
+   * ordering produce the same normalized string. It handles:
+   * - Objects: sorts keys recursively
+   * - Arrays: normalizes each element recursively
+   * - Primitives: returns as-is
+   *
+   * @param value - JSON value to normalize (object, array, or primitive)
+   * @returns Normalized value with all keys sorted
+   */
+  private normalizeJsonValue(value: unknown): unknown {
+    // Handle null and primitives (string, number, boolean, undefined)
+    if (value === null || typeof value !== "object") {
+      return value;
+    }
+
+    // Handle arrays: normalize each element recursively
+    if (Array.isArray(value)) {
+      return value.map((item) => this.normalizeJsonValue(item));
+    }
+
+    // Handle objects: sort keys and normalize values recursively
+    const sortedEntries = Object.entries(value)
+      .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+      .map(([key, val]) => [key, this.normalizeJsonValue(val)]);
+
+    return Object.fromEntries(sortedEntries);
+  }
+
+  /**
    * Normalizes request body by sorting JSON keys
    *
-   * For JSON bodies, sorts object keys to ensure consistent comparison.
-   * For non-JSON bodies, creates an identifier using length and prefix.
+   * For JSON bodies, recursively sorts object keys at all levels to ensure
+   * consistent comparison. For non-JSON bodies, creates an identifier using
+   * length and prefix.
    *
    * **Limitation**: Non-JSON bodies with the same length and prefix will be
    * considered identical for deduplication purposes. This is acceptable for
@@ -139,9 +171,10 @@ export class DeduplicationManager {
     }
 
     try {
-      // Parse and normalize JSON by sorting keys
+      // Parse and normalize JSON by recursively sorting keys at all levels
       const parsed = JSON.parse(body);
-      return JSON.stringify(parsed, Object.keys(parsed).sort());
+      const normalized = this.normalizeJsonValue(parsed);
+      return JSON.stringify(normalized);
     } catch {
       // If not JSON, create identifier using length and prefix
       // This approach balances uniqueness with performance (no hash computation needed)
