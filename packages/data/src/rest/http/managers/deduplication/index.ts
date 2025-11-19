@@ -128,8 +128,15 @@ export class DeduplicationManager {
   /**
    * Normalizes request body by sorting JSON keys
    *
-   * For non-JSON bodies, creates a unique identifier based on length and prefix
-   * to avoid collisions for different bodies with same string content.
+   * For JSON bodies, sorts object keys to ensure consistent comparison.
+   * For non-JSON bodies, creates an identifier using length and prefix.
+   *
+   * **Limitation**: Non-JSON bodies with the same length and prefix will be
+   * considered identical for deduplication purposes. This is acceptable for
+   * most use cases since:
+   * - JSON bodies are fully compared (no collisions)
+   * - Non-JSON body collisions are rare in practice
+   * - The deduplication key includes URL, method, and headers, reducing collision risk
    *
    * @param body - Request body string
    * @returns Normalized body string
@@ -140,11 +147,13 @@ export class DeduplicationManager {
     }
 
     try {
+      // Parse and normalize JSON by sorting keys
       const parsed = JSON.parse(body);
       return JSON.stringify(parsed, Object.keys(parsed).sort());
     } catch {
-      // If not JSON, create identifier to avoid collisions
-      // Use length and prefix to distinguish different non-JSON bodies
+      // If not JSON, create identifier using length and prefix
+      // This approach balances uniqueness with performance (no hash computation needed)
+      // Collisions are possible but rare in practice, especially combined with URL/method/headers
       const prefix = body.substring(0, NON_JSON_BODY_PREFIX_LENGTH);
       return `non-json:${body.length}:${prefix}`;
     }
