@@ -19,6 +19,18 @@ export class DeduplicationManager {
   private pendingWatches: Map<string, () => void> = new Map();
 
   /**
+   * Base URL for resolving relative URLs during normalization
+   * 
+   * Passed explicitly to avoid circular dependency with state module.
+   * If not provided, relative URLs will be normalized without base URL.
+   */
+  private readonly baseUrl: string | null;
+
+  constructor(baseUrl?: string | null) {
+    this.baseUrl = baseUrl ?? null;
+  }
+
+  /**
    * Generates a unique key for a request based on URL, query params, payload, and method
    *
    * @param url - Request URL
@@ -43,8 +55,8 @@ export class DeduplicationManager {
   /**
    * Normalizes URL by removing trailing slashes and sorting query parameters
    *
-   * Handles absolute URLs, relative URLs, and SSR/test environments where window.location.origin
-   * may not be available.
+   * Handles absolute URLs, relative URLs, and SSR/test environments.
+   * Uses baseUrl passed to constructor for resolving relative URLs.
    *
    * @param url - Request URL
    * @returns Normalized URL string
@@ -66,50 +78,38 @@ export class DeduplicationManager {
         return `${pathname}${urlObj.search}`;
       }
 
-      // For relative URLs, try to use globalBaseUrl if available
-      // Import state at module level would cause circular dependency, so we'll use a fallback
-      let baseUrl: string | undefined;
-      try {
-        // Try to access state.globalBaseUrl via dynamic import or fallback
-        // Since we can't import state here (circular dependency), use window.location.origin as fallback
-        if (typeof window !== "undefined" && window.location) {
-          baseUrl = window.location.origin;
-        }
-      } catch {
-        // Ignore errors accessing window
+      // For relative URLs, use baseUrl from constructor if available
+      if (this.baseUrl) {
+        // Use baseUrl to create full URL
+        const urlObj = new URL(url, this.baseUrl);
+        // Sort query parameters
+        const sortedParams = Array.from(urlObj.searchParams.entries())
+          .sort(([a], [b]) => a.localeCompare(b));
+        urlObj.search = "";
+        sortedParams.forEach(([key, value]) => {
+          urlObj.searchParams.append(key, value);
+        });
+        // Remove trailing slash from pathname
+        const pathname = urlObj.pathname.replace(/\/$/, "");
+        return `${pathname}${urlObj.search}`;
       }
 
       // If no base URL available, return normalized pathname only
-      if (!baseUrl) {
-        // Extract pathname and query from relative URL
-        const queryIndex = url.indexOf("?");
-        const pathname = queryIndex === -1 ? url : url.substring(0, queryIndex);
-        const query = queryIndex === -1 ? "" : url.substring(queryIndex + 1);
-        
-        // Sort query parameters if present
-        if (query) {
-          const params = new URLSearchParams(query);
-          const sortedParams = Array.from(params.entries())
-            .sort(([a], [b]) => a.localeCompare(b));
-          const sortedQuery = new URLSearchParams(sortedParams).toString();
-          return `${pathname.replace(/\/$/, "")}${sortedQuery ? `?${sortedQuery}` : ""}`;
-        }
-        
-        return pathname.replace(/\/$/, "");
+      // Extract pathname and query from relative URL
+      const queryIndex = url.indexOf("?");
+      const pathname = queryIndex === -1 ? url : url.substring(0, queryIndex);
+      const query = queryIndex === -1 ? "" : url.substring(queryIndex + 1);
+      
+      // Sort query parameters if present
+      if (query) {
+        const params = new URLSearchParams(query);
+        const sortedParams = Array.from(params.entries())
+          .sort(([a], [b]) => a.localeCompare(b));
+        const sortedQuery = new URLSearchParams(sortedParams).toString();
+        return `${pathname.replace(/\/$/, "")}${sortedQuery ? `?${sortedQuery}` : ""}`;
       }
-
-      // Use baseUrl to create full URL
-      const urlObj = new URL(url, baseUrl);
-      // Sort query parameters
-      const sortedParams = Array.from(urlObj.searchParams.entries())
-        .sort(([a], [b]) => a.localeCompare(b));
-      urlObj.search = "";
-      sortedParams.forEach(([key, value]) => {
-        urlObj.searchParams.append(key, value);
-      });
-      // Remove trailing slash from pathname
-      const pathname = urlObj.pathname.replace(/\/$/, "");
-      return `${pathname}${urlObj.search}`;
+      
+      return pathname.replace(/\/$/, "");
     } catch {
       // If URL parsing fails, return as-is
       return url;
