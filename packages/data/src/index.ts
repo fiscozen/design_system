@@ -1,4 +1,4 @@
-// Namespace export (backward compatible with Breweries examples)
+// Namespace export (alternative import pattern)
 export * as rest from "./rest";
 
 // Direct exports (for convenience)
