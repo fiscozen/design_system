@@ -1,7 +1,7 @@
 import { computed, toValue } from "vue";
 import type { UseFzFetchOptions, UseFzFetchReturn, UseFzFetchParams } from "../../http/types";
 import type { UseActionOptions, QueryActionReturn } from "./types";
-import type { ListActionParams, ListActionReturn } from "../list/types";
+import type { PaginationParams, FilterParams, SortParams } from "../list/types";
 
 /**
  * Normalize action options to UseFzFetchOptions
@@ -28,58 +28,66 @@ export const normalizeOptions = (
 };
 
 /**
- * Normalize list action params into query parameters
+ * Normalize list action reactive params into query parameters
  *
- * Supports reactive params using MaybeRefOrGetter.
+ * Accepts reactive objects (filters, sort, pagination) and converts them to query string format.
  * Returns a computed object that updates when reactive params change.
  *
- * @param params - List action params (filters, sort, page, pageSize)
+ * @param params - Reactive list action params (filters, sort, pagination)
  * @returns UseFzFetchParams with reactive queryParams
  */
-export const normalizeParams = (params: ListActionParams = {}): UseFzFetchParams => {
+export const normalizeParams = (params: {
+  filters?: FilterParams;
+  sort?: SortParams;
+  pagination?: PaginationParams;
+}): UseFzFetchParams => {
   return {
     queryParams: computed(() => {
       const queryParams: Record<string, string | number | boolean> = {};
 
       // Filters: { by_city: 'san_diego' } → queryParams.by_city = 'san_diego'
       if (params.filters) {
-        const filters = toValue(params.filters);
-
         // Validate filters is an object
         if (
-          filters === null ||
-          typeof filters !== "object" ||
-          Array.isArray(filters)
+          params.filters === null ||
+          typeof params.filters !== "object" ||
+          Array.isArray(params.filters)
         ) {
           throw new Error(
             "[normalizeParams] filters must be an object (Record<string, string | number | boolean | null | undefined>)",
           );
         }
 
-        Object.entries(filters).forEach(([key, value]) => {
+        Object.entries(params.filters).forEach(([key, value]) => {
           if (value !== undefined && value !== null) {
             queryParams[key] = value;
           }
         });
       }
 
-      // Sort: { name: 'asc', created_at: 'desc' } → queryParams.sort = 'name:asc,created_at:desc'
-      if (params.sort) {
-        const sort = toValue(params.sort);
-        const sortEntries = Object.entries(sort).map(
-          ([key, direction]) => `${key}:${direction}`,
-        );
+      // Sort: [{ name: 'asc' }, { created_at: 'desc' }] → queryParams.sort = 'name:asc,created_at:desc'
+      if (params.sort && Array.isArray(params.sort) && params.sort.length > 0) {
+        const sortEntries: string[] = [];
+        
+        params.sort.forEach((sortObj) => {
+          Object.entries(sortObj).forEach(([key, direction]) => {
+            sortEntries.push(`${key}:${direction}`);
+          });
+        });
+        
         if (sortEntries.length > 0) {
           queryParams.sort = sortEntries.join(",");
         }
       }
 
       // Pagination
-      if (params.page !== undefined) {
-        queryParams.page = toValue(params.page);
-      }
-      if (params.pageSize !== undefined) {
-        queryParams.per_page = toValue(params.pageSize);
+      if (params.pagination) {
+        if (params.pagination.page !== undefined) {
+          queryParams.page = params.pagination.page;
+        }
+        if (params.pagination.pageSize !== undefined) {
+          queryParams.per_page = params.pagination.pageSize;
+        }
       }
 
       return queryParams;
@@ -111,16 +119,20 @@ export const normalizeResponse = <T>(
 };
 
 /**
- * Normalize UseFzFetchReturn to ListActionReturn (for list actions)
+ * Normalize UseFzFetchReturn to QueryActionReturn (for list actions)
+ *
+ * Note: This returns only the base QueryActionReturn. The calling code
+ * (createListAction) adds filters, sort, and pagination reactive objects
+ * to create the full ListActionReturn.
  *
  * @param response - UseFzFetchReturn from useFzFetch (expects array type)
  * @param throwOnError - Whether to throw errors instead of storing in error ref
- * @returns ListActionReturn with computed properties
+ * @returns QueryActionReturn with computed properties
  */
 export const normalizeListResponse = <T>(
   response: UseFzFetchReturn<T[]>,
   throwOnError: boolean = false,
-): ListActionReturn<T> => {
+): QueryActionReturn<T[]> => {
   const originalExecute = response.execute;
   
   return {
@@ -130,5 +142,5 @@ export const normalizeListResponse = <T>(
     execute: async () => {
       await originalExecute(throwOnError);
     },
-  } as ListActionReturn<T>;
+  } as QueryActionReturn<T[]>;
 };
