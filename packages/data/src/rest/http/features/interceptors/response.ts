@@ -59,13 +59,13 @@ export const wrapWithResponseInterceptor = <T>(
               }
             } catch (parseError: unknown) {
               // If parsing fails, set error and stop execution
+              // Normalize error immediately to ensure it's always an Error instance
+              const normalizedParseError = normalizeError(parseError);
               if (state.globalDebug) {
-                const normalizedError = normalizeError(parseError);
                 console.debug(
-                  `[useFzFetch] Failed to parse modified response body: ${normalizedError.message}`,
+                  `[useFzFetch] Failed to parse modified response body: ${normalizedParseError.message}`,
                 );
               }
-              const normalizedParseError = normalizeError(parseError);
               fetchResult.error.value = normalizedParseError;
               if (throwOnFailed) {
                 throw normalizedParseError;
