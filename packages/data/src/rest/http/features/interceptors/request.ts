@@ -5,6 +5,38 @@ import { normalizeUseFzFetchOptions } from "../../utils/options";
 import type { RequestInterceptor } from "./types";
 
 /**
+ * Compares two normalized header objects for equality
+ *
+ * Compares headers property-by-property instead of using JSON.stringify
+ * for better performance and to avoid issues with property order.
+ *
+ * @param a - First normalized headers object
+ * @param b - Second normalized headers object
+ * @returns True if headers differ, false if they are equivalent
+ */
+const compareNormalizedHeaders = (
+  a: Record<string, string>,
+  b: Record<string, string>,
+): boolean => {
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+
+  // Different number of keys means they differ
+  if (keysA.length !== keysB.length) {
+    return true;
+  }
+
+  // Compare each key-value pair
+  for (const key of keysA) {
+    if (a[key] !== b[key]) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+/**
  * Compares two RequestInit objects to detect if they differ
  *
  * Uses property-by-property comparison instead of JSON.stringify to handle:
@@ -25,10 +57,10 @@ const compareRequestInit = (
     return true;
   }
 
-  // Compare headers
+  // Compare headers using direct property comparison
   const headersA = normalizeHeaders(a.headers);
   const headersB = normalizeHeaders(b.headers);
-  if (JSON.stringify(headersA) !== JSON.stringify(headersB)) {
+  if (compareNormalizedHeaders(headersA, headersB)) {
     return true;
   }
 
