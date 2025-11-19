@@ -2,6 +2,7 @@ import type {
   UseFzFetch,
   UseFzFetchOptions,
   UseFzFetchParams,
+  UseFzFetchReturn,
 } from "./types";
 import { toValue, type MaybeRefOrGetter, computed } from "vue";
 import { state } from "./setup/state";
@@ -36,6 +37,60 @@ const shouldDeduplicate = (
   }
   // Fall back to global setting
   return state.globalDeduplication;
+};
+
+/**
+ * Creates a fetch result with all wrappers applied
+ *
+ * Applies request interceptor, response interceptor, and deduplication wrapper
+ * in the correct order to ensure proper functionality.
+ *
+ * @param finalUrl - Computed URL for the request (can be reactive via ref/computed)
+ * @param requestInit - Request configuration
+ * @param method - HTTP method
+ * @param body - Request body (for deduplication key)
+ * @param deduplicationEnabled - Whether deduplication is enabled
+ * @param useFetchOptions - Optional useFetchOptions for fzFetcher and interceptors
+ * @returns Wrapped fetch result with all interceptors and deduplication applied
+ */
+const createFetchResult = <T>(
+  finalUrl: MaybeRefOrGetter<string>,
+  requestInit: RequestInit,
+  method: string,
+  body: BodyInit | null | undefined,
+  deduplicationEnabled: boolean,
+  useFetchOptions?: UseFzFetchOptions,
+): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> => {
+  // Create base fetch result
+  let fetchResult = state.fzFetcher!<T>(
+    finalUrl,
+    requestInit,
+    useFetchOptions ? normalizeUseFzFetchOptions(useFetchOptions) : undefined,
+  ).json();
+
+  // Apply request interceptor wrapper (must be first to intercept before fetch)
+  fetchResult = wrapWithRequestInterceptor(
+    fetchResult,
+    finalUrl,
+    requestInit,
+    useFetchOptions,
+  ) as typeof fetchResult;
+
+  // Apply response interceptor wrapper
+  fetchResult = wrapWithResponseInterceptor(
+    fetchResult,
+    finalUrl,
+    requestInit,
+  ) as typeof fetchResult;
+
+  // Apply deduplication wrapper (must be last to wrap the interceptor logic)
+  return wrapWithDeduplication(
+    fetchResult,
+    finalUrl,
+    method,
+    body,
+    deduplicationEnabled,
+  );
 };
 
 
@@ -84,188 +139,100 @@ export const useFzFetch: UseFzFetch = <T>(
   paramsOrUseFetchOptions?: UseFzFetchParams | UseFzFetchOptions,
   useFetchOptions?: UseFzFetchOptions,
 ) => {
-  if (state.fzFetcher) {
-    // Case 3: All 3 parameters (useFetchOptions present)
-    if (useFetchOptions !== undefined) {
-      // Determine deduplication setting for this case
-      const deduplicationEnabled = shouldDeduplicate(
-        useFetchOptions.deduplication,
-      );
+  if (!state.fzFetcher) {
+    throw new Error("FzFetcher not initialized! Use setupFzFetcher first.");
+  }
 
+  // Case 3: All 3 parameters (useFetchOptions present)
+  if (useFetchOptions !== undefined) {
+    const params = paramsOrUseFetchOptions as UseFzFetchParams;
+    const method = params?.method || DEFAULT_HTTP_METHOD;
+    const finalUrl = computed(() =>
+      getUrlWithQueryParams(toValue(basePath), params.queryParams),
+    );
+    const requestInit = {
+      method,
+      body: params?.body,
+      headers: injectCsrfToken(method, params?.headers),
+    };
+
+    return createFetchResult<T>(
+      finalUrl,
+      requestInit,
+      method,
+      params?.body,
+      shouldDeduplicate(useFetchOptions.deduplication),
+      useFetchOptions,
+    );
+  }
+
+  // Case 2: basePath + second parameter (useFetchOptions absent)
+  if (paramsOrUseFetchOptions !== undefined) {
+    // Distinguish between UseFzFetchParams and UseFzFetchOptions
+    if (
+      "queryParams" in paramsOrUseFetchOptions ||
+      "method" in paramsOrUseFetchOptions ||
+      "body" in paramsOrUseFetchOptions
+    ) {
+      // It's UseFzFetchParams
       const params = paramsOrUseFetchOptions as UseFzFetchParams;
-      const method = params?.method || DEFAULT_HTTP_METHOD;
-
-      // Keep basePath reactive and create reactive finalUrl if needed
+      const method = params.method || DEFAULT_HTTP_METHOD;
       const finalUrl = computed(() =>
         getUrlWithQueryParams(toValue(basePath), params.queryParams),
       );
       const requestInit = {
         method,
-        body: params?.body,
-        headers: injectCsrfToken(method, params?.headers),
+        body: params.body,
+        headers: injectCsrfToken(method, params.headers),
       };
-      let fetchResult = state.fzFetcher<T>(
+
+      return createFetchResult<T>(
         finalUrl,
         requestInit,
-        normalizeUseFzFetchOptions(useFetchOptions),
-      ).json();
-      
-      // Apply request interceptor wrapper (must be first to intercept before fetch)
-      fetchResult = wrapWithRequestInterceptor(
-        fetchResult,
-        finalUrl,
-        requestInit,
-        useFetchOptions,
-      ) as typeof fetchResult;
-      
-      // Apply response interceptor wrapper
-      fetchResult = wrapWithResponseInterceptor(
-        fetchResult,
-        finalUrl,
-        requestInit,
-      ) as typeof fetchResult;
-      
-      // Apply deduplication wrapper (must be last to wrap the interceptor logic)
-      return wrapWithDeduplication(
-        fetchResult,
-        finalUrl,
         method,
-        params?.body,
-        deduplicationEnabled,
+        params.body,
+        shouldDeduplicate(undefined),
+        undefined,
+      );
+    } else {
+      // It's UseFzFetchOptions
+      const useFetchOptionsForThis = paramsOrUseFetchOptions as UseFzFetchOptions;
+      const finalUrl = computed(() =>
+        getUrlWithQueryParams(toValue(basePath), undefined),
+      );
+      const method = DEFAULT_HTTP_METHOD;
+      const requestInit = {
+        method,
+        headers: injectCsrfToken(method, {}),
+      };
+
+      return createFetchResult<T>(
+        finalUrl,
+        requestInit,
+        method,
+        null,
+        shouldDeduplicate(useFetchOptionsForThis.deduplication),
+        useFetchOptionsForThis,
       );
     }
-
-    // Case 2: basePath + second parameter (useFetchOptions absent)
-    if (paramsOrUseFetchOptions !== undefined) {
-      // Distinguish between UseFzFetchParams and UseFzFetchOptions
-      if (
-        "queryParams" in paramsOrUseFetchOptions ||
-        "method" in paramsOrUseFetchOptions ||
-        "body" in paramsOrUseFetchOptions
-      ) {
-        // It's UseFzFetchParams
-        // Determine deduplication setting for this case (use global default)
-        const deduplicationEnabled = shouldDeduplicate(undefined);
-
-        const params = paramsOrUseFetchOptions as UseFzFetchParams;
-        const method = params.method || DEFAULT_HTTP_METHOD;
-
-        const finalUrl = computed(() =>
-          getUrlWithQueryParams(toValue(basePath), params.queryParams),
-        );
-        const requestInit = {
-          method,
-          body: params.body,
-          headers: injectCsrfToken(method, params.headers),
-        };
-        let fetchResult = state.fzFetcher<T>(finalUrl, requestInit).json();
-        
-        // Apply request interceptor wrapper (must be first to intercept before fetch)
-        fetchResult = wrapWithRequestInterceptor(
-          fetchResult,
-          finalUrl,
-          requestInit,
-          undefined, // No useFetchOptions in this case
-        ) as typeof fetchResult;
-        
-        // Apply response interceptor wrapper
-        fetchResult = wrapWithResponseInterceptor(
-          fetchResult,
-          finalUrl,
-          requestInit,
-        ) as typeof fetchResult;
-        
-        // Apply deduplication wrapper (must be last to wrap the interceptor logic)
-        return wrapWithDeduplication(
-          fetchResult,
-          finalUrl,
-          method,
-          params.body,
-          deduplicationEnabled,
-        );
-      } else {
-        // It's UseFzFetchOptions
-        const finalUrl = computed(() =>
-          getUrlWithQueryParams(toValue(basePath), undefined),
-        );
-        const method = DEFAULT_HTTP_METHOD;
-        const requestInit = {
-          method,
-          headers: injectCsrfToken(method, {}),
-        };
-        const deduplicationEnabledForThis = shouldDeduplicate(
-          (paramsOrUseFetchOptions as UseFzFetchOptions).deduplication,
-        );
-        const useFetchOptionsForThis = paramsOrUseFetchOptions as UseFzFetchOptions;
-        let fetchResult = state.fzFetcher<T>(
-          finalUrl,
-          requestInit,
-          normalizeUseFzFetchOptions(useFetchOptionsForThis),
-        ).json();
-        
-        // Apply request interceptor wrapper (must be first to intercept before fetch)
-        fetchResult = wrapWithRequestInterceptor(
-          fetchResult,
-          finalUrl,
-          requestInit,
-          useFetchOptionsForThis,
-        ) as typeof fetchResult;
-        
-        // Apply response interceptor wrapper
-        fetchResult = wrapWithResponseInterceptor(
-          fetchResult,
-          finalUrl,
-          requestInit,
-        ) as typeof fetchResult;
-        
-        // Apply deduplication wrapper (must be last to wrap the interceptor logic)
-        return wrapWithDeduplication(
-          fetchResult,
-          finalUrl,
-          method,
-          null,
-          deduplicationEnabledForThis,
-        );
-      }
-    }
-
-    // Case 1: Only basePath - keep URL reactivity
-    // Determine deduplication setting for this case (use global default)
-    const deduplicationEnabled = shouldDeduplicate(undefined);
-
-    const finalUrl = computed(() =>
-      getUrlWithQueryParams(toValue(basePath), undefined),
-    );
-    const method = "GET";
-    const requestInit = {
-      method,
-      headers: injectCsrfToken(method, {}),
-    };
-    let fetchResult = state.fzFetcher<T>(finalUrl, requestInit).json();
-    
-    // Apply request interceptor wrapper (must be first to intercept before fetch)
-    fetchResult = wrapWithRequestInterceptor(
-      fetchResult,
-      finalUrl,
-      requestInit,
-    ) as typeof fetchResult;
-    
-    // Apply response interceptor wrapper
-    fetchResult = wrapWithResponseInterceptor(
-      fetchResult,
-      finalUrl,
-      requestInit,
-    ) as typeof fetchResult;
-    
-    // Apply deduplication wrapper (must be last to wrap the interceptor logic)
-    return wrapWithDeduplication(
-      fetchResult,
-      finalUrl,
-      method,
-      null,
-      deduplicationEnabled,
-    );
-  } else {
-    throw new Error("FzFetcher not initialized! Use setupFzFetcher first.");
   }
+
+  // Case 1: Only basePath - keep URL reactivity
+  const finalUrl = computed(() =>
+    getUrlWithQueryParams(toValue(basePath), undefined),
+  );
+  const method = DEFAULT_HTTP_METHOD;
+  const requestInit = {
+    method,
+    headers: injectCsrfToken(method, {}),
+  };
+
+  return createFetchResult<T>(
+    finalUrl,
+    requestInit,
+    method,
+    null,
+    shouldDeduplicate(undefined),
+    undefined,
+  );
 };
