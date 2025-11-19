@@ -27,9 +27,6 @@ export const createDeleteAction = <T>(
           {
             method: "DELETE",
           },
-          options?.timeout !== null && options?.timeout !== undefined
-            ? { timeout: options.timeout }
-            : undefined,
         );
 
         await response.execute(options?.throwOnError ?? false);

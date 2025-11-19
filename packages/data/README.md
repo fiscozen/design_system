@@ -11,7 +11,7 @@
 > * centralise and standardise state and error handling;
 > * ensure strong typing and composable reusability.
 
-**Current Status:** Complete CRUD operations with reactive parameters, CSRF protection, request deduplication, configurable timeouts, request/response interceptors, and debug logging.
+**Current Status:** Complete CRUD operations with reactive parameters, CSRF protection, request deduplication, request/response interceptors, and debug logging.
 
 ---
 
@@ -436,15 +436,6 @@ interface SetupFzFetcherOptions {
   debug?: boolean
 
   /**
-   * Global request timeout in milliseconds
-   * If a request takes longer than this value, it will be aborted with a timeout error.
-   * Set to `null` for infinite timeout (no timeout).
-   * Can be overridden per-action via QueryActionOptions.timeout or MutationActionOptions.timeout
-   * (default: null - infinite timeout, no timeout applied)
-   */
-  timeout?: number | null
-
-  /**
    * Request interceptor function
    * Called before each request is sent. Can modify the request or abort it.
    * (default: undefined - no interceptor)
@@ -523,8 +514,6 @@ setupFzFetcher({
   // Request deduplication
   deduplication: true,
   
-  // Global timeout (null = infinite timeout by default)
-  timeout: 30000, // 30 seconds, or null for infinite timeout
   
   // Request interceptor
   requestInterceptor,
@@ -987,57 +976,6 @@ export const useUserInvoices = (userId: MaybeRefOrGetter<number>) => {
 }
 ```
 
-### Configurable Timeouts
-
-Set request timeouts globally or per-action to handle slow networks and prevent hanging requests:
-
-```typescript
-// Global timeout (null = infinite timeout by default)
-setupFzFetcher({
-  baseUrl: 'https://api.example.com',
-  timeout: 60000 // 60 seconds for all requests
-  // timeout: null // Infinite timeout (no timeout applied)
-})
-
-// Per-action timeout override
-const { data } = useListUsers(
-  { filters: { role: 'admin' } },
-  { timeout: 10000 } // 10 seconds for this specific request
-)
-
-// Infinite timeout for specific action
-const { data } = useListUsers(
-  { filters: { role: 'admin' } },
-  { timeout: null } // No timeout for this request
-)
-
-// Mutation actions also support timeout
-const { execute: createUser } = useCreateUser({ 
-  timeout: 5000 // 5 seconds for create operations
-})
-
-// Timeout resolution: per-action → global → default (null = infinite)
-```
-
-**Timeout Behavior:**
-- Requests exceeding the timeout are automatically aborted
-- A `TimeoutError` is thrown with a clear error message
-- The error is available in the `error` ref for handling
-- Timeout cleanup is handled automatically
-
-**Error Handling:**
-```typescript
-const { data, error, isLoading } = useListUsers({ 
-  filters: { role: 'admin' } 
-})
-
-// Check for timeout errors
-if (error.value instanceof TimeoutError) {
-  console.error('Request timed out:', error.value.message)
-  // Handle timeout (e.g., show user-friendly message, retry)
-}
-```
-
 ### Batch Operations
 
 Handle multiple operations:
@@ -1126,14 +1064,6 @@ interface QueryActionOptions<T> {
    * @default undefined (uses global setting)
    */
   deduplication?: boolean
-
-  /**
-   * Request timeout in milliseconds for this specific action
-   * Set to `null` for infinite timeout (no timeout).
-   * Overrides global timeout setting from setupFzFetcher
-   * @default undefined (uses global timeout setting, or null for infinite timeout if not set)
-   */
-  timeout?: number | null
 
   /**
    * Whether to throw errors instead of storing them in the error ref
@@ -1259,14 +1189,6 @@ interface ListActionReturn<T> {
 
 ```typescript
 interface MutationActionOptions {
-  /**
-   * Request timeout in milliseconds for this specific action
-   * Set to `null` for infinite timeout (no timeout).
-   * Overrides global timeout setting from setupFzFetcher
-   * @default undefined (uses global timeout setting, or null for infinite timeout if not set)
-   */
-  timeout?: number | null
-
   /**
    * Whether to throw errors instead of storing them in the error ref
    * 
@@ -1566,7 +1488,6 @@ Configurable globally and per-action:
 - ✅ Reactive parameters (auto-refetch when filters/sort/page change)
 - ✅ CSRF token auto-injection for mutations (POST/PUT/PATCH/DELETE)
 - ✅ Request deduplication (configurable globally and per-action)
-- ✅ Configurable timeouts (global and per-action, with `null` for infinite timeout)
 - ✅ Request and response interceptors (modify requests/responses, abort requests)
 - ✅ Debug logging (configurable via `setupFzFetcher({ debug: true })`)
 
@@ -1603,7 +1524,11 @@ Configurable globally and per-action:
 
 **Error Handling & Resilience:**
 - [ ] Retry logic with exponential backoff (configurable globally and per-action)
-- [ ] Automatic retry for network errors (timeout, 5xx) - not for 4xx
+- [ ] Automatic retry for network errors (5xx) - not for 4xx
+- [ ] Request timeouts (configurable globally and per-action)
+  - Abort requests that exceed configured timeout duration
+  - Support for infinite timeout (`null`) and per-action overrides
+  - Proper cleanup and error handling
 - [ ] Offline support with request queue
 
 **Developer Experience:**
@@ -1707,7 +1632,7 @@ This package is designed to work with REST APIs following these conventions:
 
 - **Bundle Size**: 21.24 kB (gzip: 5.65 kB)
 - **Lines of Code**: ~1800 LOC
-- **Test Coverage**: Organized by feature (setup, deduplication, timeout, interceptors)
+- **Test Coverage**: Organized by feature (setup, deduplication, interceptors)
 - **Type Safety**: Complete (no `any` types in public API)
 - **Linting**: 0 errors
 - **Build**: Optimized and production-ready

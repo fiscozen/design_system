@@ -94,9 +94,6 @@ setupFzFetcher({
   // Request Deduplication (optional)
   deduplication: true,  // Enable globally (can be overridden per-action)
   
-  // Global Timeout (optional)
-  timeout: 30000,  // 30 seconds (set to null for infinite timeout)
-  
   // Debug Logging (optional)
   debug: true,  // Enable console.debug logging for development
   
@@ -141,7 +138,6 @@ setupFzFetcher({
 | `csrf.cookieName` | `string` | ❌ No | `'csrf_token'` | Cookie name containing CSRF token |
 | `csrf.headerName` | `string` | ❌ No | `'X-CSRF-Token'` | Header name to send CSRF token |
 | `deduplication` | `boolean` | ❌ No | `false` | Enable request deduplication globally (disabled by default) |
-| `timeout` | `number \| null` | ❌ No | `null` | Global timeout in milliseconds (`null` = infinite) |
 | `debug` | `boolean` | ❌ No | `false` | Enable debug logging |
 | `requestInterceptor` | `RequestInterceptor` | ❌ No | - | Function to modify/abort requests |
 | `responseInterceptor` | `ResponseInterceptor` | ❌ No | - | Function to modify/handle responses |
@@ -691,7 +687,6 @@ Options for query actions (`useRetrieve`, `useList`).
 | `autoUpdate` | `boolean \| Ref<boolean> \| ComputedRef<boolean>` | ❌ No | `true` | Automatically refetch when reactive parameters change |
 | `initialData` | `T \| null` | ❌ No | `null` | Initial data before request completes |
 | `deduplication` | `boolean` | ❌ No | `undefined` | Enable request deduplication (overrides global setting) |
-| `timeout` | `number \| null` | ❌ No | `undefined` | Request timeout in milliseconds (`null` = infinite, overrides global setting) |
 | `throwOnError` | `boolean` | ❌ No | `false` | Whether to throw errors instead of storing them in the error ref |
 
 **Example:**
@@ -702,7 +697,6 @@ const { data, execute } = useListUsers(
   {
     onMount: false,        // Don't fetch on mount
     autoUpdate: false,     // Don't auto-refetch when filters change
-    timeout: 10000,        // 10 second timeout
     deduplication: true    // Enable deduplication for this action
   }
 )
@@ -737,7 +731,6 @@ Options for mutation actions (`useCreate`, `useUpdate`, `useDelete`).
 
 | Option | Type | Required | Default | Description |
 |--------|------|----------|---------|-------------|
-| `timeout` | `number \| null` | ❌ No | `undefined` | Request timeout in milliseconds (`null` = infinite, overrides global setting) |
 | `throwOnError` | `boolean` | ❌ No | `false` | Whether to throw errors instead of storing them in the error ref |
 
 **Example**
@@ -748,7 +741,7 @@ import { useCreditNotes } from '@/composables/useCreditNotes'
 const { useCreateCreditNote } = useCreditNotes()
 
 const { execute: createCreditNote } = useCreateCreditNote({
-  timeout: 10000 // 10 second timeout for credit note creation
+  throwOnError: true // Throw errors instead of storing in error ref
 })
 ```
 
@@ -1099,7 +1092,6 @@ describe('useUsers', () => {
 - **CSRF Protection** - Automatic token injection for mutation requests
 - **Request Deduplication** - Prevent duplicate identical requests
 - **Request/Response Interceptors** - Modify requests/responses or abort requests
-- **Configurable Timeouts** - Global and per-action timeout configuration
 - **Debug Logging** - Development logging for troubleshooting
 - **TypeScript Support** - Full type safety with generics
 - **Error Handling** - Consistent error states across all actions
@@ -1107,6 +1099,7 @@ describe('useUsers', () => {
 
 ### 🔮 Nice to Have (Future)
 
+- **Request Timeouts** - Configurable timeouts (global and per-action) to abort requests that exceed configured duration
 - Response caching and cache invalidation
 - Optimistic updates for mutations
 - Retry logic with exponential backoff

@@ -22,7 +22,6 @@ export const state = {
   globalCsrfOptions: null as CsrfOptions | null,
   globalDebug: false,
   globalDeduplication: false,
-  globalTimeout: null as number | null, // Default: null (infinite timeout)
   globalRequestInterceptor: null as RequestInterceptor | null,
   globalResponseInterceptor: null as ResponseInterceptor | null,
 
@@ -36,12 +35,6 @@ export const state = {
  * @internal
  */
 export const getGlobalBaseUrl = (): string | null => state.globalBaseUrl;
-
-/**
- * Get global timeout setting
- * @internal
- */
-export const getGlobalTimeout = (): number | null => state.globalTimeout;
 
 /**
  * Get global request interceptor
