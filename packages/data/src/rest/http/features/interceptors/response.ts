@@ -79,7 +79,7 @@ export const wrapWithResponseInterceptor = <T>(
                 );
               }
             } catch (parseError: unknown) {
-              // If parsing fails, set error
+              // If parsing fails, set error and stop execution
               if (state.globalDebug) {
                 console.debug(
                   `[useFzFetch] Failed to parse modified response body: ${parseError.message}`,
@@ -90,10 +90,12 @@ export const wrapWithResponseInterceptor = <T>(
               if (throwOnFailed) {
                 throw normalizedParseError;
               }
+              // Stop execution when error is set (don't continue processing)
+              return;
             }
           }
         } catch (error: unknown) {
-          // If response interceptor throws, treat as error
+          // If response interceptor throws, treat as error and stop execution
           const normalizedError = error instanceof Error ? error : new Error(String(error));
           if (state.globalDebug) {
             console.debug(
@@ -104,6 +106,8 @@ export const wrapWithResponseInterceptor = <T>(
           if (throwOnFailed) {
             throw normalizedError;
           }
+          // Stop execution when error is set (don't continue processing)
+          return;
         }
       }
     } catch (error: unknown) {
