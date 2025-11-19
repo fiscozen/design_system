@@ -63,17 +63,6 @@ export interface QueryActionOptions<T = unknown> {
     deduplication?: boolean;
 
     /**
-     * Request timeout in milliseconds for this specific action
-     * 
-     * If the request takes longer than this value, it will be aborted with a timeout error.
-     * Set to `null` for infinite timeout (no timeout).
-     * Overrides global timeout setting from setupFzFetcher.
-     * 
-     * @default undefined (uses global timeout setting, or null for infinite timeout if not set)
-     */
-    timeout?: number | null;
-
-    /**
      * Whether to throw errors instead of storing them in the error ref
      * 
      * When `false` (default), errors are stored in `error` ref and can be checked reactively.
@@ -91,17 +80,6 @@ export interface QueryActionOptions<T = unknown> {
  * Reserved for future extensions (optimistic updates, retry logic, etc.)
  */
 export interface MutationActionOptions {
-  /**
-   * Request timeout in milliseconds for this specific action
-   * 
-   * If the request takes longer than this value, it will be aborted with a timeout error.
-   * Set to `null` for infinite timeout (no timeout).
-   * Overrides global timeout setting from setupFzFetcher.
-   * 
-   * @default undefined (uses global timeout setting, or null for infinite timeout if not set)
-   */
-  timeout?: number | null;
-
   /**
    * Whether to throw errors instead of storing them in the error ref
    * 

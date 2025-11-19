@@ -40,9 +40,6 @@ export const createUpdateAction = <T>(
             body: JSON.stringify(payload),
             headers: { "Content-Type": CONTENT_TYPE_JSON },
           },
-          options?.timeout !== null && options?.timeout !== undefined
-            ? { timeout: options.timeout }
-            : undefined,
         );
 
         await response.execute(options?.throwOnError ?? false);
