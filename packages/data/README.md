@@ -1382,7 +1382,663 @@ This package is designed to work with REST APIs following these conventions:
 
 ---
 
-## 12. Architectural Decisions
+## 12. Development Guide
+
+This section provides detailed information for developers working on the package internals, including architecture, code structure, and how to make fixes or add features.
+
+### 12.1 Package Structure
+
+```
+packages/data/
+├── src/
+│   ├── rest/
+│   │   ├── actions/          # CRUD operations layer
+│   │   │   ├── create/       # Create action (POST)
+│   │   │   ├── delete/       # Delete action (DELETE)
+│   │   │   ├── list/         # List action (GET with filters/sort/pagination)
+│   │   │   ├── retrieve/     # Retrieve action (GET by ID)
+│   │   │   ├── update/       # Update action (PUT/PATCH)
+│   │   │   ├── shared/       # Shared utilities for actions
+│   │   │   └── index.ts      # Main export (useActions factory)
+│   │   │
+│   │   └── http/             # HTTP layer (low-level)
+│   │       ├── features/     # Feature modules
+│   │       │   ├── deduplication/  # Request deduplication
+│   │       │   └── interceptors/    # Request/response interceptors
+│   │       ├── managers/     # State managers
+│   │       │   ├── csrf/      # CSRF token management
+│   │       │   └── deduplication/  # Deduplication manager
+│   │       ├── setup/         # Global setup and state
+│   │       ├── types/         # TypeScript type definitions
+│   │       ├── utils/         # Utility functions
+│   │       │   ├── csrf.ts    # CSRF token injection
+│   │       │   ├── error.ts   # Error normalization
+│   │       │   ├── options.ts # Options normalization
+│   │       │   ├── response.ts # Response parsing
+│   │       │   └── url.ts     # URL building and query params
+│   │       ├── wrappers/      # Wrapper pattern implementation
+│   │       │   ├── adapters.ts # Wrapper adapters
+│   │       │   ├── chain.ts   # WrapperChain class
+│   │       │   └── types.ts   # Wrapper interfaces
+│   │       ├── common.ts      # Common constants
+│   │       ├── config.ts      # Configuration constants
+│   │       └── index.ts       # Main export (useFzFetch)
+│   │
+│   └── __tests__/            # Test files
+│       ├── csrf.spec.ts
+│       ├── deduplication.spec.ts
+│       ├── interceptors.spec.ts
+│       ├── integration.spec.ts
+│       ├── list.spec.ts
+│       ├── setup.spec.ts
+│       └── url.spec.ts
+│
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+└── README.md
+```
+
+### 12.2 Architecture Overview
+
+The package follows a **layered architecture** with clear separation of concerns:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ Component Layer (Consumer Application)                 │
+│ - useUsers, useInvoices, etc.                          │
+└────────────────────┬──────────────────────────────────┘
+                     │
+┌────────────────────▼──────────────────────────────────┐
+│ Actions Layer (src/rest/actions/)                     │
+│ - useActions<T>() factory                             │
+│ - createRetrieveAction, createListAction, etc.         │
+│ - Handles: query building, reactive params, CRUD ops   │
+└────────────────────┬──────────────────────────────────┘
+                     │
+┌────────────────────▼──────────────────────────────────┐
+│ HTTP Layer (src/rest/http/)                          │
+│ - useFzFetch() wrapper                                │
+│ - WrapperChain pattern                                │
+│ - Features: CSRF, deduplication, interceptors         │
+└────────────────────┬──────────────────────────────────┘
+                     │
+┌────────────────────▼──────────────────────────────────┐
+│ Foundation (@vueuse/core)                             │
+│ - createFetch                                         │
+│ - Reactive state management                           │
+└───────────────────────────────────────────────────────┘
+```
+
+### 12.3 Core Components Explained
+
+#### 12.3.1 HTTP Layer (`src/rest/http/`)
+
+**Entry Point: `index.ts`**
+- Exports `useFzFetch` - main HTTP wrapper function
+- Handles 3 overload cases (basePath only, basePath + params, basePath + params + options)
+- Uses `createFetchResult` helper to apply wrappers via `WrapperChain`
+
+**Wrapper Pattern (`wrappers/`)**
+- **`chain.ts`**: `WrapperChain` class that applies wrappers sequentially
+- **`adapters.ts`**: Adapter implementations for each wrapper (request interceptor, response interceptor, deduplication)
+- **`types.ts`**: `Wrapper` interface and `WrapperContext` type
+
+**How Wrappers Work:**
+```typescript
+// 1. Base fetch result is created
+const baseFetchResult = state.fzFetcher<T>(url, requestInit).json()
+
+// 2. Wrapper chain is created with default wrappers
+const chain = new WrapperChain()
+chain.add(requestInterceptorWrapper)   // Applied first
+chain.add(responseInterceptorWrapper)  // Applied second
+chain.add(deduplicationWrapper)        // Applied last
+
+// 3. Wrappers are applied sequentially
+return chain.apply(baseFetchResult, context)
+```
+
+**Why This Pattern?**
+- Easy to add/remove wrappers without modifying core code
+- Clear execution order
+- Testable in isolation
+- Composable functionality
+
+#### 12.3.2 Features (`features/`)
+
+**Request Interceptor (`features/interceptors/request.ts`)**
+- Wraps `execute()` method to intercept requests before fetch
+- Can modify `requestInit` or abort request (return `null`)
+- If `requestInit` is modified, creates new fetch call with modified config
+- Uses reactive `watch` to sync state from modified fetch to original result
+
+**Response Interceptor (`features/interceptors/response.ts`)**
+- Wraps `execute()` method to intercept responses after fetch
+- Can modify response body (requires re-parsing)
+- Uses `parseResponseBody` utility for consistent parsing
+
+**Deduplication (`features/deduplication/`)**
+- **`wrapper.ts`**: Wraps `execute()` to check for pending identical requests
+- **`managers/deduplication/index.ts`**: `DeduplicationManager` class
+  - Generates unique keys: `method:normalizedUrl:normalizedBody`
+  - Tracks pending requests in `Map`
+  - Uses `watchEffect` to sync state reactively
+  - Cleans up automatically when request completes
+
+#### 12.3.3 Managers (`managers/`)
+
+**CSRF Manager (`managers/csrf/index.ts`)**
+- Reads CSRF token from cookie (handles values with `=`)
+- Injects token into headers for mutation methods (POST/PUT/PATCH/DELETE)
+- Uses `CsrfManager` class with `injectToken()` method
+
+**Deduplication Manager (`managers/deduplication/index.ts`)**
+- Generates deduplication keys
+- Normalizes URLs (removes trailing slashes, sorts query params)
+- Normalizes bodies (sorts JSON keys, creates identifier for non-JSON)
+- Tracks pending requests and watches for completion
+
+#### 12.3.4 Setup & State (`setup/`)
+
+**`state.ts`**: Global singleton state
+- `fzFetcher`: `@vueuse/core` fetch instance
+- `globalBaseUrl`: Base URL for API requests
+- `globalCsrfOptions`: CSRF configuration
+- `csrfManager`: CSRF manager instance
+- `deduplicationManager`: Deduplication manager instance
+- `globalRequestInterceptor`: Request interceptor function
+- `globalResponseInterceptor`: Response interceptor function
+- `globalDebug`: Debug logging flag
+
+**`index.ts`**: Setup function
+- `setupFzFetcher()`: Initializes global state
+- `resetFzFetcher()`: Resets state (useful for testing)
+
+#### 12.3.5 Utils (`utils/`)
+
+**`error.ts`**: `normalizeError(error: unknown): Error`
+- Converts any error-like value to `Error` instance
+- Handles strings, objects with `message` property, etc.
+
+**`response.ts`**: `parseResponseBody<T>(response: Response): Promise<T>`
+- Parses response based on Content-Type header
+- Tries JSON first, falls back to text
+- Handles all content types consistently
+
+**`url.ts`**: `getUrlWithQueryParams(basePath, queryParams)`
+- Builds URL with query parameters
+- Handles reactive `queryParams`
+- Merges existing query params from URL
+
+**`csrf.ts`**: `injectCsrfToken(method, headers)`
+- Injects CSRF token for mutation methods
+- Returns headers with CSRF token added
+
+**`options.ts`**: `normalizeUseFzFetchOptions(options)`
+- Normalizes `UseFzFetchOptions` for `@vueuse/core`
+- Handles default values and type conversions
+
+#### 12.3.6 Actions Layer (`actions/`)
+
+**Factory Pattern: `useActions<T>(basePath)`**
+- Returns object with 5 action creators:
+  - `useRetrieve`: Get single entity by ID
+  - `useList`: List entities with filters/sort/pagination
+  - `useCreate`: Create new entity (POST)
+  - `useUpdate`: Update entity (PUT/PATCH)
+  - `useDelete`: Delete entity (DELETE)
+
+**Each Action Creator:**
+- Returns composable with `data`, `error`, `isLoading`, `execute`
+- Handles reactive parameters (auto-refetch)
+- Builds URLs and query strings
+- Uses `useFzFetch` internally
+
+**Shared Utilities (`shared/`):**
+- `types.ts`: Common types for all actions
+- `normalize.ts`: Normalizes action options
+- `error-handling.ts`: Centralized error handling
+
+### 12.4 How to Fix a Bug
+
+#### Step 1: Identify the Problem
+
+1. **Reproduce the bug**: Create a minimal test case
+2. **Locate the code**: Use code search to find relevant files
+3. **Understand the flow**: Trace execution path from entry point
+
+**Example: Fixing a bug in CSRF token injection**
+
+```typescript
+// 1. Bug: CSRF token not injected for PATCH requests
+// 2. Search for CSRF-related code
+grep -r "csrf" src/rest/http/
+
+// 3. Check CSRF manager
+// File: src/rest/http/managers/csrf/index.ts
+// Method: injectToken() - checks MUTATION_METHODS
+
+// 4. Check MUTATION_METHODS constant
+// File: src/rest/http/common.ts
+// Verify PATCH is included: ["POST", "PUT", "PATCH", "DELETE"]
+```
+
+#### Step 2: Write a Failing Test
+
+```typescript
+// src/__tests__/csrf.spec.ts
+it('should inject CSRF token for PATCH requests', () => {
+  document.cookie = 'csrf_token=test-token'
+  
+  setupFzFetcher({
+    baseUrl: 'https://api.example.com',
+    csrf: { enabled: true, cookieName: 'csrf_token' }
+  })
+  
+  const { execute } = useFzFetch('/test', { method: 'PATCH' })
+  
+  // Mock fetch to verify headers
+  let interceptedHeaders: HeadersInit | undefined
+  global.fetch = vi.fn((url, init) => {
+    interceptedHeaders = init?.headers
+    return Promise.resolve(new Response())
+  }) as any
+  
+  await execute()
+  
+  // Verify CSRF token was injected
+  expect(interceptedHeaders).toHaveProperty('X-CSRF-Token', 'test-token')
+})
+```
+
+#### Step 3: Fix the Code
+
+```typescript
+// Fix in src/rest/http/managers/csrf/index.ts
+// Ensure PATCH is in MUTATION_METHODS (already correct)
+// Check injectToken logic (already correct)
+// Verify wrapper is applied (check createDefaultWrapperChain)
+```
+
+#### Step 4: Verify the Fix
+
+```bash
+# Run tests
+pnpm --filter @fiscozen/data test:unit
+
+# Run linting
+pnpm --filter @fiscozen/data lint
+
+# Test manually in browser/devtools
+```
+
+#### Step 5: Update Documentation
+
+- Update README if API changed
+- Update JSDoc comments if behavior changed
+- Add examples if new use case
+
+### 12.5 How to Add a Feature
+
+#### Example: Adding Request Timeout Feature
+
+**Step 1: Design the API**
+
+```typescript
+// Setup options
+setupFzFetcher({
+  baseUrl: 'https://api.example.com',
+  timeout: 5000 // 5 seconds (global)
+})
+
+// Per-action override
+useListUsers({ filters: {} }, { timeout: 10000 })
+```
+
+**Step 2: Create Feature Module**
+
+```typescript
+// src/rest/http/features/timeout/types.ts
+export interface TimeoutOptions {
+  timeout?: number | null // null = no timeout
+}
+
+// src/rest/http/features/timeout/wrapper.ts
+export const wrapWithTimeout = <T>(
+  fetchResult: UseFzFetchReturn<T>,
+  timeout: number | null | undefined,
+): UseFzFetchReturn<T> => {
+  if (!timeout) return fetchResult
+  
+  const originalExecute = fetchResult.execute
+  fetchResult.execute = async (throwOnFailed?: boolean) => {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), timeout)
+    
+    try {
+      // Add signal to requestInit
+      // Execute with timeout
+      await originalExecute(throwOnFailed)
+    } finally {
+      clearTimeout(timeoutId)
+    }
+  }
+  
+  return fetchResult
+}
+```
+
+**Step 3: Create Wrapper Adapter**
+
+```typescript
+// src/rest/http/wrappers/adapters.ts
+export const timeoutWrapper: Wrapper = {
+  wrap<T>(
+    fetchResult: UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>,
+    context: WrapperContext,
+  ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> {
+    const timeout = context.useFetchOptions?.timeout ?? state.globalTimeout
+    return wrapWithTimeout(fetchResult, timeout)
+  },
+}
+```
+
+**Step 4: Add to Wrapper Chain**
+
+```typescript
+// src/rest/http/index.ts
+const createDefaultWrapperChain = (): WrapperChain => {
+  const chain = new WrapperChain()
+  chain.add(requestInterceptorWrapper)
+  chain.add(responseInterceptorWrapper)
+  chain.add(timeoutWrapper)              // ← Add here
+  chain.add(deduplicationWrapper)
+  return chain
+}
+```
+
+**Step 5: Update Types**
+
+```typescript
+// src/rest/http/types/core.ts
+export interface UseFzFetchOptions extends UseFetchOptions {
+  timeout?: number | null
+}
+
+// src/rest/http/types/setup.ts
+export interface SetupFzFetcherOptions {
+  timeout?: number | null
+}
+```
+
+**Step 6: Update State**
+
+```typescript
+// src/rest/http/setup/state.ts
+export const state = {
+  globalTimeout: null as number | null,
+  // ... other state
+}
+```
+
+**Step 7: Write Tests**
+
+```typescript
+// src/__tests__/timeout.spec.ts
+describe('Timeout Feature', () => {
+  it('should abort request after timeout', async () => {
+    setupFzFetcher({
+      baseUrl: 'https://api.example.com',
+      timeout: 100
+    })
+    
+    global.fetch = vi.fn(() => 
+      new Promise(resolve => setTimeout(() => resolve(new Response()), 1000))
+    ) as any
+    
+    const { execute, error } = useFzFetch('/test', { immediate: false })
+    await execute()
+    
+    expect(error.value).toBeInstanceOf(Error)
+    expect(error.value?.name).toBe('AbortError')
+  })
+})
+```
+
+**Step 8: Update Documentation**
+
+- Add to README Configuration section
+- Add examples
+- Update API reference
+
+### 12.6 Key Patterns & Conventions
+
+#### 12.6.1 Wrapper Pattern
+
+**When to Use:**
+- Adding cross-cutting concerns (logging, timeout, retry)
+- Modifying request/response behavior
+- Adding functionality that wraps the entire fetch flow
+
+**How to Implement:**
+
+1. Create wrapper function in `features/[feature-name]/wrapper.ts`:
+```typescript
+export const wrapWithFeature = <T>(
+  fetchResult: UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>,
+  // ... feature-specific params
+): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> => {
+  const originalExecute = fetchResult.execute
+  fetchResult.execute = async (throwOnFailed?: boolean) => {
+    // Feature logic here
+    return originalExecute(throwOnFailed)
+  }
+  return fetchResult
+}
+```
+
+2. Create adapter in `wrappers/adapters.ts`:
+```typescript
+export const featureWrapper: Wrapper = {
+  wrap<T>(fetchResult, context) {
+    return wrapWithFeature(fetchResult, /* params from context */)
+  },
+}
+```
+
+3. Add to wrapper chain in `index.ts`:
+```typescript
+chain.add(featureWrapper)
+```
+
+#### 12.6.2 Error Handling Pattern
+
+**Always use `normalizeError`:**
+```typescript
+import { normalizeError } from '../utils/error'
+
+try {
+  // code that might throw
+} catch (error: unknown) {
+  const normalizedError = normalizeError(error)
+  fetchResult.error.value = normalizedError
+  if (throwOnFailed) {
+    throw normalizedError
+  }
+}
+```
+
+**Why:** Ensures consistent error types across the codebase.
+
+#### 12.6.3 State Synchronization Pattern
+
+**When syncing state between fetch results, use `watchEffect`:**
+```typescript
+import { watchEffect, nextTick } from 'vue'
+
+const unwatchSync = watchEffect(() => {
+  // Sync all reactive properties
+  targetResult.data.value = sourceResult.data.value
+  targetResult.error.value = sourceResult.error.value
+  // ...
+  
+  // Cleanup when done
+  if (!sourceResult.isFetching.value) {
+    nextTick(() => {
+      unwatchSync()
+    })
+  }
+})
+```
+
+**Why:** `watchEffect` automatically tracks all accessed reactive properties, more efficient than explicit `watch` arrays.
+
+#### 12.6.4 URL Normalization Pattern
+
+**Always normalize URLs for deduplication keys:**
+```typescript
+// Use DeduplicationManager.normalizeUrl() internally
+// Or create helper if needed elsewhere
+const normalizedUrl = normalizeUrl(url) // Removes trailing slashes, sorts query params
+```
+
+**Why:** Ensures identical requests generate identical keys.
+
+#### 12.6.5 Testing Patterns
+
+**Unit Tests:**
+- Test one feature/function at a time
+- Mock dependencies (`global.fetch`, `state`)
+- Use `resetFzFetcher()` in `beforeEach`
+
+**Integration Tests:**
+- Test complete flow (setup → request → interceptor → response)
+- Verify state synchronization
+- Test error handling end-to-end
+
+**Test Structure:**
+```typescript
+describe('FeatureName', () => {
+  beforeEach(() => {
+    resetFzFetcher()
+    vi.clearAllMocks()
+  })
+  
+  describe('SpecificBehavior', () => {
+    it('should do something', async () => {
+      // Arrange
+      setupFzFetcher({ baseUrl: 'https://api.test.com' })
+      global.fetch = vi.fn(() => Promise.resolve(new Response()))
+      
+      // Act
+      const { execute } = useFzFetch('/test')
+      await execute()
+      
+      // Assert
+      expect(global.fetch).toHaveBeenCalledWith(...)
+    })
+  })
+})
+```
+
+### 12.7 Common Tasks
+
+#### Adding a New Action Type
+
+1. Create action directory: `src/rest/actions/[action-name]/`
+2. Create `index.ts` with action creator function
+3. Create `types.ts` with types
+4. Export from `src/rest/actions/index.ts`
+5. Add to `useActions` factory return type
+
+#### Modifying Request Behavior
+
+1. Check if existing wrapper can handle it
+2. If not, create new wrapper in `features/[feature-name]/`
+3. Add adapter to `wrappers/adapters.ts`
+4. Add to wrapper chain in `index.ts`
+
+#### Adding Global Configuration
+
+1. Add to `SetupFzFetcherOptions` in `types/setup.ts`
+2. Store in `state.ts`
+3. Use in setup function (`setup/index.ts`)
+4. Document in README Configuration section
+
+#### Debugging Tips
+
+**Enable Debug Logging:**
+```typescript
+setupFzFetcher({ baseUrl: '...', debug: true })
+// Logs all requests, responses, and state changes
+```
+
+**Check State:**
+```typescript
+import { state } from '@fiscozen/data/rest/http/setup/state'
+console.log(state) // Inspect global state
+```
+
+**Trace Execution:**
+- Add `console.log` in wrapper `execute` methods
+- Check browser Network tab for actual requests
+- Use Vue DevTools to inspect reactive state
+
+### 12.8 Code Quality Standards
+
+**TypeScript:**
+- No `any` types in public API
+- Use `unknown` for error types, then normalize
+- Export types from dedicated `types.ts` files
+
+**Vue 3:**
+- Use `<script setup lang="ts">` for components
+- Use `computed`, `ref`, `watch` from Vue
+- Prefer `watchEffect` for automatic dependency tracking
+
+**Error Handling:**
+- Always use `normalizeError()` utility
+- Set `error.value` before throwing (if `throwOnFailed`)
+- Clean up watches/resources in finally blocks
+
+**Performance:**
+- Use `watchEffect` instead of multiple `watch` calls
+- Clean up watches with `nextTick` for proper timing
+- Memoize expensive computations
+
+**Documentation:**
+- JSDoc on all public functions
+- Explain "why" not "what" in comments
+- Include `@example` for complex functions
+- Document limitations and edge cases
+
+### 12.9 File Naming Conventions
+
+- **Test files**: `__tests__/[feature].spec.ts` (NOT `.test.ts`)
+- **Type files**: `types.ts` in same directory or `types/[name].ts`
+- **Utility files**: `utils/[name].ts`
+- **Feature modules**: `features/[feature-name]/[file].ts`
+- **Manager classes**: `managers/[manager-name]/index.ts`
+
+### 12.10 Testing Checklist
+
+Before submitting a fix or feature:
+
+- [ ] Unit tests written and passing
+- [ ] Integration tests added (if applicable)
+- [ ] Linting passes (`pnpm lint`)
+- [ ] Type checking passes (`pnpm type-check`)
+- [ ] README updated (if API changed)
+- [ ] JSDoc comments added/updated
+- [ ] Examples added (if new feature)
+- [ ] Edge cases handled
+- [ ] Error cases tested
+- [ ] Cleanup verified (watches, timers, etc.)
+
+---
+
+## 13. Architectural Decisions
 
 ### Singleton Pattern
 
