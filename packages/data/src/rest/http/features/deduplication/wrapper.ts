@@ -1,4 +1,4 @@
-import { toValue, watch, nextTick, type MaybeRefOrGetter } from "vue";
+import { toValue, watchEffect, nextTick, type MaybeRefOrGetter } from "vue";
 import type { UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
 
@@ -99,40 +99,32 @@ export const wrapWithDeduplication = <T>(
       // We can't call execute() on pendingFetchResult because it might be the same
       // instance wrapped, causing infinite recursion
       if (pendingFetchResult.isFetching.value) {
-        // Create a single watch that handles both waiting and syncing
+        // Use watchEffect for more efficient reactive syncing
+        // watchEffect automatically tracks all accessed reactive properties
         let unwatchSync: (() => void) | null = null;
         let isCleanedUp = false;
 
         await new Promise<void>((resolve) => {
-          // Watch for completion and sync state reactively
-          unwatchSync = watch(
-            [
-              () => pendingFetchResult.isFetching.value,
-              () => pendingFetchResult.data.value,
-              () => pendingFetchResult.error.value,
-              () => pendingFetchResult.statusCode.value,
-              () => pendingFetchResult.response.value,
-            ],
-            () => {
-              // Sync state whenever it changes
-              syncState();
+          // WatchEffect automatically tracks all reactive dependencies
+          // More efficient than watch with explicit array of sources
+          unwatchSync = watchEffect(() => {
+            // Sync state whenever any tracked property changes
+            syncState();
 
-              // Resolve promise and cleanup when request completes
-              if (!pendingFetchResult.isFetching.value && !isCleanedUp) {
-                isCleanedUp = true;
-                // Use nextTick to ensure cleanup happens after current execution
-                // This allows other pending requests to sync state before cleanup
-                nextTick(() => {
-                  if (unwatchSync) {
-                    unwatchSync();
-                    unwatchSync = null;
-                  }
-                  resolve();
-                });
-              }
-            },
-            { immediate: true },
-          );
+            // Resolve promise and cleanup when request completes
+            if (!pendingFetchResult.isFetching.value && !isCleanedUp) {
+              isCleanedUp = true;
+              // Use nextTick to ensure cleanup happens after current execution
+              // This allows other pending requests to sync state before cleanup
+              nextTick(() => {
+                if (unwatchSync) {
+                  unwatchSync();
+                  unwatchSync = null;
+                }
+                resolve();
+              });
+            }
+          });
         });
       } else {
         // Request already completed, sync state once

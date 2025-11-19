@@ -2,6 +2,7 @@ import { toValue, watch, type MaybeRefOrGetter } from "vue";
 import type { UseFzFetchOptions, UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
 import { normalizeUseFzFetchOptions } from "../../utils/options";
+import { normalizeError } from "../../utils/error";
 import type { RequestInterceptor } from "./types";
 
 /**
@@ -286,7 +287,7 @@ export const wrapWithRequestInterceptor = <T>(
           // Stop watching before handling error to prevent further sync
           unwatchSync();
           
-          const normalizedError = error instanceof Error ? error : new Error(String(error));
+          const normalizedError = normalizeError(error);
           fetchResult.error.value = normalizedError;
           if (throwOnFailed) {
             throw normalizedError;
@@ -305,7 +306,7 @@ export const wrapWithRequestInterceptor = <T>(
       return originalExecute(throwOnFailed);
     } catch (error: unknown) {
       // If interceptor throws, abort the request
-      const normalizedError = error instanceof Error ? error : new Error(String(error));
+      const normalizedError = normalizeError(error);
       if (state.globalDebug) {
         console.debug(
           `[useFzFetch] Request interceptor error: ${normalizedError.message}`,
