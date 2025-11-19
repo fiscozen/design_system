@@ -1,4 +1,4 @@
-import { watch } from "vue";
+import { watch, nextTick } from "vue";
 import type { UseFzFetchReturn } from "../../types";
 
 /**
@@ -159,7 +159,30 @@ export class DeduplicationManager {
   }
 
   /**
+   * Cleans up a pending request and its watch
+   *
+   * Removes the request from pendingRequests map and stops watching.
+   * This method is idempotent - safe to call multiple times.
+   *
+   * @param key - Request key to clean up
+   */
+  private cleanupRequest(key: string): void {
+    // Remove from pending requests
+    this.pendingRequests.delete(key);
+    
+    // Stop watching and remove from pending watches
+    const watchCleanup = this.pendingWatches.get(key);
+    if (watchCleanup) {
+      watchCleanup();
+      this.pendingWatches.delete(key);
+    }
+  }
+
+  /**
    * Registers a pending request
+   *
+   * Sets up automatic cleanup when the request completes (success or error).
+   * Uses watch to detect when isFetching becomes false and cleans up immediately.
    *
    * @param url - Request URL
    * @param method - HTTP method
@@ -181,23 +204,18 @@ export class DeduplicationManager {
       () => fetchResult.isFetching.value,
       (isFetching: boolean) => {
         if (!isFetching) {
-          // Request completed, clean up after a short delay to allow
-          // other pending requests to access the result
-          setTimeout(() => {
-            this.pendingRequests.delete(key);
-            const watchCleanup = this.pendingWatches.get(key);
-            if (watchCleanup) {
-              watchCleanup();
-              this.pendingWatches.delete(key);
-            }
-            unwatch();
-          }, 100);
+          // Request completed, clean up after nextTick to allow
+          // other pending requests to sync state before cleanup
+          // This ensures deduplicated requests can access the result
+          nextTick(() => {
+            this.cleanupRequest(key);
+          });
         }
       },
       { immediate: true },
     );
     
-    // Store watch cleanup function for explicit cleanup
+    // Store watch cleanup function for explicit cleanup (e.g., in clear())
     this.pendingWatches.set(key, unwatch);
   }
 
