@@ -23,11 +23,24 @@ export const createRetrieveAction = <T>(
     );
   }
 
-  // Create reactive URL with validation
+  // Validate initial pk value (only once, not on every computed evaluation)
+  const initialPk = toValue(pk);
+  if (
+    initialPk === null ||
+    initialPk === undefined ||
+    (typeof initialPk === "string" && initialPk.trim() === "") ||
+    (typeof initialPk === "number" && isNaN(initialPk))
+  ) {
+    throw new Error(
+      "[createRetrieveAction] Primary key (pk) must be a valid non-empty string or number",
+    );
+  }
+
+  // Create reactive URL with validation for reactive values
   const url = computed(() => {
     const resolvedPk = toValue(pk);
 
-    // Validate pk is not empty when resolved (handles reactive values)
+    // Validate pk when resolved (handles reactive values that change)
     if (
       resolvedPk === null ||
       resolvedPk === undefined ||

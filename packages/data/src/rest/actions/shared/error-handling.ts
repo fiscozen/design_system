@@ -37,17 +37,21 @@ export async function executeMutation<T>(
     error.value = response.error.value;
 
     if (response.error.value) {
+      // Explicitly set data to null on error for consistency
+      data.value = null;
       if (throwOnError) {
         throw response.error.value;
       }
       // If throwOnError is false, error is already stored in error.value
       return;
     }
-  } catch (err) {
+  } catch (err: unknown) {
     // Normalize error to Error type
     const normalizedError =
       err instanceof Error ? err : new Error(String(err));
     error.value = normalizedError;
+    // Explicitly set data to null on error for consistency
+    data.value = null;
     
     if (throwOnError) {
       throw normalizedError;

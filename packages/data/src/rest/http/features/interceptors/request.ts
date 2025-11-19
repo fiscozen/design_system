@@ -161,11 +161,16 @@ export const wrapWithRequestInterceptor = <T>(
         requestInit,
       );
 
-      if (requestInitChanged && state.globalBaseUrl) {
+      if (requestInitChanged) {
         // Build full URL
+        // If URL is absolute, use it directly
+        // If URL is relative and globalBaseUrl is available, prepend it
+        // If URL is relative and globalBaseUrl is null, use relative URL (fallback)
         const fullUrl = urlString.startsWith("http")
           ? urlString
-          : `${state.globalBaseUrl.replace(/\/$/, "")}/${urlString.replace(/^\//, "")}`;
+          : state.globalBaseUrl
+          ? `${state.globalBaseUrl.replace(/\/$/, "")}/${urlString.replace(/^\//, "")}`
+          : urlString; // Fallback: use relative URL if globalBaseUrl not available
 
         if (state.globalDebug) {
           console.debug(
@@ -201,10 +206,11 @@ export const wrapWithRequestInterceptor = <T>(
           fetchResult.statusCode.value = modifiedFetchResult.statusCode.value;
           fetchResult.data.value = modifiedFetchResult.data.value;
           fetchResult.error.value = modifiedFetchResult.error.value;
-        } catch (error: any) {
-          fetchResult.error.value = error;
+        } catch (error: unknown) {
+          const normalizedError = error instanceof Error ? error : new Error(String(error));
+          fetchResult.error.value = normalizedError;
           if (throwOnFailed) {
-            throw error;
+            throw normalizedError;
           }
         }
 
@@ -213,16 +219,17 @@ export const wrapWithRequestInterceptor = <T>(
 
       // If requestInit wasn't modified, execute original request
       return originalExecute(throwOnFailed);
-    } catch (error: any) {
+    } catch (error: unknown) {
       // If interceptor throws, abort the request
+      const normalizedError = error instanceof Error ? error : new Error(String(error));
       if (state.globalDebug) {
         console.debug(
-          `[useFzFetch] Request interceptor error: ${error.message}`,
+          `[useFzFetch] Request interceptor error: ${normalizedError.message}`,
         );
       }
-      fetchResult.error.value = error;
+      fetchResult.error.value = normalizedError;
       if (throwOnFailed) {
-        throw error;
+        throw normalizedError;
       }
       return;
     }
