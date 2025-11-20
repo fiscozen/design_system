@@ -1,0 +1,297 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Documentation/Media/FzAvatar" />
+
+# FzAvatar
+
+Avatar component representing a customer or consultant. Supports image avatars for consultants and initials placeholders for users, with optional title and subtitle text.
+
+## Features
+
+- **2 Environments**: Backoffice (32px avatar, compact), Frontoffice (44px avatar, larger - default)
+- **2 Variants**: Default (circular), Square (rounded corners)
+- **Image Support**: Profile photos for consultants
+- **Initials Support**: Automatic initials generation for users without profile pictures
+- **Text Labels**: Optional title and subtitle text
+- **Responsive Sizing**: Environment-based sizing and spacing
+
+## Installation
+
+```bash
+npm install @fiscozen/avatar
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { FzAvatar } from '@fiscozen/avatar'
+</script>
+
+<template>
+  <!-- User with initials -->
+  <FzAvatar firstName="Mario" lastName="Rossi" />
+
+  <!-- Consultant with image -->
+  <FzAvatar firstName="Mario" lastName="Rossi" src="https://example.com/photo.jpg" />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>firstName</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>-</td>
+      <td>First name of customer/consultant (required)</td>
+    </tr>
+    <tr>
+      <td>
+        <code>lastName</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>-</td>
+      <td>Last name of customer/consultant (required)</td>
+    </tr>
+    <tr>
+      <td>
+        <code>src</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Image source URL. Avatar will default to initials placeholder if not provided.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>initials</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Overrides initials placeholder calculated from firstName and lastName</td>
+    </tr>
+    <tr>
+      <td>
+        <code>environment</code>
+      </td>
+      <td>
+        <code>'backoffice' | 'frontoffice'</code>
+      </td>
+      <td>
+        <code>'frontoffice'</code>
+      </td>
+      <td>Environment context determining avatar size and spacing</td>
+    </tr>
+    <tr>
+      <td>
+        <code>variant</code>
+      </td>
+      <td>
+        <code>'default' | 'square'</code>
+      </td>
+      <td>
+        <code>'default'</code>
+      </td>
+      <td>Avatar shape variant. Default is circular, square has rounded corners.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>title</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Optional title text displayed next to avatar</td>
+    </tr>
+    <tr>
+      <td>
+        <code>subtitle</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Optional subtitle text displayed below title</td>
+    </tr>
+    <tr>
+      <td>
+        <code>size</code>
+      </td>
+      <td>
+        <code>'sm' | 'md' | 'lg' | 'xl'</code>
+      </td>
+      <td>
+        <code>'lg'</code>
+      </td>
+      <td>
+        <strong>Deprecated</strong> - Use <code>environment</code> prop instead
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+**Deprecated Props:**
+
+- `size` (`'sm' | 'md' | 'lg' | 'xl'`): Use `environment` prop instead
+
+## Environments
+
+### Backoffice
+
+Compact size for internal applications. 32px avatar with 8px gap to text.
+
+```vue
+<FzAvatar firstName="Mario" lastName="Rossi" environment="backoffice" />
+```
+
+### Frontoffice (Default)
+
+Larger size for customer-facing interfaces. 44px avatar with 12px gap to text.
+
+```vue
+<FzAvatar firstName="Mario" lastName="Rossi" environment="frontoffice" />
+```
+
+## Variants
+
+### Default (Circular)
+
+Circular avatar with border-radius: 50%. This is the default variant.
+
+```vue
+<FzAvatar firstName="Mario" lastName="Rossi" variant="default" />
+```
+
+### Square
+
+Avatar with rounded corners (border-radius: 8px).
+
+```vue
+<FzAvatar firstName="Mario" lastName="Rossi" variant="square" />
+```
+
+## User Types
+
+### User (Initials)
+
+Users without profile pictures use initials placeholder. The component automatically generates initials from firstName and lastName.
+
+```vue
+<FzAvatar firstName="Mario" lastName="Rossi" />
+```
+
+The initials "MR" will be displayed on a dark background with white text.
+
+### Consultant (Image)
+
+Consultants use their profile photo. Provide the `src` prop with the image URL.
+
+```vue
+<FzAvatar firstName="Daniele" lastName="Adinolfi" src="https://example.com/photo.jpg" />
+```
+
+## With Title and Subtitle
+
+The component supports optional title and subtitle text displayed next to the avatar.
+
+### Title Only
+
+```vue
+<FzAvatar firstName="Mario" lastName="Rossi" title="Title" />
+```
+
+### Title and Subtitle
+
+```vue
+<FzAvatar
+  firstName="Daniele"
+  lastName="Adinolfi"
+  src="https://example.com/photo.jpg"
+  title="Daniele Adinolfi"
+  subtitle="Sales consultant"
+/>
+```
+
+## Text Truncation
+
+Title and subtitle text automatically truncate with ellipsis when they exceed the available width.
+
+```vue
+<FzAvatar
+  firstName="Mario"
+  lastName="Rossi"
+  title="This is a very long title that will be truncated"
+  subtitle="This is a very long subtitle that will also be truncated"
+/>
+```
+
+## Deprecation Notices
+
+### Size Prop
+
+The `size` prop is deprecated. Use `environment` instead:
+
+```vue
+<!-- ❌ Deprecated -->
+<FzAvatar firstName="Mario" lastName="Rossi" size="lg" />
+
+<!-- ✅ Recommended -->
+<FzAvatar firstName="Mario" lastName="Rossi" environment="frontoffice" />
+```
+
+**Size to Environment Mapping:**
+
+- `sm`, `md`, `lg` → `backoffice` (32px)
+- `xl` → `frontoffice` (44px)
+
+Note: The `size` prop still works for backward compatibility but will be removed in a future version.
+
+## Design Guidelines
+
+### When to Use Initials vs Images
+
+- **Initials**: Use for users who don't have profile pictures yet
+- **Images**: Use for consultants who have profile photos available
+
+### Environment Selection
+
+- **Backoffice**: Use for internal/admin interfaces where space is limited
+- **Frontoffice**: Use for customer-facing interfaces where larger avatars improve recognition
+
+### Text Labels
+
+- **Title**: Use for the person's name or role title
+- **Subtitle**: Use for additional context like job title or department
+
+## Related Components
+
+- **FzViewFlag**: User role and environment indicator
+- **FzNavbar**: Navigation bar that may include user avatars
