@@ -1,0 +1,575 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Form/FzInput" />
+
+# FzInput
+
+Flexible input component with icon support, validation states, and multiple variants. Supports left/right icons (static or clickable buttons), floating label variant, error/valid states, and full accessibility features.
+
+## Features
+
+- **Multiple Input Types**: text, password, email, number, tel, url
+- **Icon Support**: Left and right icons (static or clickable buttons)
+- **Validation States**: Error and valid states with visual feedback
+- **Two Variants**: Normal and floating-label presentation
+- **Three Sizes**: sm, md, lg
+- **Full Accessibility**: ARIA attributes, keyboard navigation, screen reader support
+- **Customizable**: Slots for label, icons, help text, and error messages
+
+## Installation
+
+```bash
+npm install @fiscozen/input
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { FzInput } from '@fiscozen/input'
+</script>
+
+<template>
+  <FzInput label="Email" type="email" v-model="email" />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Text label displayed above the input field. Overridden by label slot if provided.</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'sm' | 'md' | 'lg'</code></td>
+      <td><code>'md'</code></td>
+      <td>Visual size affecting height, padding, and text size</td>
+    </tr>
+    <tr>
+      <td><code>placeholder</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Placeholder text shown when input is empty. Behavior differs based on variant.</td>
+    </tr>
+    <tr>
+      <td><code>secondaryPlaceholder</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Secondary placeholder for floating-label variant. Displays as floating text when input has focus or value.</td>
+    </tr>
+    <tr>
+      <td><code>required</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Marks input as required. Adds asterisk to label and sets native required attribute.</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Disables input interaction and applies disabled styling</td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows error state with red border and enables errorMessage slot display</td>
+    </tr>
+    <tr>
+      <td><code>valid</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows success checkmark icon on the right when true. Takes precedence over rightIcon</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'normal' | 'floating-label'</code></td>
+      <td><code>'normal'</code></td>
+      <td>Visual presentation style. 'floating-label' moves placeholder above input when focused/filled</td>
+    </tr>
+    <tr>
+      <td><code>type</code></td>
+      <td><code>'text' | 'password' | 'email' | 'number' | 'tel' | 'url'</code></td>
+      <td><code>'text'</code></td>
+      <td>Native HTML input type. Determines keyboard layout and validation behavior</td>
+    </tr>
+    <tr>
+      <td><code>leftIcon</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Font Awesome icon name displayed on the left side of input</td>
+    </tr>
+    <tr>
+      <td><code>leftIconVariant</code></td>
+      <td><code>IconVariant</code></td>
+      <td>-</td>
+      <td>Visual style variant for left icon (solid, regular, light, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>leftIconButtonVariant</code></td>
+      <td><code>IconButtonVariant</code></td>
+      <td>-</td>
+      <td>Button variant for left icon when rendered as clickable button</td>
+    </tr>
+    <tr>
+      <td><code>rightIcon</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Font Awesome icon name displayed on the right side of input</td>
+    </tr>
+    <tr>
+      <td><code>rightIconSize</code></td>
+      <td><code>IconSize</code></td>
+      <td>-</td>
+      <td>Size override for right icon. If not provided, uses input size mapping.</td>
+    </tr>
+    <tr>
+      <td><code>rightIconVariant</code></td>
+      <td><code>IconVariant</code></td>
+      <td>-</td>
+      <td>Visual style variant for right icon (solid, regular, light, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>rightIconButton</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Renders right icon as clickable button instead of static icon</td>
+    </tr>
+    <tr>
+      <td><code>rightIconButtonVariant</code></td>
+      <td><code>IconButtonVariant</code></td>
+      <td><code>'invisible'</code></td>
+      <td>Button variant for right icon when rightIconButton is true</td>
+    </tr>
+    <tr>
+      <td><code>pattern</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>HTML5 pattern attribute for native browser validation</td>
+    </tr>
+    <tr>
+      <td><code>name</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Native name attribute for form submission and identification</td>
+    </tr>
+    <tr>
+      <td><code>readonly</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Native readonly attribute. Prevents user input while keeping field focusable</td>
+    </tr>
+    <tr>
+      <td><code>maxlength</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Native maxlength attribute. Limits maximum number of characters</td>
+    </tr>
+    <tr>
+      <td><code>rightIconClass</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Additional CSS classes applied to right icon container</td>
+    </tr>
+    <tr>
+      <td><code>leftIconClass</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Additional CSS classes applied to left icon container</td>
+    </tr>
+  </tbody>
+</table>
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>label</code></td>
+      <td>Custom label content (overrides <code>label</code> prop)</td>
+    </tr>
+    <tr>
+      <td><code>left-icon</code></td>
+      <td>Custom left icon content (overrides <code>leftIcon</code> prop)</td>
+    </tr>
+    <tr>
+      <td><code>right-icon</code></td>
+      <td>Custom right icon content (overrides <code>rightIcon</code> prop and <code>valid</code> checkmark)</td>
+    </tr>
+    <tr>
+      <td><code>helpText</code></td>
+      <td>Help text displayed below input when no error is present</td>
+    </tr>
+    <tr>
+      <td><code>errorMessage</code></td>
+      <td>Error message displayed below input when <code>error</code> is true</td>
+    </tr>
+  </tbody>
+</table>
+
+## Variants
+
+### Normal (Default)
+
+Standard input with label above and placeholder inside the input field.
+
+```vue
+<FzInput label="Email" type="email" placeholder="Enter your email" v-model="email" />
+```
+
+### Floating Label
+
+Floating label variant moves placeholder above input when focused or when input has a value.
+
+```vue
+<FzInput 
+  label="Email" 
+  variant="floating-label" 
+  placeholder="Enter your email" 
+  v-model="email" 
+/>
+```
+
+## Sizes
+
+```vue
+<template>
+  <FzInput label="Small" size="sm" v-model="value1" />
+  <FzInput label="Medium (Default)" size="md" v-model="value2" />
+  <FzInput label="Large" size="lg" v-model="value3" />
+</template>
+```
+
+## Input Types
+
+### Text
+
+```vue
+<FzInput label="Name" type="text" v-model="name" />
+```
+
+### Password
+
+```vue
+<FzInput label="Password" type="password" v-model="password" />
+```
+
+### Email
+
+```vue
+<FzInput label="Email" type="email" required v-model="email" />
+```
+
+### Number
+
+```vue
+<FzInput label="Age" type="number" v-model="age" />
+```
+
+### Telephone
+
+```vue
+<FzInput 
+  label="Phone" 
+  type="tel" 
+  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" 
+  v-model="phone" 
+/>
+```
+
+### URL
+
+```vue
+<FzInput label="Website" type="url" v-model="website" />
+```
+
+## States
+
+### Required
+
+Required inputs show an asterisk (*) next to the label and set the native required attribute.
+
+```vue
+<FzInput label="Email" type="email" required v-model="email" />
+```
+
+### Disabled
+
+Disabled inputs prevent user interaction and apply muted styling.
+
+```vue
+<FzInput label="Disabled Input" disabled v-model="value" />
+```
+
+### Error
+
+Error state shows red border and displays error message via errorMessage slot.
+
+```vue
+<FzInput label="Email" type="email" :error="hasError" v-model="email">
+  <template #errorMessage>Please enter a valid email address</template>
+</FzInput>
+```
+
+### Valid
+
+Valid state shows a green checkmark icon on the right side.
+
+```vue
+<FzInput label="Email" type="email" :valid="isValid" v-model="email" />
+```
+
+### Readonly
+
+Readonly inputs prevent editing but remain focusable and visible.
+
+```vue
+<FzInput label="Read-only Value" readonly v-model="readonlyValue" />
+```
+
+## With Icons
+
+### Left Icon
+
+```vue
+<FzInput 
+  label="Date" 
+  leftIcon="calendar-lines" 
+  v-model="date" 
+/>
+```
+
+### Right Icon
+
+```vue
+<FzInput 
+  label="Search" 
+  rightIcon="magnifying-glass" 
+  v-model="search" 
+/>
+```
+
+### Right Icon as Button
+
+Right icon can be rendered as a clickable button (useful for password visibility toggle, clear button, etc.).
+
+```vue
+<template>
+  <FzInput 
+    label="Password" 
+    :type="passwordType"
+    rightIcon="eye"
+    :rightIconButton="true"
+    rightIconButtonVariant="secondary"
+    @fzinput:right-icon-click="togglePasswordVisibility"
+    v-model="password" 
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const passwordType = ref('password')
+const password = ref('')
+
+const togglePasswordVisibility = () => {
+  passwordType.value = passwordType.value === 'password' ? 'text' : 'password'
+}
+</script>
+```
+
+### Both Icons
+
+```vue
+<FzInput 
+  label="Amount" 
+  leftIcon="dollar-sign" 
+  rightIcon="credit-card" 
+  v-model="amount" 
+/>
+```
+
+## Help Text and Error Messages
+
+### Help Text
+
+Help text is displayed below the input when no error is present.
+
+```vue
+<FzInput label="Username" v-model="username">
+  <template #helpText>
+    Username must be between 3 and 20 characters
+  </template>
+</FzInput>
+```
+
+### Error Message
+
+Error message is displayed below the input when error prop is true.
+
+```vue
+<FzInput label="Email" type="email" :error="hasError" v-model="email">
+  <template #errorMessage>
+    Please enter a valid email address
+  </template>
+</FzInput>
+```
+
+## Custom Label
+
+You can provide custom label content using the label slot.
+
+```vue
+<FzInput v-model="value">
+  <template #label>
+    <strong>Custom Label</strong> with <em>formatting</em>
+  </template>
+</FzInput>
+```
+
+## Usage Examples
+
+### Form with Validation
+
+```vue
+<template>
+  <form @submit.prevent="handleSubmit">
+    <FzInput 
+      label="Email" 
+      type="email" 
+      required 
+      :error="errors.email"
+      v-model="form.email"
+    >
+      <template #errorMessage v-if="errors.email">
+        {{ errors.email }}
+      </template>
+    </FzInput>
+    
+    <FzInput 
+      label="Password" 
+      type="password" 
+      required 
+      :error="errors.password"
+      v-model="form.password"
+    >
+      <template #errorMessage v-if="errors.password">
+        {{ errors.password }}
+      </template>
+    </FzInput>
+    
+    <button type="submit">Submit</button>
+  </form>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const form = ref({
+  email: '',
+  password: ''
+})
+
+const errors = ref({
+  email: null,
+  password: null
+})
+
+const handleSubmit = () => {
+  // Validation logic
+}
+</script>
+```
+
+### Password with Visibility Toggle
+
+```vue
+<template>
+  <FzInput 
+    label="Password" 
+    :type="showPassword ? 'text' : 'password'"
+    rightIcon="eye"
+    :rightIconButton="true"
+    @fzinput:right-icon-click="togglePassword"
+    v-model="password" 
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const password = ref('')
+const showPassword = ref(false)
+
+const togglePassword = () => {
+  showPassword.value = !showPassword.value
+}
+</script>
+```
+
+### Search Input
+
+```vue
+<FzInput 
+  label="Search" 
+  leftIcon="magnifying-glass" 
+  rightIcon="xmark"
+  :rightIconButton="true"
+  @fzinput:right-icon-click="clearSearch"
+  v-model="searchQuery" 
+/>
+```
+
+### Input with Max Length
+
+```vue
+<FzInput 
+  label="PIN" 
+  type="text" 
+  maxlength="4" 
+  pattern="[0-9]{4}"
+  v-model="pin" 
+/>
+```
+
+## Accessibility
+
+FzInput is fully accessible and meets WCAG 2.1 AA standards:
+
+- **ARIA Attributes**: Proper aria-required, aria-invalid, aria-disabled, aria-labelledby, aria-describedby
+- **Keyboard Navigation**: Full keyboard support (Tab, Enter, Space, Arrow keys)
+- **Screen Readers**: Error messages and help text are properly associated with inputs
+- **Focus Management**: Visible focus indicators with proper contrast
+- **Semantic HTML**: Native input elements with proper label associations
+- **Error Announcements**: Error messages use role="alert" for immediate screen reader announcements
+
+### ARIA Attributes
+
+- **aria-required**: Set to "true" or "false" (string values for Vue 3 compatibility)
+- **aria-invalid**: Set to "true" when error prop is true
+- **aria-disabled**: Set to "true" when disabled prop is true
+- **aria-labelledby**: Links to label element when label prop is provided
+- **aria-describedby**: Links to help text or error message when present
+
+### Error Message Accessibility
+
+Error messages are rendered with `role="alert"` to ensure screen readers announce them immediately when displayed.

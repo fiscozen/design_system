@@ -1,34 +1,16 @@
-<template>
-  <FzInput
-    ref="fzInputRef"
-    v-bind="props"
-    :modelValue="fzInputModel"
-    type="text"
-    @paste="onPaste"
-  >
-    <template #right-icon v-if="step">
-      <div class="flex flex-col justify-between items-center">
-        <FzIcon
-          name="angle-up"
-          size="xs"
-          class="fz__currencyinput__arrowup cursor-pointer"
-          @click="stepUpDown(step)"
-        ></FzIcon>
-        <FzIcon
-          name="angle-down"
-          size="xs"
-          class="fz__currencyinput__arrowdown cursor-pointer"
-          @click="stepUpDown(-step)"
-        ></FzIcon>
-      </div>
-    </template>
-    <template #label>
-      <slot name="label"></slot>
-    </template>
-  </FzInput>
-</template>
-
 <script setup lang="ts">
+/**
+ * FzCurrencyInput Component
+ *
+ * Specialized currency input built on FzInput with number formatting, validation,
+ * and step controls. Formats values using Intl.NumberFormat with locale-aware separators.
+ * Supports min/max constraints, step quantization, and intelligent paste parsing
+ * that detects decimal/thousand separators automatically.
+ *
+ * @component
+ * @example
+ * <FzCurrencyInput label="Amount" v-model:amount="value" :min="0" :max="1000" />
+ */
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import FzInput from "./FzInput.vue";
 import { FzCurrencyInputProps } from "./types";
@@ -59,6 +41,17 @@ const {
 
 defineEmits(["update:amount"]);
 
+/**
+ * Handles paste events with intelligent separator detection
+ *
+ * Parses pasted text by detecting decimal and thousand separators using heuristics:
+ * - Multiple different separators: rightmost is decimal
+ * - Multiple same separators: thousand separator
+ * - Single separator with <3 digits after: decimal separator
+ * - Single separator with 3+ digits after: ambiguous, uses default formatting
+ *
+ * Normalizes to dot decimal separator before parsing, then formats using locale settings.
+ */
 const onPaste = (e: ClipboardEvent) => {
   e.preventDefault();
 
@@ -84,7 +77,7 @@ const onPaste = (e: ClipboardEvent) => {
   let isNegative = rawPastedText.slice(0, 1) === "-";
   const separatorRegex = /[,.]/g;
   const separators: string[] = [...rawPastedText.matchAll(separatorRegex)].map(
-    (regexRes) => regexRes[0],
+    (regexRes) => regexRes[0]
   );
 
   const uniqueSeparators = new Set(separators);
@@ -133,6 +126,12 @@ onMounted(() => {
 });
 const model = defineModel<number>("amount");
 
+/**
+ * Increments or decrements value by step amount
+ *
+ * When forceStep is true, rounds current value to nearest step before applying increment.
+ * Formats result using locale settings and updates both display and model value.
+ */
 const stepUpDown = (amount: number) => {
   if (!props.step) {
     return;
@@ -154,3 +153,33 @@ defineExpose({
   containerRef,
 });
 </script>
+
+<template>
+  <FzInput
+    ref="fzInputRef"
+    v-bind="props"
+    :modelValue="fzInputModel"
+    type="text"
+    @paste="onPaste"
+  >
+    <template #right-icon v-if="step">
+      <div class="flex flex-col justify-between items-center">
+        <FzIcon
+          name="angle-up"
+          size="xs"
+          class="fz__currencyinput__arrowup cursor-pointer"
+          @click="stepUpDown(step)"
+        ></FzIcon>
+        <FzIcon
+          name="angle-down"
+          size="xs"
+          class="fz__currencyinput__arrowdown cursor-pointer"
+          @click="stepUpDown(-step)"
+        ></FzIcon>
+      </div>
+    </template>
+    <template #label>
+      <slot name="label"></slot>
+    </template>
+  </FzInput>
+</template>

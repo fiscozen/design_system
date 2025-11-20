@@ -4,7 +4,7 @@ import { FzInputProps } from "./types";
 export default function useInputStyle(
   props: ToRefs<FzInputProps>,
   container: Ref<HTMLElement | null>,
-  model: Ref<string>
+  model: Ref<string | undefined>
 ) {
   const containerWidth = computed(() =>
     container.value ? `${container.value.clientWidth}px` : "auto",
@@ -41,9 +41,12 @@ export default function useInputStyle(
     ((props.variant?.value === 'floating-label') && !model.value)
   });
 
-  const computedInputClass = computed(() => [
-    props.variant?.value === 'floating-label' ? textSizeMap[props.size?.value] : '',
-  ]);
+  const computedInputClass = computed(() => {
+    if (props.variant?.value === 'floating-label' && props.size?.value) {
+      return [textSizeMap[props.size.value]];
+    }
+    return [];
+  });
 
   const computedHelpClass = computed(() => [
     props.size?.value === "sm" ? "text-xs" : "",
