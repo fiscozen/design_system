@@ -4,10 +4,18 @@ import { FzAppointments } from '@fiscozen/appointments'
 import { ref } from 'vue'
 import { addDays, formatISO } from 'date-fns'
 
-// Helper function to get current hour in "HH:00" format
+// Helper function to get current hour in ISO-8601 format
 // This ensures slots are always available regardless of when tests run
-const getCurrentHour = (): string => {
+const getCurrentStartTimeISO = (): string => {
   const now = new Date()
+  now.setHours(now.getHours() + 1, 0, 0, 0)
+  return formatISO(now)
+}
+
+// Helper to get current time string "HH:00" for verification
+const getCurrentTimeString = (): string => {
+  const now = new Date()
+  now.setHours(now.getHours() + 1, 0, 0, 0)
   const hours = now.getHours().toString().padStart(2, '0')
   return `${hours}:00`
 }
@@ -19,7 +27,7 @@ const meta: Meta<typeof FzAppointments> = {
   argTypes: {
     slotStartTime: {
       control: 'text',
-      description: 'Start time for slots in format "HH:mm"'
+      description: 'Start time for slots as ISO-8601 string'
     },
     slotCount: {
       control: 'number',
@@ -36,7 +44,7 @@ const meta: Meta<typeof FzAppointments> = {
   },
   args: {
     startDate: formatISO(new Date()),
-    slotStartTime: getCurrentHour(),
+    slotStartTime: getCurrentStartTimeISO(),
     slotCount: 8,
     slotInterval: 30,
     breakDuration: 0
@@ -92,7 +100,7 @@ export const Default: Story = {
   ...Template,
   args: {
     startDate: formatISO(new Date()),
-    slotStartTime: getCurrentHour(),
+    slotStartTime: getCurrentStartTimeISO(),
     slotCount: 24,
     slotInterval: 30,
     breakDuration: 0
@@ -147,7 +155,7 @@ export const WithBreakDuration: Story = {
   ...Template,
   args: {
     startDate: formatISO(new Date()),
-    slotStartTime: getCurrentHour(),
+    slotStartTime: getCurrentStartTimeISO(),
     slotCount: 3,
     slotInterval: 30,
     breakDuration: 10
@@ -167,10 +175,10 @@ export const WithBreakDuration: Story = {
         label.textContent?.trim()
       )
 
-      const currentHour = getCurrentHour()
+      const currentHour = getCurrentTimeString()
       expect(slotLabels.some((text) => text?.includes(currentHour))).toBe(true)
-      expect(slotLabels.some((text) => text?.includes("40"))).toBe(true)
-      expect(slotLabels.some((text) => text?.includes("20"))).toBe(true)
+      expect(slotLabels.some((text) => text?.includes('40'))).toBe(true)
+      expect(slotLabels.some((text) => text?.includes('20'))).toBe(true)
     })
   }
 }
@@ -179,7 +187,7 @@ export const WithExcludedDays: Story = {
   ...Template,
   args: {
     startDate: formatISO(new Date()),
-    slotStartTime: getCurrentHour(),
+    slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
@@ -218,10 +226,10 @@ export const WithexcludedSlots: Story = {
   args: (() => {
     const now = new Date()
     const currentHour = now.getHours()
-    
+
     return {
       startDate: formatISO(new Date()),
-      slotStartTime: getCurrentHour(),
+      slotStartTime: getCurrentStartTimeISO(),
       slotCount: 5,
       slotInterval: 30,
       breakDuration: 0,
@@ -229,12 +237,12 @@ export const WithexcludedSlots: Story = {
         // Disable first and second slot (current time and +30 minutes)
         (() => {
           const date = new Date()
-          date.setHours(currentHour, 0, 0, 0)
+          date.setHours(currentHour + 1, 0, 0, 0)
           return formatISO(date)
         })(),
         (() => {
           const date = new Date()
-          date.setHours(currentHour, 30, 0, 0)
+          date.setHours(currentHour + 1, 30, 0, 0)
           return formatISO(date)
         })()
       ]
@@ -247,7 +255,7 @@ export const WithexcludedSlots: Story = {
           const slotLabels = Array.from(canvasElement.querySelectorAll('label')).map((label) =>
             label.textContent?.trim()
           )
-          const currentHour = getCurrentHour()
+          const currentHour = getCurrentTimeString()
           expect(slotLabels.length).toBeGreaterThan(0)
 
           // Inside slots container should not contain the current hour and the current hour + 30 minutes
@@ -263,7 +271,7 @@ export const WithMaxDate: Story = {
   ...Template,
   args: {
     startDate: formatISO(new Date()),
-    slotStartTime: getCurrentHour(),
+    slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
@@ -299,8 +307,8 @@ export const NoAvailableSlots: Story = {
   ...Template,
   args: (() => {
     const now = new Date()
-    const currentHour = now.getHours()
-    
+    const currentHour = now.getHours() + 1
+
     // Disable all slots by marking them as disabled
     const excludedSlots: string[] = []
     for (let i = 0; i < 5; i++) {
@@ -308,10 +316,10 @@ export const NoAvailableSlots: Story = {
       slot.setHours(currentHour, i * 30, 0, 0)
       excludedSlots.push(formatISO(slot))
     }
-    
+
     return {
       startDate: formatISO(new Date()),
-      slotStartTime: getCurrentHour(),
+      slotStartTime: getCurrentStartTimeISO(),
       slotCount: 5,
       slotInterval: 30,
       breakDuration: 0,
@@ -342,7 +350,7 @@ export const SlotSelection: Story = {
   ...Template,
   args: {
     startDate: formatISO(new Date()),
-    slotStartTime: getCurrentHour(),
+    slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0
@@ -386,7 +394,7 @@ export const DateNavigation: Story = {
   ...Template,
   args: {
     startDate: formatISO(new Date()),
-    slotStartTime: getCurrentHour(),
+    slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0
@@ -459,7 +467,7 @@ export const CustomSlotConfiguration: Story = {
   ...Template,
   args: {
     startDate: formatISO(new Date()),
-    slotStartTime: getCurrentHour(),
+    slotStartTime: getCurrentStartTimeISO(),
     slotCount: 10,
     slotInterval: 15,
     breakDuration: 5
@@ -486,11 +494,11 @@ export const CustomSlotConfiguration: Story = {
         label.textContent?.trim()
       )
 
-      const currentHour = getCurrentHour()
+      const currentHour = getCurrentTimeString()
       // First slot should be current hour
       expect(slotLabels.some((text) => text?.includes(currentHour))).toBe(true)
       // Second slot should be current hour + 15 minutes + 5 minutes break (20 minutes)
-      expect(slotLabels.some((text) => text?.includes("20"))).toBe(true)
+      expect(slotLabels.some((text) => text?.includes('20'))).toBe(true)
     })
   }
 }
@@ -499,7 +507,7 @@ export const RequiredField: Story = {
   ...Template,
   args: {
     startDate: formatISO(new Date()),
-    slotStartTime: getCurrentHour(),
+    slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,

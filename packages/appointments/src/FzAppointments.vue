@@ -94,7 +94,7 @@ const props = withDefaults(defineProps<FzAppointmentsProps>(), {
   name: "fz-appointments",
   required: false,
   startDate: () => formatISO(startOfDay(new Date())),
-  slotStartTime: "09:00",
+  slotStartTime: () => formatISO(startOfDay(new Date()).setHours(9, 0, 0, 0)),
   alertTitle: "Nessuna disponibilità",
   alertDescription: "Scegli un'altro giorno e prenota la tua consulenza.",
 });
@@ -235,11 +235,9 @@ const isCurrentDateValid = computed(() => {
 // Generate time slots for the current date
 const generateTimeSlots = (date: Date): Date[] => {
   const slots: Date[] = [];
-  const [hours, minutes] = props.slotStartTime.split(":").map(Number);
-
-  if (isNaN(hours) || isNaN(minutes)) {
-    return slots;
-  }
+  const startTime = parseISO(props.slotStartTime);
+  const hours = startTime.getHours();
+  const minutes = startTime.getMinutes();
 
   const slotDate = new Date(date);
   slotDate.setHours(hours, minutes, 0, 0);
@@ -247,12 +245,12 @@ const generateTimeSlots = (date: Date): Date[] => {
   for (let i = 0; i < props.slotCount; i++) {
     const date = new Date(slotDate);
     if (
-      date < startOfDay(currentDate.value) ||
-      date > endOfDay(currentDate.value)
+      date >= startOfDay(currentDate.value) &&
+      date >= new Date() &&
+      date <= endOfDay(currentDate.value)
     ) {
-      continue;
+      slots.push(date);
     }
-    slots.push(date);
     slotDate.setMinutes(slotDate.getMinutes() + props.slotInterval);
 
     // Add break duration between slots (except after the last one)

@@ -12,7 +12,8 @@ export type FzAppointmentsProps = {
    */
   maxDate?: string;
   /**
-   * Start time for slots in format "HH:mm" (e.g., "09:00")
+   * Start time for slots as ISO-8601 string (e.g., "2024-11-03T09:00:00.000Z")
+   * The date part is ignored, only time is used
    */
   slotStartTime?: string;
   /**
