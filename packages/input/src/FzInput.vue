@@ -82,14 +82,13 @@ const ariaDescribedBy = computed(() => {
   return ids.length > 0 ? ids.join(" ") : undefined;
 });
 
-const emit = defineEmits([
-  "input",
-  "focus",
-  "paste",
-  "blur",
-  "fzinput:left-icon-click",
-  "fzinput:right-icon-click",
-]);
+const emit = defineEmits<{
+  focus: [event: FocusEvent];
+  paste: [event: ClipboardEvent];
+  blur: [event: FocusEvent];
+  "fzinput:left-icon-click": [];
+  "fzinput:right-icon-click": [];
+}>();
 
 /**
  * Handles container interaction (click or keyboard) to focus the input
@@ -120,24 +119,49 @@ const handleContainerKeydown = (e: KeyboardEvent) => {
  *
  * Supports Enter and Space keys following accessibility best practices.
  */
-const handleIconKeydown = (e: KeyboardEvent, emitEvent: string) => {
+const handleIconKeydown = (
+  e: KeyboardEvent,
+  emitEvent: "fzinput:left-icon-click" | "fzinput:right-icon-click"
+) => {
   if (e.key === "Enter" || e.key === " ") {
     e.preventDefault();
-    emit(emitEvent as "fzinput:left-icon-click" | "fzinput:right-icon-click");
+    if (emitEvent === "fzinput:left-icon-click") {
+      emit("fzinput:left-icon-click");
+    } else {
+      emit("fzinput:right-icon-click");
+    }
   }
 };
 
 /**
- * Computed property to determine if left icon is clickable and accessible
+ * Determines if left icon is clickable (has click handler)
  */
 const isLeftIconClickable = computed(() => !!props.leftIcon);
-const isLeftIconAccessible = computed(() => isLeftIconClickable.value && !!props.leftIconAriaLabel);
 
 /**
- * Computed property to determine if right icon is clickable and accessible
+ * Determines if left icon is keyboard-accessible (has aria-label)
+ *
+ * Icons are only accessible via keyboard when aria-label is provided.
  */
-const isRightIconClickable = computed(() => !!props.rightIcon && !props.rightIconButton);
-const isRightIconAccessible = computed(() => isRightIconClickable.value && !!props.rightIconAriaLabel);
+const isLeftIconAccessible = computed(
+  () => isLeftIconClickable.value && !!props.leftIconAriaLabel
+);
+
+/**
+ * Determines if right icon is clickable (not rendered as button)
+ */
+const isRightIconClickable = computed(
+  () => !!props.rightIcon && !props.rightIconButton
+);
+
+/**
+ * Determines if right icon is keyboard-accessible (has aria-label)
+ *
+ * Icons are only accessible via keyboard when aria-label is provided.
+ */
+const isRightIconAccessible = computed(
+  () => isRightIconClickable.value && !!props.rightIconAriaLabel
+);
 
 defineExpose({
   inputRef,
@@ -176,7 +200,12 @@ defineExpose({
           :tabindex="isLeftIconAccessible && !disabled ? 0 : undefined"
           :class="leftIconClass"
           @click.stop="emit('fzinput:left-icon-click')"
-          @keydown="isLeftIconAccessible ? (e: KeyboardEvent) => handleIconKeydown(e, 'fzinput:left-icon-click') : undefined"
+          @keydown="
+            isLeftIconAccessible
+              ? (e: KeyboardEvent) =>
+                  handleIconKeydown(e, 'fzinput:left-icon-click')
+              : undefined
+          "
         />
       </slot>
       <div class="flex flex-col space-around min-w-0 grow">
@@ -223,11 +252,18 @@ defineExpose({
           :variant="rightIconVariant"
           :role="isRightIconAccessible ? 'button' : undefined"
           :aria-label="isRightIconAccessible ? rightIconAriaLabel : undefined"
-          :aria-disabled="isRightIconAccessible && disabled ? 'true' : undefined"
+          :aria-disabled="
+            isRightIconAccessible && disabled ? 'true' : undefined
+          "
           :tabindex="isRightIconAccessible && !disabled ? 0 : undefined"
           :class="rightIconClass"
           @click.stop="emit('fzinput:right-icon-click')"
-          @keydown="isRightIconAccessible ? (e: KeyboardEvent) => handleIconKeydown(e, 'fzinput:right-icon-click') : undefined"
+          @keydown="
+            isRightIconAccessible
+              ? (e: KeyboardEvent) =>
+                  handleIconKeydown(e, 'fzinput:right-icon-click')
+              : undefined
+          "
         />
         <FzIconButton
           v-if="rightIcon && rightIconButton"
