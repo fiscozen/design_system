@@ -98,10 +98,37 @@ export const createPaginatedListAction = <T>(
   delete (listOptions as any).dataKey;
   delete (listOptions as any).enableSingleOrdering;
 
+  // For usePaginatedList, pagination must always be present (even if empty)
+  // This ensures pagination defaults (page: 1, pageSize: 50) are always applied
+  // If pagination is not provided, add it as empty object so defaults are applied
+  let paramsWithPagination: any = paramsOrOptions;
+  const isParamsObject =
+    paramsOrOptions &&
+    ("filters" in paramsOrOptions ||
+      "ordering" in paramsOrOptions ||
+      "pagination" in paramsOrOptions);
+
+  if (isParamsObject && "pagination" in paramsOrOptions) {
+    // pagination is already present in params - use as is
+    paramsWithPagination = paramsOrOptions;
+  } else if (isParamsObject) {
+    // params object exists but pagination is not present - add it as empty object
+    paramsWithPagination = {
+      ...paramsOrOptions,
+      pagination: {},
+    };
+  } else {
+    // paramsOrOptions is options or undefined - create params object with pagination
+    paramsWithPagination = {
+      ...(paramsOrOptions || {}),
+      pagination: {},
+    };
+  }
+
   // Call createListBase with PaginatedResponse<T> type
   const baseResult = createListBase<PaginatedResponse<T>, T>(
     basePath,
-    paramsOrOptions,
+    paramsWithPagination,
     listOptions,
     (response, throwOnError) =>
       normalizePaginatedListResponse<T>(response, dataKey, throwOnError),

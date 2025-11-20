@@ -127,6 +127,14 @@ export interface UseActionsReturn<T> {
   useList: import("../list/types").UseListAction<T>;
 
   /**
+   * List/query multiple entities with pagination support and metadata (GET /resource)
+   * 
+   * Works like useList but handles paginated responses with metadata (count, pages, page).
+   * Pagination is always enabled with defaults (page: 1, pageSize: 50).
+   */
+  usePaginatedList: import("../paginated-list/types").UsePaginatedListAction<T>;
+
+  /**
    * Create a new entity (POST /resource)
    */
   useCreate: import("../create/types").UseCreateAction<T>;

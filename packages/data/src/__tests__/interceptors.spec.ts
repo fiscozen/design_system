@@ -254,4 +254,212 @@ describe("Interceptors", () => {
       expect(global.fetch).toHaveBeenCalled();
     });
   });
+
+  describe("Request Interceptor - Watch Cleanup", () => {
+    it("should cleanup watch when execute() is called multiple times rapidly", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, requestInit) => {
+          // Modify requestInit to trigger watch creation
+          return {
+            ...requestInit,
+            headers: {
+              ...(requestInit.headers as Record<string, string>),
+              "X-Custom-Header": "modified",
+            },
+          };
+        },
+      });
+
+      global.fetch = vi.fn(() => {
+        return Promise.resolve(
+          new Response(JSON.stringify({ data: "test" }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      const { execute, data } = useFzFetch<{ data: string }>("/test", {
+        immediate: false,
+      });
+
+      // Call execute() multiple times rapidly
+      // This tests that watches are properly cleaned up and don't accumulate
+      const promise1 = execute();
+      const promise2 = execute();
+      const promise3 = execute();
+
+      // Wait for all to complete
+      await Promise.all([promise1, promise2, promise3]);
+
+      // Verify that fetch was called (may be called multiple times due to deduplication)
+      expect(global.fetch).toHaveBeenCalled();
+
+      // Verify final state is correct (no errors from uncleaned watches)
+      expect(data.value).toEqual({ data: "test" });
+
+      // Call execute() again to verify no memory leak from previous watches
+      await execute();
+      expect(data.value).toEqual({ data: "test" });
+    });
+
+    it("should cleanup watch when interceptor throws an error", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, requestInit) => {
+          // Modify requestInit to trigger watch creation, then throw error
+          const modified = {
+            ...requestInit,
+            headers: {
+              ...(requestInit.headers as Record<string, string>),
+              "X-Custom-Header": "modified",
+            },
+          };
+          // Simulate error after modification
+          throw new Error("Interceptor error");
+        },
+      });
+
+      global.fetch = vi.fn(() => {
+        return Promise.resolve(
+          new Response(JSON.stringify({ data: "test" }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      const { execute, error } = useFzFetch<{ data: string }>("/test", {
+        immediate: false,
+      });
+
+      // Call execute() - should handle error and cleanup watch
+      await execute();
+
+      // Verify error was set
+      expect(error.value).toBeDefined();
+      expect(error.value?.message).toContain("Interceptor error");
+
+      // Call execute() again - should not have memory leak from previous watch
+      await execute();
+      expect(error.value?.message).toContain("Interceptor error");
+    });
+  });
+
+  describe("Request Interceptor - Immediate Execution", () => {
+    it("should call request interceptor when immediate: true (automatic execution)", async () => {
+      let interceptorCalled = false;
+      let interceptedUrl: string | null = null;
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, requestInit) => {
+          interceptorCalled = true;
+          interceptedUrl = url;
+          return requestInit;
+        },
+      });
+
+      global.fetch = vi.fn(() => {
+        return Promise.resolve(
+          new Response(JSON.stringify({ data: "test" }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      // useFzFetch with immediate: true (default) should call interceptor
+      const { data } = useFzFetch<{ data: string }>("/test", {
+        immediate: true, // Explicitly set to true (this is the default)
+      });
+
+      // Wait for automatic execution to complete
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Verify interceptor was called during automatic execution
+      expect(interceptorCalled).toBe(true);
+      expect(interceptedUrl).toBe("/test");
+      expect(data.value).toEqual({ data: "test" });
+      expect(global.fetch).toHaveBeenCalled();
+    });
+
+    it("should call request interceptor when immediate: false and execute() is called manually", async () => {
+      let interceptorCalled = false;
+      let interceptedUrl: string | null = null;
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, requestInit) => {
+          interceptorCalled = true;
+          interceptedUrl = url;
+          return requestInit;
+        },
+      });
+
+      global.fetch = vi.fn(() => {
+        return Promise.resolve(
+          new Response(JSON.stringify({ data: "test" }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      // useFzFetch with immediate: false
+      const { execute, data } = useFzFetch<{ data: string }>("/test", {
+        immediate: false,
+      });
+
+      // Interceptor should not be called yet
+      expect(interceptorCalled).toBe(false);
+
+      // Manually call execute()
+      await execute();
+
+      // Verify interceptor was called during manual execution
+      expect(interceptorCalled).toBe(true);
+      expect(interceptedUrl).toBe("/test");
+      expect(data.value).toEqual({ data: "test" });
+      expect(global.fetch).toHaveBeenCalled();
+    });
+
+    it("should call response interceptor when immediate: true (automatic execution)", async () => {
+      let interceptorCalled = false;
+      let interceptedUrl: string | null = null;
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        responseInterceptor: async (response, url) => {
+          interceptorCalled = true;
+          interceptedUrl = url;
+          return response;
+        },
+      });
+
+      global.fetch = vi.fn(() => {
+        return Promise.resolve(
+          new Response(JSON.stringify({ data: "test" }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      // useFzFetch with immediate: true (default) should call interceptor
+      const { data } = useFzFetch<{ data: string }>("/test", {
+        immediate: true,
+      });
+
+      // Wait for automatic execution to complete
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Verify interceptor was called during automatic execution
+      expect(interceptorCalled).toBe(true);
+      expect(interceptedUrl).toBe("/test");
+      expect(data.value).toEqual({ data: "test" });
+      expect(global.fetch).toHaveBeenCalled();
+    });
+  });
 });

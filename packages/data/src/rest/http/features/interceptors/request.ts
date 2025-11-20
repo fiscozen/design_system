@@ -203,8 +203,19 @@ export const wrapWithRequestInterceptor = <T>(
 
   // Wrap execute method to apply request interceptor
   const originalExecute = fetchResult.execute;
+  // Track current watch to cleanup when execute() is called multiple times rapidly
+  let currentWatch: (() => void) | null = null;
+  
   fetchResult.execute = async (throwOnFailed?: boolean) => {
+    // Always re-evaluate the URL when execute() is called manually
+    // This ensures reactive URLs (computed URLs that depend on reactive values) are properly evaluated
     const urlString = toValue(url);
+
+    // Cleanup previous watch if it exists (in case execute() was called multiple times)
+    if (currentWatch) {
+      currentWatch();
+      currentWatch = null;
+    }
 
     // Apply request interceptor
     try {
@@ -297,12 +308,16 @@ export const wrapWithRequestInterceptor = <T>(
           { immediate: true, deep: false },
         );
 
+        // Store watch cleanup function to allow cleanup if execute() is called again
+        currentWatch = unwatchSync;
+
         // Execute the modified fetch and handle errors
         try {
           await modifiedFetchResult.execute(throwOnFailed);
         } catch (error: unknown) {
           // Stop watching before handling error to prevent further sync
           unwatchSync();
+          currentWatch = null;
 
           const normalizedError = normalizeError(error);
           fetchResult.error.value = normalizedError;
@@ -315,14 +330,27 @@ export const wrapWithRequestInterceptor = <T>(
         // Stop watching when request completes (success or error)
         // The watch will have already synced the final state
         unwatchSync();
+        currentWatch = null;
 
         return;
       }
 
       // If requestInit wasn't modified, execute original request
+      // However, we still need to ensure the URL is re-evaluated when execute() is called manually
+      // This is important for reactive URLs (e.g., computed URLs that depend on reactive values)
+      // Note: @vueuse/core's createFetch should handle URL re-evaluation automatically,
+      // but if the URL is a computed that depends on reactive values, we need to ensure
+      // it's evaluated correctly. The urlString was already evaluated above with toValue(url),
+      // so originalExecute should use the current URL value from the computed.
       return originalExecute(throwOnFailed);
     } catch (error: unknown) {
       // If interceptor throws, abort the request
+      // Cleanup watch if it exists
+      if (currentWatch) {
+        currentWatch();
+        currentWatch = null;
+      }
+      
       const normalizedError = normalizeError(error);
       if (state.globalDebug) {
         console.debug(

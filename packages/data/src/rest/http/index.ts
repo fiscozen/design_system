@@ -48,6 +48,10 @@ const createDefaultWrapperChain = (): WrapperChain => {
  * Uses a wrapper chain to apply request interceptor, response interceptor,
  * and deduplication wrapper in the correct order.
  *
+ * **Important**: If interceptors are configured, we disable `immediate` execution
+ * in the base fetch result to ensure interceptors are applied before execution.
+ * After applying interceptors, we manually call `execute()` if `immediate` was true.
+ *
  * @param finalUrl - Computed URL for the request (can be reactive via ref/computed)
  * @param requestInit - Request configuration
  * @param method - HTTP method
@@ -62,11 +66,31 @@ const createFetchResult = <T>(
   body: BodyInit | null | undefined,
   useFetchOptions?: UseFzFetchOptions,
 ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> => {
-  // Create base fetch result
+  // Check if interceptors are configured
+  const hasInterceptors =
+    state.globalRequestInterceptor || state.globalResponseInterceptor;
+
+  // If interceptors are configured, we need to disable immediate execution
+  // to ensure interceptors wrap execute() before the request runs
+  const shouldExecuteImmediate =
+    hasInterceptors && (useFetchOptions?.immediate ?? true);
+
+  // Create base fetch result with immediate disabled if interceptors are present
+  // This ensures interceptors wrap execute() before any automatic execution
+  const baseFetchOptions = useFetchOptions
+    ? {
+        ...normalizeUseFzFetchOptions(useFetchOptions),
+        // Disable immediate if interceptors are present (we'll call execute() manually after wrapping)
+        immediate: hasInterceptors ? false : useFetchOptions.immediate,
+      }
+    : hasInterceptors
+      ? { immediate: false }
+      : undefined;
+
   const baseFetchResult = state.fzFetcher!<T>(
     finalUrl,
     requestInit,
-    useFetchOptions ? normalizeUseFzFetchOptions(useFetchOptions) : undefined,
+    baseFetchOptions,
   ).json();
 
   // Create wrapper context
@@ -80,7 +104,21 @@ const createFetchResult = <T>(
 
   // Apply wrappers using chain
   const wrapperChain = createDefaultWrapperChain();
-  return wrapperChain.apply(baseFetchResult, context);
+  const wrappedResult = wrapperChain.apply(baseFetchResult, context);
+
+  // If immediate execution was requested and interceptors are present,
+  // manually call execute() after interceptors have been applied
+  if (shouldExecuteImmediate) {
+    // Use nextTick to ensure all reactive setup is complete
+    Promise.resolve().then(() => {
+      wrappedResult.execute().catch(() => {
+        // Errors are already handled in execute() and stored in error.value
+        // We just need to catch to prevent unhandled promise rejection
+      });
+    });
+  }
+
+  return wrappedResult;
 };
 
 /**

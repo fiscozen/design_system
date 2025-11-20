@@ -398,6 +398,27 @@ describe("createPaginatedListAction", () => {
       pagination.page = 2;
       expect(pagination.page).toBe(2);
     });
+
+    it("should always have pagination defaults even when not provided", () => {
+      // Test without pagination in params
+      const { pagination: pagination1 } = createPaginatedListAction<User>("users");
+      expect(pagination1.page).toBe(1);
+      expect(pagination1.pageSize).toBe(50);
+
+      // Test with empty pagination object
+      const { pagination: pagination2 } = createPaginatedListAction<User>("users", {
+        pagination: {},
+      });
+      expect(pagination2.page).toBe(1);
+      expect(pagination2.pageSize).toBe(50);
+
+      // Test with only options (no params)
+      const { pagination: pagination3 } = createPaginatedListAction<User>("users", {
+        dataKey: "items",
+      });
+      expect(pagination3.page).toBe(1);
+      expect(pagination3.pageSize).toBe(50);
+    });
   });
 
   describe("Error handling", () => {
