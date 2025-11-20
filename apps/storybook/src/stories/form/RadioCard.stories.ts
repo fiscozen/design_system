@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadioCard } from '@fiscozen/radio'
-import {ref} from 'vue';
+import { ref } from 'vue'
+import { expect, within, userEvent } from '@storybook/test'
 
-const checkrimg = 'consultant.jpg';
-const radioModel = ref('');
+const checkrimg = 'consultant.jpg'
+const radioModel = ref('')
 
 const meta = {
   title: 'Form/FzRadioCard',
@@ -34,7 +35,7 @@ const Template: RadioCardStory = {
     components: { FzRadioCard },
     setup() {
       return {
-        args,
+        args
       }
     },
     template: `<FzRadioCard v-bind="args" v-model="args.modelValue" />`
@@ -59,7 +60,20 @@ export const Vertical: RadioCardStory = {
     subtitle: 'This is a Radioccard label',
     tooltip: 'this is a tooltip',
     value: 'test1',
-    modelValue: radioModel.value,
+    modelValue: radioModel.value
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const radio = canvas.getByRole('radio')
+    await expect(radio).toBeInTheDocument()
+    await expect(canvas.getByText('RadioCard')).toBeInTheDocument()
+    await expect(canvas.getByText('This is a Radioccard label')).toBeInTheDocument()
+
+    const label = canvas.getByText('RadioCard').closest('label')
+    await expect(label).toHaveClass('flex-col')
+
+    await userEvent.click(label!)
+    await expect(radio).toBeChecked()
   }
 }
 
@@ -74,6 +88,17 @@ export const Horizontal: RadioCardStory = {
     subtitle: 'This is a Radioccard label',
     tooltip: 'this is a tooltip',
     value: 'test2'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const radio = canvas.getByRole('radio')
+    await expect(radio).toBeInTheDocument()
+
+    const label = canvas.getByText('RadioCard').closest('label')
+    await expect(label).toHaveClass('flex-row')
+
+    await userEvent.click(label!)
+    await expect(radio).toBeChecked()
   }
 }
 
@@ -87,7 +112,7 @@ export const HorizontalNoIconNoImage: RadioCardStory = {
     subtitle: 'This is a Radioccard label',
     radioIcon: false,
     value: 'test3',
-    modelValue: radioModel.value,
+    modelValue: radioModel.value
   }
 }
 
@@ -101,7 +126,7 @@ export const HorizontalIconNoImage: RadioCardStory = {
     subtitle: 'This is a Radioccard label',
     radioIcon: true,
     value: 'test4',
-    modelValue: radioModel.value,
+    modelValue: radioModel.value
   }
 }
 
@@ -116,7 +141,7 @@ export const HorizontalNoIconWithImage: RadioCardStory = {
     subtitle: 'This is a Radioccard label',
     radioIcon: false,
     value: 'test5',
-    modelValue: radioModel.value,
+    modelValue: radioModel.value
   }
 }
 
@@ -176,7 +201,7 @@ export const VerticalWithImage: RadioCardStory = {
     title: 'RadioCard',
     subtitle: 'This is a Radioccard label',
     value: 'test9',
-    modelValue: radioModel.value,
+    modelValue: radioModel.value
   }
 }
 
@@ -191,7 +216,7 @@ export const VerticalWithIconWithImage: RadioCardStory = {
     title: 'RadioCard',
     subtitle: 'This is a Radioccard label',
     value: 'test10',
-    modelValue: radioModel.value,
+    modelValue: radioModel.value
   }
 }
 
@@ -226,7 +251,6 @@ export const VerticalWithIconWithImageWithTooltip: RadioCardStory = {
   }
 }
 
-
 export const WithHasRadio: RadioCardStory = {
   ...Template,
   args: {
@@ -237,7 +261,7 @@ export const WithHasRadio: RadioCardStory = {
     subtitle: 'This is a Radioccard label',
     hasRadio: true,
     value: 'test15',
-    modelValue: radioModel.value,
+    modelValue: radioModel.value
   }
 }
 
@@ -251,7 +275,7 @@ export const WithoutHasRadio: RadioCardStory = {
     subtitle: 'This is a Radioccard label',
     hasRadio: false,
     value: 'test16',
-    modelValue: radioModel.value,
+    modelValue: radioModel.value
   }
 }
 
@@ -265,7 +289,7 @@ export const ToneNeutral: RadioCardStory = {
     subtitle: 'This is a Radioccard label',
     tone: 'neutral',
     value: 'test17',
-    modelValue: radioModel.value,
+    modelValue: radioModel.value
   }
 }
 
@@ -279,7 +303,7 @@ export const ToneEmphasis: RadioCardStory = {
     subtitle: 'This is a Radioccard label',
     tone: 'emphasis',
     value: 'test18',
-    modelValue: radioModel.value,
+    modelValue: radioModel.value
   }
 }
 
@@ -293,6 +317,6 @@ export const ToneError: RadioCardStory = {
     subtitle: 'This is a Radioccard label',
     tone: 'error',
     value: 'test19',
-    modelValue: radioModel.value,
+    modelValue: radioModel.value
   }
 }

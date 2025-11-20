@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadioGroup, FzRadio, FzRadioCard } from '@fiscozen/radio'
 import { FzIcon } from '@fiscozen/icons'
+import { expect, within, userEvent } from '@storybook/test'
 const checker = 'consultant.jpg'
 
 const meta = {
@@ -71,9 +72,22 @@ export const Medium: RadioGroupStory = {
   ...Template,
   args: {
     label: 'Radio Group Medium'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const group = canvas.getByRole('radiogroup')
+    await expect(group).toBeInTheDocument()
+
+    const radios = canvas.getAllByRole('radio')
+    await expect(radios.length).toBe(3)
+
+    await expect(radios[1]).toBeChecked()
+
+    await userEvent.click(radios[0])
+    await expect(radios[0]).toBeChecked()
+    await expect(radios[1]).not.toBeChecked()
   }
 }
-
 
 export const HelpText: RadioGroupStory = {
   render: (args) => ({
@@ -141,6 +155,10 @@ export const Error: RadioGroupStory = {
   args: {
     label: 'Radio Group',
     tone: 'error'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(canvas.getByText('This is an error text')).toBeInTheDocument()
   }
 }
 

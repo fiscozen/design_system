@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadio } from '@fiscozen/radio'
+import { expect, within, userEvent } from '@storybook/test'
 
 const meta = {
   title: 'Form/FzRadio',
@@ -24,7 +25,7 @@ const meta = {
         type: 'select'
       }
     }
-  },
+  }
 } satisfies Meta<typeof FzRadio>
 
 export default meta
@@ -52,9 +53,18 @@ export const Medium: RadioStory = {
   args: {
     size: 'md',
     label: 'Radio'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const radio = canvas.getByRole('radio')
+    await expect(radio).toBeInTheDocument()
+    await expect(radio).not.toBeChecked()
+    await expect(canvas.getByText('Radio')).toBeInTheDocument()
+
+    await userEvent.click(radio)
+    await expect(radio).toBeChecked()
   }
 }
-
 
 export const CheckedDefault: RadioStory = {
   ...Template,
@@ -62,6 +72,11 @@ export const CheckedDefault: RadioStory = {
     size: 'md',
     label: 'Radio',
     checked: true
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const radio = canvas.getByRole('radio')
+    await expect(radio).toBeChecked()
   }
 }
 
@@ -71,6 +86,12 @@ export const Disabled: RadioStory = {
     size: 'md',
     label: 'Radio',
     disabled: true
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const radio = canvas.getByRole('radio')
+    await expect(radio).toBeDisabled()
+    await expect(radio).not.toBeChecked()
   }
 }
 
@@ -81,6 +102,13 @@ export const CheckedDisabled: RadioStory = {
     label: 'Radio',
     checked: true,
     disabled: true
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const radio = canvas.getByRole('radio')
+    await expect(radio).toBeInTheDocument()
+    await expect(radio).toBeChecked()
+    await expect(radio).toBeDisabled()
   }
 }
 
@@ -90,6 +118,13 @@ export const ToneNeutral: RadioStory = {
     size: 'md',
     label: 'Radio',
     tone: 'neutral'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const radio = canvas.getByRole('radio')
+    await expect(radio).toBeInTheDocument()
+    const label = canvas.getByText('Radio').closest('label')
+    await expect(label).toHaveClass('text-core-black')
   }
 }
 
@@ -99,6 +134,13 @@ export const ToneEmphasis: RadioStory = {
     size: 'md',
     label: 'Radio',
     tone: 'emphasis'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const radio = canvas.getByRole('radio')
+    await expect(radio).toBeInTheDocument()
+    const label = canvas.getByText('Radio').closest('label')
+    await expect(label).toHaveClass('peer-checked:before:border-blue-500')
   }
 }
 
@@ -108,6 +150,13 @@ export const ToneError: RadioStory = {
     size: 'md',
     label: 'Radio',
     tone: 'error'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const radio = canvas.getByRole('radio')
+    await expect(radio).toBeInTheDocument()
+    const label = canvas.getByText('Radio').closest('label')
+    await expect(label).toHaveClass('text-semantic-error')
   }
 }
 
@@ -117,15 +166,14 @@ export const WithTooltip: RadioStory = {
     size: 'md',
     label: 'Radio',
     tooltip: 'This is an informative tooltip'
-  }
-}
-
-export const HasTextFalse: RadioStory = {
-  ...Template,
-  args: {
-    size: 'md',
-    label: 'Radio',
-    hasText: false
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const parentElement = within(canvasElement.parentElement as HTMLElement)
+    const radio = canvas.getByRole('radio')
+    await expect(radio).toBeInTheDocument()
+    const tooltip = parentElement.getByText('This is an informative tooltip')
+    await expect(tooltip).toBeInTheDocument()
   }
 }
 
@@ -138,7 +186,7 @@ export const VeryLongLabel: RadioStory = {
   },
   globals: {
     viewport: {
-      value: "xs",
+      value: 'xs',
       isRotated: false
     }
   }
