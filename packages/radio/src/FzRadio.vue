@@ -35,20 +35,27 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { FzRadioProps } from "./types";
-import { mapSizeToClasses, computedLabelObject, staticInputClass, staticLabelClass } from "./common";
+import {
+  mapSizeToClasses,
+  computedLabelObject,
+  staticInputClass,
+  staticLabelClass,
+} from "./common";
 import { FzIcon } from "@fiscozen/icons";
 import { FzTooltip } from "@fiscozen/tooltip";
 import "./fz-radio.css";
 
 const props = withDefaults(defineProps<FzRadioProps>(), {
   size: "md",
-  hasText: undefined
+  hasText: undefined,
 });
 
 const computedValue = computed(() => {
   if (props.value == null && props.label == null) {
-    console.error("[FzRadio] You must provide a value or label prop to the radio button")
-    return ''
+    console.error(
+      "[FzRadio] You must provide a value or label prop to the radio button",
+    );
+    return "";
   }
   return props.value ?? props.label;
 });
@@ -64,7 +71,7 @@ const computedTone = computed<"neutral" | "emphasis" | "error">(() => {
 });
 
 // Compute hasText from props (with fallback to deprecated standalone)
-const shouldShowText = computed(() => { 
+const shouldShowText = computed(() => {
   if (props.hasText !== undefined) return props.hasText;
   return !props.standalone;
 });

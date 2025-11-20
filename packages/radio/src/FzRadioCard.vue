@@ -44,7 +44,7 @@ const labelClass = computed(() => ({
   "before:left-24": props.orientation === "vertical",
   "before:self-center": props.orientation === "horizontal",
   "before:shrink-0": props.orientation === "horizontal",
-  "bg-grey-hover": !props.disabled,
+  "hover:bg-[#f9faff] peer-checked:bg-[#f9faff]": !props.disabled,
   "before:!hidden": !computedHasRadio.value,
 }));
 
@@ -84,7 +84,11 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
         ]"
         :title="imageAlt || ''"
       >
-        <img :src="imageUrl" :alt="imageAlt || ''" class="object-cover h-full w-full" />
+        <img
+          :src="imageUrl"
+          :alt="imageAlt || ''"
+          class="object-cover h-full w-full"
+        />
       </picture>
 
       <div
@@ -99,9 +103,7 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
           </p>
           <p
             v-if="subtitle"
-            :class="[
-              'font-normal text-sm text-grey-500 mt-4 break-words'
-            ]"
+            :class="['font-normal text-sm text-grey-500 mt-4 break-words']"
           >
             {{ subtitle }}
           </p>
@@ -128,9 +130,3 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
     </label>
   </div>
 </template>
-
-<style>
-.bg-grey-hover:hover {
-  background-color: #f9faff;
-}
-</style>

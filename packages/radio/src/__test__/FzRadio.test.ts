@@ -78,11 +78,11 @@ describe("FzRadio", () => {
     });
     await wrapper.vm.$nextTick();
 
-    // FzAlert should be used instead of FzRadioErrorText
-    expect(wrapper.findComponent({ name: "FzAlert" }).exists()).toBe(true);
-    expect(wrapper.findComponent({ name: "FzAlert" }).text()).toContain(
-      "Error text",
+    // Should contain error color
+    expect(wrapper.find("label").classes()).toContain(
+      "before:border-semantic-error",
     );
+    expect(wrapper.find("label").classes()).toContain("text-semantic-error");
   });
 
   it("should toggle error text when error switch from true to false", async () => {
@@ -98,11 +98,19 @@ describe("FzRadio", () => {
     });
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.findComponent({ name: "FzAlert" }).exists()).toBe(true);
+    expect(wrapper.find("label").classes()).toContain(
+      "before:border-semantic-error",
+    );
+    expect(wrapper.find("label").classes()).toContain("text-semantic-error");
 
     await wrapper.setProps({ tone: "neutral" });
 
-    expect(wrapper.findComponent({ name: "FzAlert" }).exists()).toBe(false);
+    expect(wrapper.find("label").classes()).not.toContain(
+      "before:border-semantic-error",
+    );
+    expect(wrapper.find("label").classes()).not.toContain(
+      "text-semantic-error",
+    );
   });
 
   it("should not show label when standalone is true", async () => {

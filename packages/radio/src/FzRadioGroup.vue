@@ -1,6 +1,10 @@
 <template>
   <div :class="[staticContainerClass, computedContainerClass]">
-    <label :for="name" :class="[staticLabelClass, computedLabelClass]">
+    <label
+      v-if="label"
+      :for="name"
+      :class="[staticLabelClass, computedLabelClass]"
+    >
       <span>{{ label }}<span v-if="required"> *</span></span>
       <p :class="computedHelpTextClass" v-if="$slots.help">
         <slot name="help" />
@@ -9,6 +13,7 @@
     <div
       :class="[staticSlotContainerClass, computedSlotContainerClass]"
       test-id="slot-container"
+      role="radiogroup"
     >
       <slot :radioGroupProps="controlledProps" />
     </div>
@@ -48,15 +53,17 @@ const isError = computed(() => {
   return computedTone.value === "error" || props.error === true;
 });
 
-const controlledProps = computed(() => ({
-  disabled: props.disabled,
-  error: props.error,
-  size: "md",
-  emphasis: props.emphasis,
-  tone: computedTone.value,
-  required: props.required,
-  name: props.name,
-}));
+const controlledProps = computed<Omit<FzRadioGroupProps, "label" | "variant">>(
+  () => ({
+    disabled: props.disabled,
+    error: props.error,
+    size: "md",
+    emphasis: props.emphasis,
+    tone: computedTone.value,
+    required: props.required,
+    name: props.name,
+  }),
+);
 
 const staticLabelClass = "flex flex-col";
 const staticContainerClass = "flex flex-col";
@@ -78,11 +85,11 @@ const computedLabelClass = computed(() => [
 
 const computedContainerClass = computed(() => [
   mapSizeToClasses["md"],
-  "gap-10"
+  "gap-10",
 ]);
 
 const computedSlotContainerClass = computed(() => [
   mapSizeToClasses["md"],
-  "gap-8"
+  "gap-8",
 ]);
 </script>

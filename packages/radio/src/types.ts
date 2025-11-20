@@ -27,7 +27,7 @@ export type FzRadioProps = {
    * @deprecated This prop is deprecated and will be removed in a future version.
    * Radio buttons now have a fixed size equivalent to the former "md" size.
    */
-  size: "sm" | "md";
+  size?: "sm" | "md";
   /**
    * The tone/variant of the radio button
    */
@@ -73,7 +73,7 @@ export type FzRadioGroupProps = {
   /**
    * The label of the radio button group
    */
-  label: string;
+  label?: string;
   /**
    * The size of the radio button
    */

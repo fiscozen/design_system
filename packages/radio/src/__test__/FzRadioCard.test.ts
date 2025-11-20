@@ -63,22 +63,6 @@ describe("FzRadioCard", () => {
     );
   });
 
-  it("should support size prop", async () => {
-    const wrapperSm = await createWrapper({
-      label: "Radio",
-      size: "sm",
-      title: "This is a title",
-    });
-    expect(wrapperSm.find("label").classes()).toContain("w-[280px]");
-
-    const wrapperMd = await createWrapper({
-      label: "Radio",
-      size: "md",
-      title: "This is a title",
-    });
-    expect(wrapperMd.find("label").classes()).toContain("w-[360px]");
-  });
-
   it("should support hasRadio prop", async () => {
     const wrapperWithRadio = await createWrapper({
       label: "Radio",
