@@ -4,6 +4,7 @@ import type {
   QueryActionOptions,
 } from "./shared/types";
 import type { UseListAction } from "./list/types";
+import type { UsePaginatedListAction } from "./paginated-list/types";
 import type { UseCreateAction } from "./create/types";
 import type { UseUpdateAction } from "./update/types";
 import type { UseDeleteAction } from "./delete/types";
@@ -64,6 +65,12 @@ export const useActions: UseActions = <T>(basePath: string) => {
         paramsOrOptions,
         options,
       )) as UseListAction<T>,
+    usePaginatedList: ((paramsOrOptions, options) =>
+      createPaginatedListAction<T>(
+        basePath,
+        paramsOrOptions,
+        options,
+      )) as UsePaginatedListAction<T>,
     useCreate: ((options?: MutationActionOptions) =>
       createCreateAction<T>(basePath, options)) as UseCreateAction<T>,
     useUpdate: ((options?: MutationActionOptions) =>
