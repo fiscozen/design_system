@@ -154,16 +154,37 @@ export const createPaginatedListAction = <T>(
   // Synchronize pagination.page with meta.page (server response)
   // This ensures pagination.page always reflects the actual page returned by the server
   // After each successful response, pagination.page is updated to match the server's response.page
+  //
+  // Race condition prevention:
+  // When multiple page requests are made in quick succession, we only sync if:
+  // 1. No request is in flight (safe to sync normally), OR
+  // 2. A request is in flight AND the response page matches the current pagination.page
+  //    (meaning this response is for the current request, not an older one)
+  // This prevents older responses from overwriting newer user actions.
+  //
+  // We watch both meta.page and isFetching to handle cases where the watch fires
+  // during request processing vs after completion.
   watch(
-    () => meta.value?.page,
-    (serverPage) => {
-      if (
-        serverPage !== undefined &&
-        baseResult.pagination.page !== serverPage
-      ) {
-        // Only update if different to avoid unnecessary reactivity triggers
-        // If this triggers a refetch (due to watch in createListBase), it's harmless
-        // as it will request the same page number that was just returned
+    [() => meta.value?.page, () => baseResult._rawResponse.isFetching.value],
+    ([serverPage, isRequestInFlight]) => {
+      if (serverPage === undefined) return;
+
+      const currentPage = baseResult.pagination.page;
+
+      // If a request is in flight, only sync if response matches current page
+      // This prevents race conditions where an older response overwrites a newer user action
+      if (isRequestInFlight) {
+        if (currentPage === serverPage) {
+          // Response matches current request - safe to sync
+          baseResult.pagination.page = serverPage;
+        }
+        // Otherwise, ignore this response (it's from an older request)
+        return;
+      }
+
+      // No request in flight - safe to sync normally
+      // This handles cases where server returns a different page due to validation, etc.
+      if (currentPage !== serverPage) {
         baseResult.pagination.page = serverPage;
       }
     },

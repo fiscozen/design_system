@@ -362,6 +362,93 @@ describe("createPaginatedListAction", () => {
       expect(meta.value?.page).toBe(3);
       expect(pagination.page).toBe(3);
     });
+
+    it("should prevent race condition when multiple page requests are made quickly", async () => {
+      // Track fetch calls and their corresponding page numbers
+      const fetchCalls: Array<{ page: number; resolve: () => void }> = [];
+
+      global.fetch = vi.fn((url: string) => {
+        // Extract page number from URL
+        const urlObj = new URL(url);
+        const page = parseInt(urlObj.searchParams.get("page") || "1", 10);
+
+        return new Promise<Response>((resolve) => {
+          // Store the resolve function with the page number
+          fetchCalls.push({
+            page,
+            resolve: () => {
+              const response: PaginatedResponse<User> = {
+                results: [],
+                count: 100,
+                next: null,
+                previous: null,
+                pages: 10,
+                page,
+              };
+              resolve(
+                new Response(JSON.stringify(response), {
+                  status: 200,
+                  headers: { "Content-Type": "application/json" },
+                }),
+              );
+            },
+          });
+        });
+      }) as any;
+
+      // Disable autoUpdate and onMount to have manual control over when requests are made
+      const { pagination, meta, execute } = createPaginatedListAction<User>(
+        "users",
+        {
+          pagination: { page: 1, pageSize: 25 },
+        },
+        {
+          autoUpdate: false, // Disable autoUpdate
+          onMount: false, // Disable onMount to prevent initial fetch
+        },
+      );
+
+      // Request page 1
+      expect(pagination.page).toBe(1);
+      const execute1Promise = execute();
+
+      // Wait a bit for the fetch to be initiated
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      // Should have exactly 1 fetch call for page 1
+      expect(fetchCalls.length).toBe(1);
+      expect(fetchCalls[0].page).toBe(1);
+
+      // Immediately request page 2 (before page 1 completes)
+      pagination.page = 2;
+      expect(pagination.page).toBe(2);
+      const execute2Promise = execute();
+
+      // Wait a bit for the second fetch to be initiated
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      expect(fetchCalls.length).toBe(2);
+      expect(fetchCalls[1].page).toBe(2);
+
+      // Resolve page 1 response first (older response arrives after newer request)
+      // This simulates the race condition: page 1 response arrives after page 2 was requested
+      fetchCalls[0].resolve();
+
+      // Wait for page 1 response to be processed
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // pagination.page should still be 2 (not overwritten by page 1 response)
+      // This verifies the race condition fix: older responses don't overwrite newer user actions
+      expect(pagination.page).toBe(2);
+
+      // Resolve page 2 response
+      fetchCalls[1].resolve();
+
+      // Wait for both requests to complete
+      await Promise.all([execute1Promise, execute2Promise]);
+
+      // Final state should reflect page 2 (the intended page)
+      expect(pagination.page).toBe(2);
+      expect(meta.value?.page).toBe(2);
+    });
   });
 
   describe("Reactive objects", () => {
