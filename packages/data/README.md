@@ -438,6 +438,14 @@ interface SetupFzFetcherOptions {
   debug?: boolean
 
   /**
+   * Debounce time in milliseconds for autoUpdate watches in list/paginated-list actions.
+   * When reactive parameters (filters, ordering, pagination) change rapidly,
+   * this debounce groups multiple changes into a single fetch request.
+   * (default: 100)
+   */
+  autoUpdateDebounceDelay?: number
+
+  /**
    * Request interceptor function
    * Called before each request is sent. Can modify the request or abort it.
    * (default: undefined - no interceptor)
@@ -516,6 +524,9 @@ setupFzFetcher({
   // Request deduplication
   deduplication: true,
   
+  // AutoUpdate debounce delay (optional, default: 100ms)
+  // Groups rapid parameter changes in list/paginated-list actions
+  autoUpdateDebounceDelay: 200,
   
   // Request interceptor
   requestInterceptor,
