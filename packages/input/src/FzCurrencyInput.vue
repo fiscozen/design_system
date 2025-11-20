@@ -244,7 +244,9 @@ const handleStepKeydown = (e: KeyboardEvent, amount: number) => {
 const isStepDisabled = computed(() => props.disabled || props.readonly);
 
 /**
- * Computed property for step up aria-label
+ * Accessible label for step up button
+ *
+ * Describes the increment action for screen readers.
  */
 const stepUpAriaLabel = computed(() => {
   const stepValue = props.step || 1;
@@ -252,7 +254,9 @@ const stepUpAriaLabel = computed(() => {
 });
 
 /**
- * Computed property for step down aria-label
+ * Accessible label for step down button
+ *
+ * Describes the decrement action for screen readers.
  */
 const stepDownAriaLabel = computed(() => {
   const stepValue = props.step || 1;

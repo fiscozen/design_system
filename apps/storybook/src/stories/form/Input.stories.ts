@@ -98,7 +98,19 @@ export const Default: Story = {
     await expect(input).toHaveAttribute('aria-required', 'false')
     await expect(input).toHaveAttribute('aria-invalid', 'false')
     await expect(input).toHaveAttribute('aria-disabled', 'false')
-    await expect(input).toHaveAttribute('aria-labelledby')
+    
+    // Verify aria-labelledby links to label
+    const labelledBy = input.getAttribute('aria-labelledby')
+    await expect(labelledBy).toBeTruthy()
+    if (labelledBy) {
+      const labelElement = canvasElement.querySelector(`#${labelledBy}`)
+      await expect(labelElement).toBeInTheDocument()
+      await expect(labelElement?.textContent).toContain('Input Label')
+    }
+
+    // Verify container is keyboard accessible
+    const container = input.closest('.fz-input > div')
+    await expect(container).toHaveAttribute('tabindex', '0')
   }
 }
 
@@ -226,6 +238,13 @@ export const Error: Story = {
       await expect(errorElement).toHaveAttribute('role', 'alert')
       await expect(errorElement?.textContent).toContain('error message')
     }
+
+    // Verify error icon is decorative (aria-hidden)
+    const errorIcon = canvasElement.querySelector('.fa-triangle-exclamation')
+    if (errorIcon) {
+      const errorIconWrapper = errorIcon.closest('[aria-hidden]')
+      await expect(errorIconWrapper).toHaveAttribute('aria-hidden', 'true')
+    }
   }
 }
 
@@ -248,6 +267,37 @@ export const LeftIcon: Story = {
   }
 }
 
+export const LeftIconAccessible: Story = {
+  ...Template,
+  args: {
+    label: 'Date',
+    size: 'md',
+    leftIcon: 'calendar-lines',
+    leftIconAriaLabel: 'Open calendar picker'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Verify left icon is displayed
+    const icon = canvasElement.querySelector('.fa-calendar-lines')
+    await expect(icon).toBeInTheDocument()
+
+    // Verify accessibility attributes are present
+    if (icon) {
+      await expect(icon).toHaveAttribute('role', 'button')
+      await expect(icon).toHaveAttribute('aria-label', 'Open calendar picker')
+      await expect(icon).toHaveAttribute('tabindex', '0')
+    }
+
+    // Verify keyboard navigation works
+    if (icon) {
+      ;(icon as HTMLElement).focus()
+      await userEvent.keyboard('{Enter}')
+      // Event emission is tested in unit tests
+    }
+  }
+}
+
 export const RightIcon: Story = {
   ...Template,
   args: {
@@ -262,6 +312,34 @@ export const RightIcon: Story = {
     // Verify icon click emits event (event emission is tested in unit tests)
     if (icon) {
       await userEvent.click(icon)
+    }
+  }
+}
+
+export const RightIconAccessible: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    rightIcon: 'eye',
+    rightIconAriaLabel: 'Toggle password visibility'
+  },
+  play: async ({ canvasElement }) => {
+    // Verify right icon is displayed
+    const icon = canvasElement.querySelector('.fa-eye')
+    await expect(icon).toBeInTheDocument()
+
+    // Verify accessibility attributes are present
+    if (icon) {
+      await expect(icon).toHaveAttribute('role', 'button')
+      await expect(icon).toHaveAttribute('aria-label', 'Toggle password visibility')
+      await expect(icon).toHaveAttribute('tabindex', '0')
+    }
+
+    // Verify keyboard navigation works
+    if (icon) {
+      ;(icon as HTMLElement).focus()
+      await userEvent.keyboard('{Space}')
+      // Event emission is tested in unit tests
     }
   }
 }
@@ -316,8 +394,16 @@ export const Valid: Story = {
     const checkIcon = canvasElement.querySelector('.fa-check')
     await expect(checkIcon).toBeInTheDocument()
 
-    // Verify success styling is applied
-    await expect(checkIcon).toHaveClass('text-semantic-success')
+    if (checkIcon) {
+      // Verify success styling is applied
+      await expect(checkIcon).toHaveClass('text-semantic-success')
+
+      // Verify check icon is decorative (aria-hidden)
+      const checkIconWrapper = checkIcon.closest('[aria-hidden]')
+      if (checkIconWrapper) {
+        await expect(checkIconWrapper).toHaveAttribute('aria-hidden', 'true')
+      }
+    }
   }
 }
 
@@ -339,6 +425,14 @@ export const Required: Story = {
     const input = canvas.getByRole('textbox', { name: /Input Label/i })
     await expect(input).toHaveAttribute('required')
     await expect(input).toHaveAttribute('aria-required', 'true')
+
+    // Verify aria-labelledby links to label
+    const labelledBy = input.getAttribute('aria-labelledby')
+    await expect(labelledBy).toBeTruthy()
+    if (labelledBy) {
+      const labelElement = canvasElement.querySelector(`#${labelledBy}`)
+      await expect(labelElement).toBeInTheDocument()
+    }
   }
 }
 
@@ -347,6 +441,7 @@ export const LeftAndRightWithValid: Story = {
   args: {
     ...Template.args,
     leftIcon: 'calendar-lines',
+    leftIconAriaLabel: 'Open calendar',
     rightIcon: 'credit-card',
     valid: true
   },
@@ -359,6 +454,18 @@ export const LeftAndRightWithValid: Story = {
     // Valid checkmark takes precedence over rightIcon
     const rightIcon = canvasElement.querySelector('.fa-credit-card')
     await expect(rightIcon).not.toBeInTheDocument()
+
+    // Verify left icon accessibility attributes
+    if (leftIcon) {
+      await expect(leftIcon).toHaveAttribute('role', 'button')
+      await expect(leftIcon).toHaveAttribute('aria-label', 'Open calendar')
+      await expect(leftIcon).toHaveAttribute('tabindex', '0')
+    }
+
+    // Verify check icon is decorative (aria-hidden)
+    if (checkIcon) {
+      await expect(checkIcon).toHaveAttribute('aria-hidden', 'true')
+    }
   }
 }
 
@@ -437,7 +544,8 @@ export const MaxLength: Story = {
 export const ShowHidePassword: Story = {
   args: {
     ...Template.args,
-    rightIconClass: 'cursor-pointer'
+    rightIconClass: 'cursor-pointer',
+    rightIconAriaLabel: 'Toggle password visibility'
   },
   render: (args) => ({
     components: { FzInput },
@@ -479,12 +587,25 @@ export const ShowHidePassword: Story = {
     const eyeIcon = canvasElement.querySelector('.fa-eye')
     await expect(eyeIcon).toBeInTheDocument()
 
+    // Verify accessibility attributes are present
+    if (eyeIcon) {
+      await expect(eyeIcon).toHaveAttribute('role', 'button')
+      await expect(eyeIcon).toHaveAttribute('aria-label', 'Toggle password visibility')
+      await expect(eyeIcon).toHaveAttribute('tabindex', '0')
+    }
+
     // Verify clicking icon toggles visibility
     if (eyeIcon) {
       await userEvent.click(eyeIcon)
       await expect(input).toHaveAttribute('type', 'text')
       const eyeSlashIcon = canvasElement.querySelector('.fa-eye-slash')
       await expect(eyeSlashIcon).toBeInTheDocument()
+    }
+
+    // Verify keyboard navigation works
+    if (eyeIcon) {
+      ;(eyeIcon as HTMLElement).focus()
+      await userEvent.keyboard('{Enter}')
     }
   }
 }

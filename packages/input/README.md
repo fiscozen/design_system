@@ -78,11 +78,13 @@ const amount = ref<number | null>(null)
 | `leftIcon` | `string` | - | Font Awesome icon name displayed on the left side of input |
 | `leftIconVariant` | `IconVariant` | - | Visual style variant for left icon (solid, regular, light, etc.) |
 | `leftIconButtonVariant` | `IconButtonVariant` | - | Button variant for left icon when rendered as clickable button |
+| `leftIconAriaLabel` | `string` | - | Accessible label for left icon when clickable. Required for screen reader accessibility |
 | `rightIcon` | `string` | - | Font Awesome icon name displayed on the right side of input |
 | `rightIconSize` | `IconSize` | - | Size override for right icon. If not provided, uses input size mapping. |
 | `rightIconVariant` | `IconVariant` | - | Visual style variant for right icon (solid, regular, light, etc.) |
 | `rightIconButton` | `boolean` | `false` | Renders right icon as clickable button instead of static icon |
 | `rightIconButtonVariant` | `IconButtonVariant` | `'invisible'` | Button variant for right icon when rightIconButton is true |
+| `rightIconAriaLabel` | `string` | - | Accessible label for right icon when clickable. Required for screen reader accessibility |
 | `pattern` | `string` | - | HTML5 pattern attribute for native browser validation |
 | `name` | `string` | - | Native name attribute for form submission and identification |
 | `readonly` | `boolean` | `false` | Native readonly attribute. Prevents user input while keeping field focusable |
@@ -268,6 +270,7 @@ Right icon can be rendered as a clickable button (useful for password visibility
     rightIcon="eye"
     :rightIconButton="true"
     rightIconButtonVariant="secondary"
+    rightIconAriaLabel="Toggle password visibility"
     @fzinput:right-icon-click="togglePasswordVisibility"
     v-model="password" 
   />
@@ -283,6 +286,20 @@ const togglePasswordVisibility = () => {
   passwordType.value = passwordType.value === 'password' ? 'text' : 'password'
 }
 </script>
+```
+
+### Clickable Icons with Accessibility
+
+When icons are clickable, provide `leftIconAriaLabel` or `rightIconAriaLabel` for keyboard accessibility:
+
+```vue
+<FzInput 
+  label="Search" 
+  leftIcon="magnifying-glass"
+  leftIconAriaLabel="Open search options"
+  @fzinput:left-icon-click="openSearchOptions"
+  v-model="search" 
+/>
 ```
 
 ### Both Icons
@@ -503,6 +520,8 @@ When `step` prop is provided, arrow buttons appear on the right to increment/dec
 - **Paste Handling**: Automatically detects and parses various number formats (e.g., "1.234,56", "1,234.56")
 - **Step Quantization**: When `forceStep` is true, values are automatically rounded to nearest step multiple
 - **Empty Values**: When `nullOnEmpty` is true, empty input converts to null instead of 0
+- **Step Controls**: When `step` prop is provided, arrow buttons appear with keyboard accessibility (Enter/Space to activate)
+- **Type Safety**: v-model accepts `number | string | undefined` but emits only `number | undefined`
 
 ## Accessibility
 
