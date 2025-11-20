@@ -47,6 +47,10 @@ type FzInputProps = {
    */
   leftIconButtonVariant?: IconButtonVariant;
   /**
+   * Accessible label for left icon when clickable. Required for screen reader accessibility.
+   */
+  leftIconAriaLabel?: string;
+  /**
    * Font Awesome icon name displayed on the right side of input
    */
   rightIcon?: string;
@@ -68,6 +72,10 @@ type FzInputProps = {
    * @default 'invisible'
    */
   rightIconButtonVariant?: IconButtonVariant;
+  /**
+   * Accessible label for right icon when clickable. Required for screen reader accessibility.
+   */
+  rightIconAriaLabel?: string;
   /**
    * Native HTML input type. Determines keyboard layout and validation behavior
    * @default 'text'
