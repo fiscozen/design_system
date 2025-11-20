@@ -27,6 +27,7 @@
     "@awesome.me/kit-8137893ad3": "^1.0.394",
     "@fiscozen/actionlist": "workspace:^",
     "@fiscozen/alert": "workspace:^",
+    "@fiscozen/appointments": "workspace:*",
     "@fiscozen/avatar": "workspace:^",
     "@fiscozen/badge": "workspace:^",
     "@fiscozen/breadcrumbs": "workspace:^",
@@ -63,6 +64,7 @@
     "@fiscozen/typeahead": "workspace:^",
     "@fiscozen/upload": "workspace:^",
     "@fiscozen/view-flag": "workspace:^",
+    "date-fns": "^3.6.0",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"
   },

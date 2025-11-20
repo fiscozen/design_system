@@ -1,0 +1,553 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Documentation/Form/FzAppointments" />
+
+# FzAppointments
+
+A comprehensive appointment booking component that allows users to select a date and time slot from available appointments. Features flexible slot configuration, date navigation, and support for excluding specific days or time slots.
+
+## Features
+
+- **Date Navigation**: Navigate between dates with forward/backward buttons
+- **Flexible Slot Configuration**: Customizable start time, count, interval, and break duration
+- **Day Exclusion**: Exclude specific dates, holidays, or days of the week
+- **Slot Management**: Disable individual time slots that are already booked
+- **Date Validation**: Automatic validation for past dates and maximum date limits
+- **Empty State**: Shows alert when no slots are available
+- **Accessibility**: Full keyboard navigation and ARIA support
+
+## Installation
+
+```bash
+npm install @fiscozen/appointments
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzAppointments } from '@fiscozen/appointments'
+
+const selectedAppointment = ref<Date | undefined>()
+
+// Configure slots: 8 slots starting at 09:00, 30 minutes apart
+const startDate = new Date()
+</script>
+
+<template>
+  <FzAppointments
+    v-model="selectedAppointment"
+    :start-date="startDate"
+    slot-start-time="09:00"
+    :slot-count="8"
+    :slot-interval="30"
+  />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>modelValue</code>
+      </td>
+      <td>
+        <code>Date | undefined</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>The selected date and time (v-model). Returns a Date object with both date and time.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>startDate</code>
+      </td>
+      <td>
+        <code>Date</code>
+      </td>
+      <td>
+        <code>startOfDay(new Date())</code>
+      </td>
+      <td>Start date for appointments. Users cannot navigate to dates before this date.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>maxDate</code>
+      </td>
+      <td>
+        <code>Date | undefined</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Maximum date selectable. Users cannot navigate to dates after this date.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>slotStartTime</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>"09:00"</code>
+      </td>
+      <td>Start time for slots in format "HH:mm" (e.g., "09:00", "14:30").</td>
+    </tr>
+    <tr>
+      <td>
+        <code>slotCount</code>
+      </td>
+      <td>
+        <code>number</code>
+      </td>
+      <td>-</td>
+      <td>
+        <strong>Required.</strong> Number of time slots to create.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>slotInterval</code>
+      </td>
+      <td>
+        <code>number</code>
+      </td>
+      <td>
+        <code>30</code>
+      </td>
+      <td>Interval between slots in minutes. Default is 30 minutes.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>breakDuration</code>
+      </td>
+      <td>
+        <code>number</code>
+      </td>
+      <td>
+        <code>0</code>
+      </td>
+      <td>
+        Break duration between slots in minutes. For example, with 30-minute slots and 10-minute
+        breaks starting at 11:00, you'll get slots at 11:00 and 11:40.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>excludedDays</code>
+      </td>
+      <td>
+        <code>(Date | string | number)[]</code>
+      </td>
+      <td>
+        <code>[]</code>
+      </td>
+      <td>
+        Days to exclude from selection. See <a href="#excluded-days">Excluded Days</a> section for
+        details.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>excludedSlots</code>
+      </td>
+      <td>
+        <code>(Date | string)[]</code>
+      </td>
+      <td>
+        <code>[]</code>
+      </td>
+      <td>
+        Slots that are already occupied and should be disabled. Can be Date objects or ISO string
+        dates with time (e.g., "2024-12-25T14:30:00").
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>name</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>"fz-appointments"</code>
+      </td>
+      <td>Name for the radio group. Used for form submission and accessibility.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>required</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
+      <td>Whether the selection is required for form validation.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>alertTitle</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>"Nessuna disponibilità"</code>
+      </td>
+      <td>Title for the alert shown when no slots are available.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>alertDescription</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>"Scegli un'altro giorno e prenota la tua consulenza."</code>
+      </td>
+      <td>Description text for the alert shown when no slots are available.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Excluded Days
+
+The `excludedDays` prop accepts an array that can contain three different types of values to exclude days from selection:
+
+### 1. Date Objects
+
+Exclude specific dates by providing Date objects:
+
+```vue
+<script setup>
+import { FzAppointments } from '@fiscozen/appointments'
+
+const holidays = [
+  new Date('2024-12-25'), // Christmas
+  new Date('2024-01-01') // New Year
+]
+</script>
+
+<template>
+  <FzAppointments :excluded-days="holidays" slot-start-time="09:00" :slot-count="8" />
+</template>
+```
+
+### 2. ISO String Dates
+
+Exclude specific dates using ISO string format (date only, time is ignored):
+
+```vue
+<script setup>
+const holidays = [
+  '2024-12-25', // Christmas
+  '2024-01-01', // New Year
+  '2024-04-25' // Liberation Day
+]
+</script>
+
+<template>
+  <FzAppointments :excluded-days="holidays" slot-start-time="09:00" :slot-count="8" />
+</template>
+```
+
+### 3. Day of Week Numbers
+
+Exclude specific days of the week using numbers (0-6):
+
+- **0** = Sunday (Domenica)
+- **1** = Monday (Lunedì)
+- **2** = Tuesday (Martedì)
+- **3** = Wednesday (Mercoledì)
+- **4** = Thursday (Giovedì)
+- **5** = Friday (Venerdì)
+- **6** = Saturday (Sabato)
+
+```vue
+<script setup>
+// Exclude weekends (Saturday and Sunday)
+const excludedDays = [0, 6]
+
+// Or exclude only Sundays
+const sundaysOnly = [0]
+
+// Exclude weekdays (Monday to Friday)
+const weekdaysOnly = [1, 2, 3, 4, 5]
+</script>
+
+<template>
+  <FzAppointments :excluded-days="excludedDays" slot-start-time="09:00" :slot-count="8" />
+</template>
+```
+
+### Mixed Usage
+
+You can combine all three types in a single array:
+
+```vue
+<script setup>
+import { FzAppointments } from '@fiscozen/appointments'
+
+const excludedDays = [
+  // Exclude weekends
+  0, // Sunday
+  6, // Saturday
+  // Exclude specific holidays
+  '2024-12-25', // Christmas (ISO string)
+  new Date('2024-01-01') // New Year (Date object)
+]
+</script>
+
+<template>
+  <FzAppointments :excluded-days="excludedDays" slot-start-time="09:00" :slot-count="8" />
+</template>
+```
+
+**Important Notes:**
+
+- When using day of week numbers, those days will be excluded **every week** (e.g., `[0, 6]` excludes all Sundays and Saturdays)
+- Date objects and ISO strings exclude only the **specific dates** provided
+- The component automatically skips excluded days when navigating with the forward/backward buttons
+- Past dates are automatically excluded regardless of the `excludedDays` prop
+
+## Usage Examples
+
+### Basic Appointment Selection
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzAppointments } from '@fiscozen/appointments'
+
+const appointment = ref<Date | undefined>()
+const startDate = new Date()
+</script>
+
+<template>
+  <FzAppointments
+    v-model="appointment"
+    :start-date="startDate"
+    slot-start-time="09:00"
+    :slot-count="8"
+    :slot-interval="30"
+  />
+</template>
+```
+
+### Slots with Breaks
+
+Configure slots with breaks between them. For example, 3 slots of 30 minutes each with 10-minute breaks starting at 11:00 will create slots at 11:00, 11:40, and 12:20:
+
+```vue
+<template>
+  <FzAppointments
+    v-model="appointment"
+    :start-date="startDate"
+    slot-start-time="11:00"
+    :slot-count="3"
+    :slot-interval="30"
+    :break-duration="10"
+  />
+</template>
+```
+
+### Excluding Weekends
+
+```vue
+<script setup>
+const excludedDays = [0, 6] // Sunday and Saturday
+</script>
+
+<template>
+  <FzAppointments
+    v-model="appointment"
+    :start-date="startDate"
+    :excluded-days="excludedDays"
+    slot-start-time="09:00"
+    :slot-count="8"
+  />
+</template>
+```
+
+### Excluding Holidays
+
+```vue
+<script setup>
+const holidays = [
+  '2024-12-25', // Christmas
+  '2024-01-01', // New Year
+  '2024-04-25' // Liberation Day
+]
+</script>
+
+<template>
+  <FzAppointments
+    v-model="appointment"
+    :start-date="startDate"
+    :excluded-days="holidays"
+    slot-start-time="09:00"
+    :slot-count="8"
+  />
+</template>
+```
+
+### Disabling Booked Slots
+
+```vue
+<script setup>
+import { FzAppointments } from '@fiscozen/appointments'
+
+const bookedSlots = [
+  new Date('2024-12-20T10:00:00'),
+  new Date('2024-12-20T11:30:00'),
+  '2024-12-21T14:00:00' // ISO string format
+]
+</script>
+
+<template>
+  <FzAppointments
+    v-model="appointment"
+    :start-date="startDate"
+    :disabled-slots="bookedSlots"
+    slot-start-time="09:00"
+    :slot-count="8"
+  />
+</template>
+```
+
+### With Maximum Date
+
+Limit how far in the future users can book:
+
+```vue
+<script setup>
+import { addDays } from 'date-fns'
+
+const startDate = new Date()
+const maxDate = addDays(startDate, 30) // 30 days from now
+</script>
+
+<template>
+  <FzAppointments
+    v-model="appointment"
+    :start-date="startDate"
+    :max-date="maxDate"
+    slot-start-time="09:00"
+    :slot-count="8"
+  />
+</template>
+```
+
+### Required Field
+
+```vue
+<template>
+  <FzAppointments
+    v-model="appointment"
+    :start-date="startDate"
+    slot-start-time="09:00"
+    :slot-count="8"
+    required
+  />
+</template>
+```
+
+### Custom Alert Messages
+
+```vue
+<template>
+  <FzAppointments
+    v-model="appointment"
+    :start-date="startDate"
+    slot-start-time="09:00"
+    :slot-count="8"
+    alert-title="Nessun appuntamento disponibile"
+    alert-description="Seleziona un'altra data per continuare."
+  />
+</template>
+```
+
+## Slot Calculation Examples
+
+### Example 1: Standard 30-Minute Slots
+
+```vue
+<!-- 8 slots starting at 09:00, 30 minutes apart -->
+<!-- Result: 09:00, 09:30, 10:00, 10:30, 11:00, 11:30, 12:00, 12:30 -->
+<FzAppointments slot-start-time="09:00" :slot-count="8" :slot-interval="30" :break-duration="0" />
+```
+
+### Example 2: Slots with Breaks
+
+```vue
+<!-- 3 slots of 30 minutes with 10-minute breaks starting at 11:00 -->
+<!-- Result: 11:00, 11:40, 12:20 -->
+<FzAppointments slot-start-time="11:00" :slot-count="3" :slot-interval="30" :break-duration="10" />
+```
+
+### Example 3: 15-Minute Slots
+
+```vue
+<!-- 10 slots of 15 minutes starting at 14:00 -->
+<!-- Result: 14:00, 14:15, 14:30, 14:45, 15:00, 15:15, 15:30, 15:45, 16:00, 16:15 -->
+<FzAppointments slot-start-time="14:00" :slot-count="10" :slot-interval="15" :break-duration="0" />
+```
+
+## Behavior
+
+### Date Navigation
+
+- Users can navigate forward/backward using the arrow buttons
+- The back button is disabled when viewing today's date
+- The forward button is disabled when reaching `maxDate` or today's date
+- Excluded days are automatically skipped during navigation
+- The selected slot is reset when changing dates (radio button behavior)
+
+### Slot Generation
+
+- Slots are generated based on `slotStartTime`, `slotCount`, `slotInterval`, and `breakDuration`
+- Each slot is a Date object combining the current date with the calculated time
+- Slots in the past are automatically disabled
+- Slots in `excludedSlots` are disabled but still visible
+
+### Empty State
+
+When no slots are available for the current date (all disabled or date excluded), the component shows an `FzAlert` with the configured title and description.
+
+### Value Management
+
+- The `modelValue` is a Date object containing both date and time
+- When a slot is selected, the full Date object is emitted
+- When the date changes, the selection is automatically reset to `undefined`
+- The component watches for external changes to `modelValue` and updates the displayed date accordingly
+
+## Accessibility
+
+- **Keyboard Navigation**: Full support for Tab navigation between slots
+- **Screen Readers**: Proper ARIA labels and role attributes
+- **Focus Management**: Clear focus indicators on interactive elements
+- **Semantic HTML**: Uses native radio inputs for proper form behavior
+- **Button Labels**: Navigation buttons have descriptive aria-labels ("Giorno precedente", "Giorno successivo")
+
+## Related Components
+
+- **FzRadioCard**: Used internally to display time slots
+- **FzRadioGroup**: Groups the time slot radio buttons
+- **FzIconButton**: Navigation buttons for date selection
+- **FzAlert**: Shown when no slots are available
