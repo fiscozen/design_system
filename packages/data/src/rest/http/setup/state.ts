@@ -25,6 +25,7 @@ export const state = {
   globalCsrfOptions: null as CsrfOptions | null,
   globalDebug: false,
   globalDeduplication: false,
+  globalAutoUpdateDebounceDelay: 100, // Default 100ms debounce for autoUpdate
   globalRequestInterceptor: null as RequestInterceptor | null,
   globalResponseInterceptor: null as ResponseInterceptor | null,
 
@@ -77,3 +78,10 @@ export const getDeduplicationManager = (): DeduplicationManager | null =>
  * @internal
  */
 export const getCsrfOptions = (): CsrfOptions | null => state.globalCsrfOptions;
+
+/**
+ * Get global autoUpdate debounce delay
+ * @internal
+ */
+export const getGlobalAutoUpdateDebounceDelay = (): number =>
+  state.globalAutoUpdateDebounceDelay;

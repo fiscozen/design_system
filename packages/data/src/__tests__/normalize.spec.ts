@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { normalizeParams } from "../rest/actions/shared/normalize";
-import { computed } from "vue";
+import { normalizeParams, normalizePaginatedListResponse } from "../rest/actions/shared/normalize";
+import { shallowRef } from "vue";
+import type { UseFzFetchReturn } from "../rest/http/types";
 
 describe("normalizeParams", () => {
   describe("Ordering normalization", () => {
@@ -189,6 +190,116 @@ describe("normalizeParams", () => {
       expect(queryParams.ordering).toBe("name,-created_at");
       expect(queryParams.page).toBe(2);
       expect(queryParams.per_page).toBe(25);
+    });
+  });
+
+  describe("normalizePaginatedListResponse", () => {
+    const createMockResponse = <T>(
+      data: T | null,
+      error: Error | null = null,
+    ): UseFzFetchReturn<T> => {
+      return {
+        data: shallowRef(data),
+        error: shallowRef(error),
+        statusCode: shallowRef(null),
+        response: shallowRef(null),
+        isFetching: shallowRef(false),
+        execute: async () => {},
+      };
+    };
+
+    it("should extract data array from paginated response with default dataKey", () => {
+      const mockResponse = createMockResponse({
+        results: [{ id: 1, name: "User 1" }],
+        count: 100,
+        pages: 10,
+        page: 1,
+        next: null,
+        previous: null,
+      });
+
+      const normalized = normalizePaginatedListResponse(mockResponse);
+
+      expect(normalized.data.value).toEqual([{ id: 1, name: "User 1" }]);
+    });
+
+    it("should extract data array from paginated response with custom dataKey", () => {
+      const mockResponse = createMockResponse({
+        items: [{ id: 1, name: "User 1" }],
+        count: 100,
+        pages: 10,
+        page: 1,
+        next: null,
+        previous: null,
+      }) as any;
+
+      const normalized = normalizePaginatedListResponse(mockResponse, "items");
+
+      expect(normalized.data.value).toEqual([{ id: 1, name: "User 1" }]);
+    });
+
+    it("should return null when response data is null", () => {
+      const mockResponse = createMockResponse(null) as any;
+
+      const normalized = normalizePaginatedListResponse(mockResponse);
+
+      expect(normalized.data.value).toBeNull();
+    });
+
+    it("should throw error when dataKey is missing from response", () => {
+      const mockResponse = createMockResponse({
+        count: 100,
+        pages: 10,
+        page: 1,
+        next: null,
+        previous: null,
+        // Missing 'results' key
+      }) as any;
+
+      const normalized = normalizePaginatedListResponse(mockResponse, "results");
+
+      expect(() => {
+        // Access computed to trigger evaluation
+        normalized.data.value;
+      }).toThrowError(
+        /\[normalizePaginatedListResponse\] Key "results" not found in response/,
+      );
+    });
+
+    it("should throw error when dataKey exists but is not an array", () => {
+      const mockResponse = createMockResponse({
+        results: "not an array",
+        count: 100,
+        pages: 10,
+        page: 1,
+        next: null,
+        previous: null,
+      }) as any;
+
+      const normalized = normalizePaginatedListResponse(mockResponse, "results");
+
+      expect(() => {
+        normalized.data.value;
+      }).toThrowError(
+        /\[normalizePaginatedListResponse\] Expected array at key "results"/,
+      );
+    });
+
+    it("should include available keys in error message when dataKey is missing", () => {
+      const mockResponse = createMockResponse({
+        items: [],
+        count: 100,
+        pages: 10,
+        page: 1,
+        next: null,
+        previous: null,
+      }) as any;
+
+      const normalized = normalizePaginatedListResponse(mockResponse, "results");
+
+      expect(() => {
+        normalized.data.value;
+      }).toThrowError(/Available keys: items, count, pages, page, next, previous/);
     });
   });
 });

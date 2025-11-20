@@ -158,3 +158,74 @@ describe("useList - Ordering", () => {
     expect(url.searchParams.get("ordering")).toBeNull();
   });
 });
+
+describe("useList - AutoUpdate Debounce", () => {
+  beforeEach(() => {
+    resetFzFetcher();
+    vi.clearAllMocks();
+
+    setupFzFetcher({
+      baseUrl: "https://api.example.com",
+      autoUpdateDebounceDelay: 100, // 100ms debounce
+    });
+
+    global.fetch = vi.fn(() => {
+      return Promise.resolve(
+        new Response(JSON.stringify([{ id: 1, name: "User 1" }]), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+      );
+    }) as any;
+  });
+
+  it("should debounce rapid changes and execute only one request", async () => {
+    const { useList } = useActions<{ id: number; name: string }>("users");
+    const { filters, ordering, pagination } = useList({
+      autoUpdate: true,
+      onMount: false, // Disable onMount to control when requests start
+    });
+
+    // Rapid changes that should be debounced into a single request
+    filters.name = "John";
+    ordering.push({ age: "asc" });
+    pagination.page = 2;
+
+    // Wait for debounce delay + a bit more to ensure request completes
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    // Should have been called only once (after debounce)
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("should use default debounce delay when not configured", async () => {
+    resetFzFetcher();
+    setupFzFetcher({
+      baseUrl: "https://api.example.com",
+      // autoUpdateDebounceDelay not specified, should use default 100ms
+    });
+
+    global.fetch = vi.fn(() => {
+      return Promise.resolve(
+        new Response(JSON.stringify([{ id: 1, name: "User 1" }]), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+      );
+    }) as any;
+
+    const { useList } = useActions<{ id: number; name: string }>("users");
+    const { filters } = useList({
+      autoUpdate: true,
+      onMount: false,
+    });
+
+    filters.name = "John";
+
+    // Wait for debounce delay + execution time
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    // Should have been called once after debounce
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
+});

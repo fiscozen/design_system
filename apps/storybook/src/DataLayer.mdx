@@ -97,6 +97,9 @@ setupFzFetcher({
   // Debug Logging (optional)
   debug: true,  // Enable console.debug logging for development
   
+  // AutoUpdate Debounce (optional)
+  autoUpdateDebounceDelay: 200,  // Debounce time in ms for rapid parameter changes (default: 100)
+  
   // Request Interceptor (optional)
   requestInterceptor: async (url, requestInit) => {
     // Modify request before sending
@@ -139,6 +142,7 @@ setupFzFetcher({
 | `csrf.headerName` | `string` | ❌ No | `'X-CSRF-Token'` | Header name to send CSRF token |
 | `deduplication` | `boolean` | ❌ No | `false` | Enable request deduplication globally (disabled by default) |
 | `debug` | `boolean` | ❌ No | `false` | Enable debug logging |
+| `autoUpdateDebounceDelay` | `number` | ❌ No | `100` | Debounce time in milliseconds for autoUpdate watches in list/paginated-list actions. Groups rapid parameter changes into a single fetch request. |
 | `requestInterceptor` | `RequestInterceptor` | ❌ No | - | Function to modify/abort requests |
 | `responseInterceptor` | `ResponseInterceptor` | ❌ No | - | Function to modify/handle responses |
 | `fetchOptions` | `RequestInit` | ❌ No | - | Default options for fetch requests |

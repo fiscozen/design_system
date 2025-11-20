@@ -193,15 +193,23 @@ export const normalizePaginatedListResponse = <T>(
     const paginatedData = response.data.value;
     if (!paginatedData) return null;
 
-    // Extract array from response using dataKey
-    const dataArray = (paginatedData as any)[dataKey];
+    // Extract array from response using dataKey with type-safe access
+    const paginatedDataRecord = paginatedData as Record<string, unknown>;
+    const dataArray = paginatedDataRecord[dataKey];
+
+    // Validate dataKey exists in response
+    if (dataArray === undefined) {
+      const availableKeys = Object.keys(paginatedDataRecord).join(", ");
+      throw new Error(
+        `[normalizePaginatedListResponse] Key "${dataKey}" not found in response. Available keys: ${availableKeys}`,
+      );
+    }
 
     // Validate it's an array
     if (!Array.isArray(dataArray)) {
-      console.warn(
+      throw new Error(
         `[normalizePaginatedListResponse] Expected array at key "${dataKey}", got ${typeof dataArray}`,
       );
-      return null;
     }
 
     return dataArray as T[];

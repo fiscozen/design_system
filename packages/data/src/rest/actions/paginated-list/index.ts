@@ -7,6 +7,7 @@ import type {
   PaginationMeta,
 } from "./types";
 import type { UseActionOptions } from "../shared/types";
+import type { UseFzFetchReturn } from "../../http/types";
 import { normalizePaginatedListResponse } from "../shared/normalize";
 import { createListBase } from "../shared/create-list-base";
 
@@ -82,26 +83,32 @@ export const createPaginatedListAction = <T>(
         : false;
 
   // Extract options without dataKey and enableSingleOrdering (pass to createListBase)
-  const listOptions: UseActionOptions =
+  // Use destructuring to safely exclude these properties instead of delete
+  const optionsToExtract =
     options !== undefined
-      ? { ...options }
+      ? options
       : paramsOrOptions &&
           !(
             "filters" in paramsOrOptions ||
             "ordering" in paramsOrOptions ||
             "pagination" in paramsOrOptions
           )
-        ? { ...(paramsOrOptions as PaginatedListActionOptions<T>) }
-        : {};
+        ? (paramsOrOptions as PaginatedListActionOptions<T>)
+        : ({} as PaginatedListActionOptions<T>);
 
-  // Remove dataKey and enableSingleOrdering from options (not needed by createListBase)
-  delete (listOptions as any).dataKey;
-  delete (listOptions as any).enableSingleOrdering;
+  const { dataKey: _dataKey, enableSingleOrdering: _enableSingleOrdering, ...restOptions } =
+    optionsToExtract;
+  const listOptions: UseActionOptions = restOptions;
 
   // For usePaginatedList, pagination must always be present (even if empty)
   // This ensures pagination defaults (page: 1, pageSize: 50) are always applied
   // If pagination is not provided, add it as empty object so defaults are applied
-  let paramsWithPagination: any = paramsOrOptions;
+  // Use explicit union type instead of any for better type safety
+  type ParamsWithPagination =
+    | PaginatedListActionParams
+    | PaginatedListActionOptions<T>
+    | undefined;
+  let paramsWithPagination: ParamsWithPagination = paramsOrOptions;
   const isParamsObject =
     paramsOrOptions &&
     ("filters" in paramsOrOptions ||
@@ -126,17 +133,29 @@ export const createPaginatedListAction = <T>(
   }
 
   // Call createListBase with PaginatedResponse<T> type
+  // Define internal type that includes _rawResponse for type-safe access
+  interface InternalListBaseResult {
+    filters: ReturnType<typeof createListBase>["filters"];
+    ordering: ReturnType<typeof createListBase>["ordering"];
+    pagination: ReturnType<typeof createListBase>["pagination"];
+    data: ReturnType<typeof createListBase>["data"];
+    error: ReturnType<typeof createListBase>["error"];
+    isLoading: ReturnType<typeof createListBase>["isLoading"];
+    execute: ReturnType<typeof createListBase>["execute"];
+    _rawResponse: UseFzFetchReturn<PaginatedResponse<T>>;
+  }
+
   const baseResult = createListBase<PaginatedResponse<T>, T>(
     basePath,
     paramsWithPagination,
     listOptions,
     (response, throwOnError) =>
       normalizePaginatedListResponse<T>(response, dataKey, throwOnError),
-  );
+  ) as InternalListBaseResult;
 
   // Extract meta from paginated response using raw response
   const meta = computed((): PaginationMeta | null => {
-    const rawResponse = (baseResult as any)._rawResponse;
+    const rawResponse = baseResult._rawResponse;
     if (!rawResponse) return null;
 
     const paginatedData = rawResponse.data.value;
@@ -194,6 +213,13 @@ export const createPaginatedListAction = <T>(
   // Helper function to change the page
   // Updates pagination.page which will trigger automatic refetch if autoUpdate is enabled
   const handlePageChange = (page: number): void => {
+    // Validate page number must be >= 1
+    if (page < 1) {
+      console.warn(
+        `[handlePageChange] Page number must be >= 1, got ${page}. Ignoring invalid page change.`,
+      );
+      return;
+    }
     baseResult.pagination.page = page;
     // The watch in createListBase will automatically trigger refetch if autoUpdate is enabled
   };
@@ -258,7 +284,8 @@ export const createPaginatedListAction = <T>(
   };
 
   // Remove _rawResponse from return (internal use only)
-  const { _rawResponse, ...result } = baseResult as any;
+  // Type-safe destructuring using the InternalListBaseResult type
+  const { _rawResponse: _unusedRawResponse, ...result } = baseResult;
 
   return {
     ...result,
