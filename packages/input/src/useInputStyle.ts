@@ -18,10 +18,13 @@ export default function useInputStyle(
 
   const staticContainerClass = `flex justify-between w-full items-center px-10 border-1 rounded gap-8 text-left has-[:focus]:border-blue-600 relative`;
 
-  const computedContainerClass = computed(() => [
-    props.variant?.value === 'normal' ? mapContainerClass[props.size?.value!] : 'h-40 pr-6',
-    evaluateProps(),
-  ]);
+  const computedContainerClass = computed(() => {
+    const size = props.size?.value ?? 'md';
+    return [
+      props.variant?.value === 'normal' ? mapContainerClass[size] : 'h-40 pr-6',
+      evaluateProps(),
+    ];
+  });
 
   const computedLabelClass = computed(() => [
     props.disabled?.value ? "text-grey-300" : "text-core-black",
@@ -29,12 +32,11 @@ export default function useInputStyle(
 
   const staticInputClass = `peer w-full bg-transparent border-0 focus:outline-none cursor-[inherit] focus:ring-0 truncate`;
 
-  const textSizeMap = {
-    xl: 'text-lg',
+  const textSizeMap: Record<"sm" | "md" | "lg", string> = {
     lg: 'text-base',
     md: 'text-sm',
     sm: 'text-xs'
-  }
+  };
 
   const showNormalPlaceholder = computed(() => {
     return !(props.variant?.value === 'floating-label') ||
@@ -43,7 +45,8 @@ export default function useInputStyle(
 
   const computedInputClass = computed(() => {
     if (props.variant?.value === 'floating-label' && props.size?.value) {
-      return [textSizeMap[props.size.value]];
+      const size = props.size.value;
+      return textSizeMap[size] ? [textSizeMap[size]] : [];
     }
     return [];
   });

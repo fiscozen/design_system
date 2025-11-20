@@ -16,6 +16,7 @@ import { FzInputProps } from "./types";
 import { FzIcon } from "@fiscozen/icons";
 import { FzIconButton } from "@fiscozen/button";
 import useInputStyle from "./useInputStyle";
+import { generateInputId } from "./utils";
 
 const props = withDefaults(defineProps<FzInputProps>(), {
   size: "md",
@@ -28,7 +29,7 @@ const props = withDefaults(defineProps<FzInputProps>(), {
 const model = defineModel<string>();
 const containerRef: Ref<HTMLElement | null> = ref(null);
 const inputRef: Ref<HTMLInputElement | null> = ref(null);
-const uniqueId = `fz-input-${Math.random().toString(36).slice(2, 9)}`;
+const uniqueId = generateInputId();
 
 const {
   staticContainerClass,
@@ -89,6 +90,55 @@ const emit = defineEmits([
   "fzinput:left-icon-click",
   "fzinput:right-icon-click",
 ]);
+
+/**
+ * Handles container interaction (click or keyboard) to focus the input
+ *
+ * Makes the entire container area clickable and keyboard-accessible for better UX,
+ * especially useful for floating-label variant and mobile devices.
+ */
+const handleContainerInteraction = () => {
+  if (!props.disabled && inputRef.value) {
+    inputRef.value.focus();
+  }
+};
+
+/**
+ * Handles keyboard events on container to focus input
+ *
+ * Supports Enter and Space keys following accessibility best practices.
+ */
+const handleContainerKeydown = (e: KeyboardEvent) => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    handleContainerInteraction();
+  }
+};
+
+/**
+ * Handles keyboard events on clickable icons
+ *
+ * Supports Enter and Space keys following accessibility best practices.
+ */
+const handleIconKeydown = (e: KeyboardEvent, emitEvent: string) => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    emit(emitEvent as "fzinput:left-icon-click" | "fzinput:right-icon-click");
+  }
+};
+
+/**
+ * Computed property to determine if left icon is clickable and accessible
+ */
+const isLeftIconClickable = computed(() => !!props.leftIcon);
+const isLeftIconAccessible = computed(() => isLeftIconClickable.value && !!props.leftIconAriaLabel);
+
+/**
+ * Computed property to determine if right icon is clickable and accessible
+ */
+const isRightIconClickable = computed(() => !!props.rightIcon && !props.rightIconButton);
+const isRightIconAccessible = computed(() => isRightIconClickable.value && !!props.rightIconAriaLabel);
+
 defineExpose({
   inputRef,
   containerRef,
@@ -110,7 +160,9 @@ defineExpose({
     <div
       :class="[staticContainerClass, computedContainerClass]"
       ref="containerRef"
-      @click="inputRef?.focus()"
+      :tabindex="disabled ? undefined : 0"
+      @click="handleContainerInteraction"
+      @keydown="handleContainerKeydown"
     >
       <slot name="left-icon">
         <FzIcon
@@ -118,8 +170,13 @@ defineExpose({
           :name="leftIcon"
           :size="size"
           :variant="leftIconVariant"
-          @click.stop="emit('fzinput:left-icon-click')"
+          :role="isLeftIconAccessible ? 'button' : undefined"
+          :aria-label="isLeftIconAccessible ? leftIconAriaLabel : undefined"
+          :aria-disabled="isLeftIconAccessible && disabled ? 'true' : undefined"
+          :tabindex="isLeftIconAccessible && !disabled ? 0 : undefined"
           :class="leftIconClass"
+          @click.stop="emit('fzinput:left-icon-click')"
+          @keydown="isLeftIconAccessible ? (e: KeyboardEvent) => handleIconKeydown(e, 'fzinput:left-icon-click') : undefined"
         />
       </slot>
       <div class="flex flex-col space-around min-w-0 grow">
@@ -130,7 +187,7 @@ defineExpose({
         >
         <input
           :type="type"
-          :required="required ? required : false"
+          :required="required"
           :disabled="disabled"
           :readonly="readonly"
           :placeholder="showNormalPlaceholder ? placeholder : ''"
@@ -157,14 +214,20 @@ defineExpose({
           name="check"
           :size="size"
           class="text-semantic-success"
+          aria-hidden="true"
         />
         <FzIcon
           v-if="rightIcon && !rightIconButton"
           :name="rightIcon"
           :size="size"
           :variant="rightIconVariant"
-          @click.stop="emit('fzinput:right-icon-click')"
+          :role="isRightIconAccessible ? 'button' : undefined"
+          :aria-label="isRightIconAccessible ? rightIconAriaLabel : undefined"
+          :aria-disabled="isRightIconAccessible && disabled ? 'true' : undefined"
+          :tabindex="isRightIconAccessible && !disabled ? 0 : undefined"
           :class="rightIconClass"
+          @click.stop="emit('fzinput:right-icon-click')"
+          @keydown="isRightIconAccessible ? (e: KeyboardEvent) => handleIconKeydown(e, 'fzinput:right-icon-click') : undefined"
         />
         <FzIconButton
           v-if="rightIcon && rightIconButton"
