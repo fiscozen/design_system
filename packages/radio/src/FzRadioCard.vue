@@ -37,14 +37,14 @@ const labelClass = computed(() => ({
     props.orientation === "horizontal" && props.modelValue === props.value,
   "pt-[11px]": props.modelValue === props.value,
   "gap-12": props.orientation === "horizontal",
-  "border-2 px-[11px] border-blue-500 ": props.modelValue === props.value,
-  "border-1 border-grey-300": props.modelValue !== props.value,
+  "border-2 px-[11px] border-blue-500 ": props.modelValue === props.value && !props.disabled,
+  "border-1 border-grey-300": (props.modelValue !== props.value || props.disabled),
   "before:absolute": props.orientation === "vertical",
   "before:top-24": props.orientation === "vertical",
   "before:left-24": props.orientation === "vertical",
   "before:self-center": props.orientation === "horizontal",
   "before:shrink-0": props.orientation === "horizontal",
-  "hover:bg-[#f9faff] peer-checked:bg-[#f9faff]": !props.disabled,
+  "hover:bg-[#f9faff] peer-focus:outline peer-focus:bg-[#f9faff] peer-focus:outline-blue-200 peer-focus:outline-2 peer-checked:bg-[#f9faff]": !props.disabled,
   "before:!hidden": !computedHasRadio.value,
 }));
 
@@ -80,6 +80,7 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
           {
             'shrink-0 size-[58px]': orientation === 'horizontal',
             'w-full h-[252px]': orientation === 'vertical',
+            'opacity-30': props.disabled,
           },
         ]"
         :title="imageAlt || ''"
@@ -97,14 +98,13 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
           { 'mt-20': orientation === 'vertical' },
         ]"
       >
-        <div class="fz-input flex flex-col w-full grow-0 min-w-0">
-          <p :class="['font-medium break-words']">
+        <div class="justify-center flex flex-col w-full grow-0 min-w-0" >
+          <p :class="['font-medium break-words !m-0 !leading-[20px]', { 'text-grey-300': props.disabled }]">
             {{ title }}
           </p>
           <p
             v-if="subtitle"
-            :class="['font-normal text-sm text-grey-500 mt-4 break-words']"
-          >
+            :class="['font-normal text-sm mt-4 break-words !m-0 !leading-[16px]', { 'text-grey-300': props.disabled, 'text-grey-500': !props.disabled }]">
             {{ subtitle }}
           </p>
         </div>
@@ -116,6 +116,7 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
             'ml-8': props.orientation === 'vertical',
             'ml-12': props.orientation === 'horizontal',
           }"
+          :disabled="props.disabled"
           :text="tooltip"
           :status="tooltipStatus || 'neutral'"
         >

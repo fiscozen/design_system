@@ -22,6 +22,23 @@ const meta = {
       control: {
         type: 'select'
       }
+    },
+    disabled: {
+      control: {
+        type: 'boolean'
+      }
+    },
+    hasRadio: {
+      control: {
+        type: 'boolean',
+        defaultValue: true
+      }
+    },
+    radioIcon: {
+      control: {
+        type: 'boolean',
+      },
+      description: 'Deprecated prop, use hasRadio instead'
     }
   }
 } satisfies Meta<typeof FzRadioCard>
@@ -110,7 +127,7 @@ export const HorizontalNoIconNoImage: RadioCardStory = {
     orientation: 'horizontal',
     title: 'RadioCard',
     subtitle: 'This is a Radioccard label',
-    radioIcon: false,
+    hasRadio: false,
     value: 'test3',
     modelValue: radioModel.value
   }
@@ -139,7 +156,7 @@ export const HorizontalNoIconWithImage: RadioCardStory = {
     imageUrl: checkrimg,
     title: 'RadioCard',
     subtitle: 'This is a Radioccard label',
-    radioIcon: false,
+    hasRadio: false,
     value: 'test5',
     modelValue: radioModel.value
   }
@@ -153,7 +170,7 @@ export const HorizontalNoIconNoImageWithTooltip: RadioCardStory = {
     orientation: 'horizontal',
     title: 'RadioCard',
     subtitle: 'This is a Radioccard label',
-    radioIcon: false,
+    hasRadio: false,
     value: 'test6',
     modelValue: radioModel.value,
     tooltip: 'this is a tooltip'
@@ -168,7 +185,7 @@ export const HorizontalNoImageWithTooltip: RadioCardStory = {
     orientation: 'horizontal',
     title: 'RadioCard',
     subtitle: 'This is a Radioccard label',
-    radioIcon: true,
+    hasRadio: true,
     value: 'test7',
     modelValue: radioModel.value,
     tooltip: 'this is a tooltip'
@@ -184,7 +201,7 @@ export const HorizontalNoIconWithImageWithTooltip: RadioCardStory = {
     orientation: 'horizontal',
     title: 'RadioCard',
     subtitle: 'This is a Radioccard label',
-    radioIcon: false,
+    hasRadio: false,
     value: 'test8',
     modelValue: radioModel.value,
     tooltip: 'this is a tooltip'
@@ -212,7 +229,7 @@ export const VerticalWithIconWithImage: RadioCardStory = {
     label: 'Radio',
     imageUrl: checkrimg,
     orientation: 'vertical',
-    radioIcon: true,
+    hasRadio: true,
     title: 'RadioCard',
     subtitle: 'This is a Radioccard label',
     value: 'test10',
@@ -242,40 +259,12 @@ export const VerticalWithIconWithImageWithTooltip: RadioCardStory = {
     label: 'Radio',
     imageUrl: checkrimg,
     orientation: 'vertical',
-    radioIcon: true,
+    hasRadio: true,
     title: 'RadioCard',
     subtitle: 'This is a Radioccard label',
     value: 'test12',
     modelValue: radioModel.value,
     tooltip: 'this is a tooltip'
-  }
-}
-
-export const WithHasRadio: RadioCardStory = {
-  ...Template,
-  args: {
-    size: 'md',
-    label: 'Radio',
-    orientation: 'horizontal',
-    title: 'RadioCard',
-    subtitle: 'This is a Radioccard label',
-    hasRadio: true,
-    value: 'test15',
-    modelValue: radioModel.value
-  }
-}
-
-export const WithoutHasRadio: RadioCardStory = {
-  ...Template,
-  args: {
-    size: 'md',
-    label: 'Radio',
-    orientation: 'horizontal',
-    title: 'RadioCard',
-    subtitle: 'This is a Radioccard label',
-    hasRadio: false,
-    value: 'test16',
-    modelValue: radioModel.value
   }
 }
 
@@ -318,5 +307,36 @@ export const ToneError: RadioCardStory = {
     tone: 'error',
     value: 'test19',
     modelValue: radioModel.value
+  }
+}
+
+export const Disabled: RadioCardStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Radio',
+    orientation: 'horizontal',
+    title: 'RadioCard',
+    subtitle: 'This is a Radioccard label',
+    value: 'test20',
+    disabled: true,
+  }
+}
+
+export const Focused: RadioCardStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Radio',
+    orientation: 'horizontal',
+    title: 'RadioCard',
+    subtitle: 'This is a Radioccard label'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const radio = canvas.getByRole('radio')
+    await expect(radio).toBeInTheDocument()
+
+    await userEvent.tab()
   }
 }
