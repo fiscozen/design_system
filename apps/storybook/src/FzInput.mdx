@@ -125,6 +125,12 @@ import { FzInput } from '@fiscozen/input'
       <td>Button variant for left icon when rendered as clickable button</td>
     </tr>
     <tr>
+      <td><code>leftIconAriaLabel</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Accessible label for left icon when clickable. Required for screen reader accessibility</td>
+    </tr>
+    <tr>
       <td><code>rightIcon</code></td>
       <td><code>string</code></td>
       <td>-</td>
@@ -153,6 +159,12 @@ import { FzInput } from '@fiscozen/input'
       <td><code>IconButtonVariant</code></td>
       <td><code>'invisible'</code></td>
       <td>Button variant for right icon when rightIconButton is true</td>
+    </tr>
+    <tr>
+      <td><code>rightIconAriaLabel</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Accessible label for right icon when clickable. Required for screen reader accessibility</td>
     </tr>
     <tr>
       <td><code>pattern</code></td>
@@ -380,6 +392,7 @@ Right icon can be rendered as a clickable button (useful for password visibility
     rightIcon="eye"
     :rightIconButton="true"
     rightIconButtonVariant="secondary"
+    rightIconAriaLabel="Toggle password visibility"
     @fzinput:right-icon-click="togglePasswordVisibility"
     v-model="password" 
   />
@@ -395,6 +408,20 @@ const togglePasswordVisibility = () => {
   passwordType.value = passwordType.value === 'password' ? 'text' : 'password'
 }
 </script>
+```
+
+### Clickable Icons with Accessibility
+
+When icons are clickable, provide `leftIconAriaLabel` or `rightIconAriaLabel` for keyboard accessibility:
+
+```vue
+<FzInput 
+  label="Search" 
+  leftIcon="magnifying-glass"
+  leftIconAriaLabel="Open search options"
+  @fzinput:left-icon-click="openSearchOptions"
+  v-model="search" 
+/>
 ```
 
 ### Both Icons
@@ -573,3 +600,134 @@ FzInput is fully accessible and meets WCAG 2.1 AA standards:
 ### Error Message Accessibility
 
 Error messages are rendered with `role="alert"` to ensure screen readers announce them immediately when displayed.
+
+### Clickable Icons Accessibility
+
+When icons are clickable (have click handlers), they should include `leftIconAriaLabel` or `rightIconAriaLabel` props for keyboard accessibility. Without these labels, icons remain clickable via mouse but are not accessible via keyboard navigation.
+
+## FzCurrencyInput
+
+Specialized currency input component built on FzInput with number formatting, validation, and step controls.
+
+### Features
+
+- Locale-aware number formatting (decimal and thousand separators)
+- Min/max value constraints
+- Step quantization with arrow buttons
+- Intelligent paste parsing (detects decimal/thousand separators automatically)
+- Configurable decimal places
+- Keyboard-accessible step controls
+
+### Basic Usage
+
+```vue
+<script setup lang="ts">
+import { FzCurrencyInput } from '@fiscozen/input'
+import { ref } from 'vue'
+
+const amount = ref<number | undefined>(undefined)
+</script>
+
+<template>
+  <FzCurrencyInput 
+    label="Amount" 
+    v-model:amount="amount" 
+    :min="0" 
+    :max="1000" 
+  />
+</template>
+```
+
+### With Step Controls
+
+When `step` prop is provided, arrow buttons appear on the right to increment/decrement the value. The buttons are fully keyboard-accessible.
+
+```vue
+<FzCurrencyInput 
+  label="Quantity" 
+  v-model:amount="quantity" 
+  :step="5"
+  :forceStep="true"
+/>
+```
+
+### Props
+
+FzCurrencyInput extends FzInput props (except `type` and `modelValue`) and adds:
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>nullOnEmpty</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>When true, empty input values are converted to null instead of 0</td>
+    </tr>
+    <tr>
+      <td><code>minimumFractionDigits</code></td>
+      <td><code>number</code></td>
+      <td><code>2</code></td>
+      <td>Minimum decimal places in formatted output. Used by Intl.NumberFormat.</td>
+    </tr>
+    <tr>
+      <td><code>maximumFractionDigits</code></td>
+      <td><code>number</code></td>
+      <td><code>2</code></td>
+      <td>Maximum decimal places in formatted output. Used by Intl.NumberFormat.</td>
+    </tr>
+    <tr>
+      <td><code>min</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Minimum allowed numeric value. Values below this are clamped to min</td>
+    </tr>
+    <tr>
+      <td><code>max</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Maximum allowed numeric value. Values above this are clamped to max</td>
+    </tr>
+    <tr>
+      <td><code>step</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Step increment for arrow buttons and quantization. When forceStep is true, values are rounded to nearest step</td>
+    </tr>
+    <tr>
+      <td><code>forceStep</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>When true, enforces quantization: values are automatically rounded to nearest step multiple</td>
+    </tr>
+  </tbody>
+</table>
+
+### V-Model Type
+
+FzCurrencyInput accepts `number | string | undefined` in v-model for retrocompatibility, but always emits `number | undefined`. String values will show a deprecation warning in the console.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+// Recommended: use number
+const amount = ref<number | undefined>(undefined)
+
+// Also works (deprecated): string values
+const amountString = ref<string | undefined>(undefined)
+</script>
+
+<template>
+  <FzCurrencyInput v-model:amount="amount" />
+  <!-- String values will show deprecation warning -->
+  <FzCurrencyInput v-model:amount="amountString" />
+</template>
+```
