@@ -52,6 +52,25 @@ export interface SetupFzFetcherOptions {
   deduplication?: boolean;
 
   /**
+   * Debounce delay in milliseconds for autoUpdate watch in list actions
+   *
+   * When autoUpdate is enabled, changes to filters, ordering, or pagination
+   * trigger automatic refetch. This delay groups rapid changes together to
+   * prevent duplicate requests.
+   *
+   * @default 100
+   *
+   * @example
+   * // Disable debounce (not recommended)
+   * autoUpdateDebounceDelay: 0
+   *
+   * @example
+   * // Increase debounce for slower networks
+   * autoUpdateDebounceDelay: 200
+   */
+  autoUpdateDebounceDelay?: number;
+
+  /**
    * Request interceptor function
    *
    * Called before each request is sent. Can modify the request (URL, headers, body, etc.)

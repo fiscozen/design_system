@@ -5,6 +5,7 @@ import type { QueryActionReturn } from "./types";
 import type { PaginationParams, FilterParams, SortParams } from "../list/types";
 import type { UseActionOptions } from "./types";
 import { normalizeOptions, normalizeParams } from "./normalize";
+import { getGlobalAutoUpdateDebounceDelay } from "../../http/setup/state";
 
 /**
  * Base function for creating list actions with configurable response type
@@ -98,6 +99,9 @@ export const createListBase = <TResponse, TData>(
   if (autoUpdate) {
     // Use a flag to prevent race conditions when params change rapidly
     let isExecuting = false;
+    let watchTimeout: ReturnType<typeof setTimeout> | null = null;
+    const debounceDelay = getGlobalAutoUpdateDebounceDelay();
+
     watch(
       [filters, ordering, pagination],
       async () => {
@@ -105,12 +109,24 @@ export const createListBase = <TResponse, TData>(
         if (isExecuting || response.isFetching.value) {
           return;
         }
-        isExecuting = true;
-        try {
-          await response.execute(throwOnError);
-        } finally {
-          isExecuting = false;
+
+        // Cancel previous timeout if exists (debounce: group rapid changes)
+        if (watchTimeout !== null) {
+          clearTimeout(watchTimeout);
+          watchTimeout = null;
         }
+
+        // Debounce: wait for debounceDelay before executing
+        // If more changes arrive during this time, cancel and restart
+        watchTimeout = setTimeout(async () => {
+          isExecuting = true;
+          watchTimeout = null; // Reset timeout reference
+          try {
+            await response.execute(throwOnError);
+          } finally {
+            isExecuting = false;
+          }
+        }, debounceDelay);
       },
       { deep: true, immediate: false },
     );

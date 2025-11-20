@@ -324,6 +324,34 @@ describe("createPaginatedListAction", () => {
       const url = new URL(callUrl);
       expect(url.searchParams.get("page")).toBe("2");
     });
+
+    it("should reject invalid page numbers (< 1)", () => {
+      const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const { pagination, handlePageChange } = createPaginatedListAction<User>(
+        "users",
+        {
+          pagination: { page: 1, pageSize: 25 },
+        },
+      );
+
+      const initialPage = pagination.page;
+      expect(initialPage).toBe(1);
+
+      // Test negative value
+      handlePageChange(-1);
+      expect(pagination.page).toBe(1); // Should remain unchanged
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining("[handlePageChange] Page number must be >= 1"),
+      );
+
+      // Test zero
+      handlePageChange(0);
+      expect(pagination.page).toBe(1); // Should remain unchanged
+      expect(consoleSpy).toHaveBeenCalledTimes(2);
+
+      consoleSpy.mockRestore();
+    });
   });
 
   describe("Pagination synchronization", () => {
