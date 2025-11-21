@@ -1,41 +1,44 @@
-import { computed, ToRefs, Ref } from "vue";
-import { FzInputProps } from "./types";
+import { computed, ToRefs, Ref, ComputedRef } from "vue";
+import { FzInputProps, type InputEnvironment } from "./types";
 
 export default function useInputStyle(
   props: ToRefs<FzInputProps>,
   container: Ref<HTMLElement | null>,
-  model: Ref<string | undefined>
+  model: Ref<string | undefined>,
+  effectiveEnvironment: ComputedRef<InputEnvironment>
 ) {
   const containerWidth = computed(() =>
     container.value ? `${container.value.clientWidth}px` : "auto",
   );
 
-  const mapContainerClass = {
-    sm: "h-28 text-sm",
-    md: "h-32 text-base",
-    lg: "h-40 text-lg",
+  const mapContainerClass: Record<InputEnvironment, string> = {
+    backoffice: "h-32",
+    frontoffice: "h-44",
   };
 
-  const staticContainerClass = `flex justify-between w-full items-center px-10 border-1 rounded gap-8 text-left has-[:focus]:border-blue-600 relative`;
+  // Common styles: padding 10px, border-radius 4px, border 1px solid grey-300, background white, color black
+  const staticContainerClass = `flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none`;
 
   const computedContainerClass = computed(() => {
-    const size = props.size?.value ?? 'md';
+    const env = effectiveEnvironment.value;
     return [
-      props.variant?.value === 'normal' ? mapContainerClass[size] : 'h-40 pr-6',
+      props.variant?.value === 'normal' ? mapContainerClass[env] : mapContainerClass.frontoffice,
       evaluateProps(),
     ];
   });
 
   const computedLabelClass = computed(() => [
-    props.disabled?.value ? "text-grey-300" : "text-core-black",
+    "font-normal text-base",
+    (props.disabled?.value || props.readonly?.value) ? "text-grey-300" : "text-core-black",
   ]);
 
-  const staticInputClass = `peer w-full bg-transparent border-0 focus:outline-none cursor-[inherit] focus:ring-0 truncate`;
+  // Input styles: transparent background (inherits from container), no border, placeholder color grey-300
+  const staticInputClass = `peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base`;
 
-  const textSizeMap: Record<"sm" | "md" | "lg", string> = {
-    lg: 'text-base',
-    md: 'text-sm',
-    sm: 'text-xs'
+  // Input text size: 16px for both environments (as per design specs)
+  const textSizeMap: Record<InputEnvironment, string> = {
+    backoffice: 'text-base',
+    frontoffice: 'text-base',
   };
 
   const showNormalPlaceholder = computed(() => {
@@ -44,34 +47,56 @@ export default function useInputStyle(
   });
 
   const computedInputClass = computed(() => {
-    if (props.variant?.value === 'floating-label' && props.size?.value) {
-      const size = props.size.value;
-      return textSizeMap[size] ? [textSizeMap[size]] : [];
+    const env = effectiveEnvironment.value;
+    if (props.variant?.value === 'floating-label') {
+      return [textSizeMap[env]];
     }
     return [];
   });
 
+  // Help text styles: Inter, 16px, normal, 400, line-height 20px (125%), color grey-500
   const computedHelpClass = computed(() => [
-    props.size?.value === "sm" ? "text-xs" : "",
-    props.size?.value === "md" ? "text-sm" : "",
-    props.size?.value === "lg" ? "text-base" : "",
-    props.disabled?.value ? "text-grey-300" : "text-grey-500",
-  ]);
-  const computedErrorClass = computed(() => [
-    props.size?.value === "sm" ? "text-xs" : "",
-    props.size?.value === "md" ? "text-sm" : "",
-    props.size?.value === "lg" ? "text-base" : "",
-    props.disabled?.value ? "text-grey-300" : "text-core-black",
+    "font-normal text-base",
+    (props.disabled?.value || props.readonly?.value) ? "text-grey-300" : "text-grey-500",
   ]);
 
+  // Error text styles: same as helpText (Inter, 16px, normal, 400, line-height 20px) but with core-black color
+  const computedErrorClass = computed(() => [
+    "font-normal text-base",
+    (props.disabled?.value || props.readonly?.value) ? "text-grey-300" : "text-core-black",
+  ]);
+
+  /**
+   * Helper functions to identify UI states.
+   * 
+   * These functions explicitly describe when each UI representation should be applied,
+   * making the component logic more declarative and maintainable.
+   * Priority order: error (highest) > disabled/readonly > default
+   */
+  const isError = (p: typeof props) => !!p.error?.value;
+  const isDisabled = (p: typeof props) => !!p.disabled?.value || !!p.readonly?.value;
+  const isDefault = (p: typeof props) => !p.error?.value && !p.disabled?.value && !p.readonly?.value;
+
+  /**
+   * Evaluates container styles based on props with priority order:
+   * 1. error (highest priority)
+   * 2. disabled/readonly (same styling)
+   * 3. default
+   * 
+   * Focus states are handled separately:
+   * - error+focus: border-semantic-error-300
+   * - default+focus: border-blue-600
+   */
   const evaluateProps = () => {
     switch (true) {
-      case props.disabled?.value:
+      case isError(props):
+        return "border-semantic-error-200 has-[:focus]:border-semantic-error-300 bg-core-white text-core-black cursor-text";
+      
+      case isDisabled(props):
         return "bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed";
-      case props.error?.value:
-        return "border-semantic-error bg-white text-core-black cursor-text";
-      default:
-        return "border-grey-300 bg-white text-core-black cursor-text";
+      
+      case isDefault(props):
+        return "border-grey-300 has-[:focus]:border-blue-600 bg-core-white text-core-black cursor-text";
     }
   };
 

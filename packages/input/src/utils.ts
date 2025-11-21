@@ -4,6 +4,22 @@
  * @module @fiscozen/input/utils
  */
 
+import type { InputEnvironment } from "./types";
+
+type InputSize = "sm" | "md" | "lg";
+
+/**
+ * Maps deprecated InputSize to InputEnvironment
+ * 
+ * Used for backward compatibility when size prop is provided instead of environment.
+ * Size values map to environments: sm/md → backoffice, lg → frontoffice
+ */
+export const sizeToEnvironmentMapping: Record<InputSize, InputEnvironment> = {
+  sm: "backoffice",
+  md: "backoffice",
+  lg: "frontoffice",
+};
+
 /**
  * Internal helper function to generate unique IDs with a given prefix.
  *

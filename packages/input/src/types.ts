@@ -1,24 +1,29 @@
 import { IconButtonVariant } from "@fiscozen/button";
 import { IconSize , IconVariant } from "@fiscozen/icons";
 
+export type InputEnvironment = "backoffice" | "frontoffice";
+
 type FzInputProps = {
   /**
    * Text label displayed above the input field. Overridden by label slot if provided.
    */
   label?: string;
   /**
+   * Environment determining input size and styling
+   * @default 'frontoffice'
+   */
+  environment?: InputEnvironment;
+  /**
    * Visual size affecting height, padding, and text size
-   * @default 'md'
+   *
+   * @deprecated Use the 'environment' prop instead. This prop will be removed in a future version.
+   * Size values map to environments: sm/md → backoffice, lg → frontoffice
    */
   size?: "sm" | "md" | "lg";
   /**
    * Placeholder text shown when input is empty. Behavior differs based on variant.
    */
   placeholder?: string;
-  /**
-   * Secondary placeholder for floating-label variant. Displays as floating text when input has focus or value.
-   */
-  secondaryPlaceholder?: string;
   /**
    * Marks input as required. Adds asterisk to label and sets native required attribute.
    * @default false
@@ -55,7 +60,13 @@ type FzInputProps = {
    */
   rightIcon?: string;
   /**
+   * Additional CSS classes applied to right icon container
+   */
+  rightIconClass?: string;
+  /**
    * Size override for right icon. If not provided, uses input size mapping.
+   * @deprecated This prop is deprecated and will be removed in a future version.
+   * Icons now have a fixed size of "md". This prop will be ignored.
    */
   rightIconSize?: IconSize;
   /**
@@ -76,6 +87,33 @@ type FzInputProps = {
    * Accessible label for right icon when clickable. Required for screen reader accessibility.
    */
   rightIconAriaLabel?: string;
+  /**
+   * Font Awesome icon name displayed as second icon on the right side of input.
+   * Priority order: valid > secondRightIcon > rightIcon
+   */
+  secondRightIcon?: string;
+  /**
+   * Additional CSS classes applied to second right icon container
+   */
+  secondRightIconClass?: string;
+  /**
+   * Visual style variant for second right icon (solid, regular, light, etc.)
+   */
+  secondRightIconVariant?: IconVariant;
+  /**
+   * Renders second right icon as clickable button instead of static icon
+   * @default false
+   */
+  secondRightIconButton?: boolean;
+  /**
+   * Button variant for second right icon when secondRightIconButton is true
+   * @default 'invisible'
+   */
+  secondRightIconButtonVariant?: IconButtonVariant;
+  /**
+   * Accessible label for second right icon when clickable. Required for screen reader accessibility.
+   */
+  secondRightIconAriaLabel?: string;
   /**
    * Native HTML input type. Determines keyboard layout and validation behavior
    * @default 'text'
@@ -108,10 +146,6 @@ type FzInputProps = {
    * Native maxlength attribute. Limits maximum number of characters
    */
   maxlength?: number;
-  /**
-   * Additional CSS classes applied to right icon container
-   */
-  rightIconClass?: string;
   /**
    * Additional CSS classes applied to left icon container
    */
