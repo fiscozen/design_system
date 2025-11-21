@@ -92,6 +92,7 @@ const model = defineModel<string>();
 const containerRef: Ref<HTMLElement | null> = ref(null);
 const inputRef: Ref<HTMLInputElement | null> = ref(null);
 const uniqueId = generateInputId();
+const isFocused = ref(false);
 
 const {
   staticContainerClass,
@@ -103,7 +104,13 @@ const {
   computedErrorClass,
   containerWidth,
   showNormalPlaceholder,
-} = useInputStyle(toRefs(props), containerRef, model, effectiveEnvironment);
+} = useInputStyle(
+  toRefs(props),
+  containerRef,
+  model,
+  effectiveEnvironment,
+  isFocused
+);
 
 const slots = defineSlots<{
   label?: () => unknown;
@@ -314,8 +321,18 @@ defineExpose({
           :aria-disabled="isReadonlyOrDisabled ? 'true' : 'false'"
           :aria-labelledby="label ? `${uniqueId}-label` : undefined"
           :aria-describedby="ariaDescribedBy"
-          @blur="(e) => $emit('blur', e)"
-          @focus="(e) => $emit('focus', e)"
+          @blur="
+            (e) => {
+              isFocused = false;
+              $emit('blur', e);
+            }
+          "
+          @focus="
+            (e) => {
+              isFocused = true;
+              $emit('focus', e);
+            }
+          "
           @paste="(e) => $emit('paste', e)"
         />
       </div>
