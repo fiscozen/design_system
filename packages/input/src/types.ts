@@ -153,41 +153,67 @@ type FzInputProps = {
 };
 
 interface FzCurrencyInputProps
-  extends Omit<FzInputProps, "type" | "modelValue"> {
+  extends Omit<
+    FzInputProps,
+    | "type"
+    | "modelValue"
+    | "rightIcon"
+    | "rightIconSize"
+    | "rightIconVariant"
+    | "rightIconButton"
+    | "rightIconButtonVariant"
+    | "rightIconAriaLabel"
+    | "rightIconClass"
+    | "secondRightIcon"
+    | "secondRightIconClass"
+    | "secondRightIconVariant"
+    | "secondRightIconButton"
+    | "secondRightIconButtonVariant"
+    | "secondRightIconAriaLabel"
+  > {
   /**
-   * When true, empty input values are converted to null instead of 0
+   * Converts empty input to null instead of 0
    * @default false
    */
   nullOnEmpty?: boolean;
   /**
-   * Minimum decimal places in formatted output. Used by Intl.NumberFormat.
+   * Minimum decimal places in formatted output
    * @default 2
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#digit_options
    */
   minimumFractionDigits?: number;
   /**
-   * Maximum decimal places in formatted output. Used by Intl.NumberFormat.
+   * Maximum decimal places in formatted output
    * @default 2
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#digit_options
    */
   maximumFractionDigits?: number;
   /**
-   * Minimum allowed numeric value. Values below this are clamped to min
+   * Minimum allowed value. Values below this are clamped to min
    */
   min?: number;
   /**
-   * Maximum allowed numeric value. Values above this are clamped to max
+   * Maximum allowed value. Values above this are clamped to max
    */
   max?: number;
   /**
-   * Step increment for arrow buttons and quantization. When forceStep is true, values are rounded to nearest step
+   * Step increment for arrow buttons. When forceStep is true, values are rounded to nearest step multiple
+   * @default 1
    */
   step?: number;
   /**
-   * When true, enforces quantization: values are automatically rounded to nearest step multiple
+   * Enforces quantization: values are automatically rounded to nearest step multiple
    * @default false
    */
   forceStep?: boolean;
+  /**
+   * Custom accessible label for step up button. If not provided, uses default label.
+   */
+  stepUpAriaLabel?: string;
+  /**
+   * Custom accessible label for step down button. If not provided, uses default label.
+   */
+  stepDownAriaLabel?: string;
 }
 
 export { FzInputProps, FzCurrencyInputProps };

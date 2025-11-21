@@ -9,7 +9,7 @@
  *
  * @component
  * @example
- * <FzCurrencyInput label="Amount" v-model:amount="value" :min="0" :max="1000" />
+ * <FzCurrencyInput label="Amount" v-model="value" :min="0" :max="1000" />
  */
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import FzInput from "./FzInput.vue";
@@ -19,10 +19,9 @@ import { FzIcon } from "@fiscozen/icons";
 
 const fzInputRef = ref<InstanceType<typeof FzInput>>();
 /**
- * Internal model for FzInput component (string format)
+ * String representation for FzInput display
  *
- * FzInput works with strings, so we maintain a string representation
- * that gets formatted/parsed to/from the number model.
+ * FzInput expects strings, so we maintain formatted string while model is number.
  */
 const fzInputModel = ref<string | undefined>();
 const containerRef = computed(() => fzInputRef.value?.containerRef);
@@ -30,6 +29,7 @@ const inputRef = computed(() => fzInputRef.value?.inputRef);
 const props = withDefaults(defineProps<FzCurrencyInputProps>(), {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
+  step: 1,
 });
 const {
   inputRef: currencyInputRef,
@@ -45,31 +45,19 @@ const {
   step: props.step,
 });
 
-defineEmits<{
-  "update:amount": [value: number | undefined];
-}>();
-
 /**
- * V-model for amount value
+ * Currency value model
  *
- * Accepts number | string | undefined for retrocompatibility,
- * but always emits number | undefined.
- *
- * We use a union type for input compatibility, but internally
- * normalize to number | undefined.
+ * Accepts number | string | undefined for retrocompatibility, always emits number | undefined.
+ * String inputs are deprecated and trigger console.warn.
  */
-const model = defineModel<number | string | undefined>("amount");
+const model = defineModel<number | string | undefined>();
 
 /**
- * Handles paste events with intelligent separator detection
+ * Parses pasted text with automatic separator detection
  *
- * Parses pasted text by detecting decimal and thousand separators using heuristics:
- * - Multiple different separators: rightmost is decimal
- * - Multiple same separators: thousand separator
- * - Single separator with <3 digits after: decimal separator
- * - Single separator with 3+ digits after: ambiguous, uses default formatting
- *
- * Normalizes to dot decimal separator before parsing, then formats using locale settings.
+ * Detects decimal/thousand separators using heuristics (multiple different = rightmost is decimal,
+ * multiple same = thousand, single with <3 digits after = decimal). Normalizes to dot before parsing.
  */
 const onPaste = (e: ClipboardEvent) => {
   e.preventDefault();
@@ -78,8 +66,7 @@ const onPaste = (e: ClipboardEvent) => {
     return;
   }
 
-  // Validate clipboard data availability
-  if (!e.clipboardData || !e.clipboardData.getData) {
+  if (!e.clipboardData?.getData) {
     console.warn(
       "[FzCurrencyInput] Paste event missing clipboardData. Paste operation ignored."
     );
@@ -94,17 +81,16 @@ const onPaste = (e: ClipboardEvent) => {
     return;
   }
 
-  // Handle empty or whitespace-only pasted text
-  if (!rawPastedText || !rawPastedText.trim()) {
+  if (!rawPastedText?.trim()) {
     return;
   }
 
+  // Match all comma and dot separators for heuristic detection
   const separatorRegex = /[,.]/g;
   const separators: string[] = [...rawPastedText.matchAll(separatorRegex)].map(
     (regexRes) => regexRes[0]
   );
 
-  // If no separators found, treat as integer and format directly
   if (separators.length === 0) {
     try {
       const safeNum = parse(rawPastedText.trim());
@@ -130,33 +116,29 @@ const onPaste = (e: ClipboardEvent) => {
   let decimalSeparator = ".";
   let thousandSeparator = "";
 
-  // case 1: there are 2 different separators pasted, therefore we can assume the rightmost is the decimal separator
+  // Heuristic 1: Multiple different separators → rightmost is decimal
   if (uniqueSeparators.size > 1) {
     decimalSeparator = separators[separators.length - 1];
     thousandSeparator = separators[0];
   }
 
-  // case 2: there are multiple instances of the same separator, therefore it must be the thousand separator
+  // Heuristic 2: Multiple same separator → thousand separator
+  // Heuristic 3: Single separator with <3 digits after → decimal separator
   if (uniqueSeparators.size === 1) {
     if (separators.length > 1) {
       thousandSeparator = separators[0];
     } else {
-      // case 3: there is only one instance of a separator with < 3 digits afterwards (must be decimal separator)
       const unknownSeparator = separators[0];
       const splitted = rawPastedText.split(unknownSeparator);
-
-      // Validate that split produced at least 2 parts before accessing splitted[1]
       if (splitted.length > 1 && splitted[1].length !== 3) {
         decimalSeparator = unknownSeparator;
       }
-      // If splitted[1].length === 3, it's ambiguous - use default formatting
+      // If exactly 3 digits after separator, ambiguous → use default formatting
     }
   }
 
-  // Normalize separators: remove thousand separator and replace decimal with dot
-  // Use RegExp with escaped separator instead of replaceAll() for TypeScript compatibility
-  // Escape special regex characters (., *, +, ?, ^, $, {, }, (, ), |, [, ], \) to treat separator as literal string
-  // This ensures that separators like "." or "," are matched literally, not as regex metacharacters
+  // Normalize: remove thousand separator, replace decimal with dot
+  // Escape regex special chars to treat separators as literal strings
   let safeText = rawPastedText
     .replace(
       new RegExp(thousandSeparator.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
@@ -172,8 +154,6 @@ const onPaste = (e: ClipboardEvent) => {
 
   try {
     const safeNum = parse(safeText);
-
-    // Validate parsed number
     if (isNaN(safeNum) || !isFinite(safeNum)) {
       console.warn(
         `[FzCurrencyInput] Invalid number parsed from paste: "${rawPastedText}". Normalized to "${safeText}". Paste operation ignored.`
@@ -195,7 +175,7 @@ const onPaste = (e: ClipboardEvent) => {
 onMounted(() => {
   currencyInputRef.value = inputRef.value;
   nextTick(() => {
-    // Initialize fzInputModel from input value or model value
+    // Sync initial value: prefer existing input value, otherwise format model value
     if (inputRef.value?.value) {
       fzInputModel.value = inputRef.value.value;
     } else if (model.value !== undefined) {
@@ -207,13 +187,13 @@ onMounted(() => {
 });
 
 /**
- * Increments or decrements value by step amount
+ * Adjusts value by step amount
  *
- * When forceStep is true, rounds current value to nearest step before applying increment.
- * Formats result using locale settings and updates both display and model value.
+ * When forceStep is true, rounds to nearest step before increment. Formats and syncs display/model.
+ * Updates model.value directly to sync with v-model (instead of using emitAmount which emits update:amount).
  */
 const stepUpDown = (amount: number) => {
-  if (!props.step || props.disabled || props.readonly) {
+  if (props.disabled || props.readonly) {
     return;
   }
   const currentValue = normalizeModelValue(model.value) || 0;
@@ -223,13 +203,16 @@ const stepUpDown = (amount: number) => {
   stepVal += amount;
   const safeText = format(stepVal);
   setValue(safeText);
-  emitAmount(stepVal);
+  // Update model directly to sync with v-model
+  isInternalUpdate = true;
+  model.value = stepVal;
+  fzInputModel.value = safeText;
 };
 
 /**
- * Handles keyboard events on step arrows
+ * Keyboard handler for step controls
  *
- * Supports Enter and Space keys following accessibility best practices.
+ * Triggers step adjustment on Enter/Space for accessibility.
  */
 const handleStepKeydown = (e: KeyboardEvent, amount: number) => {
   if (e.key === "Enter" || e.key === " ") {
@@ -238,36 +221,38 @@ const handleStepKeydown = (e: KeyboardEvent, amount: number) => {
   }
 };
 
-/**
- * Computed property to determine if step controls are disabled
- */
 const isStepDisabled = computed(() => props.disabled || props.readonly);
 
 /**
  * Accessible label for step up button
  *
- * Describes the increment action for screen readers.
+ * Uses custom prop if provided, otherwise generates default Italian label with step value.
  */
 const stepUpAriaLabel = computed(() => {
-  const stepValue = props.step || 1;
+  if (props.stepUpAriaLabel) {
+    return props.stepUpAriaLabel;
+  }
+  const stepValue = props.step;
   return `Incrementa di ${stepValue}`;
 });
 
 /**
  * Accessible label for step down button
  *
- * Describes the decrement action for screen readers.
+ * Uses custom prop if provided, otherwise generates default Italian label with step value.
  */
 const stepDownAriaLabel = computed(() => {
-  const stepValue = props.step || 1;
+  if (props.stepDownAriaLabel) {
+    return props.stepDownAriaLabel;
+  }
+  const stepValue = props.step;
   return `Decrementa di ${stepValue}`;
 });
 
 /**
- * Converts model value (number | string | undefined) to number | undefined
+ * Normalizes model value to number | undefined
  *
- * Handles retrocompatibility by parsing strings to numbers.
- * Warns developers when string is provided (deprecated behavior).
+ * Parses strings for retrocompatibility (deprecated, warns developer). Always returns number or undefined.
  */
 const normalizeModelValue = (
   value: number | string | undefined
@@ -290,33 +275,25 @@ const normalizeModelValue = (
 };
 
 /**
- * Watches external model changes and syncs to FzInput string format
+ * Syncs external model changes to FzInput string format
  *
- * Converts number | string | undefined to formatted string for FzInput display.
- * Only syncs when value changes externally (not from user input via useCurrency).
- * useCurrency handles input filtering directly on the input element, so we
- * only need to sync when the model changes from outside.
+ * Converts number to formatted string for display. Skips internal updates (from handleFzInputUpdate)
+ * to avoid loops. useCurrency handles input filtering directly on DOM, so this only handles external changes.
  */
 let isInternalUpdate = false;
 watch(
   () => model.value,
   (newVal, oldVal) => {
-    // Skip if this is an internal update from handleFzInputUpdate
     if (isInternalUpdate) {
       isInternalUpdate = false;
       return;
     }
 
-    // Only sync if value changed externally
     const numValue = normalizeModelValue(newVal);
     const oldNumValue = normalizeModelValue(oldVal);
-
-    // Skip if values are effectively the same
     if (numValue === oldNumValue) {
       return;
     }
-
-    // Update fzInputModel and input element value
     if (numValue === undefined) {
       fzInputModel.value = undefined;
       if (inputRef.value) {
@@ -333,18 +310,15 @@ watch(
 );
 
 /**
- * Handles FzInput model value updates
+ * Syncs FzInput string updates to number model
  *
- * Parses string input and syncs to number model.
- * Note: useCurrency handles input filtering directly on the input element,
- * so this mainly handles the v-model synchronization when useCurrency emits.
+ * Parses formatted string and updates v-model. Sets isInternalUpdate flag to prevent watch loop.
+ * useCurrency handles input filtering on DOM, so this mainly syncs v-model when useCurrency emits.
  */
 const handleFzInputUpdate = (newVal: string | undefined) => {
-  // Update fzInputModel to reflect the change
   fzInputModel.value = newVal;
 
-  // Parse and update model only if value is meaningful
-  if (newVal === undefined || newVal === null || newVal === "") {
+  if (!newVal?.trim()) {
     const currentNormalized = normalizeModelValue(model.value);
     if (currentNormalized !== undefined) {
       isInternalUpdate = true;
@@ -357,7 +331,6 @@ const handleFzInputUpdate = (newVal: string | undefined) => {
   const normalized = isNaN(parsed) ? undefined : parsed;
   const currentNormalized = normalizeModelValue(model.value);
 
-  // Only update if value actually changed to avoid infinite loops
   if (currentNormalized !== normalized) {
     isInternalUpdate = true;
     model.value = normalized;
@@ -379,30 +352,39 @@ defineExpose({
     @update:modelValue="handleFzInputUpdate"
     @paste="onPaste"
   >
-    <template #right-icon v-if="step">
-      <div class="flex flex-col justify-between items-center">
+    <template #right-icon>
+      <div class="flex items-center gap-4">
         <FzIcon
-          name="angle-up"
-          size="xs"
-          role="button"
-          :aria-label="stepUpAriaLabel"
-          :aria-disabled="isStepDisabled ? 'true' : 'false'"
-          :tabindex="isStepDisabled ? undefined : 0"
-          class="fz__currencyinput__arrowup cursor-pointer"
-          @click="stepUpDown(step!)"
-          @keydown="(e: KeyboardEvent) => handleStepKeydown(e, step!)"
-        ></FzIcon>
-        <FzIcon
-          name="angle-down"
-          size="xs"
-          role="button"
-          :aria-label="stepDownAriaLabel"
-          :aria-disabled="isStepDisabled ? 'true' : 'false'"
-          :tabindex="isStepDisabled ? undefined : 0"
-          class="fz__currencyinput__arrowdown cursor-pointer"
-          @click="stepUpDown(-step!)"
-          @keydown="(e: KeyboardEvent) => handleStepKeydown(e, -step!)"
-        ></FzIcon>
+          v-if="props.valid"
+          name="check"
+          size="md"
+          class="text-semantic-success"
+          aria-hidden="true"
+        />
+        <div class="flex flex-col justify-between items-center">
+          <FzIcon
+            name="angle-up"
+            size="xs"
+            role="button"
+            :aria-label="stepUpAriaLabel"
+            :aria-disabled="isStepDisabled ? 'true' : 'false'"
+            :tabindex="isStepDisabled ? undefined : 0"
+            class="fz__currencyinput__arrowup cursor-pointer"
+            @click="stepUpDown(props.step)"
+            @keydown="(e: KeyboardEvent) => handleStepKeydown(e, props.step)"
+          ></FzIcon>
+          <FzIcon
+            name="angle-down"
+            size="xs"
+            role="button"
+            :aria-label="stepDownAriaLabel"
+            :aria-disabled="isStepDisabled ? 'true' : 'false'"
+            :tabindex="isStepDisabled ? undefined : 0"
+            class="fz__currencyinput__arrowdown cursor-pointer"
+            @click="stepUpDown(-props.step)"
+            @keydown="(e: KeyboardEvent) => handleStepKeydown(e, -props.step)"
+          ></FzIcon>
+        </div>
       </div>
     </template>
     <template #label>
