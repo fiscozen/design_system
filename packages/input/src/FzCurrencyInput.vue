@@ -1,34 +1,16 @@
-<template>
-  <FzInput
-    ref="fzInputRef"
-    v-bind="props"
-    :modelValue="fzInputModel"
-    type="text"
-    @paste="onPaste"
-  >
-    <template #right-icon v-if="step">
-      <div class="flex flex-col justify-between items-center">
-        <FzIcon
-          name="angle-up"
-          size="xs"
-          class="fz__currencyinput__arrowup cursor-pointer"
-          @click="stepUpDown(step)"
-        ></FzIcon>
-        <FzIcon
-          name="angle-down"
-          size="xs"
-          class="fz__currencyinput__arrowdown cursor-pointer"
-          @click="stepUpDown(-step)"
-        ></FzIcon>
-      </div>
-    </template>
-    <template #label>
-      <slot name="label"></slot>
-    </template>
-  </FzInput>
-</template>
-
 <script setup lang="ts">
+/**
+ * FzCurrencyInput Component
+ *
+ * Specialized currency input built on FzInput with number formatting, validation,
+ * and step controls. Formats values using Intl.NumberFormat with locale-aware separators.
+ * Supports min/max constraints, step quantization, and intelligent paste parsing
+ * that detects decimal/thousand separators automatically.
+ *
+ * @component
+ * @example
+ * <FzCurrencyInput label="Amount" v-model="value" :min="0" :max="1000" />
+ */
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import FzInput from "./FzInput.vue";
 import { FzCurrencyInputProps } from "./types";
@@ -36,17 +18,17 @@ import { roundTo, useCurrency } from "@fiscozen/composables";
 import { FzIcon } from "@fiscozen/icons";
 
 const fzInputRef = ref<InstanceType<typeof FzInput>>();
-const fzInputModel = ref();
+const fzInputModel = ref<string | undefined>();
 const containerRef = computed(() => fzInputRef.value?.containerRef);
 const inputRef = computed(() => fzInputRef.value?.inputRef);
 const props = withDefaults(defineProps<FzCurrencyInputProps>(), {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
+  step: 1,
 });
 const {
   inputRef: currencyInputRef,
   setValue,
-  emitAmount,
   parse,
   format,
 } = useCurrency({
@@ -57,8 +39,13 @@ const {
   step: props.step,
 });
 
-defineEmits(["update:amount"]);
+const model = defineModel<number | string | undefined>();
 
+let isInternalUpdate = false;
+
+/**
+ * Parses pasted text with automatic separator detection
+ */
 const onPaste = (e: ClipboardEvent) => {
   e.preventDefault();
 
@@ -66,91 +53,293 @@ const onPaste = (e: ClipboardEvent) => {
     return;
   }
 
-  let rawPastedText;
-  if (e.clipboardData && e.clipboardData.getData) {
+  if (!e.clipboardData?.getData) {
+    console.warn(
+      "[FzCurrencyInput] Paste event missing clipboardData. Paste operation ignored."
+    );
+    return;
+  }
+
+  let rawPastedText: string;
+  try {
     rawPastedText = e.clipboardData.getData("text/plain");
-  } else {
-    throw "invalid paste value";
+  } catch (error) {
+    console.warn("[FzCurrencyInput] Failed to read clipboard data:", error);
+    return;
   }
 
-  // Fix for firefox paste handling on `contenteditable` elements where `e.target` is the text node, not the element
-  let eventTarget;
-  if ((!e.target as any)?.tagName) {
-    eventTarget = (e as any).explicitOriginalTarget;
-  } else {
-    eventTarget = e.target;
+  if (!rawPastedText?.trim()) {
+    return;
   }
 
-  let isNegative = rawPastedText.slice(0, 1) === "-";
   const separatorRegex = /[,.]/g;
   const separators: string[] = [...rawPastedText.matchAll(separatorRegex)].map(
-    (regexRes) => regexRes[0],
+    (regexRes) => regexRes[0]
   );
+
+  if (separators.length === 0) {
+    try {
+      const safeNum = parse(rawPastedText.trim());
+      if (isNaN(safeNum) || !isFinite(safeNum)) {
+        console.warn(
+          `[FzCurrencyInput] Invalid number parsed from paste: "${rawPastedText.trim()}". Paste operation ignored.`
+        );
+        return;
+      }
+      const safeText = format(safeNum);
+      setValue(safeText);
+      isInternalUpdate = true;
+      const finalValue = props.nullOnEmpty && !safeNum ? undefined : safeNum;
+      model.value = finalValue;
+      fzInputModel.value = safeText;
+    } catch (error) {
+      console.warn(
+        `[FzCurrencyInput] Error parsing pasted value "${rawPastedText.trim()}":`,
+        error
+      );
+    }
+    return;
+  }
 
   const uniqueSeparators = new Set(separators);
   let decimalSeparator = ".";
   let thousandSeparator = "";
-  let unknownSeparator;
 
-  // case 1: there are 2 different separators pasted, therefore we can assume the rightmost is the decimal separator
   if (uniqueSeparators.size > 1) {
     decimalSeparator = separators[separators.length - 1];
     thousandSeparator = separators[0];
   }
 
-  // case 2: there are multiple instances of the same separator, therefore it must be the thousand separator
   if (uniqueSeparators.size === 1) {
     if (separators.length > 1) {
       thousandSeparator = separators[0];
-    }
-
-    // case 3: there is only one instance of a separator  with < 3 digits afterwards (must be decimal separator)
-    unknownSeparator = separators[0];
-    const splitted = rawPastedText.split(unknownSeparator);
-
-    if (splitted[1].length !== 3) {
-      decimalSeparator = unknownSeparator;
+    } else {
+      const unknownSeparator = separators[0];
+      const splitted = rawPastedText.split(unknownSeparator);
+      if (splitted.length > 1 && splitted[1].length !== 3) {
+        decimalSeparator = unknownSeparator;
+      }
     }
   }
+  let safeText = rawPastedText
+    .replace(
+      new RegExp(thousandSeparator.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
+      ""
+    )
+    .trim();
+  safeText = safeText
+    .replace(
+      new RegExp(decimalSeparator.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
+      "."
+    )
+    .trim();
 
-  // case 3: there is only one instance of a separator with 3 digits afterwards. Here we cannot make assumptions
-  //         we will format based on settings
-  //@ts-ignore
-  let safeText = rawPastedText.replaceAll(thousandSeparator, "").trim();
-  safeText = safeText.replaceAll(decimalSeparator, ".").trim();
+  try {
+    const safeNum = parse(safeText);
+    if (isNaN(safeNum) || !isFinite(safeNum)) {
+      console.warn(
+        `[FzCurrencyInput] Invalid number parsed from paste: "${rawPastedText}". Normalized to "${safeText}". Paste operation ignored.`
+      );
+      return;
+    }
 
-  const safeNum = parse(safeText);
-  safeText = format(safeNum);
-  setValue(safeText);
-  emitAmount(safeNum);
+    const formattedText = format(safeNum);
+    setValue(formattedText);
+    isInternalUpdate = true;
+    const finalValue = props.nullOnEmpty && !safeNum ? undefined : safeNum;
+    model.value = finalValue;
+    fzInputModel.value = formattedText;
+  } catch (error) {
+    console.warn(
+      `[FzCurrencyInput] Error processing pasted value "${rawPastedText}":`,
+      error
+    );
+  }
 };
 
 onMounted(() => {
   currencyInputRef.value = inputRef.value;
   nextTick(() => {
-    fzInputModel.value = inputRef.value?.value;
+    if (inputRef.value?.value) {
+      fzInputModel.value = inputRef.value.value;
+    } else if (model.value !== undefined) {
+      const numValue = normalizeModelValue(model.value);
+      fzInputModel.value =
+        numValue !== undefined ? format(numValue) : undefined;
+    }
   });
 });
-const model = defineModel<number>("amount");
 
+/**
+ * Adjusts value by step amount
+ *
+ * When forceStep is true, rounds to nearest step before increment.
+ */
 const stepUpDown = (amount: number) => {
-  if (!props.step) {
+  if (props.disabled || props.readonly) {
     return;
   }
-  const value = model.value || 0;
-  let stepVal = props.forceStep ? roundTo(props.step, value) : value;
+  const currentValue = normalizeModelValue(model.value) || 0;
+  let stepVal = props.forceStep
+    ? roundTo(props.step, currentValue)
+    : currentValue;
   stepVal += amount;
   const safeText = format(stepVal);
   setValue(safeText);
-  emitAmount(stepVal);
+  isInternalUpdate = true;
+  model.value = stepVal;
+  fzInputModel.value = safeText;
 };
 
-watch(model, (newVal) => {
-  fzInputModel.value = newVal;
+const handleStepKeydown = (e: KeyboardEvent, amount: number) => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    stepUpDown(amount);
+  }
+};
+
+const isStepDisabled = computed(() => props.disabled || props.readonly);
+
+const stepUpAriaLabel = computed(() => {
+  return props.stepUpAriaLabel || `Incrementa di ${props.step}`;
 });
+
+const stepDownAriaLabel = computed(() => {
+  return props.stepDownAriaLabel || `Decrementa di ${props.step}`;
+});
+
+const normalizeModelValue = (
+  value: number | string | undefined
+): number | undefined => {
+  if (value === undefined || value === null || value === "") {
+    return undefined;
+  }
+  if (typeof value === "number") {
+    return value;
+  }
+  if (typeof value === "string") {
+    console.warn(
+      "[FzCurrencyInput] String values in v-model are deprecated. Please use number instead. " +
+        `Received: "${value}". This will be parsed to a number for retrocompatibility, but string support may be removed in a future version.`
+    );
+    const parsed = parse(value);
+    return isNaN(parsed) ? undefined : parsed;
+  }
+  return undefined;
+};
+
+/**
+ * Syncs external model changes to FzInput string format
+ *
+ * Skips internal updates to avoid loops.
+ */
+watch(
+  () => model.value,
+  (newVal, oldVal) => {
+    if (isInternalUpdate) {
+      isInternalUpdate = false;
+      return;
+    }
+
+    const numValue = normalizeModelValue(newVal);
+    const oldNumValue = normalizeModelValue(oldVal);
+    if (numValue === oldNumValue) {
+      return;
+    }
+    if (numValue === undefined) {
+      fzInputModel.value = undefined;
+      if (inputRef.value) {
+        inputRef.value.value = "";
+      }
+    } else {
+      const formatted = format(numValue);
+      fzInputModel.value = formatted;
+      if (inputRef.value) {
+        inputRef.value.value = formatted;
+      }
+    }
+  }
+);
+
+/**
+ * Syncs FzInput string updates to number model
+ *
+ * Sets isInternalUpdate flag to prevent watch loop.
+ */
+const handleFzInputUpdate = (newVal: string | undefined) => {
+  fzInputModel.value = newVal;
+
+  if (!newVal?.trim()) {
+    const currentNormalized = normalizeModelValue(model.value);
+    if (currentNormalized !== undefined) {
+      isInternalUpdate = true;
+      model.value = undefined;
+    }
+    return;
+  }
+
+  const parsed = parse(newVal);
+  const normalized = isNaN(parsed) ? undefined : parsed;
+  const currentNormalized = normalizeModelValue(model.value);
+
+  if (currentNormalized !== normalized) {
+    isInternalUpdate = true;
+    model.value = normalized;
+  }
+};
 
 defineExpose({
   inputRef,
   containerRef,
 });
 </script>
+
+<template>
+  <FzInput
+    ref="fzInputRef"
+    v-bind="props"
+    :modelValue="fzInputModel"
+    type="text"
+    @update:modelValue="handleFzInputUpdate"
+    @paste="onPaste"
+  >
+    <template #right-icon>
+      <div class="flex items-center gap-4">
+        <FzIcon
+          v-if="props.valid"
+          name="check"
+          size="md"
+          class="text-semantic-success"
+          aria-hidden="true"
+        />
+        <div class="flex flex-col justify-between items-center">
+          <FzIcon
+            name="angle-up"
+            size="xs"
+            role="button"
+            :aria-label="stepUpAriaLabel"
+            :aria-disabled="isStepDisabled ? 'true' : 'false'"
+            :tabindex="isStepDisabled ? undefined : 0"
+            class="fz__currencyinput__arrowup cursor-pointer"
+            @click="stepUpDown(props.step)"
+            @keydown="(e: KeyboardEvent) => handleStepKeydown(e, props.step)"
+          ></FzIcon>
+          <FzIcon
+            name="angle-down"
+            size="xs"
+            role="button"
+            :aria-label="stepDownAriaLabel"
+            :aria-disabled="isStepDisabled ? 'true' : 'false'"
+            :tabindex="isStepDisabled ? undefined : 0"
+            class="fz__currencyinput__arrowdown cursor-pointer"
+            @click="stepUpDown(-props.step)"
+            @keydown="(e: KeyboardEvent) => handleStepKeydown(e, -props.step)"
+          ></FzIcon>
+        </div>
+      </div>
+    </template>
+    <template #label>
+      <slot name="label"></slot>
+    </template>
+  </FzInput>
+</template>

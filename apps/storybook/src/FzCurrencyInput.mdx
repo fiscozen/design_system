@@ -1,0 +1,493 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Form/FzCurrencyInput" />
+
+# FzCurrencyInput
+
+Specialized currency input component built on FzInput with number formatting, validation, and step controls. Formats values using Intl.NumberFormat with locale-aware separators. Supports min/max constraints, step quantization, and intelligent paste parsing.
+
+## Features
+
+- **Locale-aware Formatting**: Uses Intl.NumberFormat with locale settings for decimal/thousand separators
+- **Step Controls**: Arrow buttons for increment/decrement (always visible, default step = 1)
+- **Min/Max Constraints**: Automatic clamping of values outside allowed range
+- **Step Quantization**: Optional automatic rounding to nearest step multiple
+- **Intelligent Paste**: Automatically detects and parses various number formats
+- **Configurable Decimals**: Minimum and maximum decimal places
+- **Valid State**: Success checkmark icon support (displayed with step controls)
+- **Full Accessibility**: ARIA attributes, keyboard navigation, screen reader support
+
+## Installation
+
+```bash
+npm install @fiscozen/input
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { FzCurrencyInput } from '@fiscozen/input'
+import { ref } from 'vue'
+
+const amount = ref<number | undefined>(undefined)
+</script>
+
+<template>
+  <FzCurrencyInput label="Amount" v-model="amount" />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Text label displayed above the input field. Overridden by label slot if provided.</td>
+    </tr>
+    <tr>
+      <td><code>environment</code></td>
+      <td><code>'frontoffice' | 'backoffice'</code></td>
+      <td><code>'frontoffice'</code></td>
+      <td>Environment determining input size and spacing</td>
+    </tr>
+    <tr>
+      <td><code>placeholder</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Placeholder text shown when input is empty. Behavior differs based on variant.</td>
+    </tr>
+    <tr>
+      <td><code>required</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Marks input as required. Adds asterisk to label and sets native required attribute.</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Disables input interaction and applies disabled styling</td>
+    </tr>
+    <tr>
+      <td><code>readonly</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Prevents user input while keeping field focusable. Same styling as disabled.</td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows error state with red border and enables errorMessage slot display</td>
+    </tr>
+    <tr>
+      <td><code>valid</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows success checkmark icon on the right (displayed with step controls)</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'normal' | 'floating-label'</code></td>
+      <td><code>'normal'</code></td>
+      <td>Visual presentation style. 'floating-label' moves placeholder above input when focused/filled</td>
+    </tr>
+    <tr>
+      <td><code>leftIcon</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Font Awesome icon name displayed on the left side of input</td>
+    </tr>
+    <tr>
+      <td><code>leftIconVariant</code></td>
+      <td><code>IconVariant</code></td>
+      <td>-</td>
+      <td>Visual style variant for left icon (solid, regular, light, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>leftIconAriaLabel</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Accessible label for left icon when clickable. Required for screen reader accessibility</td>
+    </tr>
+    <tr>
+      <td><code>leftIconClass</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Additional CSS classes applied to left icon container</td>
+    </tr>
+    <tr>
+      <td><code>nullOnEmpty</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Converts empty input to null instead of 0</td>
+    </tr>
+    <tr>
+      <td><code>minimumFractionDigits</code></td>
+      <td><code>number</code></td>
+      <td><code>2</code></td>
+      <td>Minimum decimal places in formatted output</td>
+    </tr>
+    <tr>
+      <td><code>maximumFractionDigits</code></td>
+      <td><code>number</code></td>
+      <td><code>2</code></td>
+      <td>Maximum decimal places in formatted output</td>
+    </tr>
+    <tr>
+      <td><code>min</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Minimum allowed value. Values below this are clamped to min</td>
+    </tr>
+    <tr>
+      <td><code>max</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Maximum allowed value. Values above this are clamped to max</td>
+    </tr>
+    <tr>
+      <td><code>step</code></td>
+      <td><code>number</code></td>
+      <td><code>1</code></td>
+      <td>Step increment for arrow buttons. When forceStep is true, values are rounded to nearest step multiple</td>
+    </tr>
+    <tr>
+      <td><code>forceStep</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Enforces quantization: values are automatically rounded to nearest step multiple</td>
+    </tr>
+    <tr>
+      <td><code>stepUpAriaLabel</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Custom accessible label for step up button. If not provided, uses default label</td>
+    </tr>
+    <tr>
+      <td><code>stepDownAriaLabel</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Custom accessible label for step down button. If not provided, uses default label</td>
+    </tr>
+    <tr>
+      <td><code>pattern</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>HTML5 pattern attribute for native browser validation</td>
+    </tr>
+    <tr>
+      <td><code>name</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Native name attribute for form submission and identification</td>
+    </tr>
+    <tr>
+      <td><code>maxlength</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Native maxlength attribute. Limits maximum number of characters</td>
+    </tr>
+  </tbody>
+</table>
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>label</code></td>
+      <td>Custom label content (overrides <code>label</code> prop)</td>
+    </tr>
+    <tr>
+      <td><code>left-icon</code></td>
+      <td>Custom left icon content (overrides <code>leftIcon</code> prop)</td>
+    </tr>
+    <tr>
+      <td><code>helpText</code></td>
+      <td>Help text displayed below input when no error is present</td>
+    </tr>
+    <tr>
+      <td><code>errorMessage</code></td>
+      <td>Error message displayed below input when <code>error</code> is true</td>
+    </tr>
+  </tbody>
+</table>
+
+## Variants
+
+### Normal (Default)
+
+Standard input with label above and placeholder inside the input field.
+
+```vue
+<FzCurrencyInput label="Amount" v-model="amount" />
+```
+
+### Floating Label
+
+Floating label variant moves placeholder above input when focused or when input has a value.
+
+```vue
+<FzCurrencyInput 
+  label="Amount" 
+  variant="floating-label" 
+  placeholder="Enter amount" 
+  v-model="amount" 
+/>
+```
+
+## Environments
+
+Currency inputs support two environments that determine their height and styling:
+
+- **frontoffice** (default): larger spacing (44px height)
+- **backoffice**: compact spacing (32px height)
+
+```vue
+<template>
+  <FzCurrencyInput label="Frontoffice (Default)" environment="frontoffice" v-model="value1" />
+  <FzCurrencyInput label="Backoffice" environment="backoffice" v-model="value2" />
+</template>
+```
+
+## Examples
+
+### Basic Currency Input
+
+```vue
+<template>
+  <FzCurrencyInput label="Amount" v-model="amount" />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const amount = ref<number | undefined>(undefined)
+</script>
+```
+
+### With Step Controls
+
+Step controls (arrow buttons) are always visible. Default step is 1, but can be customized.
+
+```vue
+<template>
+  <FzCurrencyInput 
+    label="Quantity" 
+    v-model="quantity" 
+    :step="5"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const quantity = ref<number | undefined>(undefined)
+</script>
+```
+
+### With Step Quantization
+
+When `forceStep` is true, values are automatically rounded to the nearest step multiple.
+
+```vue
+<template>
+  <FzCurrencyInput 
+    label="Quantity" 
+    v-model="quantity" 
+    :step="4"
+    :forceStep="true"
+  />
+</template>
+```
+
+### With Min/Max Constraints
+
+Values are automatically clamped to the min/max range.
+
+```vue
+<template>
+  <FzCurrencyInput 
+    label="Price" 
+    v-model="price" 
+    :min="0" 
+    :max="9999.99"
+    :minimumFractionDigits="2"
+    :maximumFractionDigits="2"
+  />
+</template>
+```
+
+### With Valid State
+
+Valid checkmark icon is displayed alongside step controls.
+
+```vue
+<template>
+  <FzCurrencyInput 
+    label="Amount" 
+    v-model="amount" 
+    :valid="isValid"
+  />
+</template>
+```
+
+### Null on Empty
+
+When `nullOnEmpty` is true, empty input converts to null instead of 0.
+
+```vue
+<template>
+  <FzCurrencyInput 
+    label="Amount" 
+    v-model="amount" 
+    :nullOnEmpty="true"
+  />
+</template>
+```
+
+### Custom Decimal Places
+
+Configure minimum and maximum decimal places in formatted output.
+
+```vue
+<template>
+  <FzCurrencyInput 
+    label="Price" 
+    v-model="price" 
+    :minimumFractionDigits="0"
+    :maximumFractionDigits="3"
+  />
+</template>
+```
+
+### With Left Icon
+
+```vue
+<template>
+  <FzCurrencyInput 
+    label="Amount" 
+    leftIcon="dollar-sign"
+    v-model="amount" 
+  />
+</template>
+```
+
+### With Error State
+
+```vue
+<template>
+  <FzCurrencyInput 
+    label="Amount" 
+    :error="hasError"
+    v-model="amount"
+  >
+    <template #errorMessage>
+      Please enter a valid amount
+    </template>
+  </FzCurrencyInput>
+</template>
+```
+
+### With Help Text
+
+```vue
+<template>
+  <FzCurrencyInput label="Amount" v-model="amount">
+    <template #helpText>
+      Enter amount in euros
+    </template>
+  </FzCurrencyInput>
+</template>
+```
+
+## Behavior & Concepts
+
+### v-model Type
+
+FzCurrencyInput accepts `number | string | undefined` for retrocompatibility, but always emits `number | undefined`. String inputs are deprecated and trigger a console.warn.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+// ✅ Recommended: use number
+const amount = ref<number | undefined>(undefined)
+
+// ⚠️ Deprecated: string support (will be removed in future version)
+const amountString = ref<string | undefined>(undefined)
+</script>
+```
+
+### Step Controls
+
+Step controls (arrow buttons) are always visible in FzCurrencyInput. The default step is 1, but can be customized. Step controls support keyboard navigation (Enter/Space to activate).
+
+**Note**: `rightIcon` and `secondRightIcon` props are not available in FzCurrencyInput. Only `valid` checkmark icon can be displayed alongside step controls.
+
+### Paste Handling
+
+FzCurrencyInput uses intelligent heuristics to parse pasted values:
+
+- **Multiple different separators**: Rightmost is decimal separator (e.g., "1.234,56" becomes 1234.56)
+- **Multiple same separators**: Thousand separator (e.g., "1.234.567" becomes 1234567)
+- **Single separator with less than 3 digits after**: Decimal separator (e.g., "1,23" becomes 1.23)
+- **Single separator with 3 or more digits after**: Ambiguous, uses default formatting
+
+### Formatting
+
+Values are formatted using Intl.NumberFormat with locale settings (default: 'it-IT'). The formatting respects:
+- Browser locale settings
+- Minimum and maximum fraction digits
+- Decimal and thousand separator conventions
+
+### Step Quantization
+
+When `forceStep` is true, values are automatically rounded to the nearest step multiple. For example, with `step="4"` and `forceStep="true"`:
+- Input: 5 becomes: 4
+- Input: 7 becomes: 8
+- Input: 6 becomes: 4 (closer to 4 than 8)
+
+### Min/Max Clamping
+
+Values are automatically clamped to the min/max range on blur:
+- Values below `min` are set to `min`
+- Values above `max` are set to `max`
+
+## Accessibility
+
+FzCurrencyInput is fully accessible and meets WCAG 2.1 AA standards:
+
+- **ARIA Attributes**: Proper aria-required, aria-invalid, aria-disabled, aria-labelledby, aria-describedby
+- **Keyboard Navigation**: Full keyboard support for input and step controls (Tab, Enter, Space)
+- **Screen Readers**: Error messages and help text are properly associated with input
+- **Focus Management**: Visible focus indicators with proper contrast
+- **Step Controls**: Accessible with role="button", aria-label, tabindex, and keyboard support
+- **Valid Icon**: Decorative (aria-hidden="true") as information is conveyed visually
+
+### Step Controls Accessibility
+
+Step controls are fully keyboard accessible:
+- **Tab**: Focuses the step control
+- **Enter/Space**: Activates the step adjustment
+- **aria-label**: Describes the action (e.g., "Incrementa di 1")
+- **aria-disabled**: Indicates when controls are disabled
