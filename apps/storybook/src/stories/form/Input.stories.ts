@@ -4,6 +4,9 @@ import { ref } from 'vue'
 import { FzInput } from '@fiscozen/input'
 import { all } from '@awesome.me/kit-8137893ad3/icons'
 
+const templateForm =
+  '<form action="javascript:void(0);"><story/> <button type="submit" class="mt-10 border-1 px-10 py-4 rounded ">Submit</button></form>'
+
 const meta = {
   title: 'Form/FzInput',
   component: FzInput,
@@ -185,6 +188,45 @@ export const Password: Story = {
     await userEvent.type(input, 'secret123')
     await expect(input).toHaveValue('secret123')
     await expect(input).toHaveAttribute('type', 'password')
+  }
+}
+
+export const Email: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    type: 'email',
+    required: true
+  },
+  decorators: [() => ({ template: templateForm })],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Verify input type is email
+    const input = canvas.getByRole('textbox', { name: /Input Label/i })
+    await expect(input).toHaveAttribute('type', 'email')
+  }
+}
+
+export const Telephone: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    type: 'tel',
+    pattern: '[0-9]{3}-[0-9]{3}-[0-9]{4}',
+    required: true
+  },
+  decorators: [() => ({ template: templateForm })],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    const input = canvas.getByRole('textbox', { name: /Input Label/i })
+
+    // Verify input type is tel
+    await expect(input).toHaveAttribute('type', 'tel')
+
+    // Verify pattern attribute is set
+    await expect(input).toHaveAttribute('pattern', '[0-9]{3}-[0-9]{3}-[0-9]{4}')
   }
 }
 
@@ -456,6 +498,23 @@ export const LeftAndRightWithValid: Story = {
   }
 }
 
+export const Url: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    type: 'url',
+    required: true
+  },
+  decorators: [() => ({ template: templateForm })],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Verify input type is url
+    const input = canvas.getByRole('textbox', { name: /Input Label/i })
+    await expect(input).toHaveAttribute('type', 'url')
+  }
+}
+
 export const MaxLength: Story = {
   ...Template,
   args: {
@@ -626,6 +685,40 @@ export const TwoRightIconsWithValid: Story = {
       await expect(rightIcon).toHaveAttribute('role', 'button')
       await expect(rightIcon).toHaveAttribute('aria-label', 'Email details')
       await expect(rightIcon).toHaveAttribute('tabindex', '0')
+    }
+  }
+}
+
+export const FloatingLabelEmpty: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    variant: 'floating-label',
+    placeholder: 'Enter your email',
+    modelValue: ''
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    const input = canvas.getByRole('textbox', { name: /Input Label/i })
+
+    // Verify input is empty
+    await expect(input).toHaveValue('')
+
+    // Verify placeholder is shown inside input (when empty and not focused)
+    await expect(input).toHaveAttribute('placeholder', 'Enter your email')
+
+    // Verify floating placeholder span is not shown when input is empty and not focused
+    const floatingPlaceholder = canvasElement.querySelector('span.text-xs.text-gray-300')
+    await expect(floatingPlaceholder).not.toBeInTheDocument()
+
+    // Verify when focused, placeholder "floats" above
+    await input.focus()
+    await expect(input).toHaveAttribute('placeholder', '')
+    const floatingPlaceholderFocused = canvasElement.querySelector('span.text-xs.text-gray-300')
+    await expect(floatingPlaceholderFocused).toBeInTheDocument()
+    if (floatingPlaceholderFocused) {
+      await expect(floatingPlaceholderFocused.textContent).toBe('Enter your email')
     }
   }
 }
