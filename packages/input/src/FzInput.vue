@@ -22,6 +22,7 @@ const props = withDefaults(defineProps<FzInputProps>(), {
   error: false,
   type: "text",
   rightIconButtonVariant: "invisible",
+  secondRightIconButtonVariant: "invisible",
   variant: "normal",
   environment: "frontoffice",
 });
