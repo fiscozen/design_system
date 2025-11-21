@@ -5,7 +5,8 @@ export default function useInputStyle(
   props: ToRefs<FzInputProps>,
   container: Ref<HTMLElement | null>,
   model: Ref<string | undefined>,
-  effectiveEnvironment: ComputedRef<InputEnvironment>
+  effectiveEnvironment: ComputedRef<InputEnvironment>,
+  isFocused: Ref<boolean>
 ) {
   const containerWidth = computed(() =>
     container.value ? `${container.value.clientWidth}px` : "auto",
@@ -41,9 +42,22 @@ export default function useInputStyle(
     frontoffice: 'text-base',
   };
 
+  /**
+   * Determines when to show the normal placeholder inside the input.
+   * 
+   * For floating-label variant:
+   * - Shows placeholder inside input only when input is empty AND not focused
+   * - When focused or has value, placeholder "floats" above as <span>
+   * 
+   * For normal variant:
+   * - Always shows placeholder inside input
+   */
   const showNormalPlaceholder = computed(() => {
-    return !(props.variant?.value === 'floating-label') ||
-    ((props.variant?.value === 'floating-label') && !model.value)
+    if (props.variant?.value !== 'floating-label') {
+      return true; // Normal variant: always show placeholder inside
+    }
+    // Floating-label variant: show placeholder inside only when empty AND not focused
+    return !model.value && !isFocused.value;
   });
 
   const computedInputClass = computed(() => {
