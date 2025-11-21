@@ -677,7 +677,7 @@ const amount = ref<number | undefined>(undefined)
 <template>
   <FzCurrencyInput 
     label="Amount" 
-    v-model:amount="amount" 
+    v-model="amount" 
     :min="0" 
     :max="1000" 
   />
@@ -691,7 +691,7 @@ When `step` prop is provided, arrow buttons appear on the right to increment/dec
 ```vue
 <FzCurrencyInput 
   label="Quantity" 
-  v-model:amount="quantity" 
+  v-model="quantity" 
   :step="5"
   :forceStep="true"
 />
@@ -772,8 +772,8 @@ const amountString = ref<string | undefined>(undefined)
 </script>
 
 <template>
-  <FzCurrencyInput v-model:amount="amount" />
+  <FzCurrencyInput v-model="amount" />
   <!-- String values will show deprecation warning -->
-  <FzCurrencyInput v-model:amount="amountString" />
+  <FzCurrencyInput v-model="amountString" />
 </template>
 ```
