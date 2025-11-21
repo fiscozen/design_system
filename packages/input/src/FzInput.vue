@@ -297,10 +297,10 @@ defineExpose({
           "
         />
       </slot>
-      <div class="flex flex-col space-around min-w-0 grow">
+      <div class="flex flex-col justify-around min-w-0 grow">
         <span
           v-if="!showNormalPlaceholder"
-          class="text-xs text-gray-300 grow-0 overflow-hidden text-ellipsis whitespace-nowrap"
+          class="text-xs text-grey-300 grow-0 overflow-hidden text-ellipsis whitespace-nowrap"
           >{{ placeholder }}</span
         >
         <input
@@ -376,7 +376,7 @@ defineExpose({
             "
             @click.stop="emit('fzinput:second-right-icon-click')"
             :class="[
-              { 'bg-grey-100 !text-gray-300': isReadonlyOrDisabled },
+              { 'bg-grey-100 !text-grey-300': isReadonlyOrDisabled },
               secondRightIconClass,
             ]"
           />
@@ -412,7 +412,7 @@ defineExpose({
             "
             @click.stop="emit('fzinput:right-icon-click')"
             :class="[
-              { 'bg-grey-100 !text-gray-300': isReadonlyOrDisabled },
+              { 'bg-grey-100 !text-grey-300': isReadonlyOrDisabled },
               rightIconClass,
             ]"
           />

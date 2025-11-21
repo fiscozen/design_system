@@ -12,11 +12,22 @@ const meta = {
   component: FzInput,
   tags: ['autodocs'],
   argTypes: {
+    environment: {
+      options: ['backoffice', 'frontoffice'],
+      control: {
+        type: 'select'
+      }
+    },
     size: {
       options: ['sm', 'md', 'lg'],
       control: {
         type: 'select'
-      }
+      },
+      table: {
+        type: { summary: "'sm' | 'md' | 'lg'" },
+        category: 'Deprecated'
+      },
+      description: 'Deprecated: Use environment prop instead. Size values map to environments: sm/md → backoffice, lg → frontoffice'
     },
     type: {
       options: ['text', 'password', 'email', 'number', 'tel', 'url'],
@@ -322,7 +333,7 @@ export const LeftIcon: Story = {
   ...Template,
   args: {
     label: 'Label',
-    size: 'md',
+    environment: 'backoffice',
     leftIcon: 'calendar-lines'
   },
   play: async ({ canvasElement }) => {
@@ -341,7 +352,7 @@ export const LeftIconAccessible: Story = {
   ...Template,
   args: {
     label: 'Date',
-    size: 'md',
+    environment: 'backoffice',
     leftIcon: 'calendar-lines',
     leftIconAriaLabel: 'Open calendar picker'
   },

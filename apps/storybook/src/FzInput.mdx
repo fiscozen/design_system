@@ -51,10 +51,16 @@ import { FzInput } from '@fiscozen/input'
       <td>Text label displayed above the input field. Overridden by label slot if provided.</td>
     </tr>
     <tr>
+      <td><code>environment</code></td>
+      <td><code>'backoffice' | 'frontoffice'</code></td>
+      <td><code>'frontoffice'</code></td>
+      <td>Environment determining input size and styling</td>
+    </tr>
+    <tr>
       <td><code>size</code></td>
       <td><code>'sm' | 'md' | 'lg'</code></td>
-      <td><code>'md'</code></td>
-      <td>Visual size affecting height, padding, and text size</td>
+      <td>-</td>
+      <td><strong>Deprecated</strong>: Use <code>environment</code> prop instead. Size values map to environments: sm/md → backoffice, lg → frontoffice</td>
     </tr>
     <tr>
       <td><code>placeholder</code></td>
