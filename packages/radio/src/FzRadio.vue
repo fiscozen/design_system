@@ -5,15 +5,24 @@
       :id="computedId"
       :value="computedValue"
       :disabled="disabled"
-      :checked="modelValue === computedValue || checked"
+      :checked="computedChecked"
       :class="[staticInputClass, computedInputClass]"
       :name="name"
       :required="required"
+      :aria-checked="ariaChecked"
+      :aria-disabled="disabled ? 'true' : 'false'"
+      :aria-required="required ? 'true' : 'false'"
+      :aria-invalid="computedTone === 'error' ? 'true' : 'false'"
+      :aria-label="shouldShowText ? undefined : label"
+      :aria-labelledby="shouldShowText ? `${radioId}-label` : undefined"
       @change="emits('update:modelValue', computedValue)"
-      tabindex="0"
       ref="radioContainer"
     />
-    <label :for="computedId" :class="[staticLabelClass, computedLabelClass]">
+    <label 
+      :id="shouldShowText ? `${radioId}-label` : undefined"
+      :for="computedId" 
+      :class="[staticLabelClass, computedLabelClass]"
+      >
       <span class="w-fit" v-if="shouldShowText">{{ label }}</span>
       <FzTooltip
         v-if="tooltip"
@@ -33,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { FzRadioProps } from "./types";
 import {
   mapSizeToClasses,
@@ -43,11 +52,13 @@ import {
 } from "./common";
 import { FzIcon } from "@fiscozen/icons";
 import { FzTooltip } from "@fiscozen/tooltip";
+import { generateRadioId } from "./utils";
 import "./fz-radio.css";
 
 const props = withDefaults(defineProps<FzRadioProps>(), {
   size: "md",
   hasText: undefined,
+  checked: undefined,
 });
 
 const computedValue = computed(() => {
@@ -58,6 +69,11 @@ const computedValue = computed(() => {
     return "";
   }
   return props.value ?? props.label;
+});
+
+const computedChecked = computed(() => {
+  if (props.checked != null) return props.checked;
+  return props.modelValue === computedValue.value;
 });
 
 const emits = defineEmits(["update:modelValue"]);
@@ -80,7 +96,15 @@ const computedId = computed(() =>
   props.name ? `${props.name}-${props.label}` : props.label,
 );
 
+// Generate unique ID for ARIA relationships
+const radioId = generateRadioId();
+
 const radioContainer = ref<HTMLInputElement | null>(null);
+
+// Compute ARIA attributes for accessibility
+const ariaChecked = computed(() => {
+  return props.modelValue === computedValue.value ? "true" : "false";
+});
 
 const computedInputClass = computed(() => ({
   "radio--medium": true,
@@ -106,6 +130,12 @@ const getBorderAndTextColorForLabel = () => {
       return "before:border-grey-500";
   }
 };
+
+onMounted(() => {
+  if (props.checked) {
+    radioContainer.value?.click();
+  }
+});
 </script>
 <style scoped>
 .fz-hidden-input {

@@ -15,6 +15,7 @@ export type FzRadioProps = {
   modelValue?: string;
   /**
    * Whether the radio button is checked
+   * @deprecated Use v-model instead
    */
   checked?: boolean;
   /**

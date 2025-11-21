@@ -2,43 +2,50 @@
   <div :class="[staticContainerClass, computedContainerClass]">
     <label
       v-if="label"
+      :id="`${id}-label`"
       :for="name"
       :class="[staticLabelClass, computedLabelClass]"
     >
       <span>{{ label }}<span v-if="required"> *</span></span>
-      <p :class="computedHelpTextClass" v-if="$slots.help">
+      <p :id="`${id}-help`" :class="computedHelpTextClass" v-if="$slots.help">
         <slot name="help" />
       </p>
     </label>
     <div
+      :id="id"
       :class="[staticSlotContainerClass, computedSlotContainerClass]"
       test-id="slot-container"
       role="radiogroup"
+      :aria-labelledby="label ? `${id}-label` : undefined"
+      :aria-describedby="computedAriaDescribedby"
+      :aria-required="required ? 'true' : 'false'"
+      :aria-invalid="isError ? 'true' : 'false'"
     >
       <slot :radioGroupProps="controlledProps" />
     </div>
-    <FzAlert
-      v-if="isError && $slots.error"
-      type="error"
-      alertStyle="simple"
-      size="md"
-    >
+    <ErrorAlert v-if="isError && $slots.error" :id="`${id}-error`">
       <slot name="error" />
-    </FzAlert>
+    </ErrorAlert>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useSlots } from "vue";
 import { FzRadioGroupProps } from "./types";
-import { FzAlert } from "@fiscozen/alert";
 import { mapSizeToClasses } from "./common";
+import { generateRadioGroupId } from "./utils";
+import ErrorAlert from "./components/ErrorAlert.vue";
+
+const slots = useSlots();
 
 const props = withDefaults(defineProps<FzRadioGroupProps>(), {
   name: `radio-group-${Math.random().toString(36).slice(2, 9)}`,
   size: "md",
   variant: "vertical",
 });
+
+/** Unique identifier for the radio group, used for ARIA relationships */
+const id = generateRadioGroupId();
 
 // Compute tone from props (with fallback to deprecated emphasis/error)
 const computedTone = computed<"neutral" | "emphasis" | "error">(() => {
@@ -92,4 +99,24 @@ const computedSlotContainerClass = computed(() => [
   mapSizeToClasses["md"],
   "gap-8",
 ]);
+
+/**
+ * Computes the aria-describedby attribute value for the radio group.
+ * Combines help text and error message IDs when present.
+ *
+ * @returns Space-separated string of IDs, or undefined if no descriptions
+ */
+const computedAriaDescribedby = computed<string | undefined>(() => {
+  const descriptions: string[] = [];
+
+  if (slots.help) {
+    descriptions.push(`${id}-help`);
+  }
+
+  if (isError.value && slots.error) {
+    descriptions.push(`${id}-error`);
+  }
+
+  return descriptions.length > 0 ? descriptions.join(" ") : undefined;
+});
 </script>

@@ -11,7 +11,7 @@ A fully accessible radio button component for selecting a single option from a g
 - **Multiple Tones**: Neutral, emphasis, and error states
 - **Tooltip Support**: Informative tooltips with customizable status
 - **Flexible Text Display**: Control label visibility with `hasText` prop
-- **Error Handling**: Built-in error state with FzAlert integration
+- **Error Handling**: Built-in error state
 - **Full Accessibility**: WCAG 2.1 AA compliant with keyboard navigation
 - **Backward Compatible**: Supports deprecated props for gradual migration
 
@@ -161,23 +161,6 @@ const selected = ref('option2')
 - `standalone` (`boolean`): Use `hasText={false}` instead
 - `size` (`'sm' | 'md'`): will always be 'md'
 
-## Slots
-
-<table>
-  <thead>
-    <tr>
-      <th>Slot</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>error</code></td>
-      <td>Error message content (shown when <code>tone="error"</code>)</td>
-    </tr>
-  </tbody>
-</table>
-
 ## Usage Examples
 
 ### Tone Variants
@@ -198,9 +181,6 @@ const selected = ref('option2')
 
 ```vue
 <FzRadio label="Option 1" value="option1" v-model="selected" tone="error">
-  <template #error>
-    This field is required
-  </template>
 </FzRadio>
 ```
 
@@ -320,14 +300,10 @@ const selected = ref('option2')
 
 ```vue
 <!-- ❌ Deprecated -->
-<FzRadio label="Option" value="opt" v-model="selected" error>
-  <template #error>Error message</template>
-</FzRadio>
+<FzRadio label="Option" value="opt" v-model="selected" error />
 
 <!-- ✅ Recommended -->
-<FzRadio label="Option" value="opt" v-model="selected" tone="error">
-  <template #error>Error message</template>
-</FzRadio>
+<FzRadio label="Option" value="opt" v-model="selected" tone="error" />
 ```
 
 ### From `standalone` to `hasText`
@@ -345,5 +321,4 @@ const selected = ref('option2')
 - **FzRadioGroup**: Container for grouping related radio buttons
 - **FzRadioCard**: Card-based radio button variant
 - **FzTooltip**: Used internally for tooltip functionality
-- **FzAlert**: Used for error message display
 
