@@ -60,9 +60,8 @@ describe("FzRadioGroup", () => {
 
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.find("p")).toBeTruthy();
-    expect(wrapper.find("p").text()).toBe("Error text");
-    expect(wrapper.find("p").find("svg")).toBeTruthy();
+    // FzAlert should be used instead of FzRadioErrorText
+    expect(wrapper.findComponent({ name: "FzAlert" }).exists()).toBe(true);
     wrapper
       .find('[test-id="slot-container"]')
       .findAll("label")
@@ -85,6 +84,61 @@ describe("FzRadioGroup", () => {
   });
 
   it("should set emphasized class", async () => {
+    const wrapper = await createWrapper({
+      label: "Radio",
+      size: "md",
+      emphasis: true,
+    });
+    await wrapper.vm.$nextTick();
+    wrapper
+      .find('[test-id="slot-container"]')
+      .findAll("label")
+      .forEach((input) => {
+        expect(input.classes()).toContain(
+          "peer-checked:before:border-blue-500",
+        );
+      });
+  });
+
+  it("should support variant prop", async () => {
+    const wrapper = await createWrapper({
+      label: "Radio",
+      size: "md",
+      variant: "horizontal",
+    });
+    await wrapper.vm.$nextTick();
+    const slotContainer = wrapper.find('[test-id="slot-container"]');
+    expect(slotContainer.classes()).toContain("flex-row");
+  });
+
+  it("should default to vertical variant", async () => {
+    const wrapper = await createWrapper({
+      label: "Radio",
+      size: "md",
+    });
+    await wrapper.vm.$nextTick();
+    const slotContainer = wrapper.find('[test-id="slot-container"]');
+    expect(slotContainer.classes()).toContain("flex-col");
+  });
+
+  it("should support tone prop", async () => {
+    const wrapper = await createWrapper({
+      label: "Radio",
+      size: "md",
+      tone: "emphasis",
+    });
+    await wrapper.vm.$nextTick();
+    wrapper
+      .find('[test-id="slot-container"]')
+      .findAll("label")
+      .forEach((input) => {
+        expect(input.classes()).toContain(
+          "peer-checked:before:border-blue-500",
+        );
+      });
+  });
+
+  it("should maintain backward compatibility with emphasis prop", async () => {
     const wrapper = await createWrapper({
       label: "Radio",
       size: "md",

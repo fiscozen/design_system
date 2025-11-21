@@ -6,3 +6,4 @@ export type {
   FzRadioGroupProps,
   FzRadioCardProps,
 } from "./types";
+export { generateRadioId, generateRadioGroupId } from "./utils";

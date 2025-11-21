@@ -1,3 +1,5 @@
+import { FzTooltipStatus } from "@fiscozen/tooltip";
+
 export type FzRadioProps = {
   /**
    * The label of the radio button
@@ -13,18 +15,27 @@ export type FzRadioProps = {
   modelValue?: string;
   /**
    * Whether the radio button is checked
+   * @deprecated Use v-model instead
    */
   checked?: boolean;
   /**
    * If true, no label will be rendered
+   * @deprecated Use hasText instead (hasText={false} is equivalent to standalone={true})
    */
   standalone?: boolean;
   /**
    * The size of the radio button
+   * @deprecated This prop is deprecated and will be removed in a future version.
+   * Radio buttons now have a fixed size equivalent to the former "md" size.
    */
-  size: "sm" | "md";
+  size?: "sm" | "md";
+  /**
+   * The tone/variant of the radio button
+   */
+  tone?: "neutral" | "emphasis" | "error";
   /**
    * If true, the radio button will be emphasized
+   * @deprecated Use tone="emphasis" instead
    */
   emphasis?: boolean;
   /**
@@ -33,8 +44,22 @@ export type FzRadioProps = {
   disabled?: boolean;
   /**
    * If true, the radio button will be in an error state
+   * @deprecated Use tone="error" instead
    */
   error?: boolean;
+  /**
+   * Text to display in the tooltip when hasIconRight is true
+   */
+  tooltip?: string;
+  /**
+   * Status of the tooltip (determines color and icon)
+   */
+  tooltipStatus?: FzTooltipStatus;
+  /**
+   * Controls visibility of the label text. If false, only the radio icon is shown.
+   * Note: standalone={true} is equivalent to hasText={false}
+   */
+  hasText?: boolean;
   /**
    * the name of the radio button group to which the radio button belongs
    */
@@ -49,13 +74,22 @@ export type FzRadioGroupProps = {
   /**
    * The label of the radio button group
    */
-  label: string;
+  label?: string;
   /**
    * The size of the radio button
    */
   size?: "sm" | "md";
   /**
+   * Layout variant: vertical stacks radio buttons, horizontal arranges them in a row
+   */
+  variant?: "vertical" | "horizontal";
+  /**
+   * The tone/variant of the radio buttons
+   */
+  tone?: "neutral" | "emphasis" | "error";
+  /**
    * If true, the radio button will be emphasized
+   * @deprecated Use tone="emphasis" instead
    */
   emphasis?: boolean;
   /**
@@ -64,6 +98,7 @@ export type FzRadioGroupProps = {
   disabled?: boolean;
   /**
    * If true, the radio button will be in an error state
+   * @deprecated Use tone="error" instead
    */
   error?: boolean;
   /**
@@ -85,5 +120,13 @@ export type FzRadioCardProps = FzRadioProps & {
   imageUrl?: string;
   imageAlt?: string;
   tooltip?: string;
-  radioIcon?: boolean;
+  /**
+   * Controls whether the radio icon is shown
+   * @deprecated Use hasRadio instead
+   */
+  radioIcon?: boolean | ((props: FzRadioCardProps) => boolean);
+  /**
+   * Controls whether the radio icon is shown
+   */
+  hasRadio?: boolean;
 };

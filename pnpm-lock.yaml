@@ -2065,12 +2065,18 @@ importers:
 
   packages/radio:
     dependencies:
+      '@fiscozen/alert':
+        specifier: workspace:^
+        version: link:../alert
       '@fiscozen/badge':
         specifier: workspace:^
         version: link:../badge
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
+      '@fiscozen/icons':
+        specifier: workspace:^
+        version: link:../icons
       '@fiscozen/tooltip':
         specifier: workspace:^
         version: link:../tooltip
@@ -2081,27 +2087,15 @@ importers:
         specifier: ^3.4.13
         version: 3.5.13(typescript@5.3.3)
     devDependencies:
-      '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.65
-        version: 1.0.236
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
-      '@fiscozen/icons':
-        specifier: workspace:^
-        version: link:../icons
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
-      '@fortawesome/fontawesome-svg-core':
-        specifier: ^6.5.1
-        version: 6.7.2
-      '@fortawesome/vue-fontawesome':
-        specifier: ^3.0.6
-        version: 3.0.8(@fortawesome/fontawesome-svg-core@6.7.2)(vue@3.5.13(typescript@5.3.3))
       '@rushstack/eslint-patch':
         specifier: ^1.3.3
         version: 1.10.5
