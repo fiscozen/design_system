@@ -89,7 +89,7 @@ type FzInputProps = {
   rightIconAriaLabel?: string;
   /**
    * Font Awesome icon name displayed as second icon on the right side of input.
-   * Priority order: valid > secondRightIcon > rightIcon
+   * Priority order: secondRightIcon > rightIcon > valid
    */
   secondRightIcon?: string;
   /**
