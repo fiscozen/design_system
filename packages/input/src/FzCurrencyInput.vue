@@ -18,11 +18,6 @@ import { roundTo, useCurrency } from "@fiscozen/composables";
 import { FzIcon } from "@fiscozen/icons";
 
 const fzInputRef = ref<InstanceType<typeof FzInput>>();
-/**
- * String representation for FzInput display
- *
- * FzInput expects strings, so we maintain formatted string while model is number.
- */
 const fzInputModel = ref<string | undefined>();
 const containerRef = computed(() => fzInputRef.value?.containerRef);
 const inputRef = computed(() => fzInputRef.value?.inputRef);
@@ -34,7 +29,6 @@ const props = withDefaults(defineProps<FzCurrencyInputProps>(), {
 const {
   inputRef: currencyInputRef,
   setValue,
-  emitAmount,
   parse,
   format,
 } = useCurrency({
@@ -45,19 +39,12 @@ const {
   step: props.step,
 });
 
-/**
- * Currency value model
- *
- * Accepts number | string | undefined for retrocompatibility, always emits number | undefined.
- * String inputs are deprecated and trigger console.warn.
- */
 const model = defineModel<number | string | undefined>();
+
+let isInternalUpdate = false;
 
 /**
  * Parses pasted text with automatic separator detection
- *
- * Detects decimal/thousand separators using heuristics (multiple different = rightmost is decimal,
- * multiple same = thousand, single with <3 digits after = decimal). Normalizes to dot before parsing.
  */
 const onPaste = (e: ClipboardEvent) => {
   e.preventDefault();
@@ -85,7 +72,6 @@ const onPaste = (e: ClipboardEvent) => {
     return;
   }
 
-  // Match all comma and dot separators for heuristic detection
   const separatorRegex = /[,.]/g;
   const separators: string[] = [...rawPastedText.matchAll(separatorRegex)].map(
     (regexRes) => regexRes[0]
@@ -102,7 +88,10 @@ const onPaste = (e: ClipboardEvent) => {
       }
       const safeText = format(safeNum);
       setValue(safeText);
-      emitAmount(safeNum);
+      isInternalUpdate = true;
+      const finalValue = props.nullOnEmpty && !safeNum ? undefined : safeNum;
+      model.value = finalValue;
+      fzInputModel.value = safeText;
     } catch (error) {
       console.warn(
         `[FzCurrencyInput] Error parsing pasted value "${rawPastedText.trim()}":`,
@@ -116,14 +105,11 @@ const onPaste = (e: ClipboardEvent) => {
   let decimalSeparator = ".";
   let thousandSeparator = "";
 
-  // Heuristic 1: Multiple different separators → rightmost is decimal
   if (uniqueSeparators.size > 1) {
     decimalSeparator = separators[separators.length - 1];
     thousandSeparator = separators[0];
   }
 
-  // Heuristic 2: Multiple same separator → thousand separator
-  // Heuristic 3: Single separator with <3 digits after → decimal separator
   if (uniqueSeparators.size === 1) {
     if (separators.length > 1) {
       thousandSeparator = separators[0];
@@ -133,12 +119,8 @@ const onPaste = (e: ClipboardEvent) => {
       if (splitted.length > 1 && splitted[1].length !== 3) {
         decimalSeparator = unknownSeparator;
       }
-      // If exactly 3 digits after separator, ambiguous → use default formatting
     }
   }
-
-  // Normalize: remove thousand separator, replace decimal with dot
-  // Escape regex special chars to treat separators as literal strings
   let safeText = rawPastedText
     .replace(
       new RegExp(thousandSeparator.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
@@ -163,7 +145,10 @@ const onPaste = (e: ClipboardEvent) => {
 
     const formattedText = format(safeNum);
     setValue(formattedText);
-    emitAmount(safeNum);
+    isInternalUpdate = true;
+    const finalValue = props.nullOnEmpty && !safeNum ? undefined : safeNum;
+    model.value = finalValue;
+    fzInputModel.value = formattedText;
   } catch (error) {
     console.warn(
       `[FzCurrencyInput] Error processing pasted value "${rawPastedText}":`,
@@ -175,7 +160,6 @@ const onPaste = (e: ClipboardEvent) => {
 onMounted(() => {
   currencyInputRef.value = inputRef.value;
   nextTick(() => {
-    // Sync initial value: prefer existing input value, otherwise format model value
     if (inputRef.value?.value) {
       fzInputModel.value = inputRef.value.value;
     } else if (model.value !== undefined) {
@@ -189,8 +173,7 @@ onMounted(() => {
 /**
  * Adjusts value by step amount
  *
- * When forceStep is true, rounds to nearest step before increment. Formats and syncs display/model.
- * Updates model.value directly to sync with v-model (instead of using emitAmount which emits update:amount).
+ * When forceStep is true, rounds to nearest step before increment.
  */
 const stepUpDown = (amount: number) => {
   if (props.disabled || props.readonly) {
@@ -203,17 +186,11 @@ const stepUpDown = (amount: number) => {
   stepVal += amount;
   const safeText = format(stepVal);
   setValue(safeText);
-  // Update model directly to sync with v-model
   isInternalUpdate = true;
   model.value = stepVal;
   fzInputModel.value = safeText;
 };
 
-/**
- * Keyboard handler for step controls
- *
- * Triggers step adjustment on Enter/Space for accessibility.
- */
 const handleStepKeydown = (e: KeyboardEvent, amount: number) => {
   if (e.key === "Enter" || e.key === " ") {
     e.preventDefault();
@@ -223,37 +200,14 @@ const handleStepKeydown = (e: KeyboardEvent, amount: number) => {
 
 const isStepDisabled = computed(() => props.disabled || props.readonly);
 
-/**
- * Accessible label for step up button
- *
- * Uses custom prop if provided, otherwise generates default Italian label with step value.
- */
 const stepUpAriaLabel = computed(() => {
-  if (props.stepUpAriaLabel) {
-    return props.stepUpAriaLabel;
-  }
-  const stepValue = props.step;
-  return `Incrementa di ${stepValue}`;
+  return props.stepUpAriaLabel || `Incrementa di ${props.step}`;
 });
 
-/**
- * Accessible label for step down button
- *
- * Uses custom prop if provided, otherwise generates default Italian label with step value.
- */
 const stepDownAriaLabel = computed(() => {
-  if (props.stepDownAriaLabel) {
-    return props.stepDownAriaLabel;
-  }
-  const stepValue = props.step;
-  return `Decrementa di ${stepValue}`;
+  return props.stepDownAriaLabel || `Decrementa di ${props.step}`;
 });
 
-/**
- * Normalizes model value to number | undefined
- *
- * Parses strings for retrocompatibility (deprecated, warns developer). Always returns number or undefined.
- */
 const normalizeModelValue = (
   value: number | string | undefined
 ): number | undefined => {
@@ -277,10 +231,8 @@ const normalizeModelValue = (
 /**
  * Syncs external model changes to FzInput string format
  *
- * Converts number to formatted string for display. Skips internal updates (from handleFzInputUpdate)
- * to avoid loops. useCurrency handles input filtering directly on DOM, so this only handles external changes.
+ * Skips internal updates to avoid loops.
  */
-let isInternalUpdate = false;
 watch(
   () => model.value,
   (newVal, oldVal) => {
@@ -312,8 +264,7 @@ watch(
 /**
  * Syncs FzInput string updates to number model
  *
- * Parses formatted string and updates v-model. Sets isInternalUpdate flag to prevent watch loop.
- * useCurrency handles input filtering on DOM, so this mainly syncs v-model when useCurrency emits.
+ * Sets isInternalUpdate flag to prevent watch loop.
  */
 const handleFzInputUpdate = (newVal: string | undefined) => {
   fzInputModel.value = newVal;
