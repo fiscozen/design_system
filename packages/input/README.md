@@ -51,11 +51,11 @@ const email = ref('')
 import { FzCurrencyInput } from '@fiscozen/input'
 import { ref } from 'vue'
 
-const amount = ref<number | null>(null)
+const amount = ref<number | undefined>(undefined)
 </script>
 
 <template>
-  <FzCurrencyInput label="Amount" v-model:amount="amount" />
+  <FzCurrencyInput label="Amount" v-model="amount" />
 </template>
 ```
 
@@ -99,17 +99,21 @@ const amount = ref<number | null>(null)
 
 ### FzCurrencyInput Props
 
-FzCurrencyInput extends FzInput props (except `type` and `modelValue`) and adds:
+FzCurrencyInput extends FzInput props (except `type`, `modelValue`, `rightIcon`, `rightIconSize`, `rightIconVariant`, `rightIconButton`, `rightIconButtonVariant`, `rightIconAriaLabel`, `rightIconClass`, `secondRightIcon`, `secondRightIconClass`, `secondRightIconVariant`, `secondRightIconButton`, `secondRightIconButtonVariant`, `secondRightIconAriaLabel`) and adds:
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `nullOnEmpty` | `boolean` | `false` | When true, empty input values are converted to null instead of 0 |
-| `minimumFractionDigits` | `number` | `2` | Minimum decimal places in formatted output. Used by Intl.NumberFormat. |
-| `maximumFractionDigits` | `number` | `2` | Maximum decimal places in formatted output. Used by Intl.NumberFormat. |
-| `min` | `number` | - | Minimum allowed numeric value. Values below this are clamped to min |
-| `max` | `number` | - | Maximum allowed numeric value. Values above this are clamped to max |
-| `step` | `number` | - | Step increment for arrow buttons and quantization. When forceStep is true, values are rounded to nearest step |
-| `forceStep` | `boolean` | `false` | When true, enforces quantization: values are automatically rounded to nearest step multiple |
+| `nullOnEmpty` | `boolean` | `false` | Converts empty input to null instead of 0 |
+| `minimumFractionDigits` | `number` | `2` | Minimum decimal places in formatted output |
+| `maximumFractionDigits` | `number` | `2` | Maximum decimal places in formatted output |
+| `min` | `number` | - | Minimum allowed value. Values below this are clamped to min |
+| `max` | `number` | - | Maximum allowed value. Values above this are clamped to max |
+| `step` | `number` | `1` | Step increment for arrow buttons. When forceStep is true, values are rounded to nearest step multiple |
+| `forceStep` | `boolean` | `false` | Enforces quantization: values are automatically rounded to nearest step multiple |
+| `stepUpAriaLabel` | `string` | - | Custom accessible label for step up button. If not provided, uses default label |
+| `stepDownAriaLabel` | `string` | - | Custom accessible label for step down button. If not provided, uses default label |
+
+**Note**: `rightIcon` and `secondRightIcon` props are not available in FzCurrencyInput. Only `valid` checkmark icon can be displayed alongside step controls.
 
 ## Slots
 
@@ -486,13 +490,13 @@ Specialized currency input component built on FzInput with number formatting, va
 import { FzCurrencyInput } from '@fiscozen/input'
 import { ref } from 'vue'
 
-const amount = ref<number | null>(null)
+const amount = ref<number | undefined>(undefined)
 </script>
 
 <template>
   <FzCurrencyInput 
     label="Amount" 
-    v-model:amount="amount" 
+    v-model="amount" 
     :min="0" 
     :max="1000" 
   />
@@ -501,13 +505,25 @@ const amount = ref<number | null>(null)
 
 ### With Step Controls
 
-When `step` prop is provided, arrow buttons appear on the right to increment/decrement the value.
+Step controls (arrow buttons) are always visible in FzCurrencyInput. Default step is 1, but can be customized.
 
 ```vue
 <FzCurrencyInput 
   label="Quantity" 
-  v-model:amount="quantity" 
+  v-model="quantity" 
   :step="5"
+/>
+```
+
+### With Step Quantization
+
+When `forceStep` is true, values are automatically rounded to the nearest step multiple.
+
+```vue
+<FzCurrencyInput 
+  label="Quantity" 
+  v-model="quantity" 
+  :step="4"
   :forceStep="true"
 />
 ```
@@ -517,7 +533,7 @@ When `step` prop is provided, arrow buttons appear on the right to increment/dec
 ```vue
 <FzCurrencyInput 
   label="Price" 
-  v-model:amount="price" 
+  v-model="price" 
   :min="0" 
   :max="9999.99"
   :minimumFractionDigits="2"
@@ -525,14 +541,28 @@ When `step` prop is provided, arrow buttons appear on the right to increment/dec
 />
 ```
 
+### With Valid State
+
+Valid checkmark icon is displayed alongside step controls.
+
+```vue
+<FzCurrencyInput 
+  label="Amount" 
+  v-model="amount" 
+  :valid="isValid"
+/>
+```
+
 ### Currency Input Behavior
 
-- **Formatting**: Values are formatted using Intl.NumberFormat with locale settings
+- **Formatting**: Values are formatted using Intl.NumberFormat with locale settings (default: 'it-IT')
 - **Paste Handling**: Automatically detects and parses various number formats (e.g., "1.234,56", "1,234.56")
+- **Step Controls**: Arrow buttons are always visible (default step = 1). Support keyboard accessibility (Enter/Space to activate)
 - **Step Quantization**: When `forceStep` is true, values are automatically rounded to nearest step multiple
 - **Empty Values**: When `nullOnEmpty` is true, empty input converts to null instead of 0
-- **Step Controls**: When `step` prop is provided, arrow buttons appear with keyboard accessibility (Enter/Space to activate)
-- **Type Safety**: v-model accepts `number | string | undefined` but emits only `number | undefined`
+- **Valid State**: Valid checkmark icon can be displayed alongside step controls
+- **Right Icons**: `rightIcon` and `secondRightIcon` props are not available. Only `valid` icon is supported.
+- **v-model Type**: Accepts `number | string | undefined` for retrocompatibility, but always emits `number | undefined`. String inputs are deprecated and trigger console.warn.
 
 ## Accessibility
 
