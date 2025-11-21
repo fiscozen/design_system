@@ -720,13 +720,13 @@ export const FloatingLabelEmpty: Story = {
     await expect(input).toHaveAttribute('placeholder', 'Enter your email')
 
     // Verify floating placeholder span is not shown when input is empty and not focused
-    const floatingPlaceholder = canvasElement.querySelector('span.text-xs.text-gray-300')
+    const floatingPlaceholder = canvasElement.querySelector('span.text-xs.text-grey-300')
     await expect(floatingPlaceholder).not.toBeInTheDocument()
 
     // Verify when focused, placeholder "floats" above
     await input.focus()
     await expect(input).toHaveAttribute('placeholder', '')
-    const floatingPlaceholderFocused = canvasElement.querySelector('span.text-xs.text-gray-300')
+    const floatingPlaceholderFocused = canvasElement.querySelector('span.text-xs.text-grey-300')
     await expect(floatingPlaceholderFocused).toBeInTheDocument()
     if (floatingPlaceholderFocused) {
       await expect(floatingPlaceholderFocused.textContent).toBe('Enter your email')
