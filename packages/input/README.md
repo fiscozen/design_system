@@ -85,7 +85,7 @@ const amount = ref<number | undefined>(undefined)
 | `rightIconButton` | `boolean` | `false` | Renders right icon as clickable button instead of static icon |
 | `rightIconButtonVariant` | `IconButtonVariant` | `'invisible'` | Button variant for right icon when rightIconButton is true |
 | `rightIconAriaLabel` | `string` | - | Accessible label for right icon when clickable. Required for screen reader accessibility |
-| `secondRightIcon` | `string` | - | Font Awesome icon name displayed as second icon on the right side of input. Order: valid > secondRightIcon > rightIcon (all can be present simultaneously) |
+| `secondRightIcon` | `string` | - | Font Awesome icon name displayed as second icon on the right side of input. Order: secondRightIcon > rightIcon > valid (all can be present simultaneously) |
 | `secondRightIconClass` | `string` | - | Additional CSS classes applied to second right icon container |
 | `secondRightIconVariant` | `IconVariant` | - | Visual style variant for second right icon (solid, regular, light, etc.) |
 | `secondRightIconButton` | `boolean` | `false` | Renders second right icon as clickable button instead of static icon |

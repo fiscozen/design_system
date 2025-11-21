@@ -168,7 +168,7 @@ import { FzInput } from '@fiscozen/input'
       <td><code>secondRightIcon</code></td>
       <td><code>string</code></td>
       <td>-</td>
-      <td>Font Awesome icon name displayed as second icon on the right side of input. Order: valid > secondRightIcon > rightIcon (all can be present simultaneously)</td>
+      <td>Font Awesome icon name displayed as second icon on the right side of input. Order: secondRightIcon > rightIcon > valid (all can be present simultaneously)</td>
     </tr>
     <tr>
       <td><code>secondRightIconClass</code></td>
@@ -461,7 +461,7 @@ When icons are clickable, provide `leftIconAriaLabel` or `rightIconAriaLabel` fo
 
 ### Second Right Icon
 
-You can display a second icon on the right side. The display order is: `valid` checkmark > `secondRightIcon` > `rightIcon`. All three can be present simultaneously.
+You can display a second icon on the right side. The display order is: `secondRightIcon` > `rightIcon` > `valid` checkmark. All three can be present simultaneously.
 
 ```vue
 <FzInput 
