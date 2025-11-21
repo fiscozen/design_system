@@ -66,7 +66,8 @@ const amount = ref<number | undefined>(undefined)
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `label` | `string` | - | Text label displayed above the input field. Overridden by label slot if provided. |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Visual size affecting height, padding, and text size |
+| `environment` | `'backoffice' \| 'frontoffice'` | `'frontoffice'` | Environment determining input size and styling |
+| `size` | `'sm' \| 'md' \| 'lg'` | - | **Deprecated**: Use `environment` prop instead. Size values map to environments: sm/md → backoffice, lg → frontoffice |
 | `placeholder` | `string` | - | Placeholder text shown when input is empty. Behavior differs based on variant. |
 | `required` | `boolean` | `false` | Marks input as required. Adds asterisk to label and sets native required attribute. |
 | `disabled` | `boolean` | `false` | Disables input interaction and applies disabled styling |
