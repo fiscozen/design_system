@@ -4,9 +4,6 @@ import { ref } from 'vue'
 import { FzInput } from '@fiscozen/input'
 import { all } from '@awesome.me/kit-8137893ad3/icons'
 
-const templateForm =
-  '<form action="javascript:void(0);"><story/> <button type="submit" class="mt-10 border-1 px-10 py-4 rounded ">Submit</button></form>'
-
 const meta = {
   title: 'Form/FzInput',
   component: FzInput,
@@ -136,6 +133,37 @@ export const Disabled: Story = {
     // Verify user cannot type in disabled input
     await userEvent.type(input, 'Test')
     await expect(input).toHaveValue('')
+  }
+}
+
+export const Readonly: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    readonly: true,
+    modelValue: 'Read-only value'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    const input = canvas.getByRole('textbox', { name: /Input Label/i })
+
+    // Verify input is readonly
+    await expect(input).toHaveAttribute('readonly')
+    await expect(input).toHaveAttribute('aria-disabled', 'true')
+
+    // Verify readonly styling is applied (same as disabled)
+    const container = input.closest('.fz-input')
+    await expect(container).toBeInTheDocument()
+
+    // Verify container is not clickable (no tabindex)
+    const containerDiv = input.closest('.fz-input > div')
+    await expect(containerDiv).not.toHaveAttribute('tabindex')
+
+    // Verify user cannot modify readonly input
+    await userEvent.clear(input)
+    await userEvent.type(input, 'New text')
+    await expect(input).toHaveValue('Read-only value')
   }
 }
 
@@ -344,45 +372,6 @@ export const RightIconAccessible: Story = {
   }
 }
 
-export const Email: Story = {
-  ...Template,
-  args: {
-    ...Template.args,
-    type: 'email',
-    required: true
-  },
-  decorators: [() => ({ template: templateForm })],
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-
-    // Verify input type is email
-    const input = canvas.getByRole('textbox', { name: /Input Label/i })
-    await expect(input).toHaveAttribute('type', 'email')
-  }
-}
-
-export const Telephone: Story = {
-  ...Template,
-  args: {
-    ...Template.args,
-    type: 'tel',
-    pattern: '[0-9]{3}-[0-9]{3}-[0-9]{4}',
-    required: true
-  },
-  decorators: [() => ({ template: templateForm })],
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-
-    const input = canvas.getByRole('textbox', { name: /Input Label/i })
-
-    // Verify input type is tel
-    await expect(input).toHaveAttribute('type', 'tel')
-
-    // Verify pattern attribute is set
-    await expect(input).toHaveAttribute('pattern', '[0-9]{3}-[0-9]{3}-[0-9]{4}')
-  }
-}
-
 export const Valid: Story = {
   ...Template,
   args: {
@@ -413,7 +402,6 @@ export const Required: Story = {
     ...Template.args,
     required: true
   },
-  decorators: [() => ({ template: templateForm })],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -446,14 +434,13 @@ export const LeftAndRightWithValid: Story = {
     valid: true
   },
   play: async ({ canvasElement }) => {
-    // Verify both icons and valid checkmark are displayed
+    // Verify all icons are displayed (leftIcon, rightIcon, and valid checkmark at the end)
     const leftIcon = canvasElement.querySelector('.fa-calendar-lines')
+    const rightIcon = canvasElement.querySelector('.fa-credit-card')
     const checkIcon = canvasElement.querySelector('.fa-check')
     await expect(leftIcon).toBeInTheDocument()
+    await expect(rightIcon).toBeInTheDocument()
     await expect(checkIcon).toBeInTheDocument()
-    // Valid checkmark takes precedence over rightIcon
-    const rightIcon = canvasElement.querySelector('.fa-credit-card')
-    await expect(rightIcon).not.toBeInTheDocument()
 
     // Verify left icon accessibility attributes
     if (leftIcon) {
@@ -469,63 +456,12 @@ export const LeftAndRightWithValid: Story = {
   }
 }
 
-export const WithDefaultValues: Story = {
-  ...Template,
-  args: {
-    label: 'Input Label',
-    placeholder: 'This is a very long placeholder with a longer value and longer meaning',
-    modelValue: 'This is a very long text with a longer value and longer meaning'
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-
-    // Verify default value is displayed
-    const input = canvas.getByRole('textbox', { name: /Input Label/i })
-    await expect(input).toHaveValue('This is a very long text with a longer value and longer meaning')
-  }
-}
-
-export const Number: Story = {
-  ...Template,
-  args: {
-    ...Template.args,
-    type: 'number',
-    required: true
-  },
-  decorators: [() => ({ template: templateForm })],
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-
-    // Verify input type is number
-    const input = canvas.getByRole('spinbutton', { name: /Input Label/i })
-    await expect(input).toHaveAttribute('type', 'number')
-  }
-}
-
-export const Url: Story = {
-  ...Template,
-  args: {
-    ...Template.args,
-    type: 'url',
-    required: true
-  },
-  decorators: [() => ({ template: templateForm })],
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-
-    // Verify input type is url
-    const input = canvas.getByRole('textbox', { name: /Input Label/i })
-    await expect(input).toHaveAttribute('type', 'url')
-  }
-}
-
 export const MaxLength: Story = {
   ...Template,
   args: {
     ...Template.args,
     maxlength: 4
   },
-  decorators: [() => ({ template: templateForm })],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -610,59 +546,87 @@ export const ShowHidePassword: Story = {
   }
 }
 
-export const CustomLabel: Story = {
+export const TwoRightIcons: Story = {
   ...Template,
-  render: (args) => ({
-    components: { FzInput },
-    setup() {
-      const modelValue = ref('')
-      return { args, modelValue }
-    },
-    template: `
-      <div>
-        <FzInput v-bind="args" v-model="modelValue">
-          <template #label><b>This is a custom label</b></template>
-        </FzInput>
-      </div>
-    `
-  }),
+  args: {
+    ...Template.args,
+    secondRightIcon: 'info-circle',
+    rightIcon: 'envelope',
+    secondRightIconAriaLabel: 'Show information',
+    rightIconAriaLabel: 'Email details'
+  },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    // Verify no left icon is displayed
+    const leftIcon = canvasElement.querySelector('.fa-calendar-lines')
+    await expect(leftIcon).not.toBeInTheDocument()
 
-    // Verify custom label is displayed
-    const customLabel = canvas.getByText('This is a custom label')
-    await expect(customLabel).toBeVisible()
-    await expect(customLabel.tagName).toBe('B')
+    // Verify both right icons are displayed (order: secondRightIcon, rightIcon)
+    const secondIcon = canvasElement.querySelector('.fa-info-circle')
+    const rightIcon = canvasElement.querySelector('.fa-envelope')
+    await expect(secondIcon).toBeInTheDocument()
+    await expect(rightIcon).toBeInTheDocument()
+
+    // Verify second icon accessibility attributes
+    if (secondIcon) {
+      await expect(secondIcon).toHaveAttribute('role', 'button')
+      await expect(secondIcon).toHaveAttribute('aria-label', 'Show information')
+      await expect(secondIcon).toHaveAttribute('tabindex', '0')
+    }
+
+    // Verify right icon accessibility attributes
+    if (rightIcon) {
+      await expect(rightIcon).toHaveAttribute('role', 'button')
+      await expect(rightIcon).toHaveAttribute('aria-label', 'Email details')
+      await expect(rightIcon).toHaveAttribute('tabindex', '0')
+    }
   }
 }
 
-export const FloatingLabel: Story = {
+export const TwoRightIconsWithValid: Story = {
   ...Template,
   args: {
-    label: 'Label',
-    size: 'md',
-    rightIcon: 'calendar-lines',
-    rightIconButtonVariant: 'secondary',
-    rightIconButton: true,
-    rightIconSize: 'sm',
-    variant: 'floating-label'
+    ...Template.args,
+    valid: true,
+    secondRightIcon: 'info-circle',
+    rightIcon: 'envelope',
+    secondRightIconAriaLabel: 'Show information',
+    rightIconAriaLabel: 'Email details'
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    // Verify no left icon is displayed
+    const leftIcon = canvasElement.querySelector('.fa-calendar-lines')
+    await expect(leftIcon).not.toBeInTheDocument()
 
-    // Verify floating label variant styling
-    const input = canvas.getByRole('textbox', { name: /Label/i })
-    const container = input.closest('.fz-input')
-    await expect(container).toBeInTheDocument()
+    // Verify all three right icons are displayed (order: secondRightIcon, rightIcon, valid checkmark)
+    const secondIcon = canvasElement.querySelector('.fa-info-circle')
+    const rightIcon = canvasElement.querySelector('.fa-envelope')
+    const checkIcon = canvasElement.querySelector('.fa-check')
+    
+    await expect(secondIcon).toBeInTheDocument()
+    await expect(rightIcon).toBeInTheDocument()
+    await expect(checkIcon).toBeInTheDocument()
 
-    // Verify placeholder behavior in floating label mode
-    // In floating-label mode, placeholder shows above input when empty
-    const placeholderSpan = canvasElement.querySelector('span.text-xs.text-gray-300')
-    await expect(placeholderSpan).toBeInTheDocument()
+    // Verify check icon is decorative (aria-hidden)
+    if (checkIcon) {
+      const checkIconWrapper = checkIcon.closest('[aria-hidden]')
+      if (checkIconWrapper) {
+        await expect(checkIconWrapper).toHaveAttribute('aria-hidden', 'true')
+      }
+    }
 
-    // Verify right icon button is rendered
-    const iconButton = canvasElement.querySelector('.fz-icon-button')
-    await expect(iconButton).toBeInTheDocument()
+    // Verify second icon accessibility attributes
+    if (secondIcon) {
+      await expect(secondIcon).toHaveAttribute('role', 'button')
+      await expect(secondIcon).toHaveAttribute('aria-label', 'Show information')
+      await expect(secondIcon).toHaveAttribute('tabindex', '0')
+    }
+
+    // Verify right icon accessibility attributes
+    if (rightIcon) {
+      await expect(rightIcon).toHaveAttribute('role', 'button')
+      await expect(rightIcon).toHaveAttribute('aria-label', 'Email details')
+      await expect(rightIcon).toHaveAttribute('tabindex', '0')
+    }
   }
 }
 

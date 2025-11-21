@@ -8,7 +8,7 @@ Flexible input component library for Vue 3 applications, featuring icon support,
 - **Icon Support**: Left and right icons (static or clickable buttons)
 - **Validation States**: Error and valid states with visual feedback
 - **Two Variants**: Normal and floating-label presentation
-- **Three Sizes**: sm, md, lg
+- **Two Environments**: frontoffice and backoffice (different heights and styling)
 - **Currency Input**: Specialized component with locale-aware number formatting
 - **Full Accessibility**: ARIA attributes, keyboard navigation, screen reader support
 - **Customizable**: Slots for label, icons, help text, and error messages
@@ -68,7 +68,6 @@ const amount = ref<number | null>(null)
 | `label` | `string` | - | Text label displayed above the input field. Overridden by label slot if provided. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Visual size affecting height, padding, and text size |
 | `placeholder` | `string` | - | Placeholder text shown when input is empty. Behavior differs based on variant. |
-| `secondaryPlaceholder` | `string` | - | Secondary placeholder for floating-label variant. Displays as floating text when input has focus or value. |
 | `required` | `boolean` | `false` | Marks input as required. Adds asterisk to label and sets native required attribute. |
 | `disabled` | `boolean` | `false` | Disables input interaction and applies disabled styling |
 | `error` | `boolean` | `false` | Shows error state with red border and enables errorMessage slot display |
@@ -80,11 +79,17 @@ const amount = ref<number | null>(null)
 | `leftIconButtonVariant` | `IconButtonVariant` | - | Button variant for left icon when rendered as clickable button |
 | `leftIconAriaLabel` | `string` | - | Accessible label for left icon when clickable. Required for screen reader accessibility |
 | `rightIcon` | `string` | - | Font Awesome icon name displayed on the right side of input |
-| `rightIconSize` | `IconSize` | - | Size override for right icon. If not provided, uses input size mapping. |
+| `rightIconSize` | `IconSize` | - | **Deprecated**: Size override for right icon. Icons now have a fixed size of "md". This prop is ignored. |
 | `rightIconVariant` | `IconVariant` | - | Visual style variant for right icon (solid, regular, light, etc.) |
 | `rightIconButton` | `boolean` | `false` | Renders right icon as clickable button instead of static icon |
 | `rightIconButtonVariant` | `IconButtonVariant` | `'invisible'` | Button variant for right icon when rightIconButton is true |
 | `rightIconAriaLabel` | `string` | - | Accessible label for right icon when clickable. Required for screen reader accessibility |
+| `secondRightIcon` | `string` | - | Font Awesome icon name displayed as second icon on the right side of input. Order: valid > secondRightIcon > rightIcon (all can be present simultaneously) |
+| `secondRightIconClass` | `string` | - | Additional CSS classes applied to second right icon container |
+| `secondRightIconVariant` | `IconVariant` | - | Visual style variant for second right icon (solid, regular, light, etc.) |
+| `secondRightIconButton` | `boolean` | `false` | Renders second right icon as clickable button instead of static icon |
+| `secondRightIconButtonVariant` | `IconButtonVariant` | `'invisible'` | Button variant for second right icon when secondRightIconButton is true |
+| `secondRightIconAriaLabel` | `string` | - | Accessible label for second right icon when clickable. Required for screen reader accessibility |
 | `pattern` | `string` | - | HTML5 pattern attribute for native browser validation |
 | `name` | `string` | - | Native name attribute for form submission and identification |
 | `readonly` | `boolean` | `false` | Native readonly attribute. Prevents user input while keeping field focusable |
@@ -139,15 +144,21 @@ Floating label variant moves placeholder above input when focused or when input 
 />
 ```
 
-## Sizes
+## Environments
+
+Inputs support two environments that determine their height and styling:
+
+- **frontoffice** (default): larger spacing
+- **backoffice**: compact spacing
 
 ```vue
 <template>
-  <FzInput label="Small" size="sm" v-model="value1" />
-  <FzInput label="Medium (Default)" size="md" v-model="value2" />
-  <FzInput label="Large" size="lg" v-model="value3" />
+  <FzInput label="Frontoffice (Default)" environment="frontoffice" v-model="value1" />
+  <FzInput label="Backoffice" environment="backoffice" v-model="value2" />
 </template>
 ```
+
+**Note**: The `size` prop is deprecated. Use `environment` instead.
 
 ## Input Types
 
@@ -558,9 +569,14 @@ When both `label` prop and label slot are provided, the slot takes precedence:
 </FzInput>
 ```
 
-### Valid vs Right Icon Priority
+### Right Icons Display Order
 
-When both `valid` prop is true and `rightIcon` is provided, the valid checkmark takes precedence and the rightIcon is hidden.
+The component supports three types of right-side icons that can all be displayed simultaneously:
+1. **`valid` checkmark** (when `valid` prop is `true`) - displayed first
+2. **`secondRightIcon`** (when provided) - displayed second
+3. **`rightIcon`** (when provided) - displayed third
+
+All three icons can be visible at the same time, appearing in this order from left to right.
 
 ### Floating Label Placeholder Behavior
 

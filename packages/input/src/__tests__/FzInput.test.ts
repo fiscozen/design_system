@@ -424,9 +424,9 @@ describe('FzInput', () => {
 
         await wrapper.vm.$nextTick()
 
-        // Find the error icon (FzIcon with name="triangle-exclamation")
+        // Find the error icon (FzIcon with name="circle-xmark")
         const errorIcons = wrapper.findAllComponents({ name: 'FzIcon' })
-        const errorIcon = errorIcons.find((icon) => icon.props('name') === 'triangle-exclamation')
+        const errorIcon = errorIcons.find((icon) => icon.props('name') === 'circle-xmark')
         
         expect(errorIcon?.exists()).toBe(true)
         const rootElement = errorIcon?.element as HTMLElement
@@ -454,6 +454,21 @@ describe('FzInput', () => {
           props: {
             label: 'Label',
             disabled: true,
+          },
+          slots: {},
+        })
+
+        await wrapper.vm.$nextTick()
+
+        const container = wrapper.find('.fz-input > div').element as HTMLElement
+        expect(container.getAttribute('tabindex')).toBeNull()
+      })
+
+      it('removes tabindex from container when readonly', async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: 'Label',
+            readonly: true,
           },
           slots: {},
         })
@@ -644,6 +659,33 @@ describe('FzInput', () => {
         expect(rootElement.getAttribute('aria-disabled')).toBe('true')
       })
 
+      it('removes tabindex when readonly and rightIconAriaLabel is provided', async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: 'Label',
+            rightIcon: 'eye',
+            rightIconAriaLabel: 'Toggle visibility',
+            readonly: true,
+          },
+          slots: {},
+        })
+
+        await wrapper.vm.$nextTick()
+
+        // Find the FzIcon component wrapper
+        const iconComponent = wrapper.findComponent({ name: 'FzIcon' })
+        expect(iconComponent.exists()).toBe(true)
+        
+        // Get the root element (div wrapper)
+        const rootElement = iconComponent.element as HTMLElement
+        
+        // Verify attributes are on the root element
+        expect(rootElement.getAttribute('role')).toBe('button')
+        expect(rootElement.getAttribute('aria-label')).toBe('Toggle visibility')
+        expect(rootElement.getAttribute('tabindex')).toBeNull() // Removed when readonly
+        expect(rootElement.getAttribute('aria-disabled')).toBe('true')
+      })
+
       it('does not apply accessibility attributes when rightIconButton is true', async () => {
         const wrapper = mount(FzInput, {
           props: {
@@ -684,6 +726,111 @@ describe('FzInput', () => {
         // Verify icon is keyboard accessible (has tabindex)
         expect(rootElement.getAttribute('tabindex')).toBe('0')
         // Keyboard interaction is tested in Storybook play functions
+      })
+    })
+
+    describe('Second right icon accessibility', () => {
+      it('applies accessibility attributes when secondRightIconAriaLabel is provided', async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: 'Label',
+            secondRightIcon: 'info-circle',
+            secondRightIconAriaLabel: 'Show information',
+          },
+          slots: {},
+        })
+
+        await wrapper.vm.$nextTick()
+
+        // Find all FzIcon components and get the one with secondRightIcon
+        const iconComponents = wrapper.findAllComponents({ name: 'FzIcon' })
+        const secondIconComponent = iconComponents.find((icon) => 
+          icon.props('name') === 'info-circle'
+        )
+        
+        expect(secondIconComponent?.exists()).toBe(true)
+        
+        // Get the root element (div wrapper)
+        const rootElement = secondIconComponent?.element as HTMLElement
+        
+        // Verify attributes are on the root element
+        expect(rootElement.getAttribute('role')).toBe('button')
+        expect(rootElement.getAttribute('aria-label')).toBe('Show information')
+        expect(rootElement.getAttribute('tabindex')).toBe('0')
+      })
+
+      it('removes tabindex when readonly and secondRightIconAriaLabel is provided', async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: 'Label',
+            secondRightIcon: 'info-circle',
+            secondRightIconAriaLabel: 'Show information',
+            readonly: true,
+          },
+          slots: {},
+        })
+
+        await wrapper.vm.$nextTick()
+
+        // Find all FzIcon components and get the one with secondRightIcon
+        const iconComponents = wrapper.findAllComponents({ name: 'FzIcon' })
+        const secondIconComponent = iconComponents.find((icon) => 
+          icon.props('name') === 'info-circle'
+        )
+        
+        expect(secondIconComponent?.exists()).toBe(true)
+        
+        // Get the root element (div wrapper)
+        const rootElement = secondIconComponent?.element as HTMLElement
+        
+        // Verify attributes are on the root element
+        expect(rootElement.getAttribute('role')).toBe('button')
+        expect(rootElement.getAttribute('aria-label')).toBe('Show information')
+        expect(rootElement.getAttribute('tabindex')).toBeNull() // Removed when readonly
+        expect(rootElement.getAttribute('aria-disabled')).toBe('true')
+      })
+    })
+
+    describe('Right icons order', () => {
+      it('renders valid checkmark as last icon when all icons are present', async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: 'Label',
+            valid: true,
+            secondRightIcon: 'info-circle',
+            rightIcon: 'envelope',
+          },
+          slots: {},
+        })
+
+        await wrapper.vm.$nextTick()
+
+        // Find all FzIcon components in the right-icon slot
+        const iconComponents = wrapper.findAllComponents({ name: 'FzIcon' })
+        const validIcon = iconComponents.find((icon) => icon.props('name') === 'check')
+        const secondIcon = iconComponents.find((icon) => icon.props('name') === 'info-circle')
+        const rightIcon = iconComponents.find((icon) => icon.props('name') === 'envelope')
+
+        expect(validIcon?.exists()).toBe(true)
+        expect(secondIcon?.exists()).toBe(true)
+        expect(rightIcon?.exists()).toBe(true)
+
+        // Get the container div that wraps all right icons
+        const rightIconContainer = wrapper.find('.fz-input > div > div.flex.items-center.gap-1')
+        expect(rightIconContainer.exists()).toBe(true)
+
+        // Get all icon elements in order
+        const icons = rightIconContainer.findAllComponents({ name: 'FzIcon' })
+        expect(icons.length).toBeGreaterThanOrEqual(3)
+
+        // Verify order: secondRightIcon, rightIcon, valid (check)
+        const iconNames = icons.map((icon) => icon.props('name'))
+        const secondIndex = iconNames.indexOf('info-circle')
+        const rightIndex = iconNames.indexOf('envelope')
+        const validIndex = iconNames.indexOf('check')
+
+        expect(secondIndex).toBeLessThan(rightIndex)
+        expect(rightIndex).toBeLessThan(validIndex)
       })
     })
   })

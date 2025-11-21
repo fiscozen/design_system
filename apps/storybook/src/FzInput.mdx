@@ -11,8 +11,6 @@ Flexible input component with icon support, validation states, and multiple vari
 - **Multiple Input Types**: text, password, email, number, tel, url
 - **Icon Support**: Left and right icons (static or clickable buttons)
 - **Validation States**: Error and valid states with visual feedback
-- **Two Variants**: Normal and floating-label presentation
-- **Three Sizes**: sm, md, lg
 - **Full Accessibility**: ARIA attributes, keyboard navigation, screen reader support
 - **Customizable**: Slots for label, icons, help text, and error messages
 
@@ -63,12 +61,6 @@ import { FzInput } from '@fiscozen/input'
       <td><code>string</code></td>
       <td>-</td>
       <td>Placeholder text shown when input is empty. Behavior differs based on variant.</td>
-    </tr>
-    <tr>
-      <td><code>secondaryPlaceholder</code></td>
-      <td><code>string</code></td>
-      <td>-</td>
-      <td>Secondary placeholder for floating-label variant. Displays as floating text when input has focus or value.</td>
     </tr>
     <tr>
       <td><code>required</code></td>
@@ -140,7 +132,7 @@ import { FzInput } from '@fiscozen/input'
       <td><code>rightIconSize</code></td>
       <td><code>IconSize</code></td>
       <td>-</td>
-      <td>Size override for right icon. If not provided, uses input size mapping.</td>
+      <td><strong>Deprecated</strong>: Size override for right icon. Icons now have a fixed size of "md". This prop is ignored.</td>
     </tr>
     <tr>
       <td><code>rightIconVariant</code></td>
@@ -165,6 +157,42 @@ import { FzInput } from '@fiscozen/input'
       <td><code>string</code></td>
       <td>-</td>
       <td>Accessible label for right icon when clickable. Required for screen reader accessibility</td>
+    </tr>
+    <tr>
+      <td><code>secondRightIcon</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Font Awesome icon name displayed as second icon on the right side of input. Order: valid > secondRightIcon > rightIcon (all can be present simultaneously)</td>
+    </tr>
+    <tr>
+      <td><code>secondRightIconClass</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Additional CSS classes applied to second right icon container</td>
+    </tr>
+    <tr>
+      <td><code>secondRightIconVariant</code></td>
+      <td><code>IconVariant</code></td>
+      <td>-</td>
+      <td>Visual style variant for second right icon (solid, regular, light, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>secondRightIconButton</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Renders second right icon as clickable button instead of static icon</td>
+    </tr>
+    <tr>
+      <td><code>secondRightIconButtonVariant</code></td>
+      <td><code>IconButtonVariant</code></td>
+      <td><code>'invisible'</code></td>
+      <td>Button variant for second right icon when secondRightIconButton is true</td>
+    </tr>
+    <tr>
+      <td><code>secondRightIconAriaLabel</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Accessible label for second right icon when clickable. Required for screen reader accessibility</td>
     </tr>
     <tr>
       <td><code>pattern</code></td>
@@ -259,16 +287,6 @@ Floating label variant moves placeholder above input when focused or when input 
   placeholder="Enter your email" 
   v-model="email" 
 />
-```
-
-## Sizes
-
-```vue
-<template>
-  <FzInput label="Small" size="sm" v-model="value1" />
-  <FzInput label="Medium (Default)" size="md" v-model="value2" />
-  <FzInput label="Large" size="lg" v-model="value3" />
-</template>
 ```
 
 ## Input Types
@@ -432,6 +450,34 @@ When icons are clickable, provide `leftIconAriaLabel` or `rightIconAriaLabel` fo
   leftIcon="dollar-sign" 
   rightIcon="credit-card" 
   v-model="amount" 
+/>
+```
+
+### Second Right Icon
+
+You can display a second icon on the right side. The display order is: `valid` checkmark > `secondRightIcon` > `rightIcon`. All three can be present simultaneously.
+
+```vue
+<FzInput 
+  label="Search" 
+  secondRightIcon="filter"
+  rightIcon="magnifying-glass"
+  v-model="search" 
+/>
+```
+
+### Multiple Right Icons with Valid
+
+When `valid` is true, all icons can be displayed together:
+
+```vue
+<FzInput 
+  label="Email" 
+  type="email"
+  :valid="isValid"
+  secondRightIcon="info-circle"
+  rightIcon="envelope"
+  v-model="email" 
 />
 ```
 
