@@ -1,23 +1,28 @@
-import { ButtonSize } from '@fiscozen/button'
-import { FzActionlistProps } from '@fiscozen/actionlist'
-import { IconButtonVariant, ButtonVariant } from '@fiscozen/button'
+import { ButtonSize, IconButtonVariant } from '@fiscozen/button'
+import { FzActionProps, FzActionSectionProps } from '@fiscozen/action'
+import { ButtonVariant } from '@fiscozen/button'
 import { VNode } from 'vue'
 
 type FzDropdownProps = {
   /**
+   * @deprecated Use the environment prop instead
    * Size of the dropdown trigger
    */
   size?: ButtonSize
+
   /**
-   * Label of the action list
+   * Environment of the dropdown trigger
+   * @default 'frontoffice'
    */
-  actionsLabel?: string
+  environment?: 'frontoffice' | 'backoffice'
   /**
+   * @deprecated Declare your actions list inside the actionsList slot instead
    * List of actions
    */
-  actions: FzActionlistProps['items']
+  actions: (FzActionProps | (FzActionSectionProps & { type: 'section' }))[]
   /**
    * Whether to align to the left or right
+   * @default 'center'
    */
   align?: 'left' | 'right' | 'center'
   /**
@@ -25,29 +30,23 @@ type FzDropdownProps = {
    */
   closeOnActionClick?: boolean
   /**
-   * Whether opener is disabled
-   */
-  openerDisabled?: boolean
-  /**
-   * Class binded to opener
-   */
-  openerClass?: string
-  /**
-   * teleport floating to body
-   */
-  teleport?: boolean
-  /**
-   * Class binded to the action list
+   * Class to apply to the actions list
    */
   listClass?: string
   /**
-   * Class binded to the floating element
+   * Whether opener is disabled
    */
-  floatingClass?: string
+  disabled?: boolean
   /**
-   * variant of the button
+   * Button variant
+   * @default 'primary'
    */
-  variant?: ButtonVariant
+  buttonVariant?: ButtonVariant
+  /**
+   * Teleport floating to body
+   * @default true
+   */
+  teleport?: boolean
 }
 
 type FzDropdownSlots = {
@@ -57,21 +56,39 @@ type FzDropdownSlots = {
    */
   default(props: { isOpen: boolean }): VNode | VNode[]
   /**
+   * Actions list slot
+   */
+  actionList(): VNode | VNode[]
+  /**
    *
    * Use this to replace the button opener entirely
    */
-  opener(props: { isOpen: boolean, open: () => void, close: () => void }): VNode | VNode[]
+  opener(props: { isOpen: boolean; open: () => void; close: () => void }): VNode | VNode[]
 }
 
-interface FzIconDropdownProps extends FzDropdownProps {
+export type FzIconDropdownProps = Omit<FzDropdownProps, 'buttonVariant'> & {
   /**
    * icon name
    */
   iconName: string
+  hasNotification?: boolean
   /**
-   * button variant
+   * A11y label for the button opener
+   * @default 'Open dropdown'
+   */
+  label?: string
+  /**
+   * Button variant (limited to IconButton variants)
+   * @default 'secondary'
    */
   buttonVariant?: IconButtonVariant
 }
 
-export type { FzDropdownProps, FzDropdownSlots, FzIconDropdownProps }
+export type FzIconDropdownSlots = {
+  /**
+   * Actions list slot
+   */
+  actionList(): VNode | VNode[]
+}
+
+export type { FzDropdownProps, FzDropdownSlots }
