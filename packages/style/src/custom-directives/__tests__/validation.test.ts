@@ -127,6 +127,37 @@ describe('Directive Validation', () => {
       expect(result).toBe(false)
       expect(consoleErrorSpy).toHaveBeenCalled()
     })
+
+    it('should always allow false value even with value restrictions', () => {
+      // false is a special sentinel value used by directives to remove classes
+      // It should always be valid, regardless of value restrictions in config
+      const el = document.createElement('h2')
+      const result = validateElement(mockConfig, el, {
+        name: 'v-color',
+        arg: 'red',
+        value: false, // false should be valid even though only '200' is in allowed values
+      } as any)
+
+      expect(result).toBe(true)
+      expect(consoleErrorSpy).not.toHaveBeenCalled()
+    })
+
+    it('should allow false value on P tag with value restrictions', () => {
+      const configWithRestrictions: DirectiveValidationConfig = {
+        'v-color': [
+          { tags: ['P'], values: ['500', '700'] }, // P only allows 500 and 700
+        ],
+      }
+      const el = document.createElement('p')
+      const result = validateElement(configWithRestrictions, el, {
+        name: 'v-color',
+        arg: 'blue',
+        value: false, // false should be valid for removal
+      } as any)
+
+      expect(result).toBe(true)
+      expect(consoleErrorSpy).not.toHaveBeenCalled()
+    })
   })
 
   describe('getValidTagsForDirective', () => {
