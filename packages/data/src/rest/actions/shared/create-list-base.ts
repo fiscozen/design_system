@@ -2,7 +2,12 @@ import { reactive, toValue, watch } from "vue";
 import { useFzFetch } from "../../http";
 import type { UseFzFetchReturn } from "../../http/types";
 import type { QueryActionReturn } from "./types";
-import type { PaginationParams, FilterParams, SortParams } from "../list/types";
+import type {
+  PaginationParams,
+  FilterParams,
+  SortParams,
+  ListActionParams,
+} from "../list/types";
 import type { UseActionOptions } from "./types";
 import {
   normalizeOptions,
@@ -12,6 +17,7 @@ import {
   isParamsObject,
 } from "./normalize";
 import { getGlobalAutoUpdateDebounceDelay } from "../../http/setup/state";
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "../../http/config";
 
 /**
  * Base function for creating list actions with configurable response type
@@ -29,8 +35,8 @@ import { getGlobalAutoUpdateDebounceDelay } from "../../http/setup/state";
  */
 export const createListBase = <TResponse, TData>(
   basePath: string,
-  paramsOrOptions: any,
-  options: any,
+  paramsOrOptions: ListActionParams | UseActionOptions | undefined,
+  options: UseActionOptions | undefined,
   normalizeResponseFn: (
     response: UseFzFetchReturn<TResponse>,
     throwOnError: boolean,
@@ -58,17 +64,19 @@ export const createListBase = <TResponse, TData>(
   // Create reactive objects for direct modification
   const filters = reactive<FilterParams>({ ...initialFilters });
   const ordering = reactive<SortParams>([...initialOrdering]);
-  // Apply defaults (page: 1, pageSize: 50) if pagination is provided (even if empty)
+  // Apply defaults if pagination is provided (even if empty)
   // Filter out undefined values to prevent them from overriding defaults
   const pagination = reactive<PaginationParams>(
     hasPagination
       ? {
           page:
-            initialPagination.page !== undefined ? initialPagination.page : 1,
+            initialPagination.page !== undefined
+              ? initialPagination.page
+              : DEFAULT_PAGE,
           pageSize:
             initialPagination.pageSize !== undefined
               ? initialPagination.pageSize
-              : 50,
+              : DEFAULT_PAGE_SIZE,
         }
       : {},
   );

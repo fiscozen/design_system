@@ -1,7 +1,7 @@
 import { toValue, type MaybeRefOrGetter } from "vue";
 import type { UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
-import { normalizeError } from "../../utils/error";
+import { handleFetchError } from "../../utils/error";
 import { parseResponseBody } from "../../utils/response";
 import type { ResponseInterceptor } from "./types";
 
@@ -60,16 +60,15 @@ export const wrapWithResponseInterceptor = <T>(
               }
             } catch (parseError: unknown) {
               // If parsing fails, set error and stop execution
-              // Normalize error immediately to ensure it's always an Error instance
-              const normalizedParseError = normalizeError(parseError);
+              const normalizedError = handleFetchError(
+                fetchResult.error,
+                parseError,
+                throwOnFailed,
+              );
               if (state.globalDebug) {
                 console.debug(
-                  `[useFzFetch] Failed to parse modified response body: ${normalizedParseError.message}`,
+                  `[useFzFetch] Failed to parse modified response body: ${normalizedError.message}`,
                 );
-              }
-              fetchResult.error.value = normalizedParseError;
-              if (throwOnFailed) {
-                throw normalizedParseError;
               }
               // Stop execution when error is set (don't continue processing)
               return;
@@ -77,15 +76,15 @@ export const wrapWithResponseInterceptor = <T>(
           }
         } catch (error: unknown) {
           // If response interceptor throws, treat as error and stop execution
-          const normalizedError = normalizeError(error);
+          const normalizedError = handleFetchError(
+            fetchResult.error,
+            error,
+            throwOnFailed,
+          );
           if (state.globalDebug) {
             console.debug(
               `[useFzFetch] Response interceptor error: ${normalizedError.message}`,
             );
-          }
-          fetchResult.error.value = normalizedError;
-          if (throwOnFailed) {
-            throw normalizedError;
           }
           // Stop execution when error is set (don't continue processing)
           return;

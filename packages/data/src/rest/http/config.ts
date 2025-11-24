@@ -17,3 +17,31 @@
  * @default 100
  */
 export const NON_JSON_BODY_PREFIX_LENGTH = 100;
+
+/**
+ * Default pagination page number (1-indexed)
+ *
+ * Used when pagination is provided but page is not specified.
+ *
+ * @default 1
+ */
+export const DEFAULT_PAGE = 1;
+
+/**
+ * Default pagination page size
+ *
+ * Used when pagination is provided but pageSize is not specified.
+ *
+ * @default 50
+ */
+export const DEFAULT_PAGE_SIZE = 50;
+
+/**
+ * Default data key for paginated responses
+ *
+ * Used to extract the data array from paginated responses when dataKey is not specified.
+ * Most APIs return paginated data under the "results" key.
+ *
+ * @default "results"
+ */
+export const DEFAULT_DATA_KEY = "results";

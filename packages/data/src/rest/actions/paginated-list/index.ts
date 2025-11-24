@@ -15,6 +15,7 @@ import {
   isParamsObject,
 } from "../shared/normalize";
 import { createListBase } from "../shared/create-list-base";
+import { DEFAULT_DATA_KEY } from "../../http/config";
 
 /**
  * Create a paginated list action for fetching multiple entities with filters, ordering, and pagination
@@ -64,7 +65,7 @@ export const createPaginatedListAction = <T>(
     options,
     paramsOrOptions,
     "dataKey",
-    "results",
+    DEFAULT_DATA_KEY,
   );
 
   // Extract enableSingleOrdering from options (default: false)
