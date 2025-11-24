@@ -42,6 +42,24 @@ const {
 const model = defineModel<number | string | undefined>();
 
 let isInternalUpdate = false;
+let pendingInternalUpdateReset = false;
+
+/**
+ * Safely resets the internal update flag after all queued watch callbacks complete.
+ *
+ * Uses nextTick to ensure all watch callbacks queued in the current tick can see
+ * the flag as true before it's reset, preventing race conditions with rapid updates.
+ */
+const resetInternalUpdateFlag = () => {
+  if (pendingInternalUpdateReset) {
+    return; // Already scheduled
+  }
+  pendingInternalUpdateReset = true;
+  nextTick(() => {
+    isInternalUpdate = false;
+    pendingInternalUpdateReset = false;
+  });
+};
 
 /**
  * Parses pasted text with automatic separator detection
@@ -234,13 +252,15 @@ const normalizeModelValue = (
 /**
  * Syncs external model changes to FzInput string format
  *
- * Skips internal updates to avoid loops.
+ * Skips internal updates to avoid loops. Uses nextTick to reset the flag
+ * after all queued watch callbacks complete, preventing race conditions
+ * with rapid external updates.
  */
 watch(
   () => model.value,
   (newVal, oldVal) => {
     if (isInternalUpdate) {
-      isInternalUpdate = false;
+      resetInternalUpdateFlag();
       return;
     }
 
