@@ -89,6 +89,8 @@ module.exports = {
       'gap-main-content-sm',
       'gap-main-content-base', 
       'gap-main-content-lg',
+      'gap-section-content-none',
+      'gap-section-content-xs',
       'gap-section-content-sm',
       'gap-section-content-base',
       'gap-section-content-lg',
