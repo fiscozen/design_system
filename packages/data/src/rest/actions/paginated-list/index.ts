@@ -8,7 +8,12 @@ import type {
 } from "./types";
 import type { UseActionOptions } from "../shared/types";
 import type { UseFzFetchReturn } from "../../http/types";
-import { normalizePaginatedListResponse } from "../shared/normalize";
+import {
+  normalizePaginatedListResponse,
+  extractOptionValue,
+  extractOptionsObject,
+  isParamsObject,
+} from "../shared/normalize";
 import { createListBase } from "../shared/create-list-base";
 
 /**
@@ -55,46 +60,27 @@ export const createPaginatedListAction = <T>(
   options?: PaginatedListActionOptions<T>,
 ): ReturnType<UsePaginatedListAction<T>> => {
   // Extract dataKey from options (default: 'results')
-  const dataKey =
-    options !== undefined
-      ? (options.dataKey ?? "results")
-      : paramsOrOptions &&
-          !(
-            "filters" in paramsOrOptions ||
-            "ordering" in paramsOrOptions ||
-            "pagination" in paramsOrOptions
-          )
-        ? ((paramsOrOptions as PaginatedListActionOptions<T>).dataKey ??
-          "results")
-        : "results";
+  const dataKey = extractOptionValue(
+    options,
+    paramsOrOptions,
+    "dataKey",
+    "results",
+  );
 
   // Extract enableSingleOrdering from options (default: false)
-  const enableSingleOrdering =
-    options !== undefined
-      ? (options.enableSingleOrdering ?? false)
-      : paramsOrOptions &&
-          !(
-            "filters" in paramsOrOptions ||
-            "ordering" in paramsOrOptions ||
-            "pagination" in paramsOrOptions
-          )
-        ? ((paramsOrOptions as PaginatedListActionOptions<T>)
-            .enableSingleOrdering ?? false)
-        : false;
+  const enableSingleOrdering = extractOptionValue(
+    options,
+    paramsOrOptions,
+    "enableSingleOrdering",
+    false,
+  );
 
   // Extract options without dataKey and enableSingleOrdering (pass to createListBase)
   // Use destructuring to safely exclude these properties instead of delete
-  const optionsToExtract =
-    options !== undefined
-      ? options
-      : paramsOrOptions &&
-          !(
-            "filters" in paramsOrOptions ||
-            "ordering" in paramsOrOptions ||
-            "pagination" in paramsOrOptions
-          )
-        ? (paramsOrOptions as PaginatedListActionOptions<T>)
-        : ({} as PaginatedListActionOptions<T>);
+  const optionsToExtract = extractOptionsObject(
+    options,
+    paramsOrOptions,
+  ) as PaginatedListActionOptions<T>;
 
   const { dataKey: _dataKey, enableSingleOrdering: _enableSingleOrdering, ...restOptions } =
     optionsToExtract;
@@ -103,34 +89,31 @@ export const createPaginatedListAction = <T>(
   // For usePaginatedList, pagination must always be present (even if empty)
   // This ensures pagination defaults (page: 1, pageSize: 50) are always applied
   // If pagination is not provided, add it as empty object so defaults are applied
-  // Use explicit union type instead of any for better type safety
   type ParamsWithPagination =
     | PaginatedListActionParams
     | PaginatedListActionOptions<T>
     | undefined;
-  let paramsWithPagination: ParamsWithPagination = paramsOrOptions;
-  const isParamsObject =
-    paramsOrOptions &&
-    ("filters" in paramsOrOptions ||
-      "ordering" in paramsOrOptions ||
-      "pagination" in paramsOrOptions);
 
-  if (isParamsObject && "pagination" in paramsOrOptions) {
-    // pagination is already present in params - use as is
-    paramsWithPagination = paramsOrOptions;
-  } else if (isParamsObject) {
-    // params object exists but pagination is not present - add it as empty object
-    paramsWithPagination = {
-      ...paramsOrOptions,
-      pagination: {},
-    };
-  } else {
+  const paramsWithPagination: ParamsWithPagination = (() => {
+    // If paramsOrOptions is a params object
+    if (isParamsObject(paramsOrOptions)) {
+      // If pagination already exists, use as is
+      if ("pagination" in paramsOrOptions) {
+        return paramsOrOptions;
+      }
+      // Otherwise, add empty pagination object
+      return {
+        ...paramsOrOptions,
+        pagination: {},
+      };
+    }
+
     // paramsOrOptions is options or undefined - create params object with pagination
-    paramsWithPagination = {
+    return {
       ...(paramsOrOptions || {}),
       pagination: {},
     };
-  }
+  })();
 
   // Call createListBase with PaginatedResponse<T> type
   // Define internal type that includes _rawResponse for type-safe access
@@ -170,6 +153,34 @@ export const createPaginatedListAction = <T>(
     };
   });
 
+  // Helper function to safely sync pagination.page with server response
+  // Prevents race conditions when multiple page requests are made in quick succession
+  const syncPaginationPage = (
+    serverPage: number | undefined,
+    isRequestInFlight: boolean,
+  ): void => {
+    if (serverPage === undefined) return;
+
+    const currentPage = baseResult.pagination.page;
+
+    // If a request is in flight, only sync if response matches current page
+    // This prevents race conditions where an older response overwrites a newer user action
+    if (isRequestInFlight) {
+      if (currentPage === serverPage) {
+        // Response matches current request - safe to sync
+        baseResult.pagination.page = serverPage;
+      }
+      // Otherwise, ignore this response (it's from an older request)
+      return;
+    }
+
+    // No request in flight - safe to sync normally
+    // This handles cases where server returns a different page due to validation, etc.
+    if (currentPage !== serverPage) {
+      baseResult.pagination.page = serverPage;
+    }
+  };
+
   // Synchronize pagination.page with meta.page (server response)
   // This ensures pagination.page always reflects the actual page returned by the server
   // After each successful response, pagination.page is updated to match the server's response.page
@@ -186,26 +197,7 @@ export const createPaginatedListAction = <T>(
   watch(
     [() => meta.value?.page, () => baseResult._rawResponse.isFetching.value],
     ([serverPage, isRequestInFlight]) => {
-      if (serverPage === undefined) return;
-
-      const currentPage = baseResult.pagination.page;
-
-      // If a request is in flight, only sync if response matches current page
-      // This prevents race conditions where an older response overwrites a newer user action
-      if (isRequestInFlight) {
-        if (currentPage === serverPage) {
-          // Response matches current request - safe to sync
-          baseResult.pagination.page = serverPage;
-        }
-        // Otherwise, ignore this response (it's from an older request)
-        return;
-      }
-
-      // No request in flight - safe to sync normally
-      // This handles cases where server returns a different page due to validation, etc.
-      if (currentPage !== serverPage) {
-        baseResult.pagination.page = serverPage;
-      }
+      syncPaginationPage(serverPage, isRequestInFlight);
     },
     { immediate: true },
   );

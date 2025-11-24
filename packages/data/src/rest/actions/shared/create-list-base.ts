@@ -4,7 +4,13 @@ import type { UseFzFetchReturn } from "../../http/types";
 import type { QueryActionReturn } from "./types";
 import type { PaginationParams, FilterParams, SortParams } from "../list/types";
 import type { UseActionOptions } from "./types";
-import { normalizeOptions, normalizeParams } from "./normalize";
+import {
+  normalizeOptions,
+  normalizeParams,
+  extractOptionValue,
+  extractOptionsObject,
+  isParamsObject,
+} from "./normalize";
 import { getGlobalAutoUpdateDebounceDelay } from "../../http/setup/state";
 
 /**
@@ -31,18 +37,23 @@ export const createListBase = <TResponse, TData>(
   ) => QueryActionReturn<TData[]>,
 ) => {
   // Extract initial values and create reactive objects
-  const initialFilters =
-    paramsOrOptions && "filters" in paramsOrOptions
-      ? toValue(paramsOrOptions.filters) || {}
-      : {};
-  const initialOrdering =
-    paramsOrOptions && "ordering" in paramsOrOptions
-      ? toValue(paramsOrOptions.ordering) || []
-      : [];
-  const hasPagination = paramsOrOptions && "pagination" in paramsOrOptions;
-  const initialPagination = hasPagination
-    ? toValue(paramsOrOptions.pagination) || {}
-    : {};
+  const getInitialValue = <T>(
+    key: "filters" | "ordering" | "pagination",
+    defaultValue: T,
+  ): T => {
+    if (isParamsObject(paramsOrOptions) && key in paramsOrOptions) {
+      const value = toValue(paramsOrOptions[key]);
+      return (value ?? defaultValue) as T;
+    }
+    return defaultValue;
+  };
+
+  const initialFilters = getInitialValue("filters", {} as FilterParams);
+  const initialOrdering = getInitialValue("ordering", [] as SortParams);
+  const hasPagination = isParamsObject(paramsOrOptions) && "pagination" in paramsOrOptions;
+  const initialPagination: PaginationParams = hasPagination
+    ? (toValue(paramsOrOptions.pagination) as PaginationParams) || ({} as PaginationParams)
+    : ({} as PaginationParams);
 
   // Create reactive objects for direct modification
   const filters = reactive<FilterParams>({ ...initialFilters });
@@ -63,30 +74,19 @@ export const createListBase = <TResponse, TData>(
   );
 
   // Extract throwOnError from options or paramsOrOptions
-  const throwOnError =
-    options !== undefined
-      ? (options.throwOnError ?? false)
-      : paramsOrOptions &&
-          !(
-            "filters" in paramsOrOptions ||
-            "ordering" in paramsOrOptions ||
-            "pagination" in paramsOrOptions
-          )
-        ? ((paramsOrOptions as UseActionOptions).throwOnError ?? false)
-        : false;
+  const throwOnError = extractOptionValue(
+    options,
+    paramsOrOptions,
+    "throwOnError",
+    false,
+  );
 
   // Create useFzFetch with reactive params
-  const normalizedOptions =
-    options !== undefined
-      ? normalizeOptions(options)
-      : paramsOrOptions &&
-          !(
-            "filters" in paramsOrOptions ||
-            "ordering" in paramsOrOptions ||
-            "pagination" in paramsOrOptions
-          )
-        ? normalizeOptions(paramsOrOptions as UseActionOptions)
-        : normalizeOptions({});
+  const optionsToNormalize = extractOptionsObject(
+    options,
+    paramsOrOptions,
+  ) as UseActionOptions;
+  const normalizedOptions = normalizeOptions(optionsToNormalize);
 
   const response = useFzFetch<TResponse>(
     `${basePath}`,
