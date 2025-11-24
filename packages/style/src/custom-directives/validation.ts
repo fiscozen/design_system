@@ -69,6 +69,7 @@ function isModifierAllowed(rule: ValidationRule, modifier?: string): boolean {
  * Rules:
  * - If rule doesn't restrict values (undefined): all values are allowed (including no value)
  * - If rule restricts values (array): value must be in the array
+ * - `false` is always allowed as a special sentinel value used by directives to remove classes
  * 
  * @param rule - The validation rule to check
  * @param value - The value to validate
@@ -77,6 +78,10 @@ function isModifierAllowed(rule: ValidationRule, modifier?: string): boolean {
 function isValueAllowed(rule: ValidationRule, value?: boolean | string | number): boolean {
   // If rule doesn't restrict values, all are allowed (including no value)
   if (!rule.values) return true;
+  
+  // false is a special sentinel value used by directives to remove classes
+  // It should always be valid, regardless of value restrictions
+  if (value === false) return true;
   
   // Rule restricts values - value must be provided and in the list
   if (value === undefined || value === null) return false;
