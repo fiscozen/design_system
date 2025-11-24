@@ -8,6 +8,88 @@ import type { UseActionOptions, QueryActionReturn } from "./types";
 import type { PaginationParams, FilterParams, SortParams } from "../list/types";
 
 /**
+ * Check if paramsOrOptions is a params object (has filters, ordering, or pagination)
+ * vs an options object
+ */
+export const isParamsObject = (
+  paramsOrOptions: unknown,
+): paramsOrOptions is { filters?: unknown; ordering?: unknown; pagination?: unknown } => {
+  if (!paramsOrOptions || typeof paramsOrOptions !== "object") {
+    return false;
+  }
+  return (
+    "filters" in paramsOrOptions ||
+    "ordering" in paramsOrOptions ||
+    "pagination" in paramsOrOptions
+  );
+};
+
+/**
+ * Extract a property value from options or paramsOrOptions with a default fallback
+ *
+ * This helper simplifies the complex nested ternary pattern used throughout the codebase
+ * to extract option values when dealing with function overloads.
+ *
+ * Priority:
+ * 1. If `options` is provided, use `options[property] ?? defaultValue`
+ * 2. If `paramsOrOptions` exists and is an options object (not params), use `paramsOrOptions[property] ?? defaultValue`
+ * 3. Otherwise, use `defaultValue`
+ *
+ * @param options - Explicit options object (when params are provided)
+ * @param paramsOrOptions - Either params or options object (function overload)
+ * @param property - Property name to extract from options
+ * @param defaultValue - Default value if property is not found
+ * @returns Extracted property value or default
+ */
+export const extractOptionValue = <TOptions extends object, TValue>(
+  options: TOptions | undefined,
+  paramsOrOptions: TOptions | unknown | undefined,
+  property: keyof TOptions,
+  defaultValue: TValue,
+): TValue => {
+  // Priority 1: Explicit options parameter
+  if (options !== undefined) {
+    return ((options as Record<string, unknown>)[property as string] as TValue | undefined) ?? defaultValue;
+  }
+
+  // Priority 2: paramsOrOptions is an options object (not params)
+  if (paramsOrOptions && !isParamsObject(paramsOrOptions)) {
+    const optionsObj = paramsOrOptions as TOptions;
+    return ((optionsObj as Record<string, unknown>)[property as string] as TValue | undefined) ?? defaultValue;
+  }
+
+  // Priority 3: Default value
+  return defaultValue;
+};
+
+/**
+ * Extract the entire options object from options or paramsOrOptions
+ *
+ * Similar to extractOptionValue but returns the entire options object instead of a single property.
+ *
+ * @param options - Explicit options object (when params are provided)
+ * @param paramsOrOptions - Either params or options object (function overload)
+ * @returns Options object or empty object
+ */
+export const extractOptionsObject = <TOptions extends object>(
+  options: TOptions | undefined,
+  paramsOrOptions: TOptions | unknown | undefined,
+): TOptions => {
+  // Priority 1: Explicit options parameter
+  if (options !== undefined) {
+    return options;
+  }
+
+  // Priority 2: paramsOrOptions is an options object (not params)
+  if (paramsOrOptions && !isParamsObject(paramsOrOptions)) {
+    return paramsOrOptions as TOptions;
+  }
+
+  // Priority 3: Empty object
+  return {} as TOptions;
+};
+
+/**
  * Normalize action options to UseFzFetchOptions
  *
  * @param options - Action options
