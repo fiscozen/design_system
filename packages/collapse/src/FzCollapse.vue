@@ -5,8 +5,12 @@ import { FzIcon } from '@fiscozen/icons'
 defineProps<FzCollapseProps>()
 const isOpen = defineModel<boolean>('open')
 
-const handleSummaryClick = () => {
-  isOpen.value = !isOpen.value
+const handleSummaryClick = (e) => {
+  if (e.newState === "open" && isOpen.value === false) {
+    isOpen.value = true
+  } else if (e.newState === "closed" && isOpen.value === true) {
+    isOpen.value = false
+  }
 }
 </script>
 
