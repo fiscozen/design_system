@@ -417,3 +417,27 @@ export const EnvironmentBackoffice: Story = {
     await expect(container).toBeInTheDocument()
   }
 }
+
+export const WithLeftIcon: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    leftIcon: 'euro-sign'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    const input = canvas.getByRole('textbox', { name: /Amount/i })
+    await expect(input).toBeInTheDocument()
+
+    // Verify euro icon is displayed on the left
+    const euroIcon = canvasElement.querySelector('.fa-euro-sign')
+    await expect(euroIcon).toBeInTheDocument()
+
+    // Verify step controls are still visible on the right
+    const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
+    const arrowDown = canvasElement.querySelector('.fz__currencyinput__arrowdown')
+    await expect(arrowUp).toBeInTheDocument()
+    await expect(arrowDown).toBeInTheDocument()
+  }
+}
