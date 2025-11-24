@@ -338,7 +338,7 @@ defineExpose({
         />
       </div>
       <slot name="right-icon">
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-4">
           <FzIcon
             v-if="secondRightIcon && !secondRightIconButton"
             :name="secondRightIcon"
