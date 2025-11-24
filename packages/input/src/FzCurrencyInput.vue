@@ -214,6 +214,21 @@ const stepUpDown = (amount: number) => {
   fzInputModel.value = safeText;
 };
 
+/**
+ * Handles step button click events
+ *
+ * Prevents event propagation and default behavior when disabled/readonly
+ * to avoid interfering with parent component event handlers.
+ */
+const handleStepClick = (e: MouseEvent, amount: number) => {
+  if (props.disabled || props.readonly) {
+    e.preventDefault();
+    e.stopPropagation();
+    return;
+  }
+  stepUpDown(amount);
+};
+
 const handleStepKeydown = (e: KeyboardEvent, amount: number) => {
   if (e.key === "Enter" || e.key === " ") {
     e.preventDefault();
@@ -346,7 +361,7 @@ defineExpose({
             :aria-disabled="isStepDisabled ? 'true' : 'false'"
             :tabindex="isStepDisabled ? undefined : 0"
             class="fz__currencyinput__arrowup cursor-pointer"
-            @click="stepUpDown(props.step)"
+            @click="(e: MouseEvent) => handleStepClick(e, props.step)"
             @keydown="(e: KeyboardEvent) => handleStepKeydown(e, props.step)"
           ></FzIcon>
           <FzIcon
@@ -357,7 +372,7 @@ defineExpose({
             :aria-disabled="isStepDisabled ? 'true' : 'false'"
             :tabindex="isStepDisabled ? undefined : 0"
             class="fz__currencyinput__arrowdown cursor-pointer"
-            @click="stepUpDown(-props.step)"
+            @click="(e: MouseEvent) => handleStepClick(e, -props.step)"
             @keydown="(e: KeyboardEvent) => handleStepKeydown(e, -props.step)"
           ></FzIcon>
         </div>
