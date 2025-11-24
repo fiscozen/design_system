@@ -115,6 +115,7 @@ const onPaste = (e: ClipboardEvent) => {
         props.nullOnEmpty && !trimmedText ? undefined : safeNum;
       model.value = finalValue;
       fzInputModel.value = safeText;
+      resetInternalUpdateFlag();
     } catch (error) {
       console.warn(
         `[FzCurrencyInput] Error parsing pasted value "${rawPastedText.trim()}":`,
@@ -172,6 +173,7 @@ const onPaste = (e: ClipboardEvent) => {
     const finalValue = props.nullOnEmpty && !safeText ? undefined : safeNum;
     model.value = finalValue;
     fzInputModel.value = formattedText;
+    resetInternalUpdateFlag();
   } catch (error) {
     console.warn(
       `[FzCurrencyInput] Error processing pasted value "${rawPastedText}":`,
@@ -212,6 +214,7 @@ const stepUpDown = (amount: number) => {
   isInternalUpdate = true;
   model.value = stepVal;
   fzInputModel.value = safeText;
+  resetInternalUpdateFlag();
 };
 
 /**
@@ -314,6 +317,7 @@ const handleFzInputUpdate = (newVal: string | undefined) => {
     if (currentNormalized !== undefined) {
       isInternalUpdate = true;
       model.value = undefined;
+      resetInternalUpdateFlag();
     }
     return;
   }
@@ -325,6 +329,7 @@ const handleFzInputUpdate = (newVal: string | undefined) => {
   if (currentNormalized !== normalized) {
     isInternalUpdate = true;
     model.value = normalized;
+    resetInternalUpdateFlag();
   }
 };
 
