@@ -708,6 +708,70 @@ describe('FzCurrencyInput', () => {
         // With nullOnEmpty, empty should emit null (but display as empty)
         expect(inputElement.element.value).toBe('')
       })
+
+      it('should preserve zero value when nullOnEmpty is enabled', async () => {
+        let emittedValue: number | undefined
+
+        const wrapper = mount(FzCurrencyInput, {
+          props: {
+            label: 'Label',
+            modelValue: undefined,
+            nullOnEmpty: true,
+            'onUpdate:modelValue': (e: number | undefined) => {
+              emittedValue = e
+              wrapper.setProps({ modelValue: e })
+            },
+          },
+        })
+
+        const inputElement = wrapper.find('input')
+        
+        // Paste "0" - should remain 0, not become undefined
+        await inputElement.trigger('paste', {
+          clipboardData: {
+            getData() {
+              return '0'
+            },
+          },
+        })
+        await new Promise((resolve) => window.setTimeout(resolve, 100))
+        
+        expect(inputElement.element.value).toBe('0,00')
+        expect(emittedValue).toBe(0)
+        expect(emittedValue).not.toBeUndefined()
+      })
+
+      it('should preserve zero value with separators when nullOnEmpty is enabled', async () => {
+        let emittedValue: number | undefined
+
+        const wrapper = mount(FzCurrencyInput, {
+          props: {
+            label: 'Label',
+            modelValue: undefined,
+            nullOnEmpty: true,
+            'onUpdate:modelValue': (e: number | undefined) => {
+              emittedValue = e
+              wrapper.setProps({ modelValue: e })
+            },
+          },
+        })
+
+        const inputElement = wrapper.find('input')
+        
+        // Paste "0,00" - should remain 0, not become undefined
+        await inputElement.trigger('paste', {
+          clipboardData: {
+            getData() {
+              return '0,00'
+            },
+          },
+        })
+        await new Promise((resolve) => window.setTimeout(resolve, 100))
+        
+        expect(inputElement.element.value).toBe('0,00')
+        expect(emittedValue).toBe(0)
+        expect(emittedValue).not.toBeUndefined()
+      })
     })
 
     describe('Negative values', () => {
