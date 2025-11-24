@@ -45,20 +45,23 @@ let isInternalUpdate = false;
 
 /**
  * Parses pasted text with automatic separator detection
+ *
+ * Only prevents default paste behavior if we can handle it.
+ * If clipboardData is unavailable, allows default browser paste to proceed.
  */
 const onPaste = (e: ClipboardEvent) => {
-  e.preventDefault();
-
   if (props.readonly) {
     return;
   }
 
   if (!e.clipboardData?.getData) {
-    console.warn(
-      "[FzCurrencyInput] Paste event missing clipboardData. Paste operation ignored."
-    );
+    // Allow default paste behavior if clipboardData is unavailable
+    // This prevents blocking legitimate paste operations in edge cases
     return;
   }
+
+  // Only prevent default if we can handle the paste
+  e.preventDefault();
 
   let rawPastedText: string;
   try {
