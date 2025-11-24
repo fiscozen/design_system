@@ -712,6 +712,14 @@
     }
   },
   "section-content": {
+    "none": {
+      "value": "0px",
+      "type": "spacing"
+    },
+    "xs": {
+      "value": "8px",
+      "type": "spacing"
+    },
     "sm": {
       "value": "16px",
       "type": "spacing"

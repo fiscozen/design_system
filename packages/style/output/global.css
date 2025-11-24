@@ -148,6 +148,8 @@
   --main-content-sm: 32px;
   --main-content-base: 48px;
   --main-content-lg: 64px;
+  --section-content-none: 0px;
+  --section-content-xs: 8px;
   --section-content-sm: 16px;
   --section-content-base: 24px;
   --section-content-lg: 32px;
