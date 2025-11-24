@@ -211,7 +211,7 @@ describe('v-color Directive', () => {
   describe('Class removal', () => {
     it('should remove existing color classes when new color is applied', async () => {
       const TestComponent = {
-        template: '<p v-color:blue class="text-red-500">Test</p>',
+        template: '<p v-color:blue class="text-orange-500">Test</p>',
       }
       const wrapper = mount(TestComponent, {
         global: {
@@ -224,7 +224,7 @@ describe('v-color Directive', () => {
       await wrapper.vm.$nextTick()
       const element = wrapper.element as HTMLElement
       expect(element.classList.contains('text-blue-500')).toBe(true)
-      expect(element.classList.contains('text-red-500')).toBe(false)
+      expect(element.classList.contains('text-orange-500')).toBe(false)
     })
 
     it('should not remove non-color text classes', async () => {
