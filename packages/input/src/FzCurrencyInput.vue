@@ -100,17 +100,19 @@ const onPaste = (e: ClipboardEvent) => {
 
   if (separators.length === 0) {
     try {
-      const safeNum = parse(rawPastedText.trim());
+      const trimmedText = rawPastedText.trim();
+      const safeNum = parse(trimmedText);
       if (isNaN(safeNum) || !isFinite(safeNum)) {
         console.warn(
-          `[FzCurrencyInput] Invalid number parsed from paste: "${rawPastedText.trim()}". Paste operation ignored.`
+          `[FzCurrencyInput] Invalid number parsed from paste: "${trimmedText}". Paste operation ignored.`
         );
         return;
       }
       const safeText = format(safeNum);
       setValue(safeText);
       isInternalUpdate = true;
-      const finalValue = props.nullOnEmpty && !safeNum ? undefined : safeNum;
+      const finalValue =
+        props.nullOnEmpty && !trimmedText ? undefined : safeNum;
       model.value = finalValue;
       fzInputModel.value = safeText;
     } catch (error) {
@@ -167,7 +169,7 @@ const onPaste = (e: ClipboardEvent) => {
     const formattedText = format(safeNum);
     setValue(formattedText);
     isInternalUpdate = true;
-    const finalValue = props.nullOnEmpty && !safeNum ? undefined : safeNum;
+    const finalValue = props.nullOnEmpty && !safeText ? undefined : safeNum;
     model.value = finalValue;
     fzInputModel.value = formattedText;
   } catch (error) {
