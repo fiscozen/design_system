@@ -2,7 +2,7 @@ import { toValue, watch, type MaybeRefOrGetter } from "vue";
 import type { UseFzFetchOptions, UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
 import { normalizeUseFzFetchOptions } from "../../utils/options";
-import { normalizeError } from "../../utils/error";
+import { handleFetchError } from "../../utils/error";
 import type { RequestInterceptor } from "./types";
 
 /**
@@ -179,6 +179,135 @@ const normalizeHeaders = (
 };
 
 /**
+ * Handles aborted request when interceptor returns null
+ */
+const handleAbortedRequest = <T>(
+  fetchResult: UseFzFetchReturn<T>,
+  urlString: string,
+  throwOnFailed?: boolean,
+): void => {
+  if (state.globalDebug) {
+    console.debug(
+      `[useFzFetch] Request aborted by interceptor: ${urlString}`,
+    );
+  }
+  const abortError = new Error(
+    `Request aborted by interceptor: ${urlString}`,
+  );
+  abortError.name = "AbortError";
+  fetchResult.error.value = abortError;
+  if (throwOnFailed) {
+    throw abortError;
+  }
+};
+
+/**
+ * Builds full URL from relative or absolute URL
+ */
+const buildFullUrl = (urlString: string): string => {
+  // If URL is absolute, use it directly
+  if (urlString.startsWith("http")) {
+    return urlString;
+  }
+
+  // If URL is relative and globalBaseUrl is available, prepend it
+  if (state.globalBaseUrl) {
+    const baseUrl = state.globalBaseUrl.replace(/\/$/, "");
+    const path = urlString.replace(/^\//, "");
+    return `${baseUrl}/${path}`;
+  }
+
+  // Fallback: use relative URL if globalBaseUrl not available
+  return urlString;
+};
+
+/**
+ * Creates a new fetch request with modified requestInit
+ */
+const createModifiedFetchRequest = <T>(
+  fullUrl: string,
+  interceptedRequest: RequestInit,
+  useFetchOptions?: UseFzFetchOptions,
+): UseFzFetchReturn<T> => {
+  if (!state.fzFetcher) {
+    throw new Error(
+      "[useFzFetch] Cannot apply request interceptor: fzFetcher not initialized",
+    );
+  }
+
+  if (state.globalDebug) {
+    console.debug(
+      `[useFzFetch] Request interceptor modified requestInit, using direct fetch: ${fullUrl}`,
+    );
+  }
+
+  return state
+    .fzFetcher<T>(
+      fullUrl,
+      interceptedRequest,
+      useFetchOptions
+        ? normalizeUseFzFetchOptions(useFetchOptions)
+        : undefined,
+    )
+    .json();
+};
+
+/**
+ * Synchronizes state from source fetch result to target fetch result
+ * Returns cleanup function to stop watching
+ */
+const syncFetchResultState = <T>(
+  source: UseFzFetchReturn<T>,
+  target: UseFzFetchReturn<T>,
+): () => void => {
+  const unwatchSync = watch(
+    [
+      () => source.response.value,
+      () => source.statusCode.value,
+      () => source.data.value,
+      () => source.error.value,
+    ],
+    () => {
+      // Sync all state properties reactively
+      target.response.value = source.response.value;
+      target.statusCode.value = source.statusCode.value;
+      target.data.value = source.data.value;
+      target.error.value = source.error.value;
+    },
+    { immediate: true, deep: false },
+  );
+
+  return unwatchSync;
+};
+
+/**
+ * Handles errors from interceptor execution
+ */
+const handleInterceptorError = <T>(
+  fetchResult: UseFzFetchReturn<T>,
+  error: unknown,
+  throwOnFailed?: boolean,
+  watchCleanup?: (() => void) | null,
+): void => {
+  // Cleanup watch if it exists
+  if (watchCleanup) {
+    watchCleanup();
+  }
+
+  const normalizedError = handleFetchError(
+    fetchResult.error,
+    error,
+    throwOnFailed,
+  );
+  
+  if (state.globalDebug) {
+    console.debug(
+      `[useFzFetch] Request interceptor error: ${normalizedError.message}`,
+    );
+  }
+};
+
+/**
  * Wraps a fetch result to apply request interceptor
  *
  * The request interceptor is applied when execute() is called, before the actual fetch.
@@ -226,141 +355,64 @@ export const wrapWithRequestInterceptor = <T>(
 
       // If interceptor returns null, abort the request
       if (interceptedRequest === null) {
-        if (state.globalDebug) {
-          console.debug(
-            `[useFzFetch] Request aborted by interceptor: ${urlString}`,
-          );
-        }
-        const abortError = new Error(
-          `Request aborted by interceptor: ${urlString}`,
-        );
-        abortError.name = "AbortError";
-        fetchResult.error.value = abortError;
-        if (throwOnFailed) {
-          throw abortError;
-        }
+        handleAbortedRequest(fetchResult, urlString, throwOnFailed);
         return;
       }
 
-      // If requestInit was modified, we need to make a new fetch call
-      // Since @vueuse/core's createFetch doesn't allow dynamic requestInit modification,
-      // we'll make a direct fetch call with the modified requestInit
+      // Check if requestInit was modified
       const requestInitChanged = compareRequestInit(
         interceptedRequest,
         requestInit,
       );
 
       if (requestInitChanged) {
-        // Build full URL
-        // If URL is absolute, use it directly
-        // If URL is relative and globalBaseUrl is available, prepend it
-        // If URL is relative and globalBaseUrl is null, use relative URL (fallback)
-        const fullUrl = urlString.startsWith("http")
-          ? urlString
-          : state.globalBaseUrl
-            ? `${state.globalBaseUrl.replace(/\/$/, "")}/${urlString.replace(/^\//, "")}`
-            : urlString; // Fallback: use relative URL if globalBaseUrl not available
-
-        if (state.globalDebug) {
-          console.debug(
-            `[useFzFetch] Request interceptor modified requestInit, using direct fetch: ${fullUrl}`,
-          );
-        }
-
-        // Create a new fetch call with modified requestInit
-        // Note: We can't update isFetching directly (it's readonly), so we'll
-        // create a new fzFetcher call with the modified requestInit instead
-        // This ensures all reactive state is properly managed
-        // We'll use fzFetcher directly with the modified requestInit
-        if (!state.fzFetcher) {
-          throw new Error(
-            "[useFzFetch] Cannot apply request interceptor: fzFetcher not initialized",
-          );
-        }
-
-        const modifiedFetchResult = state
-          .fzFetcher<T>(
-            fullUrl,
-            interceptedRequest,
-            useFetchOptions
-              ? normalizeUseFzFetchOptions(useFetchOptions)
-              : undefined,
-          )
-          .json();
-
-        // Synchronize state reactively from modified fetch to original result
-        // This ensures state stays in sync even if modifiedFetchResult changes after initial sync
-        // Note: isFetching is readonly and cannot be synced, but we observe it to know when request completes
-        const unwatchSync = watch(
-          [
-            () => modifiedFetchResult.response.value,
-            () => modifiedFetchResult.statusCode.value,
-            () => modifiedFetchResult.data.value,
-            () => modifiedFetchResult.error.value,
-          ],
-          () => {
-            // Sync all state properties reactively
-            fetchResult.response.value = modifiedFetchResult.response.value;
-            fetchResult.statusCode.value = modifiedFetchResult.statusCode.value;
-            fetchResult.data.value = modifiedFetchResult.data.value;
-            fetchResult.error.value = modifiedFetchResult.error.value;
-          },
-          { immediate: true, deep: false },
+        // Build full URL and create modified fetch request
+        const fullUrl = buildFullUrl(urlString);
+        const modifiedFetchResult = createModifiedFetchRequest<T>(
+          fullUrl,
+          interceptedRequest,
+          useFetchOptions,
         );
 
-        // Store watch cleanup function to allow cleanup if execute() is called again
+        // Synchronize state reactively from modified fetch to original result
+        const unwatchSync = syncFetchResultState(
+          modifiedFetchResult,
+          fetchResult,
+        );
         currentWatch = unwatchSync;
 
         // Execute the modified fetch and handle errors
         try {
           await modifiedFetchResult.execute(throwOnFailed);
         } catch (error: unknown) {
-          // Stop watching before handling error to prevent further sync
           unwatchSync();
           currentWatch = null;
-
-          const normalizedError = normalizeError(error);
-          fetchResult.error.value = normalizedError;
-          if (throwOnFailed) {
-            throw normalizedError;
+          const normalizedError = handleFetchError(
+            fetchResult.error,
+            error,
+            throwOnFailed,
+          );
+          if (state.globalDebug) {
+            console.debug(
+              `[useFzFetch] Modified fetch request error: ${normalizedError.message}`,
+            );
           }
           return;
         }
 
         // Stop watching when request completes (success or error)
-        // The watch will have already synced the final state
         unwatchSync();
         currentWatch = null;
-
         return;
       }
 
       // If requestInit wasn't modified, execute original request
-      // However, we still need to ensure the URL is re-evaluated when execute() is called manually
-      // This is important for reactive URLs (e.g., computed URLs that depend on reactive values)
-      // Note: @vueuse/core's createFetch should handle URL re-evaluation automatically,
-      // but if the URL is a computed that depends on reactive values, we need to ensure
-      // it's evaluated correctly. The urlString was already evaluated above with toValue(url),
-      // so originalExecute should use the current URL value from the computed.
+      // URL is already re-evaluated above with toValue(url)
       return originalExecute(throwOnFailed);
     } catch (error: unknown) {
-      // If interceptor throws, abort the request
-      // Cleanup watch if it exists
-      if (currentWatch) {
-        currentWatch();
-        currentWatch = null;
-      }
-      
-      const normalizedError = normalizeError(error);
-      if (state.globalDebug) {
-        console.debug(
-          `[useFzFetch] Request interceptor error: ${normalizedError.message}`,
-        );
-      }
-      fetchResult.error.value = normalizedError;
-      if (throwOnFailed) {
-        throw normalizedError;
-      }
+      // If interceptor throws, handle error
+      handleInterceptorError(fetchResult, error, throwOnFailed, currentWatch);
+      currentWatch = null;
       return;
     }
   };

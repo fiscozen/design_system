@@ -1,6 +1,92 @@
 import { toValue, type MaybeRefOrGetter } from "vue";
 
 /**
+ * Sorts query parameters alphabetically by key
+ *
+ * @param searchParams - URLSearchParams instance
+ * @returns Sorted array of [key, value] tuples
+ */
+const sortQueryParams = (
+  searchParams: URLSearchParams,
+): [string, string][] => {
+  return Array.from(searchParams.entries()).sort(([a], [b]) =>
+    a.localeCompare(b),
+  );
+};
+
+/**
+ * Removes trailing slash from a pathname
+ *
+ * @param pathname - Pathname string
+ * @returns Pathname without trailing slash
+ */
+const removeTrailingSlash = (pathname: string): string => {
+  return pathname.replace(/\/$/, "");
+};
+
+/**
+ * Normalizes URL by removing trailing slashes and sorting query parameters
+ *
+ * This is a shared utility for URL normalization used in deduplication and other contexts.
+ * Handles absolute URLs, relative URLs with baseUrl, and relative URLs without baseUrl.
+ *
+ * @param url - Request URL to normalize
+ * @param baseUrl - Optional base URL for resolving relative URLs
+ * @returns Normalized URL string (pathname + sorted query params, no trailing slash)
+ *
+ * @example
+ * normalizeUrlForDeduplication('/users/?page=2&limit=10') // '/users?limit=10&page=2'
+ * normalizeUrlForDeduplication('https://api.com/users/?page=2&limit=10') // '/users?limit=10&page=2'
+ */
+export const normalizeUrlForDeduplication = (
+  url: string,
+  baseUrl?: string | null,
+): string => {
+  try {
+    // Handle absolute URLs
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      const urlObj = new URL(url);
+      const sortedParams = sortQueryParams(urlObj.searchParams);
+      urlObj.search = "";
+      sortedParams.forEach(([key, value]) => {
+        urlObj.searchParams.append(key, value);
+      });
+      const pathname = removeTrailingSlash(urlObj.pathname);
+      return `${pathname}${urlObj.search}`;
+    }
+
+    // Handle relative URLs with baseUrl
+    if (baseUrl) {
+      const urlObj = new URL(url, baseUrl);
+      const sortedParams = sortQueryParams(urlObj.searchParams);
+      urlObj.search = "";
+      sortedParams.forEach(([key, value]) => {
+        urlObj.searchParams.append(key, value);
+      });
+      const pathname = removeTrailingSlash(urlObj.pathname);
+      return `${pathname}${urlObj.search}`;
+    }
+
+    // Handle relative URLs without baseUrl
+    const queryIndex = url.indexOf("?");
+    const pathname = queryIndex === -1 ? url : url.substring(0, queryIndex);
+    const query = queryIndex === -1 ? "" : url.substring(queryIndex + 1);
+
+    if (query) {
+      const params = new URLSearchParams(query);
+      const sortedParams = sortQueryParams(params);
+      const sortedQuery = new URLSearchParams(sortedParams).toString();
+      return `${removeTrailingSlash(pathname)}${sortedQuery ? `?${sortedQuery}` : ""}`;
+    }
+
+    return removeTrailingSlash(pathname);
+  } catch {
+    // If URL parsing fails, return as-is
+    return url;
+  }
+};
+
+/**
  * Build URL with query parameters, merging existing ones from basePath
  *
  * @param basePath - Base URL path (may contain existing query params)

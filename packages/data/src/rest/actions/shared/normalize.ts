@@ -6,6 +6,7 @@ import type {
 } from "../../http/types";
 import type { UseActionOptions, QueryActionReturn } from "./types";
 import type { PaginationParams, FilterParams, SortParams } from "../list/types";
+import { DEFAULT_DATA_KEY } from "../../http/config";
 
 /**
  * Check if paramsOrOptions is a params object (has filters, ordering, or pagination)
@@ -22,6 +23,18 @@ export const isParamsObject = (
     "ordering" in paramsOrOptions ||
     "pagination" in paramsOrOptions
   );
+};
+
+/**
+ * Safely gets a property value from an object with type checking
+ */
+const getPropertyValue = <TValue>(
+  obj: Record<string, unknown>,
+  property: string,
+  defaultValue: TValue,
+): TValue => {
+  const value = obj[property];
+  return (value !== undefined ? (value as TValue) : defaultValue);
 };
 
 /**
@@ -49,13 +62,20 @@ export const extractOptionValue = <TOptions extends object, TValue>(
 ): TValue => {
   // Priority 1: Explicit options parameter
   if (options !== undefined) {
-    return ((options as Record<string, unknown>)[property as string] as TValue | undefined) ?? defaultValue;
+    return getPropertyValue(
+      options as Record<string, unknown>,
+      property as string,
+      defaultValue,
+    );
   }
 
   // Priority 2: paramsOrOptions is an options object (not params)
   if (paramsOrOptions && !isParamsObject(paramsOrOptions)) {
-    const optionsObj = paramsOrOptions as TOptions;
-    return ((optionsObj as Record<string, unknown>)[property as string] as TValue | undefined) ?? defaultValue;
+    return getPropertyValue(
+      paramsOrOptions as Record<string, unknown>,
+      property as string,
+      defaultValue,
+    );
   }
 
   // Priority 3: Default value
@@ -265,7 +285,7 @@ export const normalizePaginatedListResponse = <T>(
     page: number;
     [key: string]: unknown;
   }>,
-  dataKey: string = "results",
+  dataKey: string = DEFAULT_DATA_KEY,
   throwOnError: boolean = false,
 ): QueryActionReturn<T[]> => {
   const originalExecute = response.execute;

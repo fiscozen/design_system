@@ -1,6 +1,7 @@
 import { watch, nextTick } from "vue";
 import type { UseFzFetchReturn } from "../../types";
 import { NON_JSON_BODY_PREFIX_LENGTH } from "../../config";
+import { normalizeUrlForDeduplication } from "../../utils/url";
 
 /**
  * Manages request deduplication to prevent duplicate identical requests
@@ -42,79 +43,12 @@ export class DeduplicationManager {
     body?: string | null,
   ): string {
     // Normalize URL (remove trailing slashes, sort query params)
-    const normalizedUrl = this.normalizeUrl(url);
+    const normalizedUrl = normalizeUrlForDeduplication(url, this.baseUrl);
 
     // Normalize body (sort keys if JSON)
     const normalizedBody = this.normalizeBody(body);
 
     return `${method}:${normalizedUrl}:${normalizedBody}`;
-  }
-
-  /**
-   * Normalizes URL by removing trailing slashes and sorting query parameters
-   *
-   * Handles absolute URLs, relative URLs, and SSR/test environments.
-   * Uses baseUrl passed to constructor for resolving relative URLs.
-   *
-   * @param url - Request URL
-   * @returns Normalized URL string
-   */
-  private normalizeUrl(url: string): string {
-    try {
-      // If URL is absolute, parse directly
-      if (url.startsWith("http://") || url.startsWith("https://")) {
-        const urlObj = new URL(url);
-        // Sort query parameters
-        const sortedParams = Array.from(urlObj.searchParams.entries()).sort(
-          ([a], [b]) => a.localeCompare(b),
-        );
-        urlObj.search = "";
-        sortedParams.forEach(([key, value]) => {
-          urlObj.searchParams.append(key, value);
-        });
-        // Remove trailing slash from pathname
-        const pathname = urlObj.pathname.replace(/\/$/, "");
-        return `${pathname}${urlObj.search}`;
-      }
-
-      // For relative URLs, use baseUrl from constructor if available
-      if (this.baseUrl) {
-        // Use baseUrl to create full URL
-        const urlObj = new URL(url, this.baseUrl);
-        // Sort query parameters
-        const sortedParams = Array.from(urlObj.searchParams.entries()).sort(
-          ([a], [b]) => a.localeCompare(b),
-        );
-        urlObj.search = "";
-        sortedParams.forEach(([key, value]) => {
-          urlObj.searchParams.append(key, value);
-        });
-        // Remove trailing slash from pathname
-        const pathname = urlObj.pathname.replace(/\/$/, "");
-        return `${pathname}${urlObj.search}`;
-      }
-
-      // If no base URL available, return normalized pathname only
-      // Extract pathname and query from relative URL
-      const queryIndex = url.indexOf("?");
-      const pathname = queryIndex === -1 ? url : url.substring(0, queryIndex);
-      const query = queryIndex === -1 ? "" : url.substring(queryIndex + 1);
-
-      // Sort query parameters if present
-      if (query) {
-        const params = new URLSearchParams(query);
-        const sortedParams = Array.from(params.entries()).sort(([a], [b]) =>
-          a.localeCompare(b),
-        );
-        const sortedQuery = new URLSearchParams(sortedParams).toString();
-        return `${pathname.replace(/\/$/, "")}${sortedQuery ? `?${sortedQuery}` : ""}`;
-      }
-
-      return pathname.replace(/\/$/, "");
-    } catch {
-      // If URL parsing fails, return as-is
-      return url;
-    }
   }
 
   /**
