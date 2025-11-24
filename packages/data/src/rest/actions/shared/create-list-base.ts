@@ -108,33 +108,44 @@ export const createListBase = <TResponse, TData>(
     // Use a flag to prevent race conditions when params change rapidly
     let isExecuting = false;
     let watchTimeout: ReturnType<typeof setTimeout> | null = null;
+    let hasPendingChanges = false;
     const debounceDelay = getGlobalAutoUpdateDebounceDelay();
+
+    const executeRequest = async () => {
+      isExecuting = true;
+      watchTimeout = null; // Reset timeout reference
+      try {
+        await response.execute(throwOnError);
+      } finally {
+        isExecuting = false;
+        // If there were pending changes while we were executing, trigger a new request
+        if (hasPendingChanges) {
+          hasPendingChanges = false;
+          // Schedule execution after a short delay to ensure the previous request is fully complete
+          watchTimeout = setTimeout(executeRequest, debounceDelay);
+        }
+      }
+    };
 
     watch(
       [filters, ordering, pagination],
       async () => {
-        // Prevent duplicate requests if already executing or fetching
-        if (isExecuting || response.isFetching.value) {
-          return;
-        }
-
         // Cancel previous timeout if exists (debounce: group rapid changes)
         if (watchTimeout !== null) {
           clearTimeout(watchTimeout);
           watchTimeout = null;
         }
 
+        // If a request is already in progress, mark that we have pending changes
+        // and schedule execution after the current request completes
+        if (isExecuting || response.isFetching.value) {
+          hasPendingChanges = true;
+          return;
+        }
+
         // Debounce: wait for debounceDelay before executing
         // If more changes arrive during this time, cancel and restart
-        watchTimeout = setTimeout(async () => {
-          isExecuting = true;
-          watchTimeout = null; // Reset timeout reference
-          try {
-            await response.execute(throwOnError);
-          } finally {
-            isExecuting = false;
-          }
-        }, debounceDelay);
+        watchTimeout = setTimeout(executeRequest, debounceDelay);
       },
       { deep: true, immediate: false },
     );
