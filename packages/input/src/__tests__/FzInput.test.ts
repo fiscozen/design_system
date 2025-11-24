@@ -816,7 +816,7 @@ describe('FzInput', () => {
         expect(rightIcon?.exists()).toBe(true)
 
         // Get the container div that wraps all right icons
-        const rightIconContainer = wrapper.find('.fz-input > div > div.flex.items-center.gap-1')
+        const rightIconContainer = wrapper.find('.fz-input > div > div.flex.items-center.gap-4')
         expect(rightIconContainer.exists()).toBe(true)
 
         // Get all icon elements in order
