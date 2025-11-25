@@ -14,8 +14,19 @@ export const format = (options: FzUseCurrencyOptions) => (input: number | null) 
 }
 
 export const parse = (text: string): number => {
-  // strip currency, handle edge cases...
-  return parseFloat(text.replace(/,/g, '.'))
+  if (!text || typeof text !== 'string') {
+    return NaN
+  }
+
+  let normalized = text.trim()
+
+  // Handle Italian format: "1.234,56" (points = thousands, comma = decimal)
+  if (normalized.includes(',')) {
+    normalized = normalized.replace(/\./g, '')
+    normalized = normalized.replace(',', '.')
+  }
+
+  return parseFloat(normalized)
 }
 
 export const roundTo = (step: number, val: number) => {
