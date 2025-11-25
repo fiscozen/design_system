@@ -39,7 +39,7 @@ const {
   step: props.step,
 });
 
-const model = defineModel<number | string | undefined>();
+const model = defineModel<FzCurrencyInputProps["modelValue"]>();
 
 let isInternalUpdate = false;
 let pendingInternalUpdateReset = false;
