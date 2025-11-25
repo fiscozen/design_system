@@ -174,23 +174,33 @@ interface FzCurrencyInputProps
   /**
    * The v-model value.
    * 
-   * **Type assertion**: This prop accepts `number | string | undefined` as input,
-   * but the component **always emits** `number | undefined` (never `string`).
+   * **Type assertion**: This prop accepts `number | string | undefined | null` as input,
+   * but the component **always emits** `number | undefined | null` (never `string`).
    * Strings are automatically parsed (Italian format: "1.234,56" → 1234.56) and converted
    * to numbers internally.
    * 
+   * **nullOnEmpty**: When `nullOnEmpty` is `true`, empty input emits `null` instead of `undefined`.
+   * 
    * **Deprecation**: String values are deprecated and will be removed in a future version.
-   * A console warning is shown when strings are used. Please use `number | undefined` instead
+   * A console warning is shown when strings are used. Please use `number | undefined | null` instead
    * for type safety and future compatibility.
    * 
    * @example
    * ```vue
-   * <!-- ✅ Recommended: number | undefined -->
+   * <!-- ✅ Recommended: number | undefined | null -->
    * <script setup>
    * const amount = ref<number | undefined>(undefined);
    * </script>
    * <template>
    *   <FzCurrencyInput v-model="amount" />
+   * </template>
+   * 
+   * <!-- ✅ With nullOnEmpty: number | null -->
+   * <script setup>
+   * const amount = ref<number | null>(null);
+   * </script>
+   * <template>
+   *   <FzCurrencyInput v-model="amount" :nullOnEmpty="true" />
    * </template>
    * 
    * <!-- ⚠️ Deprecated: string (still works but shows warning) -->
@@ -202,12 +212,19 @@ interface FzCurrencyInputProps
    * </template>
    * ```
    */
-  modelValue?: number | string | undefined;
+  modelValue?: number | string | undefined | null;
   /**
-   * Converts empty input to null instead of 0
+   * Converts empty input to null instead of undefined.
+   * When true, empty input (v-model undefined) will emit null instead of undefined.
    * @default false
    */
   nullOnEmpty?: boolean;
+  /**
+   * Converts empty input to 0 instead of undefined.
+   * When true, empty input (v-model undefined) will emit 0 instead of undefined.
+   * @default false
+   */
+  zeroOnEmpty?: boolean;
   /**
    * Minimum decimal places in formatted output
    * @default 2

@@ -9,8 +9,6 @@ export const useCurrency = (options: FzUseCurrencyOptions) => {
   const computedModel = computed<number | null>(() => vm?.props.amount as number | null)
   const internalVal = ref<number | null>()
 
-  const format = formatNumber(options)
-
   const emitAmount = (val: number | null) => {
     if (Number.isNaN(val)) {
       return
@@ -72,7 +70,7 @@ export const useCurrency = (options: FzUseCurrencyOptions) => {
         number = options.max
       }
     }
-    const text = format(number)
+    const text = formatNumber(number, options)
     setValue(text)
     emitAmount(parse(text))
   }
@@ -90,7 +88,7 @@ export const useCurrency = (options: FzUseCurrencyOptions) => {
     newVal.addEventListener('blur', onBlur)
 
     if (vm?.props.amount) {
-      newVal.value = format(computedModel.value)
+      newVal.value = formatNumber(computedModel.value, options)
     }
   })
 
@@ -102,7 +100,7 @@ export const useCurrency = (options: FzUseCurrencyOptions) => {
       // we need to format here only if someone externally set the
       // value of the amount model
       if (internalVal.value !== newVal) {
-        const formatted = format(newVal)
+        const formatted = formatNumber(newVal, options)
         inputRef.value.value = formatted
         internalVal.value = newVal
       }
@@ -112,7 +110,7 @@ export const useCurrency = (options: FzUseCurrencyOptions) => {
   return {
     inputRef,
     parse,
-    format,
+    format: formatNumber,
     emitAmount,
     setValue
   }
