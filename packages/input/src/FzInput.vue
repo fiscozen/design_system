@@ -151,6 +151,7 @@ const emit = defineEmits<{
  *
  * Makes the entire container area clickable and keyboard-accessible for better UX,
  * especially useful for floating-label variant and mobile devices.
+ * Respects disabled and readonly states.
  */
 const handleContainerInteraction = () => {
   if (!props.disabled && !props.readonly && inputRef.value) {
@@ -162,6 +163,8 @@ const handleContainerInteraction = () => {
  * Handles keyboard events on container to focus input
  *
  * Supports Enter and Space keys following accessibility best practices.
+ *
+ * @param e - Keyboard event
  */
 const handleContainerKeydown = (e: KeyboardEvent) => {
   if (e.key === "Enter" || e.key === " ") {
@@ -174,6 +177,9 @@ const handleContainerKeydown = (e: KeyboardEvent) => {
  * Handles keyboard events on clickable icons
  *
  * Supports Enter and Space keys following accessibility best practices.
+ *
+ * @param e - Keyboard event
+ * @param emitEvent - Event name to emit when key is pressed
  */
 const handleIconKeydown = (
   e: KeyboardEvent,

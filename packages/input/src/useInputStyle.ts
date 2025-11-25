@@ -1,6 +1,19 @@
 import { computed, ToRefs, Ref, ComputedRef } from "vue";
 import { FzInputProps, type InputEnvironment } from "./types";
 
+/**
+ * Composable for managing FzInput component styles and computed classes
+ *
+ * Handles dynamic styling based on props, environment, variant, and state.
+ * Returns computed classes for container, label, input, help text, and error messages.
+ *
+ * @param props - Reactive props from FzInput component
+ * @param container - Reference to container DOM element
+ * @param model - Reactive model value (string | undefined)
+ * @param effectiveEnvironment - Computed effective environment (backoffice | frontoffice)
+ * @param isFocused - Reactive flag indicating if input is focused
+ * @returns Object containing computed classes and style-related properties
+ */
 export default function useInputStyle(
   props: ToRefs<FzInputProps>,
   container: Ref<HTMLElement | null>,

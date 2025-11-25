@@ -66,6 +66,8 @@ const resetInternalUpdateFlag = () => {
  *
  * Only prevents default paste behavior if we can handle it.
  * If clipboardData is unavailable, allows default browser paste to proceed.
+ *
+ * @param e - Clipboard event containing pasted text data
  */
 const onPaste = (e: ClipboardEvent) => {
   if (props.readonly) {
@@ -73,12 +75,12 @@ const onPaste = (e: ClipboardEvent) => {
   }
 
   if (!e.clipboardData?.getData) {
-    // Allow default paste behavior if clipboardData is unavailable
-    // This prevents blocking legitimate paste operations in edge cases
+    // Allow default paste behavior if clipboardData is unavailable.
+    // This prevents blocking legitimate paste operations in edge cases.
     return;
   }
 
-  // Only prevent default if we can handle the paste
+  // Only prevent default if we can handle the paste.
   e.preventDefault();
 
   let rawPastedText: string;
@@ -199,6 +201,8 @@ onMounted(() => {
  *
  * When forceStep is true, adds the step amount first, then rounds to nearest step multiple.
  * This ensures the result is always a valid step multiple.
+ *
+ * @param amount - Step amount to add (positive for increment, negative for decrement)
  */
 const stepUpDown = (amount: number) => {
   if (props.disabled || props.readonly) {
@@ -207,12 +211,12 @@ const stepUpDown = (amount: number) => {
   const currentValue = normalizeModelValue(model.value) || 0;
   let stepVal = currentValue + amount;
 
-  // If forceStep is true, round to nearest step multiple after adding the step
+  // If forceStep is true, round to nearest step multiple after adding the step.
   if (props.forceStep && props.step) {
     stepVal = roundTo(props.step, stepVal);
   }
 
-  // Apply min/max constraints
+  // Apply min/max constraints.
   if (props.min !== undefined && props.min > stepVal) {
     stepVal = props.min;
   }
@@ -233,6 +237,9 @@ const stepUpDown = (amount: number) => {
  *
  * Prevents event propagation and default behavior when disabled/readonly
  * to avoid interfering with parent component event handlers.
+ *
+ * @param e - Mouse click event
+ * @param amount - Step amount to apply (positive for up, negative for down)
  */
 const handleStepClick = (e: MouseEvent, amount: number) => {
   if (props.disabled || props.readonly) {
@@ -243,6 +250,15 @@ const handleStepClick = (e: MouseEvent, amount: number) => {
   stepUpDown(amount);
 };
 
+/**
+ * Handles keyboard events for step buttons
+ *
+ * Activates step adjustment when Enter or Space is pressed.
+ * Prevents default browser behavior to avoid page scrolling.
+ *
+ * @param e - Keyboard event
+ * @param amount - Step amount to apply (positive for up, negative for down)
+ */
 const handleStepKeydown = (e: KeyboardEvent, amount: number) => {
   if (e.key === "Enter" || e.key === " ") {
     e.preventDefault();
@@ -250,16 +266,41 @@ const handleStepKeydown = (e: KeyboardEvent, amount: number) => {
   }
 };
 
+/**
+ * Computed property indicating if step controls should be disabled
+ *
+ * Step controls are disabled when the input is disabled or readonly.
+ */
 const isStepDisabled = computed(() => props.disabled || props.readonly);
 
+/**
+ * Computed accessible label for step up button
+ *
+ * Uses custom label if provided, otherwise generates default Italian label.
+ */
 const stepUpAriaLabel = computed(() => {
   return props.stepUpAriaLabel || `Incrementa di ${props.step}`;
 });
 
+/**
+ * Computed accessible label for step down button
+ *
+ * Uses custom label if provided, otherwise generates default Italian label.
+ */
 const stepDownAriaLabel = computed(() => {
   return props.stepDownAriaLabel || `Decrementa di ${props.step}`;
 });
 
+/**
+ * Normalizes model value to number | undefined
+ *
+ * Converts string values to numbers (with deprecation warning) and handles
+ * null/undefined/empty string cases. Used to ensure consistent internal
+ * representation regardless of input type.
+ *
+ * @param value - Input value (number, string, or undefined)
+ * @returns Normalized number value or undefined
+ */
 const normalizeModelValue = (
   value: number | string | undefined
 ): number | undefined => {
@@ -320,6 +361,8 @@ watch(
  *
  * Sets isInternalUpdate flag to prevent watch loop.
  * Applies min/max constraints during input, but not forceStep (applied on blur).
+ *
+ * @param newVal - New string value from FzInput component
  */
 const handleFzInputUpdate = (newVal: string | undefined) => {
   fzInputModel.value = newVal;
@@ -328,7 +371,7 @@ const handleFzInputUpdate = (newVal: string | undefined) => {
     const currentNormalized = normalizeModelValue(model.value);
     if (currentNormalized !== undefined) {
       isInternalUpdate = true;
-      // Respect nullOnEmpty prop: emit undefined if true, 0 if false
+      // Respect nullOnEmpty prop: emit undefined if true, 0 if false.
       model.value = props.nullOnEmpty ? undefined : 0;
       resetInternalUpdateFlag();
     }
@@ -338,7 +381,7 @@ const handleFzInputUpdate = (newVal: string | undefined) => {
   const parsed = parse(newVal);
   let normalized = isNaN(parsed) ? undefined : parsed;
 
-  // Apply min/max constraints during input (but not forceStep - that's applied on blur)
+  // Apply min/max constraints during input (but not forceStep - that's applied on blur).
   if (normalized !== undefined) {
     if (props.min !== undefined && props.min > normalized) {
       normalized = props.min;
@@ -375,12 +418,12 @@ const handleBlur = () => {
 
   let finalValue = currentValue;
 
-  // Apply forceStep rounding on blur
+  // Apply forceStep rounding on blur.
   if (props.forceStep && props.step) {
     finalValue = roundTo(props.step, finalValue);
   }
 
-  // Apply min/max constraints
+  // Apply min/max constraints.
   if (props.min !== undefined && props.min > finalValue) {
     finalValue = props.min;
   }
@@ -388,7 +431,7 @@ const handleBlur = () => {
     finalValue = props.max;
   }
 
-  // Only update if value changed
+  // Only update if value changed.
   if (finalValue !== currentValue) {
     const formatted = format(finalValue);
     isInternalUpdate = true;
