@@ -993,22 +993,22 @@ describe('FzCurrencyInput', () => {
         await arrowDown.trigger('click')
         await wrapper.vm.$nextTick()
         await new Promise((resolve) => window.setTimeout(resolve, 150))
-        // Step controls don't apply clamping, so value goes below min
-        expect(inputElement.element.value).toBe('8,00')
+        // Step controls now apply clamping immediately, so value is clamped to min
+        expect(inputElement.element.value).toBe('10,00')
+        expect(wrapper.props('modelValue')).toBe(10)
 
-        // Clamping happens on blur via useCurrency's onBlur handler
-        // But stepUpDown updates model.value directly, so we need to trigger input change
+        // Verify that manually typing below min still gets clamped on blur
         await inputElement.setValue('8')
         await inputElement.trigger('blur')
         await new Promise((resolve) => window.setTimeout(resolve, 100))
         expect(inputElement.element.value).toBe('10,00')
       })
 
-      it('should allow step controls to go above max (clamping happens on blur)', async () => {
+      it('should clamp step controls to max when they would exceed it', async () => {
         const wrapper = mount(FzCurrencyInput, {
           props: {
             label: 'Label',
-            modelValue: 95,
+            modelValue: 99,
             'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
             min: 10,
             max: 100,
@@ -1021,26 +1021,22 @@ describe('FzCurrencyInput', () => {
 
         await inputElement.trigger('blur')
         await new Promise((resolve) => window.setTimeout(resolve, 100))
-        expect(inputElement.element.value).toBe('95,00')
-
-        await arrowUp.trigger('click')
-        await wrapper.vm.$nextTick()
-        await new Promise((resolve) => window.setTimeout(resolve, 150))
-        // Step controls don't apply clamping, so value goes above max
-        expect(inputElement.element.value).toBe('97,00')
-
-        await arrowUp.trigger('click')
-        await wrapper.vm.$nextTick()
-        await new Promise((resolve) => window.setTimeout(resolve, 150))
         expect(inputElement.element.value).toBe('99,00')
 
-        // Clamping happens on blur via useCurrency's onBlur handler
-        // The value 99 is already in the input, so blur should clamp it to max (100)
-        // But since stepUpDown updates model.value directly, the input might not trigger useCurrency's blur correctly
-        // Let's verify the actual behavior: step controls can go above max, and clamping only happens when user types
-        // For this test, we verify that step controls allow values above max
-        expect(parseFloat(inputElement.element.value.replace(',', '.'))).toBeGreaterThan(95)
-        expect(parseFloat(inputElement.element.value.replace(',', '.'))).toBeLessThanOrEqual(100)
+        // Click arrow up: 99 + 2 = 101, which exceeds max (100), so should clamp to 100
+        await arrowUp.trigger('click')
+        await wrapper.vm.$nextTick()
+        await new Promise((resolve) => window.setTimeout(resolve, 150))
+        // Step controls now apply clamping immediately, so value is clamped to max
+        expect(inputElement.element.value).toBe('100,00')
+        expect(wrapper.props('modelValue')).toBe(100)
+
+        // Verify that clicking again doesn't go above max
+        await arrowUp.trigger('click')
+        await wrapper.vm.$nextTick()
+        await new Promise((resolve) => window.setTimeout(resolve, 150))
+        expect(inputElement.element.value).toBe('100,00')
+        expect(wrapper.props('modelValue')).toBe(100)
       })
     })
 
@@ -1265,6 +1261,128 @@ describe('FzCurrencyInput', () => {
         // 1.234 with step 0.05: rounds to nearest step multiple
         // The actual behavior rounds to 1.25 (closer to 1.25 than to 1.20)
         expect(inputElement.element.value).toBe('1,25')
+      })
+
+      it('should round invalid step value on blur (e.g., 3 with step 2)', async () => {
+        const wrapper = mount(FzCurrencyInput, {
+          props: {
+            label: 'Label',
+            modelValue: undefined,
+            'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
+            step: 2,
+            forceStep: true,
+            min: 0,
+          },
+        })
+
+        const inputElement = wrapper.find('input')
+        // User types "3" which is not a valid step (step is 2)
+        await inputElement.setValue('3')
+        await inputElement.trigger('blur')
+        await new Promise((resolve) => window.setTimeout(resolve, 100))
+        // 3 with step 2: remainder is 1, which is >= 1 (step/2), so rounds up to 4
+        expect(inputElement.element.value).toBe('4,00')
+        expect(wrapper.props('modelValue')).toBe(4)
+      })
+
+      it('should round invalid step value down when closer to lower step', async () => {
+        const wrapper = mount(FzCurrencyInput, {
+          props: {
+            label: 'Label',
+            modelValue: undefined,
+            'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
+            step: 2,
+            forceStep: true,
+            min: 0,
+          },
+        })
+
+        const inputElement = wrapper.find('input')
+        // User types "1" which is not a valid step (step is 2)
+        await inputElement.setValue('1')
+        await inputElement.trigger('blur')
+        await new Promise((resolve) => window.setTimeout(resolve, 100))
+        // 1 with step 2: remainder is 1, which is >= 1 (step/2), so rounds up to 2
+        // Actually: 1 % 2 = 1, Math.abs(1) = 1, 1 >= 1, so rounds up to 2
+        expect(inputElement.element.value).toBe('2,00')
+        expect(wrapper.props('modelValue')).toBe(2)
+      })
+
+      it('should increment value correctly with step arrows when forceStep is true', async () => {
+        const wrapper = mount(FzCurrencyInput, {
+          props: {
+            label: 'Label',
+            modelValue: 0,
+            'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
+            step: 2,
+            forceStep: true,
+            min: 0,
+          },
+        })
+
+        const inputElement = wrapper.find('input')
+        const arrowUp = wrapper.find('.fz__currencyinput__arrowup')
+        const arrowDown = wrapper.find('.fz__currencyinput__arrowdown')
+
+        await inputElement.trigger('blur')
+        await new Promise((resolve) => window.setTimeout(resolve, 100))
+        expect(inputElement.element.value).toBe('0,00')
+
+        // Click arrow up: should increment by step (2)
+        await arrowUp.trigger('click')
+        await wrapper.vm.$nextTick()
+        await new Promise((resolve) => window.setTimeout(resolve, 150))
+        expect(inputElement.element.value).toBe('2,00')
+        expect(wrapper.props('modelValue')).toBe(2)
+
+        // Click arrow up again: should increment by step (2) to 4
+        await arrowUp.trigger('click')
+        await wrapper.vm.$nextTick()
+        await new Promise((resolve) => window.setTimeout(resolve, 150))
+        expect(inputElement.element.value).toBe('4,00')
+        expect(wrapper.props('modelValue')).toBe(4)
+
+        // Click arrow down: should decrement by step (2) to 2
+        await arrowDown.trigger('click')
+        await wrapper.vm.$nextTick()
+        await new Promise((resolve) => window.setTimeout(resolve, 150))
+        expect(inputElement.element.value).toBe('2,00')
+        expect(wrapper.props('modelValue')).toBe(2)
+      })
+
+      it('should increment value correctly with step arrows when forceStep is false', async () => {
+        const wrapper = mount(FzCurrencyInput, {
+          props: {
+            label: 'Label',
+            modelValue: 1,
+            'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
+            step: 2,
+            forceStep: false,
+            min: 0,
+          },
+        })
+
+        const inputElement = wrapper.find('input')
+        const arrowUp = wrapper.find('.fz__currencyinput__arrowup')
+        const arrowDown = wrapper.find('.fz__currencyinput__arrowdown')
+
+        await inputElement.trigger('blur')
+        await new Promise((resolve) => window.setTimeout(resolve, 100))
+        expect(inputElement.element.value).toBe('1,00')
+
+        // Click arrow up: should increment by step (2) from current value (1) to 3
+        await arrowUp.trigger('click')
+        await wrapper.vm.$nextTick()
+        await new Promise((resolve) => window.setTimeout(resolve, 150))
+        expect(inputElement.element.value).toBe('3,00')
+        expect(wrapper.props('modelValue')).toBe(3)
+
+        // Click arrow down: should decrement by step (2) from current value (3) to 1
+        await arrowDown.trigger('click')
+        await wrapper.vm.$nextTick()
+        await new Promise((resolve) => window.setTimeout(resolve, 150))
+        expect(inputElement.element.value).toBe('1,00')
+        expect(wrapper.props('modelValue')).toBe(1)
       })
     })
   })
