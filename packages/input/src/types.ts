@@ -172,6 +172,38 @@ interface FzCurrencyInputProps
     | "secondRightIconAriaLabel"
   > {
   /**
+   * The v-model value.
+   * 
+   * **Type assertion**: This prop accepts `number | string | undefined` as input,
+   * but the component **always emits** `number | undefined` (never `string`).
+   * Strings are automatically parsed (Italian format: "1.234,56" → 1234.56) and converted
+   * to numbers internally.
+   * 
+   * **Deprecation**: String values are deprecated and will be removed in a future version.
+   * A console warning is shown when strings are used. Please use `number | undefined` instead
+   * for type safety and future compatibility.
+   * 
+   * @example
+   * ```vue
+   * <!-- ✅ Recommended: number | undefined -->
+   * <script setup>
+   * const amount = ref<number | undefined>(undefined);
+   * </script>
+   * <template>
+   *   <FzCurrencyInput v-model="amount" />
+   * </template>
+   * 
+   * <!-- ⚠️ Deprecated: string (still works but shows warning) -->
+   * <script setup>
+   * const amount = ref<string>("1234,56");
+   * </script>
+   * <template>
+   *   <FzCurrencyInput v-model="amount" />
+   * </template>
+   * ```
+   */
+  modelValue?: number | string | undefined;
+  /**
    * Converts empty input to null instead of 0
    * @default false
    */
