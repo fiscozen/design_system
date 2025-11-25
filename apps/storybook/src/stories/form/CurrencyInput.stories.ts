@@ -26,7 +26,14 @@ const Template: Story = {
       const modelValue = ref<number | undefined>(initialValue)
       return { args, modelValue }
     },
-    template: `<FzCurrencyInput v-bind="args" v-model="modelValue" />`
+    template: `
+      <div>
+        <FzCurrencyInput v-bind="args" v-model="modelValue" />
+        <p style="margin-top: 10px; font-size: 14px; color: #666;">
+          Raw value (v-model): {{ modelValue === undefined ? 'undefined' : modelValue }}
+        </p>
+      </div>
+    `
   }),
   args: {
     label: 'Amount',
@@ -234,9 +241,14 @@ export const WithError: Story = {
       return { args, modelValue }
     },
     template: `
-      <FzCurrencyInput v-bind="args" v-model="modelValue">
-        <template #errorMessage>Please enter a valid amount</template>
-      </FzCurrencyInput>
+      <div>
+        <FzCurrencyInput v-bind="args" v-model="modelValue">
+          <template #errorMessage>Please enter a valid amount</template>
+        </FzCurrencyInput>
+        <p style="margin-top: 10px; font-size: 14px; color: #666;">
+          Raw value (v-model): {{ modelValue === undefined ? 'undefined' : modelValue }}
+        </p>
+      </div>
     `
   }),
   play: async ({ canvasElement }) => {
@@ -262,9 +274,14 @@ export const WithHelpText: Story = {
       return { args, modelValue }
     },
     template: `
-      <FzCurrencyInput v-bind="args" v-model="modelValue">
-        <template #helpText>Enter amount in euros</template>
-      </FzCurrencyInput>
+      <div>
+        <FzCurrencyInput v-bind="args" v-model="modelValue">
+          <template #helpText>Enter amount in euros</template>
+        </FzCurrencyInput>
+        <p style="margin-top: 10px; font-size: 14px; color: #666;">
+          Raw value (v-model): {{ modelValue === undefined ? 'undefined' : modelValue }}
+        </p>
+      </div>
     `
   }),
   play: async ({ canvasElement }) => {

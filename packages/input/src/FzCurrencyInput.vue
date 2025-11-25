@@ -14,298 +14,291 @@
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import FzInput from "./FzInput.vue";
 import { FzCurrencyInputProps } from "./types";
-import { roundTo, useCurrency } from "@fiscozen/composables";
+import {
+  clamp,
+  format as formatValue,
+  parse,
+  roundTo,
+  truncateDecimals,
+} from "@fiscozen/composables";
 import { FzIcon } from "@fiscozen/icons";
 
 const fzInputRef = ref<InstanceType<typeof FzInput>>();
+
 const fzInputModel = ref<string | undefined>();
+
 const containerRef = computed(() => fzInputRef.value?.containerRef);
+
 const inputRef = computed(() => fzInputRef.value?.inputRef);
+
+const isFocused = ref(false);
+
 const props = withDefaults(defineProps<FzCurrencyInputProps>(), {
+  min: -Infinity,
   minimumFractionDigits: 2,
+  max: Infinity,
   maximumFractionDigits: 2,
   step: 1,
-});
-const {
-  inputRef: currencyInputRef,
-  setValue,
-  parse,
-  format,
-} = useCurrency({
-  minimumFractionDigits: props.minimumFractionDigits,
-  maximumFractionDigits: props.maximumFractionDigits,
-  min: props.min,
-  max: props.max,
-  step: props.step,
 });
 
 const model = defineModel<FzCurrencyInputProps["modelValue"]>();
 
 let isInternalUpdate = false;
-let pendingInternalUpdateReset = false;
 
 /**
- * Safely resets the internal update flag after all queued watch callbacks complete.
+ * Determines the value to emit when input is empty based on nullOnEmpty and zeroOnEmpty props
  *
- * Uses nextTick to ensure all watch callbacks queued in the current tick can see
- * the flag as true before it's reset, preventing race conditions with rapid updates.
+ * Priority: nullOnEmpty > zeroOnEmpty > undefined
+ *
+ * @returns null if nullOnEmpty is true, 0 if zeroOnEmpty is true, undefined otherwise
  */
-const resetInternalUpdateFlag = () => {
-  if (pendingInternalUpdateReset) {
-    return; // Already scheduled
+const getEmptyValue = (): number | null | undefined => {
+  if (props.nullOnEmpty) {
+    return null;
   }
-  pendingInternalUpdateReset = true;
-  nextTick(() => {
-    isInternalUpdate = false;
-    pendingInternalUpdateReset = false;
-  });
+  if (props.zeroOnEmpty) {
+    return 0;
+  }
+  return undefined;
 };
 
 /**
- * Parses pasted text with automatic separator detection
+ * Computed aria-label for step up button
  *
- * Only prevents default paste behavior if we can handle it.
- * If clipboardData is unavailable, allows default browser paste to proceed.
- *
- * @param e - Clipboard event containing pasted text data
- */
-const onPaste = (e: ClipboardEvent) => {
-  if (props.readonly) {
-    return;
-  }
-
-  if (!e.clipboardData?.getData) {
-    // Allow default paste behavior if clipboardData is unavailable.
-    // This prevents blocking legitimate paste operations in edge cases.
-    return;
-  }
-
-  // Only prevent default if we can handle the paste.
-  e.preventDefault();
-
-  let rawPastedText: string;
-  try {
-    rawPastedText = e.clipboardData.getData("text/plain");
-  } catch (error) {
-    console.warn("[FzCurrencyInput] Failed to read clipboard data:", error);
-    return;
-  }
-
-  if (!rawPastedText?.trim()) {
-    return;
-  }
-
-  const separatorRegex = /[,.]/g;
-  const separators: string[] = [...rawPastedText.matchAll(separatorRegex)].map(
-    (regexRes) => regexRes[0]
-  );
-
-  if (separators.length === 0) {
-    try {
-      const safeText = rawPastedText.trim();
-      const safeNum = parse(safeText);
-      if (isNaN(safeNum) || !isFinite(safeNum)) {
-        console.warn(
-          `[FzCurrencyInput] Invalid number parsed from paste: "${safeText}". Paste operation ignored.`
-        );
-        return;
-      }
-      const formattedText = format(safeNum);
-      setValue(formattedText);
-      isInternalUpdate = true;
-      const finalValue = props.nullOnEmpty && !safeText ? undefined : safeNum;
-      model.value = finalValue;
-      fzInputModel.value = formattedText;
-      resetInternalUpdateFlag();
-    } catch (error) {
-      console.warn(
-        `[FzCurrencyInput] Error parsing pasted value "${rawPastedText.trim()}":`,
-        error
-      );
-    }
-    return;
-  }
-
-  const uniqueSeparators = new Set(separators);
-  let decimalSeparator = ".";
-  let thousandSeparator = "";
-
-  if (uniqueSeparators.size > 1) {
-    decimalSeparator = separators[separators.length - 1];
-    thousandSeparator = separators[0];
-  }
-
-  if (uniqueSeparators.size === 1) {
-    if (separators.length > 1) {
-      thousandSeparator = separators[0];
-    } else {
-      const unknownSeparator = separators[0];
-      const splitted = rawPastedText.split(unknownSeparator);
-      if (splitted.length > 1 && splitted[1].length !== 3) {
-        decimalSeparator = unknownSeparator;
-      }
-    }
-  }
-  let safeText = rawPastedText
-    .replace(
-      new RegExp(thousandSeparator.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
-      ""
-    )
-    .trim();
-  safeText = safeText
-    .replace(
-      new RegExp(decimalSeparator.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
-      "."
-    )
-    .trim();
-
-  try {
-    const safeNum = parse(safeText);
-    if (isNaN(safeNum) || !isFinite(safeNum)) {
-      console.warn(
-        `[FzCurrencyInput] Invalid number parsed from paste: "${rawPastedText}". Normalized to "${safeText}". Paste operation ignored.`
-      );
-      return;
-    }
-
-    const formattedText = format(safeNum);
-    setValue(formattedText);
-    isInternalUpdate = true;
-    const finalValue = props.nullOnEmpty && !safeText ? undefined : safeNum;
-    model.value = finalValue;
-    fzInputModel.value = formattedText;
-    resetInternalUpdateFlag();
-  } catch (error) {
-    console.warn(
-      `[FzCurrencyInput] Error processing pasted value "${rawPastedText}":`,
-      error
-    );
-  }
-};
-
-onMounted(() => {
-  currencyInputRef.value = inputRef.value;
-  nextTick(() => {
-    if (inputRef.value?.value) {
-      fzInputModel.value = inputRef.value.value;
-    } else if (model.value !== undefined) {
-      const numValue = normalizeModelValue(model.value);
-      fzInputModel.value =
-        numValue !== undefined ? format(numValue) : undefined;
-    }
-  });
-});
-
-/**
- * Adjusts value by step amount
- *
- * When forceStep is true, adds the step amount first, then rounds to nearest step multiple.
- * This ensures the result is always a valid step multiple.
- *
- * @param amount - Step amount to add (positive for increment, negative for decrement)
- */
-const stepUpDown = (amount: number) => {
-  if (props.disabled || props.readonly) {
-    return;
-  }
-  const currentValue = normalizeModelValue(model.value) || 0;
-  let stepVal = currentValue + amount;
-
-  // If forceStep is true, round to nearest step multiple after adding the step.
-  if (props.forceStep && props.step) {
-    stepVal = roundTo(props.step, stepVal);
-  }
-
-  // Apply min/max constraints.
-  if (props.min !== undefined && props.min > stepVal) {
-    stepVal = props.min;
-  }
-  if (props.max !== undefined && props.max < stepVal) {
-    stepVal = props.max;
-  }
-
-  const safeText = format(stepVal);
-  setValue(safeText);
-  isInternalUpdate = true;
-  model.value = stepVal;
-  fzInputModel.value = safeText;
-  resetInternalUpdateFlag();
-};
-
-/**
- * Handles step button click events
- *
- * Prevents event propagation and default behavior when disabled/readonly
- * to avoid interfering with parent component event handlers.
- *
- * @param e - Mouse click event
- * @param amount - Step amount to apply (positive for up, negative for down)
- */
-const handleStepClick = (e: MouseEvent, amount: number) => {
-  if (props.disabled || props.readonly) {
-    e.preventDefault();
-    e.stopPropagation();
-    return;
-  }
-  stepUpDown(amount);
-};
-
-/**
- * Handles keyboard events for step buttons
- *
- * Activates step adjustment when Enter or Space is pressed.
- * Prevents default browser behavior to avoid page scrolling.
- *
- * @param e - Keyboard event
- * @param amount - Step amount to apply (positive for up, negative for down)
- */
-const handleStepKeydown = (e: KeyboardEvent, amount: number) => {
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    stepUpDown(amount);
-  }
-};
-
-/**
- * Computed property indicating if step controls should be disabled
- *
- * Step controls are disabled when the input is disabled or readonly.
- */
-const isStepDisabled = computed(() => props.disabled || props.readonly);
-
-/**
- * Computed accessible label for step up button
- *
- * Uses custom label if provided, otherwise generates default Italian label.
+ * Uses custom stepUpAriaLabel if provided, otherwise generates default label based on step value.
  */
 const stepUpAriaLabel = computed(() => {
-  return props.stepUpAriaLabel || `Incrementa di ${props.step}`;
+  if (props.stepUpAriaLabel) {
+    return props.stepUpAriaLabel;
+  }
+  return `Incrementa di ${props.step}`;
 });
 
 /**
- * Computed accessible label for step down button
+ * Computed aria-label for step down button
  *
- * Uses custom label if provided, otherwise generates default Italian label.
+ * Uses custom stepDownAriaLabel if provided, otherwise generates default label based on step value.
  */
 const stepDownAriaLabel = computed(() => {
-  return props.stepDownAriaLabel || `Decrementa di ${props.step}`;
+  if (props.stepDownAriaLabel) {
+    return props.stepDownAriaLabel;
+  }
+  return `Decrementa di ${props.step}`;
 });
 
 /**
- * Normalizes model value to number | undefined
+ * Computed disabled state for step controls
+ *
+ * Step controls are disabled when input is readonly or disabled.
+ */
+const isStepDisabled = computed(() => {
+  return props.readonly || props.disabled;
+});
+
+/**
+ * Validates and normalizes user input
+ *
+ * Allows only digits, "." and ",". Converts "." to ",".
+ * Handles double comma case: "123,45" -> "12,3,45" -> "12,34"
+ * (keeps only the first comma, everything after becomes decimal part)
+ *
+ * @param inputValue - Raw input value from user
+ * @returns Normalized value with only one comma
+ */
+const normalizeInput = (inputValue: string): string => {
+  // Allow only digits, "." and ","
+  let filtered = inputValue.replace(/[^0-9.,]/g, "");
+
+  // Convert "." to ","
+  filtered = filtered.replace(/\./g, ",");
+
+  // Handle multiple commas: keep only the first one
+  const firstCommaIndex = filtered.indexOf(",");
+  if (firstCommaIndex !== -1) {
+    // Keep everything before first comma + first comma + everything after first comma (remove other commas)
+    const beforeComma = filtered.substring(0, firstCommaIndex);
+    const afterComma = filtered
+      .substring(firstCommaIndex + 1)
+      .replace(/,/g, "");
+    filtered = beforeComma + "," + afterComma;
+  }
+
+  return filtered;
+};
+
+/**
+ * Prevents invalid characters from being typed
+ *
+ * Allows only digits, "." and ",". Blocks all other characters.
+ * Also allows control keys (Backspace, Delete, Arrow keys, Tab, etc.)
+ * Multiple commas are handled by normalizeInput.
+ *
+ * @param e - Keyboard event
+ */
+const handleKeydown = (e: KeyboardEvent) => {
+  // Allow control keys (Backspace, Delete, Arrow keys, Tab, etc.)
+  if (
+    e.ctrlKey ||
+    e.metaKey ||
+    e.altKey ||
+    [
+      "Backspace",
+      "Delete",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Tab",
+      "Enter",
+      "Home",
+      "End",
+    ].includes(e.key)
+  ) {
+    return;
+  }
+
+  // Allow only digits, "." and ","
+  if (!/^[0-9.,]$/.test(e.key)) {
+    e.preventDefault();
+  }
+};
+
+/**
+ * Handles input updates from FzInput
+ *
+ * Validates and normalizes input, updates v-model with parsed number.
+ * Does NOT format the display value - shows raw input (e.g., "123" stays "123", not "123,00").
+ * Formatting happens only on blur.
+ */
+const handleInputUpdate = (newValue: string | undefined) => {
+  if (!newValue) {
+    fzInputModel.value = "";
+    isInternalUpdate = true;
+    model.value = getEmptyValue();
+    isInternalUpdate = false;
+    return;
+  }
+
+  const normalized = normalizeInput(newValue);
+  fzInputModel.value = normalized;
+
+  // Parse to number and update v-model (but don't format display - keep raw)
+  const parsed = parse(normalized);
+  if (!isNaN(parsed) && isFinite(parsed)) {
+    // Truncate decimals to maximumFractionDigits before updating v-model
+    let processed = truncateDecimals(parsed, props.maximumFractionDigits);
+
+    // Apply step quantization if forceStep is enabled
+    if (props.forceStep) {
+      processed = roundTo(props.step, processed);
+    }
+
+    // Apply min/max constraints
+    processed = clamp(props.min, processed, props.max);
+
+    isInternalUpdate = true;
+    model.value = processed;
+    isInternalUpdate = false;
+  } else {
+    // If invalid, keep the normalized string but don't update v-model
+    isInternalUpdate = true;
+    model.value = getEmptyValue();
+    isInternalUpdate = false;
+  }
+};
+
+/**
+ * Handles blur event to format the value
+ *
+ * Formats the value to Italian format (e.g., "123" -> "123,00", "123,4" -> "123,40")
+ */
+const handleBlur = () => {
+  if (props.readonly || props.disabled) {
+    return;
+  }
+
+  isFocused.value = false;
+
+  const currentValue = normalizeModelValue(model.value);
+  if (currentValue === undefined || currentValue === null) {
+    fzInputModel.value = "";
+    // Ensure v-model matches the expected empty value based on nullOnEmpty/zeroOnEmpty
+    const expectedEmptyValue = getEmptyValue();
+    if (model.value !== expectedEmptyValue) {
+      isInternalUpdate = true;
+      model.value = expectedEmptyValue;
+      isInternalUpdate = false;
+    }
+    return;
+  }
+
+  // Apply step quantization if forceStep is enabled
+  let processed = currentValue;
+  if (props.forceStep) {
+    processed = roundTo(props.step, processed);
+  }
+
+  // Apply min/max constraints
+  processed = clamp(props.min, processed, props.max);
+
+  // Update v-model if processed value differs
+  if (processed !== currentValue) {
+    isInternalUpdate = true;
+    model.value = processed;
+    isInternalUpdate = false;
+  }
+
+  // Format the value for display
+  const formatted = formatValue(processed, {
+    minimumFractionDigits: props.minimumFractionDigits,
+    maximumFractionDigits: props.maximumFractionDigits,
+    roundDecimals: false,
+    useGrouping: true,
+  });
+  fzInputModel.value = formatted;
+};
+
+/**
+ * Handles focus event
+ *
+ * When input gains focus, shows raw value (without formatting)
+ */
+const handleFocus = () => {
+  if (props.readonly || props.disabled) {
+    return;
+  }
+
+  isFocused.value = true;
+
+  // Convert formatted value back to raw for editing
+  const currentValue = normalizeModelValue(model.value);
+  if (currentValue !== undefined) {
+    // Get raw value from formatted: remove thousand separators, keep decimal separator
+    const formatted = formatValue(currentValue, {
+      minimumFractionDigits: props.minimumFractionDigits,
+      maximumFractionDigits: props.maximumFractionDigits,
+      roundDecimals: false,
+      useGrouping: true,
+    });
+    const rawValue = formatted.replace(/\./g, ""); // Remove thousand separators
+    fzInputModel.value = rawValue;
+  }
+};
+
+/**
+ * Normalizes model value to number | undefined | null
  *
  * Converts string values to numbers (with deprecation warning) and handles
- * null/undefined/empty string cases. Used to ensure consistent internal
- * representation regardless of input type.
+ * null/undefined/empty string cases.
  *
- * @param value - Input value (number, string, or undefined)
- * @returns Normalized number value or undefined
+ * @param value - Input value (number, string, undefined, or null)
+ * @returns Normalized number value, undefined, or null
  */
 const normalizeModelValue = (
-  value: number | string | undefined
-): number | undefined => {
+  value: number | string | undefined | null
+): number | undefined | null => {
   if (value === undefined || value === null || value === "") {
-    return undefined;
+    return value === null ? null : undefined;
   }
   if (typeof value === "number") {
     return value;
@@ -322,127 +315,273 @@ const normalizeModelValue = (
 };
 
 /**
- * Syncs external model changes to FzInput string format
+ * Handles step up button click
  *
- * Skips internal updates to avoid loops. Uses nextTick to reset the flag
- * after all queued watch callbacks complete, preventing race conditions
- * with rapid external updates.
+ * Increments the current value by step amount, applying truncation and clamping.
  */
-watch(
-  () => model.value,
-  (newVal, oldVal) => {
-    if (isInternalUpdate) {
-      resetInternalUpdateFlag();
-      return;
-    }
-
-    const numValue = normalizeModelValue(newVal);
-    const oldNumValue = normalizeModelValue(oldVal);
-    if (numValue === oldNumValue) {
-      return;
-    }
-    if (numValue === undefined) {
-      fzInputModel.value = undefined;
-      if (inputRef.value) {
-        inputRef.value.value = "";
-      }
-    } else {
-      const formatted = format(numValue);
-      fzInputModel.value = formatted;
-      if (inputRef.value) {
-        inputRef.value.value = formatted;
-      }
-    }
-  }
-);
-
-/**
- * Syncs FzInput string updates to number model
- *
- * Sets isInternalUpdate flag to prevent watch loop.
- * Applies min/max constraints during input, but not forceStep (applied on blur).
- *
- * @param newVal - New string value from FzInput component
- */
-const handleFzInputUpdate = (newVal: string | undefined) => {
-  fzInputModel.value = newVal;
-
-  if (!newVal?.trim()) {
-    const currentNormalized = normalizeModelValue(model.value);
-    if (currentNormalized !== undefined) {
-      isInternalUpdate = true;
-      // Respect nullOnEmpty prop: emit undefined if true, 0 if false.
-      model.value = props.nullOnEmpty ? undefined : 0;
-      resetInternalUpdateFlag();
-    }
-    return;
-  }
-
-  const parsed = parse(newVal);
-  let normalized = isNaN(parsed) ? undefined : parsed;
-
-  // Apply min/max constraints during input (but not forceStep - that's applied on blur).
-  if (normalized !== undefined) {
-    if (props.min !== undefined && props.min > normalized) {
-      normalized = props.min;
-    }
-    if (props.max !== undefined && props.max < normalized) {
-      normalized = props.max;
-    }
-  }
-
-  const currentNormalized = normalizeModelValue(model.value);
-
-  if (currentNormalized !== normalized) {
-    isInternalUpdate = true;
-    model.value = normalized;
-    resetInternalUpdateFlag();
-  }
-};
-
-/**
- * Handles blur event to apply forceStep rounding and final validation
- *
- * When forceStep is true, rounds the value to the nearest step multiple.
- * Also applies min/max constraints if needed.
- */
-const handleBlur = () => {
+const handleStepUp = () => {
   if (props.readonly || props.disabled) {
     return;
   }
 
   const currentValue = normalizeModelValue(model.value);
-  if (currentValue === undefined) {
+  // If value is undefined/null, start from 0 or empty value based on props
+  const baseValue =
+    currentValue === undefined || currentValue === null ? 0 : currentValue;
+
+  // Add step
+  const newValue = baseValue + props.step;
+
+  // Truncate decimals
+  const truncated = truncateDecimals(newValue, props.maximumFractionDigits);
+
+  // Apply min/max constraints
+  const clamped = clamp(props.min, truncated, props.max);
+
+  // Update v-model
+  isInternalUpdate = true;
+  model.value = clamped;
+  isInternalUpdate = false;
+
+  // Format and update display
+  const formatted = formatValue(clamped, {
+    minimumFractionDigits: props.minimumFractionDigits,
+    maximumFractionDigits: props.maximumFractionDigits,
+    roundDecimals: false,
+    useGrouping: true,
+  });
+  fzInputModel.value = formatted;
+};
+
+/**
+ * Handles step down button click
+ *
+ * Decrements the current value by step amount, applying truncation and clamping.
+ */
+const handleStepDown = () => {
+  if (props.readonly || props.disabled) {
     return;
   }
 
-  let finalValue = currentValue;
+  const currentValue = normalizeModelValue(model.value);
+  // If value is undefined/null, start from 0 or empty value based on props
+  const baseValue =
+    currentValue === undefined || currentValue === null ? 0 : currentValue;
 
-  // Apply forceStep rounding on blur.
-  if (props.forceStep && props.step) {
-    finalValue = roundTo(props.step, finalValue);
-  }
+  // Subtract step
+  const newValue = baseValue - props.step;
 
-  // Apply min/max constraints.
-  if (props.min !== undefined && props.min > finalValue) {
-    finalValue = props.min;
-  }
-  if (props.max !== undefined && props.max < finalValue) {
-    finalValue = props.max;
-  }
+  // Truncate decimals
+  const truncated = truncateDecimals(newValue, props.maximumFractionDigits);
 
-  // Only update if value changed.
-  if (finalValue !== currentValue) {
-    const formatted = format(finalValue);
-    isInternalUpdate = true;
-    model.value = finalValue;
-    fzInputModel.value = formatted;
-    if (inputRef.value) {
-      inputRef.value.value = formatted;
-    }
-    resetInternalUpdateFlag();
-  }
+  // Apply min/max constraints
+  const clamped = clamp(props.min, truncated, props.max);
+
+  // Update v-model
+  isInternalUpdate = true;
+  model.value = clamped;
+  isInternalUpdate = false;
+
+  // Format and update display
+  const formatted = formatValue(clamped, {
+    minimumFractionDigits: props.minimumFractionDigits,
+    maximumFractionDigits: props.maximumFractionDigits,
+    roundDecimals: false,
+    useGrouping: true,
+  });
+  fzInputModel.value = formatted;
 };
+
+/**
+ * Initializes fzInputModel with the value from v-model on mount
+ *
+ * Formats the value only if not focused (formatted display).
+ */
+onMounted(() => {
+  const initialValue = model.value;
+
+  if (initialValue === undefined || initialValue === null) {
+    fzInputModel.value = "";
+    // Ensure v-model matches the expected empty value based on nullOnEmpty/zeroOnEmpty
+    const expectedEmptyValue = getEmptyValue();
+    if (initialValue !== expectedEmptyValue) {
+      isInternalUpdate = true;
+      model.value = expectedEmptyValue;
+      isInternalUpdate = false;
+    }
+    return;
+  }
+
+  if (typeof initialValue === "number") {
+    // Truncate decimals to maximumFractionDigits before updating v-model
+    let processed = truncateDecimals(initialValue, props.maximumFractionDigits);
+
+    // Apply step quantization if forceStep is enabled
+    if (props.forceStep) {
+      processed = roundTo(props.step, processed);
+    }
+
+    // Apply min/max constraints
+    processed = clamp(props.min, processed, props.max);
+
+    // Update v-model if processed value differs (to ensure v-model always respects max decimals and step quantization)
+    if (processed !== initialValue) {
+      isInternalUpdate = true;
+      model.value = processed;
+      isInternalUpdate = false;
+    }
+
+    // Format number to Italian format (comma as decimal separator)
+    const formatted = formatValue(processed, {
+      minimumFractionDigits: props.minimumFractionDigits,
+      maximumFractionDigits: props.maximumFractionDigits,
+      roundDecimals: false,
+      useGrouping: true,
+    });
+    fzInputModel.value = formatted;
+    return;
+  }
+
+  if (typeof initialValue === "string") {
+    // Parse string (handles Italian format: "1.234,56")
+    const parsed = parse(initialValue);
+    if (!isNaN(parsed) && isFinite(parsed)) {
+      // Truncate decimals to maximumFractionDigits before updating v-model
+      let processed = truncateDecimals(parsed, props.maximumFractionDigits);
+
+      // Apply step quantization if forceStep is enabled
+      if (props.forceStep) {
+        processed = roundTo(props.step, processed);
+      }
+
+      // Apply min/max constraints
+      processed = clamp(props.min, processed, props.max);
+
+      // Update v-model to number (this will trigger watch, but will be handled as number)
+      isInternalUpdate = true;
+      model.value = processed;
+      isInternalUpdate = false;
+      // Format and display
+      const formatted = formatValue(processed, {
+        minimumFractionDigits: props.minimumFractionDigits,
+        maximumFractionDigits: props.maximumFractionDigits,
+        roundDecimals: false,
+        useGrouping: true,
+      });
+      fzInputModel.value = formatted;
+    } else {
+      // Invalid string, clear input
+      fzInputModel.value = "";
+      isInternalUpdate = true;
+      model.value = getEmptyValue();
+      isInternalUpdate = false;
+    }
+    return;
+  }
+});
+
+/**
+ * Syncs external v-model changes to fzInputModel
+ *
+ * Point 1: v-model undefined -> fzInputModel = "" (empty string), v-model stays undefined
+ * Point 2: v-model number 1234.56 -> fzInputModel = "1234,56" (formatted), v-model stays 1234.56
+ * Point 3: v-model string "1.234,56" -> fzInputModel = "1234,56" (formatted), v-model will be 1234.56
+ *
+ * Formats only when not focused (when focused, shows raw value for editing).
+ */
+watch(
+  () => model.value,
+  (newVal) => {
+    // Skip if this is an internal update (from handleInputUpdate)
+    if (isInternalUpdate) {
+      return;
+    }
+
+    if (newVal === undefined || newVal === null) {
+      fzInputModel.value = "";
+      // Ensure v-model matches the expected empty value based on nullOnEmpty/zeroOnEmpty
+      const expectedEmptyValue = getEmptyValue();
+      if (newVal !== expectedEmptyValue) {
+        isInternalUpdate = true;
+        model.value = expectedEmptyValue;
+        isInternalUpdate = false;
+      }
+      return;
+    }
+
+    if (typeof newVal === "number") {
+      // Truncate decimals to maximumFractionDigits before updating v-model
+      let processed = truncateDecimals(newVal, props.maximumFractionDigits);
+
+      // Apply step quantization if forceStep is enabled
+      if (props.forceStep) {
+        processed = roundTo(props.step, processed);
+      }
+
+      // Apply min/max constraints
+      processed = clamp(props.min, processed, props.max);
+
+      // Update v-model if processed value differs (to ensure v-model always respects max decimals and step quantization)
+      if (processed !== newVal) {
+        isInternalUpdate = true;
+        model.value = processed;
+        isInternalUpdate = false;
+      }
+
+      // Format number to Italian format (comma as decimal separator)
+      // But only if not focused (when focused, show raw value)
+      if (!isFocused.value) {
+        const formatted = formatValue(processed, {
+          minimumFractionDigits: props.minimumFractionDigits,
+          maximumFractionDigits: props.maximumFractionDigits,
+          roundDecimals: false,
+          useGrouping: true,
+        });
+        fzInputModel.value = formatted;
+      }
+      return;
+    }
+
+    if (typeof newVal === "string") {
+      // Parse string (handles Italian format: "1.234,56")
+      const parsed = parse(newVal);
+      if (!isNaN(parsed) && isFinite(parsed)) {
+        // Truncate decimals to maximumFractionDigits before updating v-model
+        let processed = truncateDecimals(parsed, props.maximumFractionDigits);
+
+        // Apply step quantization if forceStep is enabled
+        if (props.forceStep) {
+          processed = roundTo(props.step, processed);
+        }
+
+        // Apply min/max constraints
+        processed = clamp(props.min, processed, props.max);
+
+        // Update v-model to number (this will trigger watch again, but will be handled as number)
+        isInternalUpdate = true;
+        model.value = processed;
+        isInternalUpdate = false;
+        // Format and display (only if not focused)
+        if (!isFocused.value) {
+          const formatted = formatValue(processed, {
+            minimumFractionDigits: props.minimumFractionDigits,
+            maximumFractionDigits: props.maximumFractionDigits,
+            roundDecimals: false,
+            useGrouping: true,
+          });
+          fzInputModel.value = formatted;
+        }
+      } else {
+        // Invalid string, clear input
+        fzInputModel.value = "";
+        isInternalUpdate = true;
+        model.value = getEmptyValue();
+        isInternalUpdate = false;
+      }
+      return;
+    }
+  }
+);
 
 defineExpose({
   inputRef,
@@ -456,8 +595,9 @@ defineExpose({
     v-bind="props"
     :modelValue="fzInputModel"
     type="text"
-    @update:modelValue="handleFzInputUpdate"
-    @paste="onPaste"
+    @update:modelValue="handleInputUpdate"
+    @keydown="handleKeydown"
+    @focus="handleFocus"
     @blur="handleBlur"
   >
     <template #right-icon>
@@ -475,22 +615,36 @@ defineExpose({
             size="xs"
             role="button"
             :aria-label="stepUpAriaLabel"
-            :aria-disabled="isStepDisabled ? 'true' : 'false'"
-            :tabindex="isStepDisabled ? undefined : 0"
+            :aria-disabled="isStepDisabled ? 'true' : undefined"
+            :tabindex="isStepDisabled ? undefined : '0'"
             class="fz__currencyinput__arrowup cursor-pointer"
-            @click="(e: MouseEvent) => handleStepClick(e, props.step)"
-            @keydown="(e: KeyboardEvent) => handleStepKeydown(e, props.step)"
+            @click="handleStepUp"
+            @keydown="
+              (e: KeyboardEvent) => {
+                if ((e.key === 'Enter' || e.key === ' ') && !isStepDisabled) {
+                  e.preventDefault();
+                  handleStepUp();
+                }
+              }
+            "
           ></FzIcon>
           <FzIcon
             name="angle-down"
             size="xs"
             role="button"
             :aria-label="stepDownAriaLabel"
-            :aria-disabled="isStepDisabled ? 'true' : 'false'"
-            :tabindex="isStepDisabled ? undefined : 0"
+            :aria-disabled="isStepDisabled ? 'true' : undefined"
+            :tabindex="isStepDisabled ? undefined : '0'"
             class="fz__currencyinput__arrowdown cursor-pointer"
-            @click="(e: MouseEvent) => handleStepClick(e, -props.step)"
-            @keydown="(e: KeyboardEvent) => handleStepKeydown(e, -props.step)"
+            @click="handleStepDown"
+            @keydown="
+              (e: KeyboardEvent) => {
+                if ((e.key === 'Enter' || e.key === ' ') && !isStepDisabled) {
+                  e.preventDefault();
+                  handleStepDown();
+                }
+              }
+            "
           ></FzIcon>
         </div>
       </div>
