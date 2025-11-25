@@ -524,6 +524,102 @@ describe('FzCurrencyInput', () => {
       expect(typeof emittedValue).toBe('number')
       expect(emittedValue).toBe(123.45)
     })
+
+    it('should handle string values with comma as decimal separator (Italian format)', async () => {
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          modelValue: '1234,56',
+          'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+
+      expect(consoleSpy).toHaveBeenCalled()
+      const inputElement = wrapper.find('input')
+      await inputElement.trigger('blur')
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+      // String with comma as decimal separator should be parsed correctly
+      expect(inputElement.element.value).toBe('1234,56')
+
+      consoleSpy.mockRestore()
+    })
+
+    it('should handle string values that would fail with Number() or parseInt/parseFloat', async () => {
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+      // Simulate the scenario: data[`${firstValue}_amount`] is a string like "1234,56"
+      // Number("1234,56") would return NaN, parseFloat would return NaN,
+      // parseInt would return 1234 (incorrect, stops at comma)
+      // But the component should handle it correctly using its parse function
+      const stringValue = '1234,56'
+      
+      // Verify that Number() fails with this format (returns NaN)
+      expect(Number(stringValue)).toBeNaN()
+      // parseInt and parseFloat stop at comma, returning only the integer part (incorrect)
+      expect(parseInt(stringValue)).toBe(1234)
+      expect(parseFloat(stringValue)).toBe(1234)
+
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          modelValue: stringValue,
+          'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+
+      expect(consoleSpy).toHaveBeenCalled()
+      const inputElement = wrapper.find('input')
+      await inputElement.trigger('blur')
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+      // Component should parse and display the value correctly despite Number()/parseFloat failing
+      // The component's parse function replaces comma with dot, so "1234,56" becomes 1234.56
+      expect(inputElement.element.value).toBe('1234,56')
+
+      consoleSpy.mockRestore()
+    })
+
+    it('should correctly parse Italian format string "1.234,56" with thousand separators', async () => {
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+      // Test the exact scenario: "1.234,56" should become 1234.56
+      // Process: "1.234,56" → remove dots → "1234,56" → replace comma → "1234.56" → 1234.56
+      const stringValue = '1.234,56'
+      
+      // Verify that Number() and parseFloat fail with this format
+      expect(Number(stringValue)).toBeNaN()
+      expect(parseFloat(stringValue)).toBe(1.234) // Stops at second dot
+
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          modelValue: stringValue,
+          'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+
+      expect(consoleSpy).toHaveBeenCalled()
+      const inputElement = wrapper.find('input')
+      await inputElement.trigger('blur')
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+      // Should be formatted as "1234,56" (Italian format, no thousand separators in display)
+      expect(inputElement.element.value).toBe('1234,56')
+      // Verify the numeric value is correct (1234.56)
+      const actualValue = inputElement.element.value
+      expect(parseFloat(actualValue.replace(',', '.'))).toBeCloseTo(1234.56, 2)
+
+      consoleSpy.mockRestore()
+    })
   })
 
   describe('Edge cases', () => {
@@ -615,19 +711,11 @@ describe('FzCurrencyInput', () => {
 
         expect(consoleSpy).toHaveBeenCalled()
         const inputElement = wrapper.find('input')
-        // When parsing '1.234.567,89' as a string, JavaScript parseFloat sees first dot as decimal
-        // So it parses as 1.23... The paste handler would handle this correctly, but modelValue string parsing doesn't
-        // Test the actual behavior: string parsing doesn't handle thousand separators well
         await inputElement.trigger('blur')
         await new Promise((resolve) => window.setTimeout(resolve, 100))
-        // parse('1.234.567,89') with replace(/,/g, '.') = '1.234.567.89', parseFloat = 1.234...
-        // Actually, the parse function replaces commas with dots, so '1.234.567,89' becomes '1.234.567.89'
-        // parseFloat('1.234.567.89') = 1.234 (stops at first invalid character after second dot)
-        // So the result is approximately 1.23
+        expect(inputElement.element.value).toBe('1234567,89')
         const actualValue = inputElement.element.value
-        // The parse function behavior: it replaces commas with dots first
-        // So '1.234.567,89' -> parseFloat('1.234.567.89') = 1.234
-        expect(parseFloat(actualValue.replace(',', '.'))).toBeCloseTo(1.23, 2)
+        expect(parseFloat(actualValue.replace(',', '.'))).toBeCloseTo(1234567.89, 2)
 
         consoleSpy.mockRestore()
       })
@@ -717,8 +805,8 @@ describe('FzCurrencyInput', () => {
             label: 'Label',
             modelValue: undefined,
             nullOnEmpty: true,
-            'onUpdate:modelValue': (e: number | undefined) => {
-              emittedValue = e
+            'onUpdate:modelValue': (e: number | string | undefined) => {
+              emittedValue = e as number | undefined
               wrapper.setProps({ modelValue: e })
             },
           },
@@ -749,8 +837,8 @@ describe('FzCurrencyInput', () => {
             label: 'Label',
             modelValue: undefined,
             nullOnEmpty: true,
-            'onUpdate:modelValue': (e: number | undefined) => {
-              emittedValue = e
+            'onUpdate:modelValue': (e: number | string | undefined) => {
+              emittedValue = e as number | undefined
               wrapper.setProps({ modelValue: e })
             },
           },
