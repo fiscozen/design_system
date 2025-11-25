@@ -63,7 +63,7 @@ const Template: RadioCardStory = {
     value: 'test',
     tooltip: 'this is a tooltip'
   },
-  decorators: [() => ({ template: '<div style="padding:10px;"><story/></div>' })]
+  decorators: [() => ({ template: '<div style="padding:10px; width: 360px;"><story/></div>' })]
 }
 
 export const Vertical: RadioCardStory = {

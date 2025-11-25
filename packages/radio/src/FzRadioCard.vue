@@ -12,9 +12,16 @@ const props = withDefaults(defineProps<FzRadioCardProps>(), {
   tone: "emphasis",
   emphasis: true, // deprecated, kept for backward compatibility
   radioIcon: (props: FzRadioCardProps) => props.orientation === "horizontal",
-  hasRadio: undefined,
+  hasRadio: undefined
 });
 const emits = defineEmits(["update:modelValue"]);
+const computedValue = computed(() => {
+  return props.value ?? props.label;
+});
+
+const isChecked = computed(() => {
+  return props.modelValue === computedValue.value;
+});
 
 // Compute hasRadio from props (with fallback to deprecated radioIcon)
 const computedHasRadio = computed(() => {
@@ -28,19 +35,19 @@ const computedHasRadio = computed(() => {
 const labelClass = computed(() => ({
   "flex-col": props.orientation === "vertical",
   "flex-row": props.orientation === "horizontal",
-  "pb-20": props.orientation === "vertical" && props.modelValue !== props.value,
+  "pb-20": props.orientation === "vertical" && !isChecked.value,
   "pb-12":
-    props.orientation === "horizontal" && props.modelValue !== props.value,
+    props.orientation === "horizontal" && !isChecked.value,
   "pb-[19px]":
-    props.orientation === "vertical" && props.modelValue === props.value,
+    props.orientation === "vertical" && isChecked.value,
   "pb-[11px]":
-    props.orientation === "horizontal" && props.modelValue === props.value,
-  "pt-[11px]": props.modelValue === props.value,
+    props.orientation === "horizontal" && isChecked.value,
+  "pt-[11px]": isChecked.value,
   "gap-12": props.orientation === "horizontal",
   "border-2 px-[11px] border-blue-500 ":
-    props.modelValue === props.value && !props.disabled,
+    isChecked.value && !props.disabled,
   "border-1 border-grey-300":
-    props.modelValue !== props.value || props.disabled,
+    !isChecked.value || props.disabled,
   "before:absolute": props.orientation === "vertical",
   "before:top-24": props.orientation === "vertical",
   "before:left-24": props.orientation === "vertical",
@@ -60,17 +67,17 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
       type="radio"
       :id="computedId"
       :class="[staticInputClass]"
-      :value="value"
+      :value="computedValue"
       :disabled="disabled"
-      :checked="modelValue === value"
+      :checked="isChecked"
       :name="name"
       :required="required"
       tabindex="0"
-      @change="emits('update:modelValue', value)"
+      @change="emits('update:modelValue', computedValue)"
     />
     <label
       :class="[
-        'relative flex fz-radio__label block rounded-lg border-solid pt-12 px-12 cursor-pointer w-[360px]',
+        'relative flex fz-radio__label block rounded-lg border-solid pt-12 px-12 cursor-pointer w-full',
         labelClass,
         computedLabelClass,
       ]"
@@ -82,7 +89,7 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
           'rounded overflow-hidden',
           {
             'shrink-0 size-[58px]': orientation === 'horizontal',
-            'w-full h-[252px]': orientation === 'vertical',
+            'w-full': orientation === 'vertical',
             'opacity-30': props.disabled,
           },
         ]"
@@ -101,7 +108,7 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
           { 'mt-20': orientation === 'vertical' },
         ]"
       >
-        <div class="justify-center flex flex-col w-full grow-0 min-w-0">
+        <div class="justify-center flex flex-col w-full grow-0 min-w-0 gap-4">
           <p
             :class="[
               'font-medium break-words !m-0 !leading-[20px]',

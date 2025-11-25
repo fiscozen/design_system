@@ -124,7 +124,7 @@ const selected = ref('option2')
     <tr>
       <td><code>tooltipStatus</code></td>
       <td><code>'neutral' | 'informative' | 'positive' | 'alert' | 'error'</code></td>
-      <td><code>'informative'</code></td>
+      <td><code>'neutral'</code></td>
       <td>Status of the tooltip (determines color and icon)</td>
     </tr>
     <tr>
@@ -200,13 +200,13 @@ const selected = ref('option2')
 
 ```vue
 <template>
-  <!-- Informative (default) -->
+  <!-- Neutral (default) -->
   <FzRadio 
     label="Info" 
     value="info" 
     v-model="selected"
-    tooltip="This is informative"
-    tooltipStatus="informative"
+    tooltip="This is neutral"
+    tooltipStatus="neutral"
   />
   
   <!-- Error -->

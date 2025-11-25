@@ -25,7 +25,8 @@ const meta = {
         type: 'select'
       }
     }
-  }
+  },
+  decorators: [() => ({ template: '<div style="padding:10px;"><story/></div>' })]
 } satisfies Meta<typeof FzRadio>
 
 export default meta
