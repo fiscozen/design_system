@@ -197,17 +197,29 @@ onMounted(() => {
 /**
  * Adjusts value by step amount
  *
- * When forceStep is true, rounds to nearest step before increment.
+ * When forceStep is true, adds the step amount first, then rounds to nearest step multiple.
+ * This ensures the result is always a valid step multiple.
  */
 const stepUpDown = (amount: number) => {
   if (props.disabled || props.readonly) {
     return;
   }
   const currentValue = normalizeModelValue(model.value) || 0;
-  let stepVal = props.forceStep
-    ? roundTo(props.step, currentValue)
-    : currentValue;
-  stepVal += amount;
+  let stepVal = currentValue + amount;
+
+  // If forceStep is true, round to nearest step multiple after adding the step
+  if (props.forceStep && props.step) {
+    stepVal = roundTo(props.step, stepVal);
+  }
+
+  // Apply min/max constraints
+  if (props.min !== undefined && props.min > stepVal) {
+    stepVal = props.min;
+  }
+  if (props.max !== undefined && props.max < stepVal) {
+    stepVal = props.max;
+  }
+
   const safeText = format(stepVal);
   setValue(safeText);
   isInternalUpdate = true;
@@ -307,6 +319,7 @@ watch(
  * Syncs FzInput string updates to number model
  *
  * Sets isInternalUpdate flag to prevent watch loop.
+ * Applies min/max constraints during input, but not forceStep (applied on blur).
  */
 const handleFzInputUpdate = (newVal: string | undefined) => {
   fzInputModel.value = newVal;
@@ -323,12 +336,67 @@ const handleFzInputUpdate = (newVal: string | undefined) => {
   }
 
   const parsed = parse(newVal);
-  const normalized = isNaN(parsed) ? undefined : parsed;
+  let normalized = isNaN(parsed) ? undefined : parsed;
+
+  // Apply min/max constraints during input (but not forceStep - that's applied on blur)
+  if (normalized !== undefined) {
+    if (props.min !== undefined && props.min > normalized) {
+      normalized = props.min;
+    }
+    if (props.max !== undefined && props.max < normalized) {
+      normalized = props.max;
+    }
+  }
+
   const currentNormalized = normalizeModelValue(model.value);
 
   if (currentNormalized !== normalized) {
     isInternalUpdate = true;
     model.value = normalized;
+    resetInternalUpdateFlag();
+  }
+};
+
+/**
+ * Handles blur event to apply forceStep rounding and final validation
+ *
+ * When forceStep is true, rounds the value to the nearest step multiple.
+ * Also applies min/max constraints if needed.
+ */
+const handleBlur = () => {
+  if (props.readonly || props.disabled) {
+    return;
+  }
+
+  const currentValue = normalizeModelValue(model.value);
+  if (currentValue === undefined) {
+    return;
+  }
+
+  let finalValue = currentValue;
+
+  // Apply forceStep rounding on blur
+  if (props.forceStep && props.step) {
+    finalValue = roundTo(props.step, finalValue);
+  }
+
+  // Apply min/max constraints
+  if (props.min !== undefined && props.min > finalValue) {
+    finalValue = props.min;
+  }
+  if (props.max !== undefined && props.max < finalValue) {
+    finalValue = props.max;
+  }
+
+  // Only update if value changed
+  if (finalValue !== currentValue) {
+    const formatted = format(finalValue);
+    isInternalUpdate = true;
+    model.value = finalValue;
+    fzInputModel.value = formatted;
+    if (inputRef.value) {
+      inputRef.value.value = formatted;
+    }
     resetInternalUpdateFlag();
   }
 };
@@ -347,6 +415,7 @@ defineExpose({
     type="text"
     @update:modelValue="handleFzInputUpdate"
     @paste="onPaste"
+    @blur="handleBlur"
   >
     <template #right-icon>
       <div class="flex items-center gap-4">
