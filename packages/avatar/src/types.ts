@@ -10,6 +10,7 @@ export type Variant = 'default' | 'square'
 
 /**
  * Size of avatar. Deprecated - use environment instead.
+ * @deprecated Use Environment type instead
  */
 export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl'
 
