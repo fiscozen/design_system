@@ -4,7 +4,7 @@
  *
  * Specialized currency input built on FzInput with number formatting, validation,
  * and step controls. Formats values using Intl.NumberFormat with locale-aware separators.
- * Supports min/max constraints, step quantization, and intelligent paste parsing
+ * Supports min/max constraints and step quantization
  * that detects decimal/thousand separators automatically.
  *
  * @component
@@ -443,9 +443,10 @@ onMounted(() => {
   }
 
   if (typeof initialValue === "string") {
-    // Parse string (handles Italian format: "1.234,56")
-    const parsed = parse(initialValue);
-    if (!isNaN(parsed) && isFinite(parsed)) {
+    // Normalize string value (handles Italian format: "1.234,56" and shows deprecation warning)
+    const normalized = normalizeModelValue(initialValue);
+    if (normalized !== undefined && normalized !== null) {
+      const parsed = normalized;
       // Truncate decimals to maximumFractionDigits before updating v-model
       let processed = truncateDecimals(parsed, props.maximumFractionDigits);
 
@@ -543,9 +544,10 @@ watch(
     }
 
     if (typeof newVal === "string") {
-      // Parse string (handles Italian format: "1.234,56")
-      const parsed = parse(newVal);
-      if (!isNaN(parsed) && isFinite(parsed)) {
+      // Normalize string value (handles Italian format: "1.234,56" and shows deprecation warning)
+      const normalized = normalizeModelValue(newVal);
+      if (normalized !== undefined && normalized !== null) {
+        const parsed = normalized;
         // Truncate decimals to maximumFractionDigits before updating v-model
         let processed = truncateDecimals(parsed, props.maximumFractionDigits);
 
@@ -651,6 +653,12 @@ defineExpose({
     </template>
     <template #label>
       <slot name="label"></slot>
+    </template>
+    <template #errorMessage>
+      <slot name="errorMessage"></slot>
+    </template>
+    <template #helpText>
+      <slot name="helpText"></slot>
     </template>
   </FzInput>
 </template>
