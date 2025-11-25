@@ -104,6 +104,7 @@ FzCurrencyInput extends FzInput props (except `type`, `modelValue`, `rightIcon`,
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
+| `modelValue` | `number \| string \| undefined` | - | **Type assertion**: Accepts `number \| string \| undefined` as input, but **always emits** `number \| undefined` (never `string`). Strings are deprecated and trigger a console warning. See [v-model Type Behavior](#v-model-type-behavior) for details. |
 | `nullOnEmpty` | `boolean` | `false` | Converts empty input to null instead of 0 |
 | `minimumFractionDigits` | `number` | `2` | Minimum decimal places in formatted output |
 | `maximumFractionDigits` | `number` | `2` | Maximum decimal places in formatted output |
@@ -563,7 +564,76 @@ Valid checkmark icon is displayed alongside step controls.
 - **Empty Values**: When `nullOnEmpty` is true, empty input converts to null instead of 0
 - **Valid State**: Valid checkmark icon can be displayed alongside step controls
 - **Right Icons**: `rightIcon` and `secondRightIcon` props are not available. Only `valid` icon is supported.
-- **v-model Type**: Accepts `number | string | undefined` for retrocompatibility, but always emits `number | undefined`. String inputs are deprecated and trigger console.warn.
+
+### v-model Type Behavior
+
+FzCurrencyInput uses a **type assertion** pattern for its v-model:
+
+- **Accepts**: `number | string | undefined` as input
+- **Emits**: Always `number | undefined` (never `string`)
+
+#### Type Assertion
+
+The component accepts `number | string | undefined` as input, but **always emits** `number | undefined`. Strings are automatically parsed (Italian format: "1.234,56" → 1234.56) and converted to numbers internally.
+
+#### Deprecation Warning
+
+**String values are deprecated** and will be removed in a future version. A console warning is shown when strings are used. Please use `number | undefined` instead for type safety and future compatibility.
+
+#### Recommended Usage
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+// ✅ Recommended: number | undefined (future-proof)
+const amount = ref<number | undefined>(undefined)
+</script>
+
+<template>
+  <FzCurrencyInput label="Amount" v-model="amount" />
+</template>
+```
+
+#### Deprecated Usage (Still Works)
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+// ⚠️ Deprecated: string (still works but shows warning)
+// Strings are parsed and converted to numbers internally
+const amount = ref<string>("1234,56")
+</script>
+
+<template>
+  <FzCurrencyInput label="Amount" v-model="amount" />
+</template>
+```
+
+**Note**: When using strings, the component will:
+1. Show a console warning about deprecation
+2. Parse the string using Italian format (points = thousands, comma = decimal)
+3. Convert it to a number internally
+4. Always emit a `number | undefined` value
+
+#### Migration Guide
+
+If you're currently using strings, migrate to numbers:
+
+```vue
+<!-- Before (deprecated) -->
+<script setup lang="ts">
+const amount = ref<string>("1234,56")
+</script>
+
+<!-- After (recommended) -->
+<script setup lang="ts">
+const amount = ref<number | undefined>(1234.56)
+// or
+const amount = ref<number | undefined>(undefined)
+</script>
+```
 
 ## Accessibility
 
