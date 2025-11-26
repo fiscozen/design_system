@@ -168,7 +168,8 @@ const handleKeydown = (e: KeyboardEvent) => {
  *
  * Validates and normalizes input, updates v-model with parsed number.
  * Does NOT format the display value - shows raw input (e.g., "123" stays "123", not "123,00").
- * Formatting happens only on blur.
+ * Does NOT apply step quantization - quantization happens only on blur.
+ * Formatting and quantization happen only on blur.
  */
 const handleInputUpdate = (newValue: string | undefined) => {
   if (!newValue) {
@@ -186,12 +187,7 @@ const handleInputUpdate = (newValue: string | undefined) => {
   const parsed = parse(normalized);
   if (!isNaN(parsed) && isFinite(parsed)) {
     // Truncate decimals to maximumFractionDigits before updating v-model
-    let processed = truncateDecimals(parsed, props.maximumFractionDigits);
-
-    // Apply step quantization if forceStep is enabled
-    if (props.forceStep) {
-      processed = roundTo(props.step, processed);
-    }
+    const processed = truncateDecimals(parsed, props.maximumFractionDigits);
 
     isInternalUpdate = true;
     model.value = processed;
@@ -207,7 +203,8 @@ const handleInputUpdate = (newValue: string | undefined) => {
 /**
  * Handles blur event to format the value
  *
- * Formats the value to Italian format (e.g., "123" -> "123,00", "123,4" -> "123,40")
+ * Formats the value to Italian format (e.g., "123" -> "123,00", "123,4" -> "123,40").
+ * Applies step quantization if forceStep is enabled (quantization happens only on blur, not during typing).
  */
 const handleBlur = () => {
   if (props.readonly || props.disabled) {
