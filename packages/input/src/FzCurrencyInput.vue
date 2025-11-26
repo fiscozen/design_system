@@ -189,6 +189,45 @@ const handleKeydown = (e: KeyboardEvent) => {
 };
 
 /**
+ * Handles paste event to replace entire input value
+ *
+ * Prevents default paste behavior and replaces the entire input value with the pasted content.
+ * Uses parse() to handle Italian format (e.g., "1.234,56"). If the pasted text is not a valid number,
+ * the paste is ignored.
+ */
+const handlePaste = (e: ClipboardEvent) => {
+  if (props.readonly || props.disabled) {
+    return;
+  }
+
+  e.preventDefault();
+
+  const pastedText = e.clipboardData?.getData("text") || "";
+  if (!pastedText) {
+    return;
+  }
+
+  // Use parse() to convert Italian format to number
+  const parsed = parse(pastedText);
+
+  if (!isNaN(parsed) && isFinite(parsed)) {
+    // Truncate decimals to maximumFractionDigits
+    const processed = truncateDecimals(parsed, props.maximumFractionDigits);
+
+    // Update v-model
+    isInternalUpdate = true;
+    model.value = processed;
+    isInternalUpdate = false;
+
+    // Convert number to normalized string format for display (e.g., 1234.56 -> "1234,56")
+    const numberString = String(processed);
+    const normalized = normalizeInput(numberString);
+    fzInputModel.value = normalized;
+  }
+  // If invalid, ignore paste (do nothing)
+};
+
+/**
  * Handles input updates from FzInput
  *
  * Validates and normalizes input, updates v-model with parsed number.
@@ -626,6 +665,7 @@ defineExpose({
     @keydown="handleKeydown"
     @focus="handleFocus"
     @blur="handleBlur"
+    @paste="handlePaste"
   >
     <template #right-icon>
       <div class="flex items-center gap-4">
