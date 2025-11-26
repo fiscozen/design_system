@@ -11,8 +11,17 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * FzSelectLabel Component
+ *
+ * Displays a group label in the select options list.
+ * Used to visually separate option groups.
+ *
+ * @component
+ */
 import { computed } from "vue";
 import { FzSelectLabelProps } from "../types";
+import { selectSizeConfig } from "../common";
 
 const props = defineProps<{
   option: FzSelectLabelProps;
@@ -22,12 +31,10 @@ const props = defineProps<{
 const staticClass =
   "text-grey-400 flex items-center text-ellipsis whitespace-nowrap";
 
-const mappedClass = {
-  sm: "text-[10px] min-h-24 px-14",
-  md: "text-xs min-h-32 px-16",
-  lg: "text-sm min-h-40 px-20",
-};
+/**
+ * Computes label classes based on size
+ */
 const computedClass = computed(() => {
-  return [staticClass, mappedClass[props.size]];
+  return [staticClass, selectSizeConfig.label[props.size]];
 });
 </script>
