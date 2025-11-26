@@ -99,15 +99,22 @@ const isStepDisabled = computed(() => {
  * Validates and normalizes user input
  *
  * Allows only digits, "." and ",". Converts "." to ",".
+ * Allows minus sign only at the beginning for negative values.
  * Handles double comma case: "123,45" -> "12,3,45" -> "12,34"
  * (keeps only the first comma, everything after becomes decimal part)
  *
  * @param inputValue - Raw input value from user
- * @returns Normalized value with only one comma
+ * @returns Normalized value with only one comma and optional leading minus sign
  */
 const normalizeInput = (inputValue: string): string => {
-  // Allow only digits, "." and ","
-  let filtered = inputValue.replace(/[^0-9.,]/g, "");
+  // Allow only digits, "." "," and "-"
+  let filtered = inputValue.replace(/[^0-9.,-]/g, "");
+
+  // Check if minus sign is at the beginning (after removing invalid chars)
+  const hasLeadingMinus = filtered.startsWith("-");
+
+  // Remove all minus signs (we'll reattach only one at the beginning if needed)
+  filtered = filtered.replace(/-/g, "");
 
   // Convert "." to ","
   filtered = filtered.replace(/\./g, ",");
@@ -123,13 +130,15 @@ const normalizeInput = (inputValue: string): string => {
     filtered = beforeComma + "," + afterComma;
   }
 
-  return filtered;
+  // Reattach minus sign at the beginning if it was present at the start
+  return hasLeadingMinus ? "-" + filtered : filtered;
 };
 
 /**
  * Prevents invalid characters from being typed
  *
- * Allows only digits, "." and ",". Blocks all other characters.
+ * Allows only digits, "." and ",". Allows minus sign only at the beginning.
+ * Blocks all other characters.
  * Also allows control keys (Backspace, Delete, Arrow keys, Tab, etc.)
  * Multiple commas are handled by normalizeInput.
  *
@@ -154,6 +163,22 @@ const handleKeydown = (e: KeyboardEvent) => {
       "End",
     ].includes(e.key)
   ) {
+    return;
+  }
+
+  // Allow minus sign only at the beginning (position 0) or when entire value is selected
+  if (e.key === "-") {
+    const target = e.target as HTMLInputElement;
+    const cursorPosition = target.selectionStart ?? 0;
+    const selectionLength = (target.selectionEnd ?? 0) - cursorPosition;
+    const valueLength = target.value.length;
+
+    // Allow minus if:
+    // 1. Cursor is at position 0 (beginning)
+    // 2. Entire value is selected (user can replace with negative)
+    if (cursorPosition !== 0 && selectionLength !== valueLength) {
+      e.preventDefault();
+    }
     return;
   }
 
