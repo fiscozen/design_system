@@ -1113,7 +1113,6 @@ describe('FzCurrencyInput', () => {
         })
 
         const inputElement = wrapper.find('input')
-        // Set value directly in input to trigger useCurrency's onBlur which applies forceStep
         await inputElement.setValue('-3')
         await inputElement.trigger('blur')
         await new Promise((resolve) => window.setTimeout(resolve, 100))
