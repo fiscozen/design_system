@@ -1,19 +1,20 @@
 <template>
   <button
+    role="option"
     :class="[staticClass, computedClass]"
     test-id="fzselect-option"
     type="button"
     :title="option.label"
     :disabled="option.disabled || option.readonly"
+    :aria-selected="isSelected ? 'true' : 'false'"
+    :aria-disabled="option.disabled ? 'true' : 'false'"
     @click="
       () => {
         $emit('click');
       }
     "
   >
-    <span :class="computedValueClass">{{
-      option.label
-    }}</span>
+    <span :class="computedValueClass">{{ option.label }}</span>
     <span v-if="option.subtitle" :class="computedSubtitleClass">
       {{ option.subtitle }}
     </span>
@@ -21,8 +22,17 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * FzSelectOption Component
+ *
+ * Renders a single selectable option in the dropdown list.
+ * Supports disabled, readonly, and selected states with subtitle display.
+ *
+ * @component
+ */
 import { computed } from "vue";
 import { FzSelectOptionProps } from "../types";
+import { selectSizeConfig } from "../common";
 
 const props = defineProps<{
   option: FzSelectOptionProps;
@@ -34,48 +44,99 @@ const props = defineProps<{
 const staticClass =
   "group flex flex-col justify-center text-left font-normal cursor-pointer rounded";
 
-const mappedClass = {
-  sm: "text-sm px-14 py-4",
-  md: "text-base px-16 py-6",
-  lg: "text-lg px-20 py-8",
+/**
+ * Whether this option is currently selected
+ */
+const isSelected = computed(() => props.selectedValue === props.option.value);
+
+/**
+ * Helper functions to identify option visual states
+ */
+const isDisabledOption = (option: typeof props.option) => option.disabled;
+const isReadonlyOption = (option: typeof props.option) =>
+  option.readonly && !option.disabled;
+const isSelectedOption = (option: typeof props.option) => {
+  return (
+    !option.disabled && !option.readonly && props.selectedValue === option.value
+  );
+};
+const isDefaultOption = (option: typeof props.option) => {
+  return (
+    !option.disabled && !option.readonly && props.selectedValue !== option.value
+  );
 };
 
-const mappedSubtitleClass = {
-  sm: 'text-xs',
-  md: 'text-sm',
-  lg: 'text-base'
-}
-
+/**
+ * Computes option button classes using Representation-First pattern
+ *
+ * Maps each visual representation (disabled, readonly, selected, default) to its styling.
+ * This pattern makes it explicit when the option looks like each state.
+ */
 const computedClass = computed(() => {
-  const { disabled, readonly, value } = props.option;
-  const isSelected = props.selectedValue === value;
-  return [
-    {
-      "text-grey-200": disabled,
-      "text-core-black": readonly,
-      "bg-background-alice-blue text-blue-500":
-        !disabled && !readonly && isSelected,
-      "bg-white hover:!bg-background-alice-blue text-core-black hover:text-blue-500":
-        !disabled && !readonly && !isSelected
-    },
-    mappedClass[props.size],
-  ];
+  const baseClasses: string[] = [selectSizeConfig.option[props.size]];
+
+  switch (true) {
+    case isDisabledOption(props.option):
+      baseClasses.push("text-grey-200");
+      break;
+
+    case isReadonlyOption(props.option):
+      baseClasses.push("text-core-black");
+      break;
+
+    case isSelectedOption(props.option):
+      baseClasses.push("bg-background-alice-blue", "text-blue-500");
+      break;
+
+    case isDefaultOption(props.option):
+      baseClasses.push(
+        "bg-white",
+        "hover:!bg-background-alice-blue",
+        "text-core-black",
+        "hover:text-blue-500"
+      );
+      break;
+  }
+
+  return baseClasses;
 });
 
+/**
+ * Computes value span classes for text truncation
+ */
 const computedValueClass = computed(() => ({
-  "w-full overflow-hidden text-ellipsis whitespace-nowrap": !props.disableTruncate,
-}))
+  "w-full overflow-hidden text-ellipsis whitespace-nowrap":
+    !props.disableTruncate,
+}));
 
+/**
+ * Helper functions to identify subtitle visual states
+ */
+const isSubtitleInteractive = (option: typeof props.option) => {
+  return !option.disabled && props.selectedValue !== option.value;
+};
+
+/**
+ * Computes subtitle span classes using Representation-First pattern
+ *
+ * Maps visual representation (interactive vs non-interactive) to styling.
+ */
 const computedSubtitleClass = computed(() => {
-  const { disabled, value } = props.option;
-  const isSelected = props.selectedValue === value;
-  return [
-    {
-      "w-full overflow-hidden text-ellipsis whitespace-nowrap": !props.disableTruncate,
-      "text-grey-500 group-hover:text-blue-500":
-      !disabled && !isSelected,
-    },
-    mappedSubtitleClass[props.size]
-  ]
-})
+  const baseClasses: string[] = [selectSizeConfig.subtitle[props.size]];
+
+  if (!props.disableTruncate) {
+    baseClasses.push(
+      "w-full",
+      "overflow-hidden",
+      "text-ellipsis",
+      "whitespace-nowrap"
+    );
+  }
+
+  if (isSubtitleInteractive(props.option)) {
+    baseClasses.push("text-grey-500", "group-hover:text-blue-500");
+  }
+
+  return baseClasses;
+});
 </script>
