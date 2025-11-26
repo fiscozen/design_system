@@ -1,156 +1,3 @@
-<template>
-  <FzFloating
-    :position="position ?? 'auto-vertical-start'"
-    ref="floatingRef"
-    :isOpen
-    class="flex flex-col gap-8 overflow-visible"
-    :teleport="teleport"
-    :useViewport="true"
-    :overrideOpener
-    contentClass="z-70"
-    @fzfloating:setPosition="calculateMaxHeight"
-  >
-    <template #opener-start>
-      <label
-        v-if="label"
-        :id="labelId"
-        :for="openerId"
-        :class="['text-sm', computedLabelClass]"
-      >
-        {{ label }}{{ required ? " *" : "" }}
-      </label>
-    </template>
-    <template #opener="{ floating }" class="flex">
-      <div class="w-full flex flex-col gap-8" ref="openerContainer">
-        <slot name="opener" :handlePickerClick :isOpen :floating>
-          <button
-            :id="openerId"
-            @click="handlePickerClick"
-            test-id="fzselect-opener"
-            type="button"
-            :size="size"
-            :class="[staticPickerClass, computedPickerClass, pickerClass]"
-            ref="opener"
-            :title="selectedOption ? selectedOption.label : placeholder"
-            :aria-expanded="isOpen ? 'true' : 'false'"
-            :aria-haspopup="'listbox'"
-            :aria-labelledby="label ? labelId : undefined"
-            :aria-label="
-              !label
-                ? selectedOption
-                  ? selectedOption.label
-                  : placeholder
-                : undefined
-            "
-            :aria-required="required ? 'true' : 'false'"
-            :aria-invalid="error ? 'true' : 'false'"
-            :aria-disabled="props.disabled ? 'true' : 'false'"
-          >
-            <FzIcon v-if="leftIcon" :name="leftIcon" :size="size" />
-            <div class="flex flex-col min-w-0 grow">
-              <span
-                v-if="!showNormalPlaceholder"
-                :class="[staticSpanClass, 'text-grey-300 text-xs']"
-                >{{ placeholder }}</span
-              >
-              <span :class="[staticSpanClass, computedSpanClass]">
-                {{ selectedOption ? selectedOption.label : placeholder }}
-              </span>
-            </div>
-            <FzIcon
-              v-if="rightIcon && !rightIconLast"
-              :name="rightIcon"
-              :size="size"
-            />
-            <FzIcon
-              :name="isOpen ? 'chevron-up' : 'chevron-down'"
-              :size="size"
-            />
-            <FzIcon
-              v-if="rightIcon && rightIconLast && !rightIconButton"
-              :name="rightIcon"
-              :size="mappedSize"
-            />
-            <FzIconButton
-              v-if="rightIconButton && rightIconLast && rightIcon"
-              :class="{ 'bg-grey-100 text-gray-300': disabled }"
-              :iconName="rightIcon"
-              :size="mappedSize"
-              :variant="disabled ? 'invisible' : rightIconButtonVariant"
-              @click.stop="emit('fzselect:right-icon-click')"
-            />
-          </button>
-        </slot>
-      </div>
-    </template>
-    <template #opener-end>
-      <div
-        v-if="error && $slots.error"
-        class="flex gap-4"
-        :style="{ 'max-width': containerWidth }"
-      >
-        <FzIcon
-          name="triangle-exclamation"
-          class="text-semantic-error"
-          :size="size"
-        />
-        <div :class="['mt-1', computedErrorClass]">
-          <slot name="error"></slot>
-        </div>
-      </div>
-      <span
-        v-else-if="$slots.help"
-        :class="[computedHelpClass]"
-        :style="{ 'max-width': containerWidth }"
-      >
-        <slot name="help"></slot>
-      </span>
-    </template>
-    <div
-      role="listbox"
-      :aria-labelledby="openerId"
-      class="flex flex-col p-4 rounded shadow overflow-auto ml-[-2px] box-border max-h-min"
-      :style="{ minWidth: containerWidth, maxWidth: openerMaxWidth, maxHeight }"
-      ref="containerRef"
-      test-id="fzselect-options-container"
-    >
-      <template v-if="visibleOptions.length">
-        <template
-          v-for="option in visibleOptions"
-          :key="option.kind === 'label' ? option.label : option.value"
-        >
-          <FzSelectLabel
-            v-if="option.kind === 'label'"
-            :option="option"
-            :disableTruncate="disableTruncate"
-            :size="size"
-          />
-          <FzSelectOption
-            v-else
-            @click="() => handleSelect(option.value)"
-            :option="option"
-            :size="size"
-            :disableTruncate="disableTruncate"
-            :selectedValue="model"
-          />
-        </template>
-      </template>
-      <template v-else>
-        <FzSelectOption
-          :option="{
-            label: 'Nessun risultato trovato',
-            readonly: true,
-            value: '',
-          }"
-          :disableTruncate="disableTruncate"
-          :size="size"
-          :selectedValue="model"
-        />
-      </template>
-    </div>
-  </FzFloating>
-</template>
-
 <script setup lang="ts">
 /**
  * FzSelect Component
@@ -513,4 +360,158 @@ defineExpose({
   forceOpen,
 });
 </script>
+
+<template>
+  <FzFloating
+    :position="position ?? 'auto-vertical-start'"
+    ref="floatingRef"
+    :isOpen
+    class="flex flex-col gap-8 overflow-visible"
+    :teleport="teleport"
+    :useViewport="true"
+    :overrideOpener
+    contentClass="z-70"
+    @fzfloating:setPosition="calculateMaxHeight"
+  >
+    <template #opener-start>
+      <label
+        v-if="label"
+        :id="labelId"
+        :for="openerId"
+        :class="['text-sm', computedLabelClass]"
+      >
+        {{ label }}{{ required ? " *" : "" }}
+      </label>
+    </template>
+    <template #opener="{ floating }" class="flex">
+      <div class="w-full flex flex-col gap-8" ref="openerContainer">
+        <slot name="opener" :handlePickerClick :isOpen :floating>
+          <button
+            :id="openerId"
+            @click="handlePickerClick"
+            test-id="fzselect-opener"
+            type="button"
+            :size="size"
+            :class="[staticPickerClass, computedPickerClass, pickerClass]"
+            ref="opener"
+            :title="selectedOption ? selectedOption.label : placeholder"
+            :aria-expanded="isOpen ? 'true' : 'false'"
+            :aria-haspopup="'listbox'"
+            :aria-labelledby="label ? labelId : undefined"
+            :aria-label="
+              !label
+                ? selectedOption
+                  ? selectedOption.label
+                  : placeholder
+                : undefined
+            "
+            :aria-required="required ? 'true' : 'false'"
+            :aria-invalid="error ? 'true' : 'false'"
+            :aria-disabled="props.disabled ? 'true' : 'false'"
+          >
+            <FzIcon v-if="leftIcon" :name="leftIcon" :size="size" />
+            <div class="flex flex-col min-w-0 grow">
+              <span
+                v-if="!showNormalPlaceholder"
+                :class="[staticSpanClass, 'text-grey-300 text-xs']"
+                >{{ placeholder }}</span
+              >
+              <span :class="[staticSpanClass, computedSpanClass]">
+                {{ selectedOption ? selectedOption.label : placeholder }}
+              </span>
+            </div>
+            <FzIcon
+              v-if="rightIcon && !rightIconLast"
+              :name="rightIcon"
+              :size="size"
+            />
+            <FzIcon
+              :name="isOpen ? 'chevron-up' : 'chevron-down'"
+              :size="size"
+            />
+            <FzIcon
+              v-if="rightIcon && rightIconLast && !rightIconButton"
+              :name="rightIcon"
+              :size="mappedSize"
+            />
+            <FzIconButton
+              v-if="rightIconButton && rightIconLast && rightIcon"
+              :class="{ 'bg-grey-100 text-gray-300': disabled }"
+              :iconName="rightIcon"
+              :size="mappedSize"
+              :variant="disabled ? 'invisible' : rightIconButtonVariant"
+              @click.stop="emit('fzselect:right-icon-click')"
+            />
+          </button>
+        </slot>
+      </div>
+    </template>
+    <template #opener-end>
+      <div
+        v-if="error && $slots.error"
+        class="flex gap-4"
+        :style="{ 'max-width': containerWidth }"
+      >
+        <FzIcon
+          name="triangle-exclamation"
+          class="text-semantic-error"
+          :size="size"
+        />
+        <div :class="['mt-1', computedErrorClass]">
+          <slot name="error"></slot>
+        </div>
+      </div>
+      <span
+        v-else-if="$slots.help"
+        :class="[computedHelpClass]"
+        :style="{ 'max-width': containerWidth }"
+      >
+        <slot name="help"></slot>
+      </span>
+    </template>
+    <div
+      role="listbox"
+      :aria-labelledby="openerId"
+      class="flex flex-col p-4 rounded shadow overflow-auto ml-[-2px] box-border max-h-min"
+      :style="{ minWidth: containerWidth, maxWidth: openerMaxWidth, maxHeight }"
+      ref="containerRef"
+      test-id="fzselect-options-container"
+    >
+      <template v-if="visibleOptions.length">
+        <template
+          v-for="option in visibleOptions"
+          :key="option.kind === 'label' ? option.label : option.value"
+        >
+          <FzSelectLabel
+            v-if="option.kind === 'label'"
+            :option="option"
+            :disableTruncate="disableTruncate"
+            :size="size"
+          />
+          <FzSelectOption
+            v-else
+            @click="() => handleSelect(option.value)"
+            :option="option"
+            :size="size"
+            :disableTruncate="disableTruncate"
+            :selectedValue="model"
+          />
+        </template>
+      </template>
+      <template v-else>
+        <FzSelectOption
+          :option="{
+            label: 'Nessun risultato trovato',
+            readonly: true,
+            value: '',
+          }"
+          :disableTruncate="disableTruncate"
+          :size="size"
+          :selectedValue="model"
+        />
+      </template>
+    </div>
+  </FzFloating>
+</template>
+
 <style scoped></style>
