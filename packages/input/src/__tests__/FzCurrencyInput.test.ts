@@ -975,6 +975,72 @@ describe('FzCurrencyInput', () => {
         await new Promise((resolve) => window.setTimeout(resolve, 150))
         expect(inputElement.element.value).toBe('3,00')
       })
+
+      it('should allow typing negative values directly', async () => {
+        let modelValue: number | undefined = undefined
+        const wrapper = mount(FzCurrencyInput, {
+          props: {
+            label: 'Label',
+            modelValue,
+            'onUpdate:modelValue': (e) => {
+              modelValue = e as number
+              wrapper.setProps({ modelValue })
+            },
+          },
+        })
+
+        const inputElement = wrapper.find('input')
+        await inputElement.trigger('focus')
+        
+        // Type negative value
+        await inputElement.setValue('-123,45')
+        await inputElement.trigger('input')
+        await new Promise((resolve) => window.setTimeout(resolve, 100))
+        
+        // During typing, should show normalized value with minus sign
+        expect(inputElement.element.value).toBe('-123,45')
+        expect(modelValue).toBe(-123.45)
+        
+        // On blur, should format correctly
+        await inputElement.trigger('blur')
+        await new Promise((resolve) => window.setTimeout(resolve, 100))
+        expect(inputElement.element.value).toBe('-123,45')
+        expect(modelValue).toBe(-123.45)
+      })
+
+      it('should normalize minus sign to beginning only', async () => {
+        let modelValue: number | undefined = undefined
+        const wrapper = mount(FzCurrencyInput, {
+          props: {
+            label: 'Label',
+            modelValue,
+            'onUpdate:modelValue': (e) => {
+              modelValue = e as number
+              wrapper.setProps({ modelValue })
+            },
+          },
+        })
+
+        const inputElement = wrapper.find('input')
+        await inputElement.trigger('focus')
+        
+        // Simulate pasting or typing value with minus in middle (should be normalized)
+        // This tests normalizeInput function behavior
+        await inputElement.setValue('123-45')
+        await inputElement.trigger('input')
+        await new Promise((resolve) => window.setTimeout(resolve, 100))
+        
+        // Minus in middle should be removed, value should be positive
+        expect(inputElement.element.value).toBe('12345')
+        expect(modelValue).toBe(12345)
+        
+        // Test with minus at beginning (should be preserved)
+        await inputElement.setValue('-123,45')
+        await inputElement.trigger('input')
+        await new Promise((resolve) => window.setTimeout(resolve, 100))
+        expect(inputElement.element.value).toBe('-123,45')
+        expect(modelValue).toBe(-123.45)
+      })
     })
 
     describe('Decimal values', () => {
