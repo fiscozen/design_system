@@ -1,0 +1,356 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Form/FzSelect" />
+
+# FzSelect
+
+A dropdown select component with floating panel, lazy loading, keyboard navigation, and full accessibility support.
+
+## Features
+
+- Dropdown selection with floating panel positioning
+- Lazy loading for performance with large option lists
+- Grouped options with label separators
+- Custom icons (left and right positions)
+- Error and help states with custom slots
+- Floating label variant for compact forms
+- Keyboard navigation with full ARIA support
+- WCAG 2.1 AA compliant accessibility
+
+## Installation
+
+```bash
+npm install @fiscozen/select
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { FzSelect } from '@fiscozen/select'
+
+const selectedValue = ref('')
+
+const options = [
+  { value: '1', label: 'Option 1' },
+  { value: '2', label: 'Option 2' },
+  { value: '3', label: 'Option 3' }
+]
+</script>
+
+<template>
+  <FzSelect
+    v-model="selectedValue"
+    :options="options"
+    label="Select an option"
+    placeholder="Choose..."
+  />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>options</code></td>
+      <td><code>FzSelectOptionsProps[]</code></td>
+      <td><strong>required</strong></td>
+      <td>List of options to display in the dropdown</td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Label displayed above the select input</td>
+    </tr>
+    <tr>
+      <td><code>placeholder</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Placeholder text shown when no option is selected</td>
+    </tr>
+    <tr>
+      <td><code>required</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Marks the select as required (shows asterisk)</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Disables the select input</td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows error state styling</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'sm' | 'md' | 'lg'</code></td>
+      <td><code>'md'</code></td>
+      <td>Size of the select input</td>
+    </tr>
+    <tr>
+      <td><code>leftIcon</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Icon name to display on the left</td>
+    </tr>
+    <tr>
+      <td><code>rightIcon</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Icon name to display on the right</td>
+    </tr>
+    <tr>
+      <td><code>rightIconButton</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Renders right icon as a button instead of icon</td>
+    </tr>
+    <tr>
+      <td><code>rightIconButtonVariant</code></td>
+      <td><code>IconButtonVariant</code></td>
+      <td>-</td>
+      <td>Variant for right icon button</td>
+    </tr>
+    <tr>
+      <td><code>rightIconLast</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Positions right icon after chevron</td>
+    </tr>
+    <tr>
+      <td><code>pickerClass</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Custom CSS classes for the picker button</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'normal' | 'floating-label'</code></td>
+      <td><code>'normal'</code></td>
+      <td>Select variant style</td>
+    </tr>
+    <tr>
+      <td><code>optionsToShow</code></td>
+      <td><code>number</code></td>
+      <td><code>25</code></td>
+      <td>Number of options to render per batch (lazy loading)</td>
+    </tr>
+    <tr>
+      <td><code>floatingPanelMaxHeight</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Maximum height for the floating panel</td>
+    </tr>
+    <tr>
+      <td><code>disableTruncate</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Disables text truncation in options</td>
+    </tr>
+    <tr>
+      <td><code>extOpener</code></td>
+      <td><code>HTMLElement</code></td>
+      <td>-</td>
+      <td>External element to use as opener</td>
+    </tr>
+    <tr>
+      <td><code>overrideOpener</code></td>
+      <td><code>Ref&lt;HTMLElement&gt;</code></td>
+      <td>-</td>
+      <td>Override opener reference for floating positioning</td>
+    </tr>
+    <tr>
+      <td><code>position</code></td>
+      <td><code>FzFloatingPosition</code></td>
+      <td><code>'auto-vertical-start'</code></td>
+      <td>Floating panel position</td>
+    </tr>
+    <tr>
+      <td><code>teleport</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Teleport panel to body</td>
+    </tr>
+    <tr>
+      <td><code>useViewport</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Use viewport constraints for positioning</td>
+    </tr>
+  </tbody>
+</table>
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>opener</code></td>
+      <td>Custom opener button (receives <code>handlePickerClick</code>, <code>isOpen</code>, <code>floating</code> props)</td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td>Error message content (shown when <code>error={true}</code>)</td>
+    </tr>
+    <tr>
+      <td><code>help</code></td>
+      <td>Help text content (shown when no error)</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Basic Select
+
+```vue
+<template>
+  <FzSelect
+    v-model="selected"
+    :options="options"
+    label="Country"
+    placeholder="Select a country"
+  />
+</template>
+```
+
+### With Icons
+
+```vue
+<template>
+  <FzSelect
+    v-model="selected"
+    :options="options"
+    label="Search"
+    leftIcon="magnifying-glass"
+    rightIcon="xmark"
+    :rightIconButton="true"
+    @fzselect:right-icon-click="clearSelection"
+  />
+</template>
+```
+
+### Grouped Options
+
+```vue
+<template>
+  <FzSelect
+    v-model="selected"
+    :options="groupedOptions"
+    label="Category"
+  />
+</template>
+
+<script setup>
+const groupedOptions = [
+  { kind: 'label', label: 'Fruits' },
+  { value: 'apple', label: 'Apple' },
+  { value: 'banana', label: 'Banana' },
+  { kind: 'label', label: 'Vegetables' },
+  { value: 'carrot', label: 'Carrot' },
+  { value: 'lettuce', label: 'Lettuce' }
+]
+</script>
+```
+
+### Error State
+
+```vue
+<template>
+  <FzSelect
+    v-model="selected"
+    :options="options"
+    label="Required Field"
+    :required="true"
+    :error="hasError"
+  >
+    <template #error>
+      Please select an option
+    </template>
+  </FzSelect>
+</template>
+```
+
+### Help Text
+
+```vue
+<template>
+  <FzSelect
+    v-model="selected"
+    :options="options"
+    label="Select"
+  >
+    <template #help>
+      Choose the best option for your needs
+    </template>
+  </FzSelect>
+</template>
+```
+
+### Floating Label Variant
+
+```vue
+<template>
+  <FzSelect
+    v-model="selected"
+    :options="options"
+    variant="floating-label"
+    placeholder="Select..."
+  />
+</template>
+```
+
+### Disabled Options
+
+```vue
+<script setup>
+const options = [
+  { value: '1', label: 'Available' },
+  { value: '2', label: 'Disabled', disabled: true },
+  { value: '3', label: 'Read-only', readonly: true }
+]
+</script>
+```
+
+## Accessibility
+
+The component is fully accessible and WCAG 2.1 AA compliant:
+
+- **Keyboard navigation**: Tab to focus, Enter/Space to open, Arrow keys to navigate, Escape to close
+- **Screen reader support**: Proper ARIA attributes (`aria-expanded`, `aria-haspopup`, `aria-labelledby`, `aria-required`, `aria-invalid`)
+- **Semantic HTML**: Uses `role="listbox"` and `role="option"` for proper semantics
+- **Focus management**: Focus returns to opener when dropdown closes
+- **State announcements**: Screen readers announce open/closed state and selected option
+
+### ARIA Attributes
+
+- `aria-expanded`: Indicates dropdown open/closed state
+- `aria-haspopup="listbox"`: Declares dropdown type
+- `aria-labelledby`: Links to label element
+- `aria-label`: Provides accessible name when label is not present
+- `aria-required`: Indicates required fields
+- `aria-invalid`: Indicates error state
+- `aria-disabled`: Indicates disabled state
+- `aria-selected`: Indicates selected option in list

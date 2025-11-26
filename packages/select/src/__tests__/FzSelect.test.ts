@@ -1,4 +1,3 @@
-// FzSelect.spec.ts
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import FzSelect from "../FzSelect.vue";
@@ -13,6 +12,21 @@ describe("FzSelect", () => {
       disconnect: () => null,
     });
     window.IntersectionObserver = mockIntersectionObserver;
+
+    // Mock window.matchMedia for FzFloating component
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockImplementation(query => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
   });
 
   afterEach(() => {
@@ -403,3 +417,4 @@ describe("FzSelect", () => {
     ).toBe(1);
   });
 });
+

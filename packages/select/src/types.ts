@@ -17,18 +17,22 @@ export interface FzSelectProps extends FzFloatingProps {
   placeholder?: string;
   /**
    * If set to true, the input is required
+   * @default false
    */
   required?: boolean;
   /**
    * If set to true, the input is disabled
+   * @default false
    */
   disabled?: boolean;
   /**
    * If set to true, the input is in error state
+   * @default false
    */
   error?: boolean;
   /**
    * The size of the input
+   * @default 'md'
    */
   size?: "sm" | "md" | "lg";
   /**
@@ -45,6 +49,7 @@ export interface FzSelectProps extends FzFloatingProps {
   rightIconButtonVariant?: IconButtonVariant;
   /**
    * Right icon button vs simple icon
+   * @default false
    */
   rightIconButton?: boolean;
   /**
@@ -61,6 +66,7 @@ export interface FzSelectProps extends FzFloatingProps {
   floatingPanelMaxHeight?: string;
   /**
    * Size of the options to render each time in the floating panel
+   * @default 25
    */
   optionsToShow?: number;
   /**
@@ -68,15 +74,18 @@ export interface FzSelectProps extends FzFloatingProps {
    */
   overrideOpener?: Ref<HTMLElement>;
   /**
-   * Disable the truncation of any text in the options. False by default
+   * Disable the truncation of any text in the options
+   * @default false
    */
   disableTruncate?: boolean;
   /**
    * Select variant
+   * @default 'normal'
    */
   variant?: 'normal' | 'floating-label';
   /**
    * Whether to position right icon before or after chevron
+   * @default false
    */
   rightIconLast?: boolean;
 }
@@ -98,14 +107,17 @@ export type FzSelectOptionProps = {
   subtitle?: string;
   /**
    * if true the option will not be selectable
+   * @default false
    */
   disabled?: boolean;
   /**
    * same as disabled, but without grey text
+   * @default false
    */
   readonly?: boolean;
   /**
    * the type of option
+   * @default 'option'
    */
   kind?: "option";
 };
