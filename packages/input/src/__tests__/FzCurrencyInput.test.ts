@@ -109,6 +109,51 @@ describe('FzCurrencyInput', () => {
       await new Promise((resolve) => window.setTimeout(resolve, 100))
       expect(inputElement.element.value).toBe('20,00')
     })
+
+    it('should allow typing values outside min/max range temporarily', async () => {
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          modelValue: 50,
+          'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
+          min: 2,
+          max: 100,
+        },
+      })
+
+      const inputElement = wrapper.find('input')
+      await inputElement.trigger('focus')
+      
+      // Type a value above max - should be allowed during typing
+      await inputElement.setValue('150')
+      await inputElement.trigger('input')
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+      // During typing, value should NOT be clamped - user can type "150" even with max=100
+      expect(inputElement.element.value).toBe('150')
+      // v-model should also reflect the unclamped value during typing
+      expect(wrapper.props('modelValue')).toBe(150)
+      
+      // Only after blur, value should be clamped to max
+      await inputElement.trigger('blur')
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+      expect(inputElement.element.value).toBe('100,00')
+      expect(wrapper.props('modelValue')).toBe(100)
+      
+      // Test with value below min
+      await inputElement.trigger('focus')
+      await inputElement.setValue('1')
+      await inputElement.trigger('input')
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+      // During typing, value should NOT be clamped
+      expect(inputElement.element.value).toBe('1')
+      expect(wrapper.props('modelValue')).toBe(1)
+      
+      // Only after blur, value should be clamped to min
+      await inputElement.trigger('blur')
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+      expect(inputElement.element.value).toBe('2,00')
+      expect(wrapper.props('modelValue')).toBe(2)
+    })
   })
 
   describe('Step quantization', () => {

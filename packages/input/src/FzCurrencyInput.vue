@@ -193,9 +193,6 @@ const handleInputUpdate = (newValue: string | undefined) => {
       processed = roundTo(props.step, processed);
     }
 
-    // Apply min/max constraints
-    processed = clamp(props.min, processed, props.max);
-
     isInternalUpdate = true;
     model.value = processed;
     isInternalUpdate = false;
@@ -519,8 +516,11 @@ watch(
         processed = roundTo(props.step, processed);
       }
 
-      // Apply min/max constraints
-      processed = clamp(props.min, processed, props.max);
+      // Apply min/max constraints only when input is not focused
+      // When focused, allow values outside range temporarily (clamping happens on blur)
+      if (!isFocused.value) {
+        processed = clamp(props.min, processed, props.max);
+      }
 
       // Update v-model if processed value differs (to ensure v-model always respects max decimals and step quantization)
       if (processed !== newVal) {
@@ -556,8 +556,11 @@ watch(
           processed = roundTo(props.step, processed);
         }
 
-        // Apply min/max constraints
-        processed = clamp(props.min, processed, props.max);
+        // Apply min/max constraints only when input is not focused
+        // When focused, allow values outside range temporarily (clamping happens on blur)
+        if (!isFocused.value) {
+          processed = clamp(props.min, processed, props.max);
+        }
 
         // Update v-model to number (this will trigger watch again, but will be handled as number)
         isInternalUpdate = true;
