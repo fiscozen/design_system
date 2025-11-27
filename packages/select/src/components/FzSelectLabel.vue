@@ -1,15 +1,3 @@
-<template>
-  <label
-    disabled
-    test-id="fzselect-label"
-    @click.prevent.stop
-    :title="option.label"
-    :class="computedClass"
-  >
-    {{ option.label }}
-  </label>
-</template>
-
 <script setup lang="ts">
 /**
  * FzSelectLabel Component
@@ -19,22 +7,21 @@
  *
  * @component
  */
-import { computed } from "vue";
 import { FzSelectLabelProps } from "../types";
-import { selectSizeConfig } from "../common";
 
 const props = defineProps<{
   option: FzSelectLabelProps;
-  size: "sm" | "md" | "lg";
 }>();
-
-const staticClass =
-  "text-grey-400 flex items-center text-ellipsis whitespace-nowrap";
-
-/**
- * Computes label classes based on size
- */
-const computedClass = computed(() => {
-  return [staticClass, selectSizeConfig.label[props.size]];
-});
 </script>
+
+<template>
+  <label
+    disabled
+    test-id="fzselect-label"
+    @click.prevent.stop
+    :title="props.option.label"
+    class="text-grey-400 flex items-center text-ellipsis whitespace-nowrap text-sm min-h-40 px-20"
+  >
+    {{ props.option.label }}
+  </label>
+</template>
