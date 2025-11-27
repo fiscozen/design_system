@@ -16,7 +16,9 @@ FzAction provides a consistent way to create interactive elements across the app
 - **Dual Functionality**: Works as both button and link components
 - **Environment Support**: Optimized for both backoffice and frontoffice contexts
 - **Flexible Layouts**: Multiple variants for different use cases
-- **Icon Support**: Optional [FontAwesome](https://fontawesome.com/) icons on left and/or right sides
+- **Type-Safe Icon Support**: Type-safe icon properties based on variant:
+  - `onlyIcon` variant: uses `iconName` and `iconVariant`
+  - `textLeft` and `textCenter` variants: use `iconLeftName`, `iconLeftVariant`, `iconRightName`, and `iconRightVariant`
 - **Accessibility**: Built-in disabled states and keyboard navigation
 - **Text Handling**: Support for main label and sub-label with truncation options
 
@@ -44,9 +46,30 @@ FzAction provides a consistent way to create interactive elements across the app
 |----------|------|---------|-------------|
 | \`label\` | \`string\` | - | Main label text (can also use default slot) |
 | \`subLabel\` | \`string\` | - | Secondary text displayed below the main label |
-| \`iconName\` | \`string\` | - | Name of the [FontAwesome](https://fontawesome.com/) icon |
-| \`iconVariant\` | \`IconVariant\` | - | Variant of the [FontAwesome](https://fontawesome.com/) icon |
-| \`iconPosition\` | \`'left' \| 'right'\` | \`'right'\` | Position of the icon (only used for textLeft and textCenter variants) |
+`}
+</Markdown>
+
+#### Icon Properties (for variant="onlyIcon")
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`iconName\` | \`string\` | - | Name of the [FzIcon](?path=/docs/media-fzicon--docs) icon (required for onlyIcon variant) |
+| \`iconVariant\` | \`IconVariant\` | - | Variant of the [FzIcon](?path=/docs/media-fzicon--docs) icon (required for onlyIcon variant) |
+`}
+</Markdown>
+
+#### Icon Properties (for variant="textLeft" or variant="textCenter")
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`iconLeftName\` | \`string\` | - | Name of the left [FzIcon](?path=/docs/media-fzicon--docs) icon (required for textLeft and textCenter variants) |
+| \`iconLeftVariant\` | \`IconVariant\` | - | Variant of the left [FzIcon](?path=/docs/media-fzicon--docs) icon (required for textLeft and textCenter variants) |
+| \`iconRightName\` | \`string\` | - | Name of the right [FzIcon](?path=/docs/media-fzicon--docs) icon (required for textLeft and textCenter variants) |
+| \`iconRightVariant\` | \`IconVariant\` | - | Variant of the right [FzIcon](?path=/docs/media-fzicon--docs) icon (required for textLeft and textCenter variants) |
 `}
 </Markdown>
 
@@ -73,7 +96,7 @@ FzAction provides a consistent way to create interactive elements across the app
   <FzAction
     label="Save Changes"
     subLabel="Save your current work"
-    iconName="save"
+    iconRightName="save"
     @click="handleSave"
   />
 </template>
@@ -88,7 +111,7 @@ FzAction provides a consistent way to create interactive elements across the app
     to="/dashboard"
     label="Dashboard"
     subLabel="View your overview"
-    iconName="chart-line"
+    iconRightName="chart-line"
   />
 </template>
 ```
@@ -101,8 +124,22 @@ FzAction provides a consistent way to create interactive elements across the app
     variant="textCenter"
     label="Profile"
     subLabel="Account settings"
-    iconName="user"
+    iconRightName="chevron-right"
     @click="openProfile"
+  />
+</template>
+```
+
+### Action with Left and Right Icons
+
+```vue
+<template>
+  <FzAction
+    label="Navigation Item"
+    subLabel="With icons on both sides"
+    iconLeftName="chevron-left"
+    iconRightName="chevron-right"
+    @click="navigate"
   />
 </template>
 ```
@@ -124,7 +161,7 @@ FzAction provides a consistent way to create interactive elements across the app
     to="https://help.example.com"
     label="Help Center"
     subLabel="Get support"
-    iconName="question-circle"
+    iconRightName="arrow-up-right-from-square"
     external
     target="_blank"
   />
@@ -135,7 +172,12 @@ FzAction provides a consistent way to create interactive elements across the app
 
 ```vue
 <template>
-  <FzAction label="Delete Item" subLabel="This action cannot be undone" iconName="trash" disabled />
+  <FzAction
+    label="Delete Item"
+    subLabel="This action cannot be undone"
+    iconRightName="trash"
+    disabled
+  />
 </template>
 ```
 
@@ -147,7 +189,7 @@ FzAction provides a consistent way to create interactive elements across the app
     label="Very Long Label That Should Be Truncated"
     subLabel="Very Long Sub Label That Should Also Be Truncated"
     isTextTruncated
-    iconName="file"
+    iconRightName="file"
   />
 </template>
 ```

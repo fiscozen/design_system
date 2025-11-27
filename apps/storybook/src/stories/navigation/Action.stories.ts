@@ -32,15 +32,24 @@ const meta: Meta<typeof FzAction> = {
     },
     iconName: {
       control: { type: 'text' },
-      description: 'Name of the icon'
-    },
-    iconPosition: {
-      control: { type: 'select' },
-      options: ['left', 'right'],
-      description: 'Position of the icon'
+      description: 'Name of the icon (for onlyIcon variant)'
     },
     iconVariant: {
-      description: 'Variant of the icon'
+      description: 'Variant of the icon (for onlyIcon variant)'
+    },
+    iconLeftName: {
+      control: { type: 'text' },
+      description: 'Name of the left icon (for textLeft and textCenter variants)'
+    },
+    iconLeftVariant: {
+      description: 'Variant of the left icon (for textLeft and textCenter variants)'
+    },
+    iconRightName: {
+      control: { type: 'text' },
+      description: 'Name of the right icon (for textLeft and textCenter variants)'
+    },
+    iconRightVariant: {
+      description: 'Variant of the right icon (for textLeft and textCenter variants)'
     },
     label: {
       control: { type: 'text' },
@@ -66,7 +75,7 @@ const meta: Meta<typeof FzAction> = {
     external: {
       control: { type: 'boolean' },
       description: 'Whether the link is for an external page or not'
-    },
+    }
   },
   args: {
     type: 'action',
@@ -74,7 +83,7 @@ const meta: Meta<typeof FzAction> = {
     variant: 'textLeft',
     disabled: false,
     isTextTruncated: false,
-    iconName: 'face-smile',
+    iconRightName: 'face-smile',
     label: 'Label',
     subLabel: 'SubLabel'
   },
@@ -92,6 +101,7 @@ const Default: Story = {
 const TextLeft: Story = {
   args: {
     variant: 'textLeft',
+    iconRightName: 'chevron-right',
     label: 'Text Left Action',
     subLabel: 'With sub-label'
   }
@@ -101,6 +111,8 @@ const TextLeft: Story = {
 const TextCenter: Story = {
   args: {
     variant: 'textCenter',
+    iconLeftName: 'smile',
+    iconRightName: 'smile',
     label: 'Text Center Action',
     subLabel: 'With sub-label'
   }
@@ -118,6 +130,7 @@ const OnlyIcon: Story = {
 const Disabled: Story = {
   args: {
     disabled: true,
+    iconRightName: 'face-smile',
     label: 'Disabled Action',
     subLabel: 'This action is disabled'
   }
@@ -127,12 +140,13 @@ const Disabled: Story = {
 const TextTruncated: Story = {
   args: {
     isTextTruncated: true,
+    iconRightName: 'face-smile',
     label: 'Very Long Label That Should Be Truncated',
     subLabel: 'Very Long Sub Label That Should Also Be Truncated'
   },
   globals: {
     viewport: {
-      value: "xs",
+      value: 'xs',
       isRotated: false
     }
   }
@@ -142,6 +156,7 @@ const TextTruncated: Story = {
 const Frontoffice: Story = {
   args: {
     environment: 'frontoffice',
+    iconRightName: 'face-smile',
     label: 'Frontoffice Action',
     subLabel: 'Different padding'
   }
@@ -152,6 +167,7 @@ const Link: Story = {
   args: {
     type: 'link',
     to: '/example',
+    iconRightName: 'face-smile',
     label: 'Navigation Link',
     subLabel: 'Click to navigate'
   }
@@ -162,6 +178,7 @@ const ExternalLink: Story = {
   args: {
     type: 'link',
     to: 'https://example.com',
+    iconRightName: 'face-smile',
     label: 'External Link',
     subLabel: 'Opens in new tab',
     external: true,
@@ -169,12 +186,12 @@ const ExternalLink: Story = {
   }
 }
 
-// Icon position to the right
+// Icon position to the left
 const IconPositionLeft: Story = {
   args: {
-    iconPosition: 'left',
-    label: 'Icon Position Right',
-    subLabel: 'Icon position to the right'
+    iconLeftName: 'face-smile',
+    label: 'Icon Position Left',
+    subLabel: 'Icon position to the left'
   }
 }
 

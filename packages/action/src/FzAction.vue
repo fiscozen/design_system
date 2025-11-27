@@ -9,14 +9,14 @@
   >
     <template v-if="variant === 'textLeft'">
       <FzIcon
-        v-if="iconName && iconPosition === 'left'"
-        :name="iconName"
-        :variant="iconVariant"
+        v-if="iconLeftName"
+        :name="iconLeftName"
+        :variant="iconLeftVariant"
         size="md"
         :class="iconClasses"
         :aria-hidden="isIconDecorative"
       />
-      <div class="flex flex-col gap-4 overflow-hidden">
+      <div class="flex flex-1 flex-col gap-4 overflow-hidden">
         <span
           v-if="label || $slots.default"
           :class="labelClasses"
@@ -29,9 +29,9 @@
         </span>
       </div>
       <FzIcon
-        v-if="iconName && iconPosition === 'right'"
-        :name="iconName"
-        :variant="iconVariant"
+        v-if="iconRightName"
+        :name="iconRightName"
+        :variant="iconRightVariant"
         size="md"
         :class="iconClasses"
         :aria-hidden="isIconDecorative"
@@ -43,9 +43,9 @@
     >
       <div class="flex items-center gap-8">
         <FzIcon
-          v-if="iconName && iconPosition === 'left'"
-          :name="iconName"
-          :variant="iconVariant"
+          v-if="iconLeftName"
+          :name="iconLeftName"
+          :variant="iconLeftVariant"
           size="md"
           :class="iconClasses"
           :aria-hidden="isIconDecorative"
@@ -60,9 +60,9 @@
         </span>
 
         <FzIcon
-          v-if="iconName && iconPosition === 'right'"
-          :name="iconName"
-          :variant="iconVariant"
+          v-if="iconRightName"
+          :name="iconRightName"
+          :variant="iconRightVariant"
           size="md"
           :class="iconClasses"
           :aria-hidden="isIconDecorative"
@@ -87,7 +87,7 @@
 import { computed } from "vue";
 import { FzIcon } from "@fiscozen/icons";
 import { FzLink } from "@fiscozen/link";
-import { FzActionProps } from "./types";
+import type { FzActionProps } from "./types";
 import { useActionClasses } from "./composables/useActionClasses";
 
 const props = withDefaults(defineProps<FzActionProps>(), {
@@ -96,7 +96,6 @@ const props = withDefaults(defineProps<FzActionProps>(), {
   variant: "textLeft",
   disabled: false,
   isTextTruncated: false,
-  iconPosition: "right",
 });
 
 const emit = defineEmits<{
@@ -106,6 +105,52 @@ const emit = defineEmits<{
 
 const { baseClasses, iconClasses, labelClasses, subLabelClasses } =
   useActionClasses(props);
+
+/*
+  Those computed properties are necessary to avoid type errors when using the component with the different variants.
+  Using directly props values inside the template would cause type errors.
+*/
+const iconName = computed(() => {
+  if (props.variant === "onlyIcon") {
+    return props.iconName;
+  }
+  return undefined;
+});
+
+const iconVariant = computed(() => {
+  if (props.variant === "onlyIcon") {
+    return props.iconVariant;
+  }
+  return undefined;
+});
+
+const iconLeftName = computed(() => {
+  if (props.variant === "textLeft" || props.variant === "textCenter") {
+    return props.iconLeftName;
+  }
+  return undefined;
+});
+
+const iconLeftVariant = computed(() => {
+  if (props.variant === "textLeft" || props.variant === "textCenter") {
+    return props.iconLeftVariant;
+  }
+  return undefined;
+});
+
+const iconRightName = computed(() => {
+  if (props.variant === "textLeft" || props.variant === "textCenter") {
+    return props.iconRightName;
+  }
+  return undefined;
+});
+
+const iconRightVariant = computed(() => {
+  if (props.variant === "textLeft" || props.variant === "textCenter") {
+    return props.iconRightVariant;
+  }
+  return undefined;
+});
 
 /**
  * Computed aria-label for accessibility
@@ -119,7 +164,7 @@ const ariaLabel = computed(() => {
     const parts = [];
     if (props.label) parts.push(props.label);
     if (props.subLabel) parts.push(props.subLabel);
-    if (parts.length === 0 && props.iconName) parts.push(props.iconName);
+    if (parts.length === 0 && iconName.value) parts.push(iconName.value);
     return parts.join(". ") || undefined;
   }
 
@@ -159,7 +204,6 @@ const boundAttrs = computed(() => {
   const baseAriaAttributes: Record<string, string | undefined> = {
     "aria-disabled": props.disabled ? "true" : "false",
     tabindex: props.disabled ? "-1" : undefined,
-    role: "button",
   };
 
   if (props.disabled) {
@@ -188,8 +232,6 @@ const boundAttrs = computed(() => {
 
 // Computed properties
 const componentTag = computed(() => {
-  if (props.disabled) return "span";
-
   return props.type === "action" ? "button" : FzLink;
 });
 

@@ -30,7 +30,7 @@ export function useActionClasses(props: UseActionClassesProps) {
       // States
       props.disabled ? "text-grey-200 cursor-not-allowed" : "",
       !props.disabled
-        ? "text-core-black hover:bg-background-alice-blue hover:text-blue-500 focus:border-blue-200 focus:outline-none"
+        ? "text-core-black hover:bg-background-alice-blue hover:!text-blue-500 focus:!border-blue-200 focus:!outline-none focus:text-core-black "
         : "",
     ]
       .filter(Boolean)

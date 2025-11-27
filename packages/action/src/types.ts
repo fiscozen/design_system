@@ -9,19 +9,49 @@ export type FzActionEnvironment = "backoffice" | "frontoffice";
 export type FzActionVariant = "textLeft" | "textCenter" | "onlyIcon";
 
 // Common props shared by both link and button actions
-export interface FzActionCommonProps {
+export type FzActionCommonProps =
+  | FzActionOnlyIconProps
+  | FzActionStandardIconProps;
+
+export type FzActionOnlyIconProps = FzActionBasicProps & {
+  /**
+   * Only icon variant
+   */
+  variant: "onlyIcon";
   /**
    * Name of the fontawesome icon
    */
-  iconName?: string;
+  iconName: string;
   /**
    * Variant of the fontawesome icon
    */
-  iconVariant?: IconVariant;
+  iconVariant: IconVariant;
+};
+
+export type FzActionStandardIconProps = FzActionBasicProps & {
   /**
-   * Icon position (left/right)
+   * Text left or text center variant
    */
-  iconPosition?: "left" | "right";
+  variant: "textLeft" | "textCenter";
+  /**
+   * Name of the fontawesome icon
+   */
+  iconLeftName: string;
+  /**
+   * Variant of the fontawesome icon
+   */
+  iconLeftVariant: IconVariant;
+  /**
+   * Name of the fontawesome icon
+   */
+  iconRightName: string;
+  /**
+   * Variant of the fontawesome icon
+   */
+  iconRightVariant: IconVariant;
+};
+
+type FzActionBasicProps = {
   /**
    * Alternative prop to default label slot
    */
@@ -50,9 +80,7 @@ export interface FzActionCommonProps {
    * Type of the action (link/action)
    */
   type?: "link" | "action";
-}
-
-// Props specific to link actions (from FzLink)
+};
 
 // Discriminated union for action props
 export type FzActionProps = FzActionLinkProps | FzActionButtonProps;
