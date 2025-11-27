@@ -50,12 +50,17 @@ import {
 import FzSelectLabel from "./components/FzSelectLabel.vue";
 
 const props = withDefaults(defineProps<FzSelectProps>(), {
+  disabled: false,
+  disableTruncate: false,
+  environment: "frontoffice",
+  error: false,
   optionsToShow: 25,
+  readonly: false,
+  required: false,
+  rightIconButton: false,
+  rightIconButtonVariant: "invisible",
   teleport: true,
   variant: "normal",
-  environment: "frontoffice",
-  rightIconButtonVariant: "invisible",
-  readonly: false,
 });
 
 const model = defineModel({
@@ -169,16 +174,16 @@ const showNormalPlaceholder = computed(() => {
  * Dynamically adjusts panel height to prevent overflow when positioned above or below opener.
  * Uses OPTIONS_BUFFER to reserve space for smooth scrolling near viewport edges.
  *
- * @param rect - Floating container rect (unused but required by FzFloating callback)
+ * @param _rect - Floating container rect (unused but required by FzFloating callback)
  * @param openerRect - Opener element rect for position calculation
- * @param containerRect - Container rect (unused but required by FzFloating callback)
+ * @param _containerRect - Container rect (unused but required by FzFloating callback)
  * @param position - Preferred floating position
  * @param actualPosition - Actual floating position after auto-adjustment
  */
 const calculateMaxHeight = (
-  rect: Ref<DOMRect | undefined>,
+  _rect: Ref<DOMRect | undefined>,
   openerRect: Ref<DOMRect | undefined>,
-  containerRect: Ref<DOMRect | undefined>,
+  _containerRect: Ref<DOMRect | undefined>,
   position: Ref<FzFloatingPosition>,
   actualPosition: Ref<FzFloatingPosition | undefined>
 ): void => {
@@ -268,21 +273,20 @@ const computedPickerClass = computed(() => [
 const baseTextClasses = "text-base leading-5";
 
 /**
- * Helper functions to identify text element visual states using Representation-First pattern
+ * Generic helper functions to identify component state using Representation-First pattern
  *
- * Each function answers: "When does this text element look like this state?"
+ * These functions check the component's interactive state regardless of context (text, value, picker).
+ * Unified to avoid duplication and improve maintainability.
  */
-const isDisabledText = (p: typeof props) => p.disabled;
-const isReadonlyText = (p: typeof props) => p.readonly;
-const isActiveText = (p: typeof props) => !p.disabled && !p.readonly;
+const isDisabled = (p: typeof props) => p.disabled;
+const isReadonly = (p: typeof props) => p.readonly;
+const isInteractiveState = (p: typeof props) => !p.disabled && !p.readonly;
 
 /**
- * Helper functions to identify value/placeholder visual states using Representation-First pattern
+ * Helper functions specific to value/placeholder visual states
  *
  * Value/placeholder has special logic: it's grey-300 when disabled/readonly OR when no value is selected.
  */
-const isDisabledValue = (p: typeof props) => p.disabled;
-const isReadonlyValue = (p: typeof props) => p.readonly;
 const isSelectedValue = () => selectedOption.value && isInteractive.value;
 const isPlaceholderValue = () => !selectedOption.value || !isInteractive.value;
 
@@ -296,12 +300,12 @@ const computedLabelClass = computed(() => {
   const baseClasses = [baseTextClasses];
 
   switch (true) {
-    case isDisabledText(props):
-    case isReadonlyText(props):
+    case isDisabled(props):
+    case isReadonly(props):
       baseClasses.push("text-grey-300");
       break;
 
-    case isActiveText(props):
+    case isInteractiveState(props):
       baseClasses.push("text-core-black");
       break;
   }
@@ -330,8 +334,8 @@ const computedSpanClass = computed(() => {
   const baseClasses = [baseTextClasses];
 
   switch (true) {
-    case isDisabledValue(props):
-    case isReadonlyValue(props):
+    case isDisabled(props):
+    case isReadonly(props):
       baseClasses.push("text-grey-300");
       break;
 
@@ -357,12 +361,12 @@ const computedHelpClass = computed(() => {
   const baseClasses = [baseTextClasses];
 
   switch (true) {
-    case isDisabledText(props):
-    case isReadonlyText(props):
+    case isDisabled(props):
+    case isReadonly(props):
       baseClasses.push("text-grey-300");
       break;
 
-    case isActiveText(props):
+    case isInteractiveState(props):
       baseClasses.push("text-grey-500");
       break;
   }
@@ -380,12 +384,12 @@ const computedErrorClass = computed(() => {
   const baseClasses = [baseTextClasses];
 
   switch (true) {
-    case isDisabledText(props):
-    case isReadonlyText(props):
+    case isDisabled(props):
+    case isReadonly(props):
       baseClasses.push("text-grey-300");
       break;
 
-    case isActiveText(props):
+    case isInteractiveState(props):
       baseClasses.push("text-core-black");
       break;
   }
@@ -625,11 +629,17 @@ const handleOptionsKeydown = (event: KeyboardEvent) => {
  * This allows us to focus options directly without querySelector.
  *
  * @param value - Option value used as key
- * @param componentInstance - FzSelectOption component instance
+ * @param componentInstance - FzSelectOption component instance or null
  */
-const setOptionRef = (value: string, componentInstance: any) => {
-  if (componentInstance?.buttonElement) {
-    optionRefs.value.set(value, componentInstance.buttonElement);
+const setOptionRef = (
+  value: string,
+  componentInstance: InstanceType<typeof FzSelectOption> | null
+) => {
+  // Access buttonElement exposed via defineExpose
+  const buttonElement = componentInstance?.buttonElement;
+
+  if (buttonElement) {
+    optionRefs.value.set(value, buttonElement);
   } else {
     optionRefs.value.delete(value);
   }
@@ -772,7 +782,9 @@ function addScrollListener() {
  * for smoother user experience.
  */
 function handleScroll() {
-  const container = containerRef.value!;
+  if (!containerRef.value) return;
+
+  const container = containerRef.value;
   const { scrollTop, scrollHeight, clientHeight } = container;
   if (
     scrollTop + clientHeight >=
@@ -905,7 +917,11 @@ defineExpose({
           v-for="option in visibleOptions"
           :key="option.kind === 'label' ? option.label : option.value"
         >
-          <FzSelectLabel v-if="option.kind === 'label'" :option="option" />
+          <FzSelectLabel
+            v-if="option.kind === 'label'"
+            :option="option"
+            :disableTruncate="disableTruncate"
+          />
           <FzSelectOption
             v-else
             @click="() => handleSelect(option.value)"
@@ -914,7 +930,13 @@ defineExpose({
             :selectedValue="model"
             :focused="focusedOptionValue === option.value"
             :id="getOptionId(option.value)"
-            :ref="(el) => setOptionRef(option.value, el as HTMLElement | null)"
+            :ref="
+              (el) =>
+                setOptionRef(
+                  option.value,
+                  el as InstanceType<typeof FzSelectOption> | null
+                )
+            "
           />
         </template>
       </template>

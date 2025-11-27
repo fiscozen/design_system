@@ -4,7 +4,7 @@ import { Ref } from "vue";
 
 export interface FzSelectProps extends FzFloatingProps {
   /**
-   * The list of options displayer in the floating panel
+   * The list of options displayed in the floating panel
    */
   options: FzSelectOptionsProps[];
   /**
