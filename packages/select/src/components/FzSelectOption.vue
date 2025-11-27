@@ -10,13 +10,19 @@
 import { computed, ref } from "vue";
 import { FzSelectOptionProps } from "../types";
 
-const props = defineProps<{
-  option: FzSelectOptionProps;
-  selectedValue: string;
-  disableTruncate?: boolean;
-  focused?: boolean;
-  id?: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    option: FzSelectOptionProps;
+    selectedValue: string;
+    disableTruncate?: boolean;
+    focused?: boolean;
+    id?: string;
+  }>(),
+  {
+    disableTruncate: false,
+    focused: false,
+  }
+);
 
 const buttonRef = ref<HTMLElement>();
 
@@ -81,9 +87,8 @@ const computedClass = computed(() => {
       break;
   }
 
-  // Add focus border when focused via keyboard navigation (using box-shadow to avoid layout shift)
+  // Add focus border when focused via keyboard navigation
   if (props.focused && !props.option.disabled && !props.option.readonly) {
-    //baseClasses.push("shadow-[inset_0_0_0_2px_rgb(59,130,246)]"); // blue-500 as inset border
     baseClasses.push("!border-1 !border-blue-500");
   }
 
