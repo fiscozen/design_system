@@ -63,9 +63,9 @@ const props = withDefaults(defineProps<FzSelectProps>(), {
   variant: "normal",
 });
 
-const model = defineModel({
+const model = defineModel<string | undefined>({
   required: true,
-  default: "",
+  default: undefined,
 });
 
 // Track if we've already shown the deprecation warning for this instance

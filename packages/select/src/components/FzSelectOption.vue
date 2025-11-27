@@ -13,7 +13,7 @@ import { FzSelectOptionProps } from "../types";
 const props = withDefaults(
   defineProps<{
     option: FzSelectOptionProps;
-    selectedValue: string;
+    selectedValue: string | undefined;
     disableTruncate?: boolean;
     focused?: boolean;
     id?: string;
