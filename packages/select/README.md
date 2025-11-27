@@ -41,6 +41,7 @@ const options = [
     :options="options"
     label="Select an option"
     placeholder="Choose..."
+    environment="frontoffice"
   />
 </template>
 ```
@@ -54,13 +55,15 @@ const options = [
 | `placeholder` | `string` | - | Placeholder text shown when no option is selected |
 | `required` | `boolean` | `false` | Marks the select as required (shows asterisk) |
 | `disabled` | `boolean` | `false` | Disables the select input |
+| `readonly` | `boolean` | `false` | Makes the select readonly (same visual style as disabled) |
 | `error` | `boolean` | `false` | Shows error state styling |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the select input |
+| `environment` | `'backoffice' \| 'frontoffice'` | `'frontoffice'` | Environment context for styling (affects button height and text size) |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | **Deprecated:** Size prop is deprecated. The component now uses a fixed 'lg' size. This prop will be removed in a future version. |
 | `leftIcon` | `string` | - | Icon name to display on the left |
 | `rightIcon` | `string` | - | Icon name to display on the right |
 | `rightIconButton` | `boolean` | `false` | Renders right icon as a button instead of icon |
 | `rightIconButtonVariant` | `IconButtonVariant` | - | Variant for right icon button |
-| `rightIconLast` | `boolean` | `false` | Positions right icon after chevron |
+| `rightIconLast` | `boolean` | `false` | **Deprecated:** rightIconLast prop is deprecated. The right icon is now always positioned before the chevron. This prop will be removed in a future version. |
 | `pickerClass` | `string` | - | Custom CSS classes for the picker button |
 | `variant` | `'normal' \| 'floating-label'` | `'normal'` | Select variant style |
 | `optionsToShow` | `number` | `25` | Number of options to render per batch (lazy loading) |
@@ -189,9 +192,49 @@ const groupedOptions = [
     :options="options"
     variant="floating-label"
     placeholder="Select..."
+    environment="frontoffice"
   />
 </template>
 ```
+
+### Environment Styling
+
+The component supports two environments with different styling:
+
+```vue
+<template>
+  <!-- Backoffice: 32px height, text-base -->
+  <FzSelect
+    v-model="selected"
+    :options="options"
+    environment="backoffice"
+    label="Backoffice Select"
+  />
+  
+  <!-- Frontoffice: 44px height, text-lg -->
+  <FzSelect
+    v-model="selected"
+    :options="options"
+    environment="frontoffice"
+    label="Frontoffice Select"
+  />
+</template>
+```
+
+### Readonly State
+
+```vue
+<template>
+  <FzSelect
+    v-model="selected"
+    :options="options"
+    label="Readonly Select"
+    readonly
+  />
+</template>
+```
+
+The `readonly` prop applies the same visual style as `disabled` (grey-100 background/border, grey-300 text) but maintains the same semantic meaning. Keyboard navigation is disabled when readonly.
 
 ### Disabled Options
 
@@ -224,6 +267,15 @@ const options = [
 
 ## Behavior
 
+### Environment Styling
+
+The component adapts its styling based on the `environment` prop:
+
+- **Backoffice**: Button height 32px, text-base size
+- **Frontoffice**: Button height 44px, text-lg size
+
+Label and selected value text maintain uniform styling (16px font-size, 20px line-height) across both environments.
+
 ### Lazy Loading
 
 The component implements lazy loading for performance with large option lists. By default, it renders 25 options initially and loads more as the user scrolls. You can control this with the `optionsToShow` prop.
@@ -240,19 +292,70 @@ The dropdown container width matches the opener width by default, with a minimum
 
 The component is fully accessible and WCAG 2.1 AA compliant:
 
-- **Keyboard navigation**: Tab to focus, Enter/Space to open, Arrow keys to navigate, Escape to close
-- **Screen reader support**: Proper ARIA attributes (`aria-expanded`, `aria-haspopup`, `aria-labelledby`, `aria-required`, `aria-invalid`)
+- **Keyboard navigation**: Full keyboard support for opening, navigating, and selecting options
+- **Screen reader support**: Proper ARIA attributes and live region announcements
 - **Semantic HTML**: Uses `role="listbox"` and `role="option"` for proper semantics
-- **Focus management**: Focus returns to opener when dropdown closes
-- **State announcements**: Screen readers announce open/closed state and selected option
+- **Focus management**: Automatic focus handling on open/close with focus trap
+- **State announcements**: Screen readers announce open/closed state, selected option, and focused option
+
+### Keyboard Navigation
+
+The component supports comprehensive keyboard navigation:
+
+**Opener Button:**
+- `Enter` / `Space`: Open dropdown (if closed) or close dropdown (if open)
+- `Escape`: Close dropdown (if open)
+- `Tab`: Move focus to next element
+- `Shift+Tab`: Move focus to previous element
+
+**Options Container (when dropdown is open):**
+- `ArrowDown`: Move focus to next option (wraps to first on last option)
+- `ArrowUp`: Move focus to previous option (wraps to last on first option)
+- `Home`: Move focus to first option
+- `End`: Move focus to last option
+- `Enter` / `Space`: Select focused option and close dropdown
+- `Escape`: Close dropdown without selecting
+- `Tab`: Move focus to next option (wraps to first on last option) - focus trap active
+- `Shift+Tab`: Move focus to previous option (wraps to last on first option) - focus trap active
+
+**Readonly/Disabled States:**
+- When `readonly` or `disabled` is `true`, keyboard navigation is disabled
+- Focus trap is not active when component is readonly or disabled
+
+### Focus Management
+
+- **On open**: Focus automatically moves to first selectable option (or selected option if present)
+- **On close**: Focus automatically returns to opener button
+- **Focus trap**: When dropdown is open, Tab/Shift+Tab navigation is trapped within the options list
+- **Dynamic updates**: Focus management handles prop changes (readonly/disabled) gracefully
+
+### Screen Reader Support
+
+The component provides rich semantic information to assistive technologies:
+
+- **ARIA attributes**: All interactive elements have proper ARIA roles and states
+- **Live announcements**: Screen readers announce focused option via `aria-activedescendant`
+- **State changes**: Open/closed state and selection changes are announced
+- **Label associations**: Proper `aria-labelledby` relationships for form integration
 
 ### ARIA Attributes
 
-- `aria-expanded`: Indicates dropdown open/closed state
+**Opener Button:**
+- `aria-expanded`: Indicates dropdown open/closed state (`"true"` or `"false"`)
 - `aria-haspopup="listbox"`: Declares dropdown type
-- `aria-labelledby`: Links to label element
+- `aria-labelledby`: Links to label element (when label is provided)
 - `aria-label`: Provides accessible name when label is not present
-- `aria-required`: Indicates required fields
-- `aria-invalid`: Indicates error state
-- `aria-disabled`: Indicates disabled state
-- `aria-selected`: Indicates selected option in list
+- `aria-required`: Indicates required fields (`"true"` or `"false"`)
+- `aria-invalid`: Indicates error state (`"true"` or `"false"`)
+- `aria-disabled`: Indicates disabled/readonly state (`"true"` or `"false"`)
+
+**Options Container:**
+- `role="listbox"`: Declares the container as a listbox
+- `aria-labelledby`: Links to opener button for context
+- `aria-activedescendant`: Points to currently focused option (dynamically updated)
+
+**Option Elements:**
+- `role="option"`: Declares each option as a listbox option
+- `aria-selected`: Indicates selected option (`"true"` or `"false"`)
+- `aria-disabled`: Indicates disabled option (`"true"` or `"false"`)
+- Unique `id` attributes for `aria-activedescendant` reference

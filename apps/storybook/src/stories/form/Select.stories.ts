@@ -7,8 +7,8 @@ const meta = {
   component: FzSelect,
   tags: ['autodocs'],
   argTypes: {
-    size: {
-      options: ['sm', 'md', 'lg'],
+    environment: {
+      options: ['backoffice', 'frontoffice'],
       control: {
         type: 'select'
       }
@@ -37,7 +37,7 @@ const Template: SelectStory = {
                 </div>`
   }),
   args: {
-    size: 'md',
+    environment: 'frontoffice',
     label: 'Select',
     placeholder: 'Custom placeholder',
     options: [
@@ -69,7 +69,7 @@ const BottomTemplate: SelectStory = {
                 `
   }),
   args: {
-    size: 'md',
+    environment: 'frontoffice',
     label: 'Select',
     placeholder: 'Custom placeholder',
     options: [
@@ -80,24 +80,11 @@ const BottomTemplate: SelectStory = {
   }
 }
 
-export const Medium: SelectStory = {
-  ...Template,
-  decorators: [
-    () => ({
-      template: `
-      <div style="width:100vw;height:100vh;">
-        <story/>
-      </div>
-      `
-    })
-  ]
-}
-
-export const Small: SelectStory = {
+export const Frontoffice: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
-    size: 'sm'
+    environment: 'frontoffice'
   },
   decorators: [
     () => ({
@@ -110,11 +97,11 @@ export const Small: SelectStory = {
   ]
 }
 
-export const Large: SelectStory = {
+export const Backoffice: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
-    size: 'lg'
+    environment: 'backoffice'
   },
   decorators: [
     () => ({
