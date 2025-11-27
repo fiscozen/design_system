@@ -455,7 +455,27 @@ watch(
   }
 );
 
-// Initialize focused index and manage focus when dropdown opens/closes
+/**
+ * Closes dropdown when component becomes disabled or readonly
+ *
+ * Prevents interaction with an open dropdown when state changes to non-interactive.
+ * Focus is automatically returned to opener by the isOpen watcher.
+ */
+watch(
+  [() => props.disabled, () => props.readonly],
+  ([newDisabled, newReadonly]) => {
+    if ((newDisabled || newReadonly) && isOpen.value) {
+      isOpen.value = false;
+    }
+  }
+);
+
+/**
+ * Manages focus and focused index when dropdown opens or closes
+ *
+ * On open: Initializes focusedIndex to selected option (or first option) and scrolls to it.
+ * On close: Resets focusedIndex and returns focus to opener button.
+ */
 watch(isOpen, (newValue) => {
   if (newValue) {
     // When opening: set focused index and move focus to first/selected option
@@ -468,7 +488,9 @@ watch(isOpen, (newValue) => {
     // When closing: reset focused index and return focus to opener button
     focusedIndex.value = -1;
     nextTick(() => {
-      opener.value?.focus();
+      if (opener.value) {
+        opener.value.focus();
+      }
     });
   }
 });

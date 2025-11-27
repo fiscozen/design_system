@@ -34,12 +34,15 @@ const staticClass =
   "group flex flex-col justify-center text-left font-normal cursor-pointer rounded outline-none focus:outline-none !border-1 !border-transparent";
 
 /**
- * Whether this option is currently selected
+ * Checks if this option matches the currently selected value
  */
 const isSelected = computed(() => props.selectedValue === props.option.value);
 
 /**
- * Helper functions to identify option visual states
+ * Visual state helpers using Representation-First pattern
+ *
+ * Each function answers: "When does the option look like this state?"
+ * Readonly is treated separately from disabled to maintain distinct visual feedback.
  */
 const isDisabledOption = (option: typeof props.option) => option.disabled;
 const isReadonlyOption = (option: typeof props.option) =>
@@ -56,10 +59,10 @@ const isDefaultOption = (option: typeof props.option) => {
 };
 
 /**
- * Computes option button classes using Representation-First pattern
+ * Generates option button classes based on current state
  *
- * Maps each visual representation (disabled, readonly, selected, default, focused) to its styling.
- * This pattern makes it explicit when the option looks like each state.
+ * Uses Representation-First pattern to map visual states to styling.
+ * Focus border is added only when keyboard-navigated and interactive.
  */
 const computedClass = computed(() => {
   const baseClasses: string[] = ["text-lg px-20 py-8"];
@@ -96,7 +99,9 @@ const computedClass = computed(() => {
 });
 
 /**
- * Computes value span classes for text truncation
+ * Generates label span classes with conditional truncation
+ *
+ * Applies ellipsis only when disableTruncate is false.
  */
 const computedValueClass = computed(() => ({
   "w-full overflow-hidden text-ellipsis whitespace-nowrap":
@@ -104,16 +109,19 @@ const computedValueClass = computed(() => ({
 }));
 
 /**
- * Helper functions to identify subtitle visual states
+ * Checks if subtitle should show interactive styling
+ *
+ * Subtitles are interactive (hover effect) only when option is not disabled
+ * and not currently selected.
  */
 const isSubtitleInteractive = (option: typeof props.option) => {
   return !option.disabled && props.selectedValue !== option.value;
 };
 
 /**
- * Computes subtitle span classes using Representation-First pattern
+ * Generates subtitle span classes with conditional truncation and interactivity
  *
- * Maps visual representation (interactive vs non-interactive) to styling.
+ * Applies truncation unless disabled, and adds hover effects for interactive subtitles.
  */
 const computedSubtitleClass = computed(() => {
   const baseClasses: string[] = ["text-base"];
