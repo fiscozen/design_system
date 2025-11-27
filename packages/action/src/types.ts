@@ -34,19 +34,19 @@ export type FzActionStandardIconProps = FzActionBasicProps & {
    */
   variant?: "textLeft" | "textCenter";
   /**
-   * Name of the fontawesome icon
+   * Name of the fontawesome icon (left side)
    */
   iconLeftName?: string;
   /**
-   * Variant of the fontawesome icon
+   * Variant of the fontawesome icon (left side)
    */
   iconLeftVariant?: IconVariant;
   /**
-   * Name of the fontawesome icon
+   * Name of the fontawesome icon (right side)
    */
   iconRightName?: string;
   /**
-   * Variant of the fontawesome icon
+   * Variant of the fontawesome icon (right side)
    */
   iconRightVariant?: IconVariant;
 };

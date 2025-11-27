@@ -228,6 +228,7 @@ export const Required: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
+    clearable: false,
     required: true
   },
   decorators: [
