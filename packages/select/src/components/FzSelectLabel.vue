@@ -7,11 +7,40 @@
  *
  * @component
  */
+import { computed } from "vue";
 import { FzSelectLabelProps } from "../types";
 
-const props = defineProps<{
-  option: FzSelectLabelProps;
-}>();
+const props = withDefaults(
+  defineProps<{
+    option: FzSelectLabelProps;
+    disableTruncate?: boolean;
+  }>(),
+  {
+    disableTruncate: false,
+  }
+);
+
+/**
+ * Computes label classes for text truncation
+ *
+ * Conditionally applies text truncation based on disableTruncate prop.
+ */
+const computedLabelClass = computed(() => {
+  const baseClasses = [
+    "text-grey-400",
+    "flex",
+    "items-center",
+    "text-sm",
+    "min-h-40",
+    "px-20",
+  ];
+
+  if (!props.disableTruncate) {
+    baseClasses.push("text-ellipsis", "whitespace-nowrap");
+  }
+
+  return baseClasses;
+});
 </script>
 
 <template>
@@ -20,7 +49,7 @@ const props = defineProps<{
     test-id="fzselect-label"
     @click.prevent.stop
     :title="props.option.label"
-    class="text-grey-400 flex items-center text-ellipsis whitespace-nowrap text-sm min-h-40 px-20"
+    :class="computedLabelClass"
   >
     {{ props.option.label }}
   </label>
