@@ -21,9 +21,10 @@ const props = withDefaults(
 );
 
 /**
- * Computes label classes for text truncation
+ * Generates group label classes with conditional truncation
  *
- * Conditionally applies text truncation based on disableTruncate prop.
+ * Applies ellipsis only when disableTruncate is false, allowing long
+ * group names to wrap when needed.
  */
 const computedLabelClass = computed(() => {
   const baseClasses = [

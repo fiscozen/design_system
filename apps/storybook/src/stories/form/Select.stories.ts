@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, within } from '@storybook/test'
 import { ref } from 'vue'
 import { FzSelect } from '@fiscozen/select'
 
@@ -95,7 +96,21 @@ export const Frontoffice: SelectStory = {
       </div>
       `
     })
-  ]
+  ],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify opener button renders
+    const opener = canvas.getByRole('button', { name: /select/i })
+    expect(opener).toBeTruthy()
+    
+    // Verify frontoffice height (44px = h-44)
+    expect(opener.classList.contains('h-44')).toBe(true)
+    
+    // Verify ARIA attributes
+    expect(opener.getAttribute('aria-haspopup')).toBe('listbox')
+    expect(opener.getAttribute('aria-expanded')).toBe('false')
+  }
 }
 
 export const Backoffice: SelectStory = {
@@ -112,7 +127,17 @@ export const Backoffice: SelectStory = {
       </div>
       `
     })
-  ]
+  ],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify opener button renders
+    const opener = canvas.getByRole('button', { name: /select/i })
+    expect(opener).toBeTruthy()
+    
+    // Verify backoffice height (32px = h-32)
+    expect(opener.classList.contains('h-32')).toBe(true)
+  }
 }
 
 export const Error: SelectStory = {
@@ -129,7 +154,17 @@ export const Error: SelectStory = {
       </div>
       `
     })
-  ]
+  ],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify opener button has error styling
+    const opener = canvas.getByRole('button', { name: /select/i })
+    expect(opener.getAttribute('aria-invalid')).toBe('true')
+    
+    // Verify error border color
+    expect(opener.classList.contains('border-semantic-error-200')).toBe(true)
+  }
 }
 
 export const Disabled: SelectStory = {
@@ -146,7 +181,47 @@ export const Disabled: SelectStory = {
       </div>
       `
     })
-  ]
+  ],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify opener button is disabled
+    const opener = canvas.getByRole('button', { name: /select/i })
+    expect(opener.hasAttribute('disabled')).toBe(true)
+    expect(opener.getAttribute('aria-disabled')).toBe('true')
+    
+    // Verify disabled styling
+    expect(opener.classList.contains('bg-grey-100')).toBe(true)
+    expect(opener.classList.contains('border-grey-100')).toBe(true)
+  }
+}
+
+export const Readonly: SelectStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    readonly: true
+  },
+  decorators: [
+    () => ({
+      template: `
+      <div style="width:100vw;height:100vh;">
+        <story/>
+      </div>
+      `
+    })
+  ],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    // Verify opener button is readonly (same styling as disabled)
+    const opener = canvas.getByRole('button', { name: /select/i })
+    expect(opener.getAttribute('aria-disabled')).toBe('true')
+    
+    // Verify readonly styling (same as disabled)
+    expect(opener.classList.contains('bg-grey-100')).toBe(true)
+    expect(opener.classList.contains('border-grey-100')).toBe(true)
+  }
 }
 
 export const Required: SelectStory = {
