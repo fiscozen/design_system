@@ -961,6 +961,7 @@ defineExpose({
             :id="getOptionId(option.value)"
             :focused="focusedOptionValue === option.value"
             :isTextTruncated="!disableTruncate"
+            :iconRightName="model === option.value ? 'check' : undefined"
             @click="() => handleSelect(option.value)"
           />
         </template>
