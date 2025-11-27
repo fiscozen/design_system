@@ -100,6 +100,11 @@ export interface FzSelectProps extends FzFloatingProps {
    * @deprecated rightIconLast prop is deprecated. The right icon is now always positioned before the chevron. This prop will be removed in a future version.
    */
   rightIconLast?: boolean;
+  /**
+   * The Select can be cleared
+   * @default true
+   */
+  clearable?: boolean;
 }
 
 export type FzSelectOptionsProps = FzSelectOptionProps | FzSelectLabelProps;
