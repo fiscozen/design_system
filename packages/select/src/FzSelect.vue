@@ -50,6 +50,7 @@ import {
 import FzSelectLabel from "./components/FzSelectLabel.vue";
 
 const props = withDefaults(defineProps<FzSelectProps>(), {
+  clearable: true,
   disabled: false,
   disableTruncate: false,
   environment: "frontoffice",
@@ -510,10 +511,14 @@ onMounted(() => {
  * @param value - Selected option value
  */
 const handleSelect = (value: string) => {
-  model.value = value;
-  emit("select", value);
+  if (props.clearable && model.value === value) {
+    model.value = undefined;
+  } else {
+    model.value = value;
+  }
+
+  emit("select", model.value);
   isOpen.value = false;
-  // focusedIndex reset and focus return handled by watch(isOpen)
 };
 
 /**
