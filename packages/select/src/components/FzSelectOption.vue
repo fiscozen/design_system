@@ -39,24 +39,22 @@ const staticClass =
 const isSelected = computed(() => props.selectedValue === props.option.value);
 
 /**
- * Visual state helpers using Representation-First pattern
+ * Computed state flags using Representation-First pattern
  *
- * Each function answers: "When does the option look like this state?"
+ * Each computed answers: "When does the option look like this state?"
  * Readonly is treated separately from disabled to maintain distinct visual feedback.
+ * Memoized to avoid recalculation when used in computedClass.
  */
-const isDisabledOption = (option: typeof props.option) => option.disabled;
-const isReadonlyOption = (option: typeof props.option) =>
-  option.readonly && !option.disabled;
-const isSelectedOption = (option: typeof props.option) => {
-  return (
-    !option.disabled && !option.readonly && props.selectedValue === option.value
-  );
-};
-const isDefaultOption = (option: typeof props.option) => {
-  return (
-    !option.disabled && !option.readonly && props.selectedValue !== option.value
-  );
-};
+const isDisabledOption = computed(() => props.option.disabled);
+const isReadonlyOption = computed(
+  () => props.option.readonly && !props.option.disabled
+);
+const isInteractiveOption = computed(
+  () => !isDisabledOption.value && !isReadonlyOption.value
+);
+const isSelectedOption = computed(
+  () => isInteractiveOption.value && props.selectedValue === props.option.value
+);
 
 /**
  * Generates option button classes based on current state
@@ -68,19 +66,19 @@ const computedClass = computed(() => {
   const baseClasses: string[] = ["text-lg px-20 py-8"];
 
   switch (true) {
-    case isDisabledOption(props.option):
+    case isDisabledOption.value:
       baseClasses.push("text-grey-200");
       break;
 
-    case isReadonlyOption(props.option):
+    case isReadonlyOption.value:
       baseClasses.push("text-core-black");
       break;
 
-    case isSelectedOption(props.option):
+    case isSelectedOption.value:
       baseClasses.push("bg-background-alice-blue", "text-blue-500");
       break;
 
-    case isDefaultOption(props.option):
+    default:
       baseClasses.push(
         "bg-white",
         "hover:!bg-background-alice-blue",
@@ -91,7 +89,7 @@ const computedClass = computed(() => {
   }
 
   // Add focus border when focused via keyboard navigation
-  if (props.focused && !props.option.disabled && !props.option.readonly) {
+  if (props.focused && !isDisabledOption.value && !isReadonlyOption.value) {
     baseClasses.push("!border-1 !border-blue-500");
   }
 
@@ -152,12 +150,10 @@ const computedSubtitleClass = computed(() => {
     test-id="fzselect-option"
     type="button"
     :title="props.option.label"
-    :disabled="props.option.disabled || props.option.readonly"
+    :disabled="!isInteractiveOption"
     :aria-selected="isSelected ? 'true' : 'false'"
-    :aria-disabled="props.option.disabled ? 'true' : 'false'"
-    :tabindex="
-      props.focused && !props.option.disabled && !props.option.readonly ? 0 : -1
-    "
+    :aria-disabled="isDisabledOption ? 'true' : 'false'"
+    :tabindex="props.focused && isInteractiveOption ? 0 : -1"
     @click="
       () => {
         $emit('click');
