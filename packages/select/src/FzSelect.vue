@@ -57,6 +57,7 @@ const props = withDefaults(defineProps<FzSelectProps>(), {
   rightIconButtonVariant: "invisible",
   readonly: false,
 });
+
 const model = defineModel({
   required: true,
   default: "",
@@ -113,6 +114,7 @@ const focusedIndex = ref<number>(-1);
 const optionRefs = ref<Map<string, HTMLElement>>(new Map());
 const maxHeight = ref("");
 const floatingRef = ref<InstanceType<typeof FzFloating>>();
+const isScrollingToFocus = ref(false);
 
 /**
  * Generates unique ID for an option element
@@ -190,7 +192,8 @@ const calculateMaxHeight = (
     maxHeight.value = pos.includes("bottom")
       ? `calc(100vh - ${bottom}px - ${OPTIONS_BUFFER * OPTIONS_HEIGHT}px)`
       : `${top}px`;
-    floatingRef.value?.setPosition();
+    // REMOVED: floatingRef.value?.setPosition() - this caused infinite loop
+    // setPosition is already called by FzFloating when needed
   });
 };
 
@@ -426,6 +429,19 @@ const selectedOptionIndex = computed(() => {
   );
 });
 
+/**
+ * Creates a Set of focused option values for O(1) lookup
+ *
+ * Used to efficiently determine if an option is focused during rendering.
+ * Avoids calling findIndex() for every option in the template.
+ */
+const focusedOptionValue = computed(() => {
+  if (focusedIndex.value < 0 || !isOpen.value) return null;
+  const selectable = selectableOptions.value;
+  if (focusedIndex.value >= selectable.length) return null;
+  return selectable[focusedIndex.value]?.value ?? null;
+});
+
 watch(() => [model.value], updateContainerWidth);
 
 watch(
@@ -479,22 +495,14 @@ const handleSelect = (value: string) => {
 
 /**
  * Handles picker button click to toggle dropdown
+ *
+ * Focus management is handled by watch(isOpen) to avoid duplication.
  */
 const handlePickerClick = () => {
   if (!isInteractive.value) return;
   isOpen.value = !isOpen.value;
   updateContainerWidth();
-
-  // Initialize focused index when opening
-  if (isOpen.value) {
-    nextTick(() => {
-      focusedIndex.value =
-        selectedOptionIndex.value >= 0 ? selectedOptionIndex.value : 0;
-      scrollToFocusedOption();
-    });
-  } else {
-    focusedIndex.value = -1;
-  }
+  // Focus management handled by watch(isOpen)
 };
 
 /**
@@ -632,21 +640,47 @@ const setOptionRef = (value: string, componentInstance: any) => {
  *
  * Ensures the focused option is visible when navigating with keyboard.
  * Uses optionRefs map to directly access the DOM element by option value.
+ * Includes safety checks to prevent calling focus() before DOM is ready
+ * and prevent infinite loops.
  */
 const scrollToFocusedOption = () => {
+  // Prevent multiple simultaneous calls
+  if (isScrollingToFocus.value) return;
+
   nextTick(() => {
-    if (focusedIndex.value < 0) return;
+    // Safety checks: ensure dropdown is open and DOM is ready
+    if (!isOpen.value || focusedIndex.value < 0) return;
+    if (!containerRef.value) return;
 
     const selectable = selectableOptions.value;
-    if (focusedIndex.value >= selectable.length) return;
+    if (focusedIndex.value >= selectable.length || selectable.length === 0)
+      return;
 
     const focusedOption = selectable[focusedIndex.value];
     if (!focusedOption) return;
 
     const focusedButton = optionRefs.value.get(focusedOption.value);
-    if (focusedButton) {
-      focusedButton.focus();
-      focusedButton.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    if (focusedButton && document.contains(focusedButton)) {
+      isScrollingToFocus.value = true;
+
+      // Use requestAnimationFrame to ensure DOM is fully rendered
+      requestAnimationFrame(() => {
+        if (isOpen.value && document.contains(focusedButton)) {
+          try {
+            focusedButton.focus({ preventScroll: false });
+            focusedButton.scrollIntoView({
+              block: "nearest",
+              behavior: "smooth",
+            });
+          } catch (error) {
+            // Silently handle focus errors (e.g., element not focusable)
+            console.warn("[FzSelect] Failed to focus option:", error);
+          }
+        }
+        isScrollingToFocus.value = false;
+      });
+    } else {
+      isScrollingToFocus.value = false;
     }
   });
 };
@@ -878,10 +912,7 @@ defineExpose({
             :option="option"
             :disableTruncate="disableTruncate"
             :selectedValue="model"
-            :focused="
-              selectableOptions.findIndex((o) => o.value === option.value) ===
-              focusedIndex
-            "
+            :focused="focusedOptionValue === option.value"
             :id="getOptionId(option.value)"
             :ref="(el) => setOptionRef(option.value, el as HTMLElement | null)"
           />

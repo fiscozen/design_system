@@ -25,7 +25,7 @@ defineExpose({
 });
 
 const staticClass =
-  "group flex flex-col justify-center text-left font-normal cursor-pointer rounded";
+  "group flex flex-col justify-center text-left font-normal cursor-pointer rounded outline-none focus:outline-none !border-1 !border-transparent";
 
 /**
  * Whether this option is currently selected
@@ -81,9 +81,10 @@ const computedClass = computed(() => {
       break;
   }
 
-  // Add focus ring when focused via keyboard navigation
+  // Add focus border when focused via keyboard navigation (using box-shadow to avoid layout shift)
   if (props.focused && !props.option.disabled && !props.option.readonly) {
-    baseClasses.push("ring-2 ring-blue-500 ring-offset-2");
+    //baseClasses.push("shadow-[inset_0_0_0_2px_rgb(59,130,246)]"); // blue-500 as inset border
+    baseClasses.push("!border-1 !border-blue-500");
   }
 
   return baseClasses;
