@@ -65,6 +65,10 @@ type FzActionBasicProps = {
    */
   disabled?: boolean;
   /**
+   * Readonly state (visually identical to disabled but semantically different)
+   */
+  readonly?: boolean;
+  /**
    * Environment variant (backoffice/frontoffice)
    */
   environment?: FzActionEnvironment;
@@ -80,6 +84,14 @@ type FzActionBasicProps = {
    * Type of the action (link/action)
    */
   type?: "link" | "action";
+  /**
+   * Unique ID for the action element (used for ARIA relationships)
+   */
+  id?: string;
+  /**
+   * Visual focus state (for keyboard navigation)
+   */
+  focused?: boolean;
 };
 
 // Discriminated union for action props
@@ -108,6 +120,18 @@ export interface FzActionListProps {
    * Additional CSS classes to apply to the action list container
    */
   listClass?: string;
+  /**
+   * ARIA role for the list container (e.g., 'listbox' for select-like behavior)
+   */
+  role?: string;
+  /**
+   * ARIA labelledby attribute (references the ID of the element that labels this list)
+   */
+  ariaLabelledby?: string;
+  /**
+   * ARIA activedescendant attribute (indicates which child element is currently focused)
+   */
+  ariaActivedescendant?: string;
 }
 
 // ActionLabel component props

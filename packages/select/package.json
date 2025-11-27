@@ -13,6 +13,7 @@
   "keywords": [],
   "author": "Cristian Barraco",
   "dependencies": {
+    "@fiscozen/action": "workspace:^",
     "@fiscozen/button": "workspace:^",
     "@fiscozen/composables": "workspace:^"
   },

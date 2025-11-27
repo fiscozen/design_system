@@ -105,6 +105,11 @@ export interface FzSelectProps extends FzFloatingProps {
    * @default true
    */
   clearable?: boolean;
+  /**
+   * Message displayed when no options are available
+   * @default 'Nessun risultato trovato'
+   */
+  noResultsMessage?: string;
 }
 
 export type FzSelectOptionsProps = FzSelectOptionProps | FzSelectLabelProps;

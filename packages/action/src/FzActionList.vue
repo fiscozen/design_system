@@ -1,19 +1,30 @@
 <template>
   <div
+    ref="containerElement"
     :class="[
       'fz__actionlist bg-core-white rounded flex flex-col gap-20 p-4 min-w-[240px]',
       listClass,
     ]"
+    :role="role"
+    :aria-labelledby="ariaLabelledby"
+    :aria-activedescendant="ariaActivedescendant"
   >
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import { FzActionListProps } from "./types";
 
 withDefaults(defineProps<FzActionListProps>(), {
   listClass: "",
+});
+
+const containerElement = ref<HTMLElement>();
+
+defineExpose({
+  containerElement,
 });
 </script>
 
