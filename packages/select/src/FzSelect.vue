@@ -122,6 +122,18 @@ const floatingRef = ref<InstanceType<typeof FzFloating>>();
 const isScrollingToFocus = ref(false);
 
 /**
+ * Computed state flags for component interactivity and visual states
+ *
+ * Memoized to avoid repeated evaluations in multiple switch statements.
+ * These flags follow the Representation-First pattern, answering:
+ * "When does the component look like this state?"
+ */
+const isDisabled = computed(() => props.disabled);
+const isReadonly = computed(() => props.readonly);
+const isInteractive = computed(() => !isDisabled.value && !isReadonly.value);
+const isError = computed(() => props.error && isInteractive.value);
+
+/**
  * Generates unique ID for an option element
  *
  * Used for aria-activedescendant to indicate focused option to screen readers.
@@ -219,11 +231,6 @@ useClickOutside(safeOpener, () => {
 const emit = defineEmits(["select", "fzselect:right-icon-click"]);
 
 /**
- * Whether the select is interactive (not disabled)
- */
-const isInteractive = computed(() => !props.disabled && !props.readonly);
-
-/**
  * Base classes for picker button
  *
  * Common styling shared across all environments:
@@ -273,22 +280,15 @@ const computedPickerClass = computed(() => [
 const baseTextClasses = "text-base leading-5";
 
 /**
- * Generic helper functions to identify component state using Representation-First pattern
- *
- * These functions check the component's interactive state regardless of context (text, value, picker).
- * Unified to avoid duplication and improve maintainability.
- */
-const isDisabled = (p: typeof props) => p.disabled;
-const isReadonly = (p: typeof props) => p.readonly;
-const isInteractiveState = (p: typeof props) => !p.disabled && !p.readonly;
-
-/**
- * Helper functions specific to value/placeholder visual states
+ * Computed flags for value/placeholder visual states
  *
  * Value/placeholder has special logic: it's grey-300 when disabled/readonly OR when no value is selected.
+ * Memoized to avoid recalculation when used in computedSpanClass.
  */
-const isSelectedValue = () => selectedOption.value && isInteractive.value;
-const isPlaceholderValue = () => !selectedOption.value || !isInteractive.value;
+const isSelectedValue = computed(
+  () => selectedOption.value && isInteractive.value
+);
+const isPlaceholderValue = computed(() => !isSelectedValue.value);
 
 /**
  * Computes label classes using Representation-First pattern
@@ -300,12 +300,12 @@ const computedLabelClass = computed(() => {
   const baseClasses = [baseTextClasses];
 
   switch (true) {
-    case isDisabled(props):
-    case isReadonly(props):
+    case isDisabled.value:
+    case isReadonly.value:
       baseClasses.push("text-grey-300");
       break;
 
-    case isInteractiveState(props):
+    case isInteractive.value:
       baseClasses.push("text-core-black");
       break;
   }
@@ -334,16 +334,16 @@ const computedSpanClass = computed(() => {
   const baseClasses = [baseTextClasses];
 
   switch (true) {
-    case isDisabled(props):
-    case isReadonly(props):
+    case isDisabled.value:
+    case isReadonly.value:
       baseClasses.push("text-grey-300");
       break;
 
-    case isSelectedValue():
+    case isSelectedValue.value:
       baseClasses.push("text-core-black");
       break;
 
-    case isPlaceholderValue():
+    case isPlaceholderValue.value:
       baseClasses.push("text-grey-300");
       break;
   }
@@ -361,12 +361,12 @@ const computedHelpClass = computed(() => {
   const baseClasses = [baseTextClasses];
 
   switch (true) {
-    case isDisabled(props):
-    case isReadonly(props):
+    case isDisabled.value:
+    case isReadonly.value:
       baseClasses.push("text-grey-300");
       break;
 
-    case isInteractiveState(props):
+    case isInteractive.value:
       baseClasses.push("text-grey-500");
       break;
   }
@@ -384,12 +384,12 @@ const computedErrorClass = computed(() => {
   const baseClasses = [baseTextClasses];
 
   switch (true) {
-    case isDisabled(props):
-    case isReadonly(props):
+    case isDisabled.value:
+    case isReadonly.value:
       baseClasses.push("text-grey-300");
       break;
 
-    case isInteractiveState(props):
+    case isInteractive.value:
       baseClasses.push("text-core-black");
       break;
   }
@@ -456,19 +456,16 @@ watch(
 );
 
 /**
- * Closes dropdown when component becomes disabled or readonly
+ * Closes dropdown when component becomes non-interactive
  *
- * Prevents interaction with an open dropdown when state changes to non-interactive.
+ * Prevents interaction with an open dropdown when disabled or readonly.
  * Focus is automatically returned to opener by the isOpen watcher.
  */
-watch(
-  [() => props.disabled, () => props.readonly],
-  ([newDisabled, newReadonly]) => {
-    if ((newDisabled || newReadonly) && isOpen.value) {
-      isOpen.value = false;
-    }
+watch(isInteractive, (newIsInteractive) => {
+  if (!newIsInteractive && isOpen.value) {
+    isOpen.value = false;
   }
-);
+});
 
 /**
  * Manages focus and focused index when dropdown opens or closes
@@ -734,19 +731,6 @@ const forceOpen = () => {
 };
 
 /**
- * Helper functions to identify picker button visual states using Representation-First pattern
- *
- * Each function answers: "When does the button look like this state?"
- * This makes it explicit which prop combinations lead to each visual representation.
- */
-const isDisabledPicker = (p: typeof props) => p.disabled;
-const isReadonlyPicker = (p: typeof props) => p.readonly;
-const isErrorPicker = (p: typeof props) =>
-  p.error && !p.disabled && !p.readonly;
-const isDefaultPicker = (p: typeof props) =>
-  !p.disabled && !p.readonly && !p.error;
-
-/**
  * Computes picker button state classes using Representation-First pattern
  *
  * Maps each visual representation (disabled, readonly, error, default) to its styling.
@@ -756,15 +740,12 @@ const isDefaultPicker = (p: typeof props) =>
  */
 const evaluateProps = () => {
   switch (true) {
-    case isDisabledPicker(props):
-    case isReadonlyPicker(props):
+    case isDisabled.value:
+    case isReadonly.value:
       return "bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed focus:border-grey-100";
 
-    case isErrorPicker(props):
+    case isError.value:
       return "border-semantic-error-200 bg-white text-core-black cursor-pointer focus:border-semantic-error-300";
-
-    case isDefaultPicker(props):
-      return "border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500";
 
     default:
       return "border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500";
@@ -883,7 +864,7 @@ defineExpose({
             "
             :aria-required="required ? 'true' : 'false'"
             :aria-invalid="error ? 'true' : 'false'"
-            :aria-disabled="props.disabled || props.readonly ? 'true' : 'false'"
+            :aria-disabled="isInteractive ? 'false' : 'true'"
           >
             <FzIcon v-if="leftIcon" :name="leftIcon" size="md" />
             <div class="flex flex-col min-w-0 grow">
@@ -903,10 +884,10 @@ defineExpose({
             />
             <FzIconButton
               v-if="rightIcon && rightIconButton"
-              :class="{ 'bg-grey-100 text-gray-300': disabled }"
+              :class="{ 'bg-grey-100 text-gray-300': !isInteractive }"
               :iconName="rightIcon"
               size="md"
-              :variant="disabled ? 'invisible' : rightIconButtonVariant"
+              :variant="isInteractive ? rightIconButtonVariant : 'invisible'"
               @click.stop="emit('fzselect:right-icon-click')"
             />
             <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" size="md" />
