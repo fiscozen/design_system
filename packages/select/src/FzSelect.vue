@@ -48,6 +48,7 @@ import {
   OPTIONS_BUFFER,
 } from "./common";
 import FzSelectLabel from "./components/FzSelectLabel.vue";
+import { FzActionList, FzActionSection, FzAction } from "@fiscozen/action";
 
 const props = withDefaults(defineProps<FzSelectProps>(), {
   clearable: true,
@@ -55,6 +56,7 @@ const props = withDefaults(defineProps<FzSelectProps>(), {
   disableTruncate: false,
   environment: "frontoffice",
   error: false,
+  noResultsMessage: "Nessun risultato trovato",
   optionsToShow: 25,
   readonly: false,
   required: false,
@@ -112,7 +114,7 @@ watch(
 
 const isOpen = ref(false);
 const opener = ref<HTMLElement>();
-const containerRef = ref<HTMLElement>();
+const containerRef = ref<InstanceType<typeof FzActionList>>();
 const containerWidth = ref<string>(`${MIN_WIDTH}px`);
 const openerMaxWidth = ref<string>("none");
 const visibleOptions = ref<FzSelectOptionsProps[]>([]);
@@ -121,6 +123,16 @@ const optionRefs = ref<Map<string, HTMLElement>>(new Map());
 const maxHeight = ref("");
 const floatingRef = ref<InstanceType<typeof FzFloating>>();
 const isScrollingToFocus = ref(false);
+
+/**
+ * Computed ref to the actual HTML element inside FzActionList
+ *
+ * Needed for composables that expect HTMLElement refs (useKeyDown, useClickOutside).
+ * Returns the containerElement exposed by FzActionList.
+ */
+const containerElement = computed(
+  () => containerRef.value?.containerElement as HTMLElement | undefined
+);
 
 /**
  * Computed state flags for component interactivity and visual states
@@ -647,26 +659,31 @@ const handleOptionsKeydown = (event: KeyboardEvent) => {
 };
 
 /**
- * Sets option element reference for keyboard navigation
+ * Creates a ref callback for FzAction components
  *
- * Called via template ref callback to register option DOM elements.
- * This allows us to focus options directly without querySelector.
+ * Returns a function that stores the FzAction's actionElement in optionRefs.
+ * Used in v-for template refs to register option DOM elements for focus management.
  *
- * @param value - Option value used as key
- * @param componentInstance - FzSelectOption component instance or null
+ * @param value - Option value used as key in optionRefs map
+ * @returns Ref callback function
  */
-const setOptionRef = (
-  value: string,
-  componentInstance: InstanceType<typeof FzSelectOption> | null
-) => {
-  // Access buttonElement exposed via defineExpose
-  const buttonElement = componentInstance?.buttonElement;
+const createActionRefCallback = (value: string) => {
+  return (el: unknown) => {
+    // Type guard: ensure el is a valid object with actionElement
+    if (!el || typeof el !== "object" || !("actionElement" in el)) {
+      optionRefs.value.delete(value);
+      return;
+    }
 
-  if (buttonElement) {
-    optionRefs.value.set(value, buttonElement);
-  } else {
-    optionRefs.value.delete(value);
-  }
+    // Access actionElement exposed via defineExpose from FzAction
+    const actionElement = (el as { actionElement?: HTMLElement }).actionElement;
+
+    if (actionElement) {
+      optionRefs.value.set(value, actionElement);
+    } else {
+      optionRefs.value.delete(value);
+    }
+  };
 };
 
 /**
@@ -684,7 +701,8 @@ const scrollToFocusedOption = () => {
   nextTick(() => {
     // Safety checks: ensure dropdown is open and DOM is ready
     if (!isOpen.value || focusedIndex.value < 0) return;
-    if (!containerRef.value) return;
+    const container = containerElement.value;
+    if (!container) return;
 
     const selectable = selectableOptions.value;
     if (focusedIndex.value >= selectable.length || selectable.length === 0)
@@ -720,7 +738,7 @@ const scrollToFocusedOption = () => {
 };
 
 // Attach keyboard listener to options container
-useKeyDown(containerRef, handleOptionsKeydown);
+useKeyDown(containerElement, handleOptionsKeydown);
 
 /**
  * Programmatically opens the dropdown
@@ -779,7 +797,8 @@ function updateContainerWidth() {
  * Called once on mount to enable infinite scroll behavior.
  */
 function addScrollListener() {
-  containerRef.value?.addEventListener("scroll", handleScroll);
+  const element = containerElement.value;
+  element?.addEventListener("scroll", handleScroll);
 }
 
 /**
@@ -790,9 +809,9 @@ function addScrollListener() {
  * for smoother user experience.
  */
 function handleScroll() {
-  if (!containerRef.value) return;
+  const container = containerElement.value;
+  if (!container) return;
 
-  const container = containerRef.value;
   const { scrollTop, scrollHeight, clientHeight } = container;
   if (
     scrollTop + clientHeight >=
@@ -911,57 +930,50 @@ defineExpose({
         <slot name="help"></slot>
       </span>
     </template>
-    <div
+    <FzActionList
+      :style="{ minWidth: containerWidth, maxWidth: openerMaxWidth, maxHeight }"
+      ref="containerRef"
+      listClass="overflow-auto ml-[-2px] box-border max-h-min !gap-0"
+      test-id="fzselect-options-container"
       role="listbox"
       :aria-labelledby="openerId"
       :aria-activedescendant="activeDescendantId"
-      class="flex flex-col p-4 rounded shadow overflow-auto ml-[-2px] box-border max-h-min"
-      :style="{ minWidth: containerWidth, maxWidth: openerMaxWidth, maxHeight }"
-      ref="containerRef"
-      test-id="fzselect-options-container"
     >
       <template v-if="visibleOptions.length">
         <template
           v-for="option in visibleOptions"
           :key="option.kind === 'label' ? option.label : option.value"
         >
-          <FzSelectLabel
+          <FzActionSection
             v-if="option.kind === 'label'"
-            :option="option"
-            :disableTruncate="disableTruncate"
+            :label="option.label"
           />
-          <FzSelectOption
+          <FzAction
             v-else
-            @click="() => handleSelect(option.value)"
-            :option="option"
-            :disableTruncate="disableTruncate"
-            :selectedValue="model"
-            :focused="focusedOptionValue === option.value"
+            :ref="createActionRefCallback(option.value)"
+            type="action"
+            variant="textLeft"
+            environment="backoffice"
+            :label="option.label"
+            :subLabel="option.subtitle"
+            :disabled="option.disabled"
+            :readonly="option.readonly"
             :id="getOptionId(option.value)"
-            :ref="
-              (el) =>
-                setOptionRef(
-                  option.value,
-                  el as InstanceType<typeof FzSelectOption> | null
-                )
-            "
+            :focused="focusedOptionValue === option.value"
+            :isTextTruncated="!disableTruncate"
+            @click="() => handleSelect(option.value)"
           />
         </template>
       </template>
       <template v-else>
-        <FzSelectOption
-          :option="{
-            label: 'Nessun risultato trovato',
-            readonly: true,
-            value: '',
-          }"
-          :disableTruncate="disableTruncate"
-          :selectedValue="model"
-          :focused="false"
+        <FzAction
+          type="action"
+          variant="textLeft"
+          environment="backoffice"
+          :label="noResultsMessage"
+          disabled
         />
       </template>
-    </div>
+    </FzActionList>
   </FzFloating>
 </template>
-
-<style scoped></style>

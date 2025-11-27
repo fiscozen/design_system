@@ -5,10 +5,14 @@ export interface UseActionClassesProps {
   environment?: FzActionEnvironment;
   variant?: FzActionVariant;
   disabled?: boolean;
+  readonly?: boolean;
+  focused?: boolean;
   isTextTruncated?: boolean;
 }
 
 export function useActionClasses(props: UseActionClassesProps) {
+  const isInteractive = !props.disabled && !props.readonly;
+  
   const baseClasses = computed(() =>
     [
       "group inline-flex max-w-full rounded border border-transparent border-2 transition-colors duration-200 gap-2",
@@ -28,10 +32,12 @@ export function useActionClasses(props: UseActionClassesProps) {
       props.variant === "textCenter" ? "flex-col items-center gap-1" : "",
       props.variant === "onlyIcon" ? "justify-center" : "",
       // States
-      props.disabled ? "text-grey-200 cursor-not-allowed" : "",
-      !props.disabled
+      props.disabled || props.readonly ? "text-grey-200 cursor-not-allowed" : "",
+      isInteractive
         ? "text-core-black hover:bg-background-alice-blue hover:!text-blue-500 focus:!border-blue-200 focus:!outline-none focus:text-core-black "
         : "",
+      // Focus state (for keyboard navigation)
+      props.focused && isInteractive ? "!border-blue-500" : "",
     ]
       .filter(Boolean)
       .join(" "),
@@ -53,7 +59,7 @@ export function useActionClasses(props: UseActionClassesProps) {
     [
       "text-sm",
       props.variant === "textLeft" ? "text-left" : "",
-      props.disabled
+      props.disabled || props.readonly
         ? "text-grey-200"
         : "text-grey-500 group-hover:text-blue-500 transition-colors duration-200",
       props.isTextTruncated ? "truncate" : "",
