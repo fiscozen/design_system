@@ -40,14 +40,12 @@ import {
   useClickOutside,
   useKeyDown,
 } from "@fiscozen/composables";
-import FzSelectOption from "./components/FzSelectOption.vue";
 import {
   calculateContainerWidth,
   MIN_WIDTH,
   OPTIONS_HEIGHT,
   OPTIONS_BUFFER,
 } from "./common";
-import FzSelectLabel from "./components/FzSelectLabel.vue";
 import { FzActionList, FzActionSection, FzAction } from "@fiscozen/action";
 
 const props = withDefaults(defineProps<FzSelectProps>(), {
