@@ -1,6 +1,7 @@
 <template>
   <component
     :is="componentTag"
+    ref="actionElement"
     v-bind="boundAttrs"
     :class="baseClasses"
     :aria-label="ariaLabel"
@@ -84,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { FzIcon } from "@fiscozen/icons";
 import { FzLink } from "@fiscozen/link";
 import type { FzActionProps } from "./types";
@@ -95,13 +96,17 @@ const props = withDefaults(defineProps<FzActionProps>(), {
   environment: "backoffice",
   variant: "textLeft",
   disabled: false,
+  readonly: false,
   isTextTruncated: false,
+  focused: false,
 });
 
 const emit = defineEmits<{
   click: [event: MouseEvent];
   keydown: [event: KeyboardEvent];
 }>();
+
+const actionElement = ref<HTMLElement>();
 
 const { baseClasses, iconClasses, labelClasses, subLabelClasses } =
   useActionClasses(props);
@@ -201,12 +206,15 @@ const isIconDecorative = computed(() => {
 });
 
 const boundAttrs = computed(() => {
-  const baseAriaAttributes: Record<string, string | undefined> = {
-    "aria-disabled": props.disabled ? "true" : "false",
-    tabindex: props.disabled ? "-1" : undefined,
+  const isInteractive = !props.disabled && !props.readonly;
+
+  const baseAriaAttributes: Record<string, string | number | undefined> = {
+    id: props.id,
+    "aria-disabled": isInteractive ? "false" : "true",
+    tabindex: isInteractive && props.focused ? 0 : -1,
   };
 
-  if (props.disabled) {
+  if (!isInteractive) {
     return {
       ...baseAriaAttributes,
     };
@@ -237,7 +245,7 @@ const componentTag = computed(() => {
 
 // Event handlers
 const handleClick = (event: MouseEvent) => {
-  if (props.disabled) {
+  if (props.disabled || props.readonly) {
     event.preventDefault();
     event.stopPropagation();
     return;
@@ -251,10 +259,12 @@ const handleClick = (event: MouseEvent) => {
 /**
  * Handle keyboard events for accessibility
  * - Enter and Space should trigger click for buttons
- * - Disabled elements should not respond to keyboard
+ * - Disabled and readonly elements should not respond to keyboard
+ * - Navigation keys (arrows, Home, End, Tab) are allowed to bubble up
+ *   for parent components to handle (e.g., FzSelect navigation)
  */
 const handleKeydown = (event: KeyboardEvent) => {
-  if (props.disabled) {
+  if (props.disabled || props.readonly) {
     event.preventDefault();
     event.stopPropagation();
     return;
@@ -263,12 +273,31 @@ const handleKeydown = (event: KeyboardEvent) => {
   // Only handle keyboard for button type
   if (props.type !== "action") return;
 
+  // Allow navigation keys to bubble up (don't preventDefault or stopPropagation)
+  const navigationKeys = [
+    "ArrowDown",
+    "ArrowUp",
+    "Home",
+    "End",
+    "Tab",
+    "Escape",
+  ];
+  if (navigationKeys.includes(event.key)) {
+    // Let the event bubble up to parent handlers
+    return;
+  }
+
   // Enter or Space should trigger keydown
   if (event.key === "Enter" || event.key === " ") {
     event.preventDefault();
     emit("keydown", event);
   }
 };
+
+// Expose the action element for parent components to access
+defineExpose({
+  actionElement,
+});
 </script>
 
 <style scoped>

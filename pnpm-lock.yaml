@@ -2275,6 +2275,9 @@ importers:
 
   packages/select:
     dependencies:
+      '@fiscozen/action':
+        specifier: workspace:^
+        version: link:../action
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
