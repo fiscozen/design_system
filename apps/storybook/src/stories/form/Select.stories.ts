@@ -15,6 +15,7 @@ const meta = {
     }
   }
 } satisfies Meta<typeof FzSelect>
+
 export default meta
 
 type SelectStory = StoryObj<typeof FzSelect>
