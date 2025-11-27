@@ -26,6 +26,11 @@ export interface FzSelectProps extends FzFloatingProps {
    */
   disabled?: boolean;
   /**
+   * If set to true, the input is readonly
+   * @default false
+   */
+  readonly?: boolean;
+  /**
    * If set to true, the input is in error state
    * @default false
    */
@@ -33,6 +38,7 @@ export interface FzSelectProps extends FzFloatingProps {
   /**
    * The size of the input
    * @default 'md'
+   * @deprecated Size prop is deprecated. The select component now uses a fixed 'lg' size. This prop will be removed in a future version.
    */
   size?: "sm" | "md" | "lg";
   /**
@@ -84,8 +90,14 @@ export interface FzSelectProps extends FzFloatingProps {
    */
   variant?: 'normal' | 'floating-label';
   /**
+   * Environment context for styling
+   * @default 'frontoffice'
+   */
+  environment?: 'backoffice' | 'frontoffice';
+  /**
    * Whether to position right icon before or after chevron
    * @default false
+   * @deprecated rightIconLast prop is deprecated. The right icon is now always positioned before the chevron. This prop will be removed in a future version.
    */
   rightIconLast?: boolean;
 }

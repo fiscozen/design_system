@@ -4,62 +4,25 @@
  * @module @fiscozen/select/common
  */
 
+/**
+ * Minimum width for the dropdown container in pixels
+ */
 export const MIN_WIDTH = 240;
 
 /**
- * Maps select size to icon size for consistent icon scaling.
+ * Height of a single option element in pixels
  * 
- * Select components use larger sizes than icons, so this mapping
- * ensures icons are appropriately sized relative to the select.
+ * Used for calculating max height and lazy loading buffer.
  */
-export const selectIconSizeMap = {
-  sm: "xs",
-  md: "sm",
-  lg: "md",
-} as const;
+export const OPTIONS_HEIGHT = 20;
 
 /**
- * Configuration object for select component size-based styling.
+ * Number of option heights to use as buffer for lazy loading
  * 
- * Centralizes all size-dependent CSS class mappings to eliminate duplication
- * across component files and ensure consistency.
- * 
- * @constant
+ * Triggers loading of next batch before reaching absolute bottom.
+ * Also used for calculating max height with viewport constraints.
  */
-export const selectSizeConfig = {
-  /**
-   * Picker button classes (main select input)
-   */
-  picker: {
-    sm: "h-24 text-sm",
-    md: "h-32 text-base",
-    lg: "h-40 text-lg",
-  },
-  /**
-   * Label classes (group labels in options list)
-   */
-  label: {
-    sm: "text-[10px] min-h-24 px-14",
-    md: "text-xs min-h-32 px-16",
-    lg: "text-sm min-h-40 px-20",
-  },
-  /**
-   * Option classes (selectable items in options list)
-   */
-  option: {
-    sm: "text-sm px-14 py-4",
-    md: "text-base px-16 py-6",
-    lg: "text-lg px-20 py-8",
-  },
-  /**
-   * Subtitle classes (option subtitles)
-   */
-  subtitle: {
-    sm: "text-xs",
-    md: "text-sm",
-    lg: "text-base",
-  },
-} as const;
+export const OPTIONS_BUFFER = 5;
 
 /**
  * Calculates container width constraints based on opener position
