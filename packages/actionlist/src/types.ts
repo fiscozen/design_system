@@ -1,12 +1,12 @@
 import { FzRouterNavlinkProps, FzNavlinkProps } from '@fiscozen/navlink'
 
-type ActionlistItem =
+type ActionlistItem<T = void> =
   | (FzRouterNavlinkProps & { type: 'link' })
-  | (FzNavlinkProps & { type: 'button' })
+  | (FzNavlinkProps<T> & { type: 'button' })
 
-interface FzActionlistProps {
+interface FzActionlistProps<T = void> {
   label?: string;
-  items: ActionlistItem[];
+  items: ActionlistItem<T>[];
   listClass?: string;
 }
 

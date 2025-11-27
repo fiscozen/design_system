@@ -1,0 +1,170 @@
+import { Meta, Controls, Markdown } from '@storybook/addon-docs/blocks'
+import { FzAction, FzActionList, FzActionSection } from '@fiscozen/action'
+
+<Meta title="Navigation/FzActionList/Documentation" component={FzActionList} />
+
+# FzActionList
+
+The FzActionList component is a container designed to organize and display multiple FzAction components in a structured layout. It provides a clean, organized way to present action menus, navigation lists, and command palettes with support for grouping, labels, and visual separators.
+
+## Overview
+
+FzActionList serves as a flexible container that can hold multiple FzAction components along with FzActionSection components for grouping. It follows the design system's visual guidelines with consistent spacing, shadows, and styling.
+
+### Key Features
+
+- **Flexible Composition**: Supports mixing actions, labels, and dividers in any order
+- **Consistent Styling**: Follows design system guidelines with proper shadows and spacing
+- **Customizable**: Accepts custom CSS classes for specific styling needs
+- **Accessible**: Maintains proper focus management and keyboard navigation
+- **Responsive**: Adapts to different screen sizes and content lengths
+
+## Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`listClass\` | \`string\` | \`''\` | Additional CSS classes to apply to the action list container |
+`}
+</Markdown>
+
+## Usage Examples
+
+### Basic Action List
+
+```vue
+<template>
+  <FzActionList>
+    <FzActionSection>
+      <FzAction label="Save Changes" iconName="save" @click="handleSave" />
+      <FzAction label="Cancel" iconName="times" @click="handleCancel" />
+      <FzAction label="Delete" iconName="trash" @click="handleDelete" />
+    </FzActionSection>
+  </FzActionList>
+</template>
+```
+
+### Action List with Sections
+
+```vue
+<template>
+  <FzActionList>
+    <FzActionSection label="File Operations">
+      <FzAction label="New File" iconName="plus" @click="createFile" />
+      <FzAction label="Open File" iconName="folder-open" @click="openFile" />
+      <FzAction label="Save File" iconName="save" @click="saveFile" />
+    </FzActionSection>
+
+    <FzActionSection label="Edit Operations">
+      <FzAction label="Undo" iconName="undo" @click="undoAction" />
+      <FzAction label="Redo" iconName="redo" @click="redoAction" />
+      <FzAction label="Cut" iconName="cut" @click="cutAction" />
+      <FzAction label="Copy" iconName="copy" @click="copyAction" />
+      <FzAction label="Paste" iconName="paste" @click="pasteAction" />
+    </FzActionSection>
+  </FzActionList>
+</template>
+```
+
+### Mixed Action Types
+
+```vue
+<template>
+  <FzActionList>
+    <FzActionSection label="Navigation">
+      <FzAction type="link" to="/dashboard" label="Dashboard" iconName="tachometer-alt" />
+      <FzAction type="link" to="/profile" label="Profile" iconName="user" />
+    </FzActionSection>
+    <FzActionSection label="Actions">
+      <FzAction label="Settings" iconName="cog" @click="openSettings" />
+      <FzAction label="Logout" iconName="sign-out-alt" @click="logout" />
+    </FzActionSection>
+  </FzActionList>
+</template>
+```
+
+### Custom Styling
+
+```vue
+<template>
+  <FzActionList listClass="border-2 border-blue-200 bg-blue-50">
+    <FzActionSection label="Custom Styled List">
+      <FzAction label="Action 1" iconName="star" @click="action1" />
+      <FzAction label="Action 2" iconName="heart" @click="action2" />
+    </FzActionSection>
+  </FzActionList>
+</template>
+```
+
+## FzActionSection
+
+Used to create sections within the action list:
+
+```vue
+<FzActionSection label="Section Title">
+  ...
+</FzActionSection>
+```
+
+### Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`label\` | \`string\` | \`''\` | Label text for the section |
+`}
+</Markdown>
+
+### Slots
+
+<Markdown>
+  {`
+| Slot | Description |
+|------|-------------|
+| \`label\` | Slot for the label text |
+| \`default\` | Slot for the actions |
+`}
+</Markdown>
+
+## Best Practices
+
+### Organization
+
+- Use FzActionSection to group related actions
+- Keep related actions together within the same section
+
+### Content Guidelines
+
+- Use clear, descriptive labels for actions
+- Include icons to improve visual recognition
+- Provide sub-labels for complex actions when needed
+- Use disabled states for unavailable actions
+
+### Layout Considerations
+
+- FzActionList has a minimum width of 240px
+- Content will expand to accommodate longer labels
+- Use custom classes for specific width requirements
+
+## Integration
+
+### Installation
+
+```bash
+npm install @fiscozen/action
+```
+
+### Import
+
+```typescript
+import { FzActionList, FzActionSection } from '@fiscozen/action'
+```
+
+## Related Components
+
+- **[FzAction](?path=/docs/navigation-fzaction--docs)**: Individual action components used within the list
+- **[FzLink](?path=/docs/navigation-fzlink--docs)**: For simple text-based navigation
+- **[FzButton](?path=/docs/button-fzbutton--docs)**: For primary action buttons
+- **[FzIcon](?path=/docs/media-fzicon--docs)**: For standalone icon usage
