@@ -279,7 +279,7 @@ describe('useFloating', () => {
       })
 
       const floating = useFloating(args)
-      await floating.setPosition()
+      await floating.setPosition(true)
       await nextTick()
 
       expect(callback).not.toHaveBeenCalled()
@@ -290,7 +290,7 @@ describe('useFloating', () => {
     it('should position element relative to container when no opener', async () => {
       const args = toRefs({
         position: ref<FzFloatingPosition>('bottom'),
-        opener: { domRef: ref(mockOpener) },
+        opener: undefined,
         element: { domRef: ref(mockElement) }
       })
 
@@ -313,7 +313,7 @@ describe('useFloating', () => {
       })
 
       const floating = useFloating(args)
-      
+
       await expect(async () => {
         await floating.setPosition()
         await nextTick()
@@ -330,11 +330,10 @@ describe('useFloating', () => {
       })
 
       useFloating(args)
-      
+
       // Simulate component unmount
       // Note: In a real scenario, this would be handled by Vue's lifecycle
       expect(mockIntersectionObserver).toHaveBeenCalled()
     })
   })
 })
-

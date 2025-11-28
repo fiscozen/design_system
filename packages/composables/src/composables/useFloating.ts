@@ -7,7 +7,7 @@ export const useFloating = (
 ): {
   float: FzRect
   rect: Ref<DOMRect | undefined>
-  setPosition: () => Promise<void>
+  setPosition: (ignoreCallback?: boolean) => Promise<void>
   position: Ref<FzFloatingPosition>
   actualPosition?: Ref<FzFloatingPosition | undefined>
   openerRect: Ref<DOMRect | undefined>
@@ -337,12 +337,12 @@ export const useFloating = (
         safeElementDomRef.value.style.left = '0px'
       }
 
-       // Recalculate all rects after content is rendered
-       rect.value = safeElementDomRef.value!.getBoundingClientRect()
-       openerRect.value = safeOpenerDomRef.value?.getBoundingClientRect()
-       containerRect.value = safeContainerDomRef.value!.getBoundingClientRect()
+      // Recalculate all rects after content is rendered
+      rect.value = safeElementDomRef.value!.getBoundingClientRect()
+      openerRect.value = safeOpenerDomRef.value?.getBoundingClientRect()
+      containerRect.value = safeContainerDomRef.value!.getBoundingClientRect()
 
-       const elStyle = window.getComputedStyle(safeElementDomRef.value as HTMLElement)
+      const elStyle = window.getComputedStyle(safeElementDomRef.value as HTMLElement)
 
       // Step 2: Setup intersection observer
       floatObserver.value.observe(safeElementDomRef.value as HTMLElement)
