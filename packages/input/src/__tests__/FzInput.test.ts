@@ -417,6 +417,30 @@ describe('FzInput', () => {
         expect(input.getAttribute('aria-labelledby')).toBeNull()
       })
 
+      it('does not apply aria-labelledby when custom label slot is provided', async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: 'Test Label',
+          },
+          slots: {
+            label: () => 'Custom Label Slot',
+          },
+        })
+
+        await wrapper.vm.$nextTick()
+
+        const input = wrapper.find('input').element as HTMLInputElement
+        const ariaLabelledBy = input.getAttribute('aria-labelledby')
+        
+        // aria-labelledby should not be set because the default label element
+        // with id="${uniqueId}-label" doesn't exist when custom slot is used
+        expect(ariaLabelledBy).toBeNull()
+        
+        // Verify default label element is not rendered
+        const defaultLabel = wrapper.find('label')
+        expect(defaultLabel.exists()).toBe(false)
+      })
+
       it('applies aria-describedby when helpText slot is provided', async () => {
         const wrapper = mount(FzInput, {
           props: {
