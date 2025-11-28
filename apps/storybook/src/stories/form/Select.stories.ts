@@ -370,7 +370,6 @@ export const FloatingLabel: SelectStory = {
     ...Template.args,
     rightIcon: 'bell',
     rightIconButton: true,
-    rightIconLast: true,
     variant: 'floating-label',
     rightIconButtonVariant: 'secondary'
   },
