@@ -102,6 +102,11 @@ type FzActionBasicProps = {
    * @default undefined
    */
   ariaSelected?: boolean;
+  /**
+   * Override tabindex value (useful for custom focus management)
+   * @default undefined (computed based on focused and interactive state: 0 when focused and interactive, -1 otherwise)
+   */
+  tabindex?: number;
 };
 
 // Discriminated union for action props

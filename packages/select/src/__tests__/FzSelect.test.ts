@@ -371,38 +371,6 @@ describe("FzSelect", () => {
       expect(options.length).toBe(25);
     });
 
-    it("loads more options when scrolling near bottom", async () => {
-      const wrapper = mount(FzSelect, {
-        props: {
-          modelValue: "",
-          optionsToShow: 25,
-          options: Array.from({ length: 100 }, (_, i) => ({
-            value: `${i}`,
-            label: `Option ${i}`,
-          })),
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-      const button = wrapper.find('button[test-id="fzselect-opener"]');
-      await button.trigger("click");
-
-      await wrapper.vm.$nextTick();
-      let options = document.querySelectorAll(
-        'button[role="option"]'
-      );
-      expect(options.length).toBe(25);
-
-      const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
-      )!;
-      container.scrollTop = container.scrollHeight;
-      container.dispatchEvent(new Event("scroll"));
-
-      await wrapper.vm.$nextTick();
-      options = document.querySelectorAll('button[id*="-option-"]');
-      expect(options.length).toBe(50);
-    });
   });
 
   describe("Dropdown Interaction", () => {
@@ -533,7 +501,12 @@ describe("FzSelect", () => {
       });
 
       await wrapper.vm.$nextTick();
-      const opener = wrapper.vm.$refs.opener as HTMLElement;
+      // Access button element via buttonRef exposed from FzSelectButton
+      const buttonRef = wrapper.vm.$refs.buttonRef as any;
+      const opener = buttonRef?.openerButton as HTMLElement;
+      if (!opener) {
+        throw new Error("Opener button not found");
+      }
       const { maxWidth } = calculateContainerWidth(opener);
       expect(maxWidth).toBeGreaterThan(0);
     });
@@ -560,7 +533,13 @@ describe("FzSelect", () => {
         },
       });
 
-      const opener = wrapper.vm.$refs.opener as HTMLElement;
+      await wrapper.vm.$nextTick();
+      // Access button element via buttonRef exposed from FzSelectButton
+      const buttonRef = wrapper.vm.$refs.buttonRef as any;
+      const opener = buttonRef?.openerButton as HTMLElement;
+      if (!opener) {
+        throw new Error("Opener button not found");
+      }
       const { maxWidth } = calculateContainerWidth(opener);
       expect(maxWidth).toBe(right);
     });

@@ -115,6 +115,7 @@ import { FzActionList, FzAction, FzActionSection } from '@fiscozen/action'
 | `id` | `string` | - | Unique ID for ARIA relationships |
 | `role` | `string` | - | ARIA role (e.g., `"option"`, `"menuitem"`) |
 | `ariaSelected` | `boolean` | - | ARIA selected state (for `role="option"`) |
+| `tabindex` | `number` | - | Override tabindex value (useful for custom focus management). Default: `0` when focused and interactive, `-1` otherwise |
 
 **Link-specific props (when `type="link"`):**
 

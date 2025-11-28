@@ -32,13 +32,10 @@ import {
   FzSelectOptionsProps,
   FzSelectOptionProps,
 } from "./types";
-import { FzIcon } from "@fiscozen/icons";
-import { FzIconButton } from "@fiscozen/button";
 import {
   FzFloating,
   FzFloatingPosition,
   useClickOutside,
-  useKeyDown,
 } from "@fiscozen/composables";
 import {
   calculateContainerWidth,
@@ -46,7 +43,10 @@ import {
   OPTIONS_HEIGHT,
   OPTIONS_BUFFER,
 } from "./common";
-import { FzActionList, FzActionSection, FzAction } from "@fiscozen/action";
+import FzSelectLabel from "./components/FzSelectLabel.vue";
+import FzSelectButton from "./components/FzSelectButton.vue";
+import FzSelectHelpError from "./components/FzSelectHelpError.vue";
+import FzSelectOptionsList from "./components/FzSelectOptionsList.vue";
 
 const props = withDefaults(defineProps<FzSelectProps>(), {
   clearable: true,
@@ -69,6 +69,10 @@ const model = defineModel<string | undefined>({
   default: undefined,
 });
 
+// ============================================================================
+// DEPRECATION WARNINGS
+// ============================================================================
+
 // Track if we've already shown the deprecation warning for this instance
 const sizeWarningShown = ref(false);
 const rightIconLastWarningShown = ref(false);
@@ -77,9 +81,6 @@ const rightIconLastWarningShown = ref(false);
 watch(
   () => props.size,
   (newSize) => {
-    // Warn once per component instance if size prop is provided
-    // Note: withDefaults always provides a value, so we warn if it's not the default 'md'
-    // or if it's explicitly set to something else
     if (!sizeWarningShown.value && newSize !== "md") {
       console.warn(
         `[FzSelect] The 'size' prop is deprecated and will be removed in a future version. ` +
@@ -110,9 +111,13 @@ watch(
   { immediate: true }
 );
 
+// ============================================================================
+// STATE
+// ============================================================================
+
 const isOpen = ref(false);
-const opener = ref<HTMLElement>();
-const containerRef = ref<InstanceType<typeof FzActionList>>();
+const buttonRef = ref<InstanceType<typeof FzSelectButton>>();
+const optionsListRef = ref<InstanceType<typeof FzSelectOptionsList>>();
 const containerWidth = ref<string>(`${MIN_WIDTH}px`);
 const openerMaxWidth = ref<string>("none");
 const visibleOptions = ref<FzSelectOptionsProps[]>([]);
@@ -123,85 +128,114 @@ const floatingRef = ref<InstanceType<typeof FzFloating>>();
 const isScrollingToFocus = ref(false);
 
 /**
- * Computed ref to the actual HTML element inside FzActionList
- *
- * Needed for composables that expect HTMLElement refs (useKeyDown, useClickOutside).
- * Returns the containerElement exposed by FzActionList.
+ * Computed ref to the actual HTML element inside FzSelectOptionsList
  */
 const containerElement = computed(
-  () => containerRef.value?.containerElement as HTMLElement | undefined
+  () =>
+    optionsListRef.value?.containerElement?.containerElement as
+      | HTMLElement
+      | undefined
 );
 
 /**
- * Computed state flags for component interactivity and visual states
- *
- * Memoized to avoid repeated evaluations in multiple switch statements.
- * These flags follow the Representation-First pattern, answering:
- * "When does the component look like this state?"
+ * Unique IDs for accessibility attributes
  */
+const instanceId = Math.random().toString(36).substring(2, 9);
+const openerId = `fzselect-opener-${instanceId}`;
+const labelId = `fzselect-label-${instanceId}`;
+
+// ============================================================================
+// COMPUTED - State Flags
+// ============================================================================
+
 const isDisabled = computed(() => props.disabled);
 const isReadonly = computed(() => props.readonly);
 const isInteractive = computed(() => !isDisabled.value && !isReadonly.value);
-const isError = computed(() => props.error && isInteractive.value);
+
+// ============================================================================
+// COMPUTED - Options
+// ============================================================================
 
 /**
- * Generates unique ID for an option element
- *
- * Used for aria-activedescendant to indicate focused option to screen readers.
- *
- * @param option - Option to generate ID for
- * @returns Unique ID string
+ * Type guard to filter selectable options
  */
-const getOptionId = (option: FzSelectOptionProps) => {
-  return `${openerId}-option-${option.value}`;
-};
+const isSelectableOption = (
+  option: FzSelectOptionsProps
+): option is FzSelectOptionProps => option.kind !== "label";
 
 /**
- * Gets the ID of the currently focused option
- *
- * Used for aria-activedescendant on listbox.
- * Returns undefined when no option is focused.
+ * Finds the currently selected option from options list
+ */
+const selectedOption = computed(() => {
+  return props.options.find(
+    (option): option is FzSelectOptionProps =>
+      isSelectableOption(option) && option.value === model.value
+  );
+});
+
+/**
+ * Gets list of selectable options (excluding labels)
+ */
+const selectableOptions = computed(() => {
+  return visibleOptions.value.filter(isSelectableOption);
+});
+
+/**
+ * Gets the index of the selected option in selectableOptions
+ */
+const selectedOptionIndex = computed(() => {
+  if (!selectedOption.value) return -1;
+  return selectableOptions.value.findIndex(
+    (option) => option.value === selectedOption.value?.value
+  );
+});
+
+/**
+ * Gets the value of the currently focused option
+ */
+const focusedOptionValue = computed(() => {
+  if (focusedIndex.value < 0 || !isOpen.value) return null;
+  const selectable = selectableOptions.value;
+  if (focusedIndex.value >= selectable.length) return null;
+  return selectable[focusedIndex.value]?.value ?? null;
+});
+
+/**
+ * Gets the ID of the currently focused option (for aria-activedescendant)
  */
 const activeDescendantId = computed(() => {
   if (focusedIndex.value < 0 || !isOpen.value) return undefined;
   const selectable = selectableOptions.value;
   if (focusedIndex.value >= selectable.length) return undefined;
   const focusedOption = selectable[focusedIndex.value];
-  return focusedOption ? getOptionId(focusedOption) : undefined;
+  return focusedOption
+    ? `${openerId}-option-${focusedOption.value}`
+    : undefined;
 });
 
-/**
- * Unique IDs for accessibility attributes
- * Generated once per component instance to ensure stability
- */
-const instanceId = Math.random().toString(36).substring(2, 9);
-const openerId = `fzselect-opener-${instanceId}`;
-const labelId = `fzselect-label-${instanceId}`;
+// Styling logic moved to individual components (FzSelectLabel, FzSelectButton, FzSelectHelpError)
 
 /**
- * Determines if normal placeholder should be shown
- *
- * In floating-label variant, placeholder is only shown when no value is selected.
- * In normal variant, placeholder is always shown when no value is selected.
+ * Resolves the opener element reference
  */
-const showNormalPlaceholder = computed(() => {
-  return (
-    !(props.variant === "floating-label") ||
-    (props.variant === "floating-label" && !model.value)
-  );
+const safeOpener = computed(() => {
+  return props.extOpener
+    ? props.extOpener
+    : (buttonRef.value?.openerButton as HTMLElement | undefined);
 });
+
+useClickOutside(safeOpener, () => {
+  isOpen.value = false;
+});
+
+const emit = defineEmits(["select", "fzselect:right-icon-click"]);
+
+// ============================================================================
+// FLOATING PANEL
+// ============================================================================
 
 /**
  * Calculates max height for floating panel based on available viewport space
- *
- * Dynamically adjusts panel height to prevent overflow when positioned above or below opener.
- * Uses OPTIONS_BUFFER to reserve space for smooth scrolling near viewport edges.
- *
- * @param _rect - Floating container rect (unused but required by FzFloating callback)
- * @param openerRect - Opener element rect for position calculation
- * @param _containerRect - Container rect (unused but required by FzFloating callback)
- * @param position - Preferred floating position
- * @param actualPosition - Actual floating position after auto-adjustment
  */
 const calculateMaxHeight = (
   _rect: Ref<DOMRect | undefined>,
@@ -220,395 +254,36 @@ const calculateMaxHeight = (
     maxHeight.value = pos.includes("bottom")
       ? `calc(100vh - ${bottom}px - ${OPTIONS_BUFFER * OPTIONS_HEIGHT}px)`
       : `${top}px`;
-    // REMOVED: floatingRef.value?.setPosition() - this caused infinite loop
-    // setPosition is already called by FzFloating when needed
   });
 };
 
 /**
- * Resolves the opener element reference
- *
- * Uses external opener if provided, otherwise falls back to internal ref.
- * This allows the select to be controlled by an external element when needed.
+ * Updates container width based on opener element dimensions
  */
-const safeOpener = computed(() => {
-  return props.extOpener ? props.extOpener : opener.value;
-});
+function updateContainerWidth() {
+  if (!safeOpener.value) return;
 
-useClickOutside(safeOpener, () => {
-  isOpen.value = false;
-});
+  const { minWidth, maxWidth } = calculateContainerWidth(safeOpener.value);
 
-const emit = defineEmits(["select", "fzselect:right-icon-click"]);
-
-/**
- * Base classes for picker button
- *
- * Common styling shared across all environments:
- * - Padding: 10px left/right
- * - Background: core-white
- * - Border: 1px solid grey-300, 4px radius
- * - Gap: 8px between elements
- * - Vertical alignment: centered
- */
-const staticPickerClass =
-  "flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none";
-
-/**
- * Environment-based picker button classes
- *
- * Defines styling classes for backoffice and frontoffice environments.
- * Both environments share the same base styling with padding, background, border, gap, and vertical alignment.
- * Heights differ: backoffice uses 32px, frontoffice uses 44px.
- */
-const environmentPickerClasses = {
-  backoffice: "h-32 text-base",
-  frontoffice: "h-44 text-lg",
-} as const;
-
-/**
- * Computes picker button classes based on variant and environment
- *
- * Applies environment-specific height and text size:
- * - Floating-label variant: fixed height 40px
- * - Normal variant: environment-based (backoffice: 32px, frontoffice: 44px)
- * Combines with state classes from evaluateProps().
- */
-const computedPickerClass = computed(() => [
-  props.variant === "floating-label"
-    ? "h-40 text-sm pr-6"
-    : environmentPickerClasses[props.environment],
-  evaluateProps(),
-]);
-
-/**
- * Base text classes shared across label, span, help, and error text
- *
- * Uniform styling across both environments:
- * - font-size: 16px (text-base)
- * - line-height: 20px (leading-5)
- */
-const baseTextClasses = "text-base leading-5";
-
-/**
- * Computed flag for selected value visual state
- *
- * Returns true when a valid option is selected and component is interactive.
- * Used to determine text color in computedSpanClass.
- */
-const isSelectedValue = computed(
-  () => selectedOption.value && isInteractive.value
-);
-
-/**
- * Computes label classes using Representation-First pattern
- *
- * Maps visual representation (disabled, readonly, active) to styling.
- * Readonly uses the same style as disabled for visual consistency.
- */
-const computedLabelClass = computed(() => {
-  const baseClasses = [baseTextClasses];
-
-  switch (true) {
-    case isDisabled.value:
-    case isReadonly.value:
-      baseClasses.push("text-grey-300");
-      break;
-
-    case isInteractive.value:
-      baseClasses.push("text-core-black");
-      break;
-  }
-
-  return baseClasses;
-});
-
-/**
- * Base classes for selected value span
- *
- * Handles text overflow and layout:
- * - Overflow: hidden with ellipsis
- * - Flex: grows to fill available space
- * - Font-weight: normal (400)
- */
-const staticSpanClass =
-  "overflow-hidden text-ellipsis whitespace-nowrap flex-[1] font-normal";
-
-/**
- * Computes span classes for selected option display using Representation-First pattern
- *
- * Maps visual representation (disabled, readonly, selected value, placeholder) to styling.
- * Readonly uses the same style as disabled for visual consistency.
- * Placeholder (no value selected) also uses grey-300.
- */
-const computedSpanClass = computed(() => {
-  const baseClasses = [baseTextClasses];
-
-  switch (true) {
-    case isDisabled.value:
-    case isReadonly.value:
-      baseClasses.push("text-grey-300");
-      break;
-
-    case isSelectedValue.value:
-      baseClasses.push("text-core-black");
-      break;
-
-    default:
-      // Placeholder state (no value selected)
-      baseClasses.push("text-grey-300");
-      break;
-  }
-
-  return baseClasses;
-});
-
-/**
- * Computes help text classes using Representation-First pattern
- *
- * Maps visual representation (disabled, readonly, active) to styling.
- * Readonly uses the same style as disabled for visual consistency.
- */
-const computedHelpClass = computed(() => {
-  const baseClasses = [baseTextClasses];
-
-  switch (true) {
-    case isDisabled.value:
-    case isReadonly.value:
-      baseClasses.push("text-grey-300");
-      break;
-
-    case isInteractive.value:
-      baseClasses.push("text-grey-500");
-      break;
-  }
-
-  return baseClasses;
-});
-
-/**
- * Computes error text classes using Representation-First pattern
- *
- * Maps visual representation (disabled, readonly, active) to styling.
- * Readonly uses the same style as disabled for visual consistency.
- */
-const computedErrorClass = computed(() => {
-  const baseClasses = [baseTextClasses];
-
-  switch (true) {
-    case isDisabled.value:
-    case isReadonly.value:
-      baseClasses.push("text-grey-300");
-      break;
-
-    case isInteractive.value:
-      baseClasses.push("text-core-black");
-      break;
-  }
-
-  return baseClasses;
-});
+  containerWidth.value = `${minWidth}px`;
+  openerMaxWidth.value = `${maxWidth}px`;
+}
 
 // ============================================================================
-// HELPER FUNCTIONS
+// EVENT HANDLERS - Opener
 // ============================================================================
-
-/**
- * Type guard to filter selectable options
- *
- * Excludes label separators from option lists for selection and navigation logic.
- *
- * @param option - Option to check
- * @returns True if option is selectable (not a label)
- */
-const isSelectableOption = (
-  option: FzSelectOptionsProps
-): option is FzSelectOptionProps => option.kind !== "label";
-
-/**
- * Gets unique key for v-for iteration
- *
- * Uses label for label separators, value for selectable options.
- * Ensures stable keys for Vue's virtual DOM diffing.
- *
- * @param option - Option to get key for
- * @returns Unique key string
- */
-const getOptionKey = (option: FzSelectOptionsProps): string =>
-  option.kind === "label" ? option.label : option.value;
-
-/**
- * Checks if option is a label separator
- *
- * Inverse of isSelectableOption for template readability.
- *
- * @param option - Option to check
- * @returns True if option is a label separator
- */
-const isLabelOption = (option: FzSelectOptionsProps): boolean =>
-  option.kind === "label";
-
-/**
- * Gets check icon name for selected option
- *
- * Returns 'check' icon for selected option, undefined otherwise.
- * Used to visually indicate the currently selected value.
- *
- * @param option - Option to check against current selection
- * @returns Icon name or undefined
- */
-const getCheckIcon = (option: FzSelectOptionProps): string | undefined =>
-  model.value === option.value ? "check" : undefined;
-
-// ============================================================================
-// COMPUTED - Options
-// ============================================================================
-
-/**
- * Finds the currently selected option from options list
- *
- * Finds the first selectable option matching model.value.
- * Returns undefined if no option matches current model value.
- * Optimized to use single find() instead of filter() + find().
- */
-const selectedOption = computed(() => {
-  return props.options.find(
-    (option): option is FzSelectOptionProps =>
-      isSelectableOption(option) && option.value === model.value
-  );
-});
-
-/**
- * Gets list of selectable options (excluding labels)
- *
- * Used for keyboard navigation to skip non-interactive items.
- */
-const selectableOptions = computed(() => {
-  return visibleOptions.value.filter(isSelectableOption);
-});
-
-/**
- * Gets the index of the selected option in selectableOptions
- *
- * Used to initialize focusedIndex when dropdown opens.
- */
-const selectedOptionIndex = computed(() => {
-  if (!selectedOption.value) return -1;
-  return selectableOptions.value.findIndex(
-    (option) => option.value === selectedOption.value?.value
-  );
-});
-
-/**
- * Creates a Set of focused option values for O(1) lookup
- *
- * Used to efficiently determine if an option is focused during rendering.
- * Avoids calling findIndex() for every option in the template.
- */
-const focusedOptionValue = computed(() => {
-  if (focusedIndex.value < 0 || !isOpen.value) return null;
-  const selectable = selectableOptions.value;
-  if (focusedIndex.value >= selectable.length) return null;
-  return selectable[focusedIndex.value]?.value ?? null;
-});
-
-watch(() => [model.value], updateContainerWidth);
-
-watch(
-  () => props.options,
-  () => {
-    visibleOptions.value = props.options.slice(0, props.optionsToShow);
-  }
-);
-
-/**
- * Closes dropdown when component becomes non-interactive
- *
- * Prevents interaction with an open dropdown when disabled or readonly.
- * Focus is automatically returned to opener by the isOpen watcher.
- */
-watch(isInteractive, (newIsInteractive) => {
-  if (!newIsInteractive && isOpen.value) {
-    isOpen.value = false;
-  }
-});
-
-/**
- * Manages focus and focused index when dropdown opens or closes
- *
- * On open: Initializes focusedIndex to selected option (or first option) and scrolls to it.
- * On close: Resets focusedIndex and returns focus to opener button.
- */
-watch(isOpen, (newValue) => {
-  if (newValue) {
-    // When opening: set focused index and move focus to first/selected option
-    nextTick(() => {
-      const selectable = selectableOptions.value;
-      if (selectable.length === 0) {
-        focusedIndex.value = -1;
-        return;
-      }
-      focusedIndex.value =
-        selectedOptionIndex.value >= 0 ? selectedOptionIndex.value : 0;
-      scrollToFocusedOption();
-    });
-  } else {
-    // When closing: reset focused index and return focus to opener button
-    focusedIndex.value = -1;
-    nextTick(() => {
-      if (opener.value) {
-        opener.value.focus();
-      }
-    });
-  }
-});
-
-onMounted(() => {
-  if (props.floatingPanelMaxHeight) {
-    maxHeight.value = props.floatingPanelMaxHeight;
-  }
-  updateContainerWidth();
-  addScrollListener();
-  updateVisibleOptions();
-});
-
-/**
- * Handles option selection
- *
- * Updates model value, emits select event, and closes dropdown.
- * Focus is returned to opener button via watch on isOpen.
- *
- * @param option - Selected option
- */
-const handleSelect = (option: FzSelectOptionProps) => {
-  if (props.clearable && model.value === option.value) {
-    model.value = undefined;
-  } else {
-    model.value = option.value;
-  }
-
-  emit("select", model.value);
-  isOpen.value = false;
-};
 
 /**
  * Handles picker button click to toggle dropdown
- *
- * Focus management is handled by watch(isOpen) to avoid duplication.
  */
 const handlePickerClick = () => {
   if (!isInteractive.value) return;
   isOpen.value = !isOpen.value;
   updateContainerWidth();
-  // Focus management handled by watch(isOpen)
 };
 
 /**
  * Handles keyboard events on opener button
- *
- * Supports:
- * - Enter/Space: Open dropdown if closed
- * - Escape: Close dropdown if open
  */
 const handleOpenerKeydown = (event: KeyboardEvent) => {
   if (!isInteractive.value) return;
@@ -632,21 +307,26 @@ const handleOpenerKeydown = (event: KeyboardEvent) => {
   }
 };
 
-// Attach keyboard listener to opener button
-// useKeyDown handles onMounted internally, so opener ref can be undefined at call time
-useKeyDown(opener, handleOpenerKeydown);
+// ============================================================================
+// EVENT HANDLERS - Options
+// ============================================================================
+
+/**
+ * Handles option selection
+ */
+const handleSelect = (option: FzSelectOptionProps) => {
+  if (props.clearable && model.value === option.value) {
+    model.value = undefined;
+  } else {
+    model.value = option.value;
+  }
+
+  emit("select", model.value);
+  isOpen.value = false;
+};
 
 /**
  * Handles keyboard events on options container
- *
- * Supports:
- * - ArrowDown: Move focus to next option
- * - ArrowUp: Move focus to previous option
- * - Home: Move focus to first option
- * - End: Move focus to last option
- * - Enter/Space: Select focused option
- * - Escape: Close dropdown without selecting
- * - Tab/Shift+Tab: Focus trap - wrap focus within dropdown
  */
 const handleOptionsKeydown = (event: KeyboardEvent) => {
   const selectable = selectableOptions.value;
@@ -697,14 +377,12 @@ const handleOptionsKeydown = (event: KeyboardEvent) => {
       // Focus trap: prevent Tab from leaving dropdown
       event.preventDefault();
       if (event.shiftKey) {
-        // Shift+Tab: move to last option if on first, otherwise previous
         if (focusedIndex.value <= 0) {
           focusedIndex.value = selectable.length - 1;
         } else {
           focusedIndex.value--;
         }
       } else {
-        // Tab: move to first option if on last, otherwise next
         if (focusedIndex.value >= selectable.length - 1) {
           focusedIndex.value = 0;
         } else {
@@ -717,47 +395,23 @@ const handleOptionsKeydown = (event: KeyboardEvent) => {
 };
 
 /**
- * Creates a ref callback for FzAction components
- *
- * Returns a function that stores the FzAction's actionElement in optionRefs.
- * Used in v-for template refs to register option DOM elements for focus management.
- *
- * @param option - Option to create ref callback for
- * @returns Ref callback function
+ * Handles ref registration from FzSelectOptionsList
  */
-const createActionRefCallback = (option: FzSelectOptionProps) => {
-  return (el: unknown) => {
-    // Type guard: ensure el is a valid object with actionElement
-    if (!el || typeof el !== "object" || !("actionElement" in el)) {
-      optionRefs.value.delete(option.value);
-      return;
-    }
-
-    // Access actionElement exposed via defineExpose from FzAction
-    const actionElement = (el as { actionElement?: HTMLElement }).actionElement;
-
-    if (actionElement) {
-      optionRefs.value.set(option.value, actionElement);
-    } else {
-      optionRefs.value.delete(option.value);
-    }
-  };
+const handleRegisterRef = (value: string, element: HTMLElement | undefined) => {
+  if (element) {
+    optionRefs.value.set(value, element);
+  } else {
+    optionRefs.value.delete(value);
+  }
 };
 
 /**
  * Scrolls the focused option into view
- *
- * Ensures the focused option is visible when navigating with keyboard.
- * Uses optionRefs map to directly access the DOM element by option value.
- * Includes safety checks to prevent calling focus() before DOM is ready
- * and prevent infinite loops.
  */
 const scrollToFocusedOption = () => {
-  // Prevent multiple simultaneous calls
   if (isScrollingToFocus.value) return;
 
   nextTick(() => {
-    // Safety checks: ensure dropdown is open and DOM is ready
     if (!isOpen.value || focusedIndex.value < 0) return;
     const container = containerElement.value;
     if (!container) return;
@@ -773,7 +427,6 @@ const scrollToFocusedOption = () => {
     if (focusedButton && document.contains(focusedButton)) {
       isScrollingToFocus.value = true;
 
-      // Use requestAnimationFrame to ensure DOM is fully rendered
       requestAnimationFrame(() => {
         if (isOpen.value && document.contains(focusedButton)) {
           try {
@@ -783,7 +436,6 @@ const scrollToFocusedOption = () => {
               behavior: "smooth",
             });
           } catch (error) {
-            // Silently handle focus errors (e.g., element not focusable)
             console.warn("[FzSelect] Failed to focus option:", error);
           }
         }
@@ -795,64 +447,12 @@ const scrollToFocusedOption = () => {
   });
 };
 
-// Attach keyboard listener to options container
-useKeyDown(containerElement, handleOptionsKeydown);
-
-/**
- * Programmatically opens the dropdown
- *
- * Updates container width calculation when opened externally.
- * Exposed via defineExpose for parent component control.
- */
-const forceOpen = () => {
-  isOpen.value = true;
-  if (safeOpener.value) {
-    calculateContainerWidth(safeOpener.value);
-  }
-};
-
-/**
- * Computes picker button state classes using Representation-First pattern
- *
- * Maps each visual representation (disabled, readonly, error, default) to its styling.
- * This pattern makes it explicit when the component looks like each state.
- * Readonly uses the same style as disabled for visual consistency.
- * Focus states are handled separately via focus:border-* classes.
- */
-const evaluateProps = () => {
-  switch (true) {
-    case isDisabled.value:
-    case isReadonly.value:
-      return "bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed focus:border-grey-100";
-
-    case isError.value:
-      return "border-semantic-error-200 bg-white text-core-black cursor-pointer focus:border-semantic-error-300";
-
-    default:
-      return "border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500";
-  }
-};
-
-/**
- * Updates container width based on opener element dimensions
- *
- * Calculates min and max width constraints to ensure dropdown
- * matches opener width while respecting viewport boundaries.
- */
-function updateContainerWidth() {
-  if (!safeOpener.value) return;
-
-  const { minWidth, maxWidth } = calculateContainerWidth(safeOpener.value);
-
-  containerWidth.value = `${minWidth}px`;
-  openerMaxWidth.value = `${maxWidth}px`;
-}
+// ============================================================================
+// LAZY LOADING
+// ============================================================================
 
 /**
  * Attaches scroll listener to options container for lazy loading
- *
- * Enables progressive rendering of options as user scrolls.
- * Called once on mount to enable infinite scroll behavior.
  */
 function addScrollListener() {
   const element = containerElement.value;
@@ -861,10 +461,6 @@ function addScrollListener() {
 
 /**
  * Handles scroll events to trigger lazy loading of options
- *
- * Loads next batch of options when user scrolls near bottom.
- * Uses OPTIONS_BUFFER to trigger loading before reaching absolute bottom
- * for smoother user experience.
  */
 function handleScroll() {
   const container = containerElement.value;
@@ -881,17 +477,90 @@ function handleScroll() {
 
 /**
  * Loads next batch of options for lazy rendering
- *
- * Slices options array starting from current visible count.
- * Uses optionsToShow prop to determine batch size for performance.
  */
 function updateVisibleOptions() {
+  // Guard: don't load if all options are already visible
+  if (visibleOptions.value.length >= props.options.length) {
+    return;
+  }
+
   const nextItems = props.options.slice(
     visibleOptions.value.length,
     visibleOptions.value.length + props.optionsToShow
   );
   visibleOptions.value.push(...nextItems);
 }
+
+// ============================================================================
+// WATCHERS
+// ============================================================================
+
+watch(model, updateContainerWidth);
+
+watch(
+  () => props.options,
+  () => {
+    visibleOptions.value = props.options.slice(0, props.optionsToShow);
+  },
+  { immediate: true }
+);
+
+watch(isInteractive, (newIsInteractive) => {
+  if (!newIsInteractive && isOpen.value) {
+    isOpen.value = false;
+  }
+});
+
+watch(isOpen, (newValue) => {
+  if (newValue) {
+    nextTick(() => {
+      const selectable = selectableOptions.value;
+      if (selectable.length === 0) {
+        focusedIndex.value = -1;
+        return;
+      }
+      focusedIndex.value =
+        selectedOptionIndex.value >= 0 ? selectedOptionIndex.value : 0;
+      scrollToFocusedOption();
+    });
+  } else {
+    focusedIndex.value = -1;
+    nextTick(() => {
+      const openerButton = buttonRef.value?.openerButton;
+      if (openerButton) {
+        openerButton.focus();
+      }
+    });
+  }
+});
+
+// ============================================================================
+// LIFECYCLE
+// ============================================================================
+
+onMounted(() => {
+  if (props.floatingPanelMaxHeight) {
+    maxHeight.value = props.floatingPanelMaxHeight;
+  }
+  updateContainerWidth();
+  addScrollListener();
+  // Note: visibleOptions is already initialized by watch(() => props.options)
+  // No need to call updateVisibleOptions() here
+});
+
+// ============================================================================
+// EXPOSE
+// ============================================================================
+
+/**
+ * Programmatically opens the dropdown
+ */
+const forceOpen = () => {
+  isOpen.value = true;
+  if (safeOpener.value) {
+    calculateContainerWidth(safeOpener.value);
+  }
+};
 
 defineExpose({
   handlePickerClick,
@@ -913,121 +582,74 @@ defineExpose({
     @fzfloating:setPosition="calculateMaxHeight"
   >
     <template #opener-start>
-      <label
+      <FzSelectLabel
         v-if="label"
-        :id="labelId"
-        :for="openerId"
-        :class="computedLabelClass"
+        :labelId
+        :openerId
+        :label
+        :required
+        :disabled
+        :readonly
+      />
+    </template>
+
+    <template #opener="{ floating }">
+      <FzSelectButton
+        :openerId
+        :labelId
+        :label
+        :placeholder
+        :selectedOption
+        :isOpen
+        :required
+        :disabled
+        :readonly
+        :error
+        :leftIcon
+        :rightIcon
+        :rightIconButton
+        :rightIconButtonVariant
+        :variant
+        :environment
+        :pickerClass
+        @click="handlePickerClick"
+        @keydown="handleOpenerKeydown"
+        @right-icon-click="emit('fzselect:right-icon-click')"
+        ref="buttonRef"
       >
-        {{ label }}{{ required ? " *" : "" }}
-      </label>
-    </template>
-    <template #opener="{ floating }" class="flex">
-      <div class="w-full flex flex-col gap-8">
-        <slot name="opener" :handlePickerClick :isOpen :floating>
-          <button
-            :id="openerId"
-            @click="handlePickerClick"
-            test-id="fzselect-opener"
-            type="button"
-            :class="[staticPickerClass, computedPickerClass, pickerClass]"
-            ref="opener"
-            :title="selectedOption ? selectedOption.label : placeholder"
-            :aria-expanded="isOpen ? 'true' : 'false'"
-            :aria-haspopup="'listbox'"
-            :aria-labelledby="label ? labelId : undefined"
-            :aria-label="
-              !label
-                ? selectedOption
-                  ? selectedOption.label
-                  : placeholder
-                : undefined
-            "
-            :aria-required="required ? 'true' : 'false'"
-            :aria-invalid="error ? 'true' : 'false'"
-            :aria-disabled="isInteractive ? 'false' : 'true'"
-          >
-            <FzIcon v-if="leftIcon" :name="leftIcon" size="md" />
-            <div class="flex flex-col min-w-0 grow">
-              <span
-                v-if="!showNormalPlaceholder"
-                :class="[staticSpanClass, 'text-grey-300 text-xs']"
-                >{{ placeholder }}</span
-              >
-              <span :class="[staticSpanClass, computedSpanClass]">
-                {{ selectedOption ? selectedOption.label : placeholder }}
-              </span>
-            </div>
-            <FzIcon
-              v-if="rightIcon && !rightIconButton"
-              :name="rightIcon"
-              size="md"
-            />
-            <FzIconButton
-              v-if="rightIcon && rightIconButton"
-              :class="{ 'bg-grey-100 text-gray-300': !isInteractive }"
-              :iconName="rightIcon"
-              size="md"
-              :variant="isInteractive ? rightIconButtonVariant : 'invisible'"
-              @click.stop="emit('fzselect:right-icon-click')"
-            />
-            <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" size="md" />
-          </button>
-        </slot>
-      </div>
-    </template>
-    <template #opener-end>
-      <div v-if="error && $slots.error" class="flex gap-6">
-        <FzIcon name="circle-xmark" class="text-semantic-error-200" size="md" />
-        <div :class="[computedErrorClass]">
-          <slot name="error"></slot>
-        </div>
-      </div>
-      <span v-else-if="$slots.help" :class="[computedHelpClass]">
-        <slot name="help"></slot>
-      </span>
-    </template>
-    <FzActionList
-      :style="{ minWidth: containerWidth, maxWidth: openerMaxWidth, maxHeight }"
-      ref="containerRef"
-      listClass="overflow-auto ml-[-2px] box-border max-h-min !gap-0"
-      test-id="fzselect-options-container"
-      role="listbox"
-      :aria-labelledby="openerId"
-      :aria-activedescendant="activeDescendantId"
-    >
-      <template v-if="visibleOptions.length">
-        <template v-for="option in visibleOptions" :key="getOptionKey(option)">
-          <FzActionSection v-if="isLabelOption(option)" :label="option.label" />
-          <FzAction
-            v-else-if="isSelectableOption(option)"
-            :ref="createActionRefCallback(option)"
-            type="action"
-            variant="textLeft"
-            environment="backoffice"
-            :label="option.label"
-            :subLabel="option.subtitle"
-            :disabled="option.disabled"
-            :readonly="option.readonly"
-            :id="getOptionId(option)"
-            :focused="focusedOptionValue === option.value"
-            :isTextTruncated="!disableTruncate"
-            :iconRightName="getCheckIcon(option)"
-            role="option"
-            :ariaSelected="model === option.value"
-            @click="() => handleSelect(option)"
-          />
+        <template #default="slotProps">
+          <slot name="opener" v-bind="{ ...slotProps, floating }" />
         </template>
-      </template>
-      <template v-else>
-        <FzAction
-          type="action"
-          variant="textLeft"
-          environment="backoffice"
-          :label="noResultsMessage"
-          disabled
-        />
-      </template>
-    </FzActionList>
+      </FzSelectButton>
+    </template>
+
+    <template #opener-end>
+      <FzSelectHelpError :error :disabled :readonly>
+        <template #error>
+          <slot name="error" />
+        </template>
+        <template #help>
+          <slot name="help" />
+        </template>
+      </FzSelectHelpError>
+    </template>
+
+    <FzSelectOptionsList
+      :openerId
+      :visibleOptions
+      :focusedOptionValue
+      :selectedValue="model"
+      :disableTruncate
+      :noResultsMessage
+      :containerWidth
+      :openerMaxWidth
+      :maxHeight
+      :activeDescendantId
+      @select="handleSelect"
+      @keydown="handleOptionsKeydown"
+      @scroll="handleScroll"
+      @register-ref="handleRegisterRef"
+      ref="optionsListRef"
+    />
   </FzFloating>
 </template>
