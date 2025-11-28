@@ -11,7 +11,12 @@ export interface UseActionClassesProps {
 }
 
 export function useActionClasses(props: UseActionClassesProps) {
-  const isInteractive = !props.disabled && !props.readonly;
+  /**
+   * Computed reactive flag indicating if the action is interactive
+   * 
+   * Updates automatically when disabled or readonly props change.
+   */
+  const isInteractive = computed(() => !props.disabled && !props.readonly);
   
   const baseClasses = computed(() =>
     [
@@ -33,11 +38,11 @@ export function useActionClasses(props: UseActionClassesProps) {
       props.variant === "onlyIcon" ? "justify-center" : "",
       // States
       props.disabled || props.readonly ? "text-grey-200 cursor-not-allowed" : "",
-      isInteractive
+      isInteractive.value
         ? "text-core-black hover:bg-background-alice-blue hover:!text-blue-500 focus:!border-blue-200 focus:!outline-none focus:text-core-black "
         : "",
       // Focus state (for keyboard navigation)
-      props.focused && isInteractive ? "!border-blue-500" : "",
+      props.focused && isInteractive.value ? "!border-blue-500" : "",
     ]
       .filter(Boolean)
       .join(" "),
