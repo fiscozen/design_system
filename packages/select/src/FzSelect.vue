@@ -909,7 +909,6 @@ defineExpose({
     class="flex flex-col gap-8 overflow-visible"
     :teleport="teleport"
     :useViewport="true"
-    :overrideOpener
     contentClass="z-70"
     @fzfloating:setPosition="calculateMaxHeight"
   >
