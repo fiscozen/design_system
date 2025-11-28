@@ -1,6 +1,5 @@
 import { FzFloatingProps } from "@fiscozen/composables";
 import { IconButtonVariant } from '@fiscozen/button';
-import { Ref } from "vue";
 
 export interface FzSelectProps extends FzFloatingProps {
   /**
@@ -76,10 +75,6 @@ export interface FzSelectProps extends FzFloatingProps {
    * @default 25
    */
   optionsToShow?: number;
-  /**
-   * Override the default opener element used by the floating composable
-   */
-  overrideOpener?: Ref<HTMLElement>;
   /**
    * If true, disables text truncation with ellipsis in option labels
    * @default false

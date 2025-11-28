@@ -72,7 +72,6 @@ const options = [
 | `floatingPanelMaxHeight` | `string` | - | Maximum height for the floating panel |
 | `disableTruncate` | `boolean` | `false` | Disables text truncation in options |
 | `extOpener` | `HTMLElement` | - | External element to use as opener |
-| `overrideOpener` | `Ref<HTMLElement>` | - | Override opener reference for floating positioning |
 | `position` | `FzFloatingPosition` | `'auto-vertical-start'` | Floating panel position |
 | `teleport` | `boolean` | `true` | Teleport panel to body |
 | `useViewport` | `boolean` | `true` | Use viewport constraints for positioning |
