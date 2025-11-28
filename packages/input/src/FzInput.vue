@@ -11,7 +11,7 @@
  * <FzInput label="Email" type="email" v-model="email" />
  * <FzInput label="Password" type="password" rightIcon="eye" @fzinput:right-icon-click="toggleVisibility" />
  */
-import { computed, toRefs, Ref, ref, watch } from "vue";
+import { computed, toRefs, Ref, ref, watch, useSlots } from "vue";
 import { FzInputProps, type InputEnvironment } from "./types";
 import { FzIcon } from "@fiscozen/icons";
 import { FzIconButton } from "@fiscozen/button";
@@ -120,6 +120,24 @@ const slots = defineSlots<{
   errorMessage?: () => unknown;
   helpText?: () => unknown;
 }>();
+
+const runtimeSlots = useSlots();
+
+/**
+ * Computes aria-labelledby value linking input to label element
+ *
+ * Only references the label ID when the default label element is actually rendered.
+ * If a custom #label slot is provided, it replaces the default label, so the ID doesn't exist.
+ */
+const ariaLabelledBy = computed(() => {
+  // Only set aria-labelledby if:
+  // 1. label prop is provided (truthy)
+  // 2. No custom label slot is provided (default label is rendered)
+  if (props.label && !runtimeSlots.label) {
+    return `${uniqueId}-label`;
+  }
+  return undefined;
+});
 
 /**
  * Computes aria-describedby value linking input to help text or error message
@@ -361,7 +379,7 @@ defineExpose({
           :aria-required="required ? 'true' : 'false'"
           :aria-invalid="error ? 'true' : 'false'"
           :aria-disabled="isReadonlyOrDisabled ? 'true' : 'false'"
-          :aria-labelledby="label ? `${uniqueId}-label` : undefined"
+          :aria-labelledby="ariaLabelledBy"
           :aria-describedby="ariaDescribedBy"
           @blur="
             (e) => {
