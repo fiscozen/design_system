@@ -190,13 +190,48 @@ const handleIconKeydown = (
 ) => {
   if (e.key === "Enter" || e.key === " ") {
     e.preventDefault();
-    if (emitEvent === "fzinput:left-icon-click") {
-      emit("fzinput:left-icon-click");
-    } else if (emitEvent === "fzinput:right-icon-click") {
-      emit("fzinput:right-icon-click");
-    } else {
-      emit("fzinput:second-right-icon-click");
+    if (!isReadonlyOrDisabled.value) {
+      if (emitEvent === "fzinput:left-icon-click") {
+        emit("fzinput:left-icon-click");
+      } else if (emitEvent === "fzinput:right-icon-click") {
+        emit("fzinput:right-icon-click");
+      } else {
+        emit("fzinput:second-right-icon-click");
+      }
     }
+  }
+};
+
+/**
+ * Handles left icon click events
+ *
+ * Respects disabled and readonly states - does not emit if input is disabled or readonly.
+ */
+const handleLeftIconClick = () => {
+  if (!isReadonlyOrDisabled.value) {
+    emit("fzinput:left-icon-click");
+  }
+};
+
+/**
+ * Handles right icon click events
+ *
+ * Respects disabled and readonly states - does not emit if input is disabled or readonly.
+ */
+const handleRightIconClick = () => {
+  if (!isReadonlyOrDisabled.value) {
+    emit("fzinput:right-icon-click");
+  }
+};
+
+/**
+ * Handles second right icon click events
+ *
+ * Respects disabled and readonly states - does not emit if input is disabled or readonly.
+ */
+const handleSecondRightIconClick = () => {
+  if (!isReadonlyOrDisabled.value) {
+    emit("fzinput:second-right-icon-click");
   }
 };
 
@@ -295,7 +330,7 @@ defineExpose({
             isLeftIconAccessible && !isReadonlyOrDisabled ? 0 : undefined
           "
           :class="leftIconClass"
-          @click.stop="emit('fzinput:left-icon-click')"
+          @click.stop="handleLeftIconClick"
           @keydown="
             isLeftIconAccessible
               ? (e: KeyboardEvent) =>
@@ -365,7 +400,7 @@ defineExpose({
                 : undefined
             "
             :class="secondRightIconClass"
-            @click.stop="emit('fzinput:second-right-icon-click')"
+            @click.stop="handleSecondRightIconClick"
             @keydown="
               isSecondRightIconAccessible
                 ? (e: KeyboardEvent) =>
@@ -381,7 +416,7 @@ defineExpose({
             :variant="
               isReadonlyOrDisabled ? 'invisible' : secondRightIconButtonVariant
             "
-            @click.stop="emit('fzinput:second-right-icon-click')"
+            @click.stop="handleSecondRightIconClick"
             :class="[
               { 'bg-grey-100 !text-grey-300': isReadonlyOrDisabled },
               secondRightIconClass,
@@ -401,7 +436,7 @@ defineExpose({
               isRightIconAccessible && !isReadonlyOrDisabled ? 0 : undefined
             "
             :class="rightIconClass"
-            @click.stop="emit('fzinput:right-icon-click')"
+            @click.stop="handleRightIconClick"
             @keydown="
               isRightIconAccessible
                 ? (e: KeyboardEvent) =>
@@ -417,7 +452,7 @@ defineExpose({
             :variant="
               isReadonlyOrDisabled ? 'invisible' : rightIconButtonVariant
             "
-            @click.stop="emit('fzinput:right-icon-click')"
+            @click.stop="handleRightIconClick"
             :class="[
               { 'bg-grey-100 !text-grey-300': isReadonlyOrDisabled },
               rightIconClass,

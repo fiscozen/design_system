@@ -166,6 +166,130 @@ describe('FzInput', () => {
 
       expect(wrapper.emitted('fzinput:left-icon-click')).toBeTruthy()
     })
+
+    it('does not emit fzinput:right-icon-click event when disabled', async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: 'Label',
+          rightIcon: 'eye',
+          disabled: true,
+        },
+        slots: {},
+      })
+
+      await wrapper.find('.fa-eye').trigger('click')
+
+      expect(wrapper.emitted('fzinput:right-icon-click')).toBeFalsy()
+    })
+
+    it('does not emit fzinput:right-icon-click event when readonly', async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: 'Label',
+          rightIcon: 'eye',
+          readonly: true,
+        },
+        slots: {},
+      })
+
+      await wrapper.find('.fa-eye').trigger('click')
+
+      expect(wrapper.emitted('fzinput:right-icon-click')).toBeFalsy()
+    })
+
+    it('does not emit fzinput:left-icon-click event when disabled', async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: 'Label',
+          leftIcon: 'eye',
+          disabled: true,
+        },
+        slots: {},
+      })
+
+      await wrapper.find('.fa-eye').trigger('click')
+
+      expect(wrapper.emitted('fzinput:left-icon-click')).toBeFalsy()
+    })
+
+    it('does not emit fzinput:left-icon-click event when readonly', async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: 'Label',
+          leftIcon: 'eye',
+          readonly: true,
+        },
+        slots: {},
+      })
+
+      await wrapper.find('.fa-eye').trigger('click')
+
+      expect(wrapper.emitted('fzinput:left-icon-click')).toBeFalsy()
+    })
+
+    it('does not emit fzinput:second-right-icon-click event when disabled', async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: 'Label',
+          secondRightIcon: 'eye',
+          disabled: true,
+        },
+        slots: {},
+      })
+
+      await wrapper.find('.fa-eye').trigger('click')
+
+      expect(wrapper.emitted('fzinput:second-right-icon-click')).toBeFalsy()
+    })
+
+    it('does not emit fzinput:second-right-icon-click event when readonly', async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: 'Label',
+          secondRightIcon: 'eye',
+          readonly: true,
+        },
+        slots: {},
+      })
+
+      await wrapper.find('.fa-eye').trigger('click')
+
+      expect(wrapper.emitted('fzinput:second-right-icon-click')).toBeFalsy()
+    })
+
+    it('does not emit fzinput:right-icon-click event when disabled and rightIconButton is true', async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: 'Label',
+          rightIcon: 'eye',
+          rightIconButton: true,
+          disabled: true,
+        },
+        slots: {},
+      })
+
+      const button = wrapper.findComponent({ name: 'FzIconButton' })
+      await button.trigger('click')
+
+      expect(wrapper.emitted('fzinput:right-icon-click')).toBeFalsy()
+    })
+
+    it('does not emit fzinput:second-right-icon-click event when disabled and secondRightIconButton is true', async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: 'Label',
+          secondRightIcon: 'eye',
+          secondRightIconButton: true,
+          disabled: true,
+        },
+        slots: {},
+      })
+
+      const buttons = wrapper.findAllComponents({ name: 'FzIconButton' })
+      await buttons[0].trigger('click')
+
+      expect(wrapper.emitted('fzinput:second-right-icon-click')).toBeFalsy()
+    })
   })
 
   describe('Accessibility', () => {
