@@ -1,5 +1,5 @@
 <template>
-  <div :class="[staticContainerClass, computedContainerClass]">
+  <div :class="[staticContainerClass, 'text-base gap-10']">
     <label
       v-if="label"
       :id="`${id}-label`"
@@ -13,7 +13,7 @@
     </label>
     <div
       :id="id"
-      :class="[staticSlotContainerClass, computedSlotContainerClass]"
+      :class="[staticSlotContainerClass, 'text-base gap-8']"
       test-id="slot-container"
       role="radiogroup"
       :aria-labelledby="label ? `${id}-label` : undefined"
@@ -32,7 +32,6 @@
 <script setup lang="ts">
 import { computed, useSlots } from "vue";
 import { FzRadioGroupProps } from "./types";
-import { mapSizeToClasses } from "./common";
 import { generateRadioGroupId } from "./utils";
 import ErrorAlert from "./components/ErrorAlert.vue";
 
@@ -85,19 +84,8 @@ const computedHelpTextClass = computed(() => [
 ]);
 
 const computedLabelClass = computed(() => [
-  mapSizeToClasses["md"],
-  "gap-6",
+  "text-base gap-6",
   props.disabled ? "text-grey-400" : "text-core-black",
-]);
-
-const computedContainerClass = computed(() => [
-  mapSizeToClasses["md"],
-  "gap-10",
-]);
-
-const computedSlotContainerClass = computed(() => [
-  mapSizeToClasses["md"],
-  "gap-8",
 ]);
 
 /**

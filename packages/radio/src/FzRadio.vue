@@ -45,8 +45,7 @@
 import { computed, onMounted, ref } from "vue";
 import { FzRadioProps } from "./types";
 import {
-  mapSizeToClasses,
-  computedLabelObject,
+  beforeLabelClass,
   staticInputClass,
   staticLabelClass,
 } from "./common";
@@ -111,8 +110,8 @@ const computedInputClass = computed(() => ({
 }));
 
 const computedLabelClass = computed(() => [
-  mapSizeToClasses["md"],
-  computedLabelObject["md"],
+  "text-base",
+  beforeLabelClass,
   getBorderAndTextColorForLabel(),
 ]);
 

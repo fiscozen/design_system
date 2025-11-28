@@ -1,6 +1,6 @@
 import { computed, type ToRef } from "vue";
 import { FzRadioProps } from "../src/types";
-import { mapSizeToClasses, computedLabelObject } from "../src/common";
+import { beforeLabelClass } from "../src/common";
 
 export const useRadio = (props: {
   [K in keyof FzRadioProps]: ToRef<FzRadioProps[K]>;
@@ -18,8 +18,8 @@ export const useRadio = (props: {
   });
 
   const computedLabelClass = computed(() => [
-    mapSizeToClasses["md"],
-    computedLabelObject["md"],
+    "text-base",
+    beforeLabelClass,
     getBorderAndTextColorForLabel(),
   ]);
 
