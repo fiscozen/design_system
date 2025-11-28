@@ -85,6 +85,38 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * FzAction Component
+ *
+ * Versatile action component that can render as either a button or link.
+ * Supports multiple variants (textLeft, textCenter, onlyIcon) and environments (backoffice, frontoffice).
+ *
+ * Key features:
+ * - Configurable ARIA roles (e.g., "option", "menuitem") for accessibility
+ * - Support for disabled and readonly states
+ * - Icon positioning (left, right, or icon-only)
+ * - Text truncation with ellipsis
+ * - Keyboard navigation support with focus management
+ *
+ * @component
+ * @example
+ * // As a button action
+ * <FzAction type="action" variant="textLeft" label="Click me" />
+ *
+ * @example
+ * // As a listbox option (used in FzSelect)
+ * <FzAction
+ *   type="action"
+ *   variant="textLeft"
+ *   label="Option 1"
+ *   role="option"
+ *   :ariaSelected="true"
+ * />
+ *
+ * @example
+ * // As a menu item
+ * <FzAction type="action" variant="textLeft" label="Edit" role="menuitem" />
+ */
 import { computed, ref } from "vue";
 import { FzIcon } from "@fiscozen/icons";
 import { FzLink } from "@fiscozen/link";
@@ -205,14 +237,35 @@ const isIconDecorative = computed(() => {
   return false;
 });
 
+/**
+ * Computes bound attributes for the component
+ *
+ * Includes ARIA attributes for accessibility:
+ * - role: Configurable ARIA role (e.g., "option", "menuitem")
+ * - aria-disabled: Always present with explicit "true"/"false" values
+ * - aria-selected: Only added when explicitly provided (for role="option")
+ * - tabindex: 0 when focused and interactive, -1 otherwise
+ *
+ * For button type: adds type="button" and disabled attribute
+ * For link type: adds router-link props (to, replace, target, etc.)
+ */
 const boundAttrs = computed(() => {
   const isInteractive = !props.disabled && !props.readonly;
 
-  const baseAriaAttributes: Record<string, string | number | undefined> = {
+  const baseAriaAttributes: Record<
+    string,
+    string | number | boolean | undefined
+  > = {
     id: props.id,
     "aria-disabled": isInteractive ? "false" : "true",
     tabindex: isInteractive && props.focused ? 0 : -1,
+    role: props.role,
   };
+
+  // Add aria-selected only if explicitly provided (for role="option")
+  if (props.ariaSelected !== undefined) {
+    baseAriaAttributes["aria-selected"] = props.ariaSelected ? "true" : "false";
+  }
 
   if (!isInteractive) {
     return {

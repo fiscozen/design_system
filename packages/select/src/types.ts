@@ -42,55 +42,56 @@ export interface FzSelectProps extends FzFloatingProps {
    */
   size?: "sm" | "md" | "lg";
   /**
-   * Left icon name
+   * FontAwesome icon name displayed on the left side of the select
    */
   leftIcon?: string;
   /**
-   * Right icon name
+   * FontAwesome icon name displayed on the right side of the select (before chevron)
    */
   rightIcon?: string;
   /**
-   * Right icon variant
+   * Visual variant for the right icon button
+   * @default 'invisible'
    */
   rightIconButtonVariant?: IconButtonVariant;
   /**
-   * Right icon button vs simple icon
+   * If true, right icon is rendered as an interactive button instead of a static icon
    * @default false
    */
   rightIconButton?: boolean;
   /**
-   * The class applied to the input
+   * Additional CSS classes applied to the opener button
    */
   pickerClass?: string;
   /**
-   * Ref to the element that opens the selection
+   * External HTML element to use as the opener instead of the default button
    */
   extOpener?: HTMLElement;
   /**
-   * Set the max height of the floating panel
+   * Maximum height constraint for the dropdown panel (CSS value, e.g., '300px')
    */
   floatingPanelMaxHeight?: string;
   /**
-   * Size of the options to render each time in the floating panel
+   * Number of options to render at once for virtual scrolling performance
    * @default 25
    */
   optionsToShow?: number;
   /**
-   * will be used in the floating composable overriding other values
+   * Override the default opener element used by the floating composable
    */
   overrideOpener?: Ref<HTMLElement>;
   /**
-   * Disable the truncation of any text in the options
+   * If true, disables text truncation with ellipsis in option labels
    * @default false
    */
   disableTruncate?: boolean;
   /**
-   * Select variant
+   * Visual variant of the select component
    * @default 'normal'
    */
   variant?: 'normal' | 'floating-label';
   /**
-   * Environment context for styling
+   * Environment context that determines sizing and spacing (backoffice: compact, frontoffice: spacious)
    * @default 'frontoffice'
    */
   environment?: 'backoffice' | 'frontoffice';
@@ -101,7 +102,7 @@ export interface FzSelectProps extends FzFloatingProps {
    */
   rightIconLast?: boolean;
   /**
-   * The Select can be cleared
+   * If true, allows clearing the selected value by clicking the selected option again
    * @default true
    */
   clearable?: boolean;
@@ -116,29 +117,29 @@ export type FzSelectOptionsProps = FzSelectOptionProps | FzSelectLabelProps;
 
 export type FzSelectOptionProps = {
   /**
-   * the option value
+   * Unique identifier for the option (used as the selected value)
    */
   value: string;
   /**
-   * the option label
+   * Display text shown in the option
    */
   label: string;
   /**
-   * the subtitle of the option
+   * Optional secondary text displayed below the label
    */
   subtitle?: string;
   /**
-   * if true the option will not be selectable
+   * If true, the option is not selectable and appears greyed out
    * @default false
    */
   disabled?: boolean;
   /**
-   * same as disabled, but without grey text
+   * If true, the option is not selectable but maintains normal text color
    * @default false
    */
   readonly?: boolean;
   /**
-   * the type of option
+   * Type discriminator for option items
    * @default 'option'
    */
   kind?: "option";
@@ -146,11 +147,11 @@ export type FzSelectOptionProps = {
 
 export type FzSelectLabelProps = {
   /**
-   * the text of the label
+   * Display text for the section separator
    */
   label: string;
   /**
-   * the type of option
+   * Type discriminator for label separators
    */
   kind: "label";
 };

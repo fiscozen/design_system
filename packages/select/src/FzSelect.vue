@@ -149,11 +149,11 @@ const isError = computed(() => props.error && isInteractive.value);
  *
  * Used for aria-activedescendant to indicate focused option to screen readers.
  *
- * @param value - Option value
+ * @param option - Option to generate ID for
  * @returns Unique ID string
  */
-const getOptionId = (value: string) => {
-  return `${openerId}-option-${value}`;
+const getOptionId = (option: FzSelectOptionProps) => {
+  return `${openerId}-option-${option.value}`;
 };
 
 /**
@@ -167,7 +167,7 @@ const activeDescendantId = computed(() => {
   const selectable = selectableOptions.value;
   if (focusedIndex.value >= selectable.length) return undefined;
   const focusedOption = selectable[focusedIndex.value];
-  return focusedOption ? getOptionId(focusedOption.value) : undefined;
+  return focusedOption ? getOptionId(focusedOption) : undefined;
 });
 
 /**
@@ -291,15 +291,14 @@ const computedPickerClass = computed(() => [
 const baseTextClasses = "text-base leading-5";
 
 /**
- * Computed flags for value/placeholder visual states
+ * Computed flag for selected value visual state
  *
- * Value/placeholder has special logic: it's grey-300 when disabled/readonly OR when no value is selected.
- * Memoized to avoid recalculation when used in computedSpanClass.
+ * Returns true when a valid option is selected and component is interactive.
+ * Used to determine text color in computedSpanClass.
  */
 const isSelectedValue = computed(
   () => selectedOption.value && isInteractive.value
 );
-const isPlaceholderValue = computed(() => !isSelectedValue.value);
 
 /**
  * Computes label classes using Representation-First pattern
@@ -340,6 +339,7 @@ const staticSpanClass =
  *
  * Maps visual representation (disabled, readonly, selected value, placeholder) to styling.
  * Readonly uses the same style as disabled for visual consistency.
+ * Placeholder (no value selected) also uses grey-300.
  */
 const computedSpanClass = computed(() => {
   const baseClasses = [baseTextClasses];
@@ -354,7 +354,8 @@ const computedSpanClass = computed(() => {
       baseClasses.push("text-core-black");
       break;
 
-    case isPlaceholderValue.value:
+    default:
+      // Placeholder state (no value selected)
       baseClasses.push("text-grey-300");
       break;
   }
@@ -408,17 +409,73 @@ const computedErrorClass = computed(() => {
   return baseClasses;
 });
 
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/**
+ * Type guard to filter selectable options
+ *
+ * Excludes label separators from option lists for selection and navigation logic.
+ *
+ * @param option - Option to check
+ * @returns True if option is selectable (not a label)
+ */
+const isSelectableOption = (
+  option: FzSelectOptionsProps
+): option is FzSelectOptionProps => option.kind !== "label";
+
+/**
+ * Gets unique key for v-for iteration
+ *
+ * Uses label for label separators, value for selectable options.
+ * Ensures stable keys for Vue's virtual DOM diffing.
+ *
+ * @param option - Option to get key for
+ * @returns Unique key string
+ */
+const getOptionKey = (option: FzSelectOptionsProps): string =>
+  option.kind === "label" ? option.label : option.value;
+
+/**
+ * Checks if option is a label separator
+ *
+ * Inverse of isSelectableOption for template readability.
+ *
+ * @param option - Option to check
+ * @returns True if option is a label separator
+ */
+const isLabelOption = (option: FzSelectOptionsProps): boolean =>
+  option.kind === "label";
+
+/**
+ * Gets check icon name for selected option
+ *
+ * Returns 'check' icon for selected option, undefined otherwise.
+ * Used to visually indicate the currently selected value.
+ *
+ * @param option - Option to check against current selection
+ * @returns Icon name or undefined
+ */
+const getCheckIcon = (option: FzSelectOptionProps): string | undefined =>
+  model.value === option.value ? "check" : undefined;
+
+// ============================================================================
+// COMPUTED - Options
+// ============================================================================
+
 /**
  * Finds the currently selected option from options list
  *
- * Filters out label items and matches by value against model.
+ * Finds the first selectable option matching model.value.
  * Returns undefined if no option matches current model value.
+ * Optimized to use single find() instead of filter() + find().
  */
 const selectedOption = computed(() => {
-  const options = props.options.filter(
-    (option): option is FzSelectOptionProps => option.kind !== "label"
+  return props.options.find(
+    (option): option is FzSelectOptionProps =>
+      isSelectableOption(option) && option.value === model.value
   );
-  return options.find((option) => option.value === model.value);
 });
 
 /**
@@ -427,9 +484,7 @@ const selectedOption = computed(() => {
  * Used for keyboard navigation to skip non-interactive items.
  */
 const selectableOptions = computed(() => {
-  return visibleOptions.value.filter(
-    (option): option is FzSelectOptionProps => option.kind !== "label"
-  );
+  return visibleOptions.value.filter(isSelectableOption);
 });
 
 /**
@@ -488,6 +543,11 @@ watch(isOpen, (newValue) => {
   if (newValue) {
     // When opening: set focused index and move focus to first/selected option
     nextTick(() => {
+      const selectable = selectableOptions.value;
+      if (selectable.length === 0) {
+        focusedIndex.value = -1;
+        return;
+      }
       focusedIndex.value =
         selectedOptionIndex.value >= 0 ? selectedOptionIndex.value : 0;
       scrollToFocusedOption();
@@ -518,13 +578,13 @@ onMounted(() => {
  * Updates model value, emits select event, and closes dropdown.
  * Focus is returned to opener button via watch on isOpen.
  *
- * @param value - Selected option value
+ * @param option - Selected option
  */
-const handleSelect = (value: string) => {
-  if (props.clearable && model.value === value) {
+const handleSelect = (option: FzSelectOptionProps) => {
+  if (props.clearable && model.value === option.value) {
     model.value = undefined;
   } else {
-    model.value = value;
+    model.value = option.value;
   }
 
   emit("select", model.value);
@@ -623,7 +683,7 @@ const handleOptionsKeydown = (event: KeyboardEvent) => {
     case " ":
       event.preventDefault();
       if (focusedIndex.value >= 0 && focusedIndex.value < selectable.length) {
-        handleSelect(selectable[focusedIndex.value].value);
+        handleSelect(selectable[focusedIndex.value]);
       }
       break;
 
@@ -662,14 +722,14 @@ const handleOptionsKeydown = (event: KeyboardEvent) => {
  * Returns a function that stores the FzAction's actionElement in optionRefs.
  * Used in v-for template refs to register option DOM elements for focus management.
  *
- * @param value - Option value used as key in optionRefs map
+ * @param option - Option to create ref callback for
  * @returns Ref callback function
  */
-const createActionRefCallback = (value: string) => {
+const createActionRefCallback = (option: FzSelectOptionProps) => {
   return (el: unknown) => {
     // Type guard: ensure el is a valid object with actionElement
     if (!el || typeof el !== "object" || !("actionElement" in el)) {
-      optionRefs.value.delete(value);
+      optionRefs.value.delete(option.value);
       return;
     }
 
@@ -677,9 +737,9 @@ const createActionRefCallback = (value: string) => {
     const actionElement = (el as { actionElement?: HTMLElement }).actionElement;
 
     if (actionElement) {
-      optionRefs.value.set(value, actionElement);
+      optionRefs.value.set(option.value, actionElement);
     } else {
-      optionRefs.value.delete(value);
+      optionRefs.value.delete(option.value);
     }
   };
 };
@@ -938,17 +998,11 @@ defineExpose({
       :aria-activedescendant="activeDescendantId"
     >
       <template v-if="visibleOptions.length">
-        <template
-          v-for="option in visibleOptions"
-          :key="option.kind === 'label' ? option.label : option.value"
-        >
-          <FzActionSection
-            v-if="option.kind === 'label'"
-            :label="option.label"
-          />
+        <template v-for="option in visibleOptions" :key="getOptionKey(option)">
+          <FzActionSection v-if="isLabelOption(option)" :label="option.label" />
           <FzAction
-            v-else
-            :ref="createActionRefCallback(option.value)"
+            v-else-if="isSelectableOption(option)"
+            :ref="createActionRefCallback(option)"
             type="action"
             variant="textLeft"
             environment="backoffice"
@@ -956,11 +1010,13 @@ defineExpose({
             :subLabel="option.subtitle"
             :disabled="option.disabled"
             :readonly="option.readonly"
-            :id="getOptionId(option.value)"
+            :id="getOptionId(option)"
             :focused="focusedOptionValue === option.value"
             :isTextTruncated="!disableTruncate"
-            :iconRightName="model === option.value ? 'check' : undefined"
-            @click="() => handleSelect(option.value)"
+            :iconRightName="getCheckIcon(option)"
+            role="option"
+            :ariaSelected="model === option.value"
+            @click="() => handleSelect(option)"
           />
         </template>
       </template>
