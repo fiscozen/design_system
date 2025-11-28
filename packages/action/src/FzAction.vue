@@ -244,7 +244,7 @@ const isIconDecorative = computed(() => {
  * - role: Configurable ARIA role (e.g., "option", "menuitem")
  * - aria-disabled: Always present with explicit "true"/"false" values
  * - aria-selected: Only added when explicitly provided (for role="option")
- * - tabindex: 0 when focused and interactive, -1 otherwise
+ * - tabindex: Can be overridden via prop, otherwise 0 when focused and interactive, -1 otherwise
  *
  * For button type: adds type="button" and disabled attribute
  * For link type: adds router-link props (to, replace, target, etc.)
@@ -258,7 +258,12 @@ const boundAttrs = computed(() => {
   > = {
     id: props.id,
     "aria-disabled": isInteractive ? "false" : "true",
-    tabindex: isInteractive && props.focused ? 0 : -1,
+    tabindex:
+      props.tabindex !== undefined
+        ? props.tabindex
+        : isInteractive && props.focused
+          ? 0
+          : -1,
     role: props.role,
   };
 
