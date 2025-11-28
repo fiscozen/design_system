@@ -58,6 +58,8 @@ const options = [
 | `readonly` | `boolean` | `false` | Makes the select readonly (same visual style as disabled) |
 | `error` | `boolean` | `false` | Shows error state styling |
 | `environment` | `'backoffice' \| 'frontoffice'` | `'frontoffice'` | Environment context for styling (affects button height and text size) |
+| `clearable` | `boolean` | `true` | Allows clearing the selected value by clicking the selected option again |
+| `noResultsMessage` | `string` | `'Nessun risultato trovato'` | Message displayed when no options are available |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | **Deprecated:** Size prop is deprecated. The component now uses a fixed 'lg' size. This prop will be removed in a future version. |
 | `leftIcon` | `string` | - | Icon name to display on the left |
 | `rightIcon` | `string` | - | Icon name to display on the right |
@@ -248,6 +250,34 @@ const options = [
 </script>
 ```
 
+### Clearable Selection
+
+```vue
+<template>
+  <FzSelect
+    v-model="selected"
+    :options="options"
+    label="Clearable Select"
+    :clearable="true"
+  />
+</template>
+```
+
+The `clearable` prop (default: `true`) allows users to deselect an option by clicking it again. Set to `false` to prevent clearing.
+
+### Custom No Results Message
+
+```vue
+<template>
+  <FzSelect
+    v-model="selected"
+    :options="filteredOptions"
+    label="Search"
+    noResultsMessage="No matches found. Try a different search term."
+  />
+</template>
+```
+
 ### Custom Opener
 
 ```vue
@@ -354,8 +384,12 @@ The component provides rich semantic information to assistive technologies:
 - `aria-labelledby`: Links to opener button for context
 - `aria-activedescendant`: Points to currently focused option (dynamically updated)
 
-**Option Elements:**
+**Option Elements (FzAction components):**
 - `role="option"`: Declares each option as a listbox option
 - `aria-selected`: Indicates selected option (`"true"` or `"false"`)
-- `aria-disabled`: Indicates disabled option (`"true"` or `"false"`)
+- `aria-disabled`: Indicates disabled/readonly option (`"true"` or `"false"`)
 - Unique `id` attributes for `aria-activedescendant` reference
+- `tabindex`: 0 when focused, -1 otherwise (for keyboard navigation)
+- `focused`: Visual focus state managed by FzSelect
+
+**Note:** Options are rendered using `FzAction` components from `@fiscozen/action`, which handle their own accessibility attributes and keyboard interactions. FzSelect manages the overall listbox behavior and focus state.

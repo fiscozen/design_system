@@ -92,6 +92,16 @@ type FzActionBasicProps = {
    * Visual focus state (for keyboard navigation)
    */
   focused?: boolean;
+  /**
+   * ARIA role for the action element (e.g., "option", "menuitem")
+   * @default undefined (no role attribute)
+   */
+  role?: string;
+  /**
+   * ARIA selected state (used when role="option")
+   * @default undefined
+   */
+  ariaSelected?: boolean;
 };
 
 // Discriminated union for action props

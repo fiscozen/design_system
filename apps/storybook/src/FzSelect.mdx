@@ -111,6 +111,18 @@ const options = [
       <td>Environment context for styling (affects button height and text size)</td>
     </tr>
     <tr>
+      <td><code>clearable</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Allows clearing the selected value by clicking the selected option again</td>
+    </tr>
+    <tr>
+      <td><code>noResultsMessage</code></td>
+      <td><code>string</code></td>
+      <td><code>'Nessun risultato trovato'</code></td>
+      <td>Message displayed when no options are available</td>
+    </tr>
+    <tr>
       <td><code>size</code></td>
       <td><code>'sm' | 'md' | 'lg'</code></td>
       <td><code>'md'</code></td>
@@ -387,6 +399,34 @@ const options = [
 </script>
 ```
 
+### Clearable Selection
+
+```vue
+<template>
+  <FzSelect
+    v-model="selected"
+    :options="options"
+    label="Clearable Select"
+    :clearable="true"
+  />
+</template>
+```
+
+The `clearable` prop (default: `true`) allows users to deselect an option by clicking it again. Set to `false` to prevent clearing.
+
+### Custom No Results Message
+
+```vue
+<template>
+  <FzSelect
+    v-model="selected"
+    :options="filteredOptions"
+    label="Search"
+    noResultsMessage="No matches found. Try a different search term."
+  />
+</template>
+```
+
 ## Accessibility
 
 The component is fully accessible and WCAG 2.1 AA compliant:
@@ -453,8 +493,12 @@ The component provides rich semantic information to assistive technologies:
 - `aria-labelledby`: Links to opener button for context
 - `aria-activedescendant`: Points to currently focused option (dynamically updated)
 
-**Option Elements:**
+**Option Elements (FzAction components):**
 - `role="option"`: Declares each option as a listbox option
 - `aria-selected`: Indicates selected option (`"true"` or `"false"`)
-- `aria-disabled`: Indicates disabled option (`"true"` or `"false"`)
+- `aria-disabled`: Indicates disabled/readonly option (`"true"` or `"false"`)
 - Unique `id` attributes for `aria-activedescendant` reference
+- `tabindex`: 0 when focused, -1 otherwise (for keyboard navigation)
+- `focused`: Visual focus state managed by FzSelect
+
+**Note:** Options are rendered using `FzAction` components from `@fiscozen/action`, which handle their own accessibility attributes and keyboard interactions. FzSelect manages the overall listbox behavior and focus state.
