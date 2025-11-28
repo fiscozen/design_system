@@ -81,7 +81,7 @@ const rightIconLastWarningShown = ref(false);
 watch(
   () => props.size,
   (newSize) => {
-    if (!sizeWarningShown.value && newSize !== "md") {
+    if (!sizeWarningShown.value && newSize !== undefined) {
       console.warn(
         `[FzSelect] The 'size' prop is deprecated and will be removed in a future version. ` +
           `The component now uses a fixed 'lg' size. Please remove the size prop from your usage.`
