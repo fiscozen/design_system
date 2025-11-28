@@ -49,6 +49,20 @@ FzAction provides a consistent way to create interactive elements across the app
 `}
 </Markdown>
 
+### Accessibility Properties
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`id\` | \`string\` | - | Unique ID for ARIA relationships |
+| \`role\` | \`string\` | - | ARIA role (e.g., \`"option"\`, \`"menuitem"\`) |
+| \`ariaSelected\` | \`boolean\` | - | ARIA selected state (for \`role="option"\`) |
+| \`focused\` | \`boolean\` | \`false\` | Visual focus state for keyboard navigation |
+| \`readonly\` | \`boolean\` | \`false\` | Non-interactive but visually normal (vs disabled) |
+`}
+</Markdown>
+
 #### Icon Properties (for variant="onlyIcon")
 
 <Markdown>
@@ -194,6 +208,68 @@ FzAction provides a consistent way to create interactive elements across the app
 </template>
 ```
 
+### As Listbox Option (with ARIA)
+
+```vue
+<template>
+  <FzActionList role="listbox" aria-labelledby="select-label">
+    <FzAction
+      type="action"
+      variant="textLeft"
+      label="Option 1"
+      role="option"
+      :ariaSelected="selectedValue === 'option1'"
+      @click="selectOption('option1')"
+    />
+    <FzAction
+      type="action"
+      variant="textLeft"
+      label="Option 2"
+      role="option"
+      :ariaSelected="selectedValue === 'option2'"
+      @click="selectOption('option2')"
+    />
+  </FzActionList>
+</template>
+```
+
+### As Menu Item (with ARIA)
+
+```vue
+<template>
+  <FzActionList role="menu">
+    <FzAction
+      type="action"
+      variant="textLeft"
+      label="Edit"
+      role="menuitem"
+      iconLeftName="pen"
+      @click="handleEdit"
+    />
+    <FzAction
+      type="action"
+      variant="textLeft"
+      label="Delete"
+      role="menuitem"
+      iconLeftName="trash"
+      @click="handleDelete"
+    />
+  </FzActionList>
+</template>
+```
+
+### Readonly State
+
+```vue
+<template>
+  <FzAction
+    label="Read Only Item"
+    subLabel="Cannot be interacted with"
+    readonly
+  />
+</template>
+```
+
 ## Best Practices
 
 ### When to Use Each Variant
@@ -206,6 +282,43 @@ FzAction provides a consistent way to create interactive elements across the app
 
 - **backoffice**: Use for internal admin interfaces, management tools, and developer-facing applications
 - **frontoffice**: Use for customer-facing interfaces, public pages, and user-facing applications
+
+### Accessibility Guidelines
+
+#### ARIA Roles
+
+Use the `role` prop to define the semantic role of the action:
+
+- **`role="option"`**: For selectable items in a listbox (e.g., dropdown options)
+- **`role="menuitem"`**: For items in a menu
+- **No role**: For standalone buttons or links (default behavior)
+
+#### ARIA Selected State
+
+When using `role="option"`, always provide `ariaSelected`:
+
+```vue
+<FzAction
+  role="option"
+  :ariaSelected="isSelected"
+  label="Option"
+/>
+```
+
+This ensures screen readers announce the selection state correctly.
+
+#### Keyboard Navigation
+
+- **Enter/Space**: Triggers the action when focused
+- **Tab**: Moves focus to next element
+- **Arrow keys**: Handled by parent component (e.g., FzSelect, FzMenu)
+
+#### Screen Reader Support
+
+- `aria-disabled`: Always present with explicit `"true"` or `"false"` values
+- `aria-selected`: Only added when `role="option"` is set
+- `aria-label`: Automatically computed for icon-only variants
+- Text truncation: Full text available via `title` attribute for screen readers
 
 ## Integration
 

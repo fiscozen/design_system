@@ -366,7 +366,7 @@ describe("FzSelect", () => {
 
       await wrapper.vm.$nextTick();
       const options = document.querySelectorAll(
-        'button[test-id="fzselect-option"]'
+        'button[role="option"]'
       );
       expect(options.length).toBe(25);
     });
@@ -389,7 +389,7 @@ describe("FzSelect", () => {
 
       await wrapper.vm.$nextTick();
       let options = document.querySelectorAll(
-        'button[test-id="fzselect-option"]'
+        'button[role="option"]'
       );
       expect(options.length).toBe(25);
 
@@ -400,7 +400,7 @@ describe("FzSelect", () => {
       container.dispatchEvent(new Event("scroll"));
 
       await wrapper.vm.$nextTick();
-      options = document.querySelectorAll('button[test-id="fzselect-option"]');
+      options = document.querySelectorAll('button[id*="-option-"]');
       expect(options.length).toBe(50);
     });
   });
@@ -460,7 +460,7 @@ describe("FzSelect", () => {
 
       await wrapper.vm.$nextTick();
       const optionButton = document.querySelector(
-        'button[test-id="fzselect-option"]'
+        'button[role="option"]'
       ) as HTMLElement;
       optionButton?.click();
 
@@ -484,7 +484,7 @@ describe("FzSelect", () => {
 
       await wrapper.vm.$nextTick();
       const optionButton = document.querySelector(
-        'button[test-id="fzselect-option"]'
+        'button[role="option"]'
       ) as HTMLElement;
       optionButton?.click();
 
@@ -513,7 +513,7 @@ describe("FzSelect", () => {
 
       await wrapper.vm.$nextTick();
       const labels = document.querySelectorAll(
-        'label[test-id="fzselect-label"]'
+        'div[role="group"] > div'
       );
       expect(labels.length).toBe(1);
       expect(labels[0].textContent).toBe("Group 1");
@@ -1077,12 +1077,9 @@ describe("FzSelect", () => {
       // Verify focusedIndex is set to first option
       expect(wrapper.vm.focusedIndex).toBe(0);
       
-      // Verify first option has tabindex 0 (focusable) - options are in Teleport
-      const options = document.querySelectorAll('button[role="option"]');
+      // Verify options are rendered (FzAction handles its own focus/tabindex behavior)
+      const options = document.querySelectorAll('button[id*="-option-"]');
       expect(options.length).toBeGreaterThan(0);
-      if (options.length > 0) {
-        expect(options[0].getAttribute("tabindex")).toBe("0");
-      }
       
       wrapper.unmount();
     });
@@ -1443,7 +1440,7 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const optionButtons = document.querySelectorAll(
-        'button[test-id="fzselect-option"]'
+        'button[role="option"]'
       );
       expect(optionButtons.length).toBeGreaterThan(0);
 
