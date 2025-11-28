@@ -4,7 +4,7 @@ import { FzDropdown } from '@fiscozen/dropdown'
 import { vueRouter } from 'storybook-vue3-router'
 import { FzActionProps, FzActionSectionProps } from '@fiscozen/action'
 
-const actions: (FzActionProps | FzActionSectionProps & { type: 'section' })[] = [
+const actions = [
   {
     type: 'link',
     label: 'This is a router-nav-link to /foo',
@@ -36,7 +36,7 @@ const actions: (FzActionProps | FzActionSectionProps & { type: 'section' })[] = 
     type: 'action' as const,
     label: 'This is a action'
   }
-]
+] satisfies (FzActionProps | FzActionSectionProps & { type: 'section' })[]
 
 const meta: Meta<typeof FzDropdown> = {
   title: 'Navigation/FzDropdown',
@@ -245,7 +245,7 @@ export const WithSections: Story = {
       {
         type: 'section',
         label: 'Navigation'
-      } as FzActionSectionProps & { type: 'section' },
+      },
       {
         type: 'link',
         label: 'Home',
@@ -261,7 +261,7 @@ export const WithSections: Story = {
       {
         type: 'section',
         label: 'Actions'
-      } as FzActionSectionProps & { type: 'section' },
+      },
       {
         type: 'action',
         label: 'Logout'

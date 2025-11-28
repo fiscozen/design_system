@@ -33,7 +33,7 @@
             v-for="(action, actionIndex) in section"
             :key="actionIndex"
             v-bind="action"
-            @click="handleActionClick(actionIndex, action)"
+            @click="handleActionClick(action)"
             :environment="environment"
           />
         </FzActionSection>
@@ -61,7 +61,7 @@ const mappedSizeToEnvironment = computed<'backoffice' | 'frontoffice'>(() => {
   return props.size ? sizeToEnvironmentMapping[props.size] : props.environment
 })
 const emit = defineEmits<{
-  'fzaction:click': [index: number, action: FzActionProps]
+  'fzaction:click': [actionIndex: number, action: FzActionProps]
 }>()
 
 defineSlots<FzDropdownSlots>()
@@ -108,7 +108,8 @@ useKeyDown(containerDom, (event) => {
   isOpen.value = false
 })
 
-function handleActionClick(index: number, action: FzActionProps) {
+function handleActionClick(action: FzActionProps) {
+  const index = props.actions.findIndex((compareAction) => JSON.stringify(compareAction) == JSON.stringify(action))
   emit('fzaction:click', index, action)
   if (props.closeOnActionClick) {
     isOpen.value = false
