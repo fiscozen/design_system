@@ -13,6 +13,7 @@
         :disabled="disabled"
         :environment="mappedSizeToEnvironment"
         :aria-label="label"
+        :hasNotification="hasNotification"
       />
     </template>
     <template #actionList>
