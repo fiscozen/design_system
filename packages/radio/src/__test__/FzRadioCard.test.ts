@@ -62,4 +62,61 @@ describe("FzRadioCard", () => {
       "peer-checked:before:border-blue-500",
     );
   });
+
+  it("should support hasRadio prop", async () => {
+    const wrapperWithRadio = await createWrapper({
+      label: "Radio",
+      size: "md",
+      title: "This is a title",
+      hasRadio: true,
+    });
+    expect(wrapperWithRadio.find("label").classes()).not.toContain(
+      "before:!hidden",
+    );
+
+    const wrapperWithoutRadio = await createWrapper({
+      label: "Radio",
+      size: "md",
+      title: "This is a title",
+      hasRadio: false,
+    });
+    expect(wrapperWithoutRadio.find("label").classes()).toContain(
+      "before:!hidden",
+    );
+  });
+
+  it("should maintain backward compatibility with radioIcon prop", async () => {
+    const wrapperWithRadioIcon = await createWrapper({
+      label: "Radio",
+      size: "md",
+      title: "This is a title",
+      radioIcon: true,
+    });
+    expect(wrapperWithRadioIcon.find("label").classes()).not.toContain(
+      "before:!hidden",
+    );
+
+    const wrapperWithoutRadioIcon = await createWrapper({
+      label: "Radio",
+      size: "md",
+      title: "This is a title",
+      radioIcon: false,
+    });
+    expect(wrapperWithoutRadioIcon.find("label").classes()).toContain(
+      "before:!hidden",
+    );
+  });
+
+  it("should support tone prop", async () => {
+    const wrapper = await createWrapper({
+      label: "Radio",
+      size: "md",
+      title: "This is a title",
+      tone: "emphasis",
+    });
+
+    expect(wrapper.find("label").classes()).toContain(
+      "peer-checked:before:border-blue-500",
+    );
+  });
 });

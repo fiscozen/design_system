@@ -1,0 +1,467 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Form/FzRadioGroup" />
+
+# FzRadioGroup
+
+A container component for grouping related radio buttons. Manages common props and provides consistent styling across all radio buttons in the group. Supports both vertical and horizontal layouts.
+
+## Features
+
+- **Layout Variants**: Vertical (default) and horizontal layouts
+- **Tone Management**: Applies tone to all radio buttons in the group
+- **Error Handling**: Built-in error state with FzAlert integration
+- **Help Text**: Support for help text via slot
+- **Required Indicator**: Visual indicator for required fields
+- **Prop Distribution**: Automatically passes common props to child radio buttons
+- **Full Accessibility**: WCAG 2.1 AA compliant
+
+## Installation
+
+```bash
+npm install @fiscozen/radio
+# or
+pnpm add @fiscozen/radio
+```
+
+## Basic Usage
+
+### Vertical Layout (Default)
+
+```vue
+<script setup lang="ts">
+import { FzRadioGroup, FzRadio } from '@fiscozen/radio'
+import { ref } from 'vue'
+
+const selected = ref('option2')
+</script>
+
+<template>
+  <FzRadioGroup label="Select an option" v-slot="{ radioGroupProps }">
+    <FzRadio 
+      label="Option 1" 
+      value="option1" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+    <FzRadio 
+      label="Option 2" 
+      value="option2" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+    <FzRadio 
+      label="Option 3" 
+      value="option3" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+  </FzRadioGroup>
+</template>
+```
+
+### Horizontal Layout
+
+```vue
+<template>
+  <FzRadioGroup 
+    label="Select an option" 
+    variant="horizontal"
+    v-slot="{ radioGroupProps }"
+  >
+    <FzRadio 
+      label="Option 1" 
+      value="option1" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+    <FzRadio 
+      label="Option 2" 
+      value="option2" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+    <FzRadio 
+      label="Option 3" 
+      value="option3" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+  </FzRadioGroup>
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>The label of the radio button group</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'sm' | 'md'</code></td>
+      <td><code>'md'</code></td>
+      <td>The size of the radio buttons in the group</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'vertical' | 'horizontal'</code></td>
+      <td><code>'vertical'</code></td>
+      <td>Layout variant: vertical stacks radio buttons, horizontal arranges them in a row</td>
+    </tr>
+    <tr>
+      <td><code>tone</code></td>
+      <td><code>'neutral' | 'emphasis' | 'error'</code></td>
+      <td><code>'neutral'</code></td>
+      <td>The tone/variant of the radio buttons. Applied to all radio buttons in the group</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If true, all radio buttons in the group will be disabled</td>
+    </tr>
+    <tr>
+      <td><code>name</code></td>
+      <td><code>string</code></td>
+      <td>auto-generated</td>
+      <td>The name of the radio button group. Used to group radio buttons together</td>
+    </tr>
+    <tr>
+      <td><code>required</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If the radio group is required. Shows asterisk (*) next to label</td>
+    </tr>
+  </tbody>
+</table>
+
+**Deprecated Props:**
+
+- `emphasis` (`boolean`): Use `tone="emphasis"` instead
+- `error` (`boolean`): Use `tone="error"` instead
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>default</code></td>
+      <td>Radio buttons content. Receives <code>radioGroupProps</code> object via scoped slot</td>
+    </tr>
+    <tr>
+      <td><code>help</code></td>
+      <td>Help text displayed below the label</td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td>Error message content (shown when <code>tone="error"</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+## Usage Examples
+
+### With Help Text
+
+```vue
+<template>
+  <FzRadioGroup label="Select an option" v-slot="{ radioGroupProps }">
+    <template #help>
+      Please select one of the available options
+    </template>
+    
+    <FzRadio 
+      label="Option 1" 
+      value="option1" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+    <FzRadio 
+      label="Option 2" 
+      value="option2" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+  </FzRadioGroup>
+</template>
+```
+
+### With Error State
+
+```vue
+<template>
+  <FzRadioGroup 
+    label="Select an option" 
+    tone="error"
+    v-slot="{ radioGroupProps }"
+  >
+    <template #error>
+      Please select an option to continue
+    </template>
+    
+    <FzRadio 
+      label="Option 1" 
+      value="option1" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+    <FzRadio 
+      label="Option 2" 
+      value="option2" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+  </FzRadioGroup>
+</template>
+```
+
+### Required Field
+
+```vue
+<template>
+  <FzRadioGroup 
+    label="Select an option" 
+    required
+    v-slot="{ radioGroupProps }"
+  >
+    <FzRadio 
+      label="Option 1" 
+      value="option1" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+    <FzRadio 
+      label="Option 2" 
+      value="option2" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+  </FzRadioGroup>
+</template>
+```
+
+### Disabled Group
+
+```vue
+<template>
+  <FzRadioGroup 
+    label="Select an option" 
+    disabled
+    v-slot="{ radioGroupProps }"
+  >
+    <FzRadio 
+      label="Option 1" 
+      value="option1" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+    <FzRadio 
+      label="Option 2" 
+      value="option2" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+    />
+  </FzRadioGroup>
+</template>
+```
+
+### Tone Variants
+
+#### Emphasis
+
+```vue
+<FzRadioGroup 
+  label="Select an option" 
+  tone="emphasis"
+  v-slot="{ radioGroupProps }"
+>
+  <FzRadio 
+    label="Option 1" 
+    value="option1" 
+    v-model="selected" 
+    v-bind="radioGroupProps"
+  />
+</FzRadioGroup>
+```
+
+#### Error
+
+```vue
+<FzRadioGroup 
+  label="Select an option" 
+  tone="error"
+  v-slot="{ radioGroupProps }"
+>
+  <template #error>
+    This field is required
+  </template>
+  
+  <FzRadio 
+    label="Option 1" 
+    value="option1" 
+    v-model="selected" 
+    v-bind="radioGroupProps"
+  />
+</FzRadioGroup>
+```
+
+### With Radio Cards
+
+```vue
+<template>
+  <FzRadioGroup label="Select a plan" v-slot="{ radioGroupProps }">
+    <FzRadioCard 
+      label="Basic" 
+      title="Basic Plan"
+      subtitle="Perfect for individuals"
+      value="basic" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+      orientation="horizontal"
+    />
+    <FzRadioCard 
+      label="Pro" 
+      title="Pro Plan"
+      subtitle="For small teams"
+      value="pro" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+      orientation="horizontal"
+    />
+  </FzRadioGroup>
+</template>
+```
+
+### With Tooltips
+
+```vue
+<template>
+  <FzRadioGroup label="Select an option" v-slot="{ radioGroupProps }">
+    <FzRadio 
+      label="Option 1" 
+      value="option1" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+      tooltip="This option includes premium features"
+      tooltipStatus="informative"
+    />
+    <FzRadio 
+      label="Option 2" 
+      value="option2" 
+      v-model="selected" 
+      v-bind="radioGroupProps"
+      tooltip="This option is recommended"
+      tooltipStatus="positive"
+    />
+  </FzRadioGroup>
+</template>
+```
+
+## Radio Group Props Distribution
+
+The `radioGroupProps` object passed to the default slot contains the following props that should be spread to child radio buttons:
+
+- `size`: Size of the radio buttons
+- `tone`: Tone/variant (or `emphasis`/`error` for backward compatibility)
+- `disabled`: Disabled state
+- `required`: Required state
+- `name`: Group name for form association
+
+**Example:**
+
+```vue
+<FzRadioGroup label="Options" v-slot="{ radioGroupProps }">
+  <!-- Spread radioGroupProps to pass common props -->
+  <FzRadio 
+    label="Option 1" 
+    value="option1" 
+    v-model="selected" 
+    v-bind="radioGroupProps"
+  />
+  
+  <!-- You can override individual props if needed -->
+  <FzRadio 
+    label="Option 2" 
+    value="option2" 
+    v-model="selected" 
+    v-bind="radioGroupProps"
+    tooltip="Custom tooltip for this option"
+  />
+</FzRadioGroup>
+```
+
+## Accessibility
+
+- **Fieldset Pattern**: Radio groups should always have a label
+- **Keyboard Navigation**: Full support for Tab, Arrow keys, and Space
+- **Screen Readers**: Proper ARIA labels and group associations
+- **Focus Management**: Logical tab order through radio buttons
+- **Error Announcements**: Error messages announced to screen readers
+- **WCAG 2.1 AA**: Meets color contrast and accessibility requirements
+
+### ARIA Attributes
+
+- `role="radiogroup"`: Implicit via fieldset structure
+- `aria-labelledby`: Links to the group label
+- `aria-describedby`: Links to help text and error messages
+- `aria-required`: Indicates required fields
+- `aria-invalid`: Indicates validation errors
+
+## Migration Guide
+
+### From `emphasis` to `tone`
+
+```vue
+<!-- ❌ Deprecated -->
+<FzRadioGroup label="Options" emphasis v-slot="{ radioGroupProps }">
+  <FzRadio label="Option" value="opt" v-model="selected" v-bind="radioGroupProps" />
+</FzRadioGroup>
+
+<!-- ✅ Recommended -->
+<FzRadioGroup label="Options" tone="emphasis" v-slot="{ radioGroupProps }">
+  <FzRadio label="Option" value="opt" v-model="selected" v-bind="radioGroupProps" />
+</FzRadioGroup>
+```
+
+### From `error` to `tone`
+
+```vue
+<!-- ❌ Deprecated -->
+<FzRadioGroup label="Options" error v-slot="{ radioGroupProps }">
+  <template #error>Error message</template>
+  <FzRadio label="Option" value="opt" v-model="selected" v-bind="radioGroupProps" />
+</FzRadioGroup>
+
+<!-- ✅ Recommended -->
+<FzRadioGroup label="Options" tone="error" v-slot="{ radioGroupProps }">
+  <template #error>Error message</template>
+  <FzRadio label="Option" value="opt" v-model="selected" v-bind="radioGroupProps" />
+</FzRadioGroup>
+```
+
+## Related Components
+
+- **FzRadio**: Individual radio button component
+- **FzRadioCard**: Card-based radio button variant
+- **FzAlert**: Used for error message display
+- **FzCheckboxGroup**: Similar grouping component for checkboxes
+
