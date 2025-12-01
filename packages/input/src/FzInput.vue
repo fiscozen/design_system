@@ -126,14 +126,14 @@ const runtimeSlots = useSlots();
 /**
  * Computes aria-labelledby value linking input to label element
  *
- * Only references the label ID when the default label element is actually rendered.
- * If a custom #label slot is provided, it replaces the default label, so the ID doesn't exist.
+ * Only set when default label element is rendered. Custom label slot replaces default label,
+ * so the ID doesn't exist and aria-labelledby would reference a non-existent element.
  */
 const ariaLabelledBy = computed(() => {
-  // Only set aria-labelledby if:
-  // 1. label prop is provided (truthy)
-  // 2. No custom label slot is provided (default label is rendered)
-  if (props.label && !runtimeSlots.label) {
+  const hasLabelProp = !!props.label;
+  const hasCustomLabelSlot = !!runtimeSlots.label;
+
+  if (hasLabelProp && !hasCustomLabelSlot) {
     return `${uniqueId}-label`;
   }
   return undefined;
@@ -142,14 +142,14 @@ const ariaLabelledBy = computed(() => {
 /**
  * Computes aria-describedby value linking input to help text or error message
  *
- * Creates space-separated list of IDs for screen readers to announce contextual information.
+ * Uses runtimeSlots (not slots from defineSlots) because defineSlots is only for TypeScript typing.
  */
 const ariaDescribedBy = computed(() => {
   const ids: string[] = [];
-  if (props.error && slots.errorMessage) {
+  if (props.error && runtimeSlots.errorMessage) {
     ids.push(`${uniqueId}-error`);
   }
-  if (!props.error && slots.helpText) {
+  if (!props.error && runtimeSlots.helpText) {
     ids.push(`${uniqueId}-help`);
   }
   return ids.length > 0 ? ids.join(" ") : undefined;
