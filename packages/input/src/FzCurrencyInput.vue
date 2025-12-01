@@ -719,6 +719,9 @@ defineExpose({
     <template #label>
       <slot name="label"></slot>
     </template>
+    <template #left-icon>
+      <slot name="left-icon"></slot>
+    </template>
     <template #errorMessage>
       <slot name="errorMessage"></slot>
     </template>
