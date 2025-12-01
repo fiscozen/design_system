@@ -109,7 +109,8 @@ useKeyDown(containerDom, (event) => {
 })
 
 function handleActionClick(action: FzActionProps) {
-  const index = props.actions.findIndex((compareAction) => JSON.stringify(compareAction) == JSON.stringify(action))
+  const stringifiedAction = JSON.stringify(action)
+  const index = props.actions.findIndex((compareAction) => JSON.stringify(compareAction) == stringifiedAction)
   emit('fzaction:click', index, action)
   if (props.closeOnActionClick) {
     isOpen.value = false
