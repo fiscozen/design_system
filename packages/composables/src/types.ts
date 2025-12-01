@@ -40,7 +40,7 @@ export interface FzFloatElement {
 export interface FzUseFloatingArgs {
   element: FzFloatElement
   container?: FzFloatElement
-  opener: FzFloatElement
+  opener?: FzFloatElement
   position?: FzFloatingPosition
   useViewport?: boolean
   callback?: (

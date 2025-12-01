@@ -1529,9 +1529,9 @@ importers:
 
   packages/dropdown:
     dependencies:
-      '@fiscozen/actionlist':
+      '@fiscozen/action':
         specifier: workspace:^
-        version: link:../actionlist
+        version: link:../action
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
