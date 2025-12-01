@@ -97,19 +97,24 @@ export const Frontoffice: SelectStory = {
       `
     })
   ],
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    // Verify opener button renders
-    const opener = canvas.getByRole('button', { name: /select/i })
-    expect(opener).toBeTruthy()
+    await step('Verify opener button renders', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener).toBeTruthy()
+    })
     
-    // Verify frontoffice height (44px = h-44)
-    expect(opener.classList.contains('h-44')).toBe(true)
+    await step('Verify frontoffice height (44px = h-44)', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.classList.contains('h-44')).toBe(true)
+    })
     
-    // Verify ARIA attributes
-    expect(opener.getAttribute('aria-haspopup')).toBe('listbox')
-    expect(opener.getAttribute('aria-expanded')).toBe('false')
+    await step('Verify ARIA attributes', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.getAttribute('aria-haspopup')).toBe('listbox')
+      expect(opener.getAttribute('aria-expanded')).toBe('false')
+    })
   }
 }
 
@@ -128,15 +133,18 @@ export const Backoffice: SelectStory = {
       `
     })
   ],
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    // Verify opener button renders
-    const opener = canvas.getByRole('button', { name: /select/i })
-    expect(opener).toBeTruthy()
+    await step('Verify opener button renders', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener).toBeTruthy()
+    })
     
-    // Verify backoffice height (32px = h-32)
-    expect(opener.classList.contains('h-32')).toBe(true)
+    await step('Verify backoffice height (32px = h-32)', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.classList.contains('h-32')).toBe(true)
+    })
   }
 }
 
@@ -155,15 +163,18 @@ export const Error: SelectStory = {
       `
     })
   ],
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    // Verify opener button has error styling
-    const opener = canvas.getByRole('button', { name: /select/i })
-    expect(opener.getAttribute('aria-invalid')).toBe('true')
+    await step('Verify opener button has error styling', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.getAttribute('aria-invalid')).toBe('true')
+    })
     
-    // Verify error border color
-    expect(opener.classList.contains('border-semantic-error-200')).toBe(true)
+    await step('Verify error border color', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.classList.contains('border-semantic-error-200')).toBe(true)
+    })
   }
 }
 
@@ -182,17 +193,20 @@ export const Disabled: SelectStory = {
       `
     })
   ],
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    // Verify opener button is disabled
-    const opener = canvas.getByRole('button', { name: /select/i })
-    expect(opener.hasAttribute('disabled')).toBe(true)
-    expect(opener.getAttribute('aria-disabled')).toBe('true')
+    await step('Verify opener button is disabled', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.hasAttribute('disabled')).toBe(true)
+      expect(opener.getAttribute('aria-disabled')).toBe('true')
+    })
     
-    // Verify disabled styling
-    expect(opener.classList.contains('bg-grey-100')).toBe(true)
-    expect(opener.classList.contains('border-grey-100')).toBe(true)
+    await step('Verify disabled styling', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.classList.contains('bg-grey-100')).toBe(true)
+      expect(opener.classList.contains('border-grey-100')).toBe(true)
+    })
   }
 }
 
@@ -211,16 +225,19 @@ export const Readonly: SelectStory = {
       `
     })
   ],
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    // Verify opener button is readonly (same styling as disabled)
-    const opener = canvas.getByRole('button', { name: /select/i })
-    expect(opener.getAttribute('aria-disabled')).toBe('true')
+    await step('Verify opener button is readonly (same styling as disabled)', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.getAttribute('aria-disabled')).toBe('true')
+    })
     
-    // Verify readonly styling (same as disabled)
-    expect(opener.classList.contains('bg-grey-100')).toBe(true)
-    expect(opener.classList.contains('border-grey-100')).toBe(true)
+    await step('Verify readonly styling (same as disabled)', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.classList.contains('bg-grey-100')).toBe(true)
+      expect(opener.classList.contains('border-grey-100')).toBe(true)
+    })
   }
 }
 
@@ -260,7 +277,15 @@ export const SelectWithHundredsOfOptions: SelectStory = {
       </div>
       `
     })
-  ]
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button renders', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener).toBeTruthy()
+    })
+  }
 }
 
 export const SelectWithHundredsOfOptionsAndMaxHeight: SelectStory = {
@@ -281,7 +306,15 @@ export const SelectWithHundredsOfOptionsAndMaxHeight: SelectStory = {
       </div>
       `
     })
-  ]
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button renders', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener).toBeTruthy()
+    })
+  }
 }
 
 export const OpenOnTop: SelectStory = {
