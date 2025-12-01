@@ -125,6 +125,18 @@ const spanClass = computed(() => {
   return baseClasses;
 });
 
+/**
+ * Computes icon color classes based on component state
+ *
+ * Returns core-black for interactive state, grey-300 for disabled/readonly states.
+ */
+const iconColorClass = computed(() => {
+  if (isDisabled.value || isReadonly.value) {
+    return "text-grey-300";
+  }
+  return "text-core-black";
+});
+
 const handleClick = () => {
   emit("click");
 };
@@ -168,7 +180,12 @@ defineExpose({
       :aria-invalid="error ? 'true' : 'false'"
       :aria-disabled="isInteractive ? 'false' : 'true'"
     >
-      <FzIcon v-if="leftIcon" :name="leftIcon" size="md" />
+      <FzIcon
+        v-if="leftIcon"
+        :name="leftIcon"
+        size="md"
+        :class="iconColorClass"
+      />
       <div class="flex flex-col min-w-0 grow">
         <span
           v-if="!showNormalPlaceholder"
@@ -183,6 +200,7 @@ defineExpose({
         v-if="rightIcon && !rightIconButton"
         :name="rightIcon"
         size="md"
+        :class="iconColorClass"
       />
       <FzIconButton
         v-if="rightIcon && rightIconButton"
@@ -192,7 +210,11 @@ defineExpose({
         :variant="isInteractive ? rightIconButtonVariant : 'invisible'"
         @click="handleRightIconClick"
       />
-      <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" size="md" />
+      <FzIcon
+        :name="isOpen ? 'chevron-up' : 'chevron-down'"
+        size="md"
+        :class="iconColorClass"
+      />
     </button>
   </slot>
 </template>
