@@ -174,14 +174,14 @@ const selectedOption = computed(() => {
 });
 
 /**
- * Gets list of selectable options (excluding labels)
+ * Gets list of selectable options (excluding labels) from visible options
  */
 const selectableOptions = computed(() => {
   return visibleOptions.value.filter(isSelectableOption);
 });
 
 /**
- * Gets the index of the selected option in selectableOptions
+ * Gets the index of the selected option in selectableOptions (visible subset)
  */
 const selectedOptionIndex = computed(() => {
   if (!selectedOption.value) return -1;
@@ -491,6 +491,31 @@ function updateVisibleOptions() {
   visibleOptions.value.push(...nextItems);
 }
 
+/**
+ * Ensures the selected option is in the visible range
+ * Loads enough options to include the selected option if it's beyond the current visible range
+ */
+function ensureSelectedOptionVisible() {
+  if (!selectedOption.value) return; // No selection
+
+  // Find the index of the selected option in props.options (including labels)
+  const optionIndexInFullArray = props.options.findIndex(
+    (opt) =>
+      isSelectableOption(opt) && opt.value === selectedOption.value?.value
+  );
+
+  if (optionIndexInFullArray < 0) return; // Should not happen, but safety check
+
+  // Check if we need to load more options
+  // We want to ensure the option at optionIndexInFullArray is in visibleOptions
+  while (visibleOptions.value.length <= optionIndexInFullArray) {
+    if (visibleOptions.value.length >= props.options.length) {
+      break; // All options already loaded
+    }
+    updateVisibleOptions();
+  }
+}
+
 // ============================================================================
 // WATCHERS
 // ============================================================================
@@ -513,6 +538,8 @@ watch(isInteractive, (newIsInteractive) => {
 
 watch(isOpen, (newValue) => {
   if (newValue) {
+    // Ensure selected option is loaded before setting focus
+    ensureSelectedOptionVisible();
     nextTick(() => {
       const selectable = selectableOptions.value;
       if (selectable.length === 0) {
