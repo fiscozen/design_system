@@ -353,22 +353,13 @@ describe("FzBadge", () => {
     });
   });
 
-  // ============================================
-  // SNAPSHOTS
-  // ============================================
-  describe("Snapshots", () => {
-    it("should match snapshot - default state", () => {
-      const wrapper = mount(FzBadge, {
-        props: {
-          color: "black",
-          size: "md",
-        },
-        slots: {
-          default: "Badge",
-        },
-      });
-
-      expect(wrapper.html()).toMatchSnapshot();
+  it("should have rounded-full class when default slot is a string with 1 character", async ({
+    expect,
+  }) => {
+    const wrapper = mount(FzBadge, {
+      slots: {
+        default: "1",
+      },
     });
 
     it("should match snapshot - black color", () => {
@@ -382,7 +373,13 @@ describe("FzBadge", () => {
         },
       });
 
-      expect(wrapper.html()).toMatchSnapshot();
+  it("should not have rounded-full class when default slot is a string with more than 1 character", async ({
+    expect,
+  }) => {
+    const wrapper = mount(FzBadge, {
+      slots: {
+        default: "Fiscozen",
+      },
     });
 
     it("should match snapshot - error color", () => {

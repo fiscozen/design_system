@@ -1,0 +1,459 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Documentation/Misc/FzBadge" />
+
+# FzBadge
+
+Badges serve as concise visual indicators, highlighting color-coded metadata to swiftly capture a user's attention.
+
+## Features
+
+- **2 Variants**: Text and Number
+- **7 Tones**: Dark, Light, Info, Blue, Success, Warning, Error
+- **Icon Support**: Optional left and right icons
+- **Fixed Size**: 24px height (24x24px for number variant)
+- **Accessibility**: Proper semantic HTML and ARIA support
+
+## Installation
+
+```bash
+npm install @fiscozen/badge
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { FzBadge } from '@fiscozen/badge'
+</script>
+
+<template>
+  <FzBadge>Text badge</FzBadge>
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>variant</code>
+      </td>
+      <td>
+        <code>'text' | 'number'</code>
+      </td>
+      <td>
+        <code>'text'</code>
+      </td>
+      <td>Variant of the badge - text or number</td>
+    </tr>
+    <tr>
+      <td>
+        <code>tone</code>
+      </td>
+      <td>
+        <code>'dark' | 'light' | 'info' | 'blue' | 'success' | 'warning' | 'error'</code>
+      </td>
+      <td>
+        <code>'dark'</code>
+      </td>
+      <td>Color tone of the badge</td>
+    </tr>
+    <tr>
+      <td>
+        <code>leftIcon</code>
+      </td>
+      <td>
+        <code>string | undefined</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Name of the icon to display on the left (if provided, icon will be rendered)</td>
+    </tr>
+    <tr>
+      <td>
+        <code>rightIcon</code>
+      </td>
+      <td>
+        <code>string | undefined</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Name of the icon to display on the right (if provided, icon will be rendered)</td>
+    </tr>
+    <tr>
+      <td>
+        <code>leftIconVariant</code>
+      </td>
+      <td>
+        <code>IconVariant | undefined</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Variant of the left icon (e.g., 'fas', 'far', 'fal')</td>
+    </tr>
+    <tr>
+      <td>
+        <code>rightIconVariant</code>
+      </td>
+      <td>
+        <code>IconVariant | undefined</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Variant of the right icon (e.g., 'fas', 'far', 'fal')</td>
+    </tr>
+  </tbody>
+</table>
+
+**Deprecated Props:**
+
+- `color` (`'black' | 'blue' | 'error' | 'warning' | 'success' | 'info' | 'light' | 'dark'`): Use `tone` instead. Will be removed in future versions
+- `size` (`'sm' | 'md' | 'lg'`): Size is fixed at 24px. Will be removed in future versions
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>default</code>
+      </td>
+      <td>Content of the badge (text or number)</td>
+    </tr>
+  </tbody>
+</table>
+
+## Variants
+
+### Text Variant (Default)
+
+Displays text content with horizontal padding.
+
+```vue
+<FzBadge variant="text">Text badge</FzBadge>
+```
+
+**Specifications:**
+
+- Height: 24px (fixed)
+- Padding: 4px vertical, 12px horizontal
+- Border radius: 12px
+- Text style: label/small
+
+### Number Variant
+
+Displays a single number in a fixed 24x24px square.
+
+```vue
+<FzBadge variant="number">5</FzBadge>
+```
+
+**Specifications:**
+
+- Size: 24x24px (fixed square)
+- Border radius: 12px
+- Text style: number/small
+
+**Auto-detection:** If the content is a single digit, the variant automatically switches to `number`.
+
+## Tones
+
+### Dark (Default)
+
+Dark background with white text. Best for light backgrounds.
+
+```vue
+<FzBadge tone="dark">Dark badge</FzBadge>
+```
+
+**Colors:**
+
+- Background: `grey/500` (#596167)
+- Text: `core/white` (#FFFFFF)
+
+### Light
+
+Light background with black text. Best for dark backgrounds.
+
+```vue
+<FzBadge tone="light">Light badge</FzBadge>
+```
+
+**Colors:**
+
+- Background: `grey/100` (#E9EDF0)
+- Text: `core/black` (#2C282F)
+
+### Info
+
+Informational badge with blue background.
+
+```vue
+<FzBadge tone="info">Info badge</FzBadge>
+```
+
+**Colors:**
+
+- Background: `semantic/info/200` (#4E9FFF)
+- Text: `core/white` (#FFFFFF)
+
+### Blue
+
+Blue badge variant.
+
+```vue
+<FzBadge tone="blue">Blue badge</FzBadge>
+```
+
+**Colors:**
+
+- Background: `blue/500` (#5A6EFF)
+- Text: `core/white` (#FFFFFF)
+
+### Success
+
+Success state badge with green background.
+
+```vue
+<FzBadge tone="success">Success badge</FzBadge>
+```
+
+**Colors:**
+
+- Background: `semantic/success/200` (#0FA88C)
+- Text: `core/white` (#FFFFFF)
+
+### Warning
+
+Warning state badge with orange background.
+
+```vue
+<FzBadge tone="warning">Warning badge</FzBadge>
+```
+
+**Colors:**
+
+- Background: `semantic/warning/200` (#FFAE4F)
+- Text: `core/black` (#2C282F)
+
+### Error
+
+Error state badge with red background.
+
+```vue
+<FzBadge tone="error">Error badge</FzBadge>
+```
+
+**Colors:**
+
+- Background: `semantic/error/200` (#F04242)
+- Text: `core/white` (#FFFFFF)
+
+## With Icons
+
+A badge may incorporate optional icons. The icon can be used to reinforce the semantic meaning of the badge to make it clearer to the user.
+
+Icons are rendered only when the `leftIcon` or `rightIcon` props are provided. Icons are always 16px (sm size) for consistency.
+
+```vue
+<template>
+  <!-- Icon on the left -->
+  <FzBadge leftIcon="face-smile">Text badge</FzBadge>
+
+  <!-- Icon on the right -->
+  <FzBadge rightIcon="face-smile">Text badge</FzBadge>
+
+  <!-- Both icons -->
+  <FzBadge leftIcon="face-smile" rightIcon="face-smile">Text badge</FzBadge>
+
+  <!-- With icon variants -->
+  <FzBadge leftIcon="bell" leftIconVariant="far" rightIcon="bell" rightIconVariant="fas">
+    Text badge
+  </FzBadge>
+</template>
+```
+
+**Spacing:**
+
+- Gap between icon and text: 4px
+- Icons are automatically sized to 16px (sm)
+
+## Size
+
+Badges have a fixed size of 24px height:
+
+- **Text variant**: 24px height with horizontal padding (4px vertical, 12px horizontal)
+- **Number variant**: Fixed 24x24px square
+
+The `size` prop is deprecated and will be removed in v2.0.0. All badges now use the fixed 24px size.
+
+## Usage Examples
+
+### Basic Text Badges
+
+```vue
+<template>
+  <div class="flex gap-16">
+    <FzBadge>Default</FzBadge>
+    <FzBadge tone="info">Info</FzBadge>
+    <FzBadge tone="success">Success</FzBadge>
+    <FzBadge tone="warning">Warning</FzBadge>
+    <FzBadge tone="error">Error</FzBadge>
+  </div>
+</template>
+```
+
+### Number Badges
+
+```vue
+<template>
+  <div class="flex gap-16">
+    <FzBadge variant="number" tone="dark">1</FzBadge>
+    <FzBadge variant="number" tone="info">5</FzBadge>
+    <FzBadge variant="number" tone="error">99+</FzBadge>
+  </div>
+</template>
+```
+
+### With Icons
+
+```vue
+<template>
+  <div class="flex flex-col gap-16">
+    <FzBadge leftIcon="face-smile" tone="success"> Happy </FzBadge>
+    <FzBadge rightIcon="bell" tone="info"> Notifications </FzBadge>
+    <FzBadge leftIcon="check" rightIcon="arrow-right" tone="blue"> Complete </FzBadge>
+  </div>
+</template>
+```
+
+### Auto-detection
+
+The badge automatically detects number variant when content is a single digit:
+
+```vue
+<template>
+  <!-- Automatically becomes number variant -->
+  <FzBadge>5</FzBadge>
+
+  <!-- Explicitly text variant -->
+  <FzBadge variant="text">5</FzBadge>
+</template>
+```
+
+## Best Practices
+
+1. **Always provide a label**: Badges should always have a label for accessibility and clear comprehension.
+
+2. **Use appropriate tones**:
+
+   - Use semantic tones (info, success, warning, error) for status indicators
+   - Use neutral tones (dark, light) for general metadata
+   - Use blue for brand-specific badges
+
+3. **Icon usage**: Icons should reinforce the badge's meaning, not replace the text.
+
+4. **Number variant**: Use number variant for counts, quantities, or single-digit indicators.
+
+5. **Accessibility**: Ensure sufficient contrast between background and text colors.
+
+## Deprecation Notices
+
+### Color Prop
+
+The `color` prop is deprecated. Use `tone` instead:
+
+```vue
+<!-- ❌ Deprecated -->
+<FzBadge color="error">Error</FzBadge>
+
+<!-- ✅ Recommended -->
+<FzBadge tone="error">Error</FzBadge>
+```
+
+**Color to Tone Mapping:**
+
+- `black` → `dark`
+- `dark` → `dark`
+- `light` → `light`
+- `error` → `error`
+- `warning` → `warning`
+- `success` → `success`
+- `info` → `info`
+- `blue` → `blue`
+
+### Size Prop
+
+The `size` prop is deprecated. Size is now fixed at 24px:
+
+```vue
+<!-- ❌ Deprecated -->
+<FzBadge size="lg">Badge</FzBadge>
+
+<!-- ✅ Recommended -->
+<FzBadge>Badge</FzBadge>
+```
+
+All sizes now map to the fixed 24px height. The number variant uses a fixed 24x24px square.
+
+## Migration Guide
+
+### From v0.x to v1.0.0
+
+1. **Replace `color` with `tone`**:
+
+   ```vue
+   <!-- Old -->
+   <FzBadge color="error">Error</FzBadge>
+
+   <!-- New -->
+   <FzBadge tone="error">Error</FzBadge>
+   ```
+
+2. **Remove `size` prop**:
+
+   ```vue
+   <!-- Old -->
+   <FzBadge size="md">Badge</FzBadge>
+
+   <!-- New -->
+   <FzBadge>Badge</FzBadge>
+   ```
+
+3. **Add `variant` prop for number badges**:
+
+   ```vue
+   <!-- Old -->
+   <FzBadge>5</FzBadge>
+
+   <!-- New (explicit) -->
+   <FzBadge variant="number">5</FzBadge>
+   <!-- Or rely on auto-detection -->
+   <FzBadge>5</FzBadge>
+   ```
+
+## Related Components
+
+- **FzIcon**: Icon component used within badges
+- **FzButton**: Button component that can contain badges
+- **FzTooltip**: Can wrap badges to provide additional context
