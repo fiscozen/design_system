@@ -24,7 +24,7 @@
     "postinstall": "node scripts/postinstall-playwright.cjs"
   },
   "dependencies": {
-    "@awesome.me/kit-8137893ad3": "^1.0.394",
+    "@awesome.me/kit-8137893ad3": "^1.0.396",
     "@fiscozen/action": "workspace:^",
     "@fiscozen/actionlist": "workspace:^",
     "@fiscozen/alert": "workspace:^",

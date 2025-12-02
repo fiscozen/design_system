@@ -24,8 +24,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.394
-        version: 1.0.394
+        specifier: ^1.0.396
+        version: 1.0.396
       '@fiscozen/action':
         specifier: workspace:^
         version: link:../../packages/action
@@ -877,8 +877,8 @@ importers:
         version: 3.5.13(typescript@5.3.3)
     devDependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.65
-        version: 1.0.236
+        specifier: ^1.0.396
+        version: 1.0.396
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
@@ -962,8 +962,8 @@ importers:
         version: 3.5.13(typescript@5.3.3)
     devDependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.65
-        version: 1.0.236
+        specifier: ^1.0.396
+        version: 1.0.396
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
@@ -1612,8 +1612,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.394
-        version: 1.0.394
+        specifier: ^1.0.396
+        version: 1.0.396
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.7.2
         version: 6.7.2
@@ -2304,8 +2304,8 @@ importers:
         version: 3.5.13(typescript@5.3.3)
     devDependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.65
-        version: 1.0.236
+        specifier: ^1.0.396
+        version: 1.0.396
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
@@ -2592,8 +2592,8 @@ importers:
         version: 3.5.13(typescript@5.3.3)
     devDependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.65
-        version: 1.0.236
+        specifier: ^1.0.396
+        version: 1.0.396
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
@@ -3312,12 +3312,8 @@ packages:
   '@asamuzakjp/dom-selector@2.0.2':
     resolution: {integrity: sha512-x1KXOatwofR6ZAYzXRBL5wrdV0vwNxlTCK9NCuLqAzQYARqGcvFwiJA6A1ERuh+dgeA4Dxm3JBYictIes+SqUQ==}
 
-  '@awesome.me/kit-8137893ad3@1.0.236':
-    resolution: {integrity: sha512-bGAqFfqj7aGKe2sgWMpicSsLzBfq+1OX+LVWIJ1srKv1V14v9IcfjQvokwAq9C+BVtZhUez++2uu+jboKcEPPQ==}
-    engines: {node: '>=16'}
-
-  '@awesome.me/kit-8137893ad3@1.0.394':
-    resolution: {integrity: sha512-cqo1I2UjHn+HaMO0ZPjqyoXir18IJ2WF/VCW4YPLIeSRLtF+ey7KqYHRhHSfCSqIS5IVonE/dcstFEkx2yePIA==}
+  '@awesome.me/kit-8137893ad3@1.0.396':
+    resolution: {integrity: sha512-5wCCWxkOZrW0J/JVd9DOgIy6Xo5lwZzZqx1Uf1nMxQI4v4Dov02PKEmP+xBTVb3AyMTi/FXrJQkXsSGH7E4zew==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.27.1':
@@ -8144,11 +8140,7 @@ snapshots:
       css-tree: 2.3.1
       is-potential-custom-element-name: 1.0.1
 
-  '@awesome.me/kit-8137893ad3@1.0.236':
-    dependencies:
-      '@fortawesome/fontawesome-common-types': 6.7.2
-
-  '@awesome.me/kit-8137893ad3@1.0.394':
+  '@awesome.me/kit-8137893ad3@1.0.396':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
