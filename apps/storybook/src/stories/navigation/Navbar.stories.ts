@@ -87,3 +87,24 @@ const verticalNavbar = (args: FzNavbarProps) => ({
 })
 
 export const Vertical = verticalNavbar.bind({})
+
+
+export const CustomBreakpoints = (args: FzNavbarProps) => ({
+  setup() {
+    const breakpoints = {
+      lg: '1200px' as `${number}px`,
+      md: '900px' as `${number}px`,
+      sm: '600px' as `${number}px`
+    }
+    args.breakpoints = breakpoints;
+    return { args }
+  },
+  components: { FzNavbar, FzIcon, FzNavlink, FzIconButton, FzAvatar },
+  template: `
+    <FzNavbar :breakpoints="args.breakpoints">
+      <template #brand-logo="{isMobile}">
+        <FzIcon name="fiscozen" variant="fak" size="xl" class="text-core-black text-[32px] !w-[40px] ml-[-4px] cursor-pointer" /> 
+      </template>
+    </FzNavbar>
+  `
+})

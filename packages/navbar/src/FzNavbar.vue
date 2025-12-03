@@ -1,26 +1,34 @@
 <script lang="ts" setup>
-import { ref, onBeforeMount, onMounted, onUnmounted, computed } from 'vue'
+import { computed } from 'vue'
 import { FzIconButton } from '@fiscozen/button'
 import { FzNavbarEmits, FzNavbarProps } from './types'
-import {breakpoints} from '@fiscozen/style';
-import {useBreakpoints} from '@fiscozen/composables';
+import { breakpoints } from '@fiscozen/style'
+import { useBreakpoints } from '@fiscozen/composables'
 
 const props = withDefaults(defineProps<FzNavbarProps>(), {
-  variant: 'horizontal'
+  variant: 'horizontal',
+  breakpoints: undefined
+})
+
+const computedBreakpoints = computed(() => {
+  return {
+    ...breakpoints,
+    ...(props.breakpoints ?? {})
+  }
 })
 
 const emit = defineEmits<FzNavbarEmits>()
 
-const {isGreater} = useBreakpoints(breakpoints);
-const isGreaterThanLg = isGreater('lg');
-const isMobile = computed(() => !isGreaterThanLg.value);
+const { isGreater } = useBreakpoints(computedBreakpoints.value)
+const isGreaterThanLg = isGreater('lg')
+const isMobile = computed(() => !isGreaterThanLg.value)
 const isVertical = computed(() => Boolean(props.variant === 'vertical'))
 const isHorizontal = computed(() => Boolean(props.variant === 'horizontal'))
 </script>
 
 <template>
   <header
-    class="flex p-12 shadow z-10"
+    class="z-10 flex p-12 shadow"
     :class="{
       'justify-between': isMobile,
       'h-full w-56 flex-col': isVertical && !isMobile,
