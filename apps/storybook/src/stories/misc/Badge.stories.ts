@@ -66,7 +66,7 @@ export const TextDark: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const badge = canvas.getByText('Fiscozen').closest('div')
+    const badge = canvas.getByText('Fiscozen').closest('p')!.closest('div')
 
     await expect(badge).toBeInTheDocument()
     await expect(badge?.classList.contains('bg-grey-500')).toBe(true)
@@ -85,7 +85,7 @@ export const TextLight: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const badge = canvas.getByText('Fiscozen').closest('div')
+    const badge = canvas.getByText('Fiscozen').closest('p')!.closest('div')
 
     await expect(badge).toBeInTheDocument()
     await expect(badge?.classList.contains('bg-grey-100')).toBe(true)
