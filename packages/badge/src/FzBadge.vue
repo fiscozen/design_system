@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useSlots, watch } from "vue";
+import { computed, useSlots } from "vue";
 import { FzIcon } from "@fiscozen/icons";
 import type { FzBadgeProps, FzBadgeTone } from "./types";
 
