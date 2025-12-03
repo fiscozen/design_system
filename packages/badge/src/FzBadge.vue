@@ -1,12 +1,14 @@
 <template>
-  <div :class="classes">
+  <div :class="classes" :title="label">
     <FzIcon
       v-if="leftIcon"
       :name="leftIcon"
       :variant="leftIconVariant"
       size="sm"
     />
-    <slot></slot>
+    <p class="truncate text-[inherit] text-sm">
+      <slot></slot>
+    </p>
     <FzIcon
       v-if="rightIcon"
       :name="rightIcon"
@@ -70,9 +72,8 @@ const mapToneToClasses = {
 
 const classes = computed(() => {
   const baseClasses = [
-    "flex items-center justify-center",
+    "flex items-center justify-center truncate max-w-full",
     "gap-4", // 4px gap between elements
-    "text-sm", // number/small style
   ];
 
   // Variant-specific classes
