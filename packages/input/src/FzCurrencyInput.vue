@@ -63,6 +63,40 @@ const getEmptyValue = (): number | null | undefined => {
 };
 
 /**
+ * Determines the display value when input is empty
+ *
+ * When zeroOnEmpty is true and the empty value is 0:
+ * - During typing (focused): returns empty string (formatting happens on blur)
+ * - On blur (not focused): returns formatted "0,00"
+ *
+ * Otherwise returns empty string.
+ *
+ * @param isEmptyValueZero - Whether the empty value is 0 (from getEmptyValue())
+ *   If true, implies props.zeroOnEmpty is also true
+ * @param isCurrentlyFocused - Whether the input is currently focused
+ * @returns Display string to show in the input field
+ */
+const getEmptyDisplayValue = (
+  isEmptyValueZero: boolean,
+  isCurrentlyFocused: boolean
+): string => {
+  if (isEmptyValueZero) {
+    // During typing, show empty string. Formatting happens on blur
+    if (isCurrentlyFocused) {
+      return "";
+    }
+    // On blur or when not focused, show formatted zero
+    return formatValue(0, {
+      minimumFractionDigits: props.minimumFractionDigits,
+      maximumFractionDigits: props.maximumFractionDigits,
+      roundDecimals: false,
+      useGrouping: true,
+    });
+  }
+  return "";
+};
+
+/**
  * Computed aria-label for step up button
  *
  * Uses custom stepUpAriaLabel if provided, otherwise generates default label based on step value.
@@ -237,10 +271,13 @@ const handlePaste = (e: ClipboardEvent) => {
  */
 const handleInputUpdate = (newValue: string | undefined) => {
   if (!newValue) {
-    fzInputModel.value = "";
+    const emptyValue = getEmptyValue();
     isInternalUpdate = true;
-    model.value = getEmptyValue();
+    model.value = emptyValue;
     isInternalUpdate = false;
+
+    // During typing, always show empty string. Formatting to "0,00" happens only on blur
+    fzInputModel.value = "";
     return;
   }
 
@@ -279,7 +316,6 @@ const handleBlur = () => {
 
   const currentValue = normalizeModelValue(model.value);
   if (currentValue === undefined || currentValue === null) {
-    fzInputModel.value = "";
     // Ensure v-model matches the expected empty value based on nullOnEmpty/zeroOnEmpty
     const expectedEmptyValue = getEmptyValue();
     if (model.value !== expectedEmptyValue) {
@@ -287,6 +323,12 @@ const handleBlur = () => {
       model.value = expectedEmptyValue;
       isInternalUpdate = false;
     }
+
+    // Display empty value (formatted zero if zeroOnEmpty is true, empty string otherwise)
+    fzInputModel.value = getEmptyDisplayValue(
+      expectedEmptyValue === 0,
+      false // Not focused during blur
+    );
     return;
   }
 
@@ -459,7 +501,6 @@ onMounted(() => {
   const initialValue = model.value;
 
   if (initialValue === undefined || initialValue === null) {
-    fzInputModel.value = "";
     // Ensure v-model matches the expected empty value based on nullOnEmpty/zeroOnEmpty
     const expectedEmptyValue = getEmptyValue();
     if (initialValue !== expectedEmptyValue) {
@@ -467,6 +508,12 @@ onMounted(() => {
       model.value = expectedEmptyValue;
       isInternalUpdate = false;
     }
+
+    // Display empty value (formatted zero if zeroOnEmpty is true, empty string otherwise)
+    fzInputModel.value = getEmptyDisplayValue(
+      expectedEmptyValue === 0,
+      false // Not focused during mount
+    );
     return;
   }
 
@@ -530,10 +577,16 @@ onMounted(() => {
       fzInputModel.value = formatted;
     } else {
       // Invalid string, clear input
-      fzInputModel.value = "";
+      const emptyValue = getEmptyValue();
       isInternalUpdate = true;
-      model.value = getEmptyValue();
+      model.value = emptyValue;
       isInternalUpdate = false;
+
+      // Display empty value (formatted zero if zeroOnEmpty is true, empty string otherwise)
+      fzInputModel.value = getEmptyDisplayValue(
+        emptyValue === 0,
+        false // Not focused during mount
+      );
     }
     return;
   }
@@ -557,7 +610,6 @@ watch(
     }
 
     if (newVal === undefined || newVal === null) {
-      fzInputModel.value = "";
       // Ensure v-model matches the expected empty value based on nullOnEmpty/zeroOnEmpty
       const expectedEmptyValue = getEmptyValue();
       if (newVal !== expectedEmptyValue) {
@@ -565,6 +617,12 @@ watch(
         model.value = expectedEmptyValue;
         isInternalUpdate = false;
       }
+
+      // Display empty value (formatted zero if zeroOnEmpty is true, empty string otherwise)
+      fzInputModel.value = getEmptyDisplayValue(
+        expectedEmptyValue === 0,
+        isFocused.value
+      );
       return;
     }
 
@@ -639,10 +697,16 @@ watch(
         }
       } else {
         // Invalid string, clear input
-        fzInputModel.value = "";
+        const emptyValue = getEmptyValue();
         isInternalUpdate = true;
-        model.value = getEmptyValue();
+        model.value = emptyValue;
         isInternalUpdate = false;
+
+        // Display empty value (formatted zero if zeroOnEmpty is true, empty string otherwise)
+        fzInputModel.value = getEmptyDisplayValue(
+          emptyValue === 0,
+          isFocused.value
+        );
       }
       return;
     }
