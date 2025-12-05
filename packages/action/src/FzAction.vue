@@ -1,6 +1,7 @@
 <template>
   <component
     :is="componentTag"
+    ref="actionElement"
     v-bind="boundAttrs"
     :class="baseClasses"
     :aria-label="ariaLabel"
@@ -84,7 +85,39 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+/**
+ * FzAction Component
+ *
+ * Versatile action component that can render as either a button or link.
+ * Supports multiple variants (textLeft, textCenter, onlyIcon) and environments (backoffice, frontoffice).
+ *
+ * Key features:
+ * - Configurable ARIA roles (e.g., "option", "menuitem") for accessibility
+ * - Support for disabled and readonly states
+ * - Icon positioning (left, right, or icon-only)
+ * - Text truncation with ellipsis
+ * - Keyboard navigation support with focus management
+ *
+ * @component
+ * @example
+ * // As a button action
+ * <FzAction type="action" variant="textLeft" label="Click me" />
+ *
+ * @example
+ * // As a listbox option (used in FzSelect)
+ * <FzAction
+ *   type="action"
+ *   variant="textLeft"
+ *   label="Option 1"
+ *   role="option"
+ *   :ariaSelected="true"
+ * />
+ *
+ * @example
+ * // As a menu item
+ * <FzAction type="action" variant="textLeft" label="Edit" role="menuitem" />
+ */
+import { computed, ref } from "vue";
 import { FzIcon } from "@fiscozen/icons";
 import { FzLink } from "@fiscozen/link";
 import type { FzActionProps } from "./types";
@@ -95,13 +128,17 @@ const props = withDefaults(defineProps<FzActionProps>(), {
   environment: "backoffice",
   variant: "textLeft",
   disabled: false,
+  readonly: false,
   isTextTruncated: false,
+  focused: false,
 });
 
 const emit = defineEmits<{
   click: [event: MouseEvent];
   keydown: [event: KeyboardEvent];
 }>();
+
+const actionElement = ref<HTMLElement>();
 
 const { baseClasses, iconClasses, labelClasses, subLabelClasses } =
   useActionClasses(props);
@@ -200,13 +237,42 @@ const isIconDecorative = computed(() => {
   return false;
 });
 
+/**
+ * Computes bound attributes for the component
+ *
+ * Includes ARIA attributes for accessibility:
+ * - role: Configurable ARIA role (e.g., "option", "menuitem")
+ * - aria-disabled: Always present with explicit "true"/"false" values
+ * - aria-selected: Only added when explicitly provided (for role="option")
+ * - tabindex: Can be overridden via prop, otherwise 0 when focused and interactive, -1 otherwise
+ *
+ * For button type: adds type="button" and disabled attribute
+ * For link type: adds router-link props (to, replace, target, etc.)
+ */
 const boundAttrs = computed(() => {
-  const baseAriaAttributes: Record<string, string | undefined> = {
-    "aria-disabled": props.disabled ? "true" : "false",
-    tabindex: props.disabled ? "-1" : undefined,
+  const isInteractive = !props.disabled && !props.readonly;
+
+  const baseAriaAttributes: Record<
+    string,
+    string | number | boolean | undefined
+  > = {
+    id: props.id,
+    "aria-disabled": isInteractive ? "false" : "true",
+    tabindex:
+      props.tabindex !== undefined
+        ? props.tabindex
+        : isInteractive && props.focused
+          ? 0
+          : -1,
+    role: props.role,
   };
 
-  if (props.disabled) {
+  // Add aria-selected only if explicitly provided (for role="option")
+  if (props.ariaSelected !== undefined) {
+    baseAriaAttributes["aria-selected"] = props.ariaSelected ? "true" : "false";
+  }
+
+  if (!isInteractive) {
     return {
       ...baseAriaAttributes,
     };
@@ -237,7 +303,7 @@ const componentTag = computed(() => {
 
 // Event handlers
 const handleClick = (event: MouseEvent) => {
-  if (props.disabled) {
+  if (props.disabled || props.readonly) {
     event.preventDefault();
     event.stopPropagation();
     return;
@@ -251,10 +317,12 @@ const handleClick = (event: MouseEvent) => {
 /**
  * Handle keyboard events for accessibility
  * - Enter and Space should trigger click for buttons
- * - Disabled elements should not respond to keyboard
+ * - Disabled and readonly elements should not respond to keyboard
+ * - Navigation keys (arrows, Home, End, Tab) are allowed to bubble up
+ *   for parent components to handle (e.g., FzSelect navigation)
  */
 const handleKeydown = (event: KeyboardEvent) => {
-  if (props.disabled) {
+  if (props.disabled || props.readonly) {
     event.preventDefault();
     event.stopPropagation();
     return;
@@ -263,12 +331,31 @@ const handleKeydown = (event: KeyboardEvent) => {
   // Only handle keyboard for button type
   if (props.type !== "action") return;
 
+  // Allow navigation keys to bubble up (don't preventDefault or stopPropagation)
+  const navigationKeys = [
+    "ArrowDown",
+    "ArrowUp",
+    "Home",
+    "End",
+    "Tab",
+    "Escape",
+  ];
+  if (navigationKeys.includes(event.key)) {
+    // Let the event bubble up to parent handlers
+    return;
+  }
+
   // Enter or Space should trigger keydown
   if (event.key === "Enter" || event.key === " ") {
     event.preventDefault();
     emit("keydown", event);
   }
 };
+
+// Expose the action element for parent components to access
+defineExpose({
+  actionElement,
+});
 </script>
 
 <style scoped>

@@ -1,33 +1,50 @@
-<template>
-  <label
-    disabled
-    test-id="fzselect-label"
-    @click.prevent.stop
-    :title="option.label"
-    :class="computedClass"
-  >
-    {{ option.label }}
-  </label>
-</template>
-
 <script setup lang="ts">
+/**
+ * FzSelectLabel Component
+ *
+ * Presentational component for the FzSelect label.
+ * Renders the label text with required indicator.
+ * Handles its own styling based on disabled/readonly state.
+ *
+ * @component
+ * @internal
+ */
 import { computed } from "vue";
-import { FzSelectLabelProps } from "../types";
+import type { FzSelectLabelProps } from "./types";
 
-const props = defineProps<{
-  option: FzSelectLabelProps;
-  size: "sm" | "md" | "lg";
-}>();
+const props = defineProps<FzSelectLabelProps>();
 
-const staticClass =
-  "text-grey-400 flex items-center text-ellipsis whitespace-nowrap";
+/**
+ * Base text classes shared across all text elements
+ */
+const baseTextClasses = "text-base leading-5";
 
-const mappedClass = {
-  sm: "text-[10px] min-h-24 px-14",
-  md: "text-xs min-h-32 px-16",
-  lg: "text-sm min-h-40 px-20",
-};
-const computedClass = computed(() => {
-  return [staticClass, mappedClass[props.size]];
+/**
+ * Computes label classes based on interactive state
+ *
+ * Uses Representation-First pattern to map visual states.
+ * Readonly uses the same style as disabled for consistency.
+ */
+const labelClass = computed(() => {
+  const baseClasses = [baseTextClasses];
+
+  switch (true) {
+    case props.disabled:
+    case props.readonly:
+      baseClasses.push("text-grey-300");
+      break;
+
+    default:
+      baseClasses.push("text-core-black");
+      break;
+  }
+
+  return baseClasses;
 });
 </script>
+
+<template>
+  <label :id="labelId" :for="openerId" :class="labelClass">
+    {{ label }}{{ required ? " *" : "" }}
+  </label>
+</template>
