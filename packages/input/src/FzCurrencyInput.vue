@@ -731,6 +731,12 @@ defineExpose({
     @blur="handleBlur"
     @paste="handlePaste"
   >
+    <template #label>
+      <slot name="label"></slot>
+    </template>
+    <template #left-icon>
+      <slot name="left-icon"></slot>
+    </template>
     <template #right-icon>
       <div class="flex items-center gap-4">
         <FzIcon
@@ -780,17 +786,11 @@ defineExpose({
         </div>
       </div>
     </template>
-    <template #label>
-      <slot name="label"></slot>
-    </template>
-    <template #left-icon>
-      <slot name="left-icon"></slot>
+    <template #helpText>
+      <slot name="helpText"></slot>
     </template>
     <template #errorMessage>
       <slot name="errorMessage"></slot>
-    </template>
-    <template #helpText>
-      <slot name="helpText"></slot>
     </template>
   </FzInput>
 </template>
