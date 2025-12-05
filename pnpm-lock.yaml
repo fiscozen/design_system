@@ -434,6 +434,9 @@ importers:
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
+      '@fiscozen/container':
+        specifier: workspace:^
+        version: link:../container
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons

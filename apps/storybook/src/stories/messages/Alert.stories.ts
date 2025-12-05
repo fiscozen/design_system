@@ -7,7 +7,7 @@ const meta: Meta<typeof FzAlert> = {
   component: FzAlert,
   tags: ['autodocs'],
   argTypes: {
-    type: {
+    tone: {
       control: 'select',
       options: ['info', 'error', 'danger', 'warning', 'success']
     },
@@ -18,6 +18,10 @@ const meta: Meta<typeof FzAlert> = {
     size: {
       control: 'select',
       options: ['sm', 'md', 'lg']
+    },
+    environment: {
+      control: 'select',
+      options: ['backoffice', 'frontoffice']
     }
   },
   args: {
@@ -26,7 +30,7 @@ const meta: Meta<typeof FzAlert> = {
     default:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     title: 'Title',
-    type: 'info'
+    tone: 'info'
   },
   decorators: [
     () => ({
@@ -39,51 +43,44 @@ type Story = StoryObj<typeof meta>
 
 const Info: Story = {
   args: {
-    type: 'info'
+    tone: 'info'
   }
 }
 
 const Error: Story = {
   args: {
-    type: 'error'
+    tone: 'error'
   }
 }
 
 const Danger: Story = {
   args: {
-    type: 'danger'
+    tone: 'danger'
   }
 }
 
 const Warning: Story = {
   args: {
-    type: 'warning'
+    tone: 'warning'
   }
 }
 
 const Success: Story = {
   args: {
-    type: 'success'
-  }
-}
-
-const Simple: Story = {
-  args: {
-    type: 'info',
-    alertStyle: 'simple'
+    tone: 'success'
   }
 }
 
 const Collapsable: Story = {
   args: {
-    type: 'info',
+    tone: 'info',
     alertStyle: 'collapsable'
   }
 }
 
 const CollapsableDefaultClosed: Story = {
   args: {
-    type: 'info',
+    tone: 'info',
     alertStyle: 'collapsable',
     defaultOpen: false
   }
@@ -91,7 +88,7 @@ const CollapsableDefaultClosed: Story = {
 
 const LinkAndButton: Story = {
   args: {
-    type: 'info',
+    tone: 'info',
     showLinkAction: true,
     linkActionLocation: 'example',
     linkActionLabel: 'This is a link'
@@ -101,7 +98,7 @@ const LinkAndButton: Story = {
 
 const LinkExternal: Story = {
   args: {
-    type: 'info',
+    tone: 'info',
     showLinkAction: true,
     linkActionLocation: 'https://example.com',
     linkActionLabel: 'This is an external link',
@@ -112,7 +109,7 @@ const LinkExternal: Story = {
 
 const OnlyLink: Story = {
   args: {
-    type: 'info',
+    tone: 'info',
     showButtonAction: false,
     showLinkAction: true,
     linkActionLocation: 'example',
@@ -123,8 +120,15 @@ const OnlyLink: Story = {
 
 const WithoutAction: Story = {
   args: {
-    type: 'info',
+    tone: 'info',
     showButtonAction: false
+  }
+}
+
+const Dismissible: Story = {
+  args: {
+    tone: 'info',
+    isDismissible: true
   }
 }
 
@@ -134,13 +138,13 @@ export {
   Danger,
   Warning,
   Success,
-  Simple,
   Collapsable,
   CollapsableDefaultClosed,
   LinkAndButton,
   LinkExternal,
   OnlyLink,
-  WithoutAction
+  WithoutAction,
+  Dismissible
 }
 
 export default meta

@@ -1,11 +1,15 @@
 import { RouteLocationRaw } from 'vue-router'
+import { ButtonEnvironment } from '@fiscozen/button'
+
+type AlertVariant = 'accordion' | 'background'
 
 type AlertProps = {
   /**
-   * Type of the topbar which dictates the appearance
+   * Tone of the alert which dictates the appearance
    */
-  type: 'info' | 'error' | 'danger' | 'warning' | 'success'
+  tone: 'info' | 'error' | 'danger' | 'warning' | 'success'
   /**
+   * @deprecated Use the variant prop instead. This prop will be removed in a future version.
    * Style which dictates the action rendered
    */
   alertStyle?: 'default' | 'collapsable' | 'simple'
@@ -21,6 +25,10 @@ type AlertProps = {
    * Button action tooltip
    */
   buttonActionTooltip?: string
+  /**
+   * Whether the alert is dismissible
+   */
+  isDismissible?: boolean
   /**
    * Whether to render the link action
    */
@@ -42,9 +50,14 @@ type AlertProps = {
    */
   linkActionExternal?: boolean
   /**
+   * @deprecated Use the environment prop instead. This prop will be removed in a future version.
    * Size of the alert (applies only if style is simple)
    */
   size?: 'sm' | 'md' | 'lg'
+  /**
+   * Environment of the alert 
+   */
+  environment?: ButtonEnvironment
   /**
    * Title of the alert (applies only if style is not simple)
    */
@@ -53,6 +66,10 @@ type AlertProps = {
    * Default state of the alert (open/closed)
    */
   defaultOpen?: boolean
+  /**
+   * Variant of the alert
+   */
+  variant?: AlertVariant
 }
 
-export { AlertProps }
+export { AlertProps, AlertVariant }

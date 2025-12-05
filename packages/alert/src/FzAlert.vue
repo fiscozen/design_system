@@ -1,61 +1,24 @@
-<template>
-  <div :class="containerClass" @click="isOpen = !isOpen">
-    <FzIcon :name="iconName" :size="iconSize" :class="iconClass" />
-    <div class="flex-1">
-      <div class="flex">
-        <p v-if="showTitle" class="flex-1 text-lg">
-          {{ title }}
-        </p>
-
-        <FzIcon v-if="showCollapseIcon" :name="collapseIcon" />
-      </div>
-
-      <p v-if="showDescription" :class="descriptionClass">
-        <slot></slot>
-      </p>
-
-      <slot name="action" v-if="showAction">
-        <div class="flex gap-16">
-          <FzButton
-            v-if="showButtonAction"
-            @click="handleButtonClick"
-            :tooltip="buttonActionTooltip"
-            size="sm"
-            >{{ buttonActionLabel }}</FzButton
-          >
-          <FzLink
-            v-if="showLinkAction"
-            :to="linkActionLocation!"
-            @click="handleButtonClick"
-            size="md"
-            :target="linkActionTarget"
-            :external="linkActionExternal"
-            >{{ linkActionLabel }}</FzLink
-          >
-        </div>
-      </slot>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { FzButton } from '@fiscozen/button'
+import { FzButton, FzIconButton } from '@fiscozen/button'
 import { FzIcon } from '@fiscozen/icons'
-import { AlertProps } from './types'
+import { AlertProps, AlertVariant } from './types'
 import { FzLink } from '@fiscozen/link'
+import type { ButtonEnvironment } from '@fiscozen/button'
+import { FzContainer } from '@fiscozen/container'
 
 const props = withDefaults(defineProps<AlertProps>(), {
   alertStyle: 'default',
   size: 'lg',
   defaultOpen: true,
-  showButtonAction: true
+  showButtonAction: true,
+  environment: 'frontoffice'
 })
 
-const emit = defineEmits(['fzaction:click'])
+const emit = defineEmits(['fzAlert:click', 'fzAlert:dismiss'])
 const isOpen = ref(props.defaultOpen)
 
-const mapTypeToContainerClass = {
+const mapToneToContainerClass = {
   info: 'bg-semantic-info-50 border-semantic-info',
   error: 'bg-semantic-error-50 border-semantic-error',
   danger: 'bg-semantic-error-50 border-semantic-error',
@@ -63,11 +26,16 @@ const mapTypeToContainerClass = {
   success: 'bg-semantic-success-50 border-semantic-success'
 }
 
+const sizeToEnvironmentMapping = {
+  sm: 'backoffice',
+  md: 'frontoffice',
+  lg: 'frontoffice'
+}
+
 const containerClass = computed(() => [
-  'flex select-none',
-  ...(props.alertStyle === 'simple'
-    ? ['gap-6']
-    : [mapTypeToContainerClass[props.type], 'border-l-4 p-12 gap-12 rounded']),
+  'flex select-none gap-12 rounded',
+  mapToneToContainerClass[props.tone],
+  safeEnvironment.value === 'backoffice' ? 'p-6' : 'p-12',
   ...(props.alertStyle === 'collapsable' ? ['cursor-pointer'] : [])
 ])
 
@@ -79,7 +47,7 @@ const iconName = computed(
       danger: 'triangle-exclamation',
       warning: 'triangle-exclamation',
       success: 'circle-check'
-    })[props.type]
+    })[props.tone]
 )
 
 const iconClass = computed(() => [
@@ -89,45 +57,105 @@ const iconClass = computed(() => [
     danger: 'text-semantic-error',
     warning: 'text-semantic-warning',
     success: 'text-semantic-success'
-  }[props.type]
+  }[props.tone]
 ])
 
-const iconSize = computed(() => (props.alertStyle === 'simple' ? props.size : 'lg'))
-const showTitle = computed(() => props.alertStyle !== 'simple')
 
 const descriptionClass = computed(() => [
   'font-normal',
-  ...(props.alertStyle === 'simple'
-    ? [
-        {
-          sm: 'text-xs',
-          md: 'text-sm',
-          lg: 'text-md'
-        }[props.size]
-      ]
-    : []),
+  'mt-8',
   {
-    'mb-16': props.alertStyle !== 'simple' && (props.showButtonAction || props.showLinkAction)
+    'mb-16': (props.showButtonAction || props.showLinkAction)
   }
 ])
 
 const showAction = computed(() => {
-  if (props.alertStyle === 'simple') return false
-  if (props.alertStyle === 'default') return true
+  if (safeVariant.value === 'background') return true
   return isOpen.value
 })
 const collapseIcon = computed(() => (isOpen.value ? 'angle-up' : 'angle-down'))
+const rightIconName = computed(() => {
+  if (safeVariant.value === 'accordion') return collapseIcon.value
+  if (props.isDismissible) return 'xmark'
+})
 const showDescription = computed(() => {
   if (props.alertStyle !== 'collapsable') return true
   return isOpen.value
 })
-const showCollapseIcon = computed(() => props.alertStyle === 'collapsable')
+const showCollapseIcon = computed(() => safeVariant.value === 'accordion')
 
 function handleButtonClick(event: Event) {
   event.stopPropagation()
-  emit('fzaction:click')
+  emit('fzAlert:click')
+}
+
+const safeEnvironment = computed<ButtonEnvironment>(() => {
+  if (props.environment) {
+    return props.environment
+  }
+  return props.size ? sizeToEnvironmentMapping[props.size] as ButtonEnvironment : 'frontoffice'
+})
+
+const safeVariant = computed<AlertVariant>(() => {
+  if (props.variant) {
+    return props.variant
+  }
+  return ['default', 'simple'].includes(props.alertStyle) ? 'background' : 'accordion'
+})
+
+const hasRightIcon = computed(() => safeVariant.value === 'accordion' || props.isDismissible)
+const handleRightIconClick = () => {
+  if (safeVariant.value === 'accordion') {
+    isOpen.value = !isOpen.value
+  }
+  if (props.isDismissible) {
+    emit('fzAlert:dismiss')
+  }
 }
 </script>
+
+<template>
+  <div :class="containerClass" @click="isOpen = !isOpen">
+    <FzIcon :name="iconName" size="md" :class="iconClass" />
+    <div class="flex flex-col flex-1">
+      <p v-if="title" v-bold>
+        {{ title }}
+      </p>
+
+      <p v-if="showDescription" :class="descriptionClass">
+        <slot></slot>
+      </p>
+
+      <slot name="action" v-if="showAction">
+        <FzContainer horizontal gap="sm">
+          <FzButton
+            v-if="showButtonAction"
+            @click="handleButtonClick"
+            :tooltip="buttonActionTooltip"
+            :environment="safeEnvironment"
+            variant="secondary"
+            >{{ buttonActionLabel }}</FzButton
+          >
+          <FzLink
+            v-if="showLinkAction"
+            :to="linkActionLocation!"
+            @click="handleButtonClick"
+            size="md"
+            :target="linkActionTarget"
+            :external="linkActionExternal"
+            >{{ linkActionLabel }}</FzLink
+          >
+        </FzContainer>
+      </slot>
+    </div>
+    <FzIconButton v-if="hasRightIcon"
+      :iconName="rightIconName!"
+      :environment="safeEnvironment"
+      variant="invisible"
+      @click.stop="handleRightIconClick" />
+  </div>
+</template>
+
 
 <style scoped>
 .bg-semantic-info-50 {
