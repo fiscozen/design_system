@@ -3055,6 +3055,9 @@ importers:
 
   packages/typeahead:
     dependencies:
+      '@fiscozen/action':
+        specifier: workspace:^
+        version: link:../action
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
@@ -3064,11 +3067,11 @@ importers:
       '@fiscozen/input':
         specifier: workspace:^
         version: link:../input
-      '@fiscozen/select':
+      '@fiscozen/progress':
         specifier: workspace:^
-        version: link:../select
+        version: link:../progress
       fuse.js:
-        specifier: ^7.0.0
+        specifier: ^7.1.0
         version: 7.1.0
       tailwindcss:
         specifier: ^3.4.1
@@ -3077,15 +3080,27 @@ importers:
         specifier: ^3.4.13
         version: 3.5.13(typescript@5.3.3)
     devDependencies:
+      '@awesome.me/kit-8137893ad3':
+        specifier: ^1.0.65
+        version: 1.0.396
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
+      '@fiscozen/select':
+        specifier: workspace:^
+        version: link:../select
       '@fiscozen/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
+      '@fortawesome/fontawesome-svg-core':
+        specifier: ^6.5.1
+        version: 6.7.2
+      '@fortawesome/vue-fontawesome':
+        specifier: ^3.0.6
+        version: 3.1.1(@fortawesome/fontawesome-svg-core@6.7.2)(vue@3.5.13(typescript@5.3.3))
       '@rushstack/eslint-patch':
         specifier: ^1.3.3
         version: 1.10.5
@@ -8410,6 +8425,11 @@ snapshots:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
   '@fortawesome/vue-fontawesome@3.0.8(@fortawesome/fontawesome-svg-core@6.7.2)(vue@3.5.13(typescript@5.3.3))':
+    dependencies:
+      '@fortawesome/fontawesome-svg-core': 6.7.2
+      vue: 3.5.13(typescript@5.3.3)
+
+  '@fortawesome/vue-fontawesome@3.1.1(@fortawesome/fontawesome-svg-core@6.7.2)(vue@3.5.13(typescript@5.3.3))':
     dependencies:
       '@fortawesome/fontawesome-svg-core': 6.7.2
       vue: 3.5.13(typescript@5.3.3)
