@@ -30,7 +30,7 @@ const Template: Story = {
       <div>
         <FzCurrencyInput v-bind="args" v-model="modelValue" />
         <p style="margin-top: 60px; font-size: 14px;">
-          Raw value (v-model): {{ modelValue === undefined ? 'undefined' : modelValue }}
+          Raw value (v-model): {{ modelValue === undefined ? 'undefined' : (modelValue === null ? 'null' : modelValue) }}
         </p>
       </div>
     `
