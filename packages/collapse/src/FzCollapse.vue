@@ -25,11 +25,12 @@ const handleClick = () => {
 </script>
 
 <template>
-  <details ref="detailsRef" :open="isOpen" data-e2e="details" @toggle="handleToggle" @click.stop.prevent="handleClick">
+  <details ref="detailsRef" :open="isOpen" data-e2e="details" @toggle="handleToggle" >
     <summary
       data-e2e="summary"
       class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded font-medium"
       :class="[summaryClass, {'bg-background-alice-blue !text-blue-500': isOpen}]"
+      @click.stop.prevent="handleClick"
     >
       <slot name="summary">{{ summary }}</slot>
       <slot name="icon">
