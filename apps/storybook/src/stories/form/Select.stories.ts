@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, within } from '@storybook/test'
 import { ref } from 'vue'
 import { FzSelect } from '@fiscozen/select'
 
@@ -7,14 +8,15 @@ const meta = {
   component: FzSelect,
   tags: ['autodocs'],
   argTypes: {
-    size: {
-      options: ['sm', 'md', 'lg'],
+    environment: {
+      options: ['backoffice', 'frontoffice'],
       control: {
         type: 'select'
       }
     }
   }
 } satisfies Meta<typeof FzSelect>
+
 export default meta
 
 type SelectStory = StoryObj<typeof FzSelect>
@@ -37,7 +39,7 @@ const Template: SelectStory = {
                 </div>`
   }),
   args: {
-    size: 'md',
+    environment: 'frontoffice',
     label: 'Select',
     placeholder: 'Custom placeholder',
     options: [
@@ -69,7 +71,7 @@ const BottomTemplate: SelectStory = {
                 `
   }),
   args: {
-    size: 'md',
+    environment: 'frontoffice',
     label: 'Select',
     placeholder: 'Custom placeholder',
     options: [
@@ -80,24 +82,11 @@ const BottomTemplate: SelectStory = {
   }
 }
 
-export const Medium: SelectStory = {
-  ...Template,
-  decorators: [
-    () => ({
-      template: `
-      <div style="width:100vw;height:100vh;">
-        <story/>
-      </div>
-      `
-    })
-  ]
-}
-
-export const Small: SelectStory = {
+export const Frontoffice: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
-    size: 'sm'
+    environment: 'frontoffice'
   },
   decorators: [
     () => ({
@@ -107,14 +96,33 @@ export const Small: SelectStory = {
       </div>
       `
     })
-  ]
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button renders', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener).toBeTruthy()
+    })
+    
+    await step('Verify frontoffice height (44px = h-44)', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.classList.contains('h-44')).toBe(true)
+    })
+    
+    await step('Verify ARIA attributes', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.getAttribute('aria-haspopup')).toBe('listbox')
+      expect(opener.getAttribute('aria-expanded')).toBe('false')
+    })
+  }
 }
 
-export const Large: SelectStory = {
+export const Backoffice: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
-    size: 'lg'
+    environment: 'backoffice'
   },
   decorators: [
     () => ({
@@ -124,7 +132,20 @@ export const Large: SelectStory = {
       </div>
       `
     })
-  ]
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button renders', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener).toBeTruthy()
+    })
+    
+    await step('Verify backoffice height (32px = h-32)', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.classList.contains('h-32')).toBe(true)
+    })
+  }
 }
 
 export const Error: SelectStory = {
@@ -141,7 +162,20 @@ export const Error: SelectStory = {
       </div>
       `
     })
-  ]
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button has error styling', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.getAttribute('aria-invalid')).toBe('true')
+    })
+    
+    await step('Verify error border color', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.classList.contains('border-semantic-error-200')).toBe(true)
+    })
+  }
 }
 
 export const Disabled: SelectStory = {
@@ -158,13 +192,60 @@ export const Disabled: SelectStory = {
       </div>
       `
     })
-  ]
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button is disabled', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.hasAttribute('disabled')).toBe(true)
+      expect(opener.getAttribute('aria-disabled')).toBe('true')
+    })
+    
+    await step('Verify disabled styling', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.classList.contains('bg-grey-100')).toBe(true)
+      expect(opener.classList.contains('border-grey-100')).toBe(true)
+    })
+  }
+}
+
+export const Readonly: SelectStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    readonly: true
+  },
+  decorators: [
+    () => ({
+      template: `
+      <div style="width:100vw;height:100vh;">
+        <story/>
+      </div>
+      `
+    })
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button is readonly (same styling as disabled)', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.getAttribute('aria-disabled')).toBe('true')
+    })
+    
+    await step('Verify readonly styling (same as disabled)', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener.classList.contains('bg-grey-100')).toBe(true)
+      expect(opener.classList.contains('border-grey-100')).toBe(true)
+    })
+  }
 }
 
 export const Required: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
+    clearable: false,
     required: true
   },
   decorators: [
@@ -196,7 +277,15 @@ export const SelectWithHundredsOfOptions: SelectStory = {
       </div>
       `
     })
-  ]
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button renders', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener).toBeTruthy()
+    })
+  }
 }
 
 export const SelectWithHundredsOfOptionsAndMaxHeight: SelectStory = {
@@ -217,7 +306,15 @@ export const SelectWithHundredsOfOptionsAndMaxHeight: SelectStory = {
       </div>
       `
     })
-  ]
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button renders', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      expect(opener).toBeTruthy()
+    })
+  }
 }
 
 export const OpenOnTop: SelectStory = {
@@ -306,7 +403,6 @@ export const FloatingLabel: SelectStory = {
     ...Template.args,
     rightIcon: 'bell',
     rightIconButton: true,
-    rightIconLast: true,
     variant: 'floating-label',
     rightIconButtonVariant: 'secondary'
   },

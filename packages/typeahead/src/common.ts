@@ -1,7 +1,7 @@
 /**
- * Shared utilities for the Fiscozen Select component library.
+ * Shared utilities for the Fiscozen Typeahead component library.
  * 
- * @module @fiscozen/select/common
+ * @module @fiscozen/typeahead/common
  */
 
 /**

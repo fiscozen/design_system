@@ -34,19 +34,19 @@ export type FzActionStandardIconProps = FzActionBasicProps & {
    */
   variant?: "textLeft" | "textCenter";
   /**
-   * Name of the fontawesome icon
+   * Name of the fontawesome icon (left side)
    */
   iconLeftName?: string;
   /**
-   * Variant of the fontawesome icon
+   * Variant of the fontawesome icon (left side)
    */
   iconLeftVariant?: IconVariant;
   /**
-   * Name of the fontawesome icon
+   * Name of the fontawesome icon (right side)
    */
   iconRightName?: string;
   /**
-   * Variant of the fontawesome icon
+   * Variant of the fontawesome icon (right side)
    */
   iconRightVariant?: IconVariant;
 };
@@ -65,6 +65,10 @@ type FzActionBasicProps = {
    */
   disabled?: boolean;
   /**
+   * Readonly state (visually identical to disabled but semantically different)
+   */
+  readonly?: boolean;
+  /**
    * Environment variant (backoffice/frontoffice)
    */
   environment?: FzActionEnvironment;
@@ -80,6 +84,29 @@ type FzActionBasicProps = {
    * Type of the action (link/action)
    */
   type?: "link" | "action";
+  /**
+   * Unique ID for the action element (used for ARIA relationships)
+   */
+  id?: string;
+  /**
+   * Visual focus state (for keyboard navigation)
+   */
+  focused?: boolean;
+  /**
+   * ARIA role for the action element (e.g., "option", "menuitem")
+   * @default undefined (no role attribute)
+   */
+  role?: string;
+  /**
+   * ARIA selected state (used when role="option")
+   * @default undefined
+   */
+  ariaSelected?: boolean;
+  /**
+   * Override tabindex value (useful for custom focus management)
+   * @default undefined (computed based on focused and interactive state: 0 when focused and interactive, -1 otherwise)
+   */
+  tabindex?: number;
 };
 
 // Discriminated union for action props
@@ -108,6 +135,18 @@ export interface FzActionListProps {
    * Additional CSS classes to apply to the action list container
    */
   listClass?: string;
+  /**
+   * ARIA role for the list container (e.g., 'listbox' for select-like behavior)
+   */
+  role?: string;
+  /**
+   * ARIA labelledby attribute (references the ID of the element that labels this list)
+   */
+  ariaLabelledby?: string;
+  /**
+   * ARIA activedescendant attribute (indicates which child element is currently focused)
+   */
+  ariaActivedescendant?: string;
 }
 
 // ActionLabel component props

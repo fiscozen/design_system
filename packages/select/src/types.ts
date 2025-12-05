@@ -1,10 +1,9 @@
 import { FzFloatingProps } from "@fiscozen/composables";
 import { IconButtonVariant } from '@fiscozen/button';
-import { Ref } from "vue";
 
 export interface FzSelectProps extends FzFloatingProps {
   /**
-   * The list of options displayer in the floating panel
+   * The list of options displayed in the floating panel
    */
   options: FzSelectOptionsProps[];
   /**
@@ -17,106 +16,137 @@ export interface FzSelectProps extends FzFloatingProps {
   placeholder?: string;
   /**
    * If set to true, the input is required
+   * @default false
    */
   required?: boolean;
   /**
    * If set to true, the input is disabled
+   * @default false
    */
   disabled?: boolean;
   /**
+   * If set to true, the input is readonly
+   * @default false
+   */
+  readonly?: boolean;
+  /**
    * If set to true, the input is in error state
+   * @default false
    */
   error?: boolean;
   /**
    * The size of the input
+   * @default 'md'
+   * @deprecated Size prop is deprecated. The select component now uses a fixed 'lg' size. This prop will be removed in a future version.
    */
   size?: "sm" | "md" | "lg";
   /**
-   * Left icon name
+   * FontAwesome icon name displayed on the left side of the select
    */
   leftIcon?: string;
   /**
-   * Right icon name
+   * FontAwesome icon name displayed on the right side of the select (before chevron)
    */
   rightIcon?: string;
   /**
-   * Right icon variant
+   * Visual variant for the right icon button
+   * @default 'invisible'
    */
   rightIconButtonVariant?: IconButtonVariant;
   /**
-   * Right icon button vs simple icon
+   * If true, right icon is rendered as an interactive button instead of a static icon
+   * @default false
    */
   rightIconButton?: boolean;
   /**
-   * The class applied to the input
+   * Additional CSS classes applied to the opener button
    */
   pickerClass?: string;
   /**
-   * Ref to the element that opens the selection
+   * External HTML element to use as the opener instead of the default button
    */
   extOpener?: HTMLElement;
   /**
-   * Set the max height of the floating panel
+   * Maximum height constraint for the dropdown panel (CSS value, e.g., '300px')
    */
   floatingPanelMaxHeight?: string;
   /**
-   * Size of the options to render each time in the floating panel
+   * Number of options to render at once for virtual scrolling performance
+   * @default 25
    */
   optionsToShow?: number;
   /**
-   * will be used in the floating composable overriding other values
-   */
-  overrideOpener?: Ref<HTMLElement>;
-  /**
-   * Disable the truncation of any text in the options. False by default
+   * If true, disables text truncation with ellipsis in option labels
+   * @default false
    */
   disableTruncate?: boolean;
   /**
-   * Select variant
+   * Visual variant of the select component
+   * @default 'normal'
    */
   variant?: 'normal' | 'floating-label';
   /**
+   * Environment context that determines sizing and spacing (backoffice: compact, frontoffice: spacious)
+   * @default 'frontoffice'
+   */
+  environment?: 'backoffice' | 'frontoffice';
+  /**
    * Whether to position right icon before or after chevron
+   * @default false
+   * @deprecated rightIconLast prop is deprecated. The right icon is now always positioned before the chevron. This prop will be removed in a future version.
    */
   rightIconLast?: boolean;
+  /**
+   * If true, allows clearing the selected value by clicking the selected option again
+   * @default true
+   */
+  clearable?: boolean;
+  /**
+   * Message displayed when no options are available
+   * @default 'Nessun risultato trovato'
+   */
+  noResultsMessage?: string;
 }
 
 export type FzSelectOptionsProps = FzSelectOptionProps | FzSelectLabelProps;
 
 export type FzSelectOptionProps = {
   /**
-   * the option value
+   * Unique identifier for the option (used as the selected value)
    */
   value: string;
   /**
-   * the option label
+   * Display text shown in the option
    */
   label: string;
   /**
-   * the subtitle of the option
+   * Optional secondary text displayed below the label
    */
   subtitle?: string;
   /**
-   * if true the option will not be selectable
+   * If true, the option is not selectable and appears greyed out
+   * @default false
    */
   disabled?: boolean;
   /**
-   * same as disabled, but without grey text
+   * If true, the option is not selectable but maintains normal text color
+   * @default false
    */
   readonly?: boolean;
   /**
-   * the type of option
+   * Type discriminator for option items
+   * @default 'option'
    */
   kind?: "option";
 };
 
 export type FzSelectLabelProps = {
   /**
-   * the text of the label
+   * Display text for the section separator
    */
   label: string;
   /**
-   * the type of option
+   * Type discriminator for label separators
    */
   kind: "label";
 };
