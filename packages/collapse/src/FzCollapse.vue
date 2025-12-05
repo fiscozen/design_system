@@ -1,21 +1,31 @@
 <script lang="ts" setup>
+import { ref } from 'vue'
 import { FzCollapseProps } from './types'
 import { FzIcon } from '@fiscozen/icons'
 
 defineProps<FzCollapseProps>()
-const isOpen = defineModel<boolean>('open')
+const isOpen = defineModel<boolean>('open', { default: false })
+const detailsRef = ref<HTMLDetailsElement | null>(null)
 
-const handleSummaryClick = (e) => {
+const handleToggle = (e) => {
   if (e.newState === "open" && isOpen.value === false) {
     isOpen.value = true
   } else if (e.newState === "closed" && isOpen.value === true) {
     isOpen.value = false
   }
 }
+
+const handleClick = () => {
+  if (detailsRef.value?.open) {
+    isOpen.value = false
+  } else {
+    isOpen.value = true
+  }
+}
 </script>
 
 <template>
-  <details :open="isOpen" data-e2e="details" @toggle="handleSummaryClick">
+  <details ref="detailsRef" :open="isOpen" data-e2e="details" @toggle="handleToggle" @click.stop.prevent="handleClick">
     <summary
       data-e2e="summary"
       class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded font-medium"
