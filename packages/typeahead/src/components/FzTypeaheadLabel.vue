@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /**
- * FzSelectLabel Component
+ * FzTypeaheadLabel Component
  *
- * Presentational component for the FzSelect label.
+ * Presentational component for the FzTypeahead label.
  * Renders the label text with required indicator.
  * Handles its own styling based on disabled/readonly state.
  *
@@ -10,9 +10,9 @@
  * @internal
  */
 import { computed } from "vue";
-import type { FzSelectLabelProps } from "./types";
+import type { FzTypeaheadLabelProps } from "./types";
 
-const props = defineProps<FzSelectLabelProps>();
+const props = defineProps<FzTypeaheadLabelProps>();
 
 /**
  * Base text classes shared across all text elements
