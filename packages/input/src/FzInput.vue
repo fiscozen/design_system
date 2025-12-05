@@ -181,13 +181,19 @@ const handleContainerInteraction = () => {
  * Handles keyboard events on container to focus input
  *
  * Supports Enter and Space keys following accessibility best practices.
+ * Only prevents default when event originates from container itself (not from child elements like input),
+ * allowing form submission when Enter is pressed inside the input field.
  *
  * @param e - Keyboard event
  */
 const handleContainerKeydown = (e: KeyboardEvent) => {
   if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    handleContainerInteraction();
+    // Only prevent default if event originated from container itself, not from child elements
+    // This allows Enter key presses in the input to trigger form submission
+    if (e.target === e.currentTarget || e.target === containerRef.value) {
+      e.preventDefault();
+      handleContainerInteraction();
+    }
   }
 };
 
