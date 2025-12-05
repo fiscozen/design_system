@@ -157,8 +157,10 @@ const ariaDescribedBy = computed(() => {
 
 const emit = defineEmits<{
   focus: [event: FocusEvent];
-  paste: [event: ClipboardEvent];
   blur: [event: FocusEvent];
+  // Other DOM events (keydown, keyup, paste, input, change, etc.) are automatically
+  // forwarded to the native input element via v-bind="$attrs" and don't need to be
+  // explicitly declared here. They will work automatically when used on FzInput.
   "fzinput:left-icon-click": [];
   "fzinput:right-icon-click": [];
   "fzinput:second-right-icon-click": [];
@@ -387,6 +389,7 @@ defineExpose({
           :aria-disabled="isReadonlyOrDisabled ? 'true' : 'false'"
           :aria-labelledby="ariaLabelledBy"
           :aria-describedby="ariaDescribedBy"
+          v-bind="$attrs"
           @blur="
             (e) => {
               isFocused = false;
@@ -399,7 +402,6 @@ defineExpose({
               $emit('focus', e);
             }
           "
-          @paste="(e) => $emit('paste', e)"
         />
       </div>
       <slot name="right-icon">
