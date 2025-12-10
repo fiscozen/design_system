@@ -13,11 +13,7 @@ const meta: Meta<typeof FzAlert> = {
     },
     alertStyle: {
       control: 'select',
-      options: ['default', 'collapsable', 'simple']
-    },
-    size: {
-      control: 'select',
-      options: ['sm', 'md', 'lg']
+      options: ['background', 'accordion']
     },
     environment: {
       control: 'select',
