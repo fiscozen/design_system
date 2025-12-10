@@ -10,7 +10,7 @@
  * @internal
  */
 import { computed } from "vue";
-import { FzIcon } from "@fiscozen/icons";
+import { FzAlert } from "@fiscozen/alert";
 import type { FzSelectHelpErrorProps } from "./types";
 
 const props = defineProps<FzSelectHelpErrorProps>();
@@ -67,12 +67,9 @@ const errorClass = computed(() => {
 </script>
 
 <template>
-  <div v-if="error && $slots.error" class="flex gap-6">
-    <FzIcon name="circle-xmark" class="text-semantic-error-200" size="md" />
-    <div :class="errorClass">
-      <slot name="error"></slot>
-    </div>
-  </div>
+  <FzAlert v-if="error && $slots.error" type="error" alertStyle="simple">
+    <slot name="error"></slot>
+  </FzAlert>
   <span v-else-if="$slots.help" :class="helpClass">
     <slot name="help"></slot>
   </span>
