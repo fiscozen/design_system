@@ -70,48 +70,6 @@ const model = defineModel<string | undefined>({
 });
 
 // ============================================================================
-// DEPRECATION WARNINGS
-// ============================================================================
-
-// Track if we've already shown the deprecation warning for this instance
-const sizeWarningShown = ref(false);
-const rightIconLastWarningShown = ref(false);
-
-// Warn if deprecated size prop is used
-watch(
-  () => props.size,
-  (newSize) => {
-    if (!sizeWarningShown.value && newSize !== undefined) {
-      console.warn(
-        `[FzSelect] The 'size' prop is deprecated and will be removed in a future version. ` +
-          `The component now uses a fixed 'lg' size. Please remove the size prop from your usage.`
-      );
-      sizeWarningShown.value = true;
-    }
-  },
-  { immediate: true }
-);
-
-// Warn if deprecated rightIconLast prop is used
-watch(
-  () => props.rightIconLast,
-  (newValue) => {
-    if (
-      !rightIconLastWarningShown.value &&
-      newValue !== undefined &&
-      newValue !== false
-    ) {
-      console.warn(
-        `[FzSelect] The 'rightIconLast' prop is deprecated and will be removed in a future version. ` +
-          `The right icon is now always positioned before the chevron. Please remove the rightIconLast prop from your usage.`
-      );
-      rightIconLastWarningShown.value = true;
-    }
-  },
-  { immediate: true }
-);
-
-// ============================================================================
 // STATE
 // ============================================================================
 
@@ -566,6 +524,22 @@ watch(isOpen, (newValue) => {
 // ============================================================================
 
 onMounted(() => {
+  // Deprecation warnings
+  if (props.size !== undefined) {
+    console.warn(
+      `[FzSelect] The 'size' prop is deprecated and will be removed in a future version. ` +
+        `The component now uses a fixed 'lg' size. Please remove the size prop from your usage.`
+    );
+  }
+
+  if (props.rightIconLast !== undefined && props.rightIconLast !== false) {
+    console.warn(
+      `[FzSelect] The 'rightIconLast' prop is deprecated and will be removed in a future version. ` +
+        `The right icon is now always positioned before the chevron. Please remove the rightIconLast prop from your usage.`
+    );
+  }
+
+  // Initialization
   if (props.floatingPanelMaxHeight) {
     maxHeight.value = props.floatingPanelMaxHeight;
   }
