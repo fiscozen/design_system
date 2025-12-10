@@ -170,7 +170,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
-          errorMessage: "Error message",
+          error: true,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -205,6 +205,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          error: true,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -226,7 +227,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
-          errorMessage: "Error message",
+          error: true,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -588,11 +589,11 @@ describe("FzTypeahead", () => {
       expect(button.attributes("aria-required")).toBe("true");
     });
 
-    it("sets aria-invalid when errorMessage is provided", () => {
+    it("sets aria-invalid when error is true", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
-          errorMessage: "Error message",
+          error: true,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -727,6 +728,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -755,6 +757,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -784,6 +787,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -812,6 +816,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -840,6 +845,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -867,6 +873,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -894,6 +901,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -927,6 +935,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -960,6 +969,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -985,6 +995,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { kind: "label", label: "Group 1" },
             { value: "option1", label: "Option 1" },
@@ -1019,6 +1030,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1046,6 +1058,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "option2",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1147,6 +1160,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1176,6 +1190,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1207,6 +1222,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1236,6 +1252,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1267,6 +1284,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1295,6 +1313,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1323,6 +1342,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1508,6 +1528,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [{ value: "option1", label: "Option 1" }],
         },
       });
@@ -1544,6 +1565,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1590,6 +1612,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1652,6 +1675,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "option2",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1729,6 +1753,7 @@ describe("FzTypeahead", () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
