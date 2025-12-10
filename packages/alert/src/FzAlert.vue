@@ -33,9 +33,9 @@ const sizeToEnvironmentMapping = {
 }
 
 const containerClass = computed(() => [
-  'flex select-none gap-12 rounded',
+  'flex select-none gap-12 rounded justify-between',
   mapToneToContainerClass[props.tone],
-  safeEnvironment.value === 'backoffice' ? 'p-6' : 'p-12',
+  safeEnvironment.value === 'backoffice' ? 'p-6' : '',
   ...(props.alertStyle === 'collapsable' ? ['cursor-pointer'] : [])
 ])
 
@@ -63,8 +63,9 @@ const iconClass = computed(() => [
 
 const descriptionClass = computed(() => [
   'font-normal',
-  'mt-8',
+  '!leading-[20px]',
   {
+    'mt-8': props.title,
     'mb-16': (props.showButtonAction || props.showLinkAction)
   }
 ])
@@ -116,38 +117,40 @@ const handleRightIconClick = () => {
 
 <template>
   <div :class="containerClass" @click="isOpen = !isOpen">
-    <FzIcon :name="iconName" size="md" :class="iconClass" />
-    <div class="flex flex-col flex-1">
-      <p v-if="title" v-bold>
-        {{ title }}
-      </p>
+    <FzContainer horizontal gap="sm" :class="['flex-1', props.environment === 'backoffice' ? 'p-6' : 'p-12']" alignItems="start">
+      <FzIcon :name="iconName" size="md" :class="iconClass" />
+      <div class="flex flex-col flex-1">
+        <p v-if="title" v-bold class="leading-[20px]">
+          {{ title }}
+        </p>
 
-      <p v-if="showDescription" :class="descriptionClass">
-        <slot></slot>
-      </p>
+        <p v-if="showDescription" :class="descriptionClass">
+          <slot></slot>
+        </p>
 
-      <slot name="action" v-if="showAction">
-        <FzContainer horizontal gap="sm">
-          <FzButton
-            v-if="showButtonAction"
-            @click="handleButtonClick"
-            :tooltip="buttonActionTooltip"
-            :environment="safeEnvironment"
-            variant="secondary"
-            >{{ buttonActionLabel }}</FzButton
-          >
-          <FzLink
-            v-if="showLinkAction"
-            :to="linkActionLocation!"
-            @click="handleButtonClick"
-            size="md"
-            :target="linkActionTarget"
-            :external="linkActionExternal"
-            >{{ linkActionLabel }}</FzLink
-          >
-        </FzContainer>
-      </slot>
-    </div>
+        <slot name="action" v-if="showAction">
+          <FzContainer horizontal gap="sm">
+            <FzButton
+              v-if="showButtonAction"
+              @click="handleButtonClick"
+              :tooltip="buttonActionTooltip"
+              :environment="safeEnvironment"
+              variant="secondary"
+              >{{ buttonActionLabel }}</FzButton
+            >
+            <FzLink
+              v-if="showLinkAction"
+              :to="linkActionLocation!"
+              @click="handleButtonClick"
+              size="md"
+              :target="linkActionTarget"
+              :external="linkActionExternal"
+              >{{ linkActionLabel }}</FzLink
+            >
+          </FzContainer>
+        </slot>
+      </div>
+    </FzContainer>
     <FzIconButton v-if="hasRightIcon"
       :iconName="rightIconName!"
       :environment="safeEnvironment"

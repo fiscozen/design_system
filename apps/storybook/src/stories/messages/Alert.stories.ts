@@ -132,6 +132,25 @@ const Dismissible: Story = {
   }
 }
 
+const NoTitleWithButtonAction: Story = {
+  args: {
+    tone: 'info',
+    title: undefined
+  }
+}
+
+const NoTitleWithLinkAction: Story = {
+  args: {
+    tone: 'info',
+    title: undefined,
+    showButtonAction: false,
+    showLinkAction: true,
+    linkActionLocation: 'example',
+    linkActionLabel: 'This is a link'
+  },
+  decorators: [vueRouter()]
+}
+
 export {
   Info,
   Error,
@@ -144,7 +163,9 @@ export {
   LinkExternal,
   OnlyLink,
   WithoutAction,
-  Dismissible
+  Dismissible,
+  NoTitleWithButtonAction,
+  NoTitleWithLinkAction
 }
 
 export default meta
