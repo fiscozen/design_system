@@ -104,7 +104,7 @@ type FzActionBasicProps = {
   ariaSelected?: boolean;
   /**
    * Override tabindex value (useful for custom focus management)
-   * @default undefined (computed based on focused and interactive state: 0 when focused and interactive, -1 otherwise)
+   * @default undefined (computed: -1 if not interactive, for role="option": 0 if focused else -1, for other roles: 0 if focused else undefined for browser default tabbable behavior)
    */
   tabindex?: number;
 };
