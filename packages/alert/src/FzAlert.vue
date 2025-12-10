@@ -9,7 +9,6 @@ import { FzContainer } from '@fiscozen/container'
 
 const props = withDefaults(defineProps<AlertProps>(), {
   alertStyle: 'default',
-  size: 'lg',
   defaultOpen: true,
   showButtonAction: true,
   environment: 'frontoffice'
@@ -36,7 +35,7 @@ const containerClass = computed(() => [
   'flex select-none gap-12 rounded justify-between',
   mapToneToContainerClass[props.tone],
   safeEnvironment.value === 'backoffice' ? 'p-6' : '',
-  ...(props.alertStyle === 'collapsable' ? ['cursor-pointer'] : [])
+  ...(safeVariant.value === 'accordion' ? ['cursor-pointer'] : [])
 ])
 
 const iconName = computed(
@@ -80,10 +79,9 @@ const rightIconName = computed(() => {
   if (props.isDismissible) return 'xmark'
 })
 const showDescription = computed(() => {
-  if (props.alertStyle !== 'collapsable') return true
+  if (safeVariant.value !== 'accordion') return true
   return isOpen.value
 })
-const showCollapseIcon = computed(() => safeVariant.value === 'accordion')
 
 function handleButtonClick(event: Event) {
   event.stopPropagation()
@@ -91,10 +89,10 @@ function handleButtonClick(event: Event) {
 }
 
 const safeEnvironment = computed<ButtonEnvironment>(() => {
-  if (props.environment) {
-    return props.environment
+  if (props.size) {
+    return sizeToEnvironmentMapping[props.size] as ButtonEnvironment
   }
-  return props.size ? sizeToEnvironmentMapping[props.size] as ButtonEnvironment : 'frontoffice'
+  return props.environment
 })
 
 const safeVariant = computed<AlertVariant>(() => {
@@ -113,11 +111,17 @@ const handleRightIconClick = () => {
     emit('fzAlert:dismiss')
   }
 }
+
+const handleClick = () => {
+  if (safeVariant.value === 'accordion') {
+    isOpen.value = !isOpen.value
+  }
+}
 </script>
 
 <template>
-  <div :class="containerClass" @click="isOpen = !isOpen">
-    <FzContainer horizontal gap="sm" :class="['flex-1', props.environment === 'backoffice' ? 'p-6' : 'p-12']" alignItems="start">
+  <div :class="containerClass" @click="handleClick">
+    <FzContainer horizontal gap="sm" :class="['flex-1', safeEnvironment === 'backoffice' ? 'p-6' : 'p-12']" alignItems="start">
       <FzIcon :name="iconName" size="md" :class="iconClass" />
       <div class="flex flex-col flex-1">
         <p v-if="title" v-bold class="leading-[20px]">
