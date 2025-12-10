@@ -2278,12 +2278,18 @@ importers:
       '@fiscozen/action':
         specifier: workspace:^
         version: link:../action
+      '@fiscozen/alert':
+        specifier: workspace:^
+        version: link:../alert
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
+      '@fiscozen/icons':
+        specifier: workspace:^
+        version: link:../icons
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.17
@@ -2294,9 +2300,6 @@ importers:
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
-      '@fiscozen/icons':
-        specifier: workspace:^
-        version: link:../icons
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
@@ -7895,8 +7898,8 @@ packages:
   vue-component-type-helpers@2.2.2:
     resolution: {integrity: sha512-6lLY+n2xz2kCYshl59mL6gy8OUUTmkscmDFMO8i7Lj+QKwgnIFUZmM1i/iTYObtrczZVdw7UakPqDTGwVSGaRg==}
 
-  vue-component-type-helpers@3.1.5:
-    resolution: {integrity: sha512-7V3yJuNWW7/1jxCcI1CswnpDsvs02Qcx/N43LkV+ZqhLj2PKj50slUflHAroNkN4UWiYfzMUUUXiNuv9khmSpQ==}
+  vue-component-type-helpers@3.1.8:
+    resolution: {integrity: sha512-oaowlmEM6BaYY+8o+9D9cuzxpWQWHqHTMKakMxXu0E+UCIOMTljyIPO15jcnaCwJtZu/zWDotK7mOIHvWD9mcw==}
 
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
@@ -8820,7 +8823,7 @@ snapshots:
       storybook: 9.1.10(@testing-library/dom@10.4.0)(prettier@3.5.1)(vite@5.4.14(@types/node@18.19.76))
       type-fest: 2.19.0
       vue: 3.5.13(typescript@5.3.3)
-      vue-component-type-helpers: 3.1.5
+      vue-component-type-helpers: 3.1.8
 
   '@tato30/vue-pdf@1.11.4(vue@3.5.13(typescript@5.3.3))':
     dependencies:
@@ -13160,7 +13163,7 @@ snapshots:
 
   vue-component-type-helpers@2.2.2: {}
 
-  vue-component-type-helpers@3.1.5: {}
+  vue-component-type-helpers@3.1.8: {}
 
   vue-docgen-api@4.79.2(vue@3.5.13(typescript@5.3.3)):
     dependencies:

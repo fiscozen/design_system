@@ -12,18 +12,17 @@
   "type": "module",
   "keywords": [],
   "author": "Cristian Barraco",
-  "dependencies": {
-    "@fiscozen/action": "workspace:^",
-    "@fiscozen/button": "workspace:^",
-    "@fiscozen/composables": "workspace:^"
-  },
   "peerDependencies": {
+    "@fiscozen/action": "workspace:^",
+    "@fiscozen/alert": "workspace:^",
+    "@fiscozen/button": "workspace:^",
+    "@fiscozen/composables": "workspace:^",
+    "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",
-    "@fiscozen/icons": "workspace:^",
     "@fiscozen/prettier-config": "workspace:^",
     "@fiscozen/tsconfig": "workspace:^",
     "@rushstack/eslint-patch": "^1.3.3",
