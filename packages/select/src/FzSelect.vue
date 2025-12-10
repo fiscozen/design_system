@@ -410,15 +410,10 @@ const scrollToFocusedOption = () => {
 // ============================================================================
 
 /**
- * Attaches scroll listener to options container for lazy loading
- */
-function addScrollListener() {
-  const element = containerElement.value;
-  element?.addEventListener("scroll", handleScroll);
-}
-
-/**
  * Handles scroll events to trigger lazy loading of options
+ *
+ * Called via component event from FzSelectOptionsList when user scrolls.
+ * The container element is accessed via computed property when needed.
  */
 function handleScroll() {
   const container = containerElement.value;
@@ -544,7 +539,7 @@ onMounted(() => {
     maxHeight.value = props.floatingPanelMaxHeight;
   }
   updateContainerWidth();
-  addScrollListener();
+  // Note: Scroll events are handled via component event from FzSelectOptionsList (@scroll="handleScroll")
   // Note: visibleOptions is already initialized by watch(() => props.options)
   // No need to call updateVisibleOptions() here
 });
