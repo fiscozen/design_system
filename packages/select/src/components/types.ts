@@ -5,7 +5,7 @@
  */
 
 import { IconButtonVariant } from "@fiscozen/button";
-import { FzSelectOptionProps } from "../types";
+import { FzSelectOptionProps, FzSelectOptionsProps } from "../types";
 
 /**
  * Props for FzSelectLabel component
@@ -148,7 +148,7 @@ export interface FzSelectOptionsListProps {
   /**
    * List of visible options to render
    */
-  visibleOptions: any[];
+  visibleOptions: FzSelectOptionsProps[];
   /**
    * Value of the currently focused option (for keyboard navigation)
    */

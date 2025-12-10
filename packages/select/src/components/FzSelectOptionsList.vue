@@ -9,7 +9,7 @@
  * @component
  * @internal
  */
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { FzActionList, FzActionSection, FzAction } from "@fiscozen/action";
 import type { FzSelectOptionsListProps } from "./types";
 import type { FzSelectOptionsProps, FzSelectOptionProps } from "../types";
@@ -84,6 +84,45 @@ const createActionRefCallback = (option: FzSelectOptionProps) => {
 };
 
 /**
+ * Groups visible options into sections based on label separators
+ *
+ * Options before the first label belong to a section without label.
+ * Options after a label belong to that section until the next label.
+ */
+const groupedSections = computed(() => {
+  const sections: Array<{ label?: string; options: FzSelectOptionProps[] }> =
+    [];
+  let currentSection: {
+    label?: string;
+    options: FzSelectOptionProps[];
+  } | null = null;
+
+  for (const item of props.visibleOptions) {
+    if (isLabelOption(item)) {
+      // Close current section if exists
+      if (currentSection) {
+        sections.push(currentSection);
+      }
+      // Create new section with label
+      currentSection = { label: item.label, options: [] };
+    } else if (isSelectableOption(item)) {
+      // If no current section, create one without label
+      if (!currentSection) {
+        currentSection = { options: [] };
+      }
+      currentSection.options.push(item);
+    }
+  }
+
+  // Add last section if exists
+  if (currentSection) {
+    sections.push(currentSection);
+  }
+
+  return sections;
+});
+
+/**
  * Expose containerElement for parent component to attach scroll listeners
  */
 defineExpose({
@@ -104,26 +143,31 @@ defineExpose({
     @scroll="emit('scroll')"
   >
     <template v-if="visibleOptions.length">
-      <template v-for="option in visibleOptions" :key="getOptionKey(option)">
-        <FzActionSection v-if="isLabelOption(option)" :label="option.label" />
-        <FzAction
-          v-else-if="isSelectableOption(option)"
-          :ref="createActionRefCallback(option)"
-          type="action"
-          variant="textLeft"
-          environment="backoffice"
-          :label="option.label"
-          :subLabel="option.subtitle"
-          :disabled="option.disabled"
-          :readonly="option.readonly"
-          :id="getOptionId(option)"
-          :focused="focusedOptionValue === option.value"
-          :isTextTruncated="!disableTruncate"
-          :iconRightName="getCheckIcon(option)"
-          role="option"
-          :ariaSelected="selectedValue === option.value"
-          @click="() => handleSelect(option)"
-        />
+      <template
+        v-for="(section, sectionIndex) in groupedSections"
+        :key="sectionIndex"
+      >
+        <FzActionSection :label="section.label">
+          <FzAction
+            v-for="option in section.options"
+            :key="option.value"
+            :ref="createActionRefCallback(option)"
+            type="action"
+            variant="textLeft"
+            environment="backoffice"
+            :label="option.label"
+            :subLabel="option.subtitle"
+            :disabled="option.disabled"
+            :readonly="option.readonly"
+            :id="getOptionId(option)"
+            :focused="focusedOptionValue === option.value"
+            :isTextTruncated="!disableTruncate"
+            :iconRightName="getCheckIcon(option)"
+            role="option"
+            :ariaSelected="selectedValue === option.value"
+            @click="() => handleSelect(option)"
+          />
+        </FzActionSection>
       </template>
     </template>
     <template v-else>
