@@ -30,9 +30,7 @@ const openerButton = ref<HTMLButtonElement>();
 /**
  * Computed state flags
  */
-const isDisabled = computed(() => props.disabled);
-const isReadonly = computed(() => props.readonly);
-const isInteractive = computed(() => !isDisabled.value && !isReadonly.value);
+const isInteractive = computed(() => !props.disabled && !props.readonly);
 const isError = computed(() => props.error && isInteractive.value);
 const isSelectedValue = computed(
   () => props.selectedOption && isInteractive.value
@@ -67,8 +65,8 @@ const environmentPickerClasses = {
  */
 const pickerStateClasses = computed(() => {
   switch (true) {
-    case isDisabled.value:
-    case isReadonly.value:
+    case props.disabled:
+    case props.readonly:
       return "bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed focus:border-grey-100";
 
     case isError.value:
@@ -107,8 +105,8 @@ const spanClass = computed(() => {
   const baseClasses = [baseTextClasses];
 
   switch (true) {
-    case isDisabled.value:
-    case isReadonly.value:
+    case props.disabled:
+    case props.readonly:
       baseClasses.push("text-grey-300");
       break;
 
@@ -131,7 +129,7 @@ const spanClass = computed(() => {
  * Returns core-black for interactive state, grey-300 for disabled/readonly states.
  */
 const iconColorClass = computed(() => {
-  if (isDisabled.value || isReadonly.value) {
+  if (props.disabled || props.readonly) {
     return "text-grey-300";
   }
   return "text-core-black";
@@ -164,7 +162,7 @@ defineExpose({
       @keydown="handleKeydown"
       test-id="fzselect-opener"
       type="button"
-      :disabled="isDisabled"
+      :disabled="disabled"
       :class="[staticPickerClass, ...computedPickerClass, pickerClass]"
       :title="selectedOption ? selectedOption.label : placeholder"
       :aria-expanded="isOpen ? 'true' : 'false'"
