@@ -77,8 +77,8 @@ const MixedVariants: Story = {
         <FzActionList>
           <FzActionSection label="Layout Variants">
             <FzAction label="Text Left" subLabel="With sub-label" iconRightName="align-left"  @click="() => console.log('Text left')" />
-            <FzAction variant="textCenter" label="Text Center" subLabel="Centered layout" iconLeftName="house"  iconRightName="face-smile"  @click="() => console.log('Text center')" />
-            <FzAction variant="onlyIcon" iconName="face-smile" @click="() => console.log('Icon only')" />
+            <FzAction variant="textCenter" label="Text Center" subLabel="Centered layout" iconLeftName="house"  iconRightName="check"  @click="() => console.log('Text center')" />
+            <FzAction variant="onlyIcon" iconName="check" @click="() => console.log('Icon only')" />
           </FzActionSection>
           <FzActionSection label="States">
             <FzAction label="Normal Action" iconRightName="face-smile"  @click="() => console.log('Normal')" />
@@ -129,9 +129,9 @@ const CustomStyling: Story = {
       <div class="max-w-[500px]">
         <FzActionList :listClass="args.listClass">
           <FzActionSection label="Custom Styled List">
-            <FzAction label="Action 1" iconRightName="face-smile"  @click="() => console.log('Action 1')" />
-            <FzAction label="Action 2" iconRightName="face-smile"  @click="() => console.log('Action 2')" />
-            <FzAction label="Action 3" iconRightName="face-smile"  @click="() => console.log('Action 3')" />
+            <FzAction label="Action 1" iconRightName="check"  @click="() => console.log('Action 1')" />
+            <FzAction label="Action 2" iconRightName="check"  @click="() => console.log('Action 2')" />
+            <FzAction label="Action 3" iconRightName="check"  @click="() => console.log('Action 3')" />
           </FzActionSection>
         </FzActionList>
       </div>
@@ -147,18 +147,18 @@ const ComplexContent: Story = {
       <div class="max-w-[500px]">
         <FzActionList>
           <FzActionSection label="User Management">
-            <FzAction label="Add User" subLabel="Create a new user account" iconRightName="face-smile"  @click="() => console.log('Add user')" />
-            <FzAction label="Edit User" subLabel="Modify existing user" iconRightName="face-smile"  @click="() => console.log('Edit user')" />
-            <FzAction label="Delete User" subLabel="Remove user account" iconRightName="face-smile"  disabled @click="() => console.log('Delete user')" />
+            <FzAction label="Add User" subLabel="Create a new user account" iconRightName="check"  @click="() => console.log('Add user')" />
+            <FzAction label="Edit User" subLabel="Modify existing user" iconRightName="check"  @click="() => console.log('Edit user')" />
+            <FzAction label="Delete User" subLabel="Remove user account" iconRightName="check"  disabled @click="() => console.log('Delete user')" />
           </FzActionSection>
           <FzActionSection label="System Actions">
-            <FzAction variant="textCenter" label="Backup" subLabel="Create system backup" iconLeftName="house"  iconRightName="face-smile"  @click="() => console.log('Backup')" />
-            <FzAction variant="textCenter" label="Restore" subLabel="Restore from backup" iconLeftName="house"  iconRightName="face-smile"  @click="() => console.log('Restore')" />
+            <FzAction variant="textCenter" label="Backup" subLabel="Create system backup" iconLeftName="house"  iconRightName="check"  @click="() => console.log('Backup')" />
+            <FzAction variant="textCenter" label="Restore" subLabel="Restore from backup" iconLeftName="house"  iconRightName="check"  @click="() => console.log('Restore')" />
           </FzActionSection>
           <FzActionSection label="Quick Actions">
-            <FzAction variant="onlyIcon" iconName="face-smile" iconVariant="solid" @click="() => console.log('Refresh')" />
-            <FzAction variant="onlyIcon" iconName="face-smile" iconVariant="solid" @click="() => console.log('Sync')" />
-            <FzAction variant="onlyIcon" iconName="face-smile" iconVariant="solid" @click="() => console.log('Shutdown')" />
+            <FzAction variant="onlyIcon" iconName="check" @click="() => console.log('Refresh')" />
+            <FzAction variant="onlyIcon" iconName="check" @click="() => console.log('Sync')" />
+            <FzAction variant="onlyIcon" iconName="check" @click="() => console.log('Shutdown')" />
           </FzActionSection>
         </FzActionList>
       </div>

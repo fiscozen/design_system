@@ -164,6 +164,7 @@ defineExpose({
       @keydown="handleKeydown"
       test-id="fzselect-opener"
       type="button"
+      :disabled="isDisabled"
       :class="[staticPickerClass, ...computedPickerClass, pickerClass]"
       :title="selectedOption ? selectedOption.label : placeholder"
       :aria-expanded="isOpen ? 'true' : 'false'"
