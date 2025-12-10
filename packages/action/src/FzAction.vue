@@ -298,17 +298,27 @@ const boundAttrs = computed(() => {
     baseAriaAttributes["aria-selected"] = props.ariaSelected ? "true" : "false";
   }
 
+  // For button type, always include disabled attribute when disabled is true
+  // This prevents programmatic focus() calls on disabled buttons
+  if (props.type === "action") {
+    const buttonAttrs: Record<string, string | number | boolean | undefined> = {
+      ...baseAriaAttributes,
+      type: "button",
+    };
+
+    // Always set disabled attribute for buttons when props.disabled is true
+    // This prevents focus() calls even when readonly is also true
+    if (props.disabled) {
+      buttonAttrs.disabled = true;
+    }
+
+    return buttonAttrs;
+  }
+
+  // For non-interactive links, return early with just ARIA attributes
   if (!isInteractive) {
     return {
       ...baseAriaAttributes,
-    };
-  }
-
-  if (props.type === "action") {
-    return {
-      ...baseAriaAttributes,
-      type: "button",
-      disabled: props.disabled,
     };
   }
 
