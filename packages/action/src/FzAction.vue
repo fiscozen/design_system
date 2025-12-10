@@ -238,13 +238,44 @@ const isIconDecorative = computed(() => {
 });
 
 /**
+ * Computes tabindex value based on component state and role
+ *
+ * Priority:
+ * 1. Explicit override via tabindex prop
+ * 2. Not interactive (disabled/readonly) → -1
+ * 3. role="option" → 0 if focused, -1 otherwise (for custom focus management in listboxes)
+ * 4. Other roles → 0 if focused, undefined otherwise (browser default for standalone use)
+ */
+const computedTabindex = computed(() => {
+  // Explicit override takes precedence
+  if (props.tabindex !== undefined) {
+    return props.tabindex;
+  }
+
+  const isInteractive = !props.disabled && !props.readonly;
+
+  // Non-interactive elements are not tabbable
+  if (!isInteractive) {
+    return -1;
+  }
+
+  // For role="option" (e.g., in FzSelect), only focused option is tabbable
+  if (props.role === "option") {
+    return props.focused ? 0 : -1;
+  }
+
+  // For other roles, use browser default (undefined) unless explicitly focused
+  return props.focused ? 0 : undefined;
+});
+
+/**
  * Computes bound attributes for the component
  *
  * Includes ARIA attributes for accessibility:
  * - role: Configurable ARIA role (e.g., "option", "menuitem")
  * - aria-disabled: Always present with explicit "true"/"false" values
  * - aria-selected: Only added when explicitly provided (for role="option")
- * - tabindex: Can be overridden via prop, otherwise 0 when focused and interactive, -1 otherwise
+ * - tabindex: Computed based on interactive state, role, and focus (see computedTabindex)
  *
  * For button type: adds type="button" and disabled attribute
  * For link type: adds router-link props (to, replace, target, etc.)
@@ -258,12 +289,7 @@ const boundAttrs = computed(() => {
   > = {
     id: props.id,
     "aria-disabled": isInteractive ? "false" : "true",
-    tabindex:
-      props.tabindex !== undefined
-        ? props.tabindex
-        : isInteractive && props.focused
-          ? 0
-          : -1,
+    tabindex: computedTabindex.value,
     role: props.role,
   };
 
