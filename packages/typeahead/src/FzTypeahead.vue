@@ -658,8 +658,20 @@ const findPreviousEnabledIndex = (currentIndex: number): number => {
 /**
  * Handles keyboard events on options container
  * Only navigates through enabled (non-disabled) options
+ *
+ * Escape key is handled before checking for enabled options to ensure
+ * the dropdown can always be closed via keyboard, even when no options are available.
  */
 const handleOptionsKeydown = (event: KeyboardEvent) => {
+  // Handle Escape key before checking for enabled options
+  // This ensures dropdown can be closed even when search yields no results
+  if (event.key === "Escape") {
+    event.preventDefault();
+    isOpen.value = false;
+    focusedIndex.value = -1;
+    return;
+  }
+
   const enabled = enabledOptions.value;
   if (enabled.length === 0) return;
 
@@ -694,12 +706,6 @@ const handleOptionsKeydown = (event: KeyboardEvent) => {
       if (focusedIndex.value >= 0 && focusedIndex.value < enabled.length) {
         handleSelect(enabled[focusedIndex.value]);
       }
-      break;
-
-    case "Escape":
-      event.preventDefault();
-      isOpen.value = false;
-      focusedIndex.value = -1;
       break;
 
     case "Tab":
