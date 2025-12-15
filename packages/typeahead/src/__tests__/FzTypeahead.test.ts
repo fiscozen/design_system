@@ -991,6 +991,47 @@ describe("FzTypeahead", () => {
       expect(wrapper.vm.focusedIndex).toBe(-1);
     });
 
+    it("closes dropdown on Escape key when no options are available (empty search results)", async () => {
+      vi.useFakeTimers();
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.isOpen).toBe(true);
+
+      // Type a search query that yields no results
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("nonexistent");
+      await wrapper.vm.$nextTick();
+      
+      // Advance timers to trigger debounced filter (default delay is 500ms)
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+      
+      // Verify no options are available (enabledOptions is empty)
+      expect(wrapper.vm.enabledOptions.length).toBe(0);
+
+      // Press Escape in the input field (delegates to handleOptionsKeydown)
+      await input.trigger("keydown", { key: "Escape" });
+      await wrapper.vm.$nextTick();
+      
+      // Verify dropdown closes even when no options are available
+      expect(wrapper.vm.isOpen).toBe(false);
+      expect(wrapper.vm.focusedIndex).toBe(-1);
+      
+      vi.useRealTimers();
+    });
+
     it("skips labels when navigating with arrows", async () => {
       const wrapper = mount(FzTypeahead, {
         props: {
