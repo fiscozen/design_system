@@ -593,18 +593,26 @@ watch(isOpen, (newValue) => {
 
 onMounted(() => {
   // Deprecation warnings
-  if (props.size !== undefined) {
+  // Note: Watchers with immediate: true already handle these warnings during setup.
+  // These checks prevent duplicate warnings if onMounted runs before watchers complete.
+  if (!sizeWarningShown.value && props.size !== undefined) {
     console.warn(
       `[FzSelect] The 'size' prop is deprecated and will be removed in a future version. ` +
         `The component now uses a fixed 'lg' size. Please remove the size prop from your usage.`
     );
+    sizeWarningShown.value = true;
   }
 
-  if (props.rightIconLast !== undefined && props.rightIconLast !== false) {
+  if (
+    !rightIconLastWarningShown.value &&
+    props.rightIconLast !== undefined &&
+    props.rightIconLast !== false
+  ) {
     console.warn(
       `[FzSelect] The 'rightIconLast' prop is deprecated and will be removed in a future version. ` +
         `The right icon is now always positioned before the chevron. Please remove the rightIconLast prop from your usage.`
     );
+    rightIconLastWarningShown.value = true;
   }
 
   // Initialization
