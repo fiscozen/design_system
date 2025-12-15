@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
 import { FzAppointments } from '@fiscozen/appointments'
 import { ref } from 'vue'
-import { addDays, formatISO } from 'date-fns'
+import { addDays, formatISO, startOfDay } from 'date-fns'
 
 // Helper function to get current hour in ISO-8601 format
 // This ensures slots are always available regardless of when tests run
@@ -47,7 +47,8 @@ const meta: Meta<typeof FzAppointments> = {
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 8,
     slotInterval: 30,
-    breakDuration: 0
+    breakDuration: 0,
+    type: 'auto'
   },
   decorators: [
     () => ({
@@ -108,6 +109,7 @@ const Template: Story = {
 export const Default: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 24,
@@ -164,6 +166,7 @@ export const Default: Story = {
 export const WithBreakDuration: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 3,
@@ -196,6 +199,7 @@ export const WithBreakDuration: Story = {
 export const WithExcludedDays: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
@@ -238,6 +242,7 @@ export const WithexcludedSlots: Story = {
     const currentHour = now.getHours()
 
     return {
+      type: 'auto',
       startDate: formatISO(new Date()),
       slotStartTime: getCurrentStartTimeISO(),
       slotCount: 5,
@@ -318,6 +323,7 @@ export const WithexcludedSlots: Story = {
 export const WithMaxDate: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
@@ -366,6 +372,7 @@ export const NoAvailableSlots: Story = {
     }
 
     return {
+      type: 'auto',
       startDate: formatISO(new Date()),
       slotStartTime: getCurrentStartTimeISO(),
       slotCount: 5,
@@ -397,6 +404,7 @@ export const NoAvailableSlots: Story = {
 export const SlotSelection: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
@@ -448,6 +456,7 @@ export const SlotSelection: Story = {
 export const DateNavigation: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
@@ -538,6 +547,7 @@ export const DateNavigation: Story = {
 export const CustomSlotConfiguration: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 10,
@@ -578,6 +588,7 @@ export const CustomSlotConfiguration: Story = {
 export const RequiredField: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
@@ -585,6 +596,319 @@ export const RequiredField: Story = {
     breakDuration: 0,
     required: true
   },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    await step('Verify required attribute is set', async () => {
+      await waitFor(
+        () => {
+          const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+          expect(slots.length).toBeGreaterThan(0)
+
+          // All slots should have required attribute
+          const firstSlot = slots[0]
+          expect(firstSlot).toHaveAttribute('required')
+        },
+        { timeout: 2000 }
+      )
+    })
+  }
+}
+
+// ==========================================
+// CONTROLLED MODE STORIES
+// ==========================================
+
+// Helper to generate controlled slots for a given day
+const generateManualSlots = (day: Date, times: string[]): Date[] => {
+  return times.map((time) => {
+    const [hours, minutes] = time.split(':').map(Number)
+    const slot = new Date(day)
+    slot.setHours(hours, minutes, 0, 0)
+    return slot
+  })
+}
+
+const ManualTemplate: Story = {
+  render: (args) => ({
+    components: { FzAppointments },
+    setup() {
+      const selectedDate = ref<string | undefined>()
+      return {
+        args,
+        selectedDate
+      }
+    },
+    template: `
+      <div class="flex gap-32">
+        <FzAppointments 
+          v-bind="args" 
+          v-model="selectedDate"
+        />
+        <div class="h-auto p-12 bg-grey-100 rounded">
+          <p class="text-sm font-medium mb-4">Selected appointment:</p>
+          <p class="text-sm" v-if="selectedDate">
+            GMT (raw value): {{ selectedDate }}
+          </p>
+          <p class="text-sm" v-if="selectedDate">
+            Local: {{ new Date(selectedDate).toLocaleString() }}
+          </p>
+          <p class="text-sm text-grey-500" v-else>No appointment selected</p>
+        </div>
+      </div>
+    `
+  })
+}
+
+export const ManualBasic: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const slots = generateManualSlots(tomorrow, [
+      '09:00',
+      '09:30',
+      '10:00',
+      '10:30',
+      '11:00',
+      '14:00',
+      '14:30',
+      '15:00'
+    ])
+
+    return {
+      type: 'manual',
+      slots: slots
+    }
+  })(),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify component renders with controlled slots', async () => {
+      await waitFor(
+        () => {
+          const slots = canvasElement.querySelectorAll('input[type="radio"]')
+          expect(slots.length).toBe(8)
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Verify specific times are displayed', async () => {
+      expect(canvas.getByText('09:00')).toBeInTheDocument()
+      expect(canvas.getByText('14:00')).toBeInTheDocument()
+    })
+
+    await step('Verify info text is not displayed by default', async () => {
+      const infoTexts = canvasElement.querySelectorAll('.text-grey-500')
+      // No info text should contain "minuti a partire dalle"
+      const hasDefaultInfoText = Array.from(infoTexts).some((el) =>
+        el.textContent?.includes('minuti a partire dalle')
+      )
+      expect(hasDefaultInfoText).toBe(false)
+    })
+  }
+}
+
+export const ManualMultipleDays: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const day1 = addDays(startOfDay(new Date()), 1)
+    const day2 = addDays(startOfDay(new Date()), 3)
+    const day3 = addDays(startOfDay(new Date()), 5)
+
+    const slots = [
+      ...generateManualSlots(day1, ['09:00', '10:00', '11:00']),
+      ...generateManualSlots(day2, ['14:00', '15:00', '16:00']),
+      ...generateManualSlots(day3, ['09:30', '10:30'])
+    ]
+
+    return {
+      type: 'manual',
+      slots: slots
+    }
+  })(),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify first day slots are displayed', async () => {
+      await waitFor(
+        () => {
+          expect(canvas.getByText('09:00')).toBeInTheDocument()
+          expect(canvas.getByText('10:00')).toBeInTheDocument()
+          expect(canvas.getByText('11:00')).toBeInTheDocument()
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Navigate to second day', async () => {
+      const forwardButton = canvas.getByLabelText('Giorno successivo')
+      await userEvent.click(forwardButton)
+
+      await waitFor(() => {
+        expect(canvas.getByText('14:00')).toBeInTheDocument()
+        expect(canvas.getByText('15:00')).toBeInTheDocument()
+        expect(canvas.getByText('16:00')).toBeInTheDocument()
+      })
+    })
+
+    await step('Navigate to third day', async () => {
+      const forwardButton = canvas.getByLabelText('Giorno successivo')
+      await userEvent.click(forwardButton)
+
+      await waitFor(() => {
+        expect(canvas.getByText('09:30')).toBeInTheDocument()
+        expect(canvas.getByText('10:30')).toBeInTheDocument()
+      })
+    })
+
+    await step('Verify forward button is disabled at last day', async () => {
+      const forwardButton = canvas.getByLabelText('Giorno successivo')
+      expect(forwardButton).toBeDisabled()
+    })
+
+    await step('Navigate back to first day', async () => {
+      const backButton = canvas.getByLabelText('Giorno precedente')
+      await userEvent.click(backButton)
+      await userEvent.click(backButton)
+
+      await waitFor(() => {
+        expect(canvas.getByText('09:00')).toBeInTheDocument()
+      })
+    })
+  }
+}
+
+export const ManualWithCustomInfoText: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const slots = generateManualSlots(tomorrow, ['10:00', '11:00', '12:00', '14:00', '15:00'])
+
+    return {
+      type: 'manual',
+      slots: slots,
+      infoText: 'Seleziona un orario per la tua consulenza gratuita'
+    }
+  })(),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify custom info text is displayed', async () => {
+      expect(
+        canvas.getByText('Seleziona un orario per la tua consulenza gratuita')
+      ).toBeInTheDocument()
+    })
+  }
+}
+
+export const ManualWithISOStrings: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const slots = generateManualSlots(tomorrow, ['09:00', '10:30', '14:00', '16:30'])
+
+    return {
+      // Pass as ISO strings instead of Date objects
+      type: 'manual',
+      slots: slots.map((slot) => formatISO(slot))
+    }
+  })(),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify ISO string slots are parsed correctly', async () => {
+      await waitFor(
+        () => {
+          expect(canvas.getByText('09:00')).toBeInTheDocument()
+          expect(canvas.getByText('10:30')).toBeInTheDocument()
+          expect(canvas.getByText('14:00')).toBeInTheDocument()
+          expect(canvas.getByText('16:30')).toBeInTheDocument()
+        },
+        { timeout: 2000 }
+      )
+    })
+  }
+}
+
+export const ManualEmptySlots: Story = {
+  ...ManualTemplate,
+  args: {
+    type: 'manual',
+    slots: [],
+    alertTitle: 'Nessun appuntamento disponibile',
+    alertDescription: 'Non ci sono orari disponibili per la prenotazione.'
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify alert is displayed when no slots', async () => {
+      await waitFor(
+        () => {
+          expect(canvas.getByText('Nessun appuntamento disponibile')).toBeInTheDocument()
+          expect(
+            canvas.getByText('Non ci sono orari disponibili per la prenotazione.')
+          ).toBeInTheDocument()
+        },
+        { timeout: 2000 }
+      )
+    })
+  }
+}
+
+export const ManualSlotSelection: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const slots = generateManualSlots(tomorrow, ['09:00', '10:00', '11:00'])
+
+    return {
+      type: 'manual',
+      slots: slots
+    }
+  })(),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Select a time slot', async () => {
+      await waitFor(
+        async () => {
+          const slot = canvas.getByText('10:00')
+          await userEvent.click(slot)
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Verify slot is selected', async () => {
+      await waitFor(() => {
+        const selectedSlot = canvasElement.querySelector('input[type="radio"]:checked')
+        expect(selectedSlot).toBeInTheDocument()
+      })
+    })
+
+    await step('Verify selected date is displayed in sidebar', async () => {
+      await waitFor(() => {
+        const selectedInfo = canvas.getByText(/Selected appointment:/i)
+        expect(selectedInfo).toBeInTheDocument()
+        // Should show the raw GMT value
+        const gmtText = canvas.getByText(/GMT \(raw value\):/i)
+        expect(gmtText).toBeInTheDocument()
+      })
+    })
+  }
+}
+
+export const ManualRequired: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const slots = generateManualSlots(tomorrow, ['09:00', '10:00', '11:00'])
+
+    return {
+      type: 'manual',
+      slots: slots,
+      required: true
+    }
+  })(),
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
     await step('Verify required attribute is set', async () => {
       await waitFor(
