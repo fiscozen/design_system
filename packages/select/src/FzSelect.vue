@@ -78,7 +78,7 @@ const buttonRef = ref<InstanceType<typeof FzSelectButton>>();
 const optionsListRef = ref<InstanceType<typeof FzSelectOptionsList>>();
 const containerWidth = ref<string>(`${MIN_WIDTH}px`);
 const openerMaxWidth = ref<string>("none");
-const visibleOptions = ref<FzSelectOptionsProps[]>([]);
+const loadedOptionsCount = ref<number>(0);
 const focusedIndex = ref<number>(-1);
 const optionRefs = ref<Map<string, HTMLElement>>(new Map());
 const maxHeight = ref("");
@@ -120,6 +120,17 @@ const isInteractive = computed(() => !isDisabled.value && !isReadonly.value);
 const isSelectableOption = (
   option: FzSelectOptionsProps
 ): option is FzSelectOptionProps => option.kind !== "label";
+
+/**
+ * Computed property for visible options based on lazy loading count
+ *
+ * Automatically updates when props.options or loadedOptionsCount changes.
+ * This eliminates the need for manual array manipulation and makes the
+ * reactive state more declarative.
+ */
+const visibleOptions = computed(() => {
+  return props.options.slice(0, loadedOptionsCount.value);
+});
 
 /**
  * Finds the currently selected option from options list
@@ -441,18 +452,21 @@ function handleScroll() {
 
 /**
  * Loads next batch of options for lazy rendering
+ *
+ * Increments loadedOptionsCount, which automatically updates visibleOptions
+ * computed property through reactive dependency.
  */
 function updateVisibleOptions() {
   // Guard: don't load if all options are already visible
-  if (visibleOptions.value.length >= props.options.length) {
+  if (loadedOptionsCount.value >= props.options.length) {
     return;
   }
 
-  const nextItems = props.options.slice(
-    visibleOptions.value.length,
-    visibleOptions.value.length + props.optionsToShow
+  // Increment count to load next batch
+  loadedOptionsCount.value = Math.min(
+    loadedOptionsCount.value + props.optionsToShow,
+    props.options.length
   );
-  visibleOptions.value.push(...nextItems);
 }
 
 /**
@@ -472,8 +486,9 @@ function ensureSelectedOptionVisible() {
 
   // Check if we need to load more options
   // We want to ensure the option at optionIndexInFullArray is in visibleOptions
-  while (visibleOptions.value.length <= optionIndexInFullArray) {
-    if (visibleOptions.value.length >= props.options.length) {
+  // Note: optionIndexInFullArray is 0-based, so we need loadedOptionsCount > index
+  while (loadedOptionsCount.value <= optionIndexInFullArray) {
+    if (loadedOptionsCount.value >= props.options.length) {
       break; // All options already loaded
     }
     updateVisibleOptions();
@@ -489,7 +504,12 @@ watch(model, updateContainerWidth);
 watch(
   () => props.options,
   () => {
-    visibleOptions.value = props.options.slice(0, props.optionsToShow);
+    // Reset loaded count when options change
+    // visibleOptions computed will automatically update
+    loadedOptionsCount.value = Math.min(
+      props.optionsToShow,
+      props.options.length
+    );
   },
   { immediate: true }
 );
@@ -554,8 +574,8 @@ onMounted(() => {
     updateContainerWidth();
   });
   // Note: Scroll events are handled via component event from FzSelectOptionsList (@scroll="handleScroll")
-  // Note: visibleOptions is already initialized by watch(() => props.options)
-  // No need to call updateVisibleOptions() here
+  // Note: loadedOptionsCount is initialized by watch(() => props.options) with immediate: true
+  // visibleOptions computed property automatically derives from loadedOptionsCount
 });
 
 // ============================================================================
