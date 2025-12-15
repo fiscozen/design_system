@@ -236,8 +236,15 @@ function updateContainerWidth() {
  */
 const handlePickerClick = () => {
   if (!isInteractive.value) return;
+  const wasOpen = isOpen.value;
   isOpen.value = !isOpen.value;
-  updateContainerWidth();
+
+  // Update container width when opening (not when closing)
+  if (!wasOpen && isOpen.value) {
+    nextTick(() => {
+      updateContainerWidth();
+    });
+  }
 };
 
 /**
@@ -252,7 +259,9 @@ const handleOpenerKeydown = (event: KeyboardEvent) => {
       event.preventDefault();
       if (!isOpen.value) {
         isOpen.value = true;
-        updateContainerWidth();
+        nextTick(() => {
+          updateContainerWidth();
+        });
       }
       break;
 
@@ -538,7 +547,10 @@ onMounted(() => {
   if (props.floatingPanelMaxHeight) {
     maxHeight.value = props.floatingPanelMaxHeight;
   }
-  updateContainerWidth();
+  // Use nextTick to ensure refs are available
+  nextTick(() => {
+    updateContainerWidth();
+  });
   // Note: Scroll events are handled via component event from FzSelectOptionsList (@scroll="handleScroll")
   // Note: visibleOptions is already initialized by watch(() => props.options)
   // No need to call updateVisibleOptions() here
@@ -550,12 +562,14 @@ onMounted(() => {
 
 /**
  * Programmatically opens the dropdown
+ *
+ * Ensures container width is updated after DOM is rendered.
  */
 const forceOpen = () => {
   isOpen.value = true;
-  if (safeOpener.value) {
-    calculateContainerWidth(safeOpener.value);
-  }
+  nextTick(() => {
+    updateContainerWidth();
+  });
 };
 
 defineExpose({

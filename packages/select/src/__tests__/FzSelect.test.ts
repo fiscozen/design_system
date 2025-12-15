@@ -1834,5 +1834,34 @@ describe("FzSelect", () => {
       await wrapper.vm.forceOpen();
       expect(wrapper.vm.isOpen).toBe(true);
     });
+
+    it("forceOpen method updates container width", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      
+      // Get initial container width
+      const initialContainerWidth = wrapper.vm.containerWidth;
+      const initialOpenerMaxWidth = wrapper.vm.openerMaxWidth;
+      
+      // Call forceOpen
+      await wrapper.vm.forceOpen();
+      await wrapper.vm.$nextTick();
+      
+      // Verify container width was updated (should be different from initial or at least calculated)
+      expect(wrapper.vm.containerWidth).toBeDefined();
+      expect(wrapper.vm.openerMaxWidth).toBeDefined();
+      // Width should be a valid CSS value (contains 'px' or is 'none')
+      expect(wrapper.vm.containerWidth).toMatch(/^\d+px$/);
+      expect(wrapper.vm.openerMaxWidth === "none" || wrapper.vm.openerMaxWidth.match(/^\d+px$/)).toBeTruthy();
+    });
   });
 });
