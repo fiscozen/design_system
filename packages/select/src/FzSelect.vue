@@ -262,6 +262,8 @@ const handleOpenerKeydown = (event: KeyboardEvent) => {
         nextTick(() => {
           updateContainerWidth();
         });
+      } else {
+        isOpen.value = false;
       }
       break;
 

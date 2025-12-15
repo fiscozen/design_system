@@ -685,6 +685,44 @@ describe("FzSelect", () => {
       expect(wrapper.vm.isOpen).toBe(true);
     });
 
+    it("closes dropdown on Enter key when already open", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      expect(wrapper.vm.isOpen).toBe(true);
+
+      await button.trigger("keydown", { key: "Enter" });
+      expect(wrapper.vm.isOpen).toBe(false);
+    });
+
+    it("closes dropdown on Space key when already open", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      expect(wrapper.vm.isOpen).toBe(true);
+
+      await button.trigger("keydown", { key: " " });
+      expect(wrapper.vm.isOpen).toBe(false);
+    });
+
     it("closes dropdown on Escape key when open", async () => {
       const wrapper = mount(FzSelect, {
         props: {
