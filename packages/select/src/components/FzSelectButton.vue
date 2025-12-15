@@ -135,7 +135,7 @@ const iconColorClass = computed(() => {
   return "text-core-black";
 });
 
-const handleClick = () => {
+const handlePickerClick = () => {
   emit("click");
 };
 
@@ -154,11 +154,11 @@ defineExpose({
 </script>
 
 <template>
-  <slot :handleClick :isOpen>
+  <slot :handlePickerClick :isOpen>
     <button
       ref="openerButton"
       :id="openerId"
-      @click="handleClick"
+      @click="handlePickerClick"
       @keydown="handleKeydown"
       test-id="fzselect-opener"
       type="button"
