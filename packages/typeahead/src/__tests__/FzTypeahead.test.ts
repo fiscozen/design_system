@@ -416,7 +416,7 @@ describe("FzTypeahead", () => {
       expect(wrapper.vm.isOpen).toBe(false);
     });
 
-    it("emits select event when option is selected", async () => {
+    it("emits fztypeahead:select event when option is selected", async () => {
       const wrapper = mount(FzTypeahead, {
         props: {
           modelValue: "",
@@ -437,8 +437,8 @@ describe("FzTypeahead", () => {
       optionButton?.click();
 
       await wrapper.vm.$nextTick();
-      expect(wrapper.emitted("select")).toBeTruthy();
-      expect(wrapper.emitted("select")?.[0]).toEqual(["option1"]);
+      expect(wrapper.emitted("fztypeahead:select")).toBeTruthy();
+      expect(wrapper.emitted("fztypeahead:select")?.[0]).toEqual(["option1"]);
     });
   });
 

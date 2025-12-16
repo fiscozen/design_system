@@ -488,7 +488,7 @@ useClickOutside(safeOpener, () => {
   isOpen.value = false;
 });
 
-const emit = defineEmits(["select"]);
+const emit = defineEmits(["fztypeahead:select"]);
 
 // ============================================================================
 // FLOATING PANEL
@@ -633,7 +633,7 @@ const handleSelect = (option: FzTypeaheadOptionProps) => {
   // Reset internalFilteredOptions to show all options on next open
   internalFilteredOptions.value = props.options;
 
-  emit("select", model.value);
+  emit("fztypeahead:select", model.value);
   isOpen.value = false;
 };
 
