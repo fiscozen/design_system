@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/divider",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Design System Divider component",
   "scripts": {
     "coverage": "vitest run --coverage",
