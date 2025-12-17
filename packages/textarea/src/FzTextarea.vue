@@ -28,8 +28,8 @@
         class="text-semantic-success absolute top-10 right-10"
       />
     </div>
-    <div class="text-sm flex items-center gap-6 h-20">
-      <template v-if="error && errorMessage">
+    <div class="text-sm flex items-center gap-6 h-20" v-if="shouldShowMessage">
+      <template v-if="shouldShowError">
         <FzIcon
           name="triangle-exclamation"
           size="md"
@@ -37,7 +37,7 @@
         />
         {{ errorMessage }}
       </template>
-      <span v-else-if="helpMessage" class="text-grey-500">
+      <span v-else-if="shouldShowHelp" class="text-grey-500">
         {{ helpMessage }}
       </span>
     </div>
@@ -96,6 +96,18 @@ const classes = computed(() => [
     "pr-[38px]": props.valid,
   },
 ]);
+
+const shouldShowError = computed(() => {
+  return props.error && props.errorMessage;
+});
+
+const shouldShowHelp = computed(() => {
+  return !!props.helpMessage;
+});
+
+const shouldShowMessage = computed(() => {
+  return shouldShowError.value || shouldShowHelp.value;
+});
 </script>
 
 <style scoped></style>
