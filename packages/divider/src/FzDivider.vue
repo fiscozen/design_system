@@ -1,13 +1,13 @@
 <template>
-  <div class="w-full my-16 relative">
-    <hr />
-    <span
-      v-if="props.label"
-      class="text-md font-medium absolute px-8 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-core-white"
-      :class="labelClass"
-    >
+  <div v-if="props.label" class="w-full my-16 flex items-center gap-6">
+    <div class="flex-1 border-solid border-t-1 border-grey-200"></div>
+    <span class="text-md" :class="labelClass">
       {{ label }}
     </span>
+    <div class="flex-1 border-solid border-t-1 border-grey-200"></div>
+  </div>
+  <div v-else class="w-full my-16">
+    <div class="border-solid border-t-1 border-grey-200"></div>
   </div>
 </template>
 
