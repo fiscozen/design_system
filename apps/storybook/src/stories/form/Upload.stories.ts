@@ -59,6 +59,13 @@ const Multiple: Story = {
   }
 }
 
-export { Default, Multiple }
+const MultipleFileLimit: Story = {
+  args: {
+    multiple: true,
+    fileLimit: 3
+  }
+}
+
+export { Default, Multiple, MultipleFileLimit }
 
 export default meta

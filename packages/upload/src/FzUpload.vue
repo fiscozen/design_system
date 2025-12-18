@@ -73,12 +73,13 @@ const emit = defineEmits<{
   "fzupload:change": [files: File[]];
   "fzupload:add": [files: File[]];
   "fzupload:delete": [File];
+  "fzupload:file-limit-exceeded": [files: File[]];
 }>();
 
 function modelSetter(value: File[]) {
   if (value.length > 1 && !props.multiple) {
     console.warn(
-      "[Fiscozen Design System]: FzUpload prop 'multiple' is set to false, but multiple files are provided. Only the first file will be used.",
+      "[Fiscozen Design System]: FzUpload prop 'multiple' is set to false, but multiple files are provided. Only the first file will be used."
     );
     return [value[0]];
   }
@@ -126,6 +127,13 @@ function addFiles(filesToAdd: File[]) {
   let newFiles = [];
   if (props.multiple) {
     newFiles = [...(model.value ?? []), ...filesToAdd];
+    if (props.fileLimit && newFiles.length > props.fileLimit) {
+      console.warn(
+        `[Fiscozen Design System]: FzUpload prop 'fileLimit' is set to ${props.fileLimit}, but ${newFiles.length} files are provided.`
+      );
+      emit("fzupload:file-limit-exceeded", filesToAdd);
+      return;
+    }
   } else {
     newFiles = [filesToAdd[0]];
   }

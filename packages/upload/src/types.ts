@@ -5,6 +5,8 @@ type FzUploadProps = {
   name?: string;
   /** Whether user can upload multiple files at once */
   multiple?: boolean;
+  /** Maximum number of files that can be uploaded */
+  fileLimit?: number;
   /** Pattern that dictates what files the input accepts */
   accept?: string;
   /** Size of the component */
