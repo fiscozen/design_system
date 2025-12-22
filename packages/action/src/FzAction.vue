@@ -298,17 +298,18 @@ const boundAttrs = computed(() => {
     baseAriaAttributes["aria-selected"] = props.ariaSelected ? "true" : "false";
   }
 
-  // For button type, always include disabled attribute when disabled is true
-  // This prevents programmatic focus() calls on disabled buttons
+  // For button type, include disabled attribute when disabled is true
+  // Exception: if tabindex is explicitly set to 0 (for keyboard navigation),
+  // don't set disabled="true" to allow programmatic focus (but keep aria-disabled="true")
   if (props.type === "action") {
     const buttonAttrs: Record<string, string | number | boolean | undefined> = {
       ...baseAriaAttributes,
       type: "button",
     };
 
-    // Always set disabled attribute for buttons when props.disabled is true
-    // This prevents focus() calls even when readonly is also true
-    if (props.disabled) {
+    // Set disabled attribute for buttons when props.disabled is true,
+    // unless tabindex is explicitly set to 0 (allows focus for keyboard navigation)
+    if (props.disabled && computedTabindex.value !== 0) {
       buttonAttrs.disabled = true;
     }
 
@@ -356,18 +357,11 @@ const handleClick = (event: MouseEvent) => {
  * - Disabled and readonly elements should not respond to keyboard
  * - Navigation keys (arrows, Home, End, Tab) are allowed to bubble up
  *   for parent components to handle (e.g., FzSelect navigation)
+ *   This applies even when disabled/readonly to allow keyboard navigation traversal
  */
 const handleKeydown = (event: KeyboardEvent) => {
-  if (props.disabled || props.readonly) {
-    event.preventDefault();
-    event.stopPropagation();
-    return;
-  }
-
-  // Only handle keyboard for button type
-  if (props.type !== "action") return;
-
-  // Allow navigation keys to bubble up (don't preventDefault or stopPropagation)
+  // Navigation keys should always bubble up, even for disabled/readonly elements
+  // This allows parent components to handle navigation (e.g., Tab traversal)
   const navigationKeys = [
     "ArrowDown",
     "ArrowUp",
@@ -377,9 +371,19 @@ const handleKeydown = (event: KeyboardEvent) => {
     "Escape",
   ];
   if (navigationKeys.includes(event.key)) {
-    // Let the event bubble up to parent handlers
+    // Let the event bubble up to parent handlers (even if disabled/readonly)
     return;
   }
+
+  // For disabled/readonly elements, prevent other keyboard events
+  if (props.disabled || props.readonly) {
+    event.preventDefault();
+    event.stopPropagation();
+    return;
+  }
+
+  // Only handle keyboard for button type
+  if (props.type !== "action") return;
 
   // Enter or Space should trigger keydown
   if (event.key === "Enter" || event.key === " ") {
