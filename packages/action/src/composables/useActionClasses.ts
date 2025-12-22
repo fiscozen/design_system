@@ -37,7 +37,7 @@ export function useActionClasses(props: UseActionClassesProps) {
       props.variant === "textCenter" ? "flex-col items-center gap-1" : "",
       props.variant === "onlyIcon" ? "justify-center" : "",
       // States
-      props.disabled || props.readonly ? "text-grey-200 cursor-not-allowed" : "",
+      props.disabled || props.readonly ? "text-grey-200 cursor-not-allowed focus:!outline-none" : "",
       isInteractive.value
         ? "text-core-black hover:bg-background-alice-blue hover:!text-blue-500 focus:!border-blue-200 focus:!outline-none focus:text-core-black "
         : "",
