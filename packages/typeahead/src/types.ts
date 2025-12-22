@@ -135,6 +135,11 @@ interface FzTypeaheadFilterableProps extends FzTypeaheadBaseProps {
    * @default 500
    */
   delayTime?: number;
+  /**
+   * If true, the component will use fuzzy search to filter the options
+   * @default true
+   */
+  fuzzySearch?: boolean;
 }
 
 /**

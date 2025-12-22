@@ -100,6 +100,12 @@ const options = [
       <td>Delay in milliseconds before applying filter after user stops typing (debounce time). <strong>Only available when <code>filtrable: true</code></strong></td>
     </tr>
     <tr>
+      <td><code>fuzzySearch</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>If true, uses Fuse.js for fuzzy search (handles typos and partial matches). If false, uses simple case-insensitive substring matching. <strong>Only available when <code>filtrable: true</code></strong></td>
+    </tr>
+    <tr>
       <td><code>disabled</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
@@ -335,6 +341,36 @@ const customFilter = (text?: string): FzTypeaheadOptionsProps[] => {
   />
 </template>
 ```
+
+### With Simple Search (No Fuzzy)
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTypeahead } from '@fiscozen/typeahead'
+
+const selected = ref<string>()
+
+const options = [
+  { label: 'JavaScript', value: 'js' },
+  { label: 'TypeScript', value: 'ts' },
+  { label: 'Python', value: 'py' },
+  { label: 'Java', value: 'java' }
+]
+</script>
+
+<template>
+  <FzTypeahead
+    v-model="selected"
+    label="Programming Language"
+    :options="options"
+    :fuzzySearch="false"
+    placeholder="Type to search (exact match only)..."
+  />
+</template>
+```
+
+**Note:** With `fuzzySearch: false`, the component uses simple case-insensitive substring matching. It will not handle typos or partial matches like fuzzy search does. For example, searching "javascrpt" (typo) will not find "JavaScript", but "java" will find both "JavaScript" and "Java".
 
 ### Remote Loading with Async Filter
 
@@ -584,6 +620,7 @@ FzTypeahead is built with accessibility in mind and follows WCAG 2.1 AA standard
 - Use `filterFn` for custom filtering logic if you need more control than Fuse.js provides
 - Use `filtrable: false` if you're handling all filtering through remote loading
 - The component automatically handles lazy loading - no manual optimization needed
+- Use `fuzzySearch: false` for faster filtering with simple substring matching (no typo tolerance)
 
 ### Common Patterns
 
