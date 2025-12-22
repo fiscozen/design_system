@@ -274,17 +274,8 @@ const isSelectableOption = (
 ): option is FzTypeaheadOptionProps => option.kind !== "label";
 
 const selectedOption = computed(() => {
-  // When not filtrable, behave exactly like FzSelect
-  if (!props.filtrable) {
-    if (!props.options) return undefined;
-    return props.options.find(
-      (option): option is FzTypeaheadOptionProps =>
-        isSelectableOption(option) && option.value === model.value
-    );
-  }
-  // When filtrable, use internal filtered options
-  if (!internalFilteredOptions.value) return undefined;
-  return internalFilteredOptions.value.find(
+  if (!props.options || !model.value) return undefined;
+  return props.options.find(
     (option): option is FzTypeaheadOptionProps =>
       isSelectableOption(option) && option.value === model.value
   );
