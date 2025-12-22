@@ -41,12 +41,6 @@ interface FzTypeaheadBaseProps extends FzFloatingProps {
    */
   error?: boolean;
   /**
-   * The size of the input
-   * @default 'md'
-   * @deprecated Size prop is deprecated. The typeahead component now uses a fixed 'lg' size. This prop will be removed in a future version.
-   */
-  size?: "sm" | "md" | "lg";
-  /**
    * FontAwesome icon name displayed on the left side of the typeahead
    */
   leftIcon?: string;
@@ -111,47 +105,10 @@ interface FzTypeaheadBaseProps extends FzFloatingProps {
    */
   noResultsMessage?: string;
   /**
-   * Deprecated: Use the 'options' prop instead.
-   * @deprecated This prop is deprecated and will be removed in a future version. Please use the 'options' prop instead.
-   */
-  selectProps?: FzSelectProps;
-  /**
-   * Deprecated: Use the 'options' prop instead.
-   * @deprecated This prop is deprecated and will be removed in a future version. Please use the 'options' prop instead.
-   */
-  inputProps?: FzSelectProps;
-  /**
-   * Deprecated: Use the 'options' prop instead.
-   * @deprecated This prop is deprecated and will be removed in a future version. Please use the 'options' prop instead.
-   */
-  filteredOptions?: FzSelectOptionsProps[];
-  /**
    * If true, writing in the input will filter the options
    * @default true
    */
   filtrable?: boolean;
-  /**
-   * Async function to filter the options
-   * Can be used for server-side filtering
-   */
-  filterFn?: (
-    text?: string,
-  ) => Promise<FzTypeaheadOptionsProps[]> | FzTypeaheadOptionsProps[];
-  /**
-   * Delay in milliseconds before applying filter after user stops typing
-   * @default 500
-   */
-  delayTime?: number;
-  /**
-   * Deprecated: This prop is no longer used and has no effect.
-   * @deprecated This prop is deprecated and will be removed in a future version. The component no longer emits input events on focus.
-   */
-  disableEmitOnFocus?: boolean;
-  /**
-   * Deprecated: This prop is no longer used and has no effect.
-   * @deprecated This prop is deprecated and will be removed in a future version. The component now always shows all options when the input is empty.
-   */
-  emptySearchNoFilter?: boolean;
 }
 
 /**
@@ -166,6 +123,18 @@ interface FzTypeaheadFilterableProps extends FzTypeaheadBaseProps {
    * @default true
    */
   filtrable: true;
+  /**
+   * Async function to filter the options
+   * Can be used for server-side filtering
+   */
+  filterFn?: (
+    text?: string,
+  ) => Promise<FzTypeaheadOptionsProps[]> | FzTypeaheadOptionsProps[];
+  /**
+   * Delay in milliseconds before applying filter after user stops typing
+   * @default 500
+   */
+  delayTime?: number;
 }
 
 /**
@@ -186,12 +155,46 @@ interface FzTypeaheadNonFilterableProps extends FzTypeaheadBaseProps {
    * @default 'normal'
    */
   variant?: "normal" | "floating-label";
+}
+
+interface FzTypeaheadDeprecatedProps {
+  /**
+   * The size of the input
+   * @default 'md'
+   * @deprecated Size prop is deprecated. The typeahead component now uses a fixed 'lg' size. This prop will be removed in a future version.
+   */
+  size?: "sm" | "md" | "lg";
   /**
    * Whether to position right icon before or after chevron
    * @default false
    * @deprecated rightIconLast prop is deprecated. The right icon is now always positioned before the chevron. This prop will be removed in a future version.
    */
   rightIconLast?: boolean;
+  /**
+   * Deprecated: Use the 'options' prop instead.
+   * @deprecated This prop is deprecated and will be removed in a future version. Please use the 'options' prop instead.
+   */
+  selectProps?: FzSelectProps;
+  /**
+   * Deprecated: Use the 'options' prop instead.
+   * @deprecated This prop is deprecated and will be removed in a future version. Please use the 'options' prop instead.
+   */
+  inputProps?: FzSelectProps;
+  /**
+   * Deprecated: Use the 'options' prop instead.
+   * @deprecated This prop is deprecated and will be removed in a future version. Please use the 'options' prop instead.
+   */
+  filteredOptions?: FzSelectOptionsProps[];
+  /**
+   * Deprecated: This prop is no longer used and has no effect.
+   * @deprecated This prop is deprecated and will be removed in a future version. The component no longer emits input events on focus.
+   */
+  disableEmitOnFocus?: boolean;
+  /**
+   * Deprecated: This prop is no longer used and has no effect.
+   * @deprecated This prop is deprecated and will be removed in a future version. The component now always shows all options when the input is empty.
+   */
+  emptySearchNoFilter?: boolean;
 }
 
 /**
@@ -207,9 +210,10 @@ interface FzTypeaheadNonFilterableProps extends FzTypeaheadBaseProps {
  * This provides compile-time type checking to guide developers on which props
  * can be used in each mode.
  */
-export type FzTypeaheadProps =
-  | FzTypeaheadFilterableProps
-  | FzTypeaheadNonFilterableProps;
+export type FzTypeaheadProps = FzTypeaheadDeprecatedProps & (
+  FzTypeaheadFilterableProps
+  | FzTypeaheadNonFilterableProps
+);
 
 export type FzTypeaheadOptionsProps =
   | FzTypeaheadOptionProps
