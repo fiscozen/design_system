@@ -27,7 +27,7 @@ The `FzTypeahead` component is built on top of `FzSelect`'s architecture, sharin
 - `debouncedSearchValue`: Debounced version of searchValue
 - `internalFilteredOptions`: Filtered options after applying filterFn or Fuse.js
 - `visibleOptions`: Lazy-loaded subset of filtered options
-- `focusedIndex`: Index of currently focused option in `enabledOptions`
+- `focusedIndex`: Index of currently focused option in `selectableOptions`
 - `isOpen`: Dropdown open/closed state
 
 **Filtering Flow:**
@@ -86,11 +86,11 @@ Options are rendered in batches for performance:
 
 #### Keyboard Navigation with Disabled Options
 
-The component implements smart keyboard navigation that skips disabled options:
-- `enabledOptions`: Computed property filtering out disabled options
-- `focusedIndex`: Points to index in `enabledOptions`, not `selectableOptions`
-- Navigation functions (`findNextEnabledIndex`, `findPreviousEnabledIndex`) handle wrapping
-- All keyboard handlers use `enabledOptions` to ensure focus never lands on disabled items
+The component navigates through all options (including disabled/readonly) for WCAG compliance:
+- `selectableOptions`: All selectable options (excluding labels, including disabled/readonly)
+- `focusedIndex`: Points to index in `selectableOptions`
+- Navigation traverses all options but disabled/readonly options receive focus without visual indication
+- Tab navigation allows traversing disabled options for accessibility
 
 #### Scroll Reset on Filter Change
 
@@ -220,13 +220,13 @@ Race condition handling is left to the developer because:
 - Automatic cancellation could hide bugs in developer's code
 - Simpler API: Just show the last result received
 
-#### Why enabledOptions Instead of Filtering in Navigation?
+#### Why Navigate Through All Options (Including Disabled)?
 
-Separating `enabledOptions` from `selectableOptions`:
-- Clear separation of concerns: filtering vs. navigation
-- Easier to test and maintain
-- Explicit intent: "navigate only enabled options"
-- Better performance: Filter once, use many times
+Navigating through all options (including disabled/readonly) for WCAG compliance:
+- Screen readers can announce all options, including disabled ones
+- Keyboard users can traverse the full list for context
+- Disabled options receive focus but without visual indication
+- Better accessibility: users understand the full option set
 
 #### Why Representation-First Pattern for Styling?
 

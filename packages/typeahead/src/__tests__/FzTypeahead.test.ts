@@ -1016,8 +1016,8 @@ describe("FzTypeahead", () => {
       vi.advanceTimersByTime(500);
       await wrapper.vm.$nextTick();
 
-      // Verify no options are available (enabledOptions is empty)
-      expect(wrapper.vm.enabledOptions.length).toBe(0);
+      // Verify no options are available (selectableOptions is empty)
+      expect(wrapper.vm.selectableOptions.length).toBe(0);
 
       // Press Escape in the input field (delegates to handleOptionsKeydown)
       await input.trigger("keydown", { key: "Escape" });

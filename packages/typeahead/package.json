@@ -13,15 +13,16 @@
   "keywords": [],
   "author": "Cristian Barraco",
   "dependencies": {
+    "fuse.js": "^7.1.0"
+  },
+  "peerDependencies": {
     "@fiscozen/action": "workspace:^",
+    "@fiscozen/alert": "workspace:^",
     "@fiscozen/button": "workspace:^",
     "@fiscozen/composables": "workspace:^",
     "@fiscozen/icons": "workspace:^",
     "@fiscozen/input": "workspace:^",
     "@fiscozen/progress": "workspace:^",
-    "fuse.js": "^7.1.0"
-  },
-  "peerDependencies": {
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },

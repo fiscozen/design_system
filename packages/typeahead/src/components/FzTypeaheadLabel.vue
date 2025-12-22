@@ -2,9 +2,7 @@
 /**
  * FzTypeaheadLabel Component
  *
- * Presentational component for the FzTypeahead label.
- * Renders the label text with required indicator.
- * Handles its own styling based on disabled/readonly state.
+ * Presentational component for the label with required indicator.
  *
  * @component
  * @internal
@@ -14,17 +12,8 @@ import type { FzTypeaheadLabelProps } from "./types";
 
 const props = defineProps<FzTypeaheadLabelProps>();
 
-/**
- * Base text classes shared across all text elements
- */
 const baseTextClasses = "text-base leading-5";
 
-/**
- * Computes label classes based on interactive state
- *
- * Uses Representation-First pattern to map visual states.
- * Readonly uses the same style as disabled for consistency.
- */
 const labelClass = computed(() => {
   const baseClasses = [baseTextClasses];
 

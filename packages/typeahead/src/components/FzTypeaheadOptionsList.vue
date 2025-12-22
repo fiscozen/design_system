@@ -2,9 +2,7 @@
 /**
  * FzTypeaheadOptionsList Component
  *
- * Presentational component for the FzTypeahead options list.
- * Renders the list of options with lazy loading support using FzActionList and FzAction.
- * All logic is delegated to the parent FzTypeahead component.
+ * Presentational component for the options list with lazy loading support.
  *
  * @component
  * @internal
@@ -27,38 +25,24 @@ const emit = defineEmits<{
 
 const containerRef = ref<InstanceType<typeof FzActionList>>();
 
-/**
- * Type guard to filter selectable options
- */
 const isSelectableOption = (
   option: FzTypeaheadOptionsProps
 ): option is FzTypeaheadOptionProps => option.kind !== "label";
 
-/**
- * Gets unique key for v-for iteration
- */
 const getOptionKey = (option: FzTypeaheadOptionsProps): string =>
   option.kind === "label" ? option.label : option.value;
 
-/**
- * Checks if option is a label separator
- */
 const isLabelOption = (option: FzTypeaheadOptionsProps): boolean =>
   option.kind === "label";
 
-/**
- * Gets check icon name for selected option
- */
 const getCheckIcon = (option: FzTypeaheadOptionProps): string | undefined =>
   props.selectedValue === option.value ? "check" : undefined;
 
 /**
  * Gets tabindex for an option
- * When filtrable is true and focusedIndex is -1, the selected option (if any) should be focusable
- * Otherwise, only the focused option should be focusable
  *
- * Note: Disabled/readonly options can also receive focus (tabindex="0") when focused,
- * allowing keyboard navigation to traverse them even though they're not interactive.
+ * Focused option is always focusable (tabindex="0"), including disabled/readonly.
+ * When no option is focused, selected option is focusable (for filtrable mode).
  */
 const getTabIndex = (option: FzTypeaheadOptionProps): number => {
   // If this is the focused option, it should be focusable (even if disabled/readonly)
@@ -77,33 +61,18 @@ const getTabIndex = (option: FzTypeaheadOptionProps): number => {
   return -1;
 };
 
-/**
- * Generates unique ID for an option element
- */
 const getOptionId = (option: FzTypeaheadOptionProps) => {
   return `${props.openerId}-option-${option.value}`;
 };
 
-/**
- * Handles option selection
- * Delegates to parent component via emit
- */
 const handleSelect = (option: FzTypeaheadOptionProps) => {
   emit("select", option);
 };
 
-/**
- * Handles option focus event
- * Updates focusedIndex in parent when user tabs to an option
- */
 const handleOptionFocus = (option: FzTypeaheadOptionProps) => {
   emit("focus", option.value);
 };
 
-/**
- * Creates a ref callback for FzAction components
- * Registers the action element with the parent for focus management
- */
 const createActionRefCallback = (option: FzTypeaheadOptionProps) => {
   return (el: unknown) => {
     // Type guard: ensure el is a valid object with actionElement
@@ -118,9 +87,6 @@ const createActionRefCallback = (option: FzTypeaheadOptionProps) => {
   };
 };
 
-/**
- * Expose containerElement for parent component to attach scroll listeners
- */
 defineExpose({
   containerElement: containerRef,
 });

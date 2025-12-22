@@ -475,7 +475,7 @@ const options = [
 
 FzTypeahead is built with accessibility in mind and follows WCAG 2.1 AA standards:
 
-- **Keyboard Navigation**: Full keyboard support for navigating and selecting options. Disabled options are automatically skipped during navigation
+- **Keyboard Navigation**: Full keyboard support for navigating and selecting options. All options (including disabled/readonly) can be traversed for WCAG compliance
 - **ARIA Attributes**: Complete ARIA implementation (aria-expanded, aria-haspopup, aria-controls, aria-activedescendant)
 - **Focus Management**: Clear focus indicators, logical tab order, and focus trap within dropdown
 - **Required Fields**: Properly marked with `required` attribute and ARIA labels
@@ -492,18 +492,19 @@ FzTypeahead is built with accessibility in mind and follows WCAG 2.1 AA standard
 - `Shift+Tab`: Move focus to previous element
 
 **Options Container (when dropdown is open):**
-- `ArrowDown`: Move focus to next enabled option (wraps to first on last option, skips disabled)
-- `ArrowUp`: Move focus to previous enabled option (wraps to last on first option, skips disabled)
-- `Home`: Move focus to first enabled option
-- `End`: Move focus to last enabled option
-- `Enter` / `Space`: Select focused option and close dropdown
+- `ArrowDown`: Move focus to next option (wraps to first on last option, traverses all options including disabled/readonly)
+- `ArrowUp`: Move focus to previous option (wraps to last on first option, traverses all options including disabled/readonly)
+- `Home`: Move focus to first option (or selected option if present)
+- `End`: Move focus to last option
+- `Enter` / `Space`: Select focused option and close dropdown (only if option is not disabled/readonly)
 - `Escape`: Close dropdown without selecting
-- `Tab`: Move focus to next enabled option (wraps to first on last option) - focus trap active
-- `Shift+Tab`: Move focus to previous enabled option (wraps to last on first option) - focus trap active
+- `Tab`: Move focus to next option (wraps to first on last option, traverses all options) - focus trap active
+- `Shift+Tab`: Move focus to previous option (wraps to last on first option, traverses all options) - focus trap active
 
 **Input Field (when filtrable and dropdown is open):**
-- Type: Filter options and navigate (opens dropdown if closed)
-- All option navigation keys work as above
+- Type: Filter options as you type (opens dropdown if closed)
+- `Tab`: Move focus from input to selected option (or first option if none selected)
+- All option navigation keys work as above when focus is in options list
 
 ## Best Practices
 
