@@ -26,25 +26,24 @@
  *   environment="frontoffice"
  * />
  */
-import {
-  computed,
-  ref,
-  watch,
-  nextTick,
-  onMounted,
-  onBeforeUnmount,
-  Ref,
-} from "vue";
-import {
+import { computed, ref, watch, nextTick, onMounted, Ref } from "vue";
+
+import Fuse from "fuse.js";
+
+import type {
   FzTypeaheadProps,
   FzTypeaheadOptionsProps,
   FzTypeaheadOptionProps,
 } from "./types";
+
 import {
   FzFloating,
   FzFloatingPosition,
   useClickOutside,
 } from "@fiscozen/composables";
+
+import { debounce } from "./utils";
+
 import {
   calculateContainerWidth,
   MIN_WIDTH,
@@ -55,8 +54,6 @@ import FzTypeaheadLabel from "./components/FzTypeaheadLabel.vue";
 import FzTypeaheadButton from "./components/FzTypeaheadButton.vue";
 import FzTypeaheadHelpError from "./components/FzTypeaheadHelpError.vue";
 import FzTypeaheadOptionsList from "./components/FzTypeaheadOptionsList.vue";
-import Fuse from "fuse.js";
-import { debounce } from "./utils";
 
 const props = withDefaults(defineProps<FzTypeaheadProps>(), {
   clearable: true,
@@ -95,7 +92,6 @@ const loadedOptionsCount = ref<number>(0);
 const focusedIndex = ref<number>(-1);
 const optionRefs = ref<Map<string, HTMLElement>>(new Map());
 const maxHeight = ref("");
-const floatingRef = ref<InstanceType<typeof FzFloating>>();
 const isScrollingToFocus = ref(false);
 const searchValue = ref<string>("");
 const debouncedSearchValue = ref<string>("");
@@ -106,8 +102,6 @@ const internalFilteredOptions = ref<FzTypeaheadOptionsProps[] | undefined>(
 const fuseOptions = {
   keys: ["label"],
 };
-
-let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 /**
  * Reconstructs grouped options structure after filtering
@@ -203,21 +197,24 @@ const updateFilteredOptions = async () => {
   }
 };
 
-watch(
-  searchValue,
-  (newValue) => {
-    if (debounceTimer) {
-      clearTimeout(debounceTimer);
-    }
+/**
+ * Debounced function to update debouncedSearchValue
+ * Only used when filtrable is true
+ */
+const debouncedUpdateSearchValue = debounce(
+  (value: unknown) => {
+    debouncedSearchValue.value = value as string;
+  },
+  (props as any).delayTime ?? 500
+);
 
-    if (props.filtrable) {
-      // Apply debounce when filtrable
-      debounceTimer = setTimeout(() => {
-        debouncedSearchValue.value = newValue;
-      }, props.delayTime);
-    } else {
-      // If not filtrable, update immediately
-      debouncedSearchValue.value = newValue;
+watch(
+  () => props.filtrable && searchValue.value,
+  (newValue) => {
+    // Only watch searchValue when filtrable is true
+    // When filtrable is false, searchValue never changes (no input field visible)
+    if (props.filtrable && newValue !== undefined) {
+      debouncedUpdateSearchValue(newValue);
     }
   },
   { immediate: true }
@@ -937,12 +934,6 @@ onMounted(() => {
   });
 });
 
-onBeforeUnmount(() => {
-  if (debounceTimer) {
-    clearTimeout(debounceTimer);
-  }
-});
-
 // ============================================================================
 // EXPOSE
 // ============================================================================
@@ -970,7 +961,6 @@ defineExpose({
     :useViewport="true"
     class="flex flex-col gap-8 overflow-visible"
     contentClass="z-70"
-    ref="floatingRef"
     @fzfloating:setPosition="calculateMaxHeight"
   >
     <template #opener-start>
