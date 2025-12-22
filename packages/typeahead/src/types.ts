@@ -1,8 +1,12 @@
 import { FzFloatingProps } from "@fiscozen/composables";
 import { IconVariant } from "@fiscozen/icons";
+import { IconButtonVariant } from "@fiscozen/button";
 import { FzSelectProps, FzSelectOptionsProps } from "@fiscozen/select";
 
-export interface FzTypeaheadProps extends FzFloatingProps {
+/**
+ * Base props common to both filterable and non-filterable variants
+ */
+interface FzTypeaheadBaseProps extends FzFloatingProps {
   /**
    * The list of options displayed in the floating panel.
    * If undefined, shows a loading indicator (FzProgress).
@@ -84,7 +88,7 @@ export interface FzTypeaheadProps extends FzFloatingProps {
    * Environment context that determines sizing and spacing (backoffice: compact, frontoffice: spacious)
    * @default 'frontoffice'
    */
-  environment?: 'backoffice' | 'frontoffice';
+  environment?: "backoffice" | "frontoffice";
   /**
    * If true, allows clearing the selected value by clicking the selected option again
    * @default true
@@ -119,7 +123,9 @@ export interface FzTypeaheadProps extends FzFloatingProps {
    * Async function to filter the options
    * Can be used for server-side filtering
    */
-  filterFn?: (text?: string) => Promise<FzTypeaheadOptionsProps[]> | FzTypeaheadOptionsProps[];
+  filterFn?: (
+    text?: string,
+  ) => Promise<FzTypeaheadOptionsProps[]> | FzTypeaheadOptionsProps[];
   /**
    * Delay in milliseconds before applying filter after user stops typing
    * @default 500
@@ -137,7 +143,77 @@ export interface FzTypeaheadProps extends FzFloatingProps {
   emptySearchNoFilter?: boolean;
 }
 
-export type FzTypeaheadOptionsProps = FzTypeaheadOptionProps | FzTypeaheadLabelProps;
+/**
+ * Props when filtrable is true
+ *
+ * When filtrable is true, the component shows an input field when open.
+ * The variant, rightIconButton, and rightIconButtonVariant props are not available
+ * in this mode as they only apply to the button display.
+ */
+interface FzTypeaheadFilterableProps extends FzTypeaheadBaseProps {
+  /**
+   * If true, writing in the input will filter the options
+   * @default true
+   */
+  filtrable: true;
+}
+
+/**
+ * Props when filtrable is false or undefined
+ *
+ * When filtrable is false, the component behaves like a standard select dropdown.
+ * The variant, rightIconButton, and rightIconButtonVariant props are available
+ * in this mode to customize the button appearance.
+ */
+interface FzTypeaheadNonFilterableProps extends FzTypeaheadBaseProps {
+  /**
+   * If true, writing in the input will filter the options
+   * @default true
+   */
+  filtrable?: false;
+  /**
+   * Visual variant of the typeahead component.
+   * Only applicable when filtrable is false.
+   * @default 'normal'
+   */
+  variant?: "normal" | "floating-label";
+  /**
+   * If true, right icon is rendered as an interactive button instead of a static icon.
+   * Only applicable when filtrable is false.
+   * @default false
+   */
+  rightIconButton?: boolean;
+  /**
+   * Visual variant for the right icon button.
+   * Only applicable when filtrable is false and rightIconButton is true.
+   * @default 'invisible'
+   */
+  rightIconButtonVariant?: IconButtonVariant;
+  /**
+   * Whether to position right icon before or after chevron
+   * @default false
+   * @deprecated rightIconLast prop is deprecated. The right icon is now always positioned before the chevron. This prop will be removed in a future version.
+   */
+  rightIconLast?: boolean;
+}
+
+/**
+ * FzTypeahead component props
+ *
+ * Discriminated union type that ensures type safety based on filtrable value:
+ * - When filtrable={true}: variant, rightIconButton, and rightIconButtonVariant are not available
+ * - When filtrable={false} or undefined: variant, rightIconButton, and rightIconButtonVariant are available
+ *
+ * This provides compile-time type checking to guide developers on which props
+ * can be used in each mode.
+ */
+export type FzTypeaheadProps =
+  | FzTypeaheadFilterableProps
+  | FzTypeaheadNonFilterableProps;
+
+export type FzTypeaheadOptionsProps =
+  | FzTypeaheadOptionProps
+  | FzTypeaheadLabelProps;
 
 export type FzTypeaheadOptionProps = {
   /**

@@ -46,9 +46,9 @@ describe("FzTypeahead", () => {
       });
 
       expect(wrapper.html()).toBeTruthy();
-      expect(wrapper.find('button[test-id="fztypeahead-opener"]').exists()).toBe(
-        true
-      );
+      expect(
+        wrapper.find('button[test-id="fztypeahead-opener"]').exists(),
+      ).toBe(true);
     });
 
     it("displays label when provided", () => {
@@ -324,7 +324,6 @@ describe("FzTypeahead", () => {
 
       expect(wrapper.html()).toContain("xmark");
     });
-
   });
 
   describe("Lazy Loading", () => {
@@ -345,12 +344,9 @@ describe("FzTypeahead", () => {
       await button.trigger("click");
 
       await wrapper.vm.$nextTick();
-      const options = document.querySelectorAll(
-        'button[role="option"]'
-      );
+      const options = document.querySelectorAll('button[role="option"]');
       expect(options.length).toBe(25);
     });
-
   });
 
   describe("Dropdown Interaction", () => {
@@ -408,7 +404,7 @@ describe("FzTypeahead", () => {
 
       await wrapper.vm.$nextTick();
       const optionButton = document.querySelector(
-        'button[role="option"]'
+        'button[role="option"]',
       ) as HTMLElement;
       optionButton?.click();
 
@@ -432,7 +428,7 @@ describe("FzTypeahead", () => {
 
       await wrapper.vm.$nextTick();
       const optionButton = document.querySelector(
-        'button[role="option"]'
+        'button[role="option"]',
       ) as HTMLElement;
       optionButton?.click();
 
@@ -460,9 +456,7 @@ describe("FzTypeahead", () => {
       await button.trigger("click");
 
       await wrapper.vm.$nextTick();
-      const labels = document.querySelectorAll(
-        'div[role="group"] > div'
-      );
+      const labels = document.querySelectorAll('div[role="group"] > div');
       expect(labels.length).toBe(1);
       expect(labels[0].textContent).toBe("Group 1");
     });
@@ -500,7 +494,7 @@ describe("FzTypeahead", () => {
             width: 100,
             right,
             left,
-          }) as DOMRect
+          }) as DOMRect,
       );
 
       const wrapper = mount(FzTypeahead, {
@@ -622,7 +616,7 @@ describe("FzTypeahead", () => {
 
       await wrapper.vm.$nextTick();
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       );
       expect(container?.getAttribute("role")).toBe("listbox");
     });
@@ -742,12 +736,12 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       expect(wrapper.vm.focusedIndex).toBe(0);
 
       container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowDown" })
+        new KeyboardEvent("keydown", { key: "ArrowDown" }),
       );
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(1);
@@ -774,11 +768,9 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
-      container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowUp" })
-      );
+      container.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(1);
     });
@@ -803,10 +795,10 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowDown" })
+        new KeyboardEvent("keydown", { key: "ArrowDown" }),
       );
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(0);
@@ -832,11 +824,9 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
-      container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowUp" })
-      );
+      container.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(1);
     });
@@ -862,7 +852,7 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "Home" }));
       await wrapper.vm.$nextTick();
@@ -890,7 +880,7 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "End" }));
       await wrapper.vm.$nextTick();
@@ -918,16 +908,20 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       // Container is in a Teleport, use document.querySelector
-      const containerEl = document.querySelector('[test-id="fztypeahead-options-container"]') as HTMLElement;
+      const containerEl = document.querySelector(
+        '[test-id="fztypeahead-options-container"]',
+      ) as HTMLElement;
       expect(containerEl).toBeTruthy();
-      containerEl.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      containerEl.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+      );
       await wrapper.vm.$nextTick();
-      
+
       // Verify selection via emitted event
       expect(wrapper.emitted("update:modelValue")).toBeTruthy();
       expect(wrapper.emitted("update:modelValue")![0]).toEqual(["option2"]);
       expect(wrapper.vm.isOpen).toBe(false);
-      
+
       wrapper.unmount();
     });
 
@@ -952,16 +946,20 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       // Container is in a Teleport, use document.querySelector
-      const containerEl = document.querySelector('[test-id="fztypeahead-options-container"]') as HTMLElement;
+      const containerEl = document.querySelector(
+        '[test-id="fztypeahead-options-container"]',
+      ) as HTMLElement;
       expect(containerEl).toBeTruthy();
-      containerEl.dispatchEvent(new KeyboardEvent("keydown", { key: " ", bubbles: true }));
+      containerEl.dispatchEvent(
+        new KeyboardEvent("keydown", { key: " ", bubbles: true }),
+      );
       await wrapper.vm.$nextTick();
-      
+
       // Verify selection via emitted event
       expect(wrapper.emitted("update:modelValue")).toBeTruthy();
       expect(wrapper.emitted("update:modelValue")![0]).toEqual(["option1"]);
       expect(wrapper.vm.isOpen).toBe(false);
-      
+
       wrapper.unmount();
     });
 
@@ -983,7 +981,7 @@ describe("FzTypeahead", () => {
       expect(wrapper.vm.isOpen).toBe(true);
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
       await wrapper.vm.$nextTick();
@@ -1013,22 +1011,22 @@ describe("FzTypeahead", () => {
       const input = wrapper.find('input[type="text"]');
       await input.setValue("nonexistent");
       await wrapper.vm.$nextTick();
-      
+
       // Advance timers to trigger debounced filter (default delay is 500ms)
       vi.advanceTimersByTime(500);
       await wrapper.vm.$nextTick();
-      
+
       // Verify no options are available (enabledOptions is empty)
       expect(wrapper.vm.enabledOptions.length).toBe(0);
 
       // Press Escape in the input field (delegates to handleOptionsKeydown)
       await input.trigger("keydown", { key: "Escape" });
       await wrapper.vm.$nextTick();
-      
+
       // Verify dropdown closes even when no options are available
       expect(wrapper.vm.isOpen).toBe(false);
       expect(wrapper.vm.focusedIndex).toBe(-1);
-      
+
       vi.useRealTimers();
     });
 
@@ -1055,10 +1053,10 @@ describe("FzTypeahead", () => {
       expect(wrapper.vm.focusedIndex).toBe(0);
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowDown" })
+        new KeyboardEvent("keydown", { key: "ArrowDown" }),
       );
       await wrapper.vm.$nextTick();
       // Should move to second selectable option, skipping labels
@@ -1087,11 +1085,11 @@ describe("FzTypeahead", () => {
 
       // Verify focusedIndex is set to first option
       expect(wrapper.vm.focusedIndex).toBe(0);
-      
+
       // Verify options are rendered (FzAction handles its own focus/tabindex behavior)
       const options = document.querySelectorAll('button[id*="-option-"]');
       expect(options.length).toBeGreaterThan(0);
-      
+
       wrapper.unmount();
     });
 
@@ -1185,7 +1183,7 @@ describe("FzTypeahead", () => {
 
       // Close with Escape
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
       await wrapper.vm.$nextTick();
@@ -1219,7 +1217,7 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
       await wrapper.vm.$nextTick();
@@ -1249,10 +1247,10 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "Tab", shiftKey: true })
+        new KeyboardEvent("keydown", { key: "Tab", shiftKey: true }),
       );
       await wrapper.vm.$nextTick();
 
@@ -1281,7 +1279,7 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
       await wrapper.vm.$nextTick();
@@ -1311,10 +1309,10 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "Tab", shiftKey: true })
+        new KeyboardEvent("keydown", { key: "Tab", shiftKey: true }),
       );
       await wrapper.vm.$nextTick();
 
@@ -1339,7 +1337,7 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       const event = new KeyboardEvent("keydown", { key: "Tab" });
       const preventDefaultSpy = vi.spyOn(event, "preventDefault");
@@ -1371,11 +1369,11 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       expect(container.getAttribute("aria-activedescendant")).toBeTruthy();
       expect(container.getAttribute("aria-activedescendant")).toContain(
-        "option1"
+        "option1",
       );
     });
 
@@ -1400,7 +1398,7 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       const firstId = container.getAttribute("aria-activedescendant");
 
@@ -1432,7 +1430,7 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       expect(container.getAttribute("aria-activedescendant")).toBeTruthy();
 
@@ -1458,9 +1456,7 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
       await wrapper.vm.$nextTick();
 
-      const optionButtons = document.querySelectorAll(
-        'button[role="option"]'
-      );
+      const optionButtons = document.querySelectorAll('button[role="option"]');
       expect(optionButtons.length).toBeGreaterThan(0);
 
       const ids = Array.from(optionButtons).map((btn) => btn.id);
@@ -1520,7 +1516,7 @@ describe("FzTypeahead", () => {
       const openerButton = wrapper.find('button[test-id="fztypeahead-opener"]');
       await openerButton.trigger("click");
       await wrapper.vm.$nextTick();
-      
+
       // Dropdown should not open when readonly
       expect(wrapper.vm.isOpen).toBe(false);
     });
@@ -1558,7 +1554,7 @@ describe("FzTypeahead", () => {
       const openerButton = wrapper.find('button[test-id="fztypeahead-opener"]');
       await openerButton.trigger("click");
       await wrapper.vm.$nextTick();
-      
+
       // Dropdown should not open when disabled
       expect(wrapper.vm.isOpen).toBe(false);
     });
@@ -1580,25 +1576,22 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
       expect(wrapper.vm.focusedIndex).toBe(0);
 
       // ArrowDown should wrap to first (and only) option
       container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowDown" })
+        new KeyboardEvent("keydown", { key: "ArrowDown" }),
       );
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(0);
 
       // ArrowUp should wrap to first (and only) option
-      container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowUp" })
-      );
+      container.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(0);
     });
-
   });
 
   describe("Keyboard Navigation - Integration Tests", () => {
@@ -1617,7 +1610,7 @@ describe("FzTypeahead", () => {
       });
 
       const openerButton = wrapper.find('button[test-id="fztypeahead-opener"]');
-      
+
       // 1. Open with Enter
       await openerButton.trigger("keydown", { key: "Enter" });
       await wrapper.vm.$nextTick();
@@ -1627,16 +1620,22 @@ describe("FzTypeahead", () => {
 
       // 2. Navigate to second option with ArrowDown
       // Container is in a Teleport, use document.querySelector
-      const containerEl = document.querySelector('[test-id="fztypeahead-options-container"]') as HTMLElement;
+      const containerEl = document.querySelector(
+        '[test-id="fztypeahead-options-container"]',
+      ) as HTMLElement;
       expect(containerEl).toBeTruthy();
-      containerEl.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+      containerEl.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }),
+      );
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(1);
 
       // 3. Select with Enter
-      containerEl.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      containerEl.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+      );
       await wrapper.vm.$nextTick();
-      
+
       // Verify selection via emitted event
       expect(wrapper.emitted("update:modelValue")).toBeTruthy();
       expect(wrapper.emitted("update:modelValue")![0]).toEqual(["option2"]);
@@ -1645,7 +1644,7 @@ describe("FzTypeahead", () => {
       // 4. Verify focusedIndex reset
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(-1);
-      
+
       wrapper.unmount();
     });
 
@@ -1670,7 +1669,7 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
 
       // Tab to next
@@ -1822,9 +1821,9 @@ describe("FzTypeahead", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fztypeahead-options-container"]'
+        '[test-id="fztypeahead-options-container"]',
       ) as HTMLElement;
-      
+
       // Tab should still work and wrap correctly
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
       await wrapper.vm.$nextTick();

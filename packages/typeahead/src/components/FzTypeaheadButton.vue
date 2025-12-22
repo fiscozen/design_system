@@ -11,12 +11,15 @@
  */
 import { ref, computed } from "vue";
 import { FzIcon } from "@fiscozen/icons";
+import { FzIconButton } from "@fiscozen/button";
 import { FzInput, type FzInputProps } from "@fiscozen/input";
 import type { FzTypeaheadButtonProps } from "./types";
 
 const props = withDefaults(defineProps<FzTypeaheadButtonProps>(), {
   environment: "frontoffice",
   filtrable: true,
+  variant: "normal",
+  rightIconButtonVariant: "invisible",
 });
 
 /**
@@ -32,6 +35,7 @@ const emit = defineEmits<{
   "input-focus": [event: FocusEvent];
   "input-click": [event: MouseEvent];
   "input-keydown": [event: KeyboardEvent];
+  "right-icon-click": [];
 }>();
 
 const openerButton = ref<HTMLButtonElement>();
@@ -44,8 +48,23 @@ const isReadonly = computed(() => props.readonly);
 const isInteractive = computed(() => !isDisabled.value && !isReadonly.value);
 const isError = computed(() => !!props.error && isInteractive.value);
 const isSelectedValue = computed(
-  () => props.selectedOption && isInteractive.value
+  () => props.selectedOption && isInteractive.value,
 );
+
+/**
+ * Determines if normal placeholder should be shown
+ * Only applies when variant is floating-label and not showing input
+ */
+const showNormalPlaceholder = computed(() => {
+  // When showing input, always use normal placeholder behavior
+  if (shouldShowTheInput.value) return true;
+
+  // When showing button, apply floating-label logic
+  return (
+    !(props.variant === "floating-label") ||
+    (props.variant === "floating-label" && !props.selectedOption)
+  );
+});
 
 /**
  * Base classes for picker button
@@ -79,12 +98,26 @@ const pickerStateClasses = computed(() => {
 });
 
 /**
- * Computes picker button classes based on environment
+ * Computes picker button classes based on variant and environment
+ * Floating-label variant only applies when not showing input
  */
-const computedPickerClass = computed(() => [
-  environmentPickerClasses[props.environment],
-  pickerStateClasses.value,
-]);
+const computedPickerClass = computed(() => {
+  // When showing input, use normal environment classes
+  if (shouldShowTheInput.value) {
+    return [
+      environmentPickerClasses[props.environment],
+      pickerStateClasses.value,
+    ];
+  }
+
+  // When showing button, apply variant logic
+  return [
+    props.variant === "floating-label"
+      ? "h-40 text-sm pr-6"
+      : environmentPickerClasses[props.environment],
+    pickerStateClasses.value,
+  ];
+});
 
 /**
  * Base text classes
@@ -140,6 +173,11 @@ const handleClick = () => {
 
 const handleKeydown = (event: KeyboardEvent) => {
   emit("keydown", event);
+};
+
+const handleRightIconClick = (event: Event) => {
+  event.stopPropagation();
+  emit("right-icon-click");
 };
 
 const shouldShowTheInput = computed(() => props.filtrable && props.isOpen);
@@ -220,15 +258,93 @@ defineExpose({
         size="md"
         :class="iconColorClass"
       />
-      <span :class="[staticSpanClass, ...spanClass]">
+      <!--
+        Floating-label variant: two-span layout for compact form styling
+        
+        Only applies when:
+        - Not showing input (!shouldShowTheInput) - ensures this only works when filtrable is false
+        - Variant is 'floating-label'
+        
+        Implementation:
+        - Uses flex-col container to stack two spans vertically
+        - First span: small placeholder label (text-xs) shown above when value is selected
+          - Condition: !showNormalPlaceholder (true when variant is floating-label AND selectedOption exists)
+          - This creates the "floating" effect: placeholder moves up when value is present
+        - Second span: displays selected value or placeholder (normal size)
+        
+        When no value is selected: only second span shows placeholder (normal behavior)
+        When value is selected: first span shows placeholder above, second span shows value
+      -->
+      <div
+        v-if="!shouldShowTheInput && variant === 'floating-label'"
+        class="flex flex-col min-w-0 grow"
+      >
+        <span
+          v-if="!showNormalPlaceholder"
+          :class="[staticSpanClass, 'text-grey-300 text-xs']"
+          >{{ placeholder }}</span
+        >
+        <span :class="[staticSpanClass, ...spanClass]">
+          {{ selectedOption ? selectedOption.label : placeholder }}
+        </span>
+      </div>
+      <!--
+        Normal variant: single span layout
+        
+        Only applies when:
+        - Not showing input (!shouldShowTheInput)
+        - Variant is NOT 'floating-label' (or variant is undefined, defaults to 'normal')
+        
+        Displays selected value or placeholder in a single span element.
+      -->
+      <span
+        v-else-if="!shouldShowTheInput"
+        :class="[staticSpanClass, ...spanClass]"
+      >
         {{ selectedOption ? selectedOption.label : placeholder }}
       </span>
+      <!--
+        Right icon: static icon (non-interactive)
+        
+        Only applies when:
+        - rightIcon prop is provided
+        - Not showing input (!shouldShowTheInput) - ensures this only works when filtrable is false
+        - rightIconButton is false or undefined (default: static icon)
+        
+        Renders a non-clickable FzIcon that displays the right icon before the chevron.
+        Icon color adapts to component state (disabled/readonly = grey, interactive = black).
+      -->
       <FzIcon
-        v-if="rightIcon"
+        v-if="rightIcon && !shouldShowTheInput && !rightIconButton"
         :name="rightIcon"
         :variant="rightIconVariant"
         size="md"
         :class="iconColorClass"
+      />
+      <!--
+        Right icon: interactive button
+        
+        Only applies when:
+        - rightIcon prop is provided
+        - Not showing input (!shouldShowTheInput) - ensures this only works when filtrable is false
+        - rightIconButton is true
+        
+        Implementation:
+        - Renders FzIconButton instead of FzIcon for clickable functionality
+        - Variant logic: uses rightIconButtonVariant when interactive, 'invisible' when disabled/readonly
+          - This ensures the button is visible only when user can interact with it
+        - Styling: applies disabled styles (bg-grey-100 text-gray-300) when not interactive
+        - Event: emits 'right-icon-click' on click (handled by parent component)
+        
+        Use case: allows actions like "clear selection" or "search" via right icon click.
+      -->
+      <FzIconButton
+        v-if="rightIcon && !shouldShowTheInput && rightIconButton"
+        :class="{ 'bg-grey-100 text-gray-300': !isInteractive }"
+        :iconName="rightIcon"
+        size="md"
+        :variant="isInteractive ? rightIconButtonVariant : 'invisible'"
+        @click="handleRightIconClick"
       />
       <FzIcon
         :name="isOpen ? 'chevron-up' : 'chevron-down'"
