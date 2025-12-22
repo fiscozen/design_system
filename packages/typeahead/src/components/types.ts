@@ -5,6 +5,7 @@
  */
 
 import { IconVariant } from "@fiscozen/icons";
+import { IconButtonVariant } from "@fiscozen/button";
 import { FzTypeaheadOptionProps, FzTypeaheadOptionsProps } from "../types";
 
 /**
@@ -114,6 +115,24 @@ export interface FzTypeaheadButtonProps {
    * @default true
    */
   filtrable?: boolean;
+  /**
+   * Visual variant (normal or floating-label)
+   * Only applicable when filtrable is false.
+   * @default 'normal'
+   */
+  variant?: "normal" | "floating-label";
+  /**
+   * Whether right icon is a button
+   * Only applicable when filtrable is false.
+   * @default false
+   */
+  rightIconButton?: boolean;
+  /**
+   * Right icon button variant
+   * Only applicable when filtrable is false and rightIconButton is true.
+   * @default 'invisible'
+   */
+  rightIconButtonVariant?: IconButtonVariant;
 }
 
 /**
