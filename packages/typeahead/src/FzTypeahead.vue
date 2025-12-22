@@ -331,10 +331,8 @@ const activeDescendantId = computed(() => {
 });
 
 const variantProp = computed(() => (props as any).variant);
-const rightIconButtonProp = computed(() => (props as any).rightIconButton);
-const rightIconButtonVariantProp = computed(
-  () => (props as any).rightIconButtonVariant
-);
+const rightIconButtonProp = computed(() => props.rightIconButton);
+const rightIconButtonVariantProp = computed(() => props.rightIconButtonVariant);
 
 const safeOpener = computed(() => {
   return props.extOpener

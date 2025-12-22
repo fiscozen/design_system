@@ -122,14 +122,13 @@ export interface FzTypeaheadButtonProps {
    */
   variant?: "normal" | "floating-label";
   /**
-   * Whether right icon is a button
-   * Only applicable when filtrable is false.
+   * Whether right icon is a button.
    * @default false
    */
   rightIconButton?: boolean;
   /**
-   * Right icon button variant
-   * Only applicable when filtrable is false and rightIconButton is true.
+   * Right icon button variant.
+   * Only applicable when rightIconButton is true.
    * @default 'invisible'
    */
   rightIconButtonVariant?: IconButtonVariant;

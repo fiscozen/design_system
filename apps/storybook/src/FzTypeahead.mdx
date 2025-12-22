@@ -154,6 +154,24 @@ const options = [
       <td>FontAwesome icon variant for the right icon (fas, far, fal, etc.)</td>
     </tr>
     <tr>
+      <td><code>rightIconButton</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If true, right icon is rendered as an interactive button instead of a static icon. Only shown when filtrable is false (button mode)</td>
+    </tr>
+    <tr>
+      <td><code>rightIconButtonVariant</code></td>
+      <td><code>IconButtonVariant</code></td>
+      <td><code>'invisible'</code></td>
+      <td>Visual variant for the right icon button. Only applicable when rightIconButton is true</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'normal' | 'floating-label'</code></td>
+      <td><code>'normal'</code></td>
+      <td>Visual variant of the typeahead. Only applicable when filtrable is false</td>
+    </tr>
+    <tr>
       <td><code>optionsToShow</code></td>
       <td><code>number</code></td>
       <td><code>25</code></td>
@@ -402,6 +420,10 @@ const options = [
   { label: 'Search Result 1', value: '1' },
   { label: 'Search Result 2', value: '2' }
 ]
+
+const handleRightIconClick = () => {
+  console.log('Right icon clicked')
+}
 </script>
 
 <template>
@@ -414,6 +436,40 @@ const options = [
     leftIconVariant="fas"
     rightIcon="filter"
     rightIconVariant="far"
+  />
+</template>
+```
+
+### With Right Icon Button
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTypeahead } from '@fiscozen/typeahead'
+
+const selected = ref<string>()
+
+const options = [
+  { label: 'Option 1', value: '1' },
+  { label: 'Option 2', value: '2' }
+]
+
+const handleRightIconClick = () => {
+  selected.value = undefined // Clear selection
+}
+</script>
+
+<template>
+  <FzTypeahead
+    v-model="selected"
+    label="Select"
+    :options="options"
+    placeholder="Choose an option..."
+    filtrable="false"
+    rightIcon="xmark"
+    :rightIconButton="true"
+    rightIconButtonVariant="secondary"
+    @fztypeahead:right-icon-click="handleRightIconClick"
   />
 </template>
 ```
