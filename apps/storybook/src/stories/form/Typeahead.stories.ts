@@ -867,3 +867,277 @@ export const WithMaxHeight: TypeaheadStory = {
   }
 }
 
+export const NotFiltrableAndUnclearable: TypeaheadStory = {
+  render: (args) => ({
+    components: { FzTypeahead },
+    setup() {
+      const model = ref<string>()
+      return {
+        args,
+        model
+      }
+    },
+    template: `<div class="p-8 relative" style='width:300px'>
+                  <FzTypeahead v-bind="args" v-model="model" />
+                </div>`
+  }),
+  args: {
+    ...Template.args,
+    filtrable: false,
+    clearable: false,
+    placeholder: 'Seleziona un valore',
+    options: [
+      { value: '1', label: 'One' },
+      { value: '2', label: 'Two' },
+      { value: '3', label: 'Three' }
+    ]
+  },
+  decorators: [
+    () => ({
+      template: `
+      <div style="width:100vw;height:100vh;">
+        <story/>
+      </div>
+      `
+    })
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify placeholder is displayed (no initial value)', async () => {
+      const opener = canvas.getByRole('button', { name: /typeahead/i })
+      await expect(opener.textContent).toContain('Seleziona un valore')
+    })
+    
+    await step('Open dropdown and verify button remains (no input)', async () => {
+      const opener = canvas.getByRole('button', { name: /typeahead/i })
+      await userEvent.click(opener)
+      
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
+      // When filtrable is false, button should remain visible (not switch to input)
+      const input = canvasElement.querySelector('input[type="text"]')
+      await expect(input).toBeNull()
+      await expect(opener).toHaveAttribute('aria-expanded', 'true')
+    })
+    
+    await step('Select an option and verify it cannot be cleared', async () => {
+      const opener = canvas.getByRole('button', { name: /typeahead/i })
+      
+      // Find and click first option
+      const options = document.querySelectorAll('[role="option"]')
+      const optionOne = Array.from(options).find(opt => opt.textContent?.includes('One'))
+      
+      if (optionOne) {
+        await userEvent.click(optionOne as HTMLElement)
+        
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        // Verify value is selected
+        const openerAfter = canvas.getByRole('button', { name: /typeahead/i })
+        await expect(openerAfter.textContent).toContain('One')
+        
+        // Re-open dropdown and click on selected option - should not clear it
+        await userEvent.click(openerAfter)
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        const selectedOption = canvasElement.querySelector('[role="option"][aria-selected="true"]')
+        if (selectedOption) {
+          await userEvent.click(selectedOption)
+          
+          await new Promise(resolve => setTimeout(resolve, 100))
+          
+          // Verify value is still selected (not cleared)
+          const openerStillSelected = canvas.getByRole('button', { name: /typeahead/i })
+          await expect(openerStillSelected.textContent).toContain('One')
+        }
+      }
+    })
+    
+    await step('Verify can select different option', async () => {
+      const opener = canvas.getByRole('button', { name: /typeahead/i })
+      await userEvent.click(opener)
+      
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
+      // Find and click a different option
+      const options = document.querySelectorAll('[role="option"]')
+      const optionTwo = Array.from(options).find(opt => opt.textContent?.includes('Two'))
+      
+      if (optionTwo) {
+        await userEvent.click(optionTwo as HTMLElement)
+        
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        // Verify new value is selected
+        const openerAfter = canvas.getByRole('button', { name: /typeahead/i })
+        await expect(openerAfter.textContent).toContain('Two')
+      }
+    })
+  }
+}
+
+export const SelectWithHundredsOfOptions: TypeaheadStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    filtrable: false,
+    teleport: true,
+    options: Array.from({ length: 1000 }, (_, i) => ({
+      value: i.toString(),
+      label: `Option ${i}`
+    }))
+  },
+  decorators: [
+    () => ({
+      template: `
+      <div style="width:100vw;height:100vh;">
+        <story/>
+      </div>
+      `
+    })
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button renders', async () => {
+      const opener = canvas.getByRole('button', { name: /typeahead/i })
+      await expect(opener).toBeInTheDocument()
+    })
+  }
+}
+
+export const SelectWithHundredsOfOptionsAndMaxHeight: TypeaheadStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    filtrable: false,
+    options: Array.from({ length: 1000 }, (_, i) => ({
+      value: i.toString(),
+      label: `Option ${i}`
+    })),
+    floatingPanelMaxHeight: '200px'
+  },
+  decorators: [
+    () => ({
+      template: `
+      <div style="width:100vw;height:100vh;">
+        <story/>
+      </div>
+      `
+    })
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button renders', async () => {
+      const opener = canvas.getByRole('button', { name: /typeahead/i })
+      await expect(opener).toBeInTheDocument()
+    })
+  }
+}
+
+export const LongTextOnRight: TypeaheadStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    filtrable: false
+  },
+  decorators: [
+    () => ({
+      template: `
+      <div class="flex w-full justify-end">
+        <story/>
+      </div>
+      `
+    })
+  ]
+}
+
+export const SelectWithOptionLabel: TypeaheadStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    filtrable: false,
+    options: [
+      { label: 'Group 1', kind: 'label' },
+      { value: '1', label: 'One' },
+      { value: '2', label: 'Two' },
+      { label: 'Group 2', kind: 'label' },
+      { value: '3', label: 'Three' }
+    ]
+  }
+}
+
+export const SelectWithOptionLabelAndSubtitle: TypeaheadStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    filtrable: false,
+    disableTruncate: true,
+    options: [
+      { label: 'Consigliate', kind: 'label' },
+      { value: '1', label: 'Reverse Charge - Cessione di rottami e altri materiali di recupero', subtitle: 'Per vendite di materiali di recupero come rottami metallici o carta da macero.' },
+      { value: '2', label: 'Escluso - Art. 1, Art. 2, Art. 3, Art. 5, Art. 26', subtitle: 'Per rimborsi spese sostenuti in nome e per conto del cliente.' },
+      { label: 'Tutte le normative', kind: 'label' },
+      { value: '3', label: 'Fuori campo - Art. 3, comma 4a', subtitle: 'Per operazioni di cessione di diritti d\'autore.' },
+      { value: '4', label: 'Fuori campo - Art. 3, comma 4b', subtitle: 'Per cessione di beni verso San Marino e Vaticano.' }
+    ]
+  }
+}
+
+export const FloatingLabel: TypeaheadStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    filtrable: false,
+    rightIcon: 'bell',
+    rightIconButton: true,
+    variant: 'floating-label',
+    rightIconButtonVariant: 'secondary'
+  },
+  decorators: [
+    () => ({
+      template: `
+      <div style="width:100vw;height:100vh;">
+        <story/>
+      </div>
+      `
+    })
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify floating-label variant is applied', async () => {
+      const opener = canvas.getByRole('button', { name: /typeahead/i })
+      await expect(opener).toHaveClass('h-40')
+      await expect(opener).toHaveClass('text-sm')
+    })
+    
+    await step('Select an option and verify floating label behavior', async () => {
+      const opener = canvas.getByRole('button', { name: /typeahead/i })
+      await userEvent.click(opener)
+      
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
+      // Find and click first option
+      const options = document.querySelectorAll('[role="option"]')
+      const optionOne = Array.from(options).find(opt => opt.textContent?.includes('One'))
+      
+      if (optionOne) {
+        await userEvent.click(optionOne as HTMLElement)
+        
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        // Verify value is selected and floating label shows placeholder above
+        const openerAfter = canvas.getByRole('button', { name: /typeahead/i })
+        await expect(openerAfter.textContent).toContain('One')
+        
+        // Verify floating label structure (two spans)
+        const floatingLabelContainer = openerAfter.querySelector('.flex.flex-col')
+        await expect(floatingLabelContainer).toBeTruthy()
+      }
+    })
+  }
+}
+

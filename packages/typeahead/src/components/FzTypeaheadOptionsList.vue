@@ -22,6 +22,7 @@ const emit = defineEmits<{
   keydown: [event: KeyboardEvent];
   scroll: [];
   "register-ref": [value: string, element: HTMLElement | undefined];
+  focus: [value: string];
 }>();
 
 const containerRef = ref<InstanceType<typeof FzActionList>>();
@@ -52,6 +53,31 @@ const getCheckIcon = (option: FzTypeaheadOptionProps): string | undefined =>
   props.selectedValue === option.value ? "check" : undefined;
 
 /**
+ * Gets tabindex for an option
+ * When filtrable is true and focusedIndex is -1, the selected option (if any) should be focusable
+ * Otherwise, only the focused option should be focusable
+ *
+ * Note: Disabled/readonly options can also receive focus (tabindex="0") when focused,
+ * allowing keyboard navigation to traverse them even though they're not interactive.
+ */
+const getTabIndex = (option: FzTypeaheadOptionProps): number => {
+  // If this is the focused option, it should be focusable (even if disabled/readonly)
+  if (props.focusedOptionValue === option.value) {
+    return 0;
+  }
+  // If no option is focused (focusedOptionValue is null) and this is the selected option,
+  // it should be focusable (for filtrable: true case)
+  if (
+    props.focusedOptionValue === null &&
+    props.selectedValue === option.value
+  ) {
+    return 0;
+  }
+  // Otherwise, not focusable
+  return -1;
+};
+
+/**
  * Generates unique ID for an option element
  */
 const getOptionId = (option: FzTypeaheadOptionProps) => {
@@ -64,6 +90,14 @@ const getOptionId = (option: FzTypeaheadOptionProps) => {
  */
 const handleSelect = (option: FzTypeaheadOptionProps) => {
   emit("select", option);
+};
+
+/**
+ * Handles option focus event
+ * Updates focusedIndex in parent when user tabs to an option
+ */
+const handleOptionFocus = (option: FzTypeaheadOptionProps) => {
+  emit("focus", option.value);
 };
 
 /**
@@ -123,12 +157,13 @@ defineExpose({
           :disabled="option.disabled"
           :readonly="option.readonly"
           :id="getOptionId(option)"
-          :focused="focusedOptionValue === option.value"
           :isTextTruncated="!disableTruncate"
           :iconRightName="getCheckIcon(option)"
           role="option"
+          :tabindex="getTabIndex(option)"
           :ariaSelected="selectedValue === option.value"
           @click="() => handleSelect(option)"
+          @focus="() => handleOptionFocus(option)"
         />
       </template>
     </template>

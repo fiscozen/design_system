@@ -71,124 +71,16 @@ const props = withDefaults(defineProps<FzTypeaheadProps>(), {
   position: "auto-vertical-start",
   readonly: false,
   required: false,
+  rightIconButton: false,
+  rightIconButtonVariant: "invisible",
   teleport: true,
+  variant: "normal",
 });
 
 const model = defineModel<string | undefined>({
   required: true,
   default: undefined,
 });
-
-// ============================================================================
-// DEPRECATION WARNINGS
-// ============================================================================
-
-// Track if we've already shown the deprecation warning for this instance
-const sizeWarningShown = ref(false);
-const selectPropsWarningShown = ref(false);
-const inputPropsWarningShown = ref(false);
-const filteredOptionsWarningShown = ref(false);
-const disableEmitOnFocusWarningShown = ref(false);
-const emptySearchNoFilterWarningShown = ref(false);
-
-// Warn if deprecated size prop is used
-watch(
-  () => props.size,
-  (newSize) => {
-    if (!sizeWarningShown.value && newSize !== undefined) {
-      console.warn(
-        `[FzTypeahead] The 'size' prop is deprecated and will be removed in a future version. ` +
-          `The component now uses a fixed 'lg' size. Please remove the size prop from your usage.`
-      );
-      sizeWarningShown.value = true;
-    }
-  },
-  { immediate: true }
-);
-
-// Warn if deprecated selectProps prop is used
-watch(
-  () => props.selectProps,
-  (newSelectProps) => {
-    if (!selectPropsWarningShown.value && newSelectProps !== undefined) {
-      console.warn(
-        `[FzTypeahead] The 'selectProps' prop is deprecated and will be removed in a future version. ` +
-          `Please use the 'options' prop instead.`
-      );
-      selectPropsWarningShown.value = true;
-    }
-  },
-  { immediate: true }
-);
-
-// Warn if deprecated inputProps prop is used
-watch(
-  () => props.inputProps,
-  (newInputProps) => {
-    if (!inputPropsWarningShown.value && newInputProps !== undefined) {
-      console.warn(
-        `[FzTypeahead] The 'inputProps' prop is deprecated and will be removed in a future version. ` +
-          `Please use the 'options' prop instead.`
-      );
-      inputPropsWarningShown.value = true;
-    }
-  },
-  { immediate: true }
-);
-
-// Warn if deprecated filteredOptions prop is used
-watch(
-  () => props.filteredOptions,
-  (newFilteredOptions) => {
-    if (
-      !filteredOptionsWarningShown.value &&
-      newFilteredOptions !== undefined
-    ) {
-      console.warn(
-        `[FzTypeahead] The 'filteredOptions' prop is deprecated and will be removed in a future version. ` +
-          `Please use the 'options' prop instead.`
-      );
-      filteredOptionsWarningShown.value = true;
-    }
-  },
-  { immediate: true }
-);
-
-// Warn if deprecated disableEmitOnFocus prop is used
-watch(
-  () => props.disableEmitOnFocus,
-  (newDisableEmitOnFocus) => {
-    if (
-      !disableEmitOnFocusWarningShown.value &&
-      newDisableEmitOnFocus !== undefined
-    ) {
-      console.warn(
-        `[FzTypeahead] The 'disableEmitOnFocus' prop is deprecated and will be removed in a future version. ` +
-          `The component no longer emits input events on focus, so this prop has no effect. Please remove it from your usage.`
-      );
-      disableEmitOnFocusWarningShown.value = true;
-    }
-  },
-  { immediate: true }
-);
-
-// Warn if deprecated emptySearchNoFilter prop is used
-watch(
-  () => props.emptySearchNoFilter,
-  (newEmptySearchNoFilter) => {
-    if (
-      !emptySearchNoFilterWarningShown.value &&
-      newEmptySearchNoFilter !== undefined
-    ) {
-      console.warn(
-        `[FzTypeahead] The 'emptySearchNoFilter' prop is deprecated and will be removed in a future version. ` +
-          `The component now always shows all options when the input is empty, so this prop has no effect. Please remove it from your usage.`
-      );
-      emptySearchNoFilterWarningShown.value = true;
-    }
-  },
-  { immediate: true }
-);
 
 // ============================================================================
 // STATE
@@ -199,7 +91,7 @@ const buttonRef = ref<InstanceType<typeof FzTypeaheadButton>>();
 const optionsListRef = ref<InstanceType<typeof FzTypeaheadOptionsList>>();
 const containerWidth = ref<string>(`${MIN_WIDTH}px`);
 const openerMaxWidth = ref<string>("none");
-const visibleOptions = ref<FzTypeaheadOptionsProps[] | undefined>(undefined);
+const loadedOptionsCount = ref<number>(0);
 const focusedIndex = ref<number>(-1);
 const optionRefs = ref<Map<string, HTMLElement>>(new Map());
 const maxHeight = ref("");
@@ -364,11 +256,19 @@ watch(
 
 /**
  * Watch props.options to update filtered options when options change
+ * When filtrable is false, also reset loadedOptionsCount (like FzSelect)
  */
 watch(
   () => props.options,
   () => {
     updateFilteredOptions();
+    // When not filtrable, reset loaded count when options change (like FzSelect)
+    if (!props.filtrable) {
+      loadedOptionsCount.value = Math.min(
+        props.optionsToShow,
+        props.options?.length || 0
+      );
+    }
   },
   { immediate: true }
 );
@@ -410,14 +310,44 @@ const isSelectableOption = (
 ): option is FzTypeaheadOptionProps => option.kind !== "label";
 
 /**
- * Finds the currently selected option from internal filtered options list
+ * Finds the currently selected option from options list
+ * When filtrable is false, uses props.options directly (like FzSelect)
+ * When filtrable is true, uses internalFilteredOptions
  */
 const selectedOption = computed(() => {
+  // When not filtrable, behave exactly like FzSelect
+  if (!props.filtrable) {
+    if (!props.options) return undefined;
+    return props.options.find(
+      (option): option is FzTypeaheadOptionProps =>
+        isSelectableOption(option) && option.value === model.value
+    );
+  }
+  // When filtrable, use internal filtered options
   if (!internalFilteredOptions.value) return undefined;
   return internalFilteredOptions.value.find(
     (option): option is FzTypeaheadOptionProps =>
       isSelectableOption(option) && option.value === model.value
   );
+});
+
+/**
+ * Computed property for visible options based on lazy loading count
+ *
+ * When filtrable is false, uses props.options directly (like FzSelect).
+ * When filtrable is true, uses internalFilteredOptions.
+ * Automatically updates when options or loadedOptionsCount changes.
+ * Returns undefined when filtrable is true and internalFilteredOptions is undefined (loading state).
+ */
+const visibleOptions = computed(() => {
+  // When not filtrable, behave exactly like FzSelect
+  if (!props.filtrable) {
+    if (!props.options) return [];
+    return props.options.slice(0, loadedOptionsCount.value);
+  }
+  // When filtrable, use internal filtered options
+  if (!internalFilteredOptions.value) return undefined;
+  return internalFilteredOptions.value.slice(0, loadedOptionsCount.value);
 });
 
 /**
@@ -429,8 +359,9 @@ const selectableOptions = computed(() => {
 });
 
 /**
- * Gets list of enabled (non-disabled and non-readonly) selectable options for keyboard navigation
- * Excludes disabled and readonly options to prevent focus from getting stuck on non-interactive items
+ * Gets list of enabled (non-disabled and non-readonly) selectable options
+ * Used for internal logic (e.g., finding next enabled option when needed)
+ * Note: Keyboard navigation now uses selectableOptions (includes disabled/readonly) for WCAG compliance
  */
 const enabledOptions = computed(() => {
   return selectableOptions.value.filter(
@@ -450,30 +381,47 @@ const selectedOptionIndex = computed(() => {
 
 /**
  * Gets the value of the currently focused option (for ARIA activeDescendant)
- * Uses enabledOptions to ensure we only focus on non-disabled options
+ * Uses selectableOptions to navigate through all options (including disabled/readonly) for WCAG compliance
  */
 const focusedOptionValue = computed(() => {
   if (focusedIndex.value < 0 || !isOpen.value) return null;
-  const enabled = enabledOptions.value;
-  if (focusedIndex.value >= enabled.length) return null;
-  return enabled[focusedIndex.value]?.value ?? null;
+  const selectable = selectableOptions.value;
+  if (focusedIndex.value >= selectable.length) return null;
+  return selectable[focusedIndex.value]?.value ?? null;
 });
 
 /**
  * Gets the ID of the currently active descendant (for ARIA activeDescendant)
- * Uses enabledOptions to ensure we only focus on non-disabled options
+ * Uses selectableOptions to navigate through all options (including disabled/readonly) for WCAG compliance
  */
 const activeDescendantId = computed(() => {
   if (focusedIndex.value < 0 || !isOpen.value) return undefined;
-  const enabled = enabledOptions.value;
-  if (focusedIndex.value >= enabled.length) return undefined;
-  const focusedOption = enabled[focusedIndex.value];
+  const selectable = selectableOptions.value;
+  if (focusedIndex.value >= selectable.length) return undefined;
+  const focusedOption = selectable[focusedIndex.value];
   return focusedOption
     ? `${openerId}-option-${focusedOption.value}`
     : undefined;
 });
 
 // Styling logic moved to individual components (FzTypeaheadLabel, FzTypeaheadButton, FzTypeaheadHelpError)
+
+/**
+ * Type-safe access to variant prop (only available when filtrable is false)
+ */
+const variantProp = computed(() => (props as any).variant);
+
+/**
+ * Type-safe access to rightIconButton prop (only available when filtrable is false)
+ */
+const rightIconButtonProp = computed(() => (props as any).rightIconButton);
+
+/**
+ * Type-safe access to rightIconButtonVariant prop (only available when filtrable is false)
+ */
+const rightIconButtonVariantProp = computed(
+  () => (props as any).rightIconButtonVariant
+);
 
 /**
  * Resolves the opener element reference
@@ -488,7 +436,10 @@ useClickOutside(safeOpener, () => {
   isOpen.value = false;
 });
 
-const emit = defineEmits(["fztypeahead:select"]);
+const emit = defineEmits([
+  "fztypeahead:select",
+  "fztypeahead:right-icon-click",
+]);
 
 // ============================================================================
 // FLOATING PANEL
@@ -538,8 +489,15 @@ function updateContainerWidth() {
  */
 const handlePickerClick = () => {
   if (!isInteractive.value) return;
+  const wasOpen = isOpen.value;
   isOpen.value = !isOpen.value;
-  updateContainerWidth();
+
+  // Update container width when opening (not when closing)
+  if (!wasOpen && isOpen.value) {
+    nextTick(() => {
+      updateContainerWidth();
+    });
+  }
 };
 
 /**
@@ -607,8 +565,21 @@ const handleInputKeydown = (event: KeyboardEvent) => {
       updateContainerWidth();
     }
   } else {
-    // If dropdown is open, delegate to options keyboard handler
-    handleOptionsKeydown(event);
+    // If dropdown is open
+    if (props.filtrable && event.key === "Tab" && !event.shiftKey) {
+      // When filtrable and Tab is pressed, move focus to selected option (or first)
+      event.preventDefault();
+      const selectable = selectableOptions.value;
+      if (selectable.length > 0) {
+        // Set focusedIndex to selected option index, or 0 if no selection
+        focusedIndex.value =
+          selectedOptionIndex.value >= 0 ? selectedOptionIndex.value : 0;
+        scrollToFocusedOption();
+      }
+    } else {
+      // Delegate other keys to options keyboard handler
+      handleOptionsKeydown(event);
+    }
   }
 };
 
@@ -620,6 +591,9 @@ const handleInputKeydown = (event: KeyboardEvent) => {
  * Handles option selection
  */
 const handleSelect = (option: FzTypeaheadOptionProps) => {
+  // Don't select if option is disabled or readonly
+  if (option.disabled || option.readonly) return;
+
   if (props.clearable && model.value === option.value) {
     // Deselect if clicking the same option and clearable is enabled
     model.value = undefined;
@@ -638,53 +612,52 @@ const handleSelect = (option: FzTypeaheadOptionProps) => {
 };
 
 /**
- * Finds the next enabled option index, wrapping around if needed
- */
-const findNextEnabledIndex = (currentIndex: number): number => {
-  const enabled = enabledOptions.value;
-  if (enabled.length === 0) return -1;
-  return currentIndex < enabled.length - 1 ? currentIndex + 1 : 0;
-};
-
-/**
- * Finds the previous enabled option index, wrapping around if needed
- */
-const findPreviousEnabledIndex = (currentIndex: number): number => {
-  const enabled = enabledOptions.value;
-  if (enabled.length === 0) return -1;
-  return currentIndex > 0 ? currentIndex - 1 : enabled.length - 1;
-};
-
-/**
  * Handles keyboard events on options container
- * Only navigates through enabled (non-disabled) options
- *
- * Escape key is handled before checking for enabled options to ensure
- * the dropdown can always be closed via keyboard, even when no options are available.
+ * Navigates through all selectable options (including disabled/readonly) for WCAG compliance
+ * Escape key is handled first to ensure dropdown can always be closed
  */
 const handleOptionsKeydown = (event: KeyboardEvent) => {
-  // Handle Escape key before checking for enabled options
-  // This ensures dropdown can be closed even when search yields no results
-  if (event.key === "Escape") {
-    event.preventDefault();
-    isOpen.value = false;
-    focusedIndex.value = -1;
+  const selectable = selectableOptions.value;
+  if (selectable.length === 0) {
+    // If no options, only allow Escape to close
+    if (event.key === "Escape") {
+      event.preventDefault();
+      isOpen.value = false;
+      focusedIndex.value = -1;
+    }
     return;
   }
-
-  const enabled = enabledOptions.value;
-  if (enabled.length === 0) return;
 
   switch (event.key) {
     case "ArrowDown":
       event.preventDefault();
-      focusedIndex.value = findNextEnabledIndex(focusedIndex.value);
+      // If no option is focused yet, start from selected option (or first if none selected)
+      if (focusedIndex.value < 0) {
+        focusedIndex.value =
+          selectedOptionIndex.value >= 0 ? selectedOptionIndex.value : 0;
+      } else {
+        focusedIndex.value =
+          focusedIndex.value < selectable.length - 1
+            ? focusedIndex.value + 1
+            : 0;
+      }
       scrollToFocusedOption();
       break;
 
     case "ArrowUp":
       event.preventDefault();
-      focusedIndex.value = findPreviousEnabledIndex(focusedIndex.value);
+      // If no option is focused yet, start from selected option (or last if none selected)
+      if (focusedIndex.value < 0) {
+        focusedIndex.value =
+          selectedOptionIndex.value >= 0
+            ? selectedOptionIndex.value
+            : selectable.length - 1;
+      } else {
+        focusedIndex.value =
+          focusedIndex.value > 0
+            ? focusedIndex.value - 1
+            : selectable.length - 1;
+      }
       scrollToFocusedOption();
       break;
 
@@ -696,27 +669,47 @@ const handleOptionsKeydown = (event: KeyboardEvent) => {
 
     case "End":
       event.preventDefault();
-      focusedIndex.value = enabled.length - 1;
+      focusedIndex.value = selectable.length - 1;
       scrollToFocusedOption();
       break;
 
     case "Enter":
     case " ":
       event.preventDefault();
-      if (focusedIndex.value >= 0 && focusedIndex.value < enabled.length) {
-        handleSelect(enabled[focusedIndex.value]);
+      if (focusedIndex.value >= 0 && focusedIndex.value < selectable.length) {
+        handleSelect(selectable[focusedIndex.value]);
       }
+      break;
+
+    case "Escape":
+      event.preventDefault();
+      isOpen.value = false;
+      focusedIndex.value = -1;
       break;
 
     case "Tab":
       // Focus trap: prevent Tab from leaving dropdown
-      // Only navigate through enabled options
       event.preventDefault();
-      if (event.shiftKey) {
-        focusedIndex.value = findPreviousEnabledIndex(focusedIndex.value);
+      // If no option is focused yet, start from selected option (or first if none selected)
+      if (focusedIndex.value < 0) {
+        focusedIndex.value =
+          selectedOptionIndex.value >= 0 ? selectedOptionIndex.value : 0;
+      } else if (event.shiftKey) {
+        // Shift+Tab: move to previous option (traverse all options, including disabled/readonly)
+        if (focusedIndex.value <= 0) {
+          focusedIndex.value = selectable.length - 1;
+        } else {
+          focusedIndex.value--;
+        }
       } else {
-        focusedIndex.value = findNextEnabledIndex(focusedIndex.value);
+        // Tab: move to next option (traverse all options, including disabled/readonly)
+        if (focusedIndex.value >= selectable.length - 1) {
+          focusedIndex.value = 0;
+        } else {
+          focusedIndex.value++;
+        }
       }
+      // Force focus update even if current option is disabled/readonly
       scrollToFocusedOption();
       break;
   }
@@ -734,8 +727,22 @@ const handleRegisterRef = (value: string, element: HTMLElement | undefined) => {
 };
 
 /**
+ * Handles option focus event
+ * Updates focusedIndex when user tabs to an option (especially when filtrable is true)
+ */
+const handleOptionFocus = (value: string) => {
+  if (!isOpen.value) return;
+  const selectable = selectableOptions.value;
+  const index = selectable.findIndex((opt) => opt.value === value);
+  if (index >= 0) {
+    focusedIndex.value = index;
+  }
+};
+
+/**
  * Scrolls the focused option into view
- * Uses enabledOptions to ensure we scroll to the correct enabled option
+ * Applies native focus for visual state (focus:!border-blue-200) and accessibility
+ * The visual focus state is managed via native focus and CSS classes, not focused prop
  */
 const scrollToFocusedOption = () => {
   if (isScrollingToFocus.value) return;
@@ -745,11 +752,18 @@ const scrollToFocusedOption = () => {
     const container = containerElement.value;
     if (!container) return;
 
-    const enabled = enabledOptions.value;
-    if (focusedIndex.value >= enabled.length || enabled.length === 0) return;
+    const selectable = selectableOptions.value;
+    if (focusedIndex.value >= selectable.length || selectable.length === 0)
+      return;
 
-    const focusedOption = enabled[focusedIndex.value];
+    const focusedOption = selectable[focusedIndex.value];
     if (!focusedOption) return;
+
+    // Blur currently focused element to ensure Tab navigation works
+    // even when current option is disabled/readonly
+    if (document.activeElement && document.activeElement !== document.body) {
+      (document.activeElement as HTMLElement).blur();
+    }
 
     const focusedButton = optionRefs.value.get(focusedOption.value);
     if (focusedButton && document.contains(focusedButton)) {
@@ -758,6 +772,8 @@ const scrollToFocusedOption = () => {
       requestAnimationFrame(() => {
         if (isOpen.value && document.contains(focusedButton)) {
           try {
+            // Apply focus first for visual state (focus:!border-blue-200), then scroll
+            // Even if option is disabled/readonly, we allow focus for keyboard navigation
             focusedButton.focus({ preventScroll: false });
             focusedButton.scrollIntoView({
               block: "nearest",
@@ -812,33 +828,73 @@ function resetScrollPosition() {
 
 /**
  * Loads next batch of options for lazy rendering
+ *
+ * Increments loadedOptionsCount, which automatically updates visibleOptions
+ * computed property through reactive dependency.
+ * When filtrable is false, uses props.options directly (like FzSelect)
  */
 function updateVisibleOptions() {
-  if (!visibleOptions.value || !internalFilteredOptions.value) return;
-
-  // Guard: don't load if all options are already visible
-  if (visibleOptions.value.length >= internalFilteredOptions.value.length) {
+  // When not filtrable, behave exactly like FzSelect
+  if (!props.filtrable) {
+    if (!props.options) return;
+    // Guard: don't load if all options are already visible
+    if (loadedOptionsCount.value >= props.options.length) {
+      return;
+    }
+    // Increment count to load next batch
+    loadedOptionsCount.value = Math.min(
+      loadedOptionsCount.value + props.optionsToShow,
+      props.options.length
+    );
     return;
   }
 
-  const nextItems = internalFilteredOptions.value.slice(
-    visibleOptions.value.length,
-    visibleOptions.value.length + props.optionsToShow
+  // When filtrable, use internal filtered options
+  if (!internalFilteredOptions.value) return;
+
+  // Guard: don't load if all options are already visible
+  if (loadedOptionsCount.value >= internalFilteredOptions.value.length) {
+    return;
+  }
+
+  // Increment count to load next batch
+  loadedOptionsCount.value = Math.min(
+    loadedOptionsCount.value + props.optionsToShow,
+    internalFilteredOptions.value.length
   );
-  visibleOptions.value.push(...nextItems);
 }
 
 /**
  * Ensures the selected option is in the visible range
  * Loads enough options to include the selected option if it's beyond the current visible range
+ * When filtrable is false, uses props.options directly (like FzSelect)
  */
 function ensureSelectedOptionVisible() {
-  if (
-    !selectedOption.value ||
-    !internalFilteredOptions.value ||
-    !visibleOptions.value
-  )
-    return; // No selection or no options
+  if (!selectedOption.value) return; // No selection
+
+  // When not filtrable, behave exactly like FzSelect
+  if (!props.filtrable) {
+    if (!props.options) return;
+    // Find the index of the selected option in props.options (including labels)
+    const optionIndexInFullArray = props.options.findIndex(
+      (opt) =>
+        isSelectableOption(opt) && opt.value === selectedOption.value?.value
+    );
+
+    if (optionIndexInFullArray < 0) return; // Should not happen, but safety check
+
+    // Check if we need to load more options
+    while (loadedOptionsCount.value <= optionIndexInFullArray) {
+      if (loadedOptionsCount.value >= props.options.length) {
+        break; // All options already loaded
+      }
+      updateVisibleOptions();
+    }
+    return;
+  }
+
+  // When filtrable, use internal filtered options
+  if (!internalFilteredOptions.value) return;
 
   // Find the index of the selected option in internalFilteredOptions (including labels)
   const optionIndexInFullArray = internalFilteredOptions.value.findIndex(
@@ -849,9 +905,8 @@ function ensureSelectedOptionVisible() {
   if (optionIndexInFullArray < 0) return; // Should not happen, but safety check
 
   // Check if we need to load more options
-  // We want to ensure the option at optionIndexInFullArray is in visibleOptions
-  while (visibleOptions.value.length <= optionIndexInFullArray) {
-    if (visibleOptions.value.length >= internalFilteredOptions.value.length) {
+  while (loadedOptionsCount.value <= optionIndexInFullArray) {
+    if (loadedOptionsCount.value >= internalFilteredOptions.value.length) {
       break; // All options already loaded
     }
     updateVisibleOptions();
@@ -872,11 +927,12 @@ watch(
       resetScrollPosition();
     }
 
+    // Reset loaded count when filtered options change
+    // visibleOptions computed will automatically update
     if (newValue === undefined) {
-      visibleOptions.value = undefined;
+      loadedOptionsCount.value = 0;
     } else {
-      // Reset visibleOptions to first batch when filtered options change
-      visibleOptions.value = newValue.slice(0, props.optionsToShow);
+      loadedOptionsCount.value = Math.min(props.optionsToShow, newValue.length);
     }
   },
   { immediate: true }
@@ -890,7 +946,7 @@ watch(isInteractive, (newIsInteractive) => {
 
 watch(isOpen, (newValue) => {
   if (newValue) {
-    // Ensure selected option is loaded before setting focus and scrolling
+    // Ensure selected option is loaded before setting focus
     ensureSelectedOptionVisible();
     nextTick(() => {
       if (props.filtrable) {
@@ -937,36 +993,19 @@ watch(isOpen, (newValue) => {
           resetScrollPosition();
         }
       } else {
-        // When not filtrable, focus the first enabled option in the list
-        const enabled = enabledOptions.value;
-        if (enabled.length === 0) {
+        // When not filtrable, behave exactly like FzSelect
+        const selectable = selectableOptions.value;
+        if (selectable.length === 0) {
           focusedIndex.value = -1;
-          // No options: reset scroll to top
-          resetScrollPosition();
           return;
         }
-        // Find the index of the selected option in enabledOptions
-        const selectedInEnabled = selectedOption.value
-          ? enabled.findIndex(
-              (opt) => opt.value === selectedOption.value?.value
-            )
-          : -1;
-        if (selectedInEnabled >= 0) {
-          // There is a selected option: focus it and scroll to it
-          focusedIndex.value = selectedInEnabled;
-          scrollToFocusedOption();
-        } else {
-          // No selected option: reset scroll to top and focus first option
-          resetScrollPosition();
-          focusedIndex.value = 0;
-          scrollToFocusedOption();
-        }
+        focusedIndex.value =
+          selectedOptionIndex.value >= 0 ? selectedOptionIndex.value : 0;
+        scrollToFocusedOption();
       }
     });
   } else {
-    // When closing the dropdown
     focusedIndex.value = -1;
-
     // If internalFilteredOptions is empty (user filtered but didn't select), reset everything
     if (
       internalFilteredOptions.value &&
@@ -975,7 +1014,6 @@ watch(isOpen, (newValue) => {
       searchValue.value = "";
       internalFilteredOptions.value = props.options;
     }
-
     nextTick(() => {
       const openerButton = buttonRef.value?.openerButton;
       if (openerButton) {
@@ -985,42 +1023,75 @@ watch(isOpen, (newValue) => {
   }
 });
 
-/**
- * Watch enabledOptions to ensure focusedIndex is always valid
- * If focusedIndex points to an invalid option (e.g., after options change),
- * reset it to the first enabled option or -1 if none available
- */
-watch(
-  enabledOptions,
-  (newEnabled) => {
-    if (!isOpen.value) return;
-
-    // If focusedIndex is out of bounds or points to a disabled option, reset it
-    if (focusedIndex.value >= 0) {
-      if (focusedIndex.value >= newEnabled.length) {
-        // Index is out of bounds, reset to first enabled or -1
-        focusedIndex.value = newEnabled.length > 0 ? 0 : -1;
-      }
-    } else if (newEnabled.length > 0 && !props.filtrable) {
-      // If no focus but there are enabled options and not filtrable, focus first
-      focusedIndex.value = 0;
-    }
-  },
-  { immediate: true }
-);
-
 // ============================================================================
 // LIFECYCLE
 // ============================================================================
 
 onMounted(() => {
+  // Deprecation warnings
+  if (props.size !== undefined) {
+    console.warn(
+      `[FzTypeahead] The 'size' prop is deprecated and will be removed in a future version. ` +
+        `The component now uses a fixed 'lg' size. Please remove the size prop from your usage.`
+    );
+  }
+
+  if (props.selectProps !== undefined) {
+    console.warn(
+      `[FzTypeahead] The 'selectProps' prop is deprecated and will be removed in a future version. ` +
+        `Please use the 'options' prop instead.`
+    );
+  }
+
+  if (props.inputProps !== undefined) {
+    console.warn(
+      `[FzTypeahead] The 'inputProps' prop is deprecated and will be removed in a future version. ` +
+        `Please use the 'options' prop instead.`
+    );
+  }
+
+  if (props.filteredOptions !== undefined) {
+    console.warn(
+      `[FzTypeahead] The 'filteredOptions' prop is deprecated and will be removed in a future version. ` +
+        `Please use the 'options' prop instead.`
+    );
+  }
+
+  if (props.disableEmitOnFocus !== undefined) {
+    console.warn(
+      `[FzTypeahead] The 'disableEmitOnFocus' prop is deprecated and will be removed in a future version. ` +
+        `The component no longer emits input events on focus, so this prop has no effect. Please remove it from your usage.`
+    );
+  }
+
+  if (props.emptySearchNoFilter !== undefined) {
+    console.warn(
+      `[FzTypeahead] The 'emptySearchNoFilter' prop is deprecated and will be removed in a future version. ` +
+        `The component now always shows all options when the input is empty, so this prop has no effect. Please remove it from your usage.`
+    );
+  }
+
+  if (
+    (props as any).rightIconLast !== undefined &&
+    (props as any).rightIconLast !== false
+  ) {
+    console.warn(
+      `[FzTypeahead] The 'rightIconLast' prop is deprecated and will be removed in a future version. ` +
+        `The right icon is now always positioned before the chevron. Please remove the rightIconLast prop from your usage.`
+    );
+  }
+
+  // Initialization
   if (props.floatingPanelMaxHeight) {
     maxHeight.value = props.floatingPanelMaxHeight;
   }
-  updateContainerWidth();
+  // Use nextTick to ensure refs are available
+  nextTick(() => {
+    updateContainerWidth();
+  });
   // Note: Scroll events are handled via component event from FzTypeaheadOptionsList (@scroll="handleScroll")
-  // Note: visibleOptions is already initialized by watch(() => props.options)
-  // No need to call updateVisibleOptions() here
+  // Note: loadedOptionsCount is initialized by watch(() => internalFilteredOptions) with immediate: true
+  // visibleOptions computed property automatically derives from loadedOptionsCount
 });
 
 onBeforeUnmount(() => {
@@ -1093,13 +1164,17 @@ defineExpose({
         :readonly
         :required
         :rightIcon
+        :rightIconButton="rightIconButtonProp"
+        :rightIconButtonVariant="rightIconButtonVariantProp"
         :rightIconVariant
         :selectedOption
+        :variant="variantProp"
         @click="handlePickerClick"
         @keydown="handleOpenerKeydown"
         @input-focus="handleInputFocus"
         @input-click="handleInputClick"
         @input-keydown="handleInputKeydown"
+        @right-icon-click="emit('fztypeahead:right-icon-click')"
         ref="buttonRef"
       >
         <template #default="slotProps">
@@ -1134,6 +1209,7 @@ defineExpose({
       @keydown="handleOptionsKeydown"
       @scroll="handleScroll"
       @register-ref="handleRegisterRef"
+      @focus="handleOptionFocus"
       ref="optionsListRef"
     />
   </FzFloating>
