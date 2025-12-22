@@ -3058,15 +3058,15 @@ importers:
       '@fiscozen/action':
         specifier: workspace:^
         version: link:../action
+      '@fiscozen/alert':
+        specifier: workspace:^
+        version: link:../alert
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
       '@fiscozen/composables':
         specifier: workspace:^
         version: link:../composables
-      '@fiscozen/icons':
-        specifier: workspace:^
-        version: link:../icons
       '@fiscozen/input':
         specifier: workspace:^
         version: link:../input
@@ -3089,6 +3089,9 @@ importers:
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
+      '@fiscozen/icons':
+        specifier: workspace:^
+        version: link:../icons
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config

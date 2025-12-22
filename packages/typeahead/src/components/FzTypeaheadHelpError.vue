@@ -2,32 +2,21 @@
 /**
  * FzTypeaheadHelpError Component
  *
- * Presentational component for the FzTypeahead help text and error message.
- * Renders either error message or help text based on error state.
- * Handles its own styling based on disabled/readonly state.
+ * Presentational component for help text and error messages.
+ * Error slot takes priority over help slot.
  *
  * @component
  * @internal
  */
 import { computed } from "vue";
-import { FzIcon } from "@fiscozen/icons";
+import { FzAlert } from "@fiscozen/alert";
 import type { FzTypeaheadHelpErrorProps } from "./types";
 
 const props = defineProps<FzTypeaheadHelpErrorProps>();
 
-/**
- * Base text classes
- */
 const baseTextClasses = "text-base leading-5";
-
-/**
- * Computed state flag
- */
 const isInteractive = computed(() => !props.disabled && !props.readonly);
 
-/**
- * Computes help text classes based on interactive state
- */
 const helpClass = computed(() => {
   const baseClasses = [baseTextClasses];
 
@@ -44,35 +33,12 @@ const helpClass = computed(() => {
 
   return baseClasses;
 });
-
-/**
- * Computes error text classes based on interactive state
- */
-const errorClass = computed(() => {
-  const baseClasses = [baseTextClasses];
-
-  switch (true) {
-    case props.disabled:
-    case props.readonly:
-      baseClasses.push("text-grey-300");
-      break;
-
-    case isInteractive.value:
-      baseClasses.push("text-core-black");
-      break;
-  }
-
-  return baseClasses;
-});
 </script>
 
 <template>
-  <div v-if="error && $slots.error" class="flex gap-6">
-    <FzIcon name="circle-xmark" class="text-semantic-error-200" size="md" />
-    <div :class="errorClass">
-      <slot name="error"></slot>
-    </div>
-  </div>
+  <FzAlert v-if="error && $slots.error" tone="error" alertStyle="simple">
+    <slot name="error"></slot>
+  </FzAlert>
   <span v-else-if="$slots.help" :class="helpClass">
     <slot name="help"></slot>
   </span>

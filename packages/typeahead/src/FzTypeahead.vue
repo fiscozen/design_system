@@ -103,28 +103,17 @@ const internalFilteredOptions = ref<FzTypeaheadOptionsProps[] | undefined>(
   undefined
 );
 
-/**
- * Fuse.js options for fuzzy search
- */
 const fuseOptions = {
   keys: ["label"],
 };
 
-/**
- * Debounced function to update debouncedSearchValue after user stops typing
- * Recreated when delayTime changes
- */
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 /**
  * Reconstructs grouped options structure after filtering
  *
- * Filters only selectable options (not labels), then rebuilds groups
- * keeping only labels for groups that contain at least one filtered option.
- *
- * @param allOptions - Original options array (with labels and options)
- * @param filteredSelectableOptions - Filtered selectable options only (no labels)
- * @returns Reconstructed options array with labels and filtered options
+ * Preserves group labels only when they contain filtered options.
+ * This maintains visual grouping while showing only relevant results.
  */
 const reconstructGroupedOptions = (
   allOptions: FzTypeaheadOptionsProps[],
@@ -161,17 +150,11 @@ const reconstructGroupedOptions = (
 };
 
 /**
- * Updates internal filtered options based on search value
+ * Updates filtered options based on search value
  *
- * Applies filtering logic based on filtrable prop, custom filterFn, or Fuse.js search.
- * When input is empty, shows all available options.
- * Handles both sync and async filterFn.
- *
- * For grouped options, filters only selectable options and reconstructs groups
- * keeping only labels for groups that contain at least one filtered option.
- *
- * Note: If filterFn is async and called multiple times rapidly, we simply show
- * the last result received. Race condition handling is the developer's responsibility.
+ * Priority: filterFn (if provided) > Fuse.js (when filtrable) > all options.
+ * For grouped options, preserves labels only for groups with filtered results.
+ * Empty input shows all options regardless of filtrable state.
  */
 const updateFilteredOptions = async () => {
   // If options is undefined, keep internalFilteredOptions as undefined (will show FzProgress)
@@ -220,9 +203,6 @@ const updateFilteredOptions = async () => {
   }
 };
 
-/**
- * Watch searchValue and update debouncedSearchValue after delay
- */
 watch(
   searchValue,
   (newValue) => {
@@ -243,9 +223,6 @@ watch(
   { immediate: true }
 );
 
-/**
- * Watch debouncedSearchValue and update filtered options
- */
 watch(
   debouncedSearchValue,
   () => {
@@ -254,10 +231,6 @@ watch(
   { immediate: true }
 );
 
-/**
- * Watch props.options to update filtered options when options change
- * When filtrable is false, also reset loadedOptionsCount (like FzSelect)
- */
 watch(
   () => props.options,
   () => {
@@ -273,9 +246,6 @@ watch(
   { immediate: true }
 );
 
-/**
- * Computed ref to the actual HTML element inside FzTypeaheadOptionsList
- */
 const containerElement = computed(
   () =>
     optionsListRef.value?.containerElement?.containerElement as
@@ -283,9 +253,6 @@ const containerElement = computed(
       | undefined
 );
 
-/**
- * Unique IDs for accessibility attributes
- */
 const instanceId = Math.random().toString(36).substring(2, 9);
 const openerId = `fztypeahead-opener-${instanceId}`;
 const labelId = `fztypeahead-label-${instanceId}`;
@@ -302,18 +269,10 @@ const isInteractive = computed(() => !isDisabled.value && !isReadonly.value);
 // COMPUTED - Options
 // ============================================================================
 
-/**
- * Type guard to filter selectable options
- */
 const isSelectableOption = (
   option: FzTypeaheadOptionsProps
 ): option is FzTypeaheadOptionProps => option.kind !== "label";
 
-/**
- * Finds the currently selected option from options list
- * When filtrable is false, uses props.options directly (like FzSelect)
- * When filtrable is true, uses internalFilteredOptions
- */
 const selectedOption = computed(() => {
   // When not filtrable, behave exactly like FzSelect
   if (!props.filtrable) {
@@ -331,14 +290,6 @@ const selectedOption = computed(() => {
   );
 });
 
-/**
- * Computed property for visible options based on lazy loading count
- *
- * When filtrable is false, uses props.options directly (like FzSelect).
- * When filtrable is true, uses internalFilteredOptions.
- * Automatically updates when options or loadedOptionsCount changes.
- * Returns undefined when filtrable is true and internalFilteredOptions is undefined (loading state).
- */
 const visibleOptions = computed(() => {
   // When not filtrable, behave exactly like FzSelect
   if (!props.filtrable) {
@@ -350,28 +301,11 @@ const visibleOptions = computed(() => {
   return internalFilteredOptions.value.slice(0, loadedOptionsCount.value);
 });
 
-/**
- * Gets list of selectable options (excluding labels) from visible options
- */
 const selectableOptions = computed(() => {
   if (!visibleOptions.value) return [];
   return visibleOptions.value.filter(isSelectableOption);
 });
 
-/**
- * Gets list of enabled (non-disabled and non-readonly) selectable options
- * Used for internal logic (e.g., finding next enabled option when needed)
- * Note: Keyboard navigation now uses selectableOptions (includes disabled/readonly) for WCAG compliance
- */
-const enabledOptions = computed(() => {
-  return selectableOptions.value.filter(
-    (option) => !option.disabled && !option.readonly
-  );
-});
-
-/**
- * Gets the index of the selected option in selectableOptions (visible subset)
- */
 const selectedOptionIndex = computed(() => {
   if (!selectedOption.value) return -1;
   return selectableOptions.value.findIndex(
@@ -379,10 +313,6 @@ const selectedOptionIndex = computed(() => {
   );
 });
 
-/**
- * Gets the value of the currently focused option (for ARIA activeDescendant)
- * Uses selectableOptions to navigate through all options (including disabled/readonly) for WCAG compliance
- */
 const focusedOptionValue = computed(() => {
   if (focusedIndex.value < 0 || !isOpen.value) return null;
   const selectable = selectableOptions.value;
@@ -390,10 +320,6 @@ const focusedOptionValue = computed(() => {
   return selectable[focusedIndex.value]?.value ?? null;
 });
 
-/**
- * Gets the ID of the currently active descendant (for ARIA activeDescendant)
- * Uses selectableOptions to navigate through all options (including disabled/readonly) for WCAG compliance
- */
 const activeDescendantId = computed(() => {
   if (focusedIndex.value < 0 || !isOpen.value) return undefined;
   const selectable = selectableOptions.value;
@@ -404,28 +330,12 @@ const activeDescendantId = computed(() => {
     : undefined;
 });
 
-// Styling logic moved to individual components (FzTypeaheadLabel, FzTypeaheadButton, FzTypeaheadHelpError)
-
-/**
- * Type-safe access to variant prop (only available when filtrable is false)
- */
 const variantProp = computed(() => (props as any).variant);
-
-/**
- * Type-safe access to rightIconButton prop (only available when filtrable is false)
- */
 const rightIconButtonProp = computed(() => (props as any).rightIconButton);
-
-/**
- * Type-safe access to rightIconButtonVariant prop (only available when filtrable is false)
- */
 const rightIconButtonVariantProp = computed(
   () => (props as any).rightIconButtonVariant
 );
 
-/**
- * Resolves the opener element reference
- */
 const safeOpener = computed(() => {
   return props.extOpener
     ? props.extOpener
@@ -445,9 +355,6 @@ const emit = defineEmits([
 // FLOATING PANEL
 // ============================================================================
 
-/**
- * Calculates max height for floating panel based on available viewport space
- */
 const calculateMaxHeight = (
   _rect: Ref<DOMRect | undefined>,
   openerRect: Ref<DOMRect | undefined>,
@@ -468,9 +375,6 @@ const calculateMaxHeight = (
   });
 };
 
-/**
- * Updates container width based on opener element dimensions
- */
 function updateContainerWidth() {
   if (!safeOpener.value) return;
 
@@ -484,9 +388,6 @@ function updateContainerWidth() {
 // EVENT HANDLERS - Opener
 // ============================================================================
 
-/**
- * Handles picker button click to toggle dropdown
- */
 const handlePickerClick = () => {
   if (!isInteractive.value) return;
   const wasOpen = isOpen.value;
@@ -500,9 +401,6 @@ const handlePickerClick = () => {
   }
 };
 
-/**
- * Handles keyboard events on opener button
- */
 const handleOpenerKeydown = (event: KeyboardEvent) => {
   if (!isInteractive.value) return;
 
@@ -525,9 +423,6 @@ const handleOpenerKeydown = (event: KeyboardEvent) => {
   }
 };
 
-/**
- * Handles input focus event
- */
 const handleInputFocus = (event: FocusEvent) => {
   if (!isInteractive.value) return;
   if (!isOpen.value) {
@@ -536,9 +431,6 @@ const handleInputFocus = (event: FocusEvent) => {
   }
 };
 
-/**
- * Handles input click event
- */
 const handleInputClick = (event: MouseEvent) => {
   if (!isInteractive.value) return;
   if (!isOpen.value) {
@@ -547,9 +439,6 @@ const handleInputClick = (event: MouseEvent) => {
   }
 };
 
-/**
- * Handles keyboard events on input element
- */
 const handleInputKeydown = (event: KeyboardEvent) => {
   if (!isInteractive.value) return;
 
@@ -587,9 +476,6 @@ const handleInputKeydown = (event: KeyboardEvent) => {
 // EVENT HANDLERS - Options
 // ============================================================================
 
-/**
- * Handles option selection
- */
 const handleSelect = (option: FzTypeaheadOptionProps) => {
   // Don't select if option is disabled or readonly
   if (option.disabled || option.readonly) return;
@@ -612,9 +498,10 @@ const handleSelect = (option: FzTypeaheadOptionProps) => {
 };
 
 /**
- * Handles keyboard events on options container
- * Navigates through all selectable options (including disabled/readonly) for WCAG compliance
- * Escape key is handled first to ensure dropdown can always be closed
+ * Handles keyboard navigation in options list
+ *
+ * Navigates through all options (including disabled/readonly) for WCAG compliance.
+ * Escape always closes dropdown, even when no options are available.
  */
 const handleOptionsKeydown = (event: KeyboardEvent) => {
   const selectable = selectableOptions.value;
@@ -715,9 +602,6 @@ const handleOptionsKeydown = (event: KeyboardEvent) => {
   }
 };
 
-/**
- * Handles ref registration from FzTypeaheadOptionsList
- */
 const handleRegisterRef = (value: string, element: HTMLElement | undefined) => {
   if (element) {
     optionRefs.value.set(value, element);
@@ -726,10 +610,6 @@ const handleRegisterRef = (value: string, element: HTMLElement | undefined) => {
   }
 };
 
-/**
- * Handles option focus event
- * Updates focusedIndex when user tabs to an option (especially when filtrable is true)
- */
 const handleOptionFocus = (value: string) => {
   if (!isOpen.value) return;
   const selectable = selectableOptions.value;
@@ -740,9 +620,10 @@ const handleOptionFocus = (value: string) => {
 };
 
 /**
- * Scrolls the focused option into view
- * Applies native focus for visual state (focus:!border-blue-200) and accessibility
- * The visual focus state is managed via native focus and CSS classes, not focused prop
+ * Scrolls focused option into view and applies native focus
+ *
+ * Uses native focus() for visual state and accessibility.
+ * Blurs current element first to ensure Tab navigation works with disabled options.
  */
 const scrollToFocusedOption = () => {
   if (isScrollingToFocus.value) return;
@@ -795,12 +676,6 @@ const scrollToFocusedOption = () => {
 // LAZY LOADING
 // ============================================================================
 
-/**
- * Handles scroll events to trigger lazy loading of options
- *
- * Called via @scroll event from FzTypeaheadOptionsList component.
- * No need for manual addEventListener as Vue handles event cleanup automatically.
- */
 function handleScroll() {
   const container = containerElement.value;
   if (!container) return;
@@ -814,9 +689,6 @@ function handleScroll() {
   }
 }
 
-/**
- * Resets scroll position of the options container to top
- */
 function resetScrollPosition() {
   nextTick(() => {
     const container = containerElement.value;
@@ -826,13 +698,6 @@ function resetScrollPosition() {
   });
 }
 
-/**
- * Loads next batch of options for lazy rendering
- *
- * Increments loadedOptionsCount, which automatically updates visibleOptions
- * computed property through reactive dependency.
- * When filtrable is false, uses props.options directly (like FzSelect)
- */
 function updateVisibleOptions() {
   // When not filtrable, behave exactly like FzSelect
   if (!props.filtrable) {
@@ -864,11 +729,6 @@ function updateVisibleOptions() {
   );
 }
 
-/**
- * Ensures the selected option is in the visible range
- * Loads enough options to include the selected option if it's beyond the current visible range
- * When filtrable is false, uses props.options directly (like FzSelect)
- */
 function ensureSelectedOptionVisible() {
   if (!selectedOption.value) return; // No selection
 
@@ -1028,7 +888,6 @@ watch(isOpen, (newValue) => {
 // ============================================================================
 
 onMounted(() => {
-  // Deprecation warnings
   if (props.size !== undefined) {
     console.warn(
       `[FzTypeahead] The 'size' prop is deprecated and will be removed in a future version. ` +
@@ -1081,21 +940,15 @@ onMounted(() => {
     );
   }
 
-  // Initialization
   if (props.floatingPanelMaxHeight) {
     maxHeight.value = props.floatingPanelMaxHeight;
   }
-  // Use nextTick to ensure refs are available
   nextTick(() => {
     updateContainerWidth();
   });
-  // Note: Scroll events are handled via component event from FzTypeaheadOptionsList (@scroll="handleScroll")
-  // Note: loadedOptionsCount is initialized by watch(() => internalFilteredOptions) with immediate: true
-  // visibleOptions computed property automatically derives from loadedOptionsCount
 });
 
 onBeforeUnmount(() => {
-  // Clean up debounce timer
   if (debounceTimer) {
     clearTimeout(debounceTimer);
   }
@@ -1105,9 +958,6 @@ onBeforeUnmount(() => {
 // EXPOSE
 // ============================================================================
 
-/**
- * Programmatically opens the dropdown
- */
 const forceOpen = () => {
   isOpen.value = true;
   if (safeOpener.value) {

@@ -2,9 +2,8 @@
 /**
  * FzTypeaheadButton Component
  *
- * Presentational component for the FzTypeahead opener button.
- * Renders the button with icons, placeholder, and selected value.
- * Handles its own styling based on state (disabled, readonly, error).
+ * Presentational component for the opener button/input switcher.
+ * Switches between button (when closed or not filtrable) and input (when filtrable and open).
  *
  * @component
  * @internal
@@ -22,9 +21,6 @@ const props = withDefaults(defineProps<FzTypeaheadButtonProps>(), {
   rightIconButtonVariant: "invisible",
 });
 
-/**
- * v-model for the input value (search string)
- */
 const inputModel = defineModel<string>({
   default: "",
 });
@@ -40,9 +36,6 @@ const emit = defineEmits<{
 
 const openerButton = ref<HTMLButtonElement>();
 
-/**
- * Computed state flags
- */
 const isDisabled = computed(() => props.disabled);
 const isReadonly = computed(() => props.readonly);
 const isInteractive = computed(() => !isDisabled.value && !isReadonly.value);
@@ -51,10 +44,6 @@ const isSelectedValue = computed(
   () => props.selectedOption && isInteractive.value,
 );
 
-/**
- * Determines if normal placeholder should be shown
- * Only applies when variant is floating-label and not showing input
- */
 const showNormalPlaceholder = computed(() => {
   // When showing input, always use normal placeholder behavior
   if (shouldShowTheInput.value) return true;
@@ -66,23 +55,14 @@ const showNormalPlaceholder = computed(() => {
   );
 });
 
-/**
- * Base classes for picker button
- */
 const staticPickerClass =
   "flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none";
 
-/**
- * Environment-based picker button classes
- */
 const environmentPickerClasses = {
   backoffice: "h-32 text-base",
   frontoffice: "h-44 text-lg",
 } as const;
 
-/**
- * Computes picker button state classes using Representation-First pattern
- */
 const pickerStateClasses = computed(() => {
   switch (true) {
     case isDisabled.value:
@@ -97,10 +77,6 @@ const pickerStateClasses = computed(() => {
   }
 });
 
-/**
- * Computes picker button classes based on variant and environment
- * Floating-label variant only applies when not showing input
- */
 const computedPickerClass = computed(() => {
   // When showing input, use normal environment classes
   if (shouldShowTheInput.value) {
@@ -119,20 +95,10 @@ const computedPickerClass = computed(() => {
   ];
 });
 
-/**
- * Base text classes
- */
 const baseTextClasses = "text-base leading-5";
-
-/**
- * Static CSS classes for the span
- */
 const staticSpanClass =
   "overflow-hidden text-ellipsis whitespace-nowrap flex-[1] font-normal";
 
-/**
- * Computes span classes for selected option display
- */
 const spanClass = computed(() => {
   const baseClasses = [baseTextClasses];
 
@@ -155,11 +121,6 @@ const spanClass = computed(() => {
   return baseClasses;
 });
 
-/**
- * Computes icon color classes based on component state
- *
- * Returns core-black for interactive state, grey-300 for disabled/readonly states.
- */
 const iconColorClass = computed(() => {
   if (isDisabled.value || isReadonly.value) {
     return "text-grey-300";
@@ -182,12 +143,6 @@ const handleRightIconClick = (event: Event) => {
 
 const shouldShowTheInput = computed(() => props.filtrable && props.isOpen);
 
-/**
- * Computes input props for FzInput when filterable and open
- *
- * Maps button props to FzInput props, excluding label/help/error
- * which are handled externally in slots.
- */
 const inputProps = computed<FzInputProps>(() => ({
   placeholder: props.placeholder,
   required: props.required,
