@@ -60,6 +60,7 @@ const props = withDefaults(defineProps<FzTypeaheadProps>(), {
   delayTime: 500,
   disabled: false,
   disableTruncate: false,
+  fuzzySearch: true,
   environment: "frontoffice",
   error: false,
   filtrable: true,
@@ -169,13 +170,23 @@ const updateFilteredOptions = async () => {
       debouncedSearchValue.value &&
       debouncedSearchValue.value.trim() !== ""
     ) {
+      let filteredSelectable: FzTypeaheadOptionProps[] = [];
+
       // Only filter when input has a value (using debounced value)
       // Filter only selectable options (exclude labels)
       const selectableOptions = props.options.filter(isSelectableOption);
-      const fuse = new Fuse(selectableOptions, fuseOptions);
-      const filteredSelectable = fuse
-        .search(debouncedSearchValue.value)
-        .map((searchRes: { item: FzTypeaheadOptionProps }) => searchRes.item);
+
+      if (props.fuzzySearch) {
+        const fuse = new Fuse(selectableOptions, fuseOptions);
+        filteredSelectable = fuse
+          .search(debouncedSearchValue.value)
+          .map((searchRes: { item: FzTypeaheadOptionProps }) => searchRes.item);
+      } else {
+        const lowerCaseSearchValue = debouncedSearchValue.value.toLowerCase();
+        filteredSelectable = selectableOptions.filter((option) =>
+          option.label.toLowerCase().includes(lowerCaseSearchValue)
+        );
+      }
 
       // Reconstruct grouped structure if original had groups
       const hasGroups = props.options.some((opt) => opt.kind === "label");

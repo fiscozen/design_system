@@ -409,6 +409,103 @@ export const CustomFilterFn: TypeaheadStory = {
   }
 }
 
+export const SimpleSearch: TypeaheadStory = {
+  render: (args) => ({
+    components: { FzTypeahead },
+    setup() {
+      const model = ref<string>()
+      return {
+        args,
+        model
+      }
+    },
+    template: `<div class="p-8 relative" style='width:300px'>
+                  <FzTypeahead v-bind="args" v-model="model" />
+                </div>`
+  }),
+  args: {
+    environment: 'frontoffice',
+    label: 'Programming Languages',
+    placeholder: 'Type to search (exact match only)...',
+    filtrable: true,
+    fuzzySearch: false,
+    options: [
+      { value: '1', label: 'JavaScript' },
+      { value: '2', label: 'TypeScript' },
+      { value: '3', label: 'Python' },
+      { value: '4', label: 'Java' },
+      { value: '5', label: 'C++' },
+      { value: '6', label: 'C#' },
+      { value: '7', label: 'Ruby' },
+      { value: '8', label: 'Go' }
+    ]
+  },
+  decorators: [
+    () => ({
+      template: `
+      <div style="width:100vw;height:100vh;">
+        <story/>
+      </div>
+      `
+    })
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Open dropdown and type search query', async () => {
+      const opener = canvas.getByRole('button', { name: /programming languages/i })
+      await userEvent.click(opener)
+      
+      const input = canvas.getByRole('textbox')
+      await expect(input).toBeVisible()
+      
+      // Type "java" - should find both "JavaScript" and "Java"
+      await userEvent.type(input, 'java')
+      
+      // Wait for debounce
+      await new Promise(resolve => setTimeout(resolve, 600))
+    })
+    
+    await step('Verify simple search finds exact substring matches', async () => {
+      const options = canvasElement.querySelectorAll('button[role="option"]')
+      expect(options.length).toBeGreaterThan(0)
+      
+      const optionTexts = Array.from(options).map(opt => opt.textContent)
+      // Should find both "JavaScript" and "Java" since both contain "java"
+      expect(optionTexts.some(text => text?.includes('JavaScript'))).toBe(true)
+      expect(optionTexts.some(text => text?.includes('Java'))).toBe(true)
+    })
+    
+    await step('Verify simple search does not handle typos', async () => {
+      const input = canvas.getByRole('textbox')
+      await userEvent.clear(input)
+      await userEvent.type(input, 'javascrpt') // Typo: missing 'i'
+      
+      // Wait for debounce
+      await new Promise(resolve => setTimeout(resolve, 600))
+      
+      const options = canvasElement.querySelectorAll('button[role="option"]')
+      // Simple search should not find anything with typo
+      expect(options.length).toBe(0)
+    })
+    
+    await step('Verify simple search is case-insensitive', async () => {
+      const input = canvas.getByRole('textbox')
+      await userEvent.clear(input)
+      await userEvent.type(input, 'JAVASCRIPT')
+      
+      // Wait for debounce
+      await new Promise(resolve => setTimeout(resolve, 600))
+      
+      const options = canvasElement.querySelectorAll('button[role="option"]')
+      expect(options.length).toBeGreaterThan(0)
+      const optionTexts = Array.from(options).map(opt => opt.textContent)
+      // Should find "JavaScript" regardless of case
+      expect(optionTexts.some(text => text?.includes('JavaScript'))).toBe(true)
+    })
+  }
+}
+
 export const RemoteLoading: TypeaheadStory = {
   render: (args) => ({
     components: { FzTypeahead },

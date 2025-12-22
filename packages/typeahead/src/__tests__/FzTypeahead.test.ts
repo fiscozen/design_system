@@ -1920,4 +1920,285 @@ describe("FzTypeahead", () => {
       expect(wrapper.vm.isOpen).toBe(true);
     });
   });
+
+  describe("Fuzzy Search", () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it("uses fuzzy search by default (fuzzySearch: true)", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          options: [
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { value: "3", label: "Python" },
+            { value: "4", label: "Java" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("javasc");
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Fuzzy search should find "JavaScript" (and possibly "Java" if it matches)
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBeGreaterThan(0);
+      const optionTexts = Array.from(options).map((opt) => opt.textContent);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+    });
+
+    it("uses simple includes search when fuzzySearch is false", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: false,
+          options: [
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { value: "3", label: "Python" },
+            { value: "4", label: "Java" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("java");
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Simple includes search should find both "JavaScript" and "Java"
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBe(2);
+      const optionTexts = Array.from(options).map((opt) => opt.textContent);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+      expect(optionTexts.some((text) => text?.includes("Java"))).toBe(true);
+    });
+
+    it("fuzzy search handles typos and partial matches", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: true,
+          options: [
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { value: "3", label: "Python" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("javascrpt"); // Typo: missing 'i'
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Fuzzy search should still find "JavaScript" despite typo
+      // (may also find TypeScript if it matches)
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBeGreaterThan(0);
+      const optionTexts = Array.from(options).map((opt) => opt.textContent);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+    });
+
+    it("simple search does not handle typos (exact substring match only)", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: false,
+          options: [
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { value: "3", label: "Python" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("javascrpt"); // Typo: missing 'i'
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Simple search should not find anything with typo
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBe(0);
+    });
+
+    it("fuzzy search is case-insensitive", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: true,
+          options: [
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { value: "3", label: "Python" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("JAVASCRIPT");
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Fuzzy search should find "JavaScript" regardless of case
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBeGreaterThan(0);
+      const optionTexts = Array.from(options).map((opt) => opt.textContent);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+    });
+
+    it("simple search is case-insensitive", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: false,
+          options: [
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { value: "3", label: "Python" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("JAVASCRIPT");
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Simple search should find "JavaScript" regardless of case
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBe(1);
+      expect(options[0]?.textContent).toContain("JavaScript");
+    });
+
+    it("fuzzy search works with grouped options", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: true,
+          options: [
+            { kind: "label", label: "Frontend" },
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { kind: "label", label: "Backend" },
+            { value: "3", label: "Python" },
+            { value: "4", label: "Java" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("javasc");
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Should find JavaScript (and possibly Java) and preserve group structure
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBeGreaterThan(0);
+      const optionTexts = Array.from(options).map((opt) => opt.textContent);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+    });
+
+    it("simple search works with grouped options", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: false,
+          options: [
+            { kind: "label", label: "Frontend" },
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { kind: "label", label: "Backend" },
+            { value: "3", label: "Python" },
+            { value: "4", label: "Java" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("java");
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Should find both JavaScript and Java
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBe(2);
+      const optionTexts = Array.from(options).map((opt) => opt.textContent);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+      expect(optionTexts.some((text) => text?.includes("Java"))).toBe(true);
+    });
+  });
 });

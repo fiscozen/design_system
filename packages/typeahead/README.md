@@ -69,11 +69,18 @@ The component supports three filtering modes:
    - Can return Promise for async operations
    - No race condition protection - shows last result received
 
-2. **Fuse.js fuzzy search**: Default when `filtrable` is true and no `filterFn`
+2. **Fuse.js fuzzy search**: Default when `filtrable` is true, `fuzzySearch` is true, and no `filterFn`
    - Searches in `label` field
+   - Handles typos and partial matches
+   - Only active when input has value
+   - Can be disabled by setting `fuzzySearch: false` to use simple `includes()` search instead
+
+3. **Simple includes search**: When `filtrable` is true, `fuzzySearch` is false, and no `filterFn`
+   - Uses case-insensitive `includes()` for substring matching
+   - Does not handle typos (exact substring match only)
    - Only active when input has value
 
-3. **No filtering**: When `filtrable` is false or input is empty
+4. **No filtering**: When `filtrable` is false or input is empty
    - Shows all available options
 
 #### Lazy Loading
