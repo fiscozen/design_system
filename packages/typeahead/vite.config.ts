@@ -4,7 +4,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import dts from 'vite-plugin-dts'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
@@ -23,7 +22,7 @@ export default defineConfig({
       name: 'FzTypeahead',
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', "@fiscozen/icons", "@fiscozen/composables"],
       output: {
         globals: {
           vue: 'Vue',

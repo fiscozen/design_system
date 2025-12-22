@@ -1,0 +1,566 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Form/FzTypeahead" />
+
+# FzTypeahead
+
+A dropdown typeahead component that combines text input with dropdown selection. Supports real-time filtering of options as the user types, custom filter functions, lazy loading, and full keyboard navigation.
+
+## Features
+
+- **Real-time Filtering**: Options are filtered as the user types using Fuse.js or custom filter functions
+- **Debounced Input**: Input events are debounced for better performance
+- **Lazy Loading**: Efficient rendering for large option lists (loads 25 options initially, more on scroll)
+- **Full Keyboard Navigation**: Arrow keys, Home, End, Enter, Escape, and Tab support (skips disabled options)
+- **Custom Filtering**: Use built-in Fuse.js search or provide custom async filter functions
+- **Remote Loading**: Support for loading options asynchronously from APIs
+- **Icon Support**: Customizable left and right icons with variants
+- **Validation States**: Error messages and help text via slots
+- **Accessibility**: Complete ARIA support and WCAG 2.1 AA compliance
+- **Floating Panel**: Smart positioning with viewport constraints
+
+## Installation
+
+```bash
+npm install @fiscozen/typeahead
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTypeahead } from '@fiscozen/typeahead'
+
+const selectedValue = ref<string>()
+
+const options = [
+  { label: 'Option One', value: '1' },
+  { label: 'Option Two', value: '2' },
+  { label: 'Option Three', value: '3' }
+]
+</script>
+
+<template>
+  <FzTypeahead
+    v-model="selectedValue"
+    label="Search"
+    :options="options"
+    placeholder="Type to search..."
+  />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>options</code></td>
+      <td><code>FzTypeaheadOptionsProps[] | undefined</code></td>
+      <td><code>undefined</code></td>
+      <td>Array of selectable options. If undefined, shows a loading indicator (FzProgress)</td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td><code>-</code></td>
+      <td>The label displayed on top of the input</td>
+    </tr>
+    <tr>
+      <td><code>placeholder</code></td>
+      <td><code>string</code></td>
+      <td><code>-</code></td>
+      <td>The placeholder text displayed in the input field</td>
+    </tr>
+    <tr>
+      <td><code>filtrable</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>If true, typing in the input will filter the options using Fuse.js or filterFn</td>
+    </tr>
+    <tr>
+      <td><code>filterFn</code></td>
+      <td><code>(text?: string) => Promise&lt;FzTypeaheadOptionsProps[]&gt; | FzTypeaheadOptionsProps[]</code></td>
+      <td><code>undefined</code></td>
+      <td>Custom filter function (can be async). When provided, overrides the default Fuse.js filtering</td>
+    </tr>
+    <tr>
+      <td><code>delayTime</code></td>
+      <td><code>number</code></td>
+      <td><code>500</code></td>
+      <td>Delay in milliseconds before applying filter after user stops typing (debounce time)</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If true, the input is disabled and cannot be interacted with</td>
+    </tr>
+    <tr>
+      <td><code>readonly</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If true, the input is read-only (same visual style as disabled, no input allowed)</td>
+    </tr>
+    <tr>
+      <td><code>required</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If true, the input is marked as required (shows asterisk)</td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If true, the input is in error state (shows error styling and error slot if provided)</td>
+    </tr>
+    <tr>
+      <td><code>clearable</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>If true, allows clearing the selected value by clicking the selected option again</td>
+    </tr>
+    <tr>
+      <td><code>leftIcon</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>FontAwesome icon name for the left icon</td>
+    </tr>
+    <tr>
+      <td><code>leftIconVariant</code></td>
+      <td><code>IconVariant</code></td>
+      <td><code>undefined</code></td>
+      <td>FontAwesome icon variant for the left icon (fas, far, fal, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>rightIcon</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>FontAwesome icon name for the right icon (displayed before chevron)</td>
+    </tr>
+    <tr>
+      <td><code>rightIconVariant</code></td>
+      <td><code>IconVariant</code></td>
+      <td><code>undefined</code></td>
+      <td>FontAwesome icon variant for the right icon (fas, far, fal, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>optionsToShow</code></td>
+      <td><code>number</code></td>
+      <td><code>25</code></td>
+      <td>Number of options to show initially (for lazy loading). More options load as user scrolls</td>
+    </tr>
+    <tr>
+      <td><code>noResultsMessage</code></td>
+      <td><code>string</code></td>
+      <td><code>'Nessun risultato trovato'</code></td>
+      <td>Message to display when no options match the search</td>
+    </tr>
+    <tr>
+      <td><code>disableTruncate</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If true, disables text truncation in option labels</td>
+    </tr>
+    <tr>
+      <td><code>position</code></td>
+      <td><code>FzFloatingPosition</code></td>
+      <td><code>'auto-vertical-start'</code></td>
+      <td>Floating panel position relative to input. See FzFloating documentation for available positions</td>
+    </tr>
+    <tr>
+      <td><code>teleport</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>If true, teleports the dropdown to body element (prevents z-index issues)</td>
+    </tr>
+    <tr>
+      <td><code>environment</code></td>
+      <td><code>'backoffice' | 'frontoffice'</code></td>
+      <td><code>'frontoffice'</code></td>
+      <td>Environment context that determines sizing and spacing (backoffice: compact, frontoffice: spacious)</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'sm' | 'md' | 'lg'</code></td>
+      <td><code>'md'</code></td>
+      <td><strong>Deprecated:</strong> The size prop is deprecated and will be removed in a future version. The component now uses a fixed 'lg' size internally.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Events
+
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Payload</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>fztypeahead:select</code></td>
+      <td><code>string | undefined</code></td>
+      <td>Emitted when an option is selected from the dropdown. Emits the option's value, or undefined if cleared</td>
+    </tr>
+    <tr>
+      <td><code>update:modelValue</code></td>
+      <td><code>string | undefined</code></td>
+      <td>Emitted when the model value changes. Always emits the option's value as a string, or undefined if cleared</td>
+    </tr>
+  </tbody>
+</table>
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>opener</code></td>
+      <td>Custom opener button. Receives <code>handlePickerClick</code>, <code>isOpen</code>, and <code>floating</code> props</td>
+    </tr>
+    <tr>
+      <td><code>opener-start</code></td>
+      <td>Content displayed before the opener (typically label)</td>
+    </tr>
+    <tr>
+      <td><code>opener-end</code></td>
+      <td>Content displayed after the opener (typically help/error messages)</td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td>Custom error message content. Shown when <code>error={true}</code>. Takes priority over help slot</td>
+    </tr>
+    <tr>
+      <td><code>help</code></td>
+      <td>Custom help text content. Shown when no error is present</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Basic Typeahead
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTypeahead } from '@fiscozen/typeahead'
+
+const selected = ref<string>()
+
+const options = [
+  { label: 'Apple', value: 'apple' },
+  { label: 'Banana', value: 'banana' },
+  { label: 'Cherry', value: 'cherry' }
+]
+</script>
+
+<template>
+  <FzTypeahead
+    v-model="selected"
+    label="Select a fruit"
+    :options="options"
+    placeholder="Type to search..."
+  />
+</template>
+```
+
+### With Custom Filter Function
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTypeahead, FzTypeaheadOptionsProps } from '@fiscozen/typeahead'
+
+const selected = ref<string>()
+
+const allOptions: FzTypeaheadOptionsProps[] = [
+  { label: 'JavaScript', value: 'js' },
+  { label: 'TypeScript', value: 'ts' },
+  { label: 'Python', value: 'py' },
+  { label: 'Java', value: 'java' }
+]
+
+const customFilter = (text?: string): FzTypeaheadOptionsProps[] => {
+  if (!text) return allOptions
+  return allOptions.filter(opt => 
+    opt.label.toLowerCase().includes(text.toLowerCase())
+  )
+}
+</script>
+
+<template>
+  <FzTypeahead
+    v-model="selected"
+    label="Programming Language"
+    :options="allOptions"
+    :filterFn="customFilter"
+    placeholder="Type to filter..."
+  />
+</template>
+```
+
+### Remote Loading with Async Filter
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTypeahead, FzTypeaheadOptionsProps } from '@fiscozen/typeahead'
+
+const selected = ref<string>()
+const options = ref<FzTypeaheadOptionsProps[]>([])
+
+const loadOptions = async (searchText?: string): Promise<FzTypeaheadOptionsProps[]> => {
+  // Simulate API call
+  const response = await fetch(`/api/search?q=${searchText || ''}`)
+  const data = await response.json()
+  return data.map((item: { name: string; id: string }) => ({
+    label: item.name,
+    value: item.id
+  }))
+}
+</script>
+
+<template>
+  <FzTypeahead
+    v-model="selected"
+    label="Search Users"
+    :options="options"
+    :filterFn="loadOptions"
+    placeholder="Type to search users..."
+  />
+</template>
+```
+
+### With Validation States
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTypeahead } from '@fiscozen/typeahead'
+
+const selected = ref<string>()
+const hasError = ref(false)
+
+const options = [
+  { label: 'Valid Option', value: 'valid' }
+]
+
+const validate = () => {
+  hasError.value = !selected.value
+}
+</script>
+
+<template>
+  <FzTypeahead
+    v-model="selected"
+    label="Required Field"
+    :options="options"
+    placeholder="Select an option..."
+    required
+    :error="hasError"
+    @fztypeahead:select="validate"
+  >
+    <template #error>
+      This field is required
+    </template>
+    <template #help>
+      Please select an option from the list
+    </template>
+  </FzTypeahead>
+</template>
+```
+
+### With Icons
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTypeahead } from '@fiscozen/typeahead'
+
+const selected = ref<string>()
+
+const options = [
+  { label: 'Search Result 1', value: '1' },
+  { label: 'Search Result 2', value: '2' }
+]
+</script>
+
+<template>
+  <FzTypeahead
+    v-model="selected"
+    label="Search"
+    :options="options"
+    placeholder="Type to search..."
+    leftIcon="magnifying-glass"
+    leftIconVariant="fas"
+    rightIcon="filter"
+    rightIconVariant="far"
+  />
+</template>
+```
+
+### Grouped Options
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTypeahead, FzTypeaheadOptionsProps } from '@fiscozen/typeahead'
+
+const selected = ref<string>()
+
+const groupedOptions: FzTypeaheadOptionsProps[] = [
+  { kind: 'label', label: 'Fruits' },
+  { label: 'Apple', value: 'apple' },
+  { label: 'Banana', value: 'banana' },
+  { kind: 'label', label: 'Vegetables' },
+  { label: 'Carrot', value: 'carrot' },
+  { label: 'Lettuce', value: 'lettuce' }
+]
+</script>
+
+<template>
+  <FzTypeahead
+    v-model="selected"
+    label="Category"
+    :options="groupedOptions"
+  />
+</template>
+```
+
+### Disabled Options
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTypeahead } from '@fiscozen/typeahead'
+
+const selected = ref<string>()
+
+const options = [
+  { label: 'Available', value: '1' },
+  { label: 'Disabled', value: '2', disabled: true },
+  { label: 'Read-only', value: '3', readonly: true }
+]
+</script>
+
+<template>
+  <FzTypeahead
+    v-model="selected"
+    label="Select"
+    :options="options"
+  />
+</template>
+```
+
+## Accessibility
+
+FzTypeahead is built with accessibility in mind and follows WCAG 2.1 AA standards:
+
+- **Keyboard Navigation**: Full keyboard support for navigating and selecting options. Disabled options are automatically skipped during navigation
+- **ARIA Attributes**: Complete ARIA implementation (aria-expanded, aria-haspopup, aria-controls, aria-activedescendant)
+- **Focus Management**: Clear focus indicators, logical tab order, and focus trap within dropdown
+- **Required Fields**: Properly marked with `required` attribute and ARIA labels
+- **Error States**: Error messages are associated with inputs using `aria-describedby`
+- **Screen Reader Support**: All interactive elements are properly announced with live regions
+- **Role Attributes**: Proper roles (combobox, listbox, option) for screen reader navigation
+
+### Keyboard Shortcuts
+
+**Opener Button:**
+- `Enter` / `Space`: Open dropdown (if closed)
+- `Escape`: Close dropdown (if open)
+- `Tab`: Move focus to next element
+- `Shift+Tab`: Move focus to previous element
+
+**Options Container (when dropdown is open):**
+- `ArrowDown`: Move focus to next enabled option (wraps to first on last option, skips disabled)
+- `ArrowUp`: Move focus to previous enabled option (wraps to last on first option, skips disabled)
+- `Home`: Move focus to first enabled option
+- `End`: Move focus to last enabled option
+- `Enter` / `Space`: Select focused option and close dropdown
+- `Escape`: Close dropdown without selecting
+- `Tab`: Move focus to next enabled option (wraps to first on last option) - focus trap active
+- `Shift+Tab`: Move focus to previous enabled option (wraps to last on first option) - focus trap active
+
+**Input Field (when filtrable and dropdown is open):**
+- Type: Filter options and navigate (opens dropdown if closed)
+- All option navigation keys work as above
+
+## Best Practices
+
+### When to Use
+
+- **Search/Filter Scenarios**: When users need to search through a large list of options
+- **Autocomplete**: When you want to provide suggestions as the user types
+- **Remote Data**: When options need to be loaded from an API based on user input
+- **Large Lists**: When you have many options (100+) and need lazy loading
+
+### When NOT to Use
+
+- **Small Fixed Lists**: For small, fixed lists (less than 10 items), consider using FzSelect instead
+- **Simple Text Input**: If you don't need filtering or selection, use FzInput instead
+- **Multi-select**: This component supports single selection only
+
+### Performance Tips
+
+- Use `delayTime` to control debounce timing for remote loading scenarios (default 500ms)
+- For large option lists (100+ items), lazy loading is automatic (adjust `optionsToShow` if needed)
+- Use `filterFn` for custom filtering logic if you need more control than Fuse.js provides
+- Use `filtrable: false` if you're handling all filtering through remote loading
+- The component automatically handles lazy loading - no manual optimization needed
+
+### Common Patterns
+
+**Remote Loading Pattern:**
+```vue
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { FzTypeahead, FzTypeaheadOptionsProps } from '@fiscozen/typeahead'
+
+const selected = ref<string>()
+const options = ref<FzTypeaheadOptionsProps[]>([])
+
+const loadOptions = async (searchText?: string): Promise<FzTypeaheadOptionsProps[]> => {
+  const response = await fetch(`/api/search?q=${searchText || ''}`)
+  const data = await response.json()
+  return data.map((item: { name: string; id: string }) => ({
+    label: item.name,
+    value: item.id
+  }))
+}
+
+// Load initial options
+loadOptions().then(result => {
+  options.value = result
+})
+</script>
+
+<template>
+  <FzTypeahead
+    v-model="selected"
+    label="Search"
+    :options="options"
+    :filterFn="loadOptions"
+    placeholder="Type to search..."
+  />
+</template>
+```
