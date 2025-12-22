@@ -91,13 +91,13 @@ const options = [
       <td><code>filterFn</code></td>
       <td><code>(text?: string) => Promise&lt;FzTypeaheadOptionsProps[]&gt; | FzTypeaheadOptionsProps[]</code></td>
       <td><code>undefined</code></td>
-      <td>Custom filter function (can be async). When provided, overrides the default Fuse.js filtering</td>
+      <td>Custom filter function (can be async). When provided, overrides the default Fuse.js filtering. <strong>Only available when <code>filtrable: true</code></strong></td>
     </tr>
     <tr>
       <td><code>delayTime</code></td>
       <td><code>number</code></td>
       <td><code>500</code></td>
-      <td>Delay in milliseconds before applying filter after user stops typing (debounce time)</td>
+      <td>Delay in milliseconds before applying filter after user stops typing (debounce time). <strong>Only available when <code>filtrable: true</code></strong></td>
     </tr>
     <tr>
       <td><code>disabled</code></td>
