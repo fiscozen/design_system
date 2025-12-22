@@ -41,7 +41,7 @@ const isReadonly = computed(() => props.readonly);
 const isInteractive = computed(() => !isDisabled.value && !isReadonly.value);
 const isError = computed(() => !!props.error && isInteractive.value);
 const isSelectedValue = computed(
-  () => props.selectedOption && isInteractive.value,
+  () => props.selectedOption && isInteractive.value
 );
 
 const showNormalPlaceholder = computed(() => {
@@ -89,7 +89,7 @@ const computedPickerClass = computed(() => {
   // When showing button, apply variant logic
   return [
     props.variant === "floating-label"
-      ? "h-40 text-sm pr-6"
+      ? "h-44 text-sm pr-6"
       : environmentPickerClasses[props.environment],
     pickerStateClasses.value,
   ];

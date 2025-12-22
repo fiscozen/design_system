@@ -82,7 +82,7 @@ const pickerStateClasses = computed(() => {
  */
 const computedPickerClass = computed(() => [
   props.variant === "floating-label"
-    ? "h-40 text-sm pr-6"
+    ? "h-44 text-sm pr-6"
     : environmentPickerClasses[props.environment],
   pickerStateClasses.value,
 ]);
