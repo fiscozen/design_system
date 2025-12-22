@@ -1110,7 +1110,7 @@ export const FloatingLabel: TypeaheadStory = {
     
     await step('Verify floating-label variant is applied', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
-      await expect(opener).toHaveClass('h-40')
+      await expect(opener).toHaveClass('h-44')
       await expect(opener).toHaveClass('text-sm')
     })
     
