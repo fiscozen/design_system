@@ -916,9 +916,13 @@ export const NotFiltrableAndUnclearable: TypeaheadStory = {
       await new Promise(resolve => setTimeout(resolve, 100))
       
       // When filtrable is false, button should remain visible (not switch to input)
+      // Input exists in DOM but is hidden with v-show
       const input = canvasElement.querySelector('input[type="text"]')
-      await expect(input).toBeNull()
+      if (input) {
+        await expect(input).not.toBeVisible()
+      }
       await expect(opener).toHaveAttribute('aria-expanded', 'true')
+      await expect(opener).toBeVisible()
     })
     
     await step('Select an option and verify it cannot be cleared', async () => {
