@@ -324,6 +324,47 @@ describe("FzTypeahead", () => {
 
       expect(wrapper.html()).toContain("xmark");
     });
+
+    it("renders right icon as button when rightIconButton is true and filtrable is false", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          filtrable: false,
+          rightIcon: "xmark",
+          rightIconButton: true,
+          rightIconButtonVariant: "secondary",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      // When filtrable is false, rightIconButton should be rendered
+      // The icon should be present in the HTML (as part of FzIconButton)
+      expect(wrapper.html()).toContain("xmark");
+    });
+
+    it("accepts rightIconButton prop when filtrable is true (even though not shown)", () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          rightIcon: "xmark",
+          rightIconButton: true,
+          rightIconButtonVariant: "secondary",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      // Props should be accepted without errors
+      expect(wrapper.props("rightIconButton")).toBe(true);
+      expect(wrapper.props("rightIconButtonVariant")).toBe("secondary");
+    });
   });
 
   describe("Lazy Loading", () => {

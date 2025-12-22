@@ -63,6 +63,17 @@ interface FzTypeaheadBaseProps extends FzFloatingProps {
    */
   rightIconVariant?: IconVariant;
   /**
+   * If true, right icon is rendered as an interactive button instead of a static icon.
+   * @default false
+   */
+  rightIconButton?: boolean;
+  /**
+   * Visual variant for the right icon button.
+   * Only applicable when rightIconButton is true.
+   * @default 'invisible'
+   */
+  rightIconButtonVariant?: IconButtonVariant;
+  /**
    * Additional CSS classes applied to the opener button
    */
   pickerClass?: string;
@@ -147,8 +158,7 @@ interface FzTypeaheadBaseProps extends FzFloatingProps {
  * Props when filtrable is true
  *
  * When filtrable is true, the component shows an input field when open.
- * The variant, rightIconButton, and rightIconButtonVariant props are not available
- * in this mode as they only apply to the button display.
+ * The variant prop is not available in this mode as it only applies to the button display.
  */
 interface FzTypeaheadFilterableProps extends FzTypeaheadBaseProps {
   /**
@@ -162,8 +172,7 @@ interface FzTypeaheadFilterableProps extends FzTypeaheadBaseProps {
  * Props when filtrable is false or undefined
  *
  * When filtrable is false, the component behaves like a standard select dropdown.
- * The variant, rightIconButton, and rightIconButtonVariant props are available
- * in this mode to customize the button appearance.
+ * The variant prop is available in this mode to customize the button appearance.
  */
 interface FzTypeaheadNonFilterableProps extends FzTypeaheadBaseProps {
   /**
@@ -178,18 +187,6 @@ interface FzTypeaheadNonFilterableProps extends FzTypeaheadBaseProps {
    */
   variant?: "normal" | "floating-label";
   /**
-   * If true, right icon is rendered as an interactive button instead of a static icon.
-   * Only applicable when filtrable is false.
-   * @default false
-   */
-  rightIconButton?: boolean;
-  /**
-   * Visual variant for the right icon button.
-   * Only applicable when filtrable is false and rightIconButton is true.
-   * @default 'invisible'
-   */
-  rightIconButtonVariant?: IconButtonVariant;
-  /**
    * Whether to position right icon before or after chevron
    * @default false
    * @deprecated rightIconLast prop is deprecated. The right icon is now always positioned before the chevron. This prop will be removed in a future version.
@@ -201,8 +198,11 @@ interface FzTypeaheadNonFilterableProps extends FzTypeaheadBaseProps {
  * FzTypeahead component props
  *
  * Discriminated union type that ensures type safety based on filtrable value:
- * - When filtrable={true}: variant, rightIconButton, and rightIconButtonVariant are not available
- * - When filtrable={false} or undefined: variant, rightIconButton, and rightIconButtonVariant are available
+ * - When filtrable={true}: variant is not available
+ * - When filtrable={false} or undefined: variant is available
+ *
+ * Note: rightIconButton and rightIconButtonVariant are available in both modes,
+ * but are only rendered when filtrable is false (button mode).
  *
  * This provides compile-time type checking to guide developers on which props
  * can be used in each mode.
