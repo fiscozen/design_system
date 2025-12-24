@@ -2,15 +2,14 @@
 /**
  * FzSelectOptionsList Component
  *
- * Presentational component for the FzSelect options list.
- * Renders the list of options with lazy loading support using FzActionList and FzAction.
- * All logic is delegated to the parent FzSelect component.
+ * Presentational component for the options list with lazy loading support.
  *
  * @component
  * @internal
  */
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { FzActionList, FzActionSection, FzAction } from "@fiscozen/action";
+import { FzProgress } from "@fiscozen/progress";
 import type { FzSelectOptionsListProps } from "./types";
 import type { FzSelectOptionsProps, FzSelectOptionProps } from "../types";
 
@@ -21,54 +20,59 @@ const emit = defineEmits<{
   keydown: [event: KeyboardEvent];
   scroll: [];
   "register-ref": [value: string, element: HTMLElement | undefined];
+  focus: [value: string];
 }>();
 
 const containerRef = ref<InstanceType<typeof FzActionList>>();
 
-/**
- * Type guard to filter selectable options
- */
 const isSelectableOption = (
   option: FzSelectOptionsProps
 ): option is FzSelectOptionProps => option.kind !== "label";
 
-/**
- * Gets unique key for v-for iteration
- */
 const getOptionKey = (option: FzSelectOptionsProps): string =>
   option.kind === "label" ? option.label : option.value;
 
-/**
- * Checks if option is a label separator
- */
 const isLabelOption = (option: FzSelectOptionsProps): boolean =>
   option.kind === "label";
 
-/**
- * Gets check icon name for selected option
- */
 const getCheckIcon = (option: FzSelectOptionProps): string | undefined =>
   props.selectedValue === option.value ? "check" : undefined;
 
 /**
- * Generates unique ID for an option element
+ * Gets tabindex for an option
+ *
+ * Focused option is always focusable (tabindex="0"), including disabled/readonly.
+ * When no option is focused, selected option is focusable (for filtrable mode).
  */
+const getTabIndex = (option: FzSelectOptionProps): number => {
+  // If this is the focused option, it should be focusable (even if disabled/readonly)
+  if (props.focusedOptionValue === option.value) {
+    return 0;
+  }
+  // If no option is focused (focusedOptionValue is null) and this is the selected option,
+  // it should be focusable (for filtrable: true case)
+  if (
+    props.focusedOptionValue === null &&
+    props.selectedValue === option.value
+  ) {
+    return 0;
+  }
+  // Otherwise, not focusable
+  return -1;
+};
+
 const getOptionId = (option: FzSelectOptionProps) => {
   return `${props.openerId}-option-${option.value}`;
 };
 
-/**
- * Handles option selection
- * Delegates to parent component via emit
- */
 const handleSelect = (option: FzSelectOptionProps) => {
   emit("select", option);
 };
 
-/**
- * Creates a ref callback for FzAction components
- * Registers the action element with the parent for focus management
- */
+const handleOptionFocus = (option: FzSelectOptionProps) => {
+  emit("focus", option.value);
+};
+
 const createActionRefCallback = (option: FzSelectOptionProps) => {
   return (el: unknown) => {
     // Type guard: ensure el is a valid object with actionElement
@@ -83,48 +87,6 @@ const createActionRefCallback = (option: FzSelectOptionProps) => {
   };
 };
 
-/**
- * Groups visible options into sections based on label separators
- *
- * Options before the first label belong to a section without label.
- * Options after a label belong to that section until the next label.
- */
-const groupedSections = computed(() => {
-  const sections: Array<{ label?: string; options: FzSelectOptionProps[] }> =
-    [];
-  let currentSection: {
-    label?: string;
-    options: FzSelectOptionProps[];
-  } | null = null;
-
-  for (const item of props.visibleOptions) {
-    if (isLabelOption(item)) {
-      // Close current section if exists
-      if (currentSection) {
-        sections.push(currentSection);
-      }
-      // Create new section with label
-      currentSection = { label: item.label, options: [] };
-    } else if (isSelectableOption(item)) {
-      // If no current section, create one without label
-      if (!currentSection) {
-        currentSection = { options: [] };
-      }
-      currentSection.options.push(item);
-    }
-  }
-
-  // Add last section if exists
-  if (currentSection) {
-    sections.push(currentSection);
-  }
-
-  return sections;
-});
-
-/**
- * Expose containerElement for parent component to attach scroll listeners
- */
 defineExpose({
   containerElement: containerRef,
 });
@@ -142,32 +104,33 @@ defineExpose({
     @keydown="emit('keydown', $event)"
     @scroll="emit('scroll')"
   >
-    <template v-if="visibleOptions.length">
-      <template
-        v-for="(section, sectionIndex) in groupedSections"
-        :key="sectionIndex"
-      >
-        <FzActionSection :label="section.label">
-          <FzAction
-            v-for="option in section.options"
-            :key="option.value"
-            :ref="createActionRefCallback(option)"
-            type="action"
-            variant="textLeft"
-            environment="backoffice"
-            :label="option.label"
-            :subLabel="option.subtitle"
-            :disabled="option.disabled"
-            :readonly="option.readonly"
-            :id="getOptionId(option)"
-            :focused="focusedOptionValue === option.value"
-            :isTextTruncated="!disableTruncate"
-            :iconRightName="getCheckIcon(option)"
-            role="option"
-            :ariaSelected="selectedValue === option.value"
-            @click="() => handleSelect(option)"
-          />
-        </FzActionSection>
+    <template v-if="visibleOptions === undefined">
+      <div class="flex justify-center items-center py-16">
+        <FzProgress size="md" />
+      </div>
+    </template>
+    <template v-else-if="visibleOptions.length">
+      <template v-for="option in visibleOptions" :key="getOptionKey(option)">
+        <FzActionSection v-if="isLabelOption(option)" :label="option.label" />
+        <FzAction
+          v-else-if="isSelectableOption(option)"
+          :ref="createActionRefCallback(option)"
+          type="action"
+          variant="textLeft"
+          environment="backoffice"
+          :label="option.label"
+          :subLabel="option.subtitle"
+          :disabled="option.disabled"
+          :readonly="option.readonly"
+          :id="getOptionId(option)"
+          :isTextTruncated="!disableTruncate"
+          :iconRightName="getCheckIcon(option)"
+          role="option"
+          :tabindex="getTabIndex(option)"
+          :ariaSelected="selectedValue === option.value"
+          @click="() => handleSelect(option)"
+          @focus="() => handleOptionFocus(option)"
+        />
       </template>
     </template>
     <template v-else>

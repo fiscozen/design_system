@@ -1,394 +1,276 @@
 # @fiscozen/select
 
-A dropdown select component with floating panel, lazy loading, keyboard navigation, and full accessibility support.
+> For usage documentation, see [Storybook Documentation](https://storybook-url/FzSelect)
 
-## Features
+## Development
 
-- **Dropdown selection** with floating panel positioning
-- **Lazy loading** for performance with large option lists
-- **Grouped options** with label separators
-- **Custom icons** (left and right positions)
-- **Error and help states** with custom slots
-- **Floating label variant** for compact forms
-- **Keyboard navigation** with full ARIA support
-- **WCAG 2.1 AA compliant** accessibility
+### Setup
 
-## Installation
+1. Clone the repository
+2. Install dependencies: `pnpm install`
+3. Run dev server: `pnpm dev` (from workspace root)
+
+### Architecture
+
+The `FzSelect` component is a unified dropdown select component that supports both standard select behavior (when `filtrable` is false) and typeahead/filterable behavior (when `filtrable` is true). It shares the same floating panel, lazy loading, and keyboard navigation patterns. The key difference is the dual-mode input: when `filtrable` is true and the dropdown is open, it becomes a filterable input field; when closed or `filtrable` is false, it displays the selected option label as a button.
+
+**Key Components:**
+- `FzSelect.vue`: Main component orchestrating state, filtering, and navigation
+- `FzSelectButton.vue`: Opener button that switches between button and input modes
+- `FzSelectOptionsList.vue`: Options list with lazy loading support
+- `FzSelectLabel.vue`: Label component with required indicator
+- `FzSelectHelpError.vue`: Help/error message component
+
+**State Management:**
+- `model`: Selected value (string | undefined)
+- `searchValue`: Current input text for filtering
+- `debouncedSearchValue`: Debounced version of searchValue
+- `internalFilteredOptions`: Filtered options after applying filterFn or Fuse.js
+- `visibleOptions`: Lazy-loaded subset of filtered options
+- `focusedIndex`: Index of currently focused option in `selectableOptions`
+- `isOpen`: Dropdown open/closed state
+
+**Filtering Flow:**
+1. User types → `searchValue` updates
+2. After `delayTime` ms → `debouncedSearchValue` updates
+3. `updateFilteredOptions()` called → applies `filterFn` or Fuse.js
+4. `internalFilteredOptions` updated → triggers `visibleOptions` reset
+5. Scroll triggers lazy loading → `visibleOptions` expands
+
+### Code Organization
+
+- `src/FzSelect.vue`: Main component with all business logic
+- `src/types.ts`: Type definitions for props and options
+- `src/common.ts`: Shared utilities (width calculation, constants)
+- `src/utils.ts`: Utility functions (debounce)
+- `src/components/`: Internal presentational components
+  - `FzSelectButton.vue`: Button/input switcher
+  - `FzSelectOptionsList.vue`: Options list renderer
+  - `FzSelectLabel.vue`: Label renderer
+  - `FzSelectHelpError.vue`: Help/error renderer
+  - `types.ts`: Internal component prop types
+
+### Key Concepts
+
+#### Dual-Mode Input
+
+The component uses a dual-mode approach:
+- **Closed state**: Button displays selected option label (or placeholder)
+- **Open state**: Input field appears for filtering (when `filtrable` is true)
+
+This is handled in `FzSelectButton.vue` using `shouldShowTheInput` computed property that checks `filtrable && isOpen`.
+
+#### Filtering Strategy
+
+The component supports three filtering modes:
+
+1. **Custom `filterFn` (async or sync)**: Takes precedence over default filtering
+   - Called with `debouncedSearchValue`
+   - Can return Promise for async operations
+   - No race condition protection - shows last result received
+
+2. **Fuse.js fuzzy search**: Default when `filtrable` is true, `fuzzySearch` is true, and no `filterFn`
+   - Searches in `label` field
+   - Handles typos and partial matches
+   - Only active when input has value
+   - Can be disabled by setting `fuzzySearch: false` to use simple `includes()` search instead
+
+3. **Simple includes search**: When `filtrable` is true, `fuzzySearch` is false, and no `filterFn`
+   - Uses case-insensitive `includes()` for substring matching
+   - Does not handle typos (exact substring match only)
+   - Only active when input has value
+
+4. **No filtering**: When `filtrable` is false or input is empty
+   - Shows all available options
+
+#### Lazy Loading
+
+Options are rendered in batches for performance:
+- Initial load: First `optionsToShow` (default 25) options
+- Scroll trigger: Loads next batch when user scrolls near bottom
+- Buffer: `OPTIONS_BUFFER * OPTIONS_HEIGHT` pixels from bottom triggers load
+- Selected option: Automatically loaded if beyond visible range
+
+#### Keyboard Navigation with Disabled Options
+
+The component navigates through all options (including disabled/readonly) for WCAG compliance:
+- `selectableOptions`: All selectable options (excluding labels, including disabled/readonly)
+- `focusedIndex`: Points to index in `selectableOptions`
+- Navigation traverses all options but disabled/readonly options receive focus without visual indication
+- Tab navigation allows traversing disabled options for accessibility
+
+#### Scroll Reset on Filter Change
+
+When `internalFilteredOptions` changes (due to filtering or options update):
+- `visibleOptions` resets to first batch
+- Scroll position resets to top via `resetScrollPosition()`
+- Prevents showing wrong options after filter change
+
+### Testing
+
+#### Running Tests
 
 ```bash
-npm install @fiscozen/select
+pnpm test:unit
+pnpm coverage
 ```
 
-## Basic Usage
+#### Test Structure
 
-```vue
-<script setup>
-import { ref } from 'vue'
-import { FzSelect } from '@fiscozen/select'
+- Unit tests in `src/__tests__/FzSelect.test.ts`
+- Test naming: `describe` blocks for feature groups, `it` blocks for specific cases
+- Coverage requirement: >90% line coverage
+- Use `mount` from `@vue/test-utils` for component testing
 
-const selectedValue = ref('')
+#### Test Coverage
 
-const options = [
-  { value: '1', label: 'Option 1' },
-  { value: '2', label: 'Option 2' },
-  { value: '3', label: 'Option 3' }
-]
-</script>
+Tests cover:
+- Rendering and props
+- v-model binding
+- Options filtering (Fuse.js and custom filterFn)
+- Lazy loading
+- Keyboard navigation (including disabled options)
+- Focus management
+- Error and help states
+- Accessibility attributes
+- Edge cases (empty options, undefined options, etc.)
 
-<template>
-  <FzSelect
-    v-model="selectedValue"
-    :options="options"
-    label="Select an option"
-    placeholder="Choose..."
-    environment="frontoffice"
-  />
-</template>
-```
+### Adding Features
 
-## Props
+#### Step 1: Update Types
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `options` | `FzSelectOptionsProps[]` | **required** | List of options to display in the dropdown |
-| `label` | `string` | - | Label displayed above the select input |
-| `placeholder` | `string` | - | Placeholder text shown when no option is selected |
-| `required` | `boolean` | `false` | Marks the select as required (shows asterisk) |
-| `disabled` | `boolean` | `false` | Disables the select input |
-| `readonly` | `boolean` | `false` | Makes the select readonly (same visual style as disabled) |
-| `error` | `boolean` | `false` | Shows error state styling |
-| `environment` | `'backoffice' \| 'frontoffice'` | `'frontoffice'` | Environment context for styling (affects button height and text size) |
-| `clearable` | `boolean` | `true` | Allows clearing the selected value by clicking the selected option again |
-| `noResultsMessage` | `string` | `'Nessun risultato trovato'` | Message displayed when no options are available |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | **Deprecated:** Size prop is deprecated. The component now uses a fixed 'lg' size. This prop will be removed in a future version. |
-| `leftIcon` | `string` | - | Icon name to display on the left |
-| `rightIcon` | `string` | - | Icon name to display on the right |
-| `rightIconButton` | `boolean` | `false` | Renders right icon as a button instead of icon |
-| `rightIconButtonVariant` | `IconButtonVariant` | - | Variant for right icon button |
-| `rightIconLast` | `boolean` | `false` | **Deprecated:** rightIconLast prop is deprecated. The right icon is now always positioned before the chevron. This prop will be removed in a future version. |
-| `pickerClass` | `string` | - | Custom CSS classes for the picker button |
-| `variant` | `'normal' \| 'floating-label'` | `'normal'` | Select variant style |
-| `optionsToShow` | `number` | `25` | Number of options to render per batch (lazy loading) |
-| `floatingPanelMaxHeight` | `string` | - | Maximum height for the floating panel |
-| `disableTruncate` | `boolean` | `false` | Disables text truncation in options |
-| `extOpener` | `HTMLElement` | - | External element to use as opener |
-| `position` | `FzFloatingPosition` | `'auto-vertical-start'` | Floating panel position |
-| `teleport` | `boolean` | `true` | Teleport panel to body |
-| `useViewport` | `boolean` | `true` | Use viewport constraints for positioning |
-
-### Option Types
-
-Options can be either selectable items or group labels:
-
+Add new props to `src/types.ts` with JSDoc:
 ```typescript
-// Selectable option
-{ value: '1', label: 'Option 1', subtitle?: 'Optional subtitle' }
-
-// Group label
-{ kind: 'label', label: 'Group Name' }
+/**
+ * Description of the prop
+ * @default 'defaultValue' if applicable
+ */
+newProp?: string
 ```
 
-## Slots
+#### Step 2: Implement Logic
 
-| Slot | Description |
-|------|-------------|
-| `opener` | Custom opener button (receives `handlePickerClick`, `isOpen`, `floating` props) |
-| `error` | Error message content (shown when `error={true}`) |
-| `help` | Help text content (shown when no error) |
+Add computed properties, handlers, etc. in `src/FzSelect.vue`:
+- Follow Representation-First pattern for conditional styling
+- Use Information Expert pattern (pass full objects to helpers)
+- Extract repeated logic to helper functions
 
-## Examples
+#### Step 3: Update Template
 
-### Basic Select
+Add new UI elements in template section:
+- Maintain section order: `<script>` → `<template>` → `<style>`
+- Use semantic HTML and ARIA attributes
 
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    label="Country"
-    placeholder="Select a country"
-  />
-</template>
-```
+#### Step 4: Add Tests
 
-### With Icons
+Write unit tests for new functionality:
+- Test positive and negative cases
+- Test edge cases (null, undefined, empty values)
+- Test accessibility features
 
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    label="Search"
-    leftIcon="magnifying-glass"
-    rightIcon="xmark"
-    :rightIconButton="true"
-    @fzselect:right-icon-click="clearSelection"
-  />
-</template>
-```
+#### Step 5: Update Documentation
 
-### Grouped Options
+- Update MDX with usage examples
+- Update README if architecture/logic changed
 
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="groupedOptions"
-    label="Category"
-  />
-</template>
+### Build & Release
 
-<script setup>
-const groupedOptions = [
-  { kind: 'label', label: 'Fruits' },
-  { value: 'apple', label: 'Apple' },
-  { value: 'banana', label: 'Banana' },
-  { kind: 'label', label: 'Vegetables' },
-  { value: 'carrot', label: 'Carrot' },
-  { value: 'lettuce', label: 'Lettuce' }
-]
-</script>
-```
+- Build: `pnpm build`
+- Version: Follow semver
+- Publish: `pnpm publish` (from workspace root)
 
-### Error State
+### Internal Logic
 
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    label="Required Field"
-    :required="true"
-    :error="hasError"
-  >
-    <template #error>
-      Please select an option
-    </template>
-  </FzSelect>
-</template>
-```
+#### Width Calculation Algorithm
 
-### Help Text
+The `calculateContainerWidth()` function in `src/common.ts`:
+1. Measures opener element's bounding rect
+2. Sets minWidth to max(opener width, MIN_WIDTH)
+3. Calculates available space on left and right
+4. Sets maxWidth to opener width + max(spaceLeft, spaceRight)
 
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    label="Select"
-  >
-    <template #help>
-      Choose the best option for your needs
-    </template>
-  </FzSelect>
-</template>
-```
+This ensures dropdown matches opener width while respecting viewport boundaries.
 
-### Floating Label Variant
+#### Focus Management
 
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    variant="floating-label"
-    placeholder="Select..."
-    environment="frontoffice"
-  />
-</template>
-```
+Focus flow when opening dropdown:
+1. If `filtrable`: Focus moves to input field (`FzInput` inside `FzSelectButton`)
+2. If not `filtrable`: Focus moves to first enabled option
+3. If option selected: Focus moves to selected option (if enabled)
 
-### Environment Styling
+Focus flow when closing:
+1. Focus returns to opener button
+2. `focusedIndex` resets to -1
 
-The component supports two environments with different styling:
+#### Filtering Race Conditions
 
-```vue
-<template>
-  <!-- Backoffice: 32px height, text-base -->
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    environment="backoffice"
-    label="Backoffice Select"
-  />
-  
-  <!-- Frontoffice: 44px height, text-lg -->
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    environment="frontoffice"
-    label="Frontoffice Select"
-  />
-</template>
-```
+When `filterFn` is async and called multiple times rapidly:
+- No cancellation mechanism - all calls proceed
+- Last result received is shown (may overwrite earlier results)
+- Developer responsibility to handle race conditions (e.g., request cancellation)
 
-### Readonly State
+This design choice prioritizes simplicity and developer control over automatic race condition handling.
 
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    label="Readonly Select"
-    readonly
-  />
-</template>
-```
+### Design Decisions
 
-The `readonly` prop applies the same visual style as `disabled` (grey-100 background/border, grey-300 text) but maintains the same semantic meaning. Keyboard navigation is disabled when readonly.
+#### Why Dual-Mode Input Instead of Always-Input?
 
-### Disabled Options
+The dual-mode approach (button when closed, input when open) provides:
+- Better UX: Selected value clearly visible when not filtering
+- Space efficiency: Input only appears when needed
+- Familiar pattern: Matches common select implementations
 
-```vue
-<script setup>
-const options = [
-  { value: '1', label: 'Available' },
-  { value: '2', label: 'Disabled', disabled: true },
-  { value: '3', label: 'Read-only', readonly: true }
-]
-</script>
-```
+#### Why No Race Condition Protection for filterFn?
 
-### Clearable Selection
+Race condition handling is left to the developer because:
+- Different use cases need different strategies (cancellation, debouncing, queuing)
+- Automatic cancellation could hide bugs in developer's code
+- Simpler API: Just show the last result received
 
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    label="Clearable Select"
-    :clearable="true"
-  />
-</template>
-```
+#### Why Navigate Through All Options (Including Disabled)?
 
-The `clearable` prop (default: `true`) allows users to deselect an option by clicking it again. Set to `false` to prevent clearing.
+Navigating through all options (including disabled/readonly) for WCAG compliance:
+- Screen readers can announce all options, including disabled ones
+- Keyboard users can traverse the full list for context
+- Disabled options receive focus but without visual indication
+- Better accessibility: users understand the full option set
 
-### Custom No Results Message
+#### Why Representation-First Pattern for Styling?
 
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="filteredOptions"
-    label="Search"
-    noResultsMessage="No matches found. Try a different search term."
-  />
-</template>
-```
+Using `switch(true)` with helper functions for conditional styling:
+- Explicit mapping: "when does component look like X?"
+- Maintainable: Adding new visual state = adding new case
+- Self-documenting: Structure answers "when does it look like X?"
+- Testable: Helper functions can be tested in isolation
 
-### Custom Opener
+### Dependencies
 
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="options"
-  >
-    <template #opener="{ handlePickerClick, isOpen }">
-      <button @click="handlePickerClick" :class="{ 'open': isOpen }">
-        Custom Opener
-      </button>
-    </template>
-  </FzSelect>
-</template>
-```
+**Peer Dependencies:**
+- `vue`: ^3.4.13
+- `tailwindcss`: ^3.4.1
 
-## Behavior
+**Dependencies:**
+- `@fiscozen/composables`: Floating panel positioning
+- `@fiscozen/action`: Options list rendering
+- `@fiscozen/input`: Input field component
+- `@fiscozen/icons`: Icon components
+- `@fiscozen/progress`: Loading indicator
+- `fuse.js`: Fuzzy search library
 
-### Environment Styling
+**Dev Dependencies:**
+- Standard testing and build tools (vitest, vite, typescript, etc.)
 
-The component adapts its styling based on the `environment` prop:
+### Performance Considerations
 
-- **Backoffice**: Button height 32px, text-base size
-- **Frontoffice**: Button height 44px, text-lg size
+- **Lazy Loading**: Automatic for large lists (100+ items)
+- **Debouncing**: Configurable via `delayTime` (default 500ms)
+- **Fuse.js**: Only instantiated when needed (computed property)
+- **Scroll Listener**: Attached once, cleaned up on unmount
+- **Watch Optimizations**: Uses `immediate: true` only when needed
 
-Label and selected value text maintain uniform styling (16px font-size, 20px line-height) across both environments.
+### Known Limitations
 
-### Lazy Loading
+- **No Multi-select**: Single selection only
+- **No Virtual Scrolling**: Lazy loading loads batches, but all visible options are in DOM
+- **No filterFn Cancellation**: Async filterFn calls are not cancelled automatically
 
-The component implements lazy loading for performance with large option lists. By default, it renders 25 options initially and loads more as the user scrolls. You can control this with the `optionsToShow` prop.
-
-### Positioning
-
-The floating panel automatically positions itself based on available viewport space. It prefers positioning below the opener but will adjust to above if there's not enough space. Use the `position` prop to override this behavior.
-
-### Container Width
-
-The dropdown container width matches the opener width by default, with a minimum width of 240px. It can expand up to the maximum available viewport space.
-
-## Accessibility
-
-The component is fully accessible and WCAG 2.1 AA compliant:
-
-- **Keyboard navigation**: Full keyboard support for opening, navigating, and selecting options
-- **Screen reader support**: Proper ARIA attributes and live region announcements
-- **Semantic HTML**: Uses `role="listbox"` and `role="option"` for proper semantics
-- **Focus management**: Automatic focus handling on open/close with focus trap
-- **State announcements**: Screen readers announce open/closed state, selected option, and focused option
-
-### Keyboard Navigation
-
-The component supports comprehensive keyboard navigation:
-
-**Opener Button:**
-- `Enter` / `Space`: Open dropdown (if closed) or close dropdown (if open)
-- `Escape`: Close dropdown (if open)
-- `Tab`: Move focus to next element
-- `Shift+Tab`: Move focus to previous element
-
-**Options Container (when dropdown is open):**
-- `ArrowDown`: Move focus to next option (wraps to first on last option)
-- `ArrowUp`: Move focus to previous option (wraps to last on first option)
-- `Home`: Move focus to first option
-- `End`: Move focus to last option
-- `Enter` / `Space`: Select focused option and close dropdown
-- `Escape`: Close dropdown without selecting
-- `Tab`: Move focus to next option (wraps to first on last option) - focus trap active
-- `Shift+Tab`: Move focus to previous option (wraps to last on first option) - focus trap active
-
-**Readonly/Disabled States:**
-- When `readonly` or `disabled` is `true`, keyboard navigation is disabled
-- Focus trap is not active when component is readonly or disabled
-
-### Focus Management
-
-- **On open**: Focus automatically moves to first selectable option (or selected option if present)
-- **On close**: Focus automatically returns to opener button
-- **Focus trap**: When dropdown is open, Tab/Shift+Tab navigation is trapped within the options list
-- **Dynamic updates**: Focus management handles prop changes (readonly/disabled) gracefully
-
-### Screen Reader Support
-
-The component provides rich semantic information to assistive technologies:
-
-- **ARIA attributes**: All interactive elements have proper ARIA roles and states
-- **Live announcements**: Screen readers announce focused option via `aria-activedescendant`
-- **State changes**: Open/closed state and selection changes are announced
-- **Label associations**: Proper `aria-labelledby` relationships for form integration
-
-### ARIA Attributes
-
-**Opener Button:**
-- `aria-expanded`: Indicates dropdown open/closed state (`"true"` or `"false"`)
-- `aria-haspopup="listbox"`: Declares dropdown type
-- `aria-labelledby`: Links to label element (when label is provided)
-- `aria-label`: Provides accessible name when label is not present
-- `aria-required`: Indicates required fields (`"true"` or `"false"`)
-- `aria-invalid`: Indicates error state (`"true"` or `"false"`)
-- `aria-disabled`: Indicates disabled/readonly state (`"true"` or `"false"`)
-
-**Options Container:**
-- `role="listbox"`: Declares the container as a listbox
-- `aria-labelledby`: Links to opener button for context
-- `aria-activedescendant`: Points to currently focused option (dynamically updated)
-
-**Option Elements (FzAction components):**
-- `role="option"`: Declares each option as a listbox option
-- `aria-selected`: Indicates selected option (`"true"` or `"false"`)
-- `aria-disabled`: Indicates disabled/readonly option (`"true"` or `"false"`)
-- Unique `id` attributes for `aria-activedescendant` reference
-- `tabindex`: 0 when focused, -1 otherwise (for keyboard navigation)
-- `focused`: Visual focus state managed by FzSelect
-
-**Note:** Options are rendered using `FzAction` components from `@fiscozen/action`, which handle their own accessibility attributes and keyboard interactions. FzSelect manages the overall listbox behavior and focus state.

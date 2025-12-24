@@ -4,18 +4,20 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # FzSelect
 
-A dropdown select component with floating panel, lazy loading, keyboard navigation, and full accessibility support.
+A dropdown select component that combines text input with dropdown selection. Supports real-time filtering of options as the user types, custom filter functions, lazy loading, and full keyboard navigation.
 
 ## Features
 
-- Dropdown selection with floating panel positioning
-- Lazy loading for performance with large option lists
-- Grouped options with label separators
-- Custom icons (left and right positions)
-- Error and help states with custom slots
-- Floating label variant for compact forms
-- Keyboard navigation with full ARIA support
-- WCAG 2.1 AA compliant accessibility
+- **Real-time Filtering**: Options are filtered as the user types using Fuse.js or custom filter functions
+- **Debounced Input**: Input events are debounced for better performance
+- **Lazy Loading**: Efficient rendering for large option lists (loads 25 options initially, more on scroll)
+- **Full Keyboard Navigation**: Arrow keys, Home, End, Enter, Escape, and Tab support (skips disabled options)
+- **Custom Filtering**: Use built-in Fuse.js search or provide custom async filter functions
+- **Remote Loading**: Support for loading options asynchronously from APIs
+- **Icon Support**: Customizable left and right icons with variants
+- **Validation States**: Error messages and help text via slots
+- **Accessibility**: Complete ARIA support and WCAG 2.1 AA compliance
+- **Floating Panel**: Smart positioning with viewport constraints
 
 ## Installation
 
@@ -26,26 +28,25 @@ npm install @fiscozen/select
 ## Basic Usage
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { FzSelect } from '@fiscozen/select'
 
-const selectedValue = ref('')
+const selectedValue = ref<string>()
 
 const options = [
-  { value: '1', label: 'Option 1' },
-  { value: '2', label: 'Option 2' },
-  { value: '3', label: 'Option 3' }
+  { label: 'Option One', value: '1' },
+  { label: 'Option Two', value: '2' },
+  { label: 'Option Three', value: '3' }
 ]
 </script>
 
 <template>
   <FzSelect
     v-model="selectedValue"
+    label="Search"
     :options="options"
-    label="Select an option"
-    placeholder="Choose..."
-    environment="frontoffice"
+    placeholder="Type to search..."
   />
 </template>
 ```
@@ -64,153 +65,183 @@ const options = [
   <tbody>
     <tr>
       <td><code>options</code></td>
-      <td><code>FzSelectOptionsProps[]</code></td>
-      <td><strong>required</strong></td>
-      <td>List of options to display in the dropdown</td>
+      <td><code>FzSelectOptionsProps[] | undefined</code></td>
+      <td><code>undefined</code></td>
+      <td>Array of selectable options. If undefined, shows a loading indicator (FzProgress)</td>
     </tr>
     <tr>
       <td><code>label</code></td>
       <td><code>string</code></td>
-      <td>-</td>
-      <td>Label displayed above the select input</td>
+      <td><code>-</code></td>
+      <td>The label displayed on top of the input</td>
     </tr>
     <tr>
       <td><code>placeholder</code></td>
       <td><code>string</code></td>
-      <td>-</td>
-      <td>Placeholder text shown when no option is selected</td>
+      <td><code>-</code></td>
+      <td>The placeholder text displayed in the input field</td>
     </tr>
     <tr>
-      <td><code>required</code></td>
+      <td><code>filtrable</code></td>
       <td><code>boolean</code></td>
-      <td><code>false</code></td>
-      <td>Marks the select as required (shows asterisk)</td>
+      <td><code>true</code></td>
+      <td>If true, typing in the input will filter the options using Fuse.js or filterFn</td>
+    </tr>
+    <tr>
+      <td><code>filterFn</code></td>
+      <td><code>(text?: string) => Promise&lt;FzSelectOptionsProps[]&gt; | FzSelectOptionsProps[]</code></td>
+      <td><code>undefined</code></td>
+      <td>Custom filter function (can be async). When provided, overrides the default Fuse.js filtering. <strong>Only available when <code>filtrable: true</code></strong></td>
+    </tr>
+    <tr>
+      <td><code>delayTime</code></td>
+      <td><code>number</code></td>
+      <td><code>500</code></td>
+      <td>Delay in milliseconds before applying filter after user stops typing (debounce time). <strong>Only available when <code>filtrable: true</code></strong></td>
+    </tr>
+    <tr>
+      <td><code>fuzzySearch</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>If true, uses Fuse.js for fuzzy search (handles typos and partial matches). If false, uses simple case-insensitive substring matching. <strong>Only available when <code>filtrable: true</code></strong></td>
     </tr>
     <tr>
       <td><code>disabled</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
-      <td>Disables the select input</td>
+      <td>If true, the input is disabled and cannot be interacted with</td>
     </tr>
     <tr>
       <td><code>readonly</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
-      <td>Makes the select readonly (same visual style as disabled)</td>
+      <td>If true, the input is read-only (same visual style as disabled, no input allowed)</td>
+    </tr>
+    <tr>
+      <td><code>required</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>If true, the input is marked as required (shows asterisk)</td>
     </tr>
     <tr>
       <td><code>error</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
-      <td>Shows error state styling</td>
-    </tr>
-    <tr>
-      <td><code>environment</code></td>
-      <td><code>'backoffice' | 'frontoffice'</code></td>
-      <td><code>'frontoffice'</code></td>
-      <td>Environment context for styling (affects button height and text size)</td>
+      <td>If true, the input is in error state (shows error styling and error slot if provided)</td>
     </tr>
     <tr>
       <td><code>clearable</code></td>
       <td><code>boolean</code></td>
       <td><code>true</code></td>
-      <td>Allows clearing the selected value by clicking the selected option again</td>
-    </tr>
-    <tr>
-      <td><code>noResultsMessage</code></td>
-      <td><code>string</code></td>
-      <td><code>'Nessun risultato trovato'</code></td>
-      <td>Message displayed when no options are available</td>
-    </tr>
-    <tr>
-      <td><code>size</code></td>
-      <td><code>'sm' | 'md' | 'lg'</code></td>
-      <td><code>'md'</code></td>
-      <td><strong>Deprecated:</strong> Size prop is deprecated. The component now uses a fixed 'lg' size. This prop will be removed in a future version.</td>
+      <td>If true, allows clearing the selected value by clicking the selected option again</td>
     </tr>
     <tr>
       <td><code>leftIcon</code></td>
       <td><code>string</code></td>
-      <td>-</td>
-      <td>Icon name to display on the left</td>
+      <td><code>undefined</code></td>
+      <td>FontAwesome icon name for the left icon</td>
+    </tr>
+    <tr>
+      <td><code>leftIconVariant</code></td>
+      <td><code>IconVariant</code></td>
+      <td><code>undefined</code></td>
+      <td>FontAwesome icon variant for the left icon (fas, far, fal, etc.)</td>
     </tr>
     <tr>
       <td><code>rightIcon</code></td>
       <td><code>string</code></td>
-      <td>-</td>
-      <td>Icon name to display on the right</td>
+      <td><code>undefined</code></td>
+      <td>FontAwesome icon name for the right icon (displayed before chevron)</td>
+    </tr>
+    <tr>
+      <td><code>rightIconVariant</code></td>
+      <td><code>IconVariant</code></td>
+      <td><code>undefined</code></td>
+      <td>FontAwesome icon variant for the right icon (fas, far, fal, etc.)</td>
     </tr>
     <tr>
       <td><code>rightIconButton</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
-      <td>Renders right icon as a button instead of icon</td>
+      <td>If true, right icon is rendered as an interactive button instead of a static icon. Only shown when filtrable is false (button mode)</td>
     </tr>
     <tr>
       <td><code>rightIconButtonVariant</code></td>
       <td><code>IconButtonVariant</code></td>
-      <td>-</td>
-      <td>Variant for right icon button</td>
-    </tr>
-    <tr>
-      <td><code>rightIconLast</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
-      <td><strong>Deprecated:</strong> rightIconLast prop is deprecated. The right icon is now always positioned before the chevron. This prop will be removed in a future version.</td>
-    </tr>
-    <tr>
-      <td><code>pickerClass</code></td>
-      <td><code>string</code></td>
-      <td>-</td>
-      <td>Custom CSS classes for the picker button</td>
+      <td><code>'invisible'</code></td>
+      <td>Visual variant for the right icon button. Only applicable when rightIconButton is true</td>
     </tr>
     <tr>
       <td><code>variant</code></td>
       <td><code>'normal' | 'floating-label'</code></td>
       <td><code>'normal'</code></td>
-      <td>Select variant style</td>
+      <td>Visual variant of the select. Only applicable when filtrable is false</td>
     </tr>
     <tr>
       <td><code>optionsToShow</code></td>
       <td><code>number</code></td>
       <td><code>25</code></td>
-      <td>Number of options to render per batch (lazy loading)</td>
+      <td>Number of options to show initially (for lazy loading). More options load as user scrolls</td>
     </tr>
     <tr>
-      <td><code>floatingPanelMaxHeight</code></td>
+      <td><code>noResultsMessage</code></td>
       <td><code>string</code></td>
-      <td>-</td>
-      <td>Maximum height for the floating panel</td>
+      <td><code>'Nessun risultato trovato'</code></td>
+      <td>Message to display when no options match the search</td>
     </tr>
     <tr>
       <td><code>disableTruncate</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
-      <td>Disables text truncation in options</td>
-    </tr>
-    <tr>
-      <td><code>extOpener</code></td>
-      <td><code>HTMLElement</code></td>
-      <td>-</td>
-      <td>External element to use as opener</td>
+      <td>If true, disables text truncation in option labels</td>
     </tr>
     <tr>
       <td><code>position</code></td>
       <td><code>FzFloatingPosition</code></td>
       <td><code>'auto-vertical-start'</code></td>
-      <td>Floating panel position</td>
+      <td>Floating panel position relative to input. See FzFloating documentation for available positions</td>
     </tr>
     <tr>
       <td><code>teleport</code></td>
       <td><code>boolean</code></td>
       <td><code>true</code></td>
-      <td>Teleport panel to body</td>
+      <td>If true, teleports the dropdown to body element (prevents z-index issues)</td>
     </tr>
     <tr>
-      <td><code>useViewport</code></td>
-      <td><code>boolean</code></td>
-      <td><code>true</code></td>
-      <td>Use viewport constraints for positioning</td>
+      <td><code>environment</code></td>
+      <td><code>'backoffice' | 'frontoffice'</code></td>
+      <td><code>'frontoffice'</code></td>
+      <td>Environment context that determines sizing and spacing (backoffice: compact, frontoffice: spacious)</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'sm' | 'md' | 'lg'</code></td>
+      <td><code>'md'</code></td>
+      <td><strong>Deprecated:</strong> The size prop is deprecated and will be removed in a future version. The component now uses a fixed 'lg' size internally.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Events
+
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Payload</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>fzselect:select</code></td>
+      <td><code>string | undefined</code></td>
+      <td>Emitted when an option is selected from the dropdown. Emits the option's value, or undefined if cleared</td>
+    </tr>
+    <tr>
+      <td><code>update:modelValue</code></td>
+      <td><code>string | undefined</code></td>
+      <td>Emitted when the model value changes. Always emits the option's value as a string, or undefined if cleared</td>
     </tr>
   </tbody>
 </table>
@@ -227,46 +258,254 @@ const options = [
   <tbody>
     <tr>
       <td><code>opener</code></td>
-      <td>Custom opener button (receives <code>handlePickerClick</code>, <code>isOpen</code>, <code>floating</code> props)</td>
+      <td>Custom opener button. Receives <code>handlePickerClick</code>, <code>isOpen</code>, and <code>floating</code> props</td>
+    </tr>
+    <tr>
+      <td><code>opener-start</code></td>
+      <td>Content displayed before the opener (typically label)</td>
+    </tr>
+    <tr>
+      <td><code>opener-end</code></td>
+      <td>Content displayed after the opener (typically help/error messages)</td>
     </tr>
     <tr>
       <td><code>error</code></td>
-      <td>Error message content (shown when <code>error={true}</code>)</td>
+      <td>Custom error message content. Shown when <code>error={true}</code>. Takes priority over help slot</td>
     </tr>
     <tr>
       <td><code>help</code></td>
-      <td>Help text content (shown when no error)</td>
+      <td>Custom help text content. Shown when no error is present</td>
     </tr>
   </tbody>
 </table>
 
 ## Examples
 
-### Basic Select
+### Basic Typeahead
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzSelect } from '@fiscozen/select'
+
+const selected = ref<string>()
+
+const options = [
+  { label: 'Apple', value: 'apple' },
+  { label: 'Banana', value: 'banana' },
+  { label: 'Cherry', value: 'cherry' }
+]
+</script>
+
 <template>
   <FzSelect
     v-model="selected"
+    label="Select a fruit"
     :options="options"
-    label="Country"
-    placeholder="Select a country"
+    placeholder="Type to search..."
   />
+</template>
+```
+
+### With Custom Filter Function
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzSelect, FzSelectOptionsProps } from '@fiscozen/select'
+
+const selected = ref<string>()
+
+const allOptions: FzSelectOptionsProps[] = [
+  { label: 'JavaScript', value: 'js' },
+  { label: 'TypeScript', value: 'ts' },
+  { label: 'Python', value: 'py' },
+  { label: 'Java', value: 'java' }
+]
+
+const customFilter = (text?: string): FzSelectOptionsProps[] => {
+  if (!text) return allOptions
+  return allOptions.filter(opt => 
+    opt.label.toLowerCase().includes(text.toLowerCase())
+  )
+}
+</script>
+
+<template>
+  <FzSelect
+    v-model="selected"
+    label="Programming Language"
+    :options="allOptions"
+    :filterFn="customFilter"
+    placeholder="Type to filter..."
+  />
+</template>
+```
+
+### With Simple Search (No Fuzzy)
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzSelect } from '@fiscozen/select'
+
+const selected = ref<string>()
+
+const options = [
+  { label: 'JavaScript', value: 'js' },
+  { label: 'TypeScript', value: 'ts' },
+  { label: 'Python', value: 'py' },
+  { label: 'Java', value: 'java' }
+]
+</script>
+
+<template>
+  <FzSelect
+    v-model="selected"
+    label="Programming Language"
+    :options="options"
+    :fuzzySearch="false"
+    placeholder="Type to search (exact match only)..."
+  />
+</template>
+```
+
+**Note:** With `fuzzySearch: false`, the component uses simple case-insensitive substring matching. It will not handle typos or partial matches like fuzzy search does. For example, searching "javascrpt" (typo) will not find "JavaScript", but "java" will find both "JavaScript" and "Java".
+
+### Remote Loading with Async Filter
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzSelect, FzSelectOptionsProps } from '@fiscozen/select'
+
+const selected = ref<string>()
+const options = ref<FzSelectOptionsProps[]>([])
+
+const loadOptions = async (searchText?: string): Promise<FzSelectOptionsProps[]> => {
+  // Simulate API call
+  const response = await fetch(`/api/search?q=${searchText || ''}`)
+  const data = await response.json()
+  return data.map((item: { name: string; id: string }) => ({
+    label: item.name,
+    value: item.id
+  }))
+}
+</script>
+
+<template>
+  <FzSelect
+    v-model="selected"
+    label="Search Users"
+    :options="options"
+    :filterFn="loadOptions"
+    placeholder="Type to search users..."
+  />
+</template>
+```
+
+### With Validation States
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzSelect } from '@fiscozen/select'
+
+const selected = ref<string>()
+const hasError = ref(false)
+
+const options = [
+  { label: 'Valid Option', value: 'valid' }
+]
+
+const validate = () => {
+  hasError.value = !selected.value
+}
+</script>
+
+<template>
+  <FzSelect
+    v-model="selected"
+    label="Required Field"
+    :options="options"
+    placeholder="Select an option..."
+    required
+    :error="hasError"
+    @fzselect:select="validate"
+  >
+    <template #error>
+      This field is required
+    </template>
+    <template #help>
+      Please select an option from the list
+    </template>
+  </FzSelect>
 </template>
 ```
 
 ### With Icons
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzSelect } from '@fiscozen/select'
+
+const selected = ref<string>()
+
+const options = [
+  { label: 'Search Result 1', value: '1' },
+  { label: 'Search Result 2', value: '2' }
+]
+
+const handleRightIconClick = () => {
+  console.log('Right icon clicked')
+}
+</script>
+
 <template>
   <FzSelect
     v-model="selected"
-    :options="options"
     label="Search"
+    :options="options"
+    placeholder="Type to search..."
     leftIcon="magnifying-glass"
+    leftIconVariant="fas"
+    rightIcon="filter"
+    rightIconVariant="far"
+  />
+</template>
+```
+
+### With Right Icon Button
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzSelect } from '@fiscozen/select'
+
+const selected = ref<string>()
+
+const options = [
+  { label: 'Option 1', value: '1' },
+  { label: 'Option 2', value: '2' }
+]
+
+const handleRightIconClick = () => {
+  selected.value = undefined // Clear selection
+}
+</script>
+
+<template>
+  <FzSelect
+    v-model="selected"
+    label="Select"
+    :options="options"
+    placeholder="Choose an option..."
+    filtrable="false"
     rightIcon="xmark"
     :rightIconButton="true"
-    @fzselect:right-icon-click="clearSelection"
+    rightIconButtonVariant="secondary"
+    @fzselect:right-icon-click="handleRightIconClick"
   />
 </template>
 ```
@@ -274,225 +513,148 @@ const options = [
 ### Grouped Options
 
 ```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="groupedOptions"
-    label="Category"
-  />
-</template>
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzSelect, FzSelectOptionsProps } from '@fiscozen/select'
 
-<script setup>
-const groupedOptions = [
+const selected = ref<string>()
+
+const groupedOptions: FzSelectOptionsProps[] = [
   { kind: 'label', label: 'Fruits' },
-  { value: 'apple', label: 'Apple' },
-  { value: 'banana', label: 'Banana' },
+  { label: 'Apple', value: 'apple' },
+  { label: 'Banana', value: 'banana' },
   { kind: 'label', label: 'Vegetables' },
-  { value: 'carrot', label: 'Carrot' },
-  { value: 'lettuce', label: 'Lettuce' }
+  { label: 'Carrot', value: 'carrot' },
+  { label: 'Lettuce', value: 'lettuce' }
 ]
 </script>
-```
 
-### Error State
-
-```vue
 <template>
   <FzSelect
     v-model="selected"
-    :options="options"
-    label="Required Field"
-    :required="true"
-    :error="hasError"
-  >
-    <template #error>
-      Please select an option
-    </template>
-  </FzSelect>
-</template>
-```
-
-### Help Text
-
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    label="Select"
-  >
-    <template #help>
-      Choose the best option for your needs
-    </template>
-  </FzSelect>
-</template>
-```
-
-### Floating Label Variant
-
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    variant="floating-label"
-    placeholder="Select..."
-    environment="frontoffice"
+    label="Category"
+    :options="groupedOptions"
   />
 </template>
 ```
-
-### Environment Styling
-
-The component supports two environments with different styling:
-
-```vue
-<template>
-  <!-- Backoffice: 32px height -->
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    environment="backoffice"
-    label="Backoffice Select"
-  />
-  
-  <!-- Frontoffice: 44px height -->
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    environment="frontoffice"
-    label="Frontoffice Select"
-  />
-</template>
-```
-
-### Readonly State
-
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="options"
-    label="Readonly Select"
-    readonly
-  />
-</template>
-```
-
-The `readonly` prop applies the same visual style as `disabled` (grey-100 background/border, grey-300 text) but maintains the same semantic meaning. Keyboard navigation is disabled when readonly.
 
 ### Disabled Options
 
 ```vue
-<script setup>
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzSelect } from '@fiscozen/select'
+
+const selected = ref<string>()
+
 const options = [
-  { value: '1', label: 'Available' },
-  { value: '2', label: 'Disabled', disabled: true },
-  { value: '3', label: 'Read-only', readonly: true }
+  { label: 'Available', value: '1' },
+  { label: 'Disabled', value: '2', disabled: true },
+  { label: 'Read-only', value: '3', readonly: true }
 ]
 </script>
-```
 
-### Clearable Selection
-
-```vue
 <template>
   <FzSelect
     v-model="selected"
+    label="Select"
     :options="options"
-    label="Clearable Select"
-    :clearable="true"
-  />
-</template>
-```
-
-The `clearable` prop (default: `true`) allows users to deselect an option by clicking it again. Set to `false` to prevent clearing.
-
-### Custom No Results Message
-
-```vue
-<template>
-  <FzSelect
-    v-model="selected"
-    :options="filteredOptions"
-    label="Search"
-    noResultsMessage="No matches found. Try a different search term."
   />
 </template>
 ```
 
 ## Accessibility
 
-The component is fully accessible and WCAG 2.1 AA compliant:
+FzSelect is built with accessibility in mind and follows WCAG 2.1 AA standards:
 
-- **Keyboard navigation**: Full keyboard support for opening, navigating, and selecting options
-- **Screen reader support**: Proper ARIA attributes and live region announcements
-- **Semantic HTML**: Uses `role="listbox"` and `role="option"` for proper semantics
-- **Focus management**: Automatic focus handling on open/close with focus trap
-- **State announcements**: Screen readers announce open/closed state, selected option, and focused option
+- **Keyboard Navigation**: Full keyboard support for navigating and selecting options. All options (including disabled/readonly) can be traversed for WCAG compliance
+- **ARIA Attributes**: Complete ARIA implementation (aria-expanded, aria-haspopup, aria-controls, aria-activedescendant)
+- **Focus Management**: Clear focus indicators, logical tab order, and focus trap within dropdown
+- **Required Fields**: Properly marked with `required` attribute and ARIA labels
+- **Error States**: Error messages are associated with inputs using `aria-describedby`
+- **Screen Reader Support**: All interactive elements are properly announced with live regions
+- **Role Attributes**: Proper roles (combobox, listbox, option) for screen reader navigation
 
-### Keyboard Navigation
-
-The component supports comprehensive keyboard navigation:
+### Keyboard Shortcuts
 
 **Opener Button:**
-- `Enter` / `Space`: Open dropdown (if closed) or close dropdown (if open)
+- `Enter` / `Space`: Open dropdown (if closed)
 - `Escape`: Close dropdown (if open)
 - `Tab`: Move focus to next element
 - `Shift+Tab`: Move focus to previous element
 
 **Options Container (when dropdown is open):**
-- `ArrowDown`: Move focus to next option (wraps to first on last option)
-- `ArrowUp`: Move focus to previous option (wraps to last on first option)
-- `Home`: Move focus to first option
+- `ArrowDown`: Move focus to next option (wraps to first on last option, traverses all options including disabled/readonly)
+- `ArrowUp`: Move focus to previous option (wraps to last on first option, traverses all options including disabled/readonly)
+- `Home`: Move focus to first option (or selected option if present)
 - `End`: Move focus to last option
-- `Enter` / `Space`: Select focused option and close dropdown
+- `Enter` / `Space`: Select focused option and close dropdown (only if option is not disabled/readonly)
 - `Escape`: Close dropdown without selecting
-- `Tab`: Move focus to next option (wraps to first on last option) - focus trap active
-- `Shift+Tab`: Move focus to previous option (wraps to last on first option) - focus trap active
+- `Tab`: Move focus to next option (wraps to first on last option, traverses all options) - focus trap active
+- `Shift+Tab`: Move focus to previous option (wraps to last on first option, traverses all options) - focus trap active
 
-**Readonly/Disabled States:**
-- When `readonly` or `disabled` is `true`, keyboard navigation is disabled
-- Focus trap is not active when component is readonly or disabled
+**Input Field (when filtrable and dropdown is open):**
+- Type: Filter options as you type (opens dropdown if closed)
+- `Tab`: Move focus from input to selected option (or first option if none selected)
+- All option navigation keys work as above when focus is in options list
 
-### Focus Management
+## Best Practices
 
-- **On open**: Focus automatically moves to first selectable option (or selected option if present)
-- **On close**: Focus automatically returns to opener button
-- **Focus trap**: When dropdown is open, Tab/Shift+Tab navigation is trapped within the options list
-- **Dynamic updates**: Focus management handles prop changes (readonly/disabled) gracefully
+### When to Use
 
-### Screen Reader Support
+- **Search/Filter Scenarios**: When users need to search through a large list of options
+- **Autocomplete**: When you want to provide suggestions as the user types
+- **Remote Data**: When options need to be loaded from an API based on user input
+- **Large Lists**: When you have many options (100+) and need lazy loading
 
-The component provides rich semantic information to assistive technologies:
+### When NOT to Use
 
-- **ARIA attributes**: All interactive elements have proper ARIA roles and states
-- **Live announcements**: Screen readers announce focused option via `aria-activedescendant`
-- **State changes**: Open/closed state and selection changes are announced
-- **Label associations**: Proper `aria-labelledby` relationships for form integration
+- **Small Fixed Lists**: For small, fixed lists (less than 10 items), use `filtrable: false` to disable filtering
+- **Simple Text Input**: If you don't need filtering or selection, use FzInput instead
+- **Multi-select**: This component supports single selection only
 
-### ARIA Attributes
+### Performance Tips
 
-**Opener Button:**
-- `aria-expanded`: Indicates dropdown open/closed state (`"true"` or `"false"`)
-- `aria-haspopup="listbox"`: Declares dropdown type
-- `aria-labelledby`: Links to label element (when label is provided)
-- `aria-label`: Provides accessible name when label is not present
-- `aria-required`: Indicates required fields (`"true"` or `"false"`)
-- `aria-invalid`: Indicates error state (`"true"` or `"false"`)
-- `aria-disabled`: Indicates disabled/readonly state (`"true"` or `"false"`)
+- Use `delayTime` to control debounce timing for remote loading scenarios (default 500ms)
+- For large option lists (100+ items), lazy loading is automatic (adjust `optionsToShow` if needed)
+- Use `filterFn` for custom filtering logic if you need more control than Fuse.js provides
+- Use `filtrable: false` if you're handling all filtering through remote loading
+- The component automatically handles lazy loading - no manual optimization needed
+- Use `fuzzySearch: false` for faster filtering with simple substring matching (no typo tolerance)
 
-**Options Container:**
-- `role="listbox"`: Declares the container as a listbox
-- `aria-labelledby`: Links to opener button for context
-- `aria-activedescendant`: Points to currently focused option (dynamically updated)
+### Common Patterns
 
-**Option Elements (FzAction components):**
-- `role="option"`: Declares each option as a listbox option
-- `aria-selected`: Indicates selected option (`"true"` or `"false"`)
-- `aria-disabled`: Indicates disabled/readonly option (`"true"` or `"false"`)
-- Unique `id` attributes for `aria-activedescendant` reference
-- `tabindex`: 0 when focused, -1 otherwise (for keyboard navigation)
-- `focused`: Visual focus state managed by FzSelect
+**Remote Loading Pattern:**
+```vue
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { FzSelect, FzSelectOptionsProps } from '@fiscozen/select'
 
-**Note:** Options are rendered using `FzAction` components from `@fiscozen/action`, which handle their own accessibility attributes and keyboard interactions. FzSelect manages the overall listbox behavior and focus state.
+const selected = ref<string>()
+const options = ref<FzSelectOptionsProps[]>([])
+
+const loadOptions = async (searchText?: string): Promise<FzSelectOptionsProps[]> => {
+  const response = await fetch(`/api/search?q=${searchText || ''}`)
+  const data = await response.json()
+  return data.map((item: { name: string; id: string }) => ({
+    label: item.name,
+    value: item.id
+  }))
+}
+
+// Load initial options
+loadOptions().then(result => {
+  options.value = result
+})
+</script>
+
+<template>
+  <FzSelect
+    v-model="selected"
+    label="Search"
+    :options="options"
+    :filterFn="loadOptions"
+    placeholder="Type to search..."
+  />
+</template>
+```
