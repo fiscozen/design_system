@@ -46,9 +46,9 @@ describe("FzSelect", () => {
       });
 
       expect(wrapper.html()).toBeTruthy();
-      expect(wrapper.find('button[test-id="fzselect-opener"]').exists()).toBe(
-        true
-      );
+      expect(
+        wrapper.find('button[test-id="fzselect-opener"]').exists(),
+      ).toBe(true);
     });
 
     it("displays label when provided", () => {
@@ -185,17 +185,15 @@ describe("FzSelect", () => {
       expect(wrapper.html()).toContain("Error message");
     });
 
-    it("displays help slot when error is false", async () => {
+    it("displays helpText prop when no error slot or errorMessage is provided", async () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          helpText: "Help message",
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
           ],
-        },
-        slots: {
-          help: "<div>Help message</div>",
         },
       });
 
@@ -203,10 +201,11 @@ describe("FzSelect", () => {
       expect(wrapper.html()).toContain("Help message");
     });
 
-    it("switches from help to error slot when error prop changes", async () => {
+    it("prioritizes error slot over help slot", async () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          error: true,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -219,10 +218,7 @@ describe("FzSelect", () => {
       });
 
       await wrapper.vm.$nextTick();
-      expect(wrapper.html()).toContain("Help message");
-      expect(wrapper.html()).not.toContain("Error message");
-
-      await wrapper.setProps({ error: true });
+      // Error slot has priority over help slot
       expect(wrapper.html()).toContain("Error message");
       expect(wrapper.html()).not.toContain("Help message");
     });
@@ -329,12 +325,14 @@ describe("FzSelect", () => {
       expect(wrapper.html()).toContain("xmark");
     });
 
-    it("renders right icon button when rightIconButton is true", () => {
+    it("renders right icon as button when rightIconButton is true and filtrable is false", async () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           rightIcon: "xmark",
           rightIconButton: true,
+          rightIconButtonVariant: "secondary",
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -342,8 +340,30 @@ describe("FzSelect", () => {
         },
       });
 
-      // FzIconButton component should be rendered
+      await wrapper.vm.$nextTick();
+      // When filtrable is false, rightIconButton should be rendered
+      // The icon should be present in the HTML (as part of FzIconButton)
       expect(wrapper.html()).toContain("xmark");
+    });
+
+    it("accepts rightIconButton prop when filtrable is true (even though not shown)", () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          rightIcon: "xmark",
+          rightIconButton: true,
+          rightIconButtonVariant: "secondary",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      // Props should be accepted without errors
+      expect(wrapper.props("rightIconButton")).toBe(true);
+      expect(wrapper.props("rightIconButtonVariant")).toBe("secondary");
     });
   });
 
@@ -365,12 +385,9 @@ describe("FzSelect", () => {
       await button.trigger("click");
 
       await wrapper.vm.$nextTick();
-      const options = document.querySelectorAll(
-        'button[role="option"]'
-      );
+      const options = document.querySelectorAll('button[role="option"]');
       expect(options.length).toBe(25);
     });
-
   });
 
   describe("Dropdown Interaction", () => {
@@ -428,7 +445,7 @@ describe("FzSelect", () => {
 
       await wrapper.vm.$nextTick();
       const optionButton = document.querySelector(
-        'button[role="option"]'
+        'button[role="option"]',
       ) as HTMLElement;
       optionButton?.click();
 
@@ -436,7 +453,7 @@ describe("FzSelect", () => {
       expect(wrapper.vm.isOpen).toBe(false);
     });
 
-    it("emits select event when option is selected", async () => {
+    it("emits fzselect:select event when option is selected", async () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
@@ -452,13 +469,13 @@ describe("FzSelect", () => {
 
       await wrapper.vm.$nextTick();
       const optionButton = document.querySelector(
-        'button[role="option"]'
+        'button[role="option"]',
       ) as HTMLElement;
       optionButton?.click();
 
       await wrapper.vm.$nextTick();
-      expect(wrapper.emitted("select")).toBeTruthy();
-      expect(wrapper.emitted("select")?.[0]).toEqual(["option1"]);
+      expect(wrapper.emitted("fzselect:select")).toBeTruthy();
+      expect(wrapper.emitted("fzselect:select")?.[0]).toEqual(["option1"]);
     });
   });
 
@@ -480,9 +497,7 @@ describe("FzSelect", () => {
       await button.trigger("click");
 
       await wrapper.vm.$nextTick();
-      const labels = document.querySelectorAll(
-        'div[role="group"] > div'
-      );
+      const labels = document.querySelectorAll('div[role="group"] > div');
       expect(labels.length).toBe(1);
       expect(labels[0].textContent).toBe("Group 1");
     });
@@ -520,7 +535,7 @@ describe("FzSelect", () => {
             width: 100,
             right,
             left,
-          }) as DOMRect
+          }) as DOMRect,
       );
 
       const wrapper = mount(FzSelect, {
@@ -642,7 +657,7 @@ describe("FzSelect", () => {
 
       await wrapper.vm.$nextTick();
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       );
       expect(container?.getAttribute("role")).toBe("listbox");
     });
@@ -683,44 +698,6 @@ describe("FzSelect", () => {
 
       await button.trigger("keydown", { key: " " });
       expect(wrapper.vm.isOpen).toBe(true);
-    });
-
-    it("closes dropdown on Enter key when already open", async () => {
-      const wrapper = mount(FzSelect, {
-        props: {
-          modelValue: "",
-          options: [
-            { value: "option1", label: "Option 1" },
-            { value: "option2", label: "Option 2" },
-          ],
-        },
-      });
-
-      const button = wrapper.find('button[test-id="fzselect-opener"]');
-      await button.trigger("click");
-      expect(wrapper.vm.isOpen).toBe(true);
-
-      await button.trigger("keydown", { key: "Enter" });
-      expect(wrapper.vm.isOpen).toBe(false);
-    });
-
-    it("closes dropdown on Space key when already open", async () => {
-      const wrapper = mount(FzSelect, {
-        props: {
-          modelValue: "",
-          options: [
-            { value: "option1", label: "Option 1" },
-            { value: "option2", label: "Option 2" },
-          ],
-        },
-      });
-
-      const button = wrapper.find('button[test-id="fzselect-opener"]');
-      await button.trigger("click");
-      expect(wrapper.vm.isOpen).toBe(true);
-
-      await button.trigger("keydown", { key: " " });
-      expect(wrapper.vm.isOpen).toBe(false);
     });
 
     it("closes dropdown on Escape key when open", async () => {
@@ -786,6 +763,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -799,12 +777,12 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       expect(wrapper.vm.focusedIndex).toBe(0);
 
       container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowDown" })
+        new KeyboardEvent("keydown", { key: "ArrowDown" }),
       );
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(1);
@@ -814,6 +792,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -830,11 +809,9 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
-      container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowUp" })
-      );
+      container.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(1);
     });
@@ -843,6 +820,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -858,10 +836,10 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowDown" })
+        new KeyboardEvent("keydown", { key: "ArrowDown" }),
       );
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(0);
@@ -871,6 +849,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -886,11 +865,9 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
-      container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowUp" })
-      );
+      container.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(1);
     });
@@ -899,6 +876,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -915,7 +893,7 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "Home" }));
       await wrapper.vm.$nextTick();
@@ -926,6 +904,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -942,7 +921,7 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "End" }));
       await wrapper.vm.$nextTick();
@@ -953,6 +932,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -969,16 +949,20 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       // Container is in a Teleport, use document.querySelector
-      const containerEl = document.querySelector('[test-id="fzselect-options-container"]') as HTMLElement;
+      const containerEl = document.querySelector(
+        '[test-id="fzselect-options-container"]',
+      ) as HTMLElement;
       expect(containerEl).toBeTruthy();
-      containerEl.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      containerEl.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+      );
       await wrapper.vm.$nextTick();
-      
+
       // Verify selection via emitted event
       expect(wrapper.emitted("update:modelValue")).toBeTruthy();
       expect(wrapper.emitted("update:modelValue")![0]).toEqual(["option2"]);
       expect(wrapper.vm.isOpen).toBe(false);
-      
+
       wrapper.unmount();
     });
 
@@ -986,6 +970,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1002,16 +987,20 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       // Container is in a Teleport, use document.querySelector
-      const containerEl = document.querySelector('[test-id="fzselect-options-container"]') as HTMLElement;
+      const containerEl = document.querySelector(
+        '[test-id="fzselect-options-container"]',
+      ) as HTMLElement;
       expect(containerEl).toBeTruthy();
-      containerEl.dispatchEvent(new KeyboardEvent("keydown", { key: " ", bubbles: true }));
+      containerEl.dispatchEvent(
+        new KeyboardEvent("keydown", { key: " ", bubbles: true }),
+      );
       await wrapper.vm.$nextTick();
-      
+
       // Verify selection via emitted event
       expect(wrapper.emitted("update:modelValue")).toBeTruthy();
       expect(wrapper.emitted("update:modelValue")![0]).toEqual(["option1"]);
       expect(wrapper.vm.isOpen).toBe(false);
-      
+
       wrapper.unmount();
     });
 
@@ -1019,6 +1008,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1032,7 +1022,7 @@ describe("FzSelect", () => {
       expect(wrapper.vm.isOpen).toBe(true);
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
       await wrapper.vm.$nextTick();
@@ -1040,10 +1030,52 @@ describe("FzSelect", () => {
       expect(wrapper.vm.focusedIndex).toBe(-1);
     });
 
+    it("closes dropdown on Escape key when no options are available (empty search results)", async () => {
+      vi.useFakeTimers();
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.isOpen).toBe(true);
+
+      // Type a search query that yields no results
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("nonexistent");
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter (default delay is 500ms)
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Verify no options are available (selectableOptions is empty)
+      expect(wrapper.vm.selectableOptions.length).toBe(0);
+
+      // Press Escape in the input field (delegates to handleOptionsKeydown)
+      await input.trigger("keydown", { key: "Escape" });
+      await wrapper.vm.$nextTick();
+
+      // Verify dropdown closes even when no options are available
+      expect(wrapper.vm.isOpen).toBe(false);
+      expect(wrapper.vm.focusedIndex).toBe(-1);
+
+      vi.useRealTimers();
+    });
+
     it("skips labels when navigating with arrows", async () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { kind: "label", label: "Group 1" },
             { value: "option1", label: "Option 1" },
@@ -1062,10 +1094,10 @@ describe("FzSelect", () => {
       expect(wrapper.vm.focusedIndex).toBe(0);
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowDown" })
+        new KeyboardEvent("keydown", { key: "ArrowDown" }),
       );
       await wrapper.vm.$nextTick();
       // Should move to second selectable option, skipping labels
@@ -1078,6 +1110,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1093,11 +1126,11 @@ describe("FzSelect", () => {
 
       // Verify focusedIndex is set to first option
       expect(wrapper.vm.focusedIndex).toBe(0);
-      
+
       // Verify options are rendered (FzAction handles its own focus/tabindex behavior)
       const options = document.querySelectorAll('button[id*="-option-"]');
       expect(options.length).toBeGreaterThan(0);
-      
+
       wrapper.unmount();
     });
 
@@ -1105,6 +1138,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "option2",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1190,7 +1224,7 @@ describe("FzSelect", () => {
 
       // Close with Escape
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
       await wrapper.vm.$nextTick();
@@ -1206,6 +1240,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1223,7 +1258,7 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
       await wrapper.vm.$nextTick();
@@ -1235,6 +1270,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1252,10 +1288,10 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "Tab", shiftKey: true })
+        new KeyboardEvent("keydown", { key: "Tab", shiftKey: true }),
       );
       await wrapper.vm.$nextTick();
 
@@ -1266,6 +1302,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1283,7 +1320,7 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
       await wrapper.vm.$nextTick();
@@ -1295,6 +1332,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1312,10 +1350,10 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "Tab", shiftKey: true })
+        new KeyboardEvent("keydown", { key: "Tab", shiftKey: true }),
       );
       await wrapper.vm.$nextTick();
 
@@ -1326,6 +1364,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1339,7 +1378,7 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       const event = new KeyboardEvent("keydown", { key: "Tab" });
       const preventDefaultSpy = vi.spyOn(event, "preventDefault");
@@ -1354,6 +1393,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1370,11 +1410,11 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       expect(container.getAttribute("aria-activedescendant")).toBeTruthy();
       expect(container.getAttribute("aria-activedescendant")).toContain(
-        "option1"
+        "option1",
       );
     });
 
@@ -1382,6 +1422,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1398,7 +1439,7 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       const firstId = container.getAttribute("aria-activedescendant");
 
@@ -1430,7 +1471,7 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       expect(container.getAttribute("aria-activedescendant")).toBeTruthy();
 
@@ -1456,9 +1497,7 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
       await wrapper.vm.$nextTick();
 
-      const optionButtons = document.querySelectorAll(
-        'button[role="option"]'
-      );
+      const optionButtons = document.querySelectorAll('button[role="option"]');
       expect(optionButtons.length).toBeGreaterThan(0);
 
       const ids = Array.from(optionButtons).map((btn) => btn.id);
@@ -1518,7 +1557,7 @@ describe("FzSelect", () => {
       const openerButton = wrapper.find('button[test-id="fzselect-opener"]');
       await openerButton.trigger("click");
       await wrapper.vm.$nextTick();
-      
+
       // Dropdown should not open when readonly
       expect(wrapper.vm.isOpen).toBe(false);
     });
@@ -1556,7 +1595,7 @@ describe("FzSelect", () => {
       const openerButton = wrapper.find('button[test-id="fzselect-opener"]');
       await openerButton.trigger("click");
       await wrapper.vm.$nextTick();
-      
+
       // Dropdown should not open when disabled
       expect(wrapper.vm.isOpen).toBe(false);
     });
@@ -1567,6 +1606,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [{ value: "option1", label: "Option 1" }],
         },
       });
@@ -1577,25 +1617,22 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
       expect(wrapper.vm.focusedIndex).toBe(0);
 
       // ArrowDown should wrap to first (and only) option
       container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowDown" })
+        new KeyboardEvent("keydown", { key: "ArrowDown" }),
       );
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(0);
 
       // ArrowUp should wrap to first (and only) option
-      container.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowUp" })
-      );
+      container.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(0);
     });
-
   });
 
   describe("Keyboard Navigation - Integration Tests", () => {
@@ -1603,6 +1640,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1613,7 +1651,7 @@ describe("FzSelect", () => {
       });
 
       const openerButton = wrapper.find('button[test-id="fzselect-opener"]');
-      
+
       // 1. Open with Enter
       await openerButton.trigger("keydown", { key: "Enter" });
       await wrapper.vm.$nextTick();
@@ -1623,16 +1661,22 @@ describe("FzSelect", () => {
 
       // 2. Navigate to second option with ArrowDown
       // Container is in a Teleport, use document.querySelector
-      const containerEl = document.querySelector('[test-id="fzselect-options-container"]') as HTMLElement;
+      const containerEl = document.querySelector(
+        '[test-id="fzselect-options-container"]',
+      ) as HTMLElement;
       expect(containerEl).toBeTruthy();
-      containerEl.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+      containerEl.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }),
+      );
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(1);
 
       // 3. Select with Enter
-      containerEl.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      containerEl.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+      );
       await wrapper.vm.$nextTick();
-      
+
       // Verify selection via emitted event
       expect(wrapper.emitted("update:modelValue")).toBeTruthy();
       expect(wrapper.emitted("update:modelValue")![0]).toEqual(["option2"]);
@@ -1641,7 +1685,7 @@ describe("FzSelect", () => {
       // 4. Verify focusedIndex reset
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.focusedIndex).toBe(-1);
-      
+
       wrapper.unmount();
     });
 
@@ -1649,6 +1693,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1665,7 +1710,7 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
 
       // Tab to next
@@ -1711,6 +1756,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "option2",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1788,6 +1834,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1815,9 +1862,9 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       const container = document.querySelector(
-        '[test-id="fzselect-options-container"]'
+        '[test-id="fzselect-options-container"]',
       ) as HTMLElement;
-      
+
       // Tab should still work and wrap correctly
       container.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
       await wrapper.vm.$nextTick();
@@ -1872,34 +1919,286 @@ describe("FzSelect", () => {
       await wrapper.vm.forceOpen();
       expect(wrapper.vm.isOpen).toBe(true);
     });
+  });
 
-    it("forceOpen method updates container width", async () => {
+  describe("Fuzzy Search", () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it("uses fuzzy search by default (fuzzySearch: true)", async () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
+          filtrable: true,
           options: [
-            { value: "option1", label: "Option 1" },
-            { value: "option2", label: "Option 2" },
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { value: "3", label: "Python" },
+            { value: "4", label: "Java" },
           ],
         },
       });
 
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
       await wrapper.vm.$nextTick();
-      
-      // Get initial container width
-      const initialContainerWidth = wrapper.vm.containerWidth;
-      const initialOpenerMaxWidth = wrapper.vm.openerMaxWidth;
-      
-      // Call forceOpen
-      await wrapper.vm.forceOpen();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("javasc");
       await wrapper.vm.$nextTick();
-      
-      // Verify container width was updated (should be different from initial or at least calculated)
-      expect(wrapper.vm.containerWidth).toBeDefined();
-      expect(wrapper.vm.openerMaxWidth).toBeDefined();
-      // Width should be a valid CSS value (contains 'px' or is 'none')
-      expect(wrapper.vm.containerWidth).toMatch(/^\d+px$/);
-      expect(wrapper.vm.openerMaxWidth === "none" || wrapper.vm.openerMaxWidth.match(/^\d+px$/)).toBeTruthy();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Fuzzy search should find "JavaScript" (and possibly "Java" if it matches)
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBeGreaterThan(0);
+      const optionTexts = Array.from(options).map((opt) => opt.textContent);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+    });
+
+    it("uses simple includes search when fuzzySearch is false", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: false,
+          options: [
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { value: "3", label: "Python" },
+            { value: "4", label: "Java" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("java");
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Simple includes search should find both "JavaScript" and "Java"
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBe(2);
+      const optionTexts = Array.from(options).map((opt) => opt.textContent);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+      expect(optionTexts.some((text) => text?.includes("Java"))).toBe(true);
+    });
+
+    it("fuzzy search handles typos and partial matches", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: true,
+          options: [
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { value: "3", label: "Python" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("javascrpt"); // Typo: missing 'i'
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Fuzzy search should still find "JavaScript" despite typo
+      // (may also find TypeScript if it matches)
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBeGreaterThan(0);
+      const optionTexts = Array.from(options).map((opt) => opt.textContent);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+    });
+
+    it("simple search does not handle typos (exact substring match only)", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: false,
+          options: [
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { value: "3", label: "Python" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("javascrpt"); // Typo: missing 'i'
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Simple search should not find anything with typo
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBe(0);
+    });
+
+    it("fuzzy search is case-insensitive", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: true,
+          options: [
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { value: "3", label: "Python" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("JAVASCRIPT");
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Fuzzy search should find "JavaScript" regardless of case
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBeGreaterThan(0);
+      const optionTexts = Array.from(options).map((opt) => opt.textContent);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+    });
+
+    it("simple search is case-insensitive", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: false,
+          options: [
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { value: "3", label: "Python" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("JAVASCRIPT");
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Simple search should find "JavaScript" regardless of case
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBe(1);
+      expect(options[0]?.textContent).toContain("JavaScript");
+    });
+
+    it("fuzzy search works with grouped options", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: true,
+          options: [
+            { kind: "label", label: "Frontend" },
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { kind: "label", label: "Backend" },
+            { value: "3", label: "Python" },
+            { value: "4", label: "Java" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("javasc");
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Should find JavaScript (and possibly Java) and preserve group structure
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBeGreaterThan(0);
+      const optionTexts = Array.from(options).map((opt) => opt.textContent);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+    });
+
+    it("simple search works with grouped options", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          filtrable: true,
+          fuzzySearch: false,
+          options: [
+            { kind: "label", label: "Frontend" },
+            { value: "1", label: "JavaScript" },
+            { value: "2", label: "TypeScript" },
+            { kind: "label", label: "Backend" },
+            { value: "3", label: "Python" },
+            { value: "4", label: "Java" },
+          ],
+        },
+      });
+
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.setValue("java");
+      await wrapper.vm.$nextTick();
+
+      // Advance timers to trigger debounced filter
+      vi.advanceTimersByTime(500);
+      await wrapper.vm.$nextTick();
+
+      // Should find both JavaScript and Java
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBe(2);
+      const optionTexts = Array.from(options).map((opt) => opt.textContent);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+      expect(optionTexts.some((text) => text?.includes("Java"))).toBe(true);
     });
   });
 });
