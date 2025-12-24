@@ -2,9 +2,8 @@
 /**
  * FzSelectHelpError Component
  *
- * Presentational component for the FzSelect help text and error message.
- * Renders either error message or help text based on error state.
- * Handles its own styling based on disabled/readonly state.
+ * Presentational component for help text and error messages.
+ * Error slot takes priority over help slot.
  *
  * @component
  * @internal
@@ -15,19 +14,9 @@ import type { FzSelectHelpErrorProps } from "./types";
 
 const props = defineProps<FzSelectHelpErrorProps>();
 
-/**
- * Base text classes
- */
 const baseTextClasses = "text-base leading-5";
-
-/**
- * Computed state flag
- */
 const isInteractive = computed(() => !props.disabled && !props.readonly);
 
-/**
- * Computes help text classes based on interactive state
- */
 const helpClass = computed(() => {
   const baseClasses = [baseTextClasses];
 
@@ -47,7 +36,7 @@ const helpClass = computed(() => {
 </script>
 
 <template>
-  <FzAlert v-if="error && $slots.error" type="error" alertStyle="simple">
+  <FzAlert v-if="error && $slots.error" tone="error" alertStyle="simple">
     <slot name="error"></slot>
   </FzAlert>
   <span v-else-if="$slots.help" :class="helpClass">

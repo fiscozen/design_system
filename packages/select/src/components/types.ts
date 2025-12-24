@@ -1,9 +1,10 @@
 /**
  * Type definitions for FzSelect internal components.
  *
- * @module @fiscozen/select/components/types
+ * @module @fiscozen/typeahead/components/types
  */
 
+import { IconVariant } from "@fiscozen/icons";
 import { IconButtonVariant } from "@fiscozen/button";
 import { FzSelectOptionProps, FzSelectOptionsProps } from "../types";
 
@@ -26,15 +27,15 @@ export interface FzSelectLabelProps {
    */
   label: string;
   /**
-   * Whether the select is required
+   * Whether the typeahead is required
    */
   required?: boolean;
   /**
-   * Whether the select is disabled
+   * Whether the typeahead is disabled
    */
   disabled?: boolean;
   /**
-   * Whether the select is readonly
+   * Whether the typeahead is readonly
    */
   readonly?: boolean;
 }
@@ -70,19 +71,19 @@ export interface FzSelectButtonProps {
    */
   isOpen: boolean;
   /**
-   * Whether select is required
+   * Whether typeahead is required
    */
   required?: boolean;
   /**
-   * Whether select is disabled
+   * Whether typeahead is disabled
    */
   disabled?: boolean;
   /**
-   * Whether select is readonly
+   * Whether typeahead is readonly
    */
   readonly?: boolean;
   /**
-   * Whether select is in error state
+   * Whether typeahead is in error state
    */
   error?: boolean;
   /**
@@ -90,21 +91,17 @@ export interface FzSelectButtonProps {
    */
   leftIcon?: string;
   /**
+   * Visual style variant for left icon (solid, regular, light, etc.)
+   */
+  leftIconVariant?: IconVariant;
+  /**
    * Right icon name
    */
   rightIcon?: string;
   /**
-   * Whether right icon is a button
+   * Visual style variant for right icon (solid, regular, light, etc.)
    */
-  rightIconButton?: boolean;
-  /**
-   * Right icon button variant
-   */
-  rightIconButtonVariant?: IconButtonVariant;
-  /**
-   * Visual variant (normal or floating-label)
-   */
-  variant?: "normal" | "floating-label";
+  rightIconVariant?: IconVariant;
   /**
    * Environment (backoffice or frontoffice)
    */
@@ -113,6 +110,28 @@ export interface FzSelectButtonProps {
    * Additional CSS classes
    */
   pickerClass?: string;
+  /**
+   * If true, writing in the input will filter the options
+   * @default true
+   */
+  filtrable?: boolean;
+  /**
+   * Visual variant (normal or floating-label)
+   * Only applicable when filtrable is false.
+   * @default 'normal'
+   */
+  variant?: "normal" | "floating-label";
+  /**
+   * Whether right icon is a button.
+   * @default false
+   */
+  rightIconButton?: boolean;
+  /**
+   * Right icon button variant.
+   * Only applicable when rightIconButton is true.
+   * @default 'invisible'
+   */
+  rightIconButtonVariant?: IconButtonVariant;
 }
 
 /**
@@ -122,15 +141,15 @@ export interface FzSelectButtonProps {
  */
 export interface FzSelectHelpErrorProps {
   /**
-   * Whether select is in error state
+   * Whether typeahead is in error state
    */
   error?: boolean;
   /**
-   * Whether select is disabled
+   * Whether typeahead is disabled
    */
   disabled?: boolean;
   /**
-   * Whether select is readonly
+   * Whether typeahead is readonly
    */
   readonly?: boolean;
 }
@@ -146,9 +165,10 @@ export interface FzSelectOptionsListProps {
    */
   openerId: string;
   /**
-   * List of visible options to render
+   * List of visible options to render.
+   * If undefined, shows a loading indicator (FzProgress).
    */
-  visibleOptions: FzSelectOptionsProps[];
+  visibleOptions: FzSelectOptionsProps[] | undefined;
   /**
    * Value of the currently focused option (for keyboard navigation)
    */
