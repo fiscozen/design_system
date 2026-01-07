@@ -49,10 +49,12 @@ export type FzCardProps = {
 
 type FzCardButton = {
   label: string;
+  disabled?: boolean;
 };
 
 type FzCardIconButton = {
   icon: string;
+  disabled?: boolean;
 };
 
 /**
