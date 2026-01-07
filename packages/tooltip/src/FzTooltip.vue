@@ -348,7 +348,7 @@
     :is-open="isOpen"
     :position="position"
     class="fz__tooltip flex h-max"
-    :contentClass="['rounded', '!p-0', 'm-4', classes, 'z-80']">
+    :contentClass="['rounded', classes, 'z-80']">
     <template #opener>
       <span
         :aria-label="props.ariaLabel"

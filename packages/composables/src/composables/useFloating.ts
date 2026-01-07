@@ -1,6 +1,330 @@
-import { FzFloatingPosition, FzRect, FzUseFloatingArgs } from '../types'
+import { FzFloatingPosition, FzRect, FzUseFloatingArgs, FzAbsolutePosition } from '../types'
 import { ref, reactive, onUnmounted, Ref, nextTick, ToRefs } from 'vue'
 import { calcRealPos, getHighestAvailableSpacePos } from '../utils'
+
+// ============================================================================
+// Types
+// ============================================================================
+
+interface DOMRefs {
+  element: HTMLElement
+  container: HTMLElement
+  opener: HTMLElement | null
+}
+
+interface Rects {
+  element: DOMRect
+  container: DOMRect
+  opener: DOMRect | null
+}
+
+interface Margins {
+  left: number
+  right: number
+  top: number
+  bottom: number
+}
+
+interface Transform {
+  x: number
+  y: number
+}
+
+interface PositionResult {
+  position: FzAbsolutePosition
+  transform: Transform
+}
+
+type PositionCalculator = (opener: DOMRect, margins: Margins) => PositionResult
+
+// ============================================================================
+// Pure Functions - DOM Reference Resolution
+// ============================================================================
+
+const resolveElement = (domRef: string | HTMLElement | null): HTMLElement | null =>
+  typeof domRef === 'string' ? document.querySelector(domRef) : domRef
+
+const getMargins = (style: CSSStyleDeclaration): Margins => ({
+  left: parseFloat(style.marginLeft),
+  right: parseFloat(style.marginRight),
+  top: parseFloat(style.marginTop),
+  bottom: parseFloat(style.marginBottom)
+})
+
+// ============================================================================
+// Position Calculators - Pure Functions using Pattern Matching
+// ============================================================================
+
+const positionCalculators: Record<string, PositionCalculator> = {
+  // Bottom positions
+  'bottom': (opener, margins) => ({
+    position: {
+      x: opener.left - margins.left + opener.width / 2,
+      y: opener.bottom
+    },
+    transform: { x: -50, y: 0 }
+  }),
+
+  'bottom-start': (opener, margins) => ({
+    position: {
+      x: opener.left - margins.left - margins.right,
+      y: opener.bottom
+    },
+    transform: { x: 0, y: 0 }
+  }),
+
+  'bottom-end': (opener) => ({
+    position: {
+      x: opener.right,
+      y: opener.bottom
+    },
+    transform: { x: -100, y: 0 }
+  }),
+
+  // Top positions
+  'top': (opener, margins) => ({
+    position: {
+      x: opener.left - margins.left + opener.width / 2,
+      y: opener.top - margins.top - margins.bottom
+    },
+    transform: { x: -50, y: -100 }
+  }),
+
+  'top-start': (opener, margins) => ({
+    position: {
+      x: opener.left - margins.left - margins.right,
+      y: opener.top - margins.top - margins.bottom
+    },
+    transform: { x: 0, y: -100 }
+  }),
+
+  'top-end': (opener, margins) => ({
+    position: {
+      x: opener.right,
+      y: opener.top - margins.top - margins.bottom
+    },
+    transform: { x: -100, y: -100 }
+  }),
+
+  // Left positions
+  'left': (opener, margins) => ({
+    position: {
+      x: opener.left - margins.left - margins.right,
+      y: opener.top - margins.top + opener.height / 2
+    },
+    transform: { x: -100, y: -50 }
+  }),
+
+  'left-start': (opener, margins) => ({
+    position: {
+      x: opener.left - margins.left - margins.right,
+      y: opener.top - margins.top - margins.bottom
+    },
+    transform: { x: -100, y: 0 }
+  }),
+
+  'left-end': (opener, margins) => ({
+    position: {
+      x: opener.left - margins.left - margins.right,
+      y: opener.bottom
+    },
+    transform: { x: -100, y: -100 }
+  }),
+
+  // Right positions
+  'right': (opener, margins) => ({
+    position: {
+      x: opener.right,
+      y: opener.top - margins.top + opener.height / 2
+    },
+    transform: { x: 0, y: -50 }
+  }),
+
+  'right-start': (opener, margins) => ({
+    position: {
+      x: opener.right,
+      y: opener.top - margins.top - margins.bottom
+    },
+    transform: { x: 0, y: 0 }
+  }),
+
+  'right-end': (opener) => ({
+    position: {
+      x: opener.right,
+      y: opener.bottom
+    },
+    transform: { x: 0, y: -100 }
+  })
+}
+
+const calculatePositionWithOpener = (
+  position: FzFloatingPosition,
+  opener: DOMRect,
+  margins: Margins
+): PositionResult => {
+  const calculator = positionCalculators[position]
+  return calculator
+    ? calculator(opener, margins)
+    : { position: { x: 0, y: 0 }, transform: { x: 0, y: 0 } }
+}
+
+const calculatePositionWithoutOpener = (
+  position: FzFloatingPosition,
+  container: DOMRect,
+  element: DOMRect
+): PositionResult => {
+  const { left, right, top, bottom, width, height } = container
+  const { width: elWidth, height: elHeight } = element
+
+  switch (position) {
+    case 'bottom':
+      return {
+        position: { x: left + width / 2, y: bottom - elHeight },
+        transform: { x: -50, y: 0 }
+      }
+
+    case 'bottom-start':
+    case 'left-end':
+      return {
+        position: { x: left, y: bottom - elHeight },
+        transform: { x: 0, y: 0 }
+      }
+
+    case 'bottom-end':
+    case 'right-end':
+      return {
+        position: { x: right - elWidth, y: bottom - elHeight },
+        transform: { x: 0, y: 0 }
+      }
+
+    case 'top':
+      return {
+        position: { x: left + (width - elWidth) / 2, y: top },
+        transform: { x: 0, y: 0 }
+      }
+
+    case 'top-start':
+    case 'left-start':
+      return {
+        position: { x: left, y: top },
+        transform: { x: 0, y: 0 }
+      }
+
+    case 'top-end':
+    case 'right-start':
+      return {
+        position: { x: right - elWidth, y: top },
+        transform: { x: 0, y: 0 }
+      }
+
+    case 'left':
+      return {
+        position: { x: left, y: top + (height - elHeight) / 2 },
+        transform: { x: 0, y: 0 }
+      }
+
+    case 'right':
+      return {
+        position: { x: right - elWidth, y: top + (height - elHeight) / 2 },
+        transform: { x: 0, y: 0 }
+      }
+
+    default:
+      return { position: { x: 0, y: 0 }, transform: { x: 0, y: 0 } }
+  }
+}
+
+// ============================================================================
+// Boundary Correction - Pure Function
+// ============================================================================
+
+const applyBoundaryCorrections = (
+  realPosition: FzAbsolutePosition,
+  element: DOMRect,
+  container: DOMRect,
+  transform: Transform
+): { position: FzAbsolutePosition; transform: Transform } => {
+  const correctedPosition = { ...realPosition }
+  const correctedTransform = { ...transform }
+
+  // Left boundary
+  if (realPosition.x < container.left) {
+    correctedPosition.x = container.left
+    correctedTransform.x = 0
+  }
+
+  // Right boundary
+  if (realPosition.x + element.width > container.right) {
+    const fixedX = container.right - element.width
+    if (fixedX > 0) {
+      correctedPosition.x = fixedX
+    }
+    correctedTransform.x = 0
+  }
+
+  // Top boundary
+  if (realPosition.y < container.top) {
+    correctedPosition.y = container.top
+    correctedTransform.y = 0
+  }
+
+  // Bottom boundary
+  if (realPosition.y + element.height > container.bottom) {
+    const fixedY = container.bottom - element.height
+    if (fixedY > 0) {
+      correctedPosition.y = fixedY
+    }
+    correctedTransform.y = 0
+  }
+
+  return { position: correctedPosition, transform: correctedTransform }
+}
+
+// ============================================================================
+// Auto Position Resolution - Pure Function
+// ============================================================================
+
+type AutoPositionType = 'auto' | 'auto-vertical' | 'auto-start' | 'auto-vertical-start' | 'auto-end' | 'auto-vertical-end'
+
+const resolveAutoPosition = (
+  autoType: AutoPositionType,
+  container: HTMLElement | null,
+  element: HTMLElement,
+  opener: HTMLElement,
+  useViewport: boolean
+): FzFloatingPosition => {
+  const containerEl = useViewport ? null : container
+
+  switch (autoType) {
+    case 'auto':
+      return getHighestAvailableSpacePos(containerEl, element, opener)
+
+    case 'auto-vertical':
+      return getHighestAvailableSpacePos(containerEl, element, opener, undefined, true)
+
+    case 'auto-start':
+      return getHighestAvailableSpacePos(containerEl, element, opener, 'start')
+
+    case 'auto-vertical-start':
+      return getHighestAvailableSpacePos(containerEl, element, opener, 'start', true)
+
+    case 'auto-end':
+      return getHighestAvailableSpacePos(containerEl, element, opener, 'end')
+
+    case 'auto-vertical-end':
+      return getHighestAvailableSpacePos(containerEl, element, opener, 'end', true)
+
+    default:
+      return 'bottom-start'
+  }
+}
+
+const isAutoPosition = (position: FzFloatingPosition): position is AutoPositionType =>
+  position.startsWith('auto')
+
+// ============================================================================
+// Main Composable
+// ============================================================================
 
 export const useFloating = (
   args: ToRefs<FzUseFloatingArgs>
@@ -13,379 +337,130 @@ export const useFloating = (
   openerRect: Ref<DOMRect | undefined>
   containerRect: Ref<DOMRect | undefined>
 } => {
-  const safeElementDomRef = ref<HTMLElement | null>(null)
-  const safeContainerDomRef = ref<HTMLElement | null>(null)
-  const safeOpenerDomRef = ref<HTMLElement | null>(null)
-  const openerRect = ref<DOMRect | undefined>()
-  const containerRect = ref<DOMRect | undefined>()
+  // State
   const position = ref<FzFloatingPosition>('auto')
-  const rect = ref<DOMRect | undefined>()
-  const float = reactive<FzRect>({
-    position: { x: 0, y: 0 }
-  })
-  const options: IntersectionObserverInit = {
+  const actualPosition = ref<FzFloatingPosition>()
+  const rect = ref<DOMRect>()
+  const openerRect = ref<DOMRect>()
+  const containerRect = ref<DOMRect>()
+  const float = reactive<FzRect>({ position: { x: 0, y: 0 } })
+
+  // Intersection Observer
+  const observerOptions: IntersectionObserverInit = {
     root: null,
     rootMargin: '0px',
     threshold: 1.0,
     ...args.element.value.intersectionOptions
   }
+  const floatObserver = ref(new IntersectionObserver(() => {}, observerOptions))
 
-  const handleIntersect = (
-    entries: IntersectionObserverEntry[],
-    observer: IntersectionObserver
-  ) => {}
-
-  const floatObserver = ref(new IntersectionObserver(handleIntersect, options))
-  const actualPosition = ref<FzFloatingPosition>()
-
-  // Helper: Resolve DOM references
-  const resolveDomReferences = () => {
-    safeElementDomRef.value = (
-      typeof args.element.value.domRef.value === 'string'
-        ? document.querySelector(args.element.value.domRef.value)
-        : args.element.value.domRef.value
-    ) as HTMLElement
-
-    if (!args.container?.value) {
-      safeContainerDomRef.value = document.body
-    } else {
-      safeContainerDomRef.value = (
-        typeof args.container.value?.domRef.value === 'string'
-          ? document.querySelector(args.container.value.domRef.value)
-          : args.container.value?.domRef.value
-      ) as HTMLElement
-      safeContainerDomRef.value ??= document.body
-    }
-
-    if (!safeElementDomRef.value) {
+  // DOM Reference Resolution
+  const resolveDOMRefs = (): DOMRefs | null => {
+    const element = resolveElement(args.element.value.domRef.value)
+    if (!element) {
       throw new Error('missing reference element for floating behavior')
     }
 
-    if (args.opener?.value) {
-      safeOpenerDomRef.value = (
-        typeof args.opener.value?.domRef.value === 'string'
-          ? document.querySelector(args.opener.value.domRef.value)
-          : args.opener.value?.domRef.value
-      ) as HTMLElement
-    }
+    const container = args.container?.value
+      ? resolveElement(args.container.value.domRef.value) ?? document.body
+      : document.body
 
-    rect.value = safeElementDomRef.value.getBoundingClientRect()
-    openerRect.value = safeOpenerDomRef.value?.getBoundingClientRect()
-    containerRect.value = safeContainerDomRef.value.getBoundingClientRect()
+    const opener = args.opener?.value
+      ? resolveElement(args.opener.value.domRef.value)
+      : null
+
+    return { element, container, opener }
   }
 
-  // Helper: Resolve auto position to actual position
-  const resolveAutoPositionValue = () => {
-    if (!args.opener?.value || !safeOpenerDomRef.value) return
+  const getRects = (refs: DOMRefs): Rects => ({
+    element: refs.element.getBoundingClientRect(),
+    container: refs.container.getBoundingClientRect(),
+    opener: refs.opener?.getBoundingClientRect() ?? null
+  })
 
-    switch (actualPosition.value) {
-      case 'auto':
-        actualPosition.value = getHighestAvailableSpacePos(
-          args.useViewport?.value ? null : (safeContainerDomRef.value as HTMLElement),
-          safeElementDomRef.value as HTMLElement,
-          safeOpenerDomRef.value as HTMLElement
-        )
-        break
-      case 'auto-vertical':
-        actualPosition.value = getHighestAvailableSpacePos(
-          args.useViewport?.value ? null : (safeContainerDomRef.value as HTMLElement),
-          safeElementDomRef.value as HTMLElement,
-          safeOpenerDomRef.value as HTMLElement,
-          undefined,
-          true
-        )
-        break
-      case 'auto-start':
-        actualPosition.value = getHighestAvailableSpacePos(
-          args.useViewport?.value ? null : (safeContainerDomRef.value as HTMLElement),
-          safeElementDomRef.value as HTMLElement,
-          safeOpenerDomRef.value as HTMLElement,
-          'start'
-        )
-        break
-      case 'auto-vertical-start':
-        actualPosition.value = getHighestAvailableSpacePos(
-          args.useViewport?.value ? null : (safeContainerDomRef.value as HTMLElement),
-          safeElementDomRef.value as HTMLElement,
-          safeOpenerDomRef.value as HTMLElement,
-          'start',
-          true
-        )
-        break
-      case 'auto-end':
-        actualPosition.value = getHighestAvailableSpacePos(
-          args.useViewport?.value ? null : (safeContainerDomRef.value as HTMLElement),
-          safeElementDomRef.value as HTMLElement,
-          safeOpenerDomRef.value as HTMLElement,
-          'end'
-        )
-        break
-      case 'auto-vertical-end':
-        actualPosition.value = getHighestAvailableSpacePos(
-          args.useViewport?.value ? null : (safeContainerDomRef.value as HTMLElement),
-          safeElementDomRef.value as HTMLElement,
-          safeOpenerDomRef.value as HTMLElement,
-          'end',
-          true
-        )
-        break
-      default:
-        break
-    }
-  }
-
-  // Helper: Calculate position with opener
-  const calculatePositionWithOpener = (
-    elStyle: CSSStyleDeclaration,
-    translateX: { value: number },
-    translateY: { value: number }
-  ) => {
-    if (!openerRect.value) return
-
-    const leftWithoutXMargin =
-      openerRect.value.left - parseFloat(elStyle.marginLeft) - parseFloat(elStyle.marginRight)
-    const leftWithoutLeftMargin = openerRect.value.left - parseFloat(elStyle.marginLeft)
-    const topWithoutYMargin =
-      openerRect.value.top - parseFloat(elStyle.marginTop) - parseFloat(elStyle.marginBottom)
-    const topWithoutTopMargin = openerRect.value.top - parseFloat(elStyle.marginTop)
-
-    switch (actualPosition.value) {
-      case 'bottom':
-        float.position.y = openerRect.value.bottom
-        float.position.x = leftWithoutLeftMargin + openerRect.value.width / 2
-        translateX.value = -50
-        translateY.value = 0
-        break
-      case 'bottom-start':
-        float.position.y = openerRect.value.bottom
-        float.position.x = leftWithoutXMargin
-        translateX.value = 0
-        translateY.value = 0
-        break
-      case 'bottom-end':
-        float.position.y = openerRect.value.bottom
-        float.position.x = openerRect.value.right
-        translateX.value = -100
-        translateY.value = 0
-        break
-      case 'left-start':
-        float.position.y = topWithoutYMargin
-        float.position.x = leftWithoutXMargin
-        translateX.value = -100
-        translateY.value = 0
-        break
-      case 'left':
-        float.position.y = topWithoutTopMargin + openerRect.value.height / 2
-        float.position.x = leftWithoutXMargin
-        translateY.value = -50
-        translateX.value = -100
-        break
-      case 'left-end':
-        float.position.y = openerRect.value.bottom
-        float.position.x = leftWithoutXMargin
-        translateY.value = -100
-        translateX.value = -100
-        break
-      case 'top-start':
-        float.position.y = topWithoutYMargin
-        float.position.x = leftWithoutXMargin
-        translateY.value = -100
-        translateX.value = 0
-        break
-      case 'top':
-        float.position.y = topWithoutYMargin
-        float.position.x = leftWithoutLeftMargin + openerRect.value.width / 2
-        translateX.value = -50
-        translateY.value = -100
-        break
-      case 'top-end':
-        float.position.y = topWithoutYMargin
-        float.position.x = openerRect.value.right
-        translateX.value = -100
-        translateY.value = -100
-        break
-      case 'right-start':
-        float.position.y = topWithoutYMargin
-        float.position.x = openerRect.value.right
-        translateX.value = 0
-        translateY.value = 0
-        break
-      case 'right':
-        float.position.y = topWithoutTopMargin + openerRect.value.height / 2
-        float.position.x = openerRect.value.right
-        translateY.value = -50
-        translateX.value = 0
-        break
-      case 'right-end':
-        float.position.y = openerRect.value.bottom
-        float.position.x = openerRect.value.right
-        translateY.value = -100
-        translateX.value = 0
-        break
-      default:
-        break
-    }
-  }
-
-  // Helper: Calculate position without opener
-  const calculatePositionWithoutOpener = (translateX: { value: number }) => {
-    if (!containerRect.value || !rect.value) return
-
-    switch (actualPosition.value) {
-      case 'bottom':
-        float.position.y = containerRect.value.bottom - rect.value.height
-        float.position.x = containerRect.value.left + containerRect.value.width / 2
-        translateX.value = -50
-        break
-      case 'left-end':
-      case 'bottom-start':
-        float.position.y = containerRect.value.bottom - rect.value.height
-        float.position.x = containerRect.value.left
-        break
-      case 'right-end':
-      case 'bottom-end':
-        float.position.y = containerRect.value.bottom - rect.value.height
-        float.position.x = containerRect.value.right - rect.value.width
-        break
-      case 'left':
-        float.position.y =
-          containerRect.value.top + (containerRect.value.height - rect.value.height) / 2
-        float.position.x = containerRect.value.left
-        break
-      case 'top-start':
-      case 'left-start':
-        float.position.y = containerRect.value.top
-        float.position.x = containerRect.value.left
-        break
-      case 'top':
-        float.position.y = containerRect.value.top
-        float.position.x =
-          containerRect.value.left + (containerRect.value.width - rect.value.width) / 2
-        break
-      case 'top-end':
-      case 'right-start':
-        float.position.y = containerRect.value.top
-        float.position.x = containerRect.value.right - rect.value.width
-        break
-      case 'right':
-        float.position.y =
-          containerRect.value.top + (containerRect.value.height - rect.value.height) / 2
-        float.position.x = containerRect.value.right - rect.value.width
-        break
-      default:
-        break
-    }
-  }
-
-  // Helper: Apply boundary corrections
-  const applyBoundaryCorrections = (
-    realPos: { x: number; y: number },
-    translateX: { value: number },
-    translateY: { value: number }
-  ) => {
-    if (!containerRect.value || !rect.value) return
-
-    if (realPos.x < containerRect.value.left) {
-      float.position.x = containerRect.value.left
-      translateX.value = 0
-    }
-
-    if (realPos.x + rect.value.width > containerRect.value.right) {
-      const fixVal = containerRect.value.right - rect.value.width
-      if (fixVal > 0) {
-        float.position.x = fixVal
-      }
-      translateX.value = 0
-    }
-
-    if (realPos.y < containerRect.value.top) {
-      float.position.y = containerRect.value.top
-      translateY.value = 0
-    }
-
-    if (realPos.y + rect.value.height > containerRect.value.bottom) {
-      const fixVal = containerRect.value.bottom - rect.value.height
-      if (fixVal > 0) {
-        float.position.y = fixVal
-      }
-      translateY.value = 0
-    }
-  }
-
-  // Helper: Apply element styles
-  const applyElementStyles = () => {
-    if (!safeElementDomRef.value) return
-
-    safeElementDomRef.value.style.top = `${float.position.y}px`
-    safeElementDomRef.value.style.left = `${float.position.x}px`
-    safeElementDomRef.value.style.position = 'fixed'
-    safeElementDomRef.value.style.display = 'flex'
-  }
-
+  // Main positioning function
   const setPosition = (ignoreCallback: boolean = false) =>
     nextTick(() => {
-      actualPosition.value = args.position ? args.position.value : 'auto'
+      // Step 1: Initialize position from args
+      actualPosition.value = args.position?.value ?? 'auto'
 
-      // Step 1: Resolve DOM references
-      resolveDomReferences()
+      // Step 2: Resolve DOM references
+      const refs = resolveDOMRefs()
+      if (!refs) return
 
-      // Step 1.5: CRITICAL - Remove element from document flow immediately
-      // This prevents the floating element from pushing the opener and causing layout shift
-      if (safeElementDomRef.value) {
-        safeElementDomRef.value.style.position = 'fixed'
-        safeElementDomRef.value.style.top = '0px'
-        safeElementDomRef.value.style.left = '0px'
-      }
+      // Step 3: Set fixed positioning immediately to prevent layout shift
+      Object.assign(refs.element.style, {
+        position: 'fixed',
+        top: '0px',
+        left: '0px'
+      })
 
-      // Recalculate all rects after content is rendered
-      rect.value = safeElementDomRef.value!.getBoundingClientRect()
-      openerRect.value = safeOpenerDomRef.value?.getBoundingClientRect()
-      containerRect.value = safeContainerDomRef.value!.getBoundingClientRect()
+      // Step 4: Get all bounding rects
+      const rects = getRects(refs)
+      rect.value = rects.element
+      openerRect.value = rects.opener ?? undefined
+      containerRect.value = rects.container
 
-      const elStyle = window.getComputedStyle(safeElementDomRef.value as HTMLElement)
+      // Step 5: Setup observers
+      floatObserver.value.observe(refs.element)
+      floatObserver.value.observe(refs.container)
 
-      // Step 2: Setup intersection observer
-      floatObserver.value.observe(safeElementDomRef.value as HTMLElement)
-      floatObserver.value.observe(safeContainerDomRef.value as HTMLElement)
-
-      // Step 3: Resolve auto positions
-      resolveAutoPositionValue()
-
-      // Step 4: Calculate position based on opener presence
-      const translate = { x: { value: 0 }, y: { value: 0 } }
-
-      if (args.opener?.value && safeOpenerDomRef.value && openerRect?.value) {
-        calculatePositionWithOpener(elStyle, translate.x, translate.y)
-      } else {
-        calculatePositionWithoutOpener(translate.x)
-      }
-
-      // Step 5: Calculate real position and apply boundary corrections
-      if (rect.value) {
-        const realPos = calcRealPos(
-          rect.value,
-          float.position,
-          translate.x.value,
-          translate.y.value
+      // Step 6: Resolve auto position if needed
+      if (isAutoPosition(actualPosition.value) && refs.opener) {
+        actualPosition.value = resolveAutoPosition(
+          actualPosition.value,
+          refs.container,
+          refs.element,
+          refs.opener,
+          args.useViewport?.value ?? false
         )
-        float.position.x = realPos.x
-        float.position.y = realPos.y
-
-        applyBoundaryCorrections(realPos, translate.x, translate.y)
       }
 
-      // Step 6: Apply styles to element
-      applyElementStyles()
+      // Step 7: Calculate position
+      const margins = getMargins(window.getComputedStyle(refs.element))
+      
+      const positionResult = refs.opener && rects.opener
+        ? calculatePositionWithOpener(actualPosition.value!, rects.opener, margins)
+        : calculatePositionWithoutOpener(actualPosition.value!, rects.container, rects.element)
 
-      // Step 7: Update rect after positioning
-      rect.value = safeElementDomRef.value!.getBoundingClientRect()
+      // Step 8: Apply transform to get real position
+      const realPosition = calcRealPos(
+        rects.element,
+        positionResult.position,
+        positionResult.transform.x,
+        positionResult.transform.y
+      )
 
-      // Step 8: Trigger callback if provided
+      // Step 9: Apply boundary corrections
+      const corrected = applyBoundaryCorrections(
+        realPosition,
+        rects.element,
+        rects.container,
+        positionResult.transform
+      )
+
+      // Step 10: Update float state
+      float.position.x = corrected.position.x
+      float.position.y = corrected.position.y
+
+      // Step 11: Apply final styles
+      Object.assign(refs.element.style, {
+        top: `${float.position.y}px`,
+        left: `${float.position.x}px`,
+        position: 'fixed',
+        display: 'flex'
+      })
+
+      // Step 12: Update rect after final positioning
+      rect.value = refs.element.getBoundingClientRect()
+
+      // Step 13: Trigger callback if provided
       if (args.callback?.value && !ignoreCallback) {
         args.callback.value(rect, openerRect, containerRect, position, actualPosition)
       }
     })
 
+  // Cleanup
   onUnmounted(() => {
     floatObserver.value.disconnect()
   })
