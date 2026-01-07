@@ -202,26 +202,6 @@ const handleAbortedRequest = <T>(
 };
 
 /**
- * Builds full URL from relative or absolute URL
- */
-const buildFullUrl = (urlString: string): string => {
-  // If URL is absolute, use it directly
-  if (urlString.startsWith("http")) {
-    return urlString;
-  }
-
-  // If URL is relative and globalBaseUrl is available, prepend it
-  if (state.globalBaseUrl) {
-    const baseUrl = state.globalBaseUrl.replace(/\/$/, "");
-    const path = urlString.replace(/^\//, "");
-    return `${baseUrl}/${path}`;
-  }
-
-  // Fallback: use relative URL if globalBaseUrl not available
-  return urlString;
-};
-
-/**
  * Creates a new fetch request with modified requestInit
  */
 const createModifiedFetchRequest = <T>(
@@ -366,10 +346,9 @@ export const wrapWithRequestInterceptor = <T>(
       );
 
       if (requestInitChanged) {
-        // Build full URL and create modified fetch request
-        const fullUrl = buildFullUrl(urlString);
+        // Use original URL string - fzFetcher already has baseUrl configured
         const modifiedFetchResult = createModifiedFetchRequest<T>(
-          fullUrl,
+          urlString,
           interceptedRequest,
           useFetchOptions,
         );

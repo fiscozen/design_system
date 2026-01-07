@@ -347,6 +347,82 @@ describe("Interceptors", () => {
     });
   });
 
+  describe("Request Interceptor - URL Handling", () => {
+    it("should not prepend baseUrl twice when request interceptor modifies requestInit", async () => {
+      let capturedUrl: string | null = null;
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, requestInit) => {
+          // Modify requestInit to trigger the modified fetch path
+          return {
+            ...requestInit,
+            headers: {
+              ...(requestInit.headers as Record<string, string>),
+              "X-Custom-Header": "added-by-interceptor",
+            },
+          };
+        },
+      });
+
+      global.fetch = vi.fn((url: string, init?: RequestInit) => {
+        capturedUrl = url;
+        return Promise.resolve(
+          new Response(JSON.stringify({ success: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      const { execute } = useFzFetch<{ success: boolean }>("/users/123");
+
+      await execute();
+
+      // The URL should be "https://api.example.com/users/123"
+      // NOT "https://api.example.com/https://api.example.com/users/123"
+      expect(capturedUrl).toBe("https://api.example.com/users/123");
+      expect(capturedUrl).not.toContain("api.example.com/https://");
+    });
+
+    it("should handle absolute URLs correctly when request interceptor modifies requestInit", async () => {
+      let capturedUrl: string | null = null;
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, requestInit) => {
+          return {
+            ...requestInit,
+            headers: {
+              ...(requestInit.headers as Record<string, string>),
+              "X-Modified": "true",
+            },
+          };
+        },
+      });
+
+      global.fetch = vi.fn((url: string, init?: RequestInit) => {
+        capturedUrl = url;
+        return Promise.resolve(
+          new Response(JSON.stringify({ success: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      // Use absolute URL
+      const { execute } = useFzFetch<{ success: boolean }>(
+        "https://other-api.example.com/endpoint",
+      );
+
+      await execute();
+
+      // Absolute URLs should be preserved as-is
+      expect(capturedUrl).toBe("https://other-api.example.com/endpoint");
+    });
+  });
+
   describe("Request Interceptor - Immediate Execution", () => {
     it("should call request interceptor when immediate: true (automatic execution)", async () => {
       let interceptorCalled = false;
