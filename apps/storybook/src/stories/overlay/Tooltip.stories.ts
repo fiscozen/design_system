@@ -365,6 +365,131 @@ export const WithInteractiveElements: Story = {
   }
 }
 
+// ============================================================================
+// REGRESSION TESTS - Verify tooltip works after FzFloating refactor
+// ============================================================================
+
+/**
+ * Tests that tooltip styling is correct after contentClass changes in FzFloating
+ */
+export const TooltipStylingRegression: Story = {
+  render: () => ({
+    components: { FzTooltip, FzButton },
+    template: `
+      <div class="p-32 flex items-center justify-center">
+        <FzTooltip 
+          position="bottom"
+          text="Tooltip text content"
+        >
+          <FzButton data-testid="tooltip-trigger">
+            Hover me
+          </FzButton>
+        </FzTooltip>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    
+    const trigger = canvas.getByTestId('tooltip-trigger')
+    
+    // Hover to show tooltip
+    await userEvent.hover(trigger)
+    
+    // Wait for tooltip to appear
+    const floatingContent = await waitFor(() => {
+      const content = document.querySelector('.fz__floating__content')
+      expect(content).toBeVisible()
+      return content
+    })
+    
+    const computedStyle = window.getComputedStyle(floatingContent as Element)
+    
+    // Verify positioning
+    expect(computedStyle.position).toBe('fixed')
+    
+    // Verify expected classes are applied
+    expect(floatingContent).toHaveClass('bg-core-white')
+    
+    // Verify margin is applied (for bottom position, should have margin-top)
+    expect(floatingContent).toHaveClass('mt-4')
+  }
+}
+
+/**
+ * Tests tooltip positioning with bottom position and verifies margin class
+ */
+export const TooltipBottomPosition: Story = {
+  render: () => ({
+    components: { FzTooltip, FzButton },
+    template: `
+      <div class="p-40 flex items-center justify-center">
+        <FzTooltip position="bottom" text="Bottom tooltip">
+          <FzButton data-testid="trigger-bottom">Bottom</FzButton>
+        </FzTooltip>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const TOLERANCE = 5
+    
+    const trigger = canvas.getByTestId('trigger-bottom')
+    await userEvent.hover(trigger)
+    
+    await waitFor(() => {
+      const content = document.querySelector('.fz__floating__content')
+      expect(content).toBeVisible()
+      
+      const triggerRect = trigger.getBoundingClientRect()
+      const tooltipRect = (content as Element).getBoundingClientRect()
+      
+      // Verify correct margin class (bottom position = margin-top)
+      expect(content).toHaveClass('mt-4')
+      
+      // Verify positioning: tooltip should be below trigger
+      expect(tooltipRect.top).toBeGreaterThanOrEqual(triggerRect.bottom - TOLERANCE)
+    }, { timeout: 2000 })
+  }
+}
+
+/**
+ * Tests tooltip positioning with top position and verifies margin class
+ */
+export const TooltipTopPosition: Story = {
+  render: () => ({
+    components: { FzTooltip, FzButton },
+    template: `
+      <div class="p-40 flex items-center justify-center">
+        <FzTooltip position="top" text="Top tooltip">
+          <FzButton data-testid="trigger-top">Top</FzButton>
+        </FzTooltip>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const TOLERANCE = 5
+    
+    const trigger = canvas.getByTestId('trigger-top')
+    await userEvent.hover(trigger)
+    
+    await waitFor(() => {
+      const content = document.querySelector('.fz__floating__content')
+      expect(content).toBeVisible()
+      
+      const triggerRect = trigger.getBoundingClientRect()
+      const tooltipRect = (content as Element).getBoundingClientRect()
+      
+      // Verify correct margin class (top position = margin-bottom)
+      expect(content).toHaveClass('mb-4')
+      
+      // Verify positioning: tooltip should be above trigger
+      expect(tooltipRect.bottom).toBeLessThanOrEqual(triggerRect.top + TOLERANCE)
+    }, { timeout: 2000 })
+  }
+}
+
 export const DesignReview: Story = {
   render: (args) => ({
     setup() {
