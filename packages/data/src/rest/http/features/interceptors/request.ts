@@ -221,14 +221,15 @@ const createModifiedFetchRequest = <T>(
     );
   }
 
+  const normalizedOptions = useFetchOptions
+    ? normalizeUseFzFetchOptions(useFetchOptions)
+    : {};
+
   return state
-    .fzFetcher<T>(
-      fullUrl,
-      interceptedRequest,
-      useFetchOptions
-        ? normalizeUseFzFetchOptions(useFetchOptions)
-        : undefined,
-    )
+    .fzFetcher<T>(fullUrl, interceptedRequest, {
+      ...normalizedOptions,
+      immediate: false,
+    })
     .json();
 };
 
@@ -279,7 +280,7 @@ const handleInterceptorError = <T>(
     error,
     throwOnFailed,
   );
-  
+
   if (state.globalDebug) {
     console.debug(
       `[useFzFetch] Request interceptor error: ${normalizedError.message}`,
@@ -314,7 +315,7 @@ export const wrapWithRequestInterceptor = <T>(
   const originalExecute = fetchResult.execute;
   // Track current watch to cleanup when execute() is called multiple times rapidly
   let currentWatch: (() => void) | null = null;
-  
+
   fetchResult.execute = async (throwOnFailed?: boolean) => {
     // Always re-evaluate the URL when execute() is called manually
     // This ensures reactive URLs (computed URLs that depend on reactive values) are properly evaluated
@@ -346,7 +347,6 @@ export const wrapWithRequestInterceptor = <T>(
       );
 
       if (requestInitChanged) {
-        // Use original URL string - fzFetcher already has baseUrl configured
         const modifiedFetchResult = createModifiedFetchRequest<T>(
           urlString,
           interceptedRequest,
@@ -363,6 +363,27 @@ export const wrapWithRequestInterceptor = <T>(
         // Execute the modified fetch and handle errors
         try {
           await modifiedFetchResult.execute(throwOnFailed);
+
+          // Apply response interceptor since modified fetch bypasses wrapper chain
+          if (state.globalResponseInterceptor && modifiedFetchResult.response.value) {
+            try {
+              const interceptedResponse = await state.globalResponseInterceptor(
+                modifiedFetchResult.response.value,
+                urlString,
+                interceptedRequest,
+              );
+              if (interceptedResponse !== modifiedFetchResult.response.value) {
+                modifiedFetchResult.response.value = interceptedResponse;
+                fetchResult.response.value = interceptedResponse;
+              }
+            } catch (responseInterceptorError: unknown) {
+              if (state.globalDebug) {
+                console.debug(
+                  `[useFzFetch] Response interceptor error on modified fetch: ${responseInterceptorError}`,
+                );
+              }
+            }
+          }
         } catch (error: unknown) {
           unwatchSync();
           currentWatch = null;
