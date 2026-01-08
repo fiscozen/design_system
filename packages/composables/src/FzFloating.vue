@@ -1,4 +1,31 @@
 <script lang="ts" setup>
+/**
+ * FzFloating Component
+ * 
+ * A floating container that positions itself relative to an opener element.
+ * Supports automatic repositioning on scroll, resize, and content changes.
+ * 
+ * ## Features
+ * - 12 positioning options (top/bottom/left/right with start/center/end alignment)
+ * - Auto-positioning based on available viewport space  
+ * - Reactive repositioning via ResizeObserver
+ * - Teleport support for z-index stacking context issues
+ * - Automatic margin based on resolved position direction
+ * 
+ * ## Slots
+ * - `opener`: The element that triggers/anchors the floating content
+ * - `default`: The floating content to display
+ * 
+ * ## Example
+ * ```vue
+ * <FzFloating position="bottom-start" :isOpen="showMenu">
+ *   <template #opener>
+ *     <button @click="showMenu = !showMenu">Menu</button>
+ *   </template>
+ *   <div>Menu content here</div>
+ * </FzFloating>
+ * ```
+ */
 import { ref, useSlots, watch, toRef, computed, onBeforeUnmount, onMounted, toRefs } from 'vue'
 import { useFloating } from './composables'
 import { FzFloatingProps, FzUseFloatingArgs } from './types'
@@ -166,10 +193,6 @@ onBeforeUnmount(() => {
   cleanupEventListeners()
 })
 
-// Reactive ref to track the margin class based on actual resolved position
-// This is updated after setPosition() completes to ensure correct margin direction
-const resolvedMarginClass = ref('mt-4')
-
 // Helper function to get margin class from position
 const getMarginClassForPosition = (position: string): string => {
   if (position.startsWith('bottom')) return 'mt-4' // margin-top only
@@ -179,27 +202,12 @@ const getMarginClassForPosition = (position: string): string => {
   return 'mt-4' // default fallback
 }
 
-// Watch actualPosition to update margin class when auto-positioning resolves
-watch(
-  () => floating.actualPosition?.value,
-  (newPosition) => {
-    if (newPosition) {
-      resolvedMarginClass.value = getMarginClassForPosition(newPosition)
-    }
-  },
-  { immediate: true }
-)
-
-// Also update margin class when props.position changes (for non-auto positions)
-watch(
-  () => props.position,
-  (newPosition) => {
-    if (!newPosition.startsWith('auto')) {
-      resolvedMarginClass.value = getMarginClassForPosition(newPosition)
-    }
-  },
-  { immediate: true }
-)
+// Computed margin class based on resolved position
+// Uses actualPosition for auto positions, falls back to props.position for explicit
+const resolvedMarginClass = computed(() => {
+  const effectivePosition = floating.actualPosition?.value ?? props.position
+  return getMarginClassForPosition(effectivePosition)
+})
 
 const contentClass = computed(() => {
   if (props.overrideContentClass) {

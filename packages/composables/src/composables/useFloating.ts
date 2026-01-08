@@ -1,3 +1,67 @@
+/**
+ * @module useFloating
+ * @description Composable for managing floating/popover element positioning
+ * 
+ * ## Why This Refactoring?
+ * 
+ * The previous implementation had several issues:
+ * 
+ * 1. **Monolithic function**: All positioning logic was in a single function
+ *    making it hard to test individual positioning strategies
+ * 
+ * 2. **Inconsistent margin handling**: Margins were calculated differently for
+ *    different positions, leading to visual inconsistencies
+ * 
+ * 3. **No reactive repositioning**: The floating element didn't respond to
+ *    opener/content size changes or scroll events
+ * 
+ * 4. **Layout shift on open**: The floating element was added to document flow
+ *    before positioning, causing visual jumps
+ * 
+ * ## Architecture
+ * 
+ * The new implementation uses:
+ * 
+ * - **Pure position calculators**: Each position (top, bottom, left, right and
+ *   their variants) has a dedicated calculator function stored in lookup tables
+ * 
+ * - **Lookup tables**: `positionCalculators` (with opener) and 
+ *   `containerPositionCalculators` (without opener) provide O(1) access
+ * 
+ * - **Immediate fixed positioning**: Elements are set to `position: fixed`
+ *   immediately to prevent layout shift
+ * 
+ * - **Reactive repositioning**: ResizeObserver and scroll/resize event listeners
+ *   ensure the floating stays positioned correctly during dynamic changes
+ * 
+ * ## Usage
+ * 
+ * ```typescript
+ * const { float, setPosition, actualPosition } = useFloating({
+ *   element: toRef(props, 'element'),
+ *   opener: toRef(props, 'opener'),
+ *   position: toRef(props, 'position'),
+ *   container: toRef(props, 'container')
+ * })
+ * 
+ * // Position is set automatically, or call manually:
+ * await setPosition()
+ * 
+ * // Access computed position values:
+ * console.log(float.position.x, float.position.y)
+ * console.log(actualPosition.value) // Resolved position for 'auto' modes
+ * ```
+ * 
+ * ## Position Types
+ * 
+ * - Explicit: top, bottom, left, right and variants (-start, -end)
+ * - Auto: auto, auto-vertical, auto-start, auto-end, etc.
+ * 
+ * Auto positions are resolved based on available space around the opener
+ * 
+ * @see FzFloating.vue - The component that uses this composable
+ */
+
 import { FzFloatingPosition, FzRect, FzUseFloatingArgs, FzAbsolutePosition } from '../types'
 import { ref, reactive, onUnmounted, Ref, nextTick, ToRefs } from 'vue'
 import { calcRealPos, getHighestAvailableSpacePos } from '../utils'
@@ -52,11 +116,12 @@ const getMargins = (style: CSSStyleDeclaration): Margins => ({
 })
 
 // ============================================================================
-// Position Calculators - Pure Functions using Pattern Matching
+// Position Calculators WITH Opener - Lookup Table
+// Each calculator receives opener rect and element margins for consistent spacing
 // ============================================================================
 
 const positionCalculators: Record<string, PositionCalculator> = {
-  // Bottom positions
+  // Bottom positions - content below opener
   'bottom': (opener, margins) => ({
     position: {
       x: opener.left - margins.left + opener.width / 2,
@@ -67,49 +132,49 @@ const positionCalculators: Record<string, PositionCalculator> = {
 
   'bottom-start': (opener, margins) => ({
     position: {
-      x: opener.left - margins.left - margins.right,
+      x: opener.left - margins.left,
       y: opener.bottom
     },
     transform: { x: 0, y: 0 }
   }),
 
-  'bottom-end': (opener) => ({
+  'bottom-end': (opener, margins) => ({
     position: {
-      x: opener.right,
+      x: opener.right + margins.right,
       y: opener.bottom
     },
     transform: { x: -100, y: 0 }
   }),
 
-  // Top positions
+  // Top positions - content above opener
   'top': (opener, margins) => ({
     position: {
       x: opener.left - margins.left + opener.width / 2,
-      y: opener.top - margins.top - margins.bottom
+      y: opener.top - margins.bottom
     },
     transform: { x: -50, y: -100 }
   }),
 
   'top-start': (opener, margins) => ({
     position: {
-      x: opener.left - margins.left - margins.right,
-      y: opener.top - margins.top - margins.bottom
+      x: opener.left - margins.left,
+      y: opener.top - margins.bottom
     },
     transform: { x: 0, y: -100 }
   }),
 
   'top-end': (opener, margins) => ({
     position: {
-      x: opener.right,
-      y: opener.top - margins.top - margins.bottom
+      x: opener.right + margins.right,
+      y: opener.top - margins.bottom
     },
     transform: { x: -100, y: -100 }
   }),
 
-  // Left positions
+  // Left positions - content to left of opener
   'left': (opener, margins) => ({
     position: {
-      x: opener.left - margins.left - margins.right,
+      x: opener.left - margins.right,
       y: opener.top - margins.top + opener.height / 2
     },
     transform: { x: -100, y: -50 }
@@ -117,24 +182,24 @@ const positionCalculators: Record<string, PositionCalculator> = {
 
   'left-start': (opener, margins) => ({
     position: {
-      x: opener.left - margins.left - margins.right,
-      y: opener.top - margins.top - margins.bottom
+      x: opener.left - margins.right,
+      y: opener.top - margins.top
     },
     transform: { x: -100, y: 0 }
   }),
 
   'left-end': (opener, margins) => ({
     position: {
-      x: opener.left - margins.left - margins.right,
-      y: opener.bottom
+      x: opener.left - margins.right,
+      y: opener.bottom + margins.bottom
     },
     transform: { x: -100, y: -100 }
   }),
 
-  // Right positions
+  // Right positions - content to right of opener
   'right': (opener, margins) => ({
     position: {
-      x: opener.right,
+      x: opener.right + margins.left,
       y: opener.top - margins.top + opener.height / 2
     },
     transform: { x: 0, y: -50 }
@@ -142,16 +207,16 @@ const positionCalculators: Record<string, PositionCalculator> = {
 
   'right-start': (opener, margins) => ({
     position: {
-      x: opener.right,
-      y: opener.top - margins.top - margins.bottom
+      x: opener.right + margins.left,
+      y: opener.top - margins.top
     },
     transform: { x: 0, y: 0 }
   }),
 
-  'right-end': (opener) => ({
+  'right-end': (opener, margins) => ({
     position: {
-      x: opener.right,
-      y: opener.bottom
+      x: opener.right + margins.left,
+      y: opener.bottom + margins.bottom
     },
     transform: { x: 0, y: -100 }
   })
@@ -168,70 +233,119 @@ const calculatePositionWithOpener = (
     : { position: { x: 0, y: 0 }, transform: { x: 0, y: 0 } }
 }
 
+// ============================================================================
+// Position Calculators WITHOUT Opener - Lookup Table
+// ============================================================================
+
+type ContainerPositionCalculator = (container: DOMRect, element: DOMRect) => PositionResult
+
+const containerPositionCalculators: Record<string, ContainerPositionCalculator> = {
+  'bottom': (container, element) => ({
+    position: { 
+      x: container.left + container.width / 2, 
+      y: container.bottom - element.height 
+    },
+    transform: { x: -50, y: 0 }
+  }),
+
+  'bottom-start': (container, element) => ({
+    position: { 
+      x: container.left, 
+      y: container.bottom - element.height 
+    },
+    transform: { x: 0, y: 0 }
+  }),
+
+  'bottom-end': (container, element) => ({
+    position: { 
+      x: container.right - element.width, 
+      y: container.bottom - element.height 
+    },
+    transform: { x: 0, y: 0 }
+  }),
+
+  'top': (container) => ({
+    position: { 
+      x: container.left + container.width / 2, 
+      y: container.top 
+    },
+    transform: { x: -50, y: 0 }
+  }),
+
+  'top-start': (container) => ({
+    position: { 
+      x: container.left, 
+      y: container.top 
+    },
+    transform: { x: 0, y: 0 }
+  }),
+
+  'top-end': (container, element) => ({
+    position: { 
+      x: container.right - element.width, 
+      y: container.top 
+    },
+    transform: { x: 0, y: 0 }
+  }),
+
+  'left': (container, element) => ({
+    position: { 
+      x: container.left, 
+      y: container.top + (container.height - element.height) / 2 
+    },
+    transform: { x: 0, y: 0 }
+  }),
+
+  'left-start': (container) => ({
+    position: { 
+      x: container.left, 
+      y: container.top 
+    },
+    transform: { x: 0, y: 0 }
+  }),
+
+  'left-end': (container, element) => ({
+    position: { 
+      x: container.left, 
+      y: container.bottom - element.height 
+    },
+    transform: { x: 0, y: 0 }
+  }),
+
+  'right': (container, element) => ({
+    position: { 
+      x: container.right - element.width, 
+      y: container.top + (container.height - element.height) / 2 
+    },
+    transform: { x: 0, y: 0 }
+  }),
+
+  'right-start': (container, element) => ({
+    position: { 
+      x: container.right - element.width, 
+      y: container.top 
+    },
+    transform: { x: 0, y: 0 }
+  }),
+
+  'right-end': (container, element) => ({
+    position: { 
+      x: container.right - element.width, 
+      y: container.bottom - element.height 
+    },
+    transform: { x: 0, y: 0 }
+  })
+}
+
 const calculatePositionWithoutOpener = (
   position: FzFloatingPosition,
   container: DOMRect,
   element: DOMRect
 ): PositionResult => {
-  const { left, right, top, bottom, width, height } = container
-  const { width: elWidth, height: elHeight } = element
-
-  switch (position) {
-    case 'bottom':
-      return {
-        position: { x: left + width / 2, y: bottom - elHeight },
-        transform: { x: -50, y: 0 }
-      }
-
-    case 'bottom-start':
-    case 'left-end':
-      return {
-        position: { x: left, y: bottom - elHeight },
-        transform: { x: 0, y: 0 }
-      }
-
-    case 'bottom-end':
-    case 'right-end':
-      return {
-        position: { x: right - elWidth, y: bottom - elHeight },
-        transform: { x: 0, y: 0 }
-      }
-
-    case 'top':
-      return {
-        position: { x: left + (width - elWidth) / 2, y: top },
-        transform: { x: 0, y: 0 }
-      }
-
-    case 'top-start':
-    case 'left-start':
-      return {
-        position: { x: left, y: top },
-        transform: { x: 0, y: 0 }
-      }
-
-    case 'top-end':
-    case 'right-start':
-      return {
-        position: { x: right - elWidth, y: top },
-        transform: { x: 0, y: 0 }
-      }
-
-    case 'left':
-      return {
-        position: { x: left, y: top + (height - elHeight) / 2 },
-        transform: { x: 0, y: 0 }
-      }
-
-    case 'right':
-      return {
-        position: { x: right - elWidth, y: top + (height - elHeight) / 2 },
-        transform: { x: 0, y: 0 }
-      }
-
-    default:
-      return { position: { x: 0, y: 0 }, transform: { x: 0, y: 0 } }
-  }
+  const calculator = containerPositionCalculators[position]
+  return calculator 
+    ? calculator(container, element)
+    : { position: { x: 0, y: 0 }, transform: { x: 0, y: 0 } }
 }
 
 // ============================================================================

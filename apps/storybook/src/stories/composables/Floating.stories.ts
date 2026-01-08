@@ -17,6 +17,40 @@ import { FzButton } from '@fiscozen/button'
  */
 const POSITION_TOLERANCE = 5
 
+// ============================================================================
+// TEST HELPERS
+// ============================================================================
+
+/**
+ * Waits for the floating content to reposition after a dynamic change.
+ * Uses waitFor with actual conditions instead of arbitrary timeouts.
+ */
+const waitForReposition = async (
+  openerElement: Element,
+  floatingContent: Element,
+  positionCheck: 'below' | 'above' | 'left' | 'right' = 'below'
+) => {
+  await waitFor(() => {
+    const openerRect = openerElement.getBoundingClientRect()
+    const contentRect = floatingContent.getBoundingClientRect()
+    
+    switch (positionCheck) {
+      case 'below':
+        expect(contentRect.top).toBeGreaterThanOrEqual(openerRect.bottom - POSITION_TOLERANCE)
+        break
+      case 'above':
+        expect(contentRect.bottom).toBeLessThanOrEqual(openerRect.top + POSITION_TOLERANCE)
+        break
+      case 'left':
+        expect(contentRect.right).toBeLessThanOrEqual(openerRect.left + POSITION_TOLERANCE)
+        break
+      case 'right':
+        expect(contentRect.left).toBeGreaterThanOrEqual(openerRect.right - POSITION_TOLERANCE)
+        break
+    }
+  }, { timeout: 1000 })
+}
+
 const example = [
   {
     label: 'Label 1',
@@ -1271,22 +1305,21 @@ export const ReactiveOpenerResize: Story = {
       expect(canvas.getByTestId('opener-extra-content')).toBeVisible()
     })
 
-    // Wait for repositioning via ResizeObserver
-    await new Promise(resolve => setTimeout(resolve, 200))
-
-    // Get new positions
-    const newOpenerRect = openerWrapper.getBoundingClientRect()
-    const newContentRect = (floatingContent as Element).getBoundingClientRect()
-
-    // Opener should have grown (its bottom should be lower now)
-    await expect(newOpenerRect.bottom).toBeGreaterThan(initialOpenerRect.bottom + POSITION_TOLERANCE)
-
-    // Floating content should have moved down to stay below the expanded opener
-    await expect(newContentRect.top).toBeGreaterThanOrEqual(newOpenerRect.bottom - POSITION_TOLERANCE)
-    
-    // The gap should be approximately the same (within tolerance for margin)
-    const newGap = newContentRect.top - newOpenerRect.bottom
-    await expect(Math.abs(newGap - initialGap)).toBeLessThan(POSITION_TOLERANCE)
+    // Wait for opener to expand AND content to reposition
+    await waitFor(() => {
+      const newOpenerRect = openerWrapper.getBoundingClientRect()
+      const newContentRect = (floatingContent as Element).getBoundingClientRect()
+      
+      // Opener should have grown (its bottom should be lower now)
+      expect(newOpenerRect.bottom).toBeGreaterThan(initialOpenerRect.bottom + POSITION_TOLERANCE)
+      
+      // Floating content should have moved down to stay below the expanded opener
+      expect(newContentRect.top).toBeGreaterThanOrEqual(newOpenerRect.bottom - POSITION_TOLERANCE)
+      
+      // The gap should be approximately the same (within tolerance for margin)
+      const newGap = newContentRect.top - newOpenerRect.bottom
+      expect(Math.abs(newGap - initialGap)).toBeLessThan(POSITION_TOLERANCE)
+    }, { timeout: 1000 })
   }
 }
 
@@ -1329,18 +1362,17 @@ export const ReactiveContentResize: Story = {
       expect(canvas.getByTestId('extra-content')).toBeVisible()
     })
 
-    // Wait for repositioning via ResizeObserver
-    await new Promise(resolve => setTimeout(resolve, 150))
-
-    // Get new positions
-    const newOpenerRect = openerButton.getBoundingClientRect()
-    const newContentRect = (floatingContent as Element).getBoundingClientRect()
-
-    // Content should still be below the opener (not overlapping)
-    await expect(newContentRect.top).toBeGreaterThanOrEqual(newOpenerRect.bottom - POSITION_TOLERANCE)
-    
-    // Left edge should remain aligned with opener (bottom-start)
-    await expect(Math.abs(newContentRect.left - newOpenerRect.left)).toBeLessThan(POSITION_TOLERANCE)
+    // Wait for content to expand AND maintain position
+    await waitFor(() => {
+      const newOpenerRect = openerButton.getBoundingClientRect()
+      const newContentRect = (floatingContent as Element).getBoundingClientRect()
+      
+      // Content should still be below the opener (not overlapping)
+      expect(newContentRect.top).toBeGreaterThanOrEqual(newOpenerRect.bottom - POSITION_TOLERANCE)
+      
+      // Left edge should remain aligned with opener (bottom-start)
+      expect(Math.abs(newContentRect.left - newOpenerRect.left)).toBeLessThan(POSITION_TOLERANCE)
+    }, { timeout: 1000 })
   }
 }
 
@@ -1419,16 +1451,15 @@ export const ReactiveWindowScroll: Story = {
     // Simulate scroll by dispatching scroll event
     window.dispatchEvent(new Event('scroll'))
 
-    // Wait for repositioning
-    await new Promise(resolve => setTimeout(resolve, 100))
-
-    // Verify the floating is still properly positioned relative to opener
-    const newOpenerRect = openerButton.getBoundingClientRect()
-    const newContentRect = (floatingContent as Element).getBoundingClientRect()
-    
-    // The relative position should be maintained (within tolerance)
-    const newYOffset = newContentRect.top - newOpenerRect.bottom
-    await expect(Math.abs(newYOffset - initialYOffset)).toBeLessThan(POSITION_TOLERANCE)
+    // Wait for floating to maintain relative position after scroll
+    await waitFor(() => {
+      const newOpenerRect = openerButton.getBoundingClientRect()
+      const newContentRect = (floatingContent as Element).getBoundingClientRect()
+      
+      // The relative position should be maintained (within tolerance)
+      const newYOffset = newContentRect.top - newOpenerRect.bottom
+      expect(Math.abs(newYOffset - initialYOffset)).toBeLessThan(POSITION_TOLERANCE)
+    }, { timeout: 1000 })
   }
 }
 
@@ -1463,17 +1494,14 @@ export const ReactiveContainerScroll: Story = {
     // Dispatch scroll event on the container
     scrollContainer.dispatchEvent(new Event('scroll', { bubbles: true }))
 
-    // Wait for repositioning
-    await new Promise(resolve => setTimeout(resolve, 150))
-
-    // Get new opener position after scroll
-    const newOpenerRect = openerButton.getBoundingClientRect()
-    const newContentRect = (floatingContent as Element).getBoundingClientRect()
-
-    // The opener has moved up by ~100px due to scroll
-    // The floating content should have followed
-    // Content should still be below the opener
-    await expect(newContentRect.top).toBeGreaterThanOrEqual(newOpenerRect.bottom - POSITION_TOLERANCE)
+    // Wait for content to follow opener after scroll
+    await waitFor(() => {
+      const newOpenerRect = openerButton.getBoundingClientRect()
+      const newContentRect = (floatingContent as Element).getBoundingClientRect()
+      
+      // Content should still be below the opener after scroll
+      expect(newContentRect.top).toBeGreaterThanOrEqual(newOpenerRect.bottom - POSITION_TOLERANCE)
+    }, { timeout: 1000 })
   }
 }
 
@@ -1506,15 +1534,14 @@ export const ReactiveWindowResize: Story = {
     // Dispatch resize event
     window.dispatchEvent(new Event('resize'))
 
-    // Wait for repositioning
-    await new Promise(resolve => setTimeout(resolve, 100))
-
-    // Get new positions
-    const newOpenerRect = openerButton.getBoundingClientRect()
-    const newContentRect = (floatingContent as Element).getBoundingClientRect()
-
-    // Content should still be properly positioned below opener
-    await expect(newContentRect.top).toBeGreaterThanOrEqual(newOpenerRect.bottom - POSITION_TOLERANCE)
+    // Wait for content to maintain position after resize
+    await waitFor(() => {
+      const newOpenerRect = openerButton.getBoundingClientRect()
+      const newContentRect = (floatingContent as Element).getBoundingClientRect()
+      
+      // Content should still be properly positioned below opener
+      expect(newContentRect.top).toBeGreaterThanOrEqual(newOpenerRect.bottom - POSITION_TOLERANCE)
+    }, { timeout: 1000 })
   }
 }
 
