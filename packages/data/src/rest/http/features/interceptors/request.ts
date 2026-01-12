@@ -283,6 +283,33 @@ const handleFetchCompletion = (
 };
 
 /**
+ * Sets up a watcher to monitor fetch completion and resolve Promise when done
+ *
+ * Watches isFetching and resolves the Promise when it becomes false.
+ * Returns the unwatch function for cleanup.
+ *
+ * @param fetchResult - Fetch result to watch
+ * @param resolve - Promise resolve function
+ * @returns Function to stop watching
+ */
+const setupFetchCompletionWatcher = <T>(
+  fetchResult: UseFzFetchReturn<T>,
+  resolve: () => void,
+): (() => void) => {
+  let unwatchFetching: (() => void) | null = null;
+  unwatchFetching = watch(
+    () => fetchResult.isFetching.value,
+    (isFetching) => {
+      if (!isFetching && unwatchFetching) {
+        handleFetchCompletion(unwatchFetching, resolve);
+      }
+    },
+    { immediate: true },
+  );
+  return unwatchFetching;
+};
+
+/**
  * Waits for a fetch request to fully complete (isFetching becomes false)
  *
  * Ensures all state updates are propagated before proceeding.
@@ -299,16 +326,7 @@ const waitForFetchCompletion = <T>(
   }
 
   return new Promise<void>((resolve) => {
-    let unwatchFetching: (() => void) | null = null;
-    unwatchFetching = watch(
-      () => fetchResult.isFetching.value,
-      (isFetching) => {
-        if (!isFetching && unwatchFetching) {
-          handleFetchCompletion(unwatchFetching, resolve);
-        }
-      },
-      { immediate: true },
-    );
+    setupFetchCompletionWatcher(fetchResult, resolve);
   });
 };
 
@@ -338,7 +356,12 @@ const cleanupWatcherOnError = async <T>(
 };
 
 /**
- * Applies response interceptor to the response
+ * Applies response interceptor when request interceptor modified the request
+ *
+ * When a request interceptor modifies requestInit, a new fetch is created that bypasses
+ * the normal wrapper chain. This means the response interceptor won't be applied automatically.
+ * This function manually applies the response interceptor so that response transformation
+ * works consistently regardless of whether the request was modified.
  *
  * @param originalResponse - Original response from fetch
  * @param urlString - Request URL string
@@ -415,67 +438,29 @@ const reparseResponseBody = async <T>(
 };
 
 /**
- * Handles parse error with watcher cleanup
+ * Handles error with watcher cleanup
  *
  * Stops watcher immediately to prevent it from overwriting the error.
  * The watcher syncs modifiedFetchResult.error (which is null since fetch succeeded)
- * to fetchResult.error, which would overwrite the parse error we're about to set.
+ * to fetchResult.error, which would overwrite the error we're about to set.
  *
  * @param modifiedFetchResult - Modified fetch result to wait for completion
  * @param fetchResult - Original fetch result to set error on
- * @param parseError - Parse error that occurred
+ * @param error - Error that occurred
  * @param throwOnFailed - Whether to throw on errors
  * @param unwatchSync - Function to stop watching
  * @param cleanupCallback - Callback to conditionally set currentWatch to null
+ * @param debugMessage - Debug message to log if globalDebug is enabled
  * @returns Promise that resolves when cleanup is complete
  */
-const handleParseErrorWithCleanup = async <T>(
-  modifiedFetchResult: UseFzFetchReturn<T>,
-  fetchResult: UseFzFetchReturn<T>,
-  parseError: unknown,
-  throwOnFailed: boolean | undefined,
-  unwatchSync: () => void,
-  cleanupCallback: (watcherToCleanup: () => void) => void,
-): Promise<void> => {
-  unwatchSync();
-  cleanupCallback(unwatchSync);
-
-  const normalizedError = handleFetchError(
-    fetchResult.error,
-    parseError,
-    throwOnFailed,
-  );
-  if (state.globalDebug) {
-    console.debug(
-      `[useFzFetch] Failed to parse modified response body: ${normalizedError.message}`,
-    );
-  }
-
-  await waitForFetchCompletion(modifiedFetchResult);
-};
-
-/**
- * Handles response interceptor error with watcher cleanup
- *
- * Stops watcher immediately to prevent it from overwriting the error.
- * The watcher syncs modifiedFetchResult.error (which is null since fetch succeeded)
- * to fetchResult.error, which would overwrite the interceptor error we're about to set.
- *
- * @param modifiedFetchResult - Modified fetch result to wait for completion
- * @param fetchResult - Original fetch result to set error on
- * @param error - Error from response interceptor
- * @param throwOnFailed - Whether to throw on errors
- * @param unwatchSync - Function to stop watching
- * @param cleanupCallback - Callback to conditionally set currentWatch to null
- * @returns Promise that resolves when cleanup is complete
- */
-const handleInterceptorErrorWithCleanup = async <T>(
+const handleErrorWithCleanup = async <T>(
   modifiedFetchResult: UseFzFetchReturn<T>,
   fetchResult: UseFzFetchReturn<T>,
   error: unknown,
   throwOnFailed: boolean | undefined,
   unwatchSync: () => void,
   cleanupCallback: (watcherToCleanup: () => void) => void,
+  debugMessage: string,
 ): Promise<void> => {
   unwatchSync();
   cleanupCallback(unwatchSync);
@@ -486,9 +471,7 @@ const handleInterceptorErrorWithCleanup = async <T>(
     throwOnFailed,
   );
   if (state.globalDebug) {
-    console.debug(
-      `[useFzFetch] Response interceptor error on modified fetch: ${normalizedError.message}`,
-    );
+    console.debug(`[useFzFetch] ${debugMessage}: ${normalizedError.message}`);
   }
 
   await waitForFetchCompletion(modifiedFetchResult);
@@ -553,13 +536,14 @@ const applyResponseInterceptorAndReparse = async <T>(
           urlString,
         );
       } catch (parseError: unknown) {
-        await handleParseErrorWithCleanup(
+        await handleErrorWithCleanup(
           modifiedFetchResult,
           fetchResult,
           parseError,
           throwOnFailed,
           unwatchSync,
           cleanupCallback,
+          "Failed to parse modified response body",
         );
         return false;
       }
@@ -567,13 +551,14 @@ const applyResponseInterceptorAndReparse = async <T>(
 
     return true;
   } catch (error: unknown) {
-    await handleInterceptorErrorWithCleanup(
+    await handleErrorWithCleanup(
       modifiedFetchResult,
       fetchResult,
       error,
       throwOnFailed,
       unwatchSync,
       cleanupCallback,
+      "Response interceptor error on modified fetch",
     );
     return false;
   }
