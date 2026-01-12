@@ -338,13 +338,170 @@ const cleanupWatcherOnError = async <T>(
 };
 
 /**
+ * Applies response interceptor to the response
+ *
+ * @param originalResponse - Original response from fetch
+ * @param urlString - Request URL string
+ * @param interceptedRequest - Intercepted request init
+ * @returns Intercepted response (may be modified or same as original)
+ */
+const applyResponseInterceptor = async (
+  originalResponse: Response,
+  urlString: string,
+  interceptedRequest: RequestInit,
+): Promise<Response> => {
+  if (!state.globalResponseInterceptor) {
+    return originalResponse;
+  }
+
+  return await state.globalResponseInterceptor(
+    originalResponse,
+    urlString,
+    interceptedRequest,
+  );
+};
+
+/**
+ * Updates response and statusCode in both fetch results if response was modified
+ *
+ * @param modifiedFetchResult - Modified fetch result
+ * @param fetchResult - Original fetch result to sync with
+ * @param interceptedResponse - Response from interceptor
+ * @param originalResponse - Original response before interception
+ */
+const updateResponseState = <T>(
+  modifiedFetchResult: UseFzFetchReturn<T>,
+  fetchResult: UseFzFetchReturn<T>,
+  interceptedResponse: Response,
+  originalResponse: Response,
+): void => {
+  if (interceptedResponse !== originalResponse) {
+    modifiedFetchResult.response.value = interceptedResponse;
+    fetchResult.response.value = interceptedResponse;
+    modifiedFetchResult.statusCode.value = interceptedResponse.status;
+    fetchResult.statusCode.value = interceptedResponse.status;
+  }
+};
+
+/**
+ * Re-parses response body and updates data in both fetch results
+ *
+ * @vueuse/core doesn't automatically re-parse when response changes, so we must
+ * manually parse the modified response body.
+ *
+ * @param modifiedFetchResult - Modified fetch result
+ * @param fetchResult - Original fetch result to sync with
+ * @param interceptedResponse - Modified response to parse
+ * @param urlString - Request URL string for debug logging
+ * @returns Parsed data
+ */
+const reparseResponseBody = async <T>(
+  modifiedFetchResult: UseFzFetchReturn<T>,
+  fetchResult: UseFzFetchReturn<T>,
+  interceptedResponse: Response,
+  urlString: string,
+): Promise<T> => {
+  const parsedData = await parseResponseBody<T>(interceptedResponse);
+  modifiedFetchResult.data.value = parsedData;
+  fetchResult.data.value = parsedData;
+
+  if (state.globalDebug) {
+    console.debug(
+      `[useFzFetch] Response modified by interceptor, body re-parsed: ${urlString}`,
+    );
+  }
+
+  return parsedData;
+};
+
+/**
+ * Handles parse error with watcher cleanup
+ *
+ * Stops watcher immediately to prevent it from overwriting the error.
+ * The watcher syncs modifiedFetchResult.error (which is null since fetch succeeded)
+ * to fetchResult.error, which would overwrite the parse error we're about to set.
+ *
+ * @param modifiedFetchResult - Modified fetch result to wait for completion
+ * @param fetchResult - Original fetch result to set error on
+ * @param parseError - Parse error that occurred
+ * @param throwOnFailed - Whether to throw on errors
+ * @param unwatchSync - Function to stop watching
+ * @param cleanupCallback - Callback to conditionally set currentWatch to null
+ * @returns Promise that resolves when cleanup is complete
+ */
+const handleParseErrorWithCleanup = async <T>(
+  modifiedFetchResult: UseFzFetchReturn<T>,
+  fetchResult: UseFzFetchReturn<T>,
+  parseError: unknown,
+  throwOnFailed: boolean | undefined,
+  unwatchSync: () => void,
+  cleanupCallback: (watcherToCleanup: () => void) => void,
+): Promise<void> => {
+  unwatchSync();
+  cleanupCallback(unwatchSync);
+
+  const normalizedError = handleFetchError(
+    fetchResult.error,
+    parseError,
+    throwOnFailed,
+  );
+  if (state.globalDebug) {
+    console.debug(
+      `[useFzFetch] Failed to parse modified response body: ${normalizedError.message}`,
+    );
+  }
+
+  await waitForFetchCompletion(modifiedFetchResult);
+};
+
+/**
+ * Handles response interceptor error with watcher cleanup
+ *
+ * Stops watcher immediately to prevent it from overwriting the error.
+ * The watcher syncs modifiedFetchResult.error (which is null since fetch succeeded)
+ * to fetchResult.error, which would overwrite the interceptor error we're about to set.
+ *
+ * @param modifiedFetchResult - Modified fetch result to wait for completion
+ * @param fetchResult - Original fetch result to set error on
+ * @param error - Error from response interceptor
+ * @param throwOnFailed - Whether to throw on errors
+ * @param unwatchSync - Function to stop watching
+ * @param cleanupCallback - Callback to conditionally set currentWatch to null
+ * @returns Promise that resolves when cleanup is complete
+ */
+const handleInterceptorErrorWithCleanup = async <T>(
+  modifiedFetchResult: UseFzFetchReturn<T>,
+  fetchResult: UseFzFetchReturn<T>,
+  error: unknown,
+  throwOnFailed: boolean | undefined,
+  unwatchSync: () => void,
+  cleanupCallback: (watcherToCleanup: () => void) => void,
+): Promise<void> => {
+  unwatchSync();
+  cleanupCallback(unwatchSync);
+
+  const normalizedError = handleFetchError(
+    fetchResult.error,
+    error,
+    throwOnFailed,
+  );
+  if (state.globalDebug) {
+    console.debug(
+      `[useFzFetch] Response interceptor error on modified fetch: ${normalizedError.message}`,
+    );
+  }
+
+  await waitForFetchCompletion(modifiedFetchResult);
+};
+
+/**
  * Applies response interceptor and re-parses body if response was modified
  *
- * Handles the entire flow of response interception, including:
- * - Running the response interceptor
- * - Updating response and statusCode if modified
- * - Re-parsing the body if response was modified
- * - Handling errors from interceptor or parsing
+ * Orchestrates the response interception flow:
+ * - Runs the response interceptor
+ * - Updates response and statusCode if modified
+ * - Re-parses the body if response was modified
+ * - Handles errors from interceptor or parsing
  *
  * @param modifiedFetchResult - Modified fetch result
  * @param fetchResult - Original fetch result to sync with
@@ -369,79 +526,55 @@ const applyResponseInterceptorAndReparse = async <T>(
     return true;
   }
 
+  const originalResponse = modifiedFetchResult.response.value;
+
   try {
-    const interceptedResponse = await state.globalResponseInterceptor(
-      modifiedFetchResult.response.value,
+    const interceptedResponse = await applyResponseInterceptor(
+      originalResponse,
       urlString,
       interceptedRequest,
     );
 
     // Update response if interceptor modified it
-    if (interceptedResponse !== modifiedFetchResult.response.value) {
-      modifiedFetchResult.response.value = interceptedResponse;
-      fetchResult.response.value = interceptedResponse;
-      modifiedFetchResult.statusCode.value = interceptedResponse.status;
-      fetchResult.statusCode.value = interceptedResponse.status;
+    updateResponseState(
+      modifiedFetchResult,
+      fetchResult,
+      interceptedResponse,
+      originalResponse,
+    );
 
-      // Re-parse body if response was modified
-      // @vueuse/core doesn't automatically re-parse when response changes
+    // Re-parse body if response was modified
+    if (interceptedResponse !== originalResponse) {
       try {
-        const parsedData = await parseResponseBody<T>(interceptedResponse);
-        modifiedFetchResult.data.value = parsedData;
-        fetchResult.data.value = parsedData;
-
-        if (state.globalDebug) {
-          console.debug(
-            `[useFzFetch] Response modified by interceptor, body re-parsed: ${urlString}`,
-          );
-        }
+        await reparseResponseBody<T>(
+          modifiedFetchResult,
+          fetchResult,
+          interceptedResponse,
+          urlString,
+        );
       } catch (parseError: unknown) {
-        // Stop watcher immediately to prevent it from overwriting the error
-        // The watcher syncs modifiedFetchResult.error (which is null since fetch succeeded)
-        // to fetchResult.error, which would overwrite the parse error we're about to set
-        unwatchSync();
-        cleanupCallback(unwatchSync);
-
-        // If parsing fails, set error and stop execution
-        const normalizedError = handleFetchError(
-          fetchResult.error,
+        await handleParseErrorWithCleanup(
+          modifiedFetchResult,
+          fetchResult,
           parseError,
           throwOnFailed,
+          unwatchSync,
+          cleanupCallback,
         );
-        if (state.globalDebug) {
-          console.debug(
-            `[useFzFetch] Failed to parse modified response body: ${normalizedError.message}`,
-          );
-        }
-
-        // Wait for request to fully complete before returning
-        await waitForFetchCompletion(modifiedFetchResult);
         return false;
       }
     }
 
     return true;
   } catch (error: unknown) {
-    // Stop watcher immediately to prevent it from overwriting the error
-    // The watcher syncs modifiedFetchResult.error (which is null since fetch succeeded)
-    // to fetchResult.error, which would overwrite the interceptor error we're about to set
-    unwatchSync();
-    cleanupCallback(unwatchSync);
-
-    // If response interceptor throws, treat as error and stop execution
-    const normalizedError = handleFetchError(
-      fetchResult.error,
+    await handleInterceptorErrorWithCleanup(
+      modifiedFetchResult,
+      fetchResult,
       error,
       throwOnFailed,
+      unwatchSync,
+      cleanupCallback,
     );
-    if (state.globalDebug) {
-      console.debug(
-        `[useFzFetch] Response interceptor error on modified fetch: ${normalizedError.message}`,
-      );
-    }
-
-    // Wait for request to fully complete before returning
-    await waitForFetchCompletion(modifiedFetchResult);
     return false;
   }
 };
