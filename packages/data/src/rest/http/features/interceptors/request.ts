@@ -3,6 +3,7 @@ import type { UseFzFetchOptions, UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
 import { normalizeUseFzFetchOptions } from "../../utils/options";
 import { handleFetchError } from "../../utils/error";
+import { parseResponseBody } from "../../utils/response";
 import type { RequestInterceptor } from "./types";
 
 /**
@@ -406,16 +407,57 @@ export const wrapWithRequestInterceptor = <T>(
                 urlString,
                 interceptedRequest,
               );
+
+              // Update response if interceptor modified it
               if (interceptedResponse !== modifiedFetchResult.response.value) {
                 modifiedFetchResult.response.value = interceptedResponse;
                 fetchResult.response.value = interceptedResponse;
+                modifiedFetchResult.statusCode.value = interceptedResponse.status;
+                fetchResult.statusCode.value = interceptedResponse.status;
+
+                // Re-parse body if response was modified
+                // @vueuse/core doesn't automatically re-parse when response changes
+                try {
+                  const parsedData =
+                    await parseResponseBody<T>(interceptedResponse);
+                  modifiedFetchResult.data.value = parsedData;
+                  fetchResult.data.value = parsedData;
+
+                  if (state.globalDebug) {
+                    console.debug(
+                      `[useFzFetch] Response modified by interceptor, body re-parsed: ${urlString}`,
+                    );
+                  }
+                } catch (parseError: unknown) {
+                  // If parsing fails, set error and stop execution
+                  const normalizedError = handleFetchError(
+                    fetchResult.error,
+                    parseError,
+                    throwOnFailed,
+                  );
+                  if (state.globalDebug) {
+                    console.debug(
+                      `[useFzFetch] Failed to parse modified response body: ${normalizedError.message}`,
+                    );
+                  }
+                  // Stop execution when error is set (don't continue processing)
+                  return;
+                }
               }
-            } catch (responseInterceptorError: unknown) {
+            } catch (error: unknown) {
+              // If response interceptor throws, treat as error and stop execution
+              const normalizedError = handleFetchError(
+                fetchResult.error,
+                error,
+                throwOnFailed,
+              );
               if (state.globalDebug) {
                 console.debug(
-                  `[useFzFetch] Response interceptor error on modified fetch: ${responseInterceptorError}`,
+                  `[useFzFetch] Response interceptor error on modified fetch: ${normalizedError.message}`,
                 );
               }
+              // Stop execution when error is set (don't continue processing)
+              return;
             }
           }
         } catch (error: unknown) {
