@@ -693,6 +693,16 @@ export const wrapWithRequestInterceptor = <T>(
           // This ensures state is fully synchronized before handling the error
           await waitForFetchCompletion(modifiedFetchResult);
 
+          // Stop watcher immediately to prevent it from overwriting the error
+          // and to prevent memory leak. Must be done BEFORE handleFetchError
+          // because handleFetchError may throw when throwOnFailed is true.
+          unwatchSync();
+          // Only clear currentWatch if it still refers to the watcher being cleaned up
+          // This prevents race conditions when execute() is called multiple times rapidly
+          if (currentWatch === unwatchSync) {
+            currentWatch = null;
+          }
+
           // handleFetchError will throw if throwOnFailed is true
           const normalizedError = handleFetchError(
             fetchResult.error,
@@ -706,18 +716,6 @@ export const wrapWithRequestInterceptor = <T>(
           }
           // If throwOnFailed is false, we return here (error is set on fetchResult.error)
           // If throwOnFailed is true, handleFetchError already threw, so this won't execute
-          // Clean up watcher to prevent memory leak
-          await cleanupWatcherOnError(
-            modifiedFetchResult,
-            unwatchSync,
-            (watcherToCleanup) => {
-              // Only clear currentWatch if it still refers to the watcher being cleaned up
-              // This prevents race conditions when execute() is called multiple times rapidly
-              if (currentWatch === watcherToCleanup) {
-                currentWatch = null;
-              }
-            },
-          );
           return;
         }
 
