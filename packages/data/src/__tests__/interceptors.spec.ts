@@ -423,6 +423,175 @@ describe("Interceptors", () => {
     });
   });
 
+  describe("Request Interceptor + Response Interceptor Integration", () => {
+    it("should re-parse body and update statusCode when response interceptor modifies response on modified request", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, requestInit) => {
+          // Modify requestInit to trigger the modified fetch path
+          return {
+            ...requestInit,
+            headers: {
+              ...(requestInit.headers as Record<string, string>),
+              "X-Custom-Header": "added-by-request-interceptor",
+            },
+          };
+        },
+        responseInterceptor: async (response) => {
+          // Modify response body and status
+          const clonedResponse = response.clone();
+          const data = await clonedResponse.json();
+          const modifiedData = { ...data, modified: true };
+
+          return new Response(JSON.stringify(modifiedData), {
+            status: 201, // Changed status
+            headers: response.headers,
+          });
+        },
+      });
+
+      global.fetch = vi.fn(() => {
+        return Promise.resolve(
+          new Response(JSON.stringify({ original: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      const { execute, data, statusCode, response } = useFzFetch<{
+        original: boolean;
+        modified?: boolean;
+      }>("/test");
+
+      await execute();
+
+      // Data should be re-parsed with modified content
+      expect(data.value).toEqual({ original: true, modified: true });
+      // StatusCode should be updated from modified response
+      expect(statusCode.value).toBe(201);
+      // Response should be the modified one
+      expect(response.value?.status).toBe(201);
+    });
+
+    it("should handle response interceptor errors properly when request interceptor modifies requestInit", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, requestInit) => {
+          // Modify requestInit to trigger the modified fetch path
+          return {
+            ...requestInit,
+            headers: {
+              ...(requestInit.headers as Record<string, string>),
+              "X-Custom-Header": "added-by-request-interceptor",
+            },
+          };
+        },
+        responseInterceptor: async () => {
+          // Throw error in response interceptor
+          throw new Error("Response interceptor error");
+        },
+      });
+
+      global.fetch = vi.fn(() => {
+        return Promise.resolve(
+          new Response(JSON.stringify({ success: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      const { execute, error } = useFzFetch<{ success: boolean }>("/test");
+
+      // Should not throw when throwOnFailed is false (default)
+      await execute();
+
+      // Error should be set on fetchResult
+      expect(error.value).toBeDefined();
+      expect(error.value?.message).toContain("Response interceptor error");
+    });
+
+    it("should throw error when response interceptor fails and throwOnFailed is true", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, requestInit) => {
+          // Modify requestInit to trigger the modified fetch path
+          return {
+            ...requestInit,
+            headers: {
+              ...(requestInit.headers as Record<string, string>),
+              "X-Custom-Header": "added-by-request-interceptor",
+            },
+          };
+        },
+        responseInterceptor: async () => {
+          // Throw error in response interceptor
+          throw new Error("Response interceptor error");
+        },
+      });
+
+      global.fetch = vi.fn(() => {
+        return Promise.resolve(
+          new Response(JSON.stringify({ success: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      const { execute, error } = useFzFetch<{ success: boolean }>("/test");
+
+      // Should throw when throwOnFailed is true
+      await expect(execute(true)).rejects.toThrow("Response interceptor error");
+
+      // Error should also be set on fetchResult
+      expect(error.value).toBeDefined();
+      expect(error.value?.message).toContain("Response interceptor error");
+    });
+
+    it("should handle parse errors when response interceptor modifies response on modified request", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, requestInit) => {
+          // Modify requestInit to trigger the modified fetch path
+          return {
+            ...requestInit,
+            headers: {
+              ...(requestInit.headers as Record<string, string>),
+              "X-Custom-Header": "added-by-request-interceptor",
+            },
+          };
+        },
+        responseInterceptor: async (response) => {
+          // Return invalid JSON response
+          return new Response("invalid json", {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        },
+      });
+
+      global.fetch = vi.fn(() => {
+        return Promise.resolve(
+          new Response(JSON.stringify({ original: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as any;
+
+      const { execute, error } = useFzFetch<{ original: boolean }>("/test");
+
+      // Should not throw when throwOnFailed is false (default)
+      await execute();
+
+      // Error should be set due to parse failure
+      expect(error.value).toBeDefined();
+      expect(error.value?.message).toContain("JSON");
+    });
+  });
+
   describe("Request Interceptor - Immediate Execution", () => {
     it("should call request interceptor when immediate: true (automatic execution)", async () => {
       let interceptorCalled = false;
