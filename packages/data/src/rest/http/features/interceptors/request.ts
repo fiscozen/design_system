@@ -1,4 +1,4 @@
-import { toValue, watch, type MaybeRefOrGetter } from "vue";
+import { toValue, watch, nextTick, type MaybeRefOrGetter } from "vue";
 import type { UseFzFetchOptions, UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
 import { normalizeUseFzFetchOptions } from "../../utils/options";
@@ -262,6 +262,40 @@ const syncFetchResultState = <T>(
 };
 
 /**
+ * Waits for a fetch request to fully complete (isFetching becomes false)
+ *
+ * Ensures all state updates are propagated before proceeding.
+ * This is necessary when synchronizing state between fetch results.
+ *
+ * @param fetchResult - Fetch result to wait for
+ * @returns Promise that resolves when request is fully complete
+ */
+const waitForFetchCompletion = <T>(
+  fetchResult: UseFzFetchReturn<T>,
+): Promise<void> => {
+  if (!fetchResult.isFetching.value) {
+    return Promise.resolve();
+  }
+
+  return new Promise<void>((resolve) => {
+    const unwatchFetching = watch(
+      () => fetchResult.isFetching.value,
+      (isFetching) => {
+        if (!isFetching) {
+          // Request fully completed, cleanup watch after nextTick
+          // to ensure all state updates are propagated
+          nextTick(() => {
+            unwatchFetching();
+            resolve();
+          });
+        }
+      },
+      { immediate: true },
+    );
+  });
+};
+
+/**
  * Handles errors from interceptor execution
  */
 const handleInterceptorError = <T>(
@@ -360,7 +394,7 @@ export const wrapWithRequestInterceptor = <T>(
         );
         currentWatch = unwatchSync;
 
-        // Execute the modified fetch and handle errors
+        // Execute the modified fetch and wait for completion
         try {
           await modifiedFetchResult.execute(throwOnFailed);
 
@@ -385,8 +419,11 @@ export const wrapWithRequestInterceptor = <T>(
             }
           }
         } catch (error: unknown) {
-          unwatchSync();
-          currentWatch = null;
+          // Wait for request to fully complete even on error
+          // This ensures state is fully synchronized before handling the error
+          await waitForFetchCompletion(modifiedFetchResult);
+
+          // handleFetchError will throw if throwOnFailed is true
           const normalizedError = handleFetchError(
             fetchResult.error,
             error,
@@ -397,18 +434,27 @@ export const wrapWithRequestInterceptor = <T>(
               `[useFzFetch] Modified fetch request error: ${normalizedError.message}`,
             );
           }
+          // If throwOnFailed is false, we return here (error is set on fetchResult.error)
+          // If throwOnFailed is true, handleFetchError already threw, so this won't execute
           return;
         }
 
-        // Stop watching when request completes (success or error)
-        unwatchSync();
-        currentWatch = null;
+        // Wait for request to fully complete before stopping watch
+        // This ensures all state updates are propagated
+        await waitForFetchCompletion(modifiedFetchResult);
+
+        // Stop watching when request fully completes (success or error)
+        // Use nextTick to ensure all state updates are propagated before cleanup
+        nextTick(() => {
+          unwatchSync();
+          currentWatch = null;
+        });
         return;
       }
 
       // If requestInit wasn't modified, execute original request
       // URL is already re-evaluated above with toValue(url)
-      return originalExecute(throwOnFailed);
+      return await originalExecute(throwOnFailed);
     } catch (error: unknown) {
       // If interceptor throws, handle error
       handleInterceptorError(fetchResult, error, throwOnFailed, currentWatch);
