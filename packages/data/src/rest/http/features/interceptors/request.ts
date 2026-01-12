@@ -263,6 +263,27 @@ const syncFetchResultState = <T>(
 };
 
 /**
+ * Handles fetch completion: cleans up watch and resolves Promise
+ *
+ * Called when isFetching becomes false. Uses nextTick to ensure all state
+ * updates are propagated before resolving the Promise.
+ *
+ * @param unwatchFetching - Function to stop watching
+ * @param resolve - Promise resolve function
+ */
+const handleFetchCompletion = (
+  unwatchFetching: () => void,
+  resolve: () => void,
+) => {
+  // Request fully completed, cleanup watch after nextTick
+  // to ensure all state updates are propagated
+  nextTick(() => {
+    unwatchFetching();
+    resolve();
+  });
+};
+
+/**
  * Waits for a fetch request to fully complete (isFetching becomes false)
  *
  * Ensures all state updates are propagated before proceeding.
@@ -279,16 +300,12 @@ const waitForFetchCompletion = <T>(
   }
 
   return new Promise<void>((resolve) => {
-    const unwatchFetching = watch(
+    let unwatchFetching: (() => void) | null = null;
+    unwatchFetching = watch(
       () => fetchResult.isFetching.value,
       (isFetching) => {
-        if (!isFetching) {
-          // Request fully completed, cleanup watch after nextTick
-          // to ensure all state updates are propagated
-          nextTick(() => {
-            unwatchFetching();
-            resolve();
-          });
+        if (!isFetching && unwatchFetching) {
+          handleFetchCompletion(unwatchFetching, resolve);
         }
       },
       { immediate: true },
