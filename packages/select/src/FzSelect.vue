@@ -417,20 +417,26 @@ const handleOpenerKeydown = (event: KeyboardEvent) => {
   }
 };
 
-const handleInputFocus = (event: FocusEvent) => {
+/**
+ * Opens dropdown if closed and component is interactive
+ *
+ * Checks interactivity state and opens the dropdown if it's currently closed,
+ * then updates container width for proper positioning.
+ */
+function openDropdownIfClosed() {
   if (!isInteractive.value) return;
   if (!isOpen.value) {
     isOpen.value = true;
     updateContainerWidth();
   }
+}
+
+const handleInputFocus = (event: FocusEvent) => {
+  openDropdownIfClosed();
 };
 
 const handleInputClick = (event: MouseEvent) => {
-  if (!isInteractive.value) return;
-  if (!isOpen.value) {
-    isOpen.value = true;
-    updateContainerWidth();
-  }
+  openDropdownIfClosed();
 };
 
 const handleInputKeydown = (event: KeyboardEvent) => {
