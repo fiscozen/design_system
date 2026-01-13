@@ -299,17 +299,16 @@ const boundAttrs = computed(() => {
   }
 
   // For button type, include disabled attribute when disabled is true
-  // Exception: if tabindex is explicitly set to 0 (for keyboard navigation),
-  // don't set disabled="true" to allow programmatic focus (but keep aria-disabled="true")
   if (props.type === "action") {
     const buttonAttrs: Record<string, string | number | boolean | undefined> = {
       ...baseAriaAttributes,
       type: "button",
     };
 
-    // Set disabled attribute for buttons when props.disabled is true,
-    // unless tabindex is explicitly set to 0 (allows focus for keyboard navigation)
-    if (props.disabled && computedTabindex.value !== 0) {
+    // Set disabled attribute for buttons when props.disabled is true
+    // This ensures native HTML disabled behavior, preventing all interactions
+    // (click, keyboard, programmatic) regardless of tabindex value
+    if (props.disabled) {
       buttonAttrs.disabled = true;
     }
 
