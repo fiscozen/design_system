@@ -28,8 +28,6 @@
  */
 import { computed, ref, watch, nextTick, onMounted, Ref } from "vue";
 
-import Fuse from "fuse.js";
-
 import type {
   FzSelectProps,
   FzSelectOptionsProps,
@@ -42,7 +40,12 @@ import {
   useClickOutside,
 } from "@fiscozen/composables";
 
-import { debounce } from "./utils";
+import {
+  debounce,
+  isSelectableOption,
+  applyCustomFilter,
+  filterSelectableOptions,
+} from "./utils";
 
 import {
   calculateContainerWidth,
@@ -100,112 +103,54 @@ const internalFilteredOptions = ref<FzSelectOptionsProps[] | undefined>(
   undefined
 );
 
-const fuseOptions = {
-  keys: ["label"],
-};
-
-/**
- * Reconstructs grouped options structure after filtering
- *
- * Preserves group labels only when they contain filtered options.
- * This maintains visual grouping while showing only relevant results.
- */
-const reconstructGroupedOptions = (
-  allOptions: FzSelectOptionsProps[],
-  filteredSelectableOptions: FzSelectOptionProps[]
-): FzSelectOptionsProps[] => {
-  const result: FzSelectOptionsProps[] = [];
-  const filteredValues = new Set(
-    filteredSelectableOptions.map((opt) => opt.value)
-  );
-
-  let currentGroupLabel: FzSelectOptionsProps | null = null;
-  let labelAdded = false; // Track if current group label has been added
-
-  for (const item of allOptions) {
-    if (item.kind === "label") {
-      // Start new group - reset tracking
-      currentGroupLabel = item;
-      labelAdded = false;
-    } else if (isSelectableOption(item)) {
-      // Check if this option is in the filtered list
-      if (filteredValues.has(item.value)) {
-        // Add group label only once, before the first filtered option in the group
-        if (currentGroupLabel && !labelAdded) {
-          result.push(currentGroupLabel);
-          labelAdded = true;
-        }
-        // Add the filtered option
-        result.push(item);
-      }
-    }
-  }
-
-  return result;
-};
-
 /**
  * Updates filtered options based on search value
  *
- * Priority: filterFn (if provided) > Fuse.js (when filtrable) > all options.
+ * Applies filtering strategy based on component configuration:
+ * - Custom filterFn (if provided) - takes precedence, can be async
+ * - Fuzzy search or simple search (when filtrable with search value)
+ * - All options (when filtrable but search is empty, or when not filtrable)
+ *
  * For grouped options, preserves labels only for groups with filtered results.
  * Empty input shows all options regardless of filtrable state.
+ *
+ * Priority: filterFn > fuzzy/simple search > all options
  */
 const updateFilteredOptions = async () => {
   // If options is undefined, keep internalFilteredOptions as undefined (will show FzProgress)
   if (props.options === undefined) {
     internalFilteredOptions.value = undefined;
-  } else if (props.filtrable) {
-    if (props.filterFn) {
-      // Custom filter function takes precedence (can be async)
-      internalFilteredOptions.value = undefined;
-      try {
-        const result = await props.filterFn(debouncedSearchValue.value);
-        internalFilteredOptions.value = result || [];
-      } catch (error) {
-        console.error("[FzSelect] Error in filterFn:", error);
-        internalFilteredOptions.value = [];
-      }
-    } else if (
-      debouncedSearchValue.value &&
-      debouncedSearchValue.value.trim() !== ""
-    ) {
-      let filteredSelectable: FzSelectOptionProps[] = [];
-
-      // Only filter when input has a value (using debounced value)
-      // Filter only selectable options (exclude labels)
-      const selectableOptions = props.options.filter(isSelectableOption);
-
-      if (props.fuzzySearch) {
-        const fuse = new Fuse(selectableOptions, fuseOptions);
-        filteredSelectable = fuse
-          .search(debouncedSearchValue.value)
-          .map((searchRes: { item: FzSelectOptionProps }) => searchRes.item);
-      } else {
-        const lowerCaseSearchValue = debouncedSearchValue.value.toLowerCase();
-        filteredSelectable = selectableOptions.filter((option) =>
-          option.label.toLowerCase().includes(lowerCaseSearchValue)
-        );
-      }
-
-      // Reconstruct grouped structure if original had groups
-      const hasGroups = props.options.some((opt) => opt.kind === "label");
-      if (hasGroups) {
-        internalFilteredOptions.value = reconstructGroupedOptions(
-          props.options,
-          filteredSelectable
-        );
-      } else {
-        internalFilteredOptions.value = filteredSelectable;
-      }
-    } else {
-      // When filtrable but input is empty, show all options
-      internalFilteredOptions.value = props.options;
-    }
-  } else {
-    // Default: show all options (when not filtrable)
-    internalFilteredOptions.value = props.options;
+    return;
   }
+
+  // When not filtrable, show all options
+  if (!props.filtrable) {
+    internalFilteredOptions.value = props.options;
+    return;
+  }
+
+  // Custom filter function takes precedence (can be async)
+  if (props.filterFn) {
+    internalFilteredOptions.value = undefined;
+    internalFilteredOptions.value = await applyCustomFilter(
+      props.filterFn,
+      debouncedSearchValue.value
+    );
+    return;
+  }
+
+  // When filtrable but input is empty, show all options
+  if (!debouncedSearchValue.value || debouncedSearchValue.value.trim() === "") {
+    internalFilteredOptions.value = props.options;
+    return;
+  }
+
+  // Apply search-based filtering (fuzzy or simple)
+  internalFilteredOptions.value = filterSelectableOptions(
+    props.options,
+    debouncedSearchValue.value,
+    props.fuzzySearch ?? true
+  );
 };
 
 /**
@@ -276,10 +221,6 @@ const isInteractive = computed(() => !isDisabled.value && !isReadonly.value);
 // ============================================================================
 // COMPUTED - Options
 // ============================================================================
-
-const isSelectableOption = (
-  option: FzSelectOptionsProps
-): option is FzSelectOptionProps => option.kind !== "label";
 
 const selectedOption = computed(() => {
   if (!props.options || !model.value) return undefined;
