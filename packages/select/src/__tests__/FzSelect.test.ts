@@ -2201,4 +2201,182 @@ describe("FzSelect", () => {
       expect(optionTexts.some((text) => text?.includes("Java"))).toBe(true);
     });
   });
+
+  describe("Clear icon", () => {
+    it("shows clear icon when clearable is true and value is selected", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "option1",
+          clearable: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      // Find clear icon button (xmark icon)
+      const clearButton = wrapper.find('button[aria-label="Clear selection"]');
+      expect(clearButton.exists()).toBe(true);
+    });
+
+    it("does not show clear icon when clearable is false", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "option1",
+          clearable: false,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const clearButton = wrapper.find('button[aria-label="Clear selection"]');
+      expect(clearButton.exists()).toBe(false);
+    });
+
+    it("does not show clear icon when no value is selected", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: undefined,
+          clearable: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const clearButton = wrapper.find('button[aria-label="Clear selection"]');
+      expect(clearButton.exists()).toBe(false);
+    });
+
+    it("does not show clear icon when disabled", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "option1",
+          clearable: true,
+          disabled: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const clearButton = wrapper.find('button[aria-label="Clear selection"]');
+      expect(clearButton.exists()).toBe(false);
+    });
+
+    it("does not show clear icon when readonly", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "option1",
+          clearable: true,
+          readonly: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const clearButton = wrapper.find('button[aria-label="Clear selection"]');
+      expect(clearButton.exists()).toBe(false);
+    });
+
+    it("clears selection when clear icon is clicked", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "option1",
+          clearable: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const clearButton = wrapper.find('button[aria-label="Clear selection"]');
+      expect(clearButton.exists()).toBe(true);
+
+      await clearButton.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.emitted("fzselect:select")).toBeTruthy();
+      expect(wrapper.emitted("fzselect:select")?.[0]).toEqual([undefined]);
+      expect(wrapper.emitted("update:modelValue")).toBeTruthy();
+      expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([undefined]);
+    });
+
+    it("shows clear icon in filtrable mode when value is selected", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "option1",
+          clearable: true,
+          filtrable: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      // Open dropdown to show input
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      // Clear icon should be visible in input's right-icon slot
+      const clearButton = wrapper.find('button[aria-label="Clear selection"]');
+      expect(clearButton.exists()).toBe(true);
+    });
+
+    it("clears selection when clear icon is clicked in filtrable mode", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "option1",
+          clearable: true,
+          filtrable: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      // Open dropdown to show input
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const clearButton = wrapper.find('button[aria-label="Clear selection"]');
+      expect(clearButton.exists()).toBe(true);
+
+      await clearButton.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.emitted("fzselect:select")).toBeTruthy();
+      expect(wrapper.emitted("fzselect:select")?.[0]).toEqual([undefined]);
+      expect(wrapper.emitted("update:modelValue")).toBeTruthy();
+      expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([undefined]);
+    });
+  });
 });

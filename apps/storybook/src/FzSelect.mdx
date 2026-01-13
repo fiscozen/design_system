@@ -163,7 +163,7 @@ const options = [
       <td><code>clearable</code></td>
       <td><code>boolean</code></td>
       <td><code>true</code></td>
-      <td>If true, allows clearing the selected value by clicking the selected option again</td>
+      <td>If true, allows clearing the selected value. When a value is selected, a clear icon (×) appears before the chevron. Clicking the icon or the selected option again clears the selection</td>
     </tr>
     <tr>
       <td><code>leftIcon</code></td>
@@ -592,6 +592,40 @@ const options = [
   />
 </template>
 ```
+
+### Clearable Select with Clear Icon
+
+When `clearable` is `true` (default), a clear icon (×) appears before the chevron when a value is selected. Clicking the icon clears the selection:
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzSelect } from '@fiscozen/select'
+
+const selected = ref<string>('option1')
+
+const options = [
+  { label: 'Option One', value: 'option1' },
+  { label: 'Option Two', value: 'option2' },
+  { label: 'Option Three', value: 'option3' }
+]
+</script>
+
+<template>
+  <FzSelect
+    v-model="selected"
+    label="Select an option"
+    :options="options"
+    placeholder="Choose an option"
+    :clearable="true"
+  />
+</template>
+```
+
+The clear icon is automatically hidden when:
+- No value is selected
+- The component is disabled or readonly
+- `clearable` is set to `false`
 
 ## Accessibility
 

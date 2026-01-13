@@ -132,6 +132,11 @@ export interface FzSelectButtonProps {
    * @default 'invisible'
    */
   rightIconButtonVariant?: IconButtonVariant;
+  /**
+   * If true, shows a clear icon when a value is selected.
+   * @default false
+   */
+  clearable?: boolean;
 }
 
 /**

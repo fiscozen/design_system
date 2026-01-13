@@ -495,6 +495,22 @@ const handleSelect = (option: FzSelectOptionProps) => {
 };
 
 /**
+ * Handles clear icon click
+ *
+ * Resets the selected value and related state when user clicks the clear icon.
+ */
+const handleClearClick = () => {
+  if (!isInteractive.value) return;
+
+  model.value = undefined;
+  searchValue.value = "";
+  internalFilteredOptions.value = props.options;
+
+  emit("fzselect:select", model.value);
+  isOpen.value = false;
+};
+
+/**
  * Handles keyboard navigation in options list
  *
  * Navigates through all options (including disabled/readonly) for WCAG compliance.
@@ -820,8 +836,13 @@ watch(isOpen, (newValue) => {
         if (selectedOption.value) {
           nextTick(() => {
             requestAnimationFrame(() => {
+              // Check again in case selectedOption was cleared during nextTick
+              if (!selectedOption.value) {
+                resetScrollPosition();
+                return;
+              }
               const selectedOptionElement = optionRefs.value.get(
-                selectedOption.value!.value
+                selectedOption.value.value
               );
               if (
                 selectedOptionElement &&
@@ -989,6 +1010,7 @@ defineExpose({
     <template #opener="{ floating }">
       <FzSelectButton
         v-model="searchValue"
+        :clearable
         :disabled
         :environment
         :error
@@ -1015,6 +1037,7 @@ defineExpose({
         @input-click="handleInputClick"
         @input-keydown="handleInputKeydown"
         @right-icon-click="emit('fzselect:right-icon-click')"
+        @clear-click="handleClearClick"
         ref="buttonRef"
       >
         <template #default="slotProps">
