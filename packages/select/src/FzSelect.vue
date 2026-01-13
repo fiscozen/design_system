@@ -63,7 +63,7 @@ const props = withDefaults(defineProps<FzSelectProps>(), {
   fuzzySearch: true,
   environment: "frontoffice",
   error: false,
-  filtrable: true,
+  filtrable: false,
   noResultsMessage: "Nessun risultato trovato",
   optionsToShow: 25,
   position: "auto-vertical-start",

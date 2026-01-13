@@ -12,7 +12,7 @@
 
 ### Architecture
 
-The `FzSelect` component is a unified dropdown select component that supports both standard select behavior (when `filtrable` is false) and typeahead/filterable behavior (when `filtrable` is true). It shares the same floating panel, lazy loading, and keyboard navigation patterns. The key difference is the dual-mode input: when `filtrable` is true and the dropdown is open, it becomes a filterable input field; when closed or `filtrable` is false, it displays the selected option label as a button.
+The `FzSelect` component is a unified dropdown select component that supports both standard select behavior (default, when `filtrable` is false) and typeahead/filterable behavior (when `filtrable` is true). It shares the same floating panel, lazy loading, and keyboard navigation patterns. By default, it behaves as a standard select dropdown. When `filtrable` is set to true, the component shows a filterable input field when the dropdown is open; otherwise, it displays the selected option label as a button.
 
 **Key Components:**
 - `FzSelect.vue`: Main component orchestrating state, filtering, and navigation
@@ -54,9 +54,11 @@ The `FzSelect` component is a unified dropdown select component that supports bo
 
 #### Dual-Mode Input
 
-The component uses a dual-mode approach:
+The component uses a dual-mode approach when `filtrable` is true:
 - **Closed state**: Button displays selected option label (or placeholder)
-- **Open state**: Input field appears for filtering (when `filtrable` is true)
+- **Open state**: Input field appears for filtering
+
+When `filtrable` is false (default), the component behaves as a standard select dropdown with button-only interaction.
 
 This is handled in `FzSelectButton.vue` using `shouldShowTheInput` computed property that checks `filtrable && isOpen`.
 
@@ -69,7 +71,7 @@ The component supports three filtering modes:
    - Can return Promise for async operations
    - No race condition protection - shows last result received
 
-2. **Fuse.js fuzzy search**: Default when `filtrable` is true, `fuzzySearch` is true, and no `filterFn`
+2. **Fuse.js fuzzy search**: When `filtrable` is true, `fuzzySearch` is true, and no `filterFn`
    - Searches in `label` field
    - Handles typos and partial matches
    - Only active when input has value
@@ -80,7 +82,7 @@ The component supports three filtering modes:
    - Does not handle typos (exact substring match only)
    - Only active when input has value
 
-4. **No filtering**: When `filtrable` is false or input is empty
+4. **No filtering**: When `filtrable` is false (default) or input is empty
    - Shows all available options
 
 #### Lazy Loading
