@@ -8,7 +8,8 @@ A dropdown select component that combines text input with dropdown selection. Su
 
 ## Features
 
-- **Real-time Filtering**: Options are filtered as the user types using Fuse.js or custom filter functions
+- **Standard Select**: Default behavior - simple dropdown selection
+- **Filterable Mode**: Enable with `filtrable: true` - options are filtered as the user types using Fuse.js or custom filter functions
 - **Debounced Input**: Input events are debounced for better performance
 - **Lazy Loading**: Efficient rendering for large option lists (loads 25 options initially, more on scroll)
 - **Full Keyboard Navigation**: Arrow keys, Home, End, Enter, Escape, and Tab support (skips disabled options)
@@ -44,9 +45,38 @@ const options = [
 <template>
   <FzSelect
     v-model="selectedValue"
+    label="Select an option"
+    :options="options"
+    placeholder="Choose an option"
+  />
+</template>
+```
+
+### Filterable Select
+
+To enable filtering, set `filtrable` to `true`:
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzSelect } from '@fiscozen/select'
+
+const selectedValue = ref<string>()
+
+const options = [
+  { label: 'Option One', value: '1' },
+  { label: 'Option Two', value: '2' },
+  { label: 'Option Three', value: '3' }
+]
+</script>
+
+<template>
+  <FzSelect
+    v-model="selectedValue"
     label="Search"
     :options="options"
     placeholder="Type to search..."
+    :filtrable="true"
   />
 </template>
 ```
@@ -84,7 +114,7 @@ const options = [
     <tr>
       <td><code>filtrable</code></td>
       <td><code>boolean</code></td>
-      <td><code>true</code></td>
+      <td><code>false</code></td>
       <td>If true, typing in the input will filter the options using Fuse.js or filterFn</td>
     </tr>
     <tr>

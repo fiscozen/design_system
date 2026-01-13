@@ -60,7 +60,8 @@ const Template: SelectStory = {
   args: {
     environment: 'frontoffice',
     label: 'Select',
-    placeholder: 'Type to search...',
+    placeholder: 'Choose an option',
+    filtrable: false,
     options: [
       { value: '1', label: 'One' },
       { value: '2', label: 'Two' },
@@ -89,12 +90,82 @@ const BottomTemplate: SelectStory = {
   args: {
     environment: 'frontoffice',
     label: 'Select',
-    placeholder: 'Type to search...',
+    placeholder: 'Choose an option',
+    filtrable: false,
     options: [
       { value: '1', label: 'One' },
       { value: '2', label: 'Two' },
       { value: '3', label: 'Three' }
     ]
+  }
+}
+
+export const Select: SelectStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    environment: 'frontoffice'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button renders', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      await expect(opener).toBeInTheDocument()
+    })
+    
+    await step('Verify standard select behavior (no input field)', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      await userEvent.click(opener)
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
+      // In standard select mode, there should be no input field visible
+      const input = canvasElement.querySelector('input[type="text"]')
+      await expect(input).not.toBeInTheDocument()
+    })
+    
+    await step('Verify options are visible', async () => {
+      const options = canvas.getAllByRole('option')
+      await expect(options.length).toBeGreaterThan(0)
+    })
+  }
+}
+
+export const FilterableSelect: SelectStory = {
+  ...Template,
+  args: {
+    ...Template.args,
+    environment: 'frontoffice',
+    filtrable: true,
+    placeholder: 'Type to search...'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify opener button renders', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      await expect(opener).toBeInTheDocument()
+    })
+    
+    await step('Verify filterable input appears when opened', async () => {
+      const opener = canvas.getByRole('button', { name: /select/i })
+      await userEvent.click(opener)
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
+      // In filterable mode, there should be an input field
+      const input = canvas.getByPlaceholderText(/type to search/i)
+      await expect(input).toBeInTheDocument()
+    })
+    
+    await step('Verify filtering works', async () => {
+      const input = canvas.getByPlaceholderText(/type to search/i)
+      await userEvent.type(input, 'One')
+      await new Promise(resolve => setTimeout(resolve, 600))
+      
+      const options = canvas.getAllByRole('option')
+      await expect(options.length).toBeGreaterThan(0)
+      await expect(options[0]).toHaveTextContent('One')
+    })
   }
 }
 
@@ -373,7 +444,8 @@ export const CustomFilterFn: SelectStory = {
   args: {
     ...Template.args,
     label: 'Programming Language',
-    placeholder: 'Type to filter...'
+    placeholder: 'Type to filter...',
+    filtrable: true
   },
   decorators: [
     () => ({
@@ -558,7 +630,8 @@ export const RemoteLoading: SelectStory = {
   args: {
     ...Template.args,
     label: 'Search Users',
-    placeholder: 'Type to search...'
+    placeholder: 'Type to search...',
+    filtrable: true
   },
   decorators: [
     () => ({

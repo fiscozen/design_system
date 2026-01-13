@@ -105,7 +105,7 @@ interface FzSelectBaseProps extends FzFloatingProps {
   noResultsMessage?: string;
   /**
    * If true, writing in the input will filter the options
-   * @default true
+   * @default false
    */
   filtrable?: boolean;
 }
@@ -118,8 +118,8 @@ interface FzSelectBaseProps extends FzFloatingProps {
  */
 interface FzSelectFilterableProps extends FzSelectBaseProps {
   /**
-   * If true, writing in the input will filter the options
-   * @default true
+   * If true, writing in the input will filter the options.
+   * Must be explicitly set to true to enable filtering.
    */
   filtrable: true;
   /**
@@ -150,7 +150,7 @@ interface FzSelectFilterableProps extends FzSelectBaseProps {
 interface FzSelectNonFilterableProps extends FzSelectBaseProps {
   /**
    * If true, writing in the input will filter the options
-   * @default true
+   * @default false
    */
   filtrable?: false;
   /**
