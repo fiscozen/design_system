@@ -35,6 +35,11 @@ export interface FzBadgeProps {
    * Variant of the right icon
    */
   rightIconVariant?: IconVariant;
+
+  /**
+   * Enable truncation of the badge content
+   */
+  truncate?: boolean;
   /**
    * @deprecated Use `tone` instead. Will be removed in future versions
    */

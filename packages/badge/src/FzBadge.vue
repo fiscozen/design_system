@@ -6,7 +6,7 @@
       :variant="leftIconVariant"
       size="sm"
     />
-    <p class="truncate text-[inherit] text-sm">
+    <p :class="['text-[inherit] text-sm', { 'truncate': truncate }]">
       <slot></slot>
     </p>
     <FzIcon
@@ -94,5 +94,9 @@ const classes = computed(() => {
   baseClasses.push(mapToneToClasses[effectiveTone.value]);
 
   return baseClasses;
+});
+
+const textClasses = computed(() => {
+  return ['text-[inherit] text-sm', { 'truncate': props.truncate }];
 });
 </script>
