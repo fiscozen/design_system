@@ -343,10 +343,7 @@ useClickOutside(safeOpener, () => {
   isOpen.value = false;
 });
 
-const emit = defineEmits([
-  "fzselect:select",
-  "fzselect:right-icon-click",
-]);
+const emit = defineEmits(["fzselect:select", "fzselect:right-icon-click"]);
 
 // ============================================================================
 // FLOATING PANEL
