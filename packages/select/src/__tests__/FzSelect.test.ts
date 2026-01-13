@@ -13,6 +13,13 @@ describe("FzSelect", () => {
     });
     window.IntersectionObserver = mockIntersectionObserver;
 
+    // Mock ResizeObserver for FzFloating component
+    global.ResizeObserver = vi.fn().mockImplementation(() => ({
+      observe: vi.fn(),
+      unobserve: vi.fn(),
+      disconnect: vi.fn(),
+    }));
+
     // Mock window.matchMedia for FzFloating component
     Object.defineProperty(window, "matchMedia", {
       writable: true,
