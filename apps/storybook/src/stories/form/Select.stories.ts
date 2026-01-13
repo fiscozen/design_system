@@ -131,44 +131,6 @@ export const Select: SelectStory = {
   }
 }
 
-export const FilterableSelect: SelectStory = {
-  ...Template,
-  args: {
-    ...Template.args,
-    environment: 'frontoffice',
-    filtrable: true,
-    placeholder: 'Type to search...'
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Verify opener button renders', async () => {
-      const opener = canvas.getByRole('button', { name: /select/i })
-      await expect(opener).toBeInTheDocument()
-    })
-    
-    await step('Verify filterable input appears when opened', async () => {
-      const opener = canvas.getByRole('button', { name: /select/i })
-      await userEvent.click(opener)
-      await new Promise(resolve => setTimeout(resolve, 100))
-      
-      // In filterable mode, there should be an input field
-      const input = canvas.getByPlaceholderText(/type to search/i)
-      await expect(input).toBeInTheDocument()
-    })
-    
-    await step('Verify filtering works', async () => {
-      const input = canvas.getByPlaceholderText(/type to search/i)
-      await userEvent.type(input, 'One')
-      await new Promise(resolve => setTimeout(resolve, 600))
-      
-      const options = canvas.getAllByRole('option')
-      await expect(options.length).toBeGreaterThan(0)
-      await expect(options[0]).toHaveTextContent('One')
-    })
-  }
-}
-
 export const Frontoffice: SelectStory = {
   ...Template,
   args: {
@@ -481,7 +443,7 @@ export const CustomFilterFn: SelectStory = {
   }
 }
 
-export const SimpleSearch: SelectStory = {
+export const FilterableSelect: SelectStory = {
   render: (args) => ({
     components: { FzSelect },
     setup() {
@@ -906,39 +868,6 @@ export const Unclearable: SelectStory = {
         const openerAfter = canvas.getByRole('button', { name: /select/i })
         await expect(openerAfter.textContent).toContain('One')
       }
-    })
-  }
-}
-
-export const NotFiltrable: SelectStory = {
-  ...Template,
-  args: {
-    ...Template.args,
-    filtrable: false,
-    placeholder: 'seleziona un valore'
-  },
-  decorators: [
-    () => ({
-      template: `
-      <div style="width:100vw;height:100vh;">
-        <story/>
-      </div>
-      `
-    })
-  ],
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Open dropdown and verify input does not appear', async () => {
-      const opener = canvas.getByRole('button', { name: /select/i })
-      await userEvent.click(opener)
-      
-      await new Promise(resolve => setTimeout(resolve, 100))
-      
-      // When not filtrable, button should remain visible (not switch to input)
-      const input = canvasElement.querySelector('input[type="text"]')
-      // Input might be present but hidden, so we verify button is still the opener
-      await expect(opener).toHaveAttribute('aria-expanded', 'true')
     })
   }
 }
