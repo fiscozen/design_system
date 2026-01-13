@@ -10,6 +10,8 @@ import type {
   FzSelectOptionProps,
 } from "./types";
 
+export type { Fuse };
+
 /**
  * Type for functions that can be debounced
  */
@@ -64,15 +66,21 @@ function isSelectableOption(
  * Uses Fuse.js for approximate string matching, useful for handling typos
  * and partial matches in option labels.
  *
+ * Accepts an optional Fuse instance to avoid rebuilding the index on each search.
+ * If not provided, creates a new instance (less efficient for repeated searches).
+ *
  * @param options - All options to search through
  * @param searchValue - Search query string
+ * @param fuseInstance - Optional cached Fuse instance (recreated if options changed)
  * @returns Filtered selectable options matching the search
  */
 function applyFuzzySearch(
   options: FzSelectOptionProps[],
-  searchValue: string
+  searchValue: string,
+  fuseInstance?: Fuse<FzSelectOptionProps>
 ): FzSelectOptionProps[] {
-  const fuse = new Fuse(options, { keys: ["label"] });
+  const fuse =
+    fuseInstance || new Fuse(options, { keys: ["label"] });
   return fuse
     .search(searchValue)
     .map((searchRes: { item: FzSelectOptionProps }) => searchRes.item);
@@ -181,19 +189,21 @@ async function applyCustomFilter(
  * @param options - All options to filter
  * @param searchValue - Search query string (must be non-empty)
  * @param fuzzySearch - Whether to use fuzzy search
+ * @param fuseInstance - Optional cached Fuse instance for fuzzy search (recreated if options changed)
  * @returns Filtered options array (may include group labels)
  */
 function filterSelectableOptions(
   options: FzSelectOptionsProps[],
   searchValue: string,
-  fuzzySearch: boolean
+  fuzzySearch: boolean,
+  fuseInstance?: Fuse<FzSelectOptionProps>
 ): FzSelectOptionsProps[] {
   // Filter only selectable options (exclude labels)
   const selectableOptions = options.filter(isSelectableOption);
 
   // Apply appropriate search strategy
   const filteredSelectable = fuzzySearch
-    ? applyFuzzySearch(selectableOptions, searchValue)
+    ? applyFuzzySearch(selectableOptions, searchValue, fuseInstance)
     : applySimpleSearch(selectableOptions, searchValue);
 
   // Reconstruct grouped structure if original had groups

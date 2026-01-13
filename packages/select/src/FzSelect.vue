@@ -28,6 +28,8 @@
  */
 import { computed, ref, watch, nextTick, onMounted, Ref } from "vue";
 
+import Fuse from "fuse.js";
+
 import type {
   FzSelectProps,
   FzSelectOptionsProps,
@@ -104,6 +106,15 @@ const internalFilteredOptions = ref<FzSelectOptionsProps[] | undefined>(
 );
 
 /**
+ * Cached Fuse instance for fuzzy search
+ *
+ * Recreated only when options change to avoid expensive index rebuilds
+ * on each search operation. This significantly improves performance for
+ * large option lists with frequent searches.
+ */
+const fuseInstance = ref<Fuse<FzSelectOptionProps> | undefined>(undefined);
+
+/**
  * Updates filtered options based on search value
  *
  * Applies filtering strategy based on component configuration:
@@ -146,10 +157,14 @@ const updateFilteredOptions = async () => {
   }
 
   // Apply search-based filtering (fuzzy or simple)
+  const useFuzzySearch = props.filtrable
+    ? ((props as any).fuzzySearch ?? true)
+    : false;
   internalFilteredOptions.value = filterSelectableOptions(
     props.options,
     debouncedSearchValue.value,
-    props.fuzzySearch ?? true
+    useFuzzySearch,
+    fuseInstance.value
   );
 };
 
@@ -187,6 +202,14 @@ watch(
 watch(
   () => props.options,
   () => {
+    // Invalidate Fuse cache when options change
+    if (props.filtrable && (props as any).fuzzySearch !== false) {
+      const selectableOptions = props.options?.filter(isSelectableOption) || [];
+      fuseInstance.value = new Fuse(selectableOptions, { keys: ["label"] });
+    } else {
+      fuseInstance.value = undefined;
+    }
+
     updateFilteredOptions();
     // When not filtrable, reset loaded count when options change (like FzSelect)
     if (!props.filtrable) {
@@ -194,6 +217,32 @@ watch(
         props.optionsToShow,
         props.options?.length || 0
       );
+    }
+  },
+  { immediate: true }
+);
+
+/**
+ * Updates Fuse instance when filtrable or fuzzySearch props change
+ *
+ * Recreates the Fuse instance when filtering configuration changes
+ * to ensure the cache matches the current search strategy.
+ */
+watch(
+  () => [
+    props.filtrable,
+    props.filtrable ? (props as any).fuzzySearch : undefined,
+  ],
+  () => {
+    if (
+      props.filtrable &&
+      (props as any).fuzzySearch !== false &&
+      props.options
+    ) {
+      const selectableOptions = props.options.filter(isSelectableOption);
+      fuseInstance.value = new Fuse(selectableOptions, { keys: ["label"] });
+    } else {
+      fuseInstance.value = undefined;
     }
   },
   { immediate: true }
