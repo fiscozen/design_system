@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<FzSelectButtonProps>(), {
   filtrable: true,
   variant: "normal",
   rightIconButtonVariant: "invisible",
+  clearable: false,
 });
 
 const inputModel = defineModel<string>({
@@ -32,6 +33,7 @@ const emit = defineEmits<{
   "input-click": [event: MouseEvent];
   "input-keydown": [event: KeyboardEvent];
   "right-icon-click": [];
+  "clear-click": [];
 }>();
 
 const openerButton = ref<HTMLButtonElement>();
@@ -140,6 +142,15 @@ const handleRightIconClick = (event: Event) => {
   event.stopPropagation();
   emit("right-icon-click");
 };
+
+const handleClearClick = (event: Event) => {
+  event.stopPropagation();
+  emit("clear-click");
+};
+
+const shouldShowClearIcon = computed(() => {
+  return props.clearable && props.selectedOption && isInteractive.value;
+});
 
 const shouldShowTheInput = computed(() => props.filtrable && props.isOpen);
 
@@ -301,6 +312,14 @@ defineExpose({
         :variant="isInteractive ? rightIconButtonVariant : 'invisible'"
         @click="handleRightIconClick"
       />
+      <FzIconButton
+        v-if="shouldShowClearIcon && !shouldShowTheInput"
+        iconName="xmark"
+        size="md"
+        variant="invisible"
+        aria-label="Clear selection"
+        @click="handleClearClick"
+      />
       <FzIcon
         :name="isOpen ? 'chevron-up' : 'chevron-down'"
         size="md"
@@ -338,6 +357,14 @@ defineExpose({
           :name="rightIcon"
           :variant="rightIconVariant"
           size="md"
+        />
+        <FzIconButton
+          v-if="shouldShowClearIcon && shouldShowTheInput"
+          iconName="xmark"
+          size="md"
+          variant="invisible"
+          aria-label="Clear selection"
+          @click="handleClearClick"
         />
         <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" size="md" />
       </template>
