@@ -106,6 +106,23 @@ const internalFilteredOptions = ref<FzSelectOptionsProps[] | undefined>(
 );
 
 /**
+ * Tracks the last search value used for filterFn to prevent duplicate calls
+ *
+ * Prevents calling filterFn multiple times with the same search value,
+ * which can happen during rapid state updates or watch triggers.
+ */
+const lastFilterFnSearchValue = ref<string | undefined>(undefined);
+
+/**
+ * Flag to track when an option is being selected
+ *
+ * When true, prevents filterFn from being called when searchValue becomes empty
+ * after selection. This distinguishes between user clearing input manually vs
+ * input being cleared automatically after option selection.
+ */
+const isSelectingOption = ref(false);
+
+/**
  * Cached Fuse instance for fuzzy search
  *
  * Recreated only when options change to avoid expensive index rebuilds
@@ -119,13 +136,14 @@ const fuseInstance = ref<Fuse<FzSelectOptionProps> | undefined>(undefined);
  *
  * Applies filtering strategy based on component configuration:
  * - Custom filterFn (if provided) - takes precedence, can be async
+ *   - Only called when search value is not empty (avoids unnecessary calls)
  * - Fuzzy search or simple search (when filterable with search value)
  * - All options (when filterable but search is empty, or when not filterable)
  *
  * For grouped options, preserves labels only for groups with filtered results.
  * Empty input shows all options regardless of filterable state.
  *
- * Priority: filterFn > fuzzy/simple search > all options
+ * Priority: filterFn (when search value exists) > fuzzy/simple search > all options
  */
 const updateFilteredOptions = async () => {
   // If options is undefined, keep internalFilteredOptions as undefined (will show FzProgress)
@@ -140,18 +158,59 @@ const updateFilteredOptions = async () => {
     return;
   }
 
+  // Check if search value is empty
+  const hasSearchValue =
+    debouncedSearchValue.value && debouncedSearchValue.value.trim() !== "";
+  const trimmedSearchValue = debouncedSearchValue.value?.trim() || "";
+
   // Custom filter function takes precedence (can be async)
   if (props.filterFn) {
-    internalFilteredOptions.value = undefined;
-    internalFilteredOptions.value = await applyCustomFilter(
-      props.filterFn,
-      debouncedSearchValue.value
-    );
-    return;
+    // Don't call filterFn if we're in the process of selecting an option
+    // This prevents calling filterFn("") when input is cleared after selection
+    if (isSelectingOption.value) {
+      return;
+    }
+
+    // Check if the search value has actually changed to prevent duplicate calls
+    const searchValueChanged =
+      trimmedSearchValue !== lastFilterFnSearchValue.value;
+
+    // Call filterFn if:
+    // 1. There's a search value and it changed, OR
+    // 2. Search is empty but we had a previous value (user cleared the input - need to reset filter)
+    const shouldCallFilterFn =
+      (hasSearchValue && searchValueChanged) ||
+      (!hasSearchValue &&
+        lastFilterFnSearchValue.value !== undefined &&
+        searchValueChanged);
+
+    if (shouldCallFilterFn) {
+      lastFilterFnSearchValue.value = trimmedSearchValue;
+      internalFilteredOptions.value = undefined;
+      internalFilteredOptions.value = await applyCustomFilter(
+        props.filterFn,
+        debouncedSearchValue.value || ""
+      );
+      return;
+    }
+
+    // If filterFn exists but we shouldn't call it (no change), return early to avoid other filtering
+    // This prevents showing props.options when filterFn should handle empty state
+    if (!hasSearchValue && lastFilterFnSearchValue.value === undefined) {
+      // First time with empty value - show all options (filterFn hasn't been called yet)
+      internalFilteredOptions.value = props.options;
+      return;
+    }
+
+    // If we have a previous value but search is now empty and we didn't call filterFn above,
+    // it means the value didn't change, so we keep current state
+    if (!hasSearchValue) {
+      return;
+    }
   }
 
-  // When filterable but input is empty, show all options
-  if (!debouncedSearchValue.value || debouncedSearchValue.value.trim() === "") {
+  // When filterable but input is empty and no filterFn, show all options
+  if (!hasSearchValue) {
     internalFilteredOptions.value = props.options;
     return;
   }
@@ -196,7 +255,7 @@ watch(
   () => {
     updateFilteredOptions();
   },
-  { immediate: true }
+  { immediate: false }
 );
 
 watch(
@@ -210,7 +269,17 @@ watch(
       fuseInstance.value = undefined;
     }
 
-    updateFilteredOptions();
+    // Only update filtered options if not using filterFn, or if using filterFn but search is empty
+    // This prevents unnecessary filterFn calls when options change
+    if (
+      !props.filterable ||
+      !(props as any).filterFn ||
+      !debouncedSearchValue.value ||
+      debouncedSearchValue.value.trim() === ""
+    ) {
+      updateFilteredOptions();
+    }
+
     // When not filterable, reset loaded count when options change (like FzSelect)
     if (!props.filterable) {
       loadedOptionsCount.value = Math.min(
@@ -333,7 +402,11 @@ useClickOutside(safeOpener, () => {
   isOpen.value = false;
 });
 
-const emit = defineEmits(["fzselect:select", "fzselect:right-icon-click"]);
+const emit = defineEmits([
+  "fzselect:select",
+  "fzselect:clear",
+  "fzselect:right-icon-click",
+]);
 
 // ============================================================================
 // FLOATING PANEL
@@ -470,7 +543,12 @@ const handleSelect = (option: FzSelectOptionProps) => {
   // Don't select if option is disabled or readonly
   if (option.disabled || option.readonly) return;
 
-  if (props.clearable && model.value === option.value) {
+  // Set flag to prevent filterFn from being called when searchValue is cleared
+  isSelectingOption.value = true;
+
+  const isClearing = props.clearable && model.value === option.value;
+
+  if (isClearing) {
     // Deselect if clicking the same option and clearable is enabled
     model.value = undefined;
   } else {
@@ -482,9 +560,20 @@ const handleSelect = (option: FzSelectOptionProps) => {
   searchValue.value = "";
   // Reset internalFilteredOptions to show all options on next open
   internalFilteredOptions.value = props.options;
+  // Reset lastFilterFnSearchValue since we're starting fresh after selection
+  lastFilterFnSearchValue.value = undefined;
 
+  // Emit appropriate event based on action
+  if (isClearing) {
+    emit("fzselect:clear");
+  }
   emit("fzselect:select", model.value);
   isOpen.value = false;
+
+  // Reset flag after nextTick to allow watch to process the change
+  nextTick(() => {
+    isSelectingOption.value = false;
+  });
 };
 
 /**
@@ -495,10 +584,15 @@ const handleSelect = (option: FzSelectOptionProps) => {
 const handleClearClick = () => {
   if (!isInteractive.value) return;
 
+  // Clear selection flag is not set here because user is manually clearing,
+  // so filterFn should be called if needed
   model.value = undefined;
   searchValue.value = "";
   internalFilteredOptions.value = props.options;
+  // Reset lastFilterFnSearchValue to allow filterFn to be called on next input
+  lastFilterFnSearchValue.value = undefined;
 
+  emit("fzselect:clear");
   emit("fzselect:select", model.value);
   isOpen.value = false;
 };
@@ -884,6 +978,8 @@ watch(isOpen, (newValue) => {
     ) {
       searchValue.value = "";
       internalFilteredOptions.value = props.options;
+      // Reset lastFilterFnSearchValue to allow filterFn to be called on next input
+      lastFilterFnSearchValue.value = undefined;
     }
     nextTick(() => {
       const openerButton = buttonRef.value?.openerButton;
