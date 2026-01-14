@@ -5,6 +5,7 @@ import {
   isSameDay,
   isSameHour,
   isSameMinute,
+  isValid,
   parseISO,
   startOfDay,
 } from "date-fns";
@@ -37,11 +38,8 @@ export function useAppointmentsAuto({
     if (!props.startDate) {
       return startOfDay(new Date());
     }
-    try {
-      return parseISO(props.startDate);
-    } catch {
-      return startOfDay(new Date());
-    }
+    const parsed = parseISO(props.startDate);
+    return isValid(parsed) ? parsed : startOfDay(new Date());
   });
 
   const slotStartTimeAsDate = computed(() => {
@@ -50,35 +48,29 @@ export function useAppointmentsAuto({
       date.setHours(9, 0, 0, 0);
       return date;
     }
-    try {
-      return parseISO(props.slotStartTime);
-    } catch {
-      const date = new Date();
-      date.setHours(9, 0, 0, 0);
-      return date;
+    const parsed = parseISO(props.slotStartTime);
+    if (isValid(parsed)) {
+      return parsed;
     }
+    const date = new Date();
+    date.setHours(9, 0, 0, 0);
+    return date;
   });
 
   const maxDateAsDate = computed(() => {
     if (!props.maxDate) {
       return null;
     }
-    try {
-      return parseISO(props.maxDate);
-    } catch {
-      return null;
-    }
+    const parsed = parseISO(props.maxDate);
+    return isValid(parsed) ? parsed : null;
   });
 
   const modelValueAsDate = computed(() => {
     if (!props.modelValue) {
       return undefined;
     }
-    try {
-      return parseISO(props.modelValue);
-    } catch {
-      return undefined;
-    }
+    const parsed = parseISO(props.modelValue);
+    return isValid(parsed) ? parsed : undefined;
   });
 
   // Current date being viewed
@@ -111,12 +103,12 @@ export function useAppointmentsAuto({
 
       // Check if it's a string (ISO date)
       if (typeof excluded === "string") {
-        try {
-          const excludedDate = startOfDay(parseISO(excluded));
-          return isSameDay(excludedDate, dateStart);
-        } catch {
+        const parsed = parseISO(excluded);
+        if (!isValid(parsed)) {
           return false;
         }
+        const excludedDate = startOfDay(parsed);
+        return isSameDay(excludedDate, dateStart);
       }
 
       // Check if it's a Date object
@@ -222,6 +214,9 @@ export function useAppointmentsAuto({
         typeof disabledSlot === "string"
           ? parseISO(disabledSlot)
           : disabledSlot;
+      if (!isValid(disabledDate)) {
+        return false;
+      }
       return (
         isSameDay(slot, disabledDate) &&
         isSameHour(slot, disabledDate) &&

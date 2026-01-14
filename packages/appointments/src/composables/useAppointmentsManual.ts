@@ -1,5 +1,5 @@
 import { computed, ref, watch } from "vue";
-import { format, isSameDay, parseISO, startOfDay } from "date-fns";
+import { format, isSameDay, isValid, parseISO, startOfDay } from "date-fns";
 import { it } from "date-fns/locale";
 import type {
   FzAppointmentsManualProps,
@@ -24,15 +24,12 @@ export function useAppointmentsManual({
     return props.slots
       .map((slot) => {
         if (typeof slot === "string") {
-          try {
-            return parseISO(slot);
-          } catch {
-            return null;
-          }
+          const parsed = parseISO(slot);
+          return isValid(parsed) ? parsed : null;
         }
-        return slot;
+        return isValid(slot) ? slot : null;
       })
-      .filter((slot): slot is Date => slot !== null)
+      .filter((slot): slot is Date => slot !== null && isValid(slot))
       .sort((a, b) => a.getTime() - b.getTime());
   });
 
@@ -54,6 +51,7 @@ export function useAppointmentsManual({
   const availableDays = computed(() => {
     return Array.from(slotsByDay.value.keys())
       .map((key) => parseISO(key))
+      .filter((date) => isValid(date))
       .sort((a, b) => a.getTime() - b.getTime());
   });
 
@@ -94,11 +92,8 @@ export function useAppointmentsManual({
     if (!props.modelValue) {
       return undefined;
     }
-    try {
-      return parseISO(props.modelValue);
-    } catch {
-      return undefined;
-    }
+    const parsed = parseISO(props.modelValue);
+    return isValid(parsed) ? parsed : undefined;
   });
 
   // Generate unique name for radio group
