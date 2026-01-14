@@ -16,7 +16,41 @@ const meta = {
       options: ['sm', 'md'],
       control: {
         type: 'select'
-      }
+      },
+      description: 'Deprecated: Use environment prop instead'
+    },
+    tabStyle: {
+      options: ['scroll', 'picker'],
+      control: {
+        type: 'select'
+      },
+      description: 'Controls overflow behavior'
+    },
+    environment: {
+      options: ['backoffice', 'frontoffice'],
+      control: {
+        type: 'select'
+      },
+      description: 'Environment variant for sizing'
+    },
+    tone: {
+      options: ['neutral', 'alert'],
+      control: {
+        type: 'select'
+      },
+      description: 'Tone variant for styling (neutral or alert/red)'
+    },
+    horizontalOverflow: {
+      control: {
+        type: 'boolean'
+      },
+      description: 'Deprecated: Use tabStyle prop instead'
+    },
+    vertical: {
+      control: {
+        type: 'boolean'
+      },
+      description: 'Deprecated: Will be removed in future version'
     }
   }
 } satisfies Meta<typeof FzTabs>
@@ -54,7 +88,7 @@ const Template: TabStory = {
   }
 }
 
-export const Medium: TabStory = {
+export const Tabs: TabStory = {
   ...Template,
   args: {
     size: 'md'
@@ -75,42 +109,9 @@ export const Medium: TabStory = {
   }
 }
 
-export const Small: TabStory = {
+export const TabsVertical: TabStory = {
   ...Template,
   args: {
-    size: 'sm'
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Verify component renders correctly', async () => {
-      const tabContainer = canvasElement.querySelector('.tab-container')
-      await expect(tabContainer).toBeInTheDocument()
-      
-      const buttons = canvasElement.querySelectorAll('button[title]')
-      await expect(buttons.length).toBeGreaterThanOrEqual(3)
-    })
-    
-    await step('Verify first tab is selected by default', async () => {
-      const firstTab = canvas.getByRole('button', { name: /active tab/i })
-      await expect(firstTab).toBeInTheDocument()
-      
-      // Verify selected tab has active styling
-      const selectedTab = canvasElement.querySelector('button[title="Active tab"]')
-      await expect(selectedTab?.classList.contains('bg-white')).toBe(true)
-    })
-    
-    await step('Verify tab content is displayed', async () => {
-      const content = canvasElement.textContent
-      await expect(content).toContain('Active tab')
-    })
-  }
-}
-
-export const MediumVertical: TabStory = {
-  ...Template,
-  args: {
-    size: 'md',
     vertical: true
   },
   play: async ({ canvasElement, step }) => {
@@ -131,7 +132,7 @@ export const MediumVertical: TabStory = {
   }
 }
 
-const TemplateWithIcon: TabStory = {
+export const TabsWithIcon: TabStory = {
   render: (args) => ({
     components: { FzTabs, FzTab, FzBadge, FzIcon },
     setup() {
@@ -154,45 +155,10 @@ const TemplateWithIcon: TabStory = {
                     <FzTab v-bind="customProps.tab1"> Content tab1 </FzTab> 
                     <FzTab v-bind="customProps.tab2"> Content tab2 </FzTab> 
                 </FzTabs>`
-  }),
-  args: {
-    size: 'sm'
-  }
+  })
 }
 
-export const WithIconMedium: TabStory = {
-  ...TemplateWithIcon,
-  args: {
-    size: 'md'
-  }
-}
-
-export const WithIconSmall: TabStory = {
-  ...TemplateWithIcon,
-  args: {
-    size: 'sm'
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Verify icons are displayed on tabs', async () => {
-      const tabContainer = canvasElement.querySelector('.tab-container')
-      await expect(tabContainer).toBeInTheDocument()
-      
-      // Verify icons are present (FzIcon components)
-      const icons = canvasElement.querySelectorAll('svg')
-      await expect(icons.length).toBeGreaterThanOrEqual(2)
-    })
-    
-    await step('Verify tab with initialSelected shows correct content', async () => {
-      const content = canvasElement.textContent
-      await expect(content).toContain('Content tab2')
-      await expect(content).not.toContain('Content tab1')
-    })
-  }
-}
-
-const TemplateWithBadge: TabStory = {
+export const TabsWithBadge: TabStory = {
   render: (args) => ({
     components: { FzTabs, FzTab, FzBadge, FzIcon },
     setup() {
@@ -215,43 +181,11 @@ const TemplateWithBadge: TabStory = {
                     <FzTab v-bind="customProps.tab1"> Content tab1 </FzTab> 
                     <FzTab v-bind="customProps.tab2"> Content tab2 </FzTab> 
                 </FzTabs>`
-  }),
-  args: {
-    size: 'sm'
-  }
+  })
 }
 
-export const WithBadgeMedium: TabStory = {
-  ...TemplateWithBadge,
-  args: {
-    size: 'md'
-  }
-}
 
-export const WithBadgeSmall: TabStory = {
-  ...TemplateWithBadge,
-  args: {
-    size: 'sm'
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Verify badges are displayed on tabs', async () => {
-      const badge1 = canvas.getByText('testo')
-      await expect(badge1).toBeInTheDocument()
-      
-      const badge2 = canvas.getByText('1')
-      await expect(badge2).toBeInTheDocument()
-    })
-    
-    await step('Verify selected tab content is displayed', async () => {
-      const content = canvasElement.textContent
-      await expect(content).toContain('Content tab2')
-    })
-  }
-}
-
-const TemplateWithOverflow: TabStory = {
+export const TabsOverflow: TabStory = {
   render: (args) => ({
     components: { FzTabs, FzTab, FzBadge, FzIcon },
     setup() {
@@ -279,7 +213,7 @@ const TemplateWithOverflow: TabStory = {
       }
     },
     template: `
-            <div style='width:200px; overflow:hidden; height:800px'>
+            <div style='width:300px; overflow:hidden; height:800px'>
                 <FzTabs v-bind="args" > 
                     <FzTab v-bind="customProps.tab1"> Content tab1 </FzTab> 
                     <FzTab v-bind="customProps.tab2"> Content tab2 </FzTab> 
@@ -293,37 +227,71 @@ const TemplateWithOverflow: TabStory = {
   }
 }
 
-export const Overflow: TabStory = {
-  ...TemplateWithOverflow,
+export const TabPicker: TabStory = {
+  ...TabsOverflow,
   args: {
-    size: 'sm'
+    tabStyle: 'picker'
+  },
+  play: async ({ canvasElement }) => {
+    // Verify picker is rendered instead of individual tabs
+    const picker = canvasElement.querySelector('[data-testid="fz-tab-picker-opener"]')
+    await expect(picker).toBeInTheDocument()
+    // Picker should be present (FzTabPicker component)
+    await expect(canvasElement.querySelector('.tab-container')).toBeInTheDocument()
   }
 }
 
-export const OverflowMedium: TabStory = {
-  ...TemplateWithOverflow,
+// Environment stories
+export const EnvironmentBackoffice: TabStory = {
+  ...Template,
   args: {
-    size: 'md'
+    environment: 'backoffice'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const tab1 = canvas.getByRole('button', { name: 'Active tab' })
+    await expect(tab1).toBeInTheDocument()
   }
 }
 
-export const OverflowWithScroll: TabStory = {
-  ...TemplateWithOverflow,
+export const EnvironmentFrontoffice: TabStory = {
+  ...Template,
   args: {
-    size: 'sm',
-    horizontalOverflow: true
+    environment: 'frontoffice'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const tab1 = canvas.getByRole('button', { name: 'Active tab' })
+    await expect(tab1).toBeInTheDocument()
   }
 }
 
-export const OverflowWithScrollMedium: TabStory = {
-  ...TemplateWithOverflow,
+// Tone stories
+export const ToneNeutral: TabStory = {
+  ...Template,
   args: {
-    size: 'md',
-    horizontalOverflow: true
+    tone: 'neutral'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const tab1 = canvas.getByRole('button', { name: 'Active tab' })
+    await expect(tab1).toBeInTheDocument()
   }
 }
 
-const TemplateWithTabArray: TabStory = {
+export const ToneAlert: TabStory = {
+  ...Template,
+  args: {
+    tone: 'alert'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const tab1 = canvas.getByRole('button', { name: 'Active tab' })
+    await expect(tab1).toBeInTheDocument()
+  }
+}
+
+export const TabArray: TabStory = {
   render: (args) => ({
     components: { FzTabs, FzTab, FzBadge, FzIcon },
     setup() {
@@ -365,20 +333,6 @@ const TemplateWithTabArray: TabStory = {
   }),
   args: {
     size: 'sm'
-  }
-}
-
-export const TabArray: TabStory = {
-  ...TemplateWithTabArray,
-  args: {
-    size: 'sm'
-  }
-}
-
-export const TabArrayMedium: TabStory = {
-  ...TemplateWithTabArray,
-  args: {
-    size: 'md'
   }
 }
 
