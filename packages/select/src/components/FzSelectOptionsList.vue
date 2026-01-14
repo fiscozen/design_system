@@ -42,7 +42,7 @@ const getCheckIcon = (option: FzSelectOptionProps): string | undefined =>
  * Gets tabindex for an option
  *
  * Focused option is always focusable (tabindex="0"), including disabled/readonly.
- * When no option is focused, selected option is focusable (for filtrable mode).
+ * When no option is focused, selected option is focusable (for filterable mode).
  */
 const getTabIndex = (option: FzSelectOptionProps): number => {
   // If this is the focused option, it should be focusable (even if disabled/readonly)
@@ -50,7 +50,7 @@ const getTabIndex = (option: FzSelectOptionProps): number => {
     return 0;
   }
   // If no option is focused (focusedOptionValue is null) and this is the selected option,
-  // it should be focusable (for filtrable: true case)
+  // it should be focusable (for filterable: true case)
   if (
     props.focusedOptionValue === null &&
     props.selectedValue === option.value

@@ -68,7 +68,7 @@ const props = withDefaults(defineProps<FzSelectProps>(), {
   fuzzySearch: true,
   environment: "frontoffice",
   error: false,
-  filtrable: false,
+  filterable: false,
   noResultsMessage: "Nessun risultato trovato",
   optionsToShow: 25,
   position: "auto-vertical-start",
@@ -119,11 +119,11 @@ const fuseInstance = ref<Fuse<FzSelectOptionProps> | undefined>(undefined);
  *
  * Applies filtering strategy based on component configuration:
  * - Custom filterFn (if provided) - takes precedence, can be async
- * - Fuzzy search or simple search (when filtrable with search value)
- * - All options (when filtrable but search is empty, or when not filtrable)
+ * - Fuzzy search or simple search (when filterable with search value)
+ * - All options (when filterable but search is empty, or when not filterable)
  *
  * For grouped options, preserves labels only for groups with filtered results.
- * Empty input shows all options regardless of filtrable state.
+ * Empty input shows all options regardless of filterable state.
  *
  * Priority: filterFn > fuzzy/simple search > all options
  */
@@ -134,8 +134,8 @@ const updateFilteredOptions = async () => {
     return;
   }
 
-  // When not filtrable, show all options
-  if (!props.filtrable) {
+  // When not filterable, show all options
+  if (!props.filterable) {
     internalFilteredOptions.value = props.options;
     return;
   }
@@ -150,14 +150,14 @@ const updateFilteredOptions = async () => {
     return;
   }
 
-  // When filtrable but input is empty, show all options
+  // When filterable but input is empty, show all options
   if (!debouncedSearchValue.value || debouncedSearchValue.value.trim() === "") {
     internalFilteredOptions.value = props.options;
     return;
   }
 
   // Apply search-based filtering (fuzzy or simple)
-  const useFuzzySearch = props.filtrable
+  const useFuzzySearch = props.filterable
     ? ((props as any).fuzzySearch ?? true)
     : false;
   internalFilteredOptions.value = filterSelectableOptions(
@@ -170,7 +170,7 @@ const updateFilteredOptions = async () => {
 
 /**
  * Debounced function to update debouncedSearchValue
- * Only used when filtrable is true
+ * Only used when filterable is true
  */
 const debouncedUpdateSearchValue = debounce(
   (value: unknown) => {
@@ -180,11 +180,11 @@ const debouncedUpdateSearchValue = debounce(
 );
 
 watch(
-  () => props.filtrable && searchValue.value,
+  () => props.filterable && searchValue.value,
   (newValue) => {
-    // Only watch searchValue when filtrable is true
-    // When filtrable is false, searchValue never changes (no input field visible)
-    if (props.filtrable && newValue !== undefined) {
+    // Only watch searchValue when filterable is true
+    // When filterable is false, searchValue never changes (no input field visible)
+    if (props.filterable && newValue !== undefined) {
       debouncedUpdateSearchValue(newValue);
     }
   },
@@ -203,7 +203,7 @@ watch(
   () => props.options,
   () => {
     // Invalidate Fuse cache when options change
-    if (props.filtrable && (props as any).fuzzySearch !== false) {
+    if (props.filterable && (props as any).fuzzySearch !== false) {
       const selectableOptions = props.options?.filter(isSelectableOption) || [];
       fuseInstance.value = new Fuse(selectableOptions, { keys: ["label"] });
     } else {
@@ -211,8 +211,8 @@ watch(
     }
 
     updateFilteredOptions();
-    // When not filtrable, reset loaded count when options change (like FzSelect)
-    if (!props.filtrable) {
+    // When not filterable, reset loaded count when options change (like FzSelect)
+    if (!props.filterable) {
       loadedOptionsCount.value = Math.min(
         props.optionsToShow,
         props.options?.length || 0
@@ -223,19 +223,19 @@ watch(
 );
 
 /**
- * Updates Fuse instance when filtrable or fuzzySearch props change
+ * Updates Fuse instance when filterable or fuzzySearch props change
  *
  * Recreates the Fuse instance when filtering configuration changes
  * to ensure the cache matches the current search strategy.
  */
 watch(
   () => [
-    props.filtrable,
-    props.filtrable ? (props as any).fuzzySearch : undefined,
+    props.filterable,
+    props.filterable ? (props as any).fuzzySearch : undefined,
   ],
   () => {
     if (
-      props.filtrable &&
+      props.filterable &&
       (props as any).fuzzySearch !== false &&
       props.options
     ) {
@@ -280,12 +280,12 @@ const selectedOption = computed(() => {
 });
 
 const visibleOptions = computed(() => {
-  // When not filtrable, behave exactly like FzSelect
-  if (!props.filtrable) {
+  // When not filterable, behave exactly like FzSelect
+  if (!props.filterable) {
     if (!props.options) return [];
     return props.options.slice(0, loadedOptionsCount.value);
   }
-  // When filtrable, use internal filtered options
+  // When filterable, use internal filtered options
   if (!internalFilteredOptions.value) return undefined;
   return internalFilteredOptions.value.slice(0, loadedOptionsCount.value);
 });
@@ -445,8 +445,8 @@ const handleInputKeydown = (event: KeyboardEvent) => {
     }
   } else {
     // If dropdown is open
-    if (props.filtrable && event.key === "Tab" && !event.shiftKey) {
-      // When filtrable and Tab is pressed, move focus to selected option (or first)
+    if (props.filterable && event.key === "Tab" && !event.shiftKey) {
+      // When filterable and Tab is pressed, move focus to selected option (or first)
       event.preventDefault();
       const selectable = selectableOptions.value;
       if (selectable.length > 0) {
@@ -705,8 +705,8 @@ function resetScrollPosition() {
 }
 
 function updateVisibleOptions() {
-  // When not filtrable, behave exactly like FzSelect
-  if (!props.filtrable) {
+  // When not filterable, behave exactly like FzSelect
+  if (!props.filterable) {
     if (!props.options) return;
     // Guard: don't load if all options are already visible
     if (loadedOptionsCount.value >= props.options.length) {
@@ -720,7 +720,7 @@ function updateVisibleOptions() {
     return;
   }
 
-  // When filtrable, use internal filtered options
+  // When filterable, use internal filtered options
   if (!internalFilteredOptions.value) return;
 
   // Guard: don't load if all options are already visible
@@ -738,8 +738,8 @@ function updateVisibleOptions() {
 function ensureSelectedOptionVisible() {
   if (!selectedOption.value) return; // No selection
 
-  // When not filtrable, behave exactly like FzSelect
-  if (!props.filtrable) {
+  // When not filterable, behave exactly like FzSelect
+  if (!props.filterable) {
     if (!props.options) return;
     // Find the index of the selected option in props.options (including labels)
     const optionIndexInFullArray = props.options.findIndex(
@@ -759,7 +759,7 @@ function ensureSelectedOptionVisible() {
     return;
   }
 
-  // When filtrable, use internal filtered options
+  // When filterable, use internal filtered options
   if (!internalFilteredOptions.value) return;
 
   // Find the index of the selected option in internalFilteredOptions (including labels)
@@ -815,13 +815,13 @@ watch(isOpen, (newValue) => {
     // Ensure selected option is loaded before setting focus
     ensureSelectedOptionVisible();
     nextTick(() => {
-      if (props.filtrable) {
-        // When filtrable, focus the input instead of the optionlist
+      if (props.filterable) {
+        // When filterable, focus the input instead of the optionlist
         const inputElement = buttonRef.value?.inputRef?.inputRef;
         if (inputElement) {
           inputElement.focus();
         }
-        // Don't set focusedIndex when filtrable - user types in input
+        // Don't set focusedIndex when filterable - user types in input
         focusedIndex.value = -1;
 
         // Scroll to selected option if one exists, otherwise reset to top
@@ -864,7 +864,7 @@ watch(isOpen, (newValue) => {
           resetScrollPosition();
         }
       } else {
-        // When not filtrable, behave exactly like FzSelect
+        // When not filterable, behave exactly like FzSelect
         const selectable = selectableOptions.value;
         if (selectable.length === 0) {
           focusedIndex.value = -1;
@@ -1007,7 +1007,7 @@ defineExpose({
         :disabled
         :environment
         :error
-        :filtrable
+        :filterable
         :isOpen
         :label
         :labelId

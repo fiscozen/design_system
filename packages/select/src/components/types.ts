@@ -114,10 +114,10 @@ export interface FzSelectButtonProps {
    * If true, writing in the input will filter the options
    * @default true
    */
-  filtrable?: boolean;
+  filterable?: boolean;
   /**
    * Visual variant (normal or floating-label)
-   * Only applicable when filtrable is false.
+   * Only applicable when filterable is false.
    * @default 'normal'
    */
   variant?: "normal" | "floating-label";

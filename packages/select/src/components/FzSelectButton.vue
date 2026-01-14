@@ -3,7 +3,7 @@
  * FzSelectButton Component
  *
  * Presentational component for the opener button/input switcher.
- * Switches between button (when closed or not filtrable) and input (when filtrable and open).
+ * Switches between button (when closed or not filterable) and input (when filterable and open).
  *
  * @component
  * @internal
@@ -16,7 +16,7 @@ import type { FzSelectButtonProps } from "./types";
 
 const props = withDefaults(defineProps<FzSelectButtonProps>(), {
   environment: "frontoffice",
-  filtrable: true,
+  filterable: true,
   variant: "normal",
   rightIconButtonVariant: "invisible",
   clearable: false,
@@ -152,7 +152,7 @@ const shouldShowClearIcon = computed(() => {
   return props.clearable && props.selectedOption && isInteractive.value;
 });
 
-const shouldShowTheInput = computed(() => props.filtrable && props.isOpen);
+const shouldShowTheInput = computed(() => props.filterable && props.isOpen);
 
 const inputProps = computed<FzInputProps>(() => ({
   placeholder: props.placeholder,
@@ -228,7 +228,7 @@ defineExpose({
         Floating-label variant: two-span layout for compact form styling
         
         Only applies when:
-        - Not showing input (!shouldShowTheInput) - ensures this only works when filtrable is false
+        - Not showing input (!shouldShowTheInput) - ensures this only works when filterable is false
         - Variant is 'floating-label'
         
         Implementation:
@@ -274,7 +274,7 @@ defineExpose({
         
         Only applies when:
         - rightIcon prop is provided
-        - Not showing input (!shouldShowTheInput) - ensures this only works when filtrable is false
+        - Not showing input (!shouldShowTheInput) - ensures this only works when filterable is false
         - rightIconButton is false or undefined (default: static icon)
         
         Renders a non-clickable FzIcon that displays the right icon before the chevron.
@@ -292,7 +292,7 @@ defineExpose({
         
         Only applies when:
         - rightIcon prop is provided
-        - Not showing input (!shouldShowTheInput) - ensures this only works when filtrable is false
+        - Not showing input (!shouldShowTheInput) - ensures this only works when filterable is false
         - rightIconButton is true
         
         Implementation:

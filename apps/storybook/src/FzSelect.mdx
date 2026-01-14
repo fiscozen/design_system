@@ -9,7 +9,7 @@ A dropdown select component that combines text input with dropdown selection. Su
 ## Features
 
 - **Standard Select**: Default behavior - simple dropdown selection
-- **Filterable Mode**: Enable with `filtrable: true` - options are filtered as the user types using Fuse.js or custom filter functions
+- **Filterable Mode**: Enable with `filterable: true` - options are filtered as the user types using Fuse.js or custom filter functions
 - **Debounced Input**: Input events are debounced for better performance
 - **Lazy Loading**: Efficient rendering for large option lists (loads 25 options initially, more on scroll)
 - **Full Keyboard Navigation**: Arrow keys, Home, End, Enter, Escape, and Tab support (skips disabled options)
@@ -54,7 +54,7 @@ const options = [
 
 ### Filterable Select
 
-To enable filtering, set `filtrable` to `true`:
+To enable filtering, set `filterable` to `true`:
 
 ```vue
 <script setup lang="ts">
@@ -76,7 +76,7 @@ const options = [
     label="Search"
     :options="options"
     placeholder="Type to search..."
-    :filtrable="true"
+    :filterable="true"
   />
 </template>
 ```
@@ -112,7 +112,7 @@ const options = [
       <td>The placeholder text displayed in the input field</td>
     </tr>
     <tr>
-      <td><code>filtrable</code></td>
+      <td><code>filterable</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
       <td>If true, typing in the input will filter the options using Fuse.js or filterFn</td>
@@ -121,19 +121,19 @@ const options = [
       <td><code>filterFn</code></td>
       <td><code>(text?: string) => Promise&lt;FzSelectOptionsProps[]&gt; | FzSelectOptionsProps[]</code></td>
       <td><code>undefined</code></td>
-      <td>Custom filter function (can be async). When provided, overrides the default Fuse.js filtering. <strong>Only available when <code>filtrable: true</code></strong></td>
+      <td>Custom filter function (can be async). When provided, overrides the default Fuse.js filtering. <strong>Only available when <code>filterable: true</code></strong></td>
     </tr>
     <tr>
       <td><code>delayTime</code></td>
       <td><code>number</code></td>
       <td><code>500</code></td>
-      <td>Delay in milliseconds before applying filter after user stops typing (debounce time). <strong>Only available when <code>filtrable: true</code></strong></td>
+      <td>Delay in milliseconds before applying filter after user stops typing (debounce time). <strong>Only available when <code>filterable: true</code></strong></td>
     </tr>
     <tr>
       <td><code>fuzzySearch</code></td>
       <td><code>boolean</code></td>
       <td><code>true</code></td>
-      <td>If true, uses Fuse.js for fuzzy search (handles typos and partial matches). If false, uses simple case-insensitive substring matching. <strong>Only available when <code>filtrable: true</code></strong></td>
+      <td>If true, uses Fuse.js for fuzzy search (handles typos and partial matches). If false, uses simple case-insensitive substring matching. <strong>Only available when <code>filterable: true</code></strong></td>
     </tr>
     <tr>
       <td><code>disabled</code></td>
@@ -193,7 +193,7 @@ const options = [
       <td><code>rightIconButton</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
-      <td>If true, right icon is rendered as an interactive button instead of a static icon. Only shown when filtrable is false (button mode)</td>
+      <td>If true, right icon is rendered as an interactive button instead of a static icon. Only shown when filterable is false (button mode)</td>
     </tr>
     <tr>
       <td><code>rightIconButtonVariant</code></td>
@@ -205,7 +205,7 @@ const options = [
       <td><code>variant</code></td>
       <td><code>'normal' | 'floating-label'</code></td>
       <td><code>'normal'</code></td>
-      <td>Visual variant of the select. Only applicable when filtrable is false</td>
+      <td>Visual variant of the select. Only applicable when filterable is false</td>
     </tr>
     <tr>
       <td><code>optionsToShow</code></td>
@@ -244,6 +244,12 @@ const options = [
       <td>Environment context that determines sizing and spacing (backoffice: compact, frontoffice: spacious)</td>
     </tr>
     <tr>
+      <td><code>floatingPanelMaxHeight</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Maximum height constraint for the dropdown panel (CSS value, e.g., '300px'). If not provided, height is calculated automatically based on viewport</td>
+    </tr>
+    <tr>
       <td><code>size</code></td>
       <td><code>'sm' | 'md' | 'lg'</code></td>
       <td><code>'md'</code></td>
@@ -267,6 +273,11 @@ const options = [
       <td><code>fzselect:select</code></td>
       <td><code>string | undefined</code></td>
       <td>Emitted when an option is selected from the dropdown. Emits the option's value, or undefined if cleared</td>
+    </tr>
+    <tr>
+      <td><code>fzselect:right-icon-click</code></td>
+      <td><code>void</code></td>
+      <td>Emitted when the right icon button is clicked. Only applicable when <code>rightIconButton</code> is <code>true</code></td>
     </tr>
     <tr>
       <td><code>update:modelValue</code></td>
@@ -531,7 +542,7 @@ const handleRightIconClick = () => {
     label="Select"
     :options="options"
     placeholder="Choose an option..."
-    :filtrable="false"
+    :filterable="false"
     rightIcon="xmark"
     :rightIconButton="true"
     rightIconButtonVariant="secondary"
@@ -657,7 +668,7 @@ FzSelect is built with accessibility in mind and follows WCAG 2.1 AA standards:
 - `Tab`: Move focus to next option (wraps to first on last option, traverses all options) - focus trap active
 - `Shift+Tab`: Move focus to previous option (wraps to last on first option, traverses all options) - focus trap active
 
-**Input Field (when filtrable and dropdown is open):**
+**Input Field (when filterable and dropdown is open):**
 - Type: Filter options as you type (opens dropdown if closed)
 - `Tab`: Move focus from input to selected option (or first option if none selected)
 - All option navigation keys work as above when focus is in options list
@@ -673,7 +684,7 @@ FzSelect is built with accessibility in mind and follows WCAG 2.1 AA standards:
 
 ### When NOT to Use
 
-- **Small Fixed Lists**: For small, fixed lists (less than 10 items), use `filtrable: false` to disable filtering
+- **Small Fixed Lists**: For small, fixed lists (less than 10 items), use `filterable: false` to disable filtering
 - **Simple Text Input**: If you don't need filtering or selection, use FzInput instead
 - **Multi-select**: This component supports single selection only
 
@@ -682,7 +693,7 @@ FzSelect is built with accessibility in mind and follows WCAG 2.1 AA standards:
 - Use `delayTime` to control debounce timing for remote loading scenarios (default 500ms)
 - For large option lists (100+ items), lazy loading is automatic (adjust `optionsToShow` if needed)
 - Use `filterFn` for custom filtering logic if you need more control than Fuse.js provides
-- Use `filtrable: false` if you're handling all filtering through remote loading
+- Use `filterable: false` if you're handling all filtering through remote loading
 - The component automatically handles lazy loading - no manual optimization needed
 - Use `fuzzySearch: false` for faster filtering with simple substring matching (no typo tolerance)
 

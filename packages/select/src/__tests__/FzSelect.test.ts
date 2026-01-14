@@ -332,11 +332,11 @@ describe("FzSelect", () => {
       expect(wrapper.html()).toContain("xmark");
     });
 
-    it("renders right icon as button when rightIconButton is true and filtrable is false", async () => {
+    it("renders right icon as button when rightIconButton is true and filterable is false", async () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           rightIcon: "xmark",
           rightIconButton: true,
           rightIconButtonVariant: "secondary",
@@ -348,16 +348,16 @@ describe("FzSelect", () => {
       });
 
       await wrapper.vm.$nextTick();
-      // When filtrable is false, rightIconButton should be rendered
+      // When filterable is false, rightIconButton should be rendered
       // The icon should be present in the HTML (as part of FzIconButton)
       expect(wrapper.html()).toContain("xmark");
     });
 
-    it("accepts rightIconButton prop when filtrable is true (even though not shown)", () => {
+    it("accepts rightIconButton prop when filterable is true (even though not shown)", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: true,
+          filterable: true,
           rightIcon: "xmark",
           rightIconButton: true,
           rightIconButtonVariant: "secondary",
@@ -770,7 +770,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -799,7 +799,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -827,7 +827,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -856,7 +856,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -883,7 +883,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -911,7 +911,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -939,7 +939,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -977,7 +977,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1015,7 +1015,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1042,7 +1042,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: true,
+          filterable: true,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1082,7 +1082,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { kind: "label", label: "Group 1" },
             { value: "option1", label: "Option 1" },
@@ -1117,7 +1117,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1145,7 +1145,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "option2",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1247,7 +1247,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1277,7 +1277,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1309,7 +1309,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1339,7 +1339,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1371,7 +1371,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1400,7 +1400,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1429,7 +1429,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1613,7 +1613,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [{ value: "option1", label: "Option 1" }],
         },
       });
@@ -1647,7 +1647,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1700,7 +1700,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1763,7 +1763,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "option2",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1841,7 +1841,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: false,
+          filterable: false,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -1941,7 +1941,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: true,
+          filterable: true,
           options: [
             { value: "1", label: "JavaScript" },
             { value: "2", label: "TypeScript" },
@@ -1974,7 +1974,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: true,
+          filterable: true,
           fuzzySearch: false,
           options: [
             { value: "1", label: "JavaScript" },
@@ -2009,7 +2009,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: true,
+          filterable: true,
           fuzzySearch: true,
           options: [
             { value: "1", label: "JavaScript" },
@@ -2043,7 +2043,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: true,
+          filterable: true,
           fuzzySearch: false,
           options: [
             { value: "1", label: "JavaScript" },
@@ -2074,7 +2074,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: true,
+          filterable: true,
           fuzzySearch: true,
           options: [
             { value: "1", label: "JavaScript" },
@@ -2107,7 +2107,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: true,
+          filterable: true,
           fuzzySearch: false,
           options: [
             { value: "1", label: "JavaScript" },
@@ -2139,7 +2139,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: true,
+          filterable: true,
           fuzzySearch: true,
           options: [
             { kind: "label", label: "Frontend" },
@@ -2175,7 +2175,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          filtrable: true,
+          filterable: true,
           fuzzySearch: false,
           options: [
             { kind: "label", label: "Frontend" },
@@ -2329,12 +2329,12 @@ describe("FzSelect", () => {
       expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([undefined]);
     });
 
-    it("shows clear icon in filtrable mode when value is selected", async () => {
+    it("shows clear icon in filterable mode when value is selected", async () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "option1",
           clearable: true,
-          filtrable: true,
+          filterable: true,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },
@@ -2354,12 +2354,12 @@ describe("FzSelect", () => {
       expect(clearButton.exists()).toBe(true);
     });
 
-    it("clears selection when clear icon is clicked in filtrable mode", async () => {
+    it("clears selection when clear icon is clicked in filterable mode", async () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "option1",
           clearable: true,
-          filtrable: true,
+          filterable: true,
           options: [
             { value: "option1", label: "Option 1" },
             { value: "option2", label: "Option 2" },

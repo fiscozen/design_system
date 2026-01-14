@@ -107,13 +107,13 @@ interface FzSelectBaseProps extends FzFloatingProps {
    * If true, writing in the input will filter the options
    * @default false
    */
-  filtrable?: boolean;
+  filterable?: boolean;
 }
 
 /**
- * Props when filtrable is true
+ * Props when filterable is true
  *
- * When filtrable is true, the component shows an input field when open.
+ * When filterable is true, the component shows an input field when open.
  * The variant prop is not available in this mode as it only applies to the button display.
  */
 interface FzSelectFilterableProps extends FzSelectBaseProps {
@@ -121,7 +121,7 @@ interface FzSelectFilterableProps extends FzSelectBaseProps {
    * If true, writing in the input will filter the options.
    * Must be explicitly set to true to enable filtering.
    */
-  filtrable: true;
+  filterable: true;
   /**
    * Async function to filter the options
    * Can be used for server-side filtering
@@ -142,9 +142,9 @@ interface FzSelectFilterableProps extends FzSelectBaseProps {
 }
 
 /**
- * Props when filtrable is false or undefined
+ * Props when filterable is false or undefined
  *
- * When filtrable is false, the component behaves like a standard select dropdown.
+ * When filterable is false, the component behaves like a standard select dropdown.
  * The variant prop is available in this mode to customize the button appearance.
  */
 interface FzSelectNonFilterableProps extends FzSelectBaseProps {
@@ -152,10 +152,10 @@ interface FzSelectNonFilterableProps extends FzSelectBaseProps {
    * If true, writing in the input will filter the options
    * @default false
    */
-  filtrable?: false;
+  filterable?: false;
   /**
    * Visual variant of the typeahead component.
-   * Only applicable when filtrable is false.
+   * Only applicable when filterable is false.
    * @default 'normal'
    */
   variant?: "normal" | "floating-label";
@@ -204,12 +204,12 @@ interface FzSelectDeprecatedProps {
 /**
  * FzSelect component props
  *
- * Discriminated union type that ensures type safety based on filtrable value:
- * - When filtrable={true}: variant is not available
- * - When filtrable={false} or undefined: variant is available
+ * Discriminated union type that ensures type safety based on filterable value:
+ * - When filterable={true}: variant is not available
+ * - When filterable={false} or undefined: variant is available
  *
  * Note: rightIconButton and rightIconButtonVariant are available in both modes,
- * but are only rendered when filtrable is false (button mode).
+ * but are only rendered when filterable is false (button mode).
  *
  * This provides compile-time type checking to guide developers on which props
  * can be used in each mode.

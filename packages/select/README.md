@@ -12,7 +12,7 @@
 
 ### Architecture
 
-The `FzSelect` component is a unified dropdown select component that supports both standard select behavior (default, when `filtrable` is false) and typeahead/filterable behavior (when `filtrable` is true). It shares the same floating panel, lazy loading, and keyboard navigation patterns. By default, it behaves as a standard select dropdown. When `filtrable` is set to true, the component shows a filterable input field when the dropdown is open; otherwise, it displays the selected option label as a button.
+The `FzSelect` component is a unified dropdown select component that supports both standard select behavior (default, when `filterable` is false) and typeahead/filterable behavior (when `filterable` is true). It shares the same floating panel, lazy loading, and keyboard navigation patterns. By default, it behaves as a standard select dropdown. When `filterable` is set to true, the component shows a filterable input field when the dropdown is open; otherwise, it displays the selected option label as a button.
 
 **Key Components:**
 - `FzSelect.vue`: Main component orchestrating state, filtering, and navigation
@@ -54,13 +54,13 @@ The `FzSelect` component is a unified dropdown select component that supports bo
 
 #### Dual-Mode Input
 
-The component uses a dual-mode approach when `filtrable` is true:
+The component uses a dual-mode approach when `filterable` is true:
 - **Closed state**: Button displays selected option label (or placeholder)
 - **Open state**: Input field appears for filtering
 
-When `filtrable` is false (default), the component behaves as a standard select dropdown with button-only interaction.
+When `filterable` is false (default), the component behaves as a standard select dropdown with button-only interaction.
 
-This is handled in `FzSelectButton.vue` using `shouldShowTheInput` computed property that checks `filtrable && isOpen`.
+This is handled in `FzSelectButton.vue` using `shouldShowTheInput` computed property that checks `filterable && isOpen`.
 
 #### Filtering Strategy
 
@@ -71,18 +71,18 @@ The component supports three filtering modes:
    - Can return Promise for async operations
    - No race condition protection - shows last result received
 
-2. **Fuse.js fuzzy search**: When `filtrable` is true, `fuzzySearch` is true, and no `filterFn`
+2. **Fuse.js fuzzy search**: When `filterable` is true, `fuzzySearch` is true, and no `filterFn`
    - Searches in `label` field
    - Handles typos and partial matches
    - Only active when input has value
    - Can be disabled by setting `fuzzySearch: false` to use simple `includes()` search instead
 
-3. **Simple includes search**: When `filtrable` is true, `fuzzySearch` is false, and no `filterFn`
+3. **Simple includes search**: When `filterable` is true, `fuzzySearch` is false, and no `filterFn`
    - Uses case-insensitive `includes()` for substring matching
    - Does not handle typos (exact substring match only)
    - Only active when input has value
 
-4. **No filtering**: When `filtrable` is false (default) or input is empty
+4. **No filtering**: When `filterable` is false (default) or input is empty
    - Shows all available options
 
 #### Lazy Loading
@@ -196,8 +196,8 @@ This ensures dropdown matches opener width while respecting viewport boundaries.
 #### Focus Management
 
 Focus flow when opening dropdown:
-1. If `filtrable`: Focus moves to input field (`FzInput` inside `FzSelectButton`)
-2. If not `filtrable`: Focus moves to first enabled option
+1. If `filterable`: Focus moves to input field (`FzInput` inside `FzSelectButton`)
+2. If not `filterable`: Focus moves to first enabled option
 3. If option selected: Focus moves to selected option (if enabled)
 
 Focus flow when closing:

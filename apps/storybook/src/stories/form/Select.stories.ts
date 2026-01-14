@@ -15,7 +15,7 @@ const meta = {
         type: 'select'
       }
     },
-    filtrable: {
+    filterable: {
       control: 'boolean'
     },
     disabled: {
@@ -61,7 +61,7 @@ const Template: SelectStory = {
     environment: 'frontoffice',
     label: 'Select',
     placeholder: 'Choose an option',
-    filtrable: false,
+    filterable: false,
     options: [
       { value: '1', label: 'One' },
       { value: '2', label: 'Two' },
@@ -91,7 +91,7 @@ const BottomTemplate: SelectStory = {
     environment: 'frontoffice',
     label: 'Select',
     placeholder: 'Choose an option',
-    filtrable: false,
+    filterable: false,
     options: [
       { value: '1', label: 'One' },
       { value: '2', label: 'Two' },
@@ -407,7 +407,7 @@ export const CustomFilterFn: SelectStory = {
     ...Template.args,
     label: 'Programming Language',
     placeholder: 'Type to filter...',
-    filtrable: true
+    filterable: true
   },
   decorators: [
     () => ({
@@ -461,7 +461,7 @@ export const FilterableSelect: SelectStory = {
     environment: 'frontoffice',
     label: 'Programming Languages',
     placeholder: 'Type to search (exact match only)...',
-    filtrable: true,
+    filterable: true,
     fuzzySearch: false,
     options: [
       { value: '1', label: 'JavaScript' },
@@ -593,7 +593,7 @@ export const RemoteLoading: SelectStory = {
     ...Template.args,
     label: 'Search Users',
     placeholder: 'Type to search...',
-    filtrable: true
+    filterable: true
   },
   decorators: [
     () => ({
@@ -664,7 +664,7 @@ export const GroupedOptions: SelectStory = {
       // Wait for dropdown to open and options to render
       await new Promise(resolve => setTimeout(resolve, 500))
       
-      // When filtrable is true, options should be visible even with empty input
+      // When filterable is true, options should be visible even with empty input
       // Options might be in teleport, so search in document
       const options = document.querySelectorAll('[role="option"]')
       // If no options found, might need to wait more or check if dropdown is actually open
@@ -982,7 +982,7 @@ export const NotFiltrableAndUnclearable: SelectStory = {
   }),
   args: {
     ...Template.args,
-    filtrable: false,
+    filterable: false,
     clearable: false,
     placeholder: 'Seleziona un valore',
     options: [
@@ -1014,7 +1014,7 @@ export const NotFiltrableAndUnclearable: SelectStory = {
       
       await new Promise(resolve => setTimeout(resolve, 100))
       
-      // When filtrable is false, button should remain visible (not switch to input)
+      // When filterable is false, button should remain visible (not switch to input)
       // Input exists in DOM but is hidden with v-show
       const input = canvasElement.querySelector('input[type="text"]')
       if (input) {
@@ -1084,7 +1084,7 @@ export const SelectWithHundredsOfOptions: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
-    filtrable: false,
+    filterable: false,
     teleport: true,
     options: Array.from({ length: 1000 }, (_, i) => ({
       value: i.toString(),
@@ -1114,7 +1114,7 @@ export const SelectWithHundredsOfOptionsAndMaxHeight: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
-    filtrable: false,
+    filterable: false,
     options: Array.from({ length: 1000 }, (_, i) => ({
       value: i.toString(),
       label: `Option ${i}`
@@ -1144,7 +1144,7 @@ export const LongTextOnRight: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
-    filtrable: false
+    filterable: false
   },
   decorators: [
     () => ({
@@ -1161,7 +1161,7 @@ export const SelectWithOptionLabel: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
-    filtrable: false,
+    filterable: false,
     options: [
       { label: 'Group 1', kind: 'label' },
       { value: '1', label: 'One' },
@@ -1176,7 +1176,7 @@ export const SelectWithOptionLabelAndSubtitle: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
-    filtrable: false,
+    filterable: false,
     disableTruncate: true,
     options: [
       { label: 'Consigliate', kind: 'label' },
@@ -1193,7 +1193,7 @@ export const FloatingLabel: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
-    filtrable: false,
+    filterable: false,
     rightIcon: 'bell',
     rightIconButton: true,
     variant: 'floating-label',
