@@ -1,13 +1,20 @@
 <template>
-  <button :class="classes" @click="onClickTab" v-bind="tab">
-    <FzIcon v-if="tab.icon" :name="tab.icon" :size="size" />
+  <button :class="classes" @click="onClickTab" v-bind="tab" :title="tab.title">
+    <FzIcon v-if="tab.icon" :name="tab.icon" size="md" />
     <span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">{{
       tab.title
     }}</span>
     <FzBadge
       v-if="tab.badgeContent != null"
-      :color="selectedTab === tab.title ? 'blue' : 'black'"
-      :size="size"
+      :color="
+        selectedTab === tab.title
+          ? props.tone === 'alert'
+            ? 'error'
+            : 'blue'
+          : 'black'
+      "
+      :environment="environment"
+      size="md"
     >
       {{ tab.badgeContent }}
     </FzBadge>
@@ -22,9 +29,9 @@ import { useMediaQuery } from "@fiscozen/composables";
 import { breakpoints } from "@fiscozen/style";
 import { FzTabProps } from "../types";
 import {
-  mapSelectedTabToClasses,
-  mapSizeToClasses,
-  mapUnselectedTabToClasses,
+  mapEnvironmentToClasses,
+  mapSelectedTabToClassesWithTone,
+  mapUnselectedTabToClassesWithTone,
 } from "../common";
 
 const xs = useMediaQuery(`(max-width: ${breakpoints.xs})`);
@@ -32,32 +39,40 @@ const xs = useMediaQuery(`(max-width: ${breakpoints.xs})`);
 const props = withDefaults(
   defineProps<{
     tab: FzTabProps;
-    size: "sm" | "md";
+    environment: "frontoffice" | "backoffice";
     type: "picker" | "tab";
-    readonly: boolean;
+    readonly?: boolean;
     maxWidth?: string;
+    tone?: "neutral" | "alert";
   }>(),
   {
     type: "tab",
     readonly: false,
-    maxWidth: "136px",
+    tone: "neutral",
   },
 );
 
 const selectedTab = inject<Ref<string>>("selectedTab");
 const emit = defineEmits(["click"]);
 
-const classes = computed(() => [
-  "w-auto flex font-medium items-center  rounded-md",
-  mapSizeToClasses[props.size],
-  props.type === "picker" ? "text-left" : "",
-  selectedTab?.value === props.tab.title
-    ? mapSelectedTabToClasses[props.type]
-    : mapUnselectedTabToClasses[props.type],
-  props.tab.disabled ? "cursor-not-allowed" : "cursor-pointer",
-  props.maxWidth && !xs.value ? `max-w-[${props.maxWidth}]` : "",
-  xs.value ? "!max-w-full !w-full" : "",
-]);
+const classes = computed(() => {
+  const tone = props.tone || "neutral";
+  const isSelected = selectedTab?.value === props.tab.title;
+
+  const toneClasses = isSelected
+    ? mapSelectedTabToClassesWithTone[tone][props.type]
+    : mapUnselectedTabToClassesWithTone[tone][props.type];
+
+  return [
+    "w-auto flex font-medium items-center  rounded-md",
+    mapEnvironmentToClasses[props.environment],
+    props.type === "picker" ? "text-left" : "",
+    toneClasses,
+    props.tab.disabled ? "cursor-not-allowed" : "cursor-pointer",
+    props.maxWidth && !xs.value ? `max-w-[${props.maxWidth}]` : "",
+    xs.value ? "!max-w-full !w-full" : "",
+  ];
+});
 
 const onClickTab = () => {
   if (!props.tab.disabled) {

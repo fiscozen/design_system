@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { h } from 'vue'
 import { FzTab, FzTabs } from '..'
 import { FzTabProps, FzTabsProps } from '../types'
@@ -31,6 +31,16 @@ describe('FzTabs', () => {
     globalThis.HTMLElement.prototype.scrollIntoView = vi.fn()
     vi.spyOn(console, 'warn').mockImplementation(() => {})
 
+    // Mock IntersectionObserver
+    Object.defineProperty(window, 'IntersectionObserver', {
+      writable: true,
+      value: vi.fn().mockImplementation(() => ({
+        observe: vi.fn(),
+        unobserve: vi.fn(),
+        disconnect: vi.fn(),
+      })),
+    })
+
     // Mock matchMedia for useMediaQuery composable
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
@@ -45,6 +55,10 @@ describe('FzTabs', () => {
         dispatchEvent: vi.fn(),
       })),
     })
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   // ============================================
@@ -1187,6 +1201,200 @@ describe('FzTabs', () => {
       )
 
       expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('should match snapshot - tabStyle scroll', async () => {
+      const wrapper = await createWrapper({ tabStyle: 'scroll' }, { title: 'tab1' }, { title: 'tab2' })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('should match snapshot - tabStyle picker', async () => {
+      const wrapper = await createWrapper(
+        { tabStyle: 'picker' },
+        { title: 'tab1', initialSelected: true },
+        { title: 'tab2' },
+      )
+
+      await wrapper.vm.$nextTick()
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('should match snapshot - environment backoffice', async () => {
+      const wrapper = await createWrapper({ environment: 'backoffice' }, { title: 'tab1' }, { title: 'tab2' })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('should match snapshot - environment frontoffice', async () => {
+      const wrapper = await createWrapper({ environment: 'frontoffice' }, { title: 'tab1' }, { title: 'tab2' })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('should match snapshot - tone neutral', async () => {
+      const wrapper = await createWrapper({ tone: 'neutral' }, { title: 'tab1' }, { title: 'tab2' })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('should match snapshot - tone alert', async () => {
+      const wrapper = await createWrapper({ tone: 'alert' }, { title: 'tab1' }, { title: 'tab2' })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+  })
+
+  // ============================================
+  // DEPRECATION WARNINGS
+  // ============================================
+  describe('Deprecation Warnings', () => {
+    beforeEach(() => {
+      vi.spyOn(console, 'warn').mockImplementation(() => {})
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('should warn when size prop is used', async () => {
+      await createWrapper({ size: 'sm' }, { title: 'tab1' }, { title: 'tab2' })
+
+      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('[FzTabs] The "size" prop is deprecated'))
+    })
+
+    it('should warn when horizontalOverflow prop is used', async () => {
+      await createWrapper({ horizontalOverflow: true }, { title: 'tab1' }, { title: 'tab2' })
+
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('[FzTabs] The "horizontalOverflow" prop is deprecated'),
+      )
+    })
+
+    it('should not warn when deprecated props are not used', async () => {
+      vi.clearAllMocks()
+
+      await createWrapper({}, { title: 'tab1' }, { title: 'tab2' })
+
+      const deprecationWarnings = (console.warn as any).mock.calls.filter((call: any[]) => {
+        const message = call[0]
+        return typeof message === 'string' && message.startsWith('[FzTabs]') && message.includes('deprecated')
+      })
+      expect(deprecationWarnings.length).toBe(0)
+    })
+  })
+
+  // ============================================
+  // TAB STYLE
+  // ============================================
+  describe('TabStyle', () => {
+    it('should render with tabStyle scroll', async () => {
+      const wrapper = await createWrapper({ tabStyle: 'scroll' }, { title: 'tab1' }, { title: 'tab2' })
+
+      const container = wrapper.find('.tab-container')
+      expect(container.classes()).toContain('overflow-x-auto')
+    })
+
+    it('should render with tabStyle picker', async () => {
+      const wrapper = await createWrapper(
+        { tabStyle: 'picker' },
+        { title: 'tab1', initialSelected: true },
+        { title: 'tab2' },
+      )
+
+      await wrapper.vm.$nextTick()
+      expect(wrapper.findComponent({ name: 'FzTabPicker' }).exists()).toBe(true)
+    })
+
+    it('should render with tabStyle scroll as default', async () => {
+      const wrapper = await createWrapper({}, { title: 'tab1' }, { title: 'tab2' })
+
+      const container = wrapper.find('.tab-container')
+      expect(container.classes()).toContain('overflow-x-auto')
+    })
+  })
+
+  // ============================================
+  // RETROCOMPATIBILITY
+  // ============================================
+  describe('Retrocompatibility', () => {
+    it('should map deprecated size to effectiveSize', async () => {
+      const wrapper = await createWrapper({ size: 'md' }, { title: 'tab1' }, { title: 'tab2' })
+
+      expect(wrapper.html()).toContain('tab1')
+      expect(wrapper.html()).toContain('tab2')
+    })
+
+    it('should map deprecated horizontalOverflow to overflowMode scroll', async () => {
+      const wrapper = await createWrapper({ horizontalOverflow: true }, { title: 'tab1' }, { title: 'tab2' })
+
+      await wrapper.vm.$nextTick()
+      const container = wrapper.find('.tab-container')
+      expect(container.html()).toContain('overflow-x-auto')
+    })
+
+    it('should map deprecated horizontalOverflow false to overflowMode none', async () => {
+      const wrapper = await createWrapper({ horizontalOverflow: false }, { title: 'tab1' }, { title: 'tab2' })
+
+      const container = wrapper.find('.tab-container')
+      expect(container.classes()).not.toContain('overflow-x-auto')
+    })
+
+    it('should prioritize tabStyle over horizontalOverflow', async () => {
+      const wrapper = await createWrapper(
+        { tabStyle: 'picker', horizontalOverflow: true },
+        { title: 'tab1', initialSelected: true },
+        { title: 'tab2' },
+      )
+
+      await wrapper.vm.$nextTick()
+      expect(wrapper.findComponent({ name: 'FzTabPicker' }).exists()).toBe(true)
+    })
+  })
+
+  // ============================================
+  // ENVIRONMENT
+  // ============================================
+  describe('Environment', () => {
+    it('should render with environment backoffice', async () => {
+      const wrapper = await createWrapper({ environment: 'backoffice' }, { title: 'tab1' }, { title: 'tab2' })
+
+      expect(wrapper.html()).toContain('tab1')
+      expect(wrapper.html()).toContain('tab2')
+    })
+
+    it('should render with environment frontoffice', async () => {
+      const wrapper = await createWrapper({ environment: 'frontoffice' }, { title: 'tab1' }, { title: 'tab2' })
+
+      expect(wrapper.html()).toContain('tab1')
+      expect(wrapper.html()).toContain('tab2')
+    })
+
+    it('should prioritize environment over deprecated size', async () => {
+      const wrapper = await createWrapper(
+        { environment: 'backoffice', size: 'sm' },
+        { title: 'tab1' },
+        { title: 'tab2' },
+      )
+
+      expect(wrapper.html()).toContain('tab1')
+    })
+  })
+
+  // ============================================
+  // TONE
+  // ============================================
+  describe('Tone', () => {
+    it('should render with tone neutral (default)', async () => {
+      const wrapper = await createWrapper({ tone: 'neutral' }, { title: 'tab1' }, { title: 'tab2' })
+
+      expect(wrapper.exists()).toBe(true)
+    })
+
+    it('should render with tone alert', async () => {
+      const wrapper = await createWrapper({ tone: 'alert' }, { title: 'tab1' }, { title: 'tab2' })
+
+      expect(wrapper.exists()).toBe(true)
     })
   })
 })

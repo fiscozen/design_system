@@ -1,16 +1,36 @@
 export type FzTabsProps = {
   /**
    * Size variant
+   * @deprecated Use the 'environment' prop instead. This prop will be removed in a future version.
    */
-  size: "sm" | "md";
+  size?: "sm" | "md";
   /**
    * Enable horizontal overflow
+   * @deprecated Use the 'overflowMode' prop instead. This prop will be removed in a future version.
    */
   horizontalOverflow?: boolean;
   /**
    * Enable vertical direction
    */
   vertical?: boolean;
+  /**
+   * Controls tab style and overflow behavior
+   * - 'scroll': Shows horizontal scroll when tabs overflow (default)
+   * - 'picker': Shows picker dropdown
+   */
+  tabStyle?: "scroll" | "picker";
+  /**
+   * Environment variant for sizing
+   * - 'backoffice': Backoffice environment sizing
+   * - 'frontoffice': Frontoffice environment sizing
+   */
+  environment?: "backoffice" | "frontoffice";
+  /**
+   * Tone variant for styling
+   * - 'neutral': Default neutral styling
+   * - 'alert': Alert/error styling (red variant)
+   */
+  tone?: "neutral" | "alert";
 };
 
 export type FzTabProps = {
@@ -38,4 +58,4 @@ export type FzTabProps = {
    * Max width of the tab
    */
   maxWidth?: string;
-}
+};

@@ -1,0 +1,348 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Panel/FzTabs" />
+
+# @fiscozen/tab
+
+A flexible and accessible tabs component for Vue 3 applications. FzTabs allows users to organize content into multiple sections and switch between them seamlessly. Built with enterprise-grade features, keyboard navigation support, and optimized for accessibility.
+
+## Features
+
+- **Flexible Overflow Handling** - Control overflow behavior with `tabStyle` prop (scroll, picker, or none)
+- **Environment-based Sizing** - Support for backoffice and frontoffice environments
+- **Icon Support** - Display icons alongside tab labels
+- **Badge Support** - Show badges with text or numbers on tabs
+- **Vertical Layout** - Support for both horizontal and vertical tab layouts
+- **Keyboard Navigation** - Full keyboard accessibility with arrow keys and tab navigation
+- **Accessible** - WCAG 2.1 AA compliant with proper ARIA roles and properties
+
+## Installation
+
+```bash
+npm install @fiscozen/tab
+# or
+pnpm add @fiscozen/tab
+```
+
+## Basic Usage
+
+### Simple Tabs
+
+```vue
+<script setup>
+import { FzTabs, FzTab } from '@fiscozen/tab'
+</script>
+
+<template>
+  <FzTabs>
+    <FzTab title="Tab 1">
+      Content for Tab 1
+    </FzTab>
+    <FzTab title="Tab 2">
+      Content for Tab 2
+    </FzTab>
+    <FzTab title="Tab 3">
+      Content for Tab 3
+    </FzTab>
+  </FzTabs>
+</template>
+```
+
+### With Environment
+
+```vue
+<template>
+  <FzTabs environment="backoffice">
+    <FzTab title="Dashboard">Dashboard content</FzTab>
+    <FzTab title="Settings">Settings content</FzTab>
+  </FzTabs>
+</template>
+```
+
+### With Tone (Alert Variant)
+
+```vue
+<template>
+  <FzTabs tone="alert">
+    <FzTab title="Errors">Error content</FzTab>
+    <FzTab title="Warnings">Warning content</FzTab>
+  </FzTabs>
+</template>
+```
+
+### With Icons
+
+```vue
+<template>
+  <FzTabs>
+    <FzTab title="Notifications" icon="bell">
+      Notifications content
+    </FzTab>
+    <FzTab title="Settings" icon="cog">
+      Settings content
+    </FzTab>
+  </FzTabs>
+</template>
+```
+
+### With Badges
+
+```vue
+<template>
+  <FzTabs>
+    <FzTab title="Inbox" badgeContent="5">
+      Inbox content
+    </FzTab>
+    <FzTab title="Archive" badgeContent="12">
+      Archive content
+    </FzTab>
+  </FzTabs>
+</template>
+```
+
+### Overflow Handling
+
+```vue
+<template>
+  <!-- Scroll mode: shows horizontal scroll when tabs overflow -->
+  <FzTabs tabStyle="scroll">
+    <FzTab title="Tab 1">Content 1</FzTab>
+    <FzTab title="Tab 2">Content 2</FzTab>
+    <FzTab title="Tab 3">Content 3</FzTab>
+    <FzTab title="Tab 4">Content 4</FzTab>
+  </FzTabs>
+
+  <!-- Picker mode: shows dropdown picker when tabs overflow -->
+  <FzTabs tabStyle="picker">
+    <FzTab title="Tab 1">Content 1</FzTab>
+    <FzTab title="Tab 2">Content 2</FzTab>
+    <FzTab title="Tab 3">Content 3</FzTab>
+  </FzTabs>
+
+  <!-- None mode: no overflow handling (default) -->
+  <FzTabs tabStyle="none">
+    <FzTab title="Tab 1">Content 1</FzTab>
+    <FzTab title="Tab 2">Content 2</FzTab>
+  </FzTabs>
+</template>
+```
+
+### Vertical Layout
+
+```vue
+<template>
+  <FzTabs vertical>
+    <FzTab title="Tab 1">Content 1</FzTab>
+    <FzTab title="Tab 2">Content 2</FzTab>
+  </FzTabs>
+</template>
+```
+
+### With Actions
+
+```vue
+<template>
+  <FzTabs>
+    <FzTab title="Tab 1">Content 1</FzTab>
+    <FzTab title="Tab 2">Content 2</FzTab>
+    
+    <template #tabs-end>
+      <div class="flex-1" />
+      <FzButton label="Action" variant="primary" />
+    </template>
+  </FzTabs>
+</template>
+```
+
+## API Reference
+
+### FzTabs Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `tabStyle` | `'scroll' \| 'picker' \| 'none'` | `'none'` | Controls overflow behavior when tabs exceed container width |
+| `environment` | `'backoffice' \| 'frontoffice'` | `undefined` | Environment variant for sizing |
+| `tone` | `'neutral' \| 'alert'` | `'neutral'` | Tone variant for styling (neutral or alert/red) |
+| `size` | `'sm' \| 'md'` | `undefined` | **Deprecated:** Use `environment` prop instead. This prop will be removed in a future version. |
+| `horizontalOverflow` | `boolean` | `undefined` | **Deprecated:** Use `tabStyle="scroll"` instead. This prop will be removed in a future version. |
+| `vertical` | `boolean` | `false` | **Deprecated:** This prop is deprecated and will be removed in a future version. |
+
+### FzTab Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | `string` | - | **Required.** Title of the tab |
+| `icon` | `string` | `undefined` | Icon name to display on the tab |
+| `badgeContent` | `string` | `undefined` | Badge text or number to display on the tab |
+| `disabled` | `boolean` | `false` | Disable the tab |
+| `initialSelected` | `boolean` | `false` | Show this tab's content initially |
+| `maxWidth` | `string` | `undefined` | Maximum width of the tab |
+
+### FzTabs Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | Tab content (FzTab components) |
+| `tabs-end` | Content to display after the tabs container |
+| `tabs-container-end` | Content to display at the end of the tabs container |
+
+### FzTabs Scoped Slot
+
+The default slot provides a scoped slot with the selected tab:
+
+```vue
+<template>
+  <FzTabs v-slot="{ selected }">
+    <FzTab title="Tab 1">Selected: {{ selected }}</FzTab>
+    <FzTab title="Tab 2">Selected: {{ selected }}</FzTab>
+  </FzTabs>
+</template>
+```
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `change` | `string` (tab title) | Emitted when the selected tab changes |
+
+## Deprecation Guide
+
+### Migrating from `size` to `environment`
+
+The `size` prop is deprecated. Use `environment` instead:
+
+```vue
+<!-- Before (deprecated) -->
+<FzTabs size="sm">
+  <FzTab title="Tab 1">Content</FzTab>
+</FzTabs>
+
+<!-- After (recommended) -->
+<FzTabs environment="backoffice">
+  <FzTab title="Tab 1">Content</FzTab>
+</FzTabs>
+```
+
+**Migration mapping:**
+- `size="sm"` → `environment="backoffice"`
+- `size="md"` → `environment="backoffice"`
+
+### Migrating from `horizontalOverflow` to `tabStyle`
+
+The `horizontalOverflow` prop is deprecated. Use `tabStyle` instead:
+
+```vue
+<!-- Before (deprecated) -->
+<FzTabs horizontalOverflow>
+  <FzTab title="Tab 1">Content</FzTab>
+</FzTabs>
+
+<!-- After (recommended) -->
+<FzTabs tabStyle="scroll">
+  <FzTab title="Tab 1">Content</FzTab>
+</FzTabs>
+```
+
+**Migration mapping:**
+- `horizontalOverflow={true}` or `horizontalOverflow={undefined}` → `tabStyle="scroll"`
+- `horizontalOverflow={false}` → `tabStyle="picker"`
+
+### Deprecated Props Behavior
+
+All deprecated props continue to work for backward compatibility but will show console warnings. They will be removed in a future major version.
+
+## Overflow Behavior
+
+Overflow behavior is now handled automatically. You can still 
+set the tabStyle prop to control how the tabs are displayed and how they overflow.
+
+### `tabStyle="scroll"`
+
+Shows the tabs in a horizontal scroll:
+
+```vue
+<FzTabs tabStyle="scroll">
+  <FzTab title="Tab 1">Content</FzTab>
+  <FzTab title="Tab 2">Content</FzTab>
+  <FzTab title="Tab 3">Content</FzTab>
+</FzTabs>
+```
+
+### `tabStyle="picker"`
+
+Shows the tabs in a dropdown picker:
+
+```vue
+<FzTabs tabStyle="picker">
+  <FzTab title="Tab 1">Content</FzTab>
+  <FzTab title="Tab 2">Content</FzTab>
+  <FzTab title="Tab 3">Content</FzTab>
+</FzTabs>
+```
+
+**Note:** Unlike the previous automatic overflow detection, `tabStyle` must be explicitly set. The component no longer automatically switches between normal view and picker view.
+
+## Accessibility Features
+
+### WCAG 2.1 AA Compliance
+
+This component implements comprehensive accessibility features:
+
+- **Keyboard Navigation**: Support for Tab, Arrow keys, and Enter/Space activation
+- **Screen Reader Support**: Proper ARIA roles and descriptions
+- **Focus Management**: Accessible focus indicators and logical tab order
+- **High Contrast**: Color combinations meeting WCAG AA contrast ratios
+
+### Keyboard Interactions
+
+| Key | Action |
+|-----|--------|
+| `Tab` | Navigate to next tab |
+| `Shift + Tab` | Navigate to previous tab |
+| `Arrow Left/Right` | Navigate between tabs (horizontal layout) |
+| `Arrow Up/Down` | Navigate between tabs (vertical layout) |
+| `Enter` or `Space` | Activate selected tab |
+| `Home` | Navigate to first tab |
+| `End` | Navigate to last tab |
+
+### ARIA Attributes
+
+The component automatically sets:
+- `role="tablist"` on the tabs container
+- `role="tab"` on each tab button
+- `aria-selected` to indicate the active tab
+- `aria-disabled` for disabled tabs
+
+## Styling & Theming
+
+### Environment-based Sizing
+
+The `environment` prop controls the sizing of tabs:
+
+- **`backoffice`**: Optimized for backoffice applications
+- **`frontoffice`**: Optimized for frontoffice applications
+
+### Tone Variants
+
+The `tone` prop controls the visual styling of tabs:
+
+- **`neutral`** (default): Standard blue/neutral styling
+- **`alert`**: Red/error styling for alert or error states
+
+### Custom Styling
+
+Tabs use Tailwind CSS classes and can be customized through the design system's theme configuration.
+
+## Learn More
+
+### Interactive Examples
+- **[Tabs Stories](../?path=/docs/panel-fztabs--docs)** - Live examples and interactive demos
+- **[Basic Tabs](../?path=/story/panel-fztabs--small)** - Basic tab example
+- **[With Overflow](../?path=/story/panel-fztabs--overflow-mode-scroll)** - Overflow handling demo
+- **[With Icons](../?path=/story/panel-fztabs--with-icon-small)** - Tabs with icons
+- **[With Badges](../?path=/story/panel-fztabs--with-badge-small)** - Tabs with badges
+
+### Related Components
+- **[FzButton](../?path=/docs/button-fzbutton--docs)** - Button component
+- **[FzBadge](../?path=/docs/data-fzbadge--docs)** - Badge component
+- **[FzIcon](../?path=/docs/data-fzicon--docs)** - Icon component
