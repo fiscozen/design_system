@@ -1,11 +1,19 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzBadge > black color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-core-black text-core-white rounded-2xl !w-fit">Fiscozen</div>"`;
+exports[`FzBadge > Snapshots > should match snapshot - black color 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-core-black text-core-white rounded-2xl !w-fit">Fiscozen</div>"`;
 
-exports[`FzBadge > error color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-semantic-error text-core-white rounded-2xl !w-fit">Fiscozen</div>"`;
+exports[`FzBadge > Snapshots > should match snapshot - default state 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-core-black text-core-white rounded-2xl !w-fit">Badge</div>"`;
 
-exports[`FzBadge > info color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-semantic-info text-core-white rounded-2xl !w-fit">Fiscozen</div>"`;
+exports[`FzBadge > Snapshots > should match snapshot - error color 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-semantic-error text-core-white rounded-2xl !w-fit">Fiscozen</div>"`;
 
-exports[`FzBadge > success color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-semantic-success text-core-white rounded-2xl !w-fit">Fiscozen</div>"`;
+exports[`FzBadge > Snapshots > should match snapshot - info color 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-semantic-info text-core-white rounded-2xl !w-fit">Fiscozen</div>"`;
 
-exports[`FzBadge > warning color matches snapshot 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-semantic-warning rounded-2xl !w-fit">Fiscozen</div>"`;
+exports[`FzBadge > Snapshots > should match snapshot - large size 1`] = `"<div class="flex items-center justify-center font-medium text-base px-14 size-28 bg-core-black text-core-white rounded-2xl !w-fit">Badge</div>"`;
+
+exports[`FzBadge > Snapshots > should match snapshot - single character 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-core-black text-core-white rounded-full !px-0">1</div>"`;
+
+exports[`FzBadge > Snapshots > should match snapshot - small size 1`] = `"<div class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-core-black text-core-white rounded-2xl !w-fit">Badge</div>"`;
+
+exports[`FzBadge > Snapshots > should match snapshot - success color 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-semantic-success text-core-white rounded-2xl !w-fit">Fiscozen</div>"`;
+
+exports[`FzBadge > Snapshots > should match snapshot - warning color 1`] = `"<div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-semantic-warning rounded-2xl !w-fit">Fiscozen</div>"`;
