@@ -495,6 +495,274 @@ describe.concurrent('FzContainer', () => {
     })
   })
 
+  // ============================================
+  // ACCESSIBILITY TESTS
+  // ============================================
+  describe('Accessibility', () => {
+    describe('Semantic HTML structure', () => {
+      it('should render as div by default (no landmark role)', async ({ expect }) => {
+        const wrapper = mount(FzContainer)
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('div')
+        // div elements don't have implicit landmark roles
+        expect(wrapper.attributes('role')).toBeUndefined()
+      })
+
+      it('should render as main element when tag is main', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: { tag: 'main' }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('main')
+        // main element has implicit landmark role="main"
+        // We verify the semantic element is used correctly
+      })
+
+      it('should render as section element when tag is section', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: { tag: 'section' }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('section')
+        // section element has implicit landmark role="region" when it has an accessible name
+      })
+
+      it('should render as nav element when tag is nav', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: { tag: 'nav' }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('nav')
+        // nav element has implicit landmark role="navigation"
+      })
+
+      it('should render as article element when tag is article', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: { tag: 'article' }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('article')
+        // article element has implicit landmark role="article"
+      })
+
+      it('should render as aside element when tag is aside', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: { tag: 'aside' }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('aside')
+        // aside element has implicit landmark role="complementary"
+      })
+
+      it('should render as form element when tag is form', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: { tag: 'form' }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('form')
+        // form element has implicit role="form"
+      })
+
+      it('should render as header element when tag is header', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: { tag: 'header' }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('header')
+        // header element has implicit landmark role="banner" when not inside article/section
+      })
+
+      it('should render as footer element when tag is footer', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: { tag: 'footer' }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('footer')
+        // footer element has implicit landmark role="contentinfo" when not inside article/section
+      })
+    })
+
+    describe('ARIA attributes', () => {
+      it('should support aria-label attribute', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          attrs: { 'aria-label': 'Main content area' }
+        })
+        
+        expect(wrapper.attributes('aria-label')).toBe('Main content area')
+      })
+
+      it('should support aria-labelledby attribute', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          attrs: { 'aria-labelledby': 'section-title' },
+          slots: {
+            default: '<h2 id="section-title">Section Title</h2><p>Content</p>'
+          }
+        })
+        
+        expect(wrapper.attributes('aria-labelledby')).toBe('section-title')
+        expect(wrapper.find('#section-title').exists()).toBe(true)
+      })
+
+      it('should support aria-describedby attribute', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          attrs: { 'aria-describedby': 'section-description' },
+          slots: {
+            default: '<p id="section-description">Description</p><p>Content</p>'
+          }
+        })
+        
+        expect(wrapper.attributes('aria-describedby')).toBe('section-description')
+        expect(wrapper.find('#section-description').exists()).toBe(true)
+      })
+
+      it('should support aria-label with semantic main tag', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: { tag: 'main' },
+          attrs: { 'aria-label': 'Main content' }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('main')
+        expect(wrapper.attributes('aria-label')).toBe('Main content')
+      })
+
+      it('should support aria-labelledby with semantic section tag', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: { tag: 'section' },
+          attrs: { 'aria-labelledby': 'section-heading' },
+          slots: {
+            default: '<h2 id="section-heading">Section</h2><p>Content</p>'
+          }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('section')
+        expect(wrapper.attributes('aria-labelledby')).toBe('section-heading')
+        expect(wrapper.find('#section-heading').exists()).toBe(true)
+      })
+
+      it('should support aria-label with semantic nav tag', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: { tag: 'nav' },
+          attrs: { 'aria-label': 'Main navigation' }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('nav')
+        expect(wrapper.attributes('aria-label')).toBe('Main navigation')
+      })
+    })
+
+    describe('Semantic structure expectations', () => {
+      it('should maintain semantic structure with all props', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: {
+            tag: 'main',
+            horizontal: true,
+            gap: 'lg',
+            main: true,
+            alignItems: 'center'
+          },
+          attrs: { 'aria-label': 'Main content area' }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('main')
+        expect(wrapper.attributes('aria-label')).toBe('Main content area')
+        expect(wrapper.classes()).toContain('fz-container')
+        expect(wrapper.classes()).toContain('fz-container--horizontal')
+      })
+
+      it('should work with semantic tags in vertical orientation', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: {
+            tag: 'section',
+            horizontal: false,
+            gap: 'base'
+          },
+          attrs: { 'aria-labelledby': 'section-title' },
+          slots: {
+            default: '<h2 id="section-title">Section</h2><p>Content</p>'
+          }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('section')
+        expect(wrapper.attributes('aria-labelledby')).toBe('section-title')
+        expect(wrapper.classes()).toContain('fz-container--vertical')
+      })
+
+      it('should work with semantic tags in horizontal orientation', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: {
+            tag: 'nav',
+            horizontal: true,
+            layout: 'space-between'
+          },
+          attrs: { 'aria-label': 'Navigation menu' }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('nav')
+        expect(wrapper.attributes('aria-label')).toBe('Navigation menu')
+        expect(wrapper.classes()).toContain('fz-container--horizontal')
+        expect(wrapper.classes()).toContain('layout-space-between')
+      })
+    })
+
+    describe('Edge Cases', () => {
+      it('should handle aria-label with empty string gracefully', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          attrs: { 'aria-label': '' }
+        })
+        
+        expect(wrapper.attributes('aria-label')).toBe('')
+      })
+
+      it('should handle aria-labelledby pointing to non-existent element', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          attrs: { 'aria-labelledby': 'non-existent-id' }
+        })
+        
+        // Component should still render, but the reference may not be valid
+        expect(wrapper.exists()).toBe(true)
+        expect(wrapper.attributes('aria-labelledby')).toBe('non-existent-id')
+      })
+
+      it('should support multiple semantic containers with unique aria-labels', async ({ expect }) => {
+        const wrapper1 = mount(FzContainer, {
+          props: { tag: 'main' },
+          attrs: { 'aria-label': 'Main content 1' }
+        })
+        const wrapper2 = mount(FzContainer, {
+          props: { tag: 'main' },
+          attrs: { 'aria-label': 'Main content 2' }
+        })
+        
+        expect(wrapper1.attributes('aria-label')).toBe('Main content 1')
+        expect(wrapper2.attributes('aria-label')).toBe('Main content 2')
+      })
+
+      it('should preserve all accessibility attributes when combined with layout props', async ({ expect }) => {
+        const wrapper = mount(FzContainer, {
+          props: {
+            tag: 'section',
+            horizontal: true,
+            gap: 'sm',
+            alignItems: 'start',
+            layout: 'expand-first'
+          },
+          attrs: {
+            'aria-label': 'Content section',
+            'aria-describedby': 'section-help'
+          },
+          slots: {
+            default: '<p id="section-help">Help text</p><p>Content</p>'
+          }
+        })
+        
+        expect(wrapper.element.tagName.toLowerCase()).toBe('section')
+        expect(wrapper.attributes('aria-label')).toBe('Content section')
+        expect(wrapper.attributes('aria-describedby')).toBe('section-help')
+        expect(wrapper.classes()).toContain('fz-container--horizontal')
+      })
+    })
+  })
+
   describe('Snapshots', () => {
     it('matches snapshot - vertical default', async ({ expect }) => {
       const wrapper = mount(FzContainer, {
