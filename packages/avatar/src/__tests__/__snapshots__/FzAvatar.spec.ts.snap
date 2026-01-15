@@ -1,5 +1,47 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`FzAvatar > Snapshots > should match snapshot - backoffice environment 1`] = `
+"<div class="flex items-center gap-8"><img class="select-none object-cover size-32 rounded-full" src="https://example.com/avatar.jpg" alt="Mario Rossi" title="Mario Rossi">
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzAvatar > Snapshots > should match snapshot - image with default props 1`] = `
+"<div class="flex items-center gap-12"><img class="select-none object-cover size-44 rounded-full" src="https://example.com/avatar.jpg" alt="Mario Rossi" title="Mario Rossi">
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzAvatar > Snapshots > should match snapshot - placeholder with default props 1`] = `
+"<div class="flex items-center gap-12">
+  <div class="select-none object-cover size-44 rounded-full bg-core-black text-core-white grid place-content-center text-sm" title="Mario Rossi" data-testid="avatar-placeholder">MR</div>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzAvatar > Snapshots > should match snapshot - square variant 1`] = `
+"<div class="flex items-center gap-12"><img class="select-none object-cover size-44 rounded-[8px]" src="https://example.com/avatar.jpg" alt="Mario Rossi" title="Mario Rossi">
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzAvatar > Snapshots > should match snapshot - with custom initials 1`] = `
+"<div class="flex items-center gap-12">
+  <div class="select-none object-cover size-44 rounded-full bg-core-black text-core-white grid place-content-center text-sm" title="Mario Rossi" data-testid="avatar-placeholder">AB</div>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzAvatar > Snapshots > should match snapshot - with title and subtitle 1`] = `
+"<div class="flex items-center gap-12">
+  <div class="select-none object-cover size-44 rounded-full bg-core-black text-core-white grid place-content-center text-sm" title="Mario Rossi" data-testid="avatar-placeholder">MR</div>
+  <div class="flex flex-col gap-[2px] min-w-0 flex-1">
+    <p class="font-semibold text-core-black overflow-hidden text-ellipsis whitespace-nowrap text-base !leading-[20px]">Title</p>
+    <p class="!m-0 font-normal text-grey-500 overflow-hidden text-ellipsis whitespace-nowrap text-sm !leading-[16px]">Subtitle</p>
+  </div>
+</div>"
+`;
+
 exports[`FzAvatar > image matches snapshot 1`] = `
 "<div class="flex items-center gap-12"><img class="select-none object-cover size-44 rounded-full" src="https://example.com" alt="Mario Rossi" title="Mario Rossi">
   <!--v-if-->
