@@ -1,17 +1,66 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzActionlist > should match snapshot 1`] = `
-"<div class="fz__actionlist inline-flex grow-0 flex-col rounded p-4">
-  <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>This is a label</span></div>
-  <div class="flex flex-col">
-    <router-link to="[object Object]" disabled="true" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start">
-      <!--v-if-->Item #1
-    </router-link>
-  </div>
-  <div class="flex flex-col">
-    <router-link to="[object Object]" disabled="false" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start">
-      <!--v-if-->Item #2
-    </router-link>
-  </div>
+exports[`FzActionlist > Snapshots > should match snapshot - default state 1`] = `
+"<div class="fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4">
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzActionlist > Snapshots > should match snapshot - with button items 1`] = `
+"<div class="fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4">
+  <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Button Actions</span></div>
+  <div class="flex flex-col"><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="button">
+      <!--v-if-->Action 1
+    </button></div>
+  <div class="flex flex-col"><button disabled="" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="button">
+      <!--v-if-->Action 2
+    </button></div>
+</div>"
+`;
+
+exports[`FzActionlist > Snapshots > should match snapshot - with custom listClass 1`] = `
+"<div class="fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4 custom-list-class">
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzActionlist > Snapshots > should match snapshot - with items including icons 1`] = `
+"<div class="fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4">
+  <!--v-if-->
+  <div class="flex flex-col"><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="button">
+      <div class="flex items-center justify-center w-[25px] h-[25px] mr-8"><svg class="svg-inline--fa fa-bell fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <path class="" fill="currentColor" d="M224 0c-17.7 0-32 14.3-32 32l0 19.2C119 66 64 130.6 64 208l0 25.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416l400 0c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4l0-25.4c0-77.4-55-142-128-156.8L256 32c0-17.7-14.3-32-32-32zm0 96c61.9 0 112 50.1 112 112l0 25.4c0 47.9 13.9 94.6 39.7 134.6L72.3 368C98.1 328 112 281.3 112 233.4l0-25.4c0-61.9 50.1-112 112-112zm64 352l-64 0-64 0c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"></path>
+        </svg></div>Action with Icon
+    </button></div>
+</div>"
+`;
+
+exports[`FzActionlist > Snapshots > should match snapshot - with label 1`] = `
+"<div class="fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4">
+  <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Action Menu</span></div>
+</div>"
+`;
+
+exports[`FzActionlist > Snapshots > should match snapshot - with link items 1`] = `
+"<div class="fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4">
+  <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Link Actions</span></div>
+  <div class="flex flex-col"><a to="[object Object]" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="link">
+      <!--v-if-->Link 1
+    </a></div>
+  <div class="flex flex-col"><a to="[object Object]" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="link">
+      <!--v-if-->Link 2
+    </a></div>
+</div>"
+`;
+
+exports[`FzActionlist > Snapshots > should match snapshot - with mixed items 1`] = `
+"<div class="fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4">
+  <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Mixed Actions</span></div>
+  <div class="flex flex-col"><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="button">
+      <!--v-if-->Button Action
+    </button></div>
+  <div class="flex flex-col"><a to="[object Object]" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="link">
+      <!--v-if-->Link Action
+    </a></div>
 </div>"
 `;
