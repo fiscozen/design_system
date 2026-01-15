@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzIcon > Snapshots > should match snapshot - default state 1`] = `"<div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="h-[20px]" data-testid="fa-icon"></svg></div>"`;
+
+exports[`FzIcon > Snapshots > should match snapshot - large size 1`] = `"<div class="flex items-center justify-center w-[32px] h-[32px]"><svg class="h-[24px]" data-testid="fa-icon"></svg></div>"`;
+
+exports[`FzIcon > Snapshots > should match snapshot - small size 1`] = `"<div class="flex items-center justify-center w-[15px] h-[15px]"><svg class="h-[12px]" data-testid="fa-icon"></svg></div>"`;
+
+exports[`FzIcon > Snapshots > should match snapshot - with spin 1`] = `"<div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="h-[20px]" data-testid="fa-icon"></svg></div>"`;
+
+exports[`FzIcon > Snapshots > should match snapshot - with variant 1`] = `"<div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="h-[20px]" data-testid="fa-icon"></svg></div>"`;
