@@ -1,5 +1,143 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`FzAppointments > Snapshots > should match snapshot - default state 1`] = `
+"<div class="fz-appointments flex flex-col items-center gap-section-content-base">
+  <!-- Header with date navigation -->
+  <div class="flex items-center gap-8 w-full"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" disabled="" aria-disabled="true" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Giorno precedente"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-left h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M47 239c-9.4 9.4-9.4 24.6 0 33.9L207 433c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9L97.9 256 241 113c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L47 239z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span>
+    <h3 class="flex-1 flex justify-center capitalize">mercoledì 20 novembre</h3><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Giorno successivo"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-right h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M273 239c9.4 9.4 9.4 24.6 0 33.9L113 433c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l143-143L79 113c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L273 239z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span>
+  </div><!-- Info text -->
+  <p class="text-grey-500">30 minuti a partire dalle</p><!-- Time slots or alert -->
+  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between" type="info">
+    <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-start layout-default flex-1 p-12">
+      <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px]">
+        <!---->
+      </div>
+      <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
+        <p data-v-9bf2fc2e="" class="leading-[20px]">Nessuna disponibilità</p>
+        <p data-v-9bf2fc2e="" class="font-normal !leading-[20px] mt-8">Scegli un'altro giorno e prenota la tua consulenza.</p>
+        <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default"></div>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
+exports[`FzAppointments > Snapshots > should match snapshot - no slots available 1`] = `
+"<div class="fz-appointments flex flex-col items-center gap-section-content-base">
+  <!-- Header with date navigation -->
+  <div class="flex items-center gap-8 w-full"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" disabled="" aria-disabled="true" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Giorno precedente"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-left h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M47 239c-9.4 9.4-9.4 24.6 0 33.9L207 433c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9L97.9 256 241 113c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L47 239z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span>
+    <h3 class="flex-1 flex justify-center capitalize">mercoledì 20 novembre</h3><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Giorno successivo"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-right h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M273 239c9.4 9.4 9.4 24.6 0 33.9L113 433c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l143-143L79 113c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L273 239z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span>
+  </div><!-- Info text -->
+  <p class="text-grey-500">30 minuti a partire dalle</p><!-- Time slots or alert -->
+  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between" type="info">
+    <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-start layout-default flex-1 p-12">
+      <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px]">
+        <!---->
+      </div>
+      <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
+        <p data-v-9bf2fc2e="" class="leading-[20px]">No availability</p>
+        <p data-v-9bf2fc2e="" class="font-normal !leading-[20px] mt-8">Please try another day</p>
+        <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default"></div>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
+exports[`FzAppointments > Snapshots > should match snapshot - with custom name 1`] = `
+"<div class="fz-appointments flex flex-col items-center gap-section-content-base">
+  <!-- Header with date navigation -->
+  <div class="flex items-center gap-8 w-full"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" disabled="" aria-disabled="true" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Giorno precedente"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-left h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M47 239c-9.4 9.4-9.4 24.6 0 33.9L207 433c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9L97.9 256 241 113c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L47 239z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span>
+    <h3 class="flex-1 flex justify-center capitalize">mercoledì 20 novembre</h3><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Giorno successivo"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-right h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M273 239c9.4 9.4 9.4 24.6 0 33.9L113 433c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l143-143L79 113c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L273 239z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span>
+  </div><!-- Info text -->
+  <p class="text-grey-500">30 minuti a partire dalle</p><!-- Time slots or alert -->
+  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between" type="info">
+    <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-start layout-default flex-1 p-12">
+      <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px]">
+        <!---->
+      </div>
+      <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
+        <p data-v-9bf2fc2e="" class="leading-[20px]">Nessuna disponibilità</p>
+        <p data-v-9bf2fc2e="" class="font-normal !leading-[20px] mt-8">Scegli un'altro giorno e prenota la tua consulenza.</p>
+        <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default"></div>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
+exports[`FzAppointments > Snapshots > should match snapshot - with excluded slots 1`] = `
+"<div class="fz-appointments flex flex-col items-center gap-section-content-base">
+  <!-- Header with date navigation -->
+  <div class="flex items-center gap-8 w-full"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" disabled="" aria-disabled="true" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Giorno precedente"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-left h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M47 239c-9.4 9.4-9.4 24.6 0 33.9L207 433c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9L97.9 256 241 113c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L47 239z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span>
+    <h3 class="flex-1 flex justify-center capitalize">mercoledì 20 novembre</h3><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Giorno successivo"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-right h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M273 239c9.4 9.4 9.4 24.6 0 33.9L113 433c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l143-143L79 113c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L273 239z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span>
+  </div><!-- Info text -->
+  <p class="text-grey-500">30 minuti a partire dalle</p><!-- Time slots or alert -->
+  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between" type="info">
+    <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-start layout-default flex-1 p-12">
+      <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px]">
+        <!---->
+      </div>
+      <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
+        <p data-v-9bf2fc2e="" class="leading-[20px]">Nessuna disponibilità</p>
+        <p data-v-9bf2fc2e="" class="font-normal !leading-[20px] mt-8">Scegli un'altro giorno e prenota la tua consulenza.</p>
+        <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default"></div>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
+exports[`FzAppointments > Snapshots > should match snapshot - with required prop 1`] = `
+"<div class="fz-appointments flex flex-col items-center gap-section-content-base">
+  <!-- Header with date navigation -->
+  <div class="flex items-center gap-8 w-full"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" disabled="" aria-disabled="true" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Giorno precedente"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-left h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M47 239c-9.4 9.4-9.4 24.6 0 33.9L207 433c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9L97.9 256 241 113c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L47 239z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span>
+    <h3 class="flex-1 flex justify-center capitalize">mercoledì 20 novembre</h3><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Giorno successivo"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-right h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M273 239c9.4 9.4 9.4 24.6 0 33.9L113 433c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l143-143L79 113c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L273 239z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span>
+  </div><!-- Info text -->
+  <p class="text-grey-500">30 minuti a partire dalle</p><!-- Time slots or alert -->
+  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between" type="info">
+    <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-start layout-default flex-1 p-12">
+      <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px]">
+        <!---->
+      </div>
+      <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
+        <p data-v-9bf2fc2e="" class="leading-[20px]">Nessuna disponibilità</p>
+        <p data-v-9bf2fc2e="" class="font-normal !leading-[20px] mt-8">Scegli un'altro giorno e prenota la tua consulenza.</p>
+        <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default"></div>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
+exports[`FzAppointments > Snapshots > should match snapshot - with slots 1`] = `
+"<div class="fz-appointments flex flex-col items-center gap-section-content-base">
+  <!-- Header with date navigation -->
+  <div class="flex items-center gap-8 w-full"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" disabled="" aria-disabled="true" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Giorno precedente"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-left h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M47 239c-9.4 9.4-9.4 24.6 0 33.9L207 433c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9L97.9 256 241 113c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L47 239z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span>
+    <h3 class="flex-1 flex justify-center capitalize">mercoledì 20 novembre</h3><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Giorno successivo"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-right h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M273 239c9.4 9.4 9.4 24.6 0 33.9L113 433c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l143-143L79 113c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L273 239z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span>
+  </div><!-- Info text -->
+  <p class="text-grey-500">30 minuti a partire dalle</p><!-- Time slots or alert -->
+  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between" type="info">
+    <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-start layout-default flex-1 p-12">
+      <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px]">
+        <!---->
+      </div>
+      <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
+        <p data-v-9bf2fc2e="" class="leading-[20px]">Nessuna disponibilità</p>
+        <p data-v-9bf2fc2e="" class="font-normal !leading-[20px] mt-8">Scegli un'altro giorno e prenota la tua consulenza.</p>
+        <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default"></div>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
 exports[`FzAppointments > matches snaphost 1`] = `
 "<div class="fz-appointments flex flex-col items-center gap-section-content-base">
   <!-- Header with date navigation -->
