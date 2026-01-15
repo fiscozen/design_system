@@ -554,6 +554,30 @@ npx nx run-many -t test
 
 **Status:** All 55 tests passing ✅
 
+### 3.7 Package: `collapse` ✅ **COMPLETED**
+
+**Components enhanced:**
+- ✅ `FzCollapse.vue` - Comprehensive test suite enhanced from 2 basic tests to 57 comprehensive tests
+
+**Enhanced test coverage includes:**
+- ✅ Rendering tests (default props, summary/content text, slots, icon rendering, chevron icon states)
+- ✅ Props tests (summary, content, summaryClass, contentClass, open v-model prop)
+- ✅ Events tests (update:open emission, toggle events, click handling, state updates)
+- ✅ CSS Classes tests (static base classes, open state classes, custom class props, text-sm class)
+- ✅ Accessibility tests (semantic HTML structure with native details/summary, keyboard navigation, decorative icons)
+- ✅ Edge Cases tests (undefined props, empty strings, very long text, rapid toggles, multiple custom classes, slot overrides)
+- ✅ Snapshots tests (default closed state, open state, custom classes, with slots)
+
+**Test improvements:**
+- ✅ Expanded from 2 basic tests to 57 comprehensive tests
+- ✅ Added full test coverage following TESTING.md structure
+- ✅ Added comprehensive accessibility tests for native details/summary semantic structure
+- ✅ Added keyboard navigation tests (Enter, Space key support)
+- ✅ Added comprehensive edge case testing
+- ✅ Added comprehensive props and CSS classes testing
+
+**Status:** All 57 tests passing ✅
+
 ---
 
 ## Phase 3: Unit Test Quality Improvements (Continued)
@@ -578,7 +602,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | button | ✅ Already good | - |
 | card | role="article" or similar | 1 |
 | checkbox | aria-checked, aria-labelledby | 2-3 |
-| collapse | aria-expanded, aria-controls | 2 |
+| collapse | ~~aria-expanded, aria-controls~~ | ✅ **COMPLETED** |
 | container | landmark role | 1 |
 | datepicker | Full a11y suite | 3-4 |
 | dialog | role="dialog", aria-modal | 3-4 |

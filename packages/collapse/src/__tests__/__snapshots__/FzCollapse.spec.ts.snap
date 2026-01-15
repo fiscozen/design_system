@@ -1,5 +1,44 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`FzCollapse > Snapshots > should match snapshot - default state (closed) 1`] = `
+"<details data-v-d76ce47a="" data-e2e="details">
+  <summary data-v-d76ce47a="" data-e2e="summary" class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded font-medium">Test Summary<div data-v-d76ce47a="" class="flex items-center justify-center w-[20px] h-[20px] ml-32"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path>
+      </svg></div>
+  </summary>
+  <div data-v-d76ce47a="" data-e2e="content" class="text-sm" style="display: none;">Test Content</div>
+</details>"
+`;
+
+exports[`FzCollapse > Snapshots > should match snapshot - open state 1`] = `
+"<details data-v-d76ce47a="" open="" data-e2e="details">
+  <summary data-v-d76ce47a="" data-e2e="summary" class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded font-medium bg-background-alice-blue !text-blue-500">Test Summary<div data-v-d76ce47a="" class="flex items-center justify-center w-[20px] h-[20px] ml-32"><svg class="svg-inline--fa fa-chevron-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path class="" fill="currentColor" d="M239 111c9.4-9.4 24.6-9.4 33.9 0L465 303c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-175-175L81 337c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L239 111z"></path>
+      </svg></div>
+  </summary>
+  <div data-v-d76ce47a="" data-e2e="content" class="text-sm">Test Content</div>
+</details>"
+`;
+
+exports[`FzCollapse > Snapshots > should match snapshot - with custom classes 1`] = `
+"<details data-v-d76ce47a="" open="" data-e2e="details">
+  <summary data-v-d76ce47a="" data-e2e="summary" class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded font-medium custom-summary bg-background-alice-blue !text-blue-500">Test Summary<div data-v-d76ce47a="" class="flex items-center justify-center w-[20px] h-[20px] ml-32"><svg class="svg-inline--fa fa-chevron-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path class="" fill="currentColor" d="M239 111c9.4-9.4 24.6-9.4 33.9 0L465 303c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-175-175L81 337c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L239 111z"></path>
+      </svg></div>
+  </summary>
+  <div data-v-d76ce47a="" data-e2e="content" class="text-sm custom-content">Test Content</div>
+</details>"
+`;
+
+exports[`FzCollapse > Snapshots > should match snapshot - with slots 1`] = `
+"<details data-v-d76ce47a="" data-e2e="details">
+  <summary data-v-d76ce47a="" data-e2e="summary" class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded font-medium"><span>Custom Summary</span><span>Custom Icon</span></summary>
+  <div data-v-d76ce47a="" data-e2e="content" class="text-sm" style="display: none;">
+    <div>Custom Content</div>
+  </div>
+</details>"
+`;
+
 exports[`FzCollapse > should match snapshot 1`] = `
 "<details data-v-d76ce47a="" open="" data-e2e="details">
   <summary data-v-d76ce47a="" data-e2e="summary" class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded font-medium bg-background-alice-blue !text-blue-500">this is a test summary<div data-v-d76ce47a="" class="flex items-center justify-center w-[20px] h-[20px] ml-32"><svg class="svg-inline--fa fa-chevron-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
