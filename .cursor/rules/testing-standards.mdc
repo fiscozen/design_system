@@ -1,0 +1,286 @@
+---
+description: Testing standards and requirements for Vue components in the Fiscozen Design System
+globs: ["packages/**/*.vue", "packages/**/*.spec.ts", "packages/**/*.test.ts", "apps/storybook/**/*.stories.ts"]
+alwaysApply: false
+---
+
+# Testing Standards for Fiscozen Design System Components
+
+When creating or modifying Vue components in this design system, you MUST follow these testing standards to ensure industry-standard quality and consistency.
+
+## Overview
+
+This monorepo uses a two-tier testing strategy:
+1. **Unit Tests** with Vitest + Vue Test Utils (fast, jsdom, internal logic)
+2. **Component/Interaction Tests** with Storybook Play Functions (browser-based, user interactions)
+
+## Required Files for Every Component
+
+Every component package MUST include:
+
+```
+packages/component-name/
+└── src/
+    ├── FzComponentName.vue
+    ├── types.ts
+    ├── index.ts
+    └── __tests__/                     # ALWAYS use __tests__ (plural)
+        └── FzComponentName.spec.ts    # ALWAYS use .spec.ts extension
+```
+
+And in storybook:
+
+```
+apps/storybook/src/stories/
+└── category/
+    └── ComponentName.stories.ts       # With play functions
+```
+
+## Unit Test Requirements (Vitest)
+
+### Mandatory Test Categories
+
+Every unit test file MUST include tests for:
+
+1. **Rendering Tests**
+   - Render with default props
+   - Render with label/content
+   - Render slot content
+
+2. **Props Tests**
+   - All public props documented in types.ts
+   - Variant prop (if applicable)
+   - Environment prop (frontoffice/backoffice sizing)
+   - Disabled prop
+
+3. **Events Tests**
+   - All emitted events
+   - Events blocked when disabled
+   - v-model update:modelValue (if applicable)
+
+4. **Accessibility Tests**
+   - aria-disabled attribute
+   - aria-invalid attribute (for form elements)
+   - aria-labelledby linking to label (for form elements)
+   - aria-describedby linking to error/help text
+   - role="alert" on error messages
+   - Keyboard focusability
+
+5. **Edge Cases**
+   - Undefined/null prop handling
+   - Unique ID generation for multiple instances
+
+6. **Snapshots**
+   - Default state
+   - Disabled state
+   - Error state (if applicable)
+
+### Unit Test Code Pattern
+
+```typescript
+import { describe, it, expect, vi } from 'vitest'
+import { mount } from '@vue/test-utils'
+import FzComponentName from '../FzComponentName.vue'
+
+describe('FzComponentName', () => {
+  describe('Rendering', () => {
+    it('should render with default props', () => {
+      const wrapper = mount(FzComponentName)
+      expect(wrapper.exists()).toBe(true)
+    })
+  })
+
+  describe('Props', () => {
+    describe('disabled prop', () => {
+      it('should apply disabled attribute when true', () => {
+        const wrapper = mount(FzComponentName, {
+          props: { disabled: true }
+        })
+        expect(wrapper.find('button').attributes('disabled')).toBeDefined()
+      })
+    })
+  })
+
+  describe('Events', () => {
+    it('should emit click event', async () => {
+      const wrapper = mount(FzComponentName)
+      await wrapper.find('button').trigger('click')
+      expect(wrapper.emitted('click')).toHaveLength(1)
+    })
+
+    it('should not emit click when disabled', async () => {
+      const wrapper = mount(FzComponentName, {
+        props: { disabled: true }
+      })
+      await wrapper.find('button').trigger('click')
+      expect(wrapper.emitted('click')).toBeUndefined()
+    })
+  })
+
+  describe('Accessibility', () => {
+    it('should have aria-disabled matching disabled prop', () => {
+      const wrapper = mount(FzComponentName, {
+        props: { disabled: true }
+      })
+      expect(wrapper.find('button').attributes('aria-disabled')).toBe('true')
+    })
+  })
+
+  describe('Snapshots', () => {
+    it('should match snapshot - default state', () => {
+      const wrapper = mount(FzComponentName)
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+  })
+})
+```
+
+## Storybook Play Function Requirements
+
+### Mandatory Stories with Play Functions
+
+Every stories file MUST include:
+
+1. **Default story** - Basic rendering and ARIA verification
+2. **Environment stories** - Frontoffice and Backoffice sizing
+3. **Disabled story** - Disabled state verification
+4. **User interaction story** - Click/type/select behavior
+5. **Keyboard navigation story** - Tab, Enter, Space, Escape
+6. **Error story** (for form elements) - Error message and aria-invalid
+
+### Play Function Code Pattern
+
+```typescript
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, userEvent, within } from '@storybook/test'
+import { FzComponentName } from '@fiscozen/component-name'
+
+const meta = {
+  title: 'Category/FzComponentName',
+  component: FzComponentName,
+  tags: ['autodocs'],
+  argTypes: {
+    environment: {
+      control: 'select',
+      options: ['backoffice', 'frontoffice']
+    }
+  }
+} satisfies Meta<typeof FzComponentName>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
+  args: {},
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify component renders', async () => {
+      const element = canvas.getByRole('button')
+      await expect(element).toBeInTheDocument()
+    })
+    
+    await step('Verify ARIA attributes', async () => {
+      const element = canvas.getByRole('button')
+      await expect(element).toHaveAttribute('aria-disabled', 'false')
+    })
+  }
+}
+
+export const Disabled: Story = {
+  args: { disabled: true },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const element = canvas.getByRole('button')
+    
+    await step('Verify disabled state', async () => {
+      await expect(element).toBeDisabled()
+      await expect(element).toHaveAttribute('aria-disabled', 'true')
+    })
+    
+    await step('Verify no interaction when disabled', async () => {
+      await userEvent.click(element)
+      // Should not error or respond
+    })
+  }
+}
+
+export const KeyboardNavigation: Story = {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Tab to focus', async () => {
+      await userEvent.tab()
+      await expect(document.activeElement).toBe(canvas.getByRole('button'))
+    })
+    
+    await step('Activate with Enter', async () => {
+      await userEvent.keyboard('{Enter}')
+    })
+  }
+}
+```
+
+## Critical Rules
+
+### DO ✅
+
+- Use `within(canvasElement)` for queries in play functions
+- Use `step()` to organize play function assertions
+- Use semantic queries: `getByRole`, `getByLabelText`, `getByText`
+- Test accessibility attributes in both unit tests AND play functions
+- Use `await` before all userEvent calls
+- Use `document.querySelectorAll` for teleported content (modals, dropdowns)
+
+### DON'T ❌
+
+- Don't use `.test.ts` extension (use `.spec.ts`)
+- Don't use `__test__` folder (use `__tests__` with 's')
+- Don't test implementation details (internal methods, computed caching)
+- Don't skip accessibility tests
+- Don't use brittle CSS selectors (prefer roles and semantic queries)
+- Don't duplicate exact same tests between unit and play functions
+
+## Accessibility Testing Checklist
+
+### Form Elements MUST have:
+- [ ] `aria-labelledby` linking to visible label
+- [ ] `aria-describedby` linking to help/error text when present
+- [ ] `aria-invalid` reflecting error state
+- [ ] `aria-required` reflecting required state
+- [ ] `aria-disabled` reflecting disabled state
+- [ ] `role="alert"` on error message container
+
+### Interactive Elements MUST have:
+- [ ] Keyboard accessibility (Tab, Enter, Space, Escape where applicable)
+- [ ] `aria-expanded` for expandable elements
+- [ ] `aria-haspopup` for elements that open menus/dialogs
+- [ ] `aria-selected` for selectable options
+- [ ] Decorative icons must have `aria-hidden="true"`
+
+## Test Running Commands
+
+```bash
+# Unit tests (from package directory)
+cd packages/component-name
+pnpm test
+pnpm test -- --watch
+pnpm test -- --coverage
+
+# Storybook tests (from root)
+pnpm test:storybook
+pnpm test:storybook:watch
+pnpm test:storybook:ui
+
+# All tests with nx
+npx nx run-many -t test
+npx nx affected -t test
+```
+
+## Before Submitting Changes
+
+- [ ] All unit tests pass: `pnpm test`
+- [ ] All storybook tests pass: `pnpm test:storybook`
+- [ ] Coverage meets minimum (80% statements, 75% branches)
+- [ ] No new accessibility issues in Storybook A11y panel
+- [ ] Snapshots updated if visual changes: `pnpm test -- -u`

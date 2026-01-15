@@ -31,33 +31,38 @@ Please refer to Nx documentation for full usage explanation.
 
 ## Testing
 
-### Storybook Tests
-The project uses [Storybook Test](https://storybook.js.org/docs/writing-tests) for component testing with:
-- **Interaction tests** - User behavior simulation with play functions
-- **Accessibility tests** - WCAG compliance checks with @storybook/addon-a11y
+This project uses a two-tier testing strategy for industry-standard quality:
+
+| Layer | Tool | Purpose |
+|-------|------|---------|
+| **Unit Tests** | Vitest + Vue Test Utils | Props, events, ARIA attributes, internal logic |
+| **Component Tests** | Storybook Play Functions | User interactions, keyboard navigation, visual states |
+
+📖 **See [TESTING.md](./TESTING.md) for comprehensive testing documentation, patterns, and best practices.**
+
+### Quick Start
 
 ```bash
-# Start Storybook dev server
-pnpm storybook
+# Unit tests (from package directory)
+cd packages/button
+pnpm test                     # Run once
+pnpm test -- --watch          # Watch mode
+pnpm test -- --coverage       # With coverage
 
-# Run all Storybook tests (from root)
-pnpm test:storybook
-
-# Run tests in watch mode (recommended for development)
-pnpm test:storybook:watch
-
-# Run tests with coverage report
-pnpm test:storybook:coverage
-
-# Run tests with Vitest UI
-pnpm test:storybook:ui
-```
-
-**Alternative (from apps/storybook directory):**
-```bash
-cd apps/storybook
-
+# Storybook interaction tests (from root)
 pnpm test:storybook           # Run once
-pnpm test:storybook:watch     # Watch mode
+pnpm test:storybook:watch     # Watch mode (recommended for development)
 pnpm test:storybook:coverage  # With coverage
+pnpm test:storybook:ui        # Interactive UI
+
+# Run all tests across packages
+npx nx run-many -t test       # All unit tests
+npx nx affected -t test       # Only affected packages
 ```
+
+### Test Coverage Requirements
+
+- **Statements**: 80%
+- **Branches**: 75%
+- **Functions**: 80%
+- **Lines**: 80%
