@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzActionList > Snapshots > should match snapshot - default state 1`] = `"<div data-v-0a2f193d="" class="fz__actionlist bg-core-white rounded flex flex-col gap-20 p-4 min-w-[240px]"></div>"`;
+
+exports[`FzActionList > Snapshots > should match snapshot - with custom class 1`] = `"<div data-v-0a2f193d="" class="fz__actionlist bg-core-white rounded flex flex-col gap-20 p-4 min-w-[240px] custom-class"></div>"`;
+
+exports[`FzActionList > Snapshots > should match snapshot - with role 1`] = `"<div data-v-0a2f193d="" class="fz__actionlist bg-core-white rounded flex flex-col gap-20 p-4 min-w-[240px]" role="listbox" aria-labelledby="label-id" aria-activedescendant="active-id"></div>"`;

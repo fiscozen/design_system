@@ -1,0 +1,1112 @@
+# Testing Compliance Plan
+
+## Fiscozen Design System Monorepo
+
+**Date Created:** January 15, 2026  
+**Reference Documents:** TESTING.md, .cursor/rules/testing-standards.mdc
+
+---
+
+## Table of Contents
+
+1. [Executive Summary](#executive-summary)
+2. [Current State Analysis](#current-state-analysis)
+3. [Gap Analysis](#gap-analysis)
+4. [Compliance Roadmap](#compliance-roadmap)
+5. [Phase 1: File & Folder Naming Standardization](#phase-1-file--folder-naming-standardization)
+6. [Phase 2: Missing Unit Tests](#phase-2-missing-unit-tests)
+7. [Phase 3: Unit Test Quality Improvements](#phase-3-unit-test-quality-improvements)
+8. [Phase 4: Storybook Play Functions](#phase-4-storybook-play-functions)
+9. [Phase 5: Accessibility Test Coverage](#phase-5-accessibility-test-coverage)
+10. [Phase 6: Coverage Enforcement](#phase-6-coverage-enforcement)
+11. [Appendix: Detailed Package Audit](#appendix-detailed-package-audit)
+
+---
+
+## Executive Summary
+
+This document outlines a comprehensive plan to bring the Fiscozen Design System monorepo into full compliance with the testing standards defined in `TESTING.md` and `.cursor/rules/testing-standards.mdc`.
+
+### Key Findings
+
+| Metric | Current State | Target | Gap |
+|--------|--------------|--------|-----|
+| Packages with unit tests | ~36 of 44 | 44 | 8 packages |
+| Test files using `.spec.ts` | 37 | 58+ | 21 files need renaming |
+| Test folders using `__tests__` | ~30 | All | 5 folders need renaming |
+| Stories with play functions | 23 of 51 | 51 | 28 story files |
+| Packages with full a11y tests | ~5 | 44 | ~39 packages |
+
+### Priority Order
+
+1. **🔴 Critical:** File/folder naming standardization (blocking CI consistency)
+2. **🔴 Critical:** Missing unit tests for components (9 packages)
+3. **🟠 High:** Add play functions to stories (28 story files)
+4. **🟠 High:** Accessibility test coverage gaps
+5. **🟡 Medium:** Test quality improvements (missing test categories)
+6. **🟢 Low:** Coverage enforcement and CI integration
+
+---
+
+## Current State Analysis
+
+### Unit Tests Inventory
+
+#### Packages with `.spec.ts` files (Correct Convention ✅)
+
+| Package | Test Files | Notes |
+|---------|-----------|-------|
+| `action` | 0 | ❌ Missing tests |
+| `actionlist` | 1 | `FzActionlist.spec.ts` |
+| `alert` | 1 | `FzAlert.spec.ts` |
+| `appointments` | 1 | `FzAppointments.spec.ts` |
+| `avatar` | 1 | `FzAvatar.spec.ts` |
+| `badge` | 1 | `FzBadge.spec.ts` |
+| `breadcrumbs` | 1 | `FzBreadcrumbs.spec.ts` |
+| `button` | 1 | `FzButton.spec.ts` ✅ Excellent quality |
+| `collapse` | 1 | `FzCollapse.spec.ts` |
+| `composables` | 2 | `FzFloating.spec.ts`, `useFloating.spec.ts` |
+| `container` | 1 | `FzContainer.spec.ts` |
+| `data` | 9 | Comprehensive data layer tests |
+| `datepicker` | 1 | `FzDatepicker.spec.ts` |
+| `divider` | 1 | `FzDivider.spec.ts` |
+| `dropdown` | 1 | `FzDropdown.spec.ts` |
+| `layout` | 1 | `FzLayout.spec.ts` |
+| `navbar` | 1 | `FzNavbar.spec.ts` |
+| `navlink` | 1 | `FzNavlink.spec.ts` |
+| `navlist` | 1 | `FzNavlist.spec.ts` |
+| `simple-table` | 1 | `FzSimpleTable.spec.ts` |
+| `stepper` | 1 | `FzStepper.spec.ts` |
+| `table` | 1 | `FzTable.spec.ts` |
+| `textarea` | 1 | `FzTextarea.spec.ts` |
+| `toast` | 2 | `FzToast.spec.ts`, `FzToastQueue.spec.ts` |
+| `tooltip` | 1 | `FzTooltip.spec.ts` |
+| `topbar` | 1 | `FzTopbar.spec.ts` |
+| `upload` | 1 | `FzUpload.spec.ts` |
+| `view-flag` | 1 | `FzViewFlag.spec.ts` |
+
+#### Packages with `.test.ts` files (Wrong Convention ❌)
+
+| Package | Test Files | Action Required |
+|---------|-----------|-----------------|
+| `button` | 2 | Rename `FzButtonGroup.test.ts`, `FzIconButton.test.ts` |
+| `card` | 1 | Rename `FzCard.test.ts` + fix folder name |
+| `checkbox` | 2 | Rename `FzCheckbox.test.ts`, `FzCheckboxGroup.test.ts` + fix folder |
+| `dialog` | 1 | Rename `FzDialog.test.ts` + fix folder name |
+| `input` | 2 | Rename `FzInput.test.ts`, `FzCurrencyInput.test.ts` ✅ Good quality |
+| `link` | 1 | Rename `FzLink.test.ts` |
+| `progress` | 2 | Rename `FzProgress.test.ts`, `FzProgressBar.test.ts` |
+| `radio` | 3 | Rename all + fix folder name (`__test__` → `__tests__`) |
+| `select` | 1 | Rename `FzSelect.test.ts` |
+| `style` | 4 | Rename custom directive tests |
+| `tab` | 1 | Rename `FzTabs.test.ts` + fix folder name |
+| `typeahead` | 1 | Rename `FzTypeahead.test.ts` |
+
+#### Packages Missing Tests Entirely ❌
+
+| Package | Components | Priority |
+|---------|------------|----------|
+| `action` | ~~FzAction, FzActionList, FzActionSection~~ | ✅ **COMPLETED** |
+| `icons` | FzIcon | 🟡 Medium (pure display) |
+| `pdf-viewer` | FzPdfViewer | 🟠 High |
+
+### Folder Naming Issues
+
+The following packages use `__test__` (singular) instead of `__tests__` (plural):
+
+| Package | Current | Required |
+|---------|---------|----------|
+| `card` | `src/__test__/` | `src/__tests__/` |
+| `checkbox` | `src/__test__/` | `src/__tests__/` |
+| `dialog` | `src/__test__/` | `src/__tests__/` |
+| `radio` | `src/__test__/` | `src/__tests__/` |
+| `tab` | `src/__test__/` | `src/__tests__/` |
+
+### Storybook Stories Inventory
+
+#### Stories WITH Play Functions (23 files) ✅
+
+| Category | Story File | Play Functions Quality |
+|----------|------------|----------------------|
+| button | Button.stories.ts | ✅ Excellent - variants, a11y, interactions |
+| button | ButtonGroup.stories.ts | ✅ Good |
+| button | IconButton.stories.ts | ✅ Good |
+| composables | Floating.stories.ts | ✅ Basic |
+| container | Container.stories.ts | ✅ Good |
+| form | Appointments.stories.ts | ✅ Basic |
+| form | Checkbox.stories.ts | ✅ Good |
+| form | CheckboxGroup.stories.ts | ✅ Good |
+| form | CurrencyInput.stories.ts | ✅ Good |
+| form | Input.stories.ts | ✅ Excellent - a11y |
+| form | Radio.stories.ts | ✅ Good |
+| form | RadioCard.stories.ts | ✅ Good |
+| form | RadioGroup.stories.ts | ✅ Good |
+| form | Select.stories.ts | ✅ Excellent - keyboard nav |
+| form | Typeahead.stories.ts | ✅ Good |
+| media | Avatar.stories.ts | ✅ Basic |
+| navigation | Dropdown.stories.ts | ✅ Good |
+| navigation | IconDropdown.stories.ts | ✅ Good |
+| navigation | Link.stories.ts | ✅ Basic |
+| overlay | Tooltip.stories.ts | ✅ Good |
+| panel | Card.stories.ts | ✅ Basic |
+| progress | Progress.stories.ts | ✅ Good |
+| progress | ProgressBar.stories.ts | ✅ Good |
+
+#### Stories WITHOUT Play Functions (28 files) ❌
+
+| Category | Story File | Stories Count | Priority |
+|----------|------------|---------------|----------|
+| data | SimpleTable.stories.ts | ~5 | 🟠 High |
+| data | Table.stories.ts | ~5 | 🟠 High |
+| form | Datepicker.stories.ts | ~5 | 🔴 Critical |
+| form | Textarea.stories.ts | 8 | 🔴 Critical |
+| form | Upload.stories.ts | ~3 | 🟠 High |
+| media | Icon.stories.ts | ~3 | 🟡 Low |
+| media | PdfViewer.stories.ts | ~2 | 🟡 Low |
+| messages | Alert.stories.ts | 14 | 🔴 Critical |
+| messages | Toast.stories.ts | ~5 | 🟠 High |
+| messages | ToastQueue.stories.ts | ~3 | 🟠 High |
+| misc | Badge.stories.ts | ~5 | 🟡 Medium |
+| navigation | Action.stories.ts | ~3 | 🟠 High |
+| navigation | Actionlist.stories.ts | ~3 | 🟠 High |
+| navigation | Breadcrumbs.stories.ts | ~3 | 🟠 High |
+| navigation | Navbar.stories.ts | ~3 | 🟠 High |
+| navigation | Navlink.stories.ts | ~3 | 🟠 High |
+| navigation | Navlist.stories.ts | ~3 | 🟠 High |
+| navigation | Stepper.stories.ts | ~3 | 🟠 High |
+| overlay | ConfirmDialog.stories.ts | ~3 | 🔴 Critical |
+| overlay | Dialog.stories.ts | ~3 | 🔴 Critical |
+| overlay | ViewFlag.stories.ts | ~2 | 🟡 Medium |
+| panel | Collapse.stories.ts | ~3 | 🟠 High |
+| panel | Divider.stories.ts | ~2 | 🟡 Low |
+| panel | Layout.stories.ts | ~3 | 🟡 Medium |
+| panel | Tab.stories.ts | ~5 | 🟠 High |
+| panel | Topbar.stories.ts | ~3 | 🟡 Medium |
+| typography | Paragraph.stories.ts | ~3 | 🟡 Low |
+| typography | Title.stories.ts | ~3 | 🟡 Low |
+
+---
+
+## Gap Analysis
+
+### Test Coverage by Category
+
+Based on TESTING.md requirements, each component should have:
+
+| Test Category | Required | Current Coverage | Gap |
+|---------------|----------|------------------|-----|
+| Rendering Tests | ✅ All | ~90% | Minor |
+| Props Tests | ✅ All | ~70% | Moderate |
+| Events Tests | ✅ All | ~60% | Significant |
+| Accessibility Tests | ✅ All | ~20% | **Critical** |
+| Edge Cases | ✅ All | ~30% | Significant |
+| Snapshots | ✅ All | ~50% | Moderate |
+| Keyboard Navigation | ✅ Interactive | ~15% | **Critical** |
+
+### Accessibility Test Coverage Gaps
+
+Most unit tests are missing:
+
+- [ ] `aria-labelledby` linking to label
+- [ ] `aria-describedby` linking to error/help text
+- [ ] `aria-invalid` for form elements
+- [ ] `aria-required` for form elements
+- [ ] `role="alert"` on error messages
+- [ ] Decorative icon `aria-hidden="true"`
+- [ ] Keyboard focusability tests
+
+**Reference Implementation:** `packages/input/src/__tests__/FzInput.test.ts` has excellent a11y test coverage.
+
+---
+
+## Compliance Roadmap
+
+### Timeline Overview
+
+```
+Week 1-2:  Phase 1 - File/Folder Naming Standardization
+Week 2-3:  Phase 2 - Missing Unit Tests
+Week 3-5:  Phase 3 - Unit Test Quality Improvements
+Week 4-6:  Phase 4 - Storybook Play Functions
+Week 5-7:  Phase 5 - Accessibility Test Coverage
+Week 7-8:  Phase 6 - Coverage Enforcement
+```
+
+### Effort Estimates
+
+| Phase | Tasks | Est. Hours | Priority |
+|-------|-------|------------|----------|
+| Phase 1 | File/folder renaming | 4-6 hrs | 🔴 Critical |
+| Phase 2 | Missing unit tests (3 packages) | 16-24 hrs | 🔴 Critical |
+| Phase 3 | Unit test improvements (21 packages) | 40-60 hrs | 🟠 High |
+| Phase 4 | Play functions (28 story files) | 30-45 hrs | 🟠 High |
+| Phase 5 | Accessibility tests (~35 packages) | 50-70 hrs | 🔴 Critical |
+| Phase 6 | CI/Coverage setup | 8-12 hrs | 🟡 Medium |
+
+---
+
+## Phase 1: File & Folder Naming Standardization
+
+### Priority: 🔴 Critical
+### Estimated Time: 4-6 hours
+
+### 1.1 Rename Test Folders
+
+Execute the following folder renames:
+
+```bash
+# Card package
+mv packages/card/src/__test__ packages/card/src/__tests__
+
+# Checkbox package
+mv packages/checkbox/src/__test__ packages/checkbox/src/__tests__
+
+# Dialog package
+mv packages/dialog/src/__test__ packages/dialog/src/__tests__
+
+# Radio package
+mv packages/radio/src/__test__ packages/radio/src/__tests__
+
+# Tab package
+mv packages/tab/src/__test__ packages/tab/src/__tests__
+```
+
+### 1.2 Rename Test Files from `.test.ts` to `.spec.ts`
+
+| Package | Current File | New File |
+|---------|-------------|----------|
+| button | `FzButtonGroup.test.ts` | `FzButtonGroup.spec.ts` |
+| button | `FzIconButton.test.ts` | `FzIconButton.spec.ts` |
+| card | `FzCard.test.ts` | `FzCard.spec.ts` |
+| checkbox | `FzCheckbox.test.ts` | `FzCheckbox.spec.ts` |
+| checkbox | `FzCheckboxGroup.test.ts` | `FzCheckboxGroup.spec.ts` |
+| dialog | `FzDialog.test.ts` | `FzDialog.spec.ts` |
+| input | `FzInput.test.ts` | `FzInput.spec.ts` |
+| input | `FzCurrencyInput.test.ts` | `FzCurrencyInput.spec.ts` |
+| link | `FzLink.test.ts` | `FzLink.spec.ts` |
+| progress | `FzProgress.test.ts` | `FzProgress.spec.ts` |
+| progress | `FzProgressBar.test.ts` | `FzProgressBar.spec.ts` |
+| radio | `FzRadio.test.ts` | `FzRadio.spec.ts` |
+| radio | `FzRadioCard.test.ts` | `FzRadioCard.spec.ts` |
+| radio | `FzRadioGroup.test.ts` | `FzRadioGroup.spec.ts` |
+| select | `FzSelect.test.ts` | `FzSelect.spec.ts` |
+| style | `validation.test.ts` | `validation.spec.ts` |
+| style | `vSmall.test.ts` | `vSmall.spec.ts` |
+| style | `vColor.test.ts` | `vColor.spec.ts` |
+| style | `vBold.test.ts` | `vBold.spec.ts` |
+| tab | `FzTabs.test.ts` | `FzTabs.spec.ts` |
+| typeahead | `FzTypeahead.test.ts` | `FzTypeahead.spec.ts` |
+
+### 1.3 Update Snapshot References
+
+After renaming, update any snapshot files that reference the old names:
+
+```bash
+# Example: button package
+mv packages/button/src/__tests__/__snapshots__/FzButtonGroup.test.ts.snap \
+   packages/button/src/__tests__/__snapshots__/FzButtonGroup.spec.ts.snap
+```
+
+### 1.4 Verification Script
+
+Run after all renames:
+
+```bash
+# Should return 0 results
+find packages -name "*.test.ts" -path "*/__test*" | wc -l
+
+# Should return 0 results
+find packages -type d -name "__test__" | wc -l
+
+# Verify tests still pass
+npx nx run-many -t test
+```
+
+---
+
+## Phase 2: Missing Unit Tests
+
+### Priority: 🔴 Critical
+### Estimated Time: 16-24 hours
+
+### 2.1 Package: `action` ✅ **COMPLETED**
+
+**Components tested:**
+- ✅ `FzAction.vue` - Comprehensive test suite with 80 tests
+- ✅ `FzActionList.vue` - Complete test coverage
+- ✅ `FzActionSection.vue` - Complete test coverage
+
+**Created files:**
+- ✅ `packages/action/src/__tests__/FzAction.spec.ts` (122 tests total across all 3 files)
+- ✅ `packages/action/src/__tests__/FzActionList.spec.ts`
+- ✅ `packages/action/src/__tests__/FzActionSection.spec.ts`
+
+**Test coverage includes:**
+- ✅ Rendering tests (default props, labels, slots, variants)
+- ✅ Props tests (all variants, environments, disabled, readonly, icons, roles, ARIA)
+- ✅ Events tests (click, keydown, disabled/readonly blocking)
+- ✅ Accessibility tests (ARIA attributes, keyboard navigation, decorative elements)
+- ✅ CSS Classes tests (base classes, environment-specific, hover/focus states)
+- ✅ Edge Cases tests (undefined values, missing props, unique IDs)
+- ✅ Snapshots tests (all key states and variants)
+
+**Status:** All 122 tests passing ✅
+
+### 2.2 Package: `icons`
+
+**Components to test:**
+- `FzIcon.vue`
+
+**Create:** `packages/icons/src/__tests__/FzIcon.spec.ts`
+
+```typescript
+describe('FzIcon', () => {
+  describe('Rendering', () => {
+    // - Renders with name prop
+    // - Renders correct size
+    // - Applies custom class
+  })
+
+  describe('Props', () => {
+    // - name prop
+    // - size prop (sm, md, lg variants)
+    // - color prop
+  })
+
+  describe('Accessibility', () => {
+    // - aria-hidden for decorative icons
+    // - aria-label when provided
+    // - role="img" when accessible
+  })
+
+  describe('Snapshots', () => {
+    // - Common icon sizes
+  })
+})
+```
+
+**Note:** Also create `packages/icons/vitest.config.ts`:
+
+```typescript
+import { fileURLToPath } from 'node:url'
+import { mergeConfig, defineConfig, configDefaults } from 'vitest/config'
+import viteConfig from './vite.config'
+
+export default mergeConfig(
+  viteConfig,
+  defineConfig({
+    test: {
+      environment: 'jsdom',
+      exclude: [...configDefaults.exclude, 'e2e/*'],
+      root: fileURLToPath(new URL('./', import.meta.url)),
+    }
+  })
+)
+```
+
+### 2.3 Package: `pdf-viewer`
+
+**Components to test:**
+- `FzPdfViewer.vue`
+
+**Create:** `packages/pdf-viewer/src/__tests__/FzPdfViewer.spec.ts`
+
+```typescript
+describe('FzPdfViewer', () => {
+  describe('Rendering', () => {
+    // - Renders with src prop
+    // - Shows loading state
+    // - Handles error state
+  })
+
+  describe('Props', () => {
+    // - src prop
+    // - page prop
+    // - scale prop
+  })
+
+  describe('Events', () => {
+    // - page-change event
+    // - load event
+    // - error event
+  })
+
+  describe('Accessibility', () => {
+    // - role="document"
+    // - aria-label for navigation
+  })
+
+  describe('Snapshots', () => {
+    // - Loading state
+    // - Error state
+  })
+})
+```
+
+---
+
+## Phase 3: Unit Test Quality Improvements
+
+### Priority: 🟠 High
+### Estimated Time: 40-60 hours
+
+### 3.1 Packages Needing Enhanced Accessibility Tests
+
+Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementation.
+
+**Add ARIA tests to these packages:**
+
+| Package | Missing Tests | Est. Hours |
+|---------|--------------|------------|
+| actionlist | aria-*, role | 1-2 |
+| alert | role="alert", aria-live | 1-2 |
+| appointments | aria-labelledby, aria-describedby | 2-3 |
+| avatar | alt text, aria-label | 1 |
+| badge | aria-label for status | 1 |
+| breadcrumbs | aria-current, nav role | 1-2 |
+| button | ✅ Already good | - |
+| card | role="article" or similar | 1 |
+| checkbox | aria-checked, aria-labelledby | 2-3 |
+| collapse | aria-expanded, aria-controls | 2 |
+| container | landmark role | 1 |
+| datepicker | Full a11y suite | 3-4 |
+| dialog | role="dialog", aria-modal | 3-4 |
+| divider | role="separator" | 0.5 |
+| dropdown | aria-expanded, aria-haspopup | 2-3 |
+| input | ✅ Reference implementation | - |
+| layout | landmark roles | 1 |
+| link | role="link" native | 0.5 |
+| navbar | nav role, aria-label | 1-2 |
+| navlink | aria-current | 1 |
+| navlist | listbox/list role | 2 |
+| progress | role="progressbar", aria-valuenow | 2 |
+| radio | aria-checked, radio group | 2-3 |
+| select | Full a11y suite | 3-4 |
+| simple-table | table semantics | 2 |
+| stepper | aria-current step | 2 |
+| tab | tablist/tabpanel roles | 2-3 |
+| table | table semantics, aria-sort | 3 |
+| textarea | Same as input | 2 |
+| toast | role="alert", aria-live | 1-2 |
+| tooltip | aria-describedby | 1-2 |
+| topbar | landmark role | 1 |
+| typeahead | combobox pattern | 3-4 |
+| upload | aria-describedby for instructions | 2 |
+| view-flag | aria-label | 1 |
+
+### 3.2 Template for Adding Accessibility Tests
+
+Add this describe block to each unit test file:
+
+```typescript
+describe('Accessibility', () => {
+  describe('ARIA attributes', () => {
+    it('should have aria-disabled when disabled', () => {
+      const wrapper = mount(FzComponent, {
+        props: { disabled: true }
+      })
+      expect(wrapper.find('[ELEMENT]').attributes('aria-disabled')).toBe('true')
+    })
+
+    // For form elements:
+    it('should have aria-labelledby linking to label', () => {
+      const wrapper = mount(FzComponent, {
+        props: { label: 'Test Label' }
+      })
+      const input = wrapper.find('input')
+      const labelId = input.attributes('aria-labelledby')
+      expect(labelId).toBeTruthy()
+      expect(wrapper.find(`#${labelId}`).exists()).toBe(true)
+    })
+
+    it('should have aria-describedby for help/error text', () => {
+      const wrapper = mount(FzComponent, {
+        props: { error: true },
+        slots: { errorMessage: 'Error text' }
+      })
+      const input = wrapper.find('input')
+      const errorId = input.attributes('aria-describedby')
+      expect(errorId).toBeTruthy()
+    })
+
+    it('should have aria-invalid when error', () => {
+      const wrapper = mount(FzComponent, {
+        props: { error: true }
+      })
+      expect(wrapper.find('input').attributes('aria-invalid')).toBe('true')
+    })
+
+    it('should have role="alert" on error message', () => {
+      const wrapper = mount(FzComponent, {
+        props: { error: true },
+        slots: { errorMessage: 'Error' }
+      })
+      expect(wrapper.find('[role="alert"]').exists()).toBe(true)
+    })
+  })
+
+  describe('Keyboard navigation', () => {
+    it('should be focusable when not disabled', () => {
+      const wrapper = mount(FzComponent)
+      expect(wrapper.find('[ELEMENT]').attributes('tabindex')).not.toBe('-1')
+    })
+  })
+
+  describe('Decorative elements', () => {
+    it('should hide decorative icons from screen readers', () => {
+      const wrapper = mount(FzComponent, {
+        props: { icon: 'bell' }
+      })
+      const icon = wrapper.findComponent({ name: 'FzIcon' })
+      expect(icon.attributes('aria-hidden')).toBe('true')
+    })
+  })
+})
+```
+
+### 3.3 Packages Missing Event Tests
+
+| Package | Missing Event Tests |
+|---------|-------------------|
+| alert | `dismiss`, `action-click` |
+| collapse | `toggle`, `open`, `close` |
+| dialog | `close`, `confirm`, `cancel` |
+| dropdown | `open`, `close`, `select` |
+| select | `update:modelValue`, `search` |
+| tab | `tab-change` |
+| toast | `dismiss` |
+| typeahead | `update:modelValue`, `select`, `search` |
+| upload | `upload`, `remove`, `error` |
+
+### 3.4 Packages Missing Edge Case Tests
+
+Add unique ID generation tests to form elements:
+
+```typescript
+describe('Edge Cases', () => {
+  it('should generate unique IDs for multiple instances', async () => {
+    const wrappers = Array.from({ length: 100 }).map(() =>
+      mount(FzComponent, { props: { label: 'Label' } })
+    )
+    await Promise.all(wrappers.map(w => w.vm.$nextTick()))
+    
+    const ids = wrappers.map(w => w.find('input').attributes('id'))
+    expect(new Set(ids).size).toBe(100)
+  })
+
+  it('should handle undefined/null props gracefully', () => {
+    const wrapper = mount(FzComponent, {
+      props: { modelValue: undefined }
+    })
+    expect(wrapper.exists()).toBe(true)
+  })
+})
+```
+
+---
+
+## Phase 4: Storybook Play Functions
+
+### Priority: 🟠 High
+### Estimated Time: 30-45 hours
+
+### 4.1 Critical Priority Stories (Week 4)
+
+| Story File | Required Play Functions | Est. Hours |
+|-----------|------------------------|------------|
+| form/Datepicker.stories.ts | Date selection, keyboard nav, error states | 3 |
+| form/Textarea.stories.ts | Typing, error state, disabled, required | 2 |
+| overlay/Dialog.stories.ts | Open/close, focus trap, escape key | 3 |
+| overlay/ConfirmDialog.stories.ts | Confirm/cancel actions, keyboard nav | 2 |
+| messages/Alert.stories.ts | Dismiss, action clicks, collapsible toggle | 3 |
+
+### 4.2 High Priority Stories (Week 5)
+
+| Story File | Required Play Functions | Est. Hours |
+|-----------|------------------------|------------|
+| data/SimpleTable.stories.ts | Sorting, row selection | 2 |
+| data/Table.stories.ts | Sorting, filtering, pagination | 3 |
+| form/Upload.stories.ts | File selection, drag & drop, remove | 2 |
+| messages/Toast.stories.ts | Dismiss, auto-hide | 1.5 |
+| messages/ToastQueue.stories.ts | Queue management | 1.5 |
+| navigation/Action.stories.ts | Click, hover states | 1 |
+| navigation/Actionlist.stories.ts | Navigation, selection | 1.5 |
+| navigation/Breadcrumbs.stories.ts | Click navigation | 1 |
+| navigation/Navbar.stories.ts | Navigation, active state | 1.5 |
+| navigation/Navlink.stories.ts | Click, active state | 1 |
+| navigation/Navlist.stories.ts | List navigation | 1.5 |
+| navigation/Stepper.stories.ts | Step navigation | 2 |
+| panel/Collapse.stories.ts | Expand/collapse, keyboard | 1.5 |
+| panel/Tab.stories.ts | Tab switching, keyboard nav | 2 |
+
+### 4.3 Medium Priority Stories (Week 6)
+
+| Story File | Required Play Functions | Est. Hours |
+|-----------|------------------------|------------|
+| misc/Badge.stories.ts | Visual states | 0.5 |
+| overlay/ViewFlag.stories.ts | Toggle visibility | 1 |
+| panel/Layout.stories.ts | Responsive behavior | 1 |
+| panel/Topbar.stories.ts | Interaction states | 1 |
+
+### 4.4 Low Priority Stories (Week 6-7)
+
+| Story File | Required Play Functions | Est. Hours |
+|-----------|------------------------|------------|
+| media/Icon.stories.ts | Visual verification | 0.5 |
+| media/PdfViewer.stories.ts | Page navigation | 1 |
+| panel/Divider.stories.ts | Visual states | 0.5 |
+| typography/Paragraph.stories.ts | Visual verification | 0.5 |
+| typography/Title.stories.ts | Visual verification | 0.5 |
+
+### 4.5 Play Function Template
+
+```typescript
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { FzComponent } from '@fiscozen/component-name'
+
+const meta = {
+  title: 'Category/FzComponentName',
+  component: FzComponent,
+  tags: ['autodocs'],
+  argTypes: {
+    // Define all props
+  }
+} satisfies Meta<typeof FzComponent>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
+  args: {},
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify component renders', async () => {
+      const element = canvas.getByRole('button') // or appropriate role
+      await expect(element).toBeInTheDocument()
+    })
+    
+    await step('Verify ARIA attributes', async () => {
+      const element = canvas.getByRole('button')
+      await expect(element).toHaveAttribute('aria-disabled', 'false')
+    })
+  }
+}
+
+export const Disabled: Story = {
+  args: { disabled: true },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify disabled state', async () => {
+      const element = canvas.getByRole('button')
+      await expect(element).toBeDisabled()
+      await expect(element).toHaveAttribute('aria-disabled', 'true')
+    })
+    
+    await step('Verify no interaction when disabled', async () => {
+      const element = canvas.getByRole('button')
+      await userEvent.click(element)
+      // Assert no state change
+    })
+  }
+}
+
+export const KeyboardNavigation: Story = {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Tab to focus', async () => {
+      await userEvent.tab()
+      const element = canvas.getByRole('button')
+      await expect(document.activeElement).toBe(element)
+    })
+    
+    await step('Activate with Enter', async () => {
+      await userEvent.keyboard('{Enter}')
+      // Assert expected behavior
+    })
+    
+    await step('Activate with Space', async () => {
+      await userEvent.keyboard(' ')
+      // Assert expected behavior
+    })
+  }
+}
+
+export const Error: Story = {
+  args: { error: true },
+  render: (args) => ({
+    components: { FzComponent },
+    setup: () => ({ args }),
+    template: `
+      <FzComponent v-bind="args">
+        <template #errorMessage>This field is required</template>
+      </FzComponent>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify error message', async () => {
+      const error = canvas.getByText('This field is required')
+      await expect(error).toBeVisible()
+    })
+    
+    await step('Verify aria-invalid', async () => {
+      const input = canvas.getByRole('textbox')
+      await expect(input).toHaveAttribute('aria-invalid', 'true')
+    })
+    
+    await step('Verify role="alert" on error', async () => {
+      const alert = canvasElement.querySelector('[role="alert"]')
+      await expect(alert).toBeInTheDocument()
+    })
+  }
+}
+```
+
+---
+
+## Phase 5: Accessibility Test Coverage
+
+### Priority: 🔴 Critical
+### Estimated Time: 50-70 hours
+
+### 5.1 Form Elements Accessibility Checklist
+
+Every form element (input, select, checkbox, radio, textarea, datepicker, typeahead, upload) MUST have tests for:
+
+**Unit Tests:**
+- [ ] `aria-labelledby` linking to visible label
+- [ ] `aria-describedby` linking to help/error text
+- [ ] `aria-invalid` reflecting error state
+- [ ] `aria-required` reflecting required state
+- [ ] `aria-disabled` reflecting disabled state
+- [ ] `role="alert"` on error message container
+- [ ] Unique ID generation
+
+**Storybook Play Functions:**
+- [ ] Tab focus behavior
+- [ ] Enter/Space activation
+- [ ] Error state visual + ARIA
+- [ ] Required indicator
+- [ ] Disabled state
+
+### 5.2 Interactive Elements Accessibility Checklist
+
+Every interactive element (button, dropdown, dialog, tooltip, collapse, tab) MUST have tests for:
+
+**Unit Tests:**
+- [ ] `aria-expanded` for expandable elements
+- [ ] `aria-haspopup` for elements that open menus/dialogs
+- [ ] `aria-selected` for selectable options
+- [ ] `aria-controls` linking to controlled element
+- [ ] Decorative icons have `aria-hidden="true"`
+
+**Storybook Play Functions:**
+- [ ] Keyboard accessibility (Tab, Enter, Space, Escape)
+- [ ] Focus management (focus trap in dialogs)
+- [ ] Focus visible indicator
+
+### 5.3 WAI-ARIA Pattern Compliance
+
+| Component | WAI-ARIA Pattern | Test Requirements |
+|-----------|-----------------|-------------------|
+| Dialog | Dialog (modal) | Focus trap, Escape close, aria-modal |
+| Dropdown | Menu Button | aria-haspopup, aria-expanded, Escape close |
+| Select | Listbox | aria-selected, arrow key nav, typeahead |
+| Tab | Tabs | tablist/tab/tabpanel roles, arrow keys |
+| Tooltip | Tooltip | aria-describedby, Escape dismiss |
+| Alert | Alert | role="alert", aria-live |
+| Toast | Alert | role="alert", aria-live="polite" |
+| Progress | Progressbar | aria-valuenow, aria-valuemin, aria-valuemax |
+| Checkbox | Checkbox | aria-checked, Space toggle |
+| Radio | Radio Group | aria-checked, arrow key nav |
+| Typeahead | Combobox | aria-expanded, aria-activedescendant |
+
+---
+
+## Phase 6: Coverage Enforcement
+
+### Priority: 🟡 Medium
+### Estimated Time: 8-12 hours
+
+### 6.1 Configure Coverage Thresholds
+
+Update `vitest.config.ts` in each package to enforce:
+
+```typescript
+export default mergeConfig(
+  viteConfig,
+  defineConfig({
+    test: {
+      environment: 'jsdom',
+      coverage: {
+        provider: 'v8',
+        include: ['**/src/**'],
+        exclude: ['**/index.ts', '**/__tests__/**', '**/*.stories.ts'],
+        thresholds: {
+          statements: 80,
+          branches: 75,
+          functions: 80,
+          lines: 80
+        }
+      }
+    }
+  })
+)
+```
+
+### 6.2 CI/CD Integration
+
+Add to GitHub Actions workflow:
+
+```yaml
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: npx nx affected -t test --base=origin/main --coverage
+      - name: Check coverage thresholds
+        run: |
+          # Fail if coverage below thresholds
+          npx nx run-many -t test -- --coverage --reporter=json
+          
+  storybook-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: npx playwright install chromium
+      - run: pnpm test:storybook
+```
+
+### 6.3 Pre-commit Hooks
+
+Add `.husky/pre-commit`:
+
+```bash
+#!/bin/sh
+npx nx affected -t test --base=HEAD~1
+```
+
+### 6.4 Package.json Scripts
+
+Ensure root `package.json` has:
+
+```json
+{
+  "scripts": {
+    "test": "nx run-many -t test",
+    "test:coverage": "nx run-many -t test -- --coverage",
+    "test:storybook": "pnpm --filter @fiscozen/storybook test:storybook",
+    "test:storybook:watch": "pnpm --filter @fiscozen/storybook test:storybook:watch",
+    "test:all": "pnpm test && pnpm test:storybook"
+  }
+}
+```
+
+---
+
+## Appendix: Detailed Package Audit
+
+### Package: button ✅ Mostly Compliant
+
+**Current State:**
+- `FzButton.spec.ts` - ✅ Excellent quality
+- `FzButtonGroup.test.ts` - ❌ Wrong extension
+- `FzIconButton.test.ts` - ❌ Wrong extension
+
+**Actions:**
+1. Rename test files to `.spec.ts`
+2. Update snapshot references
+
+---
+
+### Package: input ✅ Excellent Reference
+
+**Current State:**
+- `FzInput.test.ts` - ✅ Best a11y tests in repo
+- `FzCurrencyInput.test.ts` - ✅ Good
+
+**Actions:**
+1. Rename test files to `.spec.ts`
+2. Use as template for other packages
+
+---
+
+### Package: checkbox ❌ Needs Work
+
+**Current State:**
+- `__test__` folder (wrong)
+- `.test.ts` files (wrong)
+- Missing comprehensive a11y tests
+
+**Actions:**
+1. Rename folder to `__tests__`
+2. Rename files to `.spec.ts`
+3. Add aria-checked, aria-labelledby tests
+4. Add keyboard navigation tests
+
+---
+
+### Package: radio ❌ Needs Work
+
+**Current State:**
+- `__test__` folder (wrong)
+- `.test.ts` files (wrong)
+- 3 test files for 4 components
+
+**Actions:**
+1. Rename folder to `__tests__`
+2. Rename files to `.spec.ts`
+3. Add aria-checked, radio group a11y tests
+4. Add arrow key navigation tests
+
+---
+
+### Package: dialog ❌ Needs Significant Work
+
+**Current State:**
+- `__test__` folder (wrong)
+- `.test.ts` file (wrong)
+- Missing focus trap tests
+- Missing aria-modal tests
+
+**Actions:**
+1. Rename folder to `__tests__`
+2. Rename file to `.spec.ts`
+3. Add comprehensive a11y tests:
+   - role="dialog"
+   - aria-modal="true"
+   - aria-labelledby
+   - aria-describedby
+   - Focus trap
+   - Escape key close
+
+---
+
+### Package: select ⚠️ Needs Enhancement
+
+**Current State:**
+- `FzSelect.test.ts` - ❌ Wrong extension
+- Missing comprehensive a11y tests
+
+**Actions:**
+1. Rename to `.spec.ts`
+2. Add listbox/option role tests
+3. Add aria-selected tests
+4. Add keyboard navigation tests (arrow keys, typeahead)
+
+---
+
+### Package: tab ❌ Needs Work
+
+**Current State:**
+- `__test__` folder (wrong)
+- `FzTabs.test.ts` (wrong extension)
+
+**Actions:**
+1. Rename folder to `__tests__`
+2. Rename to `FzTabs.spec.ts`
+3. Add tablist/tab/tabpanel role tests
+4. Add arrow key navigation tests
+
+---
+
+### Package: typeahead ⚠️ Needs Enhancement
+
+**Current State:**
+- `FzTypeahead.test.ts` - ❌ Wrong extension
+
+**Actions:**
+1. Rename to `.spec.ts`
+2. Add combobox pattern tests
+3. Add aria-expanded tests
+4. Add aria-activedescendant tests
+
+---
+
+## Checklist Summary
+
+### Before Starting
+
+- [ ] Review TESTING.md thoroughly
+- [ ] Review .cursor/rules/testing-standards.mdc
+- [ ] Set up development environment
+- [ ] Run current test suite to establish baseline
+
+### Phase 1 Completion Checklist
+
+- [ ] All folders renamed from `__test__` to `__tests__`
+- [ ] All files renamed from `.test.ts` to `.spec.ts`
+- [ ] All snapshot files renamed
+- [ ] Full test suite passes
+
+### Phase 2 Completion Checklist
+
+- [x] `action` package has unit tests ✅ **COMPLETED**
+- [ ] `icons` package has unit tests and vitest config
+- [ ] `pdf-viewer` package has unit tests
+
+### Phase 3 Completion Checklist
+
+- [ ] All packages have Accessibility test section
+- [ ] All form elements have ARIA attribute tests
+- [ ] All packages have Edge Cases tests
+- [ ] All packages have Snapshot tests
+
+### Phase 4 Completion Checklist
+
+- [ ] All 51 story files have play functions
+- [ ] All play functions use `step()` for organization
+- [ ] All play functions test keyboard navigation
+- [ ] All play functions verify ARIA attributes
+
+### Phase 5 Completion Checklist
+
+- [ ] WAI-ARIA patterns implemented for all applicable components
+- [ ] Focus management tests for dialogs and dropdowns
+- [ ] Keyboard navigation tests for all interactive components
+
+### Phase 6 Completion Checklist
+
+- [ ] Coverage thresholds configured (80/75/80/80)
+- [ ] CI pipeline updated with test jobs
+- [ ] Pre-commit hooks configured
+- [ ] Documentation updated
+
+---
+
+## Resources
+
+- [Vitest Documentation](https://vitest.dev/)
+- [Vue Test Utils](https://test-utils.vuejs.org/)
+- [Storybook Testing](https://storybook.js.org/docs/writing-tests)
+- [Testing Library Queries](https://testing-library.com/docs/queries/about)
+- [WAI-ARIA Practices](https://www.w3.org/WAI/ARIA/apg/)
+- [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
+
+---
+
+*Document Version: 1.0*  
+*Last Updated: January 15, 2026*
+
