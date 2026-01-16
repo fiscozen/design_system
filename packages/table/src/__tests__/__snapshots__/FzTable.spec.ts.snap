@@ -1,0 +1,457 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzTable > Snapshots > should match snapshot - default state 1`] = `
+"<div class="fz-table-container m-0 p-0 size-full text-grey-500 relative flex flex-col">
+  <!--v-if-->
+  <div class="grid mb-20 items-center gap-8 grid-rows-1" style="grid-template-columns: 1fr;">
+    <div class="justify-self-start grow"><span>2 risultati</span>
+      <!--v-if-->
+    </div>
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+  <div class="fz__table overflow-auto relative">
+    <!--v-if-->
+    <div class="grid relative" style="grid-template-columns: auto auto;" role="table" aria-rowcount="2" aria-colcount="2">
+      <!--v-if-->
+      <!--v-if-->
+      <!--v-if-->
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 relative" role="columnheader">Name
+        <!--v-if-->
+      </div>
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 relative" role="columnheader">Email
+        <!--v-if-->
+      </div>
+      <!--v-if-->
+      <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100 col-span-full">
+        <!--v-if-->
+        <!--v-if-->
+        <!--v-if-->
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">John</div>
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">john@example.com</div>
+        <!--v-if-->
+      </div>
+      <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100 col-span-full">
+        <!--v-if-->
+        <!--v-if-->
+        <!--v-if-->
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">Jane</div>
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">jane@example.com</div>
+        <!--v-if-->
+      </div>
+    </div>
+  </div>
+  <!--v-if-->
+</div>
+<transition-stub name="filters" appear="false" persisted="false" css="true">
+  <!--v-if-->
+</transition-stub>
+<!--v-if-->"
+`;
+
+exports[`FzTable > Snapshots > should match snapshot - empty state 1`] = `
+"<div class="fz-table-container m-0 p-0 size-full text-grey-500 relative flex flex-col">
+  <!--v-if-->
+  <div class="grid mb-20 items-center gap-8 grid-rows-1" style="grid-template-columns: 1fr;">
+    <div class="justify-self-start grow"><span>0 risultati</span>
+      <!--v-if-->
+    </div>
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+  <div class="fz__table overflow-auto relative">
+    <!--v-if-->
+    <div class="grid relative min-h-[200px]" style="grid-template-columns: auto auto;" role="table" aria-rowcount="0" aria-colcount="2">
+      <!--v-if-->
+      <!--v-if-->
+      <!--v-if-->
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 relative" role="columnheader">Name
+        <!--v-if-->
+      </div>
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 relative" role="columnheader">Email
+        <!--v-if-->
+      </div>
+      <!--v-if-->
+      <div class="fz__table__empty h-full self-center justify-self-center min-h-[200px] flex justify-center items-center col-span-full">No data available</div>
+    </div>
+  </div>
+  <!--v-if-->
+</div>
+<transition-stub name="filters" appear="false" persisted="false" css="true">
+  <!--v-if-->
+</transition-stub>
+<!--v-if-->"
+`;
+
+exports[`FzTable > Snapshots > should match snapshot - loading state 1`] = `
+"<div class="fz-table-container m-0 p-0 size-full text-grey-500 relative flex flex-col">
+  <!--v-if-->
+  <div class="grid mb-20 items-center gap-8 grid-rows-1" style="grid-template-columns: 1fr;">
+    <div class="justify-self-start grow"><span>2 risultati</span>
+      <!--v-if-->
+    </div>
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+  <div class="fz__table overflow-auto relative">
+    <div class="fz__table__loading h-full w-full flex justify-center items-center min-h-[200px] absolute z-20 bg-gray-100/60">
+      <div class="flex items-center justify-center w-[25px] h-[25px]" style="--fa-animation-duration: 0.86s; --fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85);"><svg class="svg-inline--fa fa-spinner-third fa-spin fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="spinner-third" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path class="" fill="currentColor" d="M224 32c0-17.7 14.3-32 32-32C397.4 0 512 114.6 512 256c0 46.6-12.5 90.4-34.3 128c-8.8 15.3-28.4 20.5-43.7 11.7s-20.5-28.4-11.7-43.7c16.3-28.2 25.7-61 25.7-96c0-106-86-192-192-192c-17.7 0-32-14.3-32-32z"></path>
+        </svg></div>
+    </div>
+    <div class="grid relative" style="grid-template-columns: auto auto;" role="table" aria-rowcount="2" aria-colcount="2">
+      <!--v-if-->
+      <!--v-if-->
+      <!--v-if-->
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 relative" role="columnheader">Name
+        <!--v-if-->
+      </div>
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 relative" role="columnheader">Email
+        <!--v-if-->
+      </div>
+      <!--v-if-->
+      <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100 col-span-full">
+        <!--v-if-->
+        <!--v-if-->
+        <!--v-if-->
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">John</div>
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">john@example.com</div>
+        <!--v-if-->
+      </div>
+      <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100 col-span-full">
+        <!--v-if-->
+        <!--v-if-->
+        <!--v-if-->
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">Jane</div>
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">jane@example.com</div>
+        <!--v-if-->
+      </div>
+    </div>
+  </div>
+  <!--v-if-->
+</div>
+<transition-stub name="filters" appear="false" persisted="false" css="true">
+  <!--v-if-->
+</transition-stub>
+<!--v-if-->"
+`;
+
+exports[`FzTable > Snapshots > should match snapshot - selectable variant 1`] = `
+"<div class="fz-table-container m-0 p-0 size-full text-grey-500 relative flex flex-col">
+  <!--v-if-->
+  <div class="grid mb-20 items-center gap-8 grid-rows-1" style="grid-template-columns: 1fr;">
+    <div class="justify-self-start grow"><span>2 risultati</span>
+      <!--v-if-->
+    </div>
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+  <div class="fz__table overflow-auto relative">
+    <!--v-if-->
+    <div class="grid relative" style="grid-template-columns: min-content  auto auto;" role="table" aria-rowcount="2" aria-colcount="3">
+      <!--v-if-->
+      <!--v-if-->
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 sticky left-0 z-[3] w-[36px] justify-center items-center">
+        <!-- Root container: vertical layout with consistent spacing -->
+        <div data-v-2b014a17="" class="flex justify-center flex-col w-fit gap-4 fz__table__header--checkbox">
+          <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
+          <!-- Hover effects are handled in CSS using data attributes -->
+          <div data-v-2b014a17="" class="flex items-start group" data-emphasis="true">
+            <!-- 
+        Native checkbox input (visually hidden but functionally present)
+        - Maintains native keyboard navigation and form behavior
+        - Screen readers can interact with it normally
+        - Styled via adjacent label and icon using Tailwind's "peer" selector
+      --><input data-v-2b014a17="" type="checkbox" id="fz-checkbox-168562165739-vcq2a" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168562165739-vcq2a-label" value="all">
+            <!-- 
+        Label element: provides click target and visual representation
+        Connected to hidden input via "for" attribute
+      --><label data-v-2b014a17="" id="fz-checkbox-168562165739-vcq2a-label" for="fz-checkbox-168562165739-vcq2a" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+  peer-focus:[&amp;_div]:after:border-1
+  peer-focus:[&amp;_div]:after:border-solid
+  peer-focus:[&amp;_div]:after:rounded-[2px]
+  peer-focus:[&amp;_div]:after:border-blue-200
+  peer-focus:[&amp;_div]:after:content-['']
+  peer-focus:[&amp;_div]:after:top-0
+  peer-focus:[&amp;_div]:after:left-0
+  peer-focus:[&amp;_div]:after:right-0
+  peer-focus:[&amp;_div]:after:bottom-0
+  peer-focus:[&amp;_div]:after:absolute text-base text-core-black [&amp;_div]:text-blue-500 peer-checked:[&amp;_div]:text-blue-500 peer-indeterminate:[&amp;_div]:text-blue-500">
+              <!-- 
+          Visual checkbox icon (replaces hidden native checkbox)
+          aria-hidden because it's purely decorative - the native input conveys state
+          @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
+        -->
+              <div data-v-2b014a17="" class="flex items-center justify-center w-[20px] h-[20px] relative text-blue-500" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                  <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
+                </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->
+            </label>
+            <!-- 
+        Optional tooltip for additional context
+        @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation
+      -->
+            <!--v-if-->
+          </div><!-- Error message display with accessible ARIA live region -->
+          <!--v-if-->
+          <!-- 
+      Children slot for nested checkboxes
+      Used by FzCheckboxGroupOption to render child checkboxes
+    -->
+        </div>
+      </div>
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 relative" role="columnheader">Name
+        <!--v-if-->
+      </div>
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 relative" role="columnheader">Email
+        <!--v-if-->
+      </div>
+      <!--v-if-->
+      <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100 col-span-full">
+        <!--v-if-->
+        <div role="cell" class="w-[36px] fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 sticky left-0 z-[2] justify-center !min-w-[36px] bg-core-white">
+          <!-- Root container: vertical layout with consistent spacing -->
+          <div data-v-2b014a17="" class="flex justify-center flex-col w-fit gap-4">
+            <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
+            <!-- Hover effects are handled in CSS using data attributes -->
+            <div data-v-2b014a17="" class="flex items-start group" data-emphasis="true">
+              <!-- 
+        Native checkbox input (visually hidden but functionally present)
+        - Maintains native keyboard navigation and form behavior
+        - Screen readers can interact with it normally
+        - Styled via adjacent label and icon using Tailwind's "peer" selector
+      --><input data-v-2b014a17="" type="checkbox" id="fz-checkbox-168562165740-pon1o" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168562165740-pon1o-label" value="row-0">
+              <!-- 
+        Label element: provides click target and visual representation
+        Connected to hidden input via "for" attribute
+      --><label data-v-2b014a17="" id="fz-checkbox-168562165740-pon1o-label" for="fz-checkbox-168562165740-pon1o" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+  peer-focus:[&amp;_div]:after:border-1
+  peer-focus:[&amp;_div]:after:border-solid
+  peer-focus:[&amp;_div]:after:rounded-[2px]
+  peer-focus:[&amp;_div]:after:border-blue-200
+  peer-focus:[&amp;_div]:after:content-['']
+  peer-focus:[&amp;_div]:after:top-0
+  peer-focus:[&amp;_div]:after:left-0
+  peer-focus:[&amp;_div]:after:right-0
+  peer-focus:[&amp;_div]:after:bottom-0
+  peer-focus:[&amp;_div]:after:absolute text-base text-core-black [&amp;_div]:text-blue-500 peer-checked:[&amp;_div]:text-blue-500 peer-indeterminate:[&amp;_div]:text-blue-500">
+                <!-- 
+          Visual checkbox icon (replaces hidden native checkbox)
+          aria-hidden because it's purely decorative - the native input conveys state
+          @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
+        -->
+                <div data-v-2b014a17="" class="flex items-center justify-center w-[20px] h-[20px] relative text-blue-500" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
+                  </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->
+              </label>
+              <!-- 
+        Optional tooltip for additional context
+        @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation
+      -->
+              <!--v-if-->
+            </div><!-- Error message display with accessible ARIA live region -->
+            <!--v-if-->
+            <!-- 
+      Children slot for nested checkboxes
+      Used by FzCheckboxGroupOption to render child checkboxes
+    -->
+          </div>
+        </div>
+        <!--v-if-->
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">John</div>
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">john@example.com</div>
+        <!--v-if-->
+      </div>
+      <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100 col-span-full">
+        <!--v-if-->
+        <div role="cell" class="w-[36px] fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 sticky left-0 z-[2] justify-center !min-w-[36px] bg-core-white">
+          <!-- Root container: vertical layout with consistent spacing -->
+          <div data-v-2b014a17="" class="flex justify-center flex-col w-fit gap-4">
+            <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
+            <!-- Hover effects are handled in CSS using data attributes -->
+            <div data-v-2b014a17="" class="flex items-start group" data-emphasis="true">
+              <!-- 
+        Native checkbox input (visually hidden but functionally present)
+        - Maintains native keyboard navigation and form behavior
+        - Screen readers can interact with it normally
+        - Styled via adjacent label and icon using Tailwind's "peer" selector
+      --><input data-v-2b014a17="" type="checkbox" id="fz-checkbox-168562165742-995ke" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168562165742-995ke-label" value="row-1">
+              <!-- 
+        Label element: provides click target and visual representation
+        Connected to hidden input via "for" attribute
+      --><label data-v-2b014a17="" id="fz-checkbox-168562165742-995ke-label" for="fz-checkbox-168562165742-995ke" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+  peer-focus:[&amp;_div]:after:border-1
+  peer-focus:[&amp;_div]:after:border-solid
+  peer-focus:[&amp;_div]:after:rounded-[2px]
+  peer-focus:[&amp;_div]:after:border-blue-200
+  peer-focus:[&amp;_div]:after:content-['']
+  peer-focus:[&amp;_div]:after:top-0
+  peer-focus:[&amp;_div]:after:left-0
+  peer-focus:[&amp;_div]:after:right-0
+  peer-focus:[&amp;_div]:after:bottom-0
+  peer-focus:[&amp;_div]:after:absolute text-base text-core-black [&amp;_div]:text-blue-500 peer-checked:[&amp;_div]:text-blue-500 peer-indeterminate:[&amp;_div]:text-blue-500">
+                <!-- 
+          Visual checkbox icon (replaces hidden native checkbox)
+          aria-hidden because it's purely decorative - the native input conveys state
+          @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
+        -->
+                <div data-v-2b014a17="" class="flex items-center justify-center w-[20px] h-[20px] relative text-blue-500" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
+                  </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->
+              </label>
+              <!-- 
+        Optional tooltip for additional context
+        @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation
+      -->
+              <!--v-if-->
+            </div><!-- Error message display with accessible ARIA live region -->
+            <!--v-if-->
+            <!-- 
+      Children slot for nested checkboxes
+      Used by FzCheckboxGroupOption to render child checkboxes
+    -->
+          </div>
+        </div>
+        <!--v-if-->
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">Jane</div>
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">jane@example.com</div>
+        <!--v-if-->
+      </div>
+    </div>
+  </div>
+  <!--v-if-->
+</div>
+<transition-stub name="filters" appear="false" persisted="false" css="true">
+  <!--v-if-->
+</transition-stub>
+<!--v-if-->"
+`;
+
+exports[`FzTable > Snapshots > should match snapshot - with ordering ascending 1`] = `
+"<div class="fz-table-container m-0 p-0 size-full text-grey-500 relative flex flex-col">
+  <!--v-if-->
+  <div class="grid mb-20 items-center gap-8 grid-rows-1" style="grid-template-columns: 1fr;">
+    <div class="justify-self-start grow"><span>2 risultati</span>
+      <!--v-if-->
+    </div>
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+  <div class="fz__table overflow-auto relative">
+    <!--v-if-->
+    <div class="grid relative" style="grid-template-columns: auto auto;" role="table" aria-rowcount="2" aria-colcount="2">
+      <!--v-if-->
+      <!--v-if-->
+      <!--v-if-->
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 relative" role="columnheader" aria-sort="ascending">Name <div class="flex items-center justify-center w-[20px] h-[20px] text-blue-500 ml-8 cursor-pointer" data-cy="fztable-ordering"><svg class="svg-inline--fa fa-sort-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sort-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+            <path class="" fill="currentColor" d="M182.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8l256 0c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z"></path>
+          </svg></div>
+      </div>
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 relative" role="columnheader">Email
+        <!--v-if-->
+      </div>
+      <!--v-if-->
+      <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100 col-span-full">
+        <!--v-if-->
+        <!--v-if-->
+        <!--v-if-->
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">John</div>
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">john@example.com</div>
+        <!--v-if-->
+      </div>
+      <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100 col-span-full">
+        <!--v-if-->
+        <!--v-if-->
+        <!--v-if-->
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">Jane</div>
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">jane@example.com</div>
+        <!--v-if-->
+      </div>
+    </div>
+  </div>
+  <!--v-if-->
+</div>
+<transition-stub name="filters" appear="false" persisted="false" css="true">
+  <!--v-if-->
+</transition-stub>
+<!--v-if-->"
+`;
+
+exports[`FzTable > Snapshots > should match snapshot - with ordering descending 1`] = `
+"<div class="fz-table-container m-0 p-0 size-full text-grey-500 relative flex flex-col">
+  <!--v-if-->
+  <div class="grid mb-20 items-center gap-8 grid-rows-1" style="grid-template-columns: 1fr;">
+    <div class="justify-self-start grow"><span>2 risultati</span>
+      <!--v-if-->
+    </div>
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+  <div class="fz__table overflow-auto relative">
+    <!--v-if-->
+    <div class="grid relative" style="grid-template-columns: auto auto;" role="table" aria-rowcount="2" aria-colcount="2">
+      <!--v-if-->
+      <!--v-if-->
+      <!--v-if-->
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 relative" role="columnheader" aria-sort="descending">Name <div class="flex items-center justify-center w-[20px] h-[20px] text-blue-500 ml-8 cursor-pointer" data-cy="fztable-ordering"><svg class="svg-inline--fa fa-sort-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sort-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+            <path class="" fill="currentColor" d="M182.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8l256 0c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128z"></path>
+          </svg></div>
+      </div>
+      <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 relative" role="columnheader">Email
+        <!--v-if-->
+      </div>
+      <!--v-if-->
+      <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100 col-span-full">
+        <!--v-if-->
+        <!--v-if-->
+        <!--v-if-->
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">John</div>
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">john@example.com</div>
+        <!--v-if-->
+      </div>
+      <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100 col-span-full">
+        <!--v-if-->
+        <!--v-if-->
+        <!--v-if-->
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">Jane</div>
+        <div class="fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 relative bg-core-white" role="cell">jane@example.com</div>
+        <!--v-if-->
+      </div>
+    </div>
+  </div>
+  <!--v-if-->
+</div>
+<transition-stub name="filters" appear="false" persisted="false" css="true">
+  <!--v-if-->
+</transition-stub>
+<!--v-if-->"
+`;

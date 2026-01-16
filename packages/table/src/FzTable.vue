@@ -318,6 +318,23 @@ const orderingIconName = (colProps: FzColumnProps) => {
   }
 };
 
+const getAriaSort = (colProps: FzColumnProps): "ascending" | "descending" | "none" | undefined => {
+  const colOrdering = getOrdering(colProps);
+  if (!colOrdering?.orderable) {
+    return undefined;
+  }
+  switch (colOrdering.direction) {
+    case "asc":
+      return "ascending";
+    case "desc":
+      return "descending";
+    case "none":
+      return "none";
+    default:
+      return undefined;
+  }
+};
+
 const handleOrderingClick = (colProps: FzColumnProps) => {
   const colOrdering = getOrdering(colProps);
   if (!colOrdering) {
@@ -464,7 +481,7 @@ onUnmounted(() => {
       <div :class="[staticClasses, { 'min-h-[200px]': !(internalValue?.length || rows?.length) }]" :style="{
         'grid-template-columns':
           props.gridTemplateColumns ?? gridTemplateStyle,
-      }" ref="grid" role="table" :aria-rowcount="internalValue?.length || rows.length" :aria-colcount="totalColumns.length">
+      }" ref="grid" role="table" :aria-rowcount="internalValue?.length || rows.length" :aria-colcount="totalColumns">
         <template v-if="!((variant == 'list') || (variant === 'radio' && smOrSmaller))">
           <div v-if="variant === 'accordion'" :class="[
             'fz__table__header--accordion',
@@ -486,7 +503,7 @@ onUnmounted(() => {
             headerStaticClasses,
             getHeaderClasses(column.props),
             getBodyClasses(column, true),
-          ]" @click="handleOrderingClick(column.props)" role="columnheader" aria-sort="none">
+          ]" @click="handleOrderingClick(column.props)" role="columnheader" :aria-sort="getAriaSort(column.props)">
             {{ column.props.header }}
             <FzIcon v-if="getOrdering(column.props)?.orderable"
               :class="{'text-blue-500': getOrdering(column.props)?.direction !== 'none'}"

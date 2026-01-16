@@ -819,7 +819,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | simple-table | ~~table semantics~~ | ✅ **COMPLETED** |
 | stepper | ~~aria-current step~~ | ✅ **COMPLETED** |
 | tab | ~~tablist/tabpanel roles~~ | ✅ **COMPLETED** |
-| table | table semantics, aria-sort | 3 |
+| table | ~~table semantics, aria-sort~~ | ✅ **COMPLETED** |
 | textarea | ~~Same as input~~ | ✅ **COMPLETED** |
 | toast | ~~role="alert", aria-live~~ | ✅ **COMPLETED** |
 | tooltip | aria-describedby | 1-2 |
@@ -1799,6 +1799,20 @@ Ensure root `package.json` has:
 ---
 
 ## Recent Updates
+
+### January 15, 2026 - Table Component Testing Enhancement ✅
+
+**Package:** `table`
+- Enhanced test suite from 1 snapshot-only test to 50 comprehensive tests
+- Added full test coverage following TESTING.md structure
+- Fixed aria-sort attribute to be dynamic based on ordering state (ascending/descending/none)
+- Added comprehensive accessibility tests for table semantics (role="table", role="columnheader", aria-rowcount, aria-colcount)
+- Added comprehensive aria-sort tests for all ordering states
+- Added comprehensive props tests (variant, selectable, loading, searchable, pages, ordering)
+- Added comprehensive events tests (fztable:ordering, update:searchTerm, fztable:newitem)
+- Added comprehensive edge cases tests
+- Added snapshot tests for all key states
+- All 50 tests passing ✅
 
 ### January 15, 2026 - Stepper Component Testing Enhancement ✅
 
