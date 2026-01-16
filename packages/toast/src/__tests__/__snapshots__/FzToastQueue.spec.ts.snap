@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzToastQueue > matches snaphost 1`] = `
-"<div class="hoverable group">
+"<div class="hoverable group z-60">
   <div class="flex flex-col relative">
     <transition-group-stub name="list" appear="false" persisted="false" css="true"></transition-group-stub>
   </div>
