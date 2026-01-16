@@ -823,7 +823,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | textarea | ~~Same as input~~ | ✅ **COMPLETED** |
 | toast | ~~role="alert", aria-live~~ | ✅ **COMPLETED** |
 | tooltip | ~~aria-describedby~~ | ✅ **COMPLETED** |
-| topbar | landmark role | 1 |
+| topbar | ~~landmark role~~ | ✅ **COMPLETED** |
 | typeahead | combobox pattern | 3-4 |
 | upload | ~~aria-describedby for instructions~~ | ✅ **COMPLETED** |
 | view-flag | ~~aria-label~~ | ✅ **COMPLETED** |
@@ -1729,6 +1729,33 @@ Ensure root `package.json` has:
 
 **Status:** All 53 tests passing ✅
 
+### 3.20 Package: `topbar` ✅ **COMPLETED**
+
+**Components enhanced:**
+- ✅ `FzTopbar.vue` - Comprehensive test suite enhanced from 8 snapshot-only tests to 50 comprehensive tests
+
+**Enhanced test coverage includes:**
+- ✅ Rendering tests (default props, slot content, button/icon-button/link/hybrid styles, custom action slot)
+- ✅ Props tests (type prop: default/danger, style prop: none/button/icon-button/link/hybrid, actionLabel, actionIcon, actionTooltip, actionLink)
+- ✅ Events tests (actionClick emission from button, icon button, and hybrid mode)
+- ✅ CSS Classes tests (static base classes, type-specific background classes, flex-col lg:flex-row for button/link styles)
+- ✅ Accessibility tests (semantic HTML structure, landmark role expectations for role="banner", aria-label support, accessible action elements, screen reader support)
+- ✅ Edge Cases tests (undefined actionLabel/actionIcon, empty slot content, very long text, special characters, multiple instances, hybrid mode edge cases)
+- ✅ Snapshots tests (default state, danger type, all style variants with both types)
+
+**Test improvements:**
+- ✅ Expanded from 8 snapshot-only tests to 50 comprehensive tests
+- ✅ Added full test coverage following TESTING.md structure
+- ✅ Added comprehensive accessibility tests documenting expected behavior (landmark role="banner" for topbar identification, aria-label support)
+- ✅ Added comprehensive props tests for all topbar-specific props (type, style, actionLabel, actionIcon, actionTooltip, actionLink)
+- ✅ Added comprehensive events tests for actionClick emission from all action types
+- ✅ Added comprehensive CSS classes tests for all layout variants and responsive behavior
+- ✅ Added comprehensive edge cases tests for various prop combinations and boundary conditions
+- ✅ Added router mocking for FzLink component tests
+- ✅ Fixed component finding logic for FzIconButton click events
+
+**Status:** All 50 tests passing ✅
+
 ---
 
 ## Checklist Summary
@@ -1799,6 +1826,17 @@ Ensure root `package.json` has:
 ---
 
 ## Recent Updates
+
+### January 15, 2026 - Topbar Component Testing Enhancement ✅
+
+**Package:** `topbar`
+- Enhanced test suite from 8 snapshot-only tests to 50 comprehensive tests
+- Added full test coverage following TESTING.md structure
+- Added comprehensive accessibility tests with landmark role expectations (role="banner")
+- Added comprehensive props tests for all topbar-specific props (type, style, actionLabel, actionIcon, actionTooltip, actionLink)
+- Added comprehensive events tests for actionClick emission from all action types
+- Added router mocking for FzLink component tests
+- All 50 tests passing ✅
 
 ### January 15, 2026 - Table Component Testing Enhancement ✅
 

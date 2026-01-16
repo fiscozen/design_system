@@ -1,5 +1,71 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`FzTopbar > Snapshots > should match snapshot - danger type 1`] = `
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 z-10 bg-danger"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
+  <!--v-if-->
+  <!--v-if-->
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzTopbar > Snapshots > should match snapshot - danger with button 1`] = `
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 z-10 bg-danger flex-col lg:flex-row"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span><button data-v-f59ba988="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-semantic-error-200 text-core-white hover:bg-semantic-error-300 focus:bg-semantic-error-200 focus:!border-semantic-error-300 disabled:bg-semantic-error-100">
+    <!--v-if-->
+    <div class="truncate font-normal !text-[16px] !leading-[20px]"></div>
+    <!--v-if-->
+  </button>
+  <!--v-if-->
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzTopbar > Snapshots > should match snapshot - danger with icon-button 1`] = `
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 z-10 bg-danger"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
+  <!--v-if--><span data-v-8090b1b6="" data-v-f59ba988="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--backoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label=""><!--v-if--><!--v-if--><!--v-if--></button><!--v-if--></span>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzTopbar > Snapshots > should match snapshot - danger with link 1`] = `
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 z-10 bg-danger flex-col lg:flex-row"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
+  <!--v-if-->
+  <!--v-if--><a data-v-f59ba988="" href="/example" class="border-1 border-transparent inline-block text-sm leading-xs focus:outline-none focus:border-solid focus:no-underline text-semantic-error-200 hover:text-semantic-error-300 hover:underline focus:text-semantic-error-300 focus:border-semantic-error-300">Learn more</a>
+</div>"
+`;
+
+exports[`FzTopbar > Snapshots > should match snapshot - default state 1`] = `
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 z-10 bg-white-smoke"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
+  <!--v-if-->
+  <!--v-if-->
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzTopbar > Snapshots > should match snapshot - default with button 1`] = `
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 z-10 bg-white-smoke flex-col lg:flex-row"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span><button data-v-f59ba988="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-blue-500 text-core-white hover:bg-blue-600 focus:bg-blue-500 focus:!border-blue-600 disabled:bg-blue-200">
+    <!--v-if-->
+    <div class="truncate font-normal !text-[16px] !leading-[20px]"></div>
+    <!--v-if-->
+  </button>
+  <!--v-if-->
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzTopbar > Snapshots > should match snapshot - default with icon-button 1`] = `
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 z-10 bg-white-smoke"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
+  <!--v-if--><span data-v-8090b1b6="" data-v-f59ba988="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--backoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label=""><!--v-if--><!--v-if--><!--v-if--></button><!--v-if--></span>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzTopbar > Snapshots > should match snapshot - default with link 1`] = `
+"<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 z-10 bg-white-smoke flex-col lg:flex-row"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
+  <!--v-if-->
+  <!--v-if--><a data-v-f59ba988="" href="/example" class="border-1 border-transparent inline-block text-sm leading-xs focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600">Learn more</a>
+</div>"
+`;
+
 exports[`FzTopbar > matches danger topbar snapshot 1`] = `
 "<div data-v-f59ba988="" class="flex px-24 py-12 gap-16 items-center justify-center lg:h-48 bg-danger"><span data-v-f59ba988="" class="text-xs lg:text-sm">This is a Topbar</span>
   <!--v-if-->
