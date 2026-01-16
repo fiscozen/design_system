@@ -219,6 +219,7 @@ defineExpose({
             :iconName="tertiaryAction.icon"
             variant="invisible"
             :environment="environment"
+            :disabled="tertiaryAction.disabled"
           />
           <FzButton
             v-if="secondaryAction"
@@ -227,6 +228,7 @@ defineExpose({
             :label="secondaryAction.label"
             variant="secondary"
             :environment="environment"
+            :disabled="secondaryAction.disabled"
           />
           <FzButton
             v-if="primaryAction"
@@ -235,6 +237,7 @@ defineExpose({
             :label="primaryAction.label"
             variant="primary"
             :environment="environment"
+            :disabled="primaryAction.disabled"
           />
         </FzContainer>
       </slot>
