@@ -824,7 +824,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | toast | ~~role="alert", aria-live~~ | ✅ **COMPLETED** |
 | tooltip | ~~aria-describedby~~ | ✅ **COMPLETED** |
 | topbar | ~~landmark role~~ | ✅ **COMPLETED** |
-| typeahead | combobox pattern | 3-4 |
+| typeahead | ~~combobox pattern~~ | ✅ **COMPLETED** |
 | upload | ~~aria-describedby for instructions~~ | ✅ **COMPLETED** |
 | view-flag | ~~aria-label~~ | ✅ **COMPLETED** |
 
@@ -1900,4 +1900,28 @@ Ensure root `package.json` has:
 - Added play functions for: LinkAndButton (action clicks)
 - All play functions test user interactions, visual states, and accessibility expectations
 - Phase 4 (Storybook Play Functions) progress: 1 of 28 critical priority stories completed
+
+### January 16, 2026 - Typeahead Component Combobox Pattern Accessibility Tests ✅
+
+**Package:** `typeahead`
+- Enhanced test suite from 95 tests to 110 comprehensive tests
+- Added ResizeObserver mock for FzFloating component compatibility
+- Added comprehensive combobox pattern accessibility tests following WAI-ARIA guidelines:
+  - role="option" on option elements
+  - aria-selected on selected option
+  - aria-labelledby on listbox container linking to opener
+  - Decorative elements (chevron, left icon, right icon) aria-hidden tests
+  - Combobox pattern tests for filtrable mode (input with aria-haspopup, aria-expanded, aria-labelledby, aria-label, aria-invalid, aria-required)
+  - Semantic HTML structure tests (button for opener, input for filtrable mode, buttons for options)
+- All existing tests verified for:
+  - aria-haspopup="listbox" on opener button
+  - aria-expanded on opener
+  - aria-labelledby / aria-label support
+  - aria-required / aria-invalid support
+  - aria-activedescendant for screen readers
+  - Comprehensive keyboard navigation (ArrowUp, ArrowDown, Enter, Space, Escape, Home, End, Tab)
+  - Focus management (focus trap, focus return)
+  - Unique IDs for options
+- **Phase 3 (Unit Test Quality Improvements) accessibility tests now 100% complete**
+- All 110 tests passing ✅
 

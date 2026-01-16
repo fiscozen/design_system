@@ -13,6 +13,15 @@ describe("FzTypeahead", () => {
     });
     window.IntersectionObserver = mockIntersectionObserver;
 
+    // Mock ResizeObserver for FzFloating component
+    const mockResizeObserver = vi.fn();
+    mockResizeObserver.mockReturnValue({
+      observe: () => null,
+      unobserve: () => null,
+      disconnect: () => null,
+    });
+    window.ResizeObserver = mockResizeObserver;
+
     // Mock window.matchMedia for FzFloating component
     Object.defineProperty(window, "matchMedia", {
       writable: true,
@@ -660,6 +669,329 @@ describe("FzTypeahead", () => {
         '[test-id="fztypeahead-options-container"]',
       );
       expect(container?.getAttribute("role")).toBe("listbox");
+    });
+
+    it("sets role='option' on option elements", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+      await button.trigger("click");
+
+      await wrapper.vm.$nextTick();
+      const options = document.querySelectorAll('button[role="option"]');
+      expect(options.length).toBe(2);
+    });
+
+    it("sets aria-selected on selected option", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "option1",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+      await button.trigger("click");
+
+      await wrapper.vm.$nextTick();
+      const options = document.querySelectorAll('button[role="option"]');
+      
+      // First option should be selected
+      expect(options[0]?.getAttribute("aria-selected")).toBe("true");
+      // Second option should not be selected
+      expect(options[1]?.getAttribute("aria-selected")).toBe("false");
+    });
+
+    it("sets aria-labelledby on listbox container linking to opener", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+      const openerId = button.attributes("id");
+      await button.trigger("click");
+
+      await wrapper.vm.$nextTick();
+      const container = document.querySelector(
+        '[test-id="fztypeahead-options-container"]',
+      );
+      expect(container?.getAttribute("aria-labelledby")).toBe(openerId);
+    });
+
+    describe("Decorative elements", () => {
+      it("should hide chevron icon from screen readers", () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+        });
+
+        // Find SVG elements (Font Awesome icons render as SVGs)
+        const svgs = wrapper.findAll("svg");
+        // Chevron icon should have aria-hidden="true"
+        const chevronSvg = svgs.find((svg) =>
+          svg.attributes("data-icon")?.includes("chevron"),
+        );
+        expect(chevronSvg?.attributes("aria-hidden")).toBe("true");
+      });
+
+      it("should hide left icon from screen readers when provided", () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            leftIcon: "bell",
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+        });
+
+        // Find all SVG elements
+        const svgs = wrapper.findAll("svg");
+        // All icons should have aria-hidden="true" (decorative)
+        svgs.forEach((svg) => {
+          expect(svg.attributes("aria-hidden")).toBe("true");
+        });
+      });
+
+      it("should hide right icon from screen readers when provided", () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            rightIcon: "xmark",
+            filtrable: false, // Right icon only shows when not filtrable
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+        });
+
+        // Find all SVG elements
+        const svgs = wrapper.findAll("svg");
+        // All icons should have aria-hidden="true" (decorative)
+        svgs.forEach((svg) => {
+          expect(svg.attributes("aria-hidden")).toBe("true");
+        });
+      });
+    });
+
+    describe("Combobox pattern (filtrable mode)", () => {
+      it("input should have aria-haspopup='listbox' when filtrable", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            filtrable: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+
+        await wrapper.vm.$nextTick();
+        const input = wrapper.find('input[type="text"]');
+        expect(input.attributes("aria-haspopup")).toBe("listbox");
+      });
+
+      it("input should have aria-expanded when filtrable and open", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            filtrable: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+
+        await wrapper.vm.$nextTick();
+        const input = wrapper.find('input[type="text"]');
+        expect(input.attributes("aria-expanded")).toBe("true");
+      });
+
+      it("input should have aria-labelledby when label is provided in filtrable mode", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            label: "Test Label",
+            filtrable: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+
+        await wrapper.vm.$nextTick();
+        const input = wrapper.find('input[type="text"]');
+        expect(input.attributes("aria-labelledby")).toBeTruthy();
+      });
+
+      it("input should have aria-label when no label is provided in filtrable mode", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            placeholder: "Select...",
+            filtrable: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+
+        await wrapper.vm.$nextTick();
+        const input = wrapper.find('input[type="text"]');
+        expect(input.attributes("aria-label")).toBe("Select...");
+      });
+
+      it("input should have aria-invalid when error in filtrable mode", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            error: true,
+            filtrable: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+
+        await wrapper.vm.$nextTick();
+        const input = wrapper.find('input[type="text"]');
+        expect(input.attributes("aria-invalid")).toBe("true");
+      });
+
+      it("input should have aria-required when required in filtrable mode", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            required: true,
+            filtrable: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+
+        await wrapper.vm.$nextTick();
+        const input = wrapper.find('input[type="text"]');
+        expect(input.attributes("aria-required")).toBe("true");
+      });
+    });
+
+    describe("Semantic HTML structure", () => {
+      it("should use button element for opener", () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        expect(button.exists()).toBe(true);
+        expect(button.attributes("type")).toBe("button");
+      });
+
+      it("should use input element for filtrable mode", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            filtrable: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+
+        await wrapper.vm.$nextTick();
+        const input = wrapper.find('input[type="text"]');
+        expect(input.exists()).toBe(true);
+      });
+
+      it("should use button elements for options", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+
+        await wrapper.vm.$nextTick();
+        const optionButtons = document.querySelectorAll(
+          'button[role="option"]',
+        );
+        expect(optionButtons.length).toBe(2);
+      });
     });
   });
 
