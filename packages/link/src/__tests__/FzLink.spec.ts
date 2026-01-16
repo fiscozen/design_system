@@ -877,6 +877,46 @@ describe('FzLink', () => {
         expect(link.element.tagName.toLowerCase()).toBe('a')
       })
 
+      it('should not have explicit role="link" on native anchor elements', async () => {
+        const wrapper = mount(FzLink, {
+          props: {
+            to: '/example'
+          },
+          slots: {
+            default: 'Internal link'
+          },
+          global: {
+            plugins: [router]
+          }
+        })
+
+        await wrapper.vm.$nextTick()
+        const link = wrapper.find('a')
+        // Native anchor elements don't need explicit role="link" - they're inherently links
+        // Having role="link" on a native <a> element is redundant and should be avoided
+        expect(link.attributes('role')).toBeUndefined()
+      })
+
+      it('should not have explicit role="link" on external anchor elements', async () => {
+        const wrapper = mount(FzLink, {
+          props: {
+            to: 'https://example.com',
+            external: true
+          },
+          slots: {
+            default: 'External link'
+          },
+          global: {
+            plugins: [router]
+          }
+        })
+
+        await wrapper.vm.$nextTick()
+        const link = wrapper.find('a')
+        // Native anchor elements don't need explicit role="link"
+        expect(link.attributes('role')).toBeUndefined()
+      })
+
       it('external link should have href attribute', async () => {
         const wrapper = mount(FzLink, {
           props: {

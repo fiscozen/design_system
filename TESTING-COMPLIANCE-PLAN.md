@@ -94,7 +94,7 @@ This document outlines a comprehensive plan to bring the Fiscozen Design System 
 | `checkbox` | ~~2~~ | ~~Rename `FzCheckbox.test.ts`, `FzCheckboxGroup.test.ts` + fix folder~~ ✅ **COMPLETED** |
 | `dialog` | 1 | Rename `FzDialog.test.ts` + fix folder name |
 | `input` | ~~2~~ | ~~Rename `FzInput.test.ts`, `FzCurrencyInput.test.ts`~~ ✅ **COMPLETED** |
-| `link` | 1 | Rename `FzLink.test.ts` |
+| `link` | ~~1~~ | ~~Rename `FzLink.test.ts`~~ ✅ **COMPLETED** |
 | `progress` | ~~2~~ | ~~Rename `FzProgress.test.ts`, `FzProgressBar.test.ts`~~ ✅ **COMPLETED** |
 | `radio` | 3 | Rename all + fix folder name (`__test__` → `__tests__`) |
 | `select` | ~~1~~ | ~~Rename `FzSelect.test.ts`~~ ✅ **COMPLETED** |
@@ -283,7 +283,7 @@ mv packages/tab/src/__test__ packages/tab/src/__tests__
 | dialog | ~~`FzDialog.test.ts`~~ | ~~`FzDialog.spec.ts`~~ ✅ **COMPLETED** |
 | input | ~~`FzInput.test.ts`~~ | ~~`FzInput.spec.ts`~~ ✅ **COMPLETED** |
 | input | ~~`FzCurrencyInput.test.ts`~~ | ~~`FzCurrencyInput.spec.ts`~~ ✅ **COMPLETED** |
-| link | `FzLink.test.ts` | `FzLink.spec.ts` |
+| link | ~~`FzLink.test.ts`~~ | ~~`FzLink.spec.ts`~~ ✅ **COMPLETED** |
 | progress | ~~`FzProgress.test.ts`~~ | ~~`FzProgress.spec.ts`~~ ✅ **COMPLETED** |
 | progress | ~~`FzProgressBar.test.ts`~~ | ~~`FzProgressBar.spec.ts`~~ ✅ **COMPLETED** |
 | radio | ~~`FzRadio.test.ts`~~ | ~~`FzRadio.spec.ts`~~ ✅ **COMPLETED** |
@@ -731,7 +731,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | dropdown | ~~aria-expanded, aria-haspopup~~ | ✅ **COMPLETED** |
 | input | ✅ Reference implementation | - |
 | layout | ~~landmark roles~~ | ✅ **COMPLETED** |
-| link | role="link" native | 0.5 |
+| link | ~~role="link" native~~ | ✅ **COMPLETED** |
 | navbar | nav role, aria-label | 1-2 |
 | navlink | aria-current | 1 |
 | navlist | listbox/list role | 2 |
