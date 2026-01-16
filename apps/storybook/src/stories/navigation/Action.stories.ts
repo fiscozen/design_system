@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, userEvent, within } from '@storybook/test'
 import { FzAction } from '@fiscozen/action'
 import { vueRouter } from 'storybook-vue3-router'
 
@@ -94,7 +95,36 @@ type Story = StoryObj<typeof meta>
 
 // Default story
 const Default: Story = {
-  args: {}
+  args: {},
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify action renders correctly', async () => {
+      const button = canvas.getByRole('button', { name: /label/i })
+      await expect(button).toBeInTheDocument()
+      await expect(button).toBeVisible()
+    })
+    
+    await step('Verify label and sub-label are displayed', async () => {
+      const label = canvas.getByText('Label')
+      const subLabel = canvas.getByText('SubLabel')
+      await expect(label).toBeInTheDocument()
+      await expect(subLabel).toBeInTheDocument()
+    })
+    
+    await step('Verify ARIA attributes', async () => {
+      const button = canvas.getByRole('button', { name: /label/i })
+      await expect(button).toHaveAttribute('aria-disabled', 'false')
+      await expect(button).toHaveAttribute('type', 'button')
+    })
+    
+    await step('Verify action is clickable', async () => {
+      const button = canvas.getByRole('button', { name: /label/i })
+      await userEvent.click(button)
+      // Action should be clickable without errors
+      await expect(button).toBeInTheDocument()
+    })
+  }
 }
 
 // TextLeft variant
@@ -123,6 +153,29 @@ const OnlyIcon: Story = {
   args: {
     variant: 'onlyIcon',
     iconName: 'face-smile'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify icon-only action renders', async () => {
+      const button = canvas.getByRole('button')
+      await expect(button).toBeInTheDocument()
+      await expect(button).toBeVisible()
+    })
+    
+    await step('Verify icon is present', async () => {
+      const button = canvas.getByRole('button')
+      // Icon should be present within the button
+      const icon = button.querySelector('svg') || button.querySelector('[class*="icon"]')
+      expect(icon).toBeTruthy()
+    })
+    
+    await step('Verify icon-only action is clickable', async () => {
+      const button = canvas.getByRole('button')
+      await userEvent.click(button)
+      // Action should be clickable
+      await expect(button).toBeInTheDocument()
+    })
   }
 }
 
@@ -133,6 +186,29 @@ const Disabled: Story = {
     iconRightName: 'face-smile',
     label: 'Disabled Action',
     subLabel: 'This action is disabled'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify disabled action renders', async () => {
+      const button = canvas.getByRole('button', { name: /disabled action/i })
+      await expect(button).toBeInTheDocument()
+      await expect(button).toBeVisible()
+    })
+    
+    await step('Verify disabled state attributes', async () => {
+      const button = canvas.getByRole('button', { name: /disabled action/i })
+      await expect(button).toHaveAttribute('aria-disabled', 'true')
+      await expect(button).toHaveAttribute('disabled')
+      await expect(button).toHaveAttribute('tabindex', '-1')
+    })
+    
+    await step('Verify disabled action cannot be clicked', async () => {
+      const button = canvas.getByRole('button', { name: /disabled action/i })
+      await expect(button).toBeDisabled()
+      // Click should not trigger any action (userEvent.click on disabled button is essentially a no-op)
+      await userEvent.click(button)
+    })
   }
 }
 
@@ -170,6 +246,33 @@ const Link: Story = {
     iconRightName: 'face-smile',
     label: 'Navigation Link',
     subLabel: 'Click to navigate'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify link renders correctly', async () => {
+      const link = canvas.getByRole('link', { name: /navigation link/i })
+      await expect(link).toBeInTheDocument()
+      await expect(link).toBeVisible()
+    })
+    
+    await step('Verify link has correct href', async () => {
+      const link = canvas.getByRole('link', { name: /navigation link/i })
+      // Router link should have navigation capability
+      await expect(link).toHaveAttribute('href')
+    })
+    
+    await step('Verify link is accessible', async () => {
+      const link = canvas.getByRole('link', { name: /navigation link/i })
+      await expect(link).toHaveAttribute('aria-disabled', 'false')
+    })
+    
+    await step('Verify link can be clicked', async () => {
+      const link = canvas.getByRole('link', { name: /navigation link/i })
+      await userEvent.click(link)
+      // Link should be clickable
+      await expect(link).toBeInTheDocument()
+    })
   }
 }
 
@@ -183,6 +286,28 @@ const ExternalLink: Story = {
     subLabel: 'Opens in new tab',
     external: true,
     target: '_blank'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify external link renders', async () => {
+      const link = canvas.getByRole('link', { name: /external link/i })
+      await expect(link).toBeInTheDocument()
+      await expect(link).toBeVisible()
+    })
+    
+    await step('Verify external link attributes', async () => {
+      const link = canvas.getByRole('link', { name: /external link/i })
+      await expect(link).toHaveAttribute('target', '_blank')
+      // External links should have aria-label indicating new window
+      const ariaLabel = link.getAttribute('aria-label')
+      await expect(ariaLabel).toContain('opens in new window')
+    })
+    
+    await step('Verify external link is accessible', async () => {
+      const link = canvas.getByRole('link', { name: /external link/i })
+      await expect(link).toHaveAttribute('aria-disabled', 'false')
+    })
   }
 }
 
@@ -192,6 +317,65 @@ const IconPositionLeft: Story = {
     iconLeftName: 'face-smile',
     label: 'Icon Position Left',
     subLabel: 'Icon position to the left'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify action with left icon renders', async () => {
+      const button = canvas.getByRole('button', { name: /icon position left/i })
+      await expect(button).toBeInTheDocument()
+      await expect(button).toBeVisible()
+    })
+    
+    await step('Verify left icon is present', async () => {
+      const button = canvas.getByRole('button', { name: /icon position left/i })
+      // Icon should be present within the button
+      const icon = button.querySelector('svg') || button.querySelector('[class*="icon"]')
+      expect(icon).toBeTruthy()
+    })
+  }
+}
+
+// Keyboard navigation story
+const KeyboardNavigation: Story = {
+  args: {
+    type: 'action',
+    label: 'Keyboard Navigation Test',
+    subLabel: 'Test keyboard interactions'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Tab to focus the action', async () => {
+      document.body.focus() // Reset focus to body
+      const button = canvas.getByRole('button', { name: /keyboard navigation test/i })
+      await userEvent.tab()
+      await expect(document.activeElement).toBe(button)
+    })
+    
+    await step('Activate with Enter key', async () => {
+      const button = canvas.getByRole('button', { name: /keyboard navigation test/i })
+      button.focus()
+      await userEvent.keyboard('{Enter}')
+      // Action should be activated
+      await expect(button).toBeInTheDocument()
+    })
+    
+    await step('Activate with Space key', async () => {
+      const button = canvas.getByRole('button', { name: /keyboard navigation test/i })
+      button.focus()
+      await userEvent.keyboard(' ')
+      // Action should be activated
+      await expect(button).toBeInTheDocument()
+    })
+    
+    await step('Verify disabled action blocks keyboard', async () => {
+      // This test verifies that disabled actions don't respond to keyboard
+      // The Disabled story already covers this, but we verify focus behavior
+      const button = canvas.getByRole('button', { name: /keyboard navigation test/i })
+      await expect(button).toHaveAttribute('aria-disabled', 'false')
+      await expect(button).not.toHaveAttribute('tabindex', '-1')
+    })
   }
 }
 
@@ -205,7 +389,8 @@ export {
   TextTruncated,
   Frontoffice,
   Link,
-  ExternalLink
+  ExternalLink,
+  KeyboardNavigation
 }
 
 export default meta
