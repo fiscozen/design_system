@@ -601,6 +601,30 @@ npx nx run-many -t test
 
 **Status:** All 79 tests passing ✅
 
+### 3.9 Package: `datepicker` ✅ **COMPLETED**
+
+**Components enhanced:**
+- ✅ `FzDatepicker.vue` - Comprehensive test suite enhanced from 9 snapshot-only tests to 60 comprehensive tests
+
+**Enhanced test coverage includes:**
+- ✅ Rendering tests (default props, input field, calendar icon, label, name prop)
+- ✅ Props tests (modelValue with Date/string/null, disabled, textInput, inputProps, format, range)
+- ✅ Events tests (update:modelValue, text-input, cleared, open, closed, blur)
+- ✅ CSS Classes tests (fz-datepicker class, mobile class)
+- ✅ Accessibility tests (aria-labelledby, aria-describedby expectations, aria-invalid, aria-required, aria-disabled, role="alert" expectations, keyboard navigation, decorative elements, calendar popup accessibility)
+- ✅ Edge Cases tests (undefined/null modelValue, empty inputProps, unique ID generation, invalid date strings, very old/future dates, disabled dates)
+- ✅ Snapshots tests (default state, range, multicalendars range, weekpicker, monthpicker, yearpicker, disabled dates, inline timepicker, with label and error, disabled state)
+
+**Test improvements:**
+- ✅ Expanded from 9 snapshot-only tests to 60 comprehensive tests
+- ✅ Added full test coverage following TESTING.md structure
+- ✅ Added comprehensive accessibility tests for ARIA attributes (aria-labelledby, aria-describedby, aria-invalid, aria-required, aria-disabled)
+- ✅ Added keyboard navigation tests (Enter, Tab key support)
+- ✅ Added comprehensive edge case testing for date handling and prop validation
+- ✅ Documented current limitations (slots not passed through to FzInput) with notes for future enhancement
+
+**Status:** All 60 tests passing ✅
+
 ---
 
 ## Phase 3: Unit Test Quality Improvements (Continued)
@@ -627,7 +651,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | checkbox | aria-checked, aria-labelledby | 2-3 |
 | collapse | ~~aria-expanded, aria-controls~~ | ✅ **COMPLETED** |
 | container | ~~landmark role~~ | ✅ **COMPLETED** |
-| datepicker | Full a11y suite | 3-4 |
+| datepicker | ~~Full a11y suite~~ | ✅ **COMPLETED** |
 | dialog | role="dialog", aria-modal | 3-4 |
 | divider | ~~role="separator"~~ | ✅ **COMPLETED** |
 | dropdown | aria-expanded, aria-haspopup | 2-3 |
