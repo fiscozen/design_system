@@ -1,94 +1,97 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzUpload > matches snaphost 1`] = `
+exports[`FzUpload > Snapshots > should match snapshot - default state 1`] = `
 "<div class="text-md">
-  <div class="relative flex items-center gap-8 p-12 border-1 border-dashed rounded border-grey-300 bg-background-alice-blue"><input type="file" class="hidden"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 text-grey-500 bg-core-white !border-grey-200 hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 select-none">
-      <div class="flex items-center justify-items-center mr-6 pl-10">
-        <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-cloud-arrow-up fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="cloud-arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+  <div class="relative flex items-center gap-8 p-12 border-1 border-dashed rounded border-grey-300 bg-background-alice-blue"><input type="file" class="hidden"><button type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200 select-none">
+      <div class="flex items-center justify-items-center">
+        <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-cloud-arrow-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="cloud-arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
             <path class="" fill="currentColor" d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128l-368 0zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39L296 392c0 13.3 10.7 24 24 24s24-10.7 24-24l0-134.1 39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
           </svg></div>
       </div>
-      <div class="truncate">Carica</div>
-      <div class="flex items-center justify-items-center ml-6 pr-10">
-        <!--v-if-->
-      </div><span class="hidden h-0 w-0"></span>
+      <div class="truncate font-normal !text-[16px] !leading-[20px]">Carica</div>
+      <!--v-if-->
     </button> o trascina qui</div>
   <!--v-if-->
 </div>"
 `;
 
-exports[`FzUpload > matches snaphost with initial file 1`] = `
-"<div class="text-md">
-  <div class="relative flex items-center gap-8 p-12 border-1 border-dashed rounded border-grey-300 bg-background-alice-blue"><input type="file" class="hidden"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 text-grey-500 bg-core-white !border-grey-200 hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 select-none">
-      <div class="flex items-center justify-items-center mr-6 pl-10">
-        <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-cloud-arrow-up fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="cloud-arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+exports[`FzUpload > Snapshots > should match snapshot - sm size 1`] = `
+"<div class="text-sm">
+  <div class="relative flex items-center gap-8 p-12 border-1 border-dashed rounded border-grey-300 bg-background-alice-blue"><input type="file" class="hidden"><button type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200 select-none">
+      <div class="flex items-center justify-items-center">
+        <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-cloud-arrow-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="cloud-arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
             <path class="" fill="currentColor" d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128l-368 0zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39L296 392c0 13.3 10.7 24 24 24s24-10.7 24-24l0-134.1 39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
           </svg></div>
       </div>
-      <div class="truncate">Carica</div>
-      <div class="flex items-center justify-items-center ml-6 pr-10">
-        <!--v-if-->
-      </div><span class="hidden h-0 w-0"></span>
+      <div class="truncate font-normal !text-[16px] !leading-[20px]">Carica</div>
+      <!--v-if-->
+    </button> o trascina qui</div>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzUpload > Snapshots > should match snapshot - with accept prop 1`] = `
+"<div class="text-md">
+  <div class="relative flex items-center gap-8 p-12 border-1 border-dashed rounded border-grey-300 bg-background-alice-blue"><input type="file" class="hidden" accept="image/*"><button type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200 select-none">
+      <div class="flex items-center justify-items-center">
+        <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-cloud-arrow-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="cloud-arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+            <path class="" fill="currentColor" d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128l-368 0zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39L296 392c0 13.3 10.7 24 24 24s24-10.7 24-24l0-134.1 39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+          </svg></div>
+      </div>
+      <div class="truncate font-normal !text-[16px] !leading-[20px]">Carica</div>
+      <!--v-if-->
+    </button> o trascina qui</div>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzUpload > Snapshots > should match snapshot - with custom labels 1`] = `
+"<div class="text-md">
+  <div class="relative flex items-center gap-8 p-12 border-1 border-dashed rounded border-grey-300 bg-background-alice-blue"><input type="file" class="hidden"><button type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200 select-none">
+      <div class="flex items-center justify-items-center">
+        <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-cloud-arrow-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="cloud-arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+            <path class="" fill="currentColor" d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128l-368 0zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39L296 392c0 13.3 10.7 24 24 24s24-10.7 24-24l0-134.1 39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+          </svg></div>
+      </div>
+      <div class="truncate font-normal !text-[16px] !leading-[20px]">Select File</div>
+      <!--v-if-->
+    </button> or drop here</div>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzUpload > Snapshots > should match snapshot - with initial file 1`] = `
+"<div class="text-md">
+  <div class="relative flex items-center gap-8 p-12 border-1 border-dashed rounded border-grey-300 bg-background-alice-blue"><input type="file" class="hidden"><button type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200 select-none">
+      <div class="flex items-center justify-items-center">
+        <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-cloud-arrow-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="cloud-arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+            <path class="" fill="currentColor" d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128l-368 0zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39L296 392c0 13.3 10.7 24 24 24s24-10.7 24-24l0-134.1 39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+          </svg></div>
+      </div>
+      <div class="truncate font-normal !text-[16px] !leading-[20px]">Carica</div>
+      <!--v-if-->
     </button> o trascina qui</div>
   <ul class="mt-8 border-1 border-grey-300 rounded px-8">
-    <li class="border-b-1 last:border-b-0 py-8 flex items-center justify-between"><a href="https://example.png" class="border-1 border-transparent text-sm hover:underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600 truncate block" target="_blank">test-image1.png</a><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28">
-        <!--v-if-->
-        <div class="">
-          <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-circle-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path>
-            </svg></div>
-          <!--v-if-->
-        </div>
-        <!--v-if--><span class="hidden h-0 w-0"></span>
-      </button></li>
+    <li class="border-b-1 last:border-b-0 py-8 flex items-center justify-between"><a href="https://example.com/file.png" class="border-1 border-transparent inline-block text-sm leading-xs focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600 truncate block" target="_blank" rel="noopener noreferrer">test-image1.png</a><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--backoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label=""><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-trash-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3C140.6 6.8 151.7 0 163.8 0zM32 128l384 0L394.8 467c-1.6 25.3-22.6 45-47.9 45l-245.8 0c-25.3 0-46.3-19.7-47.9-45L32 128zM143 239c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span></li>
   </ul>
 </div>"
 `;
 
-exports[`FzUpload > matches snaphost with initial files 1`] = `
+exports[`FzUpload > Snapshots > should match snapshot - with multiple files 1`] = `
 "<div class="text-md">
-  <div class="relative flex items-center gap-8 p-12 border-1 border-dashed rounded border-grey-300 bg-background-alice-blue"><input type="file" class="hidden" multiple=""><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 text-grey-500 bg-core-white !border-grey-200 hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 select-none">
-      <div class="flex items-center justify-items-center mr-6 pl-10">
-        <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-cloud-arrow-up fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="cloud-arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+  <div class="relative flex items-center gap-8 p-12 border-1 border-dashed rounded border-grey-300 bg-background-alice-blue"><input type="file" class="hidden" multiple=""><button type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200 select-none">
+      <div class="flex items-center justify-items-center">
+        <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-cloud-arrow-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="cloud-arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
             <path class="" fill="currentColor" d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128l-368 0zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39L296 392c0 13.3 10.7 24 24 24s24-10.7 24-24l0-134.1 39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
           </svg></div>
       </div>
-      <div class="truncate">Carica</div>
-      <div class="flex items-center justify-items-center ml-6 pr-10">
-        <!--v-if-->
-      </div><span class="hidden h-0 w-0"></span>
+      <div class="truncate font-normal !text-[16px] !leading-[20px]">Carica</div>
+      <!--v-if-->
     </button> o trascina qui</div>
   <ul class="mt-8 border-1 border-grey-300 rounded px-8">
-    <li class="border-b-1 last:border-b-0 py-8 flex items-center justify-between"><a href="https://example.png" class="border-1 border-transparent text-sm hover:underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600 truncate block" target="_blank">test-image1.png</a><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28">
-        <!--v-if-->
-        <div class="">
-          <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-circle-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path>
-            </svg></div>
-          <!--v-if-->
-        </div>
-        <!--v-if--><span class="hidden h-0 w-0"></span>
-      </button></li>
-    <li class="border-b-1 last:border-b-0 py-8 flex items-center justify-between"><a href="https://example.png" class="border-1 border-transparent text-sm hover:underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600 truncate block" target="_blank">test-image2.png</a><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28">
-        <!--v-if-->
-        <div class="">
-          <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-circle-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path>
-            </svg></div>
-          <!--v-if-->
-        </div>
-        <!--v-if--><span class="hidden h-0 w-0"></span>
-      </button></li>
-    <li class="border-b-1 last:border-b-0 py-8 flex items-center justify-between"><a href="https://example.png" class="border-1 border-transparent text-sm hover:underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600 truncate block" target="_blank">test-image3.png</a><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-28 text-sm focus:border-blue-600 focus:border-solid focus:border-1 px-14 text-grey-500 bg-transparent border-transparent hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-28 h-28">
-        <!--v-if-->
-        <div class="">
-          <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-circle-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path>
-            </svg></div>
-          <!--v-if-->
-        </div>
-        <!--v-if--><span class="hidden h-0 w-0"></span>
-      </button></li>
+    <li class="border-b-1 last:border-b-0 py-8 flex items-center justify-between"><a href="https://example.com/file.png" class="border-1 border-transparent inline-block text-sm leading-xs focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600 truncate block" target="_blank" rel="noopener noreferrer">test-image1.png</a><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--backoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label=""><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-trash-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3C140.6 6.8 151.7 0 163.8 0zM32 128l384 0L394.8 467c-1.6 25.3-22.6 45-47.9 45l-245.8 0c-25.3 0-46.3-19.7-47.9-45L32 128zM143 239c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span></li>
+    <li class="border-b-1 last:border-b-0 py-8 flex items-center justify-between"><a href="https://example.com/file.png" class="border-1 border-transparent inline-block text-sm leading-xs focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600 truncate block" target="_blank" rel="noopener noreferrer">test-image2.png</a><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--backoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label=""><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-trash-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3C140.6 6.8 151.7 0 163.8 0zM32 128l384 0L394.8 467c-1.6 25.3-22.6 45-47.9 45l-245.8 0c-25.3 0-46.3-19.7-47.9-45L32 128zM143 239c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span></li>
+    <li class="border-b-1 last:border-b-0 py-8 flex items-center justify-between"><a href="https://example.com/file.png" class="border-1 border-transparent inline-block text-sm leading-xs focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600 truncate block" target="_blank" rel="noopener noreferrer">test-image3.png</a><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--backoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label=""><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-trash-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3C140.6 6.8 151.7 0 163.8 0zM32 128l384 0L394.8 467c-1.6 25.3-22.6 45-47.9 45l-245.8 0c-25.3 0-46.3-19.7-47.9-45L32 128zM143 239c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span></li>
   </ul>
 </div>"
 `;

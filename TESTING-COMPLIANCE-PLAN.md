@@ -825,7 +825,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | tooltip | aria-describedby | 1-2 |
 | topbar | landmark role | 1 |
 | typeahead | combobox pattern | 3-4 |
-| upload | aria-describedby for instructions | 2 |
+| upload | ~~aria-describedby for instructions~~ | ✅ **COMPLETED** |
 | view-flag | ~~aria-label~~ | ✅ **COMPLETED** |
 
 ### 3.2 Template for Adding Accessibility Tests
@@ -910,7 +910,7 @@ describe('Accessibility', () => {
 | tab | `tab-change` |
 | toast | `dismiss` |
 | typeahead | `update:modelValue`, `select`, `search` |
-| upload | `upload`, `remove`, `error` |
+| upload | ~~`fzupload:change`, `fzupload:add`, `fzupload:delete`, `fzupload:file-limit-exceeded`~~ | ✅ **COMPLETED** |
 
 ### 3.4 Packages Missing Edge Case Tests
 
@@ -1622,6 +1622,32 @@ Ensure root `package.json` has:
 - ✅ Added comprehensive edge cases tests
 
 **Status:** All 74 tests passing ✅
+
+### 3.16 Package: `upload` ✅ **COMPLETED**
+
+**Components enhanced:**
+- ✅ `FzUpload.vue` - Comprehensive test suite enhanced from 6 basic tests to 58 comprehensive tests
+
+**Enhanced test coverage includes:**
+- ✅ Rendering tests (default props, button label, drag and drop label, file list, multiple files, file names, delete buttons)
+- ✅ Props tests (size variants, multiple prop, accept prop, id prop, name prop, fileLimit prop, buttonLabel prop, dragAndDropLabel prop)
+- ✅ Events tests (fzupload:change emission for file add/delete, fzupload:add emission, fzupload:delete emission, fzupload:file-limit-exceeded emission)
+- ✅ CSS Classes tests (static base classes, size-specific text classes, file list container classes, file list item classes)
+- ✅ Accessibility tests (ARIA attributes expectations, keyboard navigation, semantic HTML structure, screen reader support, accessible file links, accessible delete buttons)
+- ✅ Edge Cases tests (undefined modelValue, empty arrays, multiple files without multiple prop, file limit exceeded, delete when no files, drag and drop with no files, very long file names, special characters, object URL cleanup)
+- ✅ Snapshots tests (default state, with initial file, with multiple files, sm size, custom labels, with accept prop)
+
+**Test improvements:**
+- ✅ Expanded from 6 basic tests to 58 comprehensive tests
+- ✅ Added full test coverage following TESTING.md structure
+- ✅ Added comprehensive accessibility tests documenting expected behavior (aria-describedby for instructions, accessible labels, semantic HTML structure)
+- ✅ Added comprehensive events tests for all emitted events (fzupload:change, fzupload:add, fzupload:delete, fzupload:file-limit-exceeded)
+- ✅ Added comprehensive props tests for all upload-specific props (fileLimit, accept, multiple, buttonLabel, dragAndDropLabel)
+- ✅ Added comprehensive edge cases tests for file handling, drag and drop, and object URL management
+- ✅ Fixed snapshot test name typos ("snaphost" → "snapshot")
+- ✅ Added proper mocking for window.URL.createObjectURL and window.URL.revokeObjectURL
+
+**Status:** All 58 tests passing ✅
 
 ---
 
