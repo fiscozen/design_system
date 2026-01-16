@@ -2201,4 +2201,139 @@ describe("FzTypeahead", () => {
       expect(optionTexts.some((text) => text?.includes("Java"))).toBe(true);
     });
   });
+
+  // ============================================
+  // SNAPSHOTS
+  // ============================================
+  describe("Snapshots", () => {
+    it("should match snapshot - default state", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - with label", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          label: "Select an option",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - disabled state", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          disabled: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - error state", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          error: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+        slots: {
+          error: "<div>Error message</div>",
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - with selected value", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "option1",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - backoffice environment", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          environment: "backoffice",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - with icons", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "",
+          leftIcon: "bell",
+          rightIcon: "xmark",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - readonly state", async () => {
+      const wrapper = mount(FzTypeahead, {
+        props: {
+          modelValue: "option1",
+          readonly: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+  });
 });
