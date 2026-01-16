@@ -759,7 +759,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | layout | ~~landmark roles~~ | ✅ **COMPLETED** |
 | link | ~~role="link" native~~ | ✅ **COMPLETED** |
 | navbar | ~~nav role, aria-label~~ | ✅ **COMPLETED** |
-| navlink | aria-current | 1 |
+| navlink | ~~aria-current~~ | ✅ **COMPLETED** |
 | navlist | listbox/list role | 2 |
 | progress | ~~role="progressbar", aria-valuenow~~ | ✅ **COMPLETED** |
 | radio | aria-checked, radio group | 2-3 |
@@ -1541,6 +1541,35 @@ Ensure root `package.json` has:
 - ✅ Snapshots tests (default state, with label, disabled, error, selected value, backoffice, with icons, readonly)
 
 **Status:** All tests passing ✅
+
+---
+
+### Package: navlink ✅ **COMPLETED**
+
+**Components enhanced:**
+- ✅ `FzNavlink.vue` - Comprehensive test suite enhanced from 4 basic tests to 74 comprehensive tests
+- ✅ `FzRouterNavlink.vue` - Complete test coverage
+
+**Enhanced test coverage includes:**
+- ✅ Rendering tests (default props, label, icon, icon-only mode, slots, icon + label combinations)
+- ✅ Props tests (label, iconName, iconSize, iconVariant, disabled, meta)
+- ✅ Events tests (click event emission, disabled blocking, event object structure)
+- ✅ CSS Classes tests (static base classes, icon-only classes, padding classes, disabled classes, hover/focus classes, icon margin)
+- ✅ Accessibility tests (aria-disabled expectations, focusability, accessible labels, aria-current expectations for active state, semantic HTML structure, keyboard navigation, decorative elements)
+- ✅ Edge Cases tests (undefined props, empty strings, very long labels, special characters, slot overrides, multiple instances)
+- ✅ Snapshots tests (default state, with label, with icon and label, icon only, disabled state, with slot)
+
+**Test improvements:**
+- ✅ Expanded from 4 basic tests to 74 comprehensive tests
+- ✅ Added full test coverage following TESTING.md structure
+- ✅ Added comprehensive accessibility tests documenting expected behavior (aria-current for active state)
+- ✅ Added tests for both FzNavlink (button) and FzRouterNavlink (router-link) components
+- ✅ Added router mocking for FzRouterNavlink tests
+- ✅ Added comprehensive props tests for all icon-related props
+- ✅ Added comprehensive CSS classes tests for all layout variants
+- ✅ Added comprehensive edge cases tests
+
+**Status:** All 74 tests passing ✅
 
 ---
 
