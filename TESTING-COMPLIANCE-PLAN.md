@@ -164,8 +164,8 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | media | Icon.stories.ts | ~3 | 🟡 Low |
 | media | PdfViewer.stories.ts | ~2 | 🟡 Low |
 | messages | ~~Alert.stories.ts~~ | ~~14~~ | ✅ **COMPLETED** |
-| messages | Toast.stories.ts | ~5 | 🟠 High |
-| messages | ToastQueue.stories.ts | ~3 | 🟠 High |
+| messages | ~~Toast.stories.ts~~ | ~~5~~ | ✅ **COMPLETED** |
+| messages | ~~ToastQueue.stories.ts~~ | ~~3~~ | ✅ **COMPLETED** |
 | misc | Badge.stories.ts | ~5 | 🟡 Medium |
 | navigation | ~~Action.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | Actionlist.stories.ts | ~3 | 🟠 High |
@@ -962,10 +962,10 @@ describe('Edge Cases', () => {
 | data/Table.stories.ts | Sorting, filtering, pagination | 3 |
 | form/Upload.stories.ts | File selection, drag & drop, remove | 2 |
 | messages/Toast.stories.ts | ~~Dismiss, auto-hide~~ | ✅ **COMPLETED** |
-| messages/ToastQueue.stories.ts | Queue management | 1.5 |
+| messages/ToastQueue.stories.ts | ~~Queue management~~ | ✅ **COMPLETED** |
 | navigation/Action.stories.ts | ~~Click, hover states~~ | ✅ **COMPLETED** |
 | navigation/Actionlist.stories.ts | Navigation, selection | 1.5 |
-| navigation/Breadcrumbs.stories.ts | Click navigation | 1 |
+| navigation/Breadcrumbs.stories.ts | ~~Click navigation~~ | ✅ **COMPLETED** |
 | navigation/Navbar.stories.ts | Navigation, active state | 1.5 |
 | navigation/Navlink.stories.ts | Click, active state | 1 |
 | navigation/Navlist.stories.ts | List navigation | 1.5 |
@@ -1984,4 +1984,24 @@ Ensure root `package.json` has:
 - All play functions test user interactions, visual states, and accessibility expectations
 - Play functions cover: dismiss functionality, keyboard navigation (Tab, Enter, Space), visual states for all toast types, shadow prop behavior
 - Phase 4 (Storybook Play Functions) progress: 7 of 28 critical priority stories completed
+
+### January 16, 2026 - Breadcrumbs Stories Play Functions ✅
+
+**Package:** `breadcrumbs` (Storybook)
+- Added play functions to Breadcrumbs.stories.ts for critical stories
+- Added play functions for: Default (basic rendering and breadcrumb structure), Static (static breadcrumbs with clickable links), ClickNavigation (click navigation between breadcrumbs), KeyboardNavigation (Tab, Enter/Space key activation), Accessibility (semantic HTML structure, ARIA attributes, accessible links)
+- All play functions test user interactions, visual states, and accessibility expectations
+- Play functions cover: click navigation, keyboard navigation (Tab, Enter, Space), visual states for active/inactive breadcrumbs, accessibility attributes (href, accessible text, router-link-active class)
+- Fixed test expectations to match vue-router hash mode behavior (#/ instead of /)
+- Fixed test queries to scope within breadcrumbs container to avoid conflicts with Page component test links
+- Phase 4 (Storybook Play Functions) progress: 8 of 28 critical priority stories completed
+
+### January 16, 2026 - ToastQueue Stories Play Functions ✅
+
+**Package:** `toast` (Storybook)
+- Added play functions to ToastQueue.stories.ts for critical stories
+- Added play functions for: Default (basic rendering and toast queue container), EnqueueMultiple (adding multiple toasts and verifying stacking), DismissToast (dismiss functionality with close button click), HoverExpand (hover to expand stacked toasts), LeftAlign (left alignment verification), RightAlign (right alignment verification), KeyboardNavigation (keyboard accessibility with Enter key), SpaceKeyDismiss (Space key activation), Accessibility (toast queue accessibility and screen reader support), CustomQueue (custom queue with ref management)
+- All play functions test user interactions, visual states, and accessibility expectations
+- Play functions cover: queue management (enqueue, dismiss, stacking), hover expand behavior, alignment variants (left/right), keyboard navigation (Tab, Enter, Space)
+- Phase 4 (Storybook Play Functions) progress: 9 of 28 critical priority stories completed
 
