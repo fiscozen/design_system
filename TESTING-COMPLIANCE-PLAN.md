@@ -163,7 +163,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | form | Upload.stories.ts | ~3 | 🟠 High |
 | media | Icon.stories.ts | ~3 | 🟡 Low |
 | media | PdfViewer.stories.ts | ~2 | 🟡 Low |
-| messages | Alert.stories.ts | 14 | 🔴 Critical |
+| messages | ~~Alert.stories.ts~~ | ~~14~~ | ✅ **COMPLETED** |
 | messages | Toast.stories.ts | ~5 | 🟠 High |
 | messages | ToastQueue.stories.ts | ~3 | 🟠 High |
 | misc | Badge.stories.ts | ~5 | 🟡 Medium |
@@ -814,7 +814,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | navlink | ~~aria-current~~ | ✅ **COMPLETED** |
 | navlist | ~~listbox/list role~~ | ✅ **COMPLETED** |
 | progress | ~~role="progressbar", aria-valuenow~~ | ✅ **COMPLETED** |
-| radio | aria-checked, radio group | 2-3 |
+| radio | ~~aria-checked, radio group~~ | ✅ **COMPLETED** |
 | select | ~~Full a11y suite~~ | ✅ **COMPLETED** |
 | simple-table | ~~table semantics~~ | ✅ **COMPLETED** |
 | stepper | ~~aria-current step~~ | ✅ **COMPLETED** |
@@ -952,7 +952,7 @@ describe('Edge Cases', () => {
 | form/Textarea.stories.ts | Typing, error state, disabled, required | 2 |
 | overlay/Dialog.stories.ts | Open/close, focus trap, escape key | 3 |
 | overlay/ConfirmDialog.stories.ts | Confirm/cancel actions, keyboard nav | 2 |
-| messages/Alert.stories.ts | Dismiss, action clicks, collapsible toggle | 3 |
+| messages/Alert.stories.ts | ~~Dismiss, action clicks, collapsible toggle~~ | ✅ **COMPLETED** |
 
 ### 4.2 High Priority Stories (Week 5)
 
@@ -1882,4 +1882,22 @@ Ensure root `package.json` has:
 - Added comprehensive Rendering, Props, Events, CSS Classes, and Edge Cases test sections
 - Added ResizeObserver mock for FzFloating component compatibility
 - All 69 tests passing ✅
+
+### January 15, 2026 - Radio Component Accessibility Tests Completion ✅
+
+**Package:** `radio`
+- Verified comprehensive accessibility tests already exist in FzRadio.spec.ts and FzRadioGroup.spec.ts
+- Tests include: aria-checked, aria-labelledby, aria-describedby, aria-invalid, aria-required, aria-disabled, keyboard navigation, role="radiogroup"
+- All accessibility requirements from Phase 3.1 are met
+- Marked as completed in testing compliance plan
+
+### January 15, 2026 - Alert Stories Play Functions ✅
+
+**Package:** `alert` (Storybook)
+- Added play functions to Alert.stories.ts for all critical stories
+- Added play functions for: Info, Error, Danger, Warning, Success (tone variants)
+- Added play functions for: Dismissible (dismiss functionality), Collapsable (accordion toggle), CollapsableDefaultClosed (expand from collapsed)
+- Added play functions for: LinkAndButton (action clicks)
+- All play functions test user interactions, visual states, and accessibility expectations
+- Phase 4 (Storybook Play Functions) progress: 1 of 28 critical priority stories completed
 
