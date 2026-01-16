@@ -97,7 +97,7 @@ This document outlines a comprehensive plan to bring the Fiscozen Design System 
 | `link` | 1 | Rename `FzLink.test.ts` |
 | `progress` | ~~2~~ | ~~Rename `FzProgress.test.ts`, `FzProgressBar.test.ts`~~ ✅ **COMPLETED** |
 | `radio` | 3 | Rename all + fix folder name (`__test__` → `__tests__`) |
-| `select` | 1 | Rename `FzSelect.test.ts` |
+| `select` | ~~1~~ | ~~Rename `FzSelect.test.ts`~~ ✅ **COMPLETED** |
 | `style` | 4 | Rename custom directive tests |
 | `tab` | 1 | Rename `FzTabs.test.ts` + fix folder name |
 | `typeahead` | 1 | Rename `FzTypeahead.test.ts` |
@@ -289,7 +289,7 @@ mv packages/tab/src/__test__ packages/tab/src/__tests__
 | radio | ~~`FzRadio.test.ts`~~ | ~~`FzRadio.spec.ts`~~ ✅ **COMPLETED** |
 | radio | ~~`FzRadioCard.test.ts`~~ | ~~`FzRadioCard.spec.ts`~~ ✅ **COMPLETED** |
 | radio | ~~`FzRadioGroup.test.ts`~~ | ~~`FzRadioGroup.spec.ts`~~ ✅ **COMPLETED** |
-| select | `FzSelect.test.ts` | `FzSelect.spec.ts` |
+| select | ~~`FzSelect.test.ts`~~ | ~~`FzSelect.spec.ts`~~ ✅ **COMPLETED** |
 | style | `validation.test.ts` | `validation.spec.ts` |
 | style | `vSmall.test.ts` | `vSmall.spec.ts` |
 | style | `vColor.test.ts` | `vColor.spec.ts` |
@@ -711,7 +711,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | navlist | listbox/list role | 2 |
 | progress | ~~role="progressbar", aria-valuenow~~ | ✅ **COMPLETED** |
 | radio | aria-checked, radio group | 2-3 |
-| select | Full a11y suite | 3-4 |
+| select | ~~Full a11y suite~~ | ✅ **COMPLETED** |
 | simple-table | table semantics | 2 |
 | stepper | aria-current step | 2 |
 | tab | tablist/tabpanel roles | 2-3 |
@@ -1352,17 +1352,37 @@ Ensure root `package.json` has:
 
 ---
 
-### Package: select ⚠️ Needs Enhancement
+### Package: select ✅ **COMPLETED**
 
 **Current State:**
-- `FzSelect.test.ts` - ❌ Wrong extension
-- Missing comprehensive a11y tests
+- ✅ `FzSelect.spec.ts` - Comprehensive test suite with extensive accessibility tests
+- ✅ `src/__tests__/` folder (correct naming)
 
-**Actions:**
-1. Rename to `.spec.ts`
-2. Add listbox/option role tests
-3. Add aria-selected tests
-4. Add keyboard navigation tests (arrow keys, typeahead)
+**Completed:**
+1. ✅ Renamed file from `FzSelect.test.ts` to `FzSelect.spec.ts`
+2. ✅ Updated README.md to reference new filename
+3. ✅ Test file already includes comprehensive a11y tests:
+   - ✅ aria-haspopup, aria-labelledby, aria-label, aria-required, aria-invalid
+   - ✅ role="listbox" on options container
+   - ✅ role="option" on option buttons
+   - ✅ aria-activedescendant for focused options
+   - ✅ Comprehensive keyboard navigation tests (arrow keys, Enter, Space, Escape, Tab, Home, End)
+   - ✅ Screen reader accessibility tests
+   - ✅ Focus management tests
+   - ✅ Unique ID generation for options
+
+**Test coverage includes:**
+- ✅ Rendering tests (default props, label, placeholder, selected value)
+- ✅ Props tests (environment, error, disabled, readonly, filterable, clearable, etc.)
+- ✅ Events tests (update:modelValue, fzselect:select)
+- ✅ Accessibility tests (ARIA attributes, keyboard navigation, screen reader support)
+- ✅ CSS Classes tests (environment-specific styling, error states, disabled states)
+- ✅ Edge Cases tests (empty options, undefined values, dynamic options)
+- ✅ Keyboard navigation tests (comprehensive coverage of all keyboard interactions)
+- ✅ Focus management tests (open/close, focus trap, focus return)
+- ✅ Fuzzy search tests (fuzzy vs simple search, case-insensitive, grouped options)
+
+**Status:** All tests passing ✅
 
 ---
 

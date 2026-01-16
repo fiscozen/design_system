@@ -119,7 +119,7 @@ pnpm coverage
 
 #### Test Structure
 
-- Unit tests in `src/__tests__/FzSelect.test.ts`
+- Unit tests in `src/__tests__/FzSelect.spec.ts`
 - Test naming: `describe` blocks for feature groups, `it` blocks for specific cases
 - Coverage requirement: >90% line coverage
 - Use `mount` from `@vue/test-utils` for component testing
