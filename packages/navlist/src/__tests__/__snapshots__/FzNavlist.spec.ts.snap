@@ -1,10 +1,10 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzNavlist > should match snapshot 1`] = `
+exports[`FzNavlist > Snapshots > should match snapshot - default state 1`] = `
 "<div class="fz__navlist inline-flex grow-0 flex-col rounded p-4">
   <div class="fz__navlist__section border-grey-200">
     <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Label 1</span></div>
-    <div class="flex flex-col"><a href="/foo" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" disabled="false" type="link">
+    <div class="flex flex-col"><a href="/foo" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="link">
         <!--v-if-->Item #1
       </a>
       <details data-v-5d0ac24e="" data-e2e="details">
@@ -13,27 +13,23 @@ exports[`FzNavlist > should match snapshot 1`] = `
               <path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path>
             </svg></div>
         </summary>
-        <transition-stub data-v-5d0ac24e="" appear="false" persisted="true" css="true">
-          <div data-v-5d0ac24e="" data-e2e="content" class="text-sm" style="display: none;">
-            <div class="flex flex-col">
-              <!--v-if--><a href="/foo" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start pl-24 !font-normal" disabled="false" type="link">
-                <!--v-if-->Sub-Item #1
-              </a>
-              <!--v-if--><a href="/foo" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start pl-24 !font-normal" disabled="false" type="link">
-                <!--v-if-->Sub-Item #2
-              </a>
-            </div>
+        <div data-v-5d0ac24e="" data-e2e="content" class="text-sm" style="display: none;">
+          <div class="flex flex-col">
+            <!--v-if--><a href="/foo" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start pl-24 !font-normal" type="link">
+              <!--v-if-->Sub-Item #1
+            </a>
+            <!--v-if--><a href="/foo" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start pl-24 !font-normal" type="link">
+              <!--v-if-->Sub-Item #2
+            </a>
           </div>
-        </transition-stub>
+        </div>
       </details>
     </div>
     <hr class="bg-grey-200 my-8 h-1 w-full border-none px-4">
   </div>
   <div class="fz__navlist__section border-grey-200">
     <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Label 2</span></div>
-    <div class="flex flex-col"><a href="/foo" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" disabled="true" type="link">
-        <!--v-if-->Item #1
-      </a><a href="/foo" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" disabled="false" type="link">
+    <div class="flex flex-col"><span class="px-12 py-6 text-grey-100 border-1 bg-core-white h-32 items-center rounded border-transparent text-sm border-transparent font-medium cursor-pointer grow-1 flex justify-start" type="link"><!--v-if-->Item #1</span><a href="/foo" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="link">
         <!--v-if-->Item #2
       </a></div>
     <hr class="bg-grey-200 my-8 h-1 w-full border-none px-4">
@@ -45,6 +41,74 @@ exports[`FzNavlist > should match snapshot 1`] = `
       </button><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="button">
         <!--v-if-->Item #2
       </button></div>
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
+exports[`FzNavlist > Snapshots > should match snapshot - disabled items 1`] = `
+"<div class="fz__navlist inline-flex grow-0 flex-col rounded p-4">
+  <div class="fz__navlist__section border-grey-200">
+    <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Section 1</span></div>
+    <div class="flex flex-col"><button disabled="" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="button">
+        <!--v-if-->Disabled Item
+      </button><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="button">
+        <!--v-if-->Enabled Item
+      </button></div>
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
+exports[`FzNavlist > Snapshots > should match snapshot - mixed item types 1`] = `
+"<div class="fz__navlist inline-flex grow-0 flex-col rounded p-4">
+  <div class="fz__navlist__section border-grey-200">
+    <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Section 1</span></div>
+    <div class="flex flex-col"><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="button">
+        <!--v-if-->Button Item
+      </button><a href="/foo" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="link">
+        <!--v-if-->Link Item
+      </a></div>
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
+exports[`FzNavlist > Snapshots > should match snapshot - single section 1`] = `
+"<div class="fz__navlist inline-flex grow-0 flex-col rounded p-4">
+  <div class="fz__navlist__section border-grey-200">
+    <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Section 1</span></div>
+    <div class="flex flex-col"><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="button">
+        <!--v-if-->Item 1
+      </button></div>
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
+exports[`FzNavlist > Snapshots > should match snapshot - with subitems 1`] = `
+"<div class="fz__navlist inline-flex grow-0 flex-col rounded p-4">
+  <div class="fz__navlist__section border-grey-200">
+    <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Section 1</span></div>
+    <div class="flex flex-col">
+      <details data-v-5d0ac24e="" data-e2e="details">
+        <summary data-v-5d0ac24e="" data-e2e="summary" class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded font-medium px-12"><span class="grow">Parent Item</span>
+          <div data-v-5d0ac24e="" class="flex items-center justify-center w-[20px] h-[20px] ml-32"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path>
+            </svg></div>
+        </summary>
+        <div data-v-5d0ac24e="" data-e2e="content" class="text-sm" style="display: none;">
+          <div class="flex flex-col"><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start pl-24 !font-normal" type="button">
+              <!--v-if-->Sub-Item 1
+            </button>
+            <!--v-if--><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start pl-24 !font-normal" type="button">
+              <!--v-if-->Sub-Item 2
+            </button>
+            <!--v-if-->
+          </div>
+        </div>
+      </details>
+    </div>
     <!--v-if-->
   </div>
 </div>"
