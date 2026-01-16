@@ -822,7 +822,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | table | ~~table semantics, aria-sort~~ | ✅ **COMPLETED** |
 | textarea | ~~Same as input~~ | ✅ **COMPLETED** |
 | toast | ~~role="alert", aria-live~~ | ✅ **COMPLETED** |
-| tooltip | aria-describedby | 1-2 |
+| tooltip | ~~aria-describedby~~ | ✅ **COMPLETED** |
 | topbar | landmark role | 1 |
 | typeahead | combobox pattern | 3-4 |
 | upload | ~~aria-describedby for instructions~~ | ✅ **COMPLETED** |
@@ -1822,4 +1822,14 @@ Ensure root `package.json` has:
 - Added comprehensive accessibility tests with aria-current="step" expectations
 - Added proper mocking for window.matchMedia and IntersectionObserver
 - All 53 tests passing ✅
+
+### January 15, 2026 - Tooltip Component Testing Enhancement ✅
+
+**Package:** `tooltip`
+- Enhanced test suite from 10 snapshot-only tests to 69 comprehensive tests
+- Added full test coverage following TESTING.md structure
+- Added comprehensive accessibility tests (aria-describedby linking to tooltip, role="tooltip", aria-hidden, keyboard navigation, decorative icons)
+- Added comprehensive Rendering, Props, Events, CSS Classes, and Edge Cases test sections
+- Added ResizeObserver mock for FzFloating component compatibility
+- All 69 tests passing ✅
 
