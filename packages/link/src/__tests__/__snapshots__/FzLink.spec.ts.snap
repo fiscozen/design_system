@@ -1,3 +1,17 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzLink > Rendering > matches snapshot 1`] = `"<a href="/example" class="border-1 border-transparent inline-block text-base leading-base focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600">This is a link</a>"`;
+
+exports[`FzLink > Snapshots > should match snapshot - danger type 1`] = `"<a href="/example" class="border-1 border-transparent inline-block text-base leading-base focus:outline-none focus:border-solid focus:no-underline text-semantic-error-200 hover:text-semantic-error-300 hover:underline focus:text-semantic-error-300 focus:border-semantic-error-300">Danger link</a>"`;
+
+exports[`FzLink > Snapshots > should match snapshot - default state 1`] = `"<a href="/example" class="border-1 border-transparent inline-block text-base leading-base focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600">Default link</a>"`;
+
+exports[`FzLink > Snapshots > should match snapshot - disabled state 1`] = `"<span class="border-1 border-transparent inline-block text-base leading-base cursor-not-allowed text-blue-200" aria-disabled="true" role="link" aria-label="Link disabled">Disabled link</span>"`;
+
+exports[`FzLink > Snapshots > should match snapshot - external link 1`] = `"<a href="https://example.com" class="border-1 border-transparent inline-block text-base leading-base focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600">External link</a>"`;
+
+exports[`FzLink > Snapshots > should match snapshot - external with target blank 1`] = `"<a href="https://example.com" class="border-1 border-transparent inline-block text-base leading-base focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600" target="_blank" rel="noopener noreferrer">External new tab</a>"`;
+
+exports[`FzLink > Snapshots > should match snapshot - small size 1`] = `"<a href="/example" class="border-1 border-transparent inline-block text-sm leading-xs focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600">Small link</a>"`;
+
+exports[`FzLink > Snapshots > should match snapshot - underline linkStyle 1`] = `"<a href="/example" class="border-1 border-transparent inline-block text-base leading-base underline focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 focus:text-blue-600 focus:border-blue-600">Underlined link</a>"`;
