@@ -1,5 +1,63 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`FzViewFlag > Snapshots > should match snapshot - default state 1`] = `
+"<div class="w-8 h-full bg-semantic-warning fixed top-0 left-0 z-50"></div>
+<div class="w-8 h-full bg-semantic-warning fixed top-0 right-0 z-50"></div>
+<div class="w-full h-8 bg-semantic-warning fixed top-0 left-0 z-50"></div>
+<div class="w-full h-8 bg-semantic-warning fixed bottom-0 left-0 z-50"></div>
+<div class="bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center bottom-8 fixed m-auto left-1/2 -translate-x-1/2 z-50">
+  <!--v-if-->
+  <div>
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
+exports[`FzViewFlag > Snapshots > should match snapshot - with all props 1`] = `
+"<div class="w-8 h-full bg-semantic-warning fixed top-0 left-0 z-50"></div>
+<div class="w-8 h-full bg-semantic-warning fixed top-0 right-0 z-50"></div>
+<div class="w-full h-8 bg-semantic-warning fixed top-0 left-0 z-50"></div>
+<div class="w-full h-8 bg-semantic-warning fixed bottom-0 left-0 z-50"></div>
+<div class="bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center bottom-8 fixed m-auto left-1/2 -translate-x-1/2 z-50">
+  <div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-core-black text-core-white rounded-2xl !w-fit">staging</div>
+  <div>Operatore: Mario R.</div>
+</div>"
+`;
+
+exports[`FzViewFlag > Snapshots > should match snapshot - with custom slot 1`] = `
+"<div class="w-8 h-full bg-semantic-warning fixed top-0 left-0 z-50"></div>
+<div class="w-8 h-full bg-semantic-warning fixed top-0 right-0 z-50"></div>
+<div class="w-full h-8 bg-semantic-warning fixed top-0 left-0 z-50"></div>
+<div class="w-full h-8 bg-semantic-warning fixed bottom-0 left-0 z-50"></div>
+<div class="bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center bottom-8 fixed m-auto left-1/2 -translate-x-1/2 z-50">Custom slot content</div>"
+`;
+
+exports[`FzViewFlag > Snapshots > should match snapshot - with environment only 1`] = `
+"<div class="w-8 h-full bg-semantic-warning fixed top-0 left-0 z-50"></div>
+<div class="w-8 h-full bg-semantic-warning fixed top-0 right-0 z-50"></div>
+<div class="w-full h-8 bg-semantic-warning fixed top-0 left-0 z-50"></div>
+<div class="w-full h-8 bg-semantic-warning fixed bottom-0 left-0 z-50"></div>
+<div class="bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center bottom-8 fixed m-auto left-1/2 -translate-x-1/2 z-50">
+  <div class="flex items-center justify-center font-medium text-sm px-12 size-24 bg-core-black text-core-white rounded-2xl !w-fit">production</div>
+  <div>
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
+exports[`FzViewFlag > Snapshots > should match snapshot - with user info only 1`] = `
+"<div class="w-8 h-full bg-semantic-warning fixed top-0 left-0 z-50"></div>
+<div class="w-8 h-full bg-semantic-warning fixed top-0 right-0 z-50"></div>
+<div class="w-full h-8 bg-semantic-warning fixed top-0 left-0 z-50"></div>
+<div class="w-full h-8 bg-semantic-warning fixed bottom-0 left-0 z-50"></div>
+<div class="bg-semantic-warning justify-self-center self-end rounded-t-base text-sm flex p-6 gap-12 items-center bottom-8 fixed m-auto left-1/2 -translate-x-1/2 z-50">
+  <!--v-if-->
+  <div>User: Jane S.</div>
+</div>"
+`;
+
 exports[`FzViewFlag > matches snapshot 1`] = `
 "<div class="w-8 h-full bg-semantic-warning fixed top-0 left-0 z-50"></div>
 <div class="w-8 h-full bg-semantic-warning fixed top-0 right-0 z-50"></div>
