@@ -157,7 +157,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | Category | Story File | Stories Count | Priority |
 |----------|------------|---------------|----------|
 | data | ~~SimpleTable.stories.ts~~ | ~~~5~~ | ✅ **COMPLETED** |
-| data | Table.stories.ts | ~5 | 🟠 High |
+| data | ~~Table.stories.ts~~ | ~~~5~~ | ✅ **COMPLETED** |
 | form | ~~Datepicker.stories.ts~~ | ~~~5~~ | ✅ **COMPLETED** |
 | form | ~~Textarea.stories.ts~~ | ~~8~~ | ✅ **COMPLETED** |
 | form | ~~Upload.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
@@ -959,7 +959,7 @@ describe('Edge Cases', () => {
 | Story File | Required Play Functions | Est. Hours |
 |-----------|------------------------|------------|
 | data/SimpleTable.stories.ts | ~~Table rendering, empty state, custom placeholder, fixed width columns~~ | ✅ **COMPLETED** |
-| data/Table.stories.ts | Sorting, filtering, pagination | 3 |
+| data/Table.stories.ts | ~~Sorting, filtering, pagination~~ | ✅ **COMPLETED** |
 | form/Upload.stories.ts | File selection, drag & drop, remove | 2 |
 | messages/Toast.stories.ts | ~~Dismiss, auto-hide~~ | ✅ **COMPLETED** |
 | messages/ToastQueue.stories.ts | ~~Queue management~~ | ✅ **COMPLETED** |
