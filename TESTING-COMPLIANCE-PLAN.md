@@ -170,7 +170,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | navigation | ~~Action.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | ~~Actionlist.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | Breadcrumbs.stories.ts | ~3 | 🟠 High |
-| navigation | Navbar.stories.ts | ~3 | 🟠 High |
+| navigation | ~~Navbar.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | Navlink.stories.ts | ~3 | 🟠 High |
 | navigation | Navlist.stories.ts | ~3 | 🟠 High |
 | navigation | Stepper.stories.ts | ~3 | 🟠 High |
@@ -966,7 +966,7 @@ describe('Edge Cases', () => {
 | navigation/Action.stories.ts | ~~Click, hover states~~ | ✅ **COMPLETED** |
 | navigation/Actionlist.stories.ts | ~~Navigation, selection~~ | ✅ **COMPLETED** |
 | navigation/Breadcrumbs.stories.ts | ~~Click navigation~~ | ✅ **COMPLETED** |
-| navigation/Navbar.stories.ts | Navigation, active state | 1.5 |
+| navigation | ~~Navbar.stories.ts~~ | ~~Navigation, active state~~ | ✅ **COMPLETED** |
 | navigation/Navlink.stories.ts | ~~Click, active state~~ | ✅ **COMPLETED** |
 | navigation/Navlist.stories.ts | List navigation | 1.5 |
 | navigation/Stepper.stories.ts | Step navigation | 2 |
@@ -2015,4 +2015,16 @@ Ensure root `package.json` has:
 - Play functions cover: click interactions, keyboard navigation (Tab, Enter, Space), active state styling, disabled state behavior
 - Fixed test expectations to match component implementation (native disabled attribute instead of aria-disabled)
 - Phase 4 (Storybook Play Functions) progress: 10 of 28 critical priority stories completed
+
+### January 16, 2026 - Navbar Stories Play Functions ✅
+
+**Package:** `navbar` (Storybook)
+- Added play functions to Navbar.stories.ts for all stories
+- Added play functions for: Horizontal (navbar rendering, brand logo presence, navigation buttons, semantic HTML structure, keyboard navigation), Vertical (vertical navbar rendering, brand logo presence, navigation links, semantic HTML structure, keyboard navigation), CustomBreakpoints (navbar with custom breakpoints rendering, brand logo presence, semantic HTML structure)
+- All play functions test user interactions, visual states, and accessibility expectations
+- Play functions cover: navbar rendering verification, brand logo presence, navigation elements (buttons for horizontal, links for vertical), semantic HTML structure (header role="banner"), keyboard navigation (Tab focus)
+- Fixed test queries to use `getByRole('button')` instead of `getByRole('link')` for FzNavlink components (which render as buttons)
+- Fixed Avatar component props to include required firstName and lastName props
+- Added variant prop explicitly to all navbar stories
+- Phase 4 (Storybook Play Functions) progress: 11 of 28 critical priority stories completed
 
