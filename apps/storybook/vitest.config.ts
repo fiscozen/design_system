@@ -19,9 +19,11 @@ export default mergeConfig(
       root: fileURLToPath(new URL('./', import.meta.url)),
       browser: {
         enabled: true,
-        name: 'chromium',
         provider: 'playwright',
-        headless: true
+        headless: true,
+        instances: [
+          { browser: 'chromium' }
+        ]
       },
       setupFiles: ['.storybook/vitest.setup.ts'],
       coverage: {
