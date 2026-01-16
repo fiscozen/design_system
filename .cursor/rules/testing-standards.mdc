@@ -221,6 +221,192 @@ export const KeyboardNavigation: Story = {
 }
 ```
 
+## Play Function Best Practices
+
+### Extract Reusable Helper Functions
+
+For components with repetitive setup (e.g., opening dialogs, dropdowns), extract helpers to reduce duplication:
+
+```typescript
+// ✅ GOOD: Reusable helpers at the top of the file
+const openDialog = async (canvas: ReturnType<typeof within>, buttonName: RegExp = /open/i) => {
+  const openButton = canvas.getByRole('button', { name: buttonName })
+  await userEvent.click(openButton)
+  
+  await waitFor(() => {
+    expect(document.querySelector('dialog')).toBeInTheDocument()
+  }, { timeout: 1000 })
+}
+
+const closeDialogWithEscape = async () => {
+  const dialog = document.querySelector('dialog') as HTMLElement
+  dialog?.focus()
+  await userEvent.keyboard('{Escape}')
+  
+  await waitFor(() => {
+    expect(document.querySelector('dialog')).not.toBeInTheDocument()
+  }, { timeout: 1000 })
+}
+
+// Then use in play functions:
+play: async ({ canvasElement, step }) => {
+  const canvas = within(canvasElement)
+  await step('Open dialog', async () => await openDialog(canvas))
+  // ... test assertions
+  await step('Close dialog', async () => await closeDialogWithEscape())
+}
+```
+
+### NEVER Use Arbitrary setTimeout
+
+**❌ BAD: Arbitrary timeouts are flaky and unreliable**
+
+```typescript
+// DON'T DO THIS
+await new Promise(resolve => setTimeout(resolve, 300))
+const dialog = document.querySelector('dialog')
+await expect(dialog).toBeInTheDocument()
+```
+
+**✅ GOOD: Use `waitFor` with condition checks**
+
+```typescript
+// For waiting for something to appear:
+await waitFor(() => {
+  expect(document.querySelector('dialog')).toBeInTheDocument()
+}, { timeout: 1000 })
+
+// For verifying something STAYS in a state (e.g., dialog remains open):
+const verifyDialogRemainsOpen = async () => {
+  const dialogBefore = document.querySelector('dialog')
+  
+  await waitFor(
+    () => {
+      const dialogAfter = document.querySelector('dialog')
+      expect(dialogAfter).toBeInTheDocument()
+      expect(dialogAfter).toBe(dialogBefore) // Same instance
+    },
+    { timeout: 500, interval: 100 }
+  )
+}
+```
+
+### Test Behavior, Not Implementation Details
+
+**❌ BAD: Testing CSS class names (brittle, breaks on refactors)**
+
+```typescript
+// DON'T DO THIS - relies on implementation details
+const hasDrawerClasses = dialog?.classList.contains('ml-auto') || 
+                         dialog?.classList.contains('fixed')
+await expect(hasDrawerClasses).toBe(true)
+```
+
+**✅ GOOD: Test observable behavior and computed styles**
+
+```typescript
+// DO THIS - tests actual behavior
+const dialog = document.querySelector('dialog') as HTMLElement
+const rect = dialog.getBoundingClientRect()
+const viewportWidth = window.innerWidth
+
+// Drawer should be positioned at the right edge
+const rightEdgeDistance = Math.abs(rect.right - viewportWidth)
+await expect(rightEdgeDistance).toBeLessThan(10)
+
+// Or verify computed styles
+const computedStyles = window.getComputedStyle(dialog)
+await expect(computedStyles.position).toBe('fixed')
+```
+
+### Focus Trap Testing for Dialogs/Modals
+
+When testing focus trap behavior, actually test the trapping:
+
+```typescript
+await step('Verify focus is trapped within dialog', async () => {
+  const dialog = document.querySelector('dialog')
+  const firstButton = dialog?.querySelector('#first-focusable') as HTMLElement
+  
+  // Focus the first button
+  firstButton?.focus()
+  await expect(document.activeElement).toBe(firstButton)
+  
+  // Tab should cycle within dialog
+  await userEvent.tab()
+  
+  // Focus should still be within the dialog
+  await expect(dialog?.contains(document.activeElement)).toBe(true)
+})
+
+await step('Verify focus is within dialog after opening', async () => {
+  const dialog = document.querySelector('dialog')
+  // After opening, focus should be somewhere within the dialog
+  await expect(
+    dialog?.contains(document.activeElement) || document.activeElement === dialog
+  ).toBe(true)
+})
+```
+
+### Accessibility Testing in Play Functions
+
+Go beyond just checking element existence - verify accessibility semantics:
+
+```typescript
+await step('Verify native dialog element (implicit role="dialog")', async () => {
+  const dialog = document.querySelector('dialog')
+  await expect(dialog?.tagName.toLowerCase()).toBe('dialog')
+})
+
+await step('Verify modal behavior (backdrop blocks interaction)', async () => {
+  const backdrop = document.querySelector('.fz-dialog__backdrop')
+  await expect(backdrop).toBeInTheDocument()
+  
+  // Verify backdrop covers viewport
+  const backdropStyles = window.getComputedStyle(backdrop as Element)
+  await expect(backdropStyles.position).toBe('fixed')
+})
+
+await step('Verify keyboard accessibility (Escape to close)', async () => {
+  await userEvent.keyboard('{Escape}')
+  await waitFor(() => {
+    expect(document.querySelector('dialog')).not.toBeInTheDocument()
+  })
+})
+```
+
+### Consistent `await` Usage with Assertions
+
+Always use `await` with `expect()` in play functions for consistency:
+
+```typescript
+// ✅ GOOD: Consistent await usage
+await expect(dialog).toBeInTheDocument()
+await expect(dialog).toBeVisible()
+await expect(button).not.toBeDisabled()
+
+// ❌ BAD: Inconsistent - some with await, some without
+expect(dialog).toBeInTheDocument()      // missing await
+await expect(dialog).toBeVisible()
+expect(button).not.toBeDisabled()       // missing await
+```
+
+### Testing "Disabled" Behaviors
+
+When testing that an action should NOT cause a change:
+
+```typescript
+await step('Press Escape - dialog should remain open', async () => {
+  const dialog = document.querySelector('dialog') as HTMLElement
+  
+  dialog.focus()
+  await userEvent.keyboard('{Escape}')
+  
+  // Use verifyDialogRemainsOpen helper instead of setTimeout
+  await verifyDialogRemainsOpen()
+})
+```
+
 ## Critical Rules
 
 ### DO ✅
@@ -229,8 +415,12 @@ export const KeyboardNavigation: Story = {
 - Use `step()` to organize play function assertions
 - Use semantic queries: `getByRole`, `getByLabelText`, `getByText`
 - Test accessibility attributes in both unit tests AND play functions
-- Use `await` before all userEvent calls
-- Use `document.querySelectorAll` for teleported content (modals, dropdowns)
+- Use `await` before all userEvent calls AND `expect()` assertions
+- Use `document.querySelector` for teleported content (modals, dropdowns)
+- Use `waitFor()` for async state changes instead of arbitrary delays
+- Extract reusable helper functions for common operations (open/close dialogs, etc.)
+- Test observable behavior (positioning, computed styles) not CSS class names
+- Test actual focus trap behavior in dialogs (Tab cycling within container)
 
 ### DON'T ❌
 
@@ -240,6 +430,10 @@ export const KeyboardNavigation: Story = {
 - Don't skip accessibility tests
 - Don't use brittle CSS selectors (prefer roles and semantic queries)
 - Don't duplicate exact same tests between unit and play functions
+- Don't use `setTimeout` or `new Promise(resolve => setTimeout(...))` in play functions
+- Don't test CSS class names directly (test behavior/computed styles instead)
+- Don't forget `await` before `expect()` assertions in play functions
+- Don't repeat setup code - extract helper functions for common patterns
 
 ## Accessibility Testing Checklist
 
