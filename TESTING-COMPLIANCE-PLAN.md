@@ -160,7 +160,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | data | Table.stories.ts | ~5 | 🟠 High |
 | form | ~~Datepicker.stories.ts~~ | ~~~5~~ | ✅ **COMPLETED** |
 | form | ~~Textarea.stories.ts~~ | ~~8~~ | ✅ **COMPLETED** |
-| form | Upload.stories.ts | ~3 | 🟠 High |
+| form | ~~Upload.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | media | Icon.stories.ts | ~3 | 🟡 Low |
 | media | PdfViewer.stories.ts | ~2 | 🟡 Low |
 | messages | ~~Alert.stories.ts~~ | ~~14~~ | ✅ **COMPLETED** |
@@ -2027,6 +2027,18 @@ Ensure root `package.json` has:
 - Fixed Avatar component props to include required firstName and lastName props
 - Added variant prop explicitly to all navbar stories
 - Phase 4 (Storybook Play Functions) progress: 11 of 28 critical priority stories completed
+
+### January 16, 2026 - Upload Stories Play Functions ✅
+
+**Package:** `upload` (Storybook)
+- Added play functions to Upload.stories.ts for critical stories
+- Added play functions for: Default (basic rendering, drag and drop label, file list display, delete buttons), Multiple (multiple file upload prop verification), MultipleFileLimit (file limit prop verification)
+- Added new interaction stories: ClickToUpload (button click interaction), DeleteFile (file deletion functionality), KeyboardNavigation (Tab focus, Enter/Space key activation), Accessibility (upload button accessibility, file input id, file links accessibility, delete buttons accessibility, drag and drop instructions), EmptyState (empty state rendering, no file list display, drag and drop zone visibility)
+- All play functions test user interactions, visual states, and accessibility expectations
+- Play functions cover: click interactions, keyboard navigation (Tab, Enter, Space), file deletion, accessibility attributes (id, accessible links, delete buttons), empty state behavior
+- Fixed test queries to scope within component container (`.text-md`) to avoid conflicts with decorator's file list display
+- Fixed test expectations to match component behavior when `multiple=false` (only first file shown)
+- Phase 4 (Storybook Play Functions) progress: 12 of 28 critical priority stories completed
 
 ### January 16, 2026 - Datepicker Stories Play Functions ✅
 
