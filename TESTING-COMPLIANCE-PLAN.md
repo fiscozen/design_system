@@ -174,8 +174,8 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | navigation | Navlink.stories.ts | ~3 | 🟠 High |
 | navigation | Navlist.stories.ts | ~3 | 🟠 High |
 | navigation | Stepper.stories.ts | ~3 | 🟠 High |
-| overlay | ConfirmDialog.stories.ts | ~3 | 🔴 Critical |
-| overlay | Dialog.stories.ts | ~3 | 🔴 Critical |
+| overlay | ~~ConfirmDialog.stories.ts~~ | ~~3~~ | ✅ **COMPLETED** |
+| overlay | ~~Dialog.stories.ts~~ | ~~3~~ | ✅ **COMPLETED** |
 | overlay | ViewFlag.stories.ts | ~2 | 🟡 Medium |
 | panel | Collapse.stories.ts | ~3 | 🟠 High |
 | panel | Divider.stories.ts | ~2 | 🟡 Low |
@@ -950,8 +950,8 @@ describe('Edge Cases', () => {
 |-----------|------------------------|------------|
 | form/Datepicker.stories.ts | ~~Date selection, keyboard nav, error states~~ | ✅ **COMPLETED** |
 | form/Textarea.stories.ts | ~~Typing, error state, disabled, required~~ | ✅ **COMPLETED** |
-| overlay/Dialog.stories.ts | Open/close, focus trap, escape key | 3 |
-| overlay/ConfirmDialog.stories.ts | Confirm/cancel actions, keyboard nav | 2 |
+| overlay/Dialog.stories.ts | ~~Open/close, focus trap, escape key~~ | ✅ **COMPLETED** |
+| overlay/ConfirmDialog.stories.ts | ~~Confirm/cancel actions, keyboard nav~~ | ✅ **COMPLETED** |
 | messages/Alert.stories.ts | ~~Dismiss, action clicks, collapsible toggle~~ | ✅ **COMPLETED** |
 
 ### 4.2 High Priority Stories (Week 5)
@@ -1947,4 +1947,22 @@ Ensure root `package.json` has:
 - Play functions cover: typing, error state, disabled state, required state, keyboard navigation
 - Adjusted tests to match current component implementation (noting ARIA attribute gaps for future enhancement)
 - Phase 4 (Storybook Play Functions) progress: 3 of 28 critical priority stories completed
+
+### January 16, 2026 - Dialog Stories Play Functions ✅
+
+**Package:** `dialog` (Storybook)
+- Added play functions to Dialog.stories.ts for critical stories
+- Added play functions for: Default (basic rendering and dialog content), OpenAndClose (open/close interactions), EscapeKey (escape key handling), EscapeKeyDisabled (disabled escape behavior), BackdropClick (backdrop click handling), BackdropClickDisabled (disabled backdrop behavior), FocusTrap (dialog accessibility and backdrop verification), Accessibility (role="dialog" and modal behavior), SizeVariants (all size variants: sm, md, lg, xl), Drawer (drawer variant)
+- All play functions test user interactions, visual states, and accessibility expectations
+- Play functions cover: open/close functionality, escape key handling, backdrop click handling, focus management, accessibility attributes (role="dialog", modal behavior), all size variants, drawer variant
+- Phase 4 (Storybook Play Functions) progress: 4 of 28 critical priority stories completed
+
+### January 16, 2026 - ConfirmDialog Stories Play Functions ✅
+
+**Package:** `dialog` (Storybook)
+- Added play functions to ConfirmDialog.stories.ts for all critical stories
+- Added play functions for: SimpleDialog (basic rendering and button verification), SimpleDialogDanger (danger variant styling), ConfirmAction (confirm button click and dialog close), CancelAction (cancel button click and dialog close), KeyboardNavigation (keyboard accessibility and Enter key activation), EscapeKey (escape key handling), EscapeKeyDisabled (disabled escape behavior), SpaceKeyActivation (Space key activation), DisabledConfirm (disabled confirm button behavior), NoFooter (footer disabled behavior), Accessibility (role="dialog" and button accessibility)
+- All play functions test user interactions, visual states, and accessibility expectations
+- Play functions cover: confirm/cancel actions, keyboard navigation (Enter, Space, Escape), disabled states, footer visibility, accessibility attributes
+- Phase 4 (Storybook Play Functions) progress: 5 of 28 critical priority stories completed
 
