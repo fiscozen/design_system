@@ -1,5 +1,98 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`FzNavbar > Snapshots > should match snapshot - default state 1`] = `
+"<header class="z-10 flex p-12 shadow h-56 w-full">
+  <div class="mr-32"></div>
+  <div class="flex gap-4 flex-row"></div>
+  <div class="flex gap-16 ml-auto flex-row"></div>
+</header>"
+`;
+
+exports[`FzNavbar > Snapshots > should match snapshot - horizontal layout large screen 1`] = `
+"<header class="z-10 flex p-12 shadow h-56 w-full">
+  <div class="mr-32">
+    <div id="brandlogo" class="desktop"></div>
+  </div>
+  <div class="flex gap-4 flex-row">
+    <div class="link">one</div>
+    <div class="link">two</div>
+    <div class="link">three</div>
+  </div>
+  <div class="flex gap-16 ml-auto flex-row">
+    <div id="notification"></div>
+    <div id="avatar"></div>
+  </div>
+</header>"
+`;
+
+exports[`FzNavbar > Snapshots > should match snapshot - horizontal layout small screen 1`] = `
+"<header class="z-10 flex p-12 shadow h-56 w-full">
+  <div class="mr-32">
+    <div id="brandlogo" class="desktop"></div>
+  </div>
+  <div class="flex gap-4 flex-row">
+    <div class="link">one</div>
+    <div class="link">two</div>
+    <div class="link">three</div>
+  </div>
+  <div class="flex gap-16 ml-auto flex-row">
+    <div id="notification"></div>
+    <div id="avatar"></div>
+  </div>
+</header>"
+`;
+
+exports[`FzNavbar > Snapshots > should match snapshot - vertical layout large screen 1`] = `
+"<header class="z-10 flex p-12 shadow h-full w-56 flex-col">
+  <div class="mb-32">
+    <div id="brandlogo" class="desktop"></div>
+  </div>
+  <div class="flex gap-4 flex-col">
+    <div class="link">one</div>
+    <div class="link">two</div>
+    <div class="link">three</div>
+  </div>
+  <div class="flex gap-16 mt-auto flex-col">
+    <div id="notification"></div>
+    <div id="avatar"></div>
+  </div>
+</header>"
+`;
+
+exports[`FzNavbar > Snapshots > should match snapshot - vertical layout small screen 1`] = `
+"<header class="z-10 flex p-12 shadow h-full w-56 flex-col">
+  <div class="mb-32">
+    <div id="brandlogo" class="desktop"></div>
+  </div>
+  <div class="flex gap-4 flex-col">
+    <div class="link">one</div>
+    <div class="link">two</div>
+    <div class="link">three</div>
+  </div>
+  <div class="flex gap-16 mt-auto flex-col">
+    <div id="notification"></div>
+    <div id="avatar"></div>
+  </div>
+</header>"
+`;
+
+exports[`FzNavbar > Snapshots > should match snapshot - with menu open 1`] = `
+"<header class="z-10 flex p-12 shadow h-56 w-full">
+  <div class="mr-32">
+    <div id="brandlogo" class="desktop"></div>
+  </div>
+  <div class="flex gap-4 flex-row">
+    <div class="link">one</div>
+    <div class="link">two</div>
+    <div class="link">three</div>
+  </div>
+  <div class="flex gap-16 ml-auto flex-row">
+    <div id="notification"></div>
+    <div id="avatar"></div>
+  </div>
+</header>"
+`;
+
 exports[`FzNavbar > should match snapshot in horizontal layout large screen 1`] = `
 "<header class="flex p-12 shadow h-56 w-full">
   <div class="mr-32">
