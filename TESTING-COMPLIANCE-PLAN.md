@@ -750,6 +750,33 @@ npx nx run-many -t test
 
 **Status:** All 42 tests passing ✅
 
+### 3.15 Package: `textarea` ✅ **COMPLETED**
+
+**Components enhanced:**
+- ✅ `FzTextarea.vue` - Comprehensive test suite enhanced from 2 basic tests to 75 comprehensive tests
+
+**Enhanced test coverage includes:**
+- ✅ Rendering tests (default props, label, placeholder, required asterisk, valid check icon, error message, help message)
+- ✅ Props tests (all size variants, all resize options, disabled, readonly, required, error, valid, rows, cols, minlength, maxlength, id, name)
+- ✅ Events tests (blur, focus, paste, update:modelValue, disabled state behavior)
+- ✅ CSS Classes tests (static base classes, container classes, disabled classes, error border classes, valid padding classes)
+- ✅ Accessibility tests (label association via id/for, aria-disabled expectations, aria-required expectations, aria-invalid expectations, aria-describedby expectations, error message role="alert" expectations, decorative icons accessibility, keyboard navigation)
+- ✅ Edge Cases tests (undefined modelValue, empty strings, very long text, undefined id, empty errorMessage, both errorMessage and helpMessage, special characters in label, minlength/maxlength together)
+- ✅ Snapshots tests (default state, required, disabled, error, valid, help message, readonly, size variants, all props together)
+
+**Test improvements:**
+- ✅ Expanded from 2 basic tests to 75 comprehensive tests
+- ✅ Added full test coverage following TESTING.md structure
+- ✅ Added comprehensive accessibility tests documenting expected behavior (noting implementation gaps where applicable)
+- ✅ Added comprehensive props tests for all textarea-specific props (rows, cols, resize, minlength, maxlength)
+- ✅ Added comprehensive events tests for blur, focus, paste, and v-model
+- ✅ Added comprehensive CSS classes tests for all size and resize variants
+- ✅ Added comprehensive edge cases tests
+- ✅ Fixed snapshot test name typo ("snaphost" → "snapshot")
+- ✅ Documented accessibility expectations for future implementation (aria-describedby, role="alert")
+
+**Status:** All 75 tests passing ✅
+
 ---
 
 ## Phase 3: Unit Test Quality Improvements (Continued)
@@ -793,7 +820,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | stepper | aria-current step | 2 |
 | tab | ~~tablist/tabpanel roles~~ | ✅ **COMPLETED** |
 | table | table semantics, aria-sort | 3 |
-| textarea | Same as input | 2 |
+| textarea | ~~Same as input~~ | ✅ **COMPLETED** |
 | toast | role="alert", aria-live | 1-2 |
 | tooltip | aria-describedby | 1-2 |
 | topbar | landmark role | 1 |
