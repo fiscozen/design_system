@@ -673,6 +673,32 @@ npx nx run-many -t test
 
 **Status:** All 41 tests passing ✅
 
+### 3.12 Package: `layout` ✅ **COMPLETED**
+
+**Components enhanced:**
+- ✅ `FzLayout.vue` - Comprehensive test suite enhanced from 3 snapshot-only tests to 48 comprehensive tests
+
+**Enhanced test coverage includes:**
+- ✅ Rendering tests (default props, all layout variants: oneColumn, oneColumnHeader, twoColumns, leftShoulder, rightShoulder, multipleAreas, slot content)
+- ✅ Props tests (layout prop with all variants, isViewport prop with true/false/undefined)
+- ✅ Events tests (presentational component - no events, sidebarToggle function provided to slots)
+- ✅ CSS Classes tests (static base classes, layout-specific grid classes, breakpoint-specific classes, padding classes)
+- ✅ Accessibility tests (semantic HTML structure expectations, landmark roles expectations, ARIA attributes support: aria-label, aria-labelledby, aria-describedby)
+- ✅ Edge Cases tests (empty slots, window resize events, different breakpoint values, sidebar toggle, all layout variants)
+- ✅ Snapshots tests (all layout variants, isViewport false)
+
+**Test improvements:**
+- ✅ Expanded from 3 snapshot-only tests to 48 comprehensive tests
+- ✅ Added full test coverage following TESTING.md structure
+- ✅ Added comprehensive accessibility tests documenting expected behavior (landmark roles for header, main, sidebar, left/right sections)
+- ✅ Added comprehensive props tests for all layout variants
+- ✅ Added comprehensive CSS classes tests for all layout patterns
+- ✅ Added comprehensive edge cases tests including window resize handling and breakpoint calculations
+- ✅ Fixed snapshot test name typo ("snaphost" → "snapshot")
+- ✅ Added proper mocking for window.matchMedia and window.innerWidth for breakpoint testing
+
+**Status:** All 48 tests passing ✅
+
 ---
 
 ## Phase 3: Unit Test Quality Improvements (Continued)
@@ -704,7 +730,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | divider | ~~role="separator"~~ | ✅ **COMPLETED** |
 | dropdown | ~~aria-expanded, aria-haspopup~~ | ✅ **COMPLETED** |
 | input | ✅ Reference implementation | - |
-| layout | landmark roles | 1 |
+| layout | ~~landmark roles~~ | ✅ **COMPLETED** |
 | link | role="link" native | 0.5 |
 | navbar | nav role, aria-label | 1-2 |
 | navlink | aria-current | 1 |

@@ -1,8 +1,10 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzLayout > matches snaphost for oneColumn 1`] = `
-"<div data-v-c8fca887="" class="fz-layout w-dvw h-dvh grid grid-rows-1 grid-cols-1 fz-layout__oneColumn--lg">
-  <div data-v-c8fca887="" class="fz-layout__main p-12 fz-layout__overflow"></div>
+exports[`FzLayout > Snapshots > should match snapshot - isViewport false 1`] = `
+"<div data-v-c8fca887="" class="fz-layout grid grid-rows-1 grid-cols-1 fz-layout__oneColumn--3xl w-full h-full">
+  <div data-v-c8fca887="" class="fz-layout__main p-12 fz-layout__overflow">
+    <div>Content</div>
+  </div>
   <!--v-if-->
   <!--v-if-->
   <!--v-if-->
@@ -10,24 +12,95 @@ exports[`FzLayout > matches snaphost for oneColumn 1`] = `
 </div>"
 `;
 
-exports[`FzLayout > matches snapshot for leftShoulder 1`] = `
-"<div data-v-c8fca887="" class="fz-layout w-dvw h-dvh grid grid-cols-1 lg:grid-cols-[340px_1fr] grid-rows-[100vh_100vh] lg:grid-rows-1 fz-layout__overflow fz-layout__leftShoulder--lg">
+exports[`FzLayout > Snapshots > should match snapshot - leftShoulder layout 1`] = `
+"<div data-v-c8fca887="" class="fz-layout grid grid-cols-1 lg:grid-cols-[340px_1fr] grid-rows-[100vh_100vh] lg:grid-rows-1 fz-layout__overflow fz-layout__leftShoulder--3xl w-full h-full">
   <!--v-if-->
   <!--v-if-->
   <!--v-if-->
-  <div data-v-c8fca887="" class="fz-layout__sidebar p-12"></div>
-  <div data-v-c8fca887="" class="fz-layout__main p-12"></div>
+  <div data-v-c8fca887="" class="fz-layout__sidebar p-12">
+    <div class="bg-blue-50 size-full flex justify-center items-center">side</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__main p-12">
+    <div class="bg-blue-50 size-full flex justify-center items-center">main</div>
+  </div>
   <!--v-if-->
 </div>"
 `;
 
-exports[`FzLayout > matches snapshot for twoColumns  1`] = `
-"<div data-v-c8fca887="" class="fz-layout w-dvw h-dvh grid grid-rows-[56px_100vh_100vh] sm:grid-rows-[56px_1fr_1fr] lg:grid-rows-[56px_1fr] grid-cols-1 lg:grid-cols-2 fz-layout__overflow fz-layout__twoColumns--lg">
+exports[`FzLayout > Snapshots > should match snapshot - multipleAreas layout 1`] = `
+"<div data-v-c8fca887="" class="fz-layout grid grid-cols-1 sm:grid-cols-[64px_1fr] lg:grid-cols-[280px_1fr] grid-rows-[56px_80px_1fr] sm:grid-rows-[56px_1fr] fz-layout__multipleAreas--3xl w-full h-full">
   <!--v-if-->
   <!--v-if-->
-  <div data-v-c8fca887="" class="fz-layout__header p-12"></div>
-  <div data-v-c8fca887="" class="fz-layout__left p-12"></div>
-  <div data-v-c8fca887="" class="fz-layout__right p-12"></div>
+  <!--v-if-->
+  <!--v-if-->
+  <div data-v-c8fca887="" class="fz-layout__header p-12">
+    <div>Header</div>
+  </div>
+  <!--v-if-->
+  <div data-v-c8fca887="" class="fz-layout__sidebar p-12">
+    <div>Sidebar</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__main p-12 fz-layout__overflow">
+    <div>Main</div>
+  </div>
+</div>"
+`;
+
+exports[`FzLayout > Snapshots > should match snapshot - oneColumn layout 1`] = `
+"<div data-v-c8fca887="" class="fz-layout grid grid-rows-1 grid-cols-1 fz-layout__oneColumn--3xl w-full h-full">
+  <div data-v-c8fca887="" class="fz-layout__main p-12 fz-layout__overflow">
+    <div class="w-full h-full bg-red-100">main</div>
+  </div>
+  <!--v-if-->
+  <!--v-if-->
+  <!--v-if-->
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzLayout > Snapshots > should match snapshot - oneColumnHeader layout 1`] = `
+"<div data-v-c8fca887="" class="fz-layout grid grid-rows-[56px_1fr] grid-cols-1 fz-layout__oneColumnHeader--3xl w-full h-full">
+  <!--v-if-->
+  <div data-v-c8fca887="" class="fz-layout__header p-12">
+    <div>Header</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__main p-12 fz-layout__overflow">
+    <div>Main</div>
+  </div>
+  <!--v-if-->
+  <!--v-if-->
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzLayout > Snapshots > should match snapshot - rightShoulder layout 1`] = `
+"<div data-v-c8fca887="" class="fz-layout grid grid-cols-1 lg:grid-cols-[1fr_340px] grid-rows-[100vh_100vh] lg:grid-rows-1 fz-layout__overflow fz-layout__rightShoulder--3xl w-full h-full">
+  <!--v-if-->
+  <!--v-if-->
+  <!--v-if-->
+  <div data-v-c8fca887="" class="fz-layout__sidebar p-12">
+    <div>Sidebar</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__main p-12">
+    <div>Main</div>
+  </div>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzLayout > Snapshots > should match snapshot - twoColumns layout 1`] = `
+"<div data-v-c8fca887="" class="fz-layout grid grid-rows-[56px_100vh_100vh] sm:grid-rows-[56px_1fr_1fr] lg:grid-rows-[56px_1fr] grid-cols-1 lg:grid-cols-2 fz-layout__overflow fz-layout__twoColumns--3xl w-full h-full">
+  <!--v-if-->
+  <!--v-if-->
+  <div data-v-c8fca887="" class="fz-layout__header p-12">
+    <div class="bg-blue-50 size-full flex justify-center items-center">header</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__left p-12">
+    <div class="h-[1000px] bg-blue-50 w-full flex justify-center items-center">left</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__right p-12">
+    <div class="bg-blue-50 size-full flex justify-center items-center">right</div>
+  </div>
   <!--v-if-->
   <!--v-if-->
 </div>"
