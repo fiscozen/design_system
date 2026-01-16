@@ -1,3 +1,14 @@
 {
-  "extends": "@fiscozen/tsconfig"
+  "extends": "@fiscozen/tsconfig",
+  "compilerOptions": {
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue", "env.d.ts", ".storybook/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "storybook-static",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "src/components/TokenDisplay.vue"
+  ]
 }
