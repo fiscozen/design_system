@@ -167,7 +167,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | messages | Toast.stories.ts | ~5 | 🟠 High |
 | messages | ToastQueue.stories.ts | ~3 | 🟠 High |
 | misc | Badge.stories.ts | ~5 | 🟡 Medium |
-| navigation | Action.stories.ts | ~3 | 🟠 High |
+| navigation | ~~Action.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | Actionlist.stories.ts | ~3 | 🟠 High |
 | navigation | Breadcrumbs.stories.ts | ~3 | 🟠 High |
 | navigation | Navbar.stories.ts | ~3 | 🟠 High |
@@ -961,9 +961,9 @@ describe('Edge Cases', () => {
 | data/SimpleTable.stories.ts | Sorting, row selection | 2 |
 | data/Table.stories.ts | Sorting, filtering, pagination | 3 |
 | form/Upload.stories.ts | File selection, drag & drop, remove | 2 |
-| messages/Toast.stories.ts | Dismiss, auto-hide | 1.5 |
+| messages/Toast.stories.ts | ~~Dismiss, auto-hide~~ | ✅ **COMPLETED** |
 | messages/ToastQueue.stories.ts | Queue management | 1.5 |
-| navigation/Action.stories.ts | Click, hover states | 1 |
+| navigation/Action.stories.ts | ~~Click, hover states~~ | ✅ **COMPLETED** |
 | navigation/Actionlist.stories.ts | Navigation, selection | 1.5 |
 | navigation/Breadcrumbs.stories.ts | Click navigation | 1 |
 | navigation/Navbar.stories.ts | Navigation, active state | 1.5 |
@@ -1965,4 +1965,23 @@ Ensure root `package.json` has:
 - All play functions test user interactions, visual states, and accessibility expectations
 - Play functions cover: confirm/cancel actions, keyboard navigation (Enter, Space, Escape), disabled states, footer visibility, accessibility attributes
 - Phase 4 (Storybook Play Functions) progress: 5 of 28 critical priority stories completed
+
+### January 16, 2026 - Action Stories Play Functions ✅
+
+**Package:** `action` (Storybook)
+- Added play functions to Action.stories.ts for critical stories
+- Added play functions for: Default (basic rendering, label/sub-label display, ARIA attributes, click interaction), Disabled (disabled state attributes, blocked interaction), OnlyIcon (icon-only variant rendering, icon presence, click interaction), Link (link rendering, navigation capability, accessibility, click interaction), ExternalLink (external link attributes, target="_blank", aria-label for new window), IconPositionLeft (left icon rendering), KeyboardNavigation (Tab focus, Enter/Space key activation, disabled state blocking)
+- All play functions test user interactions, visual states, and accessibility expectations
+- Play functions cover: click interactions, keyboard navigation (Tab, Enter, Space), disabled states, link navigation, external link attributes, icon variants
+- Updated snapshot tests for FzActionSection to fix unique ID generation
+- Phase 4 (Storybook Play Functions) progress: 6 of 28 critical priority stories completed
+
+### January 16, 2026 - Toast Stories Play Functions ✅
+
+**Package:** `toast` (Storybook)
+- Added play functions to Toast.stories.ts for critical stories
+- Added play functions for: Success (rendering, styling, no close button, icon verification), Warning (rendering, styling, close button presence, icon verification), Error (rendering, styling, close button presence, icon verification), Dismiss (dismiss functionality with close button click), KeyboardNavigation (keyboard accessibility with Tab, Enter, Space key activation), WithShadow (shadow styling verification), WithoutShadow (no shadow styling verification)
+- All play functions test user interactions, visual states, and accessibility expectations
+- Play functions cover: dismiss functionality, keyboard navigation (Tab, Enter, Space), visual states for all toast types, shadow prop behavior
+- Phase 4 (Storybook Play Functions) progress: 7 of 28 critical priority stories completed
 
