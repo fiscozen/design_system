@@ -1,5 +1,76 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`FzSimpleTable > Snapshots > should match snapshot - custom placeholder 1`] = `
+"<table class="w-full text-left rounded overflow-hidden bg-core-white">
+  <thead>
+    <tr class="bg-grey-100">
+      <th class="px-16 h-48 font-medium">User</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="text-center text-grey-500">
+      <td colspan="100%" class="h-80">No records found</td>
+    </tr>
+  </tbody>
+</table>"
+`;
+
+exports[`FzSimpleTable > Snapshots > should match snapshot - custom slot content 1`] = `
+"<table class="w-full text-left rounded overflow-hidden bg-core-white">
+  <thead>
+    <tr class="bg-grey-100">
+      <th class="px-16 h-48 font-medium">User</th>
+      <th class="px-16 h-48 font-medium">Custom</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b-1 border-grey-100">
+      <td class="px-16 h-48 text-grey-500">John Doe</td>
+      <td class="px-16 h-48 text-grey-500">Custom: John Doe</td>
+    </tr>
+    <!--v-if-->
+  </tbody>
+</table>"
+`;
+
+exports[`FzSimpleTable > Snapshots > should match snapshot - default state 1`] = `
+"<table class="w-full text-left rounded overflow-hidden bg-core-white">
+  <thead>
+    <tr class="bg-grey-100">
+      <th class="px-16 h-48 font-medium">User</th>
+      <th class="px-16 h-48 font-medium">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b-1 border-grey-100">
+      <td class="px-16 h-48 text-grey-500">John Doe</td>
+      <td class="px-16 h-48 text-grey-500">12/12/2022</td>
+    </tr>
+    <tr class="border-b-1 border-grey-100">
+      <td class="px-16 h-48 text-grey-500">John Doe1</td>
+      <td class="px-16 h-48 text-grey-500">10/05/2024</td>
+    </tr>
+    <!--v-if-->
+  </tbody>
+</table>"
+`;
+
+exports[`FzSimpleTable > Snapshots > should match snapshot - empty table 1`] = `
+"<table class="w-full text-left rounded overflow-hidden bg-core-white">
+  <thead>
+    <tr class="bg-grey-100">
+      <th class="px-16 h-48 font-medium">User</th>
+      <th class="px-16 h-48 font-medium">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="text-center text-grey-500">
+      <td colspan="100%" class="h-80">No data available</td>
+    </tr>
+  </tbody>
+</table>"
+`;
+
 exports[`FzSimpleTable > matches snaphost 1`] = `
 "<table class="w-full text-left rounded overflow-hidden bg-core-white">
   <thead>

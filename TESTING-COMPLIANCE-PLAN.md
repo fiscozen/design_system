@@ -816,7 +816,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | progress | ~~role="progressbar", aria-valuenow~~ | ✅ **COMPLETED** |
 | radio | aria-checked, radio group | 2-3 |
 | select | ~~Full a11y suite~~ | ✅ **COMPLETED** |
-| simple-table | table semantics | 2 |
+| simple-table | ~~table semantics~~ | ✅ **COMPLETED** |
 | stepper | aria-current step | 2 |
 | tab | ~~tablist/tabpanel roles~~ | ✅ **COMPLETED** |
 | table | table semantics, aria-sort | 3 |
@@ -1675,6 +1675,32 @@ Ensure root `package.json` has:
 - ✅ Documented accessibility expectations for future implementation (role="alert", aria-live)
 
 **Status:** All 39 tests passing ✅
+
+### 3.18 Package: `simple-table` ✅ **COMPLETED**
+
+**Components enhanced:**
+- ✅ `FzSimpleTable.vue` - Comprehensive test suite enhanced from 2 snapshot-only tests to 44 comprehensive tests
+
+**Enhanced test coverage includes:**
+- ✅ Rendering tests (default props, table headers, table rows, placeholder, custom slot content)
+- ✅ Props tests (value prop with various data, placeholder prop, FzColumn props: width, header)
+- ✅ Events tests (presentational component - no events)
+- ✅ CSS Classes tests (static base classes on table, header row, header cells, data rows, data cells, empty state)
+- ✅ Accessibility tests (semantic HTML structure with table/thead/tbody/tr/th/td elements, table header scope attribute expectations, empty state accessibility with colspan, table identification expectations, screen reader support)
+- ✅ Edge Cases tests (empty columns array, columns without field prop, missing field values, very long header/cell content, special characters, many columns/rows)
+- ✅ Snapshots tests (default state, empty table, custom placeholder, custom slot content)
+
+**Test improvements:**
+- ✅ Expanded from 2 snapshot-only tests to 44 comprehensive tests
+- ✅ Added full test coverage following TESTING.md structure
+- ✅ Added comprehensive accessibility tests for table semantics (table, thead, tbody, tr, th, td elements)
+- ✅ Added table header scope attribute expectations (documenting expected behavior for future implementation)
+- ✅ Added comprehensive props tests for value and placeholder props
+- ✅ Added comprehensive CSS classes tests for all table elements
+- ✅ Added comprehensive edge cases tests for various data scenarios
+- ✅ Fixed snapshot test name typos ("snaphost" → "snapshot")
+
+**Status:** All 44 tests passing ✅
 
 ---
 
