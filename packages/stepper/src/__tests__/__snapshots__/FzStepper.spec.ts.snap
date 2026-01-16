@@ -1,0 +1,238 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzStepper > Snapshots > should match snapshot - activeStep 2 1`] = `
+"<div data-v-6183ce6d="" class="fz-stepper flex flex-row w-full gap-16">
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer">
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-grey-200"></div>
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
+          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-grey-100 text-core-black rounded-full !px-0">1</div>
+        </div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Step 1</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">First step description</div>
+      </div>
+    </div>
+  </div>
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer">
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-grey-500"></div>
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="flex items-center justify-center w-[25px] h-[25px] text-grey-500"><svg class="svg-inline--fa fa-circle-check fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path class="" fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path>
+          </svg></div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Step 2</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">Second step description</div>
+      </div>
+    </div>
+  </div>
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer">
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-blue-500"></div>
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
+          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-blue-500 text-core-white rounded-full !px-0">3</div>
+        </div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Step 3</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">Third step description</div>
+      </div>
+    </div>
+  </div>
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer opacity-[.2] !cursor-not-allowed">
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-grey-200"></div>
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
+          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-grey-100 text-core-black rounded-full !px-0">4</div>
+        </div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Step 4</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">Fourth step description</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--v-if-->"
+`;
+
+exports[`FzStepper > Snapshots > should match snapshot - default state 1`] = `
+"<div data-v-6183ce6d="" class="fz-stepper flex flex-row w-full gap-16">
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer">
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-blue-500"></div>
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
+          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-blue-500 text-core-white rounded-full !px-0">1</div>
+        </div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Step 1</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">First step description</div>
+      </div>
+    </div>
+  </div>
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer">
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-grey-500"></div>
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="flex items-center justify-center w-[25px] h-[25px] text-grey-500"><svg class="svg-inline--fa fa-circle-check fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path class="" fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path>
+          </svg></div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Step 2</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">Second step description</div>
+      </div>
+    </div>
+  </div>
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer">
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-semantic-error"></div>
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-error"><svg class="svg-inline--fa fa-circle-exclamation fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-exclamation" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path class="" fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24l0 112c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-112c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"></path>
+          </svg></div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Step 3</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">Third step description</div>
+      </div>
+    </div>
+  </div>
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer opacity-[.2] !cursor-not-allowed">
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-grey-200"></div>
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
+          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-grey-100 text-core-black rounded-full !px-0">4</div>
+        </div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Step 4</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">Fourth step description</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--v-if-->"
+`;
+
+exports[`FzStepper > Snapshots > should match snapshot - single step 1`] = `
+"<div data-v-6183ce6d="" class="fz-stepper flex flex-row w-full gap-16">
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer">
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-blue-500"></div>
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
+          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-blue-500 text-core-white rounded-full !px-0">1</div>
+        </div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Only Step</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">Single step description</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--v-if-->"
+`;
+
+exports[`FzStepper > Snapshots > should match snapshot - with disableProgressBar 1`] = `
+"<div data-v-6183ce6d="" class="fz-stepper flex flex-row w-full gap-16">
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer">
+    <!--v-if-->
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
+          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-blue-500 text-core-white rounded-full !px-0">1</div>
+        </div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Step 1</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">First step description</div>
+      </div>
+    </div>
+  </div>
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer">
+    <!--v-if-->
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="flex items-center justify-center w-[25px] h-[25px] text-grey-500"><svg class="svg-inline--fa fa-circle-check fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path class="" fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path>
+          </svg></div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Step 2</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">Second step description</div>
+      </div>
+    </div>
+  </div>
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer">
+    <!--v-if-->
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="flex items-center justify-center w-[25px] h-[25px] text-semantic-error"><svg class="svg-inline--fa fa-circle-exclamation fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-exclamation" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path class="" fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24l0 112c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-112c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"></path>
+          </svg></div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Step 3</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">Third step description</div>
+      </div>
+    </div>
+  </div>
+  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col grow cursor-pointer opacity-[.2] !cursor-not-allowed">
+    <!--v-if-->
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+      <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+        <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
+          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-grey-100 text-core-black rounded-full !px-0">4</div>
+        </div>
+      </div>
+      <div data-v-6183ce6d="" class="flex-col">
+        <div data-v-6183ce6d="" class="fz-stepper__title text-core-black font-medium">Step 4</div>
+        <div data-v-6183ce6d="" class="fz-stepper__description mt-4 text-grey-500 text-sm">Fourth step description</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--v-if-->"
+`;
+
+exports[`FzStepper > Snapshots > should match snapshot - with forceMobile 1`] = `
+"<!--v-if-->
+<div data-v-6183ce6d="" class="fz-stepper flex flex-col w-full gap-8">
+  <div data-v-6183ce6d="" class="flex flex-row gap-8">
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-blue-500"></div>
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-grey-500"></div>
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-semantic-error"></div>
+    <div data-v-6183ce6d="" class="fz-stepper__progress h-4 rounded-5 w-full mb-8 bg-grey-200"></div>
+  </div>
+  <div data-v-6183ce6d="" class="flex flex-row gap-8 items-center">
+    <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
+      <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-blue-500 text-core-white rounded-full !px-0">1</div>
+    </div>
+    <div data-v-6183ce6d="" class="fz-stepper__dropdown grow flex">
+      <div class="inline-flex w-full sm:w-auto">
+        <div data-v-6183ce6d="" class="flex flex-col grow cursor-pointer">
+          <div data-v-6183ce6d="" class="flex flex-row size-full justify-between items-center cursor-pointer"><span data-v-6183ce6d="" class="font-medium text-core-black grow">Step 1</span>
+            <div data-v-6183ce6d="" class="flex items-center justify-center w-[25px] h-[25px] ml-4 cursor-pointer"><svg class="svg-inline--fa fa-angle-down fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path>
+              </svg></div>
+          </div><span data-v-6183ce6d="" class="text-sm">First step description</span>
+        </div>
+      </div>
+      <!--v-if-->
+      <!--teleport start-->
+      <!--teleport end-->
+    </div>
+  </div>
+</div>"
+`;
