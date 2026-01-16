@@ -93,7 +93,7 @@ This document outlines a comprehensive plan to bring the Fiscozen Design System 
 | `card` | ~~1~~ | ~~Rename `FzCard.test.ts` + fix folder name~~ ✅ **COMPLETED** |
 | `checkbox` | ~~2~~ | ~~Rename `FzCheckbox.test.ts`, `FzCheckboxGroup.test.ts` + fix folder~~ ✅ **COMPLETED** |
 | `dialog` | 1 | Rename `FzDialog.test.ts` + fix folder name |
-| `input` | 2 | Rename `FzInput.test.ts`, `FzCurrencyInput.test.ts` ✅ Good quality |
+| `input` | ~~2~~ | ~~Rename `FzInput.test.ts`, `FzCurrencyInput.test.ts`~~ ✅ **COMPLETED** |
 | `link` | 1 | Rename `FzLink.test.ts` |
 | `progress` | 2 | Rename `FzProgress.test.ts`, `FzProgressBar.test.ts` |
 | `radio` | 3 | Rename all + fix folder name (`__test__` → `__tests__`) |
@@ -281,8 +281,8 @@ mv packages/tab/src/__test__ packages/tab/src/__tests__
 | checkbox | `FzCheckbox.test.ts` | `FzCheckbox.spec.ts` |
 | checkbox | `FzCheckboxGroup.test.ts` | `FzCheckboxGroup.spec.ts` |
 | dialog | ~~`FzDialog.test.ts`~~ | ~~`FzDialog.spec.ts`~~ ✅ **COMPLETED** |
-| input | `FzInput.test.ts` | `FzInput.spec.ts` |
-| input | `FzCurrencyInput.test.ts` | `FzCurrencyInput.spec.ts` |
+| input | ~~`FzInput.test.ts`~~ | ~~`FzInput.spec.ts`~~ ✅ **COMPLETED** |
+| input | ~~`FzCurrencyInput.test.ts`~~ | ~~`FzCurrencyInput.spec.ts`~~ ✅ **COMPLETED** |
 | link | `FzLink.test.ts` | `FzLink.spec.ts` |
 | progress | `FzProgress.test.ts` | `FzProgress.spec.ts` |
 | progress | `FzProgressBar.test.ts` | `FzProgressBar.spec.ts` |
@@ -1207,15 +1207,18 @@ Ensure root `package.json` has:
 
 ---
 
-### Package: input ✅ Excellent Reference
+### Package: input ✅ **COMPLETED**
 
 **Current State:**
-- `FzInput.test.ts` - ✅ Best a11y tests in repo
-- `FzCurrencyInput.test.ts` - ✅ Good
+- ✅ `FzInput.spec.ts` - ✅ Best a11y tests in repo
+- ✅ `FzCurrencyInput.spec.ts` - ✅ Good
 
-**Actions:**
-1. Rename test files to `.spec.ts`
-2. Use as template for other packages
+**Completed:**
+1. ✅ Renamed `FzInput.test.ts` to `FzInput.spec.ts`
+2. ✅ Renamed `FzCurrencyInput.test.ts` to `FzCurrencyInput.spec.ts`
+3. ✅ All 111 tests passing (53 for FzInput, 58 for FzCurrencyInput)
+
+**Status:** All tests passing ✅
 
 ---
 
