@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzDialog > Snapshots > should match snapshot - drawer 1`] = `"<!--v-if-->"`;
+
+exports[`FzDialog > Snapshots > should match snapshot - lg 1`] = `"<!--v-if-->"`;
+
+exports[`FzDialog > Snapshots > should match snapshot - md - xs screen 1`] = `"<!--v-if-->"`;
+
+exports[`FzDialog > Snapshots > should match snapshot - md 1`] = `"<!--v-if-->"`;
+
+exports[`FzDialog > Snapshots > should match snapshot - sm 1`] = `"<!--v-if-->"`;
+
+exports[`FzDialog > Snapshots > should match snapshot - xl 1`] = `"<!--v-if-->"`;
