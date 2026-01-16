@@ -1,0 +1,174 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzRadioGroup > Rendering > should render correctly 1`] = `
+"<div class="flex flex-col text-base gap-10"><label id="fz-radio-group-168554789815-08dsi-label" for="radio" class="flex flex-col text-base gap-6 text-core-black"><span>Radio Group<!--v-if--></span>
+    <!--v-if-->
+  </label>
+  <div id="fz-radio-group-168554789815-08dsi" class="flex self-stretch flex-col text-base gap-8" test-id="slot-container" role="radiogroup" aria-labelledby="fz-radio-group-168554789815-08dsi-label" aria-required="false" aria-invalid="false">
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-Radio 1" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789817-rl8nw-label" value="Radio 1"><label data-v-029ccdb9="" id="fz-radio-168554789817-rl8nw-label" for="radio-Radio 1" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio 1</span>
+        <!--v-if-->
+      </label></div>
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-Radio 2" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789818-1ecgr-label" value="Radio 2"><label data-v-029ccdb9="" id="fz-radio-168554789818-1ecgr-label" for="radio-Radio 2" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio 2</span>
+        <!--v-if-->
+      </label></div>
+  </div>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzRadioGroup > Snapshots > should match snapshot - default state 1`] = `
+"<div class="flex flex-col text-base gap-10"><label id="fz-radio-group-168554789902-mg7sx-label" for="radio" class="flex flex-col text-base gap-6 text-core-black"><span>Radio Group<!--v-if--></span>
+    <!--v-if-->
+  </label>
+  <div id="fz-radio-group-168554789902-mg7sx" class="flex self-stretch flex-col text-base gap-8" test-id="slot-container" role="radiogroup" aria-labelledby="fz-radio-group-168554789902-mg7sx-label" aria-required="false" aria-invalid="false">
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-Radio 1" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789902-gyn0t-label" value="Radio 1"><label data-v-029ccdb9="" id="fz-radio-168554789902-gyn0t-label" for="radio-Radio 1" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio 1</span>
+        <!--v-if-->
+      </label></div>
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-Radio 2" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789902-ark2v-label" value="Radio 2"><label data-v-029ccdb9="" id="fz-radio-168554789902-ark2v-label" for="radio-Radio 2" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio 2</span>
+        <!--v-if-->
+      </label></div>
+  </div>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzRadioGroup > Snapshots > should match snapshot - disabled state 1`] = `
+"<div class="flex flex-col text-base gap-10"><label id="fz-radio-group-168554789905-nd3hu-label" for="radio-group-7q8j0j2" class="flex flex-col text-base gap-6 text-grey-400"><span>Radio Group<!--v-if--></span>
+    <!--v-if-->
+  </label>
+  <div id="fz-radio-group-168554789905-nd3hu" class="flex self-stretch flex-col text-base gap-8" test-id="slot-container" role="radiogroup" aria-labelledby="fz-radio-group-168554789905-nd3hu-label" aria-required="false" aria-invalid="false">
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-group-7q8j0j2-Radio 1" disabled="" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio-group-7q8j0j2" aria-checked="false" aria-disabled="true" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789905-1f6vu-label" value="Radio 1"><label data-v-029ccdb9="" id="fz-radio-168554789905-1f6vu-label" for="radio-group-7q8j0j2-Radio 1" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] text-grey-300 before:border-grey-200 before:bg-grey-200 peer-checked:before:bg-transparent"><span data-v-029ccdb9="" class="w-fit">Radio 1</span>
+        <!--v-if-->
+      </label></div>
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-group-7q8j0j2-Radio 2" disabled="" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio-group-7q8j0j2" aria-checked="false" aria-disabled="true" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789906-d9ddz-label" value="Radio 2"><label data-v-029ccdb9="" id="fz-radio-168554789906-d9ddz-label" for="radio-group-7q8j0j2-Radio 2" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] text-grey-300 before:border-grey-200 before:bg-grey-200 peer-checked:before:bg-transparent"><span data-v-029ccdb9="" class="w-fit">Radio 2</span>
+        <!--v-if-->
+      </label></div>
+  </div>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzRadioGroup > Snapshots > should match snapshot - emphasis state 1`] = `
+"<div class="flex flex-col text-base gap-10"><label id="fz-radio-group-168554789907-aabfc-label" for="radio-group-7q8j0j2" class="flex flex-col text-base gap-6 text-core-black"><span>Radio Group<!--v-if--></span>
+    <!--v-if-->
+  </label>
+  <div id="fz-radio-group-168554789907-aabfc" class="flex self-stretch flex-col text-base gap-8" test-id="slot-container" role="radiogroup" aria-labelledby="fz-radio-group-168554789907-aabfc-label" aria-required="false" aria-invalid="false">
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-group-7q8j0j2-Radio 1" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio-group-7q8j0j2" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789907-oi7p4-label" value="Radio 1"><label data-v-029ccdb9="" id="fz-radio-168554789907-oi7p4-label" for="radio-group-7q8j0j2-Radio 1" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500 peer-checked:before:border-blue-500"><span data-v-029ccdb9="" class="w-fit">Radio 1</span>
+        <!--v-if-->
+      </label></div>
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-group-7q8j0j2-Radio 2" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio-group-7q8j0j2" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789907-44i3g-label" value="Radio 2"><label data-v-029ccdb9="" id="fz-radio-168554789907-44i3g-label" for="radio-group-7q8j0j2-Radio 2" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500 peer-checked:before:border-blue-500"><span data-v-029ccdb9="" class="w-fit">Radio 2</span>
+        <!--v-if-->
+      </label></div>
+  </div>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzRadioGroup > Snapshots > should match snapshot - error state 1`] = `
+"<div class="flex flex-col text-base gap-10"><label id="fz-radio-group-168554789903-f00oc-label" for="radio-group-7q8j0j2" class="flex flex-col text-base gap-6 text-core-black"><span>Radio Group<!--v-if--></span>
+    <!--v-if-->
+  </label>
+  <div id="fz-radio-group-168554789903-f00oc" class="flex self-stretch flex-col text-base gap-8" test-id="slot-container" role="radiogroup" aria-labelledby="fz-radio-group-168554789903-f00oc-label" aria-describedby="fz-radio-group-168554789903-f00oc-error" aria-required="false" aria-invalid="true">
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-group-7q8j0j2-Radio 1" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio-group-7q8j0j2" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="true" aria-labelledby="fz-radio-168554789903-v7eop-label" value="Radio 1"><label data-v-029ccdb9="" id="fz-radio-168554789903-v7eop-label" for="radio-group-7q8j0j2-Radio 1" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-semantic-error text-semantic-error"><span data-v-029ccdb9="" class="w-fit">Radio 1</span>
+        <!--v-if-->
+      </label></div>
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-group-7q8j0j2-Radio 2" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio-group-7q8j0j2" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="true" aria-labelledby="fz-radio-168554789903-iu9o3-label" value="Radio 2"><label data-v-029ccdb9="" id="fz-radio-168554789903-iu9o3-label" for="radio-group-7q8j0j2-Radio 2" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-semantic-error text-semantic-error"><span data-v-029ccdb9="" class="w-fit">Radio 2</span>
+        <!--v-if-->
+      </label></div>
+  </div>
+  <!-- 
+    Error message display with ARIA live region
+    Announces validation errors immediately to screen readers
+    - role="alert": High-priority message
+    - aria-live="assertive": Interrupts current announcements
+    - aria-atomic="true": Reads complete message
+    
+    @TODO: When FzAlert supports automatic ARIA handling based on \`type\` 
+    (e.g., via an \`announce\` prop or similar semantic API), we can remove 
+    these manual attributes.
+    
+    Proposed future API:
+      FzAlert with type="error" and announce prop
+      would automatically get role="alert" and aria-live="assertive"
+  -->
+  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between" id="fz-radio-group-168554789903-f00oc-error" type="error" role="alert" aria-live="assertive" aria-atomic="true">
+    <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-start layout-default flex-1 p-12">
+      <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px]">
+        <!---->
+      </div>
+      <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
+        <!--v-if-->
+        <p data-v-9bf2fc2e="" class="font-normal !leading-[20px] mb-16">Error text</p>
+        <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default"><button data-v-9bf2fc2e="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200">
+            <!--v-if-->
+            <div class="truncate font-normal !text-[16px] !leading-[20px]"></div>
+            <!--v-if-->
+          </button>
+          <!--v-if-->
+        </div>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+</div>"
+`;
+
+exports[`FzRadioGroup > Snapshots > should match snapshot - horizontal variant 1`] = `
+"<div class="flex flex-col text-base gap-10"><label id="fz-radio-group-168554789906-t3d4a-label" for="radio-group-7q8j0j2" class="flex flex-col text-base gap-6 text-core-black"><span>Radio Group<!--v-if--></span>
+    <!--v-if-->
+  </label>
+  <div id="fz-radio-group-168554789906-t3d4a" class="flex self-stretch flex-row text-base gap-8" test-id="slot-container" role="radiogroup" aria-labelledby="fz-radio-group-168554789906-t3d4a-label" aria-required="false" aria-invalid="false">
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-group-7q8j0j2-Radio 1" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio-group-7q8j0j2" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789906-534ct-label" value="Radio 1"><label data-v-029ccdb9="" id="fz-radio-168554789906-534ct-label" for="radio-group-7q8j0j2-Radio 1" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio 1</span>
+        <!--v-if-->
+      </label></div>
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-group-7q8j0j2-Radio 2" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio-group-7q8j0j2" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789906-6ob68-label" value="Radio 2"><label data-v-029ccdb9="" id="fz-radio-168554789906-6ob68-label" for="radio-group-7q8j0j2-Radio 2" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio 2</span>
+        <!--v-if-->
+      </label></div>
+  </div>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzRadioGroup > Snapshots > should match snapshot - required state 1`] = `
+"<div class="flex flex-col text-base gap-10"><label id="fz-radio-group-168554789908-d780m-label" for="radio-group-7q8j0j2" class="flex flex-col text-base gap-6 text-core-black"><span>Radio Group<span> *</span></span>
+    <!--v-if-->
+  </label>
+  <div id="fz-radio-group-168554789908-d780m" class="flex self-stretch flex-col text-base gap-8" test-id="slot-container" role="radiogroup" aria-labelledby="fz-radio-group-168554789908-d780m-label" aria-required="true" aria-invalid="false">
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-group-7q8j0j2-Radio 1" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio-group-7q8j0j2" required="" aria-checked="false" aria-disabled="false" aria-required="true" aria-invalid="false" aria-labelledby="fz-radio-168554789908-kqez0-label" value="Radio 1"><label data-v-029ccdb9="" id="fz-radio-168554789908-kqez0-label" for="radio-group-7q8j0j2-Radio 1" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio 1</span>
+        <!--v-if-->
+      </label></div>
+    <div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="radio-group-7q8j0j2-Radio 2" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" name="radio-group-7q8j0j2" required="" aria-checked="false" aria-disabled="false" aria-required="true" aria-invalid="false" aria-labelledby="fz-radio-168554789908-fnok2-label" value="Radio 2"><label data-v-029ccdb9="" id="fz-radio-168554789908-fnok2-label" for="radio-group-7q8j0j2-Radio 2" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio 2</span>
+        <!--v-if-->
+      </label></div>
+  </div>
+  <!--v-if-->
+</div>"
+`;

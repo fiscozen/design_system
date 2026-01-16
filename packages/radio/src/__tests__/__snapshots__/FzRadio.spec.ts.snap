@@ -1,0 +1,63 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzRadio > Snapshots > should match snapshot - checked state 1`] = `
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" checked="" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789884-lxyuc-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-168554789884-lxyuc-label" for="Radio" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio</span>
+    <!--v-if-->
+  </label></div>"
+`;
+
+exports[`FzRadio > Snapshots > should match snapshot - default state 1`] = `
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789879-svp7n-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-168554789879-svp7n-label" for="Radio" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio</span>
+    <!--v-if-->
+  </label></div>"
+`;
+
+exports[`FzRadio > Snapshots > should match snapshot - disabled state 1`] = `
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" disabled="" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="true" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789885-pxoar-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-168554789885-pxoar-label" for="Radio" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] text-grey-300 before:border-grey-200 before:bg-grey-200 peer-checked:before:bg-transparent"><span data-v-029ccdb9="" class="w-fit">Radio</span>
+    <!--v-if-->
+  </label></div>"
+`;
+
+exports[`FzRadio > Snapshots > should match snapshot - emphasis state 1`] = `
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789886-wy0zi-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-168554789886-wy0zi-label" for="Radio" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500 peer-checked:before:border-blue-500"><span data-v-029ccdb9="" class="w-fit">Radio</span>
+    <!--v-if-->
+  </label></div>"
+`;
+
+exports[`FzRadio > Snapshots > should match snapshot - error state 1`] = `
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="true" aria-labelledby="fz-radio-168554789886-02d2v-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-168554789886-02d2v-label" for="Radio" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-semantic-error text-semantic-error"><span data-v-029ccdb9="" class="w-fit">Radio</span>
+    <!--v-if-->
+  </label></div>"
+`;
+
+exports[`FzRadio > Snapshots > should match snapshot - standalone state 1`] = `
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-label="Radio" value="Radio"><label data-v-029ccdb9="" for="Radio" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500">
+    <!--v-if-->
+    <!--v-if-->
+  </label></div>"
+`;
+
+exports[`FzRadio > Snapshots > should match snapshot - with tooltip 1`] = `
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168554789888-a9vtm-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-168554789888-a9vtm-label" for="Radio" class="flex items-start gap-4 
+  text-core-black
+  fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio</span>
+    <div data-v-49515ccb="" data-v-029ccdb9="" class="fz__tooltip flex h-max">
+      <div class="inline-flex w-full sm:w-auto"><span data-v-49515ccb="" tabindex="0"><div data-v-029ccdb9="" class="flex items-center justify-center w-[20px] h-[20px] text-semantic-info"><svg class="svg-inline--fa fa-circle-info h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"></path></svg></div></span></div>
+      <!--v-if-->
+      <!--teleport start-->
+      <!--teleport end-->
+    </div>
+  </label></div>"
+`;

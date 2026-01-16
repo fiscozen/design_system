@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzRadioCard > should render correctly 1`] = `
+"<div><input type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input" tabindex="0" value="Radio"><label class="relative flex fz-radio__label block rounded-lg border-solid pt-12 px-12 cursor-pointer w-full border-1 border-grey-300 hover:bg-[#f9faff] peer-focus:outline peer-focus:bg-[#f9faff] peer-focus:outline-blue-200 peer-focus:outline-2 peer-checked:bg-[#f9faff] before:!hidden text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500 peer-checked:before:border-blue-500" for="Radio">
+    <!--v-if-->
+    <div class="flex flex-row w-full justify-between min-w-0">
+      <div class="justify-center flex flex-col w-full grow-0 min-w-0 gap-4">
+        <p class="font-medium break-words !m-0 !leading-[20px]">This is a title</p>
+        <!--v-if-->
+      </div>
+      <!--v-if-->
+    </div>
+  </label></div>"
+`;

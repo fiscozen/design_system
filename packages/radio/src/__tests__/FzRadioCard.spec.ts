@@ -28,13 +28,17 @@ describe("FzRadioCard", () => {
     expect(wrapper.html()).toMatchSnapshot();
   });
 
-  it("should have checked attribute", async () => {
-    const wrapper = await createWrapper({
-      label: "Radio",
-      size: "md",
-      checked: true,
-      title: "This is a title",
+  it("should have checked attribute when modelValue matches value", async () => {
+    const wrapper = mount(FzRadioCard, {
+      props: {
+        label: "Radio",
+        size: "md",
+        value: "option1",
+        modelValue: "option1",
+        title: "This is a title",
+      },
     });
+    await wrapper.vm.$nextTick();
 
     expect(wrapper.find("input").element.checked).toBe(true);
   });
