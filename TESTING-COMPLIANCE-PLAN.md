@@ -89,7 +89,7 @@ This document outlines a comprehensive plan to bring the Fiscozen Design System 
 
 | Package | Test Files | Action Required |
 |---------|-----------|-----------------|
-| `button` | 2 | Rename `FzButtonGroup.test.ts`, `FzIconButton.test.ts` |
+| `button` | ~~2~~ | ~~Rename `FzButtonGroup.test.ts`, `FzIconButton.test.ts`~~ ✅ **COMPLETED** |
 | `card` | ~~1~~ | ~~Rename `FzCard.test.ts` + fix folder name~~ ✅ **COMPLETED** |
 | `checkbox` | ~~2~~ | ~~Rename `FzCheckbox.test.ts`, `FzCheckboxGroup.test.ts` + fix folder~~ ✅ **COMPLETED** |
 | `dialog` | 1 | Rename `FzDialog.test.ts` + fix folder name |
@@ -275,8 +275,8 @@ mv packages/tab/src/__test__ packages/tab/src/__tests__
 
 | Package | Current File | New File |
 |---------|-------------|----------|
-| button | `FzButtonGroup.test.ts` | `FzButtonGroup.spec.ts` |
-| button | `FzIconButton.test.ts` | `FzIconButton.spec.ts` |
+| button | ~~`FzButtonGroup.test.ts`~~ | ~~`FzButtonGroup.spec.ts`~~ ✅ **COMPLETED** |
+| button | ~~`FzIconButton.test.ts`~~ | ~~`FzIconButton.spec.ts`~~ ✅ **COMPLETED** |
 | card | `FzCard.test.ts` | `FzCard.spec.ts` |
 | checkbox | `FzCheckbox.test.ts` | `FzCheckbox.spec.ts` |
 | checkbox | `FzCheckboxGroup.test.ts` | `FzCheckboxGroup.spec.ts` |
@@ -1158,16 +1158,20 @@ Ensure root `package.json` has:
 
 ## Appendix: Detailed Package Audit
 
-### Package: button ✅ Mostly Compliant
+### Package: button ✅ **COMPLETED**
 
 **Current State:**
-- `FzButton.spec.ts` - ✅ Excellent quality
-- `FzButtonGroup.test.ts` - ❌ Wrong extension
-- `FzIconButton.test.ts` - ❌ Wrong extension
+- ✅ `FzButton.spec.ts` - Excellent quality
+- ✅ `FzButtonGroup.spec.ts` - Comprehensive test suite
+- ✅ `FzIconButton.spec.ts` - Comprehensive test suite
+- ✅ `src/__tests__/` folder (correct naming)
+- ✅ Snapshot files renamed
 
-**Actions:**
-1. Rename test files to `.spec.ts`
-2. Update snapshot references
+**Completed:**
+1. ✅ Renamed `FzButtonGroup.test.ts` to `FzButtonGroup.spec.ts`
+2. ✅ Renamed `FzIconButton.test.ts` to `FzIconButton.spec.ts`
+3. ✅ Renamed snapshot file `FzButtonGroup.test.ts.snap` to `FzButtonGroup.spec.ts.snap`
+4. ✅ Updated comment in test file to reflect new filename
 
 ---
 

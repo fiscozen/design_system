@@ -1,4 +1,4 @@
-// FzButtonGroup.test.ts
+// FzButtonGroup.spec.ts
 
 import { mount } from '@vue/test-utils'
 import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest'
