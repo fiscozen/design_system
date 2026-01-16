@@ -91,7 +91,7 @@ This document outlines a comprehensive plan to bring the Fiscozen Design System 
 |---------|-----------|-----------------|
 | `button` | 2 | Rename `FzButtonGroup.test.ts`, `FzIconButton.test.ts` |
 | `card` | ~~1~~ | ~~Rename `FzCard.test.ts` + fix folder name~~ ✅ **COMPLETED** |
-| `checkbox` | 2 | Rename `FzCheckbox.test.ts`, `FzCheckboxGroup.test.ts` + fix folder |
+| `checkbox` | ~~2~~ | ~~Rename `FzCheckbox.test.ts`, `FzCheckboxGroup.test.ts` + fix folder~~ ✅ **COMPLETED** |
 | `dialog` | 1 | Rename `FzDialog.test.ts` + fix folder name |
 | `input` | 2 | Rename `FzInput.test.ts`, `FzCurrencyInput.test.ts` ✅ Good quality |
 | `link` | 1 | Rename `FzLink.test.ts` |
@@ -117,7 +117,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | Package | Current | Required |
 |---------|---------|----------|
 | `card` | ~~`src/__test__/`~~ | ~~`src/__tests__/`~~ ✅ **COMPLETED** |
-| `checkbox` | `src/__test__/` | `src/__tests__/` |
+| `checkbox` | ~~`src/__test__/`~~ | ~~`src/__tests__/`~~ ✅ **COMPLETED** |
 | `dialog` | `src/__test__/` | `src/__tests__/` |
 | `radio` | `src/__test__/` | `src/__tests__/` |
 | `tab` | `src/__test__/` | `src/__tests__/` |
@@ -648,7 +648,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | breadcrumbs | ~~aria-current, nav role~~ | ✅ **COMPLETED** |
 | button | ✅ Already good | - |
 | card | ~~semantic HTML, role="article"~~ | ✅ **COMPLETED** |
-| checkbox | aria-checked, aria-labelledby | 2-3 |
+| checkbox | ~~aria-checked, aria-labelledby~~ | ✅ **COMPLETED** |
 | collapse | ~~aria-expanded, aria-controls~~ | ✅ **COMPLETED** |
 | container | ~~landmark role~~ | ✅ **COMPLETED** |
 | datepicker | ~~Full a11y suite~~ | ✅ **COMPLETED** |
@@ -1167,18 +1167,35 @@ Ensure root `package.json` has:
 
 ---
 
-### Package: checkbox ❌ Needs Work
+### Package: checkbox ✅ **COMPLETED**
 
 **Current State:**
-- `__test__` folder (wrong)
-- `.test.ts` files (wrong)
-- Missing comprehensive a11y tests
+- ✅ `FzCheckbox.spec.ts` - Comprehensive test suite with 49 tests
+- ✅ `FzCheckboxGroup.spec.ts` - Comprehensive test suite with 39 tests
+- ✅ `src/__tests__/` folder (correct naming)
+- ✅ Enhanced accessibility tests
 
-**Actions:**
-1. Rename folder to `__tests__`
-2. Rename files to `.spec.ts`
-3. Add aria-checked, aria-labelledby tests
-4. Add keyboard navigation tests
+**Completed:**
+1. ✅ Renamed folder from `__test__` to `__tests__`
+2. ✅ Renamed files from `.test.ts` to `.spec.ts`
+3. ✅ Enhanced test coverage following TESTING.md structure
+4. ✅ Added comprehensive accessibility tests (aria-checked, aria-labelledby, aria-describedby, aria-invalid, aria-required, keyboard navigation, decorative elements)
+5. ✅ Added comprehensive props tests (all variants, disabled, error, emphasis, required, standalone, indeterminate)
+6. ✅ Added comprehensive events tests
+7. ✅ Added comprehensive CSS classes tests
+8. ✅ Added comprehensive edge cases tests
+9. ✅ Added snapshot tests for all key states
+
+**Test coverage includes:**
+- ✅ Rendering tests (default props, labels, slots, icons)
+- ✅ Props tests (modelValue, disabled, emphasis, indeterminate, required, standalone, error)
+- ✅ Events tests (change event, update:modelValue, disabled blocking)
+- ✅ Accessibility tests (ARIA attributes, keyboard navigation, decorative elements)
+- ✅ CSS Classes tests (static base classes, state-specific classes)
+- ✅ Edge Cases tests (undefined/null modelValue, unique ID generation, value fallback)
+- ✅ Snapshots tests (default state, checked, disabled, error, indeterminate, standalone, emphasis, required)
+
+**Status:** All 88 tests passing ✅
 
 ---
 

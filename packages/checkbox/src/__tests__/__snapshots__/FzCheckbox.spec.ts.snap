@@ -1,0 +1,427 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzCheckbox > Snapshots > should match snapshot - checked state 1`] = `
+"<!-- Root container: vertical layout with consistent spacing -->
+<div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+  <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
+  <!-- Hover effects are handled in CSS using data attributes -->
+  <div data-v-79ecb611="" class="flex items-start group">
+    <!-- 
+        Native checkbox input (visually hidden but functionally present)
+        - Maintains native keyboard navigation and form behavior
+        - Screen readers can interact with it normally
+        - Styled via adjacent label and icon using Tailwind's "peer" selector
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355209-ju02x" class="w-0 h-0 peer fz-hidden-input" aria-checked="true" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168549355209-ju02x-label" value="test">
+    <!-- 
+        Label element: provides click target and visual representation
+        Connected to hidden input via "for" attribute
+      --><label data-v-79ecb611="" id="fz-checkbox-168549355209-ju02x-label" for="fz-checkbox-168549355209-ju02x" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+  peer-focus:[&amp;_div]:after:border-1
+  peer-focus:[&amp;_div]:after:border-solid
+  peer-focus:[&amp;_div]:after:rounded-[2px]
+  peer-focus:[&amp;_div]:after:border-blue-200
+  peer-focus:[&amp;_div]:after:content-['']
+  peer-focus:[&amp;_div]:after:top-0
+  peer-focus:[&amp;_div]:after:left-0
+  peer-focus:[&amp;_div]:after:right-0
+  peer-focus:[&amp;_div]:after:bottom-0
+  peer-focus:[&amp;_div]:after:absolute text-base text-core-black peer-checked:[&amp;_div]:text-grey-500 peer-indeterminate:[&amp;_div]:text-grey-500">
+      <!-- 
+          Visual checkbox icon (replaces hidden native checkbox)
+          aria-hidden because it's purely decorative - the native input conveys state
+          @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
+        -->
+      <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square-check h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="square-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <path class="" fill="currentColor" d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path>
+        </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Test Checkbox
+    </label>
+    <!-- 
+        Optional tooltip for additional context
+        @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation
+      -->
+    <!--v-if-->
+  </div><!-- Error message display with accessible ARIA live region -->
+  <!--v-if-->
+  <!-- 
+      Children slot for nested checkboxes
+      Used by FzCheckboxGroupOption to render child checkboxes
+    -->
+</div>"
+`;
+
+exports[`FzCheckbox > Snapshots > should match snapshot - default state 1`] = `
+"<!-- Root container: vertical layout with consistent spacing -->
+<div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+  <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
+  <!-- Hover effects are handled in CSS using data attributes -->
+  <div data-v-79ecb611="" class="flex items-start group">
+    <!-- 
+        Native checkbox input (visually hidden but functionally present)
+        - Maintains native keyboard navigation and form behavior
+        - Screen readers can interact with it normally
+        - Styled via adjacent label and icon using Tailwind's "peer" selector
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355205-ypw6u" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168549355205-ypw6u-label" value="test">
+    <!-- 
+        Label element: provides click target and visual representation
+        Connected to hidden input via "for" attribute
+      --><label data-v-79ecb611="" id="fz-checkbox-168549355205-ypw6u-label" for="fz-checkbox-168549355205-ypw6u" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+  peer-focus:[&amp;_div]:after:border-1
+  peer-focus:[&amp;_div]:after:border-solid
+  peer-focus:[&amp;_div]:after:rounded-[2px]
+  peer-focus:[&amp;_div]:after:border-blue-200
+  peer-focus:[&amp;_div]:after:content-['']
+  peer-focus:[&amp;_div]:after:top-0
+  peer-focus:[&amp;_div]:after:left-0
+  peer-focus:[&amp;_div]:after:right-0
+  peer-focus:[&amp;_div]:after:bottom-0
+  peer-focus:[&amp;_div]:after:absolute text-base text-core-black peer-checked:[&amp;_div]:text-grey-500 peer-indeterminate:[&amp;_div]:text-grey-500">
+      <!-- 
+          Visual checkbox icon (replaces hidden native checkbox)
+          aria-hidden because it's purely decorative - the native input conveys state
+          @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
+        -->
+      <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
+        </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Test Checkbox
+    </label>
+    <!-- 
+        Optional tooltip for additional context
+        @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation
+      -->
+    <!--v-if-->
+  </div><!-- Error message display with accessible ARIA live region -->
+  <!--v-if-->
+  <!-- 
+      Children slot for nested checkboxes
+      Used by FzCheckboxGroupOption to render child checkboxes
+    -->
+</div>"
+`;
+
+exports[`FzCheckbox > Snapshots > should match snapshot - disabled state 1`] = `
+"<!-- Root container: vertical layout with consistent spacing -->
+<div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+  <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
+  <!-- Hover effects are handled in CSS using data attributes -->
+  <div data-v-79ecb611="" class="flex items-start group" data-disabled="true">
+    <!-- 
+        Native checkbox input (visually hidden but functionally present)
+        - Maintains native keyboard navigation and form behavior
+        - Screen readers can interact with it normally
+        - Styled via adjacent label and icon using Tailwind's "peer" selector
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355211-phwoh" disabled="" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168549355211-phwoh-label" value="test">
+    <!-- 
+        Label element: provides click target and visual representation
+        Connected to hidden input via "for" attribute
+      --><label data-v-79ecb611="" id="fz-checkbox-168549355211-phwoh-label" for="fz-checkbox-168549355211-phwoh" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+  peer-focus:[&amp;_div]:after:border-1
+  peer-focus:[&amp;_div]:after:border-solid
+  peer-focus:[&amp;_div]:after:rounded-[2px]
+  peer-focus:[&amp;_div]:after:border-blue-200
+  peer-focus:[&amp;_div]:after:content-['']
+  peer-focus:[&amp;_div]:after:top-0
+  peer-focus:[&amp;_div]:after:left-0
+  peer-focus:[&amp;_div]:after:right-0
+  peer-focus:[&amp;_div]:after:bottom-0
+  peer-focus:[&amp;_div]:after:absolute text-base text-grey-300 [&amp;_div]:text-grey-300">
+      <!-- 
+          Visual checkbox icon (replaces hidden native checkbox)
+          aria-hidden because it's purely decorative - the native input conveys state
+          @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
+        -->
+      <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-300" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
+        </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Test Checkbox
+    </label>
+    <!-- 
+        Optional tooltip for additional context
+        @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation
+      -->
+    <!--v-if-->
+  </div><!-- Error message display with accessible ARIA live region -->
+  <!--v-if-->
+  <!-- 
+      Children slot for nested checkboxes
+      Used by FzCheckboxGroupOption to render child checkboxes
+    -->
+</div>"
+`;
+
+exports[`FzCheckbox > Snapshots > should match snapshot - error state 1`] = `
+"<!-- Root container: vertical layout with consistent spacing -->
+<div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+  <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
+  <!-- Hover effects are handled in CSS using data attributes -->
+  <div data-v-79ecb611="" class="flex items-start group" data-error="true">
+    <!-- 
+        Native checkbox input (visually hidden but functionally present)
+        - Maintains native keyboard navigation and form behavior
+        - Screen readers can interact with it normally
+        - Styled via adjacent label and icon using Tailwind's "peer" selector
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355212-o8r41" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="true" aria-describedby="fz-checkbox-168549355212-o8r41-error" aria-labelledby="fz-checkbox-168549355212-o8r41-label" value="test">
+    <!-- 
+        Label element: provides click target and visual representation
+        Connected to hidden input via "for" attribute
+      --><label data-v-79ecb611="" id="fz-checkbox-168549355212-o8r41-label" for="fz-checkbox-168549355212-o8r41" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+  peer-focus:[&amp;_div]:after:border-1
+  peer-focus:[&amp;_div]:after:border-solid
+  peer-focus:[&amp;_div]:after:rounded-[2px]
+  peer-focus:[&amp;_div]:after:border-blue-200
+  peer-focus:[&amp;_div]:after:content-['']
+  peer-focus:[&amp;_div]:after:top-0
+  peer-focus:[&amp;_div]:after:left-0
+  peer-focus:[&amp;_div]:after:right-0
+  peer-focus:[&amp;_div]:after:bottom-0
+  peer-focus:[&amp;_div]:after:absolute text-base text-semantic-error-200 [&amp;_div]:text-semantic-error-200 peer-checked:[&amp;_div]:text-semantic-error-200 peer-indeterminate:[&amp;_div]:text-semantic-error-200">
+      <!-- 
+          Visual checkbox icon (replaces hidden native checkbox)
+          aria-hidden because it's purely decorative - the native input conveys state
+          @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
+        -->
+      <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-semantic-error-200" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
+        </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Test Checkbox
+    </label>
+    <!-- 
+        Optional tooltip for additional context
+        @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation
+      -->
+    <!--v-if-->
+  </div><!-- Error message display with accessible ARIA live region -->
+  <!-- 
+    Error message display with ARIA live region
+    Announces validation errors immediately to screen readers
+    - role="alert": High-priority message
+    - aria-live="assertive": Interrupts current announcements
+    - aria-atomic="true": Reads complete message
+    
+    @TODO: When FzAlert supports automatic ARIA handling based on \`type\` 
+    (e.g., via an \`announce\` prop or similar semantic API), we can remove 
+    these manual attributes.
+    
+    Proposed future API:
+      FzAlert with type="error" and announce prop
+      would automatically get role="alert" and aria-live="assertive"
+  -->
+  <div data-v-9bf2fc2e="" data-v-79ecb611="" class="flex select-none gap-12 rounded justify-between" id="fz-checkbox-168549355212-o8r41-error" type="error" role="alert" aria-live="assertive" aria-atomic="true">
+    <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-start layout-default flex-1 p-12">
+      <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px]">
+        <!---->
+      </div>
+      <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
+        <!--v-if-->
+        <p data-v-9bf2fc2e="" class="font-normal !leading-[20px] mb-16">Error message</p>
+        <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default"><button data-v-9bf2fc2e="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200">
+            <!--v-if-->
+            <div class="truncate font-normal !text-[16px] !leading-[20px]"></div>
+            <!--v-if-->
+          </button>
+          <!--v-if-->
+        </div>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+  <!-- 
+      Children slot for nested checkboxes
+      Used by FzCheckboxGroupOption to render child checkboxes
+    -->
+</div>"
+`;
+
+exports[`FzCheckbox > Snapshots > should match snapshot - indeterminate state 1`] = `
+"<!-- Root container: vertical layout with consistent spacing -->
+<div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+  <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
+  <!-- Hover effects are handled in CSS using data attributes -->
+  <div data-v-79ecb611="" class="flex items-start group">
+    <!-- 
+        Native checkbox input (visually hidden but functionally present)
+        - Maintains native keyboard navigation and form behavior
+        - Screen readers can interact with it normally
+        - Styled via adjacent label and icon using Tailwind's "peer" selector
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355214-1hu4b" class="w-0 h-0 peer fz-hidden-input" aria-checked="mixed" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168549355214-1hu4b-label" value="test">
+    <!-- 
+        Label element: provides click target and visual representation
+        Connected to hidden input via "for" attribute
+      --><label data-v-79ecb611="" id="fz-checkbox-168549355214-1hu4b-label" for="fz-checkbox-168549355214-1hu4b" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+  peer-focus:[&amp;_div]:after:border-1
+  peer-focus:[&amp;_div]:after:border-solid
+  peer-focus:[&amp;_div]:after:rounded-[2px]
+  peer-focus:[&amp;_div]:after:border-blue-200
+  peer-focus:[&amp;_div]:after:content-['']
+  peer-focus:[&amp;_div]:after:top-0
+  peer-focus:[&amp;_div]:after:left-0
+  peer-focus:[&amp;_div]:after:right-0
+  peer-focus:[&amp;_div]:after:bottom-0
+  peer-focus:[&amp;_div]:after:absolute text-base text-core-black peer-checked:[&amp;_div]:text-grey-500 peer-indeterminate:[&amp;_div]:text-grey-500">
+      <!-- 
+          Visual checkbox icon (replaces hidden native checkbox)
+          aria-hidden because it's purely decorative - the native input conveys state
+          @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
+        -->
+      <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square-minus h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="square-minus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <path class="" fill="currentColor" d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zm88 200l144 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-144 0c-13.3 0-24-10.7-24-24s10.7-24 24-24z"></path>
+        </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Test Checkbox
+    </label>
+    <!-- 
+        Optional tooltip for additional context
+        @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation
+      -->
+    <!--v-if-->
+  </div><!-- Error message display with accessible ARIA live region -->
+  <!--v-if-->
+  <!-- 
+      Children slot for nested checkboxes
+      Used by FzCheckboxGroupOption to render child checkboxes
+    -->
+</div>"
+`;
+
+exports[`FzCheckbox > Snapshots > should match snapshot - required 1`] = `
+"<!-- Root container: vertical layout with consistent spacing -->
+<div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+  <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
+  <!-- Hover effects are handled in CSS using data attributes -->
+  <div data-v-79ecb611="" class="flex items-start group">
+    <!-- 
+        Native checkbox input (visually hidden but functionally present)
+        - Maintains native keyboard navigation and form behavior
+        - Screen readers can interact with it normally
+        - Styled via adjacent label and icon using Tailwind's "peer" selector
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355216-d8x2n" class="w-0 h-0 peer fz-hidden-input" required="" aria-checked="false" aria-required="true" aria-invalid="false" aria-labelledby="fz-checkbox-168549355216-d8x2n-label" value="test">
+    <!-- 
+        Label element: provides click target and visual representation
+        Connected to hidden input via "for" attribute
+      --><label data-v-79ecb611="" id="fz-checkbox-168549355216-d8x2n-label" for="fz-checkbox-168549355216-d8x2n" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+  peer-focus:[&amp;_div]:after:border-1
+  peer-focus:[&amp;_div]:after:border-solid
+  peer-focus:[&amp;_div]:after:rounded-[2px]
+  peer-focus:[&amp;_div]:after:border-blue-200
+  peer-focus:[&amp;_div]:after:content-['']
+  peer-focus:[&amp;_div]:after:top-0
+  peer-focus:[&amp;_div]:after:left-0
+  peer-focus:[&amp;_div]:after:right-0
+  peer-focus:[&amp;_div]:after:bottom-0
+  peer-focus:[&amp;_div]:after:absolute text-base text-core-black peer-checked:[&amp;_div]:text-grey-500 peer-indeterminate:[&amp;_div]:text-grey-500">
+      <!-- 
+          Visual checkbox icon (replaces hidden native checkbox)
+          aria-hidden because it's purely decorative - the native input conveys state
+          @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
+        -->
+      <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
+        </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Test Checkbox
+    </label>
+    <!-- 
+        Optional tooltip for additional context
+        @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation
+      -->
+    <!--v-if-->
+  </div><!-- Error message display with accessible ARIA live region -->
+  <!--v-if-->
+  <!-- 
+      Children slot for nested checkboxes
+      Used by FzCheckboxGroupOption to render child checkboxes
+    -->
+</div>"
+`;
+
+exports[`FzCheckbox > Snapshots > should match snapshot - standalone mode 1`] = `
+"<!-- Root container: vertical layout with consistent spacing -->
+<div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+  <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
+  <!-- Hover effects are handled in CSS using data attributes -->
+  <div data-v-79ecb611="" class="flex items-start group">
+    <!-- 
+        Native checkbox input (visually hidden but functionally present)
+        - Maintains native keyboard navigation and form behavior
+        - Screen readers can interact with it normally
+        - Styled via adjacent label and icon using Tailwind's "peer" selector
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355215-nq0wy" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-label="Test Checkbox" aria-required="false" aria-invalid="false" value="test">
+    <!-- 
+        Label element: provides click target and visual representation
+        Connected to hidden input via "for" attribute
+      --><label data-v-79ecb611="" id="fz-checkbox-168549355215-nq0wy-label" for="fz-checkbox-168549355215-nq0wy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+  peer-focus:[&amp;_div]:after:border-1
+  peer-focus:[&amp;_div]:after:border-solid
+  peer-focus:[&amp;_div]:after:rounded-[2px]
+  peer-focus:[&amp;_div]:after:border-blue-200
+  peer-focus:[&amp;_div]:after:content-['']
+  peer-focus:[&amp;_div]:after:top-0
+  peer-focus:[&amp;_div]:after:left-0
+  peer-focus:[&amp;_div]:after:right-0
+  peer-focus:[&amp;_div]:after:bottom-0
+  peer-focus:[&amp;_div]:after:absolute text-base text-core-black peer-checked:[&amp;_div]:text-grey-500 peer-indeterminate:[&amp;_div]:text-grey-500">
+      <!-- 
+          Visual checkbox icon (replaces hidden native checkbox)
+          aria-hidden because it's purely decorative - the native input conveys state
+          @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
+        -->
+      <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
+        </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->
+      <!--v-if-->
+    </label>
+    <!-- 
+        Optional tooltip for additional context
+        @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation
+      -->
+    <!--v-if-->
+  </div><!-- Error message display with accessible ARIA live region -->
+  <!--v-if-->
+  <!-- 
+      Children slot for nested checkboxes
+      Used by FzCheckboxGroupOption to render child checkboxes
+    -->
+</div>"
+`;
+
+exports[`FzCheckbox > Snapshots > should match snapshot - with emphasis 1`] = `
+"<!-- Root container: vertical layout with consistent spacing -->
+<div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+  <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
+  <!-- Hover effects are handled in CSS using data attributes -->
+  <div data-v-79ecb611="" class="flex items-start group" data-emphasis="true">
+    <!-- 
+        Native checkbox input (visually hidden but functionally present)
+        - Maintains native keyboard navigation and form behavior
+        - Screen readers can interact with it normally
+        - Styled via adjacent label and icon using Tailwind's "peer" selector
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355215-d4cfn" class="w-0 h-0 peer fz-hidden-input" aria-checked="true" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168549355215-d4cfn-label" value="test">
+    <!-- 
+        Label element: provides click target and visual representation
+        Connected to hidden input via "for" attribute
+      --><label data-v-79ecb611="" id="fz-checkbox-168549355215-d4cfn-label" for="fz-checkbox-168549355215-d4cfn" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+  peer-focus:[&amp;_div]:after:border-1
+  peer-focus:[&amp;_div]:after:border-solid
+  peer-focus:[&amp;_div]:after:rounded-[2px]
+  peer-focus:[&amp;_div]:after:border-blue-200
+  peer-focus:[&amp;_div]:after:content-['']
+  peer-focus:[&amp;_div]:after:top-0
+  peer-focus:[&amp;_div]:after:left-0
+  peer-focus:[&amp;_div]:after:right-0
+  peer-focus:[&amp;_div]:after:bottom-0
+  peer-focus:[&amp;_div]:after:absolute text-base text-core-black [&amp;_div]:text-blue-500 peer-checked:[&amp;_div]:text-blue-500 peer-indeterminate:[&amp;_div]:text-blue-500">
+      <!-- 
+          Visual checkbox icon (replaces hidden native checkbox)
+          aria-hidden because it's purely decorative - the native input conveys state
+          @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
+        -->
+      <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-blue-500" aria-hidden="true"><svg class="svg-inline--fa fa-square-check h-[16px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="square-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <path class="" fill="currentColor" d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path>
+        </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Test Checkbox
+    </label>
+    <!-- 
+        Optional tooltip for additional context
+        @TODO: When FzTooltip supports keyboard accessibility and ARIA attributes (role="tooltip", aria-describedby), update implementation
+      -->
+    <!--v-if-->
+  </div><!-- Error message display with accessible ARIA live region -->
+  <!--v-if-->
+  <!-- 
+      Children slot for nested checkboxes
+      Used by FzCheckboxGroupOption to render child checkboxes
+    -->
+</div>"
+`;
