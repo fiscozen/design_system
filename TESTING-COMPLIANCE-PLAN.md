@@ -168,7 +168,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | messages | ~~ToastQueue.stories.ts~~ | ~~3~~ | ✅ **COMPLETED** |
 | misc | Badge.stories.ts | ~5 | 🟡 Medium |
 | navigation | ~~Action.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
-| navigation | Actionlist.stories.ts | ~3 | 🟠 High |
+| navigation | ~~Actionlist.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | Breadcrumbs.stories.ts | ~3 | 🟠 High |
 | navigation | Navbar.stories.ts | ~3 | 🟠 High |
 | navigation | Navlink.stories.ts | ~3 | 🟠 High |
@@ -964,10 +964,10 @@ describe('Edge Cases', () => {
 | messages/Toast.stories.ts | ~~Dismiss, auto-hide~~ | ✅ **COMPLETED** |
 | messages/ToastQueue.stories.ts | ~~Queue management~~ | ✅ **COMPLETED** |
 | navigation/Action.stories.ts | ~~Click, hover states~~ | ✅ **COMPLETED** |
-| navigation/Actionlist.stories.ts | Navigation, selection | 1.5 |
+| navigation/Actionlist.stories.ts | ~~Navigation, selection~~ | ✅ **COMPLETED** |
 | navigation/Breadcrumbs.stories.ts | ~~Click navigation~~ | ✅ **COMPLETED** |
 | navigation/Navbar.stories.ts | Navigation, active state | 1.5 |
-| navigation/Navlink.stories.ts | Click, active state | 1 |
+| navigation/Navlink.stories.ts | ~~Click, active state~~ | ✅ **COMPLETED** |
 | navigation/Navlist.stories.ts | List navigation | 1.5 |
 | navigation/Stepper.stories.ts | Step navigation | 2 |
 | panel/Collapse.stories.ts | Expand/collapse, keyboard | 1.5 |
@@ -2004,4 +2004,15 @@ Ensure root `package.json` has:
 - All play functions test user interactions, visual states, and accessibility expectations
 - Play functions cover: queue management (enqueue, dismiss, stacking), hover expand behavior, alignment variants (left/right), keyboard navigation (Tab, Enter, Space)
 - Phase 4 (Storybook Play Functions) progress: 9 of 28 critical priority stories completed
+
+### January 16, 2026 - Navlink Stories Play Functions ✅
+
+**Package:** `navlink` (Storybook)
+- Added play functions to Navlink.stories.ts for critical stories
+- Added play functions for: SimpleNavlink (basic rendering, label verification, disabled state check), IconNavlink (icon rendering, icon-only classes), RouterNavlink (router link rendering, href verification, disabled state check), DisabledRouterNavlink (disabled state rendering as span, disabled classes), RouterNavlinkIcon (icon-only router navlink rendering, icon presence)
+- Added new interaction stories: ClickInteraction (button click interaction), RouterNavlinkClick (router navigation on click), ActiveState (active router navlink styling with router-link-active class), KeyboardNavigation (Tab focus, Enter/Space key activation), RouterNavlinkKeyboardNavigation (router navlink keyboard navigation), DisabledNavlink (disabled state, disabled attribute, no keyboard focus)
+- All play functions test user interactions, visual states, and accessibility expectations
+- Play functions cover: click interactions, keyboard navigation (Tab, Enter, Space), active state styling, disabled state behavior
+- Fixed test expectations to match component implementation (native disabled attribute instead of aria-disabled)
+- Phase 4 (Storybook Play Functions) progress: 10 of 28 critical priority stories completed
 
