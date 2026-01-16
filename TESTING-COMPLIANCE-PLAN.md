@@ -290,10 +290,10 @@ mv packages/tab/src/__test__ packages/tab/src/__tests__
 | radio | ~~`FzRadioCard.test.ts`~~ | ~~`FzRadioCard.spec.ts`~~ ✅ **COMPLETED** |
 | radio | ~~`FzRadioGroup.test.ts`~~ | ~~`FzRadioGroup.spec.ts`~~ ✅ **COMPLETED** |
 | select | ~~`FzSelect.test.ts`~~ | ~~`FzSelect.spec.ts`~~ ✅ **COMPLETED** |
-| style | `validation.test.ts` | `validation.spec.ts` |
-| style | `vSmall.test.ts` | `vSmall.spec.ts` |
-| style | `vColor.test.ts` | `vColor.spec.ts` |
-| style | `vBold.test.ts` | `vBold.spec.ts` |
+| style | ~~`validation.test.ts`~~ | ~~`validation.spec.ts`~~ ✅ **COMPLETED** |
+| style | ~~`vSmall.test.ts`~~ | ~~`vSmall.spec.ts`~~ ✅ **COMPLETED** |
+| style | ~~`vColor.test.ts`~~ | ~~`vColor.spec.ts`~~ ✅ **COMPLETED** |
+| style | ~~`vBold.test.ts`~~ | ~~`vBold.spec.ts`~~ ✅ **COMPLETED** |
 | tab | ~~`FzTabs.test.ts`~~ | ~~`FzTabs.spec.ts`~~ ✅ **COMPLETED** |
 | typeahead | ~~`FzTypeahead.test.ts`~~ | ~~`FzTypeahead.spec.ts`~~ ✅ **COMPLETED** |
 
@@ -1826,6 +1826,18 @@ Ensure root `package.json` has:
 ---
 
 ## Recent Updates
+
+### January 15, 2026 - Style Package Test File Naming Standardization ✅
+
+**Package:** `style`
+- Renamed all test files from `.test.ts` to `.spec.ts` to comply with testing standards
+- Renamed files:
+  - `validation.test.ts` → `validation.spec.ts`
+  - `vSmall.test.ts` → `vSmall.spec.ts`
+  - `vColor.test.ts` → `vColor.spec.ts`
+  - `vBold.test.ts` → `vBold.spec.ts`
+- All 37 tests passing ✅
+- Phase 1 (File & Folder Naming Standardization) now 100% complete
 
 ### January 15, 2026 - Topbar Component Testing Enhancement ✅
 
