@@ -1,5 +1,112 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`FzDropdown > Snapshots > should match snapshot - backoffice environment 1`] = `
+"<div>
+  <div class="inline-flex w-full sm:w-auto"><button type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-blue-500 text-core-white hover:bg-blue-600 focus:bg-blue-500 focus:!border-blue-600 disabled:bg-blue-200">
+      <!--v-if-->
+      <div class="truncate font-normal !text-[16px] !leading-[20px]">Backoffice Dropdown</div>
+      <div class="flex items-center justify-items-center">
+        <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path>
+          </svg></div>
+      </div>
+    </button></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
+</div>"
+`;
+
+exports[`FzDropdown > Snapshots > should match snapshot - custom opener 1`] = `
+"<div>
+  <div class="inline-flex w-full sm:w-auto"><button class="custom">Custom</button></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
+</div>"
+`;
+
+exports[`FzDropdown > Snapshots > should match snapshot - default state 1`] = `
+"<div>
+  <div class="inline-flex w-full sm:w-auto"><button type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-blue-500 text-core-white hover:bg-blue-600 focus:bg-blue-500 focus:!border-blue-600 disabled:bg-blue-200">
+      <!--v-if-->
+      <div class="truncate font-normal !text-[16px] !leading-[20px]">This is a dropdown</div>
+      <div class="flex items-center justify-items-center">
+        <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path>
+          </svg></div>
+      </div>
+    </button></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
+</div>"
+`;
+
+exports[`FzDropdown > Snapshots > should match snapshot - disabled state 1`] = `
+"<div>
+  <div class="inline-flex w-full sm:w-auto"><button type="button" disabled="" aria-disabled="true" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-blue-500 text-core-white disabled:bg-blue-200">
+      <!--v-if-->
+      <div class="truncate font-normal !text-[16px] !leading-[20px]">Disabled Dropdown</div>
+      <div class="flex items-center justify-items-center">
+        <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path>
+          </svg></div>
+      </div>
+    </button></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
+</div>"
+`;
+
+exports[`FzDropdown > Snapshots > should match snapshot - open state 1`] = `
+"<div>
+  <div class="inline-flex w-full sm:w-auto"><button type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-blue-500 text-core-white hover:bg-blue-600 focus:bg-blue-500 focus:!border-blue-600 disabled:bg-blue-200">
+      <!--v-if-->
+      <div class="truncate font-normal !text-[16px] !leading-[20px]">Open Dropdown</div>
+      <div class="flex items-center justify-items-center">
+        <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path class="" fill="currentColor" d="M207 143c9.4-9.4 24.6-9.4 33.9 0L401 303c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-143-143L81 337c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L207 143z"></path>
+          </svg></div>
+      </div>
+    </button></div>
+  <!--v-if-->
+  <div to="body">
+    <div class="fz__floating__content mt-4">
+      <div data-v-ca7f3405="" class="fz__actionlist bg-core-white rounded flex flex-col gap-20 p-4 min-w-[240px]">
+        <div class="flex flex-col gap-4" role="group" aria-labelledby="fz-action-section-label-normalized" environment="frontoffice">
+          <!--v-if--><button data-v-f322a564="" aria-disabled="false" aria-selected="false" type="button" class="group inline-flex max-w-full rounded border border-transparent border-2 transition-colors duration-200 gap-2 p-12 flex-row gap-8 text-core-black hover:bg-background-alice-blue hover:!text-blue-500 focus:!border-blue-200 focus:!outline-none focus:text-core-black">
+            <!--v-if-->
+            <div data-v-f322a564="" class="flex flex-1 flex-col gap-4 overflow-hidden"><span data-v-f322a564="" class="text-base text-left" title="Action 1">Action 1</span>
+              <!--v-if-->
+            </div>
+            <!--v-if-->
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`FzDropdown > Snapshots > should match snapshot - with actions 1`] = `
+"<div>
+  <div class="inline-flex w-full sm:w-auto"><button type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-blue-500 text-core-white hover:bg-blue-600 focus:bg-blue-500 focus:!border-blue-600 disabled:bg-blue-200">
+      <!--v-if-->
+      <div class="truncate font-normal !text-[16px] !leading-[20px]">Dropdown</div>
+      <div class="flex items-center justify-items-center">
+        <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path>
+          </svg></div>
+      </div>
+    </button></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
+</div>"
+`;
+
 exports[`FzDropdown > matches snapshot 1`] = `
 "<div>
   <div class="inline-flex"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
@@ -62,6 +169,24 @@ exports[`FzDropdown > matches snapshot 3`] = `
       </div>
       <!--v-if--><span class="hidden h-0 w-0"></span>
     </button></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
+</div>"
+`;
+
+exports[`FzIconDropdown > Snapshots > should match snapshot 1`] = `
+"<div iconname="bars" hasnotification="false" label="Open dropdown" actionslabel="This is the items label">
+  <div class="inline-flex w-full sm:w-auto"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Open dropdown"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-bars h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="bars" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M0 88C0 74.7 10.7 64 24 64l400 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L24 112C10.7 112 0 101.3 0 88zM0 248c0-13.3 10.7-24 24-24l400 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L24 272c-13.3 0-24-10.7-24-24zM448 408c0 13.3-10.7 24-24 24L24 432c-13.3 0-24-10.7-24-24s10.7-24 24-24l400 0c13.3 0 24 10.7 24 24z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span></div>
+  <!--v-if-->
+  <!--teleport start-->
+  <!--teleport end-->
+</div>"
+`;
+
+exports[`FzIconDropdown > Snapshots > should match snapshot 2`] = `
+"<div iconname="bars" hasnotification="false" label="Open dropdown" actionslabel="This is the items label">
+  <div class="inline-flex w-full sm:w-auto"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Open dropdown"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-bars h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="bars" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M0 88C0 74.7 10.7 64 24 64l400 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L24 112C10.7 112 0 101.3 0 88zM0 248c0-13.3 10.7-24 24-24l400 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L24 272c-13.3 0-24-10.7-24-24zM448 408c0 13.3-10.7 24-24 24L24 432c-13.3 0-24-10.7-24-24s10.7-24 24-24l400 0c13.3 0 24 10.7 24 24z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span></div>
   <!--v-if-->
   <!--teleport start-->
   <!--teleport end-->

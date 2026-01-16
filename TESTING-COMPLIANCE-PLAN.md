@@ -702,7 +702,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | datepicker | ~~Full a11y suite~~ | ✅ **COMPLETED** |
 | dialog | ~~role="dialog", aria-modal~~ | ✅ **COMPLETED** |
 | divider | ~~role="separator"~~ | ✅ **COMPLETED** |
-| dropdown | aria-expanded, aria-haspopup | 2-3 |
+| dropdown | ~~aria-expanded, aria-haspopup~~ | ✅ **COMPLETED** |
 | input | ✅ Reference implementation | - |
 | layout | landmark roles | 1 |
 | link | role="link" native | 0.5 |
@@ -801,7 +801,7 @@ describe('Accessibility', () => {
 | alert | ~~`dismiss`, `action-click`~~ | ✅ **COMPLETED** |
 | collapse | `toggle`, `open`, `close` |
 | dialog | `close`, `confirm`, `cancel` |
-| dropdown | `open`, `close`, `select` |
+| dropdown | ~~`open`, `close`, `select`~~ | ✅ **COMPLETED** |
 | select | `update:modelValue`, `search` |
 | tab | `tab-change` |
 | toast | `dismiss` |
@@ -1291,6 +1291,36 @@ Ensure root `package.json` has:
 - ✅ Snapshots tests (default state, all size variants, drawer variant, responsive breakpoints)
 
 **Status:** All 45 tests passing ✅
+
+---
+
+### Package: dropdown ✅ **COMPLETED**
+
+**Current State:**
+- ✅ `FzDropdown.spec.ts` - Comprehensive test suite with 70 tests
+- ✅ `src/__tests__/` folder (correct naming)
+- ✅ Enhanced accessibility tests
+
+**Completed:**
+1. ✅ Enhanced test coverage following TESTING.md structure
+2. ✅ Added comprehensive accessibility tests (aria-expanded expectations, aria-haspopup expectations, keyboard navigation, Escape key handling, semantic HTML structure)
+3. ✅ Added comprehensive props tests (environment, buttonVariant, disabled, align, closeOnActionClick, teleport, listClass, isOpen v-model)
+4. ✅ Added comprehensive events tests (fzaction:click emission, open/close toggle, disabled blocking, closeOnActionClick behavior)
+5. ✅ Added comprehensive CSS classes tests
+6. ✅ Added comprehensive edge cases tests (empty actions, undefined props, rapid toggles, multiple instances, section types, long labels)
+7. ✅ Added snapshot tests for all key states (default, with actions, disabled, open, backoffice, custom opener)
+8. ✅ Added comprehensive tests for FzIconDropdown component
+
+**Test coverage includes:**
+- ✅ Rendering tests (default props, slots, actions, grouped actions with sections, custom opener/actionList slots)
+- ✅ Props tests (environment, buttonVariant, disabled, align, closeOnActionClick, teleport, listClass, isOpen v-model, iconName, label, hasNotification for FzIconDropdown)
+- ✅ Events tests (fzaction:click emission with correct indices, open/close toggle, disabled blocking, closeOnActionClick behavior)
+- ✅ Accessibility tests (aria-expanded expectations, aria-haspopup expectations, keyboard navigation, Escape key handling, semantic HTML structure, aria-label for FzIconDropdown)
+- ✅ CSS Classes tests (default button classes, custom listClass)
+- ✅ Edge Cases tests (empty actions array, undefined props, missing properties, rapid toggles, multiple instances, section types, very long labels)
+- ✅ Snapshots tests (default state, with actions, disabled state, open state, backoffice environment, custom opener, FzIconDropdown states)
+
+**Status:** All 70 tests passing ✅
 
 ---
 
