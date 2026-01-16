@@ -95,7 +95,7 @@ This document outlines a comprehensive plan to bring the Fiscozen Design System 
 | `dialog` | 1 | Rename `FzDialog.test.ts` + fix folder name |
 | `input` | ~~2~~ | ~~Rename `FzInput.test.ts`, `FzCurrencyInput.test.ts`~~ ✅ **COMPLETED** |
 | `link` | 1 | Rename `FzLink.test.ts` |
-| `progress` | 2 | Rename `FzProgress.test.ts`, `FzProgressBar.test.ts` |
+| `progress` | ~~2~~ | ~~Rename `FzProgress.test.ts`, `FzProgressBar.test.ts`~~ ✅ **COMPLETED** |
 | `radio` | 3 | Rename all + fix folder name (`__test__` → `__tests__`) |
 | `select` | 1 | Rename `FzSelect.test.ts` |
 | `style` | 4 | Rename custom directive tests |
@@ -284,8 +284,8 @@ mv packages/tab/src/__test__ packages/tab/src/__tests__
 | input | ~~`FzInput.test.ts`~~ | ~~`FzInput.spec.ts`~~ ✅ **COMPLETED** |
 | input | ~~`FzCurrencyInput.test.ts`~~ | ~~`FzCurrencyInput.spec.ts`~~ ✅ **COMPLETED** |
 | link | `FzLink.test.ts` | `FzLink.spec.ts` |
-| progress | `FzProgress.test.ts` | `FzProgress.spec.ts` |
-| progress | `FzProgressBar.test.ts` | `FzProgressBar.spec.ts` |
+| progress | ~~`FzProgress.test.ts`~~ | ~~`FzProgress.spec.ts`~~ ✅ **COMPLETED** |
+| progress | ~~`FzProgressBar.test.ts`~~ | ~~`FzProgressBar.spec.ts`~~ ✅ **COMPLETED** |
 | radio | `FzRadio.test.ts` | `FzRadio.spec.ts` |
 | radio | `FzRadioCard.test.ts` | `FzRadioCard.spec.ts` |
 | radio | `FzRadioGroup.test.ts` | `FzRadioGroup.spec.ts` |
@@ -709,7 +709,7 @@ Use `packages/input/src/__tests__/FzInput.test.ts` as the reference implementati
 | navbar | nav role, aria-label | 1-2 |
 | navlink | aria-current | 1 |
 | navlist | listbox/list role | 2 |
-| progress | role="progressbar", aria-valuenow | 2 |
+| progress | ~~role="progressbar", aria-valuenow~~ | ✅ **COMPLETED** |
 | radio | aria-checked, radio group | 2-3 |
 | select | Full a11y suite | 3-4 |
 | simple-table | table semantics | 2 |
@@ -1342,6 +1342,38 @@ Ensure root `package.json` has:
 2. Add listbox/option role tests
 3. Add aria-selected tests
 4. Add keyboard navigation tests (arrow keys, typeahead)
+
+---
+
+### Package: progress ✅ **COMPLETED**
+
+**Current State:**
+- ✅ `FzProgress.spec.ts` - Comprehensive test suite with 57 tests
+- ✅ `FzProgressBar.spec.ts` - Comprehensive test suite with 48 tests
+- ✅ `src/__tests__/` folder (correct naming)
+- ✅ Enhanced accessibility tests
+
+**Completed:**
+1. ✅ Renamed files from `.test.ts` to `.spec.ts`
+2. ✅ Renamed snapshot files to match new test file names
+3. ✅ Enhanced FzProgress test coverage following TESTING.md structure
+4. ✅ Added comprehensive accessibility tests (decorative icon handling, aria-label support)
+5. ✅ Added comprehensive props tests (all IconProps: name, size, variant, spin)
+6. ✅ Added comprehensive CSS classes tests (animation styles)
+7. ✅ Added comprehensive edge cases tests (undefined props, different icon formats, all size/variant combinations)
+8. ✅ Added snapshot tests for all key states
+9. ✅ FzProgressBar already had comprehensive tests including accessibility (role="progressbar", aria-valuenow, aria-valuemin, aria-valuemax)
+
+**Test coverage includes:**
+- ✅ Rendering tests (default props, FzIcon component, default spinner icon)
+- ✅ Props tests (name prop with default, size variants, variant prop behavior, spin prop always true)
+- ✅ Events tests (presentational component - no events)
+- ✅ Accessibility tests (FzIcon accessibility handling, aria-label support, decorative elements, screen reader support)
+- ✅ CSS Classes tests (custom animation duration and timing function styles)
+- ✅ Edge Cases tests (undefined/empty name, different icon formats, array format, all size/variant combinations)
+- ✅ Snapshots tests (default state, custom size, custom variant, custom name, all props together)
+
+**Status:** All 105 tests passing ✅ (57 for FzProgress, 48 for FzProgressBar)
 
 ---
 
