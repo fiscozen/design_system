@@ -173,9 +173,9 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | navigation | ~~Actionlist.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | ~~Breadcrumbs.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | ~~Navbar.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
-| navigation | Navlink.stories.ts | ~3 | 🟠 High |
+| navigation | ~~Navlink.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | ~~Navlist.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
-| navigation | Stepper.stories.ts | ~3 | 🟠 High |
+| navigation | ~~Stepper.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | overlay | ~~ConfirmDialog.stories.ts~~ | ~~3~~ | ✅ **COMPLETED** |
 | overlay | ~~Dialog.stories.ts~~ | ~~3~~ | ✅ **COMPLETED** |
 | overlay | ~~ViewFlag.stories.ts~~ | ~~~2~~ | ✅ **COMPLETED** |
@@ -974,7 +974,7 @@ describe('Edge Cases', () => {
 | navigation/Navlink.stories.ts | ~~Click, active state~~ | ✅ **COMPLETED** |
 | navigation/Navlist.stories.ts | ~~List navigation~~ | ✅ **COMPLETED** |
 | navigation/Stepper.stories.ts | ~~Step navigation~~ | ✅ **COMPLETED** |
-| panel/Collapse.stories.ts | Expand/collapse, keyboard | 1.5 |
+| panel/Collapse.stories.ts | ~~Expand/collapse, keyboard~~ | ✅ **COMPLETED** |
 | panel/Tab.stories.ts | ~~Tab switching, keyboard nav~~ | ✅ **COMPLETED** |
 
 ### 4.3 Medium Priority Stories (Week 6)
