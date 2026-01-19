@@ -163,7 +163,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | form | ~~Datepicker.stories.ts~~ | ~~~5~~ | ✅ **COMPLETED** |
 | form | ~~Textarea.stories.ts~~ | ~~8~~ | ✅ **COMPLETED** |
 | form | ~~Upload.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
-| media | Icon.stories.ts | ~3 | 🟡 Low |
+| media | ~~Icon.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | media | PdfViewer.stories.ts | ~2 | 🟡 Low |
 | messages | ~~Alert.stories.ts~~ | ~~14~~ | ✅ **COMPLETED** |
 | messages | ~~Toast.stories.ts~~ | ~~5~~ | ✅ **COMPLETED** |
@@ -990,7 +990,7 @@ describe('Edge Cases', () => {
 
 | Story File | Required Play Functions | Est. Hours |
 |-----------|------------------------|------------|
-| media/Icon.stories.ts | Visual verification | 0.5 |
+| media/Icon.stories.ts | ~~Visual verification~~ | ✅ **COMPLETED** |
 | media/PdfViewer.stories.ts | Page navigation | 1 |
 | panel/~~Divider.stories.ts~~ | ~~Visual states~~ | ✅ **COMPLETED** |
 | typography/Paragraph.stories.ts | Visual verification | 0.5 |
