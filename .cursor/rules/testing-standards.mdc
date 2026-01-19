@@ -152,7 +152,7 @@ Every stories file MUST include:
 
 ```typescript
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from '@storybook/test'
 import { FzComponentName } from '@fiscozen/component-name'
 
 const meta = {
@@ -171,8 +171,11 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  args: {},
-  play: async ({ canvasElement, step }) => {
+  args: {
+    // 👇 Use fn() to spy on click - accessible via args in play function
+    onClick: fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify component renders', async () => {
@@ -184,12 +187,23 @@ export const Default: Story = {
       const element = canvas.getByRole('button')
       await expect(element).toHaveAttribute('aria-disabled', 'false')
     })
+    
+    await step('Verify click handler IS called', async () => {
+      const element = canvas.getByRole('button')
+      await userEvent.click(element)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
+    })
   }
 }
 
 export const Disabled: Story = {
-  args: { disabled: true },
-  play: async ({ canvasElement, step }) => {
+  args: {
+    disabled: true,
+    // 👇 Define spy in args - it should NOT be called when disabled
+    onClick: fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     const element = canvas.getByRole('button')
     
@@ -198,15 +212,19 @@ export const Disabled: Story = {
       await expect(element).toHaveAttribute('aria-disabled', 'true')
     })
     
-    await step('Verify no interaction when disabled', async () => {
+    await step('Verify click handler is NOT called when disabled', async () => {
       await userEvent.click(element)
-      // Should not error or respond
+      // ROBUST CHECK: Verify the click spy was NOT called
+      await expect(args.onClick).not.toHaveBeenCalled()
     })
   }
 }
 
 export const KeyboardNavigation: Story = {
-  play: async ({ canvasElement, step }) => {
+  args: {
+    onClick: fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Tab to focus', async () => {
@@ -214,8 +232,14 @@ export const KeyboardNavigation: Story = {
       await expect(document.activeElement).toBe(canvas.getByRole('button'))
     })
     
-    await step('Activate with Enter', async () => {
+    await step('Activate with Enter and verify handler called', async () => {
       await userEvent.keyboard('{Enter}')
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
+    })
+    
+    await step('Activate with Space and verify handler called', async () => {
+      await userEvent.keyboard(' ')
+      await expect(args.onClick).toHaveBeenCalledTimes(2)
     })
   }
 }
@@ -391,6 +415,175 @@ await expect(dialog).toBeVisible()
 expect(button).not.toBeDisabled()       // missing await
 ```
 
+### Spy Functions for Robust Interaction Testing (REQUIRED)
+
+Use `fn()` spies from `@storybook/test` to verify that event handlers are actually called (or NOT called for disabled states). This is the **official Storybook pattern** and MUST be used for all interaction tests.
+
+**Reference:** [Storybook Actions - Via fn() spies](https://storybook.js.org/docs/essentials/actions#via-storybooktest-fn-spies)
+
+**❌ WEAK: Only checking attributes (doesn't verify handler behavior)**
+
+```typescript
+// DON'T DO THIS - only checks UI state, not behavioral correctness
+await step('Verify disabled state', async () => {
+  const button = canvas.getByRole('button')
+  await expect(button).toBeDisabled()
+  await expect(button).toHaveAttribute('aria-disabled', 'true')
+  
+  await userEvent.click(button)
+  // No verification that handler was NOT called!
+})
+```
+
+**✅ ROBUST: Using spy functions in args**
+
+```typescript
+import { expect, fn, userEvent, within } from '@storybook/test'
+
+// For button-like components:
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+    // 👇 Define spy in args - accessible via args parameter in play function
+    onClick: fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify disabled state attributes', async () => {
+      const button = canvas.getByRole('button')
+      await expect(button).toBeDisabled()
+      await expect(button).toHaveAttribute('aria-disabled', 'true')
+    })
+    
+    await step('Verify click handler is NOT called when clicking disabled element', async () => {
+      const button = canvas.getByRole('button')
+      await userEvent.click(button)
+      
+      // ROBUST CHECK: Verify the click spy was NOT called
+      await expect(args.onClick).not.toHaveBeenCalled()
+    })
+  }
+}
+
+// For enabled states (contrast):
+export const Default: Story = {
+  args: {
+    onClick: fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify click handler IS called when button is clicked', async () => {
+      const button = canvas.getByRole('button')
+      await userEvent.click(button)
+      
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
+    })
+    
+    await step('Verify click handler IS called on keyboard activation', async () => {
+      const button = canvas.getByRole('button')
+      button.focus()
+      await userEvent.keyboard('{Enter}')
+      
+      // ROBUST CHECK: Verify the click spy WAS called (twice total)
+      await expect(args.onClick).toHaveBeenCalledTimes(2)
+    })
+  }
+}
+```
+
+**Vue v-model Pattern (for form components):**
+
+```typescript
+// For checkbox, radio, select, input with v-model:
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+    // 👇 For Vue v-model, use 'onUpdate:modelValue'
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify update:modelValue is NOT called when clicking disabled checkbox', async () => {
+      const checkbox = canvas.getByRole('checkbox')
+      await userEvent.click(checkbox)
+      
+      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+    })
+  }
+}
+
+// For enabled state with v-model:
+export const Default: Story = {
+  args: {
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify update:modelValue IS called when checkbox is clicked', async () => {
+      const checkbox = canvas.getByRole('checkbox')
+      await userEvent.click(checkbox)
+      
+      // ROBUST CHECK: Verify the spy WAS called with expected value
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(1)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith(true)
+    })
+  }
+}
+```
+
+**Event Name Reference for Vue Components:**
+
+| Component Type | Event Binding | Spy Arg Name |
+|---------------|--------------|--------------|
+| Button/Action | `@click` | `onClick: fn()` |
+| Navlink | `@click` | `onClick: fn()` |
+| Input/Textarea | `@blur`, `@focus` | `onBlur: fn()`, `onFocus: fn()` |
+| Checkbox/Radio | `v-model` | `'onUpdate:modelValue': fn()` |
+| Select/Typeahead | `v-model`, `@select` | `'onUpdate:modelValue': fn()` |
+| Dialog | `@close`, `@cancel` | `onClose: fn()`, `onCancel: fn()` |
+| Dropdown | `@toggle` | `onToggle: fn()` |
+| Toast | `@close` | `onClose: fn()` |
+| Action | `@click`, `@keydown` | `onClick: fn()`, `onKeydown: fn()` |
+
+**Anti-patterns to Avoid:**
+
+```typescript
+// ❌ DON'T: Use reactive counters in render functions
+render: (args) => ({
+  setup() {
+    const clickCount = ref(0)
+    const handleClick = () => { clickCount.value++ }
+    return { args, clickCount, handleClick }
+  },
+  template: `<Button @click="handleClick" /><span data-testid="count">{{ clickCount }}</span>`
+})
+
+// ❌ DON'T: Create module-level spies
+const handleClick = fn()
+export const MyStory: Story = {
+  render: (args) => ({
+    setup: () => ({ args, handleClick }),
+    template: `<Button @click="handleClick" />`
+  })
+}
+
+// ✅ DO: Use args-based spies (official pattern)
+export const MyStory: Story = {
+  args: {
+    onClick: fn()
+  },
+  play: async ({ args }) => {
+    await expect(args.onClick).toHaveBeenCalled()
+  }
+}
+```
+
 ### Testing "Disabled" Behaviors
 
 When testing that an action should NOT cause a change:
@@ -421,6 +614,9 @@ await step('Press Escape - dialog should remain open', async () => {
 - Extract reusable helper functions for common operations (open/close dialogs, etc.)
 - Test observable behavior (positioning, computed styles) not CSS class names
 - Test actual focus trap behavior in dialogs (Tab cycling within container)
+- **Use `fn()` spies in args for interaction verification (official Storybook pattern)**
+- **Use `args.onClick` / `args['onUpdate:modelValue']` to verify handlers are called**
+- **Use `not.toHaveBeenCalled()` to verify handlers are blocked when disabled**
 
 ### DON'T ❌
 
@@ -434,6 +630,9 @@ await step('Press Escape - dialog should remain open', async () => {
 - Don't test CSS class names directly (test behavior/computed styles instead)
 - Don't forget `await` before `expect()` assertions in play functions
 - Don't repeat setup code - extract helper functions for common patterns
+- **Don't use reactive counters/refs in render functions for interaction testing**
+- **Don't create module-level spies - always use args-based spies**
+- **Don't test disabled states without verifying handlers are NOT called**
 
 ## Accessibility Testing Checklist
 
