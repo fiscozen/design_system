@@ -183,7 +183,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | panel | Divider.stories.ts | ~2 | 🟡 Low |
 | panel | ~~Layout.stories.ts~~ | ~~~6~~ | ✅ **COMPLETED** |
 | panel | ~~Tab.stories.ts~~ | ~~~5~~ | ✅ **COMPLETED** |
-| panel | Topbar.stories.ts | ~3 | 🟡 Medium |
+| panel | ~~Topbar.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | typography | Paragraph.stories.ts | ~3 | 🟡 Low |
 | typography | Title.stories.ts | ~3 | 🟡 Low |
 
@@ -984,7 +984,7 @@ describe('Edge Cases', () => {
 | misc/Badge.stories.ts | ~~Visual states~~ | ✅ **COMPLETED** |
 | overlay/ViewFlag.stories.ts | ~~Rendering, positioning, accessibility~~ | ✅ **COMPLETED** |
 | panel/Layout.stories.ts | Responsive behavior | 1 |
-| panel/Topbar.stories.ts | Interaction states | 1 |
+| panel/Topbar.stories.ts | ~~Interaction states~~ | ✅ **COMPLETED** |
 
 ### 4.4 Low Priority Stories (Week 6-7)
 
@@ -2147,6 +2147,16 @@ Ensure root `package.json` has:
 - Play functions cover: step navigation, disabled step behavior, step statuses (completed/error/disabled/default), mobile view dropdown, keyboard accessibility
 - Fixed test queries to properly handle badge elements and dropdown teleported content
 - Phase 4 (Storybook Play Functions) progress: 15 of 28 critical priority stories completed
+
+### January 19, 2026 - Topbar Stories Play Functions ✅
+
+**Package:** `topbar` (Storybook)
+- Added play functions to Topbar.stories.ts for all stories
+- Added play functions for: DefaultNone (rendering, content display, default styling, no action button), DefaultButton (rendering, button action, click handler verification), DefaultIconButton (rendering, icon button, click handler verification), DefaultHybrid (rendering, hybrid style with both button and icon button, click handler verification), DefaultLink (rendering, link action, href verification, router integration), DangerNone (rendering, danger styling, no action button), DangerButton (rendering, button action, click handler verification, danger styling), DangerIconButton (rendering, icon button, click handler verification, danger styling), DangerHybrid (rendering, hybrid style, click handler verification, danger styling), DangerLink (rendering, link action, href verification, danger styling)
+- All play functions test user interactions, visual states, and styling verification
+- Play functions cover: component rendering, content display, action button/link/icon rendering, click handler verification using spy functions, type styling (default bg-white-smoke, danger bg-danger), style variations (none, button, icon-button, hybrid, link), router integration for link style
+- Used fn() spy pattern for robust click handler verification
+- Phase 4 (Storybook Play Functions) progress: 16 of 28 critical priority stories completed
 
 ### January 19, 2026 - Badge Stories Play Functions ✅
 
