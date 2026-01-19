@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from '@storybook/test'
 import { FzAction } from '@fiscozen/action'
 import { vueRouter } from 'storybook-vue3-router'
 
@@ -86,17 +86,25 @@ const meta: Meta<typeof FzAction> = {
     isTextTruncated: false,
     iconRightName: 'face-smile',
     label: 'Label',
-    subLabel: 'SubLabel'
+    subLabel: 'SubLabel',
+    // 👇 Use fn() to spy on click and keydown events - they appear in actions panel and are available in play functions
+    onClick: fn(),
+    onKeydown: fn()
   },
   decorators: [vueRouter()]
 }
 
 type Story = StoryObj<typeof meta>
 
-// Default story
+// Default story - uses fn() spies for robust interaction verification
+// Note: FzAction emits 'click' for mouse clicks and 'keydown' for keyboard activation
 const Default: Story = {
-  args: {},
-  play: async ({ canvasElement, step }) => {
+  args: {
+    // 👇 Define spies in args - they're accessible via args parameter in play function
+    onClick: fn(),
+    onKeydown: fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify action renders correctly', async () => {
@@ -118,11 +126,24 @@ const Default: Story = {
       await expect(button).toHaveAttribute('type', 'button')
     })
     
-    await step('Verify action is clickable', async () => {
+    await step('Verify click handler IS called when action is clicked', async () => {
       const button = canvas.getByRole('button', { name: /label/i })
+      
       await userEvent.click(button)
-      // Action should be clickable without errors
-      await expect(button).toBeInTheDocument()
+      
+      // ROBUST CHECK: Verify the click spy WAS called (contrast with disabled state)
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
+    })
+    
+    await step('Verify keydown handler IS called on keyboard activation (Enter key)', async () => {
+      const button = canvas.getByRole('button', { name: /label/i })
+      
+      // Focus and activate with Enter key
+      button.focus()
+      await userEvent.keyboard('{Enter}')
+      
+      // ROBUST CHECK: Verify the keydown spy WAS called (FzAction emits 'keydown' for keyboard)
+      await expect(args.onKeydown).toHaveBeenCalledTimes(1)
     })
   }
 }
@@ -179,15 +200,18 @@ const OnlyIcon: Story = {
   }
 }
 
-// Disabled state
+// Disabled state - uses fn() spies to verify handlers are NOT called
 const Disabled: Story = {
   args: {
     disabled: true,
     iconRightName: 'face-smile',
     label: 'Disabled Action',
-    subLabel: 'This action is disabled'
+    subLabel: 'This action is disabled',
+    // 👇 Define spies in args - they should NOT be called when disabled
+    onClick: fn(),
+    onKeydown: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify disabled action renders', async () => {
@@ -203,11 +227,27 @@ const Disabled: Story = {
       await expect(button).toHaveAttribute('tabindex', '-1')
     })
     
-    await step('Verify disabled action cannot be clicked', async () => {
+    await step('Verify click handler is NOT called when clicking disabled action', async () => {
       const button = canvas.getByRole('button', { name: /disabled action/i })
       await expect(button).toBeDisabled()
-      // Click should not trigger any action (userEvent.click on disabled button is essentially a no-op)
+      
+      // Attempt to click the disabled button
       await userEvent.click(button)
+      
+      // ROBUST CHECK: Verify the click spy was NOT called
+      await expect(args.onClick).not.toHaveBeenCalled()
+    })
+    
+    await step('Verify keydown handler is NOT called on keyboard activation attempt', async () => {
+      const button = canvas.getByRole('button', { name: /disabled action/i })
+      
+      // Try to focus and activate with keyboard (should not work on disabled element)
+      button.focus()
+      await userEvent.keyboard('{Enter}')
+      await userEvent.keyboard(' ')
+      
+      // ROBUST CHECK: Verify the keydown spy was NOT called
+      await expect(args.onKeydown).not.toHaveBeenCalled()
     })
   }
 }

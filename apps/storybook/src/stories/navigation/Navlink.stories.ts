@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
 import { vueRouter } from 'storybook-vue3-router'
 import { useRoute, useRouter } from 'vue-router'
 import { FzNavlink, FzRouterNavlink } from '@fiscozen/navlink'
@@ -85,9 +85,11 @@ const Template: Story = {
 export const SimpleNavlink: Story = {
   ...Template,
   args: {
-    label: 'Lorem ipsum'
+    label: 'Lorem ipsum',
+    // 👇 Use fn() to spy on click - accessible via args in play function
+    onClick: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify navlink renders correctly', async () => {
@@ -106,6 +108,14 @@ export const SimpleNavlink: Story = {
       await expect(button).not.toBeDisabled()
       // Component uses native disabled attribute, not aria-disabled
       await expect(button).not.toHaveAttribute('disabled')
+    })
+    
+    await step('Verify click handler IS called when navlink is clicked', async () => {
+      const button = canvas.getByRole('button', { name: /lorem ipsum/i })
+      await userEvent.click(button)
+      
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
     })
   }
 }
@@ -314,12 +324,15 @@ RouterNavlinkIcon.play = async ({ canvasElement, step }) => {
 // INTERACTION STORIES
 // ============================================
 
+// ClickInteraction story - uses fn() spy for robust verification
 export const ClickInteraction: Story = {
   ...Template,
   args: {
-    label: 'Click me'
+    label: 'Click me',
+    // 👇 Use fn() to spy on click - accessible via args in play function
+    onClick: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify navlink is clickable', async () => {
@@ -328,11 +341,24 @@ export const ClickInteraction: Story = {
       await expect(button).toBeVisible()
     })
     
-    await step('Click navlink button', async () => {
+    await step('Verify click handler IS called when navlink is clicked', async () => {
       const button = canvas.getByRole('button', { name: /click me/i })
+      
       await userEvent.click(button)
-      // Button should be clickable without errors
-      await expect(button).toBeInTheDocument()
+      
+      // ROBUST CHECK: Verify the click spy WAS called (contrast with disabled state)
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
+    })
+    
+    await step('Verify click handler IS called on keyboard activation', async () => {
+      const button = canvas.getByRole('button', { name: /click me/i })
+      
+      // Focus and activate with Enter key
+      button.focus()
+      await userEvent.keyboard('{Enter}')
+      
+      // ROBUST CHECK: Verify the click spy WAS called (twice total: click + Enter)
+      await expect(args.onClick).toHaveBeenCalledTimes(2)
     })
   }
 }
@@ -417,9 +443,11 @@ export const ActiveState: Story = {
 export const KeyboardNavigation: Story = {
   ...Template,
   args: {
-    label: 'Keyboard nav'
+    label: 'Keyboard nav',
+    // 👇 Use fn() to spy on click - accessible via args in play function
+    onClick: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Tab to focus navlink button', async () => {
@@ -435,8 +463,8 @@ export const KeyboardNavigation: Story = {
       await expect(document.activeElement).toBe(button)
       
       await userEvent.keyboard('{Enter}')
-      // Button should be activated without errors
-      await expect(button).toBeInTheDocument()
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
     })
     
     await step('Activate navlink with Space key', async () => {
@@ -445,8 +473,8 @@ export const KeyboardNavigation: Story = {
       await expect(document.activeElement).toBe(button)
       
       await userEvent.keyboard(' ')
-      // Button should be activated without errors
-      await expect(button).toBeInTheDocument()
+      // ROBUST CHECK: Verify the click spy WAS called (twice total: Enter + Space)
+      await expect(args.onClick).toHaveBeenCalledTimes(2)
     })
   }
 }
@@ -512,13 +540,16 @@ export const RouterNavlinkKeyboardNavigation: Story = {
   }
 }
 
+// DisabledNavlink story - uses fn() spy to verify handler is NOT called
 export const DisabledNavlink: Story = {
   ...Template,
   args: {
     label: 'Disabled navlink',
-    disabled: true
+    disabled: true,
+    // 👇 Define spy in args - it should NOT be called when disabled
+    onClick: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify disabled navlink renders correctly', async () => {
@@ -534,11 +565,26 @@ export const DisabledNavlink: Story = {
       await expect(button).toHaveAttribute('disabled')
     })
     
-    await step('Verify disabled navlink does not respond to clicks', async () => {
+    await step('Verify click handler is NOT called when clicking disabled navlink', async () => {
       const button = canvas.getByRole('button', { name: /disabled navlink/i })
+      
+      // Attempt to click the disabled button
       await userEvent.click(button)
-      // Button should remain disabled and not trigger any action
-      await expect(button).toBeDisabled()
+      
+      // ROBUST CHECK: Verify the click spy was NOT called
+      await expect(args.onClick).not.toHaveBeenCalled()
+    })
+    
+    await step('Verify click handler is NOT called on keyboard activation attempt', async () => {
+      const button = canvas.getByRole('button', { name: /disabled navlink/i })
+      
+      // Try to focus and activate with keyboard (should not work on disabled element)
+      button.focus()
+      await userEvent.keyboard('{Enter}')
+      await userEvent.keyboard(' ')
+      
+      // ROBUST CHECK: Verify the click spy was NOT called
+      await expect(args.onClick).not.toHaveBeenCalled()
     })
     
     await step('Verify disabled navlink is not keyboard focusable', async () => {

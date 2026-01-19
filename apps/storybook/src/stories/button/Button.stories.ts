@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from '@storybook/test'
 
 import { FzButton } from '@fiscozen/button'
 import { FzIcon } from '@fiscozen/icons'
@@ -68,6 +68,7 @@ const iconTemplate = `
 `
 
 type Story = StoryObj<typeof FzButton>
+
 /*
  *👇 Render functions are a framework specific feature to allow you control on how the component renders.
  * See https://storybook.js.org/docs/api/csf
@@ -75,50 +76,80 @@ type Story = StoryObj<typeof FzButton>
  */
 export const Primary: Story = {
   args: {
-    label: 'Primary Button'
+    label: 'Primary Button',
+    // 👇 Use fn() to spy on click - accessible via args in play function
+    onClick: fn()
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    // Verify button exists and has correct role
     const button = canvas.getByRole('button')
-    await expect(button).toBeInTheDocument()
     
-    // Verify primary variant default state classes
-    await expect(button.classList.contains('bg-blue-500')).toBe(true)
-    await expect(button.classList.contains('text-core-white')).toBe(true)
+    await step('Verify button exists and has correct role', async () => {
+      await expect(button).toBeInTheDocument()
+    })
     
-    // Verify hover state class
-    await expect(button.classList.contains('hover:bg-blue-600')).toBe(true)
+    await step('Verify primary variant default state classes', async () => {
+      await expect(button.classList.contains('bg-blue-500')).toBe(true)
+      await expect(button.classList.contains('text-core-white')).toBe(true)
+    })
     
-    // Verify focus state classes
-    await expect(button.classList.contains('focus:bg-blue-500')).toBe(true)
-    await expect(button.classList.contains('focus:!border-blue-600')).toBe(true)
+    await step('Verify hover state class', async () => {
+      await expect(button.classList.contains('hover:bg-blue-600')).toBe(true)
+    })
     
-    // Verify disabled state class
-    await expect(button.classList.contains('disabled:bg-blue-200')).toBe(true)
+    await step('Verify focus state classes', async () => {
+      await expect(button.classList.contains('focus:bg-blue-500')).toBe(true)
+      await expect(button.classList.contains('focus:!border-blue-600')).toBe(true)
+    })
     
-    // Verify button is not disabled
-    await expect(button).toBeEnabled()
+    await step('Verify disabled state class exists (for styling)', async () => {
+      await expect(button.classList.contains('disabled:bg-blue-200')).toBe(true)
+    })
     
-    // Verify label is rendered
-    await expect(button.textContent).toContain('Primary Button')
+    await step('Verify button is not disabled', async () => {
+      await expect(button).toBeEnabled()
+    })
     
-    // Verify default environment (frontoffice)
-    await expect(button.classList.contains('h-44')).toBe(true)
+    await step('Verify label is rendered', async () => {
+      await expect(button.textContent).toContain('Primary Button')
+    })
     
-    // Verify border and gap
-    await expect(button.classList.contains('border-1')).toBe(true)
-    await expect(button.classList.contains('gap-8')).toBe(true)
+    await step('Verify default environment (frontoffice)', async () => {
+      await expect(button.classList.contains('h-44')).toBe(true)
+    })
     
-    // Accessibility: Verify button is focusable (tabindex)
-    await expect(button.getAttribute('tabindex')).not.toBe('-1')
+    await step('Verify border and gap', async () => {
+      await expect(button.classList.contains('border-1')).toBe(true)
+      await expect(button.classList.contains('gap-8')).toBe(true)
+    })
     
-    // Accessibility: Verify button type
-    await expect(button.getAttribute('type')).toBe('button')
+    await step('Verify accessibility attributes', async () => {
+      // Verify button is focusable (tabindex)
+      await expect(button.getAttribute('tabindex')).not.toBe('-1')
+      
+      // Verify button type
+      await expect(button.getAttribute('type')).toBe('button')
+      
+      // Verify aria-disabled is set to "false" when enabled
+      await expect(button.getAttribute('aria-disabled')).toBe('false')
+    })
     
-    // Accessibility: Verify aria-disabled is set to "false" when enabled
-    await expect(button.getAttribute('aria-disabled')).toBe('false')
+    await step('Verify click handler IS called when button is clicked', async () => {
+      await userEvent.click(button)
+      
+      // ROBUST CHECK: Verify the click spy WAS called (contrast with disabled state)
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
+    })
+    
+    await step('Verify click handler IS called on keyboard activation', async () => {
+      // Focus and activate with Enter key
+      button.focus()
+      await userEvent.keyboard('{Enter}')
+      
+      // ROBUST CHECK: Verify the click spy WAS called (twice total: click + Enter)
+      await expect(args.onClick).toHaveBeenCalledTimes(2)
+    })
   }
 }
 
@@ -354,6 +385,42 @@ export const FrontofficeEnvironment: Story = {
   }
 }
 
+// Disabled state - uses fn() spy to verify handler is NOT called
+export const Disabled: Story = {
+  args: {
+    label: 'Disabled Button',
+    disabled: true,
+    // 👇 Define spy in args - it should NOT be called when disabled
+    onClick: fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const button = canvas.getByRole('button')
+    
+    await step('Verify button is disabled', async () => {
+      await expect(button).toBeDisabled()
+      await expect(button).toHaveAttribute('aria-disabled', 'true')
+    })
+    
+    await step('Verify click handler is NOT called when clicking disabled button', async () => {
+      await userEvent.click(button)
+      
+      // ROBUST CHECK: Verify the click spy was NOT called
+      await expect(args.onClick).not.toHaveBeenCalled()
+    })
+    
+    await step('Verify click handler is NOT called on keyboard activation attempt', async () => {
+      button.focus()
+      await userEvent.keyboard('{Enter}')
+      await userEvent.keyboard(' ')
+      
+      // ROBUST CHECK: Verify the click spy was NOT called
+      await expect(args.onClick).not.toHaveBeenCalled()
+    })
+  }
+}
+
+// Visual showcase of all disabled button variants (styling focus)
 export const DisabledStates: Story = {
   render: () => ({
     components: { FzButton },
@@ -369,47 +436,51 @@ export const DisabledStates: Story = {
       </div>
     `
   }),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
     const buttons = canvas.getAllByRole('button')
     
-    // Verify all buttons are disabled
-    buttons.forEach(button => {
-      expect(button).toBeDisabled()
-      expect(button.hasAttribute('disabled')).toBe(true)
+    await step('Verify all buttons are disabled', async () => {
+      buttons.forEach(button => {
+        expect(button).toBeDisabled()
+        expect(button.hasAttribute('disabled')).toBe(true)
+      })
     })
     
-    // Verify primary disabled state (index 0)
-    const primaryBtn = buttons[0]
-    await expect(primaryBtn.classList.contains('disabled:bg-blue-200')).toBe(true)
+    await step('Verify primary disabled state styling', async () => {
+      const primaryBtn = buttons[0]
+      await expect(primaryBtn.classList.contains('disabled:bg-blue-200')).toBe(true)
+    })
     
-    // Verify secondary disabled state (index 1)
-    const secondaryBtn = buttons[1]
-    await expect(secondaryBtn.classList.contains('disabled:bg-grey-50')).toBe(true)
-    await expect(secondaryBtn.classList.contains('disabled:text-grey-200')).toBe(true)
-    await expect(secondaryBtn.classList.contains('disabled:!border-grey-200')).toBe(true)
+    await step('Verify secondary disabled state styling', async () => {
+      const secondaryBtn = buttons[1]
+      await expect(secondaryBtn.classList.contains('disabled:bg-grey-50')).toBe(true)
+      await expect(secondaryBtn.classList.contains('disabled:text-grey-200')).toBe(true)
+      await expect(secondaryBtn.classList.contains('disabled:!border-grey-200')).toBe(true)
+    })
     
-    // Verify invisible disabled state (index 2)
-    const invisibleBtn = buttons[2]
-    await expect(invisibleBtn.classList.contains('disabled:bg-grey-50')).toBe(true)
-    await expect(invisibleBtn.classList.contains('disabled:text-grey-200')).toBe(true)
-    await expect(invisibleBtn.classList.contains('disabled:!border-grey-200')).toBe(true)
+    await step('Verify invisible disabled state styling', async () => {
+      const invisibleBtn = buttons[2]
+      await expect(invisibleBtn.classList.contains('disabled:bg-grey-50')).toBe(true)
+      await expect(invisibleBtn.classList.contains('disabled:text-grey-200')).toBe(true)
+      await expect(invisibleBtn.classList.contains('disabled:!border-grey-200')).toBe(true)
+    })
     
-    // Verify danger disabled state (index 3)
-    const dangerBtn = buttons[3]
-    await expect(dangerBtn.classList.contains('disabled:bg-semantic-error-100')).toBe(true)
+    await step('Verify danger disabled state styling', async () => {
+      const dangerBtn = buttons[3]
+      await expect(dangerBtn.classList.contains('disabled:bg-semantic-error-100')).toBe(true)
+    })
     
-    // Verify success disabled state (index 4)
-    const successBtn = buttons[4]
-    await expect(successBtn.classList.contains('disabled:bg-semantic-success-100')).toBe(true)
+    await step('Verify success disabled state styling', async () => {
+      const successBtn = buttons[4]
+      await expect(successBtn.classList.contains('disabled:bg-semantic-success-100')).toBe(true)
+    })
     
-    // Accessibility: Verify disabled buttons are not in tab order
-    buttons.forEach(button => {
-      // Disabled buttons should still be focusable via keyboard for accessibility
-      expect(button.getAttribute('disabled')).not.toBeNull()
-      // Verify aria-disabled is set to "true" for all disabled buttons
-      expect(button.getAttribute('aria-disabled')).toBe('true')
+    await step('Verify accessibility attributes on disabled buttons', async () => {
+      buttons.forEach(button => {
+        expect(button.getAttribute('disabled')).not.toBeNull()
+        expect(button.getAttribute('aria-disabled')).toBe('true')
+      })
     })
   }
 }

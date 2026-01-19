@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
 import { ref } from 'vue'
 import { FzCheckbox } from '@fiscozen/checkbox'
 import { FzIcon } from '@fiscozen/icons'
@@ -40,9 +40,11 @@ const Template: CheckboxStory = {
 export const Default: CheckboxStory = {
   ...Template,
   args: {
-    label: 'Checkbox'
+    label: 'Checkbox',
+    // 👇 Use fn() to spy on update:modelValue - accessible via args in play function
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
     await step('Verify checkbox input exists', async () => {
@@ -56,15 +58,26 @@ export const Default: CheckboxStory = {
       expect(label).toBeVisible()
     })
 
-    await step('Check checkbox on click', async () => {
+    await step('Check checkbox on click and verify handler IS called', async () => {
       const checkbox = canvas.getByRole('checkbox', { name: 'Checkbox' })
+      
+      expect(checkbox).not.toBeChecked()
       await userEvent.click(checkbox)
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called with true
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(1)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith(true)
       expect(checkbox).toBeChecked()
     })
 
-    await step('Uncheck checkbox on second click', async () => {
+    await step('Uncheck checkbox on second click and verify handler IS called', async () => {
       const checkbox = canvas.getByRole('checkbox', { name: 'Checkbox' })
+      
+      expect(checkbox).toBeChecked()
       await userEvent.click(checkbox)
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called (twice total)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(2)
       expect(checkbox).not.toBeChecked()
     })
 
@@ -153,9 +166,11 @@ export const Disabled: CheckboxStory = {
   ...Template,
   args: {
     label: 'Checkbox',
-    disabled: true
+    disabled: true,
+    // 👇 Define spy in args - it should NOT be called when disabled
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
     await step('Verify checkbox is disabled', async () => {
@@ -164,17 +179,32 @@ export const Disabled: CheckboxStory = {
       expect(checkbox).not.toBeChecked()
     })
 
-    await step('Verify disabled checkbox cannot be checked', async () => {
+    await step('Verify update:modelValue is NOT called when clicking disabled checkbox', async () => {
       const checkbox = canvas.getByRole('checkbox', { name: 'Checkbox' })
-      // Try to click (should not work)
-      await userEvent.click(checkbox).catch(() => {})
+      
       expect(checkbox).not.toBeChecked()
+      await userEvent.click(checkbox).catch(() => {})
+      
+      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+      expect(checkbox).not.toBeChecked() // Should remain unchecked
+    })
+
+    await step('Verify update:modelValue is NOT called on keyboard activation attempt', async () => {
+      const checkbox = canvas.getByRole('checkbox', { name: 'Checkbox' })
+      
+      expect(checkbox).not.toBeChecked()
+      checkbox.focus()
+      await userEvent.keyboard(' ')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+      expect(checkbox).not.toBeChecked() // Should remain unchecked
     })
 
     await step('Verify label exists', async () => {
       const label = canvas.getByText('Checkbox')
       expect(label).toBeInTheDocument()
-      // Note: Disabled styling classes may vary by implementation
     })
   }
 }
@@ -319,9 +349,11 @@ export const Tooltip: CheckboxStory = {
 export const KeyboardNavigationTest: CheckboxStory = {
   ...Template,
   args: {
-    label: 'Keyboard Test'
+    label: 'Keyboard Test',
+    // 👇 Use fn() to spy on update:modelValue - accessible via args in play function
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
     await step('Focus checkbox with Tab', async () => {
@@ -330,15 +362,22 @@ export const KeyboardNavigationTest: CheckboxStory = {
       expect(checkbox).toHaveFocus()
     })
 
-    await step('Check with Space key', async () => {
+    await step('Check with Space key and verify handler IS called', async () => {
       const checkbox = canvas.getByRole('checkbox', { name: 'Keyboard Test' })
       await userEvent.keyboard(' ')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(1)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith(true)
       expect(checkbox).toBeChecked()
     })
 
-    await step('Uncheck with Space key again', async () => {
+    await step('Uncheck with Space key again and verify handler IS called', async () => {
       const checkbox = canvas.getByRole('checkbox', { name: 'Keyboard Test' })
       await userEvent.keyboard(' ')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called (twice total)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(2)
       expect(checkbox).not.toBeChecked()
     })
   }

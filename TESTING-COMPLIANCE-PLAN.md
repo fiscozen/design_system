@@ -19,7 +19,8 @@
 8. [Phase 4: Storybook Play Functions](#phase-4-storybook-play-functions)
 9. [Phase 5: Accessibility Test Coverage](#phase-5-accessibility-test-coverage)
 10. [Phase 6: Coverage Enforcement](#phase-6-coverage-enforcement)
-11. [Appendix: Detailed Package Audit](#appendix-detailed-package-audit)
+11. [Phase 7: Spy Function Pattern Refactor](#phase-7-spy-function-pattern-refactor)
+12. [Appendix: Detailed Package Audit](#appendix-detailed-package-audit)
 
 ---
 
@@ -43,8 +44,9 @@ This document outlines a comprehensive plan to bring the Fiscozen Design System 
 2. **🔴 Critical:** Missing unit tests for components (9 packages)
 3. **🟠 High:** Add play functions to stories (28 story files)
 4. **🟠 High:** Accessibility test coverage gaps
-5. **🟡 Medium:** Test quality improvements (missing test categories)
-6. **🟢 Low:** Coverage enforcement and CI integration
+5. **🟠 High:** Spy function pattern refactor for robust interaction testing (~26 story files)
+6. **🟡 Medium:** Test quality improvements (missing test categories)
+7. **🟢 Low:** Coverage enforcement and CI integration
 
 ---
 
@@ -230,6 +232,7 @@ Week 3-5:  Phase 3 - Unit Test Quality Improvements
 Week 4-6:  Phase 4 - Storybook Play Functions
 Week 5-7:  Phase 5 - Accessibility Test Coverage
 Week 7-8:  Phase 6 - Coverage Enforcement
+Week 8-9:  Phase 7 - Spy Function Pattern Refactor
 ```
 
 ### Effort Estimates
@@ -242,6 +245,7 @@ Week 7-8:  Phase 6 - Coverage Enforcement
 | Phase 4 | Play functions (28 story files) | 30-45 hrs | 🟠 High |
 | Phase 5 | Accessibility tests (~35 packages) | 50-70 hrs | 🔴 Critical |
 | Phase 6 | CI/Coverage setup | 8-12 hrs | 🟡 Medium |
+| Phase 7 | Spy function pattern refactor (~26 stories) | 15-20 hrs | 🟠 High |
 
 ---
 
@@ -1807,6 +1811,18 @@ Ensure root `package.json` has:
 - [ ] Pre-commit hooks configured
 - [ ] Documentation updated
 
+### Phase 7 Completion Checklist
+
+- [x] Action.stories.ts uses spy function pattern
+- [x] Button.stories.ts uses spy function pattern
+- [x] Navlink.stories.ts uses spy function pattern
+- [x] Checkbox.stories.ts uses spy function pattern
+- [ ] All form component stories use spy functions for v-model events
+- [ ] All interactive component stories use spy functions for click events
+- [ ] All disabled state stories verify handlers are NOT called
+- [ ] All enabled state stories verify handlers ARE called
+- [ ] All keyboard navigation stories verify handlers are called on Enter/Space
+
 ---
 
 ## Resources
@@ -2075,4 +2091,247 @@ Ensure root `package.json` has:
 - Fixed visibility checks for native HTML elements (details element)
 - Fixed keyboard navigation tests to verify keyboard accessibility without relying on state changes that may require v-model updates
 - Phase 4 (Storybook Play Functions) progress: 14 of 28 critical priority stories completed
+
+### January 19, 2026 - Robust Disabled State Testing with Spy Functions ✅
+
+**Pattern Enhancement:** Spy Function Pattern for Interaction Testing
+
+A weakness was identified in existing Storybook play functions: disabled state tests were only checking for the presence of `disabled` or `aria-disabled` attributes, which is insufficient to verify that click handlers are actually blocked. Tests have been enhanced with the official Storybook spy function pattern.
+
+**Problem Identified:**
+Previous tests only verified UI state, not behavioral correctness:
+```typescript
+// ❌ WEAK: Only checks attribute presence, not handler blocking
+await step('Verify disabled state', async () => {
+  const button = canvas.getByRole('button')
+  await expect(button).toBeDisabled()
+  await expect(button).toHaveAttribute('aria-disabled', 'true')
+})
+```
+
+**Solution Implemented:**
+Using `fn()` spies from `@storybook/test` in args, accessible via play function's `args` parameter:
+```typescript
+// ✅ ROBUST: Uses spy functions to verify handler behavior
+import { fn } from '@storybook/test'
+
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+    // 👇 Define spy in args - accessible via args parameter in play function
+    onClick: fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify disabled state attributes', async () => {
+      const button = canvas.getByRole('button')
+      await expect(button).toBeDisabled()
+      await expect(button).toHaveAttribute('aria-disabled', 'true')
+    })
+    
+    await step('Verify click handler is NOT called when clicking disabled element', async () => {
+      const button = canvas.getByRole('button')
+      await userEvent.click(button)
+      
+      // ROBUST CHECK: Verify the click spy was NOT called
+      await expect(args.onClick).not.toHaveBeenCalled()
+    })
+  }
+}
+```
+
+**Enabled State Pattern (Contrast):**
+```typescript
+export const Default: Story = {
+  args: {
+    // 👇 Define spy in args for enabled state testing
+    onClick: fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify click handler IS called when button is clicked', async () => {
+      const button = canvas.getByRole('button')
+      await userEvent.click(button)
+      
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
+    })
+    
+    await step('Verify click handler IS called on keyboard activation', async () => {
+      const button = canvas.getByRole('button')
+      button.focus()
+      await userEvent.keyboard('{Enter}')
+      
+      // ROBUST CHECK: Verify the click spy WAS called (twice total)
+      await expect(args.onClick).toHaveBeenCalledTimes(2)
+    })
+  }
+}
+```
+
+**Vue v-model Pattern (for form components):**
+```typescript
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+    // 👇 For Vue v-model components, use 'onUpdate:modelValue'
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify update:modelValue is NOT called when clicking disabled checkbox', async () => {
+      const checkbox = canvas.getByRole('checkbox')
+      await userEvent.click(checkbox)
+      
+      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+    })
+  }
+}
+```
+
+**Stories Updated:**
+- ✅ `Action.stories.ts` - Default, Disabled (onClick, onKeydown spies)
+- ✅ `Button.stories.ts` - Primary, Disabled (onClick spy)
+- ✅ `Navlink.stories.ts` - SimpleNavlink, KeyboardNavigation, ClickInteraction, DisabledNavlink (onClick spy)
+- ✅ `Checkbox.stories.ts` - Default, Disabled, KeyboardNavigationTest (onUpdate:modelValue spy)
+
+**Key Benefits:**
+1. **Official Pattern** - Follows [Storybook Actions documentation](https://storybook.js.org/docs/essentials/actions#via-storybooktest-spyon)
+2. **Actions Panel Integration** - Spies automatically appear in Storybook's actions panel
+3. **Clean Code** - No custom render templates or reactive counters needed
+4. **Type-safe** - The `fn()` spy is properly typed
+5. **Rich Assertions** - `toHaveBeenCalled()`, `toHaveBeenCalledTimes()`, `toHaveBeenCalledWith()`, `not.toHaveBeenCalled()`
+
+**Reference Documentation:** [Storybook Actions - Via fn() spies](https://storybook.js.org/docs/essentials/actions#via-storybooktest-fn-spies)
+
+---
+
+## Phase 7: Spy Function Pattern Refactor
+
+### Priority: 🟠 High
+### Estimated Time: 15-20 hours
+
+This phase ensures all Storybook play functions use the robust spy function pattern for interaction testing, particularly for disabled state verification.
+
+### 7.1 Stories Requiring Spy Function Enhancement
+
+Stories with disabled states or interaction tests that should use `fn()` spies:
+
+| Story File | Disabled Tests | Interaction Tests | Est. Hours |
+|-----------|----------------|-------------------|------------|
+| form/Input.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/CurrencyInput.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/Select.stories.ts | ✅ Has disabled | ✅ Has interactions | 1.5 |
+| form/Typeahead.stories.ts | ✅ Has disabled | ✅ Has interactions | 1.5 |
+| form/Radio.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/RadioCard.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/RadioGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/CheckboxGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/Textarea.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/Datepicker.stories.ts | ✅ Has disabled | ✅ Has interactions | 1.5 |
+| form/Upload.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/Appointments.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| button/IconButton.stories.ts | ✅ Has disabled | ✅ Has interactions | 0.5 |
+| button/ButtonGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | 0.5 |
+| navigation/Dropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| navigation/IconDropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| navigation/Link.stories.ts | ✅ Has disabled | ✅ Has interactions | 0.5 |
+| navigation/Actionlist.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| navigation/Navlist.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| panel/Tab.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| panel/Collapse.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
+| overlay/Dialog.stories.ts | ❌ No disabled | ✅ Has interactions | 1 |
+| overlay/ConfirmDialog.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| messages/Alert.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
+| messages/Toast.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
+| messages/ToastQueue.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
+
+### 7.2 Checklist for Each Story Enhancement
+
+For each story file listed above:
+
+- [ ] Import `fn` from `@storybook/test`
+- [ ] Add spy function to `args` (e.g., `onClick: fn()`, `onUpdate:modelValue: fn()`)
+- [ ] Add `args` parameter to play function signature
+- [ ] For enabled state stories: Add `toHaveBeenCalledTimes()` assertions
+- [ ] For disabled state stories: Add `not.toHaveBeenCalled()` assertions
+- [ ] For keyboard navigation stories: Add spy assertions for Enter/Space key activation
+- [ ] Verify tests pass with `pnpm test:storybook`
+
+### 7.3 Event Name Reference for Vue Components
+
+| Component Type | Event Binding | Spy Arg Name |
+|---------------|--------------|--------------|
+| Button/Action | `@click` | `onClick: fn()` |
+| Input/Textarea | `@input`, `@blur`, `@focus` | `onInput: fn()`, `onBlur: fn()`, `onFocus: fn()` |
+| Checkbox/Radio | `v-model` | `'onUpdate:modelValue': fn()` |
+| Select/Typeahead | `v-model`, `@select` | `'onUpdate:modelValue': fn()`, `onSelect: fn()` |
+| Dialog | `@close`, `@confirm`, `@cancel` | `onClose: fn()`, `onConfirm: fn()`, `onCancel: fn()` |
+| Dropdown | `@toggle`, `@select` | `onToggle: fn()`, `onSelect: fn()` |
+| Toast | `@close` | `onClose: fn()` |
+
+### 7.4 Stories Already Using Spy Pattern ✅
+
+| Story File | Status |
+|-----------|--------|
+| navigation/Action.stories.ts | ✅ Complete |
+| button/Button.stories.ts | ✅ Complete |
+| navigation/Navlink.stories.ts | ✅ Complete |
+| form/Checkbox.stories.ts | ✅ Complete |
+
+### 7.5 Verification Script
+
+After completing all enhancements, run:
+
+```bash
+# Run all storybook tests
+pnpm test:storybook
+
+# Run specific story tests to verify spy pattern
+pnpm test:storybook -- --testNamePattern="Disabled|disabled"
+```
+
+### 7.6 Anti-patterns to Avoid
+
+**❌ Don't use reactive counters in render functions:**
+```typescript
+// ❌ AVOID: Custom render with reactive counter
+render: (args) => ({
+  setup() {
+    const clickCount = ref(0)
+    const handleClick = () => { clickCount.value++ }
+    return { args, clickCount, handleClick }
+  },
+  template: `<Button @click="handleClick" /><span data-testid="count">{{ clickCount }}</span>`
+})
+```
+
+**❌ Don't create module-level spies:**
+```typescript
+// ❌ AVOID: Module-level spy
+const handleClick = fn()
+
+export const MyStory: Story = {
+  render: (args) => ({
+    setup: () => ({ args, handleClick }),
+    template: `<Button @click="handleClick" />`
+  })
+}
+```
+
+**✅ Use args-based spies (official pattern):**
+```typescript
+// ✅ CORRECT: Spy in args, accessible in play function
+export const MyStory: Story = {
+  args: {
+    onClick: fn()
+  },
+  play: async ({ args }) => {
+    await expect(args.onClick).toHaveBeenCalled()
+  }
+}
 
