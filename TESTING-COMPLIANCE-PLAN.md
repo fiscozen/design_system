@@ -2273,7 +2273,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | Story File | Disabled Tests | Interaction Tests | Est. Hours |
 |-----------|----------------|-------------------|------------|
 | form/Input.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| form/CurrencyInput.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/CurrencyInput.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Select.stories.ts | ✅ Has disabled | ✅ Has interactions | 1.5 |
 | form/Typeahead.stories.ts | ✅ Has disabled | ✅ Has interactions | 1.5 |
 | form/Radio.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
@@ -2332,6 +2332,7 @@ For each story file listed above:
 | navigation/Navlink.stories.ts | ✅ Complete |
 | form/Checkbox.stories.ts | ✅ Complete |
 | form/Input.stories.ts | ✅ Complete |
+| form/CurrencyInput.stories.ts | ✅ Complete |
 
 ### 7.5 Verification Script
 
