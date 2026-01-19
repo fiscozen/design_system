@@ -181,7 +181,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | overlay | ~~ViewFlag.stories.ts~~ | ~~~2~~ | ✅ **COMPLETED** |
 | panel | ~~Collapse.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | panel | Divider.stories.ts | ~2 | 🟡 Low |
-| panel | Layout.stories.ts | ~3 | 🟡 Medium |
+| panel | ~~Layout.stories.ts~~ | ~~~6~~ | ✅ **COMPLETED** |
 | panel | ~~Tab.stories.ts~~ | ~~~5~~ | ✅ **COMPLETED** |
 | panel | Topbar.stories.ts | ~3 | 🟡 Medium |
 | typography | Paragraph.stories.ts | ~3 | 🟡 Low |
