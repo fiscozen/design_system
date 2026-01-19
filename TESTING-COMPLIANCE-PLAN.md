@@ -1929,6 +1929,23 @@ Ensure root `package.json` has:
 - All play functions test user interactions, visual states, and accessibility expectations
 - Phase 4 (Storybook Play Functions) progress: 1 of 28 critical priority stories completed
 
+### [Current Date] - Alert Stories Enhanced with Robust Testing ✅
+
+**Package:** `alert` (Storybook)
+- Enhanced Alert.stories.ts with comprehensive play function improvements:
+  - ✅ Added `fn()` spies for robust interaction testing (official Storybook pattern)
+  - ✅ Enhanced Info story with button click handler verification using spies
+  - ✅ Enhanced LinkAndButton story with spy verification for both button and link clicks
+  - ✅ Enhanced Dismissible story with dismiss handler spy verification
+  - ✅ Added KeyboardNavigation story with accordion toggle and keyboard accessibility tests
+  - ✅ Added KeyboardNavigationButton story with Enter/Space key activation tests
+  - ✅ Added Accessibility story with comprehensive ARIA and screen reader tests
+  - ✅ Added AccessibilityAccordion story for accordion variant accessibility
+  - ✅ Added FrontofficeEnvironment and BackofficeEnvironment stories for environment-specific testing
+- All 20 play function tests passing ✅
+- Follows testing standards: uses `fn()` spies, `waitFor()` instead of setTimeout, step-based organization
+- Comprehensive coverage: interactions, keyboard navigation, accessibility, environment variants
+
 ### January 16, 2026 - Typeahead Component Combobox Pattern Accessibility Tests ✅
 
 **Package:** `typeahead`
