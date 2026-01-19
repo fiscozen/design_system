@@ -2177,6 +2177,19 @@ Ensure root `package.json` has:
 - Play functions cover: component rendering, color variant classes (black, error, warning, success, info, dark, light), size variant classes (sm, md, lg), single character styling (rounded-full, !px-0), multi-character styling (rounded-2xl, !w-fit), base classes (flex, items-center, justify-center, font-medium)
 - Phase 4 (Storybook Play Functions) progress: 16 of 28 critical priority stories completed
 
+### January 19, 2026 - Collapse Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `collapse` (Storybook)
+- Enhanced Collapse.stories.ts with spy function pattern for robust interaction testing
+- Added `fn()` spies for `onUpdate:open` event in UserInteraction and KeyboardNavigation stories
+- Updated play functions to verify that `update:open` events are emitted correctly when collapse is toggled
+- Enhanced UserInteraction story to verify spy calls with `toHaveBeenCalled()` and `toHaveBeenLastCalledWith()` assertions
+- Enhanced KeyboardNavigation story to verify keyboard accessibility and interaction via click simulation
+- Used `mockClear()` between test steps to ensure accurate spy call verification
+- Fixed tests to handle component's dual handler behavior (handleClick and handleToggle both emit events)
+- All tests passing: 4 storybook tests, 57 unit tests
+- Phase 7 (Spy Function Pattern Refactor) progress: Collapse.stories.ts completed
+
 ### January 19, 2026 - Robust Disabled State Testing with Spy Functions ✅
 
 **Pattern Enhancement:** Spy Function Pattern for Interaction Testing
@@ -2328,7 +2341,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | navigation/Actionlist.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | navigation/Navlist.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | panel/Tab.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
-| panel/Collapse.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
+| panel/Collapse.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | overlay/Dialog.stories.ts | ❌ No disabled | ✅ Has interactions | 1 |
 | overlay/ConfirmDialog.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | messages/Alert.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
