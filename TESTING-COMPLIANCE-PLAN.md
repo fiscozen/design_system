@@ -2359,7 +2359,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | form/Datepicker.stories.ts | ✅ Has disabled | ✅ Has interactions | 1.5 |
 | form/Upload.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | form/Appointments.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
-| button/IconButton.stories.ts | ✅ Has disabled | ✅ Has interactions | 0.5 |
+| button/IconButton.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | button/ButtonGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | 0.5 |
 | navigation/Dropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | navigation/IconDropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
@@ -2410,6 +2410,7 @@ For each story file listed above:
 | form/CurrencyInput.stories.ts | ✅ Complete |
 | form/Select.stories.ts | ✅ Complete |
 | form/Radio.stories.ts | ✅ Complete |
+| button/IconButton.stories.ts | ✅ Complete |
 
 ### 7.5 Verification Script
 
@@ -2504,4 +2505,16 @@ export const MyStory: Story = {
 - Updated plan to mark Select as complete for event tests
 - Note: Component does not emit `search` event (only emits `fzselect:select`, `fzselect:clear`, `fzselect:right-icon-click`, and `update:modelValue` for v-model)
 - Phase 3 (Unit Test Quality Improvements) progress: Select event tests verified complete
+
+### January 20, 2026 - IconButton Spy Function Pattern Enhancement ✅
+
+**Package:** `button` (Storybook)
+- Added spy function pattern to IconButton.stories.ts for robust interaction testing
+- Enhanced Template story with `onClick` spy to verify enabled buttons call handler and disabled buttons do NOT call handler
+- Enhanced Primary story with spy function pattern including keyboard navigation tests (Enter and Space key activation)
+- Enhanced Secondary story with spy function pattern for interaction verification
+- Enhanced Invisible story with spy function pattern for interaction verification
+- All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
+- All tests passing: 3 storybook play function tests (Template, Primary, Secondary, Invisible stories)
+- Phase 7 (Spy Function Pattern Refactor) progress: IconButton.stories.ts completed
 

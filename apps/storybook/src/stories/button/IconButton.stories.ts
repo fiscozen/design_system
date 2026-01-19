@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within, userEvent } from '@storybook/test'
+import { expect, fn, within, userEvent } from '@storybook/test'
 import { FzIconButton } from '@fiscozen/button'
 
 type PlayFunctionContext = {
@@ -52,16 +52,20 @@ const Template: IconButtonStory = {
             <span class="text-sm text-grey-500">Backoffice</span>
             <div class="flex gap-8 items-center">
               <FzIconButton 
-                v-bind="{ ...args, environment: 'backoffice', disabled: false, hasNotification: false }" 
+                v-bind="{ ...args, environment: 'backoffice', disabled: false, hasNotification: false }"
+                @click="args.onClick"
               />
               <FzIconButton 
-                v-bind="{ ...args, environment: 'backoffice', disabled: false, hasNotification: true }" 
+                v-bind="{ ...args, environment: 'backoffice', disabled: false, hasNotification: true }"
+                @click="args.onClick"
               />
               <FzIconButton 
-                v-bind="{ ...args, environment: 'backoffice', disabled: true, hasNotification: false }" 
+                v-bind="{ ...args, environment: 'backoffice', disabled: true, hasNotification: false }"
+                @click="args.onClick"
               />
               <FzIconButton 
-                v-bind="{ ...args, environment: 'backoffice', disabled: true, hasNotification: true }" 
+                v-bind="{ ...args, environment: 'backoffice', disabled: true, hasNotification: true }"
+                @click="args.onClick"
               />
             </div>
           </div>
@@ -73,16 +77,20 @@ const Template: IconButtonStory = {
             <span class="text-sm text-grey-500">Frontoffice</span>
             <div class="flex gap-8 items-center">
               <FzIconButton 
-                v-bind="{ ...args, environment: 'frontoffice', disabled: false, hasNotification: false }" 
+                v-bind="{ ...args, environment: 'frontoffice', disabled: false, hasNotification: false }"
+                @click="args.onClick"
               />
               <FzIconButton 
-                v-bind="{ ...args, environment: 'frontoffice', disabled: false, hasNotification: true }" 
+                v-bind="{ ...args, environment: 'frontoffice', disabled: false, hasNotification: true }"
+                @click="args.onClick"
               />
               <FzIconButton 
-                v-bind="{ ...args, environment: 'frontoffice', disabled: true, hasNotification: false }" 
+                v-bind="{ ...args, environment: 'frontoffice', disabled: true, hasNotification: false }"
+                @click="args.onClick"
               />
               <FzIconButton 
-                v-bind="{ ...args, environment: 'frontoffice', disabled: true, hasNotification: true }" 
+                v-bind="{ ...args, environment: 'frontoffice', disabled: true, hasNotification: true }"
+                @click="args.onClick"
               />
             </div>
           </div>
@@ -92,9 +100,11 @@ const Template: IconButtonStory = {
   }),
   args: {
     iconName: 'bell',
-    ariaLabel: 'Notifications'
+    ariaLabel: 'Notifications',
+    // 👇 Use fn() to spy on click - accessible via args in play function
+    onClick: fn()
   },
-  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
     await step('Verify all buttons render', async () => {
@@ -134,6 +144,40 @@ const Template: IconButtonStory = {
       await expect(buttons[6].getAttribute('aria-disabled')).toBe('true')
       await expect(buttons[7].getAttribute('aria-disabled')).toBe('true')
     })
+
+    await step('Verify enabled buttons call click handler', async () => {
+      const buttons = canvas.getAllByRole('button')
+      // Enabled buttons are at indices 0, 1, 4, 5
+      const enabledButtons = [buttons[0], buttons[1], buttons[4], buttons[5]]
+      
+      // Reset spy call count
+      args.onClick.mockClear()
+      
+      // Click each enabled button
+      for (const button of enabledButtons) {
+        await userEvent.click(button)
+      }
+      
+      // ROBUST CHECK: Verify the click spy WAS called 4 times (once per enabled button)
+      await expect(args.onClick).toHaveBeenCalledTimes(4)
+    })
+
+    await step('Verify disabled buttons do NOT call click handler', async () => {
+      const buttons = canvas.getAllByRole('button')
+      // Disabled buttons are at indices 2, 3, 6, 7
+      const disabledButtons = [buttons[2], buttons[3], buttons[6], buttons[7]]
+      
+      // Reset spy call count
+      args.onClick.mockClear()
+      
+      // Click each disabled button
+      for (const button of disabledButtons) {
+        await userEvent.click(button)
+      }
+      
+      // ROBUST CHECK: Verify the click spy was NOT called when clicking disabled buttons
+      await expect(args.onClick).not.toHaveBeenCalled()
+    })
   }
 }
 
@@ -142,9 +186,11 @@ export const Primary: IconButtonStory = {
   args: {
     ...Template.args,
     variant: 'primary',
-    ariaLabel: 'Primary button'
+    ariaLabel: 'Primary button',
+    // 👇 Use fn() to spy on click - accessible via args in play function
+    onClick: fn()
   },
-  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
     await step('Verify all buttons render', async () => {
@@ -205,6 +251,57 @@ export const Primary: IconButtonStory = {
       await expect(buttons[6].getAttribute('aria-disabled')).toBe('true')
       await expect(buttons[7].getAttribute('aria-disabled')).toBe('true')
     })
+
+    await step('Verify enabled buttons call click handler', async () => {
+      const buttons = canvas.getAllByRole('button')
+      // Enabled buttons are at indices 0, 1, 4, 5
+      const enabledButtons = [buttons[0], buttons[1], buttons[4], buttons[5]]
+      
+      // Reset spy call count
+      args.onClick.mockClear()
+      
+      // Click each enabled button
+      for (const button of enabledButtons) {
+        await userEvent.click(button)
+      }
+      
+      // ROBUST CHECK: Verify the click spy WAS called 4 times (once per enabled button)
+      await expect(args.onClick).toHaveBeenCalledTimes(4)
+    })
+
+    await step('Verify disabled buttons do NOT call click handler', async () => {
+      const buttons = canvas.getAllByRole('button')
+      // Disabled buttons are at indices 2, 3, 6, 7
+      const disabledButtons = [buttons[2], buttons[3], buttons[6], buttons[7]]
+      
+      // Reset spy call count
+      args.onClick.mockClear()
+      
+      // Click each disabled button
+      for (const button of disabledButtons) {
+        await userEvent.click(button)
+      }
+      
+      // ROBUST CHECK: Verify the click spy was NOT called when clicking disabled buttons
+      await expect(args.onClick).not.toHaveBeenCalled()
+    })
+
+    await step('Verify keyboard activation calls click handler', async () => {
+      const buttons = canvas.getAllByRole('button')
+      // Focus and activate first enabled button with Enter key
+      buttons[0].focus()
+      await userEvent.keyboard('{Enter}')
+      
+      // ROBUST CHECK: Verify the click spy WAS called on keyboard activation
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
+      
+      // Focus and activate second enabled button with Space key
+      buttons[1].focus()
+      await userEvent.keyboard(' ')
+      
+      // ROBUST CHECK: Verify the click spy WAS called again (twice total)
+      await expect(args.onClick).toHaveBeenCalledTimes(2)
+    })
   }
 }
 
@@ -213,9 +310,11 @@ export const Secondary: IconButtonStory = {
   args: {
     ...Template.args,
     variant: 'secondary',
-    ariaLabel: 'Secondary button'
+    ariaLabel: 'Secondary button',
+    // 👇 Use fn() to spy on click - accessible via args in play function
+    onClick: fn()
   },
-  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
     await step('Verify all buttons render', async () => {
@@ -267,6 +366,40 @@ export const Secondary: IconButtonStory = {
       await expect(buttons[6].getAttribute('aria-disabled')).toBe('true')
       await expect(buttons[7].getAttribute('aria-disabled')).toBe('true')
     })
+
+    await step('Verify enabled buttons call click handler', async () => {
+      const buttons = canvas.getAllByRole('button')
+      // Enabled buttons are at indices 0, 1, 4, 5
+      const enabledButtons = [buttons[0], buttons[1], buttons[4], buttons[5]]
+      
+      // Reset spy call count
+      args.onClick.mockClear()
+      
+      // Click each enabled button
+      for (const button of enabledButtons) {
+        await userEvent.click(button)
+      }
+      
+      // ROBUST CHECK: Verify the click spy WAS called 4 times (once per enabled button)
+      await expect(args.onClick).toHaveBeenCalledTimes(4)
+    })
+
+    await step('Verify disabled buttons do NOT call click handler', async () => {
+      const buttons = canvas.getAllByRole('button')
+      // Disabled buttons are at indices 2, 3, 6, 7
+      const disabledButtons = [buttons[2], buttons[3], buttons[6], buttons[7]]
+      
+      // Reset spy call count
+      args.onClick.mockClear()
+      
+      // Click each disabled button
+      for (const button of disabledButtons) {
+        await userEvent.click(button)
+      }
+      
+      // ROBUST CHECK: Verify the click spy was NOT called when clicking disabled buttons
+      await expect(args.onClick).not.toHaveBeenCalled()
+    })
   }
 }
 
@@ -275,9 +408,11 @@ export const Invisible: IconButtonStory = {
   args: {
     ...Template.args,
     variant: 'invisible',
-    ariaLabel: 'Invisible button'
+    ariaLabel: 'Invisible button',
+    // 👇 Use fn() to spy on click - accessible via args in play function
+    onClick: fn()
   },
-  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
     await step('Verify all buttons render', async () => {
@@ -327,6 +462,40 @@ export const Invisible: IconButtonStory = {
       await expect(buttons[3].getAttribute('aria-disabled')).toBe('true')
       await expect(buttons[6].getAttribute('aria-disabled')).toBe('true')
       await expect(buttons[7].getAttribute('aria-disabled')).toBe('true')
+    })
+
+    await step('Verify enabled buttons call click handler', async () => {
+      const buttons = canvas.getAllByRole('button')
+      // Enabled buttons are at indices 0, 1, 4, 5
+      const enabledButtons = [buttons[0], buttons[1], buttons[4], buttons[5]]
+      
+      // Reset spy call count
+      args.onClick.mockClear()
+      
+      // Click each enabled button
+      for (const button of enabledButtons) {
+        await userEvent.click(button)
+      }
+      
+      // ROBUST CHECK: Verify the click spy WAS called 4 times (once per enabled button)
+      await expect(args.onClick).toHaveBeenCalledTimes(4)
+    })
+
+    await step('Verify disabled buttons do NOT call click handler', async () => {
+      const buttons = canvas.getAllByRole('button')
+      // Disabled buttons are at indices 2, 3, 6, 7
+      const disabledButtons = [buttons[2], buttons[3], buttons[6], buttons[7]]
+      
+      // Reset spy call count
+      args.onClick.mockClear()
+      
+      // Click each disabled button
+      for (const button of disabledButtons) {
+        await userEvent.click(button)
+      }
+      
+      // ROBUST CHECK: Verify the click spy was NOT called when clicking disabled buttons
+      await expect(args.onClick).not.toHaveBeenCalled()
     })
   }
 }
