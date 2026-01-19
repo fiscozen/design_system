@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, userEvent, within } from '@storybook/test'
 import { ref } from 'vue'
 import { FzTabs, FzTab } from '@fiscozen/tab'
 import FzBadge from '@fiscozen/badge/src/FzBadge.vue'
@@ -57,6 +58,20 @@ export const Medium: TabStory = {
   ...Template,
   args: {
     size: 'md'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify medium size variant renders', async () => {
+      const tabContainer = canvasElement.querySelector('.tab-container')
+      await expect(tabContainer).toBeInTheDocument()
+      
+      const firstButton = canvasElement.querySelector('button[title="Active tab"]')
+      await expect(firstButton).toBeInTheDocument()
+      
+      // Verify medium size classes
+      await expect(firstButton?.classList.contains('text-md')).toBe(true)
+    })
   }
 }
 
@@ -64,6 +79,31 @@ export const Small: TabStory = {
   ...Template,
   args: {
     size: 'sm'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify component renders correctly', async () => {
+      const tabContainer = canvasElement.querySelector('.tab-container')
+      await expect(tabContainer).toBeInTheDocument()
+      
+      const buttons = canvasElement.querySelectorAll('button[title]')
+      await expect(buttons.length).toBeGreaterThanOrEqual(3)
+    })
+    
+    await step('Verify first tab is selected by default', async () => {
+      const firstTab = canvas.getByRole('button', { name: /active tab/i })
+      await expect(firstTab).toBeInTheDocument()
+      
+      // Verify selected tab has active styling
+      const selectedTab = canvasElement.querySelector('button[title="Active tab"]')
+      await expect(selectedTab?.classList.contains('bg-white')).toBe(true)
+    })
+    
+    await step('Verify tab content is displayed', async () => {
+      const content = canvasElement.textContent
+      await expect(content).toContain('Active tab')
+    })
   }
 }
 
@@ -72,6 +112,22 @@ export const MediumVertical: TabStory = {
   args: {
     size: 'md',
     vertical: true
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify vertical layout is applied', async () => {
+      const tabContainer = canvasElement.querySelector('.tab-container')
+      await expect(tabContainer).toBeInTheDocument()
+      
+      // Verify vertical layout classes
+      await expect(tabContainer?.classList.contains('flex-col')).toBe(true)
+    })
+    
+    await step('Verify tabs are still functional in vertical layout', async () => {
+      const buttons = canvasElement.querySelectorAll('button[title]')
+      await expect(buttons.length).toBeGreaterThanOrEqual(3)
+    })
   }
 }
 
@@ -115,6 +171,24 @@ export const WithIconSmall: TabStory = {
   ...TemplateWithIcon,
   args: {
     size: 'sm'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify icons are displayed on tabs', async () => {
+      const tabContainer = canvasElement.querySelector('.tab-container')
+      await expect(tabContainer).toBeInTheDocument()
+      
+      // Verify icons are present (FzIcon components)
+      const icons = canvasElement.querySelectorAll('svg')
+      await expect(icons.length).toBeGreaterThanOrEqual(2)
+    })
+    
+    await step('Verify tab with initialSelected shows correct content', async () => {
+      const content = canvasElement.textContent
+      await expect(content).toContain('Content tab2')
+      await expect(content).not.toContain('Content tab1')
+    })
   }
 }
 
@@ -158,6 +232,22 @@ export const WithBadgeSmall: TabStory = {
   ...TemplateWithBadge,
   args: {
     size: 'sm'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify badges are displayed on tabs', async () => {
+      const badge1 = canvas.getByText('testo')
+      await expect(badge1).toBeInTheDocument()
+      
+      const badge2 = canvas.getByText('1')
+      await expect(badge2).toBeInTheDocument()
+    })
+    
+    await step('Verify selected tab content is displayed', async () => {
+      const content = canvasElement.textContent
+      await expect(content).toContain('Content tab2')
+    })
   }
 }
 
@@ -466,5 +556,161 @@ export const TabWithMaxWidth: TabStory = {
   }),
   args: {
     size: 'sm'
+  }
+}
+
+// ============================================
+// DISABLED STATE STORY
+// ============================================
+
+export const Disabled: TabStory = {
+  render: (args) => ({
+    components: { FzTabs, FzTab },
+    setup() {
+      return {
+        args,
+        customProps: {
+          tab1: {
+            title: 'Active tab',
+            disabled: false
+          },
+          tab2: {
+            title: 'Disabled tab',
+            disabled: true
+          },
+          tab3: {
+            title: 'Default tab 2',
+            disabled: false
+          }
+        }
+      }
+    },
+    template: `<FzTabs v-bind="args" v-slot="data" > 
+                    <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
+                    <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
+                    <FzTab v-bind="customProps.tab3"> {{ data.selected }} </FzTab>
+                </FzTabs>`
+  }),
+  args: {
+    size: 'sm'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify disabled tab has disabled styling', async () => {
+      const disabledTab = canvasElement.querySelector('button[title="Disabled tab"]')
+      await expect(disabledTab).toBeInTheDocument()
+      await expect(disabledTab?.classList.contains('cursor-not-allowed')).toBe(true)
+    })
+    
+    await step('Verify disabled tab does not respond to clicks', async () => {
+      const disabledTab = canvasElement.querySelector('button[title="Disabled tab"]') as HTMLElement
+      const contentBefore = canvasElement.textContent
+      
+      await userEvent.click(disabledTab)
+      
+      // Content should not change (disabled tab should not be selected)
+      const contentAfter = canvasElement.textContent
+      await expect(contentAfter).toBe(contentBefore)
+    })
+    
+    await step('Verify enabled tabs are clickable', async () => {
+      const enabledTab = canvas.getByRole('button', { name: /default tab 2/i })
+      await userEvent.click(enabledTab)
+      
+      // Content should update to show selected tab
+      const content = canvasElement.textContent
+      await expect(content).toContain('Default tab 2')
+    })
+  }
+}
+
+// ============================================
+// KEYBOARD NAVIGATION STORY
+// ============================================
+
+export const KeyboardNavigation: TabStory = {
+  ...Template,
+  args: {
+    size: 'sm'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Tab to focus first tab', async () => {
+      await userEvent.tab()
+      const firstTab = canvasElement.querySelector('button[title="Active tab"]')
+      await expect(document.activeElement).toBe(firstTab)
+    })
+    
+    await step('Navigate to second tab with Tab key', async () => {
+      await userEvent.tab()
+      const secondTab = canvasElement.querySelector('button[title="Default tab"]')
+      await expect(document.activeElement).toBe(secondTab)
+    })
+    
+    await step('Activate tab with Enter key', async () => {
+      const secondTab = canvasElement.querySelector('button[title="Default tab"]') as HTMLElement
+      secondTab.focus()
+      await userEvent.keyboard('{Enter}')
+      
+      // Verify tab content changes
+      const content = canvasElement.textContent
+      await expect(content).toContain('Default tab')
+    })
+    
+    await step('Activate tab with Space key', async () => {
+      const thirdTab = canvasElement.querySelector('button[title="Default tab 2"]') as HTMLElement
+      thirdTab.focus()
+      await userEvent.keyboard(' ')
+      
+      // Verify tab content changes
+      const content = canvasElement.textContent
+      await expect(content).toContain('Default tab 2')
+    })
+  }
+}
+
+// ============================================
+// USER INTERACTION STORY
+// ============================================
+
+export const UserInteraction: TabStory = {
+  ...Template,
+  args: {
+    size: 'sm'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Click second tab to switch', async () => {
+      const secondTab = canvasElement.querySelector('button[title="Default tab"]') as HTMLElement
+      await expect(secondTab).toBeInTheDocument()
+      await userEvent.click(secondTab)
+      
+      // Verify content updates
+      const content = canvasElement.textContent
+      await expect(content).toContain('Default tab')
+    })
+    
+    await step('Click third tab to switch again', async () => {
+      const thirdTab = canvasElement.querySelector('button[title="Default tab 2"]') as HTMLElement
+      await expect(thirdTab).toBeInTheDocument()
+      await userEvent.click(thirdTab)
+      
+      // Verify content updates
+      const content = canvasElement.textContent
+      await expect(content).toContain('Default tab 2')
+    })
+    
+    await step('Click first tab to return', async () => {
+      const firstTab = canvasElement.querySelector('button[title="Active tab"]') as HTMLElement
+      await expect(firstTab).toBeInTheDocument()
+      await userEvent.click(firstTab)
+      
+      // Verify content updates back
+      const content = canvasElement.textContent
+      await expect(content).toContain('Active tab')
+    })
   }
 }

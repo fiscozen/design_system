@@ -180,7 +180,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | panel | ~~Collapse.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | panel | Divider.stories.ts | ~2 | 🟡 Low |
 | panel | Layout.stories.ts | ~3 | 🟡 Medium |
-| panel | Tab.stories.ts | ~5 | 🟠 High |
+| panel | ~~Tab.stories.ts~~ | ~~~5~~ | ✅ **COMPLETED** |
 | panel | Topbar.stories.ts | ~3 | 🟡 Medium |
 | typography | Paragraph.stories.ts | ~3 | 🟡 Low |
 | typography | Title.stories.ts | ~3 | 🟡 Low |
@@ -971,7 +971,7 @@ describe('Edge Cases', () => {
 | navigation/Navlist.stories.ts | ~~List navigation~~ | ✅ **COMPLETED** |
 | navigation/Stepper.stories.ts | Step navigation | 2 |
 | panel/Collapse.stories.ts | Expand/collapse, keyboard | 1.5 |
-| panel/Tab.stories.ts | Tab switching, keyboard nav | 2 |
+| panel/Tab.stories.ts | ~~Tab switching, keyboard nav~~ | ✅ **COMPLETED** |
 
 ### 4.3 Medium Priority Stories (Week 6)
 
