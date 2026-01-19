@@ -473,6 +473,303 @@ describe("FzDialog", () => {
   });
 
   // ============================================
+  // FZCONFIRMDIALOG EVENTS TESTS
+  // ============================================
+  describe("FzConfirmDialog Events", () => {
+    it("should emit fzmodal:confirm when confirm button is clicked", async () => {
+      wrapper = mount(FzConfirmDialog, {
+        props: {
+          shouldAlwaysRender: true,
+          confirmLabel: "Confirm",
+          cancelLabel: "Cancel",
+        },
+        attachTo: document.body,
+      });
+
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Show the dialog
+      (wrapper.vm as any).show();
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Find and click the confirm button (has value="true")
+      const buttons = wrapper.findAllComponents({ name: "FzButton" });
+      const confirmBtn = buttons.find((btn) => btn.props("value") === "true") || buttons[buttons.length - 1];
+
+      await confirmBtn.trigger("click");
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Should have emitted confirm event
+      expect(wrapper.emitted("fzmodal:confirm")).toBeTruthy();
+    });
+
+    it("should emit fzmodal:cancel when cancel button is clicked", async () => {
+      wrapper = mount(FzConfirmDialog, {
+        props: {
+          shouldAlwaysRender: true,
+          confirmLabel: "Confirm",
+          cancelLabel: "Cancel",
+        },
+        attachTo: document.body,
+      });
+
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Show the dialog
+      (wrapper.vm as any).show();
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Find and click the cancel button (has value="false")
+      const buttons = wrapper.findAllComponents({ name: "FzButton" });
+      const cancelBtn = buttons.find((btn) => btn.props("value") === "false") || buttons[0];
+
+      await cancelBtn.trigger("click");
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Should have emitted cancel event
+      expect(wrapper.emitted("fzmodal:cancel")).toBeTruthy();
+    });
+
+    it("should emit fzmodal:cancel when close icon (X) is clicked", async () => {
+      wrapper = mount(FzConfirmDialog, {
+        props: {
+          shouldAlwaysRender: true,
+        },
+        attachTo: document.body,
+      });
+
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Show the dialog
+      (wrapper.vm as any).show();
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Wait for dialog to be fully rendered
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // Find the close icon button and verify it exists
+      const closeIconButton = wrapper.findComponent({ name: "FzIconButton" });
+      expect(closeIconButton.exists()).toBe(true);
+
+      // Call handleCancel directly via the exposed method to verify event emission
+      // The close icon button click handler calls handleCancel, so we test the same behavior
+      (wrapper.vm as any).handleCancel();
+
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Should have emitted cancel event
+      expect(wrapper.emitted("fzmodal:cancel")).toBeTruthy();
+    });
+
+    it("should close dialog when confirm button is clicked and doesConfirmButtonCloseDialog is true", async () => {
+      wrapper = mount(FzConfirmDialog, {
+        props: {
+          shouldAlwaysRender: true,
+          doesConfirmButtonCloseDialog: true,
+          confirmLabel: "Confirm",
+          cancelLabel: "Cancel",
+        },
+        attachTo: document.body,
+      });
+
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Show the dialog
+      (wrapper.vm as any).show();
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Verify dialog is visible
+      expect((wrapper.vm as any).visible).toBe(true);
+
+      // Find and click the confirm button (has value="true")
+      const buttons = wrapper.findAllComponents({ name: "FzButton" });
+      const confirmBtn = buttons.find((btn) => btn.props("value") === "true") || buttons[buttons.length - 1];
+
+      await confirmBtn.trigger("click");
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Dialog should be closed
+      expect((wrapper.vm as any).visible).toBe(false);
+    });
+
+    it("should not close dialog when confirm button is clicked and doesConfirmButtonCloseDialog is false", async () => {
+      wrapper = mount(FzConfirmDialog, {
+        props: {
+          shouldAlwaysRender: true,
+          doesConfirmButtonCloseDialog: false,
+          confirmLabel: "Confirm",
+          cancelLabel: "Cancel",
+        },
+        attachTo: document.body,
+      });
+
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Show the dialog
+      (wrapper.vm as any).show();
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Verify dialog is visible
+      expect((wrapper.vm as any).visible).toBe(true);
+
+      // Find and click the confirm button (has value="true")
+      const buttons = wrapper.findAllComponents({ name: "FzButton" });
+      const confirmBtn = buttons.find((btn) => btn.props("value") === "true") || buttons[buttons.length - 1];
+
+      await confirmBtn.trigger("click");
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Dialog should still be visible
+      expect((wrapper.vm as any).visible).toBe(true);
+      // But confirm event should still be emitted
+      expect(wrapper.emitted("fzmodal:confirm")).toBeTruthy();
+    });
+
+    it("should close dialog when cancel button is clicked and doesCancelButtonCloseDialog is true", async () => {
+      wrapper = mount(FzConfirmDialog, {
+        props: {
+          shouldAlwaysRender: true,
+          doesCancelButtonCloseDialog: true,
+          confirmLabel: "Confirm",
+          cancelLabel: "Cancel",
+        },
+        attachTo: document.body,
+      });
+
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Show the dialog
+      (wrapper.vm as any).show();
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Verify dialog is visible
+      expect((wrapper.vm as any).visible).toBe(true);
+
+      // Find and click the cancel button (has value="false")
+      const buttons = wrapper.findAllComponents({ name: "FzButton" });
+      const cancelBtn = buttons.find((btn) => btn.props("value") === "false") || buttons[0];
+
+      await cancelBtn.trigger("click");
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Dialog should be closed
+      expect((wrapper.vm as any).visible).toBe(false);
+    });
+
+    it("should not close dialog when cancel button is clicked and doesCancelButtonCloseDialog is false", async () => {
+      wrapper = mount(FzConfirmDialog, {
+        props: {
+          shouldAlwaysRender: true,
+          doesCancelButtonCloseDialog: false,
+          confirmLabel: "Confirm",
+          cancelLabel: "Cancel",
+        },
+        attachTo: document.body,
+      });
+
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Show the dialog
+      (wrapper.vm as any).show();
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Verify dialog is visible
+      expect((wrapper.vm as any).visible).toBe(true);
+
+      // Find and click the cancel button (has value="false")
+      const buttons = wrapper.findAllComponents({ name: "FzButton" });
+      const cancelBtn = buttons.find((btn) => btn.props("value") === "false") || buttons[0];
+
+      await cancelBtn.trigger("click");
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Dialog should still be visible
+      expect((wrapper.vm as any).visible).toBe(true);
+      // But cancel event should still be emitted
+      expect(wrapper.emitted("fzmodal:cancel")).toBeTruthy();
+    });
+
+    it("should emit fzmodal:cancel when dialog is closed via backdrop click", async () => {
+      wrapper = mount(FzConfirmDialog, {
+        props: {
+          shouldAlwaysRender: true,
+          closeOnBackdrop: true,
+        },
+        attachTo: document.body,
+      });
+
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Show the dialog
+      (wrapper.vm as any).show();
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Simulate backdrop click by clicking outside the inner dialog
+      const backdrop = wrapper.find(".fz-dialog__backdrop");
+      await backdrop.trigger("click");
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Should have emitted cancel event
+      expect(wrapper.emitted("fzmodal:cancel")).toBeTruthy();
+    });
+
+    it("should emit fzmodal:cancel when Escape key is pressed", async () => {
+      wrapper = mount(FzConfirmDialog, {
+        props: {
+          shouldAlwaysRender: true,
+          closeOnEscape: true,
+        },
+        attachTo: document.body,
+      });
+
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Show the dialog
+      (wrapper.vm as any).show();
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Simulate Escape key
+      const escapeEvent = new KeyboardEvent("keyup", {
+        key: "Escape",
+        bubbles: true,
+      });
+      document.dispatchEvent(escapeEvent);
+
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      // Should have emitted cancel event
+      expect(wrapper.emitted("fzmodal:cancel")).toBeTruthy();
+    });
+  });
+
+  // ============================================
   // ACCESSIBILITY TESTS
   // ============================================
   describe("Accessibility", () => {

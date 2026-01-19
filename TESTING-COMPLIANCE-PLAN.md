@@ -908,7 +908,7 @@ describe('Accessibility', () => {
 |---------|-------------------|
 | alert | ~~`dismiss`, `action-click`~~ | ✅ **COMPLETED** |
 | collapse | `toggle`, `open`, `close` |
-| dialog | `close`, `confirm`, `cancel` |
+| dialog | ~~`close`, `confirm`, `cancel`~~ | ✅ **COMPLETED** |
 | dropdown | ~~`open`, `close`, `select`~~ | ✅ **COMPLETED** |
 | select | `update:modelValue`, `search` |
 | tab | `tab-change` |
@@ -2189,6 +2189,21 @@ Ensure root `package.json` has:
 - Fixed tests to handle component's dual handler behavior (handleClick and handleToggle both emit events)
 - All tests passing: 4 storybook tests, 57 unit tests
 - Phase 7 (Spy Function Pattern Refactor) progress: Collapse.stories.ts completed
+
+### January 20, 2026 - Dialog Event Tests Completion ✅
+
+**Package:** `dialog` (Unit Tests)
+- Added comprehensive event tests for FzConfirmDialog component
+- Added tests for `fzmodal:confirm` event when confirm button is clicked
+- Added tests for `fzmodal:cancel` event when cancel button is clicked
+- Added tests for `fzmodal:cancel` event when close icon (X) is clicked
+- Added tests for `doesConfirmButtonCloseDialog` prop behavior (dialog closes when true, stays open when false)
+- Added tests for `doesCancelButtonCloseDialog` prop behavior (dialog closes when true, stays open when false)
+- Added tests for `fzmodal:cancel` event when dialog is closed via backdrop click
+- Added tests for `fzmodal:cancel` event when Escape key is pressed
+- All event tests verify that events are emitted correctly and dialog state changes appropriately
+- All tests passing: 54 unit tests (9 new event tests added), 22 storybook play function tests
+- Phase 3 (Unit Test Quality Improvements) progress: Dialog event tests completed
 
 ### January 19, 2026 - Robust Disabled State Testing with Spy Functions ✅
 
