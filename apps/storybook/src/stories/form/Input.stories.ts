@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from '@storybook/test'
 import { ref } from 'vue'
 import { FzInput } from '@fiscozen/input'
 import { all } from '@awesome.me/kit-8137893ad3/icons'
@@ -74,9 +74,11 @@ const Template: Story = {
     components: { FzInput },
     setup() {
       const modelValue = ref(args.modelValue || '')
-      return { args, modelValue }
+      // Extract onUpdate:modelValue from args if present (for spy functions)
+      const { 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
+      return { args: restArgs, modelValue, onUpdateModelValue }
     },
-    template: `<FzInput v-bind="args" v-model="modelValue" />`
+    template: `<FzInput v-bind="args" v-model="modelValue" @update:modelValue="onUpdateModelValue ? onUpdateModelValue($event) : null" />`
   }),
   args: {
     label: 'Input Label',
@@ -86,46 +88,63 @@ const Template: Story = {
 
 export const Default: Story = {
   ...Template,
-  play: async ({ canvasElement }) => {
+  args: {
+    ...Template.args,
+    // 👇 Use fn() to spy on update:modelValue - accessible via args in play function
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
-    // Verify component renders
-    const input = canvas.getByRole('textbox', { name: /Input Label/i })
-    await expect(input).toBeInTheDocument()
+    await step('Verify component renders', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await expect(input).toBeInTheDocument()
+    })
 
-    // Verify label is displayed
-    const label = canvas.getByText('Input Label')
-    await expect(label).toBeVisible()
+    await step('Verify label is displayed', async () => {
+      const label = canvas.getByText('Input Label')
+      await expect(label).toBeVisible()
+    })
 
-    // Verify placeholder is shown
-    const placeholderInput = canvas.getByPlaceholderText('Value')
-    await expect(placeholderInput).toBeInTheDocument()
+    await step('Verify placeholder is shown', async () => {
+      const placeholderInput = canvas.getByPlaceholderText('Value')
+      await expect(placeholderInput).toBeInTheDocument()
+    })
 
-    // Verify user can type in input
-    // Use direct value assignment and input event to handle spaces correctly in tests
-    await userEvent.clear(input)
-    const inputElement = input as HTMLInputElement
-    inputElement.value = 'Test value'
-    inputElement.dispatchEvent(new Event('input', { bubbles: true }))
-    await expect(input).toHaveValue('Test value')
+    await step('Verify user can type in input and update:modelValue IS called', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      // Use direct value assignment and input event to handle spaces correctly in tests
+      await userEvent.clear(input)
+      const inputElement = input as HTMLInputElement
+      inputElement.value = 'Test value'
+      inputElement.dispatchEvent(new Event('input', { bubbles: true }))
+      await expect(input).toHaveValue('Test value')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+    })
 
-    // Verify ARIA attributes
-    await expect(input).toHaveAttribute('aria-required', 'false')
-    await expect(input).toHaveAttribute('aria-invalid', 'false')
-    await expect(input).toHaveAttribute('aria-disabled', 'false')
-    
-    // Verify aria-labelledby links to label
-    const labelledBy = input.getAttribute('aria-labelledby')
-    await expect(labelledBy).toBeTruthy()
-    if (labelledBy) {
-      const labelElement = canvasElement.querySelector(`#${labelledBy}`)
-      await expect(labelElement).toBeInTheDocument()
-      await expect(labelElement?.textContent).toContain('Input Label')
-    }
+    await step('Verify ARIA attributes', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await expect(input).toHaveAttribute('aria-required', 'false')
+      await expect(input).toHaveAttribute('aria-invalid', 'false')
+      await expect(input).toHaveAttribute('aria-disabled', 'false')
+      
+      // Verify aria-labelledby links to label
+      const labelledBy = input.getAttribute('aria-labelledby')
+      await expect(labelledBy).toBeTruthy()
+      if (labelledBy) {
+        const labelElement = canvasElement.querySelector(`#${labelledBy}`)
+        await expect(labelElement).toBeInTheDocument()
+        await expect(labelElement?.textContent).toContain('Input Label')
+      }
+    })
 
-    // Verify container is keyboard accessible
-    const container = input.closest('.fz-input > div')
-    await expect(container).toHaveAttribute('tabindex', '0')
+    await step('Verify container is keyboard accessible', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      const container = input.closest('.fz-input > div')
+      await expect(container).toHaveAttribute('tabindex', '0')
+    })
   }
 }
 
@@ -133,24 +152,40 @@ export const Disabled: Story = {
   ...Template,
   args: {
     ...Template.args,
-    disabled: true
+    disabled: true,
+    // 👇 Define spy in args - it should NOT be called when disabled
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
-    const input = canvas.getByRole('textbox', { name: /Input Label/i })
+    await step('Verify input is disabled', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await expect(input).toBeDisabled()
+      await expect(input).toHaveAttribute('aria-disabled', 'true')
+    })
 
-    // Verify input is disabled
-    await expect(input).toBeDisabled()
-    await expect(input).toHaveAttribute('aria-disabled', 'true')
+    await step('Verify disabled styling is applied', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      const container = input.closest('.fz-input')
+      await expect(container).toBeInTheDocument()
+    })
 
-    // Verify disabled styling is applied
-    const container = input.closest('.fz-input')
-    await expect(container).toBeInTheDocument()
+    await step('Verify user cannot type in disabled input', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await userEvent.type(input, 'Test')
+      await expect(input).toHaveValue('')
+    })
 
-    // Verify user cannot type in disabled input
-    await userEvent.type(input, 'Test')
-    await expect(input).toHaveValue('')
+    await step('Verify update:modelValue is NOT called when typing in disabled input', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      
+      // Attempt to type in the disabled input
+      await userEvent.type(input, 'Test')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+    })
   }
 }
 
@@ -159,28 +194,46 @@ export const Readonly: Story = {
   args: {
     ...Template.args,
     readonly: true,
-    modelValue: 'Read-only value'
+    modelValue: 'Read-only value',
+    // 👇 Define spy in args - it should NOT be called when readonly
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
-    const input = canvas.getByRole('textbox', { name: /Input Label/i })
+    await step('Verify input is readonly', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await expect(input).toHaveAttribute('readonly')
+      await expect(input).toHaveAttribute('aria-disabled', 'true')
+    })
 
-    // Verify input is readonly
-    await expect(input).toHaveAttribute('readonly')
-    await expect(input).toHaveAttribute('aria-disabled', 'true')
+    await step('Verify readonly styling is applied', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      const container = input.closest('.fz-input')
+      await expect(container).toBeInTheDocument()
+    })
 
-    // Verify readonly styling is applied (same as disabled)
-    const container = input.closest('.fz-input')
-    await expect(container).toBeInTheDocument()
+    await step('Verify container is not clickable (no tabindex)', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      const containerDiv = input.closest('.fz-input > div')
+      await expect(containerDiv).not.toHaveAttribute('tabindex')
+    })
 
-    // Verify container is not clickable (no tabindex)
-    const containerDiv = input.closest('.fz-input > div')
-    await expect(containerDiv).not.toHaveAttribute('tabindex')
+    await step('Verify user cannot modify readonly input', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await userEvent.type(input, 'New text')
+      await expect(input).toHaveValue('Read-only value')
+    })
 
-    // Verify user cannot modify readonly input
-    await userEvent.type(input, 'New text')
-    await expect(input).toHaveValue('Read-only value')
+    await step('Verify update:modelValue is NOT called when typing in readonly input', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      
+      // Attempt to type in the readonly input
+      await userEvent.type(input, 'New text')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+    })
   }
 }
 

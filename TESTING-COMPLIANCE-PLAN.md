@@ -1843,6 +1843,18 @@ Ensure root `package.json` has:
 
 ## Recent Updates
 
+### January 19, 2026 - Input Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `input` (Storybook)
+- Added spy function pattern to Input.stories.ts for robust interaction testing
+- Updated Template to support `onUpdate:modelValue` spy functions from args
+- Enhanced Default story to verify `update:modelValue` IS called when typing
+- Enhanced Disabled story to verify `update:modelValue` is NOT called when disabled
+- Enhanced Readonly story to verify `update:modelValue` is NOT called when readonly
+- All play functions now use `fn()` spies from `@storybook/test` for robust verification
+- All 19 Input story tests passing ✅
+- Phase 7 (Spy Function Pattern Refactor) progress: 5 of 26 stories completed
+
 ### January 15, 2026 - Style Package Test File Naming Standardization ✅
 
 **Package:** `style`
@@ -2243,7 +2255,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 
 | Story File | Disabled Tests | Interaction Tests | Est. Hours |
 |-----------|----------------|-------------------|------------|
-| form/Input.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/Input.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/CurrencyInput.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | form/Select.stories.ts | ✅ Has disabled | ✅ Has interactions | 1.5 |
 | form/Typeahead.stories.ts | ✅ Has disabled | ✅ Has interactions | 1.5 |
@@ -2302,6 +2314,7 @@ For each story file listed above:
 | button/Button.stories.ts | ✅ Complete |
 | navigation/Navlink.stories.ts | ✅ Complete |
 | form/Checkbox.stories.ts | ✅ Complete |
+| form/Input.stories.ts | ✅ Complete |
 
 ### 7.5 Verification Script
 
