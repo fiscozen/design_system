@@ -168,7 +168,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | messages | ~~Alert.stories.ts~~ | ~~14~~ | ✅ **COMPLETED** |
 | messages | ~~Toast.stories.ts~~ | ~~5~~ | ✅ **COMPLETED** |
 | messages | ~~ToastQueue.stories.ts~~ | ~~3~~ | ✅ **COMPLETED** |
-| misc | Badge.stories.ts | ~5 | 🟡 Medium |
+| misc | ~~Badge.stories.ts~~ | ~~~5~~ | ✅ **COMPLETED** |
 | navigation | ~~Action.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | ~~Actionlist.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | Breadcrumbs.stories.ts | ~3 | 🟠 High |
@@ -981,7 +981,7 @@ describe('Edge Cases', () => {
 
 | Story File | Required Play Functions | Est. Hours |
 |-----------|------------------------|------------|
-| misc/Badge.stories.ts | Visual states | 0.5 |
+| misc/Badge.stories.ts | ~~Visual states~~ | ✅ **COMPLETED** |
 | overlay/ViewFlag.stories.ts | Toggle visibility | 1 |
 | panel/Layout.stories.ts | Responsive behavior | 1 |
 | panel/Topbar.stories.ts | Interaction states | 1 |
@@ -2102,6 +2102,15 @@ Ensure root `package.json` has:
 - Play functions cover: step navigation, disabled step behavior, step statuses (completed/error/disabled/default), mobile view dropdown, keyboard accessibility
 - Fixed test queries to properly handle badge elements and dropdown teleported content
 - Phase 4 (Storybook Play Functions) progress: 15 of 28 critical priority stories completed
+
+### January 19, 2026 - Badge Stories Play Functions ✅
+
+**Package:** `badge` (Storybook)
+- Added play functions to Badge.stories.ts for all stories
+- Added play functions for: Black (rendering, color classes, base classes), Error (error color classes), Warning (warning color classes), Success (success color classes), Info (info color classes), Dark (dark color classes), Light (light color classes), Small (small size classes), Medium (medium size classes), Large (large size classes, multi-character rounded-2xl), OneNumberSmall (single character rendering, rounded-full class, small size), OneNumberMedium (single character rendering, rounded-full class, medium size), OneNumberLarge (single character rendering, rounded-full class, large size), OneLetterSmall (single letter rendering, rounded-full class, small size), OneLetterMedium (single letter rendering, rounded-full class, medium size), OneLetterLarge (single letter rendering, rounded-full class, large size)
+- All play functions test visual states and CSS class application
+- Play functions cover: component rendering, color variant classes (black, error, warning, success, info, dark, light), size variant classes (sm, md, lg), single character styling (rounded-full, !px-0), multi-character styling (rounded-2xl, !w-fit), base classes (flex, items-center, justify-center, font-medium)
+- Phase 4 (Storybook Play Functions) progress: 16 of 28 critical priority stories completed
 
 ### January 19, 2026 - Robust Disabled State Testing with Spy Functions ✅
 
