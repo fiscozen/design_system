@@ -2351,7 +2351,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | form/CurrencyInput.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Select.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Typeahead.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| form/Radio.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/Radio.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/RadioCard.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | form/RadioGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | form/CheckboxGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
@@ -2409,6 +2409,7 @@ For each story file listed above:
 | form/Input.stories.ts | ✅ Complete |
 | form/CurrencyInput.stories.ts | ✅ Complete |
 | form/Select.stories.ts | ✅ Complete |
+| form/Radio.stories.ts | ✅ Complete |
 
 ### 7.5 Verification Script
 
@@ -2461,4 +2462,21 @@ export const MyStory: Story = {
     await expect(args.onClick).toHaveBeenCalled()
   }
 }
+```
+
+---
+
+## Completion Log
+
+### January 20, 2026 - Radio Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `radio` (Storybook)
+- Added spy function pattern to Radio.stories.ts for robust interaction testing
+- Enhanced Medium story with `onUpdate:modelValue` spy to verify click interactions
+- Enhanced Disabled story with spy to verify update:modelValue is NOT called when disabled
+- Enhanced CheckedDisabled story with spy to verify update:modelValue is NOT called when disabled
+- Added KeyboardNavigation story with spy function pattern for Space key activation
+- Fixed Template to use `:modelValue` and `@update:modelValue` instead of `v-model` to avoid double-calling spy
+- All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
+- Phase 7 (Spy Function Pattern Refactor) progress: Radio.stories.ts completed
 
