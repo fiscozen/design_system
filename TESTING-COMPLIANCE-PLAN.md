@@ -910,7 +910,7 @@ describe('Accessibility', () => {
 | collapse | ~~`update:open` (v-model), native toggle event handling~~ | ✅ **COMPLETED** |
 | dialog | ~~`close`, `confirm`, `cancel`~~ | ✅ **COMPLETED** |
 | dropdown | ~~`open`, `close`, `select`~~ | ✅ **COMPLETED** |
-| select | `update:modelValue`, `search` |
+| select | ~~`update:modelValue`~~ | ✅ **COMPLETED** - Note: Component does not emit `search` event (only emits `fzselect:select`, `fzselect:clear`, `fzselect:right-icon-click`) |
 | tab | `tab-change` |
 | toast | `dismiss` |
 | typeahead | `update:modelValue`, `select`, `search` |
@@ -2491,4 +2491,17 @@ export const MyStory: Story = {
 - Updated plan to mark Collapse as complete for event tests
 - Note: Component does not emit custom `open` or `close` events (uses v-model pattern with `update:open`)
 - Phase 3 (Unit Test Quality Improvements) progress: Collapse event tests verified complete
+
+### January 20, 2026 - Select Event Tests Verification ✅
+
+**Package:** `select` (Unit Tests)
+- Verified comprehensive event test coverage for Select component
+- Component emits `update:modelValue` (v-model) which is extensively tested with multiple test cases (lines 968-970, 1007-1008, 1688-1689, 2328-2329 in FzSelect.spec.ts)
+- Component emits `fzselect:select` event which is tested (line 463-486)
+- Component emits `fzselect:clear` event which is tested (lines 2326-2329)
+- All unit tests passing (verified with `pnpm --filter @fiscozen/select test`)
+- All Storybook play function tests passing (verified with `pnpm test:storybook --run Select` - 26 tests passed)
+- Updated plan to mark Select as complete for event tests
+- Note: Component does not emit `search` event (only emits `fzselect:select`, `fzselect:clear`, `fzselect:right-icon-click`, and `update:modelValue` for v-model)
+- Phase 3 (Unit Test Quality Improvements) progress: Select event tests verified complete
 
