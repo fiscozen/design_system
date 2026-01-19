@@ -907,7 +907,7 @@ describe('Accessibility', () => {
 | Package | Missing Event Tests |
 |---------|-------------------|
 | alert | ~~`dismiss`, `action-click`~~ | ✅ **COMPLETED** |
-| collapse | `toggle`, `open`, `close` |
+| collapse | ~~`update:open` (v-model), native toggle event handling~~ | ✅ **COMPLETED** |
 | dialog | ~~`close`, `confirm`, `cancel`~~ | ✅ **COMPLETED** |
 | dropdown | ~~`open`, `close`, `select`~~ | ✅ **COMPLETED** |
 | select | `update:modelValue`, `search` |
@@ -2479,4 +2479,16 @@ export const MyStory: Story = {
 - Fixed Template to use `:modelValue` and `@update:modelValue` instead of `v-model` to avoid double-calling spy
 - All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
 - Phase 7 (Spy Function Pattern Refactor) progress: Radio.stories.ts completed
+
+### January 20, 2026 - Collapse Event Tests Verification ✅
+
+**Package:** `collapse` (Unit Tests)
+- Verified comprehensive event test coverage for Collapse component
+- Component emits `update:open` (v-model) which is fully tested with multiple test cases
+- Native `toggle` event handling is tested with both open and closed state transitions
+- All unit tests passing (verified with `pnpm test`)
+- All Storybook play function tests passing (verified with `pnpm test:storybook --run Collapse`)
+- Updated plan to mark Collapse as complete for event tests
+- Note: Component does not emit custom `open` or `close` events (uses v-model pattern with `update:open`)
+- Phase 3 (Unit Test Quality Improvements) progress: Collapse event tests verified complete
 
