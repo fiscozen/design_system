@@ -171,7 +171,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | misc | ~~Badge.stories.ts~~ | ~~~5~~ | ✅ **COMPLETED** |
 | navigation | ~~Action.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | ~~Actionlist.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
-| navigation | Breadcrumbs.stories.ts | ~3 | 🟠 High |
+| navigation | ~~Breadcrumbs.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | ~~Navbar.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | navigation | Navlink.stories.ts | ~3 | 🟠 High |
 | navigation | ~~Navlist.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
