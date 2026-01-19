@@ -178,7 +178,7 @@ The following packages use `__test__` (singular) instead of `__tests__` (plural)
 | navigation | Stepper.stories.ts | ~3 | 🟠 High |
 | overlay | ~~ConfirmDialog.stories.ts~~ | ~~3~~ | ✅ **COMPLETED** |
 | overlay | ~~Dialog.stories.ts~~ | ~~3~~ | ✅ **COMPLETED** |
-| overlay | ViewFlag.stories.ts | ~2 | 🟡 Medium |
+| overlay | ~~ViewFlag.stories.ts~~ | ~~~2~~ | ✅ **COMPLETED** |
 | panel | ~~Collapse.stories.ts~~ | ~~~3~~ | ✅ **COMPLETED** |
 | panel | Divider.stories.ts | ~2 | 🟡 Low |
 | panel | Layout.stories.ts | ~3 | 🟡 Medium |
@@ -982,7 +982,7 @@ describe('Edge Cases', () => {
 | Story File | Required Play Functions | Est. Hours |
 |-----------|------------------------|------------|
 | misc/Badge.stories.ts | ~~Visual states~~ | ✅ **COMPLETED** |
-| overlay/ViewFlag.stories.ts | Toggle visibility | 1 |
+| overlay/ViewFlag.stories.ts | ~~Rendering, positioning, accessibility~~ | ✅ **COMPLETED** |
 | panel/Layout.stories.ts | Responsive behavior | 1 |
 | panel/Topbar.stories.ts | Interaction states | 1 |
 
