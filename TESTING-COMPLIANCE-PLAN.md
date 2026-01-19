@@ -964,7 +964,7 @@ describe('Edge Cases', () => {
 |-----------|------------------------|------------|
 | data/SimpleTable.stories.ts | ~~Table rendering, empty state, custom placeholder, fixed width columns~~ | ✅ **COMPLETED** |
 | data/Table.stories.ts | ~~Sorting, filtering, pagination~~ | ✅ **COMPLETED** |
-| form/Upload.stories.ts | File selection, drag & drop, remove | 2 |
+| form/Upload.stories.ts | ~~File selection, drag & drop, remove~~ | ✅ **COMPLETED** |
 | messages/Toast.stories.ts | ~~Dismiss, auto-hide~~ | ✅ **COMPLETED** |
 | messages/ToastQueue.stories.ts | ~~Queue management~~ | ✅ **COMPLETED** |
 | navigation/Action.stories.ts | ~~Click, hover states~~ | ✅ **COMPLETED** |

@@ -154,12 +154,34 @@ export const ClickToUpload: Story = {
       const uploadButton = canvas.getByRole('button', { name: /carica/i })
       await expect(uploadButton).toBeInTheDocument()
       await expect(uploadButton).toBeVisible()
+    })
+    
+    await step('Select file via file input', async () => {
+      const input = canvasElement.querySelector('input[type="file"]') as HTMLInputElement
+      await expect(input).toBeInTheDocument()
       
-      // Click the button - this should trigger the file input
-      await userEvent.click(uploadButton)
+      // Create a test file
+      const testFile = new File(['test content'], 'test-file.txt', { type: 'text/plain' })
       
-      // Verify button is still visible after click
-      await expect(uploadButton).toBeInTheDocument()
+      // Create a FileList with the test file
+      const dataTransfer = new DataTransfer()
+      dataTransfer.items.add(testFile)
+      input.files = dataTransfer.files
+      
+      // Trigger change event
+      const changeEvent = new Event('change', { bubbles: true })
+      input.dispatchEvent(changeEvent)
+      
+      // Wait for the file to be added to the model
+      await waitFor(() => {
+        const uploadContainer = canvasElement.querySelector('.text-md')
+        const fileList = uploadContainer?.querySelector('ul')
+        expect(fileList).toBeInTheDocument()
+      }, { timeout: 1000 })
+      
+      // Verify file appears in the list
+      const fileLinks = canvas.getAllByText('test-file.txt')
+      await expect(fileLinks.length).toBeGreaterThan(0)
     })
   }
 }
@@ -189,29 +211,170 @@ export const DeleteFile: Story = {
       await expect(file2Links.length).toBeGreaterThan(0)
     })
     
-    await step('Click delete button for first file', async () => {
+    await step('Remove first file by clicking delete button', async () => {
       // Find the file list within the component (not the decorator's list)
       const uploadContainer = canvasElement.querySelector('.text-md')
       const fileList = uploadContainer?.querySelector('ul')
       await expect(fileList).toBeInTheDocument()
       
       const initialFileCount = fileList?.querySelectorAll('li').length || 0
-      await expect(initialFileCount).toBeGreaterThan(0)
+      await expect(initialFileCount).toBe(2)
       
       const firstFileItem = fileList?.querySelector('li:first-child')
       await expect(firstFileItem).toBeInTheDocument()
       
+      // Verify the file name is visible before deletion
+      const firstFileName = firstFileItem?.textContent
+      await expect(firstFileName).toContain('test-image1.png')
+      
       const deleteButton = firstFileItem?.querySelector('button')
-      if (deleteButton) {
-        await userEvent.click(deleteButton)
-        
-        // Wait for UI update - check that file count decreased
-        await waitFor(() => {
-          const updatedFileList = uploadContainer?.querySelector('ul')
-          const remainingFiles = updatedFileList?.querySelectorAll('li') || []
-          expect(remainingFiles.length).toBeLessThan(initialFileCount)
-        }, { timeout: 1000 })
-      }
+      await expect(deleteButton).toBeInTheDocument()
+      
+      await userEvent.click(deleteButton!)
+      
+      // Wait for UI update - check that file count decreased
+      await waitFor(() => {
+        const updatedFileList = uploadContainer?.querySelector('ul')
+        const remainingFiles = updatedFileList?.querySelectorAll('li') || []
+        expect(remainingFiles.length).toBe(1)
+      }, { timeout: 1000 })
+      
+      // Verify the remaining file is the second one
+      const updatedFileList = uploadContainer?.querySelector('ul')
+      const remainingFile = updatedFileList?.querySelector('li:first-child')
+      await expect(remainingFile?.textContent).toContain('test-image2.png')
+    })
+  }
+}
+
+export const DragAndDrop: Story = {
+  render: (args) => ({
+    components: { FzUpload },
+    setup() {
+      const files = ref<File[]>([])
+      return { files, args }
+    },
+    template: `
+      <FzUpload v-bind="args" v-model="files"/>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify drag and drop zone is present', async () => {
+      const dropZone = canvasElement.querySelector('.border-dashed')
+      await expect(dropZone).toBeInTheDocument()
+      await expect(dropZone).toBeVisible()
+    })
+    
+    await step('Simulate drag and drop of a file', async () => {
+      const dropZone = canvasElement.querySelector('.border-dashed') as HTMLElement
+      await expect(dropZone).toBeInTheDocument()
+      
+      // Create test files
+      const testFile1 = new File(['content1'], 'dropped-file1.txt', { type: 'text/plain' })
+      const testFile2 = new File(['content2'], 'dropped-file2.txt', { type: 'text/plain' })
+      
+      // Create drag event data
+      const dataTransfer = new DataTransfer()
+      dataTransfer.items.add(testFile1)
+      dataTransfer.items.add(testFile2)
+      
+      // Simulate dragover event (required for drop to work)
+      const dragoverEvent = new DragEvent('dragover', {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer: dataTransfer
+      })
+      dropZone.dispatchEvent(dragoverEvent)
+      
+      // Simulate drop event
+      const dropEvent = new DragEvent('drop', {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer: dataTransfer
+      })
+      dropZone.dispatchEvent(dropEvent)
+      
+      // Wait for files to be added
+      await waitFor(() => {
+        const uploadContainer = canvasElement.querySelector('.text-md')
+        const fileList = uploadContainer?.querySelector('ul')
+        expect(fileList).toBeInTheDocument()
+      }, { timeout: 1000 })
+      
+      // Verify files appear in the list
+      // When multiple=false, only first file should be shown
+      const fileLinks = canvas.getAllByText('dropped-file1.txt')
+      await expect(fileLinks.length).toBeGreaterThan(0)
+    })
+  }
+}
+
+export const DragAndDropMultiple: Story = {
+  args: {
+    multiple: true
+  },
+  render: (args) => ({
+    components: { FzUpload },
+    setup() {
+      const files = ref<File[]>([])
+      return { files, args }
+    },
+    template: `
+      <FzUpload v-bind="args" v-model="files"/>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Simulate drag and drop of multiple files', async () => {
+      const dropZone = canvasElement.querySelector('.border-dashed') as HTMLElement
+      await expect(dropZone).toBeInTheDocument()
+      
+      // Create test files
+      const testFile1 = new File(['content1'], 'multi-file1.txt', { type: 'text/plain' })
+      const testFile2 = new File(['content2'], 'multi-file2.txt', { type: 'text/plain' })
+      const testFile3 = new File(['content3'], 'multi-file3.txt', { type: 'text/plain' })
+      
+      // Create drag event data
+      const dataTransfer = new DataTransfer()
+      dataTransfer.items.add(testFile1)
+      dataTransfer.items.add(testFile2)
+      dataTransfer.items.add(testFile3)
+      
+      // Simulate dragover event
+      const dragoverEvent = new DragEvent('dragover', {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer: dataTransfer
+      })
+      dropZone.dispatchEvent(dragoverEvent)
+      
+      // Simulate drop event
+      const dropEvent = new DragEvent('drop', {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer: dataTransfer
+      })
+      dropZone.dispatchEvent(dropEvent)
+      
+      // Wait for files to be added
+      await waitFor(() => {
+        const uploadContainer = canvasElement.querySelector('.text-md')
+        const fileList = uploadContainer?.querySelector('ul')
+        expect(fileList).toBeInTheDocument()
+        const fileItems = fileList?.querySelectorAll('li') || []
+        expect(fileItems.length).toBe(3)
+      }, { timeout: 1000 })
+      
+      // Verify all files appear in the list
+      const file1Links = canvas.getAllByText('multi-file1.txt')
+      await expect(file1Links.length).toBeGreaterThan(0)
+      const file2Links = canvas.getAllByText('multi-file2.txt')
+      await expect(file2Links.length).toBeGreaterThan(0)
+      const file3Links = canvas.getAllByText('multi-file3.txt')
+      await expect(file3Links.length).toBeGreaterThan(0)
     })
   }
 }
