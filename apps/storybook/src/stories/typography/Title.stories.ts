@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, within } from '@storybook/test'
 import { defineComponent, h } from 'vue'
 
 interface TitleArgs {
@@ -58,6 +59,25 @@ export const H1: Story = {
     components: { TitleComponent },
     template: '<TitleComponent :tag="args.tag" :text="args.text" />'
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify H1 title renders correctly', async () => {
+      const heading = canvas.getByText('Questo è un titolo H1')
+      await expect(heading).toBeInTheDocument()
+      await expect(heading).toBeVisible()
+    })
+    
+    await step('Verify H1 has correct tag name', async () => {
+      const heading = canvas.getByText('Questo è un titolo H1')
+      await expect(heading.tagName.toLowerCase()).toBe('h1')
+    })
+    
+    await step('Verify H1 text content matches', async () => {
+      const heading = canvas.getByText('Questo è un titolo H1')
+      await expect(heading.textContent).toBe('Questo è un titolo H1')
+    })
+  },
   parameters: {
     docs: {
       source: {
@@ -82,6 +102,25 @@ export const H2: Story = {
     components: { TitleComponent },
     template: '<TitleComponent :tag="args.tag" :text="args.text" />'
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify H2 title renders correctly', async () => {
+      const heading = canvas.getByText('Questo è un titolo H2')
+      await expect(heading).toBeInTheDocument()
+      await expect(heading).toBeVisible()
+    })
+    
+    await step('Verify H2 has correct tag name', async () => {
+      const heading = canvas.getByText('Questo è un titolo H2')
+      await expect(heading.tagName.toLowerCase()).toBe('h2')
+    })
+    
+    await step('Verify H2 text content matches', async () => {
+      const heading = canvas.getByText('Questo è un titolo H2')
+      await expect(heading.textContent).toBe('Questo è un titolo H2')
+    })
+  },
   parameters: {
     docs: {
       source: {
@@ -106,6 +145,25 @@ export const H3: Story = {
     components: { TitleComponent },
     template: '<TitleComponent :tag="args.tag" :text="args.text" />'
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify H3 title renders correctly', async () => {
+      const heading = canvas.getByText('Questo è un titolo H3')
+      await expect(heading).toBeInTheDocument()
+      await expect(heading).toBeVisible()
+    })
+    
+    await step('Verify H3 has correct tag name', async () => {
+      const heading = canvas.getByText('Questo è un titolo H3')
+      await expect(heading.tagName.toLowerCase()).toBe('h3')
+    })
+    
+    await step('Verify H3 text content matches', async () => {
+      const heading = canvas.getByText('Questo è un titolo H3')
+      await expect(heading.textContent).toBe('Questo è un titolo H3')
+    })
+  },
   parameters: {
     docs: {
       source: {
@@ -130,6 +188,25 @@ export const H1vColorBlue: Story = {
     components: { TitleComponent },
     template: '<TitleComponent :tag="args.tag" :text="args.text" v-color:blue />'
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify H1 with v-color:blue renders correctly', async () => {
+      const heading = canvas.getByText('Questo è un titolo H1 con v-color:blue')
+      await expect(heading).toBeInTheDocument()
+      await expect(heading).toBeVisible()
+    })
+    
+    await step('Verify H1 has correct tag name', async () => {
+      const heading = canvas.getByText('Questo è un titolo H1 con v-color:blue')
+      await expect(heading.tagName.toLowerCase()).toBe('h1')
+    })
+    
+    await step('Verify v-color:blue directive applies text-blue-500 class (default weight)', async () => {
+      const heading = canvas.getByText('Questo è un titolo H1 con v-color:blue')
+      await expect(heading).toHaveClass('text-blue-500')
+    })
+  },
   parameters: {
     docs: {
       source: {
@@ -154,6 +231,25 @@ export const H1vColorPink400: Story = {
     components: { TitleComponent },
     template: '<TitleComponent :tag="args.tag" :text="args.text" v-color:pink="400" />'
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify H1 with v-color:pink="400" renders correctly', async () => {
+      const heading = canvas.getByText('Questo è un titolo H1 con v-color:pink="400"')
+      await expect(heading).toBeInTheDocument()
+      await expect(heading).toBeVisible()
+    })
+    
+    await step('Verify H1 has correct tag name', async () => {
+      const heading = canvas.getByText('Questo è un titolo H1 con v-color:pink="400"')
+      await expect(heading.tagName.toLowerCase()).toBe('h1')
+    })
+    
+    await step('Verify v-color:pink="400" directive applies text-pink-400 class', async () => {
+      const heading = canvas.getByText('Questo è un titolo H1 con v-color:pink="400"')
+      await expect(heading).toHaveClass('text-pink-400')
+    })
+  },
   parameters: {
     docs: {
       source: {

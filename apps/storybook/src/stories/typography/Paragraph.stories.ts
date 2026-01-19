@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, within } from '@storybook/test'
 import { defineComponent, h } from 'vue'
 
 interface ParagraphArgs {
@@ -47,6 +48,25 @@ export const Paragraph: Story = {
     components: { ParagraphComponent },
     template: '<ParagraphComponent :text="args.text" />'
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify paragraph renders correctly', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo')
+      await expect(paragraph).toBeInTheDocument()
+      await expect(paragraph).toBeVisible()
+    })
+    
+    await step('Verify paragraph has correct tag name', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo')
+      await expect(paragraph.tagName.toLowerCase()).toBe('p')
+    })
+    
+    await step('Verify paragraph text content matches', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo')
+      await expect(paragraph.textContent).toBe('Questo è un paragrafo')
+    })
+  },
   parameters: {
     docs: {
       source: {
@@ -74,6 +94,20 @@ export const ASequenceOfParagraphs: Story = {
       <ParagraphComponent :text="args.text" />
     `
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify all paragraphs render correctly', async () => {
+      const paragraphs = canvas.getAllByText('Questo è un paragrafo')
+      await expect(paragraphs.length).toBe(3)
+      
+      for (const paragraph of paragraphs) {
+        await expect(paragraph).toBeInTheDocument()
+        await expect(paragraph).toBeVisible()
+        await expect(paragraph.tagName.toLowerCase()).toBe('p')
+      }
+    })
+  },
   parameters: {
     docs: {
       source: {
@@ -101,6 +135,20 @@ export const ParagraphDirectivesVBold: Story = {
     components: { ParagraphComponent },
     template: '<ParagraphComponent :text="args.text" v-bold />'
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify paragraph with v-bold renders correctly', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo con v-bold')
+      await expect(paragraph).toBeInTheDocument()
+      await expect(paragraph).toBeVisible()
+    })
+    
+    await step('Verify v-bold directive applies font-semibold class', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo con v-bold')
+      await expect(paragraph).toHaveClass('font-semibold')
+    })
+  },
   parameters: {
     docs: {
       source: {
@@ -124,6 +172,20 @@ export const ParagraphDirectivesVSmall: Story = {
     components: { ParagraphComponent },
     template: '<ParagraphComponent :text="args.text" v-small />'
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify paragraph with v-small renders correctly', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo con v-small')
+      await expect(paragraph).toBeInTheDocument()
+      await expect(paragraph).toBeVisible()
+    })
+    
+    await step('Verify v-small directive applies text-sm class', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo con v-small')
+      await expect(paragraph).toHaveClass('text-sm')
+    })
+  },
   parameters: {
     docs: {
       source: {
@@ -147,6 +209,25 @@ export const ParagraphDirectivesVBoldAndVSmall: Story = {
     components: { ParagraphComponent },
     template: '<ParagraphComponent :text="args.text" v-bold v-small />'
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify paragraph with combined directives renders correctly', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo con v-bold e v-small')
+      await expect(paragraph).toBeInTheDocument()
+      await expect(paragraph).toBeVisible()
+    })
+    
+    await step('Verify v-bold directive applies font-semibold class', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo con v-bold e v-small')
+      await expect(paragraph).toHaveClass('font-semibold')
+    })
+    
+    await step('Verify v-small directive applies text-sm class', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo con v-bold e v-small')
+      await expect(paragraph).toHaveClass('text-sm')
+    })
+  },
   parameters: {
     docs: {
       source: {
@@ -170,6 +251,20 @@ export const ParagraphDirectivesVColorBlue: Story = {
     components: { ParagraphComponent },
     template: '<ParagraphComponent :text="args.text" v-color:blue />'
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify paragraph with v-color:blue renders correctly', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo con v-color:blue')
+      await expect(paragraph).toBeInTheDocument()
+      await expect(paragraph).toBeVisible()
+    })
+    
+    await step('Verify v-color:blue directive applies text-blue-500 class (default weight)', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo con v-color:blue')
+      await expect(paragraph).toHaveClass('text-blue-500')
+    })
+  },
   parameters: {
     docs: {
       source: {
@@ -193,6 +288,20 @@ export const ParagraphDirectivesVColorPink400: Story = {
     components: { ParagraphComponent },
     template: '<ParagraphComponent :text="args.text" v-color:pink="400" />'
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify paragraph with v-color:pink="400" renders correctly', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo con v-color:pink="400"')
+      await expect(paragraph).toBeInTheDocument()
+      await expect(paragraph).toBeVisible()
+    })
+    
+    await step('Verify v-color:pink="400" directive applies text-pink-400 class', async () => {
+      const paragraph = canvas.getByText('Questo è un paragrafo con v-color:pink="400"')
+      await expect(paragraph).toHaveClass('text-pink-400')
+    })
+  },
   parameters: {
     docs: {
       source: {
