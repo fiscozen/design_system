@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from '@storybook/test'
 import { FzButton, FzButtonGroup } from '@fiscozen/button'
 
 const meta = {
@@ -69,68 +69,192 @@ const sharedPlayFunction = async ({ canvasElement, step, expectedButtonCount }: 
 }
 
 export const TwoButtonsFrontoffice: ButtonGroupStory = {
-  render: () => ({
+  render: (args) => ({
     components: { FzButtonGroup, FzButton },
     setup() {
-      return {}
+      return { args }
     },
     template: `<FzButtonGroup> 
-                    <FzButton variant="primary" environment="frontoffice">Save</FzButton>
-                    <FzButton variant="secondary" environment="frontoffice">Cancel</FzButton>
+                    <FzButton variant="primary" environment="frontoffice" @click="args.onSaveClick">Save</FzButton>
+                    <FzButton variant="secondary" environment="frontoffice" @click="args.onCancelClick">Cancel</FzButton>
                 </FzButtonGroup>`
   }),
-  play: async ({ canvasElement, step }: any) => {
+  args: {
+    onSaveClick: fn(),
+    onCancelClick: fn()
+  },
+  play: async ({ args, canvasElement, step }: any) => {
+    const canvas = within(canvasElement)
     await sharedPlayFunction({ canvasElement, step, expectedButtonCount: 2 })
+    
+    await step('Verify click handlers are called when buttons are clicked', async () => {
+      const buttons = canvas.getAllByRole('button')
+      const saveButton = buttons[0]
+      const cancelButton = buttons[1]
+      
+      // Reset spy call counts
+      args.onSaveClick.mockClear()
+      args.onCancelClick.mockClear()
+      
+      // Click Save button
+      await userEvent.click(saveButton)
+      await expect(args.onSaveClick).toHaveBeenCalledTimes(1)
+      await expect(args.onCancelClick).not.toHaveBeenCalled()
+      
+      // Click Cancel button
+      await userEvent.click(cancelButton)
+      await expect(args.onCancelClick).toHaveBeenCalledTimes(1)
+      await expect(args.onSaveClick).toHaveBeenCalledTimes(1) // Still 1 from before
+    })
+    
+    await step('Verify keyboard activation calls handlers', async () => {
+      const buttons = canvas.getAllByRole('button')
+      const saveButton = buttons[0]
+      
+      // Reset spy call counts
+      args.onSaveClick.mockClear()
+      args.onCancelClick.mockClear()
+      
+      // Focus and activate with Enter key
+      saveButton.focus()
+      await userEvent.keyboard('{Enter}')
+      await expect(args.onSaveClick).toHaveBeenCalledTimes(1)
+      
+      // Activate with Space key
+      await userEvent.keyboard(' ')
+      await expect(args.onSaveClick).toHaveBeenCalledTimes(2)
+    })
   }
 }
 
 export const TwoButtonsBackoffice: ButtonGroupStory = {
-  render: () => ({
+  render: (args) => ({
     components: { FzButtonGroup, FzButton },
     setup() {
-      return {}
+      return { args }
     },
     template: `<FzButtonGroup> 
-                    <FzButton variant="primary" environment="backoffice">Save</FzButton>
-                    <FzButton variant="secondary" environment="backoffice">Cancel</FzButton>
+                    <FzButton variant="primary" environment="backoffice" @click="args.onSaveClick">Save</FzButton>
+                    <FzButton variant="secondary" environment="backoffice" @click="args.onCancelClick">Cancel</FzButton>
                 </FzButtonGroup>`
   }),
-  play: async ({ canvasElement, step }: any) => {
+  args: {
+    onSaveClick: fn(),
+    onCancelClick: fn()
+  },
+  play: async ({ args, canvasElement, step }: any) => {
+    const canvas = within(canvasElement)
     await sharedPlayFunction({ canvasElement, step, expectedButtonCount: 2 })
+    
+    await step('Verify click handlers are called when buttons are clicked', async () => {
+      const buttons = canvas.getAllByRole('button')
+      const saveButton = buttons[0]
+      const cancelButton = buttons[1]
+      
+      // Reset spy call counts
+      args.onSaveClick.mockClear()
+      args.onCancelClick.mockClear()
+      
+      // Click Save button
+      await userEvent.click(saveButton)
+      await expect(args.onSaveClick).toHaveBeenCalledTimes(1)
+      await expect(args.onCancelClick).not.toHaveBeenCalled()
+      
+      // Click Cancel button
+      await userEvent.click(cancelButton)
+      await expect(args.onCancelClick).toHaveBeenCalledTimes(1)
+      await expect(args.onSaveClick).toHaveBeenCalledTimes(1) // Still 1 from before
+    })
   }
 }
 
 export const ThreeButtonsFrontoffice: ButtonGroupStory = {
-  render: () => ({
+  render: (args) => ({
     components: { FzButtonGroup, FzButton },
     setup() {
-      return {}
+      return { args }
     },
     template: `<FzButtonGroup> 
-                    <FzButton variant="primary" environment="frontoffice">Save</FzButton>
-                    <FzButton variant="secondary" environment="frontoffice">Cancel</FzButton>
-                    <FzButton variant="secondary" environment="frontoffice">Delete</FzButton>
+                    <FzButton variant="primary" environment="frontoffice" @click="args.onSaveClick">Save</FzButton>
+                    <FzButton variant="secondary" environment="frontoffice" @click="args.onCancelClick">Cancel</FzButton>
+                    <FzButton variant="secondary" environment="frontoffice" @click="args.onDeleteClick">Delete</FzButton>
                 </FzButtonGroup>`
   }),
-  play: async ({ canvasElement, step }: any) => {
+  args: {
+    onSaveClick: fn(),
+    onCancelClick: fn(),
+    onDeleteClick: fn()
+  },
+  play: async ({ args, canvasElement, step }: any) => {
+    const canvas = within(canvasElement)
     await sharedPlayFunction({ canvasElement, step, expectedButtonCount: 3 })
+    
+    await step('Verify click handlers are called when buttons are clicked', async () => {
+      const buttons = canvas.getAllByRole('button')
+      const saveButton = buttons[0]
+      const cancelButton = buttons[1]
+      const deleteButton = buttons[2]
+      
+      // Reset spy call counts
+      args.onSaveClick.mockClear()
+      args.onCancelClick.mockClear()
+      args.onDeleteClick.mockClear()
+      
+      // Click each button
+      await userEvent.click(saveButton)
+      await expect(args.onSaveClick).toHaveBeenCalledTimes(1)
+      
+      await userEvent.click(cancelButton)
+      await expect(args.onCancelClick).toHaveBeenCalledTimes(1)
+      
+      await userEvent.click(deleteButton)
+      await expect(args.onDeleteClick).toHaveBeenCalledTimes(1)
+    })
   }
 }
 
 export const ThreeButtonsBackoffice: ButtonGroupStory = {
-  render: () => ({
+  render: (args) => ({
     components: { FzButtonGroup, FzButton },
     setup() {
-      return {}
+      return { args }
     },
     template: `<FzButtonGroup> 
-                    <FzButton variant="primary" environment="backoffice">Save</FzButton>
-                    <FzButton variant="secondary" environment="backoffice">Cancel</FzButton>
-                    <FzButton variant="secondary" environment="backoffice">Delete</FzButton>
+                    <FzButton variant="primary" environment="backoffice" @click="args.onSaveClick">Save</FzButton>
+                    <FzButton variant="secondary" environment="backoffice" @click="args.onCancelClick">Cancel</FzButton>
+                    <FzButton variant="secondary" environment="backoffice" @click="args.onDeleteClick">Delete</FzButton>
                 </FzButtonGroup>`
   }),
-  play: async ({ canvasElement, step }: any) => {
+  args: {
+    onSaveClick: fn(),
+    onCancelClick: fn(),
+    onDeleteClick: fn()
+  },
+  play: async ({ args, canvasElement, step }: any) => {
+    const canvas = within(canvasElement)
     await sharedPlayFunction({ canvasElement, step, expectedButtonCount: 3 })
+    
+    await step('Verify click handlers are called when buttons are clicked', async () => {
+      const buttons = canvas.getAllByRole('button')
+      const saveButton = buttons[0]
+      const cancelButton = buttons[1]
+      const deleteButton = buttons[2]
+      
+      // Reset spy call counts
+      args.onSaveClick.mockClear()
+      args.onCancelClick.mockClear()
+      args.onDeleteClick.mockClear()
+      
+      // Click each button
+      await userEvent.click(saveButton)
+      await expect(args.onSaveClick).toHaveBeenCalledTimes(1)
+      
+      await userEvent.click(cancelButton)
+      await expect(args.onCancelClick).toHaveBeenCalledTimes(1)
+      
+      await userEvent.click(deleteButton)
+      await expect(args.onDeleteClick).toHaveBeenCalledTimes(1)
+    })
   }
 }
 
@@ -271,6 +395,119 @@ export const ThreeButtonsWithLongText: ButtonGroupStory = {
       // Verify truncation class is applied (FzButton handles this internally)
       const labelContainer = longTextButton.querySelector('.truncate')
       await expect(labelContainer).toBeTruthy()
+    })
+  }
+}
+
+export const DisabledButtons: ButtonGroupStory = {
+  render: (args) => ({
+    components: { FzButtonGroup, FzButton },
+    setup() {
+      return { args }
+    },
+    template: `<FzButtonGroup> 
+                    <FzButton variant="primary" environment="frontoffice" :disabled="true" @click="args.onSaveClick">Save</FzButton>
+                    <FzButton variant="secondary" environment="frontoffice" :disabled="true" @click="args.onCancelClick">Cancel</FzButton>
+                </FzButtonGroup>`
+  }),
+  args: {
+    onSaveClick: fn(),
+    onCancelClick: fn()
+  },
+  play: async ({ args, canvasElement, step }: any) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify buttons are disabled', async () => {
+      const buttons = canvas.getAllByRole('button')
+      await expect(buttons.length).toBe(2)
+      
+      await expect(buttons[0]).toBeDisabled()
+      await expect(buttons[0]).toHaveAttribute('aria-disabled', 'true')
+      
+      await expect(buttons[1]).toBeDisabled()
+      await expect(buttons[1]).toHaveAttribute('aria-disabled', 'true')
+    })
+    
+    await step('Verify click handlers are NOT called when disabled buttons are clicked', async () => {
+      const buttons = canvas.getAllByRole('button')
+      const saveButton = buttons[0]
+      const cancelButton = buttons[1]
+      
+      // Reset spy call counts
+      args.onSaveClick.mockClear()
+      args.onCancelClick.mockClear()
+      
+      // Click disabled Save button
+      await userEvent.click(saveButton)
+      await expect(args.onSaveClick).not.toHaveBeenCalled()
+      
+      // Click disabled Cancel button
+      await userEvent.click(cancelButton)
+      await expect(args.onCancelClick).not.toHaveBeenCalled()
+    })
+    
+    await step('Verify keyboard activation does NOT call handlers when disabled', async () => {
+      const buttons = canvas.getAllByRole('button')
+      const saveButton = buttons[0]
+      
+      // Reset spy call counts
+      args.onSaveClick.mockClear()
+      args.onCancelClick.mockClear()
+      
+      // Focus and attempt to activate with Enter key
+      saveButton.focus()
+      await userEvent.keyboard('{Enter}')
+      await expect(args.onSaveClick).not.toHaveBeenCalled()
+      
+      // Attempt to activate with Space key
+      await userEvent.keyboard(' ')
+      await expect(args.onSaveClick).not.toHaveBeenCalled()
+    })
+  }
+}
+
+export const MixedEnabledDisabled: ButtonGroupStory = {
+  render: (args) => ({
+    components: { FzButtonGroup, FzButton },
+    setup() {
+      return { args }
+    },
+    template: `<FzButtonGroup> 
+                    <FzButton variant="primary" environment="frontoffice" :disabled="false" @click="args.onSaveClick">Save</FzButton>
+                    <FzButton variant="secondary" environment="frontoffice" :disabled="true" @click="args.onCancelClick">Cancel</FzButton>
+                </FzButtonGroup>`
+  }),
+  args: {
+    onSaveClick: fn(),
+    onCancelClick: fn()
+  },
+  play: async ({ args, canvasElement, step }: any) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify enabled button calls handler and disabled button does not', async () => {
+      const buttons = canvas.getAllByRole('button')
+      const saveButton = buttons[0]
+      const cancelButton = buttons[1]
+      
+      // Verify states
+      await expect(saveButton).toBeEnabled()
+      await expect(saveButton).toHaveAttribute('aria-disabled', 'false')
+      await expect(cancelButton).toBeDisabled()
+      await expect(cancelButton).toHaveAttribute('aria-disabled', 'true')
+      
+      // Reset spy call counts
+      args.onSaveClick.mockClear()
+      args.onCancelClick.mockClear()
+      
+      // Click enabled Save button - should call handler
+      await userEvent.click(saveButton)
+      await expect(args.onSaveClick).toHaveBeenCalledTimes(1)
+      await expect(args.onCancelClick).not.toHaveBeenCalled()
+      
+      // Click disabled Cancel button - should NOT call handler
+      await userEvent.click(cancelButton)
+      await expect(args.onSaveClick).toHaveBeenCalledTimes(1) // Still 1 from before
+      await expect(args.onCancelClick).not.toHaveBeenCalled()
     })
   }
 }

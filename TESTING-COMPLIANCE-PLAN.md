@@ -2360,7 +2360,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | form/Upload.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | form/Appointments.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | button/IconButton.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| button/ButtonGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | 0.5 |
+| button/ButtonGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | navigation/Dropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | navigation/IconDropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | navigation/Link.stories.ts | ✅ Has disabled | ✅ Has interactions | 0.5 |
@@ -2517,4 +2517,18 @@ export const MyStory: Story = {
 - All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
 - All tests passing: 3 storybook play function tests (Template, Primary, Secondary, Invisible stories)
 - Phase 7 (Spy Function Pattern Refactor) progress: IconButton.stories.ts completed
+
+### January 20, 2026 - ButtonGroup Spy Function Pattern Enhancement ✅
+
+**Package:** `button` (Storybook)
+- Added spy function pattern to ButtonGroup.stories.ts for robust interaction testing
+- Enhanced TwoButtonsFrontoffice story with `onClick` spies to verify click interactions and keyboard activation (Enter and Space keys)
+- Enhanced TwoButtonsBackoffice story with spy function pattern for interaction verification
+- Enhanced ThreeButtonsFrontoffice story with spy function pattern for interaction verification
+- Enhanced ThreeButtonsBackoffice story with spy function pattern for interaction verification
+- Added DisabledButtons story with spy function pattern to verify handlers are NOT called when buttons are disabled
+- Added MixedEnabledDisabled story to verify enabled buttons call handlers while disabled buttons do NOT call handlers
+- All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
+- All tests passing: 8 storybook play function tests (TwoButtonsFrontoffice, TwoButtonsBackoffice, ThreeButtonsFrontoffice, ThreeButtonsBackoffice, TwoButtonsWithLongText, ThreeButtonsWithLongText, DisabledButtons, MixedEnabledDisabled)
+- Phase 7 (Spy Function Pattern Refactor) progress: ButtonGroup.stories.ts completed
 
