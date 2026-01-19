@@ -973,7 +973,7 @@ describe('Edge Cases', () => {
 | navigation | ~~Navbar.stories.ts~~ | ~~Navigation, active state~~ | ✅ **COMPLETED** |
 | navigation/Navlink.stories.ts | ~~Click, active state~~ | ✅ **COMPLETED** |
 | navigation/Navlist.stories.ts | ~~List navigation~~ | ✅ **COMPLETED** |
-| navigation/Stepper.stories.ts | Step navigation | 2 |
+| navigation/Stepper.stories.ts | ~~Step navigation~~ | ✅ **COMPLETED** |
 | panel/Collapse.stories.ts | Expand/collapse, keyboard | 1.5 |
 | panel/Tab.stories.ts | ~~Tab switching, keyboard nav~~ | ✅ **COMPLETED** |
 
@@ -2091,6 +2091,17 @@ Ensure root `package.json` has:
 - Fixed visibility checks for native HTML elements (details element)
 - Fixed keyboard navigation tests to verify keyboard accessibility without relying on state changes that may require v-model updates
 - Phase 4 (Storybook Play Functions) progress: 14 of 28 critical priority stories completed
+
+### January 19, 2026 - Stepper Stories Play Functions ✅
+
+**Package:** `stepper` (Storybook)
+- Added play functions to Stepper.stories.ts for all critical stories
+- Added play functions for: Default (basic rendering, step display, progress bar visibility), NoProgress (progress bar hidden verification)
+- Added new interaction stories: StepNavigation (step clicking and navigation), DisabledStepBehavior (disabled step and current step click prevention), StepStatuses (completed, error, disabled, default status verification), MobileView (mobile dropdown rendering and interaction), KeyboardNavigation (keyboard accessibility verification)
+- All play functions test user interactions, visual states, and accessibility expectations
+- Play functions cover: step navigation, disabled step behavior, step statuses (completed/error/disabled/default), mobile view dropdown, keyboard accessibility
+- Fixed test queries to properly handle badge elements and dropdown teleported content
+- Phase 4 (Storybook Play Functions) progress: 15 of 28 critical priority stories completed
 
 ### January 19, 2026 - Robust Disabled State Testing with Spy Functions ✅
 
