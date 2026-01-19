@@ -468,4 +468,145 @@ export const MultipleAreas: StoryObj<typeof meta> = {
   }
 }
 
+export const ResponsiveBehaviorMobile: StoryObj<typeof meta> = {
+  render: multipleAreas,
+  args: {
+    layout: 'multipleAreas'
+  },
+  globals: {
+    viewport: {
+      value: 'xs',
+      isRotated: false
+    }
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify layout renders correctly on mobile', async () => {
+      const layout = canvasElement.querySelector('.fz-layout')
+      await expect(layout).toBeInTheDocument()
+      await expect(layout).toBeVisible()
+    })
+    
+    await step('Verify sidebar trigger is visible on mobile (xs)', async () => {
+      // On mobile (xs), sidebar trigger should be visible
+      const sidebarTrigger = canvasElement.querySelector('.fz-layout__sidebarTrigger')
+      await expect(sidebarTrigger).toBeInTheDocument()
+      await expect(sidebarTrigger).toBeVisible()
+    })
+    
+    await step('Verify layout structure on mobile', async () => {
+      const layout = canvasElement.querySelector('.fz-layout')
+      const computedStyles = window.getComputedStyle(layout as Element)
+      await expect(computedStyles.display).toBe('grid')
+      
+      // Verify mobile-specific grid areas are applied
+      await expect(layout).toHaveClass('grid')
+    })
+    
+    await step('Verify header is visible on mobile', async () => {
+      const headerArea = canvasElement.querySelector('.fz-layout__header')
+      await expect(headerArea).toBeInTheDocument()
+      await expect(headerArea).toBeVisible()
+    })
+    
+    await step('Verify main content is visible on mobile', async () => {
+      const mainArea = canvasElement.querySelector('.fz-layout__main')
+      await expect(mainArea).toBeInTheDocument()
+      await expect(mainArea).toBeVisible()
+    })
+  }
+}
+
+export const ResponsiveBehaviorTablet: StoryObj<typeof meta> = {
+  render: multipleAreas,
+  args: {
+    layout: 'multipleAreas'
+  },
+  globals: {
+    viewport: {
+      value: 'md',
+      isRotated: false
+    }
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify layout renders correctly on tablet', async () => {
+      const layout = canvasElement.querySelector('.fz-layout')
+      await expect(layout).toBeInTheDocument()
+      await expect(layout).toBeVisible()
+    })
+    
+    await step('Verify sidebar trigger is visible on tablet (md)', async () => {
+      // On tablet (md), sidebar trigger should still be visible
+      const sidebarTrigger = canvasElement.querySelector('.fz-layout__sidebarTrigger')
+      await expect(sidebarTrigger).toBeInTheDocument()
+      await expect(sidebarTrigger).toBeVisible()
+    })
+    
+    await step('Verify layout structure on tablet', async () => {
+      const layout = canvasElement.querySelector('.fz-layout')
+      const computedStyles = window.getComputedStyle(layout as Element)
+      await expect(computedStyles.display).toBe('grid')
+    })
+  }
+}
+
+export const ResponsiveBehaviorDesktop: StoryObj<typeof meta> = {
+  render: multipleAreas,
+  args: {
+    layout: 'multipleAreas'
+  },
+  globals: {
+    viewport: {
+      value: 'lg',
+      isRotated: false
+    }
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify layout renders correctly on desktop', async () => {
+      const layout = canvasElement.querySelector('.fz-layout')
+      await expect(layout).toBeInTheDocument()
+      await expect(layout).toBeVisible()
+    })
+    
+    await step('Verify sidebar trigger is hidden on desktop (lg+)', async () => {
+      // On desktop (lg+), sidebar trigger should NOT be visible
+      const sidebarTrigger = canvasElement.querySelector('.fz-layout__sidebarTrigger')
+      await expect(sidebarTrigger).toBeNull()
+    })
+    
+    await step('Verify sidebar is visible on desktop', async () => {
+      // Sidebar should be visible on large screens
+      const sidebarArea = canvasElement.querySelector('.fz-layout__sidebar')
+      await expect(sidebarArea).toBeInTheDocument()
+      await expect(sidebarArea).toBeVisible()
+    })
+    
+    await step('Verify layout structure on desktop', async () => {
+      const layout = canvasElement.querySelector('.fz-layout')
+      const computedStyles = window.getComputedStyle(layout as Element)
+      await expect(computedStyles.display).toBe('grid')
+      
+      // Verify desktop layout has proper grid structure
+      await expect(layout).toHaveClass('grid')
+    })
+    
+    await step('Verify header is visible on desktop', async () => {
+      const headerArea = canvasElement.querySelector('.fz-layout__header')
+      await expect(headerArea).toBeInTheDocument()
+      await expect(headerArea).toBeVisible()
+    })
+    
+    await step('Verify main content is visible on desktop', async () => {
+      const mainArea = canvasElement.querySelector('.fz-layout__main')
+      await expect(mainArea).toBeInTheDocument()
+      await expect(mainArea).toBeVisible()
+    })
+  }
+}
+
 export default meta

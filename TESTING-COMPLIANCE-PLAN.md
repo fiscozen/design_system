@@ -983,7 +983,7 @@ describe('Edge Cases', () => {
 |-----------|------------------------|------------|
 | misc/Badge.stories.ts | ~~Visual states~~ | ✅ **COMPLETED** |
 | overlay/ViewFlag.stories.ts | ~~Rendering, positioning, accessibility~~ | ✅ **COMPLETED** |
-| panel/Layout.stories.ts | Responsive behavior | 1 |
+| panel/Layout.stories.ts | ~~Responsive behavior~~ | ✅ **COMPLETED** |
 | panel/Topbar.stories.ts | ~~Interaction states~~ | ✅ **COMPLETED** |
 
 ### 4.4 Low Priority Stories (Week 6-7)
