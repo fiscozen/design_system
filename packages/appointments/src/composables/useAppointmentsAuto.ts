@@ -1,7 +1,6 @@
 import { computed, ref, watch } from "vue";
 import {
   endOfDay,
-  format,
   isSameDay,
   isSameHour,
   isSameMinute,
@@ -9,11 +8,8 @@ import {
   parseISO,
   startOfDay,
 } from "date-fns";
-import { it } from "date-fns/locale";
-import type {
-  FzAppointmentsAutoProps,
-  UseAppointmentsReturn,
-} from "../types";
+import type { FzAppointmentsAutoProps, UseAppointmentsReturn } from "../types";
+import { useAppointmentsGeneric } from "./useAppointmentsGeneric";
 
 export interface UseAppointmentsAutoOptions {
   props: FzAppointmentsAutoProps;
@@ -24,14 +20,10 @@ export function useAppointmentsAuto({
   props,
   emit,
 }: UseAppointmentsAutoOptions): UseAppointmentsReturn {
-  // Default values
   const slotInterval = computed(() => props.slotInterval ?? 30);
   const breakDuration = computed(() => props.breakDuration ?? 0);
   const excludedDays = computed(() => props.excludedDays ?? []);
   const excludedSlots = computed(() => props.excludedSlots ?? []);
-  const defaultAlertTitle = "Nessuna disponibilità";
-  const defaultAlertDescription =
-    "Scegli un'altro giorno e prenota la tua consulenza.";
 
   // Convert ISO-8601 strings to Date objects for internal use
   const startDateAsDate = computed(() => {
@@ -65,26 +57,57 @@ export function useAppointmentsAuto({
     return isValid(parsed) ? parsed : null;
   });
 
-  const modelValueAsDate = computed(() => {
-    if (!props.modelValue) {
-      return undefined;
-    }
-    const parsed = parseISO(props.modelValue);
-    return isValid(parsed) ? parsed : undefined;
-  });
-
   // Current date being viewed
   const currentDate = ref<Date>(startDateAsDate.value);
 
-  // Generate unique name for radio group
-  const radioGroupName = computed(() => {
-    return props.name || `fz-appointments-${Date.now()}`;
+  // Use generic composable for common functionality
+  const {
+    modelValueAsDate,
+    radioGroupName,
+    selectedSlotValue,
+    alertTitle,
+    alertDescription,
+    formatTime,
+    formattedDate,
+    handleSlotSelect,
+  } = useAppointmentsGeneric({
+    props,
+    currentDate,
+    emit,
   });
 
   // Get today's date at midnight for comparison
   const today = computed(() => {
     return startOfDay(new Date());
   });
+
+  // Helper function to check if a single excluded value matches the date
+  const matchesExcludedDay = (
+    excluded: Date | string | number,
+    dateStart: Date,
+    dayOfWeek: number,
+  ): boolean => {
+    // Check if it's a number (day of week)
+    if (typeof excluded === "number") {
+      return excluded === dayOfWeek;
+    }
+
+    // Check if it's a string (ISO date)
+    if (typeof excluded === "string") {
+      const parsed = parseISO(excluded);
+      if (!isValid(parsed)) {
+        return false;
+      }
+      return isSameDay(startOfDay(parsed), dateStart);
+    }
+
+    // Check if it's a Date object
+    if (excluded instanceof Date) {
+      return isSameDay(startOfDay(excluded), dateStart);
+    }
+
+    return false;
+  };
 
   // Check if a day is excluded
   const isDayExcluded = (date: Date): boolean => {
@@ -95,29 +118,9 @@ export function useAppointmentsAuto({
     const dateStart = startOfDay(date);
     const dayOfWeek = date.getDay();
 
-    return excludedDays.value.some((excluded) => {
-      // Check if it's a number (day of week)
-      if (typeof excluded === "number") {
-        return excluded === dayOfWeek;
-      }
-
-      // Check if it's a string (ISO date)
-      if (typeof excluded === "string") {
-        const parsed = parseISO(excluded);
-        if (!isValid(parsed)) {
-          return false;
-        }
-        const excludedDate = startOfDay(parsed);
-        return isSameDay(excludedDate, dateStart);
-      }
-
-      // Check if it's a Date object
-      if (excluded instanceof Date) {
-        return isSameDay(startOfDay(excluded), dateStart);
-      }
-
-      return false;
-    });
+    return excludedDays.value.some((excluded) =>
+      matchesExcludedDay(excluded, dateStart, dayOfWeek),
+    );
   };
 
   // Check if we can navigate back
@@ -214,9 +217,11 @@ export function useAppointmentsAuto({
         typeof disabledSlot === "string"
           ? parseISO(disabledSlot)
           : disabledSlot;
+
       if (!isValid(disabledDate)) {
         return false;
       }
+
       return (
         isSameDay(slot, disabledDate) &&
         isSameHour(slot, disabledDate) &&
@@ -230,46 +235,12 @@ export function useAppointmentsAuto({
     return availableSlots.value.some((slot) => !isSlotExcluded(slot));
   });
 
-  // Selected slot value for radio group
-  const selectedSlotValue = computed(() => {
-    if (!modelValueAsDate.value) {
-      return undefined;
-    }
-
-    // Check if selected slot is for current date
-    if (isSameDay(modelValueAsDate.value, currentDate.value)) {
-      return props.modelValue;
-    }
-
-    return undefined;
-  });
-
   // Info text showing slot interval
   const infoText = computed(() => {
     if (props.infoText !== undefined) {
       return props.infoText;
     }
     return `${slotInterval.value} minuti a partire dalle`;
-  });
-
-  // Alert title
-  const alertTitle = computed(() => {
-    return props.alertTitle ?? defaultAlertTitle;
-  });
-
-  // Alert description
-  const alertDescription = computed(() => {
-    return props.alertDescription ?? defaultAlertDescription;
-  });
-
-  // Format time for display
-  const formatTime = (date: Date): string => {
-    return format(date, "HH:mm");
-  };
-
-  // Format date for display (e.g., "Lunedì 3 novembre")
-  const formattedDate = computed(() => {
-    return format(currentDate.value, "EEEE d MMMM", { locale: it });
   });
 
   // Navigate to previous day
@@ -325,11 +296,6 @@ export function useAppointmentsAuto({
       // Reset selection when date changes
       emit("update:modelValue", undefined);
     }
-  };
-
-  // Handle slot selection
-  const handleSlotSelect = (value: string) => {
-    emit("update:modelValue", value);
   };
 
   // Watch for startDate changes and update currentDate if needed

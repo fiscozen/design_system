@@ -1,10 +1,10 @@
 import { computed, ref, watch } from "vue";
 import { format, isSameDay, isValid, parseISO, startOfDay } from "date-fns";
-import { it } from "date-fns/locale";
 import type {
   FzAppointmentsManualProps,
   UseAppointmentsReturn,
 } from "../types";
+import { useAppointmentsGeneric } from "./useAppointmentsGeneric";
 
 export interface UseAppointmentsManualOptions {
   props: FzAppointmentsManualProps;
@@ -15,10 +15,6 @@ export function useAppointmentsManual({
   props,
   emit,
 }: UseAppointmentsManualOptions): UseAppointmentsReturn {
-  const defaultAlertTitle = "Nessuna disponibilità";
-  const defaultAlertDescription =
-    "Scegli un'altro giorno e prenota la tua consulenza.";
-
   // Convert all slots to Date objects
   const allSlots = computed(() => {
     return props.slots
@@ -65,45 +61,53 @@ export function useAppointmentsManual({
       : startOfDay(new Date()),
   );
 
+  // Use generic composable for common functionality
+  const {
+    modelValueAsDate,
+    radioGroupName,
+    selectedSlotValue,
+    alertTitle,
+    alertDescription,
+    formatTime,
+    formattedDate,
+    handleSlotSelect,
+  } = useAppointmentsGeneric({
+    props,
+    currentDate,
+    emit,
+  });
+
   // Watch for availableDays changes to reset currentDate if needed
   watch(
     () => availableDays.value,
     (days) => {
-      if (days.length > 0) {
-        // Find if current date is still valid
-        const currentDayKey = format(currentDate.value, "yyyy-MM-dd");
-        const index = days.findIndex(
-          (day) => format(day, "yyyy-MM-dd") === currentDayKey,
-        );
+      if (days.length === 0) {
+        // No days available, reset to safe default
+        currentDayIndex.value = 0;
+        currentDate.value = startOfDay(new Date());
+        return;
+      }
 
-        if (index === -1) {
-          // Current date is no longer available, reset to first day
-          currentDayIndex.value = 0;
-          currentDate.value = startOfDay(days[0]);
-        } else {
-          currentDayIndex.value = index;
-        }
+      // Find if current date is still valid
+      const currentDayKey = format(currentDate.value, "yyyy-MM-dd");
+      const index = days.findIndex(
+        (day) => format(day, "yyyy-MM-dd") === currentDayKey,
+      );
+
+      if (index === -1) {
+        // Current date is no longer available, reset to first day
+        currentDayIndex.value = 0;
+        currentDate.value = startOfDay(days[0]);
+      } else {
+        currentDayIndex.value = index;
       }
     },
     { immediate: true },
   );
 
-  const modelValueAsDate = computed(() => {
-    if (!props.modelValue) {
-      return undefined;
-    }
-    const parsed = parseISO(props.modelValue);
-    return isValid(parsed) ? parsed : undefined;
-  });
-
-  // Generate unique name for radio group
-  const radioGroupName = computed(() => {
-    return props.name || `fz-appointments-${Date.now()}`;
-  });
-
   // Check if we can navigate back
   const canNavigateBack = computed(() => {
-    return currentDayIndex.value > 0;
+    return availableDays.value.length > 0 && currentDayIndex.value > 0;
   });
 
   // Check if we can navigate forward
@@ -113,6 +117,11 @@ export function useAppointmentsManual({
 
   // Available slots for current date
   const availableSlots = computed(() => {
+    // Safety check: ensure currentDate is valid
+    if (!isValid(currentDate.value)) {
+      return [];
+    }
+
     const dayKey = format(currentDate.value, "yyyy-MM-dd");
     return slotsByDay.value.get(dayKey) || [];
   });
@@ -127,43 +136,9 @@ export function useAppointmentsManual({
     return availableSlots.value.length > 0;
   });
 
-  // Selected slot value for radio group
-  const selectedSlotValue = computed(() => {
-    if (!modelValueAsDate.value) {
-      return undefined;
-    }
-
-    // Check if selected slot is for current date
-    if (isSameDay(modelValueAsDate.value, currentDate.value)) {
-      return props.modelValue;
-    }
-
-    return undefined;
-  });
-
   // Info text - use custom if provided, otherwise undefined (hidden)
   const infoText = computed(() => {
     return props.infoText;
-  });
-
-  // Alert title
-  const alertTitle = computed(() => {
-    return props.alertTitle ?? defaultAlertTitle;
-  });
-
-  // Alert description
-  const alertDescription = computed(() => {
-    return props.alertDescription ?? defaultAlertDescription;
-  });
-
-  // Format time for display
-  const formatTime = (date: Date): string => {
-    return format(date, "HH:mm");
-  };
-
-  // Format date for display (e.g., "Lunedì 3 novembre")
-  const formattedDate = computed(() => {
-    return format(currentDate.value, "EEEE d MMMM", { locale: it });
   });
 
   // Navigate to previous day
@@ -172,8 +147,16 @@ export function useAppointmentsManual({
       return;
     }
 
-    currentDayIndex.value--;
-    currentDate.value = startOfDay(availableDays.value[currentDayIndex.value]);
+    const newIndex = currentDayIndex.value - 1;
+    const targetDay = availableDays.value[newIndex];
+
+    // Safety check: ensure target day exists
+    if (!targetDay || !isValid(targetDay)) {
+      return;
+    }
+
+    currentDayIndex.value = newIndex;
+    currentDate.value = startOfDay(targetDay);
     // Reset selection when date changes
     emit("update:modelValue", undefined);
   };
@@ -184,22 +167,29 @@ export function useAppointmentsManual({
       return;
     }
 
-    currentDayIndex.value++;
-    currentDate.value = startOfDay(availableDays.value[currentDayIndex.value]);
+    const newIndex = currentDayIndex.value + 1;
+    const targetDay = availableDays.value[newIndex];
+
+    // Safety check: ensure target day exists
+    if (!targetDay || !isValid(targetDay)) {
+      return;
+    }
+
+    currentDayIndex.value = newIndex;
+    currentDate.value = startOfDay(targetDay);
     // Reset selection when date changes
     emit("update:modelValue", undefined);
-  };
-
-  // Handle slot selection
-  const handleSlotSelect = (value: string) => {
-    emit("update:modelValue", value);
   };
 
   // Watch for modelValue changes to update currentDate if needed
   watch(
     () => modelValueAsDate.value,
     (newValue) => {
-      if (newValue && !isSameDay(newValue, currentDate.value)) {
+      if (!newValue || availableDays.value.length === 0) {
+        return;
+      }
+
+      if (!isSameDay(newValue, currentDate.value)) {
         // Find the day index for this value
         const dayKey = format(newValue, "yyyy-MM-dd");
         const index = availableDays.value.findIndex(
@@ -207,8 +197,12 @@ export function useAppointmentsManual({
         );
 
         if (index !== -1) {
-          currentDayIndex.value = index;
-          currentDate.value = startOfDay(availableDays.value[index]);
+          const targetDay = availableDays.value[index];
+          // Safety check: ensure target day exists and is valid
+          if (targetDay && isValid(targetDay)) {
+            currentDayIndex.value = index;
+            currentDate.value = startOfDay(targetDay);
+          }
         }
       }
     },

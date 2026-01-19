@@ -1,9 +1,5 @@
 <template>
-  <FzContainer
-    class="fz-appointments"
-    alignItems="center"
-    gap="base"
-  >
+  <FzContainer class="fz-appointments" alignItems="center" gap="base">
     <!-- Header with date navigation -->
     <FzContainer horizontal gap="base" class="w-full">
       <FzIconButton
@@ -72,9 +68,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type {
-  FzAppointmentsProps
-} from "./types";
+import type { FzAppointmentsProps } from "./types";
 import { useAppointmentsManual } from "./composables/useAppointmentsManual";
 import { useAppointmentsAuto } from "./composables/useAppointmentsAuto";
 import { FzRadioCard, FzRadioGroup } from "@fiscozen/radio";
@@ -105,9 +99,10 @@ const {
   isSlotExcluded,
   formatTime,
   handleSlotSelect,
-} = props.type === "manual"
-  ? useAppointmentsManual({ props, emit })
-  : useAppointmentsAuto({ props, emit });
+} =
+  props.type === "manual"
+    ? useAppointmentsManual({ props, emit })
+    : useAppointmentsAuto({ props, emit });
 
 // Expose required for template
 const required = computed(() => props.required ?? false);
