@@ -2368,7 +2368,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | navigation/Navlist.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | panel/Tab.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | panel/Collapse.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| overlay/Dialog.stories.ts | ❌ No disabled | ✅ Has interactions | 1 |
+| overlay/Dialog.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | overlay/ConfirmDialog.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | messages/Alert.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
 | messages/Toast.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
@@ -2558,4 +2558,19 @@ export const MyStory: Story = {
 - All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
 - All tests passing: 17 storybook play function tests (Medium, Disabled, KeyboardNavigation, and all variant stories)
 - Phase 7 (Spy Function Pattern Refactor) progress: RadioGroup.stories.ts completed
+
+### January 20, 2026 - Dialog Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `dialog` (Storybook)
+- Added spy function pattern to Dialog.stories.ts for robust interaction testing
+- Imported `fn` from `@storybook/test` and added `onFzmodalCancel` spy to Template render function
+- Enhanced OpenAndClose story with spy to verify cancel handler IS called when dialog closes via Escape key
+- Enhanced EscapeKey story with spy to verify cancel handler IS called when Escape key closes dialog
+- Enhanced EscapeKeyDisabled story with spy to verify cancel handler is NOT called when Escape is disabled
+- Enhanced BackdropClick story with spy to verify cancel handler IS called when dialog closes via backdrop click
+- Enhanced BackdropClickDisabled story with spy to verify cancel handler is NOT called when backdrop click is disabled
+- Enhanced Accessibility story with spy to verify cancel handler IS called when dialog closes via Escape key
+- All play functions test user interactions and verify handlers are called (or NOT called when disabled)
+- All tests passing: 11 storybook play function tests (OpenAndClose, EscapeKey, EscapeKeyDisabled, BackdropClick, BackdropClickDisabled, Accessibility, and other stories)
+- Phase 7 (Spy Function Pattern Refactor) progress: Dialog.stories.ts completed
 

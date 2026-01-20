@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
 import { ref } from 'vue'
 
 import { FzDialog, FzConfirmDialog, FzConfirmDialogProps } from '@fiscozen/dialog'
@@ -88,7 +88,7 @@ const Template: Story = {
     template: `
       <div class="p-12">
         <FzButton @click="dialog?.show()">Open Dialog</FzButton>
-        <FzDialog v-bind="args" ref="dialog">
+        <FzDialog v-bind="args" @fzmodal:cancel="args.onFzmodalCancel" ref="dialog">
           <template #header>
             <div class="text-xl font-medium">{{ args.title || 'Dialog Title' }}</div>
           </template>
@@ -139,9 +139,10 @@ export const Default: Story = {
 export const OpenAndClose: Story = {
   ...Template,
   args: {
-    title: 'Open and Close Dialog'
+    title: 'Open and Close Dialog',
+    onFzmodalCancel: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Open dialog', async () => {
@@ -154,8 +155,11 @@ export const OpenAndClose: Story = {
       await expect(dialog).toBeVisible()
     })
     
-    await step('Close dialog using Escape key', async () => {
+    await step('Close dialog using Escape key and verify cancel handler is called', async () => {
       await closeDialogWithEscape()
+      
+      // ROBUST CHECK: Verify the cancel spy WAS called
+      await expect(args.onFzmodalCancel).toHaveBeenCalledTimes(1)
     })
     
     await step('Verify dialog is closed', async () => {
@@ -169,17 +173,21 @@ export const EscapeKey: Story = {
   ...Template,
   args: {
     title: 'Escape Key Test',
-    closeOnEscape: true
+    closeOnEscape: true,
+    onFzmodalCancel: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Open dialog', async () => {
       await openDialog(canvas)
     })
     
-    await step('Press Escape key to close dialog', async () => {
+    await step('Press Escape key to close dialog and verify cancel handler is called', async () => {
       await closeDialogWithEscape()
+      
+      // ROBUST CHECK: Verify the cancel spy WAS called
+      await expect(args.onFzmodalCancel).toHaveBeenCalledTimes(1)
     })
     
     await step('Verify dialog closed', async () => {
@@ -193,16 +201,17 @@ export const EscapeKeyDisabled: Story = {
   ...Template,
   args: {
     title: 'Escape Key Disabled',
-    closeOnEscape: false
+    closeOnEscape: false,
+    onFzmodalCancel: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Open dialog', async () => {
       await openDialog(canvas)
     })
     
-    await step('Press Escape key - dialog should remain open', async () => {
+    await step('Press Escape key - dialog should remain open and cancel handler should NOT be called', async () => {
       const dialog = document.querySelector('dialog') as HTMLElement
       await expect(dialog).toBeInTheDocument()
       
@@ -211,6 +220,9 @@ export const EscapeKeyDisabled: Story = {
       
       // Verify dialog remains open using proper waitFor pattern
       await verifyDialogRemainsOpen()
+      
+      // ROBUST CHECK: Verify the cancel spy was NOT called when Escape is disabled
+      await expect(args.onFzmodalCancel).not.toHaveBeenCalled()
     })
   }
 }
@@ -219,16 +231,17 @@ export const BackdropClick: Story = {
   ...Template,
   args: {
     title: 'Backdrop Click Test',
-    closeOnBackdrop: true
+    closeOnBackdrop: true,
+    onFzmodalCancel: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Open dialog', async () => {
       await openDialog(canvas)
     })
     
-    await step('Click on backdrop to close dialog', async () => {
+    await step('Click on backdrop to close dialog and verify cancel handler is called', async () => {
       const backdrop = document.querySelector('.fz-dialog__backdrop')
       await expect(backdrop).toBeInTheDocument()
       
@@ -241,6 +254,9 @@ export const BackdropClick: Story = {
       await waitFor(() => {
         expect(document.querySelector('dialog')).not.toBeInTheDocument()
       }, { timeout: 1000 })
+      
+      // ROBUST CHECK: Verify the cancel spy WAS called
+      await expect(args.onFzmodalCancel).toHaveBeenCalledTimes(1)
     })
     
     await step('Verify dialog closed', async () => {
@@ -254,16 +270,17 @@ export const BackdropClickDisabled: Story = {
   ...Template,
   args: {
     title: 'Backdrop Click Disabled',
-    closeOnBackdrop: false
+    closeOnBackdrop: false,
+    onFzmodalCancel: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Open dialog', async () => {
       await openDialog(canvas)
     })
     
-    await step('Click on backdrop - dialog should remain open', async () => {
+    await step('Click on backdrop - dialog should remain open and cancel handler should NOT be called', async () => {
       const backdrop = document.querySelector('.fz-dialog__backdrop')
       await expect(backdrop).toBeInTheDocument()
       
@@ -274,6 +291,9 @@ export const BackdropClickDisabled: Story = {
       
       // Verify dialog remains open using proper waitFor pattern
       await verifyDialogRemainsOpen()
+      
+      // ROBUST CHECK: Verify the cancel spy was NOT called when backdrop click is disabled
+      await expect(args.onFzmodalCancel).not.toHaveBeenCalled()
     })
   }
 }
@@ -373,9 +393,10 @@ export const FocusTrap: Story = {
 export const Accessibility: Story = {
   ...Template,
   args: {
-    title: 'Accessibility Test'
+    title: 'Accessibility Test',
+    onFzmodalCancel: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Open dialog', async () => {
@@ -417,11 +438,14 @@ export const Accessibility: Story = {
       await expect(body?.textContent).toContain('This is the dialog body content.')
     })
     
-    await step('Verify dialog can be closed with keyboard (Escape)', async () => {
+    await step('Verify dialog can be closed with keyboard (Escape) and cancel handler is called', async () => {
       await closeDialogWithEscape()
       
       const dialog = document.querySelector('dialog')
       await expect(dialog).not.toBeInTheDocument()
+      
+      // ROBUST CHECK: Verify the cancel spy WAS called
+      await expect(args.onFzmodalCancel).toHaveBeenCalledTimes(1)
     })
   }
 }
