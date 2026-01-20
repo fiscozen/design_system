@@ -41,16 +41,3 @@ exports[`FzAvatar > Snapshots > should match snapshot - with title and subtitle 
   </div>
 </div>"
 `;
-
-exports[`FzAvatar > image matches snapshot 1`] = `
-"<div class="flex items-center gap-12"><img class="select-none object-cover size-44 rounded-full" src="https://example.com" alt="Mario Rossi" title="Mario Rossi">
-  <!--v-if-->
-</div>"
-`;
-
-exports[`FzAvatar > placeholder matches snapshot 1`] = `
-"<div class="flex items-center gap-12">
-  <div class="select-none object-cover size-44 rounded-full bg-core-black text-core-white grid place-content-center text-sm" title="Mario Rossi" data-testid="avatar-placeholder">MR</div>
-  <!--v-if-->
-</div>"
-`;

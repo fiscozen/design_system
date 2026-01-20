@@ -11,11 +11,11 @@ exports[`FzCheckbox > Snapshots > should match snapshot - checked state 1`] = `
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355209-ju02x" class="w-0 h-0 peer fz-hidden-input" aria-checked="true" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168549355209-ju02x-label" value="test">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032910-59sbh" class="w-0 h-0 peer fz-hidden-input" aria-checked="true" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032910-59sbh-label" value="test">
     <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168549355209-ju02x-label" for="fz-checkbox-168549355209-ju02x" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-168929032910-59sbh-label" for="fz-checkbox-168929032910-59sbh" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -60,11 +60,11 @@ exports[`FzCheckbox > Snapshots > should match snapshot - default state 1`] = `
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355205-ypw6u" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168549355205-ypw6u-label" value="test">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032909-s9ec0" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032909-s9ec0-label" value="test">
     <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168549355205-ypw6u-label" for="fz-checkbox-168549355205-ypw6u" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-168929032909-s9ec0-label" for="fz-checkbox-168929032909-s9ec0" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -109,11 +109,11 @@ exports[`FzCheckbox > Snapshots > should match snapshot - disabled state 1`] = `
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355211-phwoh" disabled="" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168549355211-phwoh-label" value="test">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032911-qboe4" disabled="" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032911-qboe4-label" value="test">
     <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168549355211-phwoh-label" for="fz-checkbox-168549355211-phwoh" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-168929032911-qboe4-label" for="fz-checkbox-168929032911-qboe4" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -158,11 +158,11 @@ exports[`FzCheckbox > Snapshots > should match snapshot - error state 1`] = `
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355212-o8r41" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="true" aria-describedby="fz-checkbox-168549355212-o8r41-error" aria-labelledby="fz-checkbox-168549355212-o8r41-label" value="test">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032912-8sggw" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="true" aria-describedby="fz-checkbox-168929032912-8sggw-error" aria-labelledby="fz-checkbox-168929032912-8sggw-label" value="test">
     <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168549355212-o8r41-label" for="fz-checkbox-168549355212-o8r41" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-168929032912-8sggw-label" for="fz-checkbox-168929032912-8sggw" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -203,11 +203,11 @@ exports[`FzCheckbox > Snapshots > should match snapshot - error state 1`] = `
       FzAlert with type="error" and announce prop
       would automatically get role="alert" and aria-live="assertive"
   -->
-  <div data-v-9bf2fc2e="" data-v-79ecb611="" class="flex select-none gap-12 rounded justify-between" id="fz-checkbox-168549355212-o8r41-error" type="error" role="alert" aria-live="assertive" aria-atomic="true">
+  <div data-v-9bf2fc2e="" data-v-79ecb611="" class="flex select-none gap-12 rounded justify-between bg-semantic-error-50 border-semantic-error" id="fz-checkbox-168929032912-8sggw-error" role="alert" aria-live="assertive" aria-atomic="true">
     <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-start layout-default flex-1 p-12">
-      <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px]">
-        <!---->
-      </div>
+      <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px] text-semantic-error"><svg class="svg-inline--fa fa-circle-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path>
+        </svg></div>
       <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
         <!--v-if-->
         <p data-v-9bf2fc2e="" class="font-normal !leading-[20px] mb-16">Error message</p>
@@ -240,11 +240,11 @@ exports[`FzCheckbox > Snapshots > should match snapshot - indeterminate state 1`
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355214-1hu4b" class="w-0 h-0 peer fz-hidden-input" aria-checked="mixed" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168549355214-1hu4b-label" value="test">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032914-3pusd" class="w-0 h-0 peer fz-hidden-input" aria-checked="mixed" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032914-3pusd-label" value="test">
     <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168549355214-1hu4b-label" for="fz-checkbox-168549355214-1hu4b" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-168929032914-3pusd-label" for="fz-checkbox-168929032914-3pusd" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -289,11 +289,11 @@ exports[`FzCheckbox > Snapshots > should match snapshot - required 1`] = `
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355216-d8x2n" class="w-0 h-0 peer fz-hidden-input" required="" aria-checked="false" aria-required="true" aria-invalid="false" aria-labelledby="fz-checkbox-168549355216-d8x2n-label" value="test">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032917-j9ls3" class="w-0 h-0 peer fz-hidden-input" required="" aria-checked="false" aria-required="true" aria-invalid="false" aria-labelledby="fz-checkbox-168929032917-j9ls3-label" value="test">
     <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168549355216-d8x2n-label" for="fz-checkbox-168549355216-d8x2n" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-168929032917-j9ls3-label" for="fz-checkbox-168929032917-j9ls3" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -338,11 +338,11 @@ exports[`FzCheckbox > Snapshots > should match snapshot - standalone mode 1`] = 
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355215-nq0wy" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-label="Test Checkbox" aria-required="false" aria-invalid="false" value="test">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032916-9gc2r" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-label="Test Checkbox" aria-required="false" aria-invalid="false" value="test">
     <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168549355215-nq0wy-label" for="fz-checkbox-168549355215-nq0wy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-168929032916-9gc2r-label" for="fz-checkbox-168929032916-9gc2r" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -388,11 +388,11 @@ exports[`FzCheckbox > Snapshots > should match snapshot - with emphasis 1`] = `
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168549355215-d4cfn" class="w-0 h-0 peer fz-hidden-input" aria-checked="true" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168549355215-d4cfn-label" value="test">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032917-wkjoo" class="w-0 h-0 peer fz-hidden-input" aria-checked="true" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032917-wkjoo-label" value="test">
     <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168549355215-d4cfn-label" for="fz-checkbox-168549355215-d4cfn" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-168929032917-wkjoo-label" for="fz-checkbox-168929032917-wkjoo" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]

@@ -182,11 +182,11 @@ exports[`FzTable > Snapshots > should match snapshot - selectable variant 1`] = 
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-2b014a17="" type="checkbox" id="fz-checkbox-168562165739-vcq2a" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168562165739-vcq2a-label" value="all">
+      --><input data-v-2b014a17="" type="checkbox" id="fz-checkbox-168928670254-9sp98" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168928670254-9sp98-label" value="all">
             <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-2b014a17="" id="fz-checkbox-168562165739-vcq2a-label" for="fz-checkbox-168562165739-vcq2a" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-2b014a17="" id="fz-checkbox-168928670254-9sp98-label" for="fz-checkbox-168928670254-9sp98" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -239,11 +239,11 @@ exports[`FzTable > Snapshots > should match snapshot - selectable variant 1`] = 
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-2b014a17="" type="checkbox" id="fz-checkbox-168562165740-pon1o" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168562165740-pon1o-label" value="row-0">
+      --><input data-v-2b014a17="" type="checkbox" id="fz-checkbox-168928670255-8wkue" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168928670255-8wkue-label" value="row-0">
               <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-2b014a17="" id="fz-checkbox-168562165740-pon1o-label" for="fz-checkbox-168562165740-pon1o" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-2b014a17="" id="fz-checkbox-168928670255-8wkue-label" for="fz-checkbox-168928670255-8wkue" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -294,11 +294,11 @@ exports[`FzTable > Snapshots > should match snapshot - selectable variant 1`] = 
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-2b014a17="" type="checkbox" id="fz-checkbox-168562165742-995ke" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168562165742-995ke-label" value="row-1">
+      --><input data-v-2b014a17="" type="checkbox" id="fz-checkbox-168928670256-0cqwi" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168928670256-0cqwi-label" value="row-1">
               <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-2b014a17="" id="fz-checkbox-168562165742-995ke-label" for="fz-checkbox-168562165742-995ke" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-2b014a17="" id="fz-checkbox-168928670256-0cqwi-label" for="fz-checkbox-168928670256-0cqwi" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]

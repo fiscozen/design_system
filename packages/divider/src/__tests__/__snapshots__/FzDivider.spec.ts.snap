@@ -25,10 +25,3 @@ exports[`FzDivider > Snapshots > should match snapshot - with labelClass 1`] = `
   <div class="flex-1 border-solid border-t-1 border-grey-200"></div>
 </div>"
 `;
-
-exports[`FzDivider > matches snaphost 1`] = `
-"<div class="w-full my-16 relative">
-  <hr>
-  <!--v-if-->
-</div>"
-`;

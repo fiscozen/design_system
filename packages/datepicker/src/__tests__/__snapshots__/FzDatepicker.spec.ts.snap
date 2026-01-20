@@ -12,7 +12,7 @@ exports[`FzDatepicker > Snapshots > matches disabled dates snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168549073231-332nt" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168929035164-j0u5f" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -230,22 +230,22 @@ exports[`FzDatepicker > Snapshots > matches disabled dates snapshot 1`] = `
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp__today dp__active_date">
+                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" aria-disabled="true" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__cell_disabled dp--future">
+                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" aria-disabled="true" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__cell_disabled dp--future">
+                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->18
                                 <!---->
                                 <!---->
@@ -255,28 +255,28 @@ exports[`FzDatepicker > Snapshots > matches disabled dates snapshot 1`] = `
                           <div class="dp__calendar_row" role="row">
                             <!---->
                             <div id="2026-01-19" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
+                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
+                              <div class="dp__cell_inner dp__pointer dp__today dp__active_date">
                                 <!---->20
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
+                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-disabled="true" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
+                              <div class="dp__cell_inner dp__cell_disabled dp--future">
                                 <!---->21
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
+                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" aria-disabled="true" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
+                              <div class="dp__cell_inner dp__cell_disabled dp--future">
                                 <!---->22
                                 <!---->
                                 <!---->
@@ -387,7 +387,7 @@ exports[`FzDatepicker > Snapshots > matches inline timepicker snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168549073267-dziia" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168929035187-f3pzl" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -605,22 +605,22 @@ exports[`FzDatepicker > Snapshots > matches inline timepicker snapshot 1`] = `
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp__today dp__active_date">
+                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-17" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-18" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->18
                                 <!---->
                                 <!---->
@@ -630,14 +630,14 @@ exports[`FzDatepicker > Snapshots > matches inline timepicker snapshot 1`] = `
                           <div class="dp__calendar_row" role="row">
                             <!---->
                             <div id="2026-01-19" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
+                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
+                              <div class="dp__cell_inner dp__pointer dp__today dp__active_date">
                                 <!---->20
                                 <!---->
                                 <!---->
@@ -747,11 +747,11 @@ exports[`FzDatepicker > Snapshots > matches inline timepicker snapshot 1`] = `
                         <div class="dp__flex">
                           <div class="dp__time_input">
                             <div class="dp__time_col dp__time_col_reg_inline"><button type="button" class="dp__btn dp__inc_dec_button_inline dp__tp_inline_btn_top" data-test="hours-time-inc-btn-0" aria-label="Increment hours" tabindex="0"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--backoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label=""><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M207 143c9.4-9.4 24.6-9.4 33.9 0L401 303c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-143-143L81 337c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L207 143z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span></button><button type="button" aria-label="Open hours overlay" class="dp__time_display dp__time_display_inline dp--time-overlay-btn" tabindex="0" data-test="hours-toggle-overlay-btn-0">
-                                <!---->08
+                                <!---->18
                               </button><button type="button" class="dp__btn dp__inc_dec_button_inline dp__tp_inline_btn_bottom" data-test="hours-time-dec-btn-0" aria-label="Decrement hours" tabindex="0"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--backoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label=""><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span></button></div>
                             <div class="dp__time_col dp__time_col_reg_inline"> : </div>
                             <div class="dp__time_col dp__time_col_reg_inline"><button type="button" class="dp__btn dp__inc_dec_button_inline dp__tp_inline_btn_top" data-test="minutes-time-inc-btn-0" aria-label="Increment minutes" tabindex="0"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--backoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label=""><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M207 143c9.4-9.4 24.6-9.4 33.9 0L401 303c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-143-143L81 337c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L207 143z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span></button><button type="button" aria-label="Open minutes overlay" class="dp__time_display dp__time_display_inline dp--time-overlay-btn" tabindex="0" data-test="minutes-toggle-overlay-btn-0">
-                                <!---->37
+                                <!---->10
                               </button><button type="button" class="dp__btn dp__inc_dec_button_inline dp__tp_inline_btn_bottom" data-test="minutes-time-dec-btn-0" aria-label="Decrement minutes" tabindex="0"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--backoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-32 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label=""><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-angle-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span></button></div>
                             <!---->
                             <transition-stub name="" appear="false" persisted="false" css="false">
@@ -792,7 +792,7 @@ exports[`FzDatepicker > Snapshots > matches monthpicker snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168549073177-9gwjt" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168929035116-k53ax" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -938,7 +938,7 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168549073100-muz7o" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168929035047-3vdcd" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -1156,21 +1156,21 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
                               </div>
                             </div>
                             <div id="2026-01-16" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp__today">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-17" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-18" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->18
                                 <!---->
                                 <!---->
@@ -1180,14 +1180,14 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
                           <div class="dp__calendar_row" role="row">
                             <!---->
                             <div id="2026-01-19" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-20" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp__today">
                                 <!---->20
                                 <!---->
                                 <!---->
@@ -1628,7 +1628,7 @@ exports[`FzDatepicker > Snapshots > matches range snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168549073074-sdze2" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168929035020-uzfoc" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -1847,21 +1847,21 @@ exports[`FzDatepicker > Snapshots > matches range snapshot 1`] = `
                               </div>
                             </div>
                             <div id="2026-01-16" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp__today">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-17" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-18" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->18
                                 <!---->
                                 <!---->
@@ -1871,14 +1871,14 @@ exports[`FzDatepicker > Snapshots > matches range snapshot 1`] = `
                           <div class="dp__calendar_row" role="row">
                             <!---->
                             <div id="2026-01-19" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-20" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp__today">
                                 <!---->20
                                 <!---->
                                 <!---->
@@ -2003,7 +2003,7 @@ exports[`FzDatepicker > Snapshots > matches snapshot - disabled state 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" disabled="" readonly="" id="fz-input-168549073307-40vlk" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="true">
+            <!--v-if--><input type="text" disabled="" readonly="" id="fz-input-168929035236-0npww" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="true">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -2037,13 +2037,13 @@ exports[`FzDatepicker > Snapshots > matches snapshot - with label and error 1`] 
   <div>
     <!---->
     <div class="dp__input_wrap">
-      <div class="fz-input w-full flex flex-col gap-8"><label id="fz-input-168549073302-g7drc-label" class="font-normal text-base text-core-black" for="fz-input-168549073302-g7drc">Select Date</label>
+      <div class="fz-input w-full flex flex-col gap-8"><label id="fz-input-168929035230-gwe2f-label" class="font-normal text-base text-core-black" for="fz-input-168929035230-gwe2f">Select Date</label>
         <div class="flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none h-44 border-semantic-error-200 has-[:focus]:border-semantic-error-300 bg-core-white text-core-black cursor-text" tabindex="0">
           <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-calendar-lines h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar-lines" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168549073302-g7drc" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="true" aria-disabled="false" aria-labelledby="fz-input-168549073302-g7drc-label">
+            <!--v-if--><input type="text" id="fz-input-168929035230-gwe2f" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="true" aria-disabled="false" aria-labelledby="fz-input-168929035230-gwe2f-label">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -2084,7 +2084,7 @@ exports[`FzDatepicker > Snapshots > matches snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168549073045-swr63" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168929034992-l7wjc" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -2302,22 +2302,22 @@ exports[`FzDatepicker > Snapshots > matches snapshot 1`] = `
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp__today dp__active_date">
+                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-17" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-18" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->18
                                 <!---->
                                 <!---->
@@ -2327,14 +2327,14 @@ exports[`FzDatepicker > Snapshots > matches snapshot 1`] = `
                           <div class="dp__calendar_row" role="row">
                             <!---->
                             <div id="2026-01-19" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
+                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
+                              <div class="dp__cell_inner dp__pointer dp__today dp__active_date">
                                 <!---->20
                                 <!---->
                                 <!---->
@@ -2459,7 +2459,7 @@ exports[`FzDatepicker > Snapshots > matches weekpicker snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168549073148-m12yq" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168929035087-o5he8" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -2649,50 +2649,50 @@ exports[`FzDatepicker > Snapshots > matches weekpicker snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--past dp__range_start">
+                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->12
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-13" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--past dp__range_between_week">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->13
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-14" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--past dp__range_between_week">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->14
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-15" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--past dp__range_between_week">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->15
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-16" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp__today dp__range_between_week">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-17" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__range_between_week">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-18" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future dp__range_end">
+                              <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->18
                                 <!---->
                                 <!---->
@@ -2701,50 +2701,50 @@ exports[`FzDatepicker > Snapshots > matches weekpicker snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
+                              <div class="dp__cell_inner dp__pointer dp--past dp__range_start">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-20" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp__today dp__range_between_week">
                                 <!---->20
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp--future dp__range_between_week">
                                 <!---->21
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-22" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp--future dp__range_between_week">
                                 <!---->22
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-23" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp--future dp__range_between_week">
                                 <!---->23
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-24" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp--future dp__range_between_week">
                                 <!---->24
                                 <!---->
                                 <!---->
                               </div>
                             </div>
                             <div id="2026-01-25" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
-                              <div class="dp__cell_inner dp__pointer dp--future">
+                              <div class="dp__cell_inner dp__pointer dp--future dp__range_end">
                                 <!---->25
                                 <!---->
                                 <!---->
@@ -2834,7 +2834,7 @@ exports[`FzDatepicker > Snapshots > matches yearpicker snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168549073201-01yp8" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168929035134-zng07" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->

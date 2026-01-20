@@ -107,74 +107,6 @@ exports[`FzDropdown > Snapshots > should match snapshot - with actions 1`] = `
 </div>"
 `;
 
-exports[`FzDropdown > matches snapshot 1`] = `
-"<div>
-  <div class="inline-flex"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-      <div class="flex items-center justify-items-center mr-6 pl-10">
-        <!--v-if-->
-      </div>
-      <div class="truncate">This is a dropdown</div>
-      <div class="flex items-center justify-items-center ml-6 pr-10">
-        <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-angle-down fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-            <path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path>
-          </svg></div>
-      </div><span class="hidden h-0 w-0"></span>
-    </button></div>
-  <div class="fz__floating__content fixed pt-4 z-10" style="display: none;">
-    <div class="fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4">
-      <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>This is the items label</span></div>
-      <div class="flex flex-col">
-        <router-link to="[object Object]" disabled="true" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start">
-          <!--v-if-->Item #1
-        </router-link>
-      </div>
-      <div class="flex flex-col">
-        <router-link to="[object Object]" disabled="false" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start">
-          <!--v-if-->Item #2
-        </router-link>
-      </div>
-    </div>
-  </div>
-  <!--v-if-->
-</div>"
-`;
-
-exports[`FzDropdown > matches snapshot 2`] = `
-"<div iconname="bars" buttonvariant="secondary">
-  <div class="inline-flex"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-core-white !border-grey-200 hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-32 h-32">
-      <!--v-if-->
-      <div class="">
-        <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-bars fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="bars" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-            <path class="" fill="currentColor" d="M0 88C0 74.7 10.7 64 24 64l400 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L24 112C10.7 112 0 101.3 0 88zM0 248c0-13.3 10.7-24 24-24l400 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L24 272c-13.3 0-24-10.7-24-24zM448 408c0 13.3-10.7 24-24 24L24 432c-13.3 0-24-10.7-24-24s10.7-24 24-24l400 0c13.3 0 24 10.7 24 24z"></path>
-          </svg></div>
-        <!--v-if-->
-      </div>
-      <!--v-if--><span class="hidden h-0 w-0"></span>
-    </button></div>
-  <!--v-if-->
-  <!--teleport start-->
-  <!--teleport end-->
-</div>"
-`;
-
-exports[`FzDropdown > matches snapshot 3`] = `
-"<div iconname="bars" buttonvariant="secondary">
-  <div class="inline-flex"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 px-16 text-grey-500 bg-core-white !border-grey-200 hover:bg-grey-100 focus:!border-blue-600 disabled:text-grey-100 w-32 h-32">
-      <!--v-if-->
-      <div class="">
-        <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-bars fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="bars" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-            <path class="" fill="currentColor" d="M0 88C0 74.7 10.7 64 24 64l400 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L24 112C10.7 112 0 101.3 0 88zM0 248c0-13.3 10.7-24 24-24l400 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L24 272c-13.3 0-24-10.7-24-24zM448 408c0 13.3-10.7 24-24 24L24 432c-13.3 0-24-10.7-24-24s10.7-24 24-24l400 0c13.3 0 24 10.7 24 24z"></path>
-          </svg></div>
-        <!--v-if-->
-      </div>
-      <!--v-if--><span class="hidden h-0 w-0"></span>
-    </button></div>
-  <!--v-if-->
-  <!--teleport start-->
-  <!--teleport end-->
-</div>"
-`;
-
 exports[`FzIconDropdown > Snapshots > should match snapshot 1`] = `
 "<div iconname="bars" hasnotification="false" label="Open dropdown" actionslabel="This is the items label">
   <div class="inline-flex w-full sm:w-auto"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Open dropdown"><div class="flex items-center justify-items-center"><div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-bars h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="bars" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M0 88C0 74.7 10.7 64 24 64l400 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L24 112C10.7 112 0 101.3 0 88zM0 248c0-13.3 10.7-24 24-24l400 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L24 272c-13.3 0-24-10.7-24-24zM448 408c0 13.3-10.7 24-24 24L24 432c-13.3 0-24-10.7-24-24s10.7-24 24-24l400 0c13.3 0 24 10.7 24 24z"></path></svg></div></div><!--v-if--><!--v-if--></button><!--v-if--></span></div>
@@ -190,36 +122,5 @@ exports[`FzIconDropdown > Snapshots > should match snapshot 2`] = `
   <!--v-if-->
   <!--teleport start-->
   <!--teleport end-->
-</div>"
-`;
-
-exports[`FzTopbar > matches snapshot 1`] = `
-"<div>
-  <div class="inline-flex"><button type="button" class="relative rounded flex flex-shrink items-center justify-center font-medium border-1 border-transparent h-32 focus:border-blue-600 focus:border-solid focus:border-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200 text-core-white focus:bg-blue-500">
-      <div class="flex items-center justify-items-center mr-6 pl-10">
-        <!--v-if-->
-      </div>
-      <div class="truncate">This is a dropdown</div>
-      <div class="flex items-center justify-items-center ml-6 pr-10">
-        <div class="flex items-center justify-center w-[25px] h-[25px]"><svg class="svg-inline--fa fa-angle-down fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-            <path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path>
-          </svg></div>
-      </div><span class="hidden h-0 w-0"></span>
-    </button></div>
-  <div class="bg-core-white fixed p-4 z-10" style="display: none;">
-    <div class="fz__actionlist inline-flex grow-0 flex-col rounded p-4">
-      <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>This is the items label</span></div>
-      <div class="flex flex-col">
-        <router-link to="[object Object]" disabled="true" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start">
-          <!--v-if-->Item #1
-        </router-link>
-      </div>
-      <div class="flex flex-col">
-        <router-link to="[object Object]" disabled="false" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start">
-          <!--v-if-->Item #2
-        </router-link>
-      </div>
-    </div>
-  </div>
 </div>"
 `;
