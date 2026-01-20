@@ -2367,7 +2367,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | navigation/Link.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | navigation/Actionlist.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | navigation/Navlist.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| panel/Tab.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| panel/Tab.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | panel/Collapse.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | overlay/Dialog.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | overlay/ConfirmDialog.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
@@ -2815,3 +2815,21 @@ export const MyStory: Story = {
 - All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
 - All 12 Actionlist story tests passing ✅ (verified with `pnpm test:storybook --run Actionlist`)
 - Phase 7 (Spy Function Pattern Refactor) progress: Actionlist.stories.ts completed
+
+### January 20, 2026 - Tab Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `tab` (Storybook)
+- Added spy function pattern to Tab.stories.ts for robust interaction testing
+- Imported `fn` from `@storybook/test`
+- Enhanced Disabled story with `onChange: fn()` spy to verify change handler is NOT called when clicking disabled tab
+- Enhanced KeyboardNavigation story with spy to verify change handler IS called when tabs are activated with Enter/Space keys
+- Enhanced UserInteraction story with spy to verify change handler IS called when tabs are clicked
+- Updated render functions to use `@change="args.onChange"` event binding to properly connect spy functions
+- Added `mockClear()` calls before assertions to ignore initial onChange calls from component mounting
+- Added spy assertions for:
+  - Disabled tabs: Verify `not.toHaveBeenCalled()` when clicking disabled tab
+  - Enabled tabs: Verify `toHaveBeenCalledTimes()` and `toHaveBeenCalledWith()` when clicking/activating tabs
+  - Keyboard activation: Verify handlers are called with correct tab title when using Enter/Space keys
+- All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
+- All 42 Tab story tests passing ✅ (verified with `pnpm test:storybook --run Tab`)
+- Phase 7 (Spy Function Pattern Refactor) progress: Tab.stories.ts completed

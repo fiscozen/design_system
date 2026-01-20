@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from '@storybook/test'
 import { ref } from 'vue'
 import { FzTabs, FzTab } from '@fiscozen/tab'
 import FzBadge from '@fiscozen/badge/src/FzBadge.vue'
@@ -585,16 +585,17 @@ export const Disabled: TabStory = {
         }
       }
     },
-    template: `<FzTabs v-bind="args" v-slot="data" > 
+    template: `<FzTabs v-bind="args" v-slot="data" @change="args.onChange"> 
                     <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
                     <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
                     <FzTab v-bind="customProps.tab3"> {{ data.selected }} </FzTab>
                 </FzTabs>`
   }),
   args: {
-    size: 'sm'
+    size: 'sm',
+    onChange: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify disabled tab has disabled styling', async () => {
@@ -604,6 +605,9 @@ export const Disabled: TabStory = {
     })
     
     await step('Verify disabled tab does not respond to clicks', async () => {
+      // Reset spy to ignore any initial onChange calls from component mounting
+      args.onChange.mockClear()
+      
       const disabledTab = canvasElement.querySelector('button[title="Disabled tab"]') as HTMLElement
       const contentBefore = canvasElement.textContent
       
@@ -612,15 +616,22 @@ export const Disabled: TabStory = {
       // Content should not change (disabled tab should not be selected)
       const contentAfter = canvasElement.textContent
       await expect(contentAfter).toBe(contentBefore)
+      
+      // ROBUST CHECK: Verify the onChange spy was NOT called when clicking disabled tab
+      await expect(args.onChange).not.toHaveBeenCalled()
     })
     
-    await step('Verify enabled tabs are clickable', async () => {
+    await step('Verify enabled tabs are clickable and onChange IS called', async () => {
       const enabledTab = canvas.getByRole('button', { name: /default tab 2/i })
       await userEvent.click(enabledTab)
       
       // Content should update to show selected tab
       const content = canvasElement.textContent
       await expect(content).toContain('Default tab 2')
+      
+      // ROBUST CHECK: Verify the onChange spy WAS called when clicking enabled tab
+      await expect(args.onChange).toHaveBeenCalledTimes(1)
+      await expect(args.onChange).toHaveBeenCalledWith('Default tab 2')
     })
   }
 }
@@ -630,11 +641,35 @@ export const Disabled: TabStory = {
 // ============================================
 
 export const KeyboardNavigation: TabStory = {
-  ...Template,
+  render: (args) => ({
+    components: { FzTabs, FzTab, FzBadge, FzIcon },
+    setup() {
+      return {
+        args,
+        customProps: {
+          tab1: {
+            title: 'Active tab'
+          },
+          tab2: {
+            title: 'Default tab'
+          },
+          tab3: {
+            title: 'Default tab 2'
+          }
+        }
+      }
+    },
+    template: `<FzTabs v-bind="args" v-slot="data" @change="args.onChange"> 
+                    <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
+                    <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
+                    <FzTab v-bind="customProps.tab3"> {{ data.selected }} </FzTab>
+                </FzTabs>`
+  }),
   args: {
-    size: 'sm'
+    size: 'sm',
+    onChange: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Tab to focus first tab', async () => {
@@ -650,6 +685,9 @@ export const KeyboardNavigation: TabStory = {
     })
     
     await step('Activate tab with Enter key', async () => {
+      // Reset spy to ignore any initial onChange calls from component mounting
+      args.onChange.mockClear()
+      
       const secondTab = canvasElement.querySelector('button[title="Default tab"]') as HTMLElement
       secondTab.focus()
       await userEvent.keyboard('{Enter}')
@@ -657,6 +695,10 @@ export const KeyboardNavigation: TabStory = {
       // Verify tab content changes
       const content = canvasElement.textContent
       await expect(content).toContain('Default tab')
+      
+      // ROBUST CHECK: Verify the onChange spy WAS called when activating tab with Enter
+      await expect(args.onChange).toHaveBeenCalledTimes(1)
+      await expect(args.onChange).toHaveBeenCalledWith('Default tab')
     })
     
     await step('Activate tab with Space key', async () => {
@@ -667,6 +709,10 @@ export const KeyboardNavigation: TabStory = {
       // Verify tab content changes
       const content = canvasElement.textContent
       await expect(content).toContain('Default tab 2')
+      
+      // ROBUST CHECK: Verify the onChange spy WAS called when activating tab with Space
+      await expect(args.onChange).toHaveBeenCalledTimes(2)
+      await expect(args.onChange).toHaveBeenCalledWith('Default tab 2')
     })
   }
 }
@@ -676,14 +722,41 @@ export const KeyboardNavigation: TabStory = {
 // ============================================
 
 export const UserInteraction: TabStory = {
-  ...Template,
+  render: (args) => ({
+    components: { FzTabs, FzTab, FzBadge, FzIcon },
+    setup() {
+      return {
+        args,
+        customProps: {
+          tab1: {
+            title: 'Active tab'
+          },
+          tab2: {
+            title: 'Default tab'
+          },
+          tab3: {
+            title: 'Default tab 2'
+          }
+        }
+      }
+    },
+    template: `<FzTabs v-bind="args" v-slot="data" @change="args.onChange"> 
+                    <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
+                    <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
+                    <FzTab v-bind="customProps.tab3"> {{ data.selected }} </FzTab>
+                </FzTabs>`
+  }),
   args: {
-    size: 'sm'
+    size: 'sm',
+    onChange: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Click second tab to switch', async () => {
+      // Reset spy to ignore any initial onChange calls from component mounting
+      args.onChange.mockClear()
+      
       const secondTab = canvasElement.querySelector('button[title="Default tab"]') as HTMLElement
       await expect(secondTab).toBeInTheDocument()
       await userEvent.click(secondTab)
@@ -691,6 +764,10 @@ export const UserInteraction: TabStory = {
       // Verify content updates
       const content = canvasElement.textContent
       await expect(content).toContain('Default tab')
+      
+      // ROBUST CHECK: Verify the onChange spy WAS called when clicking tab
+      await expect(args.onChange).toHaveBeenCalledTimes(1)
+      await expect(args.onChange).toHaveBeenCalledWith('Default tab')
     })
     
     await step('Click third tab to switch again', async () => {
@@ -701,6 +778,10 @@ export const UserInteraction: TabStory = {
       // Verify content updates
       const content = canvasElement.textContent
       await expect(content).toContain('Default tab 2')
+      
+      // ROBUST CHECK: Verify the onChange spy WAS called again
+      await expect(args.onChange).toHaveBeenCalledTimes(2)
+      await expect(args.onChange).toHaveBeenCalledWith('Default tab 2')
     })
     
     await step('Click first tab to return', async () => {
@@ -711,6 +792,10 @@ export const UserInteraction: TabStory = {
       // Verify content updates back
       const content = canvasElement.textContent
       await expect(content).toContain('Active tab')
+      
+      // ROBUST CHECK: Verify the onChange spy WAS called again
+      await expect(args.onChange).toHaveBeenCalledTimes(3)
+      await expect(args.onChange).toHaveBeenCalledWith('Active tab')
     })
   }
 }
