@@ -2357,7 +2357,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | form/CheckboxGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Textarea.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Datepicker.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| form/Upload.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/Upload.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Appointments.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | button/IconButton.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | button/ButtonGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
@@ -2415,6 +2415,7 @@ For each story file listed above:
 | form/RadioGroup.stories.ts | ✅ Complete |
 | form/Textarea.stories.ts | ✅ Complete |
 | form/Datepicker.stories.ts | ✅ Complete |
+| form/Upload.stories.ts | ✅ Complete |
 | button/IconButton.stories.ts | ✅ Complete |
 
 ### 7.5 Verification Script
@@ -2663,3 +2664,19 @@ export const MyStory: Story = {
 - All 20 Datepicker story tests passing ✅
 - All unit tests passing ✅
 - Phase 7 (Spy Function Pattern Refactor) progress: Datepicker.stories.ts completed
+
+### January 20, 2026 - Upload Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `upload` (Storybook)
+- Added spy function pattern to Upload.stories.ts for robust interaction testing
+- Imported `fn` from `@storybook/test` for spy function support
+- Created Template render function to support spy functions from args for `onUpdate:modelValue`, `onFzupload:change`, `onFzupload:add`, and `onFzupload:delete`
+- Enhanced ClickToUpload story with spies to verify `update:modelValue`, `fzupload:change`, and `fzupload:add` handlers ARE called when file is selected
+- Enhanced DeleteFile story with spies to verify `update:modelValue` and `fzupload:delete` handlers ARE called when file is deleted
+- Enhanced DragAndDrop story with spies to verify handlers ARE called when file is dropped
+- Enhanced DragAndDropMultiple story with spies to verify handlers ARE called when multiple files are dropped
+- Updated all interaction stories to use `:modelValue` and `@update:modelValue` pattern to avoid double-calling spy
+- All play functions test user interactions and verify handlers are called
+- All 10 Upload story tests passing ✅
+- All unit tests passing ✅
+- Phase 7 (Spy Function Pattern Refactor) progress: Upload.stories.ts completed

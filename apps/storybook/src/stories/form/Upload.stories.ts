@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
 import { FzUpload } from '@fiscozen/upload'
 import { ref } from 'vue'
 
@@ -36,6 +36,59 @@ const meta: Meta<typeof FzUpload> = {
 }
 
 type Story = StoryObj<typeof meta>
+
+// ============================================
+// TEMPLATE
+// ============================================
+
+const Template: Story = {
+  render: (args) => ({
+    components: { FzUpload },
+    setup() {
+      const files = ref<File[]>([])
+      // Support spy functions from args for update:modelValue and custom events
+      const handleUpdate = (value: File[]) => {
+        files.value = value
+        if (args['onUpdate:modelValue']) {
+          args['onUpdate:modelValue'](value)
+        }
+      }
+      const handleChange = (eventFiles: File[]) => {
+        if (args['onFzupload:change']) {
+          args['onFzupload:change'](eventFiles)
+        }
+      }
+      const handleAdd = (eventFiles: File[]) => {
+        if (args['onFzupload:add']) {
+          args['onFzupload:add'](eventFiles)
+        }
+      }
+      const handleDelete = (file: File) => {
+        if (args['onFzupload:delete']) {
+          args['onFzupload:delete'](file)
+        }
+      }
+      return {
+        files,
+        args,
+        handleUpdate,
+        handleChange,
+        handleAdd,
+        handleDelete
+      }
+    },
+    template: `
+      <FzUpload 
+        v-bind="args" 
+        :modelValue="files" 
+        @update:modelValue="handleUpdate"
+        @fzupload:change="handleChange"
+        @fzupload:add="handleAdd"
+        @fzupload:delete="handleDelete"
+      />
+    `
+  })
+}
 
 const Default: Story = {
   render: (args) => ({
@@ -137,17 +190,13 @@ export { Default, Multiple, MultipleFileLimit }
 // ============================================
 
 export const ClickToUpload: Story = {
-  render: (args) => ({
-    components: { FzUpload },
-    setup() {
-      const files = ref<File[]>([])
-      return { files, args }
-    },
-    template: `
-      <FzUpload v-bind="args" v-model="files"/>
-    `
-  }),
-  play: async ({ canvasElement, step }) => {
+  ...Template,
+  args: {
+    'onUpdate:modelValue': fn(),
+    'onFzupload:change': fn(),
+    'onFzupload:add': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify upload button is clickable', async () => {
@@ -183,6 +232,21 @@ export const ClickToUpload: Story = {
       const fileLinks = canvas.getAllByText('test-file.txt')
       await expect(fileLinks.length).toBeGreaterThan(0)
     })
+    
+    await step('Verify update:modelValue handler IS called when file is selected', async () => {
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+    })
+    
+    await step('Verify fzupload:change handler IS called when file is selected', async () => {
+      // ROBUST CHECK: Verify the fzupload:change spy WAS called
+      await expect(args['onFzupload:change']).toHaveBeenCalled()
+    })
+    
+    await step('Verify fzupload:add handler IS called when file is selected', async () => {
+      // ROBUST CHECK: Verify the fzupload:add spy WAS called
+      await expect(args['onFzupload:add']).toHaveBeenCalled()
+    })
   }
 }
 
@@ -194,13 +258,35 @@ export const DeleteFile: Story = {
         new File([], 'test-image1.png'),
         new File([], 'test-image2.png')
       ])
-      return { files, args }
+      // Support spy functions from args
+      const handleUpdate = (value: File[]) => {
+        files.value = value
+        if (args['onUpdate:modelValue']) {
+          args['onUpdate:modelValue'](value)
+        }
+      }
+      const handleDelete = (file: File) => {
+        if (args['onFzupload:delete']) {
+          args['onFzupload:delete'](file)
+        }
+      }
+      return { files, args, handleUpdate, handleDelete }
     },
     template: `
-      <FzUpload v-bind="args" v-model="files" multiple/>
+      <FzUpload 
+        v-bind="args" 
+        :modelValue="files" 
+        @update:modelValue="handleUpdate"
+        @fzupload:delete="handleDelete"
+        multiple
+      />
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  args: {
+    'onUpdate:modelValue': fn(),
+    'onFzupload:delete': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify files are displayed', async () => {
@@ -244,21 +330,27 @@ export const DeleteFile: Story = {
       const remainingFile = updatedFileList?.querySelector('li:first-child')
       await expect(remainingFile?.textContent).toContain('test-image2.png')
     })
+    
+    await step('Verify update:modelValue handler IS called when file is deleted', async () => {
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+    })
+    
+    await step('Verify fzupload:delete handler IS called when file is deleted', async () => {
+      // ROBUST CHECK: Verify the fzupload:delete spy WAS called
+      await expect(args['onFzupload:delete']).toHaveBeenCalled()
+    })
   }
 }
 
 export const DragAndDrop: Story = {
-  render: (args) => ({
-    components: { FzUpload },
-    setup() {
-      const files = ref<File[]>([])
-      return { files, args }
-    },
-    template: `
-      <FzUpload v-bind="args" v-model="files"/>
-    `
-  }),
-  play: async ({ canvasElement, step }) => {
+  ...Template,
+  args: {
+    'onUpdate:modelValue': fn(),
+    'onFzupload:change': fn(),
+    'onFzupload:add': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify drag and drop zone is present', async () => {
@@ -308,24 +400,33 @@ export const DragAndDrop: Story = {
       const fileLinks = canvas.getAllByText('dropped-file1.txt')
       await expect(fileLinks.length).toBeGreaterThan(0)
     })
+    
+    await step('Verify update:modelValue handler IS called when file is dropped', async () => {
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+    })
+    
+    await step('Verify fzupload:change handler IS called when file is dropped', async () => {
+      // ROBUST CHECK: Verify the fzupload:change spy WAS called
+      await expect(args['onFzupload:change']).toHaveBeenCalled()
+    })
+    
+    await step('Verify fzupload:add handler IS called when file is dropped', async () => {
+      // ROBUST CHECK: Verify the fzupload:add spy WAS called
+      await expect(args['onFzupload:add']).toHaveBeenCalled()
+    })
   }
 }
 
 export const DragAndDropMultiple: Story = {
+  ...Template,
   args: {
-    multiple: true
+    multiple: true,
+    'onUpdate:modelValue': fn(),
+    'onFzupload:change': fn(),
+    'onFzupload:add': fn()
   },
-  render: (args) => ({
-    components: { FzUpload },
-    setup() {
-      const files = ref<File[]>([])
-      return { files, args }
-    },
-    template: `
-      <FzUpload v-bind="args" v-model="files"/>
-    `
-  }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Simulate drag and drop of multiple files', async () => {
@@ -375,6 +476,21 @@ export const DragAndDropMultiple: Story = {
       await expect(file2Links.length).toBeGreaterThan(0)
       const file3Links = canvas.getAllByText('multi-file3.txt')
       await expect(file3Links.length).toBeGreaterThan(0)
+    })
+    
+    await step('Verify update:modelValue handler IS called when multiple files are dropped', async () => {
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+    })
+    
+    await step('Verify fzupload:change handler IS called when multiple files are dropped', async () => {
+      // ROBUST CHECK: Verify the fzupload:change spy WAS called
+      await expect(args['onFzupload:change']).toHaveBeenCalled()
+    })
+    
+    await step('Verify fzupload:add handler IS called when multiple files are dropped', async () => {
+      // ROBUST CHECK: Verify the fzupload:add spy WAS called
+      await expect(args['onFzupload:add']).toHaveBeenCalled()
     })
   }
 }
