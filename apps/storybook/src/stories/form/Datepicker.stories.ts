@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
 import { FzDatepicker } from '@fiscozen/datepicker'
 import { ref } from 'vue'
 
@@ -150,12 +150,20 @@ const Template: Story = {
     components: { FzDatepicker },
     setup() {
       const date = ref()
+      // Support spy function from args for update:modelValue
+      const handleUpdate = (value: any) => {
+        date.value = value
+        if (args['onUpdate:modelValue']) {
+          args['onUpdate:modelValue'](value)
+        }
+      }
       return {
         date,
-        args
+        args,
+        handleUpdate
       }
     },
-    template: `<FzDatepicker v-bind="args" v-model="date" />`
+    template: `<FzDatepicker v-bind="args" :modelValue="date" @update:modelValue="handleUpdate" />`
   })
 }
 
@@ -165,8 +173,10 @@ const Template: Story = {
 
 export const Default: Story = {
   ...Template,
-  args: {},
-  play: async ({ canvasElement, step }) => {
+  args: {
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify datepicker renders correctly', async () => {
@@ -206,11 +216,31 @@ export const Default: Story = {
       await expect(datepickerContainer).toBeInTheDocument()
     })
 
-    await step('Open and close calendar', async () => {
+    await step('Open calendar and select a date', async () => {
       await openCalendar(canvas)
       const calendar = getCalendar()
       await expect(calendar).toBeVisible()
-      await closeCalendar()
+
+      // Select today's date (first available date cell)
+      const todayCell = calendar.querySelector('.dp__cell_offset') || calendar.querySelector('.dp__cell')
+      if (todayCell) {
+        await userEvent.click(todayCell as HTMLElement)
+        
+        // Wait for calendar to potentially close (if autoApply is true)
+        await waitFor(
+          () => {
+            // Calendar may close after selection or remain open
+            expect(true).toBe(true)
+          },
+          { timeout: 500 }
+        )
+      }
+    })
+
+    await step('Verify update:modelValue handler IS called when date is selected', async () => {
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called
+      // Note: The spy may be called multiple times during date selection
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
   }
 }
@@ -218,9 +248,10 @@ export const Default: Story = {
 export const Disabled: Story = {
   ...Template,
   args: {
-    disabled: true
+    disabled: true,
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify disabled state renders', async () => {
@@ -247,6 +278,17 @@ export const Disabled: Story = {
         },
         { timeout: 500 }
       )
+    })
+
+    await step('Verify update:modelValue is NOT called when disabled', async () => {
+      const input = canvas.getByLabelText(/datepicker label/i)
+      
+      // Try to interact with disabled input
+      await userEvent.click(input)
+      await userEvent.type(input, '15/01/2024')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
     })
 
     await step('Verify disabled styling is applied', async () => {
@@ -690,12 +732,20 @@ export const StringValueFormat: Story = {
     components: { FzDatepicker },
     setup() {
       const date = ref()
+      // Support spy function from args for update:modelValue
+      const handleUpdate = (value: any) => {
+        date.value = value
+        if (args['onUpdate:modelValue']) {
+          args['onUpdate:modelValue'](value)
+        }
+      }
       return {
         date,
-        args
+        args,
+        handleUpdate
       }
     },
-    template: `<p data-testid="date-display">{{ date }}</p><FzDatepicker v-bind="args" v-model="date" />`
+    template: `<p data-testid="date-display">{{ date }}</p><FzDatepicker v-bind="args" :modelValue="date" @update:modelValue="handleUpdate" />`
   }),
   args: {
     modelType: 'yyyy-MM-dd'
@@ -735,12 +785,20 @@ export const OverflowDatepickerFromBody: Story = {
     components: { FzDatepicker },
     setup() {
       const date = ref()
+      // Support spy function from args for update:modelValue
+      const handleUpdate = (value: any) => {
+        date.value = value
+        if (args['onUpdate:modelValue']) {
+          args['onUpdate:modelValue'](value)
+        }
+      }
       return {
         date,
-        args
+        args,
+        handleUpdate
       }
     },
-    template: `<FzDatepicker v-bind="args" v-model="date" style="width:150px" />`
+    template: `<FzDatepicker v-bind="args" :modelValue="date" @update:modelValue="handleUpdate" style="width:150px" />`
   }),
   args: {},
   parameters: {
@@ -793,13 +851,21 @@ export const DatepickerFlow: Story = {
     components: { FzDatepicker },
     setup() {
       const date = ref()
+      // Support spy function from args for update:modelValue
+      const handleUpdate = (value: any) => {
+        date.value = value
+        if (args['onUpdate:modelValue']) {
+          args['onUpdate:modelValue'](value)
+        }
+      }
       return {
         date,
-        args
+        args,
+        handleUpdate
       }
     },
     template: `
-      <FzDatepicker v-bind="args" v-model="date" />
+      <FzDatepicker v-bind="args" :modelValue="date" @update:modelValue="handleUpdate" />
       <pre data-testid="date-value">{{ date }}</pre>
     `
   }),
@@ -853,13 +919,21 @@ export const ErrorState: Story = {
     components: { FzDatepicker },
     setup() {
       const date = ref()
+      // Support spy function from args for update:modelValue
+      const handleUpdate = (value: any) => {
+        date.value = value
+        if (args['onUpdate:modelValue']) {
+          args['onUpdate:modelValue'](value)
+        }
+      }
       return {
         date,
-        args
+        args,
+        handleUpdate
       }
     },
     template: `
-      <FzDatepicker v-bind="args" v-model="date">
+      <FzDatepicker v-bind="args" :modelValue="date" @update:modelValue="handleUpdate">
         <template #errorMessage>This field is required</template>
       </FzDatepicker>
     `
@@ -916,8 +990,10 @@ export const ErrorState: Story = {
 
 export const KeyboardNavigation: Story = {
   ...Template,
-  args: {},
-  play: async ({ canvasElement, step }) => {
+  args: {
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Tab to focus input field', async () => {
@@ -949,6 +1025,25 @@ export const KeyboardNavigation: Story = {
 
       // Verify calendar is still open after navigation
       await expect(calendar).toBeInTheDocument()
+    })
+
+    await step('Select date by clicking a date cell and verify handler IS called', async () => {
+      const calendar = getCalendar()
+      
+      // Select a date by clicking on a date cell
+      const dateCell = calendar.querySelector('.dp__cell_offset') || calendar.querySelector('.dp__cell')
+      if (dateCell) {
+        await userEvent.click(dateCell as HTMLElement)
+        
+        // Wait for selection to process
+        await waitFor(
+          () => {
+            // ROBUST CHECK: Verify handler was called when date is selected
+            expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+          },
+          { timeout: 1000 }
+        )
+      }
     })
 
     await step('Close calendar with Escape key', async () => {

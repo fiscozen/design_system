@@ -2355,8 +2355,8 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | form/RadioCard.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/RadioGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/CheckboxGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| form/Textarea.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
-| form/Datepicker.stories.ts | ✅ Has disabled | ✅ Has interactions | 1.5 |
+| form/Textarea.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
+| form/Datepicker.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Upload.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | form/Appointments.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | button/IconButton.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
@@ -2412,6 +2412,9 @@ For each story file listed above:
 | form/Select.stories.ts | ✅ Complete |
 | form/Radio.stories.ts | ✅ Complete |
 | form/RadioCard.stories.ts | ✅ Complete |
+| form/RadioGroup.stories.ts | ✅ Complete |
+| form/Textarea.stories.ts | ✅ Complete |
+| form/Datepicker.stories.ts | ✅ Complete |
 | button/IconButton.stories.ts | ✅ Complete |
 
 ### 7.5 Verification Script
@@ -2645,3 +2648,18 @@ export const MyStory: Story = {
 - All 11 Textarea story tests passing ✅
 - All 75 unit tests passing ✅
 - Phase 7 (Spy Function Pattern Refactor) progress: Textarea.stories.ts completed
+
+### January 20, 2026 - Datepicker Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `datepicker` (Storybook)
+- Added spy function pattern to Datepicker.stories.ts for robust interaction testing
+- Imported `fn` from `@storybook/test` for spy function support
+- Enhanced Template render function to support `onUpdate:modelValue` spy functions from args
+- Enhanced Default story with `onUpdate:modelValue` spy to verify handler IS called when selecting a date from calendar
+- Enhanced Disabled story with spy to verify `update:modelValue` is NOT called when disabled (including typing attempts)
+- Enhanced KeyboardNavigation story with spy to verify handler IS called when selecting date via click
+- Updated all stories that use v-model (StringValueFormat, OverflowDatepickerFromBody, DatepickerFlow, ErrorState) to use `:modelValue` and `@update:modelValue` pattern to avoid double-calling spy
+- All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
+- All 20 Datepicker story tests passing ✅
+- All unit tests passing ✅
+- Phase 7 (Spy Function Pattern Refactor) progress: Datepicker.stories.ts completed
