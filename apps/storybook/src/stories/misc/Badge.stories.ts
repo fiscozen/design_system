@@ -12,12 +12,67 @@ const meta: Meta<typeof FzBadge> = {
       options: ['black', 'error', 'warning', 'success', 'info', 'blue', 'dark', 'light']
     }
   },
-  args: { default: 'Fiscozen' }
+  args: {
+    default: 'Fiscozen',
+    color: 'black',
+    size: 'md'
+  }
 }
 
 export default meta
 
 type Story = StoryObj<typeof meta>
+
+// ============================================
+// BASIC STORIES
+// ============================================
+
+export const Default: Story = {
+  args: {
+    color: 'black',
+    size: 'md'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify badge renders correctly', async () => {
+      const badge = canvas.getByText('Fiscozen')
+      await expect(badge).toBeInTheDocument()
+      await expect(badge).toBeVisible()
+    })
+    
+    await step('Verify default color classes are applied', async () => {
+      const badge = canvas.getByText('Fiscozen')
+      await expect(badge).toHaveClass('bg-core-black')
+      await expect(badge).toHaveClass('text-core-white')
+    })
+    
+    await step('Verify default size classes are applied', async () => {
+      const badge = canvas.getByText('Fiscozen')
+      await expect(badge).toHaveClass('text-sm')
+      await expect(badge).toHaveClass('px-12')
+      await expect(badge).toHaveClass('size-24')
+    })
+    
+    await step('Verify base classes are applied', async () => {
+      const badge = canvas.getByText('Fiscozen')
+      await expect(badge).toHaveClass('flex')
+      await expect(badge).toHaveClass('items-center')
+      await expect(badge).toHaveClass('justify-center')
+      await expect(badge).toHaveClass('font-medium')
+    })
+    
+    await step('Verify multi-character content gets rounded-2xl class', async () => {
+      const badge = canvas.getByText('Fiscozen')
+      await expect(badge).toHaveClass('rounded-2xl')
+      await expect(badge).toHaveClass('!w-fit')
+    })
+  }
+}
+
+// ============================================
+// COLOR VARIANTS
+// ============================================
 
 export const Black: Story = {
   args: {
@@ -102,6 +157,21 @@ export const Info: Story = {
     await step('Verify info color classes are applied', async () => {
       const badge = canvas.getByText('Fiscozen')
       await expect(badge).toHaveClass('bg-semantic-info')
+      await expect(badge).toHaveClass('text-core-white')
+    })
+  }
+}
+
+export const Blue: Story = {
+  args: {
+    color: 'blue'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify blue color classes are applied', async () => {
+      const badge = canvas.getByText('Fiscozen')
+      await expect(badge).toHaveClass('bg-blue-500')
       await expect(badge).toHaveClass('text-core-white')
     })
   }
@@ -355,6 +425,78 @@ export const Large: Story = {
       const badge = canvas.getByText('Fiscozen')
       await expect(badge).toHaveClass('rounded-2xl')
       await expect(badge).toHaveClass('!w-fit')
+    })
+  }
+}
+
+// ============================================
+// ACCESSIBILITY STORIES
+// ============================================
+
+export const WithAriaLabel: Story = {
+  args: {
+    color: 'black',
+    size: 'md',
+    'aria-label': 'Status: Active'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify badge renders correctly', async () => {
+      const badge = canvas.getByText('Fiscozen')
+      await expect(badge).toBeInTheDocument()
+      await expect(badge).toBeVisible()
+    })
+    
+    await step('Verify aria-label attribute is applied', async () => {
+      const badge = canvas.getByText('Fiscozen')
+      await expect(badge).toHaveAttribute('aria-label', 'Status: Active')
+    })
+  }
+}
+
+export const WithRole: Story = {
+  args: {
+    color: 'black',
+    size: 'md',
+    role: 'status'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify badge renders correctly', async () => {
+      const badge = canvas.getByText('Fiscozen')
+      await expect(badge).toBeInTheDocument()
+      await expect(badge).toBeVisible()
+    })
+    
+    await step('Verify role attribute is applied', async () => {
+      const badge = canvas.getByText('Fiscozen')
+      await expect(badge).toHaveAttribute('role', 'status')
+    })
+  }
+}
+
+export const WithAriaLabelAndRole: Story = {
+  args: {
+    color: 'black',
+    size: 'md',
+    'aria-label': 'Notification count: 5',
+    role: 'status'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify badge renders correctly', async () => {
+      const badge = canvas.getByText('Fiscozen')
+      await expect(badge).toBeInTheDocument()
+      await expect(badge).toBeVisible()
+    })
+    
+    await step('Verify both aria-label and role attributes are applied', async () => {
+      const badge = canvas.getByText('Fiscozen')
+      await expect(badge).toHaveAttribute('aria-label', 'Notification count: 5')
+      await expect(badge).toHaveAttribute('role', 'status')
     })
   }
 }
