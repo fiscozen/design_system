@@ -9,7 +9,12 @@
         ]"
         ref="tabContainer"
       >
-        <FzTabPicker v-if="effectiveTabStyle === 'picker'" :tabs="tabs" :environment="effectiveSize" :tone="props.tone" />
+        <FzTabPicker
+          v-if="effectiveTabStyle === 'picker'"
+          :tabs="tabs"
+          :environment="effectiveSize"
+          :tone="props.tone"
+        />
         <template v-else>
           <FzTabButton
             v-for="tab in tabs"
@@ -36,12 +41,13 @@ import { FzTabsProps, FzTabProps } from "./types";
 import FzTabPicker from "./components/FzTabPicker.vue";
 import FzTabButton from "./components/FzTabButton.vue";
 import FzTab from "./FzTab.vue";
-import { mapSizeToEnvironment } from "./common";
+import { debugWarn, mapSizeToEnvironment } from "./common";
 
 const props = withDefaults(defineProps<FzTabsProps>(), {
   vertical: false,
   horizontalOverflow: undefined,
   tabStyle: "scroll",
+  isDebug: false,
 });
 
 const emit = defineEmits(["change"]);
@@ -114,8 +120,10 @@ const effectiveSize = computed<"frontoffice" | "backoffice">(() => {
  * Priority: overflowMode prop > horizontalOverflow prop (deprecated) > default 'scroll'
  */
 const effectiveTabStyle = computed<"scroll" | "picker">(() => {
-
-  if (props.horizontalOverflow !== undefined && props.horizontalOverflow === false)
+  if (
+    props.horizontalOverflow !== undefined &&
+    props.horizontalOverflow === false
+  )
     return "picker";
 
   return props.tabStyle;
@@ -128,9 +136,10 @@ watch(
   () => props.size,
   (size) => {
     if (size !== undefined) {
-      console.warn(
+      debugWarn(
         `[FzTabs] The "size" prop is deprecated and will be removed in a future version. ` +
           `Please use environment="backoffice" instead of size="${size}".`,
+        props.isDebug,
       );
     }
   },
@@ -146,9 +155,10 @@ watch(
     // Only warn if horizontalOverflow is explicitly set to true
     // (false is treated as not set, since the default behavior is no overflow)
     if (horizontalOverflow !== undefined) {
-      console.warn(
+      debugWarn(
         `[FzTabs] The "horizontalOverflow" prop is deprecated and will be removed in a future version. ` +
           `Please use tabStyle="scroll" instead.`,
+        props.isDebug,
       );
     }
   },
@@ -157,8 +167,9 @@ watch(
 
 onMounted(() => {
   if (tabs.value.length === 0) {
-    console.warn(
+    debugWarn(
       "[Fiscozen Design System]: FzTabs must have at least one FzTab child",
+      props.isDebug,
     );
   } else {
     const findSelected = tabs.value.find((tab) => tab.initialSelected);
@@ -173,8 +184,9 @@ onMounted(() => {
       .filter((title, index, self) => self.indexOf(title) !== index);
 
     if (duplicateTitles.length) {
-      console.warn(
+      debugWarn(
         `[Fiscozen Design System]: FzTabs has duplicate titles: ${duplicateTitles.join(", ")}, this may cause unexpected behavior.`,
+        props.isDebug,
       );
     }
   }
