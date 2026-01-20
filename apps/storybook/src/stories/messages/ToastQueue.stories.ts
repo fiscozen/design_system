@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
 import { FzToastQueue, FzToastQueueProps, enqueueToast } from '@fiscozen/toast'
 import { FzButton } from '@fiscozen/button'
 import { ref } from 'vue'
@@ -19,12 +19,21 @@ const meta: Meta<typeof FzToastQueue> = {
 type Story = StoryObj<typeof meta>
 
 const Default: Story = {
-  args: {},
-  render: (args: FzToastQueueProps) => ({
+  args: {
+    onSuccessClick: fn(),
+    onWarningClick: fn(),
+    onErrorClick: fn(),
+    onErrorLongClick: fn()
+  },
+  render: (args: FzToastQueueProps & { onSuccessClick?: ReturnType<typeof fn>, onWarningClick?: ReturnType<typeof fn>, onErrorClick?: ReturnType<typeof fn>, onErrorLongClick?: ReturnType<typeof fn> }) => ({
     components: { FzToastQueue, FzButton },
     setup: () => {
       function handleEnqueue(type: 'success' | 'warning' | 'error') {
         enqueueToast({ type, message: 'This is a toast.' })
+        // Call spy if provided
+        if (type === 'success' && args.onSuccessClick) args.onSuccessClick()
+        if (type === 'warning' && args.onWarningClick) args.onWarningClick()
+        if (type === 'error' && args.onErrorClick) args.onErrorClick()
       }
 
       function handleEnqueueLong(type: 'success' | 'warning' | 'error') {
@@ -33,6 +42,8 @@ const Default: Story = {
           message:
             'This is a long long long long long long long long long long long long long long long long long long long long long long long long long toast.'
         })
+        // Call spy if provided
+        if (type === 'error' && args.onErrorLongClick) args.onErrorLongClick()
       }
 
       return {
@@ -51,7 +62,7 @@ const Default: Story = {
         </div>
       `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify toast queue container renders', async () => {
@@ -70,15 +81,34 @@ const Default: Story = {
       await expect(errorButton).toBeInTheDocument()
     })
     
-    await step('Add a toast to the queue', async () => {
+    await step('Click Success button and verify handler IS called', async () => {
       const successButton = canvas.getByRole('button', { name: /^success$/i })
       await userEvent.click(successButton)
+      
+      // ROBUST CHECK: Verify the success click spy WAS called
+      await expect(args.onSuccessClick).toHaveBeenCalledTimes(1)
       
       // Wait for toast to appear
       await waitFor(() => {
         const toast = canvasElement.querySelector('.bg-semantic-success')
         expect(toast).toBeInTheDocument()
       }, { timeout: 1000 })
+    })
+    
+    await step('Click Warning button and verify handler IS called', async () => {
+      const warningButton = canvas.getByRole('button', { name: /^warning$/i })
+      await userEvent.click(warningButton)
+      
+      // ROBUST CHECK: Verify the warning click spy WAS called
+      await expect(args.onWarningClick).toHaveBeenCalledTimes(1)
+    })
+    
+    await step('Click Error button and verify handler IS called', async () => {
+      const errorButton = canvas.getByRole('button', { name: 'Error' })
+      await userEvent.click(errorButton)
+      
+      // ROBUST CHECK: Verify the error click spy WAS called
+      await expect(args.onErrorClick).toHaveBeenCalledTimes(1)
     })
     
     await step('Verify toast message is displayed', async () => {
@@ -90,14 +120,22 @@ const Default: Story = {
 }
 
 const EnqueueMultiple: Story = {
-  args: {},
-  render: (args: FzToastQueueProps) => ({
+  args: {
+    onSuccessClick: fn(),
+    onWarningClick: fn(),
+    onErrorClick: fn()
+  },
+  render: (args: FzToastQueueProps & { onSuccessClick?: ReturnType<typeof fn>, onWarningClick?: ReturnType<typeof fn>, onErrorClick?: ReturnType<typeof fn> }) => ({
     components: { FzToastQueue, FzButton },
     setup: () => {
       const toasts = ref<any[]>([])
 
       function handleEnqueue(type: 'success' | 'warning' | 'error') {
         enqueueToast({ type, message: `${type.charAt(0).toUpperCase() + type.slice(1)} toast message` }, toasts)
+        // Call spy if provided
+        if (type === 'success' && args.onSuccessClick) args.onSuccessClick()
+        if (type === 'warning' && args.onWarningClick) args.onWarningClick()
+        if (type === 'error' && args.onErrorClick) args.onErrorClick()
       }
 
       return {
@@ -117,28 +155,31 @@ const EnqueueMultiple: Story = {
         </div>
       `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    await step('Add multiple toasts to the queue', async () => {
+    await step('Add multiple toasts to the queue and verify handlers ARE called', async () => {
       const successButton = canvas.getByRole('button', { name: /add success/i })
       const warningButton = canvas.getByRole('button', { name: /add warning/i })
       const errorButton = canvas.getByRole('button', { name: /add error/i })
       
-      // Add three toasts
+      // Add three toasts and verify handlers are called
       await userEvent.click(successButton)
+      await expect(args.onSuccessClick).toHaveBeenCalledTimes(1)
       await waitFor(() => {
         const toasts = canvasElement.querySelectorAll('.toast')
         expect(toasts.length).toBeGreaterThanOrEqual(1)
       }, { timeout: 1000 })
       
       await userEvent.click(warningButton)
+      await expect(args.onWarningClick).toHaveBeenCalledTimes(1)
       await waitFor(() => {
         const toasts = canvasElement.querySelectorAll('.toast')
         expect(toasts.length).toBeGreaterThanOrEqual(2)
       }, { timeout: 1000 })
       
       await userEvent.click(errorButton)
+      await expect(args.onErrorClick).toHaveBeenCalledTimes(1)
       await waitFor(() => {
         const toasts = canvasElement.querySelectorAll('.toast')
         expect(toasts.length).toBeGreaterThanOrEqual(3)
@@ -164,14 +205,20 @@ const EnqueueMultiple: Story = {
 }
 
 const DismissToast: Story = {
-  args: {},
-  render: (args: FzToastQueueProps) => ({
+  args: {
+    onWarningClick: fn(),
+    onErrorClick: fn()
+  },
+  render: (args: FzToastQueueProps & { onWarningClick?: ReturnType<typeof fn>, onErrorClick?: ReturnType<typeof fn> }) => ({
     components: { FzToastQueue, FzButton },
     setup: () => {
       const toasts = ref<any[]>([])
 
       function handleEnqueue(type: 'success' | 'warning' | 'error') {
         enqueueToast({ type, message: `${type.charAt(0).toUpperCase() + type.slice(1)} toast` }, toasts)
+        // Call spy if provided
+        if (type === 'warning' && args.onWarningClick) args.onWarningClick()
+        if (type === 'error' && args.onErrorClick) args.onErrorClick()
       }
 
       return {
@@ -190,12 +237,15 @@ const DismissToast: Story = {
         </div>
       `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    await step('Add a warning toast', async () => {
+    await step('Add a warning toast and verify handler IS called', async () => {
       const warningButton = canvas.getByRole('button', { name: /add warning toast/i })
       await userEvent.click(warningButton)
+      
+      // ROBUST CHECK: Verify the warning click spy WAS called
+      await expect(args.onWarningClick).toHaveBeenCalledTimes(1)
       
       await waitFor(() => {
         const toast = canvasElement.querySelector('.bg-semantic-warning')
@@ -314,15 +364,18 @@ const HoverExpand: Story = {
 
 const LeftAlign: Story = {
   args: {
-    align: 'left'
+    align: 'left',
+    onAddToastClick: fn()
   },
-  render: (args: FzToastQueueProps) => ({
+  render: (args: FzToastQueueProps & { onAddToastClick?: ReturnType<typeof fn> }) => ({
     components: { FzToastQueue, FzButton },
     setup: () => {
       const toasts = ref<any[]>([])
 
       function handleEnqueue(type: 'success' | 'warning' | 'error') {
         enqueueToast({ type, message: 'Left-aligned toast message' }, toasts)
+        // Call spy if provided
+        if (args.onAddToastClick) args.onAddToastClick()
       }
 
       return {
@@ -340,12 +393,15 @@ const LeftAlign: Story = {
         </div>
       `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    await step('Add a toast with left alignment', async () => {
+    await step('Add a toast with left alignment and verify handler IS called', async () => {
       const addButton = canvas.getByRole('button', { name: /add toast/i })
       await userEvent.click(addButton)
+      
+      // ROBUST CHECK: Verify the add toast click spy WAS called
+      await expect(args.onAddToastClick).toHaveBeenCalledTimes(1)
       
       await waitFor(() => {
         const toast = canvasElement.querySelector('.toast')
@@ -363,15 +419,18 @@ const LeftAlign: Story = {
 
 const RightAlign: Story = {
   args: {
-    align: 'right'
+    align: 'right',
+    onAddToastClick: fn()
   },
-  render: (args: FzToastQueueProps) => ({
+  render: (args: FzToastQueueProps & { onAddToastClick?: ReturnType<typeof fn> }) => ({
     components: { FzToastQueue, FzButton },
     setup: () => {
       const toasts = ref<any[]>([])
 
       function handleEnqueue(type: 'success' | 'warning' | 'error') {
         enqueueToast({ type, message: 'Right-aligned toast message' }, toasts)
+        // Call spy if provided
+        if (args.onAddToastClick) args.onAddToastClick()
       }
 
       return {
@@ -389,12 +448,15 @@ const RightAlign: Story = {
         </div>
       `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    await step('Add a toast with right alignment', async () => {
+    await step('Add a toast with right alignment and verify handler IS called', async () => {
       const addButton = canvas.getByRole('button', { name: /add toast/i })
       await userEvent.click(addButton)
+      
+      // ROBUST CHECK: Verify the add toast click spy WAS called
+      await expect(args.onAddToastClick).toHaveBeenCalledTimes(1)
       
       await waitFor(() => {
         const toast = canvasElement.querySelector('.toast')
@@ -411,14 +473,18 @@ const RightAlign: Story = {
 }
 
 const KeyboardNavigation: Story = {
-  args: {},
-  render: (args: FzToastQueueProps) => ({
+  args: {
+    onAddToastClick: fn()
+  },
+  render: (args: FzToastQueueProps & { onAddToastClick?: ReturnType<typeof fn> }) => ({
     components: { FzToastQueue, FzButton },
     setup: () => {
       const toasts = ref<any[]>([])
 
       function handleEnqueue() {
         enqueueToast({ type: 'warning', message: 'Toast with keyboard navigation' }, toasts)
+        // Call spy if provided
+        if (args.onAddToastClick) args.onAddToastClick()
       }
 
       return {
@@ -436,12 +502,15 @@ const KeyboardNavigation: Story = {
         </div>
       `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    await step('Add a warning toast (has close button)', async () => {
+    await step('Add a warning toast and verify handler IS called', async () => {
       const addButton = canvas.getByRole('button', { name: /add toast/i })
       await userEvent.click(addButton)
+      
+      // ROBUST CHECK: Verify the add toast click spy WAS called
+      await expect(args.onAddToastClick).toHaveBeenCalledTimes(1)
       
       await waitFor(() => {
         const toast = canvasElement.querySelector('.toast')
@@ -474,14 +543,18 @@ const KeyboardNavigation: Story = {
 }
 
 const SpaceKeyDismiss: Story = {
-  args: {},
-  render: (args: FzToastQueueProps) => ({
+  args: {
+    onAddToastClick: fn()
+  },
+  render: (args: FzToastQueueProps & { onAddToastClick?: ReturnType<typeof fn> }) => ({
     components: { FzToastQueue, FzButton },
     setup: () => {
       const toasts = ref<any[]>([])
 
       function handleEnqueue() {
         enqueueToast({ type: 'error', message: 'Toast to dismiss with Space key' }, toasts)
+        // Call spy if provided
+        if (args.onAddToastClick) args.onAddToastClick()
       }
 
       return {
@@ -499,12 +572,15 @@ const SpaceKeyDismiss: Story = {
         </div>
       `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    await step('Add an error toast (has close button)', async () => {
+    await step('Add an error toast and verify handler IS called', async () => {
       const addButton = canvas.getByRole('button', { name: /add error toast/i })
       await userEvent.click(addButton)
+      
+      // ROBUST CHECK: Verify the add toast click spy WAS called
+      await expect(args.onAddToastClick).toHaveBeenCalledTimes(1)
       
       await waitFor(() => {
         const toast = canvasElement.querySelector('.toast')

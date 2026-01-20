@@ -2373,7 +2373,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | overlay/ConfirmDialog.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | messages/Alert.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | messages/Toast.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| messages/ToastQueue.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
+| messages/ToastQueue.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 
 ### 7.2 Checklist for Each Story Enhancement
 
@@ -2855,3 +2855,18 @@ export const MyStory: Story = {
 - All 11 ConfirmDialog story tests passing ✅ (verified with `pnpm test:storybook --run ConfirmDialog`)
 - All 54 unit tests passing ✅ (verified with `pnpm test:unit` in packages/dialog)
 - Phase 7 (Spy Function Pattern Refactor) progress: ConfirmDialog.stories.ts completed
+
+### January 20, 2026 - ToastQueue Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `toast` (Storybook)
+- Added spy function pattern to ToastQueue.stories.ts for robust interaction testing
+- Enhanced Default story with `onSuccessClick`, `onWarningClick`, `onErrorClick`, and `onErrorLongClick` spies to verify button click handlers ARE called
+- Enhanced EnqueueMultiple story with `onSuccessClick`, `onWarningClick`, and `onErrorClick` spies to verify multiple toast enqueue handlers ARE called
+- Enhanced DismissToast story with `onWarningClick` and `onErrorClick` spies to verify toast enqueue handlers ARE called
+- Enhanced LeftAlign story with `onAddToastClick` spy to verify add toast handler IS called
+- Enhanced RightAlign story with `onAddToastClick` spy to verify add toast handler IS called
+- Enhanced KeyboardNavigation story with `onAddToastClick` spy to verify add toast handler IS called
+- Enhanced SpaceKeyDismiss story with `onAddToastClick` spy to verify add toast handler IS called
+- All play functions test user interactions and verify handlers are called using `toHaveBeenCalledTimes()` assertions
+- All tests passing: 10 storybook play function tests (verified with `pnpm test:storybook --run ToastQueue`)
+- Phase 7 (Spy Function Pattern Refactor) progress: ToastQueue.stories.ts completed
