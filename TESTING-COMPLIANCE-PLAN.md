@@ -2358,7 +2358,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | form/Textarea.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Datepicker.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Upload.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| form/Appointments.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/Appointments.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | button/IconButton.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | button/ButtonGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | navigation/Dropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
@@ -2719,3 +2719,22 @@ export const MyStory: Story = {
 - All play functions test user interactions and verify handlers are called (or verify disabled links don't navigate)
 - All tests passing: 21 storybook play function tests (verified with `pnpm test:storybook --run Link`)
 - Phase 7 (Spy Function Pattern Refactor) progress: Link.stories.ts completed
+
+### January 20, 2026 - Appointments Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `appointments` (Storybook)
+- Added spy function pattern to Appointments.stories.ts for robust interaction testing
+- Imported `fn` from `@storybook/test`
+- Updated Template render function to support spy functions from args for `onUpdate:modelValue`
+- Enhanced Default story with `'onUpdate:modelValue': fn()` spy
+- Enhanced SlotSelection story with spy to verify slot selection emits `update:modelValue` event
+- Enhanced WithexcludedSlots story with spy to verify disabled slots cannot be selected (spy not called) and enabled slots can be selected (spy called)
+- Enhanced DateNavigation story with spy to verify selection resets on date change (spy called with undefined)
+- Added `args` parameter to all play function signatures
+- Added spy assertions for slot selection interactions:
+  - Enabled slots: Verify `toHaveBeenCalled()` when clicked
+  - Disabled slots: Verify `not.toHaveBeenCalled()` when clicked
+  - Date navigation: Verify spy called with `undefined` when date changes
+- All play functions test user interactions and verify handlers are called appropriately
+- All 10 Appointments story tests passing ✅ (verified with `pnpm test:storybook --run Appointments`)
+- Phase 7 (Spy Function Pattern Refactor) progress: Appointments.stories.ts completed
