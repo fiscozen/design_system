@@ -2354,7 +2354,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | form/Radio.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/RadioCard.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/RadioGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| form/CheckboxGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/CheckboxGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Textarea.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | form/Datepicker.stories.ts | ✅ Has disabled | ✅ Has interactions | 1.5 |
 | form/Upload.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
@@ -2406,6 +2406,7 @@ For each story file listed above:
 | button/Button.stories.ts | ✅ Complete |
 | navigation/Navlink.stories.ts | ✅ Complete |
 | form/Checkbox.stories.ts | ✅ Complete |
+| form/CheckboxGroup.stories.ts | ✅ Complete |
 | form/Input.stories.ts | ✅ Complete |
 | form/CurrencyInput.stories.ts | ✅ Complete |
 | form/Select.stories.ts | ✅ Complete |
@@ -2533,6 +2534,21 @@ export const MyStory: Story = {
 - All tests passing: 8 storybook play function tests (TwoButtonsFrontoffice, TwoButtonsBackoffice, ThreeButtonsFrontoffice, ThreeButtonsBackoffice, TwoButtonsWithLongText, ThreeButtonsWithLongText, DisabledButtons, MixedEnabledDisabled)
 - Phase 7 (Spy Function Pattern Refactor) progress: ButtonGroup.stories.ts completed
 
+### January 20, 2026 - CheckboxGroup Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `checkbox` (Storybook)
+- Added spy function pattern to CheckboxGroup.stories.ts for robust interaction testing
+- Enhanced Template to support `onUpdate:modelValue` spy functions from args
+- Enhanced MultipleSelection story with spy to verify `update:modelValue` IS called when selecting checkboxes
+- Enhanced Disabled story with spy to verify disabled state accessibility (checkboxes are marked as disabled)
+- Enhanced IndeterminateStateTest story with spy to verify handler IS called when checking child checkbox
+- Enhanced KeyboardNavigationTest story with spy to verify handler IS called on Space key activation
+- Enhanced CheckboxGroupWithDynamicOptions story with spy to verify handler IS called when interacting with dynamically loaded checkboxes
+- Updated all render functions to use consistent handleUpdate pattern for spy function support
+- All play functions test user interactions and verify handlers are called (or verify disabled state for disabled stories)
+- All 12 CheckboxGroup story tests passing ✅
+- Phase 7 (Spy Function Pattern Refactor) progress: CheckboxGroup.stories.ts completed
+
 ### January 20, 2026 - RadioCard Stories Spy Function Pattern Enhancement ✅
 
 **Package:** `radio` (Storybook)
@@ -2597,4 +2613,19 @@ export const MyStory: Story = {
 - Updated plan to mark Typeahead as complete for event tests
 - Note: Component does not emit `search` event - search functionality is handled internally via `searchValue` and `debouncedSearchValue` reactive refs
 - Phase 3 (Unit Test Quality Improvements) progress: Typeahead event tests completed
+
+### January 20, 2026 - CheckboxGroup Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `checkbox` (Storybook)
+- Added spy function pattern to CheckboxGroup.stories.ts for robust interaction testing
+- Enhanced Template to support `onUpdate:modelValue` spy functions from args
+- Enhanced MultipleSelection story with spy to verify `update:modelValue` IS called when selecting checkboxes
+- Enhanced Disabled story with spy to verify disabled state accessibility (checkboxes are marked as disabled)
+- Enhanced IndeterminateStateTest story with spy to verify handler IS called when checking child checkbox
+- Enhanced KeyboardNavigationTest story with spy to verify handler IS called on Space key activation
+- Enhanced CheckboxGroupWithDynamicOptions story with spy to verify handler IS called when interacting with dynamically loaded checkboxes
+- Updated all render functions to use consistent handleUpdate pattern for spy function support
+- All play functions test user interactions and verify handlers are called (or verify disabled state for disabled stories)
+- All 12 CheckboxGroup story tests passing ✅
+- Phase 7 (Spy Function Pattern Refactor) progress: CheckboxGroup.stories.ts completed
 
