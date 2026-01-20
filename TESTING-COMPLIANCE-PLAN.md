@@ -2361,7 +2361,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | form/Appointments.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | button/IconButton.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | button/ButtonGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| navigation/Dropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| navigation/Dropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | navigation/IconDropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | navigation/Link.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | navigation/Actionlist.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
@@ -2488,6 +2488,18 @@ export const MyStory: Story = {
 - All play functions test user interactions and verify handlers are called using `toHaveBeenCalledTimes()` assertions
 - All tests passing: 83 unit tests (verified with `pnpm test:unit`), 20 storybook play function tests (verified with `pnpm test:storybook --run Alert`)
 - Phase 7 (Spy Function Pattern Refactor) progress: Alert.stories.ts completed
+
+### January 20, 2026 - Dropdown Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `dropdown` (Storybook)
+- Added spy function pattern to Dropdown.stories.ts for robust interaction testing
+- Enhanced Default story with `onFzactionClick` and `onUpdate:isOpen` spies to verify action clicks and dropdown toggle
+- Enhanced Disabled story with spies to verify handlers are NOT called when disabled
+- Enhanced WithSections story with spies to verify action click handler IS called
+- Used render functions to properly bind kebab-case event handlers (`@fzaction:click` and `@update:isOpen`)
+- All play functions test user interactions and verify handlers are called (or NOT called for disabled states) using `toHaveBeenCalledTimes()` and `not.toHaveBeenCalled()` assertions
+- All tests passing: 12 storybook play function tests (verified with `pnpm test:storybook --run Dropdown`)
+- Phase 7 (Spy Function Pattern Refactor) progress: Dropdown.stories.ts completed
 
 ### January 20, 2026 - Radio Stories Spy Function Pattern Enhancement ✅
 

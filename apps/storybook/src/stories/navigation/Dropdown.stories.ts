@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within, userEvent, waitFor } from '@storybook/test'
+import { expect, fn, within, userEvent, waitFor } from '@storybook/test'
 import { FzDropdown } from '@fiscozen/dropdown'
 import { vueRouter } from 'storybook-vue3-router'
 import { FzActionProps, FzActionSectionProps } from '@fiscozen/action'
@@ -89,24 +89,57 @@ const meta: Meta<typeof FzDropdown> = {
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  play: async ({ canvasElement }) => {
+  args: {
+    // 👇 Use fn() to spy on fzaction:click - accessible via args in play function
+    onFzactionClick: fn(),
+    // 👇 Use fn() to spy on isOpen v-model updates
+    'onUpdate:isOpen': fn()
+  },
+  render: (args) => ({
+    components: { FzDropdown },
+    setup: () => ({ args }),
+    template: `<FzDropdown v-bind="args" @fzaction:click="args.onFzactionClick" @update:isOpen="args['onUpdate:isOpen']">{{ args.default }}</FzDropdown>`
+  }),
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     const parentCanvas = within(canvasElement.parentElement!)
 
-    // Find the dropdown button
-    const dropdownButton = canvas.getByRole('button')
-    await expect(dropdownButton).toBeInTheDocument()
+    await step('Verify dropdown button exists and has correct text', async () => {
+      const dropdownButton = canvas.getByRole('button')
+      await expect(dropdownButton).toBeInTheDocument()
+      await expect(dropdownButton).toHaveTextContent('This is a dropdown')
+    })
 
-    // Verify button has correct text
-    await expect(dropdownButton).toHaveTextContent('This is a dropdown')
+    await step('Click to open dropdown and verify isOpen handler IS called', async () => {
+      const dropdownButton = canvas.getByRole('button')
+      await userEvent.click(dropdownButton)
 
-    // Click to open dropdown
-    await userEvent.click(dropdownButton)
+      // ROBUST CHECK: Verify the isOpen spy WAS called with true
+      await expect(args['onUpdate:isOpen']).toHaveBeenCalledTimes(1)
+      await expect(args['onUpdate:isOpen']).toHaveBeenCalledWith(true)
 
-    // Wait for dropdown content to appear
-    await waitFor(async () => {
-      const dropdownContent = parentCanvas.queryByText('This is a router-nav-link to /foo')
-      await expect(dropdownContent).toBeVisible()
+      // Wait for dropdown content to appear
+      await waitFor(async () => {
+        const dropdownContent = parentCanvas.queryByText('This is a router-nav-link to /foo')
+        await expect(dropdownContent).toBeVisible()
+      })
+    })
+
+    await step('Click action and verify fzaction:click handler IS called', async () => {
+      // Find the action button (the last one is type 'action')
+      const actionButton = parentCanvas.getByRole('button', { name: 'This is a action' })
+      await userEvent.click(actionButton)
+
+      // ROBUST CHECK: Verify the fzaction:click spy WAS called
+      await expect(args.onFzactionClick).toHaveBeenCalledTimes(1)
+      // Verify it was called with action index (3) and action object
+      await expect(args.onFzactionClick).toHaveBeenCalledWith(
+        3,
+        expect.objectContaining({
+          type: 'action',
+          label: 'This is a action'
+        })
+      )
     })
   }
 }
@@ -220,22 +253,42 @@ export const Invisible: Story = {
 
 export const Disabled: Story = {
   args: {
-    disabled: true
+    disabled: true,
+    // 👇 Use fn() to spy on fzaction:click - accessible via args in play function
+    onFzactionClick: fn(),
+    // 👇 Use fn() to spy on isOpen v-model updates
+    'onUpdate:isOpen': fn()
   },
-  play: async ({ canvasElement }) => {
+  render: (args) => ({
+    components: { FzDropdown },
+    setup: () => ({ args }),
+    template: `<FzDropdown v-bind="args" @fzaction:click="args.onFzactionClick" @update:isOpen="args['onUpdate:isOpen']">{{ args.default }}</FzDropdown>`
+  }),
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     const parentCanvas = within(canvasElement.parentElement!)
     const button = canvas.getByRole('button')
 
-    // Verify button is disabled
-    await expect(button).toBeDisabled()
+    await step('Verify button is disabled', async () => {
+      await expect(button).toBeDisabled()
+    })
 
-    // Try to click (should not work)
-    await userEvent.click(button)
+    await step('Verify update:isOpen is NOT called when clicking disabled dropdown', async () => {
+      // Try to click (should not work)
+      await userEvent.click(button)
 
-    // Verify dropdown did not open
-    const dropdownContent = parentCanvas.queryByText('This is a action')
-    await expect(dropdownContent).not.toBeVisible()
+      // ROBUST CHECK: Verify the isOpen spy was NOT called
+      await expect(args['onUpdate:isOpen']).not.toHaveBeenCalled()
+
+      // Verify dropdown did not open
+      const dropdownContent = parentCanvas.queryByText('This is a action')
+      await expect(dropdownContent).not.toBeVisible()
+    })
+
+    await step('Verify fzaction:click is NOT called when disabled', async () => {
+      // ROBUST CHECK: Verify the fzaction:click spy was NOT called
+      await expect(args.onFzactionClick).not.toHaveBeenCalled()
+    })
   }
 }
 
@@ -266,21 +319,53 @@ export const WithSections: Story = {
         type: 'action',
         label: 'Logout'
       }
-    ]
+    ],
+    // 👇 Use fn() to spy on fzaction:click - accessible via args in play function
+    onFzactionClick: fn(),
+    // 👇 Use fn() to spy on isOpen v-model updates
+    'onUpdate:isOpen': fn()
   },
-  play: async ({ canvasElement }) => {
+  render: (args) => ({
+    components: { FzDropdown },
+    setup: () => ({ args }),
+    template: `<FzDropdown v-bind="args" @fzaction:click="args.onFzactionClick" @update:isOpen="args['onUpdate:isOpen']">{{ args.default }}</FzDropdown>`
+  }),
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     const parentCanvas = within(canvasElement.parentElement!)
     const dropdownButton = canvas.getByRole('button')
 
-    await userEvent.click(dropdownButton)
+    await step('Open dropdown and verify sections are visible', async () => {
+      await userEvent.click(dropdownButton)
 
-    await waitFor(async () => {
-      const navigationSection = parentCanvas.queryByText('Navigation')
-      await expect(navigationSection).toBeVisible()
+      // ROBUST CHECK: Verify the isOpen spy WAS called with true
+      await expect(args['onUpdate:isOpen']).toHaveBeenCalledTimes(1)
+      await expect(args['onUpdate:isOpen']).toHaveBeenCalledWith(true)
 
-      const actionsSection = parentCanvas.queryByText('Actions')
-      await expect(actionsSection).toBeVisible()
+      await waitFor(async () => {
+        const navigationSection = parentCanvas.queryByText('Navigation')
+        await expect(navigationSection).toBeVisible()
+
+        const actionsSection = parentCanvas.queryByText('Actions')
+        await expect(actionsSection).toBeVisible()
+      })
+    })
+
+    await step('Click action and verify fzaction:click handler IS called', async () => {
+      // Find the Logout action button
+      const logoutButton = parentCanvas.getByRole('button', { name: 'Logout' })
+      await userEvent.click(logoutButton)
+
+      // ROBUST CHECK: Verify the fzaction:click spy WAS called
+      await expect(args.onFzactionClick).toHaveBeenCalledTimes(1)
+      // Verify it was called with action index (4) and action object
+      await expect(args.onFzactionClick).toHaveBeenCalledWith(
+        4,
+        expect.objectContaining({
+          type: 'action',
+          label: 'Logout'
+        })
+      )
     })
   }
 }
