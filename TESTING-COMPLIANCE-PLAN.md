@@ -2364,7 +2364,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | navigation/Dropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | navigation/IconDropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | navigation/Link.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| navigation/Actionlist.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| navigation/Actionlist.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | navigation/Navlist.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | panel/Tab.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | panel/Collapse.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
@@ -2778,3 +2778,21 @@ export const MyStory: Story = {
 - All play functions test user interactions and verify handlers are called appropriately
 - All 10 Appointments story tests passing ✅ (verified with `pnpm test:storybook --run Appointments`)
 - Phase 7 (Spy Function Pattern Refactor) progress: Appointments.stories.ts completed
+
+### January 20, 2026 - Actionlist Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `actionlist` (Storybook)
+- Added spy function pattern to Actionlist.stories.ts for robust interaction testing
+- Imported `fn` from `@storybook/test` and `ref` from `vue`
+- Enhanced Default story with `onClick: fn()` spy to verify click handler IS called when buttons are clicked
+- Enhanced Disabled story with spy to verify enabled actions call handler and disabled actions do NOT call handler
+- Enhanced KeyboardNavigation story (removed spy assertions for keyboard events since FzAction emits `keydown` events, not `click` events for keyboard activation)
+- Enhanced Frontoffice, Backoffice, WithSections, MixedVariants, CustomStyling, ComplexContent, ListboxRole, and MenuRole stories with spy functions
+- Updated all render functions to use `setup()` with `args` parameter to support spy functions
+- Added spy assertions for:
+  - Enabled actions: Verify `toHaveBeenCalled()` when clicked
+  - Disabled actions: Verify `not.toHaveBeenCalled()` when clicked
+  - Multiple interactions: Verify call counts increment correctly
+- All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
+- All 12 Actionlist story tests passing ✅ (verified with `pnpm test:storybook --run Actionlist`)
+- Phase 7 (Spy Function Pattern Refactor) progress: Actionlist.stories.ts completed

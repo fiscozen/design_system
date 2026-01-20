@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from '@storybook/test'
+import { ref } from 'vue'
 import { vueRouter } from 'storybook-vue3-router'
 import { FzActionList, FzActionSection, FzAction } from '@fiscozen/action'
 
@@ -126,26 +127,27 @@ const verifyComputedStyle = async (
  * This is the most common use case for the component.
  */
 export const Default: Story = {
-  render: () => ({
+  args: {
+    onClick: fn()
+  },
+  render: (args) => ({
     components: { FzActionList, FzActionSection, FzAction },
+    setup() {
+      return { args }
+    },
     template: `
       <div class="max-w-[500px]">   
         <FzActionList>
           <FzActionSection>
-            <FzAction label="Save Changes" iconRightName="face-smile" @click="handleSave" />
-            <FzAction label="Cancel" iconRightName="face-smile" @click="handleCancel" />
-            <FzAction label="Delete" iconRightName="face-smile" @click="handleDelete" />
+            <FzAction label="Save Changes" iconRightName="face-smile" @click="args.onClick" />
+            <FzAction label="Cancel" iconRightName="face-smile" @click="args.onClick" />
+            <FzAction label="Delete" iconRightName="face-smile" @click="args.onClick" />
           </FzActionSection>
         </FzActionList>
       </div>
-    `,
-    methods: {
-      handleSave() { console.log('Save clicked') },
-      handleCancel() { console.log('Cancel clicked') },
-      handleDelete() { console.log('Delete clicked') }
-    }
+    `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify action list renders correctly', async () => {
@@ -166,10 +168,12 @@ export const Default: Story = {
       await expect(saveButton).toHaveAttribute('type', 'button')
     })
 
-    await step('Verify button is clickable and responds', async () => {
+    await step('Verify button click handler IS called', async () => {
       const saveButton = canvas.getByRole('button', { name: /save changes/i })
       await expect(saveButton).not.toBeDisabled()
       await userEvent.click(saveButton)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
       // Button should remain functional after click
       await expect(saveButton).toBeVisible()
     })
@@ -181,24 +185,27 @@ export const Default: Story = {
  * Demonstrates disabled state behavior and accessibility.
  */
 export const Disabled: Story = {
-  render: () => ({
+  args: {
+    onClick: fn()
+  },
+  render: (args) => ({
     components: { FzActionList, FzActionSection, FzAction },
+    setup() {
+      return { args }
+    },
     template: `
       <div class="max-w-[500px]">   
         <FzActionList>
           <FzActionSection label="Actions">
-            <FzAction label="Enabled Action" iconRightName="check" @click="handleClick" />
-            <FzAction label="Disabled Action" iconRightName="xmark" disabled @click="handleClick" />
-            <FzAction label="Another Disabled" iconRightName="ban" disabled @click="handleClick" />
+            <FzAction label="Enabled Action" iconRightName="check" @click="args.onClick" />
+            <FzAction label="Disabled Action" iconRightName="xmark" disabled @click="args.onClick" />
+            <FzAction label="Another Disabled" iconRightName="ban" disabled @click="args.onClick" />
           </FzActionSection>
         </FzActionList>
       </div>
-    `,
-    methods: {
-      handleClick() { console.log('Action clicked') }
-    }
+    `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify action list renders', async () => {
@@ -221,10 +228,19 @@ export const Disabled: Story = {
       await expect(enabledButton).toHaveAttribute('aria-disabled', 'false')
     })
 
-    await step('Verify disabled action does not respond to clicks', async () => {
+    await step('Verify enabled action click handler IS called', async () => {
+      const enabledButton = canvas.getByRole('button', { name: /enabled action/i })
+      await userEvent.click(enabledButton)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
+    })
+
+    await step('Verify disabled action click handler is NOT called', async () => {
       const disabledButton = canvas.getByRole('button', { name: /disabled action/i })
       // Clicking disabled button should not trigger any action
       await userEvent.click(disabledButton)
+      // ROBUST CHECK: Verify the click spy was NOT called (still at 1 from previous step)
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
       // Button should still be disabled
       await verifyDisabledState(disabledButton)
     })
@@ -247,21 +263,27 @@ export const Disabled: Story = {
  * Frontoffice has different sizing for consumer-facing applications.
  */
 export const Frontoffice: Story = {
-  render: () => ({
+  args: {
+    onClick: fn()
+  },
+  render: (args) => ({
     components: { FzActionList, FzActionSection, FzAction },
+    setup() {
+      return { args }
+    },
     template: `
       <div class="max-w-[500px]">   
         <FzActionList>
           <FzActionSection label="Frontoffice Actions">
-            <FzAction environment="frontoffice" label="Action One" iconRightName="house" @click="() => {}" />
-            <FzAction environment="frontoffice" label="Action Two" iconRightName="user" @click="() => {}" />
-            <FzAction environment="frontoffice" label="Action Three" iconRightName="gear" @click="() => {}" />
+            <FzAction environment="frontoffice" label="Action One" iconRightName="house" @click="args.onClick" />
+            <FzAction environment="frontoffice" label="Action Two" iconRightName="user" @click="args.onClick" />
+            <FzAction environment="frontoffice" label="Action Three" iconRightName="gear" @click="args.onClick" />
           </FzActionSection>
         </FzActionList>
       </div>
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify action list renders in frontoffice mode', async () => {
@@ -276,10 +298,12 @@ export const Frontoffice: Story = {
       ])
     })
 
-    await step('Verify frontoffice actions are functional', async () => {
+    await step('Verify frontoffice actions click handler IS called', async () => {
       const actionOne = canvas.getByRole('button', { name: /action one/i })
       await expect(actionOne).not.toBeDisabled()
       await userEvent.click(actionOne)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
       await expect(actionOne).toBeVisible()
     })
   }
@@ -290,21 +314,27 @@ export const Frontoffice: Story = {
  * Backoffice is optimized for internal admin interfaces.
  */
 export const Backoffice: Story = {
-  render: () => ({
+  args: {
+    onClick: fn()
+  },
+  render: (args) => ({
     components: { FzActionList, FzActionSection, FzAction },
+    setup() {
+      return { args }
+    },
     template: `
       <div class="max-w-[500px]">   
         <FzActionList>
           <FzActionSection label="Backoffice Actions">
-            <FzAction environment="backoffice" label="Dashboard" iconRightName="chart-line" @click="() => {}" />
-            <FzAction environment="backoffice" label="Users" iconRightName="users" @click="() => {}" />
-            <FzAction environment="backoffice" label="Settings" iconRightName="cog" @click="() => {}" />
+            <FzAction environment="backoffice" label="Dashboard" iconRightName="chart-line" @click="args.onClick" />
+            <FzAction environment="backoffice" label="Users" iconRightName="users" @click="args.onClick" />
+            <FzAction environment="backoffice" label="Settings" iconRightName="cog" @click="args.onClick" />
           </FzActionSection>
         </FzActionList>
       </div>
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify action list renders in backoffice mode', async () => {
@@ -319,10 +349,12 @@ export const Backoffice: Story = {
       ])
     })
 
-    await step('Verify backoffice actions are functional', async () => {
+    await step('Verify backoffice actions click handler IS called', async () => {
       const dashboard = canvas.getByRole('button', { name: /dashboard/i })
       await expect(dashboard).not.toBeDisabled()
       await userEvent.click(dashboard)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
       await expect(dashboard).toBeVisible()
     })
   }
@@ -333,22 +365,28 @@ export const Backoffice: Story = {
  * Tests Tab, Enter, and Space key interactions.
  */
 export const KeyboardNavigation: Story = {
-  render: () => ({
+  args: {
+    onClick: fn()
+  },
+  render: (args) => ({
     components: { FzActionList, FzActionSection, FzAction },
+    setup() {
+      return { args }
+    },
     template: `
       <div class="max-w-[500px]">   
         <FzActionList>
           <FzActionSection label="Keyboard Test">
-            <FzAction label="First Action" iconRightName="1" @click="() => console.log('First')" />
-            <FzAction label="Second Action" iconRightName="2" @click="() => console.log('Second')" />
-            <FzAction label="Disabled Action" iconRightName="ban" disabled />
-            <FzAction label="Third Action" iconRightName="3" @click="() => console.log('Third')" />
+            <FzAction label="First Action" iconRightName="1" @click="args.onClick" />
+            <FzAction label="Second Action" iconRightName="2" @click="args.onClick" />
+            <FzAction label="Disabled Action" iconRightName="ban" disabled @click="args.onClick" />
+            <FzAction label="Third Action" iconRightName="3" @click="args.onClick" />
           </FzActionSection>
         </FzActionList>
       </div>
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify action list renders', async () => {
@@ -378,6 +416,7 @@ export const KeyboardNavigation: Story = {
       firstAction.focus()
       await expect(document.activeElement).toBe(firstAction)
       await userEvent.keyboard('{Enter}')
+      // Note: FzAction emits keydown events for keyboard activation, not click events
       // Action should remain focused after activation
       await expect(document.activeElement).toBe(firstAction)
     })
@@ -387,6 +426,7 @@ export const KeyboardNavigation: Story = {
       secondAction.focus()
       await expect(document.activeElement).toBe(secondAction)
       await userEvent.keyboard(' ')
+      // Note: FzAction emits keydown events for keyboard activation, not click events
       // Action should remain focused after activation
       await expect(document.activeElement).toBe(secondAction)
     })
@@ -411,33 +451,39 @@ export const KeyboardNavigation: Story = {
  * Demonstrates grouping related actions with section headers.
  */
 export const WithSections: Story = {
-  render: () => ({
+  args: {
+    onClick: fn()
+  },
+  render: (args) => ({
     components: { FzActionList, FzAction, FzActionSection },
+    setup() {
+      return { args }
+    },
     template: `
       <div class="max-w-[500px]">
         <FzActionList>
           <FzActionSection label="File Operations">
-            <FzAction label="New File" iconRightName="file" @click="() => console.log('New file')" />
-            <FzAction label="Open File" iconRightName="folder-open" @click="() => console.log('Open file')" />
-            <FzAction label="Save File" iconRightName="floppy-disk" @click="() => console.log('Save file')" />
+            <FzAction label="New File" iconRightName="file" @click="args.onClick" />
+            <FzAction label="Open File" iconRightName="folder-open" @click="args.onClick" />
+            <FzAction label="Save File" iconRightName="floppy-disk" @click="args.onClick" />
           </FzActionSection>
           <FzActionSection label="Edit Operations">
-            <FzAction label="Undo" iconRightName="rotate-left" @click="() => console.log('Undo')" />
-            <FzAction label="Redo" iconRightName="rotate-right" @click="() => console.log('Redo')" />
-            <FzAction label="Cut" iconRightName="scissors" @click="() => console.log('Cut')" />
-            <FzAction label="Copy" iconRightName="copy" @click="() => console.log('Copy')" />
-            <FzAction label="Paste" iconRightName="paste" @click="() => console.log('Paste')" />
+            <FzAction label="Undo" iconRightName="rotate-left" @click="args.onClick" />
+            <FzAction label="Redo" iconRightName="rotate-right" @click="args.onClick" />
+            <FzAction label="Cut" iconRightName="scissors" @click="args.onClick" />
+            <FzAction label="Copy" iconRightName="copy" @click="args.onClick" />
+            <FzAction label="Paste" iconRightName="paste" @click="args.onClick" />
           </FzActionSection>
           <FzActionSection label="View Options">
-            <FzAction label="Zoom In" iconRightName="magnifying-glass-plus" @click="() => console.log('Zoom in')" />
-            <FzAction label="Zoom Out" iconRightName="magnifying-glass-minus" @click="() => console.log('Zoom out')" />
-            <FzAction label="Reset View" iconRightName="arrows-rotate" @click="() => console.log('Reset view')" />
+            <FzAction label="Zoom In" iconRightName="magnifying-glass-plus" @click="args.onClick" />
+            <FzAction label="Zoom Out" iconRightName="magnifying-glass-minus" @click="args.onClick" />
+            <FzAction label="Reset View" iconRightName="arrows-rotate" @click="args.onClick" />
           </FzActionSection>
         </FzActionList>
       </div>
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify action list with sections renders', async () => {
@@ -478,14 +524,18 @@ export const WithSections: Story = {
       ])
     })
 
-    await step('Verify navigation between sections works', async () => {
+    await step('Verify navigation between sections works and handlers are called', async () => {
       const newFileButton = canvas.getByRole('button', { name: /new file/i })
       const pasteButton = canvas.getByRole('button', { name: /paste/i })
 
       await userEvent.click(newFileButton)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
       await expect(newFileButton).toBeVisible()
 
       await userEvent.click(pasteButton)
+      // ROBUST CHECK: Verify the click spy WAS called (twice total)
+      await expect(args.onClick).toHaveBeenCalledTimes(2)
       await expect(pasteButton).toBeVisible()
     })
   }
@@ -496,28 +546,34 @@ export const WithSections: Story = {
  * Demonstrates textLeft, textCenter, and onlyIcon variants.
  */
 export const MixedVariants: Story = {
-  render: () => ({
+  args: {
+    onClick: fn()
+  },
+  render: (args) => ({
     components: { FzActionList, FzAction, FzActionSection },
+    setup() {
+      return { args }
+    },
     template: `
       <div class="max-w-[500px]">
         <FzActionList>
           <FzActionSection label="Layout Variants">
-            <FzAction label="Text Left" subLabel="With sub-label" iconRightName="align-left" @click="() => console.log('Text left')" />
-            <FzAction variant="textCenter" label="Text Center" subLabel="Centered layout" iconLeftName="house" iconRightName="check" @click="() => console.log('Text center')" />
-            <FzAction variant="onlyIcon" iconName="check" @click="() => console.log('Icon only')" />
+            <FzAction label="Text Left" subLabel="With sub-label" iconRightName="align-left" @click="args.onClick" />
+            <FzAction variant="textCenter" label="Text Center" subLabel="Centered layout" iconLeftName="house" iconRightName="check" @click="args.onClick" />
+            <FzAction variant="onlyIcon" iconName="check" @click="args.onClick" />
           </FzActionSection>
           <FzActionSection label="States">
-            <FzAction label="Normal Action" iconRightName="circle" @click="() => console.log('Normal')" />
-            <FzAction label="Disabled Action" iconRightName="circle-xmark" disabled @click="() => console.log('Disabled')" />
-            <FzAction label="Action with both icons" iconLeftName="house" iconRightName="arrow-right" @click="() => console.log('Both icons')" />
-            <FzAction label="Very long label that will not truncate because isTextTruncated is false by default" iconRightName="text-width" @click="() => console.log('Not Truncated')" />
-            <FzAction label="Very long text that will truncate because isTextTruncated is true" isTextTruncated iconRightName="ellipsis" @click="() => console.log('Truncated')" />
+            <FzAction label="Normal Action" iconRightName="circle" @click="args.onClick" />
+            <FzAction label="Disabled Action" iconRightName="circle-xmark" disabled @click="args.onClick" />
+            <FzAction label="Action with both icons" iconLeftName="house" iconRightName="arrow-right" @click="args.onClick" />
+            <FzAction label="Very long label that will not truncate because isTextTruncated is false by default" iconRightName="text-width" @click="args.onClick" />
+            <FzAction label="Very long text that will truncate because isTextTruncated is true" isTextTruncated iconRightName="ellipsis" @click="args.onClick" />
           </FzActionSection>
         </FzActionList>
       </div>
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify action list renders', async () => {
@@ -546,14 +602,23 @@ export const MixedVariants: Story = {
       await expect(iconOnlyButton).toHaveAttribute('aria-label')
     })
 
+    await step('Verify enabled action click handler IS called', async () => {
+      const normalButton = canvas.getByRole('button', { name: /normal action/i })
+      await userEvent.click(normalButton)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
+    })
+
     await step('Verify disabled action state and ARIA attributes', async () => {
       const disabledButton = canvas.getByRole('button', { name: /disabled action/i })
       await verifyDisabledState(disabledButton)
     })
 
-    await step('Verify disabled action does not respond to clicks', async () => {
+    await step('Verify disabled action click handler is NOT called', async () => {
       const disabledButton = canvas.getByRole('button', { name: /disabled action/i })
       await userEvent.click(disabledButton)
+      // ROBUST CHECK: Verify the click spy was NOT called (still at 1 from previous step)
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
       await verifyDisabledState(disabledButton)
     })
 
@@ -651,7 +716,8 @@ export const WithLinks: Story = {
  */
 export const CustomStyling: Story = {
   args: {
-    listClass: 'border-2 border-blue-200 bg-blue-50'
+    listClass: 'border-2 border-blue-200 bg-blue-50',
+    onClick: fn()
   },
   render: (args) => ({
     components: { FzActionList, FzAction, FzActionSection },
@@ -662,15 +728,15 @@ export const CustomStyling: Story = {
       <div class="max-w-[500px]">
         <FzActionList :listClass="args.listClass">
           <FzActionSection label="Custom Styled List">
-            <FzAction label="Action 1" iconRightName="check" @click="() => console.log('Action 1')" />
-            <FzAction label="Action 2" iconRightName="check" @click="() => console.log('Action 2')" />
-            <FzAction label="Action 3" iconRightName="check" @click="() => console.log('Action 3')" />
+            <FzAction label="Action 1" iconRightName="check" @click="args.onClick" />
+            <FzAction label="Action 2" iconRightName="check" @click="args.onClick" />
+            <FzAction label="Action 3" iconRightName="check" @click="args.onClick" />
           </FzActionSection>
         </FzActionList>
       </div>
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify action list renders', async () => {
@@ -690,10 +756,12 @@ export const CustomStyling: Story = {
       await expect(hasBackgroundClass).toBe(true)
     })
 
-    await step('Verify actions remain functional with custom styling', async () => {
+    await step('Verify actions click handler IS called with custom styling', async () => {
       const action1 = canvas.getByRole('button', { name: /action 1/i })
       await expect(action1).not.toBeDisabled()
       await userEvent.click(action1)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
       await expect(action1).toBeVisible()
     })
   }
@@ -704,30 +772,36 @@ export const CustomStyling: Story = {
  * Demonstrates combining multiple variants, states, and sections.
  */
 export const ComplexContent: Story = {
-  render: () => ({
+  args: {
+    onClick: fn()
+  },
+  render: (args) => ({
     components: { FzActionList, FzAction, FzActionSection },
+    setup() {
+      return { args }
+    },
     template: `
       <div class="max-w-[500px]">
         <FzActionList>
           <FzActionSection label="User Management">
-            <FzAction label="Add User" subLabel="Create a new user account" iconRightName="user-plus" @click="() => console.log('Add user')" />
-            <FzAction label="Edit User" subLabel="Modify existing user" iconRightName="user-pen" @click="() => console.log('Edit user')" />
-            <FzAction label="Delete User" subLabel="Remove user account" iconRightName="user-minus" disabled @click="() => console.log('Delete user')" />
+            <FzAction label="Add User" subLabel="Create a new user account" iconRightName="user-plus" @click="args.onClick" />
+            <FzAction label="Edit User" subLabel="Modify existing user" iconRightName="user-pen" @click="args.onClick" />
+            <FzAction label="Delete User" subLabel="Remove user account" iconRightName="user-minus" disabled @click="args.onClick" />
           </FzActionSection>
           <FzActionSection label="System Actions">
-            <FzAction variant="textCenter" label="Backup" subLabel="Create system backup" iconLeftName="database" iconRightName="download" @click="() => console.log('Backup')" />
-            <FzAction variant="textCenter" label="Restore" subLabel="Restore from backup" iconLeftName="database" iconRightName="upload" @click="() => console.log('Restore')" />
+            <FzAction variant="textCenter" label="Backup" subLabel="Create system backup" iconLeftName="database" iconRightName="download" @click="args.onClick" />
+            <FzAction variant="textCenter" label="Restore" subLabel="Restore from backup" iconLeftName="database" iconRightName="upload" @click="args.onClick" />
           </FzActionSection>
           <FzActionSection label="Quick Actions">
-            <FzAction variant="onlyIcon" iconName="arrows-rotate" @click="() => console.log('Refresh')" />
-            <FzAction variant="onlyIcon" iconName="cloud-arrow-up" @click="() => console.log('Sync')" />
-            <FzAction variant="onlyIcon" iconName="power-off" @click="() => console.log('Shutdown')" />
+            <FzAction variant="onlyIcon" iconName="arrows-rotate" @click="args.onClick" />
+            <FzAction variant="onlyIcon" iconName="cloud-arrow-up" @click="args.onClick" />
+            <FzAction variant="onlyIcon" iconName="power-off" @click="args.onClick" />
           </FzActionSection>
         </FzActionList>
       </div>
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify complex action list renders', async () => {
@@ -752,12 +826,21 @@ export const ComplexContent: Story = {
       await verifyDisabledState(deleteButton)
     })
 
-    await step('Verify textCenter variant actions work', async () => {
+    await step('Verify disabled action click handler is NOT called', async () => {
+      const deleteButton = canvas.getByRole('button', { name: /delete user/i })
+      await userEvent.click(deleteButton)
+      // ROBUST CHECK: Verify the click spy was NOT called
+      await expect(args.onClick).not.toHaveBeenCalled()
+    })
+
+    await step('Verify textCenter variant actions click handler IS called', async () => {
       // Use getAllByRole since sub-label also matches the pattern
       const backupButtons = canvas.getAllByRole('button', { name: /backup/i })
       await expect(backupButtons.length).toBeGreaterThan(0)
       const backupButton = backupButtons[0]
       await userEvent.click(backupButton)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
       await expect(backupButton).toBeVisible()
     })
 
@@ -772,7 +855,7 @@ export const ComplexContent: Story = {
       await expect(iconOnlyButtons.length).toBe(3)
     })
 
-    await step('Verify navigation across multiple sections', async () => {
+    await step('Verify navigation across multiple sections and handlers are called', async () => {
       const addUserButton = canvas.getByRole('button', { name: /add user/i })
       // Use getAllByRole since sub-label also matches the pattern
       const restoreButtons = canvas.getAllByRole('button', { name: /restore/i })
@@ -780,9 +863,13 @@ export const ComplexContent: Story = {
       const restoreButton = restoreButtons[0]
 
       await userEvent.click(addUserButton)
+      // ROBUST CHECK: Verify the click spy WAS called (twice total - once from backup, once from addUser)
+      await expect(args.onClick).toHaveBeenCalledTimes(2)
       await expect(addUserButton).toBeVisible()
 
       await userEvent.click(restoreButton)
+      // ROBUST CHECK: Verify the click spy WAS called (three times total)
+      await expect(args.onClick).toHaveBeenCalledTimes(3)
       await expect(restoreButton).toBeVisible()
     })
   }
@@ -793,8 +880,19 @@ export const ComplexContent: Story = {
  * Demonstrates ARIA listbox role with option children.
  */
 export const ListboxRole: Story = {
-  render: () => ({
+  args: {
+    onClick: fn()
+  },
+  render: (args) => ({
     components: { FzActionList, FzAction, FzActionSection },
+    setup() {
+      const selectedColor = ref('red')
+      const handleClick = (color: string) => {
+        selectedColor.value = color
+        args.onClick(color)
+      }
+      return { args, selectedColor, handleClick }
+    },
     template: `
       <div class="max-w-[500px]">
         <label id="color-label" class="block mb-2 text-sm font-medium">Select a color:</label>
@@ -805,7 +903,7 @@ export const ListboxRole: Story = {
             :aria-selected="selectedColor === 'red'"
             :focused="selectedColor === 'red'"
             iconRightName="circle"
-            @click="() => selectedColor = 'red'" 
+            @click="handleClick('red')" 
           />
           <FzAction 
             role="option" 
@@ -813,7 +911,7 @@ export const ListboxRole: Story = {
             :aria-selected="selectedColor === 'green'"
             :focused="selectedColor === 'green'"
             iconRightName="circle"
-            @click="() => selectedColor = 'green'" 
+            @click="handleClick('green')" 
           />
           <FzAction 
             role="option" 
@@ -821,18 +919,13 @@ export const ListboxRole: Story = {
             :aria-selected="selectedColor === 'blue'"
             :focused="selectedColor === 'blue'"
             iconRightName="circle"
-            @click="() => selectedColor = 'blue'" 
+            @click="handleClick('blue')" 
           />
         </FzActionList>
       </div>
-    `,
-    data() {
-      return {
-        selectedColor: 'red'
-      }
-    }
+    `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify listbox role is applied to action list', async () => {
@@ -858,9 +951,12 @@ export const ListboxRole: Story = {
       await expect(greenOption).toHaveAttribute('aria-selected', 'false')
     })
 
-    await step('Verify clicking option changes selection', async () => {
+    await step('Verify clicking option changes selection and handler IS called', async () => {
       const greenOption = canvas.getByRole('option', { name: /green/i })
       await userEvent.click(greenOption)
+      // ROBUST CHECK: Verify the click spy WAS called with 'green'
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
+      await expect(args.onClick).toHaveBeenCalledWith('green')
       // After click, green should be selected
       await expect(greenOption).toHaveAttribute('aria-selected', 'true')
 
@@ -875,20 +971,26 @@ export const ListboxRole: Story = {
  * Demonstrates ARIA menu role with menuitem children.
  */
 export const MenuRole: Story = {
-  render: () => ({
+  args: {
+    onClick: fn()
+  },
+  render: (args) => ({
     components: { FzActionList, FzAction, FzActionSection },
+    setup() {
+      return { args }
+    },
     template: `
       <div class="max-w-[500px]">
         <FzActionList role="menu" aria-labelledby="menu-button">
-          <FzAction role="menuitem" label="Cut" iconLeftName="scissors" @click="() => console.log('Cut')" />
-          <FzAction role="menuitem" label="Copy" iconLeftName="copy" @click="() => console.log('Copy')" />
-          <FzAction role="menuitem" label="Paste" iconLeftName="paste" @click="() => console.log('Paste')" />
-          <FzAction role="menuitem" label="Delete" iconLeftName="trash" disabled @click="() => console.log('Delete')" />
+          <FzAction role="menuitem" label="Cut" iconLeftName="scissors" @click="args.onClick" />
+          <FzAction role="menuitem" label="Copy" iconLeftName="copy" @click="args.onClick" />
+          <FzAction role="menuitem" label="Paste" iconLeftName="paste" @click="args.onClick" />
+          <FzAction role="menuitem" label="Delete" iconLeftName="trash" disabled @click="args.onClick" />
         </FzActionList>
       </div>
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify menu role is applied to action list', async () => {
@@ -906,10 +1008,19 @@ export const MenuRole: Story = {
       await expect(deleteItem).toHaveAttribute('aria-disabled', 'true')
     })
 
-    await step('Verify menuitem is clickable', async () => {
+    await step('Verify enabled menuitem click handler IS called', async () => {
       const cutItem = canvas.getByRole('menuitem', { name: /cut/i })
       await userEvent.click(cutItem)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
       await expect(cutItem).toBeVisible()
+    })
+
+    await step('Verify disabled menuitem click handler is NOT called', async () => {
+      const deleteItem = canvas.getByRole('menuitem', { name: /delete/i })
+      await userEvent.click(deleteItem)
+      // ROBUST CHECK: Verify the click spy was NOT called (still at 1 from previous step)
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
     })
   }
 }
