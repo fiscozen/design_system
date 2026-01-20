@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, userEvent, within, waitFor, fn } from '@storybook/test'
 import { vueRouter } from 'storybook-vue3-router'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -283,14 +283,27 @@ export const ClickNavigation: Story = {
           path: '/foo/bar'
         }
       }
-    ]
+    ],
+    onClick: fn()
   },
   decorators: [
     vueRouter(routes, {
       initialRoute: '/foo/bar'
     })
   ],
-  play: async ({ canvasElement, step }) => {
+  render: (args: FzRouterBreadcrumbsProps) => ({
+    setup() {
+      return { args }
+    },
+    components: { page: Page, FzRouterBreadcrumbs: FzRouterBreadcrumbs },
+    template: `
+      <fz-router-breadcrumbs 
+          :breadcrumbs="args.breadcrumbs" />
+      <br/>
+      <router-view />
+    `
+  }),
+  play: async ({ args, canvasElement, step }) => {
     await step('Verify initial route is /foo/bar', async () => {
       // Wait for router to be ready and content to render
       await waitFor(() => {
@@ -305,6 +318,8 @@ export const ClickNavigation: Story = {
       const homeLink = breadcrumbsCanvas.getByRole('link', { name: /home/i })
       await expect(homeLink).toBeInTheDocument()
       
+      // Note: Router navigation happens via router-link, so we verify the link is clickable
+      // The actual navigation is handled by vue-router, not a custom event
       await userEvent.click(homeLink)
       
       // Wait for navigation - check for page content update
@@ -312,6 +327,9 @@ export const ClickNavigation: Story = {
         const pageContent = canvasElement.querySelector('h2')
         expect(pageContent?.textContent).toBeTruthy()
       }, { timeout: ROUTER_READY_TIMEOUT })
+      
+      // Verify link has correct href for navigation
+      await expect(homeLink).toHaveAttribute('href', '#/')
     })
     
     await step('Click on foo breadcrumb to navigate', async () => {
@@ -327,6 +345,9 @@ export const ClickNavigation: Story = {
         const pageContent = canvasElement.querySelector('h2')
         expect(pageContent?.textContent).toBeTruthy()
       }, { timeout: ROUTER_READY_TIMEOUT })
+      
+      // Verify link has correct href for navigation
+      await expect(fooLink).toHaveAttribute('href', '#/foo')
     })
   }
 }

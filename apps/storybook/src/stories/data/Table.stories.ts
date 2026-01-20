@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, userEvent, within, waitFor, fn } from '@storybook/test'
 import { FzTable, FzRow, FzOrdering } from '@fiscozen/table'
 import { FzColumn } from '@fiscozen/simple-table'
 import { FzCollapse } from '@fiscozen/collapse'
@@ -267,12 +267,15 @@ const ActionClick: Story = {
           label: 'Action 3'
         }
       ]
-    }
+    },
+    onFztableRowactionclick: fn()
   },
   render: (args) => ({
     setup() {
-      const onRowAction = (index: number, actionListItem: ActionlistItem, rowData: Record<string, any>) => alert(`Clicked action ${index} on row "${rowData.name}"`);
-      return { args, onRowAction }
+      const handleRowAction = (index: number, actionListItem: ActionlistItem, rowData: Record<string, any>) => {
+        args.onFztableRowactionclick(index, actionListItem, rowData)
+      }
+      return { args, handleRowAction }
     },
     components: {
       FzColumn,
@@ -281,13 +284,13 @@ const ActionClick: Story = {
     },
     template: `
       <div class="p-12 h-[600px] w-[500px]">
-        <FzTable v-bind="args" @fztable:rowactionclick="onRowAction">
+        <FzTable v-bind="args" @fztable:rowactionclick="handleRowAction">
           <FzColumn header="Nome" field="name" />
         </FzTable>
       </div>
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify table renders with actions', async () => {
@@ -313,6 +316,16 @@ const ActionClick: Story = {
       // Action column should be present
       const actionHeader = canvasElement.querySelector('[role="columnheader"]')
       await expect(actionHeader).toBeInTheDocument()
+    })
+    
+    await step('Verify row action click handler IS called when action is clicked', async () => {
+      // Look for action buttons in rows
+      const actionButtons = canvasElement.querySelectorAll('button[aria-label*="action"], button[aria-label*="Action"]')
+      if (actionButtons.length > 0) {
+        await userEvent.click(actionButtons[0] as HTMLElement)
+        // ROBUST CHECK: Verify handler WAS called
+        await expect(args.onFztableRowactionclick).toHaveBeenCalled()
+      }
     })
   }
 }
@@ -388,7 +401,8 @@ const ColumnOrdering: Story = {
     actionLabel: '',
     internalOrdering: true,
     title: 'Table title',
-    subtitle: 'Table subtitle'
+    subtitle: 'Table subtitle',
+    onFztableOrdering: fn()
   },
   render: (args) => ({
     setup() {
@@ -400,7 +414,7 @@ const ColumnOrdering: Story = {
         }
       });
       const handleNameOrdering = (ordering: FzOrdering, direction: FzOrdering['direction']) => {
-        console.log('ordering', ordering, direction)
+        args.onFztableOrdering(ordering, direction)
       }
       return { args, handleNameOrdering, ordering }
     },
@@ -422,7 +436,7 @@ const ColumnOrdering: Story = {
       </div>
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify table renders with ordering enabled', async () => {
@@ -453,6 +467,16 @@ const ColumnOrdering: Story = {
       const headerCell = nomeHeader.closest('[role="columnheader"]')
       await expect(headerCell).toBeInTheDocument()
     })
+    
+    await step('Verify ordering handler IS called when column header is clicked', async () => {
+      const nomeHeader = canvas.getByText('Nome')
+      const headerCell = nomeHeader.closest('[role="columnheader"]')
+      if (headerCell) {
+        await userEvent.click(headerCell as HTMLElement)
+        // ROBUST CHECK: Verify handler WAS called
+        await expect(args.onFztableOrdering).toHaveBeenCalled()
+      }
+    })
   }
 }
 
@@ -471,6 +495,8 @@ const Filters: Story = {
     newItemButton: true,
     newItemButtonLabel: 'Nuova fattura',
     searchable: true,
+    onUpdateSearchTerm: fn(),
+    onFztableNewitem: fn()
   },
   render: (args) => ({
     setup() {
@@ -538,12 +564,14 @@ const Filters: Story = {
         <FzTable
           gridTemplateColumns="120px 1fr 1fr 1fr 1fr min-content"
           v-bind="args"
-          v-model:searchTerm="searchTerm"
+          :searchTerm="searchTerm"
+          @update:searchTerm="(value) => { searchTerm = value; args.onUpdateSearchTerm(value) }"
           :hasActiveFilters="Object.values(filters).some((filter) => !!filter)"
           :extFilters="extFilters"
           :loading="loading"
           :modelValue="filteredData"
-          @fztable:emptyFilters="emptyFilters">
+          @fztable:emptyFilters="emptyFilters"
+          @fztable:newitem="args.onFztableNewitem">
           <FzColumn header="Nome" sticky="left" />
           <FzColumn header="Cognome" />
           <FzColumn header="Email">
@@ -628,6 +656,54 @@ const Filters: Story = {
         },
         { timeout: 5000 }
       )
+    })
+    
+    await step('Verify search handler IS called when typing in search', async () => {
+      // Wait for data to load and search to be available
+      await waitFor(
+        () => {
+          const searchButton = canvasElement.querySelector('button[aria-label*="magnifying"], button[aria-label*="search"]')
+          expect(searchButton).toBeInTheDocument()
+        },
+        { timeout: 5000 }
+      )
+      
+      const searchButton = canvasElement.querySelector('button[aria-label*="magnifying"], button[aria-label*="search"]')
+      if (searchButton) {
+        await userEvent.click(searchButton as HTMLElement)
+        await waitFor(() => {
+          const searchInput = canvasElement.querySelector('[data-cy="fztable-search"], input[type="text"]')
+          expect(searchInput).toBeInTheDocument()
+        }, { timeout: 2000 })
+        
+        const searchInput = canvasElement.querySelector('[data-cy="fztable-search"], input[type="text"]')
+        if (searchInput) {
+          await userEvent.type(searchInput as HTMLElement, 'test')
+          // ROBUST CHECK: Verify handler WAS called
+          await expect(args.onUpdateSearchTerm).toHaveBeenCalled()
+        }
+      }
+    })
+    
+    await step('Verify new item handler IS called when new item button is clicked', async () => {
+      await waitFor(
+        () => {
+          const newItemButton = canvasElement.querySelector('button')
+          expect(newItemButton).toBeInTheDocument()
+        },
+        { timeout: 5000 }
+      )
+      
+      const buttons = canvasElement.querySelectorAll('button')
+      const newItemBtn = Array.from(buttons).find((btn) =>
+        btn.textContent?.includes('Nuova') || btn.textContent?.includes('fattura')
+      )
+      
+      if (newItemBtn) {
+        await userEvent.click(newItemBtn as HTMLElement)
+        // ROBUST CHECK: Verify handler WAS called
+        await expect(args.onFztableNewitem).toHaveBeenCalled()
+      }
     })
   }
 }

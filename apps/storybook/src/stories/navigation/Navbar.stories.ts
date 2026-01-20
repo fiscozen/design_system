@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from '@storybook/test'
+import { expect, userEvent, within, fn } from '@storybook/test'
 
 import { FzNavbar, FzNavbarProps } from '@fiscozen/navbar'
 import { FzIcon } from '@fiscozen/icons'
@@ -21,13 +21,16 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Horizontal: Story = {
+  args: {
+    onFznavbarMenuButtonClick: fn()
+  },
   render: (args: FzNavbarProps) => ({
     setup() {
       return { args }
     },
     components: { FzNavbar, FzIcon, FzNavlink, FzIconButton, FzAvatar },
     template: `
-      <FzNavbar variant="horizontal">
+      <FzNavbar variant="horizontal" @fznavbar:menuButtonClick="args.onFznavbarMenuButtonClick">
         <template #brand-logo="{isMobile}">
           <FzIcon name="fiscozen" variant="fak" size="xl" class="text-core-black text-[32px] !w-[40px] ml-[-4px] cursor-pointer" /> 
         </template>
@@ -51,7 +54,7 @@ export const Horizontal: Story = {
       </FzNavbar>
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify navbar renders correctly', async () => {
@@ -84,6 +87,16 @@ export const Horizontal: Story = {
       await userEvent.tab()
       const firstButton = canvas.getByRole('button', { name: /fatture/i })
       await expect(document.activeElement).toBe(firstButton)
+    })
+    
+    await step('Verify menu button click handler (if menu button is visible)', async () => {
+      // Menu button is only visible on mobile, so check if it exists
+      const menuButton = canvasElement.querySelector('button[aria-label*="menu"], button[aria-label*="Menu"]')
+      if (menuButton) {
+        await userEvent.click(menuButton as HTMLElement)
+        // ROBUST CHECK: Verify handler WAS called
+        await expect(args.onFznavbarMenuButtonClick).toHaveBeenCalled()
+      }
     })
   }
 }

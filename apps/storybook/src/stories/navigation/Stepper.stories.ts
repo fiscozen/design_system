@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, userEvent, within, waitFor, fn } from '@storybook/test'
 import { FzStepper } from '@fiscozen/stepper'
 import { ref } from 'vue'
 
@@ -155,27 +155,33 @@ export { Default, NoProgress }
 export const StepNavigation: Story = {
   args: {
     steps,
+    'onUpdate:activeStep': fn()
   },
   decorators: [() => ({ template: '<div style="padding:20px;" class="h-screen"><story/></div>' })],
   render: (args) => ({
     components: { FzStepper },
     setup() {
       const activeStep = ref(0)
+      const handleUpdate = (value: number) => {
+        activeStep.value = value
+        args['onUpdate:activeStep'](value)
+      }
       return {
         args,
-        activeStep
+        activeStep,
+        handleUpdate
       }
     },
     template: `
       <div class="w-full flex flex-col items-center">
-        <FzStepper v-bind="args" v-model:activeStep="activeStep" />
+        <FzStepper v-bind="args" :activeStep="activeStep" @update:activeStep="handleUpdate" />
         <div class="w-full mt-16 bg-gray-100 p-4 rounded h-[200px] flex items-center justify-center" data-testid="active-step-display">
           current active step is {{activeStep + 1}}
         </div>
       </div> 
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify initial state - Step 1 is active', async () => {
@@ -191,6 +197,9 @@ export const StepNavigation: Story = {
         const activeStepDisplay = canvas.getByTestId('active-step-display')
         expect(activeStepDisplay).toHaveTextContent('current active step is 2')
       }, { timeout: 1000 })
+      
+      // ROBUST CHECK: Verify handler WAS called
+      await expect(args['onUpdate:activeStep']).toHaveBeenCalledWith(1)
     })
 
     await step('Click on Step 3 to navigate', async () => {
@@ -228,27 +237,33 @@ export const StepNavigation: Story = {
 export const DisabledStepBehavior: Story = {
   args: {
     steps,
+    'onUpdate:activeStep': fn()
   },
   decorators: [() => ({ template: '<div style="padding:20px;" class="h-screen"><story/></div>' })],
   render: (args) => ({
     components: { FzStepper },
     setup() {
       const activeStep = ref(0)
+      const handleUpdate = (value: number) => {
+        activeStep.value = value
+        args['onUpdate:activeStep'](value)
+      }
       return {
         args,
-        activeStep
+        activeStep,
+        handleUpdate
       }
     },
     template: `
       <div class="w-full flex flex-col items-center">
-        <FzStepper v-bind="args" v-model:activeStep="activeStep" />
+        <FzStepper v-bind="args" :activeStep="activeStep" @update:activeStep="handleUpdate" />
         <div class="w-full mt-16 bg-gray-100 p-4 rounded h-[200px] flex items-center justify-center" data-testid="active-step-display">
           current active step is {{activeStep + 1}}
         </div>
       </div> 
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify initial state - Step 1 is active', async () => {
@@ -271,6 +286,9 @@ export const DisabledStepBehavior: Story = {
       // Verify initial state
       await expect(activeStepDisplay).toHaveTextContent(/current active step is 1/)
       
+      // Clear any previous calls
+      args['onUpdate:activeStep'].mockClear()
+      
       await userEvent.click(disabledStep)
       
       // Wait a short time to ensure no state change occurred
@@ -278,11 +296,17 @@ export const DisabledStepBehavior: Story = {
       
       // Verify the active step is still 1 (hasn't changed)
       await expect(activeStepDisplay).toHaveTextContent(/current active step is 1/)
+      
+      // ROBUST CHECK: Verify handler was NOT called for disabled step
+      await expect(args['onUpdate:activeStep']).not.toHaveBeenCalled()
     })
 
     await step('Click on current Step 1 - should not change active step', async () => {
       const stepElements = canvasElement.querySelectorAll('.fz-stepper__step')
       const currentStep = stepElements[0] as HTMLElement
+      
+      // Clear any previous calls
+      args['onUpdate:activeStep'].mockClear()
       
       await userEvent.click(currentStep)
       
@@ -291,6 +315,9 @@ export const DisabledStepBehavior: Story = {
       
       const activeStepDisplay = canvas.getByTestId('active-step-display')
       await expect(activeStepDisplay).toHaveTextContent('current active step is 1')
+      
+      // ROBUST CHECK: Verify handler was NOT called when clicking current step
+      await expect(args['onUpdate:activeStep']).not.toHaveBeenCalled()
     })
   }
 }
