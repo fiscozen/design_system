@@ -2371,7 +2371,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | overlay/Dialog.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | overlay/ConfirmDialog.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | messages/Alert.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| messages/Toast.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
+| messages/Toast.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | messages/ToastQueue.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
 
 ### 7.2 Checklist for Each Story Enhancement
@@ -2418,6 +2418,7 @@ For each story file listed above:
 | form/Upload.stories.ts | ✅ Complete |
 | button/IconButton.stories.ts | ✅ Complete |
 | messages/Alert.stories.ts | ✅ Complete |
+| messages/Toast.stories.ts | ✅ Complete |
 
 ### 7.5 Verification Script
 
@@ -2524,6 +2525,19 @@ export const MyStory: Story = {
 - Updated plan to mark Select as complete for event tests
 - Note: Component does not emit `search` event (only emits `fzselect:select`, `fzselect:clear`, `fzselect:right-icon-click`, and `update:modelValue` for v-model)
 - Phase 3 (Unit Test Quality Improvements) progress: Select event tests verified complete
+
+### January 20, 2026 - Toast Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `toast` (Storybook)
+- Added spy function pattern to Toast.stories.ts for robust interaction testing
+- Enhanced Warning story with `onClose` spy to verify close button click handler IS called
+- Enhanced Error story with `onClose` spy to verify close button click handler IS called
+- Enhanced Dismiss story with `onClose` spy to verify close button click handler IS called when dismissing toast
+- Enhanced KeyboardNavigation story with `onClose` spy to verify handlers ARE called on Enter and Space key activation
+- Fixed Dismiss story to prevent double-calling spy by excluding `onClose` from `v-bind` and only calling it in `@close` handler
+- All play functions test user interactions and verify handlers are called using `toHaveBeenCalledTimes()` assertions
+- All tests passing: 7 storybook play function tests (verified with `pnpm test:storybook --run Toast`)
+- Phase 7 (Spy Function Pattern Refactor) progress: Toast.stories.ts completed
 
 ### January 20, 2026 - IconButton Spy Function Pattern Enhancement ✅
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
 import { FzToast } from '@fiscozen/toast'
 import { ref } from 'vue'
 
@@ -54,9 +54,10 @@ const Success: Story = {
 
 const Warning: Story = {
   args: {
-    type: 'warning'
+    type: 'warning',
+    onClose: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify warning toast renders correctly', async () => {
@@ -80,14 +81,25 @@ const Warning: Story = {
       const icon = canvasElement.querySelector('.fa-triangle-exclamation')
       await expect(icon).toBeInTheDocument()
     })
+    
+    await step('Click close button and verify onClose handler IS called', async () => {
+      const closeButton = canvasElement.querySelector('button')
+      await expect(closeButton).toBeInTheDocument()
+      
+      await userEvent.click(closeButton!)
+      
+      // ROBUST CHECK: Verify the onClose spy WAS called
+      await expect(args.onClose).toHaveBeenCalledTimes(1)
+    })
   }
 }
 
 const Error: Story = {
   args: {
-    type: 'error'
+    type: 'error',
+    onClose: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify error toast renders correctly', async () => {
@@ -111,6 +123,16 @@ const Error: Story = {
       const icon = canvasElement.querySelector('.fa-circle-xmark')
       await expect(icon).toBeInTheDocument()
     })
+    
+    await step('Click close button and verify onClose handler IS called', async () => {
+      const closeButton = canvasElement.querySelector('button')
+      await expect(closeButton).toBeInTheDocument()
+      
+      await userEvent.click(closeButton!)
+      
+      // ROBUST CHECK: Verify the onClose spy WAS called
+      await expect(args.onClose).toHaveBeenCalledTimes(1)
+    })
   }
 }
 
@@ -119,23 +141,33 @@ const Dismiss: Story = {
     components: { FzToast },
     setup() {
       const isVisible = ref(true)
+      // Destructure to exclude onClose from v-bind
+      const { onClose, ...toastProps } = args
+      const handleClose = () => {
+        isVisible.value = false
+        if (onClose) {
+          onClose()
+        }
+      }
       return {
         isVisible,
-        args
+        toastProps,
+        handleClose
       }
     },
     template: `
       <div class="p-12">
-        <FzToast v-if="isVisible" v-bind="args" @close="isVisible = false">
+        <FzToast v-if="isVisible" v-bind="toastProps" @close="handleClose">
           This toast can be dismissed.
         </FzToast>
       </div>
     `
   }),
   args: {
-    type: 'warning'
+    type: 'warning',
+    onClose: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify toast is visible initially', async () => {
@@ -144,11 +176,14 @@ const Dismiss: Story = {
       await expect(toast).toBeVisible()
     })
     
-    await step('Click close button to dismiss toast', async () => {
+    await step('Click close button to dismiss toast and verify onClose handler IS called', async () => {
       const closeButton = canvasElement.querySelector('button')
       await expect(closeButton).toBeInTheDocument()
       
       await userEvent.click(closeButton!)
+      
+      // ROBUST CHECK: Verify the onClose spy WAS called exactly once
+      await expect(args.onClose).toHaveBeenCalledTimes(1)
       
       // Wait for toast to be removed
       await waitFor(() => {
@@ -172,16 +207,17 @@ const KeyboardNavigation: Story = {
     },
     template: `
       <div class="p-12">
-        <FzToast v-bind="args">
+        <FzToast v-bind="args" @close="args.onClose">
           This toast supports keyboard navigation.
         </FzToast>
       </div>
     `
   }),
   args: {
-    type: 'warning'
+    type: 'warning',
+    onClose: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify toast is visible', async () => {
@@ -199,26 +235,29 @@ const KeyboardNavigation: Story = {
       await expect(document.activeElement).toBe(closeButton)
     })
     
-    await step('Activate close button with Enter key', async () => {
+    await step('Activate close button with Enter key and verify onClose handler IS called', async () => {
       const closeButton = canvasElement.querySelector('button') as HTMLElement
       closeButton.focus()
       await expect(document.activeElement).toBe(closeButton)
       
       await userEvent.keyboard('{Enter}')
-      // Note: In this test, the toast won't actually dismiss since we're not managing state
-      // But we verify the button is keyboard accessible
-      await expect(closeButton).toBeInTheDocument()
+      
+      // ROBUST CHECK: Verify the onClose spy WAS called when Enter key is pressed
+      await expect(args.onClose).toHaveBeenCalledTimes(1)
     })
     
-    await step('Activate close button with Space key', async () => {
+    await step('Reset spy and activate close button with Space key and verify onClose handler IS called', async () => {
+      // Reset the spy for the next test
+      args.onClose.mockClear()
+      
       const closeButton = canvasElement.querySelector('button') as HTMLElement
       closeButton.focus()
       await expect(document.activeElement).toBe(closeButton)
       
       await userEvent.keyboard(' ')
-      // Note: In this test, the toast won't actually dismiss since we're not managing state
-      // But we verify the button is keyboard accessible
-      await expect(closeButton).toBeInTheDocument()
+      
+      // ROBUST CHECK: Verify the onClose spy WAS called when Space key is pressed
+      await expect(args.onClose).toHaveBeenCalledTimes(1)
     })
   }
 }
