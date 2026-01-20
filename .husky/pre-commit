@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Run affected tests before committing
+# This ensures that changes don't break existing functionality
+
+echo "🧪 Running affected tests..."
+npx nx affected -t test:unit --base=HEAD~1
+
+# Exit with the test result
+exit $?
+

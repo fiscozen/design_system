@@ -5,14 +5,18 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "nx run-many --target=test:unit",
+    "test:unit": "nx run-many --target=test:unit",
+    "test:coverage": "nx run-many --target=test:unit -- --coverage",
+    "test:affected": "nx affected -t test:unit",
     "build": "nx run-many --target=build",
     "storybook": "nx run @fiscozen/storybook:storybook",
     "generate:component": "plop component",
     "test:storybook": "cd apps/storybook && pnpm test:storybook",
     "test:storybook:watch": "cd apps/storybook && pnpm test:storybook:watch",
     "test:storybook:coverage": "cd apps/storybook && pnpm test:storybook:coverage",
-    "test:storybook:ui": "cd apps/storybook && pnpm test:storybook --ui"
+    "test:storybook:ui": "cd apps/storybook && pnpm test:storybook --ui",
+    "prepare": "husky"
   },
   "engines": {
     "pnpm": "^10",
@@ -22,6 +26,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "husky": "^9.1.7",
     "nx": "20.7.1",
     "plop": "^4.0.1",
     "vitest": "^1.0.4"
