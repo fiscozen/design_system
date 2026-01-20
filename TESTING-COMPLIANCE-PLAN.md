@@ -2353,7 +2353,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | form/Typeahead.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Radio.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/RadioCard.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| form/RadioGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/RadioGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/CheckboxGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | form/Textarea.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | form/Datepicker.stories.ts | ✅ Has disabled | ✅ Has interactions | 1.5 |
@@ -2546,4 +2546,16 @@ export const MyStory: Story = {
 - All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
 - All tests passing: 18 storybook play function tests (Vertical, Horizontal, Disabled, Focused, KeyboardNavigation, and all variant stories)
 - Phase 7 (Spy Function Pattern Refactor) progress: RadioCard.stories.ts completed
+
+### January 20, 2026 - RadioGroup Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `radio` (Storybook)
+- Added spy function pattern to RadioGroup.stories.ts for robust interaction testing
+- Enhanced Template to use `:modelValue` and `@update:modelValue` instead of `v-model` to avoid double-calling spy
+- Enhanced Medium story with `onUpdate:modelValue` spy to verify click interactions
+- Enhanced Disabled story with spy to verify update:modelValue is NOT called when disabled
+- Added KeyboardNavigation story with spy function pattern for Arrow key navigation and Space key activation
+- All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
+- All tests passing: 17 storybook play function tests (Medium, Disabled, KeyboardNavigation, and all variant stories)
+- Phase 7 (Spy Function Pattern Refactor) progress: RadioGroup.stories.ts completed
 

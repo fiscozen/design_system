@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadioGroup, FzRadio, FzRadioCard } from '@fiscozen/radio'
 import { FzIcon } from '@fiscozen/icons'
-import { expect, within, userEvent } from '@storybook/test'
+import { expect, fn, within, userEvent } from '@storybook/test'
 const checker = 'consultant.jpg'
 
 const meta = {
@@ -40,11 +40,19 @@ const Template: RadioGroupStory = {
   render: (args) => ({
     components: { FzRadioGroup, FzRadio, FzRadioCard, FzIcon },
     setup() {
-      const selected = ref('option2')
+      const { modelValue: initialValue, 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
+      const selected = ref(initialValue ?? 'option2')
+      const handleUpdate = (value: string) => {
+        selected.value = value
+        if (onUpdateModelValue) {
+          onUpdateModelValue(value)
+        }
+      }
 
       return {
-        args,
-        selected
+        restArgs,
+        selected,
+        handleUpdate
       }
     },
     watch: {
@@ -55,11 +63,12 @@ const Template: RadioGroupStory = {
         }
       }
     },
-    template: `<FzRadioGroup v-bind="args" >
+    // Use :modelValue and @update:modelValue instead of v-model to avoid double-calling spy
+    template: `<FzRadioGroup v-bind="restArgs" >
                     <template v-slot="{radioGroupProps}"> 
-                        <FzRadio label="Option 1" value="option1" v-model="selected" v-bind="radioGroupProps"/>
-                        <FzRadio label="Option 2" value="option2" v-model="selected" v-bind="radioGroupProps"/>
-                        <FzRadio label="Option 3" value="option3" v-model="selected" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 1" value="option1" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 2" value="option2" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 3" value="option3" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="radioGroupProps"/>
                     </template>
                     
                 </FzRadioGroup>`
@@ -72,21 +81,34 @@ const Template: RadioGroupStory = {
 export const Medium: RadioGroupStory = {
   ...Template,
   args: {
-    label: 'Radio Group Medium'
+    label: 'Radio Group Medium',
+    modelValue: 'option2',
+    // 👇 Use fn() to spy on update:modelValue - accessible via args in play function
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const group = canvas.getByRole('radiogroup')
-    await expect(group).toBeInTheDocument()
+    
+    await step('Verify radio group renders correctly', async () => {
+      const group = canvas.getByRole('radiogroup')
+      await expect(group).toBeInTheDocument()
 
-    const radios = canvas.getAllByRole('radio')
-    await expect(radios.length).toBe(3)
-
-    await expect(radios[1]).toBeChecked()
-
-    await userEvent.click(radios[0])
-    await expect(radios[0]).toBeChecked()
-    await expect(radios[1]).not.toBeChecked()
+      const radios = canvas.getAllByRole('radio')
+      await expect(radios.length).toBe(3)
+      await expect(radios[1]).toBeChecked()
+    })
+    
+    await step('Click first radio and verify update:modelValue IS called', async () => {
+      const radios = canvas.getAllByRole('radio')
+      
+      await userEvent.click(radios[0])
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called with the new value
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(1)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith('option1')
+      await expect(radios[0]).toBeChecked()
+      await expect(radios[1]).not.toBeChecked()
+    })
   }
 }
 
@@ -234,7 +256,41 @@ export const Disabled: RadioGroupStory = {
   ...Template,
   args: {
     label: 'Radio Group',
-    disabled: true
+    disabled: true,
+    modelValue: 'option2',
+    // 👇 Define spy in args - it should NOT be called when disabled
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify disabled state', async () => {
+      const group = canvas.getByRole('radiogroup')
+      await expect(group).toBeInTheDocument()
+      
+      const radios = canvas.getAllByRole('radio')
+      await expect(radios.length).toBe(3)
+      
+      // All radios should be disabled
+      for (const radio of radios) {
+        await expect(radio).toBeDisabled()
+        await expect(radio).toHaveAttribute('aria-disabled', 'true')
+      }
+    })
+    
+    await step('Verify click handler is NOT called when clicking disabled radio', async () => {
+      const radios = canvas.getAllByRole('radio')
+      
+      // Try clicking the first radio (should not trigger update)
+      await userEvent.click(radios[0])
+      
+      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+      
+      // Verify the selection didn't change (still option2)
+      await expect(radios[1]).toBeChecked()
+      await expect(radios[0]).not.toBeChecked()
+    })
   }
 }
 
@@ -444,5 +500,92 @@ export const HorizontalWithTooltips: RadioGroupStory = {
   args: {
     label: 'Radio Group Horizontal with Tooltips',
     variant: 'horizontal'
+  }
+}
+
+export const KeyboardNavigation: RadioGroupStory = {
+  render: (args) => ({
+    components: { FzRadioGroup, FzRadio, FzRadioCard, FzIcon },
+    setup() {
+      const { modelValue: initialValue, 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
+      const selected = ref(initialValue ?? 'option2')
+      const handleUpdate = (value: string) => {
+        selected.value = value
+        if (onUpdateModelValue) {
+          onUpdateModelValue(value)
+        }
+      }
+
+      return {
+        restArgs,
+        selected,
+        handleUpdate
+      }
+    },
+    // Use :modelValue and @update:modelValue instead of v-model to avoid double-calling spy
+    template: `<FzRadioGroup v-bind="restArgs" >
+                    <template v-slot="{radioGroupProps}"> 
+                        <FzRadio label="Option 1" value="option1" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 2" value="option2" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="radioGroupProps"/>
+                        <FzRadio label="Option 3" value="option3" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="radioGroupProps"/>
+                    </template>
+                    
+                </FzRadioGroup>`
+  }),
+  args: {
+    label: 'Radio Group',
+    modelValue: 'option2',
+    // 👇 Use fn() to spy on update:modelValue - accessible via args in play function
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Focus checked radio', async () => {
+      const radios = canvas.getAllByRole('radio')
+      // Focus the checked radio (option2, which is radios[1])
+      radios[1].focus()
+      await expect(document.activeElement).toBe(radios[1])
+      await expect(radios[1]).toBeChecked()
+    })
+    
+    await step('Navigate to first radio with Arrow Up (arrow keys auto-select)', async () => {
+      const radios = canvas.getAllByRole('radio')
+      
+      // Arrow up should move to previous radio (option1) and automatically select it
+      await userEvent.keyboard('{ArrowUp}')
+      await expect(document.activeElement).toBe(radios[0])
+      
+      // ROBUST CHECK: Arrow keys in radio groups automatically select, verify spy was called with correct value
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith('option1')
+      await expect(radios[0]).toBeChecked()
+      await expect(radios[1]).not.toBeChecked()
+    })
+    
+    await step('Navigate with Arrow Down (arrow keys auto-select)', async () => {
+      const radios = canvas.getAllByRole('radio')
+      
+      // Arrow down should move to next radio (option2) and automatically select it
+      await userEvent.keyboard('{ArrowDown}')
+      await expect(document.activeElement).toBe(radios[1])
+      
+      // ROBUST CHECK: Arrow keys automatically select, verify spy was called with correct value
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith('option2')
+      await expect(radios[1]).toBeChecked()
+      await expect(radios[0]).not.toBeChecked()
+    })
+    
+    await step('Activate with Space key (should not change selection)', async () => {
+      const radios = canvas.getAllByRole('radio')
+      const lastCallCount = args['onUpdate:modelValue'].mock.calls.length
+      
+      // Space on already-selected radio should not trigger another update
+      await userEvent.keyboard(' ')
+      
+      // ROBUST CHECK: Space on already-selected radio should not call spy again
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(lastCallCount)
+      await expect(radios[1]).toBeChecked()
+    })
   }
 }
