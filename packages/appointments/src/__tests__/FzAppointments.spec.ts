@@ -98,7 +98,7 @@ describe("FzAppointments", () => {
 
       await wrapper.vm.$nextTick();
       // Wait a bit for computed values to update
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      vi.advanceTimersByTime(100);
       const radioGroup = wrapper.findComponent({ name: "FzRadioGroup" });
       // May show alert if no slots available, which is valid behavior
       expect(wrapper.exists()).toBe(true);
@@ -134,7 +134,7 @@ describe("FzAppointments", () => {
         });
 
         await wrapper.vm.$nextTick();
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        vi.advanceTimersByTime(100);
         const radioCards = wrapper.findAllComponents({ name: "FzRadioCard" });
         // Slots are filtered based on date/time logic, so may be less than requested
         expect(radioCards.length).toBeGreaterThanOrEqual(0);
@@ -196,7 +196,7 @@ describe("FzAppointments", () => {
         });
 
         await wrapper.vm.$nextTick();
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        vi.advanceTimersByTime(100);
         // Check if slots are rendered (may show alert if no slots available)
         const hasSlots = wrapper.findComponent({ name: "FzRadioGroup" }).exists();
         const hasAlert = wrapper.findComponent({ name: "FzAlert" }).exists();
@@ -462,7 +462,7 @@ describe("FzAppointments", () => {
         });
 
         await wrapper.vm.$nextTick();
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        vi.advanceTimersByTime(100);
         // Component should render (may show alert if no slots available)
         expect(wrapper.exists()).toBe(true);
       });
@@ -934,7 +934,7 @@ describe("FzAppointments", () => {
       });
 
       await wrapper.vm.$nextTick();
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      vi.advanceTimersByTime(100);
       expect(wrapper.html()).toMatchSnapshot();
     });
 
@@ -962,7 +962,7 @@ describe("FzAppointments", () => {
       });
 
       await wrapper.vm.$nextTick();
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      vi.advanceTimersByTime(100);
       expect(wrapper.html()).toMatchSnapshot();
     });
 
@@ -978,7 +978,7 @@ describe("FzAppointments", () => {
       });
 
       await wrapper.vm.$nextTick();
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      vi.advanceTimersByTime(100);
       expect(wrapper.html()).toMatchSnapshot();
     });
 
@@ -996,7 +996,7 @@ describe("FzAppointments", () => {
       });
 
       await wrapper.vm.$nextTick();
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      vi.advanceTimersByTime(100);
       expect(wrapper.html()).toMatchSnapshot();
     });
   });
