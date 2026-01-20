@@ -912,7 +912,7 @@ describe('Accessibility', () => {
 | dropdown | ~~`open`, `close`, `select`~~ | ✅ **COMPLETED** |
 | select | ~~`update:modelValue`~~ | ✅ **COMPLETED** - Note: Component does not emit `search` event (only emits `fzselect:select`, `fzselect:clear`, `fzselect:right-icon-click`) |
 | tab | ~~`change`~~ | ✅ **COMPLETED** - Note: Component emits `change` event (not `tab-change`). Comprehensive event tests added including mount event, multiple tab switching, disabled tab handling, and event payload verification |
-| toast | `dismiss` |
+| toast | ~~`close`~~ | ✅ **COMPLETED** - Note: Component emits `close` event (not `dismiss`). Comprehensive event tests added including close button click for warning/error types and verification that success type doesn't have close button |
 | typeahead | ~~`update:modelValue`, `fztypeahead:select`~~ | ✅ **COMPLETED** - Note: Component does not emit `search` event (search is handled internally, no event emitted) |
 | upload | ~~`fzupload:change`, `fzupload:add`, `fzupload:delete`, `fzupload:file-limit-exceeded`~~ | ✅ **COMPLETED** |
 
@@ -2855,6 +2855,20 @@ export const MyStory: Story = {
 - All 11 ConfirmDialog story tests passing ✅ (verified with `pnpm test:storybook --run ConfirmDialog`)
 - All 54 unit tests passing ✅ (verified with `pnpm test:unit` in packages/dialog)
 - Phase 7 (Spy Function Pattern Refactor) progress: ConfirmDialog.stories.ts completed
+
+### January 20, 2026 - Toast Event Tests Verification ✅
+
+**Package:** `toast` (Unit Tests)
+- Verified comprehensive event test coverage for Toast component
+- Component emits `close` event (not `dismiss`) which is fully tested with multiple test cases
+- Event tests include:
+  - Close button click emits `close` event for warning type
+  - Close button click emits `close` event for error type
+  - Success type doesn't have close button (no event emission)
+- All unit tests passing (verified with `pnpm --filter @fiscozen/toast test`)
+- Updated plan to mark Toast as complete for event tests
+- Note: Component emits `close` event (not `dismiss` as originally listed in plan)
+- Phase 3 (Unit Test Quality Improvements) progress: Toast event tests verified complete
 
 ### January 20, 2026 - ToastQueue Stories Spy Function Pattern Enhancement ✅
 
