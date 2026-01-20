@@ -1817,6 +1817,7 @@ Ensure root `package.json` has:
 - [x] Button.stories.ts uses spy function pattern
 - [x] Navlink.stories.ts uses spy function pattern
 - [x] Checkbox.stories.ts uses spy function pattern
+- [x] Card.stories.ts uses spy function pattern ✅ **COMPLETED**
 - [ ] All form component stories use spy functions for v-model events
 - [ ] All interactive component stories use spy functions for click events
 - [ ] All disabled state stories verify handlers are NOT called
@@ -2619,6 +2620,24 @@ export const MyStory: Story = {
 - All play functions test user interactions and verify handlers are called (or NOT called for disabled buttons)
 - All tests passing: 5 storybook play function tests (Default, Navigation, WithSubitems, Disabled, KeyboardNavigation)
 - Phase 7 (Spy Function Pattern Refactor) progress: Navlist.stories.ts completed
+
+### January 20, 2026 - Card Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `card` (Storybook)
+- Added spy function pattern to Card.stories.ts for robust interaction testing
+- Updated Template to support `onFzprimaryClick`, `onFzsecondaryClick`, `onFztertiaryClick`, and `onFzcardClickInfo` spy functions from args
+- Enhanced CardWithActions story to verify all three action button handlers are called when clicked
+- Enhanced CardWithSecondaryActionOnly story to verify secondary action handler is called
+- Enhanced CardWithPrimaryAndSecondary story to verify both primary and secondary handlers are called
+- Enhanced CardWithInfoIcon story to verify info icon click handler is called
+- Enhanced CardDefault story with play function and spy verification
+- Enhanced CardWithLongTitle story with spy verification for primary action and info icon clicks
+- Enhanced StdCard story with spy verification for action buttons
+- Added KeyboardNavigation story with comprehensive keyboard accessibility tests (Enter/Space key activation)
+- All play functions now use `fn()` spies from `@storybook/test` for robust verification
+- Fixed spy instance sharing issues by creating separate spy instances for each story
+- All 19 Card story tests passing ✅
+- Phase 7 (Spy Function Pattern Refactor) progress: 7 of 26 stories completed
 
 ### January 20, 2026 - RadioCard Stories Spy Function Pattern Enhancement ✅
 
