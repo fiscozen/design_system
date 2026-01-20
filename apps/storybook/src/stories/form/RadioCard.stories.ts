@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadioCard } from '@fiscozen/radio'
 import { ref } from 'vue'
-import { expect, within, userEvent } from '@storybook/test'
+import { expect, fn, within, userEvent } from '@storybook/test'
 
 const checkrimg = 'consultant.jpg'
 const radioModel = ref('')
@@ -51,11 +51,22 @@ const Template: RadioCardStory = {
   render: (args) => ({
     components: { FzRadioCard },
     setup() {
+      const { modelValue: initialValue, 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
+      const modelValue = ref(initialValue)
+      const handleUpdate = (value: string) => {
+        modelValue.value = value
+        if (onUpdateModelValue) {
+          onUpdateModelValue(value)
+        }
+      }
       return {
-        args
+        restArgs,
+        modelValue,
+        handleUpdate
       }
     },
-    template: `<FzRadioCard v-bind="args" v-model="args.modelValue" />`
+    // Use :modelValue and @update:modelValue instead of v-model to avoid double-calling
+    template: `<FzRadioCard v-bind="restArgs" :modelValue="modelValue" @update:modelValue="handleUpdate" />`
   }),
   args: {
     label: 'Radio',
@@ -77,20 +88,35 @@ export const Vertical: RadioCardStory = {
     subtitle: 'This is a Radioccard label',
     tooltip: 'this is a tooltip',
     value: 'test1',
-    modelValue: radioModel.value
+    modelValue: radioModel.value,
+    // 👇 Use fn() to spy on update:modelValue - accessible via args in play function
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const radio = canvas.getByRole('radio')
-    await expect(radio).toBeInTheDocument()
-    await expect(canvas.getByText('RadioCard')).toBeInTheDocument()
-    await expect(canvas.getByText('This is a Radioccard label')).toBeInTheDocument()
+    
+    await step('Verify radio card renders correctly', async () => {
+      const radio = canvas.getByRole('radio')
+      await expect(radio).toBeInTheDocument()
+      await expect(radio).not.toBeChecked()
+      await expect(canvas.getByText('RadioCard')).toBeInTheDocument()
+      await expect(canvas.getByText('This is a Radioccard label')).toBeInTheDocument()
 
-    const label = canvas.getByText('RadioCard').closest('label')
-    await expect(label).toHaveClass('flex-col')
-
-    await userEvent.click(label!)
-    await expect(radio).toBeChecked()
+      const label = canvas.getByText('RadioCard').closest('label')
+      await expect(label).toHaveClass('flex-col')
+    })
+    
+    await step('Click label and verify update:modelValue IS called', async () => {
+      const radio = canvas.getByRole('radio')
+      const label = canvas.getByText('RadioCard').closest('label')
+      
+      await userEvent.click(label!)
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called with the value
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(1)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith('test1')
+      await expect(radio).toBeChecked()
+    })
   }
 }
 
@@ -104,18 +130,33 @@ export const Horizontal: RadioCardStory = {
     imageUrl: checkrimg,
     subtitle: 'This is a Radioccard label',
     tooltip: 'this is a tooltip',
-    value: 'test2'
+    value: 'test2',
+    // 👇 Use fn() to spy on update:modelValue - accessible via args in play function
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const radio = canvas.getByRole('radio')
-    await expect(radio).toBeInTheDocument()
+    
+    await step('Verify radio card renders correctly', async () => {
+      const radio = canvas.getByRole('radio')
+      await expect(radio).toBeInTheDocument()
+      await expect(radio).not.toBeChecked()
 
-    const label = canvas.getByText('RadioCard').closest('label')
-    await expect(label).toHaveClass('flex-row')
-
-    await userEvent.click(label!)
-    await expect(radio).toBeChecked()
+      const label = canvas.getByText('RadioCard').closest('label')
+      await expect(label).toHaveClass('flex-row')
+    })
+    
+    await step('Click label and verify update:modelValue IS called', async () => {
+      const radio = canvas.getByRole('radio')
+      const label = canvas.getByText('RadioCard').closest('label')
+      
+      await userEvent.click(label!)
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called with the value
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(1)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith('test2')
+      await expect(radio).toBeChecked()
+    })
   }
 }
 
@@ -320,6 +361,29 @@ export const Disabled: RadioCardStory = {
     subtitle: 'This is a Radioccard label',
     value: 'test20',
     disabled: true,
+    // 👇 Use fn() to spy on update:modelValue - should NOT be called when disabled
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify disabled state attributes', async () => {
+      const radio = canvas.getByRole('radio')
+      await expect(radio).toBeDisabled()
+      await expect(radio).not.toBeChecked()
+      // Note: RadioCard uses native disabled attribute (no aria-disabled)
+    })
+    
+    await step('Verify update:modelValue is NOT called when clicking disabled radio card', async () => {
+      const radio = canvas.getByRole('radio')
+      
+      // Click directly on the radio input (not the label) to match Radio.stories.ts behavior
+      await userEvent.click(radio)
+      
+      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+      // Note: If this fails, it may indicate that RadioCard emits events even when disabled
+      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+    })
   }
 }
 
@@ -330,13 +394,56 @@ export const Focused: RadioCardStory = {
     label: 'Radio',
     orientation: 'horizontal',
     title: 'RadioCard',
-    subtitle: 'This is a Radioccard label'
+    subtitle: 'This is a Radioccard label',
+    value: 'test21',
+    // 👇 Use fn() to spy on update:modelValue - accessible via args in play function
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const radio = canvas.getByRole('radio')
-    await expect(radio).toBeInTheDocument()
+    
+    await step('Tab to focus radio card', async () => {
+      const radio = canvas.getByRole('radio')
+      await expect(radio).toBeInTheDocument()
+      
+      await userEvent.tab()
+      await expect(document.activeElement).toBe(radio)
+    })
+  }
+}
 
-    await userEvent.tab()
+export const KeyboardNavigation: RadioCardStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Radio',
+    orientation: 'horizontal',
+    title: 'RadioCard',
+    subtitle: 'This is a Radioccard label',
+    value: 'test22',
+    // 👇 Use fn() to spy on update:modelValue - accessible via args in play function
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Tab to focus radio card', async () => {
+      const radio = canvas.getByRole('radio')
+      await expect(radio).toBeInTheDocument()
+      
+      await userEvent.tab()
+      await expect(document.activeElement).toBe(radio)
+    })
+    
+    await step('Activate with Space key and verify handler IS called', async () => {
+      const radio = canvas.getByRole('radio')
+      
+      await userEvent.keyboard(' ')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called with the value
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(1)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith('test22')
+      await expect(radio).toBeChecked()
+    })
   }
 }

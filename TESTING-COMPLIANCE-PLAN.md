@@ -2352,7 +2352,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | form/Select.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Typeahead.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/Radio.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| form/RadioCard.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| form/RadioCard.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | form/RadioGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | form/CheckboxGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | form/Textarea.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
@@ -2410,6 +2410,7 @@ For each story file listed above:
 | form/CurrencyInput.stories.ts | ✅ Complete |
 | form/Select.stories.ts | ✅ Complete |
 | form/Radio.stories.ts | ✅ Complete |
+| form/RadioCard.stories.ts | ✅ Complete |
 | button/IconButton.stories.ts | ✅ Complete |
 
 ### 7.5 Verification Script
@@ -2531,4 +2532,18 @@ export const MyStory: Story = {
 - All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
 - All tests passing: 8 storybook play function tests (TwoButtonsFrontoffice, TwoButtonsBackoffice, ThreeButtonsFrontoffice, ThreeButtonsBackoffice, TwoButtonsWithLongText, ThreeButtonsWithLongText, DisabledButtons, MixedEnabledDisabled)
 - Phase 7 (Spy Function Pattern Refactor) progress: ButtonGroup.stories.ts completed
+
+### January 20, 2026 - RadioCard Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `radio` (Storybook)
+- Added spy function pattern to RadioCard.stories.ts for robust interaction testing
+- Enhanced Template render function to use `:modelValue` and `@update:modelValue` instead of `v-model` to avoid double-calling spy
+- Enhanced Vertical story with `onUpdate:modelValue` spy to verify click interactions
+- Enhanced Horizontal story with spy function pattern for interaction verification
+- Enhanced Disabled story with spy to verify update:modelValue is NOT called when disabled
+- Enhanced Focused story with spy function pattern for focus verification
+- Added KeyboardNavigation story with spy function pattern for Space key activation
+- All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
+- All tests passing: 18 storybook play function tests (Vertical, Horizontal, Disabled, Focused, KeyboardNavigation, and all variant stories)
+- Phase 7 (Spy Function Pattern Refactor) progress: RadioCard.stories.ts completed
 
