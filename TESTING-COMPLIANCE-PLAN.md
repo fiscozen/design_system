@@ -2370,7 +2370,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | panel/Collapse.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | overlay/Dialog.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | overlay/ConfirmDialog.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
-| messages/Alert.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
+| messages/Alert.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | messages/Toast.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
 | messages/ToastQueue.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
 
@@ -2417,6 +2417,7 @@ For each story file listed above:
 | form/Datepicker.stories.ts | ✅ Complete |
 | form/Upload.stories.ts | ✅ Complete |
 | button/IconButton.stories.ts | ✅ Complete |
+| messages/Alert.stories.ts | ✅ Complete |
 
 ### 7.5 Verification Script
 
@@ -2474,6 +2475,18 @@ export const MyStory: Story = {
 ---
 
 ## Completion Log
+
+### January 20, 2026 - Alert Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `alert` (Storybook)
+- Added spy function pattern to Alert.stories.ts for robust interaction testing
+- Enhanced Error, Danger, Warning, Success stories with `onFzAlert:click` spy to verify button click interactions
+- Enhanced NoTitleWithButtonAction story with spy and play function to verify button click handler IS called
+- Enhanced KeyboardNavigation story to verify button action click handler IS called when button is visible
+- All stories with button actions now verify handlers are called using spy functions
+- All play functions test user interactions and verify handlers are called using `toHaveBeenCalledTimes()` assertions
+- All tests passing: 83 unit tests (verified with `pnpm test:unit`), 20 storybook play function tests (verified with `pnpm test:storybook --run Alert`)
+- Phase 7 (Spy Function Pattern Refactor) progress: Alert.stories.ts completed
 
 ### January 20, 2026 - Radio Stories Spy Function Pattern Enhancement ✅
 

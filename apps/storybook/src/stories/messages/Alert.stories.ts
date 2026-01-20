@@ -86,9 +86,10 @@ const Info: Story = {
 
 const Error: Story = {
   args: {
-    tone: 'error'
+    tone: 'error',
+    'onFzAlert:click': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify error tone alert renders', async () => {
@@ -105,14 +106,22 @@ const Error: Story = {
         await expect(classes).toContain('border-semantic-error')
       }
     })
+    
+    await step('Verify button click handler IS called', async () => {
+      const button = canvas.getByRole('button', { name: /This is a button/i })
+      await userEvent.click(button)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args['onFzAlert:click']).toHaveBeenCalledTimes(1)
+    })
   }
 }
 
 const Danger: Story = {
   args: {
-    tone: 'danger'
+    tone: 'danger',
+    'onFzAlert:click': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify danger tone alert renders', async () => {
@@ -129,14 +138,22 @@ const Danger: Story = {
         await expect(classes).toContain('border-semantic-error')
       }
     })
+    
+    await step('Verify button click handler IS called', async () => {
+      const button = canvas.getByRole('button', { name: /This is a button/i })
+      await userEvent.click(button)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args['onFzAlert:click']).toHaveBeenCalledTimes(1)
+    })
   }
 }
 
 const Warning: Story = {
   args: {
-    tone: 'warning'
+    tone: 'warning',
+    'onFzAlert:click': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify warning tone alert renders', async () => {
@@ -153,14 +170,22 @@ const Warning: Story = {
         await expect(classes).toContain('border-semantic-warning')
       }
     })
+    
+    await step('Verify button click handler IS called', async () => {
+      const button = canvas.getByRole('button', { name: /This is a button/i })
+      await userEvent.click(button)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args['onFzAlert:click']).toHaveBeenCalledTimes(1)
+    })
   }
 }
 
 const Success: Story = {
   args: {
-    tone: 'success'
+    tone: 'success',
+    'onFzAlert:click': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify success tone alert renders', async () => {
@@ -176,6 +201,13 @@ const Success: Story = {
         const classes = alertContainer.className
         await expect(classes).toContain('border-semantic-success')
       }
+    })
+    
+    await step('Verify button click handler IS called', async () => {
+      const button = canvas.getByRole('button', { name: /This is a button/i })
+      await userEvent.click(button)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args['onFzAlert:click']).toHaveBeenCalledTimes(1)
     })
   }
 }
@@ -446,7 +478,30 @@ const Dismissible: Story = {
 const NoTitleWithButtonAction: Story = {
   args: {
     tone: 'info',
-    title: undefined
+    title: undefined,
+    'onFzAlert:click': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    
+    await step('Verify alert renders without title', async () => {
+      const description = canvas.getByText(/Lorem ipsum dolor sit amet/)
+      await expect(description).toBeInTheDocument()
+      await expect(description).toBeVisible()
+    })
+    
+    await step('Verify button action is present and clickable', async () => {
+      const button = canvas.getByRole('button', { name: /This is a button/i })
+      await expect(button).toBeVisible()
+      await expect(button).toBeEnabled()
+    })
+    
+    await step('Verify button click handler IS called', async () => {
+      const button = canvas.getByRole('button', { name: /This is a button/i })
+      await userEvent.click(button)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args['onFzAlert:click']).toHaveBeenCalledTimes(1)
+    })
   }
 }
 
@@ -510,6 +565,16 @@ const KeyboardNavigation: Story = {
         await userEvent.tab()
         // Focus should move to the toggle button
         await expect(document.activeElement).toBe(toggleButton)
+      }
+    })
+    
+    await step('Verify button action click handler IS called', async () => {
+      // In accordion variant, button action is visible when open
+      const button = canvas.queryByRole('button', { name: /This is a button/i })
+      if (button) {
+        await userEvent.click(button)
+        // ROBUST CHECK: Verify the click spy WAS called
+        await expect(args['onFzAlert:click']).toHaveBeenCalledTimes(1)
       }
     })
   }
