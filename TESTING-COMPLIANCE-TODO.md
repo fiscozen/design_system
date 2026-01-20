@@ -11,12 +11,12 @@
 
 | Priority | Items | Status | Estimated Effort |
 |----------|-------|--------|------------------|
-| 🔴 Critical | 3 failing tests | Blocking | 2-4 hours |
+| 🔴 Critical | 3 failing tests | ✅ **FIXED** | 2-4 hours |
 | 🟠 High | 7 interactive stories need spy pattern | ✅ **COMPLETED** | 4-6 hours |
 | 🟡 Medium | Coverage enforcement config | Not Started | 2-3 hours |
 | 🟢 Low | Vue warnings in tests | Non-blocking | 1-2 hours |
 
-**Total Remaining Work: ~3-9 hours**
+**Total Remaining Work: ~3-5 hours**
 
 ---
 
@@ -30,35 +30,28 @@
 
 ---
 
-## 🔴 Critical: Failing Tests
+## ✅ Critical: Failing Tests (FIXED)
 
 ### Package: `typeahead`
 
 **File:** `packages/typeahead/src/__tests__/FzTypeahead.spec.ts`
 
-| Test | Error | Root Cause |
-|------|-------|------------|
-| `update:modelValue keyboard selection` | TypeError: Cannot read properties of undefined | `selectedOption.value` is undefined |
-| `fztypeahead:select keyboard selection` | TypeError in requestAnimationFrame | Same root cause |
-| `fztypeahead:right-icon-click` | Component async timing issue | Race condition |
+| Test | Error | Fix Applied |
+|------|-------|-------------|
+| `update:modelValue keyboard selection` | Events not emitting | ✅ Added `filtrable: false` prop to enable keyboard navigation |
+| `fztypeahead:select keyboard selection` | Events not emitting | ✅ Added `filtrable: false` prop to enable keyboard navigation |
+| `fztypeahead:right-icon-click` | Button element not found | ✅ Added missing `rightIcon` prop and `filtrable: false` |
 
-**Fix Required:**
+**Fixes Applied:**
 
-In `packages/typeahead/src/FzTypeahead.vue` around line 824:
+1. **Component fix** (`packages/typeahead/src/FzTypeahead.vue` line 823):
+   - Added null check inside `requestAnimationFrame` callback for `selectedOption.value`
 
-```typescript
-// Before (causes error)
-const selectedOptionElement = optionRefs.value.get(
-  selectedOption.value!.value
-);
+2. **Test fixes** (`packages/typeahead/src/__tests__/FzTypeahead.spec.ts`):
+   - Keyboard selection tests: Added `filtrable: false` prop (required for keyboard navigation to focus options)
+   - Right icon click test: Added `rightIcon: "search"` prop (required for button to render) and `filtrable: false`
 
-// After (with null check)
-const selectedOptionElement = selectedOption.value 
-  ? optionRefs.value.get(selectedOption.value.value)
-  : undefined;
-```
-
-**Verification:**
+**Verification (All 122 tests passing):**
 ```bash
 pnpm --filter @fiscozen/typeahead test:unit
 ```
@@ -288,8 +281,8 @@ beforeEach(() => {
 
 ### Today
 
-1. [ ] Fix typeahead test failures (null check for `selectedOption.value`)
-2. [ ] Run `pnpm --filter @fiscozen/typeahead test:unit` to verify fix
+1. [x] Fix typeahead test failures (null check for `selectedOption.value`) ✅ **FIXED**
+2. [x] Run `pnpm --filter @fiscozen/typeahead test:unit` to verify fix ✅ **122/122 tests passing**
 
 ### This Week
 

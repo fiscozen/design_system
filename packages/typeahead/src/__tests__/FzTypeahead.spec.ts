@@ -2569,6 +2569,7 @@ describe("FzTypeahead", () => {
         const wrapper = mount(FzTypeahead, {
           props: {
             modelValue: "",
+            filtrable: false, // Required for keyboard navigation to focus options
             options: [
               { value: "option1", label: "Option 1" },
               { value: "option2", label: "Option 2" },
@@ -2698,6 +2699,7 @@ describe("FzTypeahead", () => {
         const wrapper = mount(FzTypeahead, {
           props: {
             modelValue: "",
+            filtrable: false, // Required for keyboard navigation to focus options
             options: [
               { value: "option1", label: "Option 1" },
               { value: "option2", label: "Option 2" },
@@ -2802,7 +2804,9 @@ describe("FzTypeahead", () => {
         const wrapper = mount(FzTypeahead, {
           props: {
             modelValue: "",
+            rightIcon: "search", // Required: icon must be specified for the button to render
             rightIconButton: true,
+            filtrable: false, // Required: button only renders when not showing input
             options: [
               { value: "option1", label: "Option 1" },
               { value: "option2", label: "Option 2" },
@@ -2812,8 +2816,20 @@ describe("FzTypeahead", () => {
         });
 
         await wrapper.vm.$nextTick();
-        const rightIconButton = wrapper.find('button[test-id="fztypeahead-right-icon"]');
-        await rightIconButton.trigger("click");
+        // The FzIconButton is rendered inside the opener button
+        const iconButton = wrapper.find('[data-testid="fz-icon-button"]');
+        if (iconButton.exists()) {
+          await iconButton.trigger("click");
+        } else {
+          // Fallback: find by button element within the opener
+          const buttons = wrapper.findAll("button");
+          const rightIconBtn = buttons.find(
+            (b) => b.element !== wrapper.find('button[test-id="fztypeahead-opener"]').element
+          );
+          if (rightIconBtn) {
+            await rightIconBtn.trigger("click");
+          }
+        }
         await wrapper.vm.$nextTick();
 
         expect(wrapper.emitted("fztypeahead:right-icon-click")).toBeTruthy();

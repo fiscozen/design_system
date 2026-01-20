@@ -820,9 +820,10 @@ watch(isOpen, (newValue) => {
         if (selectedOption.value) {
           nextTick(() => {
             requestAnimationFrame(() => {
-              const selectedOptionElement = optionRefs.value.get(
-                selectedOption.value!.value
-              );
+              // Re-check selectedOption.value inside callback as it may have changed
+              const selectedOptionElement = selectedOption.value
+                ? optionRefs.value.get(selectedOption.value.value)
+                : undefined;
               if (
                 selectedOptionElement &&
                 document.contains(selectedOptionElement)
