@@ -57,7 +57,7 @@
     </FzRadioGroup>
     <FzAlert
       v-else
-      type="info"
+      tone="info"
       alertStyle="default"
       :title="alertTitle"
       :showButtonAction="false"

@@ -49,7 +49,7 @@ defineProps<{
   -->
   <FzAlert
     :id="id"
-    type="error"
+    tone="error"
     alertStyle="simple"
     role="alert"
     aria-live="assertive"
