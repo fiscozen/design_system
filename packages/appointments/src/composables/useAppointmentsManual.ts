@@ -98,6 +98,7 @@ export function useAppointmentsManual({
         // Current date is no longer available, reset to first day
         currentDayIndex.value = 0;
         currentDate.value = startOfDay(days[0]);
+        emit("update:modelValue", undefined);
       } else {
         currentDayIndex.value = index;
       }
