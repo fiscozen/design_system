@@ -172,7 +172,7 @@
   const isOpen = ref(false)
   const isHoveringTooltip = ref(false)
   const isFocused = ref(false)
-  const hoverTimeout = ref<number | null>(null)
+  const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
 
   const showIcon = computed(() => props.withIcon && props.status !== 'neutral');
 

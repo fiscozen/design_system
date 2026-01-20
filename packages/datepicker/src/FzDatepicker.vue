@@ -22,7 +22,7 @@
     >
       <FzInput
         @blur="onBlur"
-        @update:modelValue="(e) => handleInputModelUpdate(onInput, e)"
+        @update:modelValue="(e: string | number) => handleInputModelUpdate(onInput, String(e))"
         @keyup.enter="onEnter"
         @keydown.tab="onTab"
         @paste="

@@ -108,7 +108,7 @@ const handleActionClick = (index: number) => {
             <FzDropdown
                 :actions="props.steps.map((step, index) => ({
                     label: step.title,
-                    type: 'button',
+                    type: 'action' as const,
                 }))"
                 align="right"
                 listClass="gap-8 !p-0 w-full"

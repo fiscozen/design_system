@@ -7,7 +7,7 @@ defineProps<FzCollapseProps>()
 const isOpen = defineModel<boolean>('open', { default: false })
 const detailsRef = ref<HTMLDetailsElement | null>(null)
 
-const handleToggle = (e) => {
+const handleToggle = (e: ToggleEvent) => {
   if (e.newState === "open" && isOpen.value === false) {
     isOpen.value = true
   } else if (e.newState === "closed" && isOpen.value === true) {
