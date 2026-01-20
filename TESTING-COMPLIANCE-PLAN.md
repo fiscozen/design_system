@@ -2370,7 +2370,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | panel/Tab.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | panel/Collapse.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | overlay/Dialog.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
-| overlay/ConfirmDialog.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| overlay/ConfirmDialog.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | messages/Alert.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | messages/Toast.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | messages/ToastQueue.stories.ts | ❌ No disabled | ✅ Has interactions | 0.5 |
@@ -2420,6 +2420,7 @@ For each story file listed above:
 | button/IconButton.stories.ts | ✅ Complete |
 | messages/Alert.stories.ts | ✅ Complete |
 | messages/Toast.stories.ts | ✅ Complete |
+| overlay/ConfirmDialog.stories.ts | ✅ Complete |
 
 ### 7.5 Verification Script
 
@@ -2833,3 +2834,24 @@ export const MyStory: Story = {
 - All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
 - All 42 Tab story tests passing ✅ (verified with `pnpm test:storybook --run Tab`)
 - Phase 7 (Spy Function Pattern Refactor) progress: Tab.stories.ts completed
+
+### January 20, 2026 - ConfirmDialog Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `dialog` (Storybook)
+- Added spy function pattern to ConfirmDialog.stories.ts for robust interaction testing
+- Imported `fn` from `@storybook/test`
+- Updated Template to bind `onFzmodalConfirm` and `onFzmodalCancel` event handlers
+- Enhanced ConfirmAction story with spies to verify `onFzmodalConfirm` IS called and `onFzmodalCancel` is NOT called
+- Enhanced CancelAction story with spies to verify `onFzmodalCancel` IS called and `onFzmodalConfirm` is NOT called
+- Enhanced KeyboardNavigation story with spies to verify `onFzmodalCancel` IS called on Enter key activation
+- Enhanced SpaceKeyActivation story with spies to verify `onFzmodalCancel` IS called on Space key activation
+- Enhanced DisabledConfirm story with spies to verify `onFzmodalConfirm` is NOT called when clicking disabled confirm button
+- Added spy assertions for:
+  - Confirm action: Verify `onFzmodalConfirm.toHaveBeenCalledTimes(1)` and `onFzmodalCancel.not.toHaveBeenCalled()`
+  - Cancel action: Verify `onFzmodalCancel.toHaveBeenCalledTimes(1)` and `onFzmodalConfirm.not.toHaveBeenCalled()`
+  - Keyboard activation: Verify handlers are called when using Enter/Space keys
+  - Disabled state: Verify handlers are NOT called when clicking disabled confirm button
+- All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
+- All 11 ConfirmDialog story tests passing ✅ (verified with `pnpm test:storybook --run ConfirmDialog`)
+- All 54 unit tests passing ✅ (verified with `pnpm test:unit` in packages/dialog)
+- Phase 7 (Spy Function Pattern Refactor) progress: ConfirmDialog.stories.ts completed

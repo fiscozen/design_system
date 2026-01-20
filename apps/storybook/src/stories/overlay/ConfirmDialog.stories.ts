@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
 import { ref } from 'vue'
 
 import { FzDialog, FzConfirmDialog, FzConfirmDialogProps } from '@fiscozen/dialog'
@@ -88,7 +88,12 @@ const Template: Story = {
     template: `
       <div class="p-12">
         <FzButton @click="dialog?.show()">Open Modal</FzButton>
-        <FzConfirmDialog v-bind="args" ref="dialog"></FzConfirmDialog>
+        <FzConfirmDialog 
+          v-bind="args" 
+          @fzmodal:confirm="args.onFzmodalConfirm" 
+          @fzmodal:cancel="args.onFzmodalCancel" 
+          ref="dialog"
+        ></FzConfirmDialog>
       </div>
     `
   })
@@ -174,9 +179,11 @@ export const ConfirmAction: Story = {
     title: 'Confirm Action',
     confirmLabel: 'Confirm',
     cancelLabel: 'Cancel',
-    text: 'Are you sure you want to proceed?'
+    text: 'Are you sure you want to proceed?',
+    onFzmodalConfirm: fn(),
+    onFzmodalCancel: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Open dialog', async () => {
@@ -187,6 +194,14 @@ export const ConfirmAction: Story = {
       const confirmButton = canvas.getByRole('button', { name: /confirm/i })
       await expect(confirmButton).toBeInTheDocument()
       await userEvent.click(confirmButton)
+    })
+    
+    await step('Verify onFzmodalConfirm handler IS called', async () => {
+      await expect(args.onFzmodalConfirm).toHaveBeenCalledTimes(1)
+    })
+    
+    await step('Verify onFzmodalCancel handler is NOT called', async () => {
+      await expect(args.onFzmodalCancel).not.toHaveBeenCalled()
     })
     
     await step('Verify dialog closes after confirm', async () => {
@@ -203,9 +218,11 @@ export const CancelAction: Story = {
     title: 'Cancel Action',
     confirmLabel: 'Confirm',
     cancelLabel: 'Cancel',
-    text: 'Are you sure you want to cancel?'
+    text: 'Are you sure you want to cancel?',
+    onFzmodalConfirm: fn(),
+    onFzmodalCancel: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Open dialog', async () => {
@@ -216,6 +233,14 @@ export const CancelAction: Story = {
       const cancelButton = canvas.getByRole('button', { name: /cancel/i })
       await expect(cancelButton).toBeInTheDocument()
       await userEvent.click(cancelButton)
+    })
+    
+    await step('Verify onFzmodalCancel handler IS called', async () => {
+      await expect(args.onFzmodalCancel).toHaveBeenCalledTimes(1)
+    })
+    
+    await step('Verify onFzmodalConfirm handler is NOT called', async () => {
+      await expect(args.onFzmodalConfirm).not.toHaveBeenCalled()
     })
     
     await step('Verify dialog closes after cancel', async () => {
@@ -232,9 +257,11 @@ export const KeyboardNavigation: Story = {
     title: 'Keyboard Navigation',
     confirmLabel: 'Confirm',
     cancelLabel: 'Cancel',
-    text: 'Test keyboard navigation'
+    text: 'Test keyboard navigation',
+    onFzmodalConfirm: fn(),
+    onFzmodalCancel: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Open dialog', async () => {
@@ -259,6 +286,14 @@ export const KeyboardNavigation: Story = {
       await waitFor(() => {
         expect(document.querySelector('dialog')).not.toBeInTheDocument()
       }, { timeout: 1000 })
+    })
+    
+    await step('Verify onFzmodalCancel handler IS called on Enter key activation', async () => {
+      await expect(args.onFzmodalCancel).toHaveBeenCalledTimes(1)
+    })
+    
+    await step('Verify onFzmodalConfirm handler is NOT called', async () => {
+      await expect(args.onFzmodalConfirm).not.toHaveBeenCalled()
     })
   }
 }
@@ -321,9 +356,11 @@ export const SpaceKeyActivation: Story = {
   args: {
     title: 'Space Key Activation',
     confirmLabel: 'Confirm',
-    cancelLabel: 'Cancel'
+    cancelLabel: 'Cancel',
+    onFzmodalConfirm: fn(),
+    onFzmodalCancel: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Open dialog', async () => {
@@ -341,6 +378,14 @@ export const SpaceKeyActivation: Story = {
         expect(document.querySelector('dialog')).not.toBeInTheDocument()
       }, { timeout: 1000 })
     })
+    
+    await step('Verify onFzmodalCancel handler IS called on Space key activation', async () => {
+      await expect(args.onFzmodalCancel).toHaveBeenCalledTimes(1)
+    })
+    
+    await step('Verify onFzmodalConfirm handler is NOT called', async () => {
+      await expect(args.onFzmodalConfirm).not.toHaveBeenCalled()
+    })
   }
 }
 
@@ -350,9 +395,11 @@ export const DisabledConfirm: Story = {
     title: 'Disabled Confirm Button',
     confirmLabel: 'Confirm',
     cancelLabel: 'Cancel',
-    disableConfirm: true
+    disableConfirm: true,
+    onFzmodalConfirm: fn(),
+    onFzmodalCancel: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Open dialog', async () => {
@@ -374,6 +421,14 @@ export const DisabledConfirm: Story = {
       await userEvent.click(confirmButton)
       
       await verifyDialogRemainsOpen()
+    })
+    
+    await step('Verify onFzmodalConfirm handler is NOT called when clicking disabled button', async () => {
+      await expect(args.onFzmodalConfirm).not.toHaveBeenCalled()
+    })
+    
+    await step('Verify onFzmodalCancel handler is NOT called', async () => {
+      await expect(args.onFzmodalCancel).not.toHaveBeenCalled()
     })
   }
 }
