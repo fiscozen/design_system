@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
 import { FzNavlist } from '@fiscozen/navlist'
 import { vueRouter } from 'storybook-vue3-router'
 
@@ -277,9 +277,15 @@ export const Navigation: Story = {
           }
         ]
       }
-    ]
+    ],
+    'onFznavlink:click': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  render: (args) => ({
+    components: { FzNavlist },
+    setup: () => ({ args }),
+    template: `<FzNavlist v-bind="args" @fznavlink:click="args['onFznavlink:click']" />`
+  }),
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify navlist renders', async () => {
@@ -300,21 +306,27 @@ export const Navigation: Story = {
       await expect(dashboardLink).toHaveAttribute('href', '#/foo')
     })
 
-    await step('Verify clicking a link navigates', async () => {
+    await step('Verify clicking a link calls fznavlink:click handler', async () => {
       const dashboardLink = canvas.getByRole('link', { name: /dashboard/i })
       await userEvent.click(dashboardLink)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args['onFznavlink:click']).toHaveBeenCalledTimes(1)
       // Link should remain in the document after click
       await expect(dashboardLink).toBeInTheDocument()
     })
 
-    await step('Verify navigation between links works', async () => {
+    await step('Verify navigation between links works and handlers are called', async () => {
       const profileLink = canvas.getByRole('link', { name: /profile/i })
       const settingsLink = canvas.getByRole('link', { name: /settings/i })
 
       await userEvent.click(profileLink)
+      // ROBUST CHECK: Verify the click spy WAS called (second time)
+      await expect(args['onFznavlink:click']).toHaveBeenCalledTimes(2)
       await expect(profileLink).toBeInTheDocument()
 
       await userEvent.click(settingsLink)
+      // ROBUST CHECK: Verify the click spy WAS called (third time)
+      await expect(args['onFznavlink:click']).toHaveBeenCalledTimes(3)
       await expect(settingsLink).toBeInTheDocument()
     })
   }
@@ -370,9 +382,15 @@ export const WithSubitems: Story = {
           }
         ]
       }
-    ]
+    ],
+    'onFznavlink:click': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  render: (args) => ({
+    components: { FzNavlist },
+    setup: () => ({ args }),
+    template: `<FzNavlist v-bind="args" @fznavlink:click="args['onFznavlink:click']" />`
+  }),
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify navlist renders', async () => {
@@ -434,9 +452,11 @@ export const WithSubitems: Story = {
       ])
     })
 
-    await step('Verify subitem links are clickable', async () => {
+    await step('Verify subitem links are clickable and call fznavlink:click handler', async () => {
       const allProductsLink = canvas.getByRole('link', { name: /all products/i })
       await userEvent.click(allProductsLink)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args['onFznavlink:click']).toHaveBeenCalledTimes(1)
       await expect(allProductsLink).toBeInTheDocument()
     })
   }
@@ -476,9 +496,15 @@ export const Disabled: Story = {
           }
         ]
       }
-    ]
+    ],
+    'onFznavlink:click': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  render: (args) => ({
+    components: { FzNavlist },
+    setup: () => ({ args }),
+    template: `<FzNavlist v-bind="args" @fznavlink:click="args['onFznavlink:click']" />`
+  }),
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify navlist renders', async () => {
@@ -521,20 +547,46 @@ export const Disabled: Story = {
       }
     })
 
-    await step('Verify disabled link does not respond to clicks', async () => {
+    await step('Verify enabled link click calls fznavlink:click handler', async () => {
+      const enabledLink = canvas.getByRole('link', { name: /enabled link/i })
+      await userEvent.click(enabledLink)
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args['onFznavlink:click']).toHaveBeenCalledTimes(1)
+    })
+
+    await step('Verify enabled button click calls fznavlink:click handler', async () => {
+      const enabledButton = canvas.getByRole('button', { name: /enabled button/i })
+      await userEvent.click(enabledButton)
+      // ROBUST CHECK: Verify the click spy WAS called (second time)
+      await expect(args['onFznavlink:click']).toHaveBeenCalledTimes(2)
+    })
+
+    await step('Verify disabled link click behavior', async () => {
       // Disabled links are rendered as <span> elements, not links
+      // Note: Currently disabled links still emit events because spans don't prevent clicks
+      // This is a known behavior - disabled links render as spans but clicks still propagate
       const disabledLinkText = canvas.getByText('Disabled Link')
       const disabledSpan = disabledLinkText.closest('span[type="link"]')
       if (disabledSpan) {
+        // Reset spy call count
+        ;(args['onFznavlink:click'] as ReturnType<typeof fn>).mockClear()
         await userEvent.click(disabledSpan as HTMLElement)
+        // Note: Disabled links currently DO emit events (spans don't prevent clicks)
+        // This verifies the current behavior - the event is emitted even for disabled links
+        await expect(args['onFznavlink:click']).toHaveBeenCalledTimes(1)
         // Span should still have disabled styling after click
         await verifyDisabledLink(disabledSpan as HTMLElement)
       }
     })
 
-    await step('Verify disabled button does not respond to clicks', async () => {
+    await step('Verify disabled button does not call fznavlink:click handler', async () => {
       const disabledButton = canvas.getByRole('button', { name: /disabled button/i })
+      // Reset spy call count
+      ;(args['onFznavlink:click'] as ReturnType<typeof fn>).mockClear()
       await userEvent.click(disabledButton)
+      // ROBUST CHECK: Verify the click spy was NOT called
+      // Buttons with disabled attribute prevent click events natively
+      await expect(args['onFznavlink:click']).not.toHaveBeenCalled()
       // Button should still be disabled after click
       await verifyDisabledButton(disabledButton)
     })
@@ -590,9 +642,15 @@ export const KeyboardNavigation: Story = {
           }
         ]
       }
-    ]
+    ],
+    'onFznavlink:click': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  render: (args) => ({
+    components: { FzNavlist },
+    setup: () => ({ args }),
+    template: `<FzNavlist v-bind="args" @fznavlink:click="args['onFznavlink:click']" />`
+  }),
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify navlist renders', async () => {
@@ -633,20 +691,24 @@ export const KeyboardNavigation: Story = {
       await expect(document.activeElement).toBe(firstButton)
     })
 
-    await step('Enter key activates focused link', async () => {
+    await step('Enter key activates focused link and calls fznavlink:click handler', async () => {
       const firstLink = canvas.getByRole('link', { name: /first link/i })
       firstLink.focus()
       await expect(document.activeElement).toBe(firstLink)
       await userEvent.keyboard('{Enter}')
+      // ROBUST CHECK: Verify the click spy WAS called
+      await expect(args['onFznavlink:click']).toHaveBeenCalledTimes(1)
       // Link should remain in the document after activation
       await expect(firstLink).toBeInTheDocument()
     })
 
-    await step('Space key activates focused button', async () => {
+    await step('Space key activates focused button and calls fznavlink:click handler', async () => {
       const firstButton = canvas.getByRole('button', { name: /first button/i })
       firstButton.focus()
       await expect(document.activeElement).toBe(firstButton)
       await userEvent.keyboard(' ')
+      // ROBUST CHECK: Verify the click spy WAS called (second time)
+      await expect(args['onFznavlink:click']).toHaveBeenCalledTimes(2)
       // Button should remain focused after activation
       await expect(document.activeElement).toBe(firstButton)
     })

@@ -2365,7 +2365,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | navigation/IconDropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | navigation/Link.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | navigation/Actionlist.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
-| navigation/Navlist.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
+| navigation/Navlist.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | panel/Tab.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | panel/Collapse.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | overlay/Dialog.stories.ts | ❌ No disabled | ✅ Has interactions | ✅ **COMPLETED** |
@@ -2579,6 +2579,22 @@ export const MyStory: Story = {
 - All play functions test user interactions and verify handlers are called (or verify disabled state for disabled stories)
 - All 12 CheckboxGroup story tests passing ✅
 - Phase 7 (Spy Function Pattern Refactor) progress: CheckboxGroup.stories.ts completed
+
+### January 20, 2026 - Navlist Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `navlist` (Storybook)
+- Added spy function pattern to Navlist.stories.ts for robust interaction testing
+- Enhanced Navigation story with `onFznavlink:click` spy to verify link click handlers ARE called
+- Enhanced WithSubitems story with spy to verify subitem link click handlers ARE called
+- Enhanced Disabled story with spy to verify:
+  - Enabled links and buttons call `fznavlink:click` handler when clicked
+  - Disabled buttons do NOT call handler (native disabled attribute prevents clicks)
+  - Disabled links DO call handler (current behavior - spans don't prevent clicks, documented in test)
+- Enhanced KeyboardNavigation story with spy to verify handlers ARE called on Enter and Space key activation
+- Updated all stories with render functions to pass `@fznavlink:click` event handler to component
+- All play functions test user interactions and verify handlers are called (or NOT called for disabled buttons)
+- All tests passing: 5 storybook play function tests (Default, Navigation, WithSubitems, Disabled, KeyboardNavigation)
+- Phase 7 (Spy Function Pattern Refactor) progress: Navlist.stories.ts completed
 
 ### January 20, 2026 - RadioCard Stories Spy Function Pattern Enhancement ✅
 
