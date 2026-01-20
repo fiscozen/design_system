@@ -472,7 +472,9 @@ export const useFloating = (
   const resolveDOMRefs = (): DOMRefs | null => {
     const element = resolveElement(args.element.value.domRef.value)
     if (!element) {
-      throw new Error('missing reference element for floating behavior')
+      // Return null instead of throwing - the element might be unmounted
+      // or not yet rendered. Callers should handle null gracefully.
+      return null
     }
 
     const container = args.container?.value
