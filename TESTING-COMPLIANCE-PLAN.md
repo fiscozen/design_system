@@ -913,7 +913,7 @@ describe('Accessibility', () => {
 | select | ~~`update:modelValue`~~ | ✅ **COMPLETED** - Note: Component does not emit `search` event (only emits `fzselect:select`, `fzselect:clear`, `fzselect:right-icon-click`) |
 | tab | `tab-change` |
 | toast | `dismiss` |
-| typeahead | `update:modelValue`, `select`, `search` |
+| typeahead | ~~`update:modelValue`, `fztypeahead:select`~~ | ✅ **COMPLETED** - Note: Component does not emit `search` event (search is handled internally, no event emitted) |
 | upload | ~~`fzupload:change`, `fzupload:add`, `fzupload:delete`, `fzupload:file-limit-exceeded`~~ | ✅ **COMPLETED** |
 
 ### 3.4 Packages Missing Edge Case Tests
@@ -2573,4 +2573,28 @@ export const MyStory: Story = {
 - All play functions test user interactions and verify handlers are called (or NOT called when disabled)
 - All tests passing: 11 storybook play function tests (OpenAndClose, EscapeKey, EscapeKeyDisabled, BackdropClick, BackdropClickDisabled, Accessibility, and other stories)
 - Phase 7 (Spy Function Pattern Refactor) progress: Dialog.stories.ts completed
+
+### January 20, 2026 - Typeahead Event Tests ✅
+
+**Package:** `typeahead` (Unit Tests)
+- Added comprehensive Events section to FzTypeahead.spec.ts following testing standards pattern
+- Added tests for `update:modelValue` event:
+  - Emits when option is selected via click
+  - Emits when option is selected via keyboard
+  - Emits with undefined when clearing selection (clearable)
+  - Does NOT emit when disabled
+  - Does NOT emit when readonly
+- Added tests for `fztypeahead:select` event:
+  - Emits when option is selected via click
+  - Emits when option is selected via keyboard
+  - Does NOT emit when selecting disabled option
+  - Does NOT emit when selecting readonly option
+  - Does NOT emit when component is disabled
+- Added test for `fztypeahead:right-icon-click` event
+- Added test verifying that `search` event does NOT exist (component handles search internally, no event emitted)
+- All unit tests passing (verified with `pnpm test:unit`)
+- All Storybook play function tests passing (verified with `pnpm test:storybook --run Typeahead` - 26 tests passed)
+- Updated plan to mark Typeahead as complete for event tests
+- Note: Component does not emit `search` event - search functionality is handled internally via `searchValue` and `debouncedSearchValue` reactive refs
+- Phase 3 (Unit Test Quality Improvements) progress: Typeahead event tests completed
 

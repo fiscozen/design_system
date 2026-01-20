@@ -2535,6 +2535,328 @@ describe("FzTypeahead", () => {
   });
 
   // ============================================
+  // EVENTS
+  // ============================================
+  describe("Events", () => {
+    describe("update:modelValue", () => {
+      it("should emit update:modelValue when option is selected via click", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+          attachTo: document.body,
+        });
+
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        const optionButton = document.querySelector(
+          'button[role="option"]',
+        ) as HTMLElement;
+        optionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("update:modelValue")).toBeTruthy();
+        expect(wrapper.emitted("update:modelValue")![0]).toEqual(["option1"]);
+      });
+
+      it("should emit update:modelValue when option is selected via keyboard", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+          attachTo: document.body,
+        });
+
+        const openerButton = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await openerButton.trigger("keydown", { key: "Enter" });
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        const containerEl = document.querySelector(
+          '[test-id="fztypeahead-options-container"]',
+        ) as HTMLElement;
+        containerEl.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("update:modelValue")).toBeTruthy();
+        expect(wrapper.emitted("update:modelValue")![0]).toEqual(["option1"]);
+      });
+
+      it("should emit update:modelValue with undefined when clearing selection (clearable)", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "option1",
+            clearable: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+          attachTo: document.body,
+        });
+
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        // Click the same option again to clear
+        const optionButton = document.querySelector(
+          'button[role="option"]',
+        ) as HTMLElement;
+        optionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("update:modelValue")).toBeTruthy();
+        expect(wrapper.emitted("update:modelValue")![0]).toEqual([undefined]);
+      });
+
+      it("should NOT emit update:modelValue when disabled", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            disabled: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+          attachTo: document.body,
+        });
+
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        // Dropdown should not open when disabled
+        expect(wrapper.vm.isOpen).toBe(false);
+        expect(wrapper.emitted("update:modelValue")).toBeFalsy();
+      });
+
+      it("should NOT emit update:modelValue when readonly", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            readonly: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+          attachTo: document.body,
+        });
+
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        // Dropdown should not open when readonly
+        expect(wrapper.vm.isOpen).toBe(false);
+        expect(wrapper.emitted("update:modelValue")).toBeFalsy();
+      });
+    });
+
+    describe("fztypeahead:select", () => {
+      it("should emit fztypeahead:select when option is selected via click", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+          attachTo: document.body,
+        });
+
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        const optionButton = document.querySelector(
+          'button[role="option"]',
+        ) as HTMLElement;
+        optionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("fztypeahead:select")).toBeTruthy();
+        expect(wrapper.emitted("fztypeahead:select")?.[0]).toEqual(["option1"]);
+      });
+
+      it("should emit fztypeahead:select when option is selected via keyboard", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+          attachTo: document.body,
+        });
+
+        const openerButton = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await openerButton.trigger("keydown", { key: "Enter" });
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        const containerEl = document.querySelector(
+          '[test-id="fztypeahead-options-container"]',
+        ) as HTMLElement;
+        containerEl.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("fztypeahead:select")).toBeTruthy();
+        expect(wrapper.emitted("fztypeahead:select")?.[0]).toEqual(["option1"]);
+      });
+
+      it("should NOT emit fztypeahead:select when selecting disabled option", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            options: [
+              { value: "option1", label: "Option 1", disabled: true },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+          attachTo: document.body,
+        });
+
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        const disabledOptionButton = document.querySelector(
+          'button[role="option"][aria-disabled="true"]',
+        ) as HTMLElement;
+        disabledOptionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("fztypeahead:select")).toBeFalsy();
+        expect(wrapper.emitted("update:modelValue")).toBeFalsy();
+      });
+
+      it("should NOT emit fztypeahead:select when selecting readonly option", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            options: [
+              { value: "option1", label: "Option 1", readonly: true },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+          attachTo: document.body,
+        });
+
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        const readonlyOptionButton = document.querySelector(
+          'button[role="option"][aria-readonly="true"]',
+        ) as HTMLElement;
+        readonlyOptionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("fztypeahead:select")).toBeFalsy();
+        expect(wrapper.emitted("update:modelValue")).toBeFalsy();
+      });
+
+      it("should NOT emit fztypeahead:select when component is disabled", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            disabled: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+          attachTo: document.body,
+        });
+
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.isOpen).toBe(false);
+        expect(wrapper.emitted("fztypeahead:select")).toBeFalsy();
+      });
+    });
+
+    describe("fztypeahead:right-icon-click", () => {
+      it("should emit fztypeahead:right-icon-click when right icon is clicked", async () => {
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            rightIconButton: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+          attachTo: document.body,
+        });
+
+        await wrapper.vm.$nextTick();
+        const rightIconButton = wrapper.find('button[test-id="fztypeahead-right-icon"]');
+        await rightIconButton.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("fztypeahead:right-icon-click")).toBeTruthy();
+      });
+    });
+
+    describe("search event", () => {
+      it("should NOT emit search event (component does not emit this event)", async () => {
+        vi.useFakeTimers();
+        const wrapper = mount(FzTypeahead, {
+          props: {
+            modelValue: "",
+            filtrable: true,
+            options: [
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+            ],
+          },
+          attachTo: document.body,
+        });
+
+        const button = wrapper.find('button[test-id="fztypeahead-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        const input = wrapper.find('input[type="text"]');
+        await input.setValue("test");
+        await wrapper.vm.$nextTick();
+
+        // Advance timers to trigger debounced filter
+        vi.advanceTimersByTime(500);
+        await wrapper.vm.$nextTick();
+
+        // Component does not emit a search event - search is handled internally
+        expect(wrapper.emitted("search")).toBeFalsy();
+        expect(wrapper.emitted("fztypeahead:search")).toBeFalsy();
+
+        vi.useRealTimers();
+      });
+    });
+  });
+
+  // ============================================
   // SNAPSHOTS
   // ============================================
   describe("Snapshots", () => {
