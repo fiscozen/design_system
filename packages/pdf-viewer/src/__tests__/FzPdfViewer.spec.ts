@@ -7,11 +7,14 @@ import FzPdfViewer from '../FzPdfViewer.vue'
 const mockUsePDF = vi.mocked(usePDF)
 
 // Mock ResizeObserver for jsdom environment
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn()
-}))
+// Note: The global mock is already set in vitest.setup.ts, but we keep this
+// for explicit clarity in this test file
+class MockResizeObserver {
+  observe = vi.fn()
+  unobserve = vi.fn()
+  disconnect = vi.fn()
+}
+global.ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver
 
 // Mock VuePDF and usePDF from @tato30/vue-pdf
 vi.mock('@tato30/vue-pdf', async () => {
