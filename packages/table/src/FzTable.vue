@@ -15,10 +15,10 @@ import { FzIcon } from "@fiscozen/icons";
 import { FzInput } from "@fiscozen/input";
 import { useMediaQuery } from "@fiscozen/composables";
 import { breakpoints } from "@fiscozen/style";
-import { ascend, descend, sortWith, prop } from "ramda";
+import { ascend, descend, sortWith } from "ramda";
 import { FzCheckbox } from "@fiscozen/checkbox";
 import { FzConfirmDialog } from "@fiscozen/dialog";
-import { ActionlistItem } from "@fiscozen/actionlist";
+import { FzActionProps } from "@fiscozen/action";
 import { FzProgress } from "@fiscozen/progress";
 
 FzCheckbox.compatConfig = {
@@ -59,7 +59,7 @@ const grid = ref<HTMLDivElement>();
 const filtersDialog = ref();
 
 const emit = defineEmits<{
-  "fztable:rowactionclick": [actionIndex: number, actionListItem: ActionlistItem, rowData?: Record<string, any>];
+  "fztable:rowactionclick": [actionIndex: number, action: FzActionProps, rowData?: Record<string, any>];
   "fztable:ordering": [
     ordering: FzOrdering,
     newOrderingDirection: FzOrdering["direction"],
@@ -88,7 +88,7 @@ const columns = computed(() => {
         if (slot.type === FzColumn) {
           return getColumn(slot);
         } else {
-          return slot.children?.map(getColumn);
+          return (slot.children as VNode[])?.map(getColumn);
         }
       }) ?? []
   );
@@ -100,7 +100,7 @@ const rows = computed(() => {
     defaultSlot.value
       ?.filter((elem) => elem.type === FzRow)
       .map((row) => ({
-        props: row.props as FzRowProps,
+        props: row.props as FzRowProps<T>,
         children: row.children as FzRowSlots,
       })) ?? []
   );
@@ -111,7 +111,7 @@ const filters = computed({
     const res = columns.value.filter(col => col.props.filterable).reduce((acc, column) => {
       acc[column.props.field || column.props.header] = column.props.filterName || column.props.header
       return acc;
-    }, {})
+    }, {} as Record<string, string>)
     return {
       ...res,
       ...props.extFilters
@@ -153,18 +153,19 @@ const effectivePageInterval = computed(() => {
 });
 
 const centerPageList = computed(() => {
-  if (!props.pages) {
+  const pages = props.pages;
+  if (!pages) {
     return [];
   }
   const safeActivePage = activePage.value || 0;
-  return new Array(props.pages)
+  return new Array(pages)
     .fill(0)
     .map((val, index) => index)
     .filter((el) => {
       const res =
         Math.abs(el - safeActivePage) <= effectivePageInterval.value &&
         el !== 0 &&
-        el !== props.pages - 1;
+        el !== pages - 1;
       return res;
     });
 });
@@ -207,15 +208,15 @@ const gridTemplateStyle = computed(() => {
 });
 
 const internalValue = computed(() => {
-  let res = modelValue.value || [];
+  let res: RowData[] = modelValue.value || [];
   const safeOrdering = Object.entries(ordering.value)
     .filter(([key, val]) => !!val.orderable && !!val.direction && val.direction !== "none")
     .map(([key, val]) => {
       let dirFn = val.direction === "asc" ? ascend : descend;
-      return dirFn(prop(key));
+      return dirFn((obj: RowData) => obj[key]);
     });
   if (props.internalOrdering) {
-    res = sortWith(safeOrdering)(res) as Record<string, any>[];
+    res = sortWith(safeOrdering)(res);
   }
   return res;
 });
@@ -462,7 +463,7 @@ onUnmounted(() => {
         iconName="arrow-down-left-and-arrow-up-right-to-center"></FzIconButton>
       <FzIconButton :class="['ml-8', { 'row-start-1': smOrSmaller }]"
         :style="smOrSmaller ? `grid-column-start: ${iconCols - 1}` : ''" v-if="hasFilters"
-        :variant="hasActiveFilters ? 'notification' : 'invisible'" iconName="bars-filter" @click="handleOpenFilters">
+        variant="invisible" :hasNotification="hasActiveFilters" iconName="bars-filter" @click="handleOpenFilters">
       </FzIconButton>
       <FzButton class="ml-16" v-if="newItemButton && !smOrSmaller" :disabled="newItemButtonDisabled" :iconAndLabel="!!newItemButtonIcon" :iconName="newItemButtonIcon" size="lg"
         @click="emit('fztable:newitem')">{{ newItemButtonLabel }}</FzButton>
@@ -497,7 +498,7 @@ onUnmounted(() => {
           ]">
             <FzCheckbox label="" class="fz__table__header--checkbox" :modelValue="allSelected" :emphasis="!indeterminate"
               :indeterminate
-              value="all" @change="toggleSelectAll($event)" />
+              value="all" @change="toggleSelectAll()" />
           </div>
           <div v-for="column in columns" :class="[
             headerStaticClasses,
@@ -552,7 +553,7 @@ onUnmounted(() => {
             'col-span-full',
             row.props?.rowClass,
           ]" v-for="(row, index) in rows" :aria-rowindex="index + 1" role="row">
-            <component v-if="row.children?.default" :is="row.children.default" :actions :columns />
+            <component v-if="row.children?.default" :is="row.children.default" :data="row.props?.data" :actions :columns />
           </div>
         </template>
         <div v-else class="fz__table__empty h-full self-center justify-self-center min-h-[200px] flex justify-center items-center col-span-full">

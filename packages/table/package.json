@@ -13,6 +13,7 @@
   "keywords": [],
   "author": "Riccardo Agnoletto",
   "peerDependencies": {
+    "@fiscozen/action": "workspace:^",
     "@fiscozen/actionlist": "workspace:^",
     "@fiscozen/button": "workspace:^",
     "@fiscozen/checkbox": "workspace:^",

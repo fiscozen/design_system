@@ -4,21 +4,21 @@ import { FzRowProps, getBodyClasses, bodyStaticClasses } from "./";
 import { FzIconDropdown } from "@fiscozen/dropdown";
 import { FzIcon } from "@fiscozen/icons";
 import { FzCheckbox } from "@fiscozen/checkbox";
-import { ActionlistItem } from "@fiscozen/actionlist";
+import { FzActionProps } from "@fiscozen/action";
 import { FzRadio } from "@fiscozen/radio";
 import { useMediaQuery } from "@fiscozen/composables";
 import { breakpoints } from "@fiscozen/style";
 
 const props = defineProps<FzRowProps<T>>();
 const emit = defineEmits<{
-  "fztable:rowactionclick": [actionIndex: number, actionlistItem: ActionlistItem, rowData: T | undefined];
+  "fztable:rowactionclick": [actionIndex: number, action: FzActionProps, rowData: T | undefined];
   click: [rowIndex: number, rowData: T | undefined];
 }>();
 const selected = defineModel<boolean>("selected");
 const smOrSmaller = useMediaQuery(`(max-width: ${breakpoints.sm})`);
 const hover = ref(false);
 const handleClick = (event: MouseEvent) => {
-   if(event.target?.closest('input[type="checkbox"]+label')) {
+   if((event.target as HTMLElement)?.closest('input[type="checkbox"]+label')) {
      event.stopPropagation();
      event.preventDefault();
    }
@@ -62,7 +62,7 @@ const handleClick = (event: MouseEvent) => {
         rowClass,
         { 'bg-core-white': !hover, '!bg-background-alice-blue': hover },
       ]">
-        <FzRadio :modelValue="props.selected ? `row-${props.id}` : ''" :label="''" :value="`row-${props.id}`"
+        <FzRadio :modelValue="selected ? `row-${props.id}` : ''" :label="''" :value="`row-${props.id}`"
           emphasis />
       </div>
       <template v-if="smOrSmaller && isList">
@@ -116,10 +116,10 @@ const handleClick = (event: MouseEvent) => {
         'sticky right-0 z-[2] flex justify-center items-start',
         { 'bg-core-white': !hover, 'bg-background-alice-blue': hover, 'left-shadow': props.isOverflowing },
       ]">
-        <FzIconDropdown :actions="actions.items" buttonVariant="invisible" :openerDisabled="actionsDisabled"
+        <FzIconDropdown :actions="(typeof actions === 'function' ? actions(props.data as T) : actions).items as FzActionProps[]" buttonVariant="invisible" :openerDisabled="actionsDisabled"
           iconName="ellipsis-vertical" size="sm" @fzaction:click="
-            (actionIndex: number, actionListItem: ActionlistItem) =>
-              emit('fztable:rowactionclick', actionIndex, actionListItem, props.data)
+            (actionIndex: number, action: FzActionProps) =>
+              emit('fztable:rowactionclick', actionIndex, action, props.data)
           "></FzIconDropdown>
       </div>
     </div>
