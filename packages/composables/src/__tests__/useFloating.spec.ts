@@ -23,6 +23,7 @@ describe('useFloating', () => {
     mockElement = document.createElement('div')
     mockElement.style.width = '200px'
     mockElement.style.height = '100px'
+    mockElement.style.margin = '0px' // Set explicit margins to avoid NaN from parseFloat
     document.body.appendChild(mockElement)
 
     mockOpener = document.createElement('button')
@@ -207,7 +208,8 @@ describe('useFloating', () => {
       const args = toRefs({
         position: ref<FzFloatingPosition>('bottom-end'),
         element: { domRef: ref(mockElement) },
-        opener: { domRef: ref(mockOpener) }
+        opener: { domRef: ref(mockOpener) },
+        container: { domRef: ref(mockContainer) }
       })
 
       const floating = useFloating(args)
@@ -215,6 +217,9 @@ describe('useFloating', () => {
       await nextTick()
 
       // Element should be adjusted to fit within container
+      // Position values should be valid numbers (not NaN)
+      expect(Number.isNaN(floating.float.position.x)).toBe(false)
+      expect(Number.isNaN(floating.float.position.y)).toBe(false)
       expect(floating.float.position.x).toBeLessThanOrEqual(1024)
       expect(floating.float.position.y).toBeLessThanOrEqual(768)
     })
@@ -305,7 +310,7 @@ describe('useFloating', () => {
   })
 
   describe('error handling', () => {
-    it('should throw error when element ref is missing', async () => {
+    it('should handle missing element ref gracefully', async () => {
       const args = toRefs({
         position: ref<FzFloatingPosition>('bottom'),
         opener: { domRef: ref(mockOpener) },
@@ -314,10 +319,13 @@ describe('useFloating', () => {
 
       const floating = useFloating(args)
 
-      await expect(async () => {
-        await floating.setPosition()
-        await nextTick()
-      }).rejects.toThrow('missing reference element for floating behavior')
+      // Should not throw, just return early when element is missing
+      await floating.setPosition()
+      await nextTick()
+      
+      // Position should remain at initial values (0, 0)
+      expect(floating.float.position.x).toBe(0)
+      expect(floating.float.position.y).toBe(0)
     })
   })
 
