@@ -911,7 +911,7 @@ describe('Accessibility', () => {
 | dialog | ~~`close`, `confirm`, `cancel`~~ | ✅ **COMPLETED** |
 | dropdown | ~~`open`, `close`, `select`~~ | ✅ **COMPLETED** |
 | select | ~~`update:modelValue`~~ | ✅ **COMPLETED** - Note: Component does not emit `search` event (only emits `fzselect:select`, `fzselect:clear`, `fzselect:right-icon-click`) |
-| tab | `tab-change` |
+| tab | ~~`change`~~ | ✅ **COMPLETED** - Note: Component emits `change` event (not `tab-change`). Comprehensive event tests added including mount event, multiple tab switching, disabled tab handling, and event payload verification |
 | toast | `dismiss` |
 | typeahead | ~~`update:modelValue`, `fztypeahead:select`~~ | ✅ **COMPLETED** - Note: Component does not emit `search` event (search is handled internally, no event emitted) |
 | upload | ~~`fzupload:change`, `fzupload:add`, `fzupload:delete`, `fzupload:file-limit-exceeded`~~ | ✅ **COMPLETED** |

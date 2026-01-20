@@ -445,6 +445,104 @@ describe('FzTabs', () => {
       expect(wrapper.text()).toContain('Content tab2')
       expect(wrapper.text()).not.toContain('Content tab1')
     })
+
+    it('should emit change event on mount with initial selected tab', async () => {
+      const wrapper = await createWrapper(
+        {
+          size: 'sm',
+        },
+        {
+          title: 'tab1',
+        },
+        {
+          title: 'tab2',
+        },
+      )
+
+      // Change event should be emitted on mount with the initially selected tab
+      expect(wrapper.emitted('change')).toBeTruthy()
+      const changeEvents = wrapper.emitted('change')!
+      expect(changeEvents[0]).toEqual(['tab1'])
+    })
+
+    it('should emit change event with initialSelected tab on mount', async () => {
+      const wrapper = await createWrapper(
+        {
+          size: 'sm',
+        },
+        {
+          title: 'tab1',
+        },
+        {
+          title: 'tab2',
+          initialSelected: true,
+        },
+      )
+
+      // Change event should be emitted on mount with the tab marked as initialSelected
+      expect(wrapper.emitted('change')).toBeTruthy()
+      const changeEvents = wrapper.emitted('change')!
+      expect(changeEvents[0]).toEqual(['tab2'])
+    })
+
+    it('should emit change event payload as string (tab title)', async () => {
+      const wrapper = await createWrapper(
+        {
+          size: 'sm',
+        },
+        {
+          title: 'tab1',
+        },
+        {
+          title: 'tab2',
+        },
+      )
+
+      const tab2Button = wrapper.find('button[title="tab2"]')
+      await tab2Button.trigger('click')
+
+      const changeEvents = wrapper.emitted('change')!
+      const lastEvent = changeEvents[changeEvents.length - 1]
+      expect(lastEvent).toHaveLength(1)
+      expect(typeof lastEvent[0]).toBe('string')
+      expect(lastEvent[0]).toBe('tab2')
+    })
+
+    it('should emit change event multiple times when switching between tabs', async () => {
+      const wrapper = await createWrapper(
+        {
+          size: 'sm',
+        },
+        {
+          title: 'tab1',
+        },
+        {
+          title: 'tab2',
+        },
+        {
+          title: 'tab3',
+        },
+      )
+
+      const initialCount = wrapper.emitted('change')?.length || 0
+
+      const tab2Button = wrapper.find('button[title="tab2"]')
+      await tab2Button.trigger('click')
+
+      const tab3Button = wrapper.find('button[title="tab3"]')
+      await tab3Button.trigger('click')
+
+      const tab1Button = wrapper.find('button[title="tab1"]')
+      await tab1Button.trigger('click')
+
+      const finalCount = wrapper.emitted('change')?.length || 0
+      expect(finalCount).toBe(initialCount + 3)
+
+      const changeEvents = wrapper.emitted('change')!
+      expect(changeEvents[changeEvents.length - 3]).toEqual(['tab2'])
+      expect(changeEvents[changeEvents.length - 2]).toEqual(['tab3'])
+      expect(changeEvents[changeEvents.length - 1]).toEqual(['tab1'])
+    })
   })
 
   // ============================================
