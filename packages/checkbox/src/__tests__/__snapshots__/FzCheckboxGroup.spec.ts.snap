@@ -6,7 +6,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`]
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-168929032806-nkbo4-label" class="flex flex-col text-base gap-6 text-core-black">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-core-black">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<!--v-if--></span><!-- Optional help text slot for additional context -->
     <!--v-if-->
   </label>
@@ -18,7 +18,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`]
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-168929032806-nkbo4" role="group" aria-labelledby="fz-checkbox-group-168929032806-nkbo4-label" aria-required="false" aria-invalid="false">
+  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="false" aria-invalid="false">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -40,11 +40,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`]
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032807-wmung" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032807-wmung-label" value="option1">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-100000000003-2kdwy" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-100000000003-2kdwy-label" value="option1">
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168929032807-wmung-label" for="fz-checkbox-168929032807-wmung" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -92,11 +92,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`]
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032808-23tcs" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032808-23tcs-label" value="option2">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-100000000006-8d7ea" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-100000000006-8d7ea-label" value="option2">
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168929032808-23tcs-label" for="fz-checkbox-168929032808-23tcs" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000006-8d7ea-label" for="fz-checkbox-100000000006-8d7ea" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -139,7 +139,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - disabled 1`] = `
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-168929032813-8xxi9-label" class="flex flex-col text-base gap-6 text-grey-400">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-grey-400">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<!--v-if--></span><!-- Optional help text slot for additional context -->
     <!--v-if-->
   </label>
@@ -151,7 +151,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - disabled 1`] = `
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-168929032813-8xxi9" role="group" aria-labelledby="fz-checkbox-group-168929032813-8xxi9-label" aria-required="false" aria-invalid="false">
+  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="false" aria-invalid="false">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -173,11 +173,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - disabled 1`] = `
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032813-1z5fw" disabled="" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032813-1z5fw-label" value="option1">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-100000000003-2kdwy" disabled="" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-100000000003-2kdwy-label" value="option1">
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168929032813-1z5fw-label" for="fz-checkbox-168929032813-1z5fw" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -220,7 +220,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-168929032820-mi1pa-label" class="flex flex-col text-base gap-6 text-core-black">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-core-black">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<!--v-if--></span><!-- Optional help text slot for additional context -->
     <!--v-if-->
   </label>
@@ -232,7 +232,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-168929032820-mi1pa" role="group" aria-labelledby="fz-checkbox-group-168929032820-mi1pa-label" aria-required="false" aria-invalid="false">
+  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="false" aria-invalid="false">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -254,11 +254,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032820-frnwd" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032820-frnwd-label" aria-owns="fz-checkbox-168929032820-6dz5d-child-0 fz-checkbox-168929032820-6dz5d-child-1" value="parent">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-100000000003-2kdwy" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-100000000003-2kdwy-label" aria-owns="fz-checkbox-100000000002-22ql0-child-0 fz-checkbox-100000000002-22ql0-child-1" value="parent">
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168929032820-frnwd-label" for="fz-checkbox-168929032820-frnwd" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -307,11 +307,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032820-6dz5d-child-0" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032820-6dz5d-child-0-label" value="child1">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-100000000002-22ql0-child-0" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-100000000002-22ql0-child-0-label" value="child1">
             <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168929032820-6dz5d-child-0-label" for="fz-checkbox-168929032820-6dz5d-child-0" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000002-22ql0-child-0-label" for="fz-checkbox-100000000002-22ql0-child-0" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -352,11 +352,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032820-6dz5d-child-1" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032820-6dz5d-child-1-label" value="child2">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-100000000002-22ql0-child-1" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-100000000002-22ql0-child-1-label" value="child2">
             <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168929032820-6dz5d-child-1-label" for="fz-checkbox-168929032820-6dz5d-child-1" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000002-22ql0-child-1-label" for="fz-checkbox-100000000002-22ql0-child-1" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -401,7 +401,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-168929032814-rz1nj-label" class="flex flex-col text-base gap-6 text-core-black">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-core-black">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<!--v-if--></span><!-- Optional help text slot for additional context -->
     <!--v-if-->
   </label>
@@ -413,7 +413,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-16 flex-row" id="fz-checkbox-group-168929032814-rz1nj" role="group" aria-labelledby="fz-checkbox-group-168929032814-rz1nj-label" aria-required="false" aria-invalid="false">
+  <div class="flex items-start text-base gap-16 flex-row" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="false" aria-invalid="false">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -435,11 +435,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032814-7sdhh" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032814-7sdhh-label" value="option1">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-100000000003-2kdwy" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-100000000003-2kdwy-label" value="option1">
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168929032814-7sdhh-label" for="fz-checkbox-168929032814-7sdhh" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -487,11 +487,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032814-1133j" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032814-1133j-label" value="option2">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-100000000006-8d7ea" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-100000000006-8d7ea-label" value="option2">
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168929032814-1133j-label" for="fz-checkbox-168929032814-1133j" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000006-8d7ea-label" for="fz-checkbox-100000000006-8d7ea" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -534,7 +534,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - required 1`] = `
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-168929032817-81tg6-label" class="flex flex-col text-base gap-6 text-core-black">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-core-black">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<span> *</span></span><!-- Optional help text slot for additional context -->
     <!--v-if-->
   </label>
@@ -546,7 +546,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - required 1`] = `
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-168929032817-81tg6" role="group" aria-labelledby="fz-checkbox-group-168929032817-81tg6-label" aria-required="true" aria-invalid="false">
+  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="true" aria-invalid="false">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -568,11 +568,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - required 1`] = `
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032818-jk4dq" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032818-jk4dq-label" value="option1">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-100000000003-2kdwy" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-100000000003-2kdwy-label" value="option1">
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168929032818-jk4dq-label" for="fz-checkbox-168929032818-jk4dq" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -615,7 +615,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with error 1`] = 
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-168929032810-d3lbt-label" class="flex flex-col text-base gap-6 text-core-black">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-core-black">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<!--v-if--></span><!-- Optional help text slot for additional context -->
     <!--v-if-->
   </label>
@@ -627,7 +627,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with error 1`] = 
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-168929032810-d3lbt" role="group" aria-labelledby="fz-checkbox-group-168929032810-d3lbt-label" aria-describedby="fz-checkbox-group-168929032810-d3lbt-error" aria-required="false" aria-invalid="true">
+  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-describedby="fz-checkbox-group-100000000001-2a84k-error" aria-required="false" aria-invalid="true">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -649,11 +649,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with error 1`] = 
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032811-1keev" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="true" aria-labelledby="fz-checkbox-168929032811-1keev-label" value="option1">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-100000000003-2kdwy" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="true" aria-labelledby="fz-checkbox-100000000003-2kdwy-label" value="option1">
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168929032811-1keev-label" for="fz-checkbox-168929032811-1keev" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -701,7 +701,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with error 1`] = 
       FzAlert with type="error" and announce prop
       would automatically get role="alert" and aria-live="assertive"
   -->
-  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between bg-semantic-error-50 border-semantic-error" id="fz-checkbox-group-168929032810-d3lbt-error" role="alert" aria-live="assertive" aria-atomic="true">
+  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between bg-semantic-error-50 border-semantic-error" id="fz-checkbox-group-100000000001-2a84k-error" role="alert" aria-live="assertive" aria-atomic="true">
     <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-start layout-default flex-1 p-12">
       <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px] text-semantic-error"><svg class="svg-inline--fa fa-circle-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path>
@@ -729,9 +729,9 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with help text 1`
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-168929032816-ju03i-label" class="flex flex-col text-base gap-6 text-core-black">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-core-black">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<!--v-if--></span><!-- Optional help text slot for additional context -->
-    <p id="fz-checkbox-group-168929032816-ju03i-help" class="text-sm text-grey-500">This is help text</p>
+    <p id="fz-checkbox-group-100000000001-2a84k-help" class="text-sm text-grey-500">This is help text</p>
   </label>
   <!-- 
       Checkbox group container with ARIA group role
@@ -741,7 +741,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with help text 1`
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-168929032816-ju03i" role="group" aria-labelledby="fz-checkbox-group-168929032816-ju03i-label" aria-describedby="fz-checkbox-group-168929032816-ju03i-help" aria-required="false" aria-invalid="false">
+  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-describedby="fz-checkbox-group-100000000001-2a84k-help" aria-required="false" aria-invalid="false">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -763,11 +763,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with help text 1`
         - Maintains native keyboard navigation and form behavior
         - Screen readers can interact with it normally
         - Styled via adjacent label and icon using Tailwind's "peer" selector
-      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-168929032816-ovuri" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-168929032816-ovuri-label" value="option1">
+      --><input data-v-79ecb611="" type="checkbox" id="fz-checkbox-100000000003-2kdwy" class="w-0 h-0 peer fz-hidden-input" aria-checked="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-checkbox-100000000003-2kdwy-label" value="option1">
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-168929032816-ovuri-label" for="fz-checkbox-168929032816-ovuri" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]

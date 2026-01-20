@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzRadio > Snapshots > should match snapshot - checked state 1`] = `
-"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" checked="" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168929031202-27nso-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-168929031202-27nso-label" for="Radio" class="flex items-start gap-4 
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" checked="" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-100000000001-2a84k-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-100000000001-2a84k-label" for="Radio" class="flex items-start gap-4 
   text-core-black
   fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio</span>
     <!--v-if-->
@@ -9,7 +9,7 @@ exports[`FzRadio > Snapshots > should match snapshot - checked state 1`] = `
 `;
 
 exports[`FzRadio > Snapshots > should match snapshot - default state 1`] = `
-"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168929031196-e7b38-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-168929031196-e7b38-label" for="Radio" class="flex items-start gap-4 
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-100000000001-2a84k-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-100000000001-2a84k-label" for="Radio" class="flex items-start gap-4 
   text-core-black
   fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio</span>
     <!--v-if-->
@@ -17,7 +17,7 @@ exports[`FzRadio > Snapshots > should match snapshot - default state 1`] = `
 `;
 
 exports[`FzRadio > Snapshots > should match snapshot - disabled state 1`] = `
-"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" disabled="" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="true" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168929031207-qzz8q-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-168929031207-qzz8q-label" for="Radio" class="flex items-start gap-4 
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" disabled="" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="true" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-100000000001-2a84k-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-100000000001-2a84k-label" for="Radio" class="flex items-start gap-4 
   text-core-black
   fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] text-grey-300 before:border-grey-200 before:bg-grey-200 peer-checked:before:bg-transparent"><span data-v-029ccdb9="" class="w-fit">Radio</span>
     <!--v-if-->
@@ -25,7 +25,7 @@ exports[`FzRadio > Snapshots > should match snapshot - disabled state 1`] = `
 `;
 
 exports[`FzRadio > Snapshots > should match snapshot - emphasis state 1`] = `
-"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168929031209-dreh2-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-168929031209-dreh2-label" for="Radio" class="flex items-start gap-4 
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-100000000001-2a84k-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-100000000001-2a84k-label" for="Radio" class="flex items-start gap-4 
   text-core-black
   fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500 peer-checked:before:border-blue-500"><span data-v-029ccdb9="" class="w-fit">Radio</span>
     <!--v-if-->
@@ -33,7 +33,7 @@ exports[`FzRadio > Snapshots > should match snapshot - emphasis state 1`] = `
 `;
 
 exports[`FzRadio > Snapshots > should match snapshot - error state 1`] = `
-"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="true" aria-labelledby="fz-radio-168929031208-ggpjq-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-168929031208-ggpjq-label" for="Radio" class="flex items-start gap-4 
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="true" aria-labelledby="fz-radio-100000000001-2a84k-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-100000000001-2a84k-label" for="Radio" class="flex items-start gap-4 
   text-core-black
   fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-semantic-error text-semantic-error"><span data-v-029ccdb9="" class="w-fit">Radio</span>
     <!--v-if-->
@@ -50,7 +50,7 @@ exports[`FzRadio > Snapshots > should match snapshot - standalone state 1`] = `
 `;
 
 exports[`FzRadio > Snapshots > should match snapshot - with tooltip 1`] = `
-"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-168929031210-1kpez-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-168929031210-1kpez-label" for="Radio" class="flex items-start gap-4 
+"<div data-v-029ccdb9="" class="flex justify-center flex-col w-fit"><input data-v-029ccdb9="" type="radio" id="Radio" class="peer h-0 w-0 absolute fz-hidden-input radio--medium" aria-checked="false" aria-disabled="false" aria-required="false" aria-invalid="false" aria-labelledby="fz-radio-100000000001-2a84k-label" value="Radio"><label data-v-029ccdb9="" id="fz-radio-100000000001-2a84k-label" for="Radio" class="flex items-start gap-4 
   text-core-black
   fz-radio__label text-base before:h-16 before:w-16 peer-checked:before:border-[5px] before:border-grey-500"><span data-v-029ccdb9="" class="w-fit">Radio</span>
     <div data-v-49515ccb="" data-v-029ccdb9="" class="fz__tooltip flex h-max">
