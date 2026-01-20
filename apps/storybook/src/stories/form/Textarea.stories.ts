@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from '@storybook/test'
 import { FzTextarea } from '@fiscozen/textarea'
 import { ref } from 'vue'
 
@@ -33,9 +33,19 @@ type Story = StoryObj<typeof meta>
 
 const Default: Story = {
   args: {
-    id: 'default'
+    id: 'default',
+    // 👇 Define spy in args - accessible via args parameter in play function
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  render: (args) => ({
+    components: { FzTextarea },
+    setup() {
+      const value = ref('')
+      return { args, value }
+    },
+    template: `<FzTextarea v-bind="args" :modelValue="value" @update:modelValue="args['onUpdate:modelValue']($event); value = $event" />`
+  }),
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify textarea renders correctly', async () => {
@@ -57,15 +67,33 @@ const Default: Story = {
       const textareaId = textarea.getAttribute('id')
       await expect(labelFor).toBe(textareaId)
     })
+    
+    await step('Verify update:modelValue IS called when typing', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
+      await userEvent.type(textarea, 'Test')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+    })
   }
 }
 
 const WithValue: Story = {
   args: {
     id: 'default',
-    modelValue: 'This is the initial value'
+    modelValue: 'This is the initial value',
+    // 👇 Define spy in args - accessible via args parameter in play function
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  render: (args) => ({
+    components: { FzTextarea },
+    setup() {
+      const value = ref('This is the initial value')
+      return { args, value }
+    },
+    template: `<FzTextarea v-bind="args" :modelValue="value" @update:modelValue="args['onUpdate:modelValue']($event); value = $event" />`
+  }),
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify initial value is displayed', async () => {
@@ -73,17 +101,23 @@ const WithValue: Story = {
       await expect(textarea).toHaveValue('This is the initial value')
     })
     
-    await step('Type additional text', async () => {
+    await step('Type additional text and verify update:modelValue IS called', async () => {
       const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
       await userEvent.clear(textarea)
       await userEvent.type(textarea, 'Updated value')
       await expect(textarea).toHaveValue('Updated value')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
     
-    await step('Clear textarea', async () => {
+    await step('Clear textarea and verify update:modelValue IS called', async () => {
       const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
       await userEvent.clear(textarea)
       await expect(textarea).toHaveValue('')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called (multiple times total)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
   }
 }
@@ -205,9 +239,19 @@ const Required: Story = {
 const Disabled: Story = {
   args: {
     id: 'disabled',
-    disabled: true
+    disabled: true,
+    // 👇 Define spy in args - it should NOT be called when disabled
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  render: (args) => ({
+    components: { FzTextarea },
+    setup() {
+      const value = ref('')
+      return { args, value }
+    },
+    template: `<FzTextarea v-bind="args" :modelValue="value" @update:modelValue="args['onUpdate:modelValue']($event); value = $event" />`
+  }),
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify disabled state', async () => {
@@ -235,6 +279,16 @@ const Disabled: Story = {
       await userEvent.type(textarea, 'test')
       await expect(textarea).toHaveValue(initialValue)
     })
+    
+    await step('Verify update:modelValue is NOT called when typing in disabled textarea', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
+      
+      // Attempt to type in the disabled textarea
+      await userEvent.type(textarea, 'test')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+    })
   }
 }
 
@@ -245,43 +299,64 @@ const Typing: Story = {
       const value = ref('')
       return { args, value }
     },
-    template: `<FzTextarea v-bind="args" v-model="value" />`
+    template: `<FzTextarea v-bind="args" :modelValue="value" @update:modelValue="args['onUpdate:modelValue']($event); value = $event" />`
   }),
   args: {
-    id: 'typing'
+    id: 'typing',
+    // 👇 Define spy in args - accessible via args parameter in play function
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
-    await step('Type in textarea field', async () => {
+    await step('Type in textarea field and verify update:modelValue IS called', async () => {
       const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
       await userEvent.clear(textarea)
       await userEvent.type(textarea, 'This is a test message')
       await expect(textarea).toHaveValue('This is a test message')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
     
-    await step('Type multiple lines', async () => {
+    await step('Type multiple lines and verify update:modelValue IS called', async () => {
       const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
       await userEvent.clear(textarea)
       await userEvent.type(textarea, 'Line 1{Enter}Line 2{Enter}Line 3')
       await expect(textarea.value).toContain('Line 1')
       await expect(textarea.value).toContain('Line 2')
       await expect(textarea.value).toContain('Line 3')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called (multiple times total)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
     
-    await step('Verify textarea can be cleared', async () => {
+    await step('Verify textarea can be cleared and update:modelValue IS called', async () => {
       const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
       await userEvent.clear(textarea)
       await expect(textarea).toHaveValue('')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called (multiple times total)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
   }
 }
 
 const KeyboardNavigation: Story = {
   args: {
-    id: 'keyboard-nav'
+    id: 'keyboard-nav',
+    // 👇 Define spy in args - accessible via args parameter in play function
+    'onUpdate:modelValue': fn()
   },
-  play: async ({ canvasElement, step }) => {
+  render: (args) => ({
+    components: { FzTextarea },
+    setup() {
+      const value = ref('')
+      return { args, value }
+    },
+    template: `<FzTextarea v-bind="args" :modelValue="value" @update:modelValue="args['onUpdate:modelValue']($event); value = $event" />`
+  }),
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Tab to focus textarea', async () => {
@@ -290,11 +365,14 @@ const KeyboardNavigation: Story = {
       await expect(document.activeElement).toBe(textarea)
     })
     
-    await step('Type text with keyboard', async () => {
+    await step('Type text with keyboard and verify update:modelValue IS called', async () => {
       const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
       await userEvent.clear(textarea)
       await userEvent.type(textarea, 'Keyboard input test')
       await expect(textarea).toHaveValue('Keyboard input test')
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
     
     await step('Navigate with arrow keys', async () => {

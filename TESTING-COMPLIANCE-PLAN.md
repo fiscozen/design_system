@@ -2629,3 +2629,19 @@ export const MyStory: Story = {
 - All 12 CheckboxGroup story tests passing ✅
 - Phase 7 (Spy Function Pattern Refactor) progress: CheckboxGroup.stories.ts completed
 
+
+### January 20, 2026 - Textarea Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `textarea` (Storybook)
+- Added spy function pattern to Textarea.stories.ts for robust interaction testing
+- Imported `fn` from `@storybook/test` for spy function support
+- Enhanced Default story with `onUpdate:modelValue` spy to verify click interactions
+- Enhanced WithValue story with spy to verify `update:modelValue` IS called when typing and clearing
+- Enhanced Disabled story with spy to verify `update:modelValue` is NOT called when disabled
+- Enhanced Typing story with spy to verify handler IS called when typing single and multiple lines
+- Enhanced KeyboardNavigation story with spy to verify handler IS called on keyboard input
+- Updated all stories that use v-model to use `:modelValue` and `@update:modelValue` pattern to avoid double-calling spy
+- All play functions test user interactions and verify handlers are called (or NOT called for disabled states)
+- All 11 Textarea story tests passing ✅
+- All 75 unit tests passing ✅
+- Phase 7 (Spy Function Pattern Refactor) progress: Textarea.stories.ts completed
