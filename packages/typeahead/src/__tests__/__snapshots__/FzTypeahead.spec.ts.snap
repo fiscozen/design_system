@@ -2,7 +2,7 @@
 
 exports[`FzTypeahead > Snapshots > should match snapshot - backoffice environment 1`] = `
 "<div class="flex flex-col gap-8 overflow-visible">
-  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-wsr5zzr" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-32 text-base border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="false">
+  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-4fzzzxj" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-32 text-base border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="false">
       <!--v-if-->
       <!--
         Floating-label variant: two-span layout for compact form styling
@@ -64,12 +64,12 @@ exports[`FzTypeahead > Snapshots > should match snapshot - backoffice environmen
           <path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path>
         </svg></div>
     </button>
-    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-wsr5zzr" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="true" style="display: none;">
+    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-4fzzzxj" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="true" style="display: none;">
       <!--v-if-->
       <div class="flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none h-32 border-grey-300 has-[:focus]:border-blue-600 bg-core-white text-core-black cursor-text" tabindex="0">
         <!--v-if-->
         <div class="flex flex-col justify-around min-w-0 grow">
-          <!--v-if--><input type="text" id="fztypeahead-opener-wsr5zzr" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true">
+          <!--v-if--><input type="text" id="fztypeahead-opener-4fzzzxj" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true">
         </div>
         <!--v-if-->
         <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -87,7 +87,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - backoffice environmen
 
 exports[`FzTypeahead > Snapshots > should match snapshot - default state 1`] = `
 "<div class="flex flex-col gap-8 overflow-visible">
-  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-zuazqm0" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="false">
+  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-4fzzzxj" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="false">
       <!--v-if-->
       <!--
         Floating-label variant: two-span layout for compact form styling
@@ -149,12 +149,12 @@ exports[`FzTypeahead > Snapshots > should match snapshot - default state 1`] = `
           <path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path>
         </svg></div>
     </button>
-    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-zuazqm0" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="true" style="display: none;">
+    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-4fzzzxj" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="true" style="display: none;">
       <!--v-if-->
       <div class="flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none h-44 border-grey-300 has-[:focus]:border-blue-600 bg-core-white text-core-black cursor-text" tabindex="0">
         <!--v-if-->
         <div class="flex flex-col justify-around min-w-0 grow">
-          <!--v-if--><input type="text" id="fztypeahead-opener-zuazqm0" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true">
+          <!--v-if--><input type="text" id="fztypeahead-opener-4fzzzxj" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true">
         </div>
         <!--v-if-->
         <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -172,7 +172,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - default state 1`] = `
 
 exports[`FzTypeahead > Snapshots > should match snapshot - disabled state 1`] = `
 "<div class="flex flex-col gap-8 overflow-visible">
-  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-yc9pszi" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed focus:border-grey-100" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="true" aria-hidden="false">
+  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-4fzzzxj" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed focus:border-grey-100" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="true" aria-hidden="false">
       <!--v-if-->
       <!--
         Floating-label variant: two-span layout for compact form styling
@@ -234,12 +234,12 @@ exports[`FzTypeahead > Snapshots > should match snapshot - disabled state 1`] = 
           <path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path>
         </svg></div>
     </button>
-    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-yc9pszi" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="true" aria-hidden="true" style="display: none;">
+    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-4fzzzxj" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="true" aria-hidden="true" style="display: none;">
       <!--v-if-->
       <div class="flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none h-44 bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed">
         <!--v-if-->
         <div class="flex flex-col justify-around min-w-0 grow">
-          <!--v-if--><input type="text" disabled="" id="fztypeahead-opener-yc9pszi" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="true" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true">
+          <!--v-if--><input type="text" disabled="" id="fztypeahead-opener-4fzzzxj" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="true" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true">
         </div>
         <!--v-if-->
         <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -257,7 +257,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - disabled state 1`] = 
 
 exports[`FzTypeahead > Snapshots > should match snapshot - error state 1`] = `
 "<div class="flex flex-col gap-8 overflow-visible">
-  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-zi4oyr8" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg border-semantic-error-200 bg-white text-core-black cursor-pointer focus:border-semantic-error-300" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="true" aria-disabled="false" aria-hidden="false">
+  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-4fzzzxj" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg border-semantic-error-200 bg-white text-core-black cursor-pointer focus:border-semantic-error-300" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="true" aria-disabled="false" aria-hidden="false">
       <!--v-if-->
       <!--
         Floating-label variant: two-span layout for compact form styling
@@ -319,12 +319,12 @@ exports[`FzTypeahead > Snapshots > should match snapshot - error state 1`] = `
           <path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path>
         </svg></div>
     </button>
-    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-zi4oyr8" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="true" aria-disabled="false" aria-hidden="true" style="display: none;">
+    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-4fzzzxj" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="true" aria-disabled="false" aria-hidden="true" style="display: none;">
       <!--v-if-->
       <div class="flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none h-44 border-semantic-error-200 has-[:focus]:border-semantic-error-300 bg-core-white text-core-black cursor-text" tabindex="0">
         <!--v-if-->
         <div class="flex flex-col justify-around min-w-0 grow">
-          <!--v-if--><input type="text" id="fztypeahead-opener-zi4oyr8" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="true" aria-disabled="false" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true">
+          <!--v-if--><input type="text" id="fztypeahead-opener-4fzzzxj" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="true" aria-disabled="false" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true">
         </div>
         <!--v-if-->
         <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -363,7 +363,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - error state 1`] = `
 
 exports[`FzTypeahead > Snapshots > should match snapshot - readonly state 1`] = `
 "<div class="flex flex-col gap-8 overflow-visible">
-  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-ix3msub" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed focus:border-grey-100" title="Option 1" aria-expanded="false" aria-haspopup="listbox" aria-label="Option 1" aria-required="false" aria-invalid="false" aria-disabled="true" aria-hidden="false">
+  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-4fzzzxj" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed focus:border-grey-100" title="Option 1" aria-expanded="false" aria-haspopup="listbox" aria-label="Option 1" aria-required="false" aria-invalid="false" aria-disabled="true" aria-hidden="false">
       <!--v-if-->
       <!--
         Floating-label variant: two-span layout for compact form styling
@@ -425,12 +425,12 @@ exports[`FzTypeahead > Snapshots > should match snapshot - readonly state 1`] = 
           <path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path>
         </svg></div>
     </button>
-    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-ix3msub" aria-expanded="false" aria-haspopup="listbox" aria-label="Option 1" aria-required="false" aria-invalid="false" aria-disabled="true" aria-hidden="true" style="display: none;">
+    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-4fzzzxj" aria-expanded="false" aria-haspopup="listbox" aria-label="Option 1" aria-required="false" aria-invalid="false" aria-disabled="true" aria-hidden="true" style="display: none;">
       <!--v-if-->
       <div class="flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none h-44 bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed">
         <!--v-if-->
         <div class="flex flex-col justify-around min-w-0 grow">
-          <!--v-if--><input type="text" readonly="" id="fztypeahead-opener-ix3msub" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="true" aria-expanded="false" aria-haspopup="listbox" aria-label="Option 1" aria-hidden="true">
+          <!--v-if--><input type="text" readonly="" id="fztypeahead-opener-4fzzzxj" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="true" aria-expanded="false" aria-haspopup="listbox" aria-label="Option 1" aria-hidden="true">
         </div>
         <!--v-if-->
         <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -448,7 +448,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - readonly state 1`] = 
 
 exports[`FzTypeahead > Snapshots > should match snapshot - with icons 1`] = `
 "<div class="flex flex-col gap-8 overflow-visible">
-  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-db3yidn" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="false">
+  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-4fzzzxj" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="false">
       <div class="flex items-center justify-center w-[20px] h-[20px] text-core-black"><svg class="svg-inline--fa fa-bell h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
           <path class="" fill="currentColor" d="M224 0c-17.7 0-32 14.3-32 32l0 19.2C119 66 64 130.6 64 208l0 25.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416l400 0c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4l0-25.4c0-77.4-55-142-128-156.8L256 32c0-17.7-14.3-32-32-32zm0 96c61.9 0 112 50.1 112 112l0 25.4c0 47.9 13.9 94.6 39.7 134.6L72.3 368C98.1 328 112 281.3 112 233.4l0-25.4c0-61.9 50.1-112 112-112zm64 352l-64 0-64 0c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"></path>
         </svg></div>
@@ -514,14 +514,14 @@ exports[`FzTypeahead > Snapshots > should match snapshot - with icons 1`] = `
           <path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path>
         </svg></div>
     </button>
-    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-db3yidn" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="true" style="display: none;">
+    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-4fzzzxj" aria-expanded="false" aria-haspopup="listbox" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="true" style="display: none;">
       <!--v-if-->
       <div class="flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none h-44 border-grey-300 has-[:focus]:border-blue-600 bg-core-white text-core-black cursor-text" tabindex="0">
         <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-bell h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
             <path class="" fill="currentColor" d="M224 0c-17.7 0-32 14.3-32 32l0 19.2C119 66 64 130.6 64 208l0 25.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416l400 0c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4l0-25.4c0-77.4-55-142-128-156.8L256 32c0-17.7-14.3-32-32-32zm0 96c61.9 0 112 50.1 112 112l0 25.4c0 47.9 13.9 94.6 39.7 134.6L72.3 368C98.1 328 112 281.3 112 233.4l0-25.4c0-61.9 50.1-112 112-112zm64 352l-64 0-64 0c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"></path>
           </svg></div>
         <div class="flex flex-col justify-around min-w-0 grow">
-          <!--v-if--><input type="text" id="fztypeahead-opener-db3yidn" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true">
+          <!--v-if--><input type="text" id="fztypeahead-opener-4fzzzxj" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true">
         </div>
         <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
             <path class="" fill="currentColor" d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
@@ -540,8 +540,8 @@ exports[`FzTypeahead > Snapshots > should match snapshot - with icons 1`] = `
 `;
 
 exports[`FzTypeahead > Snapshots > should match snapshot - with label 1`] = `
-"<div class="flex flex-col gap-8 overflow-visible"><label id="fztypeahead-label-shducm9" for="fztypeahead-opener-shducm9" class="text-base leading-5 text-core-black">Select an option</label>
-  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-shducm9" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="fztypeahead-label-shducm9" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="false">
+"<div class="flex flex-col gap-8 overflow-visible"><label id="fztypeahead-label-4fzzzxj" for="fztypeahead-opener-4fzzzxj" class="text-base leading-5 text-core-black">Select an option</label>
+  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-4fzzzxj" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="fztypeahead-label-4fzzzxj" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="false">
       <!--v-if-->
       <!--
         Floating-label variant: two-span layout for compact form styling
@@ -603,12 +603,12 @@ exports[`FzTypeahead > Snapshots > should match snapshot - with label 1`] = `
           <path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path>
         </svg></div>
     </button>
-    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-shducm9" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="fztypeahead-label-shducm9" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="true" style="display: none;">
+    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-4fzzzxj" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="fztypeahead-label-4fzzzxj" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="true" style="display: none;">
       <!--v-if-->
       <div class="flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none h-44 border-grey-300 has-[:focus]:border-blue-600 bg-core-white text-core-black cursor-text" tabindex="0">
         <!--v-if-->
         <div class="flex flex-col justify-around min-w-0 grow">
-          <!--v-if--><input type="text" id="fztypeahead-opener-shducm9" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="fztypeahead-label-shducm9" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true">
+          <!--v-if--><input type="text" id="fztypeahead-opener-4fzzzxj" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="fztypeahead-label-4fzzzxj" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true">
         </div>
         <!--v-if-->
         <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -626,7 +626,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - with label 1`] = `
 
 exports[`FzTypeahead > Snapshots > should match snapshot - with selected value 1`] = `
 "<div class="flex flex-col gap-8 overflow-visible">
-  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-4ta7293" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500" title="Option 1" aria-expanded="false" aria-haspopup="listbox" aria-label="Option 1" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="false">
+  <div class="inline-flex w-full sm:w-auto"><button id="fztypeahead-opener-4fzzzxj" test-id="fztypeahead-opener" type="button" class="flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none h-44 text-lg border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500" title="Option 1" aria-expanded="false" aria-haspopup="listbox" aria-label="Option 1" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="false">
       <!--v-if-->
       <!--
         Floating-label variant: two-span layout for compact form styling
@@ -688,12 +688,12 @@ exports[`FzTypeahead > Snapshots > should match snapshot - with selected value 1
           <path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path>
         </svg></div>
     </button>
-    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-4ta7293" aria-expanded="false" aria-haspopup="listbox" aria-label="Option 1" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="true" style="display: none;">
+    <div class="fz-input w-full flex flex-col gap-8" id="fztypeahead-opener-4fzzzxj" aria-expanded="false" aria-haspopup="listbox" aria-label="Option 1" aria-required="false" aria-invalid="false" aria-disabled="false" aria-hidden="true" style="display: none;">
       <!--v-if-->
       <div class="flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none h-44 border-grey-300 has-[:focus]:border-blue-600 bg-core-white text-core-black cursor-text" tabindex="0">
         <!--v-if-->
         <div class="flex flex-col justify-around min-w-0 grow">
-          <!--v-if--><input type="text" id="fztypeahead-opener-4ta7293" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false" aria-expanded="false" aria-haspopup="listbox" aria-label="Option 1" aria-hidden="true">
+          <!--v-if--><input type="text" id="fztypeahead-opener-4fzzzxj" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" aria-required="false" aria-invalid="false" aria-disabled="false" aria-expanded="false" aria-haspopup="listbox" aria-label="Option 1" aria-hidden="true">
         </div>
         <!--v-if-->
         <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">

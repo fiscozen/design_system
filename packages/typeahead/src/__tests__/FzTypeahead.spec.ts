@@ -2860,6 +2860,16 @@ describe("FzTypeahead", () => {
   // SNAPSHOTS
   // ============================================
   describe("Snapshots", () => {
+    // Mock Math.random() to ensure consistent IDs in snapshots
+    beforeEach(() => {
+      // Use a fixed value for consistent ID generation across all snapshot tests
+      vi.spyOn(Math, 'random').mockReturnValue(0.123456789)
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
     it("should match snapshot - default state", async () => {
       const wrapper = mount(FzTypeahead, {
         props: {
