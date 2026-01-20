@@ -1,10 +1,8 @@
-
 export const mapEnvironmentToClasses = {
   backoffice: "text-md h-40 gap-8 py-8 px-12",
   frontoffice: "text-md h-48 gap-8 py-8 px-12",
 };
 /**
- * Maps environment to size for backward compatibility
  * Both backoffice and frontoffice use 'md' size based on design specs
  */
 export const mapSizeToEnvironment = {
@@ -12,9 +10,6 @@ export const mapSizeToEnvironment = {
   md: "frontoffice" as const,
 };
 
-/**
- * Maps tone to selected tab classes
- */
 export const mapSelectedTabToClassesWithTone = {
   neutral: {
     picker: "bg-background-alice-blue text-blue-500",
@@ -26,9 +21,6 @@ export const mapSelectedTabToClassesWithTone = {
   },
 };
 
-/**
- * Maps tone to unselected tab classes
- */
 export const mapUnselectedTabToClassesWithTone = {
   neutral: {
     picker:
@@ -41,3 +33,9 @@ export const mapUnselectedTabToClassesWithTone = {
     tab: "text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-semantic-error",
   },
 };
+
+export function debugWarn(message: string, isDebug: boolean) {
+  if (isDebug) {
+    console.warn(message);
+  }
+}

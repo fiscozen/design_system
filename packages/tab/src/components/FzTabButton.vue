@@ -55,23 +55,54 @@ const props = withDefaults(
 const selectedTab = inject<Ref<string>>("selectedTab");
 const emit = defineEmits(["click"]);
 
+/**
+ * Builds the CSS classes array for a tab button based on its state and configuration.
+ * @param tone - The tone of the tab (neutral or alert)
+ * @param isSelected - Whether the tab is currently selected
+ * @param type - The type of tab (picker or tab)
+ * @param environment - The environment (frontoffice or backoffice)
+ * @param isDisabled - Whether the tab is disabled
+ * @param maxWidth - Optional max width value
+ * @param isXsBreakpoint - Whether the current viewport is at xs breakpoint (defaults to false)
+ * @returns Array of CSS class strings
+ */
+function getTabButtonClasses(
+  tone: "neutral" | "alert",
+  isSelected: boolean,
+  type: "picker" | "tab",
+  environment: "frontoffice" | "backoffice",
+  isDisabled: boolean,
+  maxWidth?: string,
+  isXsBreakpoint: boolean = false,
+): string[] {
+  const toneClasses = isSelected
+    ? mapSelectedTabToClassesWithTone[tone][type]
+    : mapUnselectedTabToClassesWithTone[tone][type];
+
+  return [
+    "w-auto flex font-medium items-center  rounded-md",
+    mapEnvironmentToClasses[environment],
+    type === "picker" ? "text-left" : "",
+    toneClasses,
+    isDisabled ? "cursor-not-allowed" : "cursor-pointer",
+    maxWidth && !isXsBreakpoint ? `max-w-[${maxWidth}]` : "",
+    isXsBreakpoint ? "!max-w-full !w-full" : "",
+  ];
+}
+
 const classes = computed(() => {
   const tone = props.tone || "neutral";
   const isSelected = selectedTab?.value === props.tab.title;
 
-  const toneClasses = isSelected
-    ? mapSelectedTabToClassesWithTone[tone][props.type]
-    : mapUnselectedTabToClassesWithTone[tone][props.type];
-
-  return [
-    "w-auto flex font-medium items-center  rounded-md",
-    mapEnvironmentToClasses[props.environment],
-    props.type === "picker" ? "text-left" : "",
-    toneClasses,
-    props.tab.disabled ? "cursor-not-allowed" : "cursor-pointer",
-    props.maxWidth && !xs.value ? `max-w-[${props.maxWidth}]` : "",
-    xs.value ? "!max-w-full !w-full" : "",
-  ];
+  return getTabButtonClasses(
+    tone,
+    isSelected,
+    props.type,
+    props.environment,
+    props.tab.disabled ?? false,
+    props.maxWidth,
+    xs.value ?? false,
+  );
 });
 
 const onClickTab = () => {

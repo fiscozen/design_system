@@ -31,6 +31,10 @@ export type FzTabsProps = {
    * - 'alert': Alert/error styling (red variant)
    */
   tone?: "neutral" | "alert";
+  /**
+   * Enable debug mode
+   */
+  isDebug?: boolean;
 };
 
 export type FzTabProps = {
