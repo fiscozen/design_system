@@ -2363,7 +2363,7 @@ Stories with disabled states or interaction tests that should use `fn()` spies:
 | button/ButtonGroup.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | navigation/Dropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | navigation/IconDropdown.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
-| navigation/Link.stories.ts | ✅ Has disabled | ✅ Has interactions | 0.5 |
+| navigation/Link.stories.ts | ✅ Has disabled | ✅ Has interactions | ✅ **COMPLETED** |
 | navigation/Actionlist.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | navigation/Navlist.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
 | panel/Tab.stories.ts | ✅ Has disabled | ✅ Has interactions | 1 |
@@ -2693,3 +2693,15 @@ export const MyStory: Story = {
 - All 10 Upload story tests passing ✅
 - All unit tests passing ✅
 - Phase 7 (Spy Function Pattern Refactor) progress: Upload.stories.ts completed
+
+### January 20, 2026 - Link Stories Spy Function Pattern Enhancement ✅
+
+**Package:** `link` (Storybook)
+- Added spy function pattern to Link.stories.ts for robust interaction testing
+- Enhanced Default, Danger, ExternalLink, and KeyboardNavigation stories with `onClick` spy to verify click interactions
+- Enhanced Disabled and DisabledDanger stories to verify disabled links render as spans and do not navigate (no click handler attached)
+- Added ExternalLink story with spy function pattern for external link testing
+- Added KeyboardNavigation story with spy function pattern for Enter key activation
+- All play functions test user interactions and verify handlers are called (or verify disabled links don't navigate)
+- All tests passing: 21 storybook play function tests (verified with `pnpm test:storybook --run Link`)
+- Phase 7 (Spy Function Pattern Refactor) progress: Link.stories.ts completed
