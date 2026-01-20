@@ -1,26 +1,26 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzActionSection > Snapshots > should match snapshot - default state 1`] = `
-"<div class="flex flex-col gap-4" role="group" aria-labelledby="fz-action-section-label-u2p90q6">
-  <div class="text-grey-400 flex items-center px-12 py-6 text-sm leading-[16px]" id="fz-action-section-label-u2p90q6">Section Label</div>
+"<div class="flex flex-col gap-4" role="group" aria-labelledby="fz-action-section-label-4fzzzxj">
+  <div class="text-grey-400 flex items-center px-12 py-6 text-sm leading-[16px]" id="fz-action-section-label-4fzzzxj">Section Label</div>
 </div>"
 `;
 
 exports[`FzActionSection > Snapshots > should match snapshot - with default slot 1`] = `
-"<div class="flex flex-col gap-4" role="group" aria-labelledby="fz-action-section-label-syvygfs">
-  <div class="text-grey-400 flex items-center px-12 py-6 text-sm leading-[16px]" id="fz-action-section-label-syvygfs">Section</div>
+"<div class="flex flex-col gap-4" role="group" aria-labelledby="fz-action-section-label-4fzzzxj">
+  <div class="text-grey-400 flex items-center px-12 py-6 text-sm leading-[16px]" id="fz-action-section-label-4fzzzxj">Section</div>
   <div>Content</div>
 </div>"
 `;
 
 exports[`FzActionSection > Snapshots > should match snapshot - with slot label 1`] = `
-"<div class="flex flex-col gap-4" role="group" aria-labelledby="fz-action-section-label-04ndz3n">
-  <div class="text-grey-400 flex items-center px-12 py-6 text-sm leading-[16px]" id="fz-action-section-label-04ndz3n">Slot Label</div>
+"<div class="flex flex-col gap-4" role="group" aria-labelledby="fz-action-section-label-4fzzzxj">
+  <div class="text-grey-400 flex items-center px-12 py-6 text-sm leading-[16px]" id="fz-action-section-label-4fzzzxj">Slot Label</div>
 </div>"
 `;
 
 exports[`FzActionSection > Snapshots > should match snapshot - without label 1`] = `
-"<div class="flex flex-col gap-4" role="group" aria-labelledby="fz-action-section-label-zrl8jgo">
+"<div class="flex flex-col gap-4" role="group" aria-labelledby="fz-action-section-label-4fzzzxj">
   <!--v-if-->
 </div>"
 `;

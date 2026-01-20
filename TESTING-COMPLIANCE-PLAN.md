@@ -3021,15 +3021,30 @@ All 42 component packages now have unit tests with:
    - All interactive component stories already use spy pattern
 
 3. **Minor Fixes**
-   - Update snapshot tests in `action` package (4 snapshots)
+   - ✅ Update snapshot tests in `action` package (4 snapshots) - **COMPLETED**
    - Update snapshot tests in `typeahead` package (8 snapshots)
 
 ### Next Steps
 
-1. Run `pnpm --filter @fiscozen/action test:unit -- -u` to update action snapshots
+1. ~~Run `pnpm --filter @fiscozen/action test:unit -- -u` to update action snapshots~~ ✅ **COMPLETED**
 2. Run `pnpm --filter @fiscozen/typeahead test:unit -- -u` to update typeahead snapshots
 3. Configure coverage thresholds in `vitest.config.ts` files
 4. Set up CI/CD pipeline for test automation
+
+---
+
+### January 20, 2026 - Action Package Snapshot Test Fixes ✅
+
+**Package:** `action` (Unit Tests)
+- Fixed snapshot test failures in `FzActionSection.spec.ts` caused by dynamic ID generation
+- Added `Math.random()` mock in snapshot tests to ensure consistent ID generation (`4fzzzxj`)
+- Updated 4 snapshot files to use consistent IDs:
+  - `should match snapshot - default state`
+  - `should match snapshot - with slot label`
+  - `should match snapshot - without label`
+  - `should match snapshot - with default slot`
+- All 122 unit tests passing ✅
+- Phase 6 (Minor Fixes) progress: Action package snapshots completed
 
 ---
 

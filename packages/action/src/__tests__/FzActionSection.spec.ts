@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import FzActionSection from '../FzActionSection.vue'
 
@@ -215,6 +215,16 @@ describe('FzActionSection', () => {
   // SNAPSHOTS
   // ============================================
   describe('Snapshots', () => {
+    // Mock Math.random() to ensure consistent IDs in snapshots
+    beforeEach(() => {
+      // Use a fixed value for consistent ID generation across all snapshot tests
+      vi.spyOn(Math, 'random').mockReturnValue(0.123456789)
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
     it('should match snapshot - default state', () => {
       const wrapper = mount(FzActionSection, {
         props: {
