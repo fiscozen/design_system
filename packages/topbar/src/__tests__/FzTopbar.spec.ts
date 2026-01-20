@@ -1,7 +1,17 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
+import { ref } from 'vue'
 import { FzTopbar } from '..'
+
+// Mock must be hoisted to module level
+vi.mock('@fiscozen/composables', () => ({
+  useBreakpoints: () => ({
+    isGreater: () => ref(false),
+    isSmaller: () => ref(false),
+    isInBetween: () => ref(false)
+  })
+}))
 
 const router = createRouter({
   history: createWebHistory(),
@@ -15,11 +25,6 @@ describe('FzTopbar', () => {
   let wrapper: VueWrapper<any>
 
   beforeEach(() => {
-    vi.mock('@fiscozen/composables', () => ({
-      useBreakpoints: vi.fn().mockReturnValue({
-        isGreater: vi.fn().mockReturnValue(false)
-      })
-    }))
     vi.spyOn(console, 'warn').mockImplementation(() => {})
     vi.spyOn(console, 'error').mockImplementation(() => {})
   })

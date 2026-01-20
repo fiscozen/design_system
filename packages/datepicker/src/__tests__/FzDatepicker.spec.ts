@@ -1,17 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
+import { ref } from "vue";
 import { FzDatepicker } from "..";
+
+// Mock must be hoisted to module level
+vi.mock("@fiscozen/composables", () => ({
+  useBreakpoints: () => ({
+    isGreater: () => ref(false),
+    isSmaller: () => ref(false),
+    isInBetween: () => ref(false)
+  })
+}));
 
 describe("FzDatepicker", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
-
-  vi.mock("@fiscozen/composables", () => ({
-    useBreakpoints: vi.fn().mockReturnValue({
-      isSmaller: vi.fn().mockReturnValue(false),
-    }),
-  }));
 
   // ============================================
   // RENDERING TESTS
