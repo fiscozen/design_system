@@ -17,12 +17,24 @@ export default mergeConfig(
       environment: 'jsdom',
       exclude: [...configDefaults.exclude, 'e2e/*'],
       root: fileURLToPath(new URL('./', import.meta.url)),
+      // Add teardown timeout to allow browser to close gracefully
+      teardownTimeout: 10000,
+      // Global test timeout
+      testTimeout: 30000,
+      // Hook timeout for setup/teardown
+      hookTimeout: 30000,
+      // Retry flaky tests
+      retry: 1,
+      // Disable parallel file execution to reduce browser instability
+      fileParallelism: false,
       browser: {
         enabled: true,
         provider: 'playwright',
         headless: true,
         instances: [
-          { browser: 'chromium' }
+          // Use Firefox instead of Chromium to avoid headless Chromium crashes
+          // See: https://github.com/vitest-dev/vitest/issues/8399
+          { browser: 'firefox' }
         ]
       },
       setupFiles: ['.storybook/vitest.setup.ts'],

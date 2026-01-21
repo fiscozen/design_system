@@ -598,7 +598,7 @@ const Filters: Story = {
       </div>
     `
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     
     await step('Verify table renders with filters', async () => {
@@ -660,23 +660,32 @@ const Filters: Story = {
     
     await step('Verify search handler IS called when typing in search', async () => {
       // Wait for data to load and search to be available
+      // The search button is an FzIconButton with a magnifying-glass icon inside
       await waitFor(
         () => {
-          const searchButton = canvasElement.querySelector('button[aria-label*="magnifying"], button[aria-label*="search"]')
+          // Look for button containing the magnifying-glass FontAwesome icon (data-icon attribute)
+          const searchButton = canvasElement.querySelector('.fz-icon-button-wrapper button') ||
+            canvasElement.querySelector('button svg[data-icon="magnifying-glass"]')?.closest('button')
           expect(searchButton).toBeInTheDocument()
         },
         { timeout: 5000 }
       )
       
-      const searchButton = canvasElement.querySelector('button[aria-label*="magnifying"], button[aria-label*="search"]')
+      // Find the search button by looking for the icon wrapper or the FontAwesome icon
+      const searchButton = canvasElement.querySelector('.fz-icon-button-wrapper button') ||
+        canvasElement.querySelector('button svg[data-icon="magnifying-glass"]')?.closest('button')
       if (searchButton) {
         await userEvent.click(searchButton as HTMLElement)
         await waitFor(() => {
-          const searchInput = canvasElement.querySelector('[data-cy="fztable-search"], input[type="text"]')
-          expect(searchInput).toBeInTheDocument()
+          // Find the actual input element inside the FzInput component
+          const searchInputWrapper = canvasElement.querySelector('[data-cy="fztable-search"]')
+          const actualInput = searchInputWrapper?.querySelector('input') || canvasElement.querySelector('input[type="text"]')
+          expect(actualInput).toBeInTheDocument()
         }, { timeout: 2000 })
         
-        const searchInput = canvasElement.querySelector('[data-cy="fztable-search"], input[type="text"]')
+        // Find the actual input element, not the wrapper
+        const searchInputWrapper = canvasElement.querySelector('[data-cy="fztable-search"]')
+        const searchInput = searchInputWrapper?.querySelector('input') || canvasElement.querySelector('input[type="text"]')
         if (searchInput) {
           await userEvent.type(searchInput as HTMLElement, 'test')
           // ROBUST CHECK: Verify handler WAS called
