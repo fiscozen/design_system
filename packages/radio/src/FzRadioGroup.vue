@@ -38,13 +38,30 @@ import ErrorAlert from "./components/ErrorAlert.vue";
 const slots = useSlots();
 
 const props = withDefaults(defineProps<FzRadioGroupProps>(), {
-  name: `radio-group-${Math.random().toString(36).slice(2, 9)}`,
   size: "md",
   variant: "vertical",
 });
 
 /** Unique identifier for the radio group, used for ARIA relationships */
 const id = generateRadioGroupId();
+
+/**
+ * Generate a unique name for the radio group if not provided.
+ * This must be computed at runtime (not in withDefaults) to ensure
+ * Math.random() is properly mocked during testing.
+ */
+const computedName = computed(() => {
+  if (props.name) return props.name;
+  // Generate random suffix at runtime for testability
+  const random = Math.random().toString(36).slice(2, 9);
+  return `radio-group-${random}`;
+});
+
+/**
+ * Stable name that doesn't change on re-renders.
+ * We capture the computed value once and use it for the lifetime of the component.
+ */
+const name = computedName.value;
 
 // Compute tone from props (with fallback to deprecated emphasis/error)
 const computedTone = computed<"neutral" | "emphasis" | "error">(() => {
@@ -67,7 +84,7 @@ const controlledProps = computed<Omit<FzRadioGroupProps, "label" | "variant">>(
     emphasis: props.emphasis,
     tone: computedTone.value,
     required: props.required,
-    name: props.name,
+    name: name,
   }),
 );
 
