@@ -32,9 +32,7 @@ export default mergeConfig(
         provider: 'playwright',
         headless: true,
         instances: [
-          // Use Firefox instead of Chromium to avoid headless Chromium crashes
-          // See: https://github.com/vitest-dev/vitest/issues/8399
-          { browser: 'firefox' }
+          { browser: 'chromium' }
         ]
       },
       setupFiles: ['.storybook/vitest.setup.ts'],
