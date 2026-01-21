@@ -55,9 +55,12 @@ const Template: LinkStory = {
     setup() {
       return { args }
     },
+    // Use @click.prevent to stop navigation during play function tests.
+    // This prevents the browser from navigating away (especially for external links),
+    // which would close the WebSocket connection and cause test failures.
     template: `<FzLink 
       v-bind="args"
-      @click="!args.disabled && args.onClick && args.onClick($event)"
+      @click.prevent="!args.disabled && args.onClick && args.onClick($event)"
     >This is a link</FzLink>`
   }),
   args: {
