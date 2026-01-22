@@ -142,13 +142,13 @@ export function useAppointmentsManual({
     return props.infoText;
   });
 
-  // Navigate to previous day
-  const navigateBack = () => {
-    if (!canNavigateBack.value) {
+  // Helper function to navigate to a different day
+  const navigateToDay = (offset: number, canNavigate: boolean) => {
+    if (!canNavigate) {
       return;
     }
 
-    const newIndex = currentDayIndex.value - 1;
+    const newIndex = currentDayIndex.value + offset;
     const targetDay = availableDays.value[newIndex];
 
     // Safety check: ensure target day exists
@@ -162,50 +162,51 @@ export function useAppointmentsManual({
     emit("update:modelValue", undefined);
   };
 
+  // Navigate to previous day
+  const navigateBack = () => {
+    navigateToDay(-1, canNavigateBack.value);
+  };
+
   // Navigate to next day
   const navigateForward = () => {
-    if (!canNavigateForward.value) {
-      return;
-    }
-
-    const newIndex = currentDayIndex.value + 1;
-    const targetDay = availableDays.value[newIndex];
-
-    // Safety check: ensure target day exists
-    if (!targetDay || !isValid(targetDay)) {
-      return;
-    }
-
-    currentDayIndex.value = newIndex;
-    currentDate.value = startOfDay(targetDay);
-    // Reset selection when date changes
-    emit("update:modelValue", undefined);
+    navigateToDay(1, canNavigateForward.value);
   };
 
   // Watch for modelValue changes to update currentDate if needed
   watch(
     () => modelValueAsDate.value,
     (newValue) => {
+      // Early return: guard clauses for invalid inputs
       if (!newValue || availableDays.value.length === 0) {
         return;
       }
 
-      if (!isSameDay(newValue, currentDate.value)) {
-        // Find the day index for this value
-        const dayKey = format(newValue, "yyyy-MM-dd");
-        const index = availableDays.value.findIndex(
-          (day) => format(day, "yyyy-MM-dd") === dayKey,
-        );
-
-        if (index !== -1) {
-          const targetDay = availableDays.value[index];
-          // Safety check: ensure target day exists and is valid
-          if (targetDay && isValid(targetDay)) {
-            currentDayIndex.value = index;
-            currentDate.value = startOfDay(targetDay);
-          }
-        }
+      // Early return: same day, no update needed
+      if (isSameDay(newValue, currentDate.value)) {
+        return;
       }
+
+      // Find the day index for this value
+      const dayKey = format(newValue, "yyyy-MM-dd");
+      const index = availableDays.value.findIndex(
+        (day) => format(day, "yyyy-MM-dd") === dayKey,
+      );
+
+      // Early return: day not found in available days
+      if (index === -1) {
+        return;
+      }
+
+      const targetDay = availableDays.value[index];
+
+      // Early return: target day invalid or missing
+      if (!targetDay || !isValid(targetDay)) {
+        return;
+      }
+
+      // Success path: update state
+      currentDayIndex.value = index;
+      currentDate.value = startOfDay(targetDay);
     },
   );
 
