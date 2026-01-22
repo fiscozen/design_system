@@ -19,8 +19,8 @@ const emit = defineEmits<{
   select: [option: FzSelectOptionProps];
   keydown: [event: KeyboardEvent];
   scroll: [];
-  "register-ref": [value: string, element: HTMLElement | undefined];
-  focus: [value: string];
+  "register-ref": [value: string | number, element: HTMLElement | undefined];
+  focus: [value: string | number];
 }>();
 
 const containerRef = ref<InstanceType<typeof FzActionList>>();
@@ -30,7 +30,7 @@ const isSelectableOption = (
 ): option is FzSelectOptionProps => option.kind !== "label";
 
 const getOptionKey = (option: FzSelectOptionsProps): string =>
-  option.kind === "label" ? option.label : option.value;
+  option.kind === "label" ? option.label : String(option.value);
 
 const isLabelOption = (option: FzSelectOptionsProps): boolean =>
   option.kind === "label";

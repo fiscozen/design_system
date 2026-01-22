@@ -271,8 +271,8 @@ const options = [
   <tbody>
     <tr>
       <td><code>fzselect:select</code></td>
-      <td><code>string | undefined</code></td>
-      <td>Emitted when an option is selected from the dropdown. Emits the option's value, or undefined if cleared</td>
+      <td><code>(value: string | number | undefined, option: FzSelectOptionProps | undefined)</code></td>
+      <td>Emitted when an option is selected from the dropdown. Emits the option's value as first parameter and the complete option object as second parameter. Both parameters are undefined when the selection is cleared</td>
     </tr>
     <tr>
       <td><code>fzselect:clear</code></td>
@@ -286,8 +286,8 @@ const options = [
     </tr>
     <tr>
       <td><code>update:modelValue</code></td>
-      <td><code>string | undefined</code></td>
-      <td>Emitted when the model value changes. Always emits the option's value as a string, or undefined if cleared</td>
+      <td><code>string | number | undefined</code></td>
+      <td>Emitted when the model value changes. Emits the option's value (string or number), or undefined if cleared</td>
     </tr>
   </tbody>
 </table>

@@ -177,11 +177,11 @@ export interface FzSelectOptionsListProps {
   /**
    * Value of the currently focused option (for keyboard navigation)
    */
-  focusedOptionValue: string | null;
+  focusedOptionValue: string | number | null;
   /**
    * Currently selected value
    */
-  selectedValue?: string;
+  selectedValue?: string | number;
   /**
    * Whether to disable text truncation in options
    * @default false

@@ -482,7 +482,10 @@ describe("FzSelect", () => {
 
       await wrapper.vm.$nextTick();
       expect(wrapper.emitted("fzselect:select")).toBeTruthy();
-      expect(wrapper.emitted("fzselect:select")?.[0]).toEqual(["option1"]);
+      expect(wrapper.emitted("fzselect:select")?.[0]).toEqual([
+        "option1",
+        { value: "option1", label: "Option 1" },
+      ]);
     });
   });
 
@@ -2324,7 +2327,10 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       expect(wrapper.emitted("fzselect:select")).toBeTruthy();
-      expect(wrapper.emitted("fzselect:select")?.[0]).toEqual([undefined]);
+      expect(wrapper.emitted("fzselect:select")?.[0]).toEqual([
+        undefined,
+        undefined,
+      ]);
       expect(wrapper.emitted("update:modelValue")).toBeTruthy();
       expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([undefined]);
     });
@@ -2381,7 +2387,10 @@ describe("FzSelect", () => {
       await wrapper.vm.$nextTick();
 
       expect(wrapper.emitted("fzselect:select")).toBeTruthy();
-      expect(wrapper.emitted("fzselect:select")?.[0]).toEqual([undefined]);
+      expect(wrapper.emitted("fzselect:select")?.[0]).toEqual([
+        undefined,
+        undefined,
+      ]);
       expect(wrapper.emitted("update:modelValue")).toBeTruthy();
       expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([undefined]);
     });

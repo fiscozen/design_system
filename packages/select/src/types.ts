@@ -227,7 +227,7 @@ export type FzSelectOptionProps = {
   /**
    * Unique identifier for the option (used as the selected value)
    */
-  value: string;
+  value: string | number;
   /**
    * Display text shown in the option
    */

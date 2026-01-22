@@ -80,7 +80,7 @@ const props = withDefaults(defineProps<FzSelectProps>(), {
   variant: "normal",
 });
 
-const model = defineModel<string | undefined>({
+const model = defineModel<string | number | undefined>({
   required: true,
   default: undefined,
 });
@@ -566,8 +566,10 @@ const handleSelect = (option: FzSelectOptionProps) => {
   // Emit appropriate event based on action
   if (isClearing) {
     emit("fzselect:clear");
+    emit("fzselect:select", undefined, undefined);
+  } else {
+    emit("fzselect:select", option.value, option);
   }
-  emit("fzselect:select", model.value);
   isOpen.value = false;
 
   // Reset flag after nextTick to allow watch to process the change
@@ -593,7 +595,7 @@ const handleClearClick = () => {
   lastFilterFnSearchValue.value = undefined;
 
   emit("fzselect:clear");
-  emit("fzselect:select", model.value);
+  emit("fzselect:select", undefined, undefined);
   isOpen.value = false;
 };
 
@@ -702,15 +704,19 @@ const handleOptionsKeydown = (event: KeyboardEvent) => {
   }
 };
 
-const handleRegisterRef = (value: string, element: HTMLElement | undefined) => {
+const handleRegisterRef = (
+  value: string | number,
+  element: HTMLElement | undefined,
+) => {
+  const key = `${openerId}-option-${value}`;
   if (element) {
-    optionRefs.value.set(value, element);
+    optionRefs.value.set(key, element);
   } else {
-    optionRefs.value.delete(value);
+    optionRefs.value.delete(key);
   }
 };
 
-const handleOptionFocus = (value: string) => {
+const handleOptionFocus = (value: string | number) => {
   if (!isOpen.value) return;
   const selectable = selectableOptions.value;
   const index = selectable.findIndex((opt) => opt.value === value);
@@ -746,7 +752,9 @@ const scrollToFocusedOption = () => {
       (document.activeElement as HTMLElement).blur();
     }
 
-    const focusedButton = optionRefs.value.get(focusedOption.value);
+    const focusedButton = optionRefs.value.get(
+      `${openerId}-option-${focusedOption.value}`,
+    );
     if (focusedButton && document.contains(focusedButton)) {
       isScrollingToFocus.value = true;
 
@@ -929,7 +937,7 @@ watch(isOpen, (newValue) => {
                 return;
               }
               const selectedOptionElement = optionRefs.value.get(
-                selectedOption.value.value
+                `${openerId}-option-${selectedOption.value.value}`,
               );
               if (
                 selectedOptionElement &&
