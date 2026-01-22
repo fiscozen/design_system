@@ -15,6 +15,8 @@ type FzUploadProps = {
   buttonLabel?: string;
   /** Label of the drag and drop zone */
   dragAndDropLabel?: string;
+  /** Enable the scrollable filelist container. It will set a max-height of 82px and enable the overflow of the container */
+  isScrollable?: boolean;
 };
 
 export { FzUploadProps };
