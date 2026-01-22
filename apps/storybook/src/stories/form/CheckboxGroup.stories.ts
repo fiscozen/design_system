@@ -227,8 +227,11 @@ export const Disabled: CheckboxGroupStory = {
     })
 
     await step('Verify disabled checkbox accessibility and interaction behavior', async () => {
-      // Wait a bit to ensure component is fully initialized
-      await new Promise(resolve => setTimeout(resolve, 200))
+      // Wait for component to be fully initialized using waitFor (not setTimeout)
+      await waitFor(() => {
+        const checkboxes = canvas.getAllByRole('checkbox')
+        expect(checkboxes.length).toBeGreaterThan(0)
+      })
       
       // Clear spy calls after initialization (component may emit on mount)
       args['onUpdate:modelValue'].mockClear()
@@ -239,18 +242,29 @@ export const Disabled: CheckboxGroupStory = {
         expect(checkbox).toBeDisabled()
       })
       
-      // Attempt to interact with a disabled checkbox
-      const option2Label = canvas.getByText('Option 2')
-      await userEvent.click(option2Label)
+      // Find the Option 2 checkbox input directly
+      const option2Checkbox = checkboxes.find(cb => {
+        const labelId = cb.getAttribute('aria-labelledby')
+        if (labelId) {
+          const label = canvasElement.querySelector(`#${labelId}`)
+          return label?.textContent?.includes('Option 2')
+        }
+        return false
+      })
       
-      // Wait a bit to ensure any async operations complete
-      await new Promise(resolve => setTimeout(resolve, 200))
+      // Verify Option 2 checkbox is disabled
+      expect(option2Checkbox).toBeDefined()
+      expect(option2Checkbox).toBeDisabled()
       
-      // Note: The component may emit update:modelValue even when disabled due to v-model behavior.
-      // The important accessibility behavior is that checkboxes are marked as disabled (verified above),
-      // which prevents user interaction. If the component needs to prevent event emission when disabled,
-      // that should be fixed in the component itself.
-      // For now, we verify the disabled state is correctly applied, which is the primary accessibility concern.
+      // Attempt to click the disabled checkbox input directly
+      // Note: userEvent.click on a disabled input should not trigger any events
+      if (option2Checkbox) {
+        await userEvent.click(option2Checkbox)
+      }
+      
+      // ROBUST CHECK: Verify the update:modelValue spy was NOT called when clicking disabled checkbox
+      // Per testing-standards.mdc line 635: "Don't test disabled states without verifying handlers are NOT called"
+      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
     })
   }
 }

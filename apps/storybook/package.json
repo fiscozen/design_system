@@ -8,7 +8,6 @@
     "build": "storybook build",
     "preview": "npx http-server storybook-static --port 6006",
     "test": "pnpm run test:storybook",
-    "test:unit": "vitest run",
     "test:storybook": "vitest --project=storybook",
     "test:storybook:watch": "vitest --project=storybook --watch",
     "test:storybook:coverage": "vitest --project=storybook --coverage",

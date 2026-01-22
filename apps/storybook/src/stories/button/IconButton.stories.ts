@@ -1,11 +1,91 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, within, userEvent } from '@storybook/test'
 import { FzIconButton } from '@fiscozen/button'
+import type { PlayFunctionContext } from '../test-utils'
 
-type PlayFunctionContext = {
-  args: any
-  canvasElement: HTMLElement
-  step: (name: string, fn: () => Promise<void>) => void | Promise<void>
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+/**
+ * Verifies the IconButton grid layout with backoffice/frontoffice rows.
+ * This helper reduces duplication across variant stories by encapsulating
+ * common verification steps for the 8-button grid (4 backoffice + 4 frontoffice).
+ */
+async function verifyIconButtonGridLayout(
+  { canvasElement, step }: Pick<PlayFunctionContext, 'canvasElement' | 'step'>
+) {
+  const canvas = within(canvasElement)
+
+  await step('Verify all buttons render', async () => {
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(8)
+  })
+
+  await step('Verify backoffice buttons', async () => {
+    const buttons = canvas.getAllByRole('button')
+    for (let i = 0; i < 4; i++) {
+      await expect(buttons[i].classList.contains('h-32')).toBe(true)
+    }
+  })
+
+  await step('Verify frontoffice buttons', async () => {
+    const buttons = canvas.getAllByRole('button')
+    for (let i = 4; i < 8; i++) {
+      await expect(buttons[i].classList.contains('h-44')).toBe(true)
+    }
+  })
+
+  await step('Verify notification badges', async () => {
+    const badges = canvasElement.querySelectorAll('div[aria-hidden="true"]')
+    await expect(badges.length).toBe(4)
+  })
+
+  await step('Verify disabled states', async () => {
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons[2].getAttribute('aria-disabled')).toBe('true')
+    await expect(buttons[3].getAttribute('aria-disabled')).toBe('true')
+    await expect(buttons[6].getAttribute('aria-disabled')).toBe('true')
+    await expect(buttons[7].getAttribute('aria-disabled')).toBe('true')
+  })
+}
+
+/**
+ * Verifies click handlers for enabled/disabled buttons in the grid.
+ * Implements robust verification per testing-standards.mdc:
+ * - Enabled buttons SHOULD call handler
+ * - Disabled buttons should NOT call handler
+ */
+async function verifyIconButtonClickHandlers(
+  { args, canvasElement, step }: PlayFunctionContext
+) {
+  const canvas = within(canvasElement)
+
+  await step('Verify enabled buttons call click handler', async () => {
+    const buttons = canvas.getAllByRole('button')
+    const enabledButtons = [buttons[0], buttons[1], buttons[4], buttons[5]]
+    
+    args.onClick.mockClear()
+    
+    for (const button of enabledButtons) {
+      await userEvent.click(button)
+    }
+    
+    await expect(args.onClick).toHaveBeenCalledTimes(4)
+  })
+
+  await step('Verify disabled buttons do NOT call click handler', async () => {
+    const buttons = canvas.getAllByRole('button')
+    const disabledButtons = [buttons[2], buttons[3], buttons[6], buttons[7]]
+    
+    args.onClick.mockClear()
+    
+    for (const button of disabledButtons) {
+      await userEvent.click(button)
+    }
+    
+    await expect(args.onClick).not.toHaveBeenCalled()
+  })
 }
 
 const meta = {
@@ -104,80 +184,10 @@ const Template: IconButtonStory = {
     // 👇 Use fn() to spy on click - accessible via args in play function
     onClick: fn()
   },
-  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
-    const canvas = within(canvasElement)
-
-    await step('Verify all buttons render', async () => {
-      const buttons = canvas.getAllByRole('button')
-      await expect(buttons.length).toBe(8)
-    })
-
-    await step('Verify backoffice buttons', async () => {
-      const buttons = canvas.getAllByRole('button')
-      // First 4 buttons are backoffice
-      for (let i = 0; i < 4; i++) {
-        const button = buttons[i]
-        await expect(button.classList.contains('h-32')).toBe(true)
-      }
-    })
-
-    await step('Verify frontoffice buttons', async () => {
-      const buttons = canvas.getAllByRole('button')
-      // Last 4 buttons are frontoffice
-      for (let i = 4; i < 8; i++) {
-        const button = buttons[i]
-        await expect(button.classList.contains('h-44')).toBe(true)
-      }
-    })
-
-    await step('Verify notification badges', async () => {
-      const badges = canvasElement.querySelectorAll('div[aria-hidden="true"]')
-      // Should have 4 badges (2nd and 4th button in each row)
-      await expect(badges.length).toBe(4)
-    })
-
-    await step('Verify disabled states', async () => {
-      const buttons = canvas.getAllByRole('button')
-      // 3rd and 4th button in each row should be disabled
-      await expect(buttons[2].getAttribute('aria-disabled')).toBe('true')
-      await expect(buttons[3].getAttribute('aria-disabled')).toBe('true')
-      await expect(buttons[6].getAttribute('aria-disabled')).toBe('true')
-      await expect(buttons[7].getAttribute('aria-disabled')).toBe('true')
-    })
-
-    await step('Verify enabled buttons call click handler', async () => {
-      const buttons = canvas.getAllByRole('button')
-      // Enabled buttons are at indices 0, 1, 4, 5
-      const enabledButtons = [buttons[0], buttons[1], buttons[4], buttons[5]]
-      
-      // Reset spy call count
-      args.onClick.mockClear()
-      
-      // Click each enabled button
-      for (const button of enabledButtons) {
-        await userEvent.click(button)
-      }
-      
-      // ROBUST CHECK: Verify the click spy WAS called 4 times (once per enabled button)
-      await expect(args.onClick).toHaveBeenCalledTimes(4)
-    })
-
-    await step('Verify disabled buttons do NOT call click handler', async () => {
-      const buttons = canvas.getAllByRole('button')
-      // Disabled buttons are at indices 2, 3, 6, 7
-      const disabledButtons = [buttons[2], buttons[3], buttons[6], buttons[7]]
-      
-      // Reset spy call count
-      args.onClick.mockClear()
-      
-      // Click each disabled button
-      for (const button of disabledButtons) {
-        await userEvent.click(button)
-      }
-      
-      // ROBUST CHECK: Verify the click spy was NOT called when clicking disabled buttons
-      await expect(args.onClick).not.toHaveBeenCalled()
-    })
+  play: async (context: PlayFunctionContext) => {
+    // Use extracted helper functions for cleaner, more maintainable tests
+    await verifyIconButtonGridLayout(context)
+    await verifyIconButtonClickHandlers(context)
   }
 }
 
@@ -190,13 +200,12 @@ export const Primary: IconButtonStory = {
     // 👇 Use fn() to spy on click - accessible via args in play function
     onClick: fn()
   },
-  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
+  play: async (context: PlayFunctionContext) => {
+    const { args, canvasElement, step } = context
     const canvas = within(canvasElement)
 
-    await step('Verify all buttons render', async () => {
-      const buttons = canvas.getAllByRole('button')
-      await expect(buttons.length).toBe(8)
-    })
+    // Use shared helper for common grid verification
+    await verifyIconButtonGridLayout(context)
 
     await step('Verify primary variant classes', async () => {
       const buttons = canvas.getAllByRole('button')
@@ -206,25 +215,8 @@ export const Primary: IconButtonStory = {
       })
     })
 
-    await step('Verify backoffice buttons', async () => {
-      const buttons = canvas.getAllByRole('button')
-      for (let i = 0; i < 4; i++) {
-        const button = buttons[i]
-        await expect(button.classList.contains('h-32')).toBe(true)
-      }
-    })
-
-    await step('Verify frontoffice buttons', async () => {
-      const buttons = canvas.getAllByRole('button')
-      for (let i = 4; i < 8; i++) {
-        const button = buttons[i]
-        await expect(button.classList.contains('h-44')).toBe(true)
-      }
-    })
-
-    await step('Verify notification badges', async () => {
+    await step('Verify notification badge styling', async () => {
       const badges = canvasElement.querySelectorAll('div[aria-hidden="true"]')
-      await expect(badges.length).toBe(4)
       
       badges.forEach(badge => {
         expect(badge?.classList.contains('rounded-full')).toBe(true)
@@ -244,47 +236,8 @@ export const Primary: IconButtonStory = {
       })
     })
 
-    await step('Verify disabled states', async () => {
-      const buttons = canvas.getAllByRole('button')
-      await expect(buttons[2].getAttribute('aria-disabled')).toBe('true')
-      await expect(buttons[3].getAttribute('aria-disabled')).toBe('true')
-      await expect(buttons[6].getAttribute('aria-disabled')).toBe('true')
-      await expect(buttons[7].getAttribute('aria-disabled')).toBe('true')
-    })
-
-    await step('Verify enabled buttons call click handler', async () => {
-      const buttons = canvas.getAllByRole('button')
-      // Enabled buttons are at indices 0, 1, 4, 5
-      const enabledButtons = [buttons[0], buttons[1], buttons[4], buttons[5]]
-      
-      // Reset spy call count
-      args.onClick.mockClear()
-      
-      // Click each enabled button
-      for (const button of enabledButtons) {
-        await userEvent.click(button)
-      }
-      
-      // ROBUST CHECK: Verify the click spy WAS called 4 times (once per enabled button)
-      await expect(args.onClick).toHaveBeenCalledTimes(4)
-    })
-
-    await step('Verify disabled buttons do NOT call click handler', async () => {
-      const buttons = canvas.getAllByRole('button')
-      // Disabled buttons are at indices 2, 3, 6, 7
-      const disabledButtons = [buttons[2], buttons[3], buttons[6], buttons[7]]
-      
-      // Reset spy call count
-      args.onClick.mockClear()
-      
-      // Click each disabled button
-      for (const button of disabledButtons) {
-        await userEvent.click(button)
-      }
-      
-      // ROBUST CHECK: Verify the click spy was NOT called when clicking disabled buttons
-      await expect(args.onClick).not.toHaveBeenCalled()
-    })
+    // Use shared helper for click handler verification
+    await verifyIconButtonClickHandlers(context)
 
     await step('Verify keyboard activation calls click handler', async () => {
       const buttons = canvas.getAllByRole('button')
@@ -314,13 +267,12 @@ export const Secondary: IconButtonStory = {
     // 👇 Use fn() to spy on click - accessible via args in play function
     onClick: fn()
   },
-  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
+  play: async (context: PlayFunctionContext) => {
+    const { canvasElement, step } = context
     const canvas = within(canvasElement)
 
-    await step('Verify all buttons render', async () => {
-      const buttons = canvas.getAllByRole('button')
-      await expect(buttons.length).toBe(8)
-    })
+    // Use shared helper for common grid verification
+    await verifyIconButtonGridLayout(context)
 
     await step('Verify secondary variant classes', async () => {
       const buttons = canvas.getAllByRole('button')
@@ -330,25 +282,8 @@ export const Secondary: IconButtonStory = {
       })
     })
 
-    await step('Verify backoffice buttons', async () => {
-      const buttons = canvas.getAllByRole('button')
-      for (let i = 0; i < 4; i++) {
-        const button = buttons[i]
-        await expect(button.classList.contains('h-32')).toBe(true)
-      }
-    })
-
-    await step('Verify frontoffice buttons', async () => {
-      const buttons = canvas.getAllByRole('button')
-      for (let i = 4; i < 8; i++) {
-        const button = buttons[i]
-        await expect(button.classList.contains('h-44')).toBe(true)
-      }
-    })
-
-    await step('Verify notification badges', async () => {
+    await step('Verify notification badge color', async () => {
       const badges = canvasElement.querySelectorAll('div[aria-hidden="true"]')
-      await expect(badges.length).toBe(4)
       
       // Secondary variant should have blue badges
       badges.forEach(badge => {
@@ -359,47 +294,8 @@ export const Secondary: IconButtonStory = {
       })
     })
 
-    await step('Verify disabled states', async () => {
-      const buttons = canvas.getAllByRole('button')
-      await expect(buttons[2].getAttribute('aria-disabled')).toBe('true')
-      await expect(buttons[3].getAttribute('aria-disabled')).toBe('true')
-      await expect(buttons[6].getAttribute('aria-disabled')).toBe('true')
-      await expect(buttons[7].getAttribute('aria-disabled')).toBe('true')
-    })
-
-    await step('Verify enabled buttons call click handler', async () => {
-      const buttons = canvas.getAllByRole('button')
-      // Enabled buttons are at indices 0, 1, 4, 5
-      const enabledButtons = [buttons[0], buttons[1], buttons[4], buttons[5]]
-      
-      // Reset spy call count
-      args.onClick.mockClear()
-      
-      // Click each enabled button
-      for (const button of enabledButtons) {
-        await userEvent.click(button)
-      }
-      
-      // ROBUST CHECK: Verify the click spy WAS called 4 times (once per enabled button)
-      await expect(args.onClick).toHaveBeenCalledTimes(4)
-    })
-
-    await step('Verify disabled buttons do NOT call click handler', async () => {
-      const buttons = canvas.getAllByRole('button')
-      // Disabled buttons are at indices 2, 3, 6, 7
-      const disabledButtons = [buttons[2], buttons[3], buttons[6], buttons[7]]
-      
-      // Reset spy call count
-      args.onClick.mockClear()
-      
-      // Click each disabled button
-      for (const button of disabledButtons) {
-        await userEvent.click(button)
-      }
-      
-      // ROBUST CHECK: Verify the click spy was NOT called when clicking disabled buttons
-      await expect(args.onClick).not.toHaveBeenCalled()
-    })
+    // Use shared helper for click handler verification
+    await verifyIconButtonClickHandlers(context)
   }
 }
 
@@ -412,13 +308,12 @@ export const Invisible: IconButtonStory = {
     // 👇 Use fn() to spy on click - accessible via args in play function
     onClick: fn()
   },
-  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
+  play: async (context: PlayFunctionContext) => {
+    const { canvasElement, step } = context
     const canvas = within(canvasElement)
 
-    await step('Verify all buttons render', async () => {
-      const buttons = canvas.getAllByRole('button')
-      await expect(buttons.length).toBe(8)
-    })
+    // Use shared helper for common grid verification
+    await verifyIconButtonGridLayout(context)
 
     await step('Verify invisible variant classes', async () => {
       const buttons = canvas.getAllByRole('button')
@@ -427,25 +322,8 @@ export const Invisible: IconButtonStory = {
       })
     })
 
-    await step('Verify backoffice buttons', async () => {
-      const buttons = canvas.getAllByRole('button')
-      for (let i = 0; i < 4; i++) {
-        const button = buttons[i]
-        await expect(button.classList.contains('h-32')).toBe(true)
-      }
-    })
-
-    await step('Verify frontoffice buttons', async () => {
-      const buttons = canvas.getAllByRole('button')
-      for (let i = 4; i < 8; i++) {
-        const button = buttons[i]
-        await expect(button.classList.contains('h-44')).toBe(true)
-      }
-    })
-
-    await step('Verify notification badges', async () => {
+    await step('Verify notification badge color', async () => {
       const badges = canvasElement.querySelectorAll('div[aria-hidden="true"]')
-      await expect(badges.length).toBe(4)
       
       // Invisible variant should have blue badges
       badges.forEach(badge => {
@@ -456,46 +334,7 @@ export const Invisible: IconButtonStory = {
       })
     })
 
-    await step('Verify disabled states', async () => {
-      const buttons = canvas.getAllByRole('button')
-      await expect(buttons[2].getAttribute('aria-disabled')).toBe('true')
-      await expect(buttons[3].getAttribute('aria-disabled')).toBe('true')
-      await expect(buttons[6].getAttribute('aria-disabled')).toBe('true')
-      await expect(buttons[7].getAttribute('aria-disabled')).toBe('true')
-    })
-
-    await step('Verify enabled buttons call click handler', async () => {
-      const buttons = canvas.getAllByRole('button')
-      // Enabled buttons are at indices 0, 1, 4, 5
-      const enabledButtons = [buttons[0], buttons[1], buttons[4], buttons[5]]
-      
-      // Reset spy call count
-      args.onClick.mockClear()
-      
-      // Click each enabled button
-      for (const button of enabledButtons) {
-        await userEvent.click(button)
-      }
-      
-      // ROBUST CHECK: Verify the click spy WAS called 4 times (once per enabled button)
-      await expect(args.onClick).toHaveBeenCalledTimes(4)
-    })
-
-    await step('Verify disabled buttons do NOT call click handler', async () => {
-      const buttons = canvas.getAllByRole('button')
-      // Disabled buttons are at indices 2, 3, 6, 7
-      const disabledButtons = [buttons[2], buttons[3], buttons[6], buttons[7]]
-      
-      // Reset spy call count
-      args.onClick.mockClear()
-      
-      // Click each disabled button
-      for (const button of disabledButtons) {
-        await userEvent.click(button)
-      }
-      
-      // ROBUST CHECK: Verify the click spy was NOT called when clicking disabled buttons
-      await expect(args.onClick).not.toHaveBeenCalled()
-    })
+    // Use shared helper for click handler verification
+    await verifyIconButtonClickHandlers(context)
   }
 }

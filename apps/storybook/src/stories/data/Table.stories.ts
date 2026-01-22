@@ -1045,10 +1045,9 @@ const EpmtyTable: Story = {
     
     await step('Verify no data rows are present', async () => {
       // Should have no data cells, only headers
-      const dataCells = Array.from(canvasElement.querySelectorAll('[role="cell"]')).filter(cell => {
-        const header = cell.closest('[role="table"]')?.querySelector('[role="columnheader"]')
-        return !header?.contains(cell)
-      })
+      // Note: Column headers ([role="columnheader"]) never contain data cells ([role="cell"]) -
+      // they are separate DOM elements, so we simply query for cells directly
+      const dataCells = canvasElement.querySelectorAll('[role="cell"]')
       await expect(dataCells.length).toBe(0)
     })
   }

@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, userEvent, within } from '@storybook/test'
-import { ref } from 'vue'
 import { Fz{{pascalCase component}} } from '@fiscozen/{{kebabCase component}}'
 
 const meta = {
@@ -8,11 +7,6 @@ const meta = {
   component: Fz{{pascalCase component}},
   tags: ['autodocs'],
   argTypes: {
-    // Define controls for your props
-    // variant: {
-    //   control: 'select',
-    //   options: ['primary', 'secondary', 'danger', 'success']
-    // },
     environment: {
       control: 'select',
       options: ['backoffice', 'frontoffice'],
@@ -21,9 +15,7 @@ const meta = {
         defaultValue: { summary: 'frontoffice' }
       }
     },
-    disabled: { control: 'boolean' },
-    // Hide deprecated props from controls:
-    // deprecatedProp: { table: { disable: true } }
+    disabled: { control: 'boolean' }
   },
   args: {
     // Default args for all stories
@@ -164,107 +156,21 @@ export const KeyboardNavigation: Story = {
 }
 
 // ============================================
-// VARIANT STORIES (if applicable)
+// ADDITIONAL STORIES TO ADD (as needed)
 // ============================================
-
-// Uncomment and customize if your component has variants:
-// export const Primary: Story = {
-//   args: { variant: 'primary' },
-//   play: async ({ canvasElement }) => {
-//     const canvas = within(canvasElement)
-//     const element = canvas.getByRole('button')
-//     
-//     await expect(element.classList.contains('bg-blue-500')).toBe(true)
-//     await expect(element.classList.contains('text-core-white')).toBe(true)
-//   }
-// }
 // 
-// export const Secondary: Story = {
-//   args: { variant: 'secondary' },
-//   play: async ({ canvasElement }) => {
-//     const canvas = within(canvasElement)
-//     const element = canvas.getByRole('button')
-//     
-//     await expect(element.classList.contains('bg-core-white')).toBe(true)
-//     await expect(element.classList.contains('text-grey-500')).toBe(true)
-//   }
-// }
-
-// ============================================
-// ERROR STATE (if applicable)
-// ============================================
-
-// Uncomment if your component supports error state:
-// export const Error: Story = {
-//   render: (args) => ({
-//     components: { Fz{{pascalCase component}} },
-//     setup: () => ({ args }),
-//     template: `
-//       <Fz{{pascalCase component}} v-bind="args" :error="true">
-//         <template #errorMessage>This field is required</template>
-//       </Fz{{pascalCase component}}>
-//     `
-//   }),
-//   args: {},
-//   play: async ({ canvasElement, step }) => {
-//     const canvas = within(canvasElement)
-//     
-//     await step('Verify error message is displayed', async () => {
-//       const errorMessage = canvas.getByText('This field is required')
-//       await expect(errorMessage).toBeVisible()
-//     })
-//     
-//     await step('Verify error ARIA attributes', async () => {
-//       const input = canvas.getByRole('textbox')
-//       await expect(input).toHaveAttribute('aria-invalid', 'true')
-//       
-//       const errorId = input.getAttribute('aria-describedby')
-//       await expect(errorId).toBeTruthy()
-//       
-//       if (errorId) {
-//         const errorElement = canvasElement.querySelector(`#${errorId}`)
-//         await expect(errorElement).toHaveAttribute('role', 'alert')
-//       }
-//     })
-//   }
-// }
-
-// ============================================
-// V-MODEL STORY (if applicable)
-// ============================================
-
-// Uncomment if your component supports v-model:
-// export const WithVModel: Story = {
-//   render: (args) => ({
-//     components: { Fz{{pascalCase component}} },
-//     setup: () => {
-//       const value = ref('')
-//       return { args, value }
-//     },
-//     template: `
-//       <div>
-//         <Fz{{pascalCase component}} v-bind="args" v-model="value" />
-//         <p class="mt-4 text-sm text-grey-500">Current value: {{ value }}</p>
-//       </div>
-//     `
-//   }),
-//   args: {},
-//   play: async ({ canvasElement, step }) => {
-//     const canvas = within(canvasElement)
-//     
-//     await step('Type in input', async () => {
-//       const input = canvas.getByRole('textbox')
-//       await userEvent.clear(input)
-//       await userEvent.type(input, 'Test value')
-//       await expect(input).toHaveValue('Test value')
-//     })
-//     
-//     await step('Verify v-model updates', async () => {
-//       const output = canvas.getByText(/Current value:/)
-//       await expect(output.textContent).toContain('Test value')
-//     })
-//   }
-// }
+// Add these stories if your component supports them:
+// 
+// - Variant stories (Primary, Secondary, etc.): If component has visual variants,
+//   add a story for each with play function verifying variant-specific CSS classes.
+// 
+// - Error state: If component supports error prop, add Error story with
+//   #errorMessage slot and verify aria-invalid="true" and role="alert".
+// 
+// - V-Model: If component supports v-model, add WithVModel story using
+//   render function with ref() and verify two-way binding works.
+// 
+// See existing stories in apps/storybook/src/stories/ for examples.
 
 // ============================================
 // ALL STATES STORY

@@ -309,14 +309,18 @@ RouterNavlinkIcon.play = async ({ canvasElement, step }) => {
   
     await step('Verify icon is present in router navlink', async () => {
       const link = canvasElement.querySelector('a[href="#/foo/bar"]')
-      await expect(link).toBeInTheDocument()
-      // Icon may be rendered as SVG or as a component - check if link has icon content
-      if (link) {
-        const icon = link.querySelector('svg') || link.querySelector('[class*="icon"]')
-        // Icon may not be directly queryable as SVG if rendered via FzIcon component
-        // Just verify the link exists and is rendered
-        await expect(link).toBeVisible()
+      // Early return pattern: fail fast if link not found
+      if (!link) {
+        throw new Error('Router navlink anchor not found')
       }
+      
+      await expect(link).toBeInTheDocument()
+      await expect(link).toBeVisible()
+      
+      // Icon may be rendered as SVG or as a component
+      const icon = link.querySelector('svg') || link.querySelector('[class*="icon"]')
+      // Icon may not be directly queryable as SVG if rendered via FzIcon component
+      // The link's presence and visibility is the primary assertion
     })
 }
 

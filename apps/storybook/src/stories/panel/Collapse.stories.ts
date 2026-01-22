@@ -47,11 +47,12 @@ export const Default: Story = {
       await expect(details).not.toHaveAttribute('open')
       
       const content = canvasElement.querySelector('[data-e2e="content"]')
-      if (content) {
-        // Content should not be visible when closed
-        const styles = window.getComputedStyle(content)
-        await expect(styles.display).toBe('none')
-      }
+      // Early return: content element may not exist in all implementations
+      if (!content) return
+      
+      // Content should not be visible when closed
+      const styles = window.getComputedStyle(content)
+      await expect(styles.display).toBe('none')
     })
     
     await step('Verify chevron icon is present', async () => {
@@ -206,12 +207,13 @@ export const UserInteraction: Story = {
     
     await step('Verify content is hidden after closing', async () => {
       const content = canvasElement.querySelector('[data-e2e="content"]')
-      if (content) {
-        await waitFor(() => {
-          const styles = window.getComputedStyle(content as Element)
-          expect(styles.display).toBe('none')
-        }, { timeout: 500 })
-      }
+      // Early return: content element may not exist in all collapse implementations
+      if (!content) return
+      
+      await waitFor(() => {
+        const styles = window.getComputedStyle(content as Element)
+        expect(styles.display).toBe('none')
+      }, { timeout: 500 })
     })
   }
 }

@@ -86,10 +86,8 @@ const meta: Meta<typeof FzAction> = {
     isTextTruncated: false,
     iconRightName: 'face-smile',
     label: 'Label',
-    subLabel: 'SubLabel',
-    // 👇 Use fn() to spy on click and keydown events - they appear in actions panel and are available in play functions
-    onClick: fn(),
-    onKeydown: fn()
+    subLabel: 'SubLabel'
+    // Note: Spies (onClick, onKeydown) are defined per-story in args to avoid shared mutable state across stories
   },
   decorators: [vueRouter()]
 }

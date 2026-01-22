@@ -24,7 +24,10 @@ type Story = StoryObj<typeof meta>
 // ============================================
 
 /**
- * Gets the main container element (the bottom banner)
+ * Gets the main container element (the bottom banner).
+ * Uses .rounded-t-base selector because the ViewFlag component renders
+ * its main content banner with rounded top corners to visually distinguish
+ * it from the border indicators around the viewport edges.
  */
 const getMainContainer = (canvasElement: HTMLElement): HTMLElement => {
   const container = canvasElement.querySelector('.rounded-t-base')

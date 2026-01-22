@@ -18,7 +18,9 @@ const PDF_LOAD_TIMEOUT = 5000
 const PDF_CLEANUP_DELAY = 300 // Delay to allow PDF library cleanup
 
 /**
- * Helper function to wait for PDF to load
+ * Waits for PDF rendering to complete before running assertions.
+ * Required because PDF.js renders asynchronously and we need to avoid
+ * flaky tests caused by asserting before the page element exists.
  */
 const waitForPdfLoad = async (canvasElement: HTMLElement): Promise<void> => {
   await waitFor(

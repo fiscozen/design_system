@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor, fireEvent } from '@storybook/test'
 import { ref } from 'vue'
 import { FzCurrencyInput } from '@fiscozen/input'
 
@@ -121,31 +121,27 @@ export const WithStep: Story = {
 
     await step('Click arrowDown and verify update:modelValue IS called again', async () => {
       const input = canvas.getByRole('textbox', { name: /Amount/i }) as HTMLInputElement
-      const arrowDown = canvasElement.querySelector('.fz__currencyinput__arrowdown') as HTMLElement
       
       // Verify the value is actually 5 before clicking arrowDown
       await expect(input).toHaveValue('5,00')
       
-      // Wait a bit to ensure the first click is fully processed
-      await new Promise(resolve => setTimeout(resolve, 500))
+      // Re-query the arrowDown element to ensure we have a fresh reference
+      const arrowDown = canvasElement.querySelector('.fz__currencyinput__arrowdown') as HTMLElement
       
       // Clicking arrowDown should decrease by 5, so 5 - 5 = 0
-      // Use direct click method for better reliability with step controls
-      if (arrowDown && args['onUpdate:modelValue']) {
-        arrowDown.click()
-        await new Promise(resolve => setTimeout(resolve, 500))
-        
-        // Wait for value to potentially change (may go to 0 or stay at 5 depending on component behavior)
-        await waitFor(async () => {
-          const currentValue = input.value
-          // Value should have changed (either to 0,00 or another value)
-          await expect(currentValue).toBeTruthy()
-        }, { timeout: 3000 })
-        
-        // ROBUST CHECK: Verify the update:modelValue spy WAS called again
-        // Note: Even if value doesn't change visually, the component may still emit the event
-        await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
-      }
+      expect(arrowDown).toBeInTheDocument()
+      
+      // Use fireEvent.click for more reliable event triggering on Vue components
+      await fireEvent.click(arrowDown)
+      
+      // ROBUST CHECK: Verify the value actually changed (not just that it's truthy)
+      // This catches cases where the interaction had no effect
+      await waitFor(async () => {
+        await expect(input).toHaveValue('0,00')
+      }, { timeout: 3000 })
+      
+      // ROBUST CHECK: Verify the update:modelValue spy WAS called again
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
   }
 }
