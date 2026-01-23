@@ -74,8 +74,8 @@ const Template: Story = {
       // Support spy function from args for update:modelValue
       const handleUpdate = (value: string | undefined) => {
         selectedDate.value = value
-        if (args['onUpdate:modelValue']) {
-          args['onUpdate:modelValue'](value)
+        if (args['update:modelValue']) {
+          args['update:modelValue'](value)
         }
       }
       return {
@@ -115,7 +115,7 @@ export const Default: Story = {
     slotCount: 24,
     slotInterval: 30,
     breakDuration: 0,
-    'onUpdate:modelValue': fn()
+    'update:modelValue': fn()
   },
   play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
@@ -158,7 +158,18 @@ export const Default: Story = {
 
     await step('Verify back button is disabled for today', async () => {
       const backButton = canvas.getByLabelText('Giorno precedente')
-      expect(backButton).toBeDisabled()
+      await expect(backButton).toBeDisabled()
+      await expect(backButton).toHaveAttribute('aria-disabled', 'true')
+    })
+
+    await step('Verify slot selection calls update:modelValue handler', async () => {
+      const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+      const enabledSlot = slots.find((slot) => !slot.hasAttribute('disabled'))
+      if (enabledSlot) {
+        await userEvent.click(enabledSlot)
+        // Verify the spy WAS called
+        await expect(args['update:modelValue']).toHaveBeenCalledTimes(1)
+      }
     })
   }
 }
@@ -261,7 +272,7 @@ export const WithexcludedSlots: Story = {
           return formatISO(date)
         })()
       ],
-      'onUpdate:modelValue': fn()
+      'update:modelValue': fn()
     }
   })(),
   play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
@@ -284,17 +295,20 @@ export const WithexcludedSlots: Story = {
     })
 
     await step('Verify disabled slots cannot be selected', async () => {
+      // Clear any previous calls
+      ;(args['update:modelValue'] as ReturnType<typeof fn>).mockClear()
+
       await waitFor(
         async () => {
           // Try to find and click any disabled slot
-          const disabledSlots = Array.from(canvasElement.querySelectorAll('input[type="radio"][disabled]'))
+          const disabledSlots = Array.from(
+            canvasElement.querySelectorAll('input[type="radio"][disabled]')
+          )
           if (disabledSlots.length > 0) {
             // Attempt to click a disabled slot
             await userEvent.click(disabledSlots[0] as HTMLElement)
             // Verify the spy was not called
-            await waitFor(() => {
-              expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
-            })
+            await expect(args['update:modelValue']).not.toHaveBeenCalled()
           }
         },
         { timeout: 2000 }
@@ -304,13 +318,15 @@ export const WithexcludedSlots: Story = {
     await step('Verify enabled slots can be selected', async () => {
       await waitFor(
         async () => {
-          const enabledSlots = Array.from(canvasElement.querySelectorAll('input[type="radio"]:not([disabled])'))
+          const enabledSlots = Array.from(
+            canvasElement.querySelectorAll('input[type="radio"]:not([disabled])')
+          )
           if (enabledSlots.length > 0) {
             // Click an enabled slot
             await userEvent.click(enabledSlots[0] as HTMLElement)
             // Verify the spy was called
             await waitFor(() => {
-              expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+              expect(args['update:modelValue']).toHaveBeenCalled()
             })
           }
         },
@@ -410,7 +426,7 @@ export const SlotSelection: Story = {
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
-    'onUpdate:modelValue': fn()
+    'update:modelValue': fn()
   },
   play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
@@ -440,7 +456,7 @@ export const SlotSelection: Story = {
 
     await step('Verify update:modelValue event was emitted', async () => {
       await waitFor(() => {
-        expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+        expect(args['update:modelValue']).toHaveBeenCalled()
       })
     })
 
@@ -462,7 +478,7 @@ export const DateNavigation: Story = {
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
-    'onUpdate:modelValue': fn()
+    'update:modelValue': fn()
   },
   play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
@@ -501,7 +517,7 @@ export const DateNavigation: Story = {
 
     await step('Verify selection resets on date change', async () => {
       // Reset spy call count
-      ;(args['onUpdate:modelValue'] as ReturnType<typeof fn>).mockClear()
+      ;(args['update:modelValue'] as ReturnType<typeof fn>).mockClear()
 
       // Select a slot first
       await waitFor(
@@ -517,11 +533,11 @@ export const DateNavigation: Story = {
 
       // Verify slot selection was emitted
       await waitFor(() => {
-        expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+        expect(args['update:modelValue']).toHaveBeenCalled()
       })
 
       // Reset spy call count before navigation
-      ;(args['onUpdate:modelValue'] as ReturnType<typeof fn>).mockClear()
+      ;(args['update:modelValue'] as ReturnType<typeof fn>).mockClear()
 
       // Navigate forward
       const forwardButton = canvas.getByLabelText('Giorno successivo')
@@ -530,7 +546,7 @@ export const DateNavigation: Story = {
 
         // Verify selection was reset (update:modelValue called with undefined)
         await waitFor(() => {
-          expect(args['onUpdate:modelValue']).toHaveBeenCalledWith(undefined)
+          expect(args['update:modelValue']).toHaveBeenCalledWith(undefined)
         })
 
         // Verify no slot is selected
@@ -613,6 +629,185 @@ export const RequiredField: Story = {
   }
 }
 
+export const KeyboardNavigation: Story = {
+  ...Template,
+  args: {
+    type: 'auto',
+    startDate: formatISO(new Date()),
+    slotStartTime: getCurrentStartTimeISO(),
+    slotCount: 5,
+    slotInterval: 30,
+    breakDuration: 0,
+    'update:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Tab to first slot and verify focus', async () => {
+      await waitFor(
+        async () => {
+          const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+          expect(slots.length).toBeGreaterThan(0)
+
+          // Tab to first available slot
+          await userEvent.tab()
+          const firstSlot = slots.find((slot) => !slot.hasAttribute('disabled'))
+          if (firstSlot) {
+            firstSlot.focus()
+            await expect(document.activeElement).toBe(firstSlot)
+          }
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Select slot with Space key', async () => {
+      await waitFor(
+        async () => {
+          const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+          const firstSlot = slots.find((slot) => !slot.hasAttribute('disabled'))
+          if (firstSlot) {
+            firstSlot.focus()
+            await userEvent.keyboard(' ')
+            await expect(args['update:modelValue']).toHaveBeenCalled()
+          }
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Navigate with Arrow keys', async () => {
+      const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+      if (slots.length > 1) {
+        await userEvent.keyboard('{ArrowDown}')
+        const selectedSlot = slots.find((slot) => slot.hasAttribute('checked'))
+        if (selectedSlot) {
+          const slotIndex = slots.indexOf(selectedSlot)
+
+          console.log(slotIndex, (slotIndex + 1) % slots.length)
+          await userEvent.keyboard('{ArrowDown}')
+          // Focus should move to next slot
+          await expect(document.activeElement).toBe(slots[(slotIndex + 1) % slots.length])
+        }
+      }
+    })
+
+    await step('Navigate date with keyboard on navigation buttons', async () => {
+      const forwardButton = canvas.getByLabelText('Giorno successivo')
+      if (!forwardButton.hasAttribute('disabled')) {
+        forwardButton.focus()
+        await expect(document.activeElement).toBe(forwardButton)
+        await userEvent.keyboard('{Enter}')
+        // Date should change
+        await waitFor(() => {
+          const dateText = canvasElement.querySelector('h3')?.textContent
+          expect(dateText).toBeTruthy()
+        })
+      }
+    })
+  }
+}
+
+export const DisabledNavigation: Story = {
+  ...Template,
+  args: {
+    type: 'auto',
+    startDate: formatISO(new Date()),
+    slotStartTime: getCurrentStartTimeISO(),
+    slotCount: 5,
+    slotInterval: 30,
+    breakDuration: 0
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify back button is disabled for today', async () => {
+      const backButton = canvas.getByLabelText('Giorno precedente')
+      await expect(backButton).toBeDisabled()
+      await expect(backButton).toHaveAttribute('aria-disabled', 'true')
+    })
+
+    await step('Verify disabled back button does not navigate', async () => {
+      const backButton = canvas.getByLabelText('Giorno precedente')
+      const initialDateText = canvasElement.querySelector('h3')?.textContent
+
+      // Try to click disabled button
+      await userEvent.click(backButton)
+
+      await waitFor(() => {
+        const dateText = canvasElement.querySelector('h3')?.textContent
+        // Date should not change
+        expect(dateText).toBe(initialDateText)
+      })
+    })
+  }
+}
+
+export const Accessibility: Story = {
+  ...Template,
+  args: {
+    type: 'auto',
+    startDate: formatISO(new Date()),
+    slotStartTime: getCurrentStartTimeISO(),
+    slotCount: 5,
+    slotInterval: 30,
+    breakDuration: 0,
+    required: true
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify radio group has role="group"', async () => {
+      await waitFor(
+        () => {
+          const radioGroup = canvas.getByRole('group', { hidden: true })
+          expect(radioGroup).toBeInTheDocument()
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Verify navigation buttons have proper ARIA labels', async () => {
+      const backButton = canvas.getByLabelText('Giorno precedente')
+      const forwardButton = canvas.getByLabelText('Giorno successivo')
+
+      await expect(backButton).toBeInTheDocument()
+      await expect(forwardButton).toBeInTheDocument()
+    })
+
+    await step('Verify required attribute on radio inputs', async () => {
+      await waitFor(
+        () => {
+          const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+          expect(slots.length).toBeGreaterThan(0)
+          const firstSlot = slots[0]
+          expect(firstSlot).toHaveAttribute('required')
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Verify radio inputs have name attribute', async () => {
+      await waitFor(
+        () => {
+          const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+          expect(slots.length).toBeGreaterThan(0)
+          const firstSlot = slots[0]
+          expect(firstSlot).toHaveAttribute('name')
+          expect(firstSlot.getAttribute('name')).toBeTruthy()
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Verify date header is properly structured', async () => {
+      const dateHeader = canvasElement.querySelector('h3')
+      await expect(dateHeader).toBeInTheDocument()
+      await expect(dateHeader?.textContent).toBeTruthy()
+    })
+  }
+}
+
 // ==========================================
 // CONTROLLED MODE STORIES
 // ==========================================
@@ -632,16 +827,25 @@ const ManualTemplate: Story = {
     components: { FzAppointments },
     setup() {
       const selectedDate = ref<string | undefined>()
+      // Support spy function from args for update:modelValue
+      const handleUpdate = (value: string | undefined) => {
+        selectedDate.value = value
+        if (args['update:modelValue']) {
+          args['update:modelValue'](value)
+        }
+      }
       return {
         args,
-        selectedDate
+        selectedDate,
+        handleUpdate
       }
     },
     template: `
       <div class="flex gap-32">
         <FzAppointments 
           v-bind="args" 
-          v-model="selectedDate"
+          :modelValue="selectedDate"
+          @update:modelValue="handleUpdate"
         />
         <div class="h-auto p-12 bg-grey-100 rounded">
           <p class="text-sm font-medium mb-4">Selected appointment:</p>
@@ -862,10 +1066,11 @@ export const ManualSlotSelection: Story = {
 
     return {
       type: 'manual',
-      slots: slots
+      slots: slots,
+      'update:modelValue': fn()
     }
   })(),
-  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
     await step('Select a time slot', async () => {
@@ -882,6 +1087,16 @@ export const ManualSlotSelection: Story = {
       await waitFor(() => {
         const selectedSlot = canvasElement.querySelector('input[type="radio"]:checked')
         expect(selectedSlot).toBeInTheDocument()
+      })
+    })
+
+    await step('Verify update:modelValue handler was called', async () => {
+      await waitFor(() => {
+        expect(args['update:modelValue']).toHaveBeenCalled()
+        // Verify it was called with an ISO string
+        const calls = (args['update:modelValue'] as ReturnType<typeof fn>).mock.calls
+        expect(calls.length).toBeGreaterThan(0)
+        expect(typeof calls[0][0]).toBe('string')
       })
     })
 
@@ -922,6 +1137,63 @@ export const ManualRequired: Story = {
         },
         { timeout: 2000 }
       )
+    })
+  }
+}
+
+export const ManualKeyboardNavigation: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const slots = generateManualSlots(tomorrow, ['09:00', '10:00', '11:00', '14:00', '15:00'])
+
+    return {
+      type: 'manual',
+      slots: slots,
+      'update:modelValue': fn()
+    }
+  })(),
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Tab to first slot and verify focus', async () => {
+      const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+      expect(slots.length).toBeGreaterThan(0)
+
+      // Tab to first slot
+      await userEvent.tab()
+      await userEvent.keyboard('{Enter}')
+      await expect(document.activeElement).toBe(slots[0])
+    })
+
+    await step('Select slot with Space key', async () => {
+      await waitFor(
+        async () => {
+          const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+          if (slots.length > 0) {
+            await userEvent.keyboard('{ArrowRight}')
+            await userEvent.keyboard(' ')
+            await expect(args['update:modelValue']).toHaveBeenCalled()
+          }
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Navigate between slots with Arrow keys', async () => {
+      const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+      if (slots.length > 1) {
+        // find the selected slot
+        const selectedSlot = slots.find((slot) => slot.hasAttribute('checked'))
+        if (selectedSlot) {
+          const slotIndex = slots.indexOf(selectedSlot)
+          if (slotIndex > 0) {
+            await userEvent.keyboard('{ArrowDown}')
+            // Focus should move to next slot
+            await expect(document.activeElement).toBe(slots[(slotIndex + 1) % slots.length])
+          }
+        }
+      }
     })
   }
 }
