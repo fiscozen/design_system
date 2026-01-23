@@ -519,9 +519,9 @@ importers:
       '@fiscozen/button':
         specifier: workspace:^
         version: link:../button
-      '@fiscozen/datepicker':
+      '@fiscozen/container':
         specifier: workspace:^
-        version: link:../datepicker
+        version: link:../container
       '@fiscozen/radio':
         specifier: workspace:^
         version: link:../radio

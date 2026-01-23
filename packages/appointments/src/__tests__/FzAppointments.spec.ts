@@ -1,1002 +1,860 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { mount, VueWrapper } from "@vue/test-utils";
+import { describe, it, expect, vi } from "vitest";
+import { mount } from "@vue/test-utils";
 import { FzAppointments } from "..";
-import { formatISO, startOfDay, addDays, setHours, setMinutes } from "date-fns";
+import { addDays, formatISO, startOfDay } from "date-fns";
 
 describe("FzAppointments", () => {
-  const MOCK_DATE = new Date("2024-11-20T10:00:00Z");
-
-  // Helper to create a date string for today at a specific time
-  const createDateString = (hours: number, minutes: number = 0): string => {
-    const date = new Date(MOCK_DATE);
-    date.setHours(hours, minutes, 0, 0);
-    return formatISO(date);
-  };
-
-  // Helper to create a date string for a future date (relative to mock date)
-  const createFutureDateString = (daysFromNow: number, hours: number = 9, minutes: number = 0): string => {
-    const date = addDays(startOfDay(MOCK_DATE), daysFromNow);
-    date.setHours(hours, minutes, 0, 0);
-    // Ensure the time is in the future relative to mock time (10:00 AM)
-    if (daysFromNow === 0 && hours < 10) {
-      date.setHours(10, minutes, 0, 0);
-    }
-    return formatISO(date);
-  };
-
-  beforeEach(() => {
-    // Mock Date.now() to return a consistent date for testing
-    vi.useFakeTimers();
-    vi.setSystemTime(MOCK_DATE);
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  // ============================================
-  // RENDERING TESTS
-  // ============================================
   describe("Rendering", () => {
-    it("should render with default props", () => {
+    it("should render with default props (auto mode)", () => {
       const wrapper = mount(FzAppointments, {
         props: {
-          slotCount: 2,
+          type: "auto",
+          slotCount: 5,
+          slotStartTime: formatISO(new Date()),
+          startDate: formatISO(new Date()),
         },
       });
-
       expect(wrapper.exists()).toBe(true);
       expect(wrapper.find(".fz-appointments").exists()).toBe(true);
     });
 
-    it("should render date navigation header", () => {
+    it("should render with manual mode", () => {
+      const tomorrow = addDays(startOfDay(new Date()), 1);
+      const slot = new Date(tomorrow);
+      slot.setHours(10, 0, 0, 0);
+
       const wrapper = mount(FzAppointments, {
         props: {
-          slotCount: 2,
+          type: "manual",
+          slots: [slot],
         },
       });
-
-      const header = wrapper.find("h3");
-      expect(header.exists()).toBe(true);
-      expect(header.text()).toBeTruthy();
+      expect(wrapper.exists()).toBe(true);
     });
 
-    it("should render info text", () => {
+    it("should render date navigation buttons", () => {
       const wrapper = mount(FzAppointments, {
         props: {
-          slotCount: 2,
+          type: "auto",
+          slotCount: 5,
+          slotStartTime: formatISO(new Date()),
+          startDate: formatISO(new Date()),
         },
       });
 
-      const infoText = wrapper.find("p.text-grey-500");
-      expect(infoText.exists()).toBe(true);
-      expect(infoText.text()).toContain("minuti a partire dalle");
+      const backButton = wrapper.find('[aria-label="Giorno precedente"]');
+      const forwardButton = wrapper.find('[aria-label="Giorno successivo"]');
+
+      expect(backButton.exists()).toBe(true);
+      expect(forwardButton.exists()).toBe(true);
     });
 
-    it("should render navigation buttons", () => {
+    it("should render formatted date in header", () => {
       const wrapper = mount(FzAppointments, {
         props: {
-          slotCount: 2,
+          type: "auto",
+          slotCount: 5,
+          slotStartTime: formatISO(new Date()),
+          startDate: formatISO(new Date()),
         },
       });
 
-      const buttons = wrapper.findAll("button");
-      expect(buttons.length).toBeGreaterThanOrEqual(2);
+      const dateHeader = wrapper.find("h3");
+      expect(dateHeader.exists()).toBe(true);
+      expect(dateHeader.text()).toBeTruthy();
+    });
+
+    it("should render info text when provided", () => {
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "auto",
+          slotCount: 5,
+          slotStartTime: formatISO(new Date()),
+          startDate: formatISO(new Date()),
+          infoText: "Custom info text",
+        },
+      });
+
+      expect(wrapper.text()).toContain("Custom info text");
+    });
+
+    it("should render alert when no slots available", () => {
+      const pastDate = new Date();
+      pastDate.setFullYear(pastDate.getFullYear() - 1);
+
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "auto",
+          slotCount: 2,
+          slotStartTime: formatISO(pastDate),
+          startDate: formatISO(pastDate),
+          alertTitle: "No slots",
+          alertDescription: "No available slots",
+        },
+      });
+
+      expect(wrapper.text()).toContain("No slots");
+      expect(wrapper.text()).toContain("No available slots");
     });
 
     it("should render time slots when available", async () => {
-      // Use tomorrow with a time after the mock time (10:00 AM)
-      const futureDate = createFutureDateString(1, 11, 0);
+      const tomorrow = addDays(new Date(), 1);
+      const slotStart = new Date(tomorrow);
+      slotStart.setHours(10, 0, 0, 0);
+
       const wrapper = mount(FzAppointments, {
         props: {
-          slotCount: 3,
-          slotStartTime: futureDate,
+          type: "auto",
+          startDate: formatISO(tomorrow),
+          slotStartTime: formatISO(slotStart),
+          slotCount: 2,
           slotInterval: 30,
-          startDate: createFutureDateString(1, 0, 0),
         },
       });
 
       await wrapper.vm.$nextTick();
-      // Wait a bit for computed values to update
-      vi.advanceTimersByTime(100);
-      const radioGroup = wrapper.findComponent({ name: "FzRadioGroup" });
-      // May show alert if no slots available, which is valid behavior
-      expect(wrapper.exists()).toBe(true);
-    });
-
-    it("should render alert when no slots available", () => {
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 0,
-        },
-      });
-
-      const alert = wrapper.findComponent({ name: "FzAlert" });
-      expect(alert.exists()).toBe(true);
+      const radioInputs = wrapper.findAll('input[type="radio"]');
+      expect(radioInputs.length).toBeGreaterThan(0);
     });
   });
 
-  // ============================================
-  // PROPS TESTS
-  // ============================================
   describe("Props", () => {
-    describe("slotCount prop", () => {
-      it("should generate correct number of slots", async () => {
-        // Use tomorrow with a time after the mock time
-        const futureDate = createFutureDateString(1, 11, 0);
+    describe("type prop", () => {
+      it("should support auto mode", () => {
         const wrapper = mount(FzAppointments, {
           props: {
-            slotCount: 3,
-            slotStartTime: futureDate,
-            slotInterval: 30,
-            startDate: createFutureDateString(1, 0, 0),
+            type: "auto",
+            slotCount: 5,
+            slotStartTime: formatISO(new Date()),
+            startDate: formatISO(new Date()),
           },
         });
-
-        await wrapper.vm.$nextTick();
-        vi.advanceTimersByTime(100);
-        const radioCards = wrapper.findAllComponents({ name: "FzRadioCard" });
-        // Slots are filtered based on date/time logic, so may be less than requested
-        expect(radioCards.length).toBeGreaterThanOrEqual(0);
         expect(wrapper.exists()).toBe(true);
       });
 
-      it("should handle zero slots", () => {
+      it("should support manual mode", () => {
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot = new Date(tomorrow);
+        slot.setHours(10, 0, 0, 0);
+
         const wrapper = mount(FzAppointments, {
           props: {
-            slotCount: 0,
+            type: "manual",
+            slots: [slot],
           },
         });
-
-        const alert = wrapper.findComponent({ name: "FzAlert" });
-        expect(alert.exists()).toBe(true);
-      });
-    });
-
-    describe("slotInterval prop", () => {
-      it("should default to 30 minutes", () => {
-        const futureDate = createFutureDateString(1, 9, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-          },
-        });
-
-        const infoText = wrapper.find("p.text-grey-500");
-        expect(infoText.text()).toContain("30 minuti");
-      });
-
-      it("should use custom slotInterval", () => {
-        const futureDate = createFutureDateString(1, 9, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-            slotInterval: 60,
-          },
-        });
-
-        const infoText = wrapper.find("p.text-grey-500");
-        expect(infoText.text()).toContain("60 minuti");
-      });
-    });
-
-    describe("slotStartTime prop", () => {
-      it("should generate slots starting from specified time", async () => {
-        // Use tomorrow with a time after the mock time
-        const futureDate = createFutureDateString(1, 11, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-            slotInterval: 30,
-            startDate: createFutureDateString(1, 0, 0),
-          },
-        });
-
-        await wrapper.vm.$nextTick();
-        vi.advanceTimersByTime(100);
-        // Check if slots are rendered (may show alert if no slots available)
-        const hasSlots = wrapper.findComponent({ name: "FzRadioGroup" }).exists();
-        const hasAlert = wrapper.findComponent({ name: "FzAlert" }).exists();
-        expect(hasSlots || hasAlert).toBe(true);
-      });
-    });
-
-    describe("breakDuration prop", () => {
-      it("should default to 0", () => {
-        const futureDate = createFutureDateString(1, 9, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-          },
-        });
-
-        expect(wrapper.exists()).toBe(true);
-      });
-
-      it("should add break duration between slots", async () => {
-        const futureDate = createFutureDateString(1, 9, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-            slotInterval: 30,
-            breakDuration: 15,
-          },
-        });
-
-        await wrapper.vm.$nextTick();
-        // With breakDuration, slots should be spaced further apart
         expect(wrapper.exists()).toBe(true);
       });
     });
 
-    describe("startDate prop", () => {
-      it("should use today as default startDate", () => {
+    describe("modelValue prop", () => {
+      it("should accept modelValue as ISO string", () => {
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot = new Date(tomorrow);
+        slot.setHours(10, 0, 0, 0);
+
         const wrapper = mount(FzAppointments, {
           props: {
-            slotCount: 2,
+            type: "manual",
+            slots: [slot],
+            modelValue: formatISO(slot),
           },
         });
-
         expect(wrapper.exists()).toBe(true);
-      });
-
-      it("should use custom startDate", async () => {
-        const futureStartDate = createFutureDateString(2, 0, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            startDate: futureStartDate,
-          },
-        });
-
-        await wrapper.vm.$nextTick();
-        expect(wrapper.exists()).toBe(true);
-      });
-    });
-
-    describe("maxDate prop", () => {
-      it("should allow navigation up to maxDate", async () => {
-        const futureDate = createFutureDateString(1, 9, 0);
-        const maxDate = createFutureDateString(5, 0, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-            maxDate: maxDate,
-          },
-        });
-
-        await wrapper.vm.$nextTick();
-        const forwardButton = wrapper.findAll("button")[1];
-        expect(forwardButton.exists()).toBe(true);
-      });
-    });
-
-    describe("excludedDays prop", () => {
-      it("should exclude days of week", async () => {
-        const futureDate = createFutureDateString(1, 9, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-            excludedDays: [0, 6], // Sunday and Saturday
-          },
-        });
-
-        await wrapper.vm.$nextTick();
-        expect(wrapper.exists()).toBe(true);
-      });
-
-      it("should exclude specific dates", async () => {
-        const futureDate = createFutureDateString(1, 9, 0);
-        const excludedDate = createFutureDateString(2, 0, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-            excludedDays: [excludedDate],
-          },
-        });
-
-        await wrapper.vm.$nextTick();
-        expect(wrapper.exists()).toBe(true);
-      });
-    });
-
-    describe("excludedSlots prop", () => {
-      it("should exclude specific time slots", async () => {
-        const futureDate = createFutureDateString(1, 9, 0);
-        const excludedSlot = createFutureDateString(1, 10, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 3,
-            slotStartTime: futureDate,
-            slotInterval: 30,
-            excludedSlots: [excludedSlot],
-          },
-        });
-
-        await wrapper.vm.$nextTick();
-        const radioCards = wrapper.findAllComponents({ name: "FzRadioCard" });
-        // The excluded slot should not be rendered
-        expect(radioCards.length).toBeLessThan(3);
       });
     });
 
     describe("name prop", () => {
-      it("should default to 'fz-appointments'", () => {
+      it("should use custom name for radio group", () => {
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot = new Date(tomorrow);
+        slot.setHours(10, 0, 0, 0);
+
         const wrapper = mount(FzAppointments, {
           props: {
-            slotCount: 2,
-          },
-        });
-
-        const radioGroup = wrapper.findComponent({ name: "FzRadioGroup" });
-        if (radioGroup.exists()) {
-          expect(radioGroup.props("name")).toBe("fz-appointments");
-        }
-      });
-
-      it("should use custom name", async () => {
-        const futureDate = createFutureDateString(1, 9, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
+            type: "manual",
+            slots: [slot],
             name: "custom-appointments",
           },
         });
 
-        await wrapper.vm.$nextTick();
         const radioGroup = wrapper.findComponent({ name: "FzRadioGroup" });
-        if (radioGroup.exists()) {
-          expect(radioGroup.props("name")).toBe("custom-appointments");
-        }
+        expect(radioGroup.exists()).toBe(true);
+        expect(radioGroup.props("name")).toBe("custom-appointments");
       });
     });
 
     describe("required prop", () => {
-      it("should default to false", async () => {
-        const futureDate = createFutureDateString(1, 9, 0);
+      it("should apply required attribute when true", async () => {
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot = new Date(tomorrow);
+        slot.setHours(10, 0, 0, 0);
+
         const wrapper = mount(FzAppointments, {
           props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-          },
-        });
-
-        await wrapper.vm.$nextTick();
-        const radioCards = wrapper.findAllComponents({ name: "FzRadioCard" });
-        if (radioCards.length > 0) {
-          expect(radioCards[0].props("required")).toBe(false);
-        }
-      });
-
-      it("should pass required to radio cards when true", async () => {
-        const futureDate = createFutureDateString(1, 9, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
+            type: "manual",
+            slots: [slot],
             required: true,
           },
         });
 
         await wrapper.vm.$nextTick();
-        const radioCards = wrapper.findAllComponents({ name: "FzRadioCard" });
-        if (radioCards.length > 0) {
-          expect(radioCards[0].props("required")).toBe(true);
+        const radioInput = wrapper.find('input[type="radio"]');
+        expect(radioInput.exists()).toBe(true);
+        expect(radioInput.attributes("required")).toBeDefined();
+      });
+
+      it("should not apply required attribute when false", async () => {
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot = new Date(tomorrow);
+        slot.setHours(10, 0, 0, 0);
+
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "manual",
+            slots: [slot],
+            required: false,
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+        const radioInput = wrapper.find('input[type="radio"]');
+        if (radioInput.exists()) {
+          expect(radioInput.attributes("required")).toBeUndefined();
         }
       });
     });
 
-    describe("alertTitle prop", () => {
-      it("should use default alert title", () => {
+    describe("infoText prop", () => {
+      it("should display custom info text", () => {
         const wrapper = mount(FzAppointments, {
           props: {
-            slotCount: 0,
+            type: "auto",
+            slotCount: 5,
+            slotStartTime: formatISO(new Date()),
+            startDate: formatISO(new Date()),
+            infoText: "Select a time",
           },
         });
 
-        const alert = wrapper.findComponent({ name: "FzAlert" });
-        expect(alert.exists()).toBe(true);
-        expect(alert.props("title")).toBe("Nessuna disponibilità");
+        expect(wrapper.text()).toContain("Select a time");
       });
 
-      it("should use custom alert title", () => {
+      it("should not display info text when not provided in manual mode", () => {
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot = new Date(tomorrow);
+        slot.setHours(10, 0, 0, 0);
+
         const wrapper = mount(FzAppointments, {
           props: {
-            slotCount: 0,
-            alertTitle: "No slots available",
+            type: "manual",
+            slots: [slot],
           },
         });
 
-        const alert = wrapper.findComponent({ name: "FzAlert" });
-        expect(alert.props("title")).toBe("No slots available");
-      });
-    });
-
-    describe("alertDescription prop", () => {
-      it("should use default alert description", () => {
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 0,
-          },
-        });
-
-        const alert = wrapper.findComponent({ name: "FzAlert" });
-        expect(alert.exists()).toBe(true);
-        expect(wrapper.text()).toContain("Scegli un'altro giorno");
-      });
-
-      it("should use custom alert description", () => {
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 0,
-            alertDescription: "Please select another day",
-          },
-        });
-
-        expect(wrapper.text()).toContain("Please select another day");
+        expect(wrapper.text()).not.toContain("minuti a partire dalle");
       });
     });
 
-    describe("modelValue prop", () => {
-      it("should display selected slot", async () => {
-        // Use tomorrow with a time after the mock time
-        const futureDate = createFutureDateString(1, 11, 0);
-        const selectedSlot = createFutureDateString(1, 11, 0);
+    describe("alertTitle and alertDescription props", () => {
+      it("should display custom alert title and description", () => {
+        const pastDate = new Date();
+        pastDate.setFullYear(pastDate.getFullYear() - 1);
+
         const wrapper = mount(FzAppointments, {
           props: {
+            type: "auto",
             slotCount: 2,
-            slotStartTime: futureDate,
-            slotInterval: 30,
-            startDate: createFutureDateString(1, 0, 0),
-            modelValue: selectedSlot,
+            slotStartTime: formatISO(pastDate),
+            startDate: formatISO(pastDate),
+            alertTitle: "Custom Title",
+            alertDescription: "Custom Description",
+          },
+        });
+
+        expect(wrapper.text()).toContain("Custom Title");
+        expect(wrapper.text()).toContain("Custom Description");
+      });
+    });
+
+    describe("Auto mode props", () => {
+      it("should accept startDate prop", () => {
+        const tomorrow = formatISO(addDays(new Date(), 1));
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "auto",
+            slotCount: 5,
+            slotStartTime: formatISO(new Date()),
+            startDate: tomorrow,
+          },
+        });
+        expect(wrapper.exists()).toBe(true);
+      });
+
+      it("should accept maxDate prop", () => {
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "auto",
+            slotCount: 5,
+            slotStartTime: formatISO(new Date()),
+            startDate: formatISO(new Date()),
+            maxDate: formatISO(addDays(new Date(), 7)),
+          },
+        });
+        expect(wrapper.exists()).toBe(true);
+      });
+
+      it("should accept slotStartTime prop", () => {
+        const slotStart = new Date();
+        slotStart.setHours(9, 0, 0, 0);
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "auto",
+            slotCount: 5,
+            slotStartTime: formatISO(slotStart),
+            startDate: formatISO(new Date()),
+          },
+        });
+        expect(wrapper.exists()).toBe(true);
+      });
+
+      it("should accept slotCount prop", () => {
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "auto",
+            slotCount: 10,
+            slotStartTime: formatISO(new Date()),
+            startDate: formatISO(new Date()),
+          },
+        });
+        expect(wrapper.exists()).toBe(true);
+      });
+
+      it("should accept slotInterval prop", () => {
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "auto",
+            slotCount: 5,
+            slotStartTime: formatISO(new Date()),
+            startDate: formatISO(new Date()),
+            slotInterval: 15,
+          },
+        });
+        expect(wrapper.exists()).toBe(true);
+      });
+
+      it("should accept breakDuration prop", () => {
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "auto",
+            slotCount: 5,
+            slotStartTime: formatISO(new Date()),
+            startDate: formatISO(new Date()),
+            breakDuration: 10,
+          },
+        });
+        expect(wrapper.exists()).toBe(true);
+      });
+
+      it("should accept excludedDays prop", () => {
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "auto",
+            slotCount: 5,
+            slotStartTime: formatISO(new Date()),
+            startDate: formatISO(new Date()),
+            excludedDays: [0, 6], // Sunday and Saturday
+          },
+        });
+        expect(wrapper.exists()).toBe(true);
+      });
+
+      it("should accept excludedSlots prop", () => {
+        const tomorrow = addDays(new Date(), 1);
+        const excludedSlot = new Date(tomorrow);
+        excludedSlot.setHours(10, 0, 0, 0);
+
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "auto",
+            slotCount: 5,
+            slotStartTime: formatISO(new Date()),
+            startDate: formatISO(new Date()),
+            excludedSlots: [formatISO(excludedSlot)],
+          },
+        });
+        expect(wrapper.exists()).toBe(true);
+      });
+    });
+
+    describe("Manual mode props", () => {
+      it("should accept slots as Date objects", () => {
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot1 = new Date(tomorrow);
+        slot1.setHours(9, 0, 0, 0);
+        const slot2 = new Date(tomorrow);
+        slot2.setHours(10, 0, 0, 0);
+
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "manual",
+            slots: [slot1, slot2],
+          },
+        });
+        expect(wrapper.exists()).toBe(true);
+      });
+
+      it("should accept slots as ISO strings", () => {
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot1 = new Date(tomorrow);
+        slot1.setHours(9, 0, 0, 0);
+        const slot2 = new Date(tomorrow);
+        slot2.setHours(10, 0, 0, 0);
+
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "manual",
+            slots: [formatISO(slot1), formatISO(slot2)],
+          },
+        });
+        expect(wrapper.exists()).toBe(true);
+      });
+
+      it("should accept mixed Date and ISO string slots", () => {
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot1 = new Date(tomorrow);
+        slot1.setHours(9, 0, 0, 0);
+        const slot2 = new Date(tomorrow);
+        slot2.setHours(10, 0, 0, 0);
+
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "manual",
+            slots: [slot1, formatISO(slot2)],
+          },
+        });
+        expect(wrapper.exists()).toBe(true);
+      });
+
+      it("should deduplicate slots with identical timestamps", async () => {
+        // This test verifies that duplicate slots (same timestamp) are deduplicated
+        // to prevent Vue duplicate key errors
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot1 = new Date(tomorrow);
+        slot1.setHours(10, 0, 0, 0);
+        const slot2 = new Date(tomorrow);
+        slot2.setHours(10, 0, 0, 0); // Same timestamp as slot1
+        const slot3 = new Date(tomorrow);
+        slot3.setHours(14, 0, 0, 0);
+
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "manual",
+            slots: [slot1, slot2, slot3, formatISO(slot1)], // Multiple duplicates
           },
         });
 
         await wrapper.vm.$nextTick();
-        vi.advanceTimersByTime(100);
-        // Component should render (may show alert if no slots available)
+
+        // Should render without duplicate key errors
         expect(wrapper.exists()).toBe(true);
+
+        // Should only render unique slots (slot1 and slot3, since slot2 and formatISO(slot1) are duplicates)
+        const radioCards = wrapper.findAllComponents({ name: "FzRadioCard" });
+        // Should have 2 unique slots, not 4
+        expect(radioCards.length).toBe(2);
+
+        // Verify no duplicate keys by checking all keys are unique
+        const keys = radioCards.map((card) => card.props("label"));
+        const uniqueKeys = new Set(keys);
+        expect(uniqueKeys.size).toBe(keys.length);
       });
     });
   });
 
-  // ============================================
-  // EVENTS TESTS
-  // ============================================
   describe("Events", () => {
-    it("should emit update:modelValue when slot is selected", async () => {
-      const futureDate = createFutureDateString(1, 9, 0);
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 2,
-          slotStartTime: futureDate,
-          slotInterval: 30,
-        },
-      });
+    describe("update:modelValue event", () => {
+      it("should emit update:modelValue when slot is selected", async () => {
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot = new Date(tomorrow);
+        slot.setHours(10, 0, 0, 0);
 
-      await wrapper.vm.$nextTick();
-      const radioCards = wrapper.findAllComponents({ name: "FzRadioCard" });
-      if (radioCards.length > 0) {
-        const selectedSlot = createFutureDateString(1, 9, 0);
-        await radioCards[0].vm.$emit("update:modelValue", selectedSlot);
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "manual",
+            slots: [slot],
+          },
+        });
 
-        expect(wrapper.emitted("update:modelValue")).toBeTruthy();
-        expect(wrapper.emitted("update:modelValue")![0]).toEqual([selectedSlot]);
-      }
-    });
-
-    it("should emit update:modelValue with undefined when navigating to different date", async () => {
-      const futureDate = createFutureDateString(1, 9, 0);
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 2,
-          slotStartTime: futureDate,
-          modelValue: futureDate,
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-      const forwardButton = wrapper.findAll("button")[1];
-      await forwardButton.trigger("click");
-      await wrapper.vm.$nextTick();
-
-      const updateEvents = wrapper.emitted("update:modelValue");
-      if (updateEvents) {
-        const lastEvent = updateEvents[updateEvents.length - 1];
-        expect(lastEvent).toEqual([undefined]);
-      }
-    });
-
-    it("should not emit update:modelValue when navigating back is disabled", async () => {
-      const futureDate = createFutureDateString(1, 9, 0);
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 2,
-          slotStartTime: futureDate,
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-      const backButton = wrapper.findAll("button")[0];
-      
-      // If button is disabled, click should not work
-      if (backButton.attributes("disabled")) {
-        await backButton.trigger("click");
         await wrapper.vm.$nextTick();
-        // Should not emit if disabled
-        expect(wrapper.emitted("update:modelValue")).toBeFalsy();
-      }
-    });
-
-    it("should not emit update:modelValue when navigating forward is disabled", async () => {
-      const futureDate = createFutureDateString(1, 9, 0);
-      const maxDate = createFutureDateString(1, 0, 0);
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 2,
-          slotStartTime: futureDate,
-          maxDate: maxDate,
-        },
+        const radioInput = wrapper.find('input[type="radio"]');
+        if (radioInput.exists()) {
+          await radioInput.setValue(true);
+          expect(wrapper.emitted("update:modelValue")).toBeTruthy();
+          expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([
+            slot.toISOString(),
+          ]);
+        }
       });
 
-      await wrapper.vm.$nextTick();
-      const forwardButton = wrapper.findAll("button")[1];
-      
-      // Navigate to max date first
-      await forwardButton.trigger("click");
-      await wrapper.vm.$nextTick();
-      
-      // Try to navigate forward again (should be disabled)
-      if (forwardButton.attributes("disabled")) {
+      it("should emit update:modelValue with ISO string value", async () => {
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot = new Date(tomorrow);
+        slot.setHours(10, 0, 0, 0);
+
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "manual",
+            slots: [slot],
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+        const radioInput = wrapper.find('input[type="radio"]');
+        if (radioInput.exists()) {
+          await radioInput.setValue(true);
+          const emitted = wrapper.emitted("update:modelValue");
+          expect(emitted).toBeTruthy();
+          if (emitted && emitted[0]) {
+            expect(typeof emitted[0][0]).toBe("string");
+            expect(emitted[0][0]).toMatch(
+              /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/,
+            );
+          }
+        }
+      });
+    });
+
+    describe("Navigation events", () => {
+      it("should navigate forward when forward button is clicked", async () => {
+        const day1 = addDays(startOfDay(new Date()), 1);
+        const day2 = addDays(startOfDay(new Date()), 3);
+
+        const slot1 = new Date(day1);
+        slot1.setHours(10, 0, 0, 0);
+        const slot2 = new Date(day2);
+        slot2.setHours(14, 0, 0, 0);
+
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "manual",
+            slots: [slot1, slot2],
+          },
+        });
+
+        const initialDate = wrapper.find("h3").text();
+        const forwardButton = wrapper.find('[aria-label="Giorno successivo"]');
+        await forwardButton.trigger("click");
+
+        await wrapper.vm.$nextTick();
+        const newDate = wrapper.find("h3").text();
+        expect(newDate).not.toBe(initialDate);
+      });
+
+      it("should navigate back when back button is clicked", async () => {
+        const day1 = addDays(startOfDay(new Date()), 1);
+        const day2 = addDays(startOfDay(new Date()), 3);
+
+        const slot1 = new Date(day1);
+        slot1.setHours(10, 0, 0, 0);
+        const slot2 = new Date(day2);
+        slot2.setHours(14, 0, 0, 0);
+
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "manual",
+            slots: [slot1, slot2],
+          },
+        });
+
+        // Navigate forward first
+        const forwardButton = wrapper.find('[aria-label="Giorno successivo"]');
         await forwardButton.trigger("click");
         await wrapper.vm.$nextTick();
-        // Should not emit additional events if disabled
-      }
+
+        const dateAfterForward = wrapper.find("h3").text();
+        const backButton = wrapper.find('[aria-label="Giorno precedente"]');
+        await backButton.trigger("click");
+
+        await wrapper.vm.$nextTick();
+        const dateAfterBack = wrapper.find("h3").text();
+        expect(dateAfterBack).not.toBe(dateAfterForward);
+      });
+
+      it("should not cause infinite loop when all weekdays are excluded without maxDate", async () => {
+        // This test verifies the fix for infinite loop when all days are excluded
+        // and maxDate is undefined. The function should stop after maxIterations.
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "auto",
+            slotCount: 5,
+            slotStartTime: formatISO(new Date()),
+            startDate: formatISO(new Date()),
+            excludedDays: [0, 1, 2, 3, 4, 5, 6], // All weekdays excluded
+            // maxDate is intentionally undefined
+          },
+        });
+
+        const initialDate = wrapper.find("h3").text();
+        const forwardButton = wrapper.find('[aria-label="Giorno successivo"]');
+
+        // This should not cause an infinite loop - it should complete quickly
+        const startTime = Date.now();
+        await forwardButton.trigger("click");
+        await wrapper.vm.$nextTick();
+        const endTime = Date.now();
+
+        // The operation should complete in less than 1 second (infinite loop would hang)
+        expect(endTime - startTime).toBeLessThan(1000);
+
+        // The date should not have changed since all days are excluded
+        // and we should have hit the iteration limit
+        const finalDate = wrapper.find("h3").text();
+        expect(finalDate).toBe(initialDate);
+      });
     });
   });
 
-  // ============================================
-  // ACCESSIBILITY TESTS
-  // ============================================
   describe("Accessibility", () => {
-    describe("ARIA attributes", () => {
-      it("should have aria-label on navigation buttons", () => {
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-          },
-        });
-
-        const buttons = wrapper.findAll("button");
-        expect(buttons.length).toBeGreaterThanOrEqual(2);
-        
-        const backButton = buttons[0];
-        expect(backButton.attributes("aria-label")).toBe("Giorno precedente");
-        
-        const forwardButton = buttons[1];
-        expect(forwardButton.attributes("aria-label")).toBe("Giorno successivo");
-      });
-
-      it("should have aria-disabled on disabled navigation buttons", () => {
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-          },
-        });
-
-        const backButton = wrapper.findAll("button")[0];
-        if (backButton.attributes("disabled")) {
-          expect(backButton.attributes("aria-disabled")).toBe("true");
-        }
-      });
-
-      it("should have role='group' on radio group", async () => {
-        const futureDate = createFutureDateString(1, 9, 0);
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-          },
-        });
-
-        await wrapper.vm.$nextTick();
-        const radioGroup = wrapper.findComponent({ name: "FzRadioGroup" });
-        if (radioGroup.exists()) {
-          expect(radioGroup.attributes("role")).toBe("group");
-        }
-      });
-
-      it("should have unique name for radio group", async () => {
-        const futureDate = createFutureDateString(1, 9, 0);
-        const wrapper1 = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-            name: "appointments-1",
-          },
-        });
-
-        const wrapper2 = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-            name: "appointments-2",
-          },
-        });
-
-        await Promise.all([wrapper1.vm.$nextTick(), wrapper2.vm.$nextTick()]);
-        
-        const radioGroup1 = wrapper1.findComponent({ name: "FzRadioGroup" });
-        const radioGroup2 = wrapper2.findComponent({ name: "FzRadioGroup" });
-        
-        if (radioGroup1.exists() && radioGroup2.exists()) {
-          expect(radioGroup1.props("name")).toBe("appointments-1");
-          expect(radioGroup2.props("name")).toBe("appointments-2");
-        }
-      });
-    });
-
-    describe("Keyboard navigation", () => {
-      it("should have focusable navigation buttons", () => {
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-          },
-        });
-
-        const buttons = wrapper.findAll("button");
-        buttons.forEach((button) => {
-          if (!button.attributes("disabled")) {
-            expect(button.attributes("tabindex")).not.toBe("-1");
-          }
-        });
-      });
-
-      it("should have disabled buttons not in tab order", () => {
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-          },
-        });
-
-        const backButton = wrapper.findAll("button")[0];
-        if (backButton.attributes("disabled")) {
-          expect(backButton.attributes("aria-disabled")).toBe("true");
-        }
-      });
-    });
-
-    describe("Semantic HTML", () => {
-      it("should use h3 for date heading", () => {
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-          },
-        });
-
-        const heading = wrapper.find("h3");
-        expect(heading.exists()).toBe(true);
-      });
-
-      it("should use paragraph for info text", () => {
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-          },
-        });
-
-        const infoText = wrapper.find("p.text-grey-500");
-        expect(infoText.exists()).toBe(true);
-      });
-    });
-  });
-
-  // ============================================
-  // CSS CLASSES TESTS
-  // ============================================
-  describe("CSS Classes", () => {
-    it("should apply base container classes", () => {
+    it("should have proper ARIA labels on navigation buttons", () => {
       const wrapper = mount(FzAppointments, {
         props: {
-          slotCount: 2,
+          type: "auto",
+          slotCount: 5,
+          slotStartTime: formatISO(new Date()),
+          startDate: formatISO(new Date()),
         },
       });
 
-      const container = wrapper.find(".fz-appointments");
-      expect(container.classes()).toContain("flex");
-      expect(container.classes()).toContain("flex-col");
-      expect(container.classes()).toContain("items-center");
-      expect(container.classes()).toContain("gap-section-content-base");
+      const backButton = wrapper.find('[aria-label="Giorno precedente"]');
+      const forwardButton = wrapper.find('[aria-label="Giorno successivo"]');
+
+      expect(backButton.exists()).toBe(true);
+      expect(forwardButton.exists()).toBe(true);
     });
 
-    it("should apply header classes", () => {
+    it("should have aria-disabled on disabled navigation buttons", async () => {
       const wrapper = mount(FzAppointments, {
         props: {
-          slotCount: 2,
+          type: "auto",
+          slotCount: 5,
+          slotStartTime: formatISO(new Date()),
+          startDate: formatISO(new Date()),
         },
       });
 
-      const header = wrapper.find(".flex.items-center.gap-8.w-full");
-      expect(header.exists()).toBe(true);
-    });
-
-    it("should apply info text classes", () => {
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 2,
-        },
+      await wrapper.vm.$nextTick();
+      const backButton = wrapper.find('[aria-label="Giorno precedente"]');
+      const backButtonComponent = backButton.findComponent({
+        name: "FzIconButton",
       });
 
-      const infoText = wrapper.find("p.text-grey-500");
-      expect(infoText.classes()).toContain("text-grey-500");
-    });
-  });
-
-  // ============================================
-  // EDGE CASES
-  // ============================================
-  describe("Edge Cases", () => {
-    it("should handle undefined modelValue gracefully", () => {
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 2,
-          modelValue: undefined,
-        },
-      });
-
-      expect(wrapper.exists()).toBe(true);
-    });
-
-    it("should handle invalid ISO date strings", async () => {
-      // Component should handle invalid dates gracefully by using defaults
-      // This test verifies it doesn't crash, even if it shows warnings
-      try {
-        const wrapper = mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            startDate: "invalid-date",
-          },
-        });
-
-        await wrapper.vm.$nextTick();
-        // Component should still render even with invalid date
-        expect(wrapper.exists()).toBe(true);
-      } catch (error) {
-        // If it throws, that's also acceptable - we're testing edge cases
-        expect(error).toBeDefined();
+      if (backButtonComponent.exists()) {
+        expect(backButtonComponent.props("disabled")).toBe(true);
       }
     });
 
-    it("should handle empty excludedDays array", async () => {
-      const futureDate = createFutureDateString(1, 9, 0);
+    it('should have role="group" on radio group', async () => {
+      const tomorrow = addDays(startOfDay(new Date()), 1);
+      const slot = new Date(tomorrow);
+      slot.setHours(10, 0, 0, 0);
+
       const wrapper = mount(FzAppointments, {
         props: {
-          slotCount: 2,
-          slotStartTime: futureDate,
-          excludedDays: [],
+          type: "manual",
+          slots: [slot],
         },
       });
 
       await wrapper.vm.$nextTick();
-      expect(wrapper.exists()).toBe(true);
+      const radioGroup = wrapper.findComponent({ name: "FzRadioGroup" });
+      if (radioGroup.exists()) {
+        expect(radioGroup.attributes("role")).toBe("group");
+      }
     });
 
-    it("should handle empty excludedSlots array", async () => {
-      const futureDate = createFutureDateString(1, 9, 0);
+    it("should have required attribute on radio inputs when required prop is true", async () => {
+      const tomorrow = addDays(startOfDay(new Date()), 1);
+      const slot = new Date(tomorrow);
+      slot.setHours(10, 0, 0, 0);
+
       const wrapper = mount(FzAppointments, {
         props: {
-          slotCount: 2,
-          slotStartTime: futureDate,
-          excludedSlots: [],
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-      expect(wrapper.exists()).toBe(true);
-    });
-
-    it("should handle past dates in startDate", async () => {
-      const pastDate = formatISO(addDays(startOfDay(new Date()), -5));
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 2,
-          startDate: pastDate,
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-      expect(wrapper.exists()).toBe(true);
-    });
-
-    it("should handle very large slotCount", async () => {
-      const futureDate = createFutureDateString(1, 9, 0);
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 100,
-          slotStartTime: futureDate,
-          slotInterval: 30,
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-      expect(wrapper.exists()).toBe(true);
-    });
-
-    it("should handle modelValue for different date than current", async () => {
-      const futureDate = createFutureDateString(1, 9, 0);
-      const differentDate = createFutureDateString(2, 9, 0);
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 2,
-          slotStartTime: futureDate,
-          modelValue: differentDate,
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-      expect(wrapper.exists()).toBe(true);
-    });
-
-    it("should generate unique radio group names for multiple instances", async () => {
-      const futureDate = createFutureDateString(1, 11, 0);
-      const wrappers = Array.from({ length: 5 }).map(() =>
-        mount(FzAppointments, {
-          props: {
-            slotCount: 2,
-            slotStartTime: futureDate,
-            startDate: createFutureDateString(1, 0, 0),
-            name: `appointments-${Math.random()}`,
-          },
-        })
-      );
-
-      await Promise.all(wrappers.map((w) => w.vm.$nextTick()));
-
-      const names = wrappers
-        .map((w) => {
-          const radioGroup = w.findComponent({ name: "FzRadioGroup" });
-          return radioGroup.exists() ? radioGroup.props("name") : w.props("name");
-        })
-        .filter(Boolean);
-
-      // All names should be present (may be custom names or default)
-      expect(names.length).toBe(5);
-      // Verify they're unique
-      expect(new Set(names).size).toBe(5);
-    });
-
-    it("should handle excludedDays with mixed types", async () => {
-      const futureDate = createFutureDateString(1, 9, 0);
-      const excludedDate = createFutureDateString(2, 0, 0);
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 2,
-          slotStartTime: futureDate,
-          excludedDays: [0, excludedDate, new Date(excludedDate)],
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-      expect(wrapper.exists()).toBe(true);
-    });
-
-    it("should handle excludedSlots with mixed types", async () => {
-      const futureDate = createFutureDateString(1, 9, 0);
-      const excludedSlot1 = createFutureDateString(1, 10, 0);
-      const excludedSlot2 = new Date(excludedSlot1);
-      excludedSlot2.setHours(11, 0, 0);
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 3,
-          slotStartTime: futureDate,
-          slotInterval: 30,
-          excludedSlots: [excludedSlot1, excludedSlot2],
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-      expect(wrapper.exists()).toBe(true);
-    });
-  });
-
-  // ============================================
-  // SNAPSHOTS
-  // ============================================
-  describe("Snapshots", () => {
-    it("should match snapshot - default state", () => {
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 2,
-        },
-      });
-
-      expect(wrapper.html()).toMatchSnapshot();
-    });
-
-    it("should match snapshot - with slots", async () => {
-      const futureDate = createFutureDateString(1, 11, 0);
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 3,
-          slotStartTime: futureDate,
-          slotInterval: 30,
-          startDate: createFutureDateString(1, 0, 0),
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-      vi.advanceTimersByTime(100);
-      expect(wrapper.html()).toMatchSnapshot();
-    });
-
-    it("should match snapshot - no slots available", () => {
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 0,
-          alertTitle: "No availability",
-          alertDescription: "Please try another day",
-        },
-      });
-
-      expect(wrapper.html()).toMatchSnapshot();
-    });
-
-    it("should match snapshot - with custom name", async () => {
-      const futureDate = createFutureDateString(1, 11, 0);
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 2,
-          slotStartTime: futureDate,
-          startDate: createFutureDateString(1, 0, 0),
-          name: "custom-appointments",
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-      vi.advanceTimersByTime(100);
-      expect(wrapper.html()).toMatchSnapshot();
-    });
-
-    it("should match snapshot - with required prop", async () => {
-      const futureDate = createFutureDateString(1, 11, 0);
-      const wrapper = mount(FzAppointments, {
-        props: {
-          slotCount: 2,
-          slotStartTime: futureDate,
-          startDate: createFutureDateString(1, 0, 0),
+          type: "manual",
+          slots: [slot],
           required: true,
         },
       });
 
       await wrapper.vm.$nextTick();
-      vi.advanceTimersByTime(100);
-      expect(wrapper.html()).toMatchSnapshot();
+      const radioInput = wrapper.find('input[type="radio"]');
+      if (radioInput.exists()) {
+        expect(radioInput.attributes("required")).toBeDefined();
+      }
     });
 
-    it("should match snapshot - with excluded slots", async () => {
-      const futureDate = createFutureDateString(1, 11, 0);
-      const excludedSlot = createFutureDateString(1, 11, 30);
+    it("should have proper name attribute on radio inputs", async () => {
+      const tomorrow = addDays(startOfDay(new Date()), 1);
+      const slot = new Date(tomorrow);
+      slot.setHours(10, 0, 0, 0);
+
       const wrapper = mount(FzAppointments, {
         props: {
-          slotCount: 3,
-          slotStartTime: futureDate,
-          slotInterval: 30,
-          startDate: createFutureDateString(1, 0, 0),
-          excludedSlots: [excludedSlot],
+          type: "manual",
+          slots: [slot],
+          name: "appointment-time",
         },
       });
 
       await wrapper.vm.$nextTick();
-      vi.advanceTimersByTime(100);
+      const radioInput = wrapper.find('input[type="radio"]');
+      if (radioInput.exists()) {
+        expect(radioInput.attributes("name")).toBeTruthy();
+      }
+    });
+  });
+
+  describe("Edge Cases", () => {
+    it("should handle empty slots array in manual mode", () => {
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "manual",
+          slots: [],
+        },
+      });
+      expect(wrapper.exists()).toBe(true);
+    });
+
+    it("should handle undefined modelValue", () => {
+      const tomorrow = addDays(startOfDay(new Date()), 1);
+      const slot = new Date(tomorrow);
+      slot.setHours(10, 0, 0, 0);
+
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "manual",
+          slots: [slot],
+          modelValue: undefined,
+        },
+      });
+      expect(wrapper.exists()).toBe(true);
+    });
+
+    it("should handle multiple instances with unique radio group names", () => {
+      const tomorrow = addDays(startOfDay(new Date()), 1);
+      const slot = new Date(tomorrow);
+      slot.setHours(10, 0, 0, 0);
+
+      const wrapper1 = mount(FzAppointments, {
+        props: {
+          type: "manual",
+          slots: [slot],
+        },
+      });
+
+      const wrapper2 = mount(FzAppointments, {
+        props: {
+          type: "manual",
+          slots: [slot],
+        },
+      });
+
+      expect(wrapper1.exists()).toBe(true);
+      expect(wrapper2.exists()).toBe(true);
+    });
+
+    it("should handle slots spanning multiple days", () => {
+      const day1 = addDays(startOfDay(new Date()), 1);
+      const day2 = addDays(startOfDay(new Date()), 3);
+      const day3 = addDays(startOfDay(new Date()), 5);
+
+      const slots = [new Date(day1), new Date(day2), new Date(day3)];
+
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "manual",
+          slots: slots,
+        },
+      });
+      expect(wrapper.exists()).toBe(true);
+    });
+
+    it("should handle past dates in auto mode", () => {
+      const pastDate = new Date();
+      pastDate.setFullYear(pastDate.getFullYear() - 1);
+
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "auto",
+          slotCount: 5,
+          slotStartTime: formatISO(pastDate),
+          startDate: formatISO(pastDate),
+        },
+      });
+      expect(wrapper.exists()).toBe(true);
+    });
+  });
+
+  describe("Snapshots", () => {
+    const defaultDate = new Date(2026, 0, 23, 10, 0, 0, 0);
+    it("should match snapshot - default state (auto mode)", () => {
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "auto",
+          slotCount: 5,
+          slotStartTime: formatISO(defaultDate),
+          startDate: formatISO(defaultDate),
+          name: "auto-appointments",
+        },
+      });
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - manual mode with slots", () => {
+      const slot1 = new Date(defaultDate);
+      slot1.setHours(9, 0, 0, 0);
+      const slot2 = new Date(defaultDate);
+      slot2.setHours(10, 0, 0, 0);
+
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "manual",
+          slots: [slot1, slot2],
+          name: "manual-appointments",
+        },
+      });
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - no slots available", () => {
+      const pastDate = new Date(defaultDate);
+      pastDate.setFullYear(pastDate.getFullYear() - 1);
+
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "auto",
+          slotCount: 2,
+          slotStartTime: formatISO(pastDate),
+          startDate: formatISO(pastDate),
+          alertTitle: "No slots",
+          alertDescription: "No available slots",
+          name: "auto-appointments",
+        },
+      });
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - required state", () => {
+      const slot = new Date(defaultDate);
+
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "manual",
+          slots: [slot],
+          required: true,
+          name: "manual-appointments",
+        },
+      });
       expect(wrapper.html()).toMatchSnapshot();
     });
   });

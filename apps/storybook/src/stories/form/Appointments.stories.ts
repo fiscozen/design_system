@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
 import { FzAppointments } from '@fiscozen/appointments'
 import { ref } from 'vue'
-import { addDays, formatISO } from 'date-fns'
+import { addDays, formatISO, startOfDay } from 'date-fns'
 
 // Helper function to get current hour in ISO-8601 format
 // This ensures slots are always available regardless of when tests run
@@ -47,7 +47,8 @@ const meta: Meta<typeof FzAppointments> = {
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 8,
     slotInterval: 30,
-    breakDuration: 0
+    breakDuration: 0,
+    type: 'auto'
   },
   decorators: [
     () => ({
@@ -73,8 +74,8 @@ const Template: Story = {
       // Support spy function from args for update:modelValue
       const handleUpdate = (value: string | undefined) => {
         selectedDate.value = value
-        if (args['onUpdate:modelValue']) {
-          args['onUpdate:modelValue'](value)
+        if (args['update:modelValue']) {
+          args['update:modelValue'](value)
         }
       }
       return {
@@ -108,12 +109,13 @@ const Template: Story = {
 export const Default: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 24,
     slotInterval: 30,
     breakDuration: 0,
-    'onUpdate:modelValue': fn()
+    'update:modelValue': fn()
   },
   play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
@@ -156,7 +158,18 @@ export const Default: Story = {
 
     await step('Verify back button is disabled for today', async () => {
       const backButton = canvas.getByLabelText('Giorno precedente')
-      expect(backButton).toBeDisabled()
+      await expect(backButton).toBeDisabled()
+      await expect(backButton).toHaveAttribute('aria-disabled', 'true')
+    })
+
+    await step('Verify slot selection calls update:modelValue handler', async () => {
+      const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+      const enabledSlot = slots.find((slot) => !slot.hasAttribute('disabled'))
+      if (enabledSlot) {
+        await userEvent.click(enabledSlot)
+        // Verify the spy WAS called
+        await expect(args['update:modelValue']).toHaveBeenCalledTimes(1)
+      }
     })
   }
 }
@@ -164,6 +177,7 @@ export const Default: Story = {
 export const WithBreakDuration: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 3,
@@ -196,6 +210,7 @@ export const WithBreakDuration: Story = {
 export const WithExcludedDays: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
@@ -238,6 +253,7 @@ export const WithexcludedSlots: Story = {
     const currentHour = now.getHours()
 
     return {
+      type: 'auto',
       startDate: formatISO(new Date()),
       slotStartTime: getCurrentStartTimeISO(),
       slotCount: 5,
@@ -256,7 +272,7 @@ export const WithexcludedSlots: Story = {
           return formatISO(date)
         })()
       ],
-      'onUpdate:modelValue': fn()
+      'update:modelValue': fn()
     }
   })(),
   play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
@@ -279,17 +295,20 @@ export const WithexcludedSlots: Story = {
     })
 
     await step('Verify disabled slots cannot be selected', async () => {
+      // Clear any previous calls
+      ;(args['update:modelValue'] as ReturnType<typeof fn>).mockClear()
+
       await waitFor(
         async () => {
           // Try to find and click any disabled slot
-          const disabledSlots = Array.from(canvasElement.querySelectorAll('input[type="radio"][disabled]'))
+          const disabledSlots = Array.from(
+            canvasElement.querySelectorAll('input[type="radio"][disabled]')
+          )
           if (disabledSlots.length > 0) {
             // Attempt to click a disabled slot
             await userEvent.click(disabledSlots[0] as HTMLElement)
             // Verify the spy was not called
-            await waitFor(() => {
-              expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
-            })
+            await expect(args['update:modelValue']).not.toHaveBeenCalled()
           }
         },
         { timeout: 2000 }
@@ -299,13 +318,15 @@ export const WithexcludedSlots: Story = {
     await step('Verify enabled slots can be selected', async () => {
       await waitFor(
         async () => {
-          const enabledSlots = Array.from(canvasElement.querySelectorAll('input[type="radio"]:not([disabled])'))
+          const enabledSlots = Array.from(
+            canvasElement.querySelectorAll('input[type="radio"]:not([disabled])')
+          )
           if (enabledSlots.length > 0) {
             // Click an enabled slot
             await userEvent.click(enabledSlots[0] as HTMLElement)
             // Verify the spy was called
             await waitFor(() => {
-              expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+              expect(args['update:modelValue']).toHaveBeenCalled()
             })
           }
         },
@@ -318,6 +339,7 @@ export const WithexcludedSlots: Story = {
 export const WithMaxDate: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
@@ -366,6 +388,7 @@ export const NoAvailableSlots: Story = {
     }
 
     return {
+      type: 'auto',
       startDate: formatISO(new Date()),
       slotStartTime: getCurrentStartTimeISO(),
       slotCount: 5,
@@ -397,12 +420,13 @@ export const NoAvailableSlots: Story = {
 export const SlotSelection: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
-    'onUpdate:modelValue': fn()
+    'update:modelValue': fn()
   },
   play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
@@ -432,7 +456,7 @@ export const SlotSelection: Story = {
 
     await step('Verify update:modelValue event was emitted', async () => {
       await waitFor(() => {
-        expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+        expect(args['update:modelValue']).toHaveBeenCalled()
       })
     })
 
@@ -448,12 +472,13 @@ export const SlotSelection: Story = {
 export const DateNavigation: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
-    'onUpdate:modelValue': fn()
+    'update:modelValue': fn()
   },
   play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
@@ -492,7 +517,7 @@ export const DateNavigation: Story = {
 
     await step('Verify selection resets on date change', async () => {
       // Reset spy call count
-      ;(args['onUpdate:modelValue'] as ReturnType<typeof fn>).mockClear()
+      ;(args['update:modelValue'] as ReturnType<typeof fn>).mockClear()
 
       // Select a slot first
       await waitFor(
@@ -508,11 +533,11 @@ export const DateNavigation: Story = {
 
       // Verify slot selection was emitted
       await waitFor(() => {
-        expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+        expect(args['update:modelValue']).toHaveBeenCalled()
       })
 
       // Reset spy call count before navigation
-      ;(args['onUpdate:modelValue'] as ReturnType<typeof fn>).mockClear()
+      ;(args['update:modelValue'] as ReturnType<typeof fn>).mockClear()
 
       // Navigate forward
       const forwardButton = canvas.getByLabelText('Giorno successivo')
@@ -521,7 +546,7 @@ export const DateNavigation: Story = {
 
         // Verify selection was reset (update:modelValue called with undefined)
         await waitFor(() => {
-          expect(args['onUpdate:modelValue']).toHaveBeenCalledWith(undefined)
+          expect(args['update:modelValue']).toHaveBeenCalledWith(undefined)
         })
 
         // Verify no slot is selected
@@ -538,6 +563,7 @@ export const DateNavigation: Story = {
 export const CustomSlotConfiguration: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 10,
@@ -578,6 +604,7 @@ export const CustomSlotConfiguration: Story = {
 export const RequiredField: Story = {
   ...Template,
   args: {
+    type: 'auto',
     startDate: formatISO(new Date()),
     slotStartTime: getCurrentStartTimeISO(),
     slotCount: 5,
@@ -598,6 +625,575 @@ export const RequiredField: Story = {
         },
         { timeout: 2000 }
       )
+    })
+  }
+}
+
+export const KeyboardNavigation: Story = {
+  ...Template,
+  args: {
+    type: 'auto',
+    startDate: formatISO(new Date()),
+    slotStartTime: getCurrentStartTimeISO(),
+    slotCount: 5,
+    slotInterval: 30,
+    breakDuration: 0,
+    'update:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Tab to first slot and verify focus', async () => {
+      await waitFor(
+        async () => {
+          const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+          expect(slots.length).toBeGreaterThan(0)
+
+          // Tab to first available slot
+          await userEvent.tab()
+          const firstSlot = slots.find((slot) => !slot.hasAttribute('disabled'))
+          if (firstSlot) {
+            firstSlot.focus()
+            await expect(document.activeElement).toBe(firstSlot)
+          }
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Select slot with Space key', async () => {
+      await waitFor(
+        async () => {
+          const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+          const firstSlot = slots.find((slot) => !slot.hasAttribute('disabled'))
+          if (firstSlot) {
+            firstSlot.focus()
+            await userEvent.keyboard(' ')
+            await expect(args['update:modelValue']).toHaveBeenCalled()
+          }
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Navigate with Arrow keys', async () => {
+      const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+      if (slots.length > 1) {
+        await userEvent.keyboard('{ArrowDown}')
+        const selectedSlot = slots.find((slot) => slot.hasAttribute('checked'))
+        if (selectedSlot) {
+          const slotIndex = slots.indexOf(selectedSlot)
+
+          console.log(slotIndex, (slotIndex + 1) % slots.length)
+          await userEvent.keyboard('{ArrowDown}')
+          // Focus should move to next slot
+          await expect(document.activeElement).toBe(slots[(slotIndex + 1) % slots.length])
+        }
+      }
+    })
+
+    await step('Navigate date with keyboard on navigation buttons', async () => {
+      const forwardButton = canvas.getByLabelText('Giorno successivo')
+      if (!forwardButton.hasAttribute('disabled')) {
+        forwardButton.focus()
+        await expect(document.activeElement).toBe(forwardButton)
+        await userEvent.keyboard('{Enter}')
+        // Date should change
+        await waitFor(() => {
+          const dateText = canvasElement.querySelector('h3')?.textContent
+          expect(dateText).toBeTruthy()
+        })
+      }
+    })
+  }
+}
+
+export const DisabledNavigation: Story = {
+  ...Template,
+  args: {
+    type: 'auto',
+    startDate: formatISO(new Date()),
+    slotStartTime: getCurrentStartTimeISO(),
+    slotCount: 5,
+    slotInterval: 30,
+    breakDuration: 0
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify back button is disabled for today', async () => {
+      const backButton = canvas.getByLabelText('Giorno precedente')
+      await expect(backButton).toBeDisabled()
+      await expect(backButton).toHaveAttribute('aria-disabled', 'true')
+    })
+
+    await step('Verify disabled back button does not navigate', async () => {
+      const backButton = canvas.getByLabelText('Giorno precedente')
+      const initialDateText = canvasElement.querySelector('h3')?.textContent
+
+      // Try to click disabled button
+      await userEvent.click(backButton)
+
+      await waitFor(() => {
+        const dateText = canvasElement.querySelector('h3')?.textContent
+        // Date should not change
+        expect(dateText).toBe(initialDateText)
+      })
+    })
+  }
+}
+
+export const Accessibility: Story = {
+  ...Template,
+  args: {
+    type: 'auto',
+    startDate: formatISO(new Date()),
+    slotStartTime: getCurrentStartTimeISO(),
+    slotCount: 5,
+    slotInterval: 30,
+    breakDuration: 0,
+    required: true
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify radio group has role="group"', async () => {
+      await waitFor(
+        () => {
+          const radioGroup = canvas.getByRole('group', { hidden: true })
+          expect(radioGroup).toBeInTheDocument()
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Verify navigation buttons have proper ARIA labels', async () => {
+      const backButton = canvas.getByLabelText('Giorno precedente')
+      const forwardButton = canvas.getByLabelText('Giorno successivo')
+
+      await expect(backButton).toBeInTheDocument()
+      await expect(forwardButton).toBeInTheDocument()
+    })
+
+    await step('Verify required attribute on radio inputs', async () => {
+      await waitFor(
+        () => {
+          const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+          expect(slots.length).toBeGreaterThan(0)
+          const firstSlot = slots[0]
+          expect(firstSlot).toHaveAttribute('required')
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Verify radio inputs have name attribute', async () => {
+      await waitFor(
+        () => {
+          const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+          expect(slots.length).toBeGreaterThan(0)
+          const firstSlot = slots[0]
+          expect(firstSlot).toHaveAttribute('name')
+          expect(firstSlot.getAttribute('name')).toBeTruthy()
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Verify date header is properly structured', async () => {
+      const dateHeader = canvasElement.querySelector('h3')
+      await expect(dateHeader).toBeInTheDocument()
+      await expect(dateHeader?.textContent).toBeTruthy()
+    })
+  }
+}
+
+// ==========================================
+// CONTROLLED MODE STORIES
+// ==========================================
+
+// Helper to generate controlled slots for a given day
+const generateManualSlots = (day: Date, times: string[]): Date[] => {
+  return times.map((time) => {
+    const [hours, minutes] = time.split(':').map(Number)
+    const slot = new Date(day)
+    slot.setHours(hours, minutes, 0, 0)
+    return slot
+  })
+}
+
+const ManualTemplate: Story = {
+  render: (args) => ({
+    components: { FzAppointments },
+    setup() {
+      const selectedDate = ref<string | undefined>()
+      // Support spy function from args for update:modelValue
+      const handleUpdate = (value: string | undefined) => {
+        selectedDate.value = value
+        if (args['update:modelValue']) {
+          args['update:modelValue'](value)
+        }
+      }
+      return {
+        args,
+        selectedDate,
+        handleUpdate
+      }
+    },
+    template: `
+      <div class="flex gap-32">
+        <FzAppointments 
+          v-bind="args" 
+          :modelValue="selectedDate"
+          @update:modelValue="handleUpdate"
+        />
+        <div class="h-auto p-12 bg-grey-100 rounded">
+          <p class="text-sm font-medium mb-4">Selected appointment:</p>
+          <p class="text-sm" v-if="selectedDate">
+            GMT (raw value): {{ selectedDate }}
+          </p>
+          <p class="text-sm" v-if="selectedDate">
+            Local: {{ new Date(selectedDate).toLocaleString() }}
+          </p>
+          <p class="text-sm text-grey-500" v-else>No appointment selected</p>
+        </div>
+      </div>
+    `
+  })
+}
+
+export const ManualBasic: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const slots = generateManualSlots(tomorrow, [
+      '09:00',
+      '09:30',
+      '10:00',
+      '10:30',
+      '11:00',
+      '14:00',
+      '14:30',
+      '15:00'
+    ])
+
+    return {
+      type: 'manual',
+      slots: slots
+    }
+  })(),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify component renders with controlled slots', async () => {
+      await waitFor(
+        () => {
+          const slots = canvasElement.querySelectorAll('input[type="radio"]')
+          expect(slots.length).toBe(8)
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Verify specific times are displayed', async () => {
+      expect(canvas.getByText('09:00')).toBeInTheDocument()
+      expect(canvas.getByText('14:00')).toBeInTheDocument()
+    })
+
+    await step('Verify info text is not displayed by default', async () => {
+      const infoTexts = canvasElement.querySelectorAll('.text-grey-500')
+      // No info text should contain "minuti a partire dalle"
+      const hasDefaultInfoText = Array.from(infoTexts).some((el) =>
+        el.textContent?.includes('minuti a partire dalle')
+      )
+      expect(hasDefaultInfoText).toBe(false)
+    })
+  }
+}
+
+export const ManualMultipleDays: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const day1 = addDays(startOfDay(new Date()), 1)
+    const day2 = addDays(startOfDay(new Date()), 3)
+    const day3 = addDays(startOfDay(new Date()), 5)
+
+    const slots = [
+      ...generateManualSlots(day1, ['09:00', '10:00', '11:00']),
+      ...generateManualSlots(day2, ['14:00', '15:00', '16:00']),
+      ...generateManualSlots(day3, ['09:30', '10:30'])
+    ]
+
+    return {
+      type: 'manual',
+      slots: slots
+    }
+  })(),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify first day slots are displayed', async () => {
+      await waitFor(
+        () => {
+          expect(canvas.getByText('09:00')).toBeInTheDocument()
+          expect(canvas.getByText('10:00')).toBeInTheDocument()
+          expect(canvas.getByText('11:00')).toBeInTheDocument()
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Navigate to second day', async () => {
+      const forwardButton = canvas.getByLabelText('Giorno successivo')
+      await userEvent.click(forwardButton)
+
+      await waitFor(() => {
+        expect(canvas.getByText('14:00')).toBeInTheDocument()
+        expect(canvas.getByText('15:00')).toBeInTheDocument()
+        expect(canvas.getByText('16:00')).toBeInTheDocument()
+      })
+    })
+
+    await step('Navigate to third day', async () => {
+      const forwardButton = canvas.getByLabelText('Giorno successivo')
+      await userEvent.click(forwardButton)
+
+      await waitFor(() => {
+        expect(canvas.getByText('09:30')).toBeInTheDocument()
+        expect(canvas.getByText('10:30')).toBeInTheDocument()
+      })
+    })
+
+    await step('Verify forward button is disabled at last day', async () => {
+      const forwardButton = canvas.getByLabelText('Giorno successivo')
+      expect(forwardButton).toBeDisabled()
+    })
+
+    await step('Navigate back to first day', async () => {
+      const backButton = canvas.getByLabelText('Giorno precedente')
+      await userEvent.click(backButton)
+      await userEvent.click(backButton)
+
+      await waitFor(() => {
+        expect(canvas.getByText('09:00')).toBeInTheDocument()
+      })
+    })
+  }
+}
+
+export const ManualWithCustomInfoText: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const slots = generateManualSlots(tomorrow, ['10:00', '11:00', '12:00', '14:00', '15:00'])
+
+    return {
+      type: 'manual',
+      slots: slots,
+      infoText: 'Seleziona un orario per la tua consulenza gratuita'
+    }
+  })(),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify custom info text is displayed', async () => {
+      expect(
+        canvas.getByText('Seleziona un orario per la tua consulenza gratuita')
+      ).toBeInTheDocument()
+    })
+  }
+}
+
+export const ManualWithISOStrings: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const slots = generateManualSlots(tomorrow, ['09:00', '10:30', '14:00', '16:30'])
+
+    return {
+      // Pass as ISO strings instead of Date objects
+      type: 'manual',
+      slots: slots.map((slot) => formatISO(slot))
+    }
+  })(),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify ISO string slots are parsed correctly', async () => {
+      await waitFor(
+        () => {
+          expect(canvas.getByText('09:00')).toBeInTheDocument()
+          expect(canvas.getByText('10:30')).toBeInTheDocument()
+          expect(canvas.getByText('14:00')).toBeInTheDocument()
+          expect(canvas.getByText('16:30')).toBeInTheDocument()
+        },
+        { timeout: 2000 }
+      )
+    })
+  }
+}
+
+export const ManualEmptySlots: Story = {
+  ...ManualTemplate,
+  args: {
+    type: 'manual',
+    slots: [],
+    alertTitle: 'Nessun appuntamento disponibile',
+    alertDescription: 'Non ci sono orari disponibili per la prenotazione.'
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify alert is displayed when no slots', async () => {
+      await waitFor(
+        () => {
+          expect(canvas.getByText('Nessun appuntamento disponibile')).toBeInTheDocument()
+          expect(
+            canvas.getByText('Non ci sono orari disponibili per la prenotazione.')
+          ).toBeInTheDocument()
+        },
+        { timeout: 2000 }
+      )
+    })
+  }
+}
+
+export const ManualSlotSelection: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const slots = generateManualSlots(tomorrow, ['09:00', '10:00', '11:00'])
+
+    return {
+      type: 'manual',
+      slots: slots,
+      'update:modelValue': fn()
+    }
+  })(),
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Select a time slot', async () => {
+      await waitFor(
+        async () => {
+          const slot = canvas.getByText('10:00')
+          await userEvent.click(slot)
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Verify slot is selected', async () => {
+      await waitFor(() => {
+        const selectedSlot = canvasElement.querySelector('input[type="radio"]:checked')
+        expect(selectedSlot).toBeInTheDocument()
+      })
+    })
+
+    await step('Verify update:modelValue handler was called', async () => {
+      await waitFor(() => {
+        expect(args['update:modelValue']).toHaveBeenCalled()
+        // Verify it was called with an ISO string
+        const calls = (args['update:modelValue'] as ReturnType<typeof fn>).mock.calls
+        expect(calls.length).toBeGreaterThan(0)
+        expect(typeof calls[0][0]).toBe('string')
+      })
+    })
+
+    await step('Verify selected date is displayed in sidebar', async () => {
+      await waitFor(() => {
+        const selectedInfo = canvas.getByText(/Selected appointment:/i)
+        expect(selectedInfo).toBeInTheDocument()
+        // Should show the raw GMT value
+        const gmtText = canvas.getByText(/GMT \(raw value\):/i)
+        expect(gmtText).toBeInTheDocument()
+      })
+    })
+  }
+}
+
+export const ManualRequired: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const slots = generateManualSlots(tomorrow, ['09:00', '10:00', '11:00'])
+
+    return {
+      type: 'manual',
+      slots: slots,
+      required: true
+    }
+  })(),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    await step('Verify required attribute is set', async () => {
+      await waitFor(
+        () => {
+          const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+          expect(slots.length).toBeGreaterThan(0)
+
+          // All slots should have required attribute
+          const firstSlot = slots[0]
+          expect(firstSlot).toHaveAttribute('required')
+        },
+        { timeout: 2000 }
+      )
+    })
+  }
+}
+
+export const ManualKeyboardNavigation: Story = {
+  ...ManualTemplate,
+  args: (() => {
+    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const slots = generateManualSlots(tomorrow, ['09:00', '10:00', '11:00', '14:00', '15:00'])
+
+    return {
+      type: 'manual',
+      slots: slots,
+      'update:modelValue': fn()
+    }
+  })(),
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Tab to first slot and verify focus', async () => {
+      const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+      expect(slots.length).toBeGreaterThan(0)
+
+      // Tab to first slot
+      await userEvent.tab()
+      await userEvent.keyboard('{Enter}')
+      await expect(document.activeElement).toBe(slots[0])
+    })
+
+    await step('Select slot with Space key', async () => {
+      await waitFor(
+        async () => {
+          const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+          if (slots.length > 0) {
+            await userEvent.keyboard('{ArrowRight}')
+            await userEvent.keyboard(' ')
+            await expect(args['update:modelValue']).toHaveBeenCalled()
+          }
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Navigate between slots with Arrow keys', async () => {
+      const slots = Array.from(canvasElement.querySelectorAll('input[type="radio"]'))
+      if (slots.length > 1) {
+        // find the selected slot
+        const selectedSlot = slots.find((slot) => slot.hasAttribute('checked'))
+        if (selectedSlot) {
+          const slotIndex = slots.indexOf(selectedSlot)
+          if (slotIndex > 0) {
+            await userEvent.keyboard('{ArrowDown}')
+            // Focus should move to next slot
+            await expect(document.activeElement).toBe(slots[(slotIndex + 1) % slots.length])
+          }
+        }
+      }
     })
   }
 }
