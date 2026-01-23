@@ -36,7 +36,8 @@ export function useAppointmentsGeneric({
 
   // Generate unique name for radio group
   const radioGroupName = computed(() => {
-    return props.name || `fz-appointments-${Date.now()}`;
+    const randomId = Math.random().toString(36).substring(2, 15);
+    return props.name || `fz-appointments-${randomId}`;
   });
 
   // Selected slot value for radio group

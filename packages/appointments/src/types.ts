@@ -8,7 +8,7 @@ export type FzAppointmentsCommonProps = {
   /**
    * The type of appointments component to use
    */
-  type: "auto" | "manual";
+  type?: "auto" | "manual";
   /**
    * Name for the radio group
    */

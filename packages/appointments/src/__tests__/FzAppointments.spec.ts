@@ -804,6 +804,7 @@ describe("FzAppointments", () => {
           slotCount: 5,
           slotStartTime: formatISO(defaultDate),
           startDate: formatISO(defaultDate),
+          name: "auto-appointments",
         },
       });
       expect(wrapper.html()).toMatchSnapshot();
@@ -819,6 +820,7 @@ describe("FzAppointments", () => {
         props: {
           type: "manual",
           slots: [slot1, slot2],
+          name: "manual-appointments",
         },
       });
       expect(wrapper.html()).toMatchSnapshot();
@@ -836,6 +838,7 @@ describe("FzAppointments", () => {
           startDate: formatISO(pastDate),
           alertTitle: "No slots",
           alertDescription: "No available slots",
+          name: "auto-appointments",
         },
       });
       expect(wrapper.html()).toMatchSnapshot();
@@ -849,6 +852,7 @@ describe("FzAppointments", () => {
           type: "manual",
           slots: [slot],
           required: true,
+          name: "manual-appointments",
         },
       });
       expect(wrapper.html()).toMatchSnapshot();
