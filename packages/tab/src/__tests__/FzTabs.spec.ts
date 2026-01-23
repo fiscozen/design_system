@@ -183,8 +183,8 @@ describe('FzTabs', () => {
   // PROPS TESTS
   // ============================================
   describe('Props', () => {
-    describe('size prop', () => {
-      it('should apply sm size classes', async () => {
+    describe('size prop (deprecated)', () => {
+      it('should apply default size classes (size prop is deprecated)', async () => {
         const wrapper = await createWrapper(
           {
             size: 'sm',
@@ -198,14 +198,15 @@ describe('FzTabs', () => {
         )
 
         const button = wrapper.find('button')
-        expect(button.classes()).toContain('text-sm')
+        // Size prop is deprecated - component uses default sizing
+        expect(button.classes()).toContain('text-md')
         expect(button.classes()).toContain('h-40')
-        expect(button.classes()).toContain('gap-6')
+        expect(button.classes()).toContain('gap-8')
         expect(button.classes()).toContain('py-8')
         expect(button.classes()).toContain('px-12')
       })
 
-      it('should apply md size classes', async () => {
+      it('should apply default size classes when md size is passed (deprecated)', async () => {
         const wrapper = await createWrapper(
           {
             size: 'md',
@@ -219,10 +220,11 @@ describe('FzTabs', () => {
         )
 
         const button = wrapper.find('button')
+        // Size prop is deprecated - component uses default sizing
         expect(button.classes()).toContain('text-md')
         expect(button.classes()).toContain('gap-8')
-        expect(button.classes()).toContain('py-12')
-        expect(button.classes()).toContain('px-14')
+        expect(button.classes()).toContain('py-8')
+        expect(button.classes()).toContain('px-12')
       })
     })
 
@@ -385,8 +387,9 @@ describe('FzTabs', () => {
 
       expect(wrapper.emitted('change')).toBeTruthy()
       // Change event is emitted on mount (tab1) and on click (tab2)
+      // Event payload: [title, buttonElement]
       const changeEvents = wrapper.emitted('change')!
-      expect(changeEvents[changeEvents.length - 1]).toEqual(['tab2'])
+      expect(changeEvents[changeEvents.length - 1][0]).toBe('tab2')
     })
 
     it('should emit change event with correct tab title', async () => {
@@ -409,8 +412,9 @@ describe('FzTabs', () => {
       await tab3Button.trigger('click')
 
       // Change event is emitted on mount (tab1) and on click (tab3)
+      // Event payload: [title, buttonElement]
       const changeEvents = wrapper.emitted('change')!
-      expect(changeEvents[changeEvents.length - 1]).toEqual(['tab3'])
+      expect(changeEvents[changeEvents.length - 1][0]).toBe('tab3')
     })
 
     it('should not emit change event when disabled tab is clicked', async () => {
@@ -474,9 +478,10 @@ describe('FzTabs', () => {
       )
 
       // Change event should be emitted on mount with the initially selected tab
+      // Event payload: [title, buttonElement]
       expect(wrapper.emitted('change')).toBeTruthy()
       const changeEvents = wrapper.emitted('change')!
-      expect(changeEvents[0]).toEqual(['tab1'])
+      expect(changeEvents[0][0]).toBe('tab1')
     })
 
     it('should emit change event with initialSelected tab on mount', async () => {
@@ -494,12 +499,13 @@ describe('FzTabs', () => {
       )
 
       // Change event should be emitted on mount with the tab marked as initialSelected
+      // Event payload: [title, buttonElement]
       expect(wrapper.emitted('change')).toBeTruthy()
       const changeEvents = wrapper.emitted('change')!
-      expect(changeEvents[0]).toEqual(['tab2'])
+      expect(changeEvents[0][0]).toBe('tab2')
     })
 
-    it('should emit change event payload as string (tab title)', async () => {
+    it('should emit change event payload with title and button element', async () => {
       const wrapper = await createWrapper(
         {
           size: 'sm',
@@ -517,7 +523,8 @@ describe('FzTabs', () => {
 
       const changeEvents = wrapper.emitted('change')!
       const lastEvent = changeEvents[changeEvents.length - 1]
-      expect(lastEvent).toHaveLength(1)
+      // Event payload: [title, buttonElement]
+      expect(lastEvent).toHaveLength(2)
       expect(typeof lastEvent[0]).toBe('string')
       expect(lastEvent[0]).toBe('tab2')
     })
@@ -552,10 +559,11 @@ describe('FzTabs', () => {
       const finalCount = wrapper.emitted('change')?.length || 0
       expect(finalCount).toBe(initialCount + 3)
 
+      // Event payload: [title, buttonElement]
       const changeEvents = wrapper.emitted('change')!
-      expect(changeEvents[changeEvents.length - 3]).toEqual(['tab2'])
-      expect(changeEvents[changeEvents.length - 2]).toEqual(['tab3'])
-      expect(changeEvents[changeEvents.length - 1]).toEqual(['tab1'])
+      expect(changeEvents[changeEvents.length - 3][0]).toBe('tab2')
+      expect(changeEvents[changeEvents.length - 2][0]).toBe('tab3')
+      expect(changeEvents[changeEvents.length - 1][0]).toBe('tab1')
     })
   })
 
@@ -949,6 +957,7 @@ describe('FzTabs', () => {
       const wrapper = mount(FzTabs, {
         props: {
           size: 'sm',
+          isDebug: true,
         },
         slots: {
           default: () => [],
@@ -966,6 +975,7 @@ describe('FzTabs', () => {
       const wrapper = await createWrapper(
         {
           size: 'sm',
+          isDebug: true
         },
         {
           title: 'tab1',
@@ -1258,13 +1268,13 @@ describe('FzTabs', () => {
     })
 
     it('should warn when size prop is used', async () => {
-      await createWrapper({ size: 'sm' }, { title: 'tab1' }, { title: 'tab2' })
+      await createWrapper({ size: 'sm', isDebug: true }, { title: 'tab1' }, { title: 'tab2' })
 
       expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('[FzTabs] The "size" prop is deprecated'))
     })
 
     it('should warn when horizontalOverflow prop is used', async () => {
-      await createWrapper({ horizontalOverflow: true }, { title: 'tab1' }, { title: 'tab2' })
+      await createWrapper({ horizontalOverflow: true, isDebug: true }, { title: 'tab1' }, { title: 'tab2' })
 
       expect(console.warn).toHaveBeenCalledWith(
         expect.stringContaining('[FzTabs] The "horizontalOverflow" prop is deprecated'),
