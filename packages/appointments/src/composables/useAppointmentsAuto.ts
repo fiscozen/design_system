@@ -252,12 +252,16 @@ export function useAppointmentsAuto({
     const newDate = new Date(currentDate.value);
     newDate.setDate(newDate.getDate() - 1);
 
-    // Skip excluded days
+    // Skip excluded days with safety limit to prevent infinite loops
+    const maxIterations = 365; // Maximum days to check (1 year)
+    let iterations = 0;
     while (
       isDayExcluded(newDate) &&
-      newDate >= startOfDay(startDateAsDate.value)
+      newDate >= startOfDay(startDateAsDate.value) &&
+      iterations < maxIterations
     ) {
       newDate.setDate(newDate.getDate() - 1);
+      iterations++;
     }
 
     if (
@@ -279,19 +283,28 @@ export function useAppointmentsAuto({
     const newDate = new Date(currentDate.value);
     newDate.setDate(newDate.getDate() + 1);
 
-    // Skip excluded days
+    // Skip excluded days with safety limit to prevent infinite loops
     const maxDateLimit = maxDateAsDate.value
       ? startOfDay(maxDateAsDate.value)
       : null;
+    const maxIterations = 365; // Maximum days to check (1 year)
+    let iterations = 0;
     while (
       isDayExcluded(newDate) &&
       newDate >= today.value &&
-      (!maxDateLimit || newDate <= maxDateLimit)
+      (!maxDateLimit || newDate <= maxDateLimit) &&
+      iterations < maxIterations
     ) {
       newDate.setDate(newDate.getDate() + 1);
+      iterations++;
     }
 
-    if (newDate >= today.value && (!maxDateLimit || newDate <= maxDateLimit)) {
+    // Only update if we found a valid date and didn't hit the iteration limit
+    if (
+      iterations < maxIterations &&
+      newDate >= today.value &&
+      (!maxDateLimit || newDate <= maxDateLimit)
+    ) {
       currentDate.value = newDate;
       // Reset selection when date changes
       emit("update:modelValue", undefined);

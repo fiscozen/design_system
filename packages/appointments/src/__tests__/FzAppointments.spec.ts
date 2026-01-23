@@ -435,6 +435,40 @@ describe("FzAppointments", () => {
         });
         expect(wrapper.exists()).toBe(true);
       });
+
+      it("should deduplicate slots with identical timestamps", async () => {
+        // This test verifies that duplicate slots (same timestamp) are deduplicated
+        // to prevent Vue duplicate key errors
+        const tomorrow = addDays(startOfDay(new Date()), 1);
+        const slot1 = new Date(tomorrow);
+        slot1.setHours(10, 0, 0, 0);
+        const slot2 = new Date(tomorrow);
+        slot2.setHours(10, 0, 0, 0); // Same timestamp as slot1
+        const slot3 = new Date(tomorrow);
+        slot3.setHours(14, 0, 0, 0);
+
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "manual",
+            slots: [slot1, slot2, slot3, formatISO(slot1)], // Multiple duplicates
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        // Should render without duplicate key errors
+        expect(wrapper.exists()).toBe(true);
+
+        // Should only render unique slots (slot1 and slot3, since slot2 and formatISO(slot1) are duplicates)
+        const radioCards = wrapper.findAllComponents({ name: "FzRadioCard" });
+        // Should have 2 unique slots, not 4
+        expect(radioCards.length).toBe(2);
+
+        // Verify no duplicate keys by checking all keys are unique
+        const keys = radioCards.map((card) => card.props("label"));
+        const uniqueKeys = new Set(keys);
+        expect(uniqueKeys.size).toBe(keys.length);
+      });
     });
   });
 
@@ -545,6 +579,38 @@ describe("FzAppointments", () => {
         await wrapper.vm.$nextTick();
         const dateAfterBack = wrapper.find("h3").text();
         expect(dateAfterBack).not.toBe(dateAfterForward);
+      });
+
+      it("should not cause infinite loop when all weekdays are excluded without maxDate", async () => {
+        // This test verifies the fix for infinite loop when all days are excluded
+        // and maxDate is undefined. The function should stop after maxIterations.
+        const wrapper = mount(FzAppointments, {
+          props: {
+            type: "auto",
+            slotCount: 5,
+            slotStartTime: formatISO(new Date()),
+            startDate: formatISO(new Date()),
+            excludedDays: [0, 1, 2, 3, 4, 5, 6], // All weekdays excluded
+            // maxDate is intentionally undefined
+          },
+        });
+
+        const initialDate = wrapper.find("h3").text();
+        const forwardButton = wrapper.find('[aria-label="Giorno successivo"]');
+
+        // This should not cause an infinite loop - it should complete quickly
+        const startTime = Date.now();
+        await forwardButton.trigger("click");
+        await wrapper.vm.$nextTick();
+        const endTime = Date.now();
+
+        // The operation should complete in less than 1 second (infinite loop would hang)
+        expect(endTime - startTime).toBeLessThan(1000);
+
+        // The date should not have changed since all days are excluded
+        // and we should have hit the iteration limit
+        const finalDate = wrapper.find("h3").text();
+        expect(finalDate).toBe(initialDate);
       });
     });
   });
@@ -730,7 +796,6 @@ describe("FzAppointments", () => {
   });
 
   describe("Snapshots", () => {
-
     const defaultDate = new Date(2026, 0, 23, 10, 0, 0, 0);
     it("should match snapshot - default state (auto mode)", () => {
       const wrapper = mount(FzAppointments, {

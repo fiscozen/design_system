@@ -15,8 +15,9 @@ export function useAppointmentsManual({
   props,
   emit,
 }: UseAppointmentsManualOptions): UseAppointmentsReturn {
-  // Convert all slots to Date objects
+  // Convert all slots to Date objects and deduplicate by timestamp
   const allSlots = computed(() => {
+    const seenTimestamps = new Set<number>();
     return props.slots
       .map((slot) => {
         if (typeof slot === "string") {
@@ -26,6 +27,14 @@ export function useAppointmentsManual({
         return isValid(slot) ? slot : null;
       })
       .filter((slot): slot is Date => slot !== null && isValid(slot))
+      .filter((slot) => {
+        const timestamp = slot.getTime();
+        if (seenTimestamps.has(timestamp)) {
+          return false; // Duplicate timestamp, skip
+        }
+        seenTimestamps.add(timestamp);
+        return true;
+      })
       .sort((a, b) => a.getTime() - b.getTime());
   });
 
