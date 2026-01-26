@@ -76,7 +76,7 @@ describe("useList - Pagination Defaults", () => {
     const callUrl = (global.fetch as any).mock.calls[0][0];
     const url = new URL(callUrl);
     expect(url.searchParams.get("page")).toBe("1");
-    expect(url.searchParams.get("per_page")).toBe("50");
+    expect(url.searchParams.get("page_size")).toBe("50");
   });
 });
 
