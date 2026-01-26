@@ -2717,17 +2717,20 @@ importers:
 
   packages/tab:
     dependencies:
+      '@fiscozen/action':
+        specifier: workspace:^
+        version: link:../action
       '@fiscozen/badge':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../badge
       '@fiscozen/composables':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../composables
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
       '@fiscozen/style':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../style
       tailwindcss:
         specifier: ^3.4.1

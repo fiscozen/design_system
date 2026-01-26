@@ -26,12 +26,6 @@ export type FzTabsProps = {
    */
   environment?: "backoffice" | "frontoffice";
   /**
-   * Tone variant for styling
-   * - 'neutral': Default neutral styling
-   * - 'alert': Alert/error styling (red variant)
-   */
-  tone?: "neutral" | "alert";
-  /**
    * Enable debug mode
    */
   isDebug?: boolean;
@@ -62,4 +56,10 @@ export type FzTabProps = {
    * Max width of the tab
    */
   maxWidth?: string;
+  /**
+   * Tone variant for styling
+   * - 'neutral': Default neutral styling
+   * - 'alert': Alert/error styling (red variant)
+   */
+  tone?: "neutral" | "alert";
 };
