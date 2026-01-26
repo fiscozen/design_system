@@ -141,7 +141,7 @@ describe("normalizeParams", () => {
       const queryParams = params.queryParams.value;
 
       expect(queryParams.page).toBe(2);
-      expect(queryParams.per_page).toBe(25);
+      expect(queryParams.page_size).toBe(25);
     });
 
     it("should handle pagination with only page", () => {
@@ -154,7 +154,7 @@ describe("normalizeParams", () => {
       const queryParams = params.queryParams.value;
 
       expect(queryParams.page).toBe(3);
-      expect(queryParams.per_page).toBeUndefined();
+      expect(queryParams.page_size).toBeUndefined();
     });
 
     it("should handle pagination with only pageSize", () => {
@@ -167,7 +167,7 @@ describe("normalizeParams", () => {
       const queryParams = params.queryParams.value;
 
       expect(queryParams.page).toBeUndefined();
-      expect(queryParams.per_page).toBe(100);
+      expect(queryParams.page_size).toBe(100);
     });
   });
 
@@ -189,7 +189,7 @@ describe("normalizeParams", () => {
       expect(queryParams.by_city).toBe("Rome");
       expect(queryParams.ordering).toBe("name,-created_at");
       expect(queryParams.page).toBe(2);
-      expect(queryParams.per_page).toBe(25);
+      expect(queryParams.page_size).toBe(25);
     });
   });
 

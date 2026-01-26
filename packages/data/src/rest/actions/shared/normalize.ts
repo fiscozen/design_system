@@ -205,7 +205,7 @@ export const normalizeParams = (params: {
           queryParams.page = params.pagination.page;
         }
         if (params.pagination.pageSize !== undefined) {
-          queryParams.per_page = params.pagination.pageSize;
+          queryParams.page_size = params.pagination.pageSize;
         }
       }
 

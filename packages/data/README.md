@@ -1524,8 +1524,8 @@ This package is designed to work with REST APIs following these conventions:
 
 ### Pagination
 
-- **Format**: `page` / `per_page` query parameters
-- **Example**: `?page=1&per_page=20`
+- **Format**: `page` / `page_size` query parameters
+- **Example**: `?page=1&page_size=20`
 
 ### Sorting
 
@@ -2454,7 +2454,7 @@ Configurable globally and per-action:
 
 This package is designed to work with REST APIs following these conventions:
 
-- **Pagination**: `page` / `per_page` query parameters
+- **Pagination**: `page` / `page_size` query parameters
 - **Ordering**: `ordering=name,-created_at` (comma-separated fields, descending fields prefixed with '-')
 - **Filtering**: Direct query parameters (e.g., `?by_city=rome&by_status=active`)
 - **API Versioning**: URL-based (e.g., `/v1/users`, `/v2/users`)
