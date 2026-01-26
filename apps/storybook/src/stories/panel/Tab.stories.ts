@@ -280,10 +280,31 @@ export const ToneNeutral: TabStory = {
 }
 
 export const ToneAlert: TabStory = {
-  ...Template,
-  args: {
-    tone: 'alert'
-  },
+  render: (args) => ({
+    components: { FzTabs, FzTab, FzBadge, FzIcon },
+    setup() {
+      return {
+        args,
+        customProps: {
+          tab1: {
+            title: 'Active tab'
+          },
+          tab2: {
+            title: 'Default tab',
+            tone: 'alert'
+          },
+          tab3: {
+            title: 'Default tab 2'
+          }
+        }
+      }
+    },
+    template: `<FzTabs v-bind="args" v-slot="data" > 
+                    <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
+                    <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
+                    <FzTab v-bind="customProps.tab3"> {{ data.selected }} </FzTab>
+                </FzTabs>`
+  }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const tab1 = canvas.getByRole('button', { name: 'Active tab' })

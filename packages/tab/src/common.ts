@@ -28,9 +28,8 @@ export const mapUnselectedTabToClassesWithTone = {
     tab: "text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500",
   },
   alert: {
-    picker:
-      "bg-white hover:bg-background-alice-blue text-black hover:text-semantic-error",
-    tab: "text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-semantic-error",
+    picker: "bg-white hover:bg-background-alice-blue text-semantic-error",
+    tab: "bg-grey-100 hover:bg-background-alice-blue active:bg-white text-semantic-error",
   },
 };
 

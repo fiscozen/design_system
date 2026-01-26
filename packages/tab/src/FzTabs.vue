@@ -13,7 +13,6 @@
           v-if="effectiveTabStyle === 'picker'"
           :tabs="tabs"
           :environment="effectiveSize"
-          :tone="props.tone"
         />
         <template v-else>
           <FzTabButton
@@ -22,7 +21,7 @@
             :key="tab.title"
             :environment="effectiveSize"
             :maxWidth="tab.maxWidth"
-            :tone="props.tone"
+            :tone="tab.tone"
             type="tab"
             :readonly="false"
           />

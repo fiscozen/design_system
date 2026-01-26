@@ -80,7 +80,7 @@ function getTabButtonClasses(
     : mapUnselectedTabToClassesWithTone[tone][type];
 
   return [
-    "w-auto flex font-medium items-center  rounded-md",
+    "w-auto flex items-center rounded-md",
     mapEnvironmentToClasses[environment],
     type === "picker" ? "text-left" : "",
     toneClasses,
