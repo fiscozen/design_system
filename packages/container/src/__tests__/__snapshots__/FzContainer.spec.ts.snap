@@ -18,6 +18,12 @@ exports[`FzContainer > Snapshots > matches snapshot - horizontal with layout exp
 </div>"
 `;
 
+exports[`FzContainer > Snapshots > matches snapshot - horizontal with layout expand-last 1`] = `
+"<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-expand-last"><button>Action</button>
+  <div>Expanding content</div>
+</div>"
+`;
+
 exports[`FzContainer > Snapshots > matches snapshot - horizontal with layout space-between 1`] = `
 "<div data-v-22dc0b85="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-space-between">
   <div>Logo</div>

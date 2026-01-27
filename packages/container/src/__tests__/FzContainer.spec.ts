@@ -395,6 +395,19 @@ describe.concurrent('FzContainer', () => {
       expect(wrapper.classes()).not.toContain('layout-default')
       expect(wrapper.classes()).not.toContain('layout-expand-first')
       expect(wrapper.classes()).not.toContain('layout-expand-all')
+      expect(wrapper.classes()).not.toContain('layout-expand-last')
+    })
+
+    it('applies layout-expand-last class', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { horizontal: true, layout: 'expand-last' }
+      })
+
+      expect(wrapper.classes()).toContain('layout-expand-last')
+      expect(wrapper.classes()).not.toContain('layout-default')
+      expect(wrapper.classes()).not.toContain('layout-expand-first')
+      expect(wrapper.classes()).not.toContain('layout-expand-all')
+      expect(wrapper.classes()).not.toContain('layout-space-between')
     })
 
     it('does not apply layout class for vertical orientation', async ({ expect }) => {
@@ -404,6 +417,7 @@ describe.concurrent('FzContainer', () => {
       expect(wrapper.classes()).not.toContain('layout-expand-first')
       expect(wrapper.classes()).not.toContain('layout-expand-all')
       expect(wrapper.classes()).not.toContain('layout-space-between')
+      expect(wrapper.classes()).not.toContain('layout-expand-last')
     })
 
     it('logs console.error when layout is used without horizontal', async ({ expect }) => {
@@ -492,6 +506,21 @@ describe.concurrent('FzContainer', () => {
       expect(wrapper.classes()).toContain('fz-container--horizontal')
       expect(wrapper.classes()).toContain('gap-section-content-lg')
       expect(wrapper.classes()).toContain('layout-expand-first')
+    })
+
+    it('combines horizontal, gap, and layout expand-last correctly', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: {
+          horizontal: true,
+          gap: 'base',
+          layout: 'expand-last'
+        }
+      })
+
+      expect(wrapper.classes()).toContain('fz-container')
+      expect(wrapper.classes()).toContain('fz-container--horizontal')
+      expect(wrapper.classes()).toContain('gap-section-content-base')
+      expect(wrapper.classes()).toContain('layout-expand-last')
     })
   })
 
@@ -845,6 +874,17 @@ describe.concurrent('FzContainer', () => {
         props: { horizontal: true, layout: 'space-between' },
         slots: {
           default: '<div>Logo</div><nav>Navigation</nav>'
+        }
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot - horizontal with layout expand-last', async ({ expect }) => {
+      const wrapper = mount(FzContainer, {
+        props: { horizontal: true, layout: 'expand-last' },
+        slots: {
+          default: '<button>Action</button><div>Expanding content</div>'
         }
       })
 
