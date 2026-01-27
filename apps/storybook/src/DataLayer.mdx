@@ -13,12 +13,13 @@ Complete guide for using the `@fiscozen/data` package in your Vue 3 application.
 3. [Setup](#setup)
 4. [Usage Pattern](#usage-pattern)
 5. [Actions Reference](#actions-reference)
-6. [Error Handling Patterns](#error-handling-patterns)
-7. [TypeScript Best Practices](#typescript-best-practices)
-8. [Testing](#testing)
-9. [Features](#features)
-10. [Future Enhancements](#future-enhancements)
-11. [Summary](#summary)
+6. [Custom Actions and Nested Routes](#custom-actions-and-nested-routes)
+7. [Error Handling Patterns](#error-handling-patterns)
+8. [TypeScript Best Practices](#typescript-best-practices)
+9. [Testing](#testing)
+10. [Features](#features)
+11. [Future Enhancements](#future-enhancements)
+12. [Summary](#summary)
 
 ---
 
@@ -994,6 +995,252 @@ const { data: disabledUsers, execute: loadDisabled } = useListUsers(
 await loadEnabled()   // Fetches enabled users
 await loadDisabled()  // Fetches disabled users
 ```
+
+---
+
+## Custom Actions and Nested Routes
+
+For endpoints that don't fit the standard CRUD pattern, use `useFzFetch` directly in your entity composables. This hybrid approach combines `useActions` for standard CRUD operations with `useFzFetch` for custom endpoints.
+
+### When to Use `useFzFetch` Directly
+
+Use `useFzFetch` directly when you need:
+
+- **Nested resources** - Endpoints like `users/68/stats` where `stats` is a nested resource under a user
+- **Custom endpoints** - Non-CRUD endpoints like exports, searches, or bulk operations
+- **Complex query strings** - Endpoints requiring custom query parameters that don't fit the standard filters/ordering/pagination pattern
+- **Non-standard URL patterns** - Endpoints that don't follow REST conventions
+
+### Example 1: Nested Resource - User Stats
+
+**Scenario:** Fetch user statistics from endpoint `GET /users/{userId}/stats`
+
+**Implementation:**
+
+```typescript
+// src/composables/useUsers.ts
+import { useActions, useFzFetch } from '@fiscozen/data/rest'
+import { computed, toValue } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
+
+interface UserStats {
+  totalOrders: number
+  revenue: number
+  activeSubscriptions: number
+  lastActivityDate: string
+}
+
+export const useUsers = () => {
+  const { useRetrieve, useList, useCreate, useUpdate, useDelete } = 
+    useActions<User>('users')
+  
+  /**
+   * Fetch user statistics from nested endpoint
+   * 
+   * @param userId - User ID (can be reactive ref or computed)
+   * @returns useFzFetch result with data, error, isLoading, execute
+   * 
+   * @example
+   * const userId = ref(68)
+   * const { data: stats, isLoading } = useGetUserStats(userId)
+   * // Auto-refetches when userId changes
+   */
+  const useGetUserStats = (userId: MaybeRefOrGetter<number>) => {
+    // Create reactive URL that updates when userId changes
+    const url = computed(() => `users/${toValue(userId)}/stats`)
+    
+    // useFzFetch handles reactive URLs automatically
+    return useFzFetch<UserStats>(url)
+  }
+  
+  return {
+    useRetrieveUserById: useRetrieve,
+    useListUsers: useList,
+    useCreateUser: useCreate,
+    useUpdateUser: useUpdate,
+    useDeleteUser: useDelete,
+    useGetUserStats
+  }
+}
+```
+
+**Usage in Component:**
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useUsers } from '@/composables/useUsers'
+
+const { useGetUserStats } = useUsers()
+
+// Reactive user ID - stats auto-refetch when userId changes
+const userId = ref(68)
+const { data: stats, error, isLoading } = useGetUserStats(userId)
+
+// Change user ID to load different stats
+const loadStatsForUser = (id: number) => {
+  userId.value = id // Automatically refetches stats
+}
+</script>
+
+<template>
+  <!-- Template: Display stats data, handle loading/error states -->
+  <!-- Focus on data layer logic, not UI implementation -->
+</template>
+```
+
+**Key Points:**
+
+- Pass `userId` as parameter when creating the function: `useGetUserStats(userId)`
+- URL is reactive - automatically refetches when `userId` changes
+- Returns standard `useFzFetch` interface: `{ data, error, isLoading, execute }`
+- Works with `ref`, `computed`, or static values
+
+### Example 2: Custom Endpoint with Query String - Export Invoices
+
+**Scenario:** Export invoices as ZIP file from endpoint `GET /esporta/lista_fatture/{invoiceIds}/?zip`
+
+**Implementation:**
+
+```typescript
+// src/composables/useInvoices.ts
+import { useActions, useFzFetch } from '@fiscozen/data/rest'
+import { computed, toValue } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
+
+interface Invoice {
+  id: number
+  number: string
+  amount: number
+  date: string
+}
+
+export const useInvoices = () => {
+  // Standard CRUD operations
+  const { useRetrieve, useList, useCreate, useUpdate, useDelete } = 
+    useActions<Invoice>('invoices')
+  
+  /**
+   * Export invoices as file (ZIP or PDF)
+   * 
+   * @param invoiceIds - Array of invoice IDs to export (can be reactive)
+   * @param format - Export format: 'zip' or 'pdf' (default: 'zip')
+   * @returns useFzFetch result with Blob data, error, isLoading, execute
+   * 
+   * @example
+   * const invoiceIds = ref([1, 2, 3])
+   * const { data: file, execute: exportInvoices } = useExportInvoices(invoiceIds, 'zip')
+   * await exportInvoices() // Triggers download
+   */
+  const useExportInvoices = (
+    invoiceIds: MaybeRefOrGetter<number[]>,
+    format: 'zip' | 'pdf' = 'zip'
+  ) => {
+    // Create reactive URL with invoice IDs
+    const url = computed(() => {
+      const ids = toValue(invoiceIds)
+      
+      // Validate invoice IDs
+      if (!ids || ids.length === 0) {
+        throw new Error('At least one invoice ID is required for export')
+      }
+      
+      // Build URL: esporta/lista_fatture/1-2-3
+      return `esporta/lista_fatture/${ids.join('-')}`
+    })
+    
+    // useFzFetch with query parameters for format
+    // Adds ?zip=true or ?pdf=true to the URL
+    return useFzFetch<Blob>(url, {
+      queryParams: { [format]: true }
+    })
+  }
+  
+  return {
+    useRetrieveInvoiceById: useRetrieve,
+    useListInvoices: useList,
+    useCreateInvoice: useCreate,
+    useUpdateInvoice: useUpdate,
+    useDeleteInvoice: useDelete,
+    useExportInvoices
+  }
+}
+```
+
+**Usage in Component:**
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useInvoices } from '@/composables/useInvoices'
+
+const { useExportInvoices } = useInvoices()
+
+// Selected invoice IDs (can be from checkbox selection)
+const selectedInvoiceIds = ref<number[]>([1, 2, 3, 5])
+const exportFormat = ref<'zip' | 'pdf'>('zip')
+
+// Create export function with reactive parameters
+const { 
+  data: fileBlob, 
+  error, 
+  isLoading: isExporting, 
+  execute: exportInvoices 
+} = useExportInvoices(selectedInvoiceIds, exportFormat)
+
+/**
+ * Trigger export and download file
+ */
+const handleExport = async () => {
+  // Validate selection
+  if (selectedInvoiceIds.value.length === 0) {
+    alert('Please select at least one invoice')
+    return
+  }
+  
+  try {
+    // Execute export request
+    await exportInvoices()
+    
+    // Check for errors
+    if (error.value) {
+      console.error('Export failed:', error.value.message)
+      return
+    }
+    
+    // Download the blob file
+    // Handle fileBlob.value download (create download link, trigger download, cleanup)
+    if (fileBlob.value) {
+      // ... download implementation ...
+    }
+  } catch (err) {
+    console.error('Export error:', err)
+  }
+}
+
+/**
+ * Change export format
+ */
+const changeFormat = (format: 'zip' | 'pdf') => {
+  exportFormat.value = format
+  // URL automatically updates with new query parameter
+  // Call execute() again to fetch with new format
+}
+</script>
+
+<template>
+  <!-- Template: Invoice selection, format selection, export button, error display -->
+  <!-- Focus on data layer logic, not UI implementation -->
+</template>
+```
+
+**Key Points:**
+
+- Pass parameters when creating the function: `useExportInvoices(invoiceIds, format)`
+- Query parameters are added via `queryParams` option in `useFzFetch`
+- URL is reactive - updates when `invoiceIds` or `format` change
+- Manual execution required - call `execute()` to trigger the request
+- Handle blob response for file downloads
 
 ---
 
