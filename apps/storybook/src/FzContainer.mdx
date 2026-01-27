@@ -95,7 +95,7 @@ Elements align horizontally in a single row with vertical centering.
     </tr>
     <tr>
       <td><code>layout</code></td>
-      <td><code>'default' | 'expand-first' | 'expand-all' | 'space-between'</code></td>
+      <td><code>'default' | 'expand-first' | 'expand-all' | 'space-between' | 'expand-last'</code></td>
       <td><code>'default'</code></td>
       <td>Layout behavior for horizontal containers (controls how child elements expand). Only applies when <code>horizontal</code> is <code>true</code></td>
     </tr>
@@ -219,35 +219,29 @@ The `layout` prop controls how child elements expand to fill available space in 
   <thead>
     <tr>
       <th>Layout</th>
-      <th>Status</th>
       <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><code>default</code></td>
-      <td>Implemented</td>
       <td>All elements maintain their natural size (<code>flex-grow: 0</code>). This is the default behavior.</td>
     </tr>
     <tr>
       <td><code>expand-first</code></td>
-      <td>Implemented</td>
       <td>The first element expands to fill available space (<code>flex-grow: 1</code>), while other elements maintain their natural size.</td>
     </tr>
     <tr>
       <td><code>expand-all</code></td>
-      <td>Implemented</td>
       <td>All elements expand equally to fill available space (<code>flex-grow: 1</code> on all children).</td>
     </tr>
     <tr>
       <td><code>space-between</code></td>
-      <td>Implemented</td>
       <td>Elements are distributed with space between them (<code>justify-content: space-between</code>). Elements maintain their natural size.</td>
     </tr>
     <tr>
       <td><code>expand-last</code></td>
-      <td>Future</td>
-      <td>The last element will expand to fill available space, while other elements maintain their natural size.</td>
+      <td>The last element expands to fill available space, while other elements maintain their natural size.</td>
     </tr>
   </tbody>
 </table>
@@ -261,6 +255,8 @@ The `layout` prop controls how child elements expand to fill available space in 
 **`expand-all`**: Use when you want all elements to have equal width.
 
 **`space-between`**: Use when you want elements to maintain their natural size but be distributed across the available space.
+
+**`expand-last`**: Use when you want the last element to take up all remaining space. Useful for toolbars with actions on the left and an expanding search/input on the right, or list items with actions on the left and expanding content on the right.
 
 ## AlignItems Behavior
 
@@ -441,6 +437,50 @@ Controls **vertical alignment** of elements:
     <FzContainer horizontal gap="sm">
       <button>Cancel</button>
       <button>Save</button>
+    </FzContainer>
+  </FzContainer>
+</template>
+```
+
+### Layout: Expand Last (Task List)
+
+```vue
+<template>
+  <FzContainer gap="sm">
+    <FzContainer horizontal layout="expand-last" gap="base">
+      <button>Complete</button>
+      <FzContainer gap="sm">
+        <p>Task name that can be very long</p>
+        <p>Task description that will expand to fill available space</p>
+      </FzContainer>
+    </FzContainer>
+    
+    <FzContainer horizontal layout="expand-last" gap="base">
+      <button>Complete</button>
+      <FzContainer gap="sm">
+        <p>Another task</p>
+        <p>With another description</p>
+      </FzContainer>
+    </FzContainer>
+  </FzContainer>
+</template>
+```
+
+### Layout: Expand Last (Form Actions)
+
+```vue
+<template>
+  <FzContainer gap="base">
+    <input type="text" placeholder="Form field..." />
+    <input type="text" placeholder="Another field..." />
+    
+    <!-- Actions aligned to the left -->
+    <FzContainer horizontal layout="expand-last" gap="base">
+      <FzContainer horizontal gap="sm">
+        <button>Cancel</button>
+        <button>Save</button>
+      </FzContainer>
+      <FzContainer></FzContainer>
     </FzContainer>
   </FzContainer>
 </template>

@@ -20,20 +20,19 @@ export type FzContainerSectionGap = 'none' | 'xs' | 'sm' | 'base' | 'lg'
  * Controls how child elements expand to fill available space.
  * Only applies when horizontal is true.
  * 
- * **Currently implemented:**
+ * **Available layouts:**
  * - `default`: All elements maintain their natural size (flex-grow: 0)
  * - `expand-first`: First element expands to fill available space, others maintain natural size
  * - `expand-all`: All elements expand equally to fill available space (flex-grow: 1 on all children)
  * - `space-between`: Elements distributed with space between them (justify-content: space-between)
- * 
- * **Future layouts (not yet implemented):**
- * - `expand-last`: Last element expands to fill available space
+ * - `expand-last`: Last element expands to fill available space, others maintain natural size
  */
 export type FzContainerLayout = 
   | 'default'
   | 'expand-first'
   | 'expand-all'
   | 'space-between'
+  | 'expand-last'
 
 /**
  * Alignment options for container items on the cross-axis

@@ -146,12 +146,10 @@ const containerClass = computed(() => {
  * 
  * Control how child elements expand to fill available space.
  * 
- * Currently implemented:
+ * Available layouts:
  * - layout-expand-first: First element expands to fill available space
  * - layout-expand-all: All elements expand equally to fill available space
  * - layout-space-between: Elements distributed with space between them
- * 
- * Future layouts (not yet implemented):
  * - layout-expand-last: Last element expands to fill available space
  */
 
@@ -186,6 +184,17 @@ const containerClass = computed(() => {
  */
 .fz-container--horizontal.layout-space-between {
   justify-content: space-between;
+}
+
+/**
+ * Expand last element
+ * 
+ * The last child element expands to fill all available horizontal space,
+ * while other elements maintain their natural size.
+ * Useful for layouts like: [action buttons | expanding content]
+ */
+.fz-container--horizontal.layout-expand-last :deep(> *:last-child) {
+  flex-grow: 1;
 }
 
 /**

@@ -24,7 +24,7 @@ const meta: Meta<any> = {
 
     layout: {
       control: 'select',
-      options: ['default', 'expand-first', 'expand-all', 'space-between'],
+      options: ['default', 'expand-first', 'expand-all', 'space-between', 'expand-last'],
       description: 'Layout behavior for horizontal containers (controls how child elements expand)',
       if: { arg: 'horizontal', eq: true }
     },
@@ -562,6 +562,100 @@ export const LayoutSpaceBetween: Story = {
     
     // Last child should be near the right edge (allowing small padding)
     await expect(Math.abs(containerRect.right - lastChildRect.right)).toBeLessThan(5)
+  }
+}
+
+export const LayoutExpandLast: Story = {
+  render: () => ({
+    components: { FzContainer, FzButton },
+    template: `
+      <FzContainer main gap="lg">
+        <h2>Layout: Expand Last</h2>
+        <p>The last element expands to fill available space, while others maintain their natural size.</p>
+        
+        <FzContainer gap="lg">
+          <FzContainer gap="sm">
+            <h3>Task List Example</h3>
+            <FzContainer horizontal layout="expand-last" gap="base">
+              <FzButton variant="primary">Complete</FzButton>
+              <FzContainer gap="sm">
+                <p>Task name that can be very long</p>
+                <p>This task description can contain a lot of text and will expand to fill the available space</p>
+              </FzContainer>
+            </FzContainer>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>Multiple Tasks</h3>
+            <FzContainer gap="sm">
+              <FzContainer horizontal layout="expand-last" gap="base">
+                <FzButton variant="secondary" size="sm">Edit</FzButton>
+                <FzContainer gap="sm">
+                  <p>Task 1</p>
+                  <p>Short description</p>
+                </FzContainer>
+              </FzContainer>
+              
+              <FzContainer horizontal layout="expand-last" gap="base">
+                <FzButton variant="secondary" size="sm">Edit</FzButton>
+                <FzContainer gap="sm">
+                  <p>Task 2</p>
+                  <p>Another task with a longer description that will expand</p>
+                </FzContainer>
+              </FzContainer>
+              
+              <FzContainer horizontal layout="expand-last" gap="base">
+                <FzButton variant="secondary" size="sm">Edit</FzButton>
+                <FzContainer gap="sm">
+                  <p>Task 3</p>
+                  <p>Final task</p>
+                </FzContainer>
+              </FzContainer>
+            </FzContainer>
+          </FzContainer>
+          
+          <FzContainer gap="sm">
+            <h3>Form Actions Example</h3>
+            <FzContainer gap="base">
+              <p>Form content goes here...</p>
+              
+              <FzContainer horizontal layout="expand-last" gap="base">
+                <FzContainer horizontal gap="sm">
+                  <FzButton variant="tertiary">Cancel</FzButton>
+                  <FzButton variant="primary">Save</FzButton>
+                </FzContainer>
+                <FzContainer></FzContainer>
+              </FzContainer>
+            </FzContainer>
+          </FzContainer>
+        </FzContainer>
+      </FzContainer>
+    `
+  }),
+  play: async ({ canvasElement }: any) => {
+    const canvas = within(canvasElement)
+    
+    // Verify all containers with layout-expand-last have the correct class
+    const expandLastContainers = canvasElement.querySelectorAll('.fz-container--horizontal.layout-expand-last')
+    await expect(expandLastContainers.length).toBe(5)
+    
+    // Verify they are all horizontal
+    for (const container of expandLastContainers) {
+      await expect(container.classList.contains('fz-container--horizontal')).toBe(true)
+      await expect(container.classList.contains('layout-expand-last')).toBe(true)
+    }
+    
+    // Verify buttons are rendered
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBeGreaterThan(0)
+    
+    // Verify the first container's last child takes more space than the button
+    const firstContainer = expandLastContainers[0] as HTMLElement
+    const firstChild = firstContainer.children[0] as HTMLElement
+    const lastChild = firstContainer.children[firstContainer.children.length - 1] as HTMLElement
+    
+    // Last child should be wider than first child (the button)
+    await expect(lastChild.offsetWidth).toBeGreaterThan(firstChild.offsetWidth)
   }
 }
 
