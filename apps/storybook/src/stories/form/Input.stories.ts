@@ -35,6 +35,11 @@ const meta = {
         type: 'select'
       }
     },
+    autocomplete: {
+      control: {
+        type: 'boolean'
+      }
+    },
     leftIcon: {
       options: all.map((icon) => icon.iconName) as string[],
       control: {
