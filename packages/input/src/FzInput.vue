@@ -25,6 +25,7 @@ const props = withDefaults(defineProps<FzInputProps>(), {
   secondRightIconButtonVariant: "invisible",
   variant: "normal",
   environment: "frontoffice",
+  autocomplete: false,
 });
 
 /**
@@ -384,6 +385,7 @@ defineExpose({
           :pattern="pattern"
           :name
           :maxlength
+          :autocomplete="autocomplete ? 'on' : 'off'"
           :aria-required="required ? 'true' : 'false'"
           :aria-invalid="error ? 'true' : 'false'"
           :aria-disabled="isReadonlyOrDisabled ? 'true' : 'false'"

@@ -136,6 +136,47 @@ describe('FzInput', () => {
       expect(wrapper.find('input').attributes('required')).toBe('')
       expect(wrapper.text()).toContain('*')
     })
+
+    it('applies autocomplete="off" by default', async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: 'Label',
+        },
+        slots: {},
+      })
+
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.find('input').attributes('autocomplete')).toBe('off')
+    })
+
+    it('applies autocomplete="off" when autocomplete is false', async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: 'Label',
+          autocomplete: false,
+        },
+        slots: {},
+      })
+
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.find('input').attributes('autocomplete')).toBe('off')
+    })
+
+    it('applies autocomplete="on" when autocomplete is true', async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: 'Label',
+          autocomplete: true,
+        },
+        slots: {},
+      })
+
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.find('input').attributes('autocomplete')).toBe('on')
+    })
   })
 
   describe('Events', () => {

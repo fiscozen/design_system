@@ -147,6 +147,12 @@ type FzInputProps = {
    */
   maxlength?: number;
   /**
+   * Native autocomplete attribute. Controls browser autocomplete and suggestions.
+   * When false, sets autocomplete="off" to disable browser autocomplete.
+   * @default false
+   */
+  autocomplete?: boolean;
+  /**
    * Additional CSS classes applied to left icon container
    */
   leftIconClass?: string;

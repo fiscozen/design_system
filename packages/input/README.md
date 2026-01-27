@@ -95,6 +95,7 @@ const amount = ref<number | undefined>(undefined)
 | `name` | `string` | - | Native name attribute for form submission and identification |
 | `readonly` | `boolean` | `false` | Native readonly attribute. Prevents user input while keeping field focusable |
 | `maxlength` | `number` | - | Native maxlength attribute. Limits maximum number of characters |
+| `autocomplete` | `boolean` | `false` | Native autocomplete attribute. Controls browser autocomplete and suggestions. When false, sets autocomplete="off" to disable browser autocomplete |
 | `rightIconClass` | `string` | - | Additional CSS classes applied to right icon container |
 | `leftIconClass` | `string` | - | Additional CSS classes applied to left icon container |
 
