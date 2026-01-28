@@ -4,7 +4,7 @@
 # This ensures that changes don't break existing functionality
 
 echo "🧪 Running affected tests..."
-npx nx affected -t test:unit --base=HEAD~1
+npx nx affected -t test:unit
 
 # Exit with the test result
 exit $?

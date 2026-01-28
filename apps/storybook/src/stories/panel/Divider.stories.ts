@@ -50,12 +50,12 @@ const Default: Story = {
       await expect(divider).toHaveClass('border-solid')
     })
     
-    await step('Verify divider has correct spacing', async () => {
+    await step('Verify divider has default correct spacing', async () => {
       const dividerContainer = canvasElement.querySelector('.my-16')
       await expect(dividerContainer).toBeInTheDocument()
       await expect(dividerContainer).toHaveClass('my-16')
     })
-    
+
     await step('Verify divider is full width', async () => {
       const dividerContainer = canvasElement.querySelector('.w-full')
       await expect(dividerContainer).toBeInTheDocument()
@@ -113,7 +113,19 @@ const WithLabel: Story = {
   }
 }
 
-export { Default, WithLabel }
+const NoMargin: Story = {
+  args: { margin: 'none' },
+  render: simpleDivider,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    await step('Verify divider has no margin spacing when margin prop set to none', async () => {
+      const dividerContainer = canvasElement.querySelector('.w-full')
+      await expect(dividerContainer).toHaveClass('my-0')
+    })
+  }
+}
+
+export { Default, WithLabel, NoMargin }
 
 // ============================================
 // ADDITIONAL STORIES FOR COMPREHENSIVE TESTING

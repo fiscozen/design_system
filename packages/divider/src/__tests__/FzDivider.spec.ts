@@ -135,6 +135,35 @@ describe("FzDivider", () => {
         expect(label.classes()).toContain("text-red-500");
       });
     });
+
+    describe("margin prop", () => {
+      it("should apply default my-16 class when margin is not provided", () => {
+        const wrapper = mount(FzDivider, {
+          props: {},
+        });
+
+        expect(wrapper.element.classList.contains("my-16")).toBe(true);
+      });
+
+      it("should apply my-0 class when margin is set to none", () => {
+        const wrapper = mount(FzDivider, {
+          props: {
+            margin: "none",
+          },
+        });
+        expect(wrapper.element.classList.contains("my-0")).toBe(true);
+      });
+
+      it("should apply my-16 class when margin is set to base", () => {
+        const wrapper = mount(FzDivider, {
+          props: {
+            margin: "base",
+          },
+        });
+        expect(wrapper.element.classList.contains("my-16")).toBe(true);
+      });
+    });
+
   });
 
   // ============================================

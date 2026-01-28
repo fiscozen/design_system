@@ -13,14 +13,14 @@ exports[`FzDivider > Snapshots > should match snapshot - empty string label 1`] 
 `;
 
 exports[`FzDivider > Snapshots > should match snapshot - with label 1`] = `
-"<div class="w-full my-16 flex items-center gap-6">
+"<div class="w-full flex items-center gap-6 my-16">
   <div class="flex-1 border-solid border-t-1 border-grey-200"></div><span class="text-md">Section Divider</span>
   <div class="flex-1 border-solid border-t-1 border-grey-200"></div>
 </div>"
 `;
 
 exports[`FzDivider > Snapshots > should match snapshot - with labelClass 1`] = `
-"<div class="w-full my-16 flex items-center gap-6">
+"<div class="w-full flex items-center gap-6 my-16">
   <div class="flex-1 border-solid border-t-1 border-grey-200"></div><span class="text-md font-bold text-blue-500">Custom Label</span>
   <div class="flex-1 border-solid border-t-1 border-grey-200"></div>
 </div>"
