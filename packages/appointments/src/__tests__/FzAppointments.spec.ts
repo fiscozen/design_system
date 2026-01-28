@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import { FzAppointments } from "..";
 import { addDays, formatISO, startOfDay } from "date-fns";
@@ -796,7 +796,19 @@ describe("FzAppointments", () => {
   });
 
   describe("Snapshots", () => {
+    /** Fixed date for deterministic snapshot output: 22 Jan 2026 10:00 Europe/Rome so that 23 Jan has next day available. */
+    const SNAPSHOT_FIXED_DATE = new Date("2026-01-22T09:00:00.000Z");
     const defaultDate = new Date(2026, 0, 23, 10, 0, 0, 0);
+
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(SNAPSHOT_FIXED_DATE);
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
     it("should match snapshot - default state (auto mode)", () => {
       const wrapper = mount(FzAppointments, {
         props: {

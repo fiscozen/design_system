@@ -1,12 +1,13 @@
 /**
  * Vitest Global Setup File
- * 
+ *
  * This file is loaded before all tests in each package.
  * It handles common test setup including:
+ * - Setting TZ and LC_ALL for deterministic date/timezone output in snapshots
  * - Suppressing Vue warnings for missing optional props in child components
  * - Mocking Date.now() and Math.random() for deterministic ID generation
  * - Mocking browser APIs not available in jsdom (ResizeObserver, etc.)
- * 
+ *
  * @see TESTING-COMPLIANCE-TODO.md - Vue Warnings section (Option B)
  */
 
@@ -14,6 +15,10 @@ import { beforeEach, vi, afterEach } from 'vitest'
 
 // Store the original console.warn
 const originalWarn = console.warn
+
+// Store original env so we can restore in afterEach
+const originalTZ = process.env.TZ
+const originalLC_ALL = process.env.LC_ALL
 
 /**
  * Mock ResizeObserver for components that use it.
@@ -57,10 +62,14 @@ let mockTimestamp = 1700000000000 // Fixed base timestamp
 let mockRandomSeed = 0.123456789 // Fixed seed for deterministic random values
 
 beforeEach(() => {
+  // Set TZ and LC_ALL so date/timezone formatting is deterministic across CI and local
+  process.env.TZ = 'Europe/Rome'
+  process.env.LC_ALL = 'it_IT.UTF-8'
+
   // Reset mocks for each test to ensure consistent behavior
   mockTimestamp = 1700000000000
   mockRandomSeed = 0.123456789
-  
+
   // Mock Date.now() to return incrementing timestamps
   vi.spyOn(Date, 'now').mockImplementation(() => {
     mockTimestamp += 1 // Increment by 1ms for each call to ensure unique IDs
@@ -114,7 +123,19 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  // Restore console.warn after each test
+  // Restore TZ and LC_ALL to original values
+  if (originalTZ !== undefined) {
+    process.env.TZ = originalTZ
+  } else {
+    delete process.env.TZ
+  }
+  if (originalLC_ALL !== undefined) {
+    process.env.LC_ALL = originalLC_ALL
+  } else {
+    delete process.env.LC_ALL
+  }
+
+  // Restore console.warn and other mocks after each test
   vi.restoreAllMocks()
 })
 
