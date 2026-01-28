@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import { ref } from "vue";
 import { FzDatepicker } from "..";
@@ -816,6 +816,18 @@ describe("FzDatepicker", () => {
   // SNAPSHOTS
   // ============================================
   describe("Snapshots", () => {
+    /** Fixed date for deterministic snapshot output: 2026-01-21 10:07 in Europe/Rome (UTC+1). */
+    const SNAPSHOT_FIXED_DATE = new Date("2026-01-21T09:07:00.000Z");
+
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(SNAPSHOT_FIXED_DATE);
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
     it("matches snapshot", async ({ expect }) => {
       const wrapper = mount(FzDatepicker, {
         props: {
