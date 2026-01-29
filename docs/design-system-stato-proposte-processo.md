@@ -1,138 +1,235 @@
 ---
-title: Design System — Stato attuale, necessità di cambiamento e piano d’azione
-versione: 1.0
-data: 2025-10-30
+title: Design System — Proposta di evoluzione (sintesi)
+versione: 3.0
+data: 2025-01-28
 owner: Design System Team
-destinatari: Prodotto, Design, Sviluppo, QA, Management, Marketing, Customer Success, Customer Relationship
+destinatari: Prodotto, Design, Sviluppo, QA, Management
 ---
 
-## Obiettivo del documento
-Allineare gli stakeholder su: (1) problemi attuali, (2) principi e governance necessari a rendere il Design System sostenibile e adottato, (3) un piano d’azione a breve e medio termine per sbloccare valore concreto.
+## Obiettivo
 
-## Contesto e problemi attuali (sintesi)
-- Approccio prevalentemente top‑down: spazio di miglioramento nella validazione collegiale e con utenti, per favorire adozione e allineamento.
-- Alcuni disallineamenti tra design e implementazione: in alcuni casi i design non riflettono lo stato reale dei componenti o la documentazione non è aggiornata.
-- Coinvolgimento da anticipare: sviluppatori e altri team possono essere ingaggiati prima e in modo leggero, con rituali e spazi di feedback continui.
-- Governance non ancora formalizzata: chiarire ruoli/ownership aiuterebbe a rendere più fluide comunicazione e decisioni.
-- Processi QA e testing da rendere più sistematici per ridurre il rischio di regressioni e incoerenze multi‑dispositivo.
-- Strategia dei contenuti da integrare meglio: microcopy, naming e linee guida allineate al sistema.
+Rendere il Design System un asset condiviso che riduca il rischio di rilasci disallineati dalle aspettative degli utenti, acceleri lo sviluppo e migliori la qualità percepita del prodotto.
 
-Nota: i riferimenti metodologici sono elencati in Bibliografia.
+---
 
-## Principi guida condivisi (fondazione)
-Necessitiamo di un set di valori e principi co-definiti per orientare decisioni di design e sviluppo. Proposta: workshop di 2 ore con rappresentanza trasversale (Prodotto, Design, Dev, QA, Marketing, CS, Management) per convergere su 5–7 principi operativi.
+## Perché agire adesso
 
-- Metodologia: breve icebreaker sugli obiettivi, raccolta divergenze (brainwriting), clustering, priorità, naming dei principi, criteri di verifica. Output: pagina “System Principles” in docs, con esempi applicativi e do/don’t.
-- Ritmo di revisione: revisione trimestrale dei principi con retrospettiva sull’efficacia.
+Il rilascio recente ha evidenziato un problema strutturale: scelte di UI percepite come "arrivate dall'alto" hanno generato feedback negativo dalla community. Non è un caso isolato — è il sintomo di un processo che non include abbastanza validazione prima del rilascio.
 
-### Design pattern prima dei componenti
-I componenti sono importanti, ma il valore organizzativo si sblocca rendendo i design pattern — combinazioni riusabili di elementi con uno scopo — la nostra unità principale di pensiero, discussione e riuso.
+**Cosa vogliamo prevenire:**
+- Decisioni di design che arrivano ai team senza contesto né possibilità di feedback
+- Rilasci che sorprendono gli utenti invece di rispondere ai loro bisogni
+- Rework costoso dopo che il danno è fatto
+- Disallineamenti tra design e implementazione
 
-- Inventario: individuare i pattern già presenti in applicazione, nominarli coerentemente, documentarne scopo, proprietà rilevanti, varianti e dipendenze.
-- Discovery: segnalare pattern emergenti durante il lavoro di prodotto; promuovere a pattern ciò che ricorre con frequenza e valore.
-- Implementazione e documentazione: partire dal pattern (contesto, proprietà, contratti) e poi dettagliare come i componenti lo realizzano; le API dei componenti riflettono le proprietà chiave del pattern.
+**Cosa vogliamo abilitare:**
+- Validazione collegiale delle scelte *prima* che diventino codice
+- Feedback loop continui con chi usa il sistema
+- Decisioni tracciabili e reversibili
+- Governance leggera ma chiara
 
-### Design Heuristics (quadro di riferimento)
-Oltre ai nostri principi, adottiamo un set di Design Heuristics universali come riferimento indipendente dal sistema. Ogni principio del sistema dovrebbe poter essere mappato ad almeno una euristica (tracciabilità), così da mantenere coerenza con buone pratiche generali di usabilità e UX. La pagina “System Principles” includerà il mapping principio ↔ euristica e casi d’uso.
+---
 
-## Governance leggera e chiara
-Obiettivo: favorire contributi e velocità, mantenendo qualità e chiarezza decisionale.
+## Piano d'azione
 
-- Ruoli consigliati:
-  - Maintainers (core DS): curano visione, qualità, versioning, roadmap.
-  - Component Stewards: referenti per componenti/aree (design+dev). Possono ruotare.
-  - Contributors: chiunque proponga miglioramenti/nuovi componenti.
-  - Advisory Circle: rappresentanza dei team (Prodotto/Marketing/CS/QA) per input periodici.
-- Meccanismi:
-  - Intake: form unico o issue template per richieste (nuovi componenti, bug, enhancement).
-  - Review duale: design+dev con checklist (accessibilità, token, API, content, test).
-  - Decisione: tacit approval entro SLA (es. 5gg) o escalation ai Maintainers.
-  - Versioning: semver, changelog umano-leggibile, guida di migrazione.
-  - Ritmo: retro mensile breve su flusso contributi e colli di bottiglia.
+### Fase 1 — Quick win e baseline (settimane 1-2)
 
-### RACI sintetico (esempio)
-| Attività | Maintainers | Stewards | Contributors | Advisory |
-| --- | --- | --- | --- | --- |
-| Definire principi | A/R | C | C | C |
-| Roadmap DS | A/R | C | C | C |
-| Nuovo componente | A | R | C | C |
-| Review PR | A | R | C | C |
-| Changelog/Migrazioni | A/R | C | C | C |
+Dimostrare valore subito, con azioni a basso costo.
 
-Legenda: R = Responsible, A = Accountable, C = Consulted.
+| Azione | Output | Owner |
+|--------|--------|-------|
+| **Audit componenti** | Lista dei 10 componenti più usati, "molecole" applicative vs DS | TBD |
+| **Canale feedback** | Channel dedicato per segnalazioni e domande sul DS | TBD |
+| **Prima Office Hour** | Sessione di 30-45 min, aperta a tutti, per raccogliere pain point | TBD |
+| **Baseline metriche** | % import @fiscozen/* vs "molecole" custom | TBD |
 
-## Engagement continuo e spazi di feedback
-- Design System Office Hours (pilota 6 settimane):
-  - Cadenza: quindicinale, 45–60 minuti, orario fisso.
-  - Agenda: aggiornamenti rapidi, backlog triage, demo/sharing, Q&A.
-  - Facilitazione: rotazione tra designer e developer; nota azioni e decisioni.
-  - Regole: problem statements chiari, richieste con contesto, follow-up documentato.
-- Cross-functional Show & Tell: slot mensile per condividere progressi ed esperienze di adozione.
-- Canali asincroni: backlog pubblico, bacheca “Need Input”, sondaggi trimestrali di soddisfazione/adoption.
+**Perché prima l'audit:** avere dati concreti dà credibilità e aiuta a prioritizzare.
 
-## Allineamento Design ↔ Sviluppo (Design-to-Code)
-- Coinvolgimento anticipato: dev nelle fasi di discovery e durante le iterazioni di design per fattibilità, naming API, performance, a11y.
-- Spec Walkthrough pre-implementazione: breve review con Figma + requisiti tecnici, prima della costruzione.
-- Component Discovery & Review: validare l’opportunità del componente, varianti, stati edge, token.
-- Pairing mirato: design–dev su componenti complessi; evitare lunghi handoff asincroni.
-- Check di coerenza: audit token e uso pattern prima del merge.
- - Pattern-centrico: definire e mantenere una pagina per ogni pattern (scopo, proprietà, varianti, esempi) come fonte unica di verità a cui allineare design e API dei componenti.
+---
 
-## Strategia dei contenuti integrata
-- Linee guida contenuti: voice & tone, microcopy, naming, localizzazione, accessibilità.
-- Coinvolgimento content nelle review dei componenti che espongono testo (labelling, errori, help, tooltip).
-- Documentazione: esempi di testo consigliati/contro-esempi, glossario condiviso.
+### Fase 2 — Processo minimo (settimane 3-4)
 
-## QA e testing multi-piattaforma
-- Definition of Done estesa: a11y baseline (es. WCAG AA), test visivi, test interattivi base, compatibilità browser/device concordata.
-- Test matrix: browser support policy, viewport chiave, input metodi (mouse, touch, keyboard).
-- Storybook come ambiente di verifica: casi controllati, snapshot visivi, interazioni.
-- Regressioni: visual regression su componenti critici, smoke sui pacchetti secondari.
+Introdurre i meccanismi base per evitare che le decisioni "arrivino dall'alto".
 
-## Metriche e adozione
-- Misurare utilizzo componenti: telemetria o code search periodica per tracciare adozione e duplicati.
-- Audit miglioramenti & usage: mappare journey reali per scoprire gap del sistema.
-- Tooling integration: controllare integrazione con stack (bundler, theming, i18n, test).
-- KPI proposti: adoption per team, % componenti DS vs custom, tempo medio issue→release, soddisfazione stakeholder.
- - Pattern reuse: misurare riuso dei pattern (nel design e nel codice) come indicatore primario di impatto.
+| Azione | Output | Owner |
+|--------|--------|-------|
+| **Template intake** | Issue template per richieste con campo "contesto d'uso" obbligatorio | TBD |
+| **Checklist review** | Checklist per PR: design, dev, a11y, content, test | TBD |
+| **Definition of Done** | Requisiti minimi: WCAG AA, test visivo, story Storybook | TBD |
+| **Primo Spec Walkthrough** | Sessione pilota: design + dev + QA insieme prima dell'implementazione | TBD |
 
-## Piano d’azione
+**Il Spec Walkthrough è il cambio chiave:** 30 minuti con designer, dev e QA *prima* di scrivere codice. Si validano: naming API, edge case, stati, token, copy. Le obiezioni emergono qui, non dopo il merge.
 
-### Breve termine (0–4 settimane)
-1) Avvio workshop “Principi del Sistema” e bozza pagina principi.
-2) Pilota Office Hours (6 settimane) e canale feedback strutturato.
-3) Definizione governance leggera (ruoli, intake, SLA, review duale).
-4) Template Spec Walkthrough + checklist review (design, dev, content, a11y, test).
-5) DoD per componenti con QA/a11y minimi e story di riferimento.
-6) Baseline metriche di adozione + inventario componenti e duplicati.
-7) Skeleton documentazione: guida contributi, principi, changelog, migrazioni.
+---
 
-### Medio termine (1–3 mesi)
-1) Ratifica principi e pubblicazione esempi applicativi.
-2) Governance in esercizio: contribution model e calendario review.
-3) Linee guida contenuti integrate nelle pagine componenti.
-4) Audit globale componenti: retire & replace e allineamento cross-piattaforma.
-5) Tooling/Automation: test visivi su componenti core, lints su token/pattern.
-6) Roadmap trimestrale pubblica (priorità per impatto utente e adozione).
+### Fase 3 — Governance e principi (mese 2)
 
-## Ruoli chiave e responsabilità (estratto operativo)
-- Maintainers: visione, qualità, release, sblocco decisioni, roadmap, metriche.
-- Stewards: qualità dei componenti, guidance, pairing, review mirate.
-- Contributors: proposta/mantenimento componenti, bugfix, doc.
-- Advisory: feedback di contesto, priorità d’area, validazione impatti.
+Una volta che il processo funziona, formalizziamo ruoli e valori.
+
+| Azione | Output | Owner |
+|--------|--------|-------|
+| **Workshop principi** | 2 ore, rappresentanza cross-funzionale. Output: 5-7 principi operativi | TBD |
+| **Formalizzazione ruoli** | Documento RACI: Maintainers, Stewards, Contributors, Advisory | TBD |
+| **Office Hours regolari** | Cadenza quindicinale, 45 min, orario fisso | TBD |
+| **Linee guida contenuti** | Voice & tone, microcopy, naming, localizzazione | TBD |
+| **Prima retro** | Retrospettiva sul processo: cosa funziona, cosa cambiare | TBD |
+
+**Perché i principi vengono dopo:** definire principi senza aver sperimentato il processo produce valori astratti. Dopo 4-6 settimane sapremo *quali* principi ci servono.
+
+---
+
+### Fase 4 — Scaling (mese 3)
+
+Consolidare, automatizzare e misurare.
+
+| Azione | Output | Owner |
+|--------|--------|-------|
+| **Visual regression** | Test automatici sui componenti core | TBD |
+| **Roadmap pubblica** | Backlog visibile con priorità e stato | TBD |
+| **Survey soddisfazione** | Questionario breve a dev e designer | TBD |
+| **Tooling automation** | integrazione CI | TBD |
+
+---
+
+## Principi guida del sistema
+
+Necessitiamo di un set di valori co-definiti per orientare decisioni. Il workshop (Fase 3) produrrà 5-7 principi operativi con:
+- Esempi applicativi e do/don't
+- Mapping verso Design Heuristics consolidate (vedi Appendice B)
+- Revisione trimestrale con retrospettiva sull'efficacia
+
+### Pattern prima dei componenti
+
+I componenti sono mattoni; i pattern sono soluzioni. Il valore del DS si sblocca quando pensiamo in termini di **pattern riusabili**.
+
+**Cosa cambia:**
+- Ogni pattern ha una pagina dedicata: scopo, proprietà, varianti, esempi, dipendenze
+- I componenti *implementano* pattern, non viceversa
+- Le API dei componenti riflettono le proprietà del pattern
+- Misuriamo il riuso dei pattern come KPI primario
+
+**Azioni:**
+- Inventario pattern esistenti (impliciti nell'app)
+- Naming consistente
+- Promozione a pattern di ciò che ricorre con frequenza
+
+---
+
+## Allineamento Design ↔ Sviluppo
+
+Il disallineamento design-dev è una delle cause principali di rilasci problematici.
+
+1. **Coinvolgimento anticipato:** dev partecipa alla review del mockup hi-fi. Checkpoint: *prima di iniziare l'hi-fi di un nuovo pattern, 30 min con uno steward dev*.
+
+2. **Spec Walkthrough pre-implementazione:** sessione breve (30 min) con Figma + requisiti tecnici. Partecipanti: designer owner, dev implementatore, QA. Output: checklist validata, dubbi risolti.
+
+3. **Pairing su componenti complessi:** per componenti con molti stati o interazioni, pairing design-dev invece di handoff asincrono.
+
+4. **Check di coerenza pre-merge:** audit rapido su token usati, pattern rispettati, naming consistente.
+
+---
+
+## QA e testing
+
+### Definition of Done estesa
+
+| Categoria | Requisiti |
+|-----------|-----------|
+| **Accessibilità** | WCAG AA (focus, contrast, keyboard nav) |
+| **Test visivo** | Almeno 1 snapshot per variante principale |
+| **Test interattivo** | Stati hover, focus, disabled, error |
+| **Browser support** | Chrome, Firefox, Safari (ultime 2 versioni), Edge |
+| **Viewport** | 320px, 768px, 1024px, 1440px |
+
+### Strumenti
+- Storybook come ambiente di verifica (stories = casi controllati)
+- Visual regression su componenti core (Chromatic o Percy)
+- Smoke test sui pacchetti secondari
+
+---
+
+## Metriche
+
+| Metrica | Come misurarla | Target iniziale |
+|---------|----------------|-----------------|
+| **Adoption rate** | % import @fiscozen/* vs custom | Baseline + trend positivo |
+| **Tempo issue → release** | Data apertura → data release | < 4 settimane (enhancement) |
+| **Soddisfazione** | Survey trimestrale (scala 1-5) | > 3.5/5 |
+| **Partecipazione** | Presenze medie Office Hours | > 5 persone |
+| **Pattern reuse** | Riuso pattern nel design e nel codice | Trend positivo |
+
+---
 
 ## Rischi e mitigazioni
-- Rischio: ritorno al top-down. Mitigazione: rituali collegiali (office hours, review duale, retro) e principi espliciti.
-- Rischio: overload dei maintainer. Mitigazione: stewardship distribuita, SLA realistici, intake chiaro.
-- Rischio: bassa adozione. Mitigazione: misure di adoption, guide migrazione, supporto e show & tell continui.
-- Rischio: incoerenza contenuti. Mitigazione: content nelle review, linee guida attive.
-- Rischio: regressioni QA. Mitigazione: DoD esteso, visual regression su core, test matrix condivisa.
+
+| Rischio | Prob. | Impatto | Mitigazione |
+|---------|-------|---------|-------------|
+| Ritorno al top-down | Media | Alto | Rituali collegiali obbligatori, principi espliciti |
+| Overload maintainer | Alta | Medio | Stewardship distribuita, SLA realistici, intake chiaro |
+| Bassa adozione | Media | Alto | Metriche visibili, guide migrazione, supporto continuo |
+| Regressioni QA | Media | Alto | DoD esteso, visual regression, test matrix |
+| Incoerenza contenuti | Bassa | Medio | Content nelle review, linee guida microcopy |
+
 
 ---
 
-## Bibliografia
-- Redesigning Design Systems — Tactics: Workshop & Engagement. https://redesigningdesign.systems/tactics/workshop-and-engagement
- - Smashing Magazine — Design Patterns Are A Better Way To Collaborate On Your Design System. https://www.smashingmagazine.com/2023/05/design-patterns-collaborate-design-system/
- - Nielsen Norman Group — Design Guidance (Design Heuristics). https://www.nngroup.com/articles/design-guidance/
- - Figma config 2024 -  Design system best practices. https://www.youtube.com/watch?v=MJTCfSFLUGE
- - Nielsen Norman Group - Design systems 101. https://www.nngroup.com/articles/design-systems-101/
+## Appendice A: Governance e ruoli
+
+### Ruoli
+
+| Ruolo | Responsabilità | Chi |
+|-------|----------------|-----|
+| **Maintainers** | Visione, qualità, release, roadmap, sblocco decisioni | Core DS team |
+| **Stewards** | Referenti per componenti/aree, pairing, review | Designer + Dev senior (rotazione) |
+| **Contributors** | Propongono componenti, bugfix, miglioramenti doc | Chiunque |
+| **Advisory Circle** | Input periodico su priorità e impatti | 1 rappresentante per area |
+
+### RACI
+
+| Attività | Maintainers | Stewards | Contributors | Advisory |
+|----------|-------------|----------|--------------|----------|
+| Roadmap DS | A/R | C | I | C |
+| Nuovo componente | A | R | C | I |
+| Review PR | A | R | C | - |
+| Principi sistema | A/R | C | C | C |
+| Changelog/Migrazioni | A/R | C | I | I |
+
+Legenda: R = Responsible, A = Accountable, C = Consulted, I = Informed
+
+### Meccanismi operativi
+
+- **Intake:** form unico o issue template per tutte le richieste
+- **Review duale:** design + dev con checklist (a11y, token, API, content, test)
+- **Decisione:** tacit approval entro SLA (5gg) o escalation ai Maintainers
+- **Versioning:** semver, changelog human-readable, guida migrazione
+- **Ritmo:** retro mensile su flusso contributi e colli di bottiglia
+
+---
+
+## Appendice B: Design Heuristics
+
+Adottiamo le euristiche di Nielsen/Norman come riferimento esterno. Ogni principio del sistema dovrebbe mappare ad almeno una euristica:
+
+1. **Visibility of system status** — Il sistema informa sempre l'utente su cosa sta succedendo
+2. **Match between system and real world** — Linguaggio familiare all'utente
+3. **User control and freedom** — Uscite di emergenza, undo/redo
+4. **Consistency and standards** — Convenzioni di piattaforma rispettate
+5. **Error prevention** — Prevenire errori è meglio che gestirli
+6. **Recognition rather than recall** — Minimizzare il carico cognitivo
+7. **Flexibility and efficiency of use** — Acceleratori per utenti esperti
+8. **Aesthetic and minimalist design** — Solo informazioni rilevanti
+9. **Help users recognize, diagnose, recover from errors** — Messaggi di errore utili
+10. **Help and documentation** — Documentazione accessibile quando serve
+
+La pagina "System Principles" includerà il mapping principio ↔ euristica.
+
+---
+
+## Appendice C: Bibliografia
+
+- Redesigning Design Systems — Workshop & Engagement: https://redesigningdesign.systems/tactics/workshop-and-engagement
+- Smashing Magazine — Design Patterns Are A Better Way To Collaborate: https://www.smashingmagazine.com/2023/05/design-patterns-collaborate-design-system/
+- Nielsen Norman Group — Design Heuristics: https://www.nngroup.com/articles/design-guidance/
+- Figma Config 2024 — Design System Best Practices: https://www.youtube.com/watch?v=MJTCfSFLUGE
+- Nielsen Norman Group — Design Systems 101: https://www.nngroup.com/articles/design-systems-101/
+

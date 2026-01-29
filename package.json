@@ -30,15 +30,19 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "husky": "^9.1.7",
     "@argdown/cli": "^1.7.5",
+    "husky": "^9.1.7",
     "nx": "20.7.1",
     "plop": "^4.0.1",
     "vitest": "^1.0.4"
   },
   "pnpm": {
     "overrides": {
-      "glob": "^11.1.0"
+      "glob": "^11.1.0",
+      "@argdown/node>glob": "^7.2.0"
+    },
+    "patchedDependencies": {
+      "@argdown/node@1.7.5": "patches/@argdown__node@1.7.5.patch"
     }
   }
 }
