@@ -1,0 +1,15 @@
+diff --git a/dist/IAsyncArgdownPlugin.js b/dist/IAsyncArgdownPlugin.js
+index aaad74704704f570300031f573af6cf058dd1c56..a29a8bff247a072ae81b6b76e9ba085534eb3c05 100644
+--- a/dist/IAsyncArgdownPlugin.js
++++ b/dist/IAsyncArgdownPlugin.js
+@@ -1,9 +1,8 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.isAsyncPlugin = void 0;
+-const util_1 = require("util");
+ const isAsyncPlugin = (plugin) => {
+-    return (0, util_1.isFunction)(plugin.runAsync);
++    return typeof plugin.runAsync === 'function';
+ };
+ exports.isAsyncPlugin = isAsyncPlugin;
+ //# sourceMappingURL=IAsyncArgdownPlugin.js.map

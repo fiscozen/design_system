@@ -12,6 +12,10 @@
     "build": "nx run-many --target=build",
     "storybook": "nx run @fiscozen/storybook:storybook",
     "generate:component": "plop component",
+    "argdown:help": "argdown --help",
+    "argdown:generate": "pnpm argdown:generate:html && pnpm argdown:generate:svg",
+    "argdown:generate:html": "argdown html docs/argdown/* docs/export/",
+    "argdown:generate:svg": "argdown map docs/argdown/* docs/export/",
     "test:storybook": "cd apps/storybook && pnpm test:storybook",
     "test:storybook:watch": "cd apps/storybook && pnpm test:storybook:watch",
     "test:storybook:coverage": "cd apps/storybook && pnpm test:storybook:coverage",
@@ -26,6 +30,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@argdown/cli": "^1.7.5",
     "husky": "^9.1.7",
     "nx": "20.7.1",
     "plop": "^4.0.1",
@@ -33,7 +38,11 @@
   },
   "pnpm": {
     "overrides": {
-      "glob": "^11.1.0"
+      "glob": "^11.1.0",
+      "@argdown/node>glob": "^7.2.0"
+    },
+    "patchedDependencies": {
+      "@argdown/node@1.7.5": "patches/@argdown__node@1.7.5.patch"
     }
   }
 }
