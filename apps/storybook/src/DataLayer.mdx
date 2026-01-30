@@ -4,6 +4,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Data Layer - @fiscozen/data
 
+Documentation for **developers using the package** in their applications (installation, setup, API, examples). For package maintainers, see the README in `packages/data`.
+
 Complete guide for using the `@fiscozen/data` package in your Vue 3 application.
 
 ## Table of Contents
@@ -12,13 +14,15 @@ Complete guide for using the `@fiscozen/data` package in your Vue 3 application.
 2. [Installation](#installation)
 3. [Setup](#setup)
 4. [Usage Pattern](#usage-pattern)
-5. [Actions Reference](#actions-reference)
-6. [Error Handling Patterns](#error-handling-patterns)
-7. [TypeScript Best Practices](#typescript-best-practices)
-8. [Testing](#testing)
-9. [Features](#features)
-10. [Future Enhancements](#future-enhancements)
-11. [Summary](#summary)
+5. [Custom Actions & Merge Helpers](#custom-actions--merge-helpers)
+6. [Nested and custom routes](#nested-and-custom-routes)
+7. [Actions Reference](#actions-reference)
+8. [Error Handling Patterns](#error-handling-patterns)
+9. [TypeScript Best Practices](#typescript-best-practices)
+10. [Testing](#testing)
+11. [Features](#features)
+12. [Future Enhancements](#future-enhancements)
+13. [Summary](#summary)
 
 ---
 
@@ -343,6 +347,243 @@ const handleCreate = async () => {
   </div>
 </template>
 ```
+
+---
+
+## Custom Actions & Merge Helpers
+
+When you need **preconfigured actions** (e.g. a list with fixed filters) but still want the view to override or add filters, ordering, pagination, or options, use the **merge helpers**. They merge default params/options with what the view passes; the view wins on conflicting keys.
+
+**Import:** `import { mergeListActionArgs, mergeRetrieveActionArgs, mergeMutationActionArgs } from '@fiscozen/data/rest'` (or `from '@fiscozen/data'`).
+
+### mergeListActionArgs (useList / usePaginatedList)
+
+Use when building a custom list or paginated-list action with default filters/options.
+
+**Input:** `defaultParams?`, `defaultOptions?`, `additionalParamsOrOptions?`, `additionalOptions?` (all optional). The first argument from the view can be either params or options; when `additionalOptions` is present, `additionalParamsOrOptions` is treated as params. Otherwise it is discriminated via presence of `filters`, `ordering`, or `pagination`.
+
+**Merge semantics:** Filters and pagination are merged (view wins on same key). Ordering: if the view provides an `ordering` key, use view's; otherwise use default. Options: view wins on same key.
+
+**Filter values:** Use `undefined` to remove a default filter (omit from request). Use `null` to send `null` to the server.
+
+**Example – custom list with default filters:**
+
+```typescript
+import { useActions, mergeListActionArgs } from '@fiscozen/data/rest'
+import type { ListActionParams, QueryActionOptions } from '@fiscozen/data/rest'
+
+interface Invoice { id: number; name: string }
+
+export const useSTS = () => {
+  const { useList: useInvoicesList } = useActions<Invoice>('invoices/')
+
+  const useSTSLists = (
+    paramsOrOptions?: ListActionParams | QueryActionOptions<Invoice[]>,
+    options?: QueryActionOptions<Invoice[]>
+  ) => {
+    const { params, options: mergedOptions } = mergeListActionArgs<Invoice>({
+      defaultParams: {
+        filters: { sts: true, sts_sent: false, sts_summary: '' },
+      },
+      additionalParamsOrOptions: paramsOrOptions,
+      additionalOptions: options,
+    })
+    return useInvoicesList(params, mergedOptions)
+  }
+
+  return { useSTSLists }
+}
+```
+
+**In the view:** Same API as `useList`; you can override or add filters, ordering, pagination, options.
+
+```vue
+<script setup>
+const { useSTSLists } = useSTS()
+const { data, filters, pagination, ordering } = useSTSLists(
+  { pagination: { page: 1, pageSize: 20 }, ordering: [{ created_at: 'desc' }] },
+  { onMount: true, autoUpdate: true }
+)
+</script>
+```
+
+### mergeRetrieveActionArgs (useRetrieve)
+
+Use when building a custom retrieve action with default pk or options. At least one of `defaultPk` or `overridePk` should be provided. When provided, `overridePk` overrides the default (substitute pk). The view's `overridePk` is preserved as-is (refs kept for reactivity).
+
+**Input:** `defaultPk?`, `defaultOptions?`, `overridePk?`, `additionalOptions?`.
+
+### mergeMutationActionArgs (useCreate / useUpdate / useDelete)
+
+Use when building a custom mutation action with default options (e.g. `throwOnError: true`).
+
+**Input:** `defaultOptions?`, `additionalOptions?`.
+
+```typescript
+const useSTSCreateInvoice = (additionalOptions?) => {
+  const { options: mergedOptions } = mergeMutationActionArgs({
+    defaultOptions: { throwOnError: true },
+    additionalOptions,
+  })
+  return useCreateInvoice(mergedOptions)
+}
+```
+
+---
+
+## Nested and custom routes
+
+For endpoints that don't fit the standard CRUD pattern, use **useFzFetch** directly in your entity composables. This **hybrid approach** combines **useActions** for standard CRUD operations with **useFzFetch** for custom endpoints.
+
+**Why hybrid?** `useActions(basePath)` accepts a **string** base path only, so you cannot pass a reactive path and get refetch when it changes.
+`useFzFetch(basePath, ...)` accepts a reactive or static URL (`MaybeRefOrGetter<string>`), so you use it inside a thin composable that builds the URL with `computed()`. CSRF, interceptors, and deduplication still apply.
+
+### When to use useFzFetch directly
+
+Use **useFzFetch** directly when you need:
+
+- **Nested resources** – Endpoints like `users/68/stats` where `stats` is a nested resource under a user
+- **Custom endpoints** – Non-CRUD endpoints like exports, searches, or bulk operations
+- **Complex query strings** – Endpoints requiring custom query parameters that don't fit the standard filters/ordering/pagination pattern
+- **Non-standard URL patterns** – Endpoints that don't follow REST conventions
+
+
+### Example 1: Nested resource – user stats
+
+**Scenario:** Fetch user statistics from `GET /users/{userId}/stats`.
+
+**Implementation:**
+
+```typescript
+// src/composables/useUsers.ts
+import { useActions, useFzFetch } from '@fiscozen/data/rest'
+import { computed, toValue } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
+
+interface UserStats {
+  totalOrders: number
+  revenue: number
+  activeSubscriptions: number
+  lastActivityDate: string
+}
+
+export const useUsers = () => {
+  const { useRetrieve, useList, useCreate, useUpdate, useDelete } =
+    useActions<User>('users')
+
+  const useGetUserStats = (userId: MaybeRefOrGetter<number>) => {
+    const url = computed(() => `users/${toValue(userId)}/stats`)
+    return useFzFetch<UserStats>(url)
+  }
+
+  return {
+    useRetrieveUserById: useRetrieve,
+    useListUsers: useList,
+    useCreateUser: useCreate,
+    useUpdateUser: useUpdate,
+    useDeleteUser: useDelete,
+    useGetUserStats
+  }
+}
+```
+
+**Usage in component:**
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useUsers } from '@/composables/useUsers'
+
+const { useGetUserStats } = useUsers()
+
+const userId = ref(68)
+const { data: stats, error, isLoading } = useGetUserStats(userId)
+
+const loadStatsForUser = (id: number) => {
+  userId.value = id
+}
+</script>
+```
+
+**Key points:** Pass `userId` when creating the function; the URL is reactive and refetches when `userId` changes; returns the standard `useFzFetch` interface (`data`, `error`, `isLoading`, `execute`). Works with `ref`, `computed`, or static values.
+
+### Example 2: Custom endpoint with query string – export invoices
+
+**Scenario:** Export invoices as file from `GET /esporta/lista_fatture/{invoiceIds}/?zip`.
+
+**Implementation:**
+
+```typescript
+// src/composables/useInvoices.ts
+import { useActions, useFzFetch } from '@fiscozen/data/rest'
+import { computed, toValue } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
+
+export const useInvoices = () => {
+  const { useRetrieve, useList, useCreate, useUpdate, useDelete } =
+    useActions<Invoice>('invoices')
+
+  const useExportInvoices = (
+    invoiceIds: MaybeRefOrGetter<number[]>,
+    format: 'zip' | 'pdf' = 'zip'
+  ) => {
+    const url = computed(() => {
+      const ids = toValue(invoiceIds)
+      if (!ids || ids.length === 0) {
+        throw new Error('At least one invoice ID is required for export')
+      }
+      return `esporta/lista_fatture/${ids.join('-')}`
+    })
+    return useFzFetch<Blob>(url, {
+      queryParams: { [format]: true }
+    })
+  }
+
+  return {
+    useRetrieveInvoiceById: useRetrieve,
+    useListInvoices: useList,
+    useCreateInvoice: useCreate,
+    useUpdateInvoice: useUpdate,
+    useDeleteInvoice: useDelete,
+    useExportInvoices
+  }
+}
+```
+
+**Usage in component:**
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useInvoices } from '@/composables/useInvoices'
+
+const { useExportInvoices } = useInvoices()
+
+const selectedInvoiceIds = ref<number[]>([1, 2, 3])
+const { data: fileBlob, error, isLoading: isExporting, execute: exportInvoices } =
+  useExportInvoices(selectedInvoiceIds, 'zip')
+
+const handleExport = async () => {
+  if (selectedInvoiceIds.value.length === 0) return
+  await exportInvoices()
+  if (fileBlob.value) {
+    // Create download link, trigger download, cleanup
+  }
+}
+</script>
+```
+
+**Key points:** Pass `invoiceIds` and `format` when creating the function; query params go via `queryParams` in `useFzFetch`; URL updates when `invoiceIds` changes; call `execute()` to trigger the request; handle blob response for file downloads. For reactive format, use `MaybeRefOrGetter<'zip' | 'pdf'>` and `toValue(format)` in `queryParams`.
+
+### When to use which
+
+| Use case | Approach |
+|----------|----------|
+| Standard CRUD, fixed base path (`users`, `invoices`) | **useActions** and entity composable (e.g. `useUsers`, `useInvoices`) |
+| Nested or custom URL with reactive segments (`users/68/stats`, export by ids) | Composable that uses **useFzFetch** with `computed` URL (and optional `queryParams`) |
+| Preconfigured list/retrieve with default params but same URL shape | Merge helpers + useActions (see [Custom Actions & Merge Helpers](#custom-actions--merge-helpers)) |
+
+This keeps a single pattern for consumers (composables returning `data` / `error` / `isLoading` / `execute`) while allowing both standard CRUD and nested/custom routes in a way that matches common practice (entity-oriented composables, thin wrappers over fetch when the URL is not a simple resource + id).
 
 ---
 
@@ -1251,6 +1492,8 @@ describe('useUsers', () => {
 
 - **Complete CRUD Operations** - `useRetrieve`, `useList`, `useCreate`, `useUpdate`, `useDelete`
 - **Reactive Parameters** - `useList` and `usePaginatedList` return reactive objects (`filters`, `pagination`, `ordering`) for direct modification. Automatic refetching when reactive objects change or when `pk` changes in `useRetrieve`
+- **Merge Helpers for Custom Actions** - `mergeListActionArgs`, `mergeRetrieveActionArgs`, `mergeMutationActionArgs` to build preconfigured actions (default params/options) while letting the view override or add filters, ordering, pagination, options
+- **Filter Semantics** - `undefined` = omit from request (e.g. remove default filter), `null` = send to server
 - **CSRF Protection** - Automatic token injection for mutation requests
 - **Request Deduplication** - Prevent duplicate identical requests
 - **Request/Response Interceptors** - Modify requests/responses or abort requests

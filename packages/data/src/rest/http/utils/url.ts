@@ -95,7 +95,7 @@ export const normalizeUrlForDeduplication = (
  */
 export const getUrlWithQueryParams = (
   basePath: MaybeRefOrGetter<string>,
-  queryParams?: MaybeRefOrGetter<Record<string, string | number | boolean>>,
+  queryParams?: MaybeRefOrGetter<Record<string, string | number | boolean | null>>,
 ): string => {
   const searchParams = new URLSearchParams();
 
@@ -126,12 +126,11 @@ export const getUrlWithQueryParams = (
     });
   }
 
-  // Add new queryParams if present (they take priority)
+  // Add new queryParams if present (they take priority). undefined = omit; null = send as "null"
   if (queryParams) {
     const resolvedParams = toValue(queryParams);
     Object.entries(resolvedParams).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        // Remove existing parameter and add new one (priority)
+      if (value !== undefined) {
         searchParams.delete(key);
         searchParams.append(key, String(value));
       }
