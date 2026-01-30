@@ -1,4 +1,4 @@
-import type { ShallowRef, MaybeRefOrGetter, Reactive, ComputedRef } from "vue";
+import type { ShallowRef, Reactive, ComputedRef } from "vue";
 import type { QueryActionOptions, QueryActionReturn } from "../shared/types";
 import type {
   ListActionParams,

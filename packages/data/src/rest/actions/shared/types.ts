@@ -40,7 +40,7 @@ export interface QueryActionOptions<T = unknown> {
   /**
    * Will automatically refetch when reactive dependencies change
    *
-   * @default false
+   * @default true
    */
   autoUpdate?: MaybeRefOrGetter<boolean>;
 

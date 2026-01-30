@@ -17,7 +17,7 @@ describe("useList - Pagination Defaults", () => {
           headers: { "Content-Type": "application/json" },
         }),
       );
-    }) as any;
+    }) as typeof fetch;
   });
 
   it("should apply default pagination values when pagination is provided but empty", () => {
@@ -73,7 +73,7 @@ describe("useList - Pagination Defaults", () => {
       }),
     );
 
-    const callUrl = (global.fetch as any).mock.calls[0][0];
+    const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
     const url = new URL(callUrl);
     expect(url.searchParams.get("page")).toBe("1");
     expect(url.searchParams.get("page_size")).toBe("50");
@@ -96,7 +96,7 @@ describe("useList - Ordering", () => {
           headers: { "Content-Type": "application/json" },
         }),
       );
-    }) as any;
+    }) as typeof fetch;
   });
 
   it("should format ordering query string correctly", async () => {
@@ -108,7 +108,7 @@ describe("useList - Ordering", () => {
 
     await execute();
 
-    const callUrl = (global.fetch as any).mock.calls[0][0];
+    const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
     const url = new URL(callUrl);
 
     expect(url.searchParams.get("ordering")).toBe("name,-created_at");
@@ -124,7 +124,7 @@ describe("useList - Ordering", () => {
 
     await execute();
 
-    const callUrl = (global.fetch as any).mock.calls[0][0];
+    const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
     const url = new URL(callUrl);
 
     expect(url.searchParams.get("ordering")).toBe("name,-status");
@@ -140,7 +140,7 @@ describe("useList - Ordering", () => {
 
     await execute();
 
-    const callUrl = (global.fetch as any).mock.calls[0][0];
+    const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
     const url = new URL(callUrl);
 
     expect(url.searchParams.get("ordering")).toBe("name,-created_at,status");
@@ -152,7 +152,7 @@ describe("useList - Ordering", () => {
 
     await execute();
 
-    const callUrl = (global.fetch as any).mock.calls[0][0];
+    const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
     const url = new URL(callUrl);
 
     expect(url.searchParams.get("ordering")).toBeNull();
@@ -176,7 +176,7 @@ describe("useList - AutoUpdate Debounce", () => {
           headers: { "Content-Type": "application/json" },
         }),
       );
-    }) as any;
+    }) as typeof fetch;
   });
 
   it("should debounce rapid changes and execute only one request", async () => {
@@ -212,7 +212,7 @@ describe("useList - AutoUpdate Debounce", () => {
           headers: { "Content-Type": "application/json" },
         }),
       );
-    }) as any;
+    }) as typeof fetch;
 
     const { useList } = useActions<{ id: number; name: string }>("users");
     const { filters } = useList({

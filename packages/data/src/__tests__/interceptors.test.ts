@@ -31,7 +31,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute, data } = useFzFetch<{
         original: boolean;
@@ -64,14 +64,15 @@ describe("Interceptors", () => {
         },
       });
 
-      global.fetch = vi.fn((url: string, init?: RequestInit) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- fetch signature requires (url, init)
+      global.fetch = vi.fn((_url: string, _init?: RequestInit) => {
         return Promise.resolve(
           new Response(JSON.stringify({ success: true }), {
             status: 200,
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute } = useFzFetch<{ success: boolean }>("/test", {
         headers: { "Content-Type": "application/json" },
@@ -108,7 +109,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute } = useFzFetch<{ success: boolean }>("/test");
 
@@ -148,7 +149,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute } = useFzFetch<{ success: boolean }>("/test", {
         headers: { "Original-Header": "original-value" },
@@ -181,7 +182,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute } = useFzFetch<{ success: boolean }>("/test", {
         headers: { "Original-Header": "original-value" },
@@ -200,7 +201,7 @@ describe("Interceptors", () => {
 
       setupFzFetcher({
         baseUrl: "https://api.example.com",
-        requestInterceptor: async (url, requestInit) => {
+        requestInterceptor: async (_url, requestInit) => {
           // Return headers with different case but semantically equivalent values
           // compareRequestInit should identify these as equivalent and NOT trigger a new fetch
           return {
@@ -231,7 +232,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute } = useFzFetch<{ success: boolean }>("/test", {
         headers: {
@@ -252,6 +253,8 @@ describe("Interceptors", () => {
       // With the fix, normalizeHeaders now normalizes plain object keys to lowercase,
       // so compareNormalizedHeaders will correctly identify them as equivalent
       expect(global.fetch).toHaveBeenCalled();
+      void originalFetchCallCount;
+      void modifiedFetchCallCount;
     });
   });
 
@@ -278,7 +281,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute, data } = useFzFetch<{ data: string }>("/test", {
         immediate: false,
@@ -307,16 +310,16 @@ describe("Interceptors", () => {
     it("should cleanup watch when interceptor throws an error", async () => {
       setupFzFetcher({
         baseUrl: "https://api.example.com",
-        requestInterceptor: async (url, requestInit) => {
+        requestInterceptor: async (_url, requestInit) => {
           // Modify requestInit to trigger watch creation, then throw error
-          const modified = {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars -- build then throw to test cleanup
+          const _modified = {
             ...requestInit,
             headers: {
               ...(requestInit.headers as Record<string, string>),
               "X-Custom-Header": "modified",
             },
           };
-          // Simulate error after modification
           throw new Error("Interceptor error");
         },
       });
@@ -328,7 +331,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute, error } = useFzFetch<{ data: string }>("/test", {
         immediate: false,
@@ -365,7 +368,8 @@ describe("Interceptors", () => {
         },
       });
 
-      global.fetch = vi.fn((url: string, init?: RequestInit) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- init not needed for this test
+      global.fetch = vi.fn((url: string, _init?: RequestInit) => {
         capturedUrl = url;
         return Promise.resolve(
           new Response(JSON.stringify({ success: true }), {
@@ -373,7 +377,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute } = useFzFetch<{ success: boolean }>("/users/123");
 
@@ -401,7 +405,8 @@ describe("Interceptors", () => {
         },
       });
 
-      global.fetch = vi.fn((url: string, init?: RequestInit) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- init not needed for this test
+      global.fetch = vi.fn((url: string, _init?: RequestInit) => {
         capturedUrl = url;
         return Promise.resolve(
           new Response(JSON.stringify({ success: true }), {
@@ -409,7 +414,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       // Use absolute URL
       const { execute } = useFzFetch<{ success: boolean }>(
@@ -457,7 +462,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute, data, statusCode, response } = useFzFetch<{
         original: boolean;
@@ -500,7 +505,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute, error } = useFzFetch<{ success: boolean }>("/test");
 
@@ -538,7 +543,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute, error } = useFzFetch<{ success: boolean }>("/test");
 
@@ -563,6 +568,7 @@ describe("Interceptors", () => {
             },
           };
         },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars -- signature requires response param
         responseInterceptor: async (response) => {
           // Return invalid JSON response
           return new Response("invalid json", {
@@ -579,7 +585,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute, error } = useFzFetch<{ original: boolean }>("/test");
 
@@ -613,7 +619,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       // useFzFetch with immediate: true (default) should call interceptor
       const { data } = useFzFetch<{ data: string }>("/test", {
@@ -650,7 +656,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       // useFzFetch with immediate: false
       const { execute, data } = useFzFetch<{ data: string }>("/test", {
@@ -676,6 +682,7 @@ describe("Interceptors", () => {
 
       setupFzFetcher({
         baseUrl: "https://api.example.com",
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars -- response only passed through
         responseInterceptor: async (response, url) => {
           interceptorCalled = true;
           interceptedUrl = url;
@@ -690,7 +697,7 @@ describe("Interceptors", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       // useFzFetch with immediate: true (default) should call interceptor
       const { data } = useFzFetch<{ data: string }>("/test", {

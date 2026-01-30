@@ -7,7 +7,8 @@ import type { QueryActionOptions, QueryActionReturn } from "../shared/types";
  * Key-value pairs where keys are filter field names and values can be
  * string, number, boolean, null, or undefined.
  *
- * Values that are `null` or `undefined` are automatically excluded from the query string.
+ * **Query semantics:** `undefined` = omit from request (e.g. remove a default filter);
+ * `null` = send to the server (query param present with value null).
  */
 export type FilterParams = Record<
   string,
@@ -52,8 +53,8 @@ export interface ListActionParams {
   /**
    * Initial filter parameters (e.g., { by_city: 'Rome', by_type: 'micro' })
    *
-   * Values can be `null` or `undefined` to explicitly exclude a filter from the query string.
-   * These values are automatically filtered out during normalization.
+   * **Query semantics:** `undefined` = omit from request; `null` = send to the server.
+   * Use `undefined` to remove a default filter in merge helpers; use `null` to send null to the API.
    *
    * After initialization, modify the returned `filters` reactive object directly.
    */

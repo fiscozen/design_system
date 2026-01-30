@@ -13,7 +13,7 @@ import { normalizeUrlForDeduplication } from "../../utils/url";
  * @internal
  */
 export class DeduplicationManager {
-  private pendingRequests: Map<string, UseFzFetchReturn<any>> = new Map();
+  private pendingRequests: Map<string, UseFzFetchReturn<unknown>> = new Map();
 
   private pendingWatches: Map<string, () => void> = new Map();
 

@@ -1,4 +1,4 @@
-import type { ShallowRef, MaybeRefOrGetter } from "vue";
+import type { MaybeRefOrGetter } from "vue";
 import type { QueryActionOptions, QueryActionReturn } from "../shared/types";
 
 /**

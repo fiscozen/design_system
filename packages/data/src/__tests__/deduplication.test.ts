@@ -20,7 +20,7 @@ describe("Deduplication", () => {
           headers: { "Content-Type": "application/json" },
         }),
       );
-    }) as any;
+    }) as typeof fetch;
 
     const { execute: execute1 } = useFzFetch<{ id: number }>("/users/1");
     const { execute: execute2 } = useFzFetch<{ id: number }>("/users/1");
@@ -52,7 +52,7 @@ describe("Deduplication", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       // Same data, different key order in nested object
       const body1 = JSON.stringify({
@@ -98,7 +98,7 @@ describe("Deduplication", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       // Same data, different key order at multiple nesting levels
       const body1 = JSON.stringify({
@@ -152,7 +152,7 @@ describe("Deduplication", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       // Same data, different key order in array elements
       const body1 = JSON.stringify({
@@ -204,7 +204,7 @@ describe("Deduplication", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       // Different data (different values)
       const body1 = JSON.stringify({
@@ -250,7 +250,7 @@ describe("Deduplication", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       // Complex structure: array of objects with nested objects
       const body1 = JSON.stringify([

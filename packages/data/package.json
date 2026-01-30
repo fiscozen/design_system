@@ -5,6 +5,7 @@
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",
+    "lint": "eslint -c eslintrc.cjs \"src/**/*.ts\"",
     "test:unit": "vitest run",
     "build": "vue-tsc && vite build"
   },

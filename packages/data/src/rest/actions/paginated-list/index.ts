@@ -83,8 +83,13 @@ export const createPaginatedListAction = <T>(
     paramsOrOptions,
   ) as PaginatedListActionOptions<T>;
 
-  const { dataKey: _dataKey, enableSingleOrdering: _enableSingleOrdering, ...restOptions } =
-    optionsToExtract;
+  const {
+    dataKey: _dataKeyUnused,
+    enableSingleOrdering: _enableSingleOrderingUnused,
+    ...restOptions
+  } = optionsToExtract;
+  void _dataKeyUnused;
+  void _enableSingleOrderingUnused;
   const listOptions: UseActionOptions = restOptions;
 
   // For usePaginatedList, pagination must always be present (even if empty)
@@ -278,7 +283,8 @@ export const createPaginatedListAction = <T>(
 
   // Remove _rawResponse from return (internal use only)
   // Type-safe destructuring using the InternalListBaseResult type
-  const { _rawResponse: _unusedRawResponse, ...result } = baseResult;
+  const { _rawResponse: _rawResponseDropped, ...result } = baseResult;
+  void _rawResponseDropped;
 
   return {
     ...result,

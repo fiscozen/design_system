@@ -352,7 +352,7 @@ const handleCreate = async () => {
 
 ## Custom Actions & Merge Helpers
 
-When you need **preconfigured actions** (e.g. a list with fixed filters) but still want the view to override or add filters, ordering, pagination, or options, use the **merge helpers**. They merge default params/options with what the view passes; the view wins on conflicting keys.
+When you need **preconfigured actions** (e.g. a list with fixed filters) but still want the view to override or add filters, ordering, pagination, or options, use the **merge helpers**. They merge default params/options with what the view passes; the view wins on conflicting keys. All merge helper inputs accept `MaybeRefOrGetter` so you can pass refs or computed for reactive defaults (e.g. default filters that depend on current user).
 
 **Import:** `import { mergeListActionArgs, mergeRetrieveActionArgs, mergeMutationActionArgs } from '@fiscozen/data/rest'` (or `from '@fiscozen/data'`).
 
@@ -364,7 +364,7 @@ Use when building a custom list or paginated-list action with default filters/op
 
 **Merge semantics:** Filters and pagination are merged (view wins on same key). Ordering: if the view provides an `ordering` key, use view's; otherwise use default. Options: view wins on same key.
 
-**Filter values:** Use `undefined` to remove a default filter (omit from request). Use `null` to send `null` to the server.
+**Filter value semantics (query layer):** `undefined` = omit from request (e.g. remove a default filter in merge); `null` = send to the server (query param present with value null). This applies to both list params and merge helpers.
 
 **Example – custom list with default filters:**
 
@@ -666,7 +666,7 @@ Initial parameters (used only for bootstrap). The composable returns reactive ob
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `filters` | `Record<string, string \| number \| boolean \| null \| undefined> \| Ref \| ComputedRef` | ❌ No | Initial filter parameters. `null`/`undefined` values are excluded. After initialization, modify the returned `filters` reactive object directly. |
+| `filters` | `Record<string, string \| number \| boolean \| null \| undefined> \| Ref \| ComputedRef` | ❌ No | Initial filter parameters. **Query semantics:** `undefined` = omit from request; `null` = send to server. After initialization, modify the returned `filters` reactive object directly. |
 | `ordering` | `Array<Record<string, 'asc' \| 'desc' \| 'none'>> \| Ref \| ComputedRef` | ❌ No | Initial ordering parameters as array (e.g., `[{ name: 'asc' }, { created_at: 'desc' }]`). Normalized to query string format: `ordering=name,-created_at`. After initialization, modify the returned `ordering` reactive array directly. |
 | `pagination` | `{ page?: number, pageSize?: number } \| Ref \| ComputedRef` | ❌ No | Initial pagination parameters. If provided (even if empty), default values are applied: `page` defaults to `1`, `pageSize` defaults to `50`. After initialization, modify the returned `pagination` reactive object directly. |
 
@@ -1117,7 +1117,6 @@ const { data, execute, filters, pagination, ordering } = useListUsers(
   {
     onMount: true,          // Fetch on mount
     autoUpdate: true,       // Auto-refetch when reactive objects change
-    timeout: 10000,        // 10 second timeout
     deduplication: true     // Enable deduplication for this action
   }
 )

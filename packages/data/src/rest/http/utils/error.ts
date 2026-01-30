@@ -54,7 +54,8 @@ export const handleFetchError = <T extends { value: Error | null }>(
   errorRef: T,
   error: unknown,
   throwOnFailed?: boolean,
-  debugMessage?: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- reserved for caller debug logging
+  _debugMessage?: string,
 ): Error => {
   const normalizedError = normalizeError(error);
   

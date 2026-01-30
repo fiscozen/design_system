@@ -341,14 +341,14 @@ const waitForFetchCompletion = <T>(
  * @param unwatchSync - Function to stop watching
  * @param cleanupCallback - Callback to conditionally set currentWatch to null
  */
-const cleanupWatcherOnError = async <T>(
+/** Reserved for future use: cleanup watcher on error to prevent memory leaks. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- reserved for future error-path cleanup
+const _cleanupWatcherOnError = async <T>(
   modifiedFetchResult: UseFzFetchReturn<T>,
   unwatchSync: () => void,
   cleanupCallback: (watcherToCleanup: () => void) => void,
 ): Promise<void> => {
-  // Wait for request to fully complete before cleanup
   await waitForFetchCompletion(modifiedFetchResult);
-  // Clean up watcher to prevent memory leak
   nextTick(() => {
     unwatchSync();
     cleanupCallback(unwatchSync);
