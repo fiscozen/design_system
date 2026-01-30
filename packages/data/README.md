@@ -197,14 +197,16 @@ packages/data/
 │   │       └── index.ts       # Main export (useFzFetch)
 │   │
 │   └── __tests__/            # Test files
-│       ├── csrf.spec.ts
-│       ├── deduplication.spec.ts
-│       ├── interceptors.spec.ts
-│       ├── integration.spec.ts
-│       ├── list.spec.ts
-│       ├── merge.spec.ts     # Merge helpers
-│       ├── setup.spec.ts
-│       └── url.spec.ts
+│       ├── csrf.test.ts
+│       ├── deduplication.test.ts
+│       ├── interceptors.test.ts
+│       ├── integration.test.ts
+│       ├── list.test.ts
+│       ├── merge.test.ts     # Merge helpers
+│       ├── normalize.test.ts
+│       ├── paginated-list.test.ts
+│       ├── setup.test.ts
+│       └── url.test.ts
 │
 ├── package.json
 ├── tsconfig.json
@@ -389,7 +391,7 @@ Merge helpers let **package consumers** build preconfigured actions (default par
 
 **Filter semantics (query layer):** `undefined` = omit from request (remove default filter); `null` = send to server. Implemented in `normalize.ts` (filters) and `http/utils/url.ts` (query params).
 
-**Tests:** `src/__tests__/merge.spec.ts` (discrimination, merge semantics, ref preservation, `toValue` on defaults).
+**Tests:** `src/__tests__/merge.test.ts` (discrimination, merge semantics, ref preservation, `toValue` on defaults).
 
 ### 6.4 How to Fix a Bug
 
@@ -418,7 +420,7 @@ grep -r "csrf" src/rest/http/
 #### Step 2: Write a Failing Test
 
 ```typescript
-// src/__tests__/csrf.spec.ts
+// src/__tests__/csrf.test.ts
 it('should inject CSRF token for PATCH requests', () => {
   document.cookie = 'csrf_token=test-token'
   
@@ -431,10 +433,10 @@ it('should inject CSRF token for PATCH requests', () => {
   
   // Mock fetch to verify headers
   let interceptedHeaders: HeadersInit | undefined
-  global.fetch = vi.fn((url, init) => {
+  global.fetch = vi.fn((_url, init) => {
     interceptedHeaders = init?.headers
     return Promise.resolve(new Response())
-  }) as any
+  }) as typeof fetch
   
   await execute()
   
@@ -576,7 +578,7 @@ export const state = {
 **Step 7: Write Tests**
 
 ```typescript
-// src/__tests__/timeout.spec.ts
+// src/__tests__/timeout.test.ts
 describe('Timeout Feature', () => {
   it('should abort request after timeout', async () => {
     setupFzFetcher({
@@ -806,7 +808,7 @@ console.log(state) // Inspect global state
 
 ### 6.9 File Naming Conventions
 
-- **Test files**: `__tests__/[feature].spec.ts` (NOT `.test.ts`)
+- **Test files**: `__tests__/[feature].test.ts`
 - **Type files**: `types.ts` in same directory or `types/[name].ts`
 - **Utility files**: `utils/[name].ts`
 - **Feature modules**: `features/[feature-name]/[file].ts`
@@ -1081,7 +1083,7 @@ This package is designed to work with REST APIs following these conventions:
 - **Lines of Code**: ~1800 LOC
 - **Test Coverage**: Organized by feature (setup, deduplication, interceptors)
 - **Type Safety**: Complete (no `any` types in public API)
-- **Linting**: 0 errors
+- **Linting**: ESLint with `@fiscozen/eslint-config`; run `pnpm lint` (0 errors)
 - **Build**: Optimized and production-ready
 
 ---

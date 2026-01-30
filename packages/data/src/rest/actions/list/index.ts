@@ -1,7 +1,13 @@
 import type { UseListAction, ListActionParams } from "./types";
 import type { UseActionOptions } from "../shared/types";
+import type { UseFzFetchReturn } from "../../http/types";
 import { normalizeListResponse } from "../shared/normalize";
 import { createListBase } from "../shared/create-list-base";
+
+/** Internal result from createListBase including _rawResponse (stripped before return). */
+interface InternalListResult<T> extends ReturnType<UseListAction<T>> {
+  _rawResponse: UseFzFetchReturn<T[]>;
+}
 
 /**
  * Create a list action for fetching multiple entities with filters, ordering, and pagination
@@ -44,7 +50,8 @@ export const createListAction = <T>(
   );
 
   // Remove _rawResponse from return (internal use only)
-  const { _rawResponse, ...cleanResult } = result as any;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructure to strip _rawResponse
+  const { _rawResponse, ...cleanResult } = result as InternalListResult<T>;
 
   return cleanResult as ReturnType<UseListAction<T>>;
 };

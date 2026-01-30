@@ -232,7 +232,7 @@ describe("normalizeParams", () => {
         page: 1,
         next: null,
         previous: null,
-      }) as any;
+      }) as UseFzFetchReturn<Record<string, unknown>>;
 
       const normalized = normalizePaginatedListResponse(mockResponse, "items");
 
@@ -240,7 +240,7 @@ describe("normalizeParams", () => {
     });
 
     it("should return null when response data is null", () => {
-      const mockResponse = createMockResponse(null) as any;
+      const mockResponse = createMockResponse(null) as UseFzFetchReturn<null>;
 
       const normalized = normalizePaginatedListResponse(mockResponse);
 
@@ -255,7 +255,7 @@ describe("normalizeParams", () => {
         next: null,
         previous: null,
         // Missing 'results' key
-      }) as any;
+      }) as UseFzFetchReturn<Record<string, unknown>>;
 
       const normalized = normalizePaginatedListResponse(mockResponse, "results");
 
@@ -275,7 +275,7 @@ describe("normalizeParams", () => {
         page: 1,
         next: null,
         previous: null,
-      }) as any;
+      }) as UseFzFetchReturn<Record<string, unknown>>;
 
       const normalized = normalizePaginatedListResponse(mockResponse, "results");
 
@@ -294,7 +294,7 @@ describe("normalizeParams", () => {
         page: 1,
         next: null,
         previous: null,
-      }) as any;
+      }) as UseFzFetchReturn<Record<string, unknown>>;
 
       const normalized = normalizePaginatedListResponse(mockResponse, "results");
 

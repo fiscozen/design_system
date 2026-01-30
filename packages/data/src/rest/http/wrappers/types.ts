@@ -23,7 +23,7 @@ export interface WrapperContext {
  * Wrappers modify fetch results to add functionality like interceptors, deduplication, etc.
  * They are applied in sequence, with each wrapper receiving the result from the previous one.
  */
-export interface Wrapper<T = any> {
+export interface Wrapper<T = unknown> {
   /**
    * Wraps a fetch result with additional functionality
    *

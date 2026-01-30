@@ -43,7 +43,7 @@ describe("createPaginatedListAction", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { data, execute } = createPaginatedListAction<User>("users");
 
@@ -72,7 +72,7 @@ describe("createPaginatedListAction", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { meta, execute } = createPaginatedListAction<User>("users");
 
@@ -110,7 +110,7 @@ describe("createPaginatedListAction", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { data, execute } = createPaginatedListAction<User>("users", {
         dataKey: "items",
@@ -140,7 +140,7 @@ describe("createPaginatedListAction", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { data, execute } = createPaginatedListAction<User>("users");
 
@@ -171,7 +171,7 @@ describe("createPaginatedListAction", () => {
             },
           ),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { ordering, execute } = createPaginatedListAction<User>("users");
 
@@ -180,7 +180,7 @@ describe("createPaginatedListAction", () => {
 
       await execute();
 
-      const callUrl = (global.fetch as any).mock.calls[0][0];
+      const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
       const url = new URL(callUrl);
 
       expect(url.searchParams.get("ordering")).toBe("name,-created_at");
@@ -204,7 +204,7 @@ describe("createPaginatedListAction", () => {
             },
           ),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { ordering, execute } = createPaginatedListAction<User>("users");
 
@@ -214,7 +214,7 @@ describe("createPaginatedListAction", () => {
 
       await execute();
 
-      const callUrl = (global.fetch as any).mock.calls[0][0];
+      const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
       const url = new URL(callUrl);
 
       expect(url.searchParams.get("ordering")).toBe("name,-status");
@@ -306,7 +306,7 @@ describe("createPaginatedListAction", () => {
             },
           ),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { pagination, handlePageChange, execute } =
         createPaginatedListAction<User>("users", {
@@ -320,7 +320,7 @@ describe("createPaginatedListAction", () => {
 
       await execute();
 
-      const callUrl = (global.fetch as any).mock.calls[0][0];
+      const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
       const url = new URL(callUrl);
       expect(url.searchParams.get("page")).toBe("2");
     });
@@ -372,7 +372,7 @@ describe("createPaginatedListAction", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { pagination, meta, execute } = createPaginatedListAction<User>(
         "users",
@@ -422,7 +422,7 @@ describe("createPaginatedListAction", () => {
             },
           });
         });
-      }) as any;
+      }) as typeof fetch;
 
       // Disable autoUpdate and onMount to have manual control over when requests are made
       const { pagination, meta, execute } = createPaginatedListAction<User>(
@@ -540,7 +540,7 @@ describe("createPaginatedListAction", () => {
     it("should handle fetch errors gracefully", async () => {
       global.fetch = vi.fn(() => {
         return Promise.reject(new Error("Network error"));
-      }) as any;
+      }) as typeof fetch;
 
       const { error, execute } = createPaginatedListAction<User>("users");
 
@@ -556,7 +556,7 @@ describe("createPaginatedListAction", () => {
     it("should return null data on error", async () => {
       global.fetch = vi.fn(() => {
         return Promise.reject(new Error("Network error"));
-      }) as any;
+      }) as typeof fetch;
 
       const { data, execute } = createPaginatedListAction<User>("users");
 
@@ -568,7 +568,7 @@ describe("createPaginatedListAction", () => {
     it("should return null meta on error", async () => {
       global.fetch = vi.fn(() => {
         return Promise.reject(new Error("Network error"));
-      }) as any;
+      }) as typeof fetch;
 
       const { meta, execute } = createPaginatedListAction<User>("users");
 

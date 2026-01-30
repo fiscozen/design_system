@@ -38,7 +38,7 @@ describe("Integration Tests", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute, data, statusCode } = useFzFetch<{ data: string }>(
         "/test",
@@ -81,7 +81,7 @@ describe("Integration Tests", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute } = useFzFetch<{ success: boolean }>("/test", {
         headers: { "Content-Type": "application/json" },
@@ -121,7 +121,7 @@ describe("Integration Tests", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute, data } = useFzFetch<{
         original: boolean;
@@ -152,7 +152,7 @@ describe("Integration Tests", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       // Make two identical requests simultaneously with immediate: false
       const { execute: execute1, data: data1 } = useFzFetch<{
@@ -189,7 +189,7 @@ describe("Integration Tests", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       // Make two different requests with immediate: false
       const { execute: execute1 } = useFzFetch<{ data: string }>("/test1", {
@@ -222,7 +222,7 @@ describe("Integration Tests", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       // Make GET and POST requests to same URL with immediate: false
       const { execute: execute1 } = useFzFetch<{ success: boolean }>("/test", {
@@ -256,7 +256,7 @@ describe("Integration Tests", () => {
 
       global.fetch = vi.fn(() => {
         return Promise.reject(new Error("Network error"));
-      }) as any;
+      }) as typeof fetch;
 
       const { execute, error } = useFzFetch("/test", { immediate: false });
 
@@ -312,7 +312,7 @@ describe("Integration Tests", () => {
             headers: { "Content-Type": "application/json" },
           }),
         );
-      }) as any;
+      }) as typeof fetch;
 
       const { execute } = useFzFetch<{ success: boolean }>("/test", {
         method: "POST",
