@@ -114,3 +114,19 @@ export type { UseDeleteAction, UseDeleteActionReturn } from "./delete/types";
 
 // Export paginated list action
 export { createPaginatedListAction } from "./paginated-list";
+
+// Merge helpers for custom actions (default + view → merge → action)
+export {
+  mergeListActionArgs,
+  mergeRetrieveActionArgs,
+  mergeMutationActionArgs,
+} from "./shared/merge";
+export type {
+  MergeListActionArgsInput,
+  MergeListActionArgsResult,
+  MergeRetrieveActionArgsInput,
+  MergeRetrieveActionArgsResult,
+  MergeMutationActionArgsInput,
+  MergeMutationActionArgsResult,
+} from "./shared/merge";
+

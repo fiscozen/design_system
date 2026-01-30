@@ -2,149 +2,31 @@
 
 ## Data Layer – Reactive Composable Architecture
 
-> **🚀 Production Ready (v1.0)**
+> **Package users:** installation, setup, API, examples, and merge helpers → **Storybook > Documentation > Data Layer**.
 >
-> This package implements a **structured data layer** for Vue 3 applications, built on top of `@vueuse/core`, designed to:
->
-> * keep components clean, without embedding data-fetching logic;
-> * provide reactive state management with automatic URL updates;
-> * centralise and standardise state and error handling;
-> * ensure strong typing and composable reusability.
+> This README targets **developers working on the package** (architecture, code layout, development guide, testing).
 
-**Current Status:** Complete CRUD operations with reactive parameters, CSRF protection, request deduplication, request/response interceptors, and debug logging.
+---
+
+**What this package does:** Structured data layer for Vue 3 apps (reactive CRUD, CSRF, deduplication, interceptors, merge helpers), built on `@vueuse/core`. Production-ready (v1.0).
 
 ---
 
 ## Table of Contents
 
-1. [Quick Start](#1-quick-start)
-2. [Current Status](#2-current-status)
-3. [Objective](#3-objective)
-4. [Architecture](#4-architecture)
-5. [Developer Usage](#5-developer-usage)
-6. [Configuration](#6-configuration)
-7. [Usage Patterns](#7-usage-patterns)
-8. [API Reference](#8-api-reference)
-9. [TypeScript Best Practices](#9-typescript-best-practices)
-10. [Testing](#10-testing)
-11. [Backend Conventions](#11-backend-conventions)
-12. [Architectural Decisions](#12-architectural-decisions)
-13. [Roadmap](#13-roadmap)
-14. [Appendix](#14-appendix)
+1. [Current Status](#1-current-status)
+2. [Objective](#2-objective)
+3. [Architecture](#3-architecture)
+4. [Package Exports](#4-package-exports)
+5. [Backend Conventions](#5-backend-conventions)
+6. [Development Guide](#6-development-guide)
+7. [Architectural Decisions](#7-architectural-decisions)
+8. [Roadmap](#8-roadmap)
+9. [Appendix](#9-appendix)
 
 ---
 
-## 1. Quick Start
-
-### Installation
-
-```bash
-npm install @fiscozen/data
-```
-
-### Step 1: Setup (Once at App Initialization)
-
-```typescript
-// app/main.ts or app setup file
-import { setupFzFetcher } from '@fiscozen/data/rest'
-
-setupFzFetcher({
-  baseUrl: 'https://api.example.com/v1',
-  csrf: {
-    enabled: true,
-    cookieName: 'csrf_token',
-    headerName: 'X-CSRF-Token'
-  },
-  deduplication: true, // Enable request deduplication globally
-  debug: false // Set to true for development logging
-})
-```
-
-### Step 2: Create Entity Composable (Once per Entity)
-
-```typescript
-// src/composables/useUsers.ts
-import { useActions } from '@fiscozen/data/rest'
-
-interface User {
-  id: number
-  name: string
-  email: string
-}
-
-export const useUsers = () => {
-  const { useRetrieve, useList, useCreate, useUpdate, useDelete } = 
-    useActions<User>('users')
-  
-  return {
-    useRetrieveUserById: useRetrieve,
-    useListUsers: useList,
-    useCreateUser: useCreate,
-    useUpdateUser: useUpdate,
-    useDeleteUser: useDelete
-  }
-}
-```
-
-### Step 3: Use in Components (Reactive & Auto-Fetching)
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useUsers } from '@/composables/useUsers'
-
-const { useListUsers, useCreateUser } = useUsers()
-
-// ✅ Auto-fetch on mount
-// ✅ Returns reactive objects (filters, pagination, ordering) for direct modification
-const { data: users, error, isLoading, filters, pagination, ordering } = useListUsers({
-  filters: { active: true },           // Initial filters (static)
-  pagination: { page: 1, pageSize: 20 }, // Initial pagination (static)
-  ordering: [{ name: 'asc' }]              // Initial ordering (static)
-})
-
-// ✅ Modify reactive objects directly - triggers auto-refetch (if autoUpdate: true)
-filters.active = false        // ✅ Auto-refetches
-pagination.page = 2          // ✅ Auto-refetches
-ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches
-
-// ✅ Manual mutation (always manual, no auto-refetch)
-const { execute: createUser } = useCreateUser()
-
-const handleCreate = async () => {
-  await createUser({ name: 'John', email: 'john@example.com' })
-  
-  // Optionally refetch list after creation
-  // (automatic refetch happens if you modify filters/pagination/ordering)
-  pagination.page = 1 // Trigger refetch
-}
-</script>
-
-<template>
-  <div v-if="isLoading">Loading...</div>
-  <div v-else-if="error">Error: {{ error }}</div>
-  <ul v-else>
-    <li v-for="user in users" :key="user.id">{{ user.name }}</li>
-  </ul>
-</template>
-```
-
-### Key Concepts
-
-**Reactive Parameters:**
-- `useRetrieve`: `pk` parameter is reactive → changing it triggers refetch
-- `useList`: Returns reactive objects (`filters`, `pagination`, `ordering`) → modify directly to trigger refetch
-- `usePaginatedList`: Returns reactive objects (`filters`, `pagination`, `ordering`) → modify directly to trigger refetch
-- Mutation actions (`useCreate`, `useUpdate`, `useDelete`): No reactive parameters → always manual
-
-**Automatic Refetch:**
-- Enabled by default (`autoUpdate: true`)
-- Triggered when reactive parameters change
-- Can be disabled with `autoUpdate: false`
-
----
-
-## 2. Current Status
+## 1. Current Status
 
 ### ✅ Completed (v1.0)
 
@@ -155,6 +37,8 @@ const handleCreate = async () => {
 - ✅ Request deduplication (configurable globally and per-action)
 - ✅ Request and response interceptors (modify requests/responses, abort requests)
 - ✅ Debug logging (configurable via `setupFzFetcher({ debug: true })`)
+- ✅ Merge helpers for custom actions (`mergeListActionArgs`, `mergeRetrieveActionArgs`, `mergeMutationActionArgs`)
+- ✅ Filter semantics: `undefined` = omit from request, `null` = send to server
 - ✅ TypeScript-first approach with complete type safety
 - ✅ Subpath exports (`@fiscozen/data/rest`)
 
@@ -181,14 +65,14 @@ const handleCreate = async () => {
 
 ---
 
-## 3. Objective
+## 2. Objective
 
 The aim is to design an architecture in which each entity (for instance, `User`) has its own **dedicated composable** (`useUsers`) encapsulating all data-handling logic, built on top of shared lower-level layers.
 
 **Key benefits:**
 - Cleaner components, free from embedded API code
 - Consistent structure across all entities
-- Centralised handling of state, errors, and loading indicators
+- Centralized handling of state, errors, and loading indicators
 - Strong TypeScript typing
 - Easier refactoring and testing
 
@@ -199,7 +83,7 @@ The aim is to design an architecture in which each entity (for instance, `User`)
 
 ---
 
-## 4. Architecture
+## 3. Architecture
 
 ### Layer Structure
 
@@ -237,16 +121,20 @@ HTTP wrapper (useFzFetch)
 
 4. **Foundation** - `@vueuse/core` for robust state management
 
-### Package Exports
+## 4. Package Exports
 
 The package provides building blocks, not entity-specific composables:
 
 ```typescript
-// Package exports
+// Package exports (from @fiscozen/data/rest or @fiscozen/data)
 export { 
-  useActions,      // Generic CRUD factory
-  setupFzFetcher,  // Setup configuration
-  useFzFetch       // Low-level HTTP wrapper
+  useActions,           // Generic CRUD factory
+  setupFzFetcher,       // Setup configuration
+  useFzFetch,           // Low-level HTTP wrapper
+  resetFzFetcher,
+  mergeListActionArgs,      // Merge defaults + view args for list/paginated-list
+  mergeRetrieveActionArgs,  // Merge defaults + view args for retrieve
+  mergeMutationActionArgs,  // Merge defaults + view args for mutations
 }
 
 export type * from './types'
@@ -256,1313 +144,17 @@ export type * from './types'
 
 ---
 
-## 5. Developer Usage
+## 5. Backend Conventions
 
-### Usage Pattern Overview
-
-The package follows a **layered architecture pattern**:
-
-1. **Setup** (once at app initialization)
-   ```typescript
-   setupFzFetcher({ baseUrl: '...', csrf: {...} })
-   ```
-
-2. **Create Entity Composable** (once per entity)
-   ```typescript
-   export const useUsers = () => {
-     const { useRetrieve, useList, ... } = useActions<User>('users')
-     return { useRetrieveUserById: useRetrieve, ... }
-   }
-   ```
-
-3. **Use in Components** (reactive, auto-fetching)
-   ```typescript
-   const { data, error, isLoading } = useRetrieveUserById(userId)
-   // Automatically refetches when userId changes
-   ```
-
-### Creating Entity Composables
-
-Create domain-specific composables for each entity in your application:
-
-```typescript
-// src/composables/useUsers.ts
-import { useActions } from '@fiscozen/data/rest'
-
-interface User {
-  id: number
-  name: string
-  email: string
-  active: boolean
-}
-
-export const useUsers = () => {
-  const { useRetrieve, useList, useCreate, useUpdate, useDelete } = 
-    useActions<User>('users')
-  
-  return {
-    // Query actions (GET)
-    useRetrieveUserById: useRetrieve,
-    useListUsers: useList,
-    
-    // Mutation actions (POST/PUT/PATCH/DELETE)
-    useCreateUser: useCreate,
-    useUpdateUser: useUpdate,
-    useDeleteUser: useDelete
-  }
-}
-```
-
-**Why Entity Composables?**
-- Encapsulate entity-specific logic in one place
-- Provide clean, semantic API (`useRetrieveUserById` vs `useRetrieve`)
-- Easy to extend with custom logic (validation, transformations)
-- Consistent structure across all entities
-
-### Using in Components
-
-Entity composables provide reactive, type-safe data operations:
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useUsers } from '@/composables/useUsers'
-
-const { useRetrieveUserById, useListUsers, useCreateUser } = useUsers()
-
-// ✅ Reactive retrieve - auto-fetches when ID changes
-const userId = ref(1)
-const { data: user, error, isLoading } = useRetrieveUserById(userId)
-
-// ✅ List with filters, pagination, and ordering
-const { data: users, filters, pagination, ordering } = useListUsers({
-  filters: { active: true },           // Initial filters
-  pagination: { page: 1, pageSize: 10 }, // Initial pagination
-  ordering: [{ name: 'asc' }]              // Initial ordering (array format)
-})
-
-// Modify reactive objects directly
-filters.active = false        // ✅ Auto-refetches
-pagination.page = 2          // ✅ Auto-refetches
-ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches
-
-// ✅ Manual mutation
-const { execute: createUser } = useCreateUser()
-
-const handleCreate = async () => {
-  await createUser({ name: 'John', email: 'john@example.com' })
-}
-
-// Change ID to trigger new fetch
-const loadUser = (id: number) => {
-  userId.value = id // Automatically fetches new user
-}
-</script>
-
-<template>
-  <div>
-    <!-- ✅ Auto-unwrapping in templates -->
-    <div v-if="isLoading">Loading user...</div>
-    <div v-else-if="error">Error: {{ error }}</div>
-    <div v-else-if="user">
-      <h1>{{ user.name }}</h1>
-      <p>{{ user.email }}</p>
-    </div>
-    
-    <!-- User list -->
-    <ul v-if="users">
-      <li v-for="u in users" :key="u.id" @click="loadUser(u.id)">
-        {{ u.name }}
-      </li>
-    </ul>
-  </div>
-</template>
-```
-
-### Available Actions
-
-All actions return consistent interface:
-
-```typescript
-interface ActionReturn<T> {
-  data: ShallowRef<T | null>        // Response data
-  error: ShallowRef<Error | null>   // Error if any
-  isLoading: Readonly<ShallowRef<boolean>>  // Loading state
-  execute?: () => Promise<void>     // Manual execution (for queries)
-}
-```
-
-**Query Actions (GET):**
-- `useRetrieve(pk, options?)` - Get single entity by primary key
-- `useList(params?, options?)` - List entities with filters, ordering, pagination
-- `usePaginatedList(params?, options?)` - List entities with paginated response and metadata
-
-**Mutation Actions:**
-- `useCreate(options?)` - Create new entity (POST)
-- `useUpdate(options?)` - Update existing entity (PUT/PATCH)
-- `useDelete(options?)` - Delete entity (DELETE)
+The package expects REST APIs with pagination (`page`/`page_size`), ordering (`ordering=name,-created_at`), filters as query params, URL versioning, and nested relations. Details and examples: **Storybook > Documentation > Data Layer**.
 
 ---
 
-## 6. Configuration
-
-### Setup Options
-
-```typescript
-interface SetupFzFetcherOptions {
-  /**
-   * Base URL for all API requests (required)
-   */
-  baseUrl: MaybeRefOrGetter<string>
-
-  /**
-   * CSRF protection configuration
-   */
-  csrf?: {
-    enabled: boolean              // Enable CSRF protection (default: false)
-    cookieName?: string          // CSRF cookie name (default: 'csrf_token')
-    headerName?: string          // CSRF header name (default: 'X-CSRF-Token')
-  }
-
-  /**
-   * Enable request deduplication globally
-   * When enabled, identical requests made simultaneously share the same result
-   * (default: false)
-   */
-  deduplication?: boolean
-
-  /**
-   * Enable debug logging (console.debug)
-   * (default: false)
-   */
-  debug?: boolean
-
-  /**
-   * Debounce time in milliseconds for autoUpdate watches in list/paginated-list actions.
-   * When reactive parameters (filters, ordering, pagination) change rapidly,
-   * this debounce groups multiple changes into a single fetch request.
-   * (default: 100)
-   */
-  autoUpdateDebounceDelay?: number
-
-  /**
-   * Request interceptor function
-   * Called before each request is sent. Can modify the request or abort it.
-   * (default: undefined - no interceptor)
-   */
-  requestInterceptor?: RequestInterceptor
-
-  /**
-   * Response interceptor function
-   * Called after each response is received. Can modify the response or handle errors.
-   * (default: undefined - no interceptor)
-   */
-  responseInterceptor?: ResponseInterceptor
-
-  /**
-   * Default options for useFzFetch
-   */
-  options?: UseFzFetchOptions
-
-  /**
-   * Options for fetch requests
-   */
-  fetchOptions?: RequestInit
-}
-```
-
-### Example Configuration
-
-```typescript
-import { setupFzFetcher } from '@fiscozen/data/rest'
-import type { RequestInterceptor, ResponseInterceptor } from '@fiscozen/data/rest'
-
-// Request interceptor: add custom headers, modify request, or abort
-const requestInterceptor: RequestInterceptor = async (url, requestInit) => {
-  // Add custom header
-  return {
-    ...requestInit,
-    headers: {
-      ...requestInit.headers,
-      'X-Custom-Header': 'value',
-      'Authorization': `Bearer ${getToken()}`
-    }
-  }
-  
-  // Or abort request conditionally
-  // if (shouldAbort(url)) {
-  //   return null
-  // }
-}
-
-// Response interceptor: transform response, handle errors globally
-const responseInterceptor: ResponseInterceptor = async (response, url, requestInit) => {
-  // Handle 401 errors globally (e.g., refresh token)
-  if (response.status === 401) {
-    await refreshToken()
-    // Retry original request or throw error
-    throw new Error('Unauthorized - token refresh required')
-  }
-  
-  // Transform response body
-  // const data = await response.json()
-  // return new Response(JSON.stringify({ ...data, transformed: true }), response)
-  
-  return response
-}
-
-setupFzFetcher({
-  baseUrl: 'https://api.example.com/v1',
-  
-  // CSRF protection for session cookies
-  csrf: {
-    enabled: true,
-    cookieName: 'csrf_token',
-    headerName: 'X-CSRF-Token'
-  },
-  
-  // Request deduplication
-  deduplication: true,
-  
-  // AutoUpdate debounce delay (optional, default: 100ms)
-  // Groups rapid parameter changes in list/paginated-list actions
-  autoUpdateDebounceDelay: 200,
-  
-  // Request interceptor
-  requestInterceptor,
-  
-  // Response interceptor
-  responseInterceptor,
-  
-  // Debug logging (development only)
-  debug: process.env.NODE_ENV === 'development'
-})
-```
-
-### Interceptors Examples
-
-Interceptors allow you to modify requests before they're sent or handle responses globally. They're configured once in `setupFzFetcher` and apply to all requests.
-
-**Request Interceptor - Add Custom Headers:**
-
-```typescript
-setupFzFetcher({
-  baseUrl: 'https://api.example.com/v1',
-  requestInterceptor: async (url, requestInit) => {
-    const token = localStorage.getItem('auth_token')
-    return {
-      ...requestInit,
-      headers: {
-        ...requestInit.headers,
-        'Authorization': `Bearer ${token}`
-      }
-    }
-  }
-})
-```
-
-**Request Interceptor - Abort Requests:**
-
-```typescript
-setupFzFetcher({
-  baseUrl: 'https://api.example.com/v1',
-  requestInterceptor: async (url, requestInit) => {
-    // Abort if user is offline
-    if (!navigator.onLine) {
-      return null // Abort request
-    }
-    return requestInit
-  }
-})
-```
-
-**Response Interceptor - Handle 401 Errors:**
-
-```typescript
-setupFzFetcher({
-  baseUrl: 'https://api.example.com/v1',
-  responseInterceptor: async (response, url, requestInit) => {
-    if (response.status === 401) {
-      // Refresh token logic
-      await refreshToken()
-      // Retry original request
-      return fetch(url, requestInit)
-    }
-    return response
-  }
-})
-```
-
-### Request Deduplication
-
-Prevent duplicate identical requests. **Deduplication works globally across your entire application**. When multiple components make identical requests simultaneously, only the first one executes and others share the result.
-
-**⚠️ Important:** Deduplication is **disabled by default**. You must explicitly enable it in `setupFzFetcher` or per-action.
-
-**Global Behavior:**
-- Single `DeduplicationManager` instance shared across all components
-- Works between different components, different composables, and different parts of your app
-- Only identical requests (same URL, query params, method, and body) are deduplicated
-- Requests are automatically cleaned up after completion
-
-**Example - Cross-Component Deduplication:**
-
-```typescript
-// ComponentA.vue
-const { data: usersA } = useListUsers({ filters: { active: true } })
-// Executes: GET /users?active=true
-
-// ComponentB.vue (different component, same moment)
-const { data: usersB } = useListUsers({ filters: { active: true } })
-// ✅ Does NOT execute new request - shares result from ComponentA
-// Both components receive the same data when the request completes
-```
-
-**Configuration:**
-
-```typescript
-// Global setting (disabled by default)
-setupFzFetcher({
-  baseUrl: 'https://api.example.com/v1',
-  deduplication: true // ✅ Must be explicitly enabled
-})
-
-// Per-action override
-const { data } = useListUsers(
-  { filters: { enabled: true } },
-  { deduplication: true } // Enable for this action (overrides global)
-)
-```
-
----
-
-## 7. Usage Patterns
-
-### Reactive Parameters & Automatic Refetch
-
-The package automatically refetches data when **reactive parameters** change. This works by wrapping parameters in `computed()` and watching for changes.
-
-#### Which Parameters Are Reactive?
-
-**Query Actions (GET):**
-
-| Action | Reactive Parameters | Refetch Trigger |
-|--------|-------------------|-----------------|
-| `useRetrieve(pk, options?)` | `pk` (primary key) | When `pk` changes |
-| `useList(params?, options?)` | Returns reactive objects: `filters`, `pagination`, `ordering` | When any reactive object is modified directly |
-| `usePaginatedList(params?, options?)` | Returns reactive objects: `filters`, `pagination`, `ordering` | When any reactive object is modified directly |
-
-**Mutation Actions (POST/PUT/PATCH/DELETE):**
-- ❌ **No reactive parameters** - Mutations are always manual via `execute()`
-- Mutations don't auto-refetch because they modify data, not fetch it
-
-#### How Automatic Refetch Works
-
-**useRetrieve:**
-```typescript
-const userId = ref(1)
-const { data, error, isLoading } = useRetrieveUserById(userId)
-
-// Changing userId automatically triggers new fetch
-userId.value = 2 // ✅ Auto-fetches new data
-
-// Works with computed values too
-const computedId = computed(() => route.params.id)
-const { data } = useRetrieveUserById(computedId) // ✅ Auto-refetches when route changes
-```
-
-**useList:**
-```typescript
-// useList returns reactive objects that you can modify directly
-const { data: users, filters, pagination, ordering } = useListUsers({
-  filters: { active: true },           // Initial values (static)
-  pagination: { page: 1, pageSize: 20 }, // Initial values (static)
-  ordering: [{ name: 'asc' }]              // Initial values (static)
-})
-
-// Modify reactive objects directly - triggers auto-refetch
-filters.active = false        // ✅ Auto-refetch
-filters.name = 'John'         // ✅ Auto-refetch
-pagination.page = 2          // ✅ Auto-refetch
-pagination.pageSize = 50     // ✅ Auto-refetch
-ordering.push({ created_at: 'desc' }) // ✅ Auto-refetch
-ordering[0].name = 'desc'        // ✅ Auto-refetch (deep reactivity)
-
-// Initial values are only used for bootstrap
-// After initialization, modify the returned reactive objects directly
-```
-
-#### Controlling Automatic Refetch
-
-**Disable auto-refetch globally:**
-```typescript
-const { data, execute } = useListUsers(
-  { filters: { active: true } },
-  { autoUpdate: false } // Disable automatic refetch
-)
-
-// Manually trigger fetch
-await execute()
-```
-
-**Disable initial fetch:**
-```typescript
-const { data, execute } = useListUsers(
-  { filters: { active: true } },
-  { onMount: false } // Don't fetch on mount
-)
-
-// Trigger fetch manually when needed
-await execute()
-```
-
-**Reactive parameters still work:**
-Even with `autoUpdate: false`, reactive parameters are still tracked. You can manually call `execute()` to refetch with updated parameters.
-
-### Complete Example: Reactive List with Filters
-
-Here's a complete example showing how to use reactive objects returned by `useList`:
-
-```typescript
-import { ref } from 'vue'
-import { useUsers } from '@/composables/useUsers'
-
-const { useListUsers } = useUsers()
-
-// useList returns reactive objects for direct modification
-const { data: users, error, isLoading, filters, pagination, ordering } = useListUsers({
-  filters: { active: true },           // Initial filters
-  pagination: { page: 1, pageSize: 20 }, // Initial pagination (defaults: page=1, pageSize=50 if not provided)
-  ordering: [{ name: 'asc' }]              // Initial ordering
-})
-
-// Pagination defaults are applied when pagination is provided (even if empty)
-const { pagination: defaultPagination } = useListUsers({ pagination: {} })
-// → defaultPagination = { page: 1, pageSize: 50 }
-
-// User interactions modify reactive objects directly - triggers auto-refetch
-const handleSearch = (term: string) => {
-  if (term) {
-    filters.search = term // ✅ Auto-refetches list
-  } else {
-    delete filters.search // ✅ Auto-refetches list
-  }
-}
-
-const handleStatusChange = (status: 'active' | 'inactive' | null) => {
-  if (status) {
-    filters.status = status // ✅ Auto-refetches list
-  } else {
-    delete filters.status // ✅ Auto-refetches list
-  }
-  pagination.page = 1 // ✅ Auto-refetches and resets to page 1
-}
-
-const handlePageChange = (page: number) => {
-  pagination.page = page // ✅ Auto-refetches list
-}
-
-const handleOrderingChange = (field: string, direction: 'asc' | 'desc' | 'none') => {
-  ordering.length = 0 // Clear existing ordering
-  if (direction !== 'none') {
-    ordering.push({ [field]: direction }) // ✅ Auto-refetches list
-  }
-}
-```
-
-### Manual Execution
-
-Disable auto-fetch and trigger manually:
-
-```typescript
-const { data, execute, isLoading, filters, pagination, ordering } = useListUsers({
-  filters: { active: true },
-  pagination: { page: 1, pageSize: 20 },
-  ordering: [{ name: 'asc' }],
-  onMount: false // Don't fetch on mount
-})
-
-// Modify reactive objects
-filters.active = false
-pagination.page = 2
-
-// Trigger fetch manually (with updated reactive params)
-await execute()
-```
-
-### Error Handling Patterns
-
-The `@fiscozen/data` package provides flexible error handling through reactive `error` refs and optional exception throwing. Choose the pattern that best fits your application's needs.
-
-#### Default Behavior: Reactive Error Handling
-
-By default, errors are stored in the `error` ref and **do not throw exceptions**. This allows you to handle errors reactively in your components.
-
-**Query Actions (useList, useRetrieve):**
-
-```typescript
-import { useUsers } from '@/composables/useUsers'
-
-const { useListUsers } = useUsers()
-const { data, error, isLoading } = useListUsers()
-
-// Check error reactively in template
-// <div v-if="error">{{ error.message }}</div>
-
-// Or watch for errors
-watch(error, (newError) => {
-  if (newError) {
-    console.error('Failed to load users:', newError.message)
-  }
-})
-```
-
-**Mutation Actions (useCreate, useUpdate, useDelete):**
-
-```typescript
-const { data, error, isLoading, execute } = useCreateUser()
-
-const handleCreate = async () => {
-  await execute({ name: 'John', email: 'john@example.com' })
-  
-  // Check error after execution
-  if (error.value) {
-    // Handle error (show toast, log, etc.)
-    showToast({ type: 'error', message: error.value.message })
-    return
-  }
-  
-  // Success - error.value is null
-  showToast({ type: 'success', message: 'User created!' })
-}
-```
-
-#### Global Error Handler
-
-Use Vue's `watch` to handle errors globally across your application:
-
-```typescript
-import { watch } from 'vue'
-import { useUsers } from '@/composables/useUsers'
-
-const { useListUsers } = useUsers()
-const { error } = useListUsers()
-
-watch(error, (newError) => {
-  if (newError) {
-    // Show toast notification
-    showToast({ type: 'error', message: newError.message })
-    
-    // Log to error tracking
-    Sentry.captureException(newError)
-  }
-})
-```
-
-#### Exception-Based Error Handling (throwOnError: true)
-
-Enable exception throwing for traditional try/catch patterns:
-
-**Per-Action Error Handling:**
-
-```typescript
-const { execute } = useCreateUser({ throwOnError: true })
-
-const handleCreate = async () => {
-  try {
-    await execute({ name: 'John' })
-    // Success
-    showToast({ type: 'success', message: 'User created!' })
-  } catch (err) {
-    // Handle error
-    if (err instanceof Error && err.message.includes('duplicate')) {
-      // Handle duplicate error specifically
-      showToast({ type: 'error', message: 'User already exists' })
-    } else {
-      // Handle other errors
-      showToast({ type: 'error', message: err.message })
-    }
-  }
-}
-```
-
-**Query Actions with throwOnError:**
-
-```typescript
-const { data, error, execute } = useListUsers(
-  { filters: { enabled: true } },
-  { throwOnError: true }
-)
-
-const loadUsers = async () => {
-  try {
-    await execute()
-    // Success - data.value contains the result
-  } catch (err) {
-    // Error - err contains the error, error.value also contains it
-    console.error('Failed to load users:', err)
-  }
-}
-```
-
-#### Error Handling Best Practices
-
-**✅ Recommended: Use reactive error handling for UI feedback**
-
-```typescript
-// Template
-<template>
-  <div v-if="error" class="error-message">
-    {{ error.message }}
-  </div>
-  <div v-if="isLoading">Loading...</div>
-  <div v-else>{{ data }}</div>
-</template>
-
-<script setup>
-const { data, error, isLoading } = useListUsers()
-</script>
-```
-
-**✅ Use throwOnError for programmatic error handling**
-
-```typescript
-// When you need to handle errors in async functions
-const processUsers = async () => {
-  const { execute } = useListUsers({ throwOnError: true })
-  
-  try {
-    await execute()
-    // Continue with processing
-  } catch (err) {
-    // Handle error and stop processing
-    return
-  }
-}
-```
-
-### Mutation Operations
-
-**Create:**
-```typescript
-const { execute: createUser, error, isLoading } = useCreateUser()
-
-await createUser({ 
-  name: 'John', 
-  email: 'john@example.com' 
-})
-```
-
-**Update:**
-```typescript
-const { execute: updateUser } = useUpdateUser()
-
-// Partial update (PATCH) - default
-await updateUser(1, { name: 'John Updated' })
-
-// Full replacement (PUT)
-await updateUser(1, { name: 'John', email: 'john@example.com' }, { 
-  partialUpdate: false 
-})
-```
-
-**Delete:**
-```typescript
-const { execute: deleteUser } = useDeleteUser()
-
-await deleteUser(1)
-```
-
-### Nested Relations
-
-For nested routes like `/users/1/invoices`, create helper composables:
-
-```typescript
-// src/composables/useUserInvoices.ts
-import { useActions } from '@fiscozen/data/rest'
-
-export const useUserInvoices = (userId: MaybeRefOrGetter<number>) => {
-  const basePath = computed(() => `users/${toValue(userId)}/invoices`)
-  const { useList, useRetrieve } = useActions<Invoice>(basePath)
-  
-  return {
-    useListUserInvoices: useList,
-    useRetrieveUserInvoice: useRetrieve
-  }
-}
-```
-
-### Batch Operations
-
-Handle multiple operations:
-
-```typescript
-const { execute: deleteUser } = useDeleteUser()
-
-// Delete multiple users
-const deleteMultiple = async (userIds: number[]) => {
-  const results = await Promise.allSettled(
-    userIds.map(id => deleteUser(id))
-  )
-  
-  // Handle partial failures
-  const failures = results.filter(r => r.status === 'rejected')
-  if (failures.length > 0) {
-    console.error('Some deletions failed:', failures)
-  }
-}
-```
-
----
-
-## 8. API Reference
-
-### Setup
-
-```typescript
-import { setupFzFetcher } from '@fiscozen/data/rest'
-
-setupFzFetcher({
-  baseUrl: 'https://api.example.com',
-  csrf: {
-    enabled: true,
-    cookieName: 'csrf_token',
-    headerName: 'X-CSRF-Token'
-  },
-  deduplication: true,
-  debug: false
-})
-```
-
-### Entity Composables
-
-```typescript
-export const useUsers = () => {
-  const { useRetrieve, useList, useCreate, useUpdate, useDelete } = 
-    useActions<User>('users')
-  
-  return {
-    useRetrieveUserById: useRetrieve,
-    useListUsers: useList,
-    useCreateUser: useCreate,
-    useUpdateUser: useUpdate,
-    useDeleteUser: useDelete
-  }
-}
-```
-
-### Query Actions (GET)
-
-#### QueryActionOptions
-
-```typescript
-interface QueryActionOptions<T> {
-  /**
-   * Auto-fetch on mount
-   * @default true
-   */
-  onMount?: boolean
-
-  /**
-   * Auto-refetch when reactive dependencies change
-   * @default false
-   */
-  autoUpdate?: MaybeRefOrGetter<boolean>
-
-  /**
-   * Initial data before first fetch completes
-   * @default null
-   */
-  initialData?: T | null
-
-  /**
-   * Enable request deduplication for this action
-   * @default undefined (uses global setting)
-   */
-  deduplication?: boolean
-
-  /**
-   * Whether to throw errors instead of storing them in the error ref
-   * 
-   * When `false` (default), errors are stored in `error` ref and can be checked reactively.
-   * When `true`, errors are thrown as exceptions and can be caught with try/catch.
-   * 
-   * @default false
-   */
-  throwOnError?: boolean
-}
-```
-
-#### ListActionParams
-
-Initial parameters for `useList` (used only for bootstrap). The composable returns reactive objects that can be modified directly.
-
-```typescript
-interface PaginationParams {
-  /**
-   * Page number (1-indexed)
-   */
-  page?: number
-
-  /**
-   * Number of items per page
-   */
-  pageSize?: number
-}
-
-interface ListActionParams {
-  /**
-   * Initial filter parameters (e.g., { by_city: 'rome', by_status: 'active' })
-   * 
-   * Values can be `null` or `undefined` to explicitly exclude a filter from the query string.
-   * After initialization, modify the returned `filters` reactive object directly.
-   */
-  filters?: MaybeRefOrGetter<Record<string, string | number | boolean | null | undefined>>
-
-  /**
-   * Initial ordering parameters as array (e.g., [{ name: 'asc' }, { created_at: 'desc' }])
-   * 
-   * Normalized to query string format: `ordering=name,-created_at`
-   * Descending fields are prefixed with '-' (e.g., '-created_at'), ascending fields have no prefix.
-   * Values with direction 'none' are excluded from the query string.
-   * After initialization, modify the returned `ordering` reactive array directly.
-   */
-  ordering?: MaybeRefOrGetter<Array<Record<string, 'asc' | 'desc' | 'none'>>>
-
-  /**
-   * Initial pagination parameters
-   * 
-   * If provided (even if empty), default values are applied:
-   * - `page`: defaults to `1` if not specified
-   * - `pageSize`: defaults to `50` if not specified
-   * 
-   * After initialization, modify the returned `pagination` reactive object directly.
-   * 
-   * @example
-   * // Empty pagination → applies defaults
-   * useList({ pagination: {} })
-   * // → pagination = { page: 1, pageSize: 50 }
-   * 
-   * // Partial pagination → applies defaults for missing values
-   * useList({ pagination: { page: 2 } })
-   * // → pagination = { page: 2, pageSize: 50 }
-   */
-  pagination?: MaybeRefOrGetter<PaginationParams>
-}
-```
-
-#### ListActionReturn
-
-```typescript
-interface ListActionReturn<T> {
-  /**
-   * The response data from server (array of entities)
-   */
-  data: ShallowRef<T[] | null>
-
-  /**
-   * Any errors that may have occurred
-   */
-  error: ShallowRef<Error | null>
-
-  /**
-   * Indicates if the action is currently being executed
-   */
-  isLoading: Readonly<ShallowRef<boolean>>
-
-  /**
-   * Manually trigger the fetch request
-   */
-  execute: () => Promise<void>
-
-  /**
-   * Reactive filters object - modify directly to trigger refetch
-   * 
-   * @example
-   * filters.name = 'Paolo' // ✅ Auto-refetches (if autoUpdate: true)
-   */
-  filters: Reactive<Record<string, string | number | boolean | null | undefined>>
-
-  /**
-   * Reactive ordering array - modify directly to trigger refetch
-   * 
-   * @example
-   * ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches (if autoUpdate: true)
-   */
-  ordering: Reactive<Array<Record<string, "asc" | "desc" | "none">>>
-
-  /**
-   * Reactive pagination object - modify directly to trigger refetch
-   * 
-   * @example
-   * pagination.page = 2 // ✅ Auto-refetches (if autoUpdate: true)
-   */
-  pagination: Reactive<PaginationParams>
-}
-```
-
-#### `usePaginatedList` - List Entities with Paginated Response
-
-Lists entities with paginated response format and metadata extraction. Works exactly like `useList` but handles paginated responses with metadata.
-
-**Signature:**
-```typescript
-usePaginatedList(): PaginatedListActionReturn<T>
-usePaginatedList(params: PaginatedListActionParams): PaginatedListActionReturn<T>
-usePaginatedList(options: PaginatedListActionOptions<T>): PaginatedListActionReturn<T>
-usePaginatedList(params: PaginatedListActionParams, options: PaginatedListActionOptions<T>): PaginatedListActionReturn<T>
-```
-
-**Response Format:**
-Expects API to return:
-```typescript
-{
-  results: T[],           // Array of entities (or custom key via dataKey option)
-  count: number,         // Total number of items across all pages
-  next: string | null,   // URL to next page (if available)
-  previous: string | null, // URL to previous page (if available)
-  pages: number,         // Total number of pages
-  page: number          // Current page number (1-indexed)
-}
-```
-
-**Parameters:**
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `params` | `PaginatedListActionParams` | ❌ No | Same as `ListActionParams` (filters, ordering, pagination) |
-| `options` | `PaginatedListActionOptions<T>` | ❌ No | Options including `dataKey` and `enableSingleOrdering` |
-
-**PaginatedListActionOptions:**
-
-| Option | Type | Required | Default | Description |
-|--------|------|----------|---------|-------------|
-| `dataKey` | `string` | ❌ No | `'results'` | Key name in paginated response that contains the data array |
-| `enableSingleOrdering` | `boolean` | ❌ No | `false` | When `true`, only one column can be ordered at a time |
-
-**Returns:**
-
-```typescript
-{
-  data: ShallowRef<T[] | null>,        // Array of entities (extracted from results)
-  error: ShallowRef<Error | null>,      // Error if request failed
-  isLoading: Readonly<ShallowRef<boolean>>, // Loading state
-  execute: () => Promise<void>,        // Manual execute function
-  meta: ComputedRef<PaginationMeta | null>, // Pagination metadata
-  filters: Reactive<Record<...>>,     // Reactive filters - modify directly
-  ordering: Reactive<Array<Record<...>>>, // Reactive ordering - modify directly
-  pagination: Reactive<PaginationParams>, // Reactive pagination - modify directly
-  handlePageChange: (page: number) => void, // Helper to change page
-  handleOrderingChange: (column: { field: string }, direction: 'asc' | 'desc' | 'none') => void // Helper to change ordering
-}
-```
-
-**PaginationMeta:**
-
-```typescript
-interface PaginationMeta {
-  count: number;    // Total number of items across all pages
-  pages: number;    // Total number of pages
-  page: number;    // Current page number (1-indexed, from API response)
-}
-```
-
-**Example:**
-
-```vue
-<script setup>
-import { useUsers } from '@/composables/useUsers'
-
-const { usePaginatedListUsers } = useUsers()
-
-// usePaginatedList returns reactive objects + meta
-const { 
-  data: users, 
-  meta, 
-  filters, 
-  pagination, 
-  ordering,
-  handlePageChange,
-  handleOrderingChange 
-} = usePaginatedListUsers({
-  filters: { active: true },
-  pagination: { page: 1, pageSize: 20 },
-  ordering: [{ name: 'asc' }]
-})
-
-// Access pagination metadata
-console.log(meta.value?.count)  // Total items
-console.log(meta.value?.pages)  // Total pages
-console.log(meta.value?.page)   // Current page
-
-// Change page using helper function
-const goToPage = (page: number) => {
-  handlePageChange(page) // ✅ Auto-refetches
-}
-
-// Change ordering using helper function
-const sortByName = () => {
-  handleOrderingChange({ field: 'name' }, 'asc') // ✅ Auto-refetches
-}
-
-// Or modify reactive objects directly
-filters.active = false        // ✅ Auto-refetches
-pagination.page = 2           // ✅ Auto-refetches
-ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches
-</script>
-
-<template>
-  <div>
-    <div v-if="meta">
-      <p>Total: {{ meta.count }} items</p>
-      <p>Page {{ meta.page }} of {{ meta.pages }}</p>
-    </div>
-    
-    <ul>
-      <li v-for="user in users" :key="user.id">{{ user.name }}</li>
-    </ul>
-    
-    <button @click="goToPage(2)">Go to page 2</button>
-  </div>
-</template>
-```
-
-**Custom Data Key:**
-
-If your API uses a different key name for the data array:
-
-```typescript
-// API returns { items: [...], count: 100, pages: 10 }
-const { data } = usePaginatedListUsers(
-  { filters: { active: true } },
-  { dataKey: 'items' } // Extract from 'items' instead of 'results'
-)
-```
-
-**Single Ordering Mode:**
-
-When `enableSingleOrdering: true`, only one column can be ordered at a time:
-
-```typescript
-const { handleOrderingChange } = usePaginatedListUsers(
-  { filters: { active: true } },
-  { enableSingleOrdering: true }
-)
-
-// Order by name - resets all other orderings
-handleOrderingChange({ field: 'name' }, 'asc')
-
-// Order by created_at - resets name ordering
-handleOrderingChange({ field: 'created_at' }, 'desc')
-
-// Remove ordering
-handleOrderingChange({ field: 'name' }, 'none')
-```
-
-### Mutation Actions (POST/PUT/PATCH/DELETE)
-
-#### MutationActionOptions
-
-```typescript
-interface MutationActionOptions {
-  /**
-   * Whether to throw errors instead of storing them in the error ref
-   * 
-   * When `false` (default), errors are stored in `error` ref and can be checked reactively.
-   * When `true`, errors are thrown as exceptions and can be caught with try/catch.
-   * 
-   * @default false
-   */
-  throwOnError?: boolean
-
-  // Reserved for future: optimistic?, retry?, debounce?, etc.
-}
-```
-
-#### UpdateOptions
-
-```typescript
-interface UpdateOptions {
-  /**
-   * Whether to perform partial update (PATCH) or full replacement (PUT)
-   * @default true (PATCH)
-   */
-  partialUpdate?: boolean
-}
-```
-
-### Action Return Types
-
-All actions return consistent interface:
-
-```typescript
-interface BaseActionReturn<T> {
-  /**
-   * Any errors that may have occurred
-   */
-  error: ShallowRef<Error | null>
-
-  /**
-   * The response data from server
-   */
-  data: ShallowRef<T | null>
-
-  /**
-   * Indicates if the action is currently being executed
-   */
-  isLoading: Readonly<ShallowRef<boolean>>
-}
-
-interface QueryActionReturn<T> extends BaseActionReturn<T> {
-  /**
-   * Manually execute the query action
-   */
-  execute: () => Promise<void>
-}
-```
-
----
-
-## 9. TypeScript Best Practices
-
-**Define Entity Types:**
-
-```typescript
-// src/types/user.ts
-export interface User {
-  id: number
-  name: string
-  email: string
-  enabled: boolean
-  createdAt: string
-  updatedAt: string
-}
-```
-
-**Use in Composable:**
-
-```typescript
-import { useActions } from '@fiscozen/data/rest'
-import type { User } from '@/types/user'
-
-export const useUsers = () => {
-  const { useRetrieve, useList, useCreate, useUpdate, useDelete } = 
-    useActions<User>('users')
-  
-  return {
-    useRetrieveUserById: useRetrieve,
-    useListUsers: useList,
-    useCreateUser: useCreate,
-    useUpdateUser: useUpdate,
-    useDeleteUser: useDelete
-  }
-}
-```
-
-**Type Safety in Components:**
-
-```vue
-<script setup lang="ts">
-import { useUsers } from '@/composables/useUsers'
-import type { User } from '@/types/user'
-
-const { useListUsers } = useUsers()
-const { data: users } = useListUsers()
-
-// users is typed as ShallowRef<User[] | null>
-users.value?.forEach((user: User) => {
-  console.log(user.name) // TypeScript knows user.name exists
-})
-</script>
-```
-
----
-
-## 10. Testing
-
-**Unit Test Entity Composable:**
-
-```typescript
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { setupFzFetcher, resetFzFetcher } from '@fiscozen/data/rest'
-import { useUsers } from './useUsers'
-
-describe('useUsers', () => {
-  beforeEach(() => {
-    resetFzFetcher()
-    setupFzFetcher({
-      baseUrl: 'https://api.test.com/v1',
-      csrf: { enabled: false }
-    })
-  })
-
-  it('should list users', async () => {
-    global.fetch = vi.fn(() =>
-      Promise.resolve(
-        new Response(JSON.stringify([{ id: 1, name: 'John' }]), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' }
-        })
-      )
-    ) as any
-
-    const { useListUsers } = useUsers()
-    const { data, execute } = useListUsers({ onMount: false })
-    
-    await execute()
-    
-    expect(data.value).toEqual([{ id: 1, name: 'John' }])
-  })
-})
-```
-
----
-
-## 11. Backend Conventions
-
-This package is designed to work with REST APIs following these conventions:
-
-### Pagination
-
-- **Format**: `page` / `page_size` query parameters
-- **Example**: `?page=1&page_size=20`
-
-### Sorting
-
-- **Format**: `ordering=name,-created_at` (comma-separated fields, descending fields prefixed with '-')
-- **Example**: `?ordering=name,-created_at`
-
-### Filtering
-
-- **Format**: Direct query parameters
-- **Example**: `?by_city=rome&by_status=active`
-
-### API Versioning
-
-- **Format**: URL-based versioning
-- **Example**: `/v1/users`, `/v2/users`
-
-### Nested Relations
-
-- **Format**: Nested routes
-- **Example**: `GET /users/1/invoices`, `GET /users/1/invoices/5`
-
-### Authentication
-
-- **Format**: Session cookies (CSRF protection supported)
-- **Token Refresh**: Handled by application (not by data layer)
-
-### Error Format
-
-- No standard format enforced - errors exposed via `error` ref for consumer to handle
-
----
-
-## 12. Development Guide
+## 6. Development Guide
 
 This section provides detailed information for developers working on the package internals, including architecture, code structure, and how to make fixes or add features.
 
-### 12.1 Package Structure
+### 6.1 Package Structure
 
 ```
 packages/data/
@@ -1576,6 +168,9 @@ packages/data/
 │   │   │   ├── retrieve/     # Retrieve action (GET by ID)
 │   │   │   ├── update/       # Update action (PUT/PATCH)
 │   │   │   ├── shared/       # Shared utilities for actions
+│   │   │   │   ├── merge.ts  # Merge helpers for custom actions
+│   │   │   │   ├── normalize.ts
+│   │   │   │   └── ...
 │   │   │   └── index.ts      # Main export (useActions factory)
 │   │   │
 │   │   └── http/             # HTTP layer (low-level)
@@ -1607,6 +202,7 @@ packages/data/
 │       ├── interceptors.spec.ts
 │       ├── integration.spec.ts
 │       ├── list.spec.ts
+│       ├── merge.spec.ts     # Merge helpers
 │       ├── setup.spec.ts
 │       └── url.spec.ts
 │
@@ -1616,7 +212,7 @@ packages/data/
 └── README.md
 ```
 
-### 12.2 Architecture Overview
+### 6.2 Architecture Overview
 
 The package follows a **layered architecture** with clear separation of concerns:
 
@@ -1647,9 +243,9 @@ The package follows a **layered architecture** with clear separation of concerns
 └───────────────────────────────────────────────────────┘
 ```
 
-### 12.3 Core Components Explained
+### 6.3 Core Components Explained
 
-#### 12.3.1 HTTP Layer (`src/rest/http/`)
+#### 6.3.1 HTTP Layer (`src/rest/http/`)
 
 **Entry Point: `index.ts`**
 - Exports `useFzFetch` - main HTTP wrapper function
@@ -1682,7 +278,7 @@ return chain.apply(baseFetchResult, context)
 - Testable in isolation
 - Composable functionality
 
-#### 12.3.2 Features (`features/`)
+#### 6.3.2 Features (`features/`)
 
 **Request Interceptor (`features/interceptors/request.ts`)**
 - Wraps `execute()` method to intercept requests before fetch
@@ -1703,7 +299,7 @@ return chain.apply(baseFetchResult, context)
   - Uses `watchEffect` to sync state reactively
   - Cleans up automatically when request completes
 
-#### 12.3.3 Managers (`managers/`)
+#### 6.3.3 Managers (`managers/`)
 
 **CSRF Manager (`managers/csrf/index.ts`)**
 - Reads CSRF token from cookie (handles values with `=`)
@@ -1716,7 +312,7 @@ return chain.apply(baseFetchResult, context)
 - Normalizes bodies (sorts JSON keys, creates identifier for non-JSON)
 - Tracks pending requests and watches for completion
 
-#### 12.3.4 Setup & State (`setup/`)
+#### 6.3.4 Setup & State (`setup/`)
 
 **`state.ts`**: Global singleton state
 - `fzFetcher`: `@vueuse/core` fetch instance
@@ -1732,7 +328,7 @@ return chain.apply(baseFetchResult, context)
 - `setupFzFetcher()`: Initializes global state
 - `resetFzFetcher()`: Resets state (useful for testing)
 
-#### 12.3.5 Utils (`utils/`)
+#### 6.3.5 Utils (`utils/`)
 
 **`error.ts`**: `normalizeError(error: unknown): Error`
 - Converts any error-like value to `Error` instance
@@ -1756,7 +352,7 @@ return chain.apply(baseFetchResult, context)
 - Normalizes `UseFzFetchOptions` for `@vueuse/core`
 - Handles default values and type conversions
 
-#### 12.3.6 Actions Layer (`actions/`)
+#### 6.3.6 Actions Layer (`actions/`)
 
 **Factory Pattern: `useActions<T>(basePath)`**
 - Returns object with 5 action creators:
@@ -1775,10 +371,27 @@ return chain.apply(baseFetchResult, context)
 
 **Shared Utilities (`shared/`):**
 - `types.ts`: Common types for all actions
-- `normalize.ts`: Normalizes action options
+- `normalize.ts`: Normalizes action options, `isParamsObject` (params vs options discrimination)
 - `error-handling.ts`: Centralized error handling
+- `merge.ts`: Merge helpers for custom actions (default + view → merge → action)
 
-### 12.4 How to Fix a Bug
+#### 6.3.7 Merge Helpers (`shared/merge.ts`)
+
+Merge helpers let **package consumers** build preconfigured actions (default params/options) while the view can override or add. **User-facing usage and examples:** Storybook > Documentation > Data Layer.
+
+**Location:** `src/rest/actions/shared/merge.ts`. Exported from `rest/actions/index.ts` and main `index.ts`.
+
+**Functions:** `mergeListActionArgs`, `mergeRetrieveActionArgs`, `mergeMutationActionArgs`.
+
+**List discrimination:** When the view passes a single argument, we distinguish params vs options via `isParamsObject` (presence of `filters`, `ordering`, or `pagination`). When `additionalOptions` is present, `additionalParamsOrOptions` is treated as params.
+
+**Merge semantics:** Filters and pagination: object spread (view wins on same key). Ordering: use view's if view provided an `ordering` key, else default. Options: object spread (view wins). Retrieve: `overridePk` overrides `defaultPk` when provided; options merged. Mutations: options merged.
+
+**Filter semantics (query layer):** `undefined` = omit from request (remove default filter); `null` = send to server. Implemented in `normalize.ts` (filters) and `http/utils/url.ts` (query params).
+
+**Tests:** `src/__tests__/merge.spec.ts` (discrimination, merge semantics, ref preservation, `toValue` on defaults).
+
+### 6.4 How to Fix a Bug
 
 #### Step 1: Identify the Problem
 
@@ -1857,7 +470,7 @@ pnpm --filter @fiscozen/data lint
 - Update JSDoc comments if behavior changed
 - Add examples if new use case
 
-### 12.5 How to Add a Feature
+### 6.5 How to Add a Feature
 
 #### Example: Adding Request Timeout Feature
 
@@ -1990,9 +603,9 @@ describe('Timeout Feature', () => {
 - Add examples
 - Update API reference
 
-### 12.6 Key Patterns & Conventions
+### 6.6 Key Patterns & Conventions
 
-#### 12.6.1 Wrapper Pattern
+#### 6.6.1 Wrapper Pattern
 
 **When to Use:**
 - Adding cross-cutting concerns (logging, timeout, retry)
@@ -2030,7 +643,7 @@ export const featureWrapper: Wrapper = {
 chain.add(featureWrapper)
 ```
 
-#### 12.6.2 Error Handling Pattern
+#### 6.6.2 Error Handling Pattern
 
 **Always use `normalizeError`:**
 ```typescript
@@ -2049,7 +662,7 @@ try {
 
 **Why:** Ensures consistent error types across the codebase.
 
-#### 12.6.3 State Synchronization Pattern
+#### 6.6.3 State Synchronization Pattern
 
 **When syncing state between fetch results, use `watchEffect`:**
 ```typescript
@@ -2072,7 +685,7 @@ const unwatchSync = watchEffect(() => {
 
 **Why:** `watchEffect` automatically tracks all accessed reactive properties, more efficient than explicit `watch` arrays.
 
-#### 12.6.4 URL Normalization Pattern
+#### 6.6.4 URL Normalization Pattern
 
 **Always normalize URLs for deduplication keys:**
 ```typescript
@@ -2083,7 +696,7 @@ const normalizedUrl = normalizeUrl(url) // Removes trailing slashes, sorts query
 
 **Why:** Ensures identical requests generate identical keys.
 
-#### 12.6.5 Testing Patterns
+#### 6.6.5 Testing Patterns
 
 **Unit Tests:**
 - Test one feature/function at a time
@@ -2120,7 +733,7 @@ describe('FeatureName', () => {
 })
 ```
 
-### 12.7 Common Tasks
+### 6.7 Common Tasks
 
 #### Adding a New Action Type
 
@@ -2163,7 +776,7 @@ console.log(state) // Inspect global state
 - Check browser Network tab for actual requests
 - Use Vue DevTools to inspect reactive state
 
-### 12.8 Code Quality Standards
+### 6.8 Code Quality Standards
 
 **TypeScript:**
 - No `any` types in public API
@@ -2191,7 +804,7 @@ console.log(state) // Inspect global state
 - Include `@example` for complex functions
 - Document limitations and edge cases
 
-### 12.9 File Naming Conventions
+### 6.9 File Naming Conventions
 
 - **Test files**: `__tests__/[feature].spec.ts` (NOT `.test.ts`)
 - **Type files**: `types.ts` in same directory or `types/[name].ts`
@@ -2199,7 +812,7 @@ console.log(state) // Inspect global state
 - **Feature modules**: `features/[feature-name]/[file].ts`
 - **Manager classes**: `managers/[manager-name]/index.ts`
 
-### 12.10 Testing Checklist
+### 6.10 Testing Checklist
 
 Before submitting a fix or feature:
 
@@ -2216,7 +829,7 @@ Before submitting a fix or feature:
 
 ---
 
-## 13. Architectural Decisions
+## 7. Architectural Decisions
 
 ### Singleton Pattern
 
@@ -2311,7 +924,7 @@ Configurable globally and per-action:
 
 ---
 
-## 13. Roadmap
+## 8. Roadmap
 
 ### v1.0 (Current) ✅ **COMPLETE**
 
@@ -2473,7 +1086,7 @@ This package is designed to work with REST APIs following these conventions:
 
 ---
 
-## 14. Appendix
+## 9. Appendix
 
 ### Glossary
 

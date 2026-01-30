@@ -42,9 +42,12 @@ export interface UseFzFetchOptions extends UseFetchOptions {
 
 /**
  * Parameters for useFzFetch function
+ *
+ * Query param values can be null; undefined means "omit from request".
+ * Null is sent to the server as the string "null".
  */
 export interface UseFzFetchParams {
-  queryParams?: MaybeRefOrGetter<Record<string, string | number | boolean>>;
+  queryParams?: MaybeRefOrGetter<Record<string, string | number | boolean | null>>;
   body?: BodyInit | null;
   headers?: Record<string, string>;
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS";

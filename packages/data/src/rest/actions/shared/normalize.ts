@@ -142,7 +142,7 @@ export const normalizeParams = (params: {
 }): UseFzFetchParams => {
   return {
     queryParams: computed(() => {
-      const queryParams: Record<string, string | number | boolean> = {};
+      const queryParams: Record<string, string | number | boolean | null> = {};
 
       // Filters: { by_city: 'san_diego' } → queryParams.by_city = 'san_diego'
       if (params.filters) {
@@ -166,8 +166,9 @@ export const normalizeParams = (params: {
           }
         }
 
+        // undefined = omit from request (e.g. remove default filter); null = send to server
         Object.entries(params.filters).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
+          if (value !== undefined) {
             queryParams[key] = value;
           }
         });

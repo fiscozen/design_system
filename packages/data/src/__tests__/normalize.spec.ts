@@ -112,7 +112,7 @@ describe("normalizeParams", () => {
       expect(queryParams.by_type).toBe("micro");
     });
 
-    it("should exclude null and undefined filter values", () => {
+    it("should exclude undefined filter values and include null (sent to server)", () => {
       const params = normalizeParams({
         filters: {
           by_city: "Rome",
@@ -124,7 +124,8 @@ describe("normalizeParams", () => {
       const queryParams = params.queryParams.value;
 
       expect(queryParams.by_city).toBe("Rome");
-      expect(queryParams.by_type).toBeUndefined();
+      // undefined = omit from request; null = send to server
+      expect(queryParams.by_type).toBe(null);
       expect(queryParams.by_status).toBeUndefined();
     });
   });
