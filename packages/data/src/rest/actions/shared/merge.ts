@@ -8,26 +8,55 @@ import type {
 import type { QueryActionOptions, MutationActionOptions } from "./types";
 import { isParamsObject } from "./normalize";
 
-/** Resolves ListActionParams to plain objects (toValue on nested refs/getters). */
+/**
+ * Resolves only the top-level params (filters, ordering, pagination) with toValue.
+ * Keeps refs/getters as values inside filters and pagination so that when the result
+ * is passed to useList/usePaginatedList, reactivity is preserved (watch triggers on ref change).
+ */
 function resolveListParams(
   params: ListActionParams | undefined,
 ): { filters: FilterParams; ordering: SortParams; pagination: PaginationParams } {
   if (!params || typeof params !== "object") {
     return { filters: {}, ordering: [], pagination: {} };
   }
-  const filters = (params.filters !== undefined && params.filters !== null
+  const filtersRaw = (params.filters !== undefined && params.filters !== null
     ? toValue(params.filters)
-    : {}) as FilterParams;
-  const ordering = (params.ordering !== undefined && params.ordering !== null
+    : {}) as Record<string, unknown>;
+  const orderingRaw = (params.ordering !== undefined && params.ordering !== null
     ? toValue(params.ordering)
     : []) as SortParams;
-  const pagination = (params.pagination !== undefined && params.pagination !== null
+  const paginationRaw = (params.pagination !== undefined && params.pagination !== null
     ? toValue(params.pagination)
     : {}) as PaginationParams;
+
+  const filters =
+    filtersRaw && typeof filtersRaw === "object" && !Array.isArray(filtersRaw)
+      ? (filtersRaw as FilterParams)
+      : {};
+  const ordering = Array.isArray(orderingRaw) ? orderingRaw : [];
+  // Only include keys that are present so merge spread preserves defaults (e.g. pageSize when additional has only page)
+  const pagination: PaginationParams = {};
+  if (
+    paginationRaw &&
+    typeof paginationRaw === "object" &&
+    !Array.isArray(paginationRaw)
+  ) {
+    if (paginationRaw.page !== undefined && paginationRaw.page !== null) {
+      (pagination as Record<string, unknown>).page = paginationRaw.page;
+    }
+    if (
+      paginationRaw.pageSize !== undefined &&
+      paginationRaw.pageSize !== null
+    ) {
+      (pagination as Record<string, unknown>).pageSize =
+        paginationRaw.pageSize;
+    }
+  }
+
   return {
-    filters: filters && typeof filters === "object" && !Array.isArray(filters) ? filters : {},
-    ordering: Array.isArray(ordering) ? ordering : [],
-    pagination: pagination && typeof pagination === "object" && !Array.isArray(pagination) ? pagination : {},
+    filters,
+    ordering,
+    pagination,
   };
 }
 
@@ -74,7 +103,8 @@ export interface MergeListActionArgsInput<T = unknown, TOptions = QueryActionOpt
 
 /**
  * Result of merging list action arguments.
- * Plain objects ready to pass to useList / usePaginatedList (defaults and view args resolved).
+ * Params and options ready to pass to useList / usePaginatedList. Refs as filter/pagination
+ * values are preserved so that reactivity is maintained (ref changes trigger refetch).
  */
 export interface MergeListActionArgsResult<T = unknown, TOptions = QueryActionOptions<T[]>> {
   params: ListActionParams;
@@ -87,6 +117,10 @@ export interface MergeListActionArgsResult<T = unknown, TOptions = QueryActionOp
  * Use when building a custom action (e.g. useSTSLists) that preconfigures filters/options
  * but allows the view to override ordering, pagination, options, or remove default filters
  * (pass filter key as undefined to omit from request; null is sent to the server).
+ *
+ * **Reactivity:** Refs/getters as filter or pagination values are preserved (not resolved),
+ * so when the result is passed to useList/usePaginatedList, changes to those refs trigger
+ * refetch (same behaviour as calling useList directly with refs in filters).
  *
  * @param input - Optional object with defaultParams, defaultOptions, additionalParamsOrOptions, additionalOptions
  * @returns Merged params and options to pass to useList or usePaginatedList
