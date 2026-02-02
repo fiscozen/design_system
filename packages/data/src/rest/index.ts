@@ -2,9 +2,12 @@
 export {
   useActions,
   createPaginatedListAction,
-  mergeListActionArgs,
-  mergeRetrieveActionArgs,
-  mergeMutationActionArgs,
+  callListActionWithDefaults,
+  callPaginatedListActionWithDefaults,
+  callRetrieveActionWithDefaults,
+  callCreateActionWithDefaults,
+  callUpdateActionWithDefaults,
+  callDeleteActionWithDefaults,
 } from "./actions";
 
 // HTTP

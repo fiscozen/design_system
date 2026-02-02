@@ -105,7 +105,7 @@ export type {
 } from "./list/types";
 export type {
   UsePaginatedListAction,
-  UsePaginatedListParamsOrOptions,
+  UsePaginatedListActionParamsOrOptions,
   UsePaginatedListActionOptions,
   UsePaginatedListActionParams,
   UsePaginatedListActionReturn,
@@ -132,18 +132,18 @@ export type {
 // Export paginated list action
 export { createPaginatedListAction } from "./paginated-list";
 
-// Merge helpers for custom actions (default + view → merge → action)
+// Call-action-with-defaults helpers: call action with default args merged with additional from the view
 export {
-  mergeListActionArgs,
-  mergeRetrieveActionArgs,
-  mergeMutationActionArgs,
+  callListActionWithDefaults,
+  callPaginatedListActionWithDefaults,
+  callRetrieveActionWithDefaults,
+  callCreateActionWithDefaults,
+  callUpdateActionWithDefaults,
+  callDeleteActionWithDefaults,
 } from "./shared/merge";
 export type {
   MergeListActionArgsInput,
-  MergeListActionArgsResult,
   MergeRetrieveActionArgsInput,
-  MergeRetrieveActionArgsResult,
   MergeMutationActionArgsInput,
-  MergeMutationActionArgsResult,
 } from "./shared/merge";
 

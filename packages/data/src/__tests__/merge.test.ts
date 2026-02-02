@@ -5,6 +5,10 @@ import {
   mergeRetrieveActionArgs,
   mergeMutationActionArgs,
 } from "../rest/actions/shared/merge";
+import type {
+  UsePaginatedListActionParamsOrOptions,
+  UsePaginatedListActionOptions,
+} from "../rest/actions";
 
 describe("mergeListActionArgs", () => {
   describe("when input is empty or undefined", () => {
@@ -268,6 +272,56 @@ describe("mergeListActionArgs", () => {
       expect(result.params.pagination.page).toBe(page);
       expect(result.params.pagination.pageSize).toBe(50);
       expect(toValue(result.params.pagination.page)).toBe(2);
+    });
+  });
+
+  describe("type inference for paginated list (no explicit generic)", () => {
+    interface Invoice {
+      id: number;
+      number: string;
+    }
+
+    it("infers TOptions as UsePaginatedListActionOptions when additionalOptions is typed", () => {
+      const paramsOrOptions: UsePaginatedListActionParamsOrOptions<Invoice> | undefined =
+        undefined;
+      const options: UsePaginatedListActionOptions<Invoice> | undefined = {
+        dataKey: "results",
+        enableSingleOrdering: false,
+      };
+
+      const { params: mergedParams, options: mergedOptions } = mergeListActionArgs({
+        defaultParams: {
+          filters: { status: "active" },
+          pagination: { page: 1, pageSize: 50 },
+        },
+        additionalParamsOrOptions: paramsOrOptions,
+        additionalOptions: options,
+      });
+
+      // If inference works, mergedOptions is UsePaginatedListActionOptions<Invoice>
+      // and assignable without cast to a variable of that type
+      const optionsForPaginatedList: UsePaginatedListActionOptions<Invoice> =
+        mergedOptions;
+
+      expect(optionsForPaginatedList.dataKey).toBe("results");
+      expect(mergedParams.filters).toEqual({ status: "active" });
+    });
+
+    it("infers TOptions when additionalParamsOrOptions is options-only (single arg)", () => {
+      const optionsOnly: UsePaginatedListActionParamsOrOptions<Invoice> = {
+        dataKey: "items",
+        onMount: true,
+      };
+
+      const { options: mergedOptions } = mergeListActionArgs({
+        defaultParams: { filters: { sts: true } },
+        additionalParamsOrOptions: optionsOnly,
+      });
+
+      const optionsForPaginatedList: UsePaginatedListActionOptions<Invoice> =
+        mergedOptions;
+
+      expect(optionsForPaginatedList.dataKey).toBe("items");
     });
   });
 });
