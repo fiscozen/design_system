@@ -37,7 +37,7 @@
 - ✅ Request deduplication (configurable globally and per-action)
 - ✅ Request and response interceptors (modify requests/responses, abort requests)
 - ✅ Debug logging (configurable via `setupFzFetcher({ debug: true })`)
-- ✅ Merge helpers for custom actions (`mergeListActionArgs`, `mergeRetrieveActionArgs`, `mergeMutationActionArgs`)
+- ✅ Call-with-defaults helpers for custom actions (`callListActionWithDefaults`, `callPaginatedListActionWithDefaults`, `callRetrieveActionWithDefaults`, `callCreateActionWithDefaults`, `callUpdateActionWithDefaults`, `callDeleteActionWithDefaults`)
 - ✅ Filter semantics: `undefined` = omit from request, `null` = send to server
 - ✅ TypeScript-first approach with complete type safety
 - ✅ Subpath exports (`@fiscozen/data/rest`)
@@ -132,9 +132,12 @@ export {
   setupFzFetcher,       // Setup configuration
   useFzFetch,           // Low-level HTTP wrapper
   resetFzFetcher,
-  mergeListActionArgs,      // Merge defaults + view args for list/paginated-list
-  mergeRetrieveActionArgs,  // Merge defaults + view args for retrieve
-  mergeMutationActionArgs,  // Merge defaults + view args for mutations
+  callListActionWithDefaults,
+  callPaginatedListActionWithDefaults,
+  callRetrieveActionWithDefaults,
+  callCreateActionWithDefaults,
+  callUpdateActionWithDefaults,
+  callDeleteActionWithDefaults,
 }
 
 export type * from './types'
@@ -377,13 +380,13 @@ return chain.apply(baseFetchResult, context)
 - `error-handling.ts`: Centralized error handling
 - `merge.ts`: Merge helpers for custom actions (default + view → merge → action)
 
-#### 6.3.7 Merge Helpers (`shared/merge.ts`)
+#### 6.3.7 Call-with-defaults helpers (`shared/merge.ts`)
 
-Merge helpers let **package consumers** build preconfigured actions (default params/options) while the view can override or add. **User-facing usage and examples:** Storybook > Documentation > Data Layer.
+Call-with-defaults helpers let **package consumers** call an action with **default args** merged with **additional args** from the view. One helper per action type: list, paginated list, retrieve, create, update, delete. **User-facing usage and examples:** Storybook > Documentation > Data Layer.
 
 **Location:** `src/rest/actions/shared/merge.ts`. Exported from `rest/actions/index.ts` and main `index.ts`.
 
-**Functions:** `mergeListActionArgs`, `mergeRetrieveActionArgs`, `mergeMutationActionArgs`.
+**Public API:** `callListActionWithDefaults`, `callPaginatedListActionWithDefaults`, `callRetrieveActionWithDefaults`, `callCreateActionWithDefaults`, `callUpdateActionWithDefaults`, `callDeleteActionWithDefaults`. Input types: `MergeListActionArgsInput`, `MergeRetrieveActionArgsInput`, `MergeMutationActionArgsInput`. Internal (used by the helpers, not re-exported): `mergeListActionArgs`, `mergeRetrieveActionArgs`, `mergeMutationActionArgs`.
 
 **List discrimination:** When the view passes a single argument, we distinguish params vs options via `isParamsObject` (presence of `filters`, `ordering`, or `pagination`). When `additionalOptions` is present, `additionalParamsOrOptions` is treated as params.
 

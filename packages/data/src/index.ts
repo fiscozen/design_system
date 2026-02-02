@@ -7,9 +7,12 @@ export {
   setupFzFetcher,
   useFzFetch,
   resetFzFetcher,
-  mergeListActionArgs,
-  mergeRetrieveActionArgs,
-  mergeMutationActionArgs,
+  callListActionWithDefaults,
+  callPaginatedListActionWithDefaults,
+  callRetrieveActionWithDefaults,
+  callCreateActionWithDefaults,
+  callUpdateActionWithDefaults,
+  callDeleteActionWithDefaults,
 } from "./rest";
 export type * from "./rest/actions";
 export type * from "./rest/http/types";

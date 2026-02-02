@@ -352,30 +352,32 @@ const handleCreate = async () => {
 
 ## Custom Actions & Merge Helpers
 
-When you need **preconfigured actions** (e.g. a list with fixed filters) but still want the view to override or add filters, ordering, pagination, or options, use the **merge helpers**. They merge default params/options with what the view passes; the view wins on conflicting keys. All merge helper inputs accept `MaybeRefOrGetter` so you can pass refs or computed for reactive defaults (e.g. default filters that depend on current user).
+When you need **preconfigured actions** (e.g. a list with fixed filters) but still want the view to override or add params/options, use the **call-with-defaults helpers**. Each helper **calls** the action with **default args** merged with **additional args** from the view — so the composable body is just `return callXActionWithDefaults(actionBase, { defaultParams, additionalParamsOrOptions, additionalOptions })`. Entity type inferred from the action; no generic to specify. All input fields accept `MaybeRefOrGetter` for reactive defaults.
 
-**Import:** `import { mergeListActionArgs, mergeRetrieveActionArgs, mergeMutationActionArgs } from '@fiscozen/data/rest'` (or `from '@fiscozen/data'`).
+**Import:** `import { callListActionWithDefaults, callPaginatedListActionWithDefaults, callRetrieveActionWithDefaults, callCreateActionWithDefaults, callUpdateActionWithDefaults, callDeleteActionWithDefaults } from '@fiscozen/data/rest'` (or `from '@fiscozen/data'`).
 
-### mergeListActionArgs (useList / usePaginatedList)
+### Call-with-defaults helpers — one per action type
 
-Use when building a custom list or paginated-list action with default filters/options.
+| Helper | Action | Input shape |
+|--------|--------|-------------|
+| `callListActionWithDefaults` | useList | defaultParams?, additionalParamsOrOptions?, additionalOptions? |
+| `callPaginatedListActionWithDefaults` | usePaginatedList | defaultParams?, defaultOptions?, additionalParamsOrOptions?, additionalOptions? |
+| `callRetrieveActionWithDefaults` | useRetrieve | defaultPk?, defaultOptions?, overridePk?, additionalOptions? |
+| `callCreateActionWithDefaults` | useCreate | defaultOptions?, additionalOptions? |
+| `callUpdateActionWithDefaults` | useUpdate | defaultOptions?, additionalOptions? |
+| `callDeleteActionWithDefaults` | useDelete | defaultOptions?, additionalOptions? |
 
-**Input:** `defaultParams?`, `defaultOptions?`, `additionalParamsOrOptions?`, `additionalOptions?` (all optional). The first argument from the view can be either params or options; when `additionalOptions` is present, `additionalParamsOrOptions` is treated as params. Otherwise it is discriminated via presence of `filters`, `ordering`, or `pagination`.
+**List / Paginated list:** Merge semantics: filters and pagination merged (view wins); ordering: view wins if provided; options: view wins.
 
-**Merge semantics:** Filters and pagination are merged (view wins on same key). Ordering: if the view provides an `ordering` key, use view's; otherwise use default. Options: view wins on same key.
+**Retrieve:** At least one of `defaultPk` or `overridePk` when calling the underlying action.
 
-**Filter value semantics (query layer):** `undefined` = omit from request (e.g. remove a default filter in merge); `null` = send to the server (query param present with value null). This applies to both list params and merge helpers.
+**Filter value semantics (list/paginated):** `undefined` = omit from request; `null` = send to the server.
 
 **Example – custom list with default filters:**
 
 ```typescript
 // e.g. src/composables/useInvoices.ts
-import { useActions, mergeListActionArgs } from '@fiscozen/data'
-import type {
-  UseListAction,
-  UseListActionParamsOrOptions,
-  UseListActionOptions,
-} from '@fiscozen/data'
+import { useActions, callListActionWithDefaults } from '@fiscozen/data'
 
 interface Invoice {
   id: number
@@ -386,49 +388,25 @@ interface Invoice {
 
 const { useList: useInvoicesListBase } = useActions<Invoice>('invoices/')
 
-/**
- * List composable with default STS filters; view can override filters, ordering, pagination, options.
- * Same overloads as useList: (), (paramsOrOptions), (params, options).
- * (Params/options inherit T from UseListAction<Invoice>; omit generic only when you don't need initialData.)
- */
-export const useInvoicesList: UseListAction<Invoice> = (
-  paramsOrOptions?: UseListActionParamsOrOptions<Invoice>,
-  options?: UseListActionOptions<Invoice>
-) => {
-  const { params: mergedParams, options: mergedOptions } = mergeListActionArgs({
+export const useInvoicesList = (paramsOrOptions?, options?) =>
+  callListActionWithDefaults(useInvoicesListBase, {
     defaultParams: {
       filters: { sts: true, sts_sent: false, sts_summary: '' },
     },
     additionalParamsOrOptions: paramsOrOptions,
     additionalOptions: options,
   })
-  return useInvoicesListBase(mergedParams, mergedOptions)
-}
 ```
 
 **Example – custom paginated list with default filters:**
 
 ```typescript
-// same file or another composable module
-import { useActions, mergeListActionArgs } from '@fiscozen/data'
-import type {
-  UsePaginatedListAction,
-  UsePaginatedListParamsOrOptions,
-  UsePaginatedListActionOptions,
-} from '@fiscozen/data'
+import { useActions, callPaginatedListActionWithDefaults } from '@fiscozen/data'
 
 const { usePaginatedList: useInvoicesPaginatedListBase } = useActions<Invoice>('invoices/')
 
-/**
- * Paginated list composable with default filters and options; view can override.
- * Same overloads as usePaginatedList: (), (paramsOrOptions), (params, options).
- * (Params/options inherit T from UsePaginatedListAction<Invoice>; omit generic only when you don't need initialData.)
- */
-export const useInvoicesPaginatedList: UsePaginatedListAction<Invoice> = (
-  paramsOrOptions?: UsePaginatedListParamsOrOptions,
-  options?: UsePaginatedListActionOptions
-) => {
-  const { params: mergedParams, options: mergedOptions } = mergeListActionArgs({
+export const useInvoicesPaginatedList = (paramsOrOptions?, options?) =>
+  callPaginatedListActionWithDefaults(useInvoicesPaginatedListBase, {
     defaultParams: {
       filters: { status: 'active' },
       pagination: { page: 1, pageSize: 20 },
@@ -437,50 +415,53 @@ export const useInvoicesPaginatedList: UsePaginatedListAction<Invoice> = (
     additionalParamsOrOptions: paramsOrOptions,
     additionalOptions: options,
   })
-  return useInvoicesPaginatedListBase(mergedParams, mergedOptions)
-}
 ```
 
-**In the view:** Same API as `useList` / `usePaginatedList`; you can override or add filters, ordering, pagination, options.
+**Example – custom retrieve with default pk:**
+
+```typescript
+import { useActions, callRetrieveActionWithDefaults } from '@fiscozen/data'
+
+const { useRetrieve: useRetrieveInvoiceBase } = useActions<Invoice>('invoices/')
+
+export const useRetrieveInvoice = (pk?, options?) =>
+  callRetrieveActionWithDefaults(useRetrieveInvoiceBase, {
+    defaultPk: userId, // ref/getter supported
+    overridePk: pk,
+    additionalOptions: options,
+  })
+```
+
+**Example – custom create with default options:**
+
+```typescript
+import { useActions, callCreateActionWithDefaults } from '@fiscozen/data'
+
+const { useCreate: useCreateInvoiceBase } = useActions<Invoice>('invoices/')
+
+export const useCreateInvoice = (options?) =>
+  callCreateActionWithDefaults(useCreateInvoiceBase, {
+    defaultOptions: { throwOnError: true },
+    additionalOptions: options,
+  })
+```
+
+**In the view:** Same API as the base actions; you can override or add params/options.
 
 ```vue
 <script setup>
 import { useInvoicesList, useInvoicesPaginatedList } from '@/composables/useInvoices'
 
-// List – override ordering and pagination
 const { data, filters, pagination, ordering } = useInvoicesList(
   { pagination: { page: 1, pageSize: 20 }, ordering: [{ created_at: 'desc' }] },
   { onMount: true, autoUpdate: true }
 )
 
-// PaginatedList – override page only; default filters and pageSize apply
 const { data: paginatedData, meta, handlePageChange } = useInvoicesPaginatedList(
   { pagination: { page: 2 } },
   { autoUpdate: true }
 )
 </script>
-```
-
-### mergeRetrieveActionArgs (useRetrieve)
-
-Use when building a custom retrieve action with default pk or options. At least one of `defaultPk` or `overridePk` should be provided. When provided, `overridePk` overrides the default (substitute pk). The view's `overridePk` is preserved as-is (refs kept for reactivity).
-
-**Input:** `defaultPk?`, `defaultOptions?`, `overridePk?`, `additionalOptions?`.
-
-### mergeMutationActionArgs (useCreate / useUpdate / useDelete)
-
-Use when building a custom mutation action with default options (e.g. `throwOnError: true`).
-
-**Input:** `defaultOptions?`, `additionalOptions?`.
-
-```typescript
-const useSTSCreateInvoice = (additionalOptions?) => {
-  const { options: mergedOptions } = mergeMutationActionArgs({
-    defaultOptions: { throwOnError: true },
-    additionalOptions,
-  })
-  return useCreateInvoice(mergedOptions)
-}
 ```
 
 ---
@@ -1545,7 +1526,7 @@ describe('useUsers', () => {
 
 - **Complete CRUD Operations** - `useRetrieve`, `useList`, `useCreate`, `useUpdate`, `useDelete`
 - **Reactive Parameters** - `useList` and `usePaginatedList` return reactive objects (`filters`, `pagination`, `ordering`) for direct modification. Automatic refetching when reactive objects change or when `pk` changes in `useRetrieve`
-- **Merge Helpers for Custom Actions** - `mergeListActionArgs`, `mergeRetrieveActionArgs`, `mergeMutationActionArgs` to build preconfigured actions (default params/options) while letting the view override or add filters, ordering, pagination, options
+- **Call-with-defaults helpers** - `callListActionWithDefaults`, `callPaginatedListActionWithDefaults`, `callRetrieveActionWithDefaults`, `callCreateActionWithDefaults`, `callUpdateActionWithDefaults`, `callDeleteActionWithDefaults` (call action with default args merged with additional from the view)
 - **Filter Semantics** - `undefined` = omit from request (e.g. remove default filter), `null` = send to server
 - **CSRF Protection** - Automatic token injection for mutation requests
 - **Request Deduplication** - Prevent duplicate identical requests

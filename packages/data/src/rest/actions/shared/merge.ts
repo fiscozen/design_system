@@ -1,10 +1,22 @@
 import { toValue, type MaybeRefOrGetter } from "vue";
 import type {
   UseListActionParams,
+  UseListAction,
+  UseListActionOptions,
+  UseListActionReturn,
   FilterParams,
   SortParams,
   PaginationParams,
 } from "../list/types";
+import type {
+  UsePaginatedListAction,
+  UsePaginatedListActionOptions,
+  UsePaginatedListActionReturn,
+} from "../paginated-list/types";
+import type { UseRetrieveAction, UseRetrieveActionReturn } from "../retrieve/types";
+import type { UseCreateAction, UseCreateActionReturn } from "../create/types";
+import type { UseUpdateAction, UseUpdateActionReturn } from "../update/types";
+import type { UseDeleteAction, UseDeleteActionReturn } from "../delete/types";
 import type { QueryActionOptions, MutationActionOptions } from "./types";
 import { isParamsObject } from "./normalize";
 
@@ -75,7 +87,10 @@ function resolveListParams(
  * When only additionalParamsOrOptions is present, it is discriminated via isParamsObject
  * (presence of filters, ordering, or pagination) to decide if it is params or options.
  */
-export interface MergeListActionArgsInput<T = unknown, TOptions = QueryActionOptions<T[]>> {
+export interface MergeListActionArgsInput<
+  T = unknown,
+  TOptions extends QueryActionOptions<unknown> = QueryActionOptions<T[]>,
+> {
   /**
    * Default params (filters, ordering, pagination).
    * Resolved at call time; supports ref/getter for reactive defaults (e.g. user: toValue(userId)).
@@ -106,7 +121,10 @@ export interface MergeListActionArgsInput<T = unknown, TOptions = QueryActionOpt
  * Params and options ready to pass to useList / usePaginatedList. Refs as filter/pagination
  * values are preserved so that reactivity is maintained (ref changes trigger refetch).
  */
-export interface MergeListActionArgsResult<T = unknown, TOptions = QueryActionOptions<T[]>> {
+export interface MergeListActionArgsResult<
+  T = unknown,
+  TOptions extends QueryActionOptions<unknown> = QueryActionOptions<T[]>,
+> {
   params: UseListActionParams;
   options: TOptions;
 }
@@ -118,6 +136,10 @@ export interface MergeListActionArgsResult<T = unknown, TOptions = QueryActionOp
  * but allows the view to override ordering, pagination, options, or remove default filters
  * (pass filter key as undefined to omit from request; null is sent to the server).
  *
+ * **Generic:** Can be omitted when the composable signature types params/options with the entity
+ * (e.g. options?: UseListActionOptions<Invoice>); TypeScript infers from additionalOptions/defaultOptions.
+ * Otherwise pass the entity type (and for paginated list also UsePaginatedListActionOptions<T>) on the call.
+ *
  * **Reactivity:** Refs/getters as filter or pagination values are preserved (not resolved),
  * so when the result is passed to useList/usePaginatedList, changes to those refs trigger
  * refetch (same behaviour as calling useList directly with refs in filters).
@@ -127,15 +149,18 @@ export interface MergeListActionArgsResult<T = unknown, TOptions = QueryActionOp
  *
  * @example
  * const useSTSLists = (paramsOrOptions?, options?) => {
- *   const { params, options: mergedOptions } = mergeListActionArgs<Invoice>({
+ *   const { params: mergedParams, options: mergedOptions } = mergeListActionArgs<Invoice>({
  *     defaultParams: { filters: { sts: true, user: toValue(userId) } },
  *     additionalParamsOrOptions: paramsOrOptions,
  *     additionalOptions: options,
  *   });
- *   return useInvoicesList(params, mergedOptions);
+ *   return useInvoicesList(mergedParams, mergedOptions);
  * };
  */
-export function mergeListActionArgs<T = unknown, TOptions extends QueryActionOptions<T[]> = QueryActionOptions<T[]>>(
+export function mergeListActionArgs<
+  T = unknown,
+  TOptions extends QueryActionOptions<unknown> = QueryActionOptions<T[]>,
+>(
   input?: MergeListActionArgsInput<T, TOptions>,
 ): MergeListActionArgsResult<T, TOptions> {
   const defaultParamsResolved = input?.defaultParams != null
@@ -181,6 +206,96 @@ export function mergeListActionArgs<T = unknown, TOptions extends QueryActionOpt
   } as TOptions;
 
   return { params, options };
+}
+
+/**
+ * Calls the list action with default args merged with additional args from the view.
+ *
+ * @param action - useList composable (from useActions)
+ * @param input - defaultParams, additionalParamsOrOptions, additionalOptions (see MergeListActionArgsInput)
+ * @returns Result of calling the action with merged params and options
+ */
+export function callListActionWithDefaults<T>(
+  action: UseListAction<T>,
+  input: MergeListActionArgsInput<T, UseListActionOptions<T>>,
+): UseListActionReturn<T> {
+  const { params, options } = mergeListActionArgs<T, UseListActionOptions<T>>(input);
+  return action(params, options);
+}
+
+/**
+ * Calls the paginated-list action with default args merged with additional args from the view.
+ *
+ * @param action - usePaginatedList composable (from useActions)
+ * @param input - defaultParams, defaultOptions, additionalParamsOrOptions, additionalOptions (see MergeListActionArgsInput)
+ * @returns Result of calling the action with merged params and options
+ */
+export function callPaginatedListActionWithDefaults<T>(
+  action: UsePaginatedListAction<T>,
+  input: MergeListActionArgsInput<T, UsePaginatedListActionOptions<T>>,
+): UsePaginatedListActionReturn<T> {
+  const { params, options } = mergeListActionArgs<T, UsePaginatedListActionOptions<T>>(input);
+  return action(params, options);
+}
+
+/**
+ * Calls the retrieve action with default args merged with additional args from the view.
+ *
+ * @param action - useRetrieve composable (from useActions)
+ * @param input - defaultPk, defaultOptions, overridePk, additionalOptions (see MergeRetrieveActionArgsInput)
+ * @returns Result of calling the action with merged pk and options
+ */
+export function callRetrieveActionWithDefaults<T>(
+  action: UseRetrieveAction<T>,
+  input: MergeRetrieveActionArgsInput<T>,
+): UseRetrieveActionReturn<T> {
+  const { pk, options } = mergeRetrieveActionArgs(input);
+  return action(pk, options);
+}
+
+/**
+ * Calls the create action with default options merged with additional options from the view.
+ *
+ * @param action - useCreate composable (from useActions)
+ * @param input - defaultOptions, additionalOptions (see MergeMutationActionArgsInput)
+ * @returns Result of calling the action with merged options
+ */
+export function callCreateActionWithDefaults<T>(
+  action: UseCreateAction<T>,
+  input: MergeMutationActionArgsInput,
+): UseCreateActionReturn<T> {
+  const { options } = mergeMutationActionArgs(input);
+  return action(options);
+}
+
+/**
+ * Calls the update action with default options merged with additional options from the view.
+ *
+ * @param action - useUpdate composable (from useActions)
+ * @param input - defaultOptions, additionalOptions (see MergeMutationActionArgsInput)
+ * @returns Result of calling the action with merged options
+ */
+export function callUpdateActionWithDefaults<T>(
+  action: UseUpdateAction<T>,
+  input: MergeMutationActionArgsInput,
+): UseUpdateActionReturn<T> {
+  const { options } = mergeMutationActionArgs(input);
+  return action(options);
+}
+
+/**
+ * Calls the delete action with default options merged with additional options from the view.
+ *
+ * @param action - useDelete composable (from useActions)
+ * @param input - defaultOptions, additionalOptions (see MergeMutationActionArgsInput)
+ * @returns Result of calling the action with merged options
+ */
+export function callDeleteActionWithDefaults<T>(
+  action: UseDeleteAction<T>,
+  input: MergeMutationActionArgsInput,
+): UseDeleteActionReturn<T> {
+  const { options } = mergeMutationActionArgs(input);
+  return action(options);
 }
 
 // =============================================================================

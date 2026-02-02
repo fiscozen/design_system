@@ -158,7 +158,7 @@ export interface UsePaginatedListActionReturn<T>
  * First argument of usePaginatedList when present (params or options).
  * @default T = unknown
  */
-export type UsePaginatedListParamsOrOptions<T = unknown> =
+export type UsePaginatedListActionParamsOrOptions<T = unknown> =
   | UsePaginatedListActionParams
   | UsePaginatedListActionOptions<T>;
 
@@ -168,7 +168,7 @@ export type UsePaginatedListParamsOrOptions<T = unknown> =
 export interface UsePaginatedListAction<T> {
   (): UsePaginatedListActionReturn<T>;
   (
-    paramsOrOptions: UsePaginatedListParamsOrOptions<T>,
+    paramsOrOptions: UsePaginatedListActionParamsOrOptions<T>,
   ): UsePaginatedListActionReturn<T>;
   (
     params: UsePaginatedListActionParams,
