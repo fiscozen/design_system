@@ -1,36 +1,81 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzBadge > black color matches snapshot 1`] = `
-"<div class="flex items-center justify-center gap-4 text-sm py-4 px-12 h-24 w-fit rounded-2xl bg-grey-500 text-core-white">
-  <!--v-if-->Fiscozen
+exports[`FzBadge > Snapshots > should have rounded-full class when default slot is a string with 1 character 1`] = `
+"<div class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-grey-500 text-core-white" title="1">
+  <!--v-if-->
+  <p class="text-[inherit] text-sm">1</p>
   <!--v-if-->
 </div>"
 `;
 
-exports[`FzBadge > error color matches snapshot 1`] = `
-"<div class="flex items-center justify-center gap-4 text-sm py-4 px-12 h-24 w-fit rounded-2xl bg-semantic-error-200 text-core-white">
-  <!--v-if-->Fiscozen
+exports[`FzBadge > Snapshots > should match snapshot - black color 1`] = `
+"<div class="flex items-center justify-center truncate max-w-full gap-4 py-4 px-12 h-24 w-fit rounded-2xl bg-grey-500 text-core-white" title="Fiscozen">
+  <!--v-if-->
+  <p class="text-[inherit] text-sm">Fiscozen</p>
   <!--v-if-->
 </div>"
 `;
 
-exports[`FzBadge > info color matches snapshot 1`] = `
-"<div class="flex items-center justify-center gap-4 text-sm py-4 px-12 h-24 w-fit rounded-2xl bg-semantic-info-200 text-core-white">
-  <!--v-if-->Fiscozen
+exports[`FzBadge > Snapshots > should match snapshot - error color 1`] = `
+"<div class="flex items-center justify-center truncate max-w-full gap-4 py-4 px-12 h-24 w-fit rounded-2xl bg-semantic-error-200 text-core-white" title="Fiscozen">
+  <!--v-if-->
+  <p class="text-[inherit] text-sm">Fiscozen</p>
   <!--v-if-->
 </div>"
 `;
 
-exports[`FzBadge > success color matches snapshot 1`] = `
-"<div class="flex items-center justify-center gap-4 text-sm py-4 px-12 h-24 w-fit rounded-2xl bg-semantic-success-200 text-core-white">
-  <!--v-if-->Fiscozen
+exports[`FzBadge > Snapshots > should match snapshot - info color 1`] = `
+"<div class="flex items-center justify-center truncate max-w-full gap-4 py-4 px-12 h-24 w-fit rounded-2xl bg-semantic-info-200 text-core-white" title="Fiscozen">
+  <!--v-if-->
+  <p class="text-[inherit] text-sm">Fiscozen</p>
   <!--v-if-->
 </div>"
 `;
 
-exports[`FzBadge > warning color matches snapshot 1`] = `
-"<div class="flex items-center justify-center gap-4 text-sm py-4 px-12 h-24 w-fit rounded-2xl bg-semantic-warning-200 text-core-black">
-  <!--v-if-->Fiscozen
+exports[`FzBadge > Snapshots > should match snapshot - large size 1`] = `
+"<div class="flex items-center justify-center truncate max-w-full gap-4 py-4 px-12 h-24 w-fit rounded-2xl bg-grey-500 text-core-white" title="Badge">
+  <!--v-if-->
+  <p class="text-[inherit] text-sm">Badge</p>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzBadge > Snapshots > should match snapshot - single character 1`] = `
+"<div class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-grey-500 text-core-white" title="1">
+  <!--v-if-->
+  <p class="text-[inherit] text-sm">1</p>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzBadge > Snapshots > should match snapshot - small size 1`] = `
+"<div class="flex items-center justify-center truncate max-w-full gap-4 py-4 px-12 h-24 w-fit rounded-2xl bg-grey-500 text-core-white" title="Badge">
+  <!--v-if-->
+  <p class="text-[inherit] text-sm">Badge</p>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzBadge > Snapshots > should match snapshot - success color 1`] = `
+"<div class="flex items-center justify-center truncate max-w-full gap-4 py-4 px-12 h-24 w-fit rounded-2xl bg-semantic-success-200 text-core-white" title="Fiscozen">
+  <!--v-if-->
+  <p class="text-[inherit] text-sm">Fiscozen</p>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzBadge > Snapshots > should match snapshot - warning color 1`] = `
+"<div class="flex items-center justify-center truncate max-w-full gap-4 py-4 px-12 h-24 w-fit rounded-2xl bg-semantic-warning-200 text-core-black" title="Fiscozen">
+  <!--v-if-->
+  <p class="text-[inherit] text-sm">Fiscozen</p>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzBadge > Snapshots > should not have rounded-full class when default slot is a string with more than 1 character 1`] = `
+"<div class="flex items-center justify-center truncate max-w-full gap-4 py-4 px-12 h-24 w-fit rounded-2xl bg-grey-500 text-core-white" title="Fiscozen">
+  <!--v-if-->
+  <p class="text-[inherit] text-sm">Fiscozen</p>
   <!--v-if-->
 </div>"
 `;

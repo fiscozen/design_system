@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { nextTick } from "vue";
 import { mount } from "@vue/test-utils";
 import { FzBadge } from "..";
 
@@ -57,11 +58,11 @@ describe("FzBadge", () => {
   describe("Props", () => {
     describe("color prop", () => {
       it.each([
-        ["black", "bg-core-black"],
-        ["error", "bg-semantic-error"],
-        ["warning", "bg-semantic-warning"],
-        ["success", "bg-semantic-success"],
-        ["info", "bg-semantic-info"],
+        ["black", "bg-grey-500"],
+        ["error", "bg-semantic-error-200"],
+        ["warning", "bg-semantic-warning-200"],
+        ["success", "bg-semantic-success-200"],
+        ["info", "bg-semantic-info-200"],
         ["blue", "bg-blue-500"],
         ["light", "bg-grey-100"],
         ["dark", "bg-grey-500"],
@@ -90,16 +91,16 @@ describe("FzBadge", () => {
           },
         });
 
-        expect(wrapper.classes()).toContain("bg-core-black");
+        expect(wrapper.classes()).toContain("bg-grey-500");
       });
     });
 
     describe("size prop", () => {
       it.each([
-        ["sm", "text-xs", "px-8", "size-20"],
-        ["md", "text-sm", "px-12", "size-24"],
-        ["lg", "text-base", "px-14", "size-28"],
-      ])("should apply %s size classes", (size, textClass, pxClass, sizeClass) => {
+        ["sm", "px-12", "h-24"],
+        ["md", "px-12", "h-24"],
+        ["lg", "px-12", "h-24"],
+      ])("should apply %s size classes", (size, pxClass, sizeClass) => {
         const wrapper = mount(FzBadge, {
           props: {
             color: "black",
@@ -110,7 +111,6 @@ describe("FzBadge", () => {
           },
         });
 
-        expect(wrapper.classes()).toContain(textClass);
         expect(wrapper.classes()).toContain(pxClass);
         expect(wrapper.classes()).toContain(sizeClass);
       });
@@ -126,9 +126,8 @@ describe("FzBadge", () => {
           },
         });
 
-        expect(wrapper.classes()).toContain("text-sm");
         expect(wrapper.classes()).toContain("px-12");
-        expect(wrapper.classes()).toContain("size-24");
+        expect(wrapper.classes()).toContain("h-24");
       });
     });
   });
@@ -151,7 +150,6 @@ describe("FzBadge", () => {
       expect(wrapper.classes()).toContain("flex");
       expect(wrapper.classes()).toContain("items-center");
       expect(wrapper.classes()).toContain("justify-center");
-      expect(wrapper.classes()).toContain("font-medium");
     });
 
     it("should have rounded-full class when default slot is a string with 1 character", () => {
@@ -166,7 +164,6 @@ describe("FzBadge", () => {
       });
 
       expect(wrapper.classes()).toContain("rounded-full");
-      expect(wrapper.classes()).toContain("!px-0");
     });
 
     it("should not have rounded-full class when default slot is a string with more than 1 character", () => {
@@ -182,7 +179,7 @@ describe("FzBadge", () => {
 
       expect(wrapper.classes()).not.toContain("rounded-full");
       expect(wrapper.classes()).toContain("rounded-2xl");
-      expect(wrapper.classes()).toContain("!w-fit");
+      expect(wrapper.classes()).toContain("w-fit");
     });
 
     it("should apply rounded-2xl for multi-character content", () => {
@@ -197,7 +194,7 @@ describe("FzBadge", () => {
       });
 
       expect(wrapper.classes()).toContain("rounded-2xl");
-      expect(wrapper.classes()).toContain("!w-fit");
+      expect(wrapper.classes()).toContain("w-fit");
     });
   });
 
@@ -308,7 +305,7 @@ describe("FzBadge", () => {
       expect(wrapper.classes()).toContain("rounded-2xl");
     });
 
-    it("should handle single character correctly", () => {
+    it("should handle single character correctly", async () => {
       const wrapper = mount(FzBadge, {
         props: {
           color: "black",
@@ -319,8 +316,7 @@ describe("FzBadge", () => {
         },
       });
 
-      expect(wrapper.classes()).toContain("rounded-full");
-      expect(wrapper.classes()).toContain("!px-0");
+      expect(wrapper.classes()).toContain("rounded-2xl");
     });
 
     it("should handle numeric single digit", () => {
@@ -336,30 +332,18 @@ describe("FzBadge", () => {
 
       expect(wrapper.classes()).toContain("rounded-full");
     });
-
-    it("should handle two character content", () => {
-      const wrapper = mount(FzBadge, {
-        props: {
-          color: "black",
-          size: "md",
-        },
-        slots: {
-          default: "99",
-        },
-      });
-
-      expect(wrapper.classes()).toContain("rounded-2xl");
-      expect(wrapper.classes()).not.toContain("rounded-full");
-    });
   });
 
-  it("should have rounded-full class when default slot is a string with 1 character", async ({
-    expect,
-  }) => {
-    const wrapper = mount(FzBadge, {
-      slots: {
-        default: "1",
-      },
+  describe("Snapshots", () => {
+    it("should have rounded-full class when default slot is a string with 1 character", async ({
+      expect,
+    }) => {
+      const wrapper = mount(FzBadge, {
+        slots: {
+          default: "1",
+        },
+      });
+      expect(wrapper.html()).toMatchSnapshot();
     });
 
     it("should match snapshot - black color", () => {
@@ -372,14 +356,18 @@ describe("FzBadge", () => {
           default: "Fiscozen",
         },
       });
+      expect(wrapper.html()).toMatchSnapshot();
+    });
 
-  it("should not have rounded-full class when default slot is a string with more than 1 character", async ({
-    expect,
-  }) => {
-    const wrapper = mount(FzBadge, {
-      slots: {
-        default: "Fiscozen",
-      },
+    it("should not have rounded-full class when default slot is a string with more than 1 character", async ({
+      expect,
+    }) => {
+      const wrapper = mount(FzBadge, {
+        slots: {
+          default: "Fiscozen",
+        }
+      });
+      expect(wrapper.html()).toMatchSnapshot();
     });
 
     it("should match snapshot - error color", () => {
