@@ -373,11 +373,20 @@ When you need **preconfigured actions** (e.g. a list with fixed filters) but sti
 
 **Filter value semantics (list/paginated):** `undefined` = omit from request; `null` = send to the server.
 
-**Example – custom list with default filters:**
+**Example – custom actions with default parameters:**
 
 ```typescript
 // e.g. src/composables/useInvoices.ts
-import { useActions, callListActionWithDefaults } from '@fiscozen/data'
+import { ref } from 'vue'
+import {
+  useActions,
+  callListActionWithDefaults,
+  callPaginatedListActionWithDefaults,
+  callRetrieveActionWithDefaults,
+  callCreateActionWithDefaults,
+  callUpdateActionWithDefaults,
+  callDeleteActionWithDefaults,
+} from '@fiscozen/data'
 
 interface Invoice {
   id: number
@@ -386,71 +395,79 @@ interface Invoice {
   created_at: string
 }
 
-const { useList: useInvoicesListBase } = useActions<Invoice>('invoices/')
+export const useInvoices = () => {
+  const {
+    useList,
+    usePaginatedList,
+    useRetrieve,
+    useCreate,
+    useUpdate,
+    useDelete,
+  } = useActions<Invoice>('invoices/')
 
-export const useInvoicesList = (paramsOrOptions?, options?) =>
-  callListActionWithDefaults(useInvoicesListBase, {
-    defaultParams: {
-      filters: { sts: true, sts_sent: false, sts_summary: '' },
-    },
-    additionalParamsOrOptions: paramsOrOptions,
-    additionalOptions: options,
-  })
+  const useInvoicesList = (paramsOrOptions?, options?) =>
+    callListActionWithDefaults(useList, {
+      defaultParams: {
+        filters: { sts: true, sts_sent: false, sts_summary: '' },
+      },
+      additionalParamsOrOptions: paramsOrOptions,
+      additionalOptions: options,
+    })
+
+  const useInvoicesPaginatedList = (paramsOrOptions?, options?) =>
+    callPaginatedListActionWithDefaults(usePaginatedList, {
+      defaultParams: {
+        filters: { status: 'active' },
+        pagination: { page: 1, pageSize: 20 },
+      },
+      defaultOptions: { dataKey: 'results', enableSingleOrdering: false },
+      additionalParamsOrOptions: paramsOrOptions,
+      additionalOptions: options,
+    })
+
+  const useRetrieveInvoice = (pk?, options?) =>
+    callRetrieveActionWithDefaults(useRetrieve, {
+      defaultPk: 68,
+      overridePk: pk,
+      additionalOptions: options,
+    })
+
+  const useCreateInvoice = (options?) =>
+    callCreateActionWithDefaults(useCreate, {
+      defaultOptions: { throwOnError: true },
+      additionalOptions: options,
+    })
+
+  const useUpdateInvoice = (options?) =>
+    callUpdateActionWithDefaults(useUpdate, {
+      defaultOptions: {},
+      additionalOptions: options,
+    })
+
+  const useDeleteInvoice = (options?) =>
+    callDeleteActionWithDefaults(useDelete, {
+      defaultOptions: {},
+      additionalOptions: options,
+    })
+
+  return {
+    useInvoicesList,
+    useInvoicesPaginatedList,
+    useRetrieveInvoice,
+    useCreateInvoice,
+    useUpdateInvoice,
+    useDeleteInvoice,
+  }
+}
 ```
 
-**Example – custom paginated list with default filters:**
-
-```typescript
-import { useActions, callPaginatedListActionWithDefaults } from '@fiscozen/data'
-
-const { usePaginatedList: useInvoicesPaginatedListBase } = useActions<Invoice>('invoices/')
-
-export const useInvoicesPaginatedList = (paramsOrOptions?, options?) =>
-  callPaginatedListActionWithDefaults(useInvoicesPaginatedListBase, {
-    defaultParams: {
-      filters: { status: 'active' },
-      pagination: { page: 1, pageSize: 20 },
-    },
-    defaultOptions: { dataKey: 'results', enableSingleOrdering: false },
-    additionalParamsOrOptions: paramsOrOptions,
-    additionalOptions: options,
-  })
-```
-
-**Example – custom retrieve with default pk:**
-
-```typescript
-import { useActions, callRetrieveActionWithDefaults } from '@fiscozen/data'
-
-const { useRetrieve: useRetrieveInvoiceBase } = useActions<Invoice>('invoices/')
-
-export const useRetrieveInvoice = (pk?, options?) =>
-  callRetrieveActionWithDefaults(useRetrieveInvoiceBase, {
-    defaultPk: userId, // ref/getter supported
-    overridePk: pk,
-    additionalOptions: options,
-  })
-```
-
-**Example – custom create with default options:**
-
-```typescript
-import { useActions, callCreateActionWithDefaults } from '@fiscozen/data'
-
-const { useCreate: useCreateInvoiceBase } = useActions<Invoice>('invoices/')
-
-export const useCreateInvoice = (options?) =>
-  callCreateActionWithDefaults(useCreateInvoiceBase, {
-    defaultOptions: { throwOnError: true },
-    additionalOptions: options,
-  })
-```
-
-**In the view:** Same API as the base actions; you can override or add params/options.
+**In the view:** Call `useInvoices()` once, then use the returned actions. Same API as the base actions; you can override or add params/options.
 
 ```vue
 <script setup>
-import { useInvoicesList, useInvoicesPaginatedList } from '@/composables/useInvoices'
+import { useInvoices } from '@/composables/useInvoices'
+
+const { useInvoicesList, useInvoicesPaginatedList } = useInvoices()
 
 const { data, filters, pagination, ordering } = useInvoicesList(
   { pagination: { page: 1, pageSize: 20 }, ordering: [{ created_at: 'desc' }] },
