@@ -128,7 +128,7 @@ export interface UseActionsReturn<T> {
 
   /**
    * List/query multiple entities with pagination support and metadata (GET /resource)
-   * 
+   *
    * Works like useList but handles paginated responses with metadata (count, pages, page).
    * Pagination is always enabled with defaults (page: 1, pageSize: 50).
    */

@@ -1,6 +1,11 @@
 import type { BaseActionReturn, MutationActionOptions } from "../shared/types";
 
 /**
+ * Options for useCreate. Alias for MutationActionOptions for consistent naming.
+ */
+export type UseCreateActionOptions = MutationActionOptions;
+
+/**
  * Return type for useCreate action
  */
 export interface UseCreateActionReturn<T> extends BaseActionReturn<T> {
@@ -17,5 +22,5 @@ export interface UseCreateActionReturn<T> extends BaseActionReturn<T> {
  * Create a new entity (POST)
  */
 export interface UseCreateAction<T> {
-  (options?: MutationActionOptions): UseCreateActionReturn<T>;
+  (options?: UseCreateActionOptions): UseCreateActionReturn<T>;
 }

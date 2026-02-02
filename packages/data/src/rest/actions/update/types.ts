@@ -1,9 +1,14 @@
 import type { BaseActionReturn, MutationActionOptions } from "../shared/types";
 
 /**
- * Options for update operations
+ * Options for useUpdate. Alias for MutationActionOptions for consistent naming.
  */
-export interface UpdateOptions {
+export type UseUpdateActionOptions = MutationActionOptions;
+
+/**
+ * Options for update execute (partial vs full replacement)
+ */
+export interface UseUpdateExecuteOptions {
   /**
    * Whether to perform a partial update (PATCH) or full replacement (PUT)
    *
@@ -21,13 +26,13 @@ export interface UseUpdateActionReturn<T> extends BaseActionReturn<T> {
    *
    * @param pk - Primary key of the entity to update
    * @param payload - Data to update
-   * @param options - Update options (partialUpdate defaults to true)
+   * @param options - Execute options (partialUpdate defaults to true)
    * @returns Promise that resolves when the request completes
    */
   execute: (
     pk: string | number,
     payload: Partial<T>,
-    options?: UpdateOptions,
+    options?: UseUpdateExecuteOptions,
   ) => Promise<void>;
 }
 
@@ -35,5 +40,5 @@ export interface UseUpdateActionReturn<T> extends BaseActionReturn<T> {
  * Update an existing entity (PUT/PATCH)
  */
 export interface UseUpdateAction<T> {
-  (options?: MutationActionOptions): UseUpdateActionReturn<T>;
+  (options?: UseUpdateActionOptions): UseUpdateActionReturn<T>;
 }

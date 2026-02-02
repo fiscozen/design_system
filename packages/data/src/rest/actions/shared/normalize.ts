@@ -247,7 +247,7 @@ export const normalizeResponse = <T>(
  *
  * Note: This returns only the base QueryActionReturn. The calling code
  * (createListAction) adds filters, ordering, and pagination reactive objects
- * to create the full ListActionReturn.
+ * to create the full UseListActionReturn.
  *
  * @param response - UseFzFetchReturn from useFzFetch (expects array type)
  * @param throwOnError - Whether to throw errors instead of storing in error ref

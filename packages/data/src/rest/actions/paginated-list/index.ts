@@ -1,8 +1,8 @@
 import { computed, watch } from "vue";
 import type {
   UsePaginatedListAction,
-  PaginatedListActionParams,
-  PaginatedListActionOptions,
+  UsePaginatedListActionParams,
+  UsePaginatedListActionOptions,
   PaginatedResponse,
   PaginationMeta,
 } from "./types";
@@ -51,14 +51,14 @@ import { DEFAULT_DATA_KEY } from "../../http/config";
  * - `pageSize`: defaults to `50` if not specified
  *
  * @param basePath - Base API path for the resource
- * @param paramsOrOptions - Either PaginatedListActionParams or PaginatedListActionOptions
- * @param options - Optional PaginatedListActionOptions (when params are provided)
- * @returns PaginatedListActionReturn with data, error, isLoading, execute, meta, filters, ordering, pagination, handlePageChange, handleOrderingChange
+ * @param paramsOrOptions - Either UsePaginatedListActionParams or UsePaginatedListActionOptions
+ * @param options - Optional UsePaginatedListActionOptions (when params are provided)
+ * @returns UsePaginatedListActionReturn with data, error, isLoading, execute, meta, filters, ordering, pagination, handlePageChange, handleOrderingChange
  */
 export const createPaginatedListAction = <T>(
   basePath: string,
-  paramsOrOptions?: PaginatedListActionParams | PaginatedListActionOptions<T>,
-  options?: PaginatedListActionOptions<T>,
+  paramsOrOptions?: UsePaginatedListActionParams | UsePaginatedListActionOptions<T>,
+  options?: UsePaginatedListActionOptions<T>,
 ): ReturnType<UsePaginatedListAction<T>> => {
   // Extract dataKey from options (default: 'results')
   const dataKey = extractOptionValue(
@@ -81,7 +81,7 @@ export const createPaginatedListAction = <T>(
   const optionsToExtract = extractOptionsObject(
     options,
     paramsOrOptions,
-  ) as PaginatedListActionOptions<T>;
+  ) as UsePaginatedListActionOptions<T>;
 
   const {
     dataKey: _dataKeyUnused,
@@ -96,8 +96,8 @@ export const createPaginatedListAction = <T>(
   // This ensures pagination defaults (page: 1, pageSize: 50) are always applied
   // If pagination is not provided, add it as empty object so defaults are applied
   type ParamsWithPagination =
-    | PaginatedListActionParams
-    | PaginatedListActionOptions<T>
+    | UsePaginatedListActionParams
+    | UsePaginatedListActionOptions<T>
     | undefined;
 
   const paramsWithPagination: ParamsWithPagination = (() => {

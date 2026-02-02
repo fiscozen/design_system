@@ -6,7 +6,7 @@ import type {
   PaginationParams,
   FilterParams,
   SortParams,
-  ListActionParams,
+  UseListActionParams,
 } from "../list/types";
 import type { UseActionOptions } from "./types";
 import {
@@ -28,14 +28,14 @@ import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "../../http/config";
  * - Response normalization function
  *
  * @param basePath - Base API path for the resource
- * @param paramsOrOptions - Either ListActionParams or UseActionOptions
+ * @param paramsOrOptions - Either UseListActionParams or UseActionOptions
  * @param options - Optional UseActionOptions (when params are provided)
  * @param normalizeResponseFn - Function to normalize the response
  * @returns Base list action return with filters, ordering, pagination
  */
 export const createListBase = <TResponse, TData>(
   basePath: string,
-  paramsOrOptions: ListActionParams | UseActionOptions | undefined,
+  paramsOrOptions: UseListActionParams | UseActionOptions | undefined,
   options: UseActionOptions | undefined,
   normalizeResponseFn: (
     response: UseFzFetchReturn<TResponse>,
