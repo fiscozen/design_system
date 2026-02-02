@@ -5,6 +5,7 @@ import {
   createPaginatedListAction,
 } from "../rest";
 import type { PaginatedResponse } from "../rest/actions/paginated-list/types";
+import { getFirstFetchCallUrl } from "./test-utils";
 
 interface User {
   id: number;
@@ -180,7 +181,7 @@ describe("createPaginatedListAction", () => {
 
       await execute();
 
-      const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
+      const callUrl = getFirstFetchCallUrl();
       const url = new URL(callUrl);
 
       expect(url.searchParams.get("ordering")).toBe("name,-created_at");
@@ -214,7 +215,7 @@ describe("createPaginatedListAction", () => {
 
       await execute();
 
-      const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
+      const callUrl = getFirstFetchCallUrl();
       const url = new URL(callUrl);
 
       expect(url.searchParams.get("ordering")).toBe("name,-status");
@@ -320,7 +321,7 @@ describe("createPaginatedListAction", () => {
 
       await execute();
 
-      const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
+      const callUrl = getFirstFetchCallUrl();
       const url = new URL(callUrl);
       expect(url.searchParams.get("page")).toBe("2");
     });

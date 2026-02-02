@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { setupFzFetcher, resetFzFetcher, useActions } from "../rest";
+import { getFirstFetchCallUrl } from "./test-utils";
 
 describe("useList - Pagination Defaults", () => {
   beforeEach(() => {
@@ -73,7 +74,7 @@ describe("useList - Pagination Defaults", () => {
       }),
     );
 
-    const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
+    const callUrl = getFirstFetchCallUrl();
     const url = new URL(callUrl);
     expect(url.searchParams.get("page")).toBe("1");
     expect(url.searchParams.get("page_size")).toBe("50");
@@ -108,7 +109,7 @@ describe("useList - Ordering", () => {
 
     await execute();
 
-    const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
+    const callUrl = getFirstFetchCallUrl();
     const url = new URL(callUrl);
 
     expect(url.searchParams.get("ordering")).toBe("name,-created_at");
@@ -124,7 +125,7 @@ describe("useList - Ordering", () => {
 
     await execute();
 
-    const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
+    const callUrl = getFirstFetchCallUrl();
     const url = new URL(callUrl);
 
     expect(url.searchParams.get("ordering")).toBe("name,-status");
@@ -140,7 +141,7 @@ describe("useList - Ordering", () => {
 
     await execute();
 
-    const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
+    const callUrl = getFirstFetchCallUrl();
     const url = new URL(callUrl);
 
     expect(url.searchParams.get("ordering")).toBe("name,-created_at,status");
@@ -152,7 +153,7 @@ describe("useList - Ordering", () => {
 
     await execute();
 
-    const callUrl = (global.fetch as { mock: { calls: [RequestInfo, RequestInit?][] } }).mock.calls[0][0];
+    const callUrl = getFirstFetchCallUrl();
     const url = new URL(callUrl);
 
     expect(url.searchParams.get("ordering")).toBeNull();
