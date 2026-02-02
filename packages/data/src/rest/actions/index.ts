@@ -80,7 +80,7 @@ export const useActions: UseActions = <T>(basePath: string) => {
   };
 };
 
-// Re-export types for backward compatibility
+// Re-export types (grouped by layer: shared → retrieve → list → paginated-list → create → update → delete)
 export type {
   UseActions,
   UseActionsReturn,
@@ -91,26 +91,43 @@ export type {
 export type {
   UseRetrieveAction,
   UseRetrieveActionReturn,
+  UseRetrieveActionOptions,
 } from "./retrieve/types";
 export type {
   UseListAction,
-  ListActionParams,
-  ListActionReturn,
+  UseListActionParamsOrOptions,
+  UseListActionOptions,
+  UseListActionParams,
+  UseListActionReturn,
+  FilterParams,
+  SortParams,
+  PaginationParams,
 } from "./list/types";
 export type {
   UsePaginatedListAction,
-  PaginatedListActionParams,
-  PaginatedListActionReturn,
+  UsePaginatedListParamsOrOptions,
+  UsePaginatedListActionOptions,
+  UsePaginatedListActionParams,
+  UsePaginatedListActionReturn,
   PaginatedResponse,
   PaginationMeta,
 } from "./paginated-list/types";
-export type { UseCreateAction, UseCreateActionReturn } from "./create/types";
+export type {
+  UseCreateAction,
+  UseCreateActionReturn,
+  UseCreateActionOptions,
+} from "./create/types";
 export type {
   UseUpdateAction,
   UseUpdateActionReturn,
-  UpdateOptions,
+  UseUpdateExecuteOptions,
+  UseUpdateActionOptions,
 } from "./update/types";
-export type { UseDeleteAction, UseDeleteActionReturn } from "./delete/types";
+export type {
+  UseDeleteAction,
+  UseDeleteActionReturn,
+  UseDeleteActionOptions,
+} from "./delete/types";
 
 // Export paginated list action
 export { createPaginatedListAction } from "./paginated-list";

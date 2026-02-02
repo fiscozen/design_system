@@ -51,12 +51,11 @@ export interface PaginationParams {
 }
 
 /**
- * Parameters for list/collection queries
+ * Params for useList (first argument when passing params only).
  *
- * These are initial values used only for bootstrap.
- * The composable returns reactive objects that can be modified directly.
+ * Initial values used only for bootstrap; composable returns reactive objects that can be modified directly.
  */
-export interface ListActionParams {
+export interface UseListActionParams {
   /**
    * Initial filter parameters (e.g., { by_city: 'Rome', by_type: 'micro' }).
    *
@@ -103,9 +102,9 @@ export interface ListActionParams {
 }
 
 /**
- * Return type for useList action
+ * Return type for useList
  */
-export interface ListActionReturn<T>
+export interface UseListActionReturn<T>
   extends Omit<QueryActionReturn<T[]>, "data"> {
   /**
    * The response data from server (array of entities)
@@ -138,15 +137,30 @@ export interface ListActionReturn<T>
 }
 
 /**
+ * Options for useList (second argument when present).
+ * Alias for QueryActionOptions<T[]>.
+ * @default T = unknown
+ */
+export type UseListActionOptions<T = unknown> = QueryActionOptions<T[]>;
+
+/**
+ * First argument of useList when present (params or options).
+ * @default T = unknown
+ */
+export type UseListActionParamsOrOptions<T = unknown> =
+  | UseListActionParams
+  | UseListActionOptions<T>;
+
+/**
  * List/query multiple entities with optional filters, sorting, and pagination
  */
 export interface UseListAction<T> {
-  (): ListActionReturn<T>;
+  (): UseListActionReturn<T>;
   (
-    paramsOrOptions: ListActionParams | QueryActionOptions<T[]>,
-  ): ListActionReturn<T>;
+    paramsOrOptions: UseListActionParamsOrOptions<T>,
+  ): UseListActionReturn<T>;
   (
-    params: ListActionParams,
-    options: QueryActionOptions<T[]>,
-  ): ListActionReturn<T>;
+    params: UseListActionParams,
+    options: UseListActionOptions<T>,
+  ): UseListActionReturn<T>;
 }

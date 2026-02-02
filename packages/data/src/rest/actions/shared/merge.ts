@@ -1,6 +1,6 @@
 import { toValue, type MaybeRefOrGetter } from "vue";
 import type {
-  ListActionParams,
+  UseListActionParams,
   FilterParams,
   SortParams,
   PaginationParams,
@@ -14,7 +14,7 @@ import { isParamsObject } from "./normalize";
  * is passed to useList/usePaginatedList, reactivity is preserved (watch triggers on ref change).
  */
 function resolveListParams(
-  params: ListActionParams | undefined,
+  params: UseListActionParams | undefined,
 ): { filters: FilterParams; ordering: SortParams; pagination: PaginationParams } {
   if (!params || typeof params !== "object") {
     return { filters: {}, ordering: [], pagination: {} };
@@ -80,7 +80,7 @@ export interface MergeListActionArgsInput<T = unknown, TOptions = QueryActionOpt
    * Default params (filters, ordering, pagination).
    * Resolved at call time; supports ref/getter for reactive defaults (e.g. user: toValue(userId)).
    */
-  defaultParams?: MaybeRefOrGetter<ListActionParams>;
+  defaultParams?: MaybeRefOrGetter<UseListActionParams>;
 
   /**
    * Default options (onMount, autoUpdate, throwOnError, etc.).
@@ -92,7 +92,7 @@ export interface MergeListActionArgsInput<T = unknown, TOptions = QueryActionOpt
    * First argument from the view call: either params or options (same overload as useList).
    * Resolved at call time before discrimination.
    */
-  additionalParamsOrOptions?: MaybeRefOrGetter<ListActionParams | TOptions>;
+  additionalParamsOrOptions?: MaybeRefOrGetter<UseListActionParams | TOptions>;
 
   /**
    * Second argument from the view call (options only, when additionalParamsOrOptions is params).
@@ -107,7 +107,7 @@ export interface MergeListActionArgsInput<T = unknown, TOptions = QueryActionOpt
  * values are preserved so that reactivity is maintained (ref changes trigger refetch).
  */
 export interface MergeListActionArgsResult<T = unknown, TOptions = QueryActionOptions<T[]>> {
-  params: ListActionParams;
+  params: UseListActionParams;
   options: TOptions;
 }
 
@@ -139,7 +139,7 @@ export function mergeListActionArgs<T = unknown, TOptions extends QueryActionOpt
   input?: MergeListActionArgsInput<T, TOptions>,
 ): MergeListActionArgsResult<T, TOptions> {
   const defaultParamsResolved = input?.defaultParams != null
-    ? (toValue(input.defaultParams) as ListActionParams | undefined)
+    ? (toValue(input.defaultParams) as UseListActionParams | undefined)
     : undefined;
   const defaultOptionsResolved = input?.defaultOptions != null
     ? (toValue(input.defaultOptions) as TOptions)
@@ -151,13 +151,13 @@ export function mergeListActionArgs<T = unknown, TOptions extends QueryActionOpt
     ? (toValue(input.additionalOptions) as TOptions)
     : undefined;
 
-  let additionalParamsResolved: ListActionParams | undefined;
+  let additionalParamsResolved: UseListActionParams | undefined;
   let additionalOptionsOnlyResolved: TOptions | undefined;
   if (additionalOptionsResolved !== undefined) {
-    additionalParamsResolved = additionalFirstResolved as ListActionParams | undefined;
+    additionalParamsResolved = additionalFirstResolved as UseListActionParams | undefined;
     additionalOptionsOnlyResolved = additionalOptionsResolved;
   } else if (additionalFirstResolved !== undefined && isParamsObject(additionalFirstResolved)) {
-    additionalParamsResolved = additionalFirstResolved as ListActionParams;
+    additionalParamsResolved = additionalFirstResolved as UseListActionParams;
     additionalOptionsOnlyResolved = undefined;
   } else {
     additionalParamsResolved = undefined;
@@ -174,7 +174,7 @@ export function mergeListActionArgs<T = unknown, TOptions extends QueryActionOpt
       : defaultPlain.ordering;
   const pagination: PaginationParams = { ...defaultPlain.pagination, ...additionalPlain.pagination };
 
-  const params: ListActionParams = { filters, ordering, pagination };
+  const params: UseListActionParams = { filters, ordering, pagination };
   const options: TOptions = {
     ...defaultOptionsResolved,
     ...additionalOptionsOnlyResolved,

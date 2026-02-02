@@ -1,14 +1,14 @@
 import { shallowRef } from "vue";
 import { useFzFetch } from "../../http";
 import { CONTENT_TYPE_JSON } from "../../http/common";
-import type { UseUpdateAction, UpdateOptions } from "./types";
+import type { UseUpdateAction, UseUpdateExecuteOptions } from "./types";
 import type { MutationActionOptions } from "../shared/types";
 import { executeMutation } from "../shared/error-handling";
 
 /**
  * Create an update action for updating an existing entity
  *
- * Supports partial updates (PATCH) and full replacement (PUT) based on updateOptions.
+ * Supports partial updates (PATCH) and full replacement (PUT) via execute options.
  *
  * @param basePath - Base API path for the resource
  * @param options - Mutation action options
@@ -25,10 +25,10 @@ export const createUpdateAction = <T>(
   const execute = async (
     pk: string | number,
     payload: Partial<T>,
-    updateOptions?: UpdateOptions,
+    executeOptions?: UseUpdateExecuteOptions,
   ): Promise<void> => {
     // Determine HTTP method based on partialUpdate option
-    const partialUpdate = updateOptions?.partialUpdate ?? true;
+    const partialUpdate = executeOptions?.partialUpdate ?? true;
     const method = partialUpdate ? "PATCH" : "PUT";
 
     await executeMutation<T>(

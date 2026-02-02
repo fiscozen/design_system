@@ -1,7 +1,7 @@
 import type { ShallowRef, Reactive, ComputedRef } from "vue";
 import type { QueryActionOptions, QueryActionReturn } from "../shared/types";
 import type {
-  ListActionParams,
+  UseListActionParams,
   PaginationParams,
   FilterParams,
   SortParams,
@@ -41,12 +41,11 @@ export interface PaginationMeta {
 }
 
 /**
- * Options for paginated list action
+ * Options for usePaginatedList (second argument when present).
  *
- * Extends QueryActionOptions with dataKey option to customize the key name
- * that contains the data array in the paginated response.
+ * Extends QueryActionOptions with dataKey and enableSingleOrdering.
  */
-export interface PaginatedListActionOptions<T>
+export interface UsePaginatedListActionOptions<T>
   extends QueryActionOptions<PaginatedResponse<T>> {
   /**
    * Key name in the paginated response that contains the data array
@@ -75,17 +74,16 @@ export interface PaginatedListActionOptions<T>
 }
 
 /**
- * Parameters for paginated list action (same as ListActionParams)
+ * Params for usePaginatedList (same as UseListActionParams)
  */
-export type PaginatedListActionParams = ListActionParams;
+export type UsePaginatedListActionParams = UseListActionParams;
 
 /**
- * Return type for usePaginatedList action
+ * Return type for usePaginatedList
  *
- * Extends ListActionReturn but with paginated response handling and meta.
- * The data array is extracted from the paginated response using the specified dataKey.
+ * Extends UseListActionReturn with paginated response handling and meta.
  */
-export interface PaginatedListActionReturn<T>
+export interface UsePaginatedListActionReturn<T>
   extends Omit<QueryActionReturn<T[]>, "data"> {
   /**
    * The data array extracted from paginated response (e.g., results)
@@ -157,15 +155,23 @@ export interface PaginatedListActionReturn<T>
 }
 
 /**
+ * First argument of usePaginatedList when present (params or options).
+ * @default T = unknown
+ */
+export type UsePaginatedListParamsOrOptions<T = unknown> =
+  | UsePaginatedListActionParams
+  | UsePaginatedListActionOptions<T>;
+
+/**
  * Paginated list action signature (same overloads as useList)
  */
 export interface UsePaginatedListAction<T> {
-  (): PaginatedListActionReturn<T>;
+  (): UsePaginatedListActionReturn<T>;
   (
-    paramsOrOptions: PaginatedListActionParams | PaginatedListActionOptions<T>,
-  ): PaginatedListActionReturn<T>;
+    paramsOrOptions: UsePaginatedListParamsOrOptions<T>,
+  ): UsePaginatedListActionReturn<T>;
   (
-    params: PaginatedListActionParams,
-    options: PaginatedListActionOptions<T>,
-  ): PaginatedListActionReturn<T>;
+    params: UsePaginatedListActionParams,
+    options: UsePaginatedListActionOptions<T>,
+  ): UsePaginatedListActionReturn<T>;
 }

@@ -369,40 +369,94 @@ Use when building a custom list or paginated-list action with default filters/op
 **Example – custom list with default filters:**
 
 ```typescript
-import { useActions, mergeListActionArgs } from '@fiscozen/data/rest'
-import type { ListActionParams, QueryActionOptions } from '@fiscozen/data/rest'
+// e.g. src/composables/useInvoices.ts
+import { useActions, mergeListActionArgs } from '@fiscozen/data'
+import type {
+  UseListAction,
+  UseListActionParamsOrOptions,
+  UseListActionOptions,
+} from '@fiscozen/data'
 
-interface Invoice { id: number; name: string }
+interface Invoice {
+  id: number
+  name: string
+  status: string
+  created_at: string
+}
 
-export const useSTS = () => {
-  const { useList: useInvoicesList } = useActions<Invoice>('invoices/')
+const { useList: useInvoicesListBase } = useActions<Invoice>('invoices/')
 
-  const useSTSLists = (
-    paramsOrOptions?: ListActionParams | QueryActionOptions<Invoice[]>,
-    options?: QueryActionOptions<Invoice[]>
-  ) => {
-    const { params, options: mergedOptions } = mergeListActionArgs<Invoice>({
-      defaultParams: {
-        filters: { sts: true, sts_sent: false, sts_summary: '' },
-      },
-      additionalParamsOrOptions: paramsOrOptions,
-      additionalOptions: options,
-    })
-    return useInvoicesList(params, mergedOptions)
-  }
-
-  return { useSTSLists }
+/**
+ * List composable with default STS filters; view can override filters, ordering, pagination, options.
+ * Same overloads as useList: (), (paramsOrOptions), (params, options).
+ * (Params/options inherit T from UseListAction<Invoice>; omit generic only when you don't need initialData.)
+ */
+export const useInvoicesList: UseListAction<Invoice> = (
+  paramsOrOptions?: UseListActionParamsOrOptions<Invoice>,
+  options?: UseListActionOptions<Invoice>
+) => {
+  const { params: mergedParams, options: mergedOptions } = mergeListActionArgs({
+    defaultParams: {
+      filters: { sts: true, sts_sent: false, sts_summary: '' },
+    },
+    additionalParamsOrOptions: paramsOrOptions,
+    additionalOptions: options,
+  })
+  return useInvoicesListBase(mergedParams, mergedOptions)
 }
 ```
 
-**In the view:** Same API as `useList`; you can override or add filters, ordering, pagination, options.
+**Example – custom paginated list with default filters:**
+
+```typescript
+// same file or another composable module
+import { useActions, mergeListActionArgs } from '@fiscozen/data'
+import type {
+  UsePaginatedListAction,
+  UsePaginatedListParamsOrOptions,
+  UsePaginatedListActionOptions,
+} from '@fiscozen/data'
+
+const { usePaginatedList: useInvoicesPaginatedListBase } = useActions<Invoice>('invoices/')
+
+/**
+ * Paginated list composable with default filters and options; view can override.
+ * Same overloads as usePaginatedList: (), (paramsOrOptions), (params, options).
+ * (Params/options inherit T from UsePaginatedListAction<Invoice>; omit generic only when you don't need initialData.)
+ */
+export const useInvoicesPaginatedList: UsePaginatedListAction<Invoice> = (
+  paramsOrOptions?: UsePaginatedListParamsOrOptions,
+  options?: UsePaginatedListActionOptions
+) => {
+  const { params: mergedParams, options: mergedOptions } = mergeListActionArgs({
+    defaultParams: {
+      filters: { status: 'active' },
+      pagination: { page: 1, pageSize: 20 },
+    },
+    defaultOptions: { dataKey: 'results', enableSingleOrdering: false },
+    additionalParamsOrOptions: paramsOrOptions,
+    additionalOptions: options,
+  })
+  return useInvoicesPaginatedListBase(mergedParams, mergedOptions)
+}
+```
+
+**In the view:** Same API as `useList` / `usePaginatedList`; you can override or add filters, ordering, pagination, options.
 
 ```vue
 <script setup>
-const { useSTSLists } = useSTS()
-const { data, filters, pagination, ordering } = useSTSLists(
+import { useInvoicesList, useInvoicesPaginatedList } from '@/composables/useInvoices'
+
+// List – override ordering and pagination
+const { data, filters, pagination, ordering } = useInvoicesList(
   { pagination: { page: 1, pageSize: 20 }, ordering: [{ created_at: 'desc' }] },
   { onMount: true, autoUpdate: true }
+)
+
+// PaginatedList – override page only; default filters and pageSize apply
+const { data: paginatedData, meta, handlePageChange } = useInvoicesPaginatedList(
+  { pagination: { page: 2 } },
+  { autoUpdate: true }
 )
 </script>
 ```
@@ -601,7 +655,7 @@ Retrieves a single entity by its primary key.
 ```typescript
 useRetrieve(
   pk?: string | number | Ref<string | number> | ComputedRef<string | number>,
-  options?: QueryActionOptions<T>
+  options?: UseRetrieveActionOptions<T>
 ): UseRetrieveActionReturn<T>
 ```
 
@@ -610,7 +664,7 @@ useRetrieve(
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `pk` | `string \| number \| Ref \| ComputedRef` | ✅ Yes | Primary key of the entity. Can be reactive - changes trigger refetch. |
-| `options` | `QueryActionOptions<T>` | ❌ No | Query options (see below) |
+| `options` | `UseRetrieveActionOptions<T>` | ❌ No | Query options (see below) |
 
 **Returns:**
 
@@ -647,20 +701,20 @@ Lists entities with optional filters, ordering, and pagination.
 
 **Signature:**
 ```typescript
-useList(): ListActionReturn<T>
-useList(params: ListActionParams): ListActionReturn<T>
-useList(options: QueryActionOptions<T[]>): ListActionReturn<T>
-useList(params: ListActionParams, options: QueryActionOptions<T[]>): ListActionReturn<T>
+useList(): UseListActionReturn<T>
+useList(params: UseListActionParams): UseListActionReturn<T>
+useList(options: UseListActionOptions<T>): UseListActionReturn<T>
+useList(params: UseListActionParams, options: UseListActionOptions<T>): UseListActionReturn<T>
 ```
 
 **Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `params` | `ListActionParams` | ❌ No | Query parameters (see below) |
-| `options` | `QueryActionOptions<T[]>` | ❌ No | Query options (see below) |
+| `params` | `UseListActionParams` | ❌ No | Query parameters (see below) |
+| `options` | `UseListActionOptions<T>` | ❌ No | Query options (see below) |
 
-**ListActionParams:**
+**UseListActionParams:**
 
 Initial parameters (used only for bootstrap). The composable returns reactive objects that can be modified directly.
 
@@ -754,10 +808,10 @@ Lists entities with paginated response format and metadata extraction. Works exa
 
 **Signature:**
 ```typescript
-usePaginatedList(): PaginatedListActionReturn<T>
-usePaginatedList(params: PaginatedListActionParams): PaginatedListActionReturn<T>
-usePaginatedList(options: PaginatedListActionOptions<T>): PaginatedListActionReturn<T>
-usePaginatedList(params: PaginatedListActionParams, options: PaginatedListActionOptions<T>): PaginatedListActionReturn<T>
+usePaginatedList(): UsePaginatedListActionReturn<T>
+usePaginatedList(params: UsePaginatedListActionParams): UsePaginatedListActionReturn<T>
+usePaginatedList(options: UsePaginatedListActionOptions<T>): UsePaginatedListActionReturn<T>
+usePaginatedList(params: UsePaginatedListActionParams, options: UsePaginatedListActionOptions<T>): UsePaginatedListActionReturn<T>
 ```
 
 **Response Format:**
@@ -777,10 +831,10 @@ Expects API to return:
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `params` | `PaginatedListActionParams` | ❌ No | Same as `ListActionParams` (filters, ordering, pagination) |
-| `options` | `PaginatedListActionOptions<T>` | ❌ No | Options including `dataKey` and `enableSingleOrdering` |
+| `params` | `UsePaginatedListActionParams` | ❌ No | Same as `UseListActionParams` (filters, ordering, pagination) |
+| `options` | `UsePaginatedListActionOptions<T>` | ❌ No | Options including `dataKey` and `enableSingleOrdering` |
 
-**PaginatedListActionOptions:**
+**UsePaginatedListActionOptions:**
 
 | Option | Type | Required | Default | Description |
 |--------|------|----------|---------|-------------|
@@ -916,14 +970,14 @@ Creates a new entity.
 
 **Signature:**
 ```typescript
-useCreate(options?: MutationActionOptions): UseCreateActionReturn<T>
+useCreate(options?: UseCreateActionOptions): UseCreateActionReturn<T>
 ```
 
 **Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `options` | `MutationActionOptions` | ❌ No | Mutation options (see below) |
+| `options` | `UseCreateActionOptions` | ❌ No | Mutation options (see below) |
 
 **Returns:**
 
@@ -964,14 +1018,14 @@ Updates an existing entity. Supports partial updates (PATCH) and full replacemen
 
 **Signature:**
 ```typescript
-useUpdate(options?: MutationActionOptions): UseUpdateActionReturn<T>
+useUpdate(options?: UseUpdateActionOptions): UseUpdateActionReturn<T>
 ```
 
 **Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `options` | `MutationActionOptions` | ❌ No | Mutation options (see below) |
+| `options` | `UseUpdateActionOptions` | ❌ No | Mutation options (see below) |
 
 **Returns:**
 
@@ -983,12 +1037,12 @@ useUpdate(options?: MutationActionOptions): UseUpdateActionReturn<T>
   execute: (
     pk: string | number,
     payload: Partial<T>,
-    updateOptions?: UpdateOptions
+    executeOptions?: UseUpdateExecuteOptions
   ) => Promise<void>
 }
 ```
 
-**UpdateOptions:**
+**UseUpdateExecuteOptions:**
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
@@ -1038,14 +1092,14 @@ Deletes an entity.
 
 **Signature:**
 ```typescript
-useDelete(options?: MutationActionOptions): UseDeleteActionReturn<T>
+useDelete(options?: UseDeleteActionOptions): UseDeleteActionReturn<T>
 ```
 
 **Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `options` | `MutationActionOptions` | ❌ No | Mutation options (see below) |
+| `options` | `UseDeleteActionOptions` | ❌ No | Mutation options (see below) |
 
 **Returns:**
 

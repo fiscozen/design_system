@@ -1,6 +1,11 @@
 import type { BaseActionReturn, MutationActionOptions } from "../shared/types";
 
 /**
+ * Options for useDelete. Alias for MutationActionOptions for consistent naming.
+ */
+export type UseDeleteActionOptions = MutationActionOptions;
+
+/**
  * Return type for useDelete action
  */
 export interface UseDeleteActionReturn<T> extends BaseActionReturn<T> {
@@ -17,5 +22,5 @@ export interface UseDeleteActionReturn<T> extends BaseActionReturn<T> {
  * Delete an existing entity (DELETE)
  */
 export interface UseDeleteAction<T> {
-  (options?: MutationActionOptions): UseDeleteActionReturn<T>;
+  (options?: UseDeleteActionOptions): UseDeleteActionReturn<T>;
 }

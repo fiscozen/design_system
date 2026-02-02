@@ -1,4 +1,4 @@
-import type { UseListAction, ListActionParams } from "./types";
+import type { UseListAction, UseListActionParams } from "./types";
 import type { UseActionOptions } from "../shared/types";
 import type { UseFzFetchReturn } from "../../http/types";
 import { normalizeListResponse } from "../shared/normalize";
@@ -32,13 +32,13 @@ interface InternalListResult<T> extends ReturnType<UseListAction<T>> {
  * - `pageSize`: defaults to `50` if not specified
  *
  * @param basePath - Base API path for the resource
- * @param paramsOrOptions - Either ListActionParams or UseActionOptions
+ * @param paramsOrOptions - Either UseListActionParams or UseActionOptions
  * @param options - Optional UseActionOptions (when params are provided)
- * @returns ListActionReturn with data, error, isLoading, execute, filters, ordering, pagination
+ * @returns UseListActionReturn with data, error, isLoading, execute, filters, ordering, pagination
  */
 export const createListAction = <T>(
   basePath: string,
-  paramsOrOptions?: ListActionParams | UseActionOptions,
+  paramsOrOptions?: UseListActionParams | UseActionOptions,
   options?: UseActionOptions,
 ): ReturnType<UseListAction<T>> => {
   const result = createListBase<T[], T>(
