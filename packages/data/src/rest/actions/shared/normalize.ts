@@ -1,4 +1,4 @@
-import { computed } from "vue";
+import { computed, toValue } from "vue";
 import type {
   UseFzFetchOptions,
   UseFzFetchReturn,
@@ -167,9 +167,11 @@ export const normalizeParams = (params: {
         }
 
         // undefined = omit from request (e.g. remove default filter); null = send to server
+        // toValue(value) so refs as filter values (e.g. from merge) are unwrapped
         Object.entries(params.filters).forEach(([key, value]) => {
-          if (value !== undefined) {
-            queryParams[key] = value;
+          const resolved = toValue(value);
+          if (resolved !== undefined) {
+            queryParams[key] = resolved;
           }
         });
       }
@@ -200,13 +202,15 @@ export const normalizeParams = (params: {
         }
       }
 
-      // Pagination
+      // Pagination (toValue so refs as values are unwrapped)
       if (params.pagination) {
-        if (params.pagination.page !== undefined) {
-          queryParams.page = params.pagination.page;
+        const page = toValue(params.pagination.page);
+        const pageSize = toValue(params.pagination.pageSize);
+        if (page !== undefined) {
+          queryParams.page = page;
         }
-        if (params.pagination.pageSize !== undefined) {
-          queryParams.page_size = params.pagination.pageSize;
+        if (pageSize !== undefined) {
+          queryParams.page_size = pageSize;
         }
       }
 

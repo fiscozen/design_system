@@ -2,10 +2,14 @@ import type { ShallowRef, MaybeRefOrGetter, Reactive } from "vue";
 import type { QueryActionOptions, QueryActionReturn } from "../shared/types";
 
 /**
- * Filter parameters
+ * Filter parameters (resolved form: plain values only).
  *
- * Key-value pairs where keys are filter field names and values can be
+ * Key-value pairs where keys are filter field names and values are
  * string, number, boolean, null, or undefined.
+ *
+ * **Input:** When passing params (e.g. to useList or merge helpers), each filter *value*
+ * can be a ref or getter (`MaybeRefOrGetter<...>`); it is resolved when building the query
+ * (in merge and in normalizeParams).
  *
  * **Query semantics:** `undefined` = omit from request (e.g. remove a default filter);
  * `null` = send to the server (query param present with value null).
@@ -29,7 +33,10 @@ export type FilterParams = Record<
 export type SortParams = Array<Record<string, "asc" | "desc" | "none">>;
 
 /**
- * Pagination parameters
+ * Pagination parameters (resolved form: plain values).
+ *
+ * When passed as input (e.g. to useList or merge helpers), page and pageSize
+ * can be refs or getters; they are resolved when building the query.
  */
 export interface PaginationParams {
   /**
@@ -51,7 +58,10 @@ export interface PaginationParams {
  */
 export interface ListActionParams {
   /**
-   * Initial filter parameters (e.g., { by_city: 'Rome', by_type: 'micro' })
+   * Initial filter parameters (e.g., { by_city: 'Rome', by_type: 'micro' }).
+   *
+   * Each filter *value* can be a ref or getter (e.g. `{ userId: ref(123) }`); values are
+   * resolved when building the query (merge and normalizeParams).
    *
    * **Query semantics:** `undefined` = omit from request; `null` = send to the server.
    * Use `undefined` to remove a default filter in merge helpers; use `null` to send null to the API.

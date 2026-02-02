@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ref, computed } from "vue";
+import { ref, computed, toValue } from "vue";
 import {
   mergeListActionArgs,
   mergeRetrieveActionArgs,
@@ -243,6 +243,31 @@ describe("mergeListActionArgs", () => {
       userId.value = 2;
       const result2 = mergeListActionArgs({ defaultParams });
       expect(result2.params.filters).toEqual({ user: 2 });
+    });
+
+    it("preserves refs as filter values so reactivity is maintained when passed to useList", () => {
+      const userId = ref(123);
+      const statusRef = ref("active");
+      const result = mergeListActionArgs({
+        additionalParamsOrOptions: { filters: { userId, status: statusRef } },
+      });
+
+      expect(result.params.filters.userId).toBe(userId);
+      expect(result.params.filters.status).toBe(statusRef);
+      expect(toValue(result.params.filters.userId)).toBe(123);
+      expect(toValue(result.params.filters.status)).toBe("active");
+    });
+
+    it("preserves refs as pagination values so reactivity is maintained", () => {
+      const page = ref(2);
+      const result = mergeListActionArgs({
+        defaultParams: { pagination: { page: 1, pageSize: 50 } },
+        additionalParamsOrOptions: { pagination: { page } },
+      });
+
+      expect(result.params.pagination.page).toBe(page);
+      expect(result.params.pagination.pageSize).toBe(50);
+      expect(toValue(result.params.pagination.page)).toBe(2);
     });
   });
 });
