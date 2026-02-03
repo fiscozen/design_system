@@ -30,7 +30,7 @@
       {{ dragAndDropLabel }}
     </div>
 
-    <ul v-if="model?.length" class="mt-8 border-1 border-grey-300 rounded px-8">
+    <ul v-if="model?.length" :class="computedScrollableContainerClass">
       <li
         v-for="file in model"
         class="border-b-1 last:border-b-0 py-8 flex items-center justify-between"
@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import { FzUploadProps } from "./types";
 import { FzButton, FzIconButton } from "@fiscozen/button";
 import { FzLink } from "@fiscozen/link";
@@ -68,6 +68,7 @@ const props = withDefaults(defineProps<FzUploadProps>(), {
   size: "md",
   buttonLabel: "Carica",
   dragAndDropLabel: "o trascina qui",
+  isScrollable: false,
 });
 const emit = defineEmits<{
   "fzupload:change": [files: File[]];
@@ -93,6 +94,13 @@ const model = defineModel<File[]>({
 
 const input = ref<HTMLInputElement | null>(null);
 const urlByFileMap = ref(new Map<File, string>());
+
+const computedScrollableContainerClass = computed(() => {
+  return [
+    "mt-8 border-1 border-grey-300 rounded px-8",
+    props.isScrollable ? "max-h-[82px] overflow-y-auto" : "",
+  ]
+});
 
 onMounted(() => {
   // this call is needed to make sure the model is correctly set when passed as a prop
