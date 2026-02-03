@@ -62,6 +62,48 @@ describe("Deduplication", () => {
     expect(result2.error.value).toBeNull();
   });
 
+  it("should make HTTP request when interceptor modifies only headers and deduplication is enabled", async () => {
+    setupFzFetcher({
+      baseUrl: "https://api.example.com",
+      deduplication: true,
+      requestInterceptor: async (_url, requestInit) => {
+        // Auth interceptor: only add headers, same URL/method/body (same dedup key)
+        return {
+          ...requestInit,
+          headers: {
+            ...(requestInit.headers instanceof Headers
+              ? Object.fromEntries((requestInit.headers as Headers).entries())
+              : (requestInit.headers as Record<string, string>) ?? {}),
+            Authorization: "Bearer token",
+          },
+        };
+      },
+    });
+
+    let fetchCallCount = 0;
+    global.fetch = vi.fn(() => {
+      fetchCallCount++;
+      return Promise.resolve(
+        new Response(JSON.stringify({ id: 1, name: "User" }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+      );
+    }) as typeof fetch;
+
+    const result = useFzFetch<{ id: number; name: string }>("/users/1", {
+      immediate: false,
+    });
+
+    await result.execute();
+
+    // Request must be made (inner modified fetch must not self-deduplicate against outer placeholder)
+    expect(fetchCallCount).toBe(1);
+    expect(result.data.value).toEqual({ id: 1, name: "User" });
+    expect(result.statusCode.value).toBe(200);
+    expect(result.error.value).toBeNull();
+  });
+
   describe("JSON normalization", () => {
     beforeEach(() => {
       setupFzFetcher({

@@ -30,6 +30,54 @@ const isBodySerializable = (
 };
 
 /**
+ * Syncs reactive state from a pending/source fetch result to the target, then waits for
+ * the source to complete (isFetching becomes false). Used when deduplicating: the current
+ * request reuses the result of an in-flight request with the same key.
+ *
+ * @param target - Fetch result to update (our wrapper's fetchResult)
+ * @param source - Pending fetch result to sync from (already in flight)
+ * @param throwOnFailed - If true, throw after completion when source has an error
+ */
+const waitForPendingAndSyncState = async <T>(
+  target: UseFzFetchReturn<T>,
+  source: UseFzFetchReturn<T>,
+  throwOnFailed?: boolean,
+): Promise<void> => {
+  const syncState = (): void => {
+    target.statusCode.value = source.statusCode.value;
+    target.response.value = source.response.value;
+    target.error.value = source.error.value;
+    target.data.value = source.data.value;
+  };
+
+  syncState();
+
+  let unwatchSync: (() => void) | null = null;
+  let isCleanedUp = false;
+
+  await new Promise<void>((resolve) => {
+    unwatchSync = watchEffect(() => {
+      syncState();
+
+      if (!source.isFetching.value && !isCleanedUp) {
+        isCleanedUp = true;
+        nextTick(() => {
+          if (unwatchSync) {
+            unwatchSync();
+            unwatchSync = null;
+          }
+          resolve();
+        });
+      }
+    });
+  });
+
+  if (source.error.value && throwOnFailed) {
+    throw source.error.value;
+  }
+};
+
+/**
  * Wraps a fetch result to apply deduplication if enabled
  *
  * body supports MaybeRefOrGetter and is resolved at execute() time for the deduplication key.
@@ -88,65 +136,18 @@ export const wrapWithDeduplication = <T>(
       bodyString,
     );
 
-    if (pendingFetchResult) {
-      // Synchronize reactive state from pending request to current fetchResult.
-      // Note: isFetching is not synced because VueUse may expose it as Readonly<ShallowRef>;
-      // mutating it would trigger Vue warnings. Callers waiting on the deduplicated request
-      // will see data/error/statusCode/response once the pending request completes.
-      const syncState = () => {
-        fetchResult.statusCode.value = pendingFetchResult.statusCode.value;
-        fetchResult.response.value = pendingFetchResult.response.value;
-        fetchResult.error.value = pendingFetchResult.error.value;
-        fetchResult.data.value = pendingFetchResult.data.value;
-      };
-
-      // Initial sync
-      syncState();
-
-      // Wait for pending request to complete and sync state reactively
-      // We can't call execute() on pendingFetchResult because it might be the same
-      // instance wrapped, causing infinite recursion
-      if (pendingFetchResult.isFetching.value) {
-        // Use watchEffect for more efficient reactive syncing
-        // watchEffect automatically tracks all accessed reactive properties
-        let unwatchSync: (() => void) | null = null;
-        let isCleanedUp = false;
-
-        await new Promise<void>((resolve) => {
-          // WatchEffect automatically tracks all reactive dependencies
-          // More efficient than watch with explicit array of sources
-          unwatchSync = watchEffect(() => {
-            // Sync state whenever any tracked property changes
-            syncState();
-
-            // Resolve promise and cleanup when request completes
-            if (!pendingFetchResult.isFetching.value && !isCleanedUp) {
-              isCleanedUp = true;
-              // Use nextTick to ensure cleanup happens after current execution
-              // This allows other pending requests to sync state before cleanup
-              nextTick(() => {
-                if (unwatchSync) {
-                  unwatchSync();
-                  unwatchSync = null;
-                }
-                resolve();
-              });
-            }
-          });
-        });
-      } else {
-        // Request already completed, sync state once
-        // No need for reactive watch since request is done
-        // (interceptors won't modify state after completion)
-        syncState();
-      }
-
-      // If there was an error and throwOnFailed is true, throw it
-      if (pendingFetchResult.error.value && throwOnFailed) {
-        throw pendingFetchResult.error.value;
-      }
-
-      // Return without executing a new request
+    // Only use pending for dedup when the request is actually in flight.
+    // When the request interceptor modifies only headers, the outer deduplication wrapper
+    // registers fetchResult before the interceptor runs; the base fetch never starts, so
+    // isFetching stays false. If we treated that as a valid dedup target we would sync
+    // empty state and return without making any HTTP request. Fall through to register
+    // and execute when isFetching is false so the real request (e.g. modified fetch) runs.
+    if (pendingFetchResult && pendingFetchResult.isFetching.value) {
+      await waitForPendingAndSyncState(
+        fetchResult,
+        pendingFetchResult,
+        throwOnFailed,
+      );
       return;
     }
 
@@ -168,49 +169,28 @@ export const wrapWithDeduplication = <T>(
     );
     
     if (verifyRegistration !== fetchResult) {
-      // Another request overwrote our registration; wait for it instead
+      // Another request overwrote our registration
       if (verifyRegistration) {
-        const syncState = () => {
-          fetchResult.statusCode.value = verifyRegistration.statusCode.value;
-          fetchResult.response.value = verifyRegistration.response.value;
-          fetchResult.error.value = verifyRegistration.error.value;
-          fetchResult.data.value = verifyRegistration.data.value;
-        };
-
-        syncState();
-
+        // Only wait for it when it is actually in flight (same as getPendingRequest check).
+        // If isFetching is false it may be a placeholder (e.g. outer wrapper) that never started.
         if (verifyRegistration.isFetching.value) {
-          let unwatchSync: (() => void) | null = null;
-          let isCleanedUp = false;
-
-          await new Promise<void>((resolve) => {
-            unwatchSync = watchEffect(() => {
-              syncState();
-
-              if (!verifyRegistration.isFetching.value && !isCleanedUp) {
-                isCleanedUp = true;
-                nextTick(() => {
-                  if (unwatchSync) {
-                    unwatchSync();
-                    unwatchSync = null;
-                  }
-                  resolve();
-                });
-              }
-            });
-          });
-        } else {
-          syncState();
+          await waitForPendingAndSyncState(
+            fetchResult,
+            verifyRegistration,
+            throwOnFailed,
+          );
+          return;
         }
-
-        if (verifyRegistration.error.value && throwOnFailed) {
-          throw verifyRegistration.error.value;
-        }
-
-        return;
+        // Placeholder (not in flight): overwrite with ourselves and fall through to execute
+        state.deduplicationManager!.registerPendingRequest(
+          urlString,
+          method,
+          bodyString,
+          fetchResult,
+        );
       }
-      // If verifyRegistration is null (cleaned up between register and verify),
-      // fall through and execute our request
+      // verifyRegistration is null (cleaned up between register and verify),
+      // or we overwrote a placeholder → fall through and execute our request
     }
 
     // Execute the original fetch
