@@ -10,6 +10,7 @@ import {
   waitForFetchCompletion,
   applyResponseInterceptorAndReparse,
   handleAbortedRequest,
+  handleInterceptorError,
 } from "../interceptors/request";
 
 /**
@@ -76,15 +77,20 @@ export const wrapWithParamsResolver = <T>(
     let requestToUse: RequestInit = requestInitForThisCall;
 
     if (state.globalRequestInterceptor) {
-      const intercepted = await state.globalRequestInterceptor(
-        urlString,
-        requestInitForThisCall,
-      );
-      if (intercepted === null) {
-        handleAbortedRequest(fetchResult, urlString, throwOnFailed);
+      try {
+        const intercepted = await state.globalRequestInterceptor(
+          urlString,
+          requestInitForThisCall,
+        );
+        if (intercepted === null) {
+          handleAbortedRequest(fetchResult, urlString, throwOnFailed);
+          return;
+        }
+        requestToUse = intercepted;
+      } catch (error: unknown) {
+        handleInterceptorError(fetchResult, error, throwOnFailed, null);
         return;
       }
-      requestToUse = intercepted;
     }
 
     const oneOff = createModifiedFetchRequest<T>(
