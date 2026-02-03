@@ -400,6 +400,101 @@ describe("Integration Tests", () => {
       await execute();
       expect(lastBody).toBe(JSON.stringify({ count: 5 }));
     });
+
+    it("should run first request through params resolver when reactive body without useFetchOptions", async () => {
+      setupFzFetcher({ baseUrl: "https://api.example.com" });
+
+      const bodyRef = ref(JSON.stringify({ value: 1 }));
+
+      const capturedBodies: string[] = [];
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        capturedBodies.push(
+          typeof init?.body === "string" ? init.body : String(init?.body ?? ""),
+        );
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      // No third argument (useFetchOptions): default immediate would be true.
+      // We disable immediate when reactive body/headers are present and run execute() after wrapping,
+      // so the first request goes through params resolver and uses current body.
+      useFzFetch<{ ok: boolean }>("/test", {
+        method: "POST",
+        body: bodyRef,
+        headers: { "Content-Type": "application/json" },
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(capturedBodies).toHaveLength(1);
+      expect(capturedBodies[0]).toBe(JSON.stringify({ value: 1 }));
+    });
+
+    it("should run first request through params resolver when reactive headers without useFetchOptions", async () => {
+      setupFzFetcher({ baseUrl: "https://api.example.com" });
+
+      const headersRef = ref<Record<string, string>>({
+        "Content-Type": "application/json",
+        "X-Custom": "initial",
+      });
+
+      const capturedHeaders: Record<string, string>[] = [];
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        const h = init?.headers;
+        capturedHeaders.push(
+          h instanceof Headers
+            ? Object.fromEntries(h.entries())
+            : (h as Record<string, string>) ?? {},
+        );
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      useFzFetch<{ ok: boolean }>("/test", {
+        method: "POST",
+        body: null,
+        headers: headersRef,
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(capturedHeaders).toHaveLength(1);
+      expect(capturedHeaders[0]["X-Custom"]).toBe("initial");
+    });
+
+    it("should not run any request when reactive body and explicit immediate: false", async () => {
+      setupFzFetcher({ baseUrl: "https://api.example.com" });
+
+      const bodyRef = ref(JSON.stringify({ value: 1 }));
+      let fetchCallCount = 0;
+      global.fetch = vi.fn(() => {
+        fetchCallCount++;
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test", {
+        method: "POST",
+        body: bodyRef,
+        headers: { "Content-Type": "application/json" },
+      }, { immediate: false });
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(fetchCallCount).toBe(0);
+
+      await execute();
+      expect(fetchCallCount).toBe(1);
+    });
   });
 
   describe("CSRF Integration", () => {

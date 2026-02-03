@@ -54,9 +54,10 @@ const createDefaultWrapperChain = (): WrapperChain => {
  * bodyGetter and headersGetter are optional; when provided they are re-evaluated on each
  * execute() by the params resolver so body and headers stay reactive.
  *
- * **Important**: If interceptors are configured, we disable `immediate` execution
- * in the base fetch result to ensure interceptors are applied before execution.
- * After applying interceptors, we manually call `execute()` if `immediate` was true.
+ * **Important**: If interceptors are configured or reactive body/headers are provided,
+ * we disable `immediate` in the base fetch so the first request goes through the
+ * wrapper chain (params resolver, interceptors). We then call `execute()` manually if
+ * the user requested immediate execution.
  *
  * @param finalUrl - Computed URL for the request (can be reactive via ref/computed)
  * @param requestInit - Request configuration (initial values; mutated by params resolver when getters provided)
@@ -78,20 +79,24 @@ const createFetchResult = <T>(
   const hasInterceptors =
     state.globalRequestInterceptor || state.globalResponseInterceptor;
 
-  // If interceptors are configured, we need to disable immediate execution
-  // to ensure interceptors wrap execute() before the request runs
-  const shouldExecuteImmediate =
-    hasInterceptors && (useFetchOptions?.immediate ?? true);
+  // Reactive body/headers are resolved by paramsResolverWrapper on each execute().
+  // If we don't disable immediate, VueUse runs the first request before the wrapper chain
+  // is applied, bypassing the params resolver and using initial requestInit only.
+  const hasReactiveParams =
+    bodyGetter !== undefined || headersGetter !== undefined;
 
-  // Create base fetch result with immediate disabled if interceptors are present
-  // This ensures interceptors wrap execute() before any automatic execution
+  const mustDisableImmediate = hasInterceptors || hasReactiveParams;
+  const shouldExecuteImmediate =
+    mustDisableImmediate && (useFetchOptions?.immediate ?? true);
+
+  // Disable immediate when interceptors or reactive params are present so the first
+  // request goes through the wrapper chain; we call execute() manually after wrapping.
   const baseFetchOptions = useFetchOptions
     ? {
         ...normalizeUseFzFetchOptions(useFetchOptions),
-        // Disable immediate if interceptors are present (we'll call execute() manually after wrapping)
-        immediate: hasInterceptors ? false : useFetchOptions.immediate,
+        immediate: mustDisableImmediate ? false : useFetchOptions.immediate,
       }
-    : hasInterceptors
+    : mustDisableImmediate
       ? { immediate: false }
       : undefined;
 
@@ -115,8 +120,8 @@ const createFetchResult = <T>(
   const wrapperChain = createDefaultWrapperChain();
   const wrappedResult = wrapperChain.apply(baseFetchResult, context);
 
-  // If immediate execution was requested and interceptors are present,
-  // manually call execute() after interceptors have been applied
+  // If we disabled immediate (interceptors or reactive params) and user wanted immediate,
+  // run execute() once so the first request goes through the wrapper chain
   if (shouldExecuteImmediate) {
     // Use nextTick to ensure all reactive setup is complete
     Promise.resolve().then(() => {
