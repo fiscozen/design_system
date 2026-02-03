@@ -1,5 +1,6 @@
 import { toValue, nextTick, type MaybeRefOrGetter } from "vue";
 import type { UseFzFetchReturn, UseFzFetchOptions } from "../../types";
+import { state } from "../../setup/state";
 import { injectCsrfToken } from "../../utils/csrf";
 import { handleFetchError } from "../../utils/error";
 import {
@@ -7,6 +8,7 @@ import {
   syncFetchResultState,
   waitForFetchCompletion,
   applyResponseInterceptorAndReparse,
+  handleAbortedRequest,
 } from "../interceptors/request";
 
 /**
@@ -16,7 +18,8 @@ import {
  * does not re-read requestInit on execute(), so mutating requestInit is not enough. We create
  * a new fetch with the current requestInit on each execute() and sync state back to fetchResult.
  *
- * Must run first (outermost) in the wrapper chain so other wrappers see the same execute() flow.
+ * Must be the outermost wrapper (added last to the chain) so it runs first on execute()
+ * and other wrappers (e.g. request interceptor) see resolved body/headers in requestInit.
  *
  * @param fetchResult - Result from fzFetcher or previous wrapper
  * @param requestInit - Request config object (mutated with current body/headers before one-off fetch)
@@ -52,9 +55,21 @@ export const wrapWithParamsResolver = <T>(
     }
 
     const urlString = toValue(url);
+    let requestToUse: RequestInit = requestInit;
+    if (state.globalRequestInterceptor) {
+      const intercepted = await state.globalRequestInterceptor(
+        urlString,
+        requestInit,
+      );
+      if (intercepted === null) {
+        handleAbortedRequest(fetchResult, urlString, throwOnFailed);
+        return;
+      }
+      requestToUse = intercepted;
+    }
     const oneOff = createModifiedFetchRequest<T>(
       urlString,
-      requestInit,
+      requestToUse,
       useFetchOptions,
     );
     const unwatchSync = syncFetchResultState(oneOff, fetchResult);
@@ -66,7 +81,7 @@ export const wrapWithParamsResolver = <T>(
         oneOff,
         fetchResult,
         urlString,
-        requestInit,
+        requestToUse,
         throwOnFailed,
         unwatchSync,
         () => {},

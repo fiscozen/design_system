@@ -8,7 +8,8 @@ import { state } from "../setup/state";
 
 /**
  * Wrapper adapter for params resolver (reactive body and headers).
- * Runs first so requestInit is updated before other wrappers and the base fetch.
+ * Added last to the chain so it is outermost and runs first on execute(),
+ * ensuring requestInit is updated with current body/headers before the request interceptor runs.
  */
 export const paramsResolverWrapper: Wrapper = {
   wrap<T>(
@@ -76,11 +77,14 @@ export const deduplicationWrapper: Wrapper = {
         ? context.useFetchOptions.deduplication
         : state.globalDeduplication;
 
+    // When body is reactive we use context.body; when static we use requestInit.body for the deduplication key
+    const bodyForDedup =
+      context.body !== undefined ? context.body : () => context.requestInit.body;
     return wrapWithDeduplication(
       fetchResult,
       context.url,
       context.method,
-      context.body,
+      bodyForDedup,
       deduplicationEnabled,
     );
   },

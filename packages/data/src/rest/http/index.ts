@@ -4,7 +4,7 @@ import type {
   UseFzFetchParams,
   UseFzFetchReturn,
 } from "./types";
-import { toValue, type MaybeRefOrGetter, computed } from "vue";
+import { toValue, isRef, type MaybeRefOrGetter, computed } from "vue";
 import { state } from "./setup/state";
 import { getUrlWithQueryParams } from "./utils/url";
 import { injectCsrfToken } from "./utils/csrf";
@@ -28,20 +28,20 @@ export { getCsrfOptions, getGlobalDebug as getDebug } from "./setup/state";
 /**
  * Creates a wrapper chain with default wrappers
  *
- * Wrappers are applied in order:
- * 1. Params resolver (resolves reactive body/headers into requestInit before each execute)
- * 2. Request interceptor
- * 3. Response interceptor
- * 4. Deduplication
+ * Wrappers are applied so the last added is outermost (runs first on execute()).
+ * Order added: request interceptor, response interceptor, deduplication, params resolver.
+ * Execution order on execute(): params resolver first (resolves reactive body/headers into
+ * requestInit), then deduplication, response interceptor, request interceptor, then base fetch.
+ * This ensures the request interceptor sees current body/headers when it reads requestInit.
  *
  * @returns Configured wrapper chain
  */
 const createDefaultWrapperChain = (): WrapperChain => {
   const chain = new WrapperChain();
-  chain.add(paramsResolverWrapper);
   chain.add(requestInterceptorWrapper);
   chain.add(responseInterceptorWrapper);
   chain.add(deduplicationWrapper);
+  chain.add(paramsResolverWrapper);
   return chain;
 };
 
@@ -212,12 +212,22 @@ export const useFzFetch: UseFzFetch = <T>(
       ),
     };
 
+    const bodyGetter =
+      params?.body !== undefined &&
+      (isRef(params.body) || typeof params.body === "function")
+        ? params.body
+        : undefined;
+    const headersGetter =
+      params?.headers !== undefined &&
+      (isRef(params.headers) || typeof params.headers === "function")
+        ? params.headers
+        : undefined;
     return createFetchResult<T>(
       finalUrl,
       requestInit,
       method,
-      params?.body,
-      params?.headers,
+      bodyGetter,
+      headersGetter,
       useFetchOptions,
     );
   }
@@ -245,12 +255,22 @@ export const useFzFetch: UseFzFetch = <T>(
         ),
       };
 
+      const bodyGetter =
+        params.body !== undefined &&
+        (isRef(params.body) || typeof params.body === "function")
+          ? params.body
+          : undefined;
+      const headersGetter =
+        params.headers !== undefined &&
+        (isRef(params.headers) || typeof params.headers === "function")
+          ? params.headers
+          : undefined;
       return createFetchResult<T>(
         finalUrl,
         requestInit,
         method,
-        params.body,
-        params.headers,
+        bodyGetter,
+        headersGetter,
         undefined,
       );
     } else {
