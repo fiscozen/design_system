@@ -21,10 +21,10 @@ export const createDeleteAction = <T>(
   const isLoading = shallowRef(false);
 
   const execute = async (pk: string | number): Promise<void> => {
-    validatePrimaryKey(pk, "createDeleteAction");
-
     await executeMutation<T>(
       async () => {
+        validatePrimaryKey(pk, "createDeleteAction");
+
         const response = useFzFetch<T>(`${basePath}/${pk}`, {
           method: "DELETE",
         });
