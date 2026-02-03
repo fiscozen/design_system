@@ -527,6 +527,44 @@ describe("Integration Tests", () => {
       expect(data.value).toEqual({ seq: 2 });
     });
 
+    it("should apply deduplication when reactive body is used and same request is in flight", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        deduplication: true,
+      });
+
+      let fetchCallCount = 0;
+      global.fetch = vi.fn(() => {
+        fetchCallCount++;
+        return new Promise<Response>((resolve) => {
+          setTimeout(
+            () =>
+              resolve(
+                new Response(JSON.stringify({ id: 1 }), {
+                  status: 200,
+                  headers: { "Content-Type": "application/json" },
+                }),
+              ),
+            50,
+          );
+        });
+      }) as typeof fetch;
+
+      const bodyRef = ref(JSON.stringify({ value: 1 }));
+      const { execute } = useFzFetch<{ id: number }>("/test", {
+        method: "POST",
+        body: bodyRef,
+        headers: { "Content-Type": "application/json" },
+      }, { immediate: false });
+
+      // Two execute() calls with same body (reactive value) in flight: dedup should coalesce to one request
+      const promise1 = execute();
+      const promise2 = execute();
+      await Promise.all([promise1, promise2]);
+
+      expect(fetchCallCount).toBe(1);
+    });
+
     it("should pass current reactive body/headers to request interceptor when it modifies request", async () => {
       const bodyRef = ref(JSON.stringify({ value: 1 }));
       const headersRef = ref<Record<string, string>>({
