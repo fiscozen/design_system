@@ -238,7 +238,8 @@ export const useFzFetch: UseFzFetch = <T>(
     if (
       "queryParams" in paramsOrUseFetchOptions ||
       "method" in paramsOrUseFetchOptions ||
-      "body" in paramsOrUseFetchOptions
+      "body" in paramsOrUseFetchOptions ||
+      "headers" in paramsOrUseFetchOptions
     ) {
       // It's UseFzFetchParams
       const params = paramsOrUseFetchOptions as UseFzFetchParams;

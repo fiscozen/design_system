@@ -33,6 +33,35 @@ describe("Deduplication", () => {
     await expect(Promise.all([promise1, promise2])).resolves.not.toThrow();
   });
 
+  it("should sync data and state when second request waits for pending identical request", async () => {
+    setupFzFetcher({
+      baseUrl: "https://api.example.com",
+      deduplication: true,
+    });
+
+    global.fetch = vi.fn(() =>
+      Promise.resolve(
+        new Response(JSON.stringify({ id: 1 }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+      ),
+    ) as typeof fetch;
+
+    const result1 = useFzFetch<{ id: number }>("/users/1", { immediate: false });
+    const result2 = useFzFetch<{ id: number }>("/users/1", { immediate: false });
+
+    const promise1 = result1.execute();
+    const promise2 = result2.execute();
+
+    await Promise.all([promise1, promise2]);
+
+    // After both complete, result2 (deduplicated) should have the same data as result1
+    expect(result2.data.value).toEqual({ id: 1 });
+    expect(result2.statusCode.value).toBe(200);
+    expect(result2.error.value).toBeNull();
+  });
+
   describe("JSON normalization", () => {
     beforeEach(() => {
       setupFzFetcher({
