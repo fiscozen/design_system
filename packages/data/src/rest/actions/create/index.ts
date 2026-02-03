@@ -23,9 +23,19 @@ export const createCreateAction = <T>(
   const execute = async (payload: Partial<T>): Promise<void> => {
     await executeMutation<T>(
       async () => {
+        let body: string;
+        try {
+          body = JSON.stringify(payload);
+        } catch (err: unknown) {
+          const serializationError = err instanceof Error ? err : new Error(String(err));
+          throw new Error(
+            `[createCreateAction] Failed to serialize payload: ${serializationError.message}`,
+          );
+        }
+
         const response = useFzFetch<T>(basePath, {
           method: "POST",
-          body: JSON.stringify(payload),
+          body,
           headers: { "Content-Type": CONTENT_TYPE_JSON },
         });
 

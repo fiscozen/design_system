@@ -57,12 +57,33 @@ export class CsrfManager {
       const value = cookie.substring(equalIndex + 1).trim();
 
       if (name === cookieName) {
-        if (this.debug) {
-          console.debug(
-            `[CsrfManager] Found CSRF token in cookie: ${cookieName}`,
-          );
+        // Check for empty token value
+        if (value === "") {
+          if (this.debug) {
+            console.debug(
+              `[CsrfManager] Found empty CSRF token in cookie: ${cookieName}`,
+            );
+          }
+          return null;
         }
-        return decodeURIComponent(value);
+
+        try {
+          const decodedValue = decodeURIComponent(value);
+          if (this.debug) {
+            console.debug(
+              `[CsrfManager] Found CSRF token in cookie: ${cookieName}`,
+            );
+          }
+          return decodedValue;
+        } catch (error: unknown) {
+          if (this.debug) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            console.warn(
+              `[CsrfManager] Failed to decode CSRF token from cookie: ${errorMessage}`,
+            );
+          }
+          return null;
+        }
       }
     }
 

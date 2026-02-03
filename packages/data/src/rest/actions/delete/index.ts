@@ -3,6 +3,7 @@ import { useFzFetch } from "../../http";
 import type { UseDeleteAction } from "./types";
 import type { MutationActionOptions } from "../shared/types";
 import { executeMutation } from "../shared/error-handling";
+import { validatePrimaryKey } from "../shared/validation";
 
 /**
  * Create a delete action for deleting an existing entity
@@ -20,6 +21,8 @@ export const createDeleteAction = <T>(
   const isLoading = shallowRef(false);
 
   const execute = async (pk: string | number): Promise<void> => {
+    validatePrimaryKey(pk, "createDeleteAction");
+
     await executeMutation<T>(
       async () => {
         const response = useFzFetch<T>(`${basePath}/${pk}`, {

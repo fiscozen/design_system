@@ -11,6 +11,7 @@ import { state } from "../../setup/state";
 import { normalizeUseFzFetchOptions } from "../../utils/options";
 import { handleFetchError } from "../../utils/error";
 import { parseResponseBody } from "../../utils/response";
+import { wrapWithDeduplication } from "../deduplication/wrapper";
 
 /**
  * Compares two normalized header objects for equality
@@ -672,20 +673,36 @@ export const wrapWithRequestInterceptor = <T>(
           useFetchOptions,
         );
 
+        // Apply deduplication to the modified fetch to maintain consistency with params-resolver path.
+        // When requestInit is modified, we create a new fetch that bypasses the wrapper chain.
+        // We must manually wrap with deduplication to prevent duplicate requests when the same
+        // modified request is made multiple times.
+        const deduplicationEnabled =
+          useFetchOptions?.deduplication !== undefined
+            ? useFetchOptions.deduplication
+            : state.globalDeduplication;
+        const modifiedFetchWithDedup = wrapWithDeduplication(
+          modifiedFetchResult as UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>,
+          () => urlString,
+          requestInit.method || "GET",
+          () => interceptedRequest.body,
+          deduplicationEnabled,
+        );
+
         // Synchronize state reactively from modified fetch to original result
         const unwatchSync = syncFetchResultState(
-          modifiedFetchResult,
+          modifiedFetchWithDedup,
           fetchResult,
         );
         currentWatch = unwatchSync;
 
         // Execute the modified fetch and wait for completion
         try {
-          await modifiedFetchResult.execute(throwOnFailed);
+          await modifiedFetchWithDedup.execute(throwOnFailed);
 
           // Apply response interceptor since modified fetch bypasses wrapper chain
           const shouldContinue = await applyResponseInterceptorAndReparse(
-            modifiedFetchResult,
+            modifiedFetchWithDedup,
             fetchResult,
             urlString,
             interceptedRequest,
@@ -707,7 +724,7 @@ export const wrapWithRequestInterceptor = <T>(
         } catch (error: unknown) {
           // Wait for request to fully complete even on error
           // This ensures state is fully synchronized before handling the error
-          await waitForFetchCompletion(modifiedFetchResult);
+          await waitForFetchCompletion(modifiedFetchWithDedup);
 
           // Stop watcher immediately to prevent it from overwriting the error
           // and to prevent memory leak. Must be done BEFORE handleFetchError
@@ -737,7 +754,7 @@ export const wrapWithRequestInterceptor = <T>(
 
         // Wait for request to fully complete before stopping watch
         // This ensures all state updates are propagated
-        await waitForFetchCompletion(modifiedFetchResult);
+        await waitForFetchCompletion(modifiedFetchWithDedup);
 
         // Stop watching when request fully completes (success or error)
         // Use nextTick to ensure all state updates are propagated before cleanup
