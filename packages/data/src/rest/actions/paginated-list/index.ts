@@ -175,6 +175,8 @@ export const createPaginatedListAction = <T>(
     if (isRequestInFlight) {
       if (currentPage === serverPage) {
         // Response matches current request - safe to sync
+        // Note: This mutation triggers the watch in create-list-base.ts, but the
+        // debounce + isExecuting check prevents infinite loops
         baseResult.pagination.page = serverPage;
       }
       // Otherwise, ignore this response (it's from an older request)
@@ -183,6 +185,7 @@ export const createPaginatedListAction = <T>(
 
     // No request in flight - safe to sync normally
     // This handles cases where server returns a different page due to validation, etc.
+    // Only update if different to avoid triggering unnecessary reactivity
     if (currentPage !== serverPage) {
       baseResult.pagination.page = serverPage;
     }

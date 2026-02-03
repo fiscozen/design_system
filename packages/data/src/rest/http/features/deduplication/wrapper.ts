@@ -150,10 +150,8 @@ export const wrapWithDeduplication = <T>(
       return;
     }
 
-    // Create new request
-    const requestPromise = originalExecute(throwOnFailed);
-
-    // Register as pending request (before await to make it available immediately)
+    // Register as pending request BEFORE executing to make it available immediately
+    // This allows concurrent execute() calls to see this request as pending
     state.deduplicationManager!.registerPendingRequest(
       urlString,
       method,
@@ -161,6 +159,62 @@ export const wrapWithDeduplication = <T>(
       fetchResult,
     );
 
+    // Race condition mitigation: verify we're still the registered request after registration.
+    // If another concurrent execute() overwrote our registration, wait for that one instead.
+    const verifyRegistration = state.deduplicationManager!.getPendingRequest<T>(
+      urlString,
+      method,
+      bodyString,
+    );
+    
+    if (verifyRegistration !== fetchResult) {
+      // Another request overwrote our registration; wait for it instead
+      if (verifyRegistration) {
+        const syncState = () => {
+          fetchResult.statusCode.value = verifyRegistration.statusCode.value;
+          fetchResult.response.value = verifyRegistration.response.value;
+          fetchResult.error.value = verifyRegistration.error.value;
+          fetchResult.data.value = verifyRegistration.data.value;
+        };
+
+        syncState();
+
+        if (verifyRegistration.isFetching.value) {
+          let unwatchSync: (() => void) | null = null;
+          let isCleanedUp = false;
+
+          await new Promise<void>((resolve) => {
+            unwatchSync = watchEffect(() => {
+              syncState();
+
+              if (!verifyRegistration.isFetching.value && !isCleanedUp) {
+                isCleanedUp = true;
+                nextTick(() => {
+                  if (unwatchSync) {
+                    unwatchSync();
+                    unwatchSync = null;
+                  }
+                  resolve();
+                });
+              }
+            });
+          });
+        } else {
+          syncState();
+        }
+
+        if (verifyRegistration.error.value && throwOnFailed) {
+          throw verifyRegistration.error.value;
+        }
+
+        return;
+      }
+      // If verifyRegistration is null (cleaned up between register and verify),
+      // fall through and execute our request
+    }
+
+    // Execute the original fetch
+    const requestPromise = originalExecute(throwOnFailed);
     return requestPromise;
   };
 
