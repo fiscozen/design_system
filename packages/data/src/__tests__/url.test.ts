@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { ref } from "vue";
 import { getUrlWithQueryParams } from "../rest/http/utils/url";
 
 describe("getUrlWithQueryParams", () => {
@@ -115,5 +116,26 @@ describe("getUrlWithQueryParams", () => {
     const result = getUrlWithQueryParams(url, { key1: "value1" });
 
     expect(result).toBe("http://example.com/path?key1=value1#section");
+  });
+
+  it("should not throw when queryParams is ref(undefined)", () => {
+    const url = "http://example.com/path";
+    const queryParams = ref<Record<string, string | number | boolean | null> | undefined>(undefined);
+    expect(() => getUrlWithQueryParams(url, queryParams)).not.toThrow();
+    expect(getUrlWithQueryParams(url, queryParams)).toBe("http://example.com/path");
+  });
+
+  it("should not throw when queryParams is getter returning undefined", () => {
+    const url = "http://example.com/path";
+    const getter = () => undefined;
+    expect(() => getUrlWithQueryParams(url, getter)).not.toThrow();
+    expect(getUrlWithQueryParams(url, getter)).toBe("http://example.com/path");
+  });
+
+  it("should not throw when queryParams is getter returning null", () => {
+    const url = "http://example.com/path";
+    const getter = () => null;
+    expect(() => getUrlWithQueryParams(url, getter)).not.toThrow();
+    expect(getUrlWithQueryParams(url, getter)).toBe("http://example.com/path");
   });
 });

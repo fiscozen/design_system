@@ -468,6 +468,32 @@ describe("Integration Tests", () => {
       expect(capturedHeaders[0]["X-Custom"]).toBe("initial");
     });
 
+    it("should treat second param as UseFzFetchParams when only headers is provided", async () => {
+      setupFzFetcher({ baseUrl: "https://api.example.com" });
+
+      let capturedHeaders: HeadersInit | undefined;
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        capturedHeaders = init?.headers;
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test", {
+        headers: { "X-Custom": "value" },
+      });
+      await execute();
+
+      const headersObj =
+        capturedHeaders instanceof Headers
+          ? Object.fromEntries(capturedHeaders.entries())
+          : (capturedHeaders as Record<string, string>) ?? {};
+      expect(headersObj["X-Custom"]).toBe("value");
+    });
+
     it("should not run any request when reactive body and explicit immediate: false", async () => {
       setupFzFetcher({ baseUrl: "https://api.example.com" });
 

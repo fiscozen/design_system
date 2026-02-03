@@ -89,7 +89,10 @@ export const wrapWithDeduplication = <T>(
     );
 
     if (pendingFetchResult) {
-      // Synchronize reactive state from pending request to current fetchResult
+      // Synchronize reactive state from pending request to current fetchResult.
+      // Note: isFetching is not synced because VueUse may expose it as Readonly<ShallowRef>;
+      // mutating it would trigger Vue warnings. Callers waiting on the deduplicated request
+      // will see data/error/statusCode/response once the pending request completes.
       const syncState = () => {
         fetchResult.statusCode.value = pendingFetchResult.statusCode.value;
         fetchResult.response.value = pendingFetchResult.response.value;

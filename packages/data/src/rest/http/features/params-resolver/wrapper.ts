@@ -57,23 +57,36 @@ export const wrapWithParamsResolver = <T>(
       currentWatch = null;
     }
 
-    // Build a per-call request config so concurrent execute() calls don't share mutable state.
-    // If we mutated the shared requestInit and the interceptor is async, a second call could
-    // overwrite body/headers before the first interceptor resumes and read wrong values.
-    const bodyValue =
-      bodyGetter !== undefined ? toValue(bodyGetter) ?? undefined : requestInit.body;
-    const headersValue =
-      headersGetter !== undefined
-        ? injectCsrfToken(method, toValue(headersGetter) ?? {})
-        : requestInit.headers;
+    let bodyValue: BodyInit | null | undefined;
+    let headersValue: RequestInit["headers"];
+    let requestInitForThisCall: RequestInit;
+    let urlString: string;
 
-    const requestInitForThisCall: RequestInit = {
-      ...requestInit,
-      body: bodyValue,
-      headers: headersValue,
-    };
+    try {
+      // Build a per-call request config so concurrent execute() calls don't share mutable state.
+      // If we mutated the shared requestInit and the interceptor is async, a second call could
+      // overwrite body/headers before the first interceptor resumes and read wrong values.
+      bodyValue =
+        bodyGetter !== undefined
+          ? toValue(bodyGetter) ?? undefined
+          : requestInit.body;
+      headersValue =
+        headersGetter !== undefined
+          ? injectCsrfToken(method, toValue(headersGetter) ?? {})
+          : requestInit.headers;
 
-    const urlString = toValue(url);
+      requestInitForThisCall = {
+        ...requestInit,
+        body: bodyValue,
+        headers: headersValue,
+      };
+
+      urlString = toValue(url);
+    } catch (error: unknown) {
+      handleFetchError(fetchResult.error, error, throwOnFailed);
+      return;
+    }
+
     let requestToUse: RequestInit = requestInitForThisCall;
 
     if (state.globalRequestInterceptor) {

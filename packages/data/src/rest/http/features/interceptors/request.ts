@@ -2,6 +2,7 @@ import {
   toValue,
   watch,
   nextTick,
+  isReadonly,
   type MaybeRefOrGetter,
   type ShallowRef,
 } from "vue";
@@ -265,7 +266,11 @@ export const syncFetchResultState = <T>(
       target.statusCode.value = source.statusCode.value;
       target.data.value = source.data.value;
       target.error.value = source.error.value;
-      (target.isFetching as ShallowRef<boolean>).value = source.isFetching.value;
+      // VueUse may expose isFetching as Readonly; skip assign to avoid Vue warning
+      if (!isReadonly(target.isFetching)) {
+        (target.isFetching as ShallowRef<boolean>).value =
+          source.isFetching.value;
+      }
     },
     { immediate: true, deep: false },
   );

@@ -129,12 +129,14 @@ export const getUrlWithQueryParams = (
   // Add new queryParams if present (they take priority). undefined = omit; null = send as "null"
   if (queryParams) {
     const resolvedParams = toValue(queryParams);
-    Object.entries(resolvedParams).forEach(([key, value]) => {
-      if (value !== undefined) {
-        searchParams.delete(key);
-        searchParams.append(key, String(value));
-      }
-    });
+    if (resolvedParams != null && typeof resolvedParams === "object") {
+      Object.entries(resolvedParams).forEach(([key, value]) => {
+        if (value !== undefined) {
+          searchParams.delete(key);
+          searchParams.append(key, String(value));
+        }
+      });
+    }
   }
 
   const queryString = searchParams.toString();
