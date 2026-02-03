@@ -64,7 +64,7 @@ const emit = defineEmits<{
     ordering: FzOrdering,
     newOrderingDirection: FzOrdering["direction"],
   ];
-  "update:searchTerm": [searchTerm: string];
+  "update:searchTerm": [searchTerm: string|undefined];
   "fztable:newitem": [];
   "fztable:updateFilters": [filters: FzTableFilters];
   "fztable:emptyFilters": [];
@@ -475,7 +475,7 @@ onUnmounted(() => {
       <template v-if="loading">
         <div class="fz__table__loading h-full w-full flex justify-center items-center min-h-[200px] absolute z-20 bg-gray-100/60">
           <slot name="loading">
-            <FzProgress />
+            <FzProgress name="spinner-third" />
           </slot>
         </div>
       </template>

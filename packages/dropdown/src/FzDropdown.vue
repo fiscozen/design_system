@@ -4,7 +4,7 @@
     :position="floatingPosition"
     ref="container"
     overrideContentClass
-    contentClass="mt-4"
+    contentClass="mt-4 z-70"
     :teleport="teleport"
   >
     <template #opener>

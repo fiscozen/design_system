@@ -73,7 +73,7 @@ exports[`FzDropdown > Snapshots > should match snapshot - open state 1`] = `
     </button></div>
   <!--v-if-->
   <div to="body">
-    <div class="fz__floating__content mt-4">
+    <div class="fz__floating__content mt-4 z-70">
       <div data-v-ca7f3405="" class="fz__actionlist bg-core-white rounded flex flex-col gap-20 p-4 min-w-[240px]">
         <div class="flex flex-col gap-4" role="group" aria-labelledby="fz-action-section-label-normalized" environment="frontoffice">
           <!--v-if--><button data-v-f322a564="" aria-disabled="false" aria-selected="false" type="button" class="group inline-flex max-w-full rounded border border-transparent border-2 transition-colors duration-200 gap-2 p-12 flex-row gap-8 text-core-black hover:bg-background-alice-blue hover:!text-blue-500 focus:!border-blue-200 focus:!outline-none focus:text-core-black">

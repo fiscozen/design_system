@@ -19,7 +19,7 @@
     "@fiscozen/checkbox": "workspace:^",
     "@fiscozen/composables": "workspace:^",
     "@fiscozen/dialog": "workspace:^",
-    "@fiscozen/dropdown": "workspace:^",
+    "@fiscozen/dropdown": "1.0.1",
     "@fiscozen/icons": "workspace:^",
     "@fiscozen/input": "workspace:^",
     "@fiscozen/progress": "workspace:^",

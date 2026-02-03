@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/dropdown",
-  "version": "1.0.0-next.0",
+  "version": "1.0.1",
   "description": "Design System Dropdown component",
   "scripts": {
     "coverage": "vitest run --coverage",
