@@ -219,9 +219,8 @@ export const createPaginatedListAction = <T>(
       validatePaginationValue(page, "page", "handlePageChange");
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      console.warn(
-        `[handlePageChange] ${errorMessage}. Ignoring invalid page change.`,
-      );
+      // errorMessage already includes context from validatePaginationValue (e.g. [handlePageChange])
+      console.warn(`${errorMessage}. Ignoring invalid page change.`);
       return;
     }
     baseResult.pagination.page = page;
