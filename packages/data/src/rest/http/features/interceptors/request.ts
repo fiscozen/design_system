@@ -575,9 +575,10 @@ export const applyResponseInterceptorAndReparse = async <T>(
 };
 
 /**
- * Handles errors from interceptor execution
+ * Handles errors from interceptor execution.
+ * Exported for use by params resolver (reactive body/headers path).
  */
-const handleInterceptorError = <T>(
+export const handleInterceptorError = <T>(
   fetchResult: UseFzFetchReturn<T>,
   error: unknown,
   throwOnFailed?: boolean,
