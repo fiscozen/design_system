@@ -28,14 +28,13 @@ export const createUpdateAction = <T>(
     payload: Partial<T>,
     executeOptions?: UseUpdateExecuteOptions,
   ): Promise<void> => {
-    validatePrimaryKey(pk, "createUpdateAction");
-
-    // Determine HTTP method based on partialUpdate option
     const partialUpdate = executeOptions?.partialUpdate ?? true;
     const method = partialUpdate ? "PATCH" : "PUT";
 
     await executeMutation<T>(
       async () => {
+        validatePrimaryKey(pk, "createUpdateAction");
+
         let body: string;
         try {
           body = JSON.stringify(payload);
