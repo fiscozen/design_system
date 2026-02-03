@@ -496,6 +496,37 @@ describe("Integration Tests", () => {
       expect(fetchCallCount).toBe(1);
     });
 
+    it("should clean up previous watcher when execute() is called rapidly so only latest request syncs to fetchResult", async () => {
+      setupFzFetcher({ baseUrl: "https://api.example.com" });
+
+      let callIndex = 0;
+      global.fetch = vi.fn((_url: string, _init?: RequestInit) => {
+        const seq = ++callIndex;
+        return Promise.resolve(
+          new Response(JSON.stringify({ seq }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const bodyRef = ref(JSON.stringify({ value: 1 }));
+      const { execute, data } = useFzFetch<{ seq: number }>("/test", {
+        method: "POST",
+        body: bodyRef,
+        headers: { "Content-Type": "application/json" },
+      }, { immediate: false });
+
+      // Fire two execute() calls without awaiting the first (rapid double call)
+      const promise1 = execute();
+      const promise2 = execute();
+      await Promise.all([promise1, promise2]);
+
+      // Only one watcher should be active at a time; the second execute() cleans up the first watcher.
+      // Final data must be from the second request (seq: 2), not corrupted by the first (seq: 1).
+      expect(data.value).toEqual({ seq: 2 });
+    });
+
     it("should pass current reactive body/headers to request interceptor when it modifies request", async () => {
       const bodyRef = ref(JSON.stringify({ value: 1 }));
       const headersRef = ref<Record<string, string>>({
