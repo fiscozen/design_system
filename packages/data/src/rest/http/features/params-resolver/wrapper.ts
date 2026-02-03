@@ -26,7 +26,7 @@ import {
  * and other wrappers (e.g. request interceptor) see resolved body/headers in requestInit.
  *
  * @param fetchResult - Result from fzFetcher or previous wrapper
- * @param requestInit - Request config object (mutated with current body/headers before one-off fetch)
+ * @param requestInit - Base request config (method, etc.); per execute() we build a copy with current body/headers
  * @param method - HTTP method
  * @param url - Request URL (MaybeRefOrGetter)
  * @param bodyGetter - Optional reactive body
@@ -56,25 +56,29 @@ export const wrapWithParamsResolver = <T>(
       currentWatch = null;
     }
 
-    if (bodyGetter !== undefined) {
-      requestInit.body = toValue(bodyGetter) ?? undefined;
-    }
-    if (headersGetter !== undefined) {
-      requestInit.headers = injectCsrfToken(
-        method,
-        toValue(headersGetter) ?? {},
-      );
-    }
+    // Build a per-call request config so concurrent execute() calls don't share mutable state.
+    // If we mutated the shared requestInit and the interceptor is async, a second call could
+    // overwrite body/headers before the first interceptor resumes and read wrong values.
+    const bodyValue =
+      bodyGetter !== undefined ? toValue(bodyGetter) ?? undefined : requestInit.body;
+    const headersValue =
+      headersGetter !== undefined
+        ? injectCsrfToken(method, toValue(headersGetter) ?? {})
+        : requestInit.headers;
+
+    const requestInitForThisCall: RequestInit = {
+      ...requestInit,
+      body: bodyValue,
+      headers: headersValue,
+    };
 
     const urlString = toValue(url);
-    const bodyValue =
-      bodyGetter !== undefined ? toValue(bodyGetter) : requestInit.body;
-    let requestToUse: RequestInit = requestInit;
+    let requestToUse: RequestInit = requestInitForThisCall;
 
     if (state.globalRequestInterceptor) {
       const intercepted = await state.globalRequestInterceptor(
         urlString,
-        requestInit,
+        requestInitForThisCall,
       );
       if (intercepted === null) {
         handleAbortedRequest(fetchResult, urlString, throwOnFailed);
