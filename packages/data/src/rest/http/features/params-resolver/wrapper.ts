@@ -3,6 +3,7 @@ import type { UseFzFetchReturn, UseFzFetchOptions } from "../../types";
 import { state } from "../../setup/state";
 import { injectCsrfToken } from "../../utils/csrf";
 import { handleFetchError } from "../../utils/error";
+import { wrapWithDeduplication } from "../deduplication/wrapper";
 import {
   createModifiedFetchRequest,
   syncFetchResultState,
@@ -18,6 +19,9 @@ import {
  * does not re-read requestInit on execute(), so mutating requestInit is not enough. We create
  * a new fetch with the current requestInit on each execute() and sync state back to fetchResult.
  *
+ * To preserve deduplication, the one-off fetch is wrapped with wrapWithDeduplication before
+ * calling execute(), so identical in-flight requests still deduplicate.
+ *
  * Must be the outermost wrapper (added last to the chain) so it runs first on execute()
  * and other wrappers (e.g. request interceptor) see resolved body/headers in requestInit.
  *
@@ -27,7 +31,7 @@ import {
  * @param url - Request URL (MaybeRefOrGetter)
  * @param bodyGetter - Optional reactive body
  * @param headersGetter - Optional reactive headers
- * @param useFetchOptions - Optional fetch options for the one-off fetch
+ * @param useFetchOptions - Optional fetch options for the one-off fetch and deduplication
  * @returns Same fetch result with execute() wrapped
  */
 export const wrapWithParamsResolver = <T>(
@@ -44,11 +48,9 @@ export const wrapWithParamsResolver = <T>(
   }
 
   // Track current watch so we can clean it up when execute() is called multiple times rapidly.
-  // Prevents multiple watchers syncing to the same fetchResult and corrupting state.
   let currentWatch: (() => void) | null = null;
 
   fetchResult.execute = async (throwOnFailed?: boolean) => {
-    // Cleanup previous watch if it exists (in case execute() was called before the prior one completed)
     if (currentWatch) {
       currentWatch();
       currentWatch = null;
@@ -65,7 +67,10 @@ export const wrapWithParamsResolver = <T>(
     }
 
     const urlString = toValue(url);
+    const bodyValue =
+      bodyGetter !== undefined ? toValue(bodyGetter) : requestInit.body;
     let requestToUse: RequestInit = requestInit;
+
     if (state.globalRequestInterceptor) {
       const intercepted = await state.globalRequestInterceptor(
         urlString,
@@ -77,6 +82,7 @@ export const wrapWithParamsResolver = <T>(
       }
       requestToUse = intercepted;
     }
+
     const oneOff = createModifiedFetchRequest<T>(
       urlString,
       requestToUse,
@@ -91,8 +97,20 @@ export const wrapWithParamsResolver = <T>(
       }
     };
 
+    const deduplicationEnabled =
+      useFetchOptions?.deduplication !== undefined
+        ? useFetchOptions.deduplication
+        : state.globalDeduplication;
+    const oneOffWithDedup = wrapWithDeduplication(
+      oneOff as UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>,
+      () => urlString,
+      method,
+      () => bodyValue,
+      deduplicationEnabled,
+    );
+
     try {
-      await oneOff.execute(throwOnFailed);
+      await oneOffWithDedup.execute(throwOnFailed);
 
       const shouldContinue = await applyResponseInterceptorAndReparse(
         oneOff,
