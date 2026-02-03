@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { ref, computed } from "vue";
 import { setupFzFetcher, resetFzFetcher, useFzFetch } from "../rest";
 
 /**
@@ -285,6 +286,119 @@ describe("Integration Tests", () => {
       // Verify error was set
       expect(error.value).toBeInstanceOf(Error);
       expect(error.value?.message).toBe("Interceptor error");
+    });
+  });
+
+  describe("Reactive body and headers", () => {
+    it("should use current body on each execute() when body is reactive", async () => {
+      setupFzFetcher({ baseUrl: "https://api.example.com" });
+
+      const bodyRef = ref(JSON.stringify({ value: 1 }));
+
+      const capturedBodies: string[] = [];
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        capturedBodies.push(
+          typeof init?.body === "string" ? init.body : String(init?.body ?? ""),
+        );
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test", {
+        method: "POST",
+        body: bodyRef,
+        headers: { "Content-Type": "application/json" },
+      }, { immediate: false });
+
+      await execute();
+      expect(capturedBodies).toHaveLength(1);
+      expect(capturedBodies[0]).toBe(JSON.stringify({ value: 1 }));
+
+      bodyRef.value = JSON.stringify({ value: 2 });
+      await execute();
+      expect(capturedBodies).toHaveLength(2);
+      expect(capturedBodies[1]).toBe(JSON.stringify({ value: 2 }));
+    });
+
+    it("should use current headers on each execute() when headers are reactive", async () => {
+      setupFzFetcher({ baseUrl: "https://api.example.com" });
+
+      const headersRef = ref<Record<string, string>>({
+        "Content-Type": "application/json",
+        "X-Custom": "first",
+      });
+
+      const capturedHeaders: Record<string, string>[] = [];
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        const h = init?.headers;
+        capturedHeaders.push(
+          h instanceof Headers
+            ? Object.fromEntries(h.entries())
+            : (h as Record<string, string>) ?? {},
+        );
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test", {
+        method: "POST",
+        body: null,
+        headers: headersRef,
+      }, { immediate: false });
+
+      await execute();
+      expect(capturedHeaders).toHaveLength(1);
+      expect(capturedHeaders[0]["X-Custom"]).toBe("first");
+
+      headersRef.value = {
+        "Content-Type": "application/json",
+        "X-Custom": "second",
+      };
+      await execute();
+      expect(capturedHeaders).toHaveLength(2);
+      expect(capturedHeaders[1]["X-Custom"]).toBe("second");
+    });
+
+    it("should work with computed body and static headers", async () => {
+      setupFzFetcher({ baseUrl: "https://api.example.com" });
+
+      const count = ref(0);
+      const bodyComputed = computed(() =>
+        JSON.stringify({ count: count.value }),
+      );
+
+      let lastBody: string | undefined;
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        lastBody =
+          typeof init?.body === "string" ? init.body : undefined;
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test", {
+        method: "POST",
+        body: bodyComputed,
+        headers: { "Content-Type": "application/json" },
+      }, { immediate: false });
+
+      await execute();
+      expect(lastBody).toBe(JSON.stringify({ count: 0 }));
+
+      count.value = 5;
+      await execute();
+      expect(lastBody).toBe(JSON.stringify({ count: 5 }));
     });
   });
 

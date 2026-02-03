@@ -12,6 +12,7 @@ import { normalizeUseFzFetchOptions } from "./utils/options";
 import { DEFAULT_HTTP_METHOD } from "./common";
 import { WrapperChain } from "./wrappers/chain";
 import {
+  paramsResolverWrapper,
   requestInterceptorWrapper,
   responseInterceptorWrapper,
   deduplicationWrapper,
@@ -28,14 +29,16 @@ export { getCsrfOptions, getGlobalDebug as getDebug } from "./setup/state";
  * Creates a wrapper chain with default wrappers
  *
  * Wrappers are applied in order:
- * 1. Request interceptor (first to intercept before fetch)
- * 2. Response interceptor
- * 3. Deduplication (last to wrap the interceptor logic)
+ * 1. Params resolver (resolves reactive body/headers into requestInit before each execute)
+ * 2. Request interceptor
+ * 3. Response interceptor
+ * 4. Deduplication
  *
  * @returns Configured wrapper chain
  */
 const createDefaultWrapperChain = (): WrapperChain => {
   const chain = new WrapperChain();
+  chain.add(paramsResolverWrapper);
   chain.add(requestInterceptorWrapper);
   chain.add(responseInterceptorWrapper);
   chain.add(deduplicationWrapper);
@@ -45,25 +48,30 @@ const createDefaultWrapperChain = (): WrapperChain => {
 /**
  * Creates a fetch result with all wrappers applied
  *
- * Uses a wrapper chain to apply request interceptor, response interceptor,
+ * Uses a wrapper chain to apply params resolver, request interceptor, response interceptor,
  * and deduplication wrapper in the correct order.
+ *
+ * bodyGetter and headersGetter are optional; when provided they are re-evaluated on each
+ * execute() by the params resolver so body and headers stay reactive.
  *
  * **Important**: If interceptors are configured, we disable `immediate` execution
  * in the base fetch result to ensure interceptors are applied before execution.
  * After applying interceptors, we manually call `execute()` if `immediate` was true.
  *
  * @param finalUrl - Computed URL for the request (can be reactive via ref/computed)
- * @param requestInit - Request configuration
+ * @param requestInit - Request configuration (initial values; mutated by params resolver when getters provided)
  * @param method - HTTP method
- * @param body - Request body (for deduplication key)
+ * @param bodyGetter - Optional reactive body (re-evaluated on each execute)
+ * @param headersGetter - Optional reactive headers (re-evaluated on each execute)
  * @param useFetchOptions - Optional useFetchOptions for fzFetcher and interceptors
- * @returns Wrapped fetch result with all interceptors and deduplication applied
+ * @returns Wrapped fetch result with all wrappers applied
  */
 const createFetchResult = <T>(
   finalUrl: MaybeRefOrGetter<string>,
   requestInit: RequestInit,
   method: string,
-  body: BodyInit | null | undefined,
+  bodyGetter?: MaybeRefOrGetter<BodyInit | null | undefined>,
+  headersGetter?: MaybeRefOrGetter<Record<string, string> | undefined>,
   useFetchOptions?: UseFzFetchOptions,
 ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> => {
   // Check if interceptors are configured
@@ -93,12 +101,13 @@ const createFetchResult = <T>(
     baseFetchOptions,
   ).json();
 
-  // Create wrapper context
+  // Create wrapper context (body/headers as getters for params resolver and deduplication)
   const context: WrapperContext = {
     url: finalUrl,
     requestInit,
     method,
-    body,
+    body: bodyGetter,
+    headers: headersGetter,
     useFetchOptions,
   };
 
@@ -160,6 +169,17 @@ const createFetchResult = <T>(
  *   queryParams: { role: 'admin', active: true }
  * })
  * // Requests: /users?role=admin&active=true
+ *
+ * @example
+ * // Reactive body and headers (re-evaluated on each execute())
+ * const payload = ref({ name: 'John' })
+ * const headers = ref({ 'Content-Type': 'application/json' })
+ * const { execute } = useFzFetch<User>('/users', {
+ *   method: 'POST',
+ *   body: computed(() => JSON.stringify(payload.value)),
+ *   headers,
+ * }, { immediate: false })
+ * await execute() // uses current payload and headers
  */
 export const useFzFetch: UseFzFetch = <T>(
   basePath: MaybeRefOrGetter<string>,
@@ -179,8 +199,12 @@ export const useFzFetch: UseFzFetch = <T>(
     );
     const requestInit = {
       method,
-      body: params?.body,
-      headers: injectCsrfToken(method, params?.headers),
+      body:
+        params?.body !== undefined ? toValue(params.body) : undefined,
+      headers: injectCsrfToken(
+        method,
+        params?.headers !== undefined ? toValue(params.headers ?? {}) : {},
+      ),
     };
 
     return createFetchResult<T>(
@@ -188,6 +212,7 @@ export const useFzFetch: UseFzFetch = <T>(
       requestInit,
       method,
       params?.body,
+      params?.headers,
       useFetchOptions,
     );
   }
@@ -208,8 +233,11 @@ export const useFzFetch: UseFzFetch = <T>(
       );
       const requestInit = {
         method,
-        body: params.body,
-        headers: injectCsrfToken(method, params.headers),
+        body: params.body !== undefined ? toValue(params.body) : undefined,
+        headers: injectCsrfToken(
+          method,
+          params.headers !== undefined ? toValue(params.headers ?? {}) : {},
+        ),
       };
 
       return createFetchResult<T>(
@@ -217,6 +245,7 @@ export const useFzFetch: UseFzFetch = <T>(
         requestInit,
         method,
         params.body,
+        params.headers,
         undefined,
       );
     } else {
@@ -236,7 +265,8 @@ export const useFzFetch: UseFzFetch = <T>(
         finalUrl,
         requestInit,
         method,
-        null,
+        undefined,
+        undefined,
         useFetchOptionsForThis,
       );
     }
@@ -252,5 +282,12 @@ export const useFzFetch: UseFzFetch = <T>(
     headers: injectCsrfToken(method, {}),
   };
 
-  return createFetchResult<T>(finalUrl, requestInit, method, null, undefined);
+  return createFetchResult<T>(
+    finalUrl,
+    requestInit,
+    method,
+    undefined,
+    undefined,
+    undefined,
+  );
 };
