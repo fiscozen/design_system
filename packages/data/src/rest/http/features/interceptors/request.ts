@@ -684,7 +684,7 @@ export const wrapWithRequestInterceptor = <T>(
         const modifiedFetchWithDedup = wrapWithDeduplication(
           modifiedFetchResult as UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>,
           () => urlString,
-          requestInit.method || "GET",
+          (interceptedRequest.method as string) || "GET",
           () => interceptedRequest.body,
           deduplicationEnabled,
         );

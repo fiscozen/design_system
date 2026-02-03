@@ -127,7 +127,7 @@ export const wrapWithParamsResolver = <T>(
     const oneOffWithDedup = wrapWithDeduplication(
       oneOff as UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>,
       () => urlString,
-      method,
+      (requestToUse.method as string) || "GET",
       () => bodyValue,
       deduplicationEnabled,
     );
