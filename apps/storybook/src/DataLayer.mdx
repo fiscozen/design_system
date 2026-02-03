@@ -676,7 +676,62 @@ const handleMarkAsPaid = async (invoice: { id: number }) => {
 
 **Key points:** Mutation pattern – like **useUpdate** which takes `execute(pk, payload)`. Pass the id (or pk and payload) to `execute()` at call time; no ref in the view for the target id. Use `immediate: false` and a ref inside the composable so the URL is set when `execute(id)` runs.
 
-**Reactive body/headers:** If the mutation body or headers depend on form state or other reactive data, you can pass a ref or computed for `body` and/or `headers`. They are re-evaluated on each `execute()`, so the request always uses the current value. Example: `body: computed(() => JSON.stringify(payload.value))` or `headers: headersRef`.
+**Reactive body/headers:** If the mutation body or headers depend on form state or other reactive data, pass a ref or computed for `body` and/or `headers`. They are re-evaluated on each `execute()`, so the request always uses the current value. Example below: composable with reactive payload and usage that calls `execute()` twice with different payloads.
+
+**Example: Mark invoice as paid with payment details (reactive body)**
+
+**Scenario:** `POST /invoices/{invoiceId}/mark_as_paid/` with a body that includes payment date and method. The payload comes from form state and can change before each submit; the same composable instance sends the current payload on each `execute()`.
+
+**Implementation:**
+
+```typescript
+// src/composables/useInvoices.ts (excerpt)
+const useMarkInvoiceAsPaid = (options?: { throwOnError?: boolean }) => {
+  const invoiceIdRef = ref<number | null>(null)
+  const payload = ref<{ payment_date: string | null; payment_method: string | null }>({
+    payment_date: null,
+    payment_method: null,
+  })
+  const url = computed(() => `invoices/${invoiceIdRef.value ?? 0}/mark_as_paid/`)
+  const fetchResult = useFzFetch<unknown>(url, {
+    method: 'POST',
+    body: computed(() => JSON.stringify(payload.value)),
+    headers: { 'Content-Type': 'application/json' },
+  }, { immediate: false })
+
+  const execute = async ({invoiceId, paymentDate, paymentMethod}: {invoiceId: number, paymentDate: string, paymentMethod: string}) => {
+    invoiceIdRef.value = invoiceId
+    payload.value = {
+      payment_date: paymentDate,
+      payment_method: paymentMethod,
+    }
+    await fetchResult.execute(options?.throwOnError ?? false)
+  }
+
+  return { ...fetchResult, execute, isLoading: fetchResult.isFetching }
+}
+```
+
+**Usage in component:**
+
+```vue
+<script setup lang="ts">
+import { useInvoices } from '@/composables/useInvoices'
+
+const { useMarkInvoiceAsPaid } = useInvoices()
+const { execute: markAsPaid, data, error, isLoading } = useMarkInvoiceAsPaid({ throwOnError: true })
+
+const handleMarkAsPaid = async (invoice: { id: number }) => {
+  await markAsPaid({
+    invoiceId: invoice.id,
+    paymentDate: '2025-01-01',
+    paymentMethod: 'card',
+  })
+}
+</script>
+```
+
+**Key points:** Same pattern as **Example 3** (mark as paid): URL from ref, `execute(...)` at call time. Here the **body** is reactive: `body: computed(() => JSON.stringify(payload.value))` so each `execute()` sends the current `payload`. The view passes all data to `execute({ invoiceId, paymentDate, paymentMethod })`; the composable sets refs and runs the fetch, so no need to build the request inside `execute()`.
 
 ### When to use which
 
