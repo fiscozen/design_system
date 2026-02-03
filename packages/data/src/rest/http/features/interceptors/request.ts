@@ -1,4 +1,10 @@
-import { toValue, watch, nextTick, type MaybeRefOrGetter } from "vue";
+import {
+  toValue,
+  watch,
+  nextTick,
+  type MaybeRefOrGetter,
+  type ShallowRef,
+} from "vue";
 import type { UseFzFetchOptions, UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
 import { normalizeUseFzFetchOptions } from "../../utils/options";
@@ -237,6 +243,8 @@ export const createModifiedFetchRequest = <T>(
 
 /**
  * Synchronizes state from source fetch result to target fetch result.
+ * Syncs response, statusCode, data, error, and isFetching so the target reflects
+ * loading and result state (e.g. for params-resolver one-off fetch).
  * Returns cleanup function to stop watching.
  * Exported for use by params resolver (reactive body/headers).
  */
@@ -250,13 +258,14 @@ export const syncFetchResultState = <T>(
       () => source.statusCode.value,
       () => source.data.value,
       () => source.error.value,
+      () => source.isFetching.value,
     ],
     () => {
-      // Sync all state properties reactively
       target.response.value = source.response.value;
       target.statusCode.value = source.statusCode.value;
       target.data.value = source.data.value;
       target.error.value = source.error.value;
+      (target.isFetching as ShallowRef<boolean>).value = source.isFetching.value;
     },
     { immediate: true, deep: false },
   );
