@@ -156,6 +156,8 @@ export const createListBase = <TResponse, TData>(
       },
       { deep: true, immediate: false },
     );
+    // Note: watch() is automatically cleaned up by Vue when the component using this
+    // composable unmounts. The setTimeout is short-lived (debounce delay) and safe.
   }
 
   // Return normalized response with reactive objects

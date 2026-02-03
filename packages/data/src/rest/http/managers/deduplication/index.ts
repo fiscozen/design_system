@@ -161,6 +161,9 @@ export class DeduplicationManager {
    * Sets up automatic cleanup when the request completes (success or error).
    * Uses watch to detect when isFetching becomes false and cleans up immediately.
    *
+   * If a request with the same key is already registered, cleans up the old watch
+   * before registering the new one to prevent memory leaks.
+   *
    * @param url - Request URL
    * @param method - HTTP method
    * @param body - Request body (if any)
@@ -173,6 +176,15 @@ export class DeduplicationManager {
     fetchResult: UseFzFetchReturn<T>,
   ): void {
     const key = this.generateKey(url, method, body);
+    
+    // If a request with the same key already exists, clean up its watch
+    // to prevent memory leak from orphaned watchers
+    const existingWatch = this.pendingWatches.get(key);
+    if (existingWatch) {
+      existingWatch();
+      this.pendingWatches.delete(key);
+    }
+    
     this.pendingRequests.set(key, fetchResult);
 
     // Clean up when request completes (success or error)
