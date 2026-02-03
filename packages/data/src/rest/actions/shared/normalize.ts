@@ -7,6 +7,7 @@ import type {
 import type { UseActionOptions, QueryActionReturn } from "./types";
 import type { PaginationParams, FilterParams, SortParams } from "../list/types";
 import { DEFAULT_DATA_KEY } from "../../http/config";
+import { validateOrderingDirection, validatePaginationValue } from "./validation";
 
 /**
  * Check if paramsOrOptions is a params object (has filters, ordering, or pagination)
@@ -188,6 +189,9 @@ export const normalizeParams = (params: {
 
         params.ordering.forEach((sortObj) => {
           Object.entries(sortObj).forEach(([key, direction]) => {
+            // Validate direction value
+            validateOrderingDirection(direction, key, "normalizeParams");
+            
             // Exclude 'none' values from query string
             if (direction !== "none") {
               // Prepend '-' for desc, no prefix for asc
@@ -206,6 +210,11 @@ export const normalizeParams = (params: {
       if (params.pagination) {
         const page = toValue(params.pagination.page);
         const pageSize = toValue(params.pagination.pageSize);
+        
+        // Validate pagination values before adding to queryParams
+        validatePaginationValue(page, "page", "normalizeParams");
+        validatePaginationValue(pageSize, "pageSize", "normalizeParams", 1000);
+        
         if (page !== undefined) {
           queryParams.page = page;
         }

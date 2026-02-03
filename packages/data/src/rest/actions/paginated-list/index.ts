@@ -16,6 +16,7 @@ import {
 } from "../shared/normalize";
 import { createListBase } from "../shared/create-list-base";
 import { DEFAULT_DATA_KEY } from "../../http/config";
+import { validatePaginationValue } from "../shared/validation";
 
 /**
  * Create a paginated list action for fetching multiple entities with filters, ordering, and pagination
@@ -211,10 +212,12 @@ export const createPaginatedListAction = <T>(
   // Helper function to change the page
   // Updates pagination.page which will trigger automatic refetch if autoUpdate is enabled
   const handlePageChange = (page: number): void => {
-    // Validate page number must be >= 1
-    if (page < 1) {
+    try {
+      validatePaginationValue(page, "page", "handlePageChange");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       console.warn(
-        `[handlePageChange] Page number must be >= 1, got ${page}. Ignoring invalid page change.`,
+        `[handlePageChange] ${errorMessage}. Ignoring invalid page change.`,
       );
       return;
     }

@@ -3,6 +3,7 @@ import { useFzFetch } from "../../http";
 import type { UseRetrieveAction } from "./types";
 import type { QueryActionOptions } from "../shared/types";
 import { normalizeOptions, normalizeResponse } from "../shared/normalize";
+import { validatePrimaryKey } from "../shared/validation";
 
 /**
  * Create a retrieve action for fetching a single entity by primary key
@@ -51,6 +52,8 @@ export const createRetrieveAction = <T>(
         "[createRetrieveAction] Primary key (pk) must be a valid non-empty string or number",
       );
     }
+
+    validatePrimaryKey(resolvedPk, "createRetrieveAction");
 
     return `${basePath}/${resolvedPk}`;
   });

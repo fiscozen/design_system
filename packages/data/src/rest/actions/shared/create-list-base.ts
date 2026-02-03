@@ -18,6 +18,7 @@ import {
 } from "./normalize";
 import { getGlobalAutoUpdateDebounceDelay } from "../../http/setup/state";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "../../http/config";
+import { validatePaginationValue } from "./validation";
 
 /**
  * Base function for creating list actions with configurable response type
@@ -64,8 +65,14 @@ export const createListBase = <TResponse, TData>(
   // Create reactive objects for direct modification
   const filters = reactive<FilterParams>({ ...initialFilters });
   const ordering = reactive<SortParams>([...initialOrdering]);
+  
   // Apply defaults if pagination is provided (even if empty)
-  // Filter out undefined values to prevent them from overriding defaults
+  // Validate pagination values before applying
+  if (hasPagination) {
+    validatePaginationValue(initialPagination.page, "page", "createListBase");
+    validatePaginationValue(initialPagination.pageSize, "pageSize", "createListBase", 1000);
+  }
+  
   const pagination = reactive<PaginationParams>(
     hasPagination
       ? {

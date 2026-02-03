@@ -20,15 +20,35 @@ export const normalizeError = (error: unknown): Error => {
     return error;
   }
 
+  // Handle null explicitly
+  if (error === null) {
+    return new Error("An error occurred (null error value)");
+  }
+
+  // Handle undefined explicitly
+  if (error === undefined) {
+    return new Error("An error occurred (undefined error value)");
+  }
+
   if (typeof error === "string") {
     return new Error(error);
   }
 
-  if (error && typeof error === "object" && "message" in error) {
-    return new Error(String(error.message));
+  if (typeof error === "object" && "message" in error) {
+    try {
+      return new Error(String(error.message));
+    } catch {
+      // If String() throws (shouldn't happen but be safe), return generic error
+      return new Error("An error occurred (unable to extract error message)");
+    }
   }
 
-  return new Error(String(error));
+  try {
+    return new Error(String(error));
+  } catch {
+    // If String() throws (shouldn't happen but be safe), return generic error
+    return new Error("An error occurred (unable to stringify error)");
+  }
 };
 
 /**

@@ -343,7 +343,7 @@ describe("createPaginatedListAction", () => {
       handlePageChange(-1);
       expect(pagination.page).toBe(1); // Should remain unchanged
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining("[handlePageChange] Page number must be >= 1"),
+        expect.stringContaining("page must be at least 1"),
       );
 
       // Test zero

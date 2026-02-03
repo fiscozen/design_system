@@ -4,6 +4,7 @@ import { CONTENT_TYPE_JSON } from "../../http/common";
 import type { UseUpdateAction, UseUpdateExecuteOptions } from "./types";
 import type { MutationActionOptions } from "../shared/types";
 import { executeMutation } from "../shared/error-handling";
+import { validatePrimaryKey } from "../shared/validation";
 
 /**
  * Create an update action for updating an existing entity
@@ -27,15 +28,27 @@ export const createUpdateAction = <T>(
     payload: Partial<T>,
     executeOptions?: UseUpdateExecuteOptions,
   ): Promise<void> => {
+    validatePrimaryKey(pk, "createUpdateAction");
+
     // Determine HTTP method based on partialUpdate option
     const partialUpdate = executeOptions?.partialUpdate ?? true;
     const method = partialUpdate ? "PATCH" : "PUT";
 
     await executeMutation<T>(
       async () => {
+        let body: string;
+        try {
+          body = JSON.stringify(payload);
+        } catch (err: unknown) {
+          const serializationError = err instanceof Error ? err : new Error(String(err));
+          throw new Error(
+            `[createUpdateAction] Failed to serialize payload: ${serializationError.message}`,
+          );
+        }
+
         const response = useFzFetch<T>(`${basePath}/${pk}`, {
           method,
-          body: JSON.stringify(payload),
+          body,
           headers: { "Content-Type": CONTENT_TYPE_JSON },
         });
 
