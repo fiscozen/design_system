@@ -3,12 +3,41 @@ import type { UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
 
 /**
+ * Checks if body is serializable for deduplication purposes
+ *
+ * FormData, Blob, ArrayBuffer, and ReadableStream cannot be serialized with JSON.stringify.
+ * URLSearchParams can be converted to string.
+ */
+const isBodySerializable = (
+  body: BodyInit | null | undefined,
+): boolean => {
+  if (!body || typeof body === "string") return true;
+  if (
+    body instanceof FormData ||
+    body instanceof Blob ||
+    body instanceof ArrayBuffer ||
+    body instanceof ReadableStream
+  ) {
+    return false;
+  }
+  if (body instanceof URLSearchParams) return true;
+  try {
+    JSON.stringify(body);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+/**
  * Wraps a fetch result to apply deduplication if enabled
+ *
+ * body supports MaybeRefOrGetter and is resolved at execute() time for the deduplication key.
  *
  * @param fetchResult - Result from fzFetcher
  * @param url - Request URL (computed or string)
  * @param method - HTTP method
- * @param body - Request body (can be string, object, or null)
+ * @param body - Request body (reactive; resolved at execute() time)
  * @param deduplicationEnabled - Whether deduplication is enabled
  * @returns Wrapped fetch result with deduplicated execute
  */
@@ -16,65 +45,37 @@ export const wrapWithDeduplication = <T>(
   fetchResult: UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>,
   url: MaybeRefOrGetter<string>,
   method: string,
-  body: BodyInit | null | undefined,
+  body: MaybeRefOrGetter<BodyInit | null | undefined>,
   deduplicationEnabled: boolean,
 ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> => {
   if (!deduplicationEnabled || !state.deduplicationManager) {
     return fetchResult;
   }
 
-  /**
-   * Checks if body is serializable for deduplication purposes
-   *
-   * FormData, Blob, ArrayBuffer, and ReadableStream cannot be serialized with JSON.stringify.
-   * URLSearchParams can be converted to string.
-   */
-  const isBodySerializable = (body: BodyInit | null | undefined): boolean => {
-    if (!body || typeof body === "string") return true;
-    if (
-      body instanceof FormData ||
-      body instanceof Blob ||
-      body instanceof ArrayBuffer ||
-      body instanceof ReadableStream
-    ) {
-      return false;
-    }
-    if (body instanceof URLSearchParams) return true;
-    // Try to serialize to check if it's a plain object/array
-    try {
-      JSON.stringify(body);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  // Skip deduplication for non-serializable bodies (FormData, Blob, ArrayBuffer, ReadableStream)
-  if (!isBodySerializable(body)) {
-    return fetchResult;
-  }
-
   // Wrap execute method to apply deduplication
   const originalExecute = fetchResult.execute;
   fetchResult.execute = async (throwOnFailed?: boolean) => {
+    const bodyValue = toValue(body);
+
+    // Skip deduplication for non-serializable bodies (FormData, Blob, etc.)
+    if (!isBodySerializable(bodyValue)) {
+      return originalExecute(throwOnFailed);
+    }
+
     // Resolve URL to string for deduplication key
     const urlString = toValue(url);
 
     // Serialize body if needed (it might be an object or already a string)
     let bodyString: string | null = null;
-    if (body !== null && body !== undefined) {
-      if (typeof body === "string") {
-        bodyString = body;
-      } else if (body instanceof URLSearchParams) {
-        // URLSearchParams can be converted to string
-        bodyString = body.toString();
+    if (bodyValue !== null && bodyValue !== undefined) {
+      if (typeof bodyValue === "string") {
+        bodyString = bodyValue;
+      } else if (bodyValue instanceof URLSearchParams) {
+        bodyString = bodyValue.toString();
       } else {
-        // Serialize object/array to JSON string
-        // At this point we know it's serializable (checked above)
         try {
-          bodyString = JSON.stringify(body);
+          bodyString = JSON.stringify(bodyValue);
         } catch {
-          // Fallback: skip deduplication if serialization fails
           return originalExecute(throwOnFailed);
         }
       }

@@ -202,9 +202,10 @@ const handleAbortedRequest = <T>(
 };
 
 /**
- * Creates a new fetch request with modified requestInit
+ * Creates a new fetch request with the given requestInit.
+ * Exported for use by params resolver (reactive body/headers).
  */
-const createModifiedFetchRequest = <T>(
+export const createModifiedFetchRequest = <T>(
   fullUrl: string,
   interceptedRequest: RequestInit,
   useFetchOptions?: UseFzFetchOptions,
@@ -234,10 +235,11 @@ const createModifiedFetchRequest = <T>(
 };
 
 /**
- * Synchronizes state from source fetch result to target fetch result
- * Returns cleanup function to stop watching
+ * Synchronizes state from source fetch result to target fetch result.
+ * Returns cleanup function to stop watching.
+ * Exported for use by params resolver (reactive body/headers).
  */
-const syncFetchResultState = <T>(
+export const syncFetchResultState = <T>(
   source: UseFzFetchReturn<T>,
   target: UseFzFetchReturn<T>,
 ): () => void => {
@@ -310,15 +312,13 @@ const setupFetchCompletionWatcher = <T>(
 };
 
 /**
- * Waits for a fetch request to fully complete (isFetching becomes false)
- *
- * Ensures all state updates are propagated before proceeding.
- * This is necessary when synchronizing state between fetch results.
+ * Waits for a fetch request to fully complete (isFetching becomes false).
+ * Exported for use by params resolver (reactive body/headers).
  *
  * @param fetchResult - Fetch result to wait for
  * @returns Promise that resolves when request is fully complete
  */
-const waitForFetchCompletion = <T>(
+export const waitForFetchCompletion = <T>(
   fetchResult: UseFzFetchReturn<T>,
 ): Promise<void> => {
   if (!fetchResult.isFetching.value) {
@@ -495,7 +495,7 @@ const handleErrorWithCleanup = async <T>(
  * @param cleanupCallback - Callback to conditionally set currentWatch to null
  * @returns Promise that resolves to true if execution should continue, false if should stop
  */
-const applyResponseInterceptorAndReparse = async <T>(
+export const applyResponseInterceptorAndReparse = async <T>(
   modifiedFetchResult: UseFzFetchReturn<T>,
   fetchResult: UseFzFetchReturn<T>,
   urlString: string,

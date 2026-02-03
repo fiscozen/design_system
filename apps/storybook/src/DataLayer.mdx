@@ -487,20 +487,22 @@ const { data: paginatedData, meta, handlePageChange } = useInvoicesPaginatedList
 
 For endpoints that don't fit the standard CRUD pattern, use **useFzFetch** directly in your entity composables. This **hybrid approach** combines **useActions** for standard CRUD operations with **useFzFetch** for custom endpoints.
 
-**Why hybrid?** `useActions(basePath)` accepts a **string** base path only, so you cannot pass a reactive path and get refetch when it changes.
-`useFzFetch(basePath, ...)` accepts a reactive or static URL (`MaybeRefOrGetter<string>`), so you use it inside a thin composable that builds the URL with `computed()`. CSRF, interceptors, and deduplication still apply.
+**Why hybrid?** `useActions(basePath)` accepts a **string** base path only, so you cannot pass a reactive path or a path that depends on call-time values. `useFzFetch(basePath, ...)` accepts a reactive or static URL (`MaybeRefOrGetter<string>`), so you use it inside a thin composable that builds the URL with `computed()`. **Body and headers** also support `MaybeRefOrGetter` and are re-evaluated on each `execute()`, so you can pass a ref or computed for the payload and have the request use the current value when the user triggers the action. CSRF, interceptors, and deduplication still apply.
+
+**Two patterns:**
+
+- **List and retrieve (GET):** Pass a **ref** (or params) to the composable at setup. The URL is built from that ref with `computed()`; when the ref changes, the request refetches. Same idea as `useRetrieve(pk)` or `useList({ filters })` where you pass the key/list params at setup and they are reactive. Examples: nested resource (e.g. user stats by `userId`), custom GET (e.g. export by `invoiceIds`).
+- **Mutations (POST/PUT/PATCH/DELETE):** Pass the values to **execute()** at call time, like **useUpdate** which takes `execute(pk, payload)`. The composable keeps a ref inside, builds the URL with `computed()`, uses `useFzFetch(..., { immediate: false })`, and exposes an `execute(id)` (or `execute(pk, payload)`) that sets the ref and runs the fetch. The view does not hold a ref for the target id; it calls `execute(invoice.id)` when the user acts.
 
 ### When to use useFzFetch directly
 
 Use **useFzFetch** directly when you need:
 
-- **Nested resources** – Endpoints like `users/68/stats` where `stats` is a nested resource under a user
-- **Custom endpoints** – Non-CRUD endpoints like exports, searches, or bulk operations
-- **Complex query strings** – Endpoints requiring custom query parameters that don't fit the standard filters/ordering/pagination pattern
-- **Non-standard URL patterns** – Endpoints that don't follow REST conventions
+- **Nested or custom GET** – List/retrieve whose path or query depends on a ref (e.g. `users/{userId}/stats`, export by ids); pass the ref at setup.
+- **Custom mutations** – POST/PUT/PATCH/DELETE whose path or body depends on call-time values (e.g. `invoices/{id}/mark_as_paid`); pass values to `execute()`.
 
 
-### Example 1: Nested resource – user stats
+### Example 1: Nested resource – user stats (GET, ref at setup)
 
 **Scenario:** Fetch user statistics from `GET /users/{userId}/stats`.
 
@@ -521,10 +523,10 @@ interface UserStats {
 
 export const useUsers = () => {
   const { useRetrieve, useList, useCreate, useUpdate, useDelete } =
-    useActions<User>('users')
+    useActions<User>('users/')
 
   const useGetUserStats = (userId: MaybeRefOrGetter<number>) => {
-    const url = computed(() => `users/${toValue(userId)}/stats`)
+    const url = computed(() => `users/${toValue(userId)}/stats/`)
     return useFzFetch<UserStats>(url)
   }
 
@@ -557,9 +559,9 @@ const loadStatsForUser = (id: number) => {
 </script>
 ```
 
-**Key points:** Pass `userId` when creating the function; the URL is reactive and refetches when `userId` changes; returns the standard `useFzFetch` interface (`data`, `error`, `isLoading`, `execute`). Works with `ref`, `computed`, or static values.
+**Key points:** GET pattern – pass `userId` (ref or getter) at setup; the URL is reactive and refetches when `userId` changes. Same idea as passing a ref to a list/retrieve composable.
 
-### Example 2: Custom endpoint with query string – export invoices
+### Example 2: Custom endpoint with query string – export invoices (GET, ref at setup)
 
 **Scenario:** Export invoices as file from `GET /esporta/lista_fatture/{invoiceIds}/?zip`.
 
@@ -625,17 +627,67 @@ const handleExport = async () => {
 </script>
 ```
 
-**Key points:** Pass `invoiceIds` and `format` when creating the function; query params go via `queryParams` in `useFzFetch`; URL updates when `invoiceIds` changes; call `execute()` to trigger the request; handle blob response for file downloads. For reactive format, use `MaybeRefOrGetter<'zip' | 'pdf'>` and `toValue(format)` in `queryParams`.
+**Key points:** GET pattern – pass `invoiceIds` and `format` at setup; URL and query params are reactive; call `execute()` to run the request (e.g. on button click). Handle blob response for file downloads.
+
+### Example 3: Custom mutation – mark invoice as paid (POST, values at execute)
+
+**Scenario:** Mark a single invoice as paid with `POST /invoices/{invoiceId}/mark_as_paid/`. The invoice id is known when the user triggers the action (e.g. click on a row), not at setup.
+
+**Implementation:**
+
+```typescript
+// src/composables/useInvoices.ts (excerpt)
+const useMarkAsPaid = (options?: { throwOnError?: boolean }) => {
+  const invoiceIdRef = ref<number | null>(null)
+  const url = computed(() => `invoices/${invoiceIdRef.value ?? 0}/mark_as_paid/`)
+  const fetchResult = useFzFetch<unknown>(
+    url,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: null,
+    },
+    { immediate: false },
+  )
+
+  const execute = async (invoiceId: number) => {
+    invoiceIdRef.value = invoiceId
+    await fetchResult.execute(options?.throwOnError ?? false)
+  }
+
+  return { ...fetchResult, execute }
+}
+```
+
+**Usage in component:**
+
+```vue
+<script setup lang="ts">
+import { useInvoices } from '@/composables/useInvoices'
+
+const { useMarkAsPaid } = useInvoices()
+const { execute: performMarkAsPaid } = useMarkAsPaid({ throwOnError: true })
+
+const handleMarkAsPaid = async (invoice: { id: number }) => {
+  await performMarkAsPaid(invoice.id)
+}
+</script>
+```
+
+**Key points:** Mutation pattern – like **useUpdate** which takes `execute(pk, payload)`. Pass the id (or pk and payload) to `execute()` at call time; no ref in the view for the target id. Use `immediate: false` and a ref inside the composable so the URL is set when `execute(id)` runs.
+
+**Reactive body/headers:** If the mutation body or headers depend on form state or other reactive data, you can pass a ref or computed for `body` and/or `headers`. They are re-evaluated on each `execute()`, so the request always uses the current value. Example: `body: computed(() => JSON.stringify(payload.value))` or `headers: headersRef`.
 
 ### When to use which
 
 | Use case | Approach |
 |----------|----------|
 | Standard CRUD, fixed base path (`users`, `invoices`) | **useActions** and entity composable (e.g. `useUsers`, `useInvoices`) |
-| Nested or custom URL with reactive segments (`users/68/stats`, export by ids) | Composable that uses **useFzFetch** with `computed` URL (and optional `queryParams`) |
+| **Nested or custom GET** (list/retrieve with id or params in path/query) | Composable with **useFzFetch** and `computed` URL; **pass ref at setup** (e.g. `useGetUserStats(userId)`, `useExportInvoices(invoiceIds, format)`). URL refetches when ref changes. |
+| **Custom mutations** (POST/PUT/PATCH/DELETE with id in path or call-time params) | Composable with **useFzFetch** (immediate: false) and **execute(id)** or **execute(pk, payload)**; **pass values at call time** (like `useUpdate`’s `execute(pk, payload)`). |
 | Preconfigured list/retrieve with default params but same URL shape | Merge helpers + useActions (see [Custom Actions & Merge Helpers](#custom-actions--merge-helpers)) |
 
-This keeps a single pattern for consumers (composables returning `data` / `error` / `isLoading` / `execute`) while allowing both standard CRUD and nested/custom routes in a way that matches common practice (entity-oriented composables, thin wrappers over fetch when the URL is not a simple resource + id).
+Consumers get a consistent API: composables return `data` / `error` / `isFetching` / `execute`. For GET you pass the ref (or params) at setup; for mutations you pass the values to `execute()` when the user acts.
 
 ---
 
@@ -1548,6 +1600,7 @@ describe('useUsers', () => {
 - **CSRF Protection** - Automatic token injection for mutation requests
 - **Request Deduplication** - Prevent duplicate identical requests
 - **Request/Response Interceptors** - Modify requests/responses or abort requests
+- **Reactive body and headers in useFzFetch** - `body` and `headers` accept `MaybeRefOrGetter` and are re-evaluated on each `execute()`, so you can pass a ref or computed for the payload
 - **Debug Logging** - Development logging for troubleshooting
 - **TypeScript Support** - Full type safety with generics
 - **Error Handling** - Consistent error states across all actions

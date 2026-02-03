@@ -36,6 +36,7 @@
 - ✅ CSRF token auto-injection for mutations (POST/PUT/PATCH/DELETE)
 - ✅ Request deduplication (configurable globally and per-action)
 - ✅ Request and response interceptors (modify requests/responses, abort requests)
+- ✅ Reactive body and headers in `useFzFetch` (`MaybeRefOrGetter`; re-evaluated on each `execute()`)
 - ✅ Debug logging (configurable via `setupFzFetcher({ debug: true })`)
 - ✅ Call-with-defaults helpers for custom actions (`callListActionWithDefaults`, `callPaginatedListActionWithDefaults`, `callRetrieveActionWithDefaults`, `callCreateActionWithDefaults`, `callUpdateActionWithDefaults`, `callDeleteActionWithDefaults`)
 - ✅ Filter semantics: `undefined` = omit from request, `null` = send to server
@@ -112,9 +113,10 @@ HTTP wrapper (useFzFetch)
    - Smart query building (filters, sorting, pagination)
    - Consistent API across all entities
 
-3. **HTTP Layer** - `useFzFetch` with reactive URL support
+3. **HTTP Layer** - `useFzFetch` with reactive URL, body, and headers
    - Built on `@vueuse/core`'s `createFetch`
    - Reactive URLs (auto-refetch when computed URLs change)
+   - Reactive body and headers (`MaybeRefOrGetter`; re-evaluated on each `execute()`)
    - Query parameter merging
    - CSRF token auto-injection
    - Request deduplication

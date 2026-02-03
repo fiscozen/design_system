@@ -45,11 +45,14 @@ export interface UseFzFetchOptions extends UseFetchOptions {
  *
  * Query param values can be null; undefined means "omit from request".
  * Null is sent to the server as the string "null".
+ * body and headers support MaybeRefOrGetter so they are re-evaluated on each execute().
  */
 export interface UseFzFetchParams {
   queryParams?: MaybeRefOrGetter<Record<string, string | number | boolean | null>>;
-  body?: BodyInit | null;
-  headers?: Record<string, string>;
+  /** Request body. Reactive: re-evaluated on each execute(). */
+  body?: MaybeRefOrGetter<BodyInit | null>;
+  /** Request headers. Reactive: re-evaluated on each execute(). */
+  headers?: MaybeRefOrGetter<Record<string, string>>;
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS";
 }
 

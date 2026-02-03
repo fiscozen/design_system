@@ -1,9 +1,31 @@
 import type { UseFzFetchReturn } from "../types";
 import type { Wrapper, WrapperContext } from "./types";
+import { wrapWithParamsResolver } from "../features/params-resolver/wrapper";
 import { wrapWithRequestInterceptor } from "../features/interceptors/request";
 import { wrapWithResponseInterceptor } from "../features/interceptors/response";
 import { wrapWithDeduplication } from "../features/deduplication/wrapper";
 import { state } from "../setup/state";
+
+/**
+ * Wrapper adapter for params resolver (reactive body and headers).
+ * Runs first so requestInit is updated before other wrappers and the base fetch.
+ */
+export const paramsResolverWrapper: Wrapper = {
+  wrap<T>(
+    fetchResult: UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>,
+    context: WrapperContext,
+  ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> {
+    return wrapWithParamsResolver(
+      fetchResult,
+      context.requestInit,
+      context.method,
+      context.url,
+      context.body,
+      context.headers,
+      context.useFetchOptions,
+    );
+  },
+};
 
 /**
  * Wrapper adapter for request interceptor

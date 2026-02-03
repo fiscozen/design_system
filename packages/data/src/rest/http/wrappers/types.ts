@@ -7,12 +7,14 @@ import type { UseFzFetchOptions, UseFzFetchReturn } from "../types";
 export interface WrapperContext {
   /** Request URL (can be reactive) */
   url: MaybeRefOrGetter<string>;
-  /** Request configuration */
+  /** Request configuration (mutated by params resolver before each execute) */
   requestInit: RequestInit;
   /** HTTP method */
   method: string;
-  /** Request body (for deduplication key) */
-  body: BodyInit | null | undefined;
+  /** Request body (reactive; for params resolver and deduplication key) */
+  body?: MaybeRefOrGetter<BodyInit | null | undefined>;
+  /** Request headers (reactive; for params resolver) */
+  headers?: MaybeRefOrGetter<Record<string, string> | undefined>;
   /** Optional useFetchOptions */
   useFetchOptions?: UseFzFetchOptions;
 }
