@@ -495,6 +495,75 @@ describe("Integration Tests", () => {
       await execute();
       expect(fetchCallCount).toBe(1);
     });
+
+    it("should pass current reactive body/headers to request interceptor when it modifies request", async () => {
+      const bodyRef = ref(JSON.stringify({ value: 1 }));
+      const headersRef = ref<Record<string, string>>({
+        "Content-Type": "application/json",
+        "X-Seq": "first",
+      });
+
+      const bodiesSeenByInterceptor: string[] = [];
+      const headersSeenByInterceptor: Record<string, string>[] = [];
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (_url, requestInit) => {
+          bodiesSeenByInterceptor.push(
+            typeof requestInit.body === "string"
+              ? requestInit.body
+              : String(requestInit.body ?? ""),
+          );
+          const h = requestInit.headers;
+          headersSeenByInterceptor.push(
+            h instanceof Headers
+              ? Object.fromEntries(h.entries())
+              : (h as Record<string, string>) ?? {},
+          );
+          return {
+            ...requestInit,
+            headers: {
+              ...(requestInit.headers instanceof Headers
+                ? Object.fromEntries(
+                    (requestInit.headers as Headers).entries(),
+                  )
+                : (requestInit.headers as Record<string, string>) ?? {}),
+              "X-Modified": "true",
+            },
+          };
+        },
+      });
+
+      global.fetch = vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        ),
+      ) as typeof fetch;
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test", {
+        method: "POST",
+        body: bodyRef,
+        headers: headersRef,
+      }, { immediate: false });
+
+      await execute();
+      expect(bodiesSeenByInterceptor).toHaveLength(1);
+      expect(bodiesSeenByInterceptor[0]).toBe(JSON.stringify({ value: 1 }));
+      expect(headersSeenByInterceptor[0]["X-Seq"]).toBe("first");
+
+      bodyRef.value = JSON.stringify({ value: 2 });
+      headersRef.value = {
+        "Content-Type": "application/json",
+        "X-Seq": "second",
+      };
+      await execute();
+      expect(bodiesSeenByInterceptor).toHaveLength(2);
+      expect(bodiesSeenByInterceptor[1]).toBe(JSON.stringify({ value: 2 }));
+      expect(headersSeenByInterceptor[1]["X-Seq"]).toBe("second");
+    });
   });
 
   describe("CSRF Integration", () => {

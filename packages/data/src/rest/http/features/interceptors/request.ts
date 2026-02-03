@@ -179,9 +179,10 @@ const normalizeHeaders = (
 };
 
 /**
- * Handles aborted request when interceptor returns null
+ * Handles aborted request when interceptor returns null.
+ * Exported for use by params resolver (reactive body/headers one-off path).
  */
-const handleAbortedRequest = <T>(
+export const handleAbortedRequest = <T>(
   fetchResult: UseFzFetchReturn<T>,
   urlString: string,
   throwOnFailed?: boolean,
