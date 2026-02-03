@@ -43,7 +43,17 @@ export const wrapWithParamsResolver = <T>(
     return fetchResult;
   }
 
+  // Track current watch so we can clean it up when execute() is called multiple times rapidly.
+  // Prevents multiple watchers syncing to the same fetchResult and corrupting state.
+  let currentWatch: (() => void) | null = null;
+
   fetchResult.execute = async (throwOnFailed?: boolean) => {
+    // Cleanup previous watch if it exists (in case execute() was called before the prior one completed)
+    if (currentWatch) {
+      currentWatch();
+      currentWatch = null;
+    }
+
     if (bodyGetter !== undefined) {
       requestInit.body = toValue(bodyGetter) ?? undefined;
     }
@@ -73,6 +83,13 @@ export const wrapWithParamsResolver = <T>(
       useFetchOptions,
     );
     const unwatchSync = syncFetchResultState(oneOff, fetchResult);
+    currentWatch = unwatchSync;
+
+    const clearCurrentWatchIfSame = (watcherToCleanup: () => void): void => {
+      if (currentWatch === watcherToCleanup) {
+        currentWatch = null;
+      }
+    };
 
     try {
       await oneOff.execute(throwOnFailed);
@@ -84,20 +101,26 @@ export const wrapWithParamsResolver = <T>(
         requestToUse,
         throwOnFailed,
         unwatchSync,
-        () => {},
+        clearCurrentWatchIfSame,
       );
       if (!shouldContinue) {
         return;
       }
     } catch (error: unknown) {
       await waitForFetchCompletion(oneOff);
-      nextTick(() => unwatchSync());
+      nextTick(() => {
+        unwatchSync();
+        clearCurrentWatchIfSame(unwatchSync);
+      });
       handleFetchError(fetchResult.error, error, throwOnFailed);
       return;
     }
 
     await waitForFetchCompletion(oneOff);
-    nextTick(() => unwatchSync());
+    nextTick(() => {
+      unwatchSync();
+      clearCurrentWatchIfSame(unwatchSync);
+    });
   };
 
   return fetchResult;
