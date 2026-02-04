@@ -7,27 +7,35 @@
   >
     <template #opener>
       <FzTabButton
-        :tab="selectedTabProps!"
-        :size="size"
+        v-if="selectedTabProps"
+        :tab="selectedTabProps"
+        :environment="environment"
+        :tone="props.tone"
         class="w-full sm:w-auto"
         type="tab"
         readonly
         @click="isOpen = !isOpen"
+        data-testid="fz-tab-picker-opener"
       >
-        <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" :size="size" />
+        <FzIcon :name="isOpen ? 'chevron-up' : 'chevron-down'" size="md" />
       </FzTabButton>
     </template>
-    <div
-      class="flex flex-col p-4 rounded shadow overflow-hidden bg-core-white z-10 w-full"
-    >
-      <FzTabButton
-        v-for="tab in tabs"
-        :tab="tab"
-        :size="size"
-        type="picker"
-        @click="closePicker"
-      />
-    </div>
+    <FzActionList>
+      <FzActionSection>
+        <FzAction
+          v-for="tab in tabs"
+          :key="tab.title"
+          type="action"
+          variant="textLeft"
+          :label="tab.title"
+          :iconLeftName="tab.icon"
+          :disabled="tab.disabled"
+          :environment="environment"
+          :tone="tab.tone"
+          @click="selectTab(tab)"
+        />
+      </FzActionSection>
+    </FzActionList>
   </FzFloating>
 </template>
 
@@ -35,29 +43,47 @@
 import { ref, inject, computed, Ref } from "vue";
 import { FzFloating } from "@fiscozen/composables";
 import { FzIcon } from "@fiscozen/icons";
-import { FzBadge } from "@fiscozen/badge";
+import { FzAction, FzActionList, FzActionSection } from "@fiscozen/action";
 import { FzTabProps } from "../types";
-import { mapSizeToClasses } from "../common";
 import FzTabButton from "./FzTabButton.vue";
 
 const isOpen = ref(false);
 const props = defineProps<{
   tabs: FzTabProps[];
-  size: "sm" | "md";
+  tone?: "neutral" | "alert";
+  environment: "frontoffice" | "backoffice";
 }>();
-const opener = ref<HTMLElement>();
 
 const selectedTab = inject<Ref<string>>("selectedTab");
 const selectedTabProps = computed(() => {
   return props.tabs.find((tab) => tab.title === selectedTab?.value);
 });
 
-const computedClasses = computed(() => [
-  "flex items-center text-left max-w-[136px] rounded-md h-auto bg-white text-blue-500 font-medium cursor-pointer capitalize ",
-  mapSizeToClasses[props.size],
-]);
+const selectTab = (tab: FzTabProps) => {
+  if (!tab.disabled && selectedTab) {
+    selectedTab.value = tab.title;
+    isOpen.value = false;
+  }
+};
 
-const closePicker = () => {
-  isOpen.value = false;
+const getActionClasses = (tab: FzTabProps) => {
+  const isSelected = selectedTab?.value === tab.title;
+  const baseClasses = "!rounded-none !px-16 !py-12";
+
+  if (props.tone === "alert") {
+    return [
+      baseClasses,
+      isSelected
+        ? "!bg-red-100 !text-red-600"
+        : "!bg-core-white hover:!bg-red-50 !text-grey-500",
+    ];
+  }
+
+  return [
+    baseClasses,
+    isSelected
+      ? "!bg-blue-100 !text-blue-600"
+      : "!bg-core-white hover:!bg-grey-50 !text-grey-500",
+  ];
 };
 </script>
