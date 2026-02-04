@@ -352,7 +352,7 @@ const handleCreate = async () => {
 
 ## Custom Actions & Merge Helpers
 
-When you need **preconfigured actions** (e.g. a list with fixed filters) but still want the view to override or add params/options, use the **call-with-defaults helpers**. Each helper **calls** the action with **default args** merged with **additional args** from the view — so the composable body is just `return callXActionWithDefaults(actionBase, { defaultParams, additionalParamsOrOptions, additionalOptions })`. Entity type inferred from the action; no generic to specify. All input fields accept `MaybeRefOrGetter` for reactive defaults.
+When you need **preconfigured actions** (e.g. a list with fixed filters) but still want the view to override or add params/options, use the **call-with-defaults helpers**. Each helper **calls** the action with **default args** merged with **additional args** from the view — so the composable body is just `return callXActionWithDefaults(actionBase, { defaultParams, defaultOptions, additionalParamsOrOptions, additionalOptions })`. Entity type inferred from the action; no generic to specify. All input fields accept `MaybeRefOrGetter` for reactive defaults.
 
 **Import:** `import { callListActionWithDefaults, callPaginatedListActionWithDefaults, callRetrieveActionWithDefaults, callCreateActionWithDefaults, callUpdateActionWithDefaults, callDeleteActionWithDefaults } from '@fiscozen/data/rest'` (or `from '@fiscozen/data'`).
 
@@ -360,7 +360,7 @@ When you need **preconfigured actions** (e.g. a list with fixed filters) but sti
 
 | Helper | Action | Input shape |
 |--------|--------|-------------|
-| `callListActionWithDefaults` | useList | defaultParams?, additionalParamsOrOptions?, additionalOptions? |
+| `callListActionWithDefaults` | useList | defaultParams?, defaultOptions?, additionalParamsOrOptions?, additionalOptions? |
 | `callPaginatedListActionWithDefaults` | usePaginatedList | defaultParams?, defaultOptions?, additionalParamsOrOptions?, additionalOptions? |
 | `callRetrieveActionWithDefaults` | useRetrieve | defaultPk?, defaultOptions?, overridePk?, additionalOptions? |
 | `callCreateActionWithDefaults` | useCreate | defaultOptions?, additionalOptions? |
@@ -527,7 +527,8 @@ export const useUsers = () => {
 
   const useGetUserStats = (userId: MaybeRefOrGetter<number>) => {
     const url = computed(() => `users/${toValue(userId)}/stats/`)
-    return useFzFetch<UserStats>(url)
+    const result = useFzFetch<UserStats>(url)
+    return { ...result, isLoading: result.isFetching }
   }
 
   return {
@@ -588,9 +589,10 @@ export const useInvoices = () => {
       }
       return `esporta/lista_fatture/${ids.join('-')}`
     })
-    return useFzFetch<Blob>(url, {
+    const result = useFzFetch<Blob>(url, {
       queryParams: { [format]: true }
     })
+    return { ...result, isLoading: result.isFetching }
   }
 
   return {
@@ -636,26 +638,43 @@ const handleExport = async () => {
 **Implementation:**
 
 ```typescript
-// src/composables/useInvoices.ts (excerpt)
-const useMarkAsPaid = (options?: { throwOnError?: boolean }) => {
-  const invoiceIdRef = ref<number | null>(null)
-  const url = computed(() => `invoices/${invoiceIdRef.value ?? 0}/mark_as_paid/`)
-  const fetchResult = useFzFetch<unknown>(
-    url,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: null,
-    },
-    { immediate: false },
-  )
+// src/composables/useInvoices.ts
+import { useActions, useFzFetch } from '@fiscozen/data/rest'
+import { computed, ref } from 'vue'
 
-  const execute = async (invoiceId: number) => {
-    invoiceIdRef.value = invoiceId
-    await fetchResult.execute(options?.throwOnError ?? false)
+export const useInvoices = () => {
+  const { useRetrieve, useList, useCreate, useUpdate, useDelete } =
+    useActions<Invoice>('invoices')
+
+  const useMarkAsPaid = (options?: { throwOnError?: boolean }) => {
+    const invoiceIdRef = ref<number | null>(null)
+    const url = computed(() => `invoices/${invoiceIdRef.value ?? 0}/mark_as_paid/`)
+    const fetchResult = useFzFetch<unknown>(
+      url,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: null,
+      },
+      { immediate: false },
+    )
+
+    const execute = async (invoiceId: number) => {
+      invoiceIdRef.value = invoiceId
+      await fetchResult.execute(options?.throwOnError ?? false)
+    }
+
+    return { ...fetchResult, execute, isLoading: fetchResult.isFetching }
   }
 
-  return { ...fetchResult, execute }
+  return {
+    useRetrieveInvoiceById: useRetrieve,
+    useListInvoices: useList,
+    useCreateInvoice: useCreate,
+    useUpdateInvoice: useUpdate,
+    useDeleteInvoice: useDelete,
+    useMarkAsPaid
+  }
 }
 ```
 
@@ -685,30 +704,47 @@ const handleMarkAsPaid = async (invoice: { id: number }) => {
 **Implementation:**
 
 ```typescript
-// src/composables/useInvoices.ts (excerpt)
-const useMarkInvoiceAsPaid = (options?: { throwOnError?: boolean }) => {
-  const invoiceIdRef = ref<number | null>(null)
-  const payload = ref<{ payment_date: string | null; payment_method: string | null }>({
-    payment_date: null,
-    payment_method: null,
-  })
-  const url = computed(() => `invoices/${invoiceIdRef.value ?? 0}/mark_as_paid/`)
-  const fetchResult = useFzFetch<unknown>(url, {
-    method: 'POST',
-    body: computed(() => JSON.stringify(payload.value)),
-    headers: { 'Content-Type': 'application/json' },
-  }, { immediate: false })
+// src/composables/useInvoices.ts
+import { useActions, useFzFetch } from '@fiscozen/data/rest'
+import { computed, ref } from 'vue'
 
-  const execute = async ({invoiceId, paymentDate, paymentMethod}: {invoiceId: number, paymentDate: string, paymentMethod: string}) => {
-    invoiceIdRef.value = invoiceId
-    payload.value = {
-      payment_date: paymentDate,
-      payment_method: paymentMethod,
+export const useInvoices = () => {
+  const { useRetrieve, useList, useCreate, useUpdate, useDelete } =
+    useActions<Invoice>('invoices')
+
+  const useMarkInvoiceAsPaid = (options?: { throwOnError?: boolean }) => {
+    const invoiceIdRef = ref<number | null>(null)
+    const payload = ref<{ payment_date: string | null; payment_method: string | null }>({
+      payment_date: null,
+      payment_method: null,
+    })
+    const url = computed(() => `invoices/${invoiceIdRef.value ?? 0}/mark_as_paid/`)
+    const fetchResult = useFzFetch<unknown>(url, {
+      method: 'POST',
+      body: computed(() => JSON.stringify(payload.value)),
+      headers: { 'Content-Type': 'application/json' },
+    }, { immediate: false })
+
+    const execute = async ({invoiceId, paymentDate, paymentMethod}: {invoiceId: number, paymentDate: string, paymentMethod: string}) => {
+      invoiceIdRef.value = invoiceId
+      payload.value = {
+        payment_date: paymentDate,
+        payment_method: paymentMethod,
+      }
+      await fetchResult.execute(options?.throwOnError ?? false)
     }
-    await fetchResult.execute(options?.throwOnError ?? false)
+
+    return { ...fetchResult, execute, isLoading: fetchResult.isFetching }
   }
 
-  return { ...fetchResult, execute, isLoading: fetchResult.isFetching }
+  return {
+    useRetrieveInvoiceById: useRetrieve,
+    useListInvoices: useList,
+    useCreateInvoice: useCreate,
+    useUpdateInvoice: useUpdate,
+    useDeleteInvoice: useDelete,
+    useMarkInvoiceAsPaid
+  }
 }
 ```
 
@@ -742,7 +778,7 @@ const handleMarkAsPaid = async (invoice: { id: number }) => {
 | **Custom mutations** (POST/PUT/PATCH/DELETE with id in path or call-time params) | Composable with **useFzFetch** (immediate: false) and **execute(id)** or **execute(pk, payload)**; **pass values at call time** (like `useUpdate`’s `execute(pk, payload)`). |
 | Preconfigured list/retrieve with default params but same URL shape | Merge helpers + useActions (see [Custom Actions & Merge Helpers](#custom-actions--merge-helpers)) |
 
-Consumers get a consistent API: composables return `data` / `error` / `isFetching` / `execute`. For GET you pass the ref (or params) at setup; for mutations you pass the values to `execute()` when the user acts.
+Consumers get a consistent API: composables return `data` / `error` / `isLoading` / `execute`. For GET you pass the ref (or params) at setup; for mutations you pass the values to `execute()` when the user acts.
 
 ---
 

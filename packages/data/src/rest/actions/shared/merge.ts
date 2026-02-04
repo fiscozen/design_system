@@ -212,7 +212,7 @@ export function mergeListActionArgs<
  * Calls the list action with default args merged with additional args from the view.
  *
  * @param action - useList composable (from useActions)
- * @param input - defaultParams, additionalParamsOrOptions, additionalOptions (see MergeListActionArgsInput)
+ * @param input - defaultParams, defaultOptions, additionalParamsOrOptions, additionalOptions (see MergeListActionArgsInput)
  * @returns Result of calling the action with merged params and options
  */
 export function callListActionWithDefaults<T>(

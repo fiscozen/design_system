@@ -388,7 +388,7 @@ Call-with-defaults helpers let **package consumers** call an action with **defau
 
 **Location:** `src/rest/actions/shared/merge.ts`. Exported from `rest/actions/index.ts` and main `index.ts`.
 
-**Public API:** `callListActionWithDefaults`, `callPaginatedListActionWithDefaults`, `callRetrieveActionWithDefaults`, `callCreateActionWithDefaults`, `callUpdateActionWithDefaults`, `callDeleteActionWithDefaults`. Input types: `MergeListActionArgsInput`, `MergeRetrieveActionArgsInput`, `MergeMutationActionArgsInput`. Internal (used by the helpers, not re-exported): `mergeListActionArgs`, `mergeRetrieveActionArgs`, `mergeMutationActionArgs`.
+**Public API:** `callListActionWithDefaults`, `callPaginatedListActionWithDefaults`, `callRetrieveActionWithDefaults`, `callCreateActionWithDefaults`, `callUpdateActionWithDefaults`, `callDeleteActionWithDefaults`. Input types: `MergeListActionArgsInput` (defaultParams, defaultOptions, additionalParamsOrOptions, additionalOptions), `MergeRetrieveActionArgsInput`, `MergeMutationActionArgsInput`. Internal (used by the helpers, not re-exported): `mergeListActionArgs`, `mergeRetrieveActionArgs`, `mergeMutationActionArgs`.
 
 **List discrimination:** When the view passes a single argument, we distinguish params vs options via `isParamsObject` (presence of `filters`, `ordering`, or `pagination`). When `additionalOptions` is present, `additionalParamsOrOptions` is treated as params.
 
