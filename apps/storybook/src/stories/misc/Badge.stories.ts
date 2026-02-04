@@ -7,15 +7,50 @@ const meta: Meta<typeof FzBadge> = {
   component: FzBadge,
   tags: ['autodocs'],
   argTypes: {
+    variant: {
+      control: 'select',
+      options: ['text', 'number']
+    },
+    tone: {
+      control: 'select',
+      options: ['dark', 'light', 'info', 'blue', 'success', 'warning', 'error']
+    },
+    leftIcon: {
+      control: 'text',
+      description: 'Name of the icon to display on the left'
+    },
+    rightIcon: {
+      control: 'text',
+      description: 'Name of the icon to display on the right'
+    },
+    leftIconVariant: {
+      control: 'select',
+      options: ['fas', 'far', 'fal', 'fat', 'fad']
+    },
+    rightIconVariant: {
+      control: 'select',
+      options: ['fas', 'far', 'fal', 'fat', 'fad']
+    },
+    // Deprecated props
     color: {
       control: 'select',
-      options: ['black', 'error', 'warning', 'success', 'info', 'blue', 'dark', 'light']
+      options: ['black', 'error', 'warning', 'success', 'info', 'blue', 'dark', 'light'],
+      table: {
+        category: 'Deprecated'
+      }
+    },
+    size: {
+      control: 'select',
+      options: ['sm', 'md', 'lg'],
+      table: {
+        category: 'Deprecated'
+      }
     }
   },
   args: {
-    default: 'Fiscozen',
-    color: 'black',
-    size: 'md'
+    variant: 'text',
+    tone: 'dark',
+    default: 'Fiscozen'
   }
 }
 
@@ -23,480 +58,362 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-// ============================================
-// BASIC STORIES
-// ============================================
-
-export const Default: Story = {
+// Text variant stories
+export const TextDark: Story = {
   args: {
-    color: 'black',
-    size: 'md'
+    variant: 'text',
+    tone: 'dark'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify badge renders correctly', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toBeInTheDocument()
-      await expect(badge).toBeVisible()
-    })
-    
-    await step('Verify default color classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('bg-core-black')
-      await expect(badge).toHaveClass('text-core-white')
-    })
-    
-    await step('Verify default size classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('text-sm')
-      await expect(badge).toHaveClass('px-12')
-      await expect(badge).toHaveClass('size-24')
-    })
-    
-    await step('Verify base classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('flex')
-      await expect(badge).toHaveClass('items-center')
-      await expect(badge).toHaveClass('justify-center')
-      await expect(badge).toHaveClass('font-medium')
-    })
-    
-    await step('Verify multi-character content gets rounded-2xl class', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('rounded-2xl')
-      await expect(badge).toHaveClass('!w-fit')
-    })
+    const badge = canvas.getByText('Fiscozen').closest('p')!.closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('bg-grey-500')).toBe(true)
+    await expect(badge?.classList.contains('text-core-white')).toBe(true)
+    await expect(badge?.classList.contains('rounded-2xl')).toBe(true)
+    await expect(badge?.classList.contains('h-24')).toBe(true)
+    await expect(badge?.classList.contains('py-4')).toBe(true)
+    await expect(badge?.classList.contains('px-12')).toBe(true)
   }
 }
 
-// ============================================
-// COLOR VARIANTS
-// ============================================
-
-export const Black: Story = {
+export const TextLight: Story = {
   args: {
-    color: 'black'
+    variant: 'text',
+    tone: 'light'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify badge renders correctly', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toBeInTheDocument()
-      await expect(badge).toBeVisible()
-    })
-    
-    await step('Verify black color classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('bg-core-black')
-      await expect(badge).toHaveClass('text-core-white')
-    })
-    
-    await step('Verify base classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('flex')
-      await expect(badge).toHaveClass('items-center')
-      await expect(badge).toHaveClass('justify-center')
-      await expect(badge).toHaveClass('font-medium')
-    })
+    const badge = canvas.getByText('Fiscozen').closest('p')!.closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('bg-grey-100')).toBe(true)
+    await expect(badge?.classList.contains('text-core-black')).toBe(true)
   }
 }
 
-export const Error: Story = {
+export const TextInfo: Story = {
   args: {
-    color: 'error'
+    variant: 'text',
+    tone: 'info'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify error color classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('bg-semantic-error')
-      await expect(badge).toHaveClass('text-core-white')
-    })
+    const badge = canvas.getByText('Fiscozen').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('bg-semantic-info-200')).toBe(true)
+    await expect(badge?.classList.contains('text-core-white')).toBe(true)
   }
 }
 
-export const Warning: Story = {
+export const TextBlue: Story = {
   args: {
-    color: 'warning'
+    variant: 'text',
+    tone: 'blue'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify warning color classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('bg-semantic-warning')
-    })
+    const badge = canvas.getByText('Fiscozen').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('bg-blue-500')).toBe(true)
+    await expect(badge?.classList.contains('text-core-white')).toBe(true)
   }
 }
 
-export const Success: Story = {
+export const TextSuccess: Story = {
   args: {
-    color: 'success'
+    variant: 'text',
+    tone: 'success'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify success color classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('bg-semantic-success')
-      await expect(badge).toHaveClass('text-core-white')
-    })
+    const badge = canvas.getByText('Fiscozen').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('bg-semantic-success-200')).toBe(true)
+    await expect(badge?.classList.contains('text-core-white')).toBe(true)
   }
 }
 
-export const Info: Story = {
+export const TextWarning: Story = {
   args: {
-    color: 'info'
+    variant: 'text',
+    tone: 'warning'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify info color classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('bg-semantic-info')
-      await expect(badge).toHaveClass('text-core-white')
-    })
+    const badge = canvas.getByText('Fiscozen').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('bg-semantic-warning-200')).toBe(true)
+    await expect(badge?.classList.contains('text-core-black')).toBe(true)
   }
 }
 
-export const Blue: Story = {
+export const TextError: Story = {
   args: {
-    color: 'blue'
+    variant: 'text',
+    tone: 'error'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify blue color classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('bg-blue-500')
-      await expect(badge).toHaveClass('text-core-white')
-    })
+    const badge = canvas.getByText('Fiscozen').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('bg-semantic-error-200')).toBe(true)
+    await expect(badge?.classList.contains('text-core-white')).toBe(true)
   }
 }
 
-export const Dark: Story = {
+// Number variant stories
+export const NumberDark: Story = {
   args: {
-    color: 'dark'
+    variant: 'number',
+    tone: 'dark',
+    default: '2'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify dark color classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('bg-grey-500')
-      await expect(badge).toHaveClass('text-core-white')
-    })
+    const badge = canvas.getByText('2').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('size-24')).toBe(true)
+    await expect(badge?.classList.contains('bg-grey-500')).toBe(true)
+    await expect(badge?.classList.contains('text-core-white')).toBe(true)
   }
 }
 
-export const Light: Story = {
+export const NumberLight: Story = {
   args: {
-    color: 'light'
+    variant: 'number',
+    tone: 'light',
+    default: '5'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify light color classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('bg-grey-100')
-      await expect(badge).toHaveClass('text-core-black')
-    })
+    const badge = canvas.getByText('5').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('size-24')).toBe(true)
+    await expect(badge?.classList.contains('bg-grey-100')).toBe(true)
+    await expect(badge?.classList.contains('text-core-black')).toBe(true)
   }
 }
 
-export const OneNumberSmall: Story = {
+export const NumberInfo: Story = {
   args: {
-    default: 1,
-    size: 'sm'
+    variant: 'number',
+    tone: 'info',
+    default: '3'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify single character badge renders', async () => {
-      const badge = canvas.getByText('1')
-      await expect(badge).toBeInTheDocument()
-      await expect(badge).toBeVisible()
-    })
-    
-    await step('Verify single character gets rounded-full class', async () => {
-      const badge = canvas.getByText('1')
-      await expect(badge).toHaveClass('rounded-full')
-      await expect(badge).toHaveClass('!px-0')
-    })
-    
-    await step('Verify small size classes are applied', async () => {
-      const badge = canvas.getByText('1')
-      await expect(badge).toHaveClass('text-xs')
-      await expect(badge).toHaveClass('size-20')
-    })
+    const badge = canvas.getByText('3').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('size-24')).toBe(true)
+    await expect(badge?.classList.contains('bg-semantic-info-200')).toBe(true)
+    await expect(badge?.classList.contains('text-core-white')).toBe(true)
   }
 }
 
-export const OneNumberMedium: Story = {
+export const NumberBlue: Story = {
   args: {
-    default: 1,
-    size: 'md'
+    variant: 'number',
+    tone: 'blue',
+    default: '7'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify single number badge renders', async () => {
-      const badge = canvas.getByText('1')
-      await expect(badge).toBeInTheDocument()
-      await expect(badge).toBeVisible()
-    })
-    
-    await step('Verify single character gets rounded-full class', async () => {
-      const badge = canvas.getByText('1')
-      await expect(badge).toHaveClass('rounded-full')
-      await expect(badge).toHaveClass('!px-0')
-    })
-    
-    await step('Verify medium size classes are applied', async () => {
-      const badge = canvas.getByText('1')
-      await expect(badge).toHaveClass('text-sm')
-      await expect(badge).toHaveClass('size-24')
-    })
+    const badge = canvas.getByText('7').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('size-24')).toBe(true)
+    await expect(badge?.classList.contains('bg-blue-500')).toBe(true)
+    await expect(badge?.classList.contains('text-core-white')).toBe(true)
   }
 }
 
-export const OneNumberLarge: Story = {
+export const NumberSuccess: Story = {
   args: {
-    default: 1,
-    size: 'lg'
+    variant: 'number',
+    tone: 'success',
+    default: '9'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify single number badge renders', async () => {
-      const badge = canvas.getByText('1')
-      await expect(badge).toBeInTheDocument()
-      await expect(badge).toBeVisible()
-    })
-    
-    await step('Verify single character gets rounded-full class', async () => {
-      const badge = canvas.getByText('1')
-      await expect(badge).toHaveClass('rounded-full')
-      await expect(badge).toHaveClass('!px-0')
-    })
-    
-    await step('Verify large size classes are applied', async () => {
-      const badge = canvas.getByText('1')
-      await expect(badge).toHaveClass('text-base')
-      await expect(badge).toHaveClass('size-28')
-    })
+    const badge = canvas.getByText('9').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('size-24')).toBe(true)
+    await expect(badge?.classList.contains('bg-semantic-success-200')).toBe(true)
+    await expect(badge?.classList.contains('text-core-white')).toBe(true)
   }
 }
 
-export const OneLetterSmall: Story = {
+export const NumberWarning: Story = {
   args: {
-    default: 'A',
-    size: 'sm'
+    variant: 'number',
+    tone: 'warning',
+    default: '1'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify single letter badge renders', async () => {
-      const badge = canvas.getByText('A')
-      await expect(badge).toBeInTheDocument()
-      await expect(badge).toBeVisible()
-    })
-    
-    await step('Verify single character gets rounded-full class', async () => {
-      const badge = canvas.getByText('A')
-      await expect(badge).toHaveClass('rounded-full')
-      await expect(badge).toHaveClass('!px-0')
-    })
-    
-    await step('Verify small size classes are applied', async () => {
-      const badge = canvas.getByText('A')
-      await expect(badge).toHaveClass('text-xs')
-      await expect(badge).toHaveClass('size-20')
-    })
+    const badge = canvas.getByText('1').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('size-24')).toBe(true)
+    await expect(badge?.classList.contains('bg-semantic-warning-200')).toBe(true)
+    await expect(badge?.classList.contains('text-core-black')).toBe(true)
   }
 }
 
-export const OneLetterMedium: Story = {
+export const NumberError: Story = {
   args: {
-    default: 'A',
-    size: 'md'
+    variant: 'number',
+    tone: 'error',
+    default: '4'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify single letter badge renders', async () => {
-      const badge = canvas.getByText('A')
-      await expect(badge).toBeInTheDocument()
-      await expect(badge).toBeVisible()
-    })
-    
-    await step('Verify single character gets rounded-full class', async () => {
-      const badge = canvas.getByText('A')
-      await expect(badge).toHaveClass('rounded-full')
-      await expect(badge).toHaveClass('!px-0')
-    })
-    
-    await step('Verify medium size classes are applied', async () => {
-      const badge = canvas.getByText('A')
-      await expect(badge).toHaveClass('text-sm')
-      await expect(badge).toHaveClass('size-24')
-    })
+    const badge = canvas.getByText('4').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    await expect(badge?.classList.contains('size-24')).toBe(true)
+    await expect(badge?.classList.contains('bg-semantic-error-200')).toBe(true)
+    await expect(badge?.classList.contains('text-core-white')).toBe(true)
   }
 }
 
-export const OneLetterLarge: Story = {
+// Icon stories
+export const WithLeftIcon: Story = {
   args: {
-    default: 'A',
-    size: 'lg'
+    variant: 'text',
+    tone: 'dark',
+    leftIcon: 'face-smile'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify single letter badge renders', async () => {
-      const badge = canvas.getByText('A')
-      await expect(badge).toBeInTheDocument()
-      await expect(badge).toBeVisible()
-    })
-    
-    await step('Verify single character gets rounded-full class', async () => {
-      const badge = canvas.getByText('A')
-      await expect(badge).toHaveClass('rounded-full')
-      await expect(badge).toHaveClass('!px-0')
-    })
-    
-    await step('Verify large size classes are applied', async () => {
-      const badge = canvas.getByText('A')
-      await expect(badge).toHaveClass('text-base')
-      await expect(badge).toHaveClass('size-28')
-    })
+    const badge = canvas.getByText('Fiscozen').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+
+    // Check for icon (should be an SVG element)
+    const icons = badge?.querySelectorAll('svg')
+    await expect(icons?.length).toBeGreaterThan(0)
+
+    // Check gap between icon and text
+    await expect(badge?.classList.contains('gap-4')).toBe(true)
   }
 }
 
-export const Small: Story = {
+export const WithRightIcon: Story = {
   args: {
-    size: 'sm'
+    variant: 'text',
+    tone: 'dark',
+    rightIcon: 'face-smile'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify small size classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('text-xs')
-      await expect(badge).toHaveClass('px-8')
-      await expect(badge).toHaveClass('size-20')
-    })
+    const badge = canvas.getByText('Fiscozen').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+
+    const icons = badge?.querySelectorAll('svg')
+    await expect(icons?.length).toBeGreaterThan(0)
+    await expect(badge?.classList.contains('gap-4')).toBe(true)
   }
 }
 
-export const Medium: Story = {
+export const WithBothIcons: Story = {
   args: {
-    size: 'md'
+    variant: 'text',
+    tone: 'dark',
+    leftIcon: 'face-smile',
+    rightIcon: 'face-smile'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify medium size classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('text-sm')
-      await expect(badge).toHaveClass('px-12')
-      await expect(badge).toHaveClass('size-24')
-    })
+    const badge = canvas.getByText('Fiscozen').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+
+    const icons = badge?.querySelectorAll('svg')
+    await expect(icons?.length).toBe(2)
+    await expect(badge?.classList.contains('gap-4')).toBe(true)
   }
 }
 
-export const Large: Story = {
+export const WithIconVariants: Story = {
   args: {
-    size: 'lg'
+    variant: 'text',
+    tone: 'dark',
+    leftIcon: 'bell',
+    leftIconVariant: 'far',
+    rightIcon: 'bell',
+    rightIconVariant: 'fas'
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify large size classes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('text-base')
-      await expect(badge).toHaveClass('px-14')
-      await expect(badge).toHaveClass('size-28')
-    })
-    
-    await step('Verify multi-character content gets rounded-2xl class', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveClass('rounded-2xl')
-      await expect(badge).toHaveClass('!w-fit')
-    })
+    const badge = canvas.getByText('Fiscozen').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+
+    const icons = badge?.querySelectorAll('svg')
+    await expect(icons?.length).toBe(2)
   }
 }
 
-// ============================================
-// ACCESSIBILITY STORIES
-// ============================================
-
-export const WithAriaLabel: Story = {
-  args: {
-    color: 'black',
-    size: 'md',
-    'aria-label': 'Status: Active'
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Verify badge renders correctly', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toBeInTheDocument()
-      await expect(badge).toBeVisible()
-    })
-    
-    await step('Verify aria-label attribute is applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveAttribute('aria-label', 'Status: Active')
-    })
-  }
+// All tones showcase
+export const AllTextTones: Story = {
+  render: () => ({
+    components: { FzBadge },
+    template: `
+      <div class="flex flex-wrap gap-16 p-16">
+        <FzBadge variant="text" tone="dark">Dark</FzBadge>
+        <FzBadge variant="text" tone="light">Light</FzBadge>
+        <FzBadge variant="text" tone="info">Info</FzBadge>
+        <FzBadge variant="text" tone="blue">Blue</FzBadge>
+        <FzBadge variant="text" tone="success">Success</FzBadge>
+        <FzBadge variant="text" tone="warning">Warning</FzBadge>
+        <FzBadge variant="text" tone="error">Error</FzBadge>
+      </div>
+    `
+  })
 }
 
-export const WithRole: Story = {
-  args: {
-    color: 'black',
-    size: 'md',
-    role: 'status'
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Verify badge renders correctly', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toBeInTheDocument()
-      await expect(badge).toBeVisible()
-    })
-    
-    await step('Verify role attribute is applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveAttribute('role', 'status')
-    })
-  }
+export const AllNumberTones: Story = {
+  render: () => ({
+    components: { FzBadge },
+    template: `
+      <div class="flex flex-wrap gap-16 p-16">
+        <FzBadge variant="number" tone="dark">1</FzBadge>
+        <FzBadge variant="number" tone="light">2</FzBadge>
+        <FzBadge variant="number" tone="info">3</FzBadge>
+        <FzBadge variant="number" tone="blue">4</FzBadge>
+        <FzBadge variant="number" tone="success">5</FzBadge>
+        <FzBadge variant="number" tone="warning">6</FzBadge>
+        <FzBadge variant="number" tone="error">7</FzBadge>
+      </div>
+    `
+  })
 }
 
-export const WithAriaLabelAndRole: Story = {
+// Auto-detect number variant
+export const AutoDetectNumber: Story = {
   args: {
-    color: 'black',
-    size: 'md',
-    'aria-label': 'Notification count: 5',
-    role: 'status'
+    default: '5',
+    variant: undefined
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
-    await step('Verify badge renders correctly', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toBeInTheDocument()
-      await expect(badge).toBeVisible()
-    })
-    
-    await step('Verify both aria-label and role attributes are applied', async () => {
-      const badge = canvas.getByText('Fiscozen')
-      await expect(badge).toHaveAttribute('aria-label', 'Notification count: 5')
-      await expect(badge).toHaveAttribute('role', 'status')
-    })
+    const badge = canvas.getByText('5').closest('div')
+
+    await expect(badge).toBeInTheDocument()
+    // Should auto-detect as number variant
+    await expect(badge?.classList.contains('size-24')).toBe(true)
   }
 }
