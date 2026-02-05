@@ -1,0 +1,95 @@
+---
+description: Component development guidelines
+alwaysApply: true
+---
+
+# Component Development Guidelines
+
+## File Structure
+
+```
+packages/{component}/
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+├── vitest.config.ts
+├── .eslintrc.cjs
+├── .prettierrc.js
+├── README.md
+└── src/
+    ├── index.ts
+    ├── types.ts
+    ├── Fz{Component}.vue
+    └── __tests__/
+        └── Fz{Component}.spec.ts
+```
+
+## Vue Component Template
+
+```vue
+<script setup lang="ts">
+import { computed } from 'vue'
+import type { Fz{Component}Props } from './types'
+
+const props = withDefaults(defineProps<Fz{Component}Props>(), {
+  variant: 'primary',
+  disabled: false
+})
+
+const emit = defineEmits<{
+  (e: 'click', event: MouseEvent): void
+}>()
+
+const classes = computed(() => [
+  'fz-{kebab-component}',
+  `fz-{kebab-component}--${props.variant}`,
+  props.disabled && 'is-disabled'
+])
+
+const handleClick = (event: MouseEvent) => {
+  if (!props.disabled) {
+    emit('click', event)
+  }
+}
+</script>
+
+<template>
+  <button
+    :class="classes"
+    :disabled="disabled"
+    @click="handleClick"
+  >
+    <slot />
+  </button>
+</template>
+
+<style scoped>
+.fz-{kebab-component} {
+  @apply flex items-center justify-center;
+}
+</style>
+```
+
+## Props Interface Template
+
+```typescript
+export interface Fz{Component}Props {
+  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'invisible'
+  size?: 'sm' | 'md' | 'lg'
+  disabled?: boolean
+  label?: string
+  environment?: 'backoffice' | 'frontoffice'
+}
+```
+
+## Component Checklist Before Submitting
+
+- [ ] Component has proper TypeScript types
+- [ ] All props have default values via `withDefaults`
+- [ ] Events are properly typed with `defineEmits`
+- [ ] Component is exported from `src/index.ts`
+- [ ] Storybook story exists and covers all variants
+- [ ] Storybook play function includes accessibility tests
+- [ ] Unit tests exist and pass
+- [ ] Component builds without errors (`pnpm build`)
+- [ ] Linting passes (`nx run {component}:lint`)

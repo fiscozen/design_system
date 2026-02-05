@@ -1,0 +1,43 @@
+---
+description: General AI behavior and task approach
+alwaysApply: true
+---
+
+# Design System AI Assistant Guidelines
+
+## Task Approach
+
+When given a task with Figma design reference:
+1. First read the relevant component source files to understand current implementation
+2. Check for similar components in `packages/` directory for patterns
+3. Review Storybook stories to understand usage patterns and variants
+4. Match Figma design to existing component props/variants or propose additions
+5. Implement changes following component conventions
+6. Write/update Storybook stories to reflect new features
+7. Run affected tests before finishing
+
+## Component Discovery Pattern
+
+For any feature request, first find related components:
+```bash
+# Search for similar functionality
+grep -r "keyword" packages/ --include="*.vue" --include="*.ts"
+
+# List all components by category
+ls apps/storybook/src/stories/
+```
+
+## Naming Conventions
+
+- **Components**: `Fz{pascalCase}` (e.g., `FzButton`, `FzDialog`)
+- **Packages**: `@fiscozen/{kebab-case}` (e.g., `@fiscozen/button`)
+- **Files**: `Fz{ComponentName}.vue`, `Fz{ComponentName}.spec.ts`
+- **Stories**: `{ComponentName}.stories.ts` in category folders
+
+## Common Patterns
+
+- All components use `<script setup lang="ts">`
+- Props interfaces are in `src/types.ts`
+- Exports from `src/index.ts`
+- Styles use Tailwind CSS with design tokens
+- Two environments: `backoffice` and `frontoffice`

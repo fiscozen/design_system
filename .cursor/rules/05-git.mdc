@@ -1,0 +1,83 @@
+---
+description: Git commit message conventions
+alwaysApply: false
+---
+
+# Git Commit Message Conventions
+
+## Format
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+## Types
+
+| Type | Description |
+|------|-------------|
+| `feat` | New feature implementation |
+| `fix` | Bug fix |
+| `refactor` | Code restructuring without behavior change |
+| `docs` | Documentation changes |
+| `style` | Formatting, missing semicolons, etc. |
+| `test` | Adding or modifying tests |
+| `chore` | Maintenance tasks, dependency updates |
+
+## Scopes
+
+Common scopes for this project:
+- `button`, `dialog`, `input`, etc. - specific component
+- `storybook` - Storybook configuration
+- `eslint`, `prettier` - configuration
+- `build` - build system
+- `deps` - dependency updates
+
+## Examples
+
+```
+feat(button): add icon position prop for icon buttons
+
+- Added `iconName` and `iconPosition` props
+- Icons can now be placed before or after label
+- Backwards compatible change
+
+Closes #123
+```
+
+```
+fix(dialog): prevent modal from closing on backdrop click when static
+
+- Added `static` prop for dialogs that shouldn't close on backdrop
+- Updated Storybook stories to demonstrate new prop
+
+Fixes #456
+```
+
+```
+refactor(input): consolidate variant styles using CSS variables
+
+- Reduced code duplication across variants
+- Maintained exact same visual output
+- All tests pass
+```
+
+```
+test(button): add accessibility tests for all variants
+
+- Added aria-disabled checks
+- Verified tabindex behavior
+- All Storybook tests pass
+```
+
+## Rules
+
+1. Use imperative mood: "add" not "added", "fix" not "fixed"
+2. Subject line max 72 characters
+3. Body wrapped at 80 characters
+4. Reference issues with `Closes #123` or `Fixes #456`
+5. Breaking changes in footer: `BREAKING CHANGE: description`
+6. Consider only staged changes for the commit message
