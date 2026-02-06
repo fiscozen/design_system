@@ -7,7 +7,11 @@ exports[`FzStepper > Snapshots > should match snapshot - activeStep 2 1`] = `
     <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
       <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
         <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
-          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-grey-100 text-core-black rounded-full !px-0">1</div>
+          <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-grey-100 text-core-black" title="1">
+            <!--v-if-->
+            <p class="text-[inherit] text-sm">1</p>
+            <!--v-if-->
+          </div>
         </div>
       </div>
       <div data-v-6183ce6d="" class="flex-col">
@@ -35,7 +39,11 @@ exports[`FzStepper > Snapshots > should match snapshot - activeStep 2 1`] = `
     <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
       <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
         <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
-          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-blue-500 text-core-white rounded-full !px-0">3</div>
+          <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-blue-500 text-core-white" title="3">
+            <!--v-if-->
+            <p class="text-[inherit] text-sm">3</p>
+            <!--v-if-->
+          </div>
         </div>
       </div>
       <div data-v-6183ce6d="" class="flex-col">
@@ -49,7 +57,11 @@ exports[`FzStepper > Snapshots > should match snapshot - activeStep 2 1`] = `
     <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
       <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
         <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
-          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-grey-100 text-core-black rounded-full !px-0">4</div>
+          <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-grey-100 text-core-black" title="4">
+            <!--v-if-->
+            <p class="text-[inherit] text-sm">4</p>
+            <!--v-if-->
+          </div>
         </div>
       </div>
       <div data-v-6183ce6d="" class="flex-col">
@@ -69,7 +81,11 @@ exports[`FzStepper > Snapshots > should match snapshot - default state 1`] = `
     <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
       <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
         <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
-          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-blue-500 text-core-white rounded-full !px-0">1</div>
+          <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-blue-500 text-core-white" title="1">
+            <!--v-if-->
+            <p class="text-[inherit] text-sm">1</p>
+            <!--v-if-->
+          </div>
         </div>
       </div>
       <div data-v-6183ce6d="" class="flex-col">
@@ -111,7 +127,11 @@ exports[`FzStepper > Snapshots > should match snapshot - default state 1`] = `
     <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
       <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
         <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
-          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-grey-100 text-core-black rounded-full !px-0">4</div>
+          <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-grey-100 text-core-black" title="4">
+            <!--v-if-->
+            <p class="text-[inherit] text-sm">4</p>
+            <!--v-if-->
+          </div>
         </div>
       </div>
       <div data-v-6183ce6d="" class="flex-col">
@@ -131,7 +151,11 @@ exports[`FzStepper > Snapshots > should match snapshot - single step 1`] = `
     <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
       <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
         <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
-          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-blue-500 text-core-white rounded-full !px-0">1</div>
+          <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-blue-500 text-core-white" title="1">
+            <!--v-if-->
+            <p class="text-[inherit] text-sm">1</p>
+            <!--v-if-->
+          </div>
         </div>
       </div>
       <div data-v-6183ce6d="" class="flex-col">
@@ -151,7 +175,11 @@ exports[`FzStepper > Snapshots > should match snapshot - with disableProgressBar
     <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
       <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
         <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
-          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-blue-500 text-core-white rounded-full !px-0">1</div>
+          <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-blue-500 text-core-white" title="1">
+            <!--v-if-->
+            <p class="text-[inherit] text-sm">1</p>
+            <!--v-if-->
+          </div>
         </div>
       </div>
       <div data-v-6183ce6d="" class="flex-col">
@@ -193,7 +221,11 @@ exports[`FzStepper > Snapshots > should match snapshot - with disableProgressBar
     <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
       <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
         <div data-v-6183ce6d="" class="size-[25px] flex justify-center items-center">
-          <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-grey-100 text-core-black rounded-full !px-0">4</div>
+          <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-grey-100 text-core-black" title="4">
+            <!--v-if-->
+            <p class="text-[inherit] text-sm">4</p>
+            <!--v-if-->
+          </div>
         </div>
       </div>
       <div data-v-6183ce6d="" class="flex-col">
@@ -217,7 +249,11 @@ exports[`FzStepper > Snapshots > should match snapshot - with forceMobile 1`] = 
   </div>
   <div data-v-6183ce6d="" class="flex flex-row gap-8 items-center">
     <div data-v-6183ce6d="" class="fz-stepper__circle flex items-center justify-center">
-      <div data-v-6183ce6d="" class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-blue-500 text-core-white rounded-full !px-0">1</div>
+      <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-blue-500 text-core-white" title="1">
+        <!--v-if-->
+        <p class="text-[inherit] text-sm">1</p>
+        <!--v-if-->
+      </div>
     </div>
     <div data-v-6183ce6d="" class="fz-stepper__dropdown grow flex">
       <div class="inline-flex w-full sm:w-auto">
