@@ -2494,8 +2494,8 @@ importers:
         specifier: workspace:^
         version: link:../composables
       '@fiscozen/dropdown':
-        specifier: workspace:^
-        version: link:../dropdown
+        specifier: 1.0.1
+        version: 1.0.1(@fiscozen/container@0.4.0(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3)))(@fiscozen/icons@packages+icons)(@fiscozen/link@1.0.0-next.0(tailwindcss@3.4.19(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.3.3)))(vue@3.5.26(typescript@5.3.3)))(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.3.3)))(vue@3.5.26(typescript@5.3.3))
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
@@ -2721,8 +2721,8 @@ importers:
         specifier: workspace:^
         version: link:../dialog
       '@fiscozen/dropdown':
-        specifier: workspace:^
-        version: link:../dropdown
+        specifier: 1.0.1
+        version: 1.0.1(@fiscozen/container@0.4.0(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3)))(@fiscozen/icons@packages+icons)(@fiscozen/link@1.0.0-next.0(tailwindcss@3.4.19(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.3.3)))(vue@3.5.26(typescript@5.3.3)))(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.3.3)))(vue@3.5.26(typescript@5.3.3))
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
@@ -3791,6 +3791,56 @@ packages:
   '@eslint/js@8.57.1':
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+
+  '@fiscozen/action@1.1.0-next.1':
+    resolution: {integrity: sha512-iZFa4XA7hVdA1+Ltd4rQp50csw4Zr7d2ZQIjmBhywZjMwCSx8cyoANoQ8CvZPXYtLsf2iCh51vIgjnAf+dTjBQ==}
+    peerDependencies:
+      '@fiscozen/icons': ^0.1.36
+      '@fiscozen/link': ^1.0.0-next.0
+      tailwindcss: ^3.4.1
+      vue: ^3.4.13
+      vue-router: ^4.3.0
+
+  '@fiscozen/button@1.0.1-next.1':
+    resolution: {integrity: sha512-W5uE20jEnLCbOndrB6ReMrowRpXJslBjq+VQrBi+dTeJCfqFg18wQhHL5N4qwrmcIH8WyFXT5Pay/2VrqgijRg==}
+    peerDependencies:
+      '@fiscozen/container': ^0.3.1
+      '@fiscozen/icons': ^0.1.35
+      '@fiscozen/style': ^0.1.8-next.0
+      tailwindcss: ^3.4.1
+      vue: ^3.4.13
+
+  '@fiscozen/composables@1.0.0':
+    resolution: {integrity: sha512-oURJLHxT5+2OT05D9GrbJGZ1VmXusEXZpRFC8+AaISO/xeiXStI47w8DySYTRxezQ37GDWvOZp6P+wUjBZY9uw==}
+    peerDependencies:
+      tailwindcss: ^3.4.1
+      vue: ^3.4.13
+
+  '@fiscozen/container@0.4.0':
+    resolution: {integrity: sha512-pbpuUJT96Wvh+mccOm2JN/njMeQhiq46qJxyXlOu2gEuWMA0GJk23aVsB2cPBfYAGQrEh8Oq/H0x59MM02n+8w==}
+    peerDependencies:
+      '@fiscozen/style': ^0.1.8-next.0
+      tailwindcss: ^3.4.1
+      vue: ^3.4.13
+
+  '@fiscozen/dropdown@1.0.1':
+    resolution: {integrity: sha512-9ykktUoVYiCueRcyWH402GncNeb1HAKl0yAb+LBtFaK48IDAWFBbnepjOm9oP9bRFXhgv2VFbm56jKMwaIuBJw==}
+    peerDependencies:
+      tailwindcss: ^3.4.1
+      vue: ^3.4.13
+
+  '@fiscozen/link@1.0.0-next.0':
+    resolution: {integrity: sha512-nf4cFDP/KaZKlkyrAtzJskf7KkZEyVJJSgnqnoCLg4Ls2rBrSI0lgu1rp8fa5PfedTltG33nwqgnN8HHgTJu+Q==}
+    peerDependencies:
+      tailwindcss: ^3.4.1
+      vue: ^3.4.13
+      vue-router: ^4.3.0
+
+  '@fiscozen/style@0.1.8-next.0':
+    resolution: {integrity: sha512-bQnQp+nDCgUMD7QYMRiaGioLfOSoccD39/rJ2RXZJpl4dymdL4L8cDpcL7jaxdmp0ExaAgs/vJCVf4VyuCaV+g==}
+    peerDependencies:
+      tailwindcss: ^3.4.1
+      vue: ^3.4.13
 
   '@fortawesome/fontawesome-common-types@6.7.2':
     resolution: {integrity: sha512-Zs+YeHUC5fkt7Mg1l6XTniei3k4bwG/yo3iFUtZWd/pMx9g3fdvkSK9E0FOC+++phXOka78uJcYb8JaFkW52Xg==}
@@ -8366,6 +8416,59 @@ snapshots:
       - supports-color
 
   '@eslint/js@8.57.1': {}
+
+  '@fiscozen/action@1.1.0-next.1(@fiscozen/icons@packages+icons)(@fiscozen/link@1.0.0-next.0(tailwindcss@3.4.19(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.3.3)))(vue@3.5.26(typescript@5.3.3)))(tailwindcss@3.4.19(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.3.3)))(vue@3.5.26(typescript@5.3.3))':
+    dependencies:
+      '@fiscozen/icons': link:packages/icons
+      '@fiscozen/link': 1.0.0-next.0(tailwindcss@3.4.19(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.3.3)))(vue@3.5.26(typescript@5.3.3))
+      tailwindcss: 3.4.19(yaml@2.8.2)
+      vue: 3.5.26(typescript@5.3.3)
+      vue-router: 4.6.4(vue@3.5.26(typescript@5.3.3))
+
+  '@fiscozen/button@1.0.1-next.1(@fiscozen/container@0.4.0(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3)))(@fiscozen/icons@packages+icons)(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))':
+    dependencies:
+      '@fiscozen/container': 0.4.0(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))
+      '@fiscozen/icons': link:packages/icons
+      '@fiscozen/style': link:packages/style
+      tailwindcss: 3.4.19(yaml@2.8.2)
+      vue: 3.5.26(typescript@5.3.3)
+
+  '@fiscozen/composables@1.0.0(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))':
+    dependencies:
+      '@fiscozen/style': 0.1.8-next.0(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))
+      tailwindcss: 3.4.19(yaml@2.8.2)
+      vue: 3.5.26(typescript@5.3.3)
+
+  '@fiscozen/container@0.4.0(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))':
+    dependencies:
+      '@fiscozen/style': link:packages/style
+      tailwindcss: 3.4.19(yaml@2.8.2)
+      vue: 3.5.26(typescript@5.3.3)
+
+  '@fiscozen/dropdown@1.0.1(@fiscozen/container@0.4.0(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3)))(@fiscozen/icons@packages+icons)(@fiscozen/link@1.0.0-next.0(tailwindcss@3.4.19(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.3.3)))(vue@3.5.26(typescript@5.3.3)))(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.3.3)))(vue@3.5.26(typescript@5.3.3))':
+    dependencies:
+      '@fiscozen/action': 1.1.0-next.1(@fiscozen/icons@packages+icons)(@fiscozen/link@1.0.0-next.0(tailwindcss@3.4.19(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.3.3)))(vue@3.5.26(typescript@5.3.3)))(tailwindcss@3.4.19(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.3.3)))(vue@3.5.26(typescript@5.3.3))
+      '@fiscozen/button': 1.0.1-next.1(@fiscozen/container@0.4.0(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3)))(@fiscozen/icons@packages+icons)(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))
+      '@fiscozen/composables': 1.0.0(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))
+      tailwindcss: 3.4.19(yaml@2.8.2)
+      vue: 3.5.26(typescript@5.3.3)
+    transitivePeerDependencies:
+      - '@fiscozen/container'
+      - '@fiscozen/icons'
+      - '@fiscozen/link'
+      - '@fiscozen/style'
+      - vue-router
+
+  '@fiscozen/link@1.0.0-next.0(tailwindcss@3.4.19(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.3.3)))(vue@3.5.26(typescript@5.3.3))':
+    dependencies:
+      tailwindcss: 3.4.19(yaml@2.8.2)
+      vue: 3.5.26(typescript@5.3.3)
+      vue-router: 4.6.4(vue@3.5.26(typescript@5.3.3))
+
+  '@fiscozen/style@0.1.8-next.0(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))':
+    dependencies:
+      tailwindcss: 3.4.19(yaml@2.8.2)
+      vue: 3.5.26(typescript@5.3.3)
 
   '@fortawesome/fontawesome-common-types@6.7.2': {}
 

@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/stepper",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Design System Stepper component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -15,7 +15,7 @@
   "peerDependencies": {
     "@fiscozen/badge": "workspace:^",
     "@fiscozen/composables": "workspace:^",
-    "@fiscozen/dropdown": "workspace:^",
+    "@fiscozen/dropdown": "1.0.1",
     "@fiscozen/icons": "workspace:^",
     "@fiscozen/style": "workspace:^",
     "tailwindcss": "^3.4.1",
