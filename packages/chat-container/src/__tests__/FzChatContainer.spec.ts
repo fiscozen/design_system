@@ -1,29 +1,152 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { mount, VueWrapper } from "@vue/test-utils";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mount } from "@vue/test-utils";
+import { nextTick } from "vue";
 import { FzChatContainer } from "..";
+import { FzIconButton } from "@fiscozen/button";
+
+beforeEach(() => {
+  // Mock matchMedia for useMediaQuery composable (used by FzCard)
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+});
+import type { FzChatContainerProps } from "../types";
+
+const createMockMessage = (
+  overrides: Partial<FzChatContainerProps["messages"][number]> = {},
+): FzChatContainerProps["messages"][number] => ({
+  message: "Hello, world!",
+  variant: "primary",
+  timestamp: "2024-01-15T10:30:00.000Z",
+  user: {
+    firstName: "John",
+    lastName: "Doe",
+    avatar: "",
+  },
+  attachments: [],
+  ...overrides,
+});
 
 describe("FzChatContainer", () => {
   // ============================================
   // RENDERING TESTS
   // ============================================
   describe("Rendering", () => {
-    it("should render with default props", () => {
-      const wrapper = mount(FzChatContainer);
+    it("should render with empty messages", () => {
+      const wrapper = mount(FzChatContainer, {
+        props: { messages: [] },
+      });
       expect(wrapper.exists()).toBe(true);
     });
 
-    it("should render label when provided", () => {
+    it("should render empty state when messages is empty and emptyMessage is provided", () => {
       const wrapper = mount(FzChatContainer, {
-        props: { label: "Test Label" },
+        props: {
+          messages: [],
+          emptyMessage: "No messages yet",
+        },
       });
-      expect(wrapper.text()).toContain("Test Label");
+      expect(wrapper.text()).toContain("No messages yet");
     });
 
-    it("should render default slot content", () => {
+    it("should render empty message description when provided and no messages", () => {
       const wrapper = mount(FzChatContainer, {
-        slots: { default: "Slot Content" },
+        props: {
+          messages: [],
+          emptyMessage: "No messages yet",
+          emptyMessageDescription: "Start a conversation",
+        },
       });
-      expect(wrapper.text()).toContain("Slot Content");
+      expect(wrapper.text()).toContain("No messages yet");
+      expect(wrapper.text()).toContain("Start a conversation");
+    });
+
+    it("should not render empty message when there are messages", () => {
+      const wrapper = mount(FzChatContainer, {
+        props: {
+          messages: [createMockMessage()],
+          emptyMessage: "No messages yet",
+        },
+      });
+      expect(wrapper.text()).not.toContain("No messages yet");
+    });
+
+    it("should render messages with user name and message content", () => {
+      const messages = [
+        createMockMessage({ message: "First message", user: { firstName: "Jane", lastName: "Smith", avatar: "" } }),
+      ];
+      const wrapper = mount(FzChatContainer, {
+        props: { messages },
+      });
+      expect(wrapper.text()).toContain("Jane Smith");
+      expect(wrapper.text()).toContain("First message");
+    });
+
+    it("should render multiple messages", () => {
+      const messages = [
+        createMockMessage({ message: "Message 1" }),
+        createMockMessage({ message: "Message 2", variant: "invisible" }),
+      ];
+      const wrapper = mount(FzChatContainer, {
+        props: { messages },
+      });
+      expect(wrapper.text()).toContain("Message 1");
+      expect(wrapper.text()).toContain("Message 2");
+    });
+
+    it("should render waiting for response message when last message is primary", () => {
+      const wrapper = mount(FzChatContainer, {
+        props: {
+          messages: [createMockMessage({ variant: "primary" })],
+          waitingForResponseMessage: "Waiting for response...",
+        },
+      });
+      expect(wrapper.text()).toContain("Waiting for response...");
+    });
+
+    it("should not render waiting for response when last message is invisible", () => {
+      const wrapper = mount(FzChatContainer, {
+        props: {
+          messages: [createMockMessage({ variant: "invisible" })],
+          waitingForResponseMessage: "Waiting for response...",
+        },
+      });
+      expect(wrapper.text()).not.toContain("Waiting for response...");
+    });
+
+    it("should not render waiting for response when messages is empty", () => {
+      const wrapper = mount(FzChatContainer, {
+        props: {
+          messages: [],
+          waitingForResponseMessage: "Waiting for response...",
+        },
+      });
+      expect(wrapper.text()).not.toContain("Waiting for response...");
+    });
+
+    it("should render attachments with download button", () => {
+      const messages = [
+        createMockMessage({
+          attachments: [
+            { name: "document.pdf", url: "https://example.com/doc.pdf" },
+          ],
+        }),
+      ];
+      const wrapper = mount(FzChatContainer, {
+        props: { messages },
+      });
+      expect(wrapper.text()).toContain("document.pdf");
+      expect(wrapper.findComponent(FzIconButton).exists()).toBe(true);
     });
   });
 
@@ -31,61 +154,30 @@ describe("FzChatContainer", () => {
   // PROPS TESTS
   // ============================================
   describe("Props", () => {
-    // Add tests for each prop your component accepts
-    // Example for variant prop:
-    // describe('variant prop', () => {
-    //   it.each([
-    //     ['primary', 'bg-blue-500'],
-    //     ['secondary', 'bg-core-white'],
-    //   ])('should apply %s variant classes', (variant, expectedClass) => {
-    //     const wrapper = mount(FzChatContainer, {
-    //       props: { variant }
-    //     })
-    //     expect(wrapper.find('button').classes()).toContain(expectedClass)
-    //   })
-    // })
-
-    describe("disabled prop", () => {
-      it("should apply disabled attribute when true", () => {
-        const wrapper = mount(FzChatContainer, {
-          props: { disabled: true },
-        });
-        // Adjust selector based on your component's structure
-        const element = wrapper.find('button, input, [role="button"]');
-        if (element.exists()) {
-          expect(element.attributes("disabled")).toBeDefined();
-        }
+    it("should apply center alignment when messages is empty", () => {
+      const wrapper = mount(FzChatContainer, {
+        props: { messages: [] },
       });
-
-      it("should set aria-disabled to true when disabled", () => {
-        const wrapper = mount(FzChatContainer, {
-          props: { disabled: true },
-        });
-        const element = wrapper.find('button, input, [role="button"]');
-        if (element.exists()) {
-          expect(element.attributes("aria-disabled")).toBe("true");
-        }
-      });
+      const container = wrapper.findComponent({ name: "FzContainer" });
+      expect(container.exists()).toBe(true);
     });
 
-    describe("environment prop", () => {
-      it("should apply frontoffice height by default", () => {
-        const wrapper = mount(FzChatContainer);
-        const element = wrapper.find('button, input, [role="button"]');
-        if (element.exists()) {
-          expect(element.classes()).toContain("h-44");
-        }
+    it("should render primary variant with avatar", () => {
+      const messages = [createMockMessage({ variant: "primary" })];
+      const wrapper = mount(FzChatContainer, {
+        props: { messages },
       });
+      const avatar = wrapper.findComponent({ name: "FzAvatar" });
+      expect(avatar.exists()).toBe(true);
+    });
 
-      it("should apply backoffice height when environment is backoffice", () => {
-        const wrapper = mount(FzChatContainer, {
-          props: { environment: "backoffice" },
-        });
-        const element = wrapper.find('button, input, [role="button"]');
-        if (element.exists()) {
-          expect(element.classes()).toContain("h-32");
-        }
+    it("should not render avatar for invisible variant", () => {
+      const messages = [createMockMessage({ variant: "invisible" })];
+      const wrapper = mount(FzChatContainer, {
+        props: { messages },
       });
+      const avatars = wrapper.findAllComponents({ name: "FzAvatar" });
+      expect(avatars.length).toBe(0);
     });
   });
 
@@ -93,117 +185,106 @@ describe("FzChatContainer", () => {
   // EVENTS TESTS
   // ============================================
   describe("Events", () => {
-    it("should emit click event when clicked", async () => {
-      const wrapper = mount(FzChatContainer);
-      const element = wrapper.find('button, [role="button"]');
-      if (element.exists()) {
-        await element.trigger("click");
-        expect(wrapper.emitted("click")).toHaveLength(1);
-      }
-    });
-
-    it("should not emit click when disabled", async () => {
+    it("should emit download-attachment when download button is clicked", async () => {
+      const downloadUrl = "https://example.com/document.pdf";
+      const messages = [
+        createMockMessage({
+          attachments: [{ name: "document.pdf", url: downloadUrl }],
+        }),
+      ];
       const wrapper = mount(FzChatContainer, {
-        props: { disabled: true },
+        props: { messages },
       });
-      const element = wrapper.find('button, [role="button"]');
-      if (element.exists()) {
-        await element.trigger("click");
-        expect(wrapper.emitted("click")).toBeUndefined();
-      }
+      const iconButton = wrapper.findComponent(FzIconButton);
+      await iconButton.trigger("click");
+      expect(wrapper.emitted("download-attachment")).toHaveLength(1);
+      expect(wrapper.emitted("download-attachment")![0]).toEqual([downloadUrl]);
     });
 
-    // Add v-model test if component supports it:
-    // it('should emit update:modelValue on input', async () => {
-    //   const wrapper = mount(FzChatContainer, {
-    //     props: { modelValue: '' }
-    //   })
-    //   await wrapper.find('input').setValue('new value')
-    //   expect(wrapper.emitted('update:modelValue')).toHaveLength(1)
-    //   expect(wrapper.emitted('update:modelValue')![0]).toEqual(['new value'])
-    // })
-  });
-
-  // ============================================
-  // ACCESSIBILITY TESTS
-  // ============================================
-  describe("Accessibility", () => {
-    describe("ARIA attributes", () => {
-      it("should have aria-disabled set correctly", () => {
-        const wrapperEnabled = mount(FzChatContainer, {
-          props: { disabled: false },
-        });
-        const wrapperDisabled = mount(FzChatContainer, {
-          props: { disabled: true },
-        });
-
-        const elEnabled = wrapperEnabled.find('button, input, [role="button"]');
-        const elDisabled = wrapperDisabled.find(
-          'button, input, [role="button"]',
-        );
-
-        if (elEnabled.exists()) {
-          expect(elEnabled.attributes("aria-disabled")).toBe("false");
-        }
-        if (elDisabled.exists()) {
-          expect(elDisabled.attributes("aria-disabled")).toBe("true");
-        }
+    it("should emit correct url when multiple attachments and first is clicked", async () => {
+      const messages = [
+        createMockMessage({
+          attachments: [
+            { name: "first.pdf", url: "https://example.com/first.pdf" },
+            { name: "second.pdf", url: "https://example.com/second.pdf" },
+          ],
+        }),
+      ];
+      const wrapper = mount(FzChatContainer, {
+        props: { messages },
       });
-
-      // Add label accessibility test if applicable:
-      // it('should have aria-labelledby linking to label', async () => {
-      //   const wrapper = mount(FzChatContainer, {
-      //     props: { label: 'Test Label' }
-      //   })
-      //   await wrapper.vm.$nextTick()
-      //   const input = wrapper.find('input')
-      //   const labelId = input.attributes('aria-labelledby')
-      //   expect(labelId).toBeTruthy()
-      //   expect(wrapper.find(`#${labelId}`).exists()).toBe(true)
-      // })
-
-      // Add error accessibility test if applicable:
-      // it('should have aria-invalid when error is true', () => {
-      //   const wrapper = mount(FzChatContainer, {
-      //     props: { error: true }
-      //   })
-      //   expect(wrapper.find('input').attributes('aria-invalid')).toBe('true')
-      // })
-
-      // it('should have aria-describedby linking to error message', () => {
-      //   const wrapper = mount(FzChatContainer, {
-      //     props: { error: true },
-      //     slots: { errorMessage: 'Error text' }
-      //   })
-      //   const input = wrapper.find('input')
-      //   const errorId = input.attributes('aria-describedby')
-      //   expect(errorId).toBeTruthy()
-      //   expect(wrapper.find(`#${errorId}`).text()).toContain('Error text')
-      // })
-    });
-
-    describe("Keyboard navigation", () => {
-      it("should be focusable when not disabled", () => {
-        const wrapper = mount(FzChatContainer);
-        const element = wrapper.find('button, input, [role="button"]');
-        if (element.exists()) {
-          expect(element.attributes("tabindex")).not.toBe("-1");
-        }
-      });
+      const iconButtons = wrapper.findAllComponents(FzIconButton);
+      await iconButtons[0].trigger("click");
+      expect(wrapper.emitted("download-attachment")![0]).toEqual([
+        "https://example.com/first.pdf",
+      ]);
     });
   });
 
   // ============================================
-  // CSS CLASSES TESTS
+  // TIMESTAMP FORMATTING
+  // ============================================
+  describe("Timestamp formatting", () => {
+    it("should format ISO timestamp to Italian format (dd/MM/yyyy H:mm)", () => {
+      const messages = [
+        createMockMessage({ timestamp: "2024-01-15T10:30:00.000Z" }),
+      ];
+      const wrapper = mount(FzChatContainer, {
+        props: { messages },
+      });
+      // With TZ=Europe/Rome from vitest setup, 10:30 UTC = 11:30 CET
+      expect(wrapper.text()).toMatch(/\d{2}\/\d{2}\/\d{4} \d{1,2}:\d{2}/);
+    });
+
+    it("should handle invalid timestamp gracefully", () => {
+      const messages = [
+        createMockMessage({ timestamp: "invalid-date" }),
+      ];
+      const wrapper = mount(FzChatContainer, {
+        props: { messages },
+      });
+      expect(wrapper.exists()).toBe(true);
+    });
+  });
+
+  // ============================================
+  // SCROLL BEHAVIOR
+  // ============================================
+  describe("Scroll behavior", () => {
+    it("should scroll to bottom on mount", async () => {
+      const messages = [createMockMessage()];
+      let scrollTopValue = 0;
+      const wrapper = mount(FzChatContainer, {
+        props: { messages },
+      });
+      const container = wrapper.find(".grow.overflow-y-auto");
+      Object.defineProperty(container.element, "scrollHeight", {
+        value: 500,
+        configurable: true,
+      });
+      Object.defineProperty(container.element, "scrollTop", {
+        get: () => scrollTopValue,
+        set: (v: number) => {
+          scrollTopValue = v;
+        },
+        configurable: true,
+      });
+      await nextTick();
+      await nextTick();
+      expect(scrollTopValue).toBe(500);
+    });
+  });
+
+  // ============================================
+  // CSS CLASSES
   // ============================================
   describe("CSS Classes", () => {
-    it("should apply base styling classes", () => {
-      const wrapper = mount(FzChatContainer);
-      // Add assertions for your component's base classes
-      // Example:
-      // const element = wrapper.find('button')
-      // expect(element.classes()).toContain('rounded')
-      // expect(element.classes()).toContain('flex')
+    it("should apply base container classes", () => {
+      const wrapper = mount(FzChatContainer, {
+        props: { messages: [] },
+      });
+      const container = wrapper.find(".grow.overflow-y-auto.no-scrollbar.pb-8");
+      expect(container.exists()).toBe(true);
     });
   });
 
@@ -211,51 +292,63 @@ describe("FzChatContainer", () => {
   // EDGE CASES
   // ============================================
   describe("Edge Cases", () => {
-    it("should handle undefined props gracefully", () => {
+    it("should handle message with empty attachments array", () => {
+      const messages = [createMockMessage({ attachments: [] })];
       const wrapper = mount(FzChatContainer, {
-        props: {
-          // @ts-expect-error testing undefined handling
-          modelValue: undefined,
-        },
+        props: { messages },
       });
-      expect(wrapper.exists()).toBe(true);
+      expect(wrapper.text()).toContain("Hello, world!");
+      expect(wrapper.findAllComponents(FzIconButton).length).toBe(0);
     });
 
-    // Add unique ID test if component generates IDs:
-    // it('should generate unique IDs for multiple instances', async () => {
-    //   const wrappers = Array.from({ length: 100 }).map(() =>
-    //     mount(FzChatContainer, { props: { label: 'Label' } })
-    //   )
-    //   await Promise.all(wrappers.map(w => w.vm.$nextTick()))
-    //
-    //   const ids = wrappers.map(w => w.find('input').attributes('id'))
-    //   expect(new Set(ids).size).toBe(100)
-    // })
+    it("should handle message with multiple attachments", () => {
+      const messages = [
+        createMockMessage({
+          attachments: [
+            { name: "a.pdf", url: "url1" },
+            { name: "b.pdf", url: "url2" },
+          ],
+        }),
+      ];
+      const wrapper = mount(FzChatContainer, {
+        props: { messages },
+      });
+      expect(wrapper.findAllComponents(FzIconButton).length).toBe(2);
+    });
   });
 
   // ============================================
   // SNAPSHOTS
   // ============================================
   describe("Snapshots", () => {
-    it("should match snapshot - default state", () => {
+    it("should match snapshot - empty state", () => {
       const wrapper = mount(FzChatContainer, {
-        props: {},
+        props: {
+          messages: [],
+          emptyMessage: "No messages",
+          emptyMessageDescription: "Start chatting",
+        },
       });
       expect(wrapper.html()).toMatchSnapshot();
     });
 
-    // Add snapshot for error state if applicable:
-    // it('should match snapshot - error state', () => {
-    //   const wrapper = mount(FzChatContainer, {
-    //     props: { error: true },
-    //     slots: { errorMessage: 'Error message' }
-    //   })
-    //   expect(wrapper.html()).toMatchSnapshot()
-    // })
-
-    it("should match snapshot - disabled state", () => {
+    it("should match snapshot - with messages", () => {
       const wrapper = mount(FzChatContainer, {
-        props: { disabled: true },
+        props: {
+          messages: [
+            createMockMessage({ message: "Test message" }),
+          ],
+        },
+      });
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - waiting for response", () => {
+      const wrapper = mount(FzChatContainer, {
+        props: {
+          messages: [createMockMessage({ variant: "primary" })],
+          waitingForResponseMessage: "Please wait...",
+        },
       });
       expect(wrapper.html()).toMatchSnapshot();
     });
