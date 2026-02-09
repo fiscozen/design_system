@@ -53,7 +53,7 @@ export const Default: Story = {
     })
 
     await step('Verify messages are displayed', async () => {
-      const messages = canvas.getAllByText(/Lorem ipsum/)
+      const messages = canvas.getAllByText(/Hello, world!/)
       await expect(messages.length).toBeGreaterThanOrEqual(1)
     })
 
@@ -120,7 +120,7 @@ export const LastMessageFromReceiver: Story = {
     const canvas = within(canvasElement)
 
     await step('Verify messages are displayed', async () => {
-      const messages = canvas.getAllByText(/Hello, world!/)
+      const messages = canvas.getAllByText(/Lorem ipsum/)
       await expect(messages.length).toBeGreaterThanOrEqual(1)
     })
   }
@@ -148,7 +148,7 @@ export const LastMessageFromSender: Story = {
     const canvas = within(canvasElement)
 
     await step('Verify messages are displayed', async () => {
-      const messages = canvas.getAllByText(/Hello, world!/)
+      const messages = canvas.getAllByText(/Lorem ipsum/)
       await expect(messages.length).toBeGreaterThanOrEqual(1)
     })
   }
@@ -189,9 +189,11 @@ export const WithAttachments: Story = {
     const canvas = within(canvasElement)
 
     await step('Verify download button is accessible', async () => {
-      const downloadButton = canvas.getByRole('button')
-      await expect(downloadButton).toBeInTheDocument()
-      await expect(downloadButton).toBeVisible()
+      const downloadButtons = canvas.getAllByRole('button', {
+        name: /Scarica invoice_\d\.pdf/
+      })
+      await expect(downloadButtons.length).toBeGreaterThanOrEqual(1)
+      await expect(downloadButtons[0]).toBeVisible()
     })
   }
 }
