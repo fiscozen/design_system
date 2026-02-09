@@ -83,7 +83,10 @@ describe("FzChatContainer", () => {
 
     it("should render messages with user name and message content", () => {
       const messages = [
-        createMockMessage({ message: "First message", user: { firstName: "Jane", lastName: "Smith", avatar: "" } }),
+        createMockMessage({
+          message: "First message",
+          user: { firstName: "Jane", lastName: "Smith", avatar: "" },
+        }),
       ];
       const wrapper = mount(FzChatContainer, {
         props: { messages },
@@ -104,20 +107,20 @@ describe("FzChatContainer", () => {
       expect(wrapper.text()).toContain("Message 2");
     });
 
-    it("should render waiting for response message when last message is primary", () => {
+    it("should render waiting for response message when last message is invisible", () => {
       const wrapper = mount(FzChatContainer, {
         props: {
-          messages: [createMockMessage({ variant: "primary" })],
+          messages: [createMockMessage({ variant: "invisible" })],
           waitingForResponseMessage: "Waiting for response...",
         },
       });
       expect(wrapper.text()).toContain("Waiting for response...");
     });
 
-    it("should not render waiting for response when last message is invisible", () => {
+    it("should not render waiting for response when last message is primary", () => {
       const wrapper = mount(FzChatContainer, {
         props: {
-          messages: [createMockMessage({ variant: "invisible" })],
+          messages: [createMockMessage({ variant: "primary" })],
           waitingForResponseMessage: "Waiting for response...",
         },
       });
@@ -185,8 +188,9 @@ describe("FzChatContainer", () => {
   // EVENTS TESTS
   // ============================================
   describe("Events", () => {
-    it("should emit download-attachment when download button is clicked", async () => {
+    it("should call window.open when download button is clicked", async () => {
       const downloadUrl = "https://example.com/document.pdf";
+      const openSpy = vi.spyOn(window, "open").mockImplementation(() => null);
       const messages = [
         createMockMessage({
           attachments: [{ name: "document.pdf", url: downloadUrl }],
@@ -197,11 +201,12 @@ describe("FzChatContainer", () => {
       });
       const iconButton = wrapper.findComponent(FzIconButton);
       await iconButton.trigger("click");
-      expect(wrapper.emitted("download-attachment")).toHaveLength(1);
-      expect(wrapper.emitted("download-attachment")![0]).toEqual([downloadUrl]);
+      expect(openSpy).toHaveBeenCalledWith(downloadUrl, "_blank");
+      openSpy.mockRestore();
     });
 
-    it("should emit correct url when multiple attachments and first is clicked", async () => {
+    it("should call window.open with correct url when multiple attachments and first is clicked", async () => {
+      const openSpy = vi.spyOn(window, "open").mockImplementation(() => null);
       const messages = [
         createMockMessage({
           attachments: [
@@ -215,9 +220,11 @@ describe("FzChatContainer", () => {
       });
       const iconButtons = wrapper.findAllComponents(FzIconButton);
       await iconButtons[0].trigger("click");
-      expect(wrapper.emitted("download-attachment")![0]).toEqual([
+      expect(openSpy).toHaveBeenCalledWith(
         "https://example.com/first.pdf",
-      ]);
+        "_blank",
+      );
+      openSpy.mockRestore();
     });
   });
 
@@ -237,9 +244,7 @@ describe("FzChatContainer", () => {
     });
 
     it("should handle invalid timestamp gracefully", () => {
-      const messages = [
-        createMockMessage({ timestamp: "invalid-date" }),
-      ];
+      const messages = [createMockMessage({ timestamp: "invalid-date" })];
       const wrapper = mount(FzChatContainer, {
         props: { messages },
       });
@@ -283,7 +288,7 @@ describe("FzChatContainer", () => {
       const wrapper = mount(FzChatContainer, {
         props: { messages: [] },
       });
-      const container = wrapper.find(".grow.overflow-y-auto.no-scrollbar.pb-8");
+      const container = wrapper.find(".grow.overflow-y-auto.pb-8");
       expect(container.exists()).toBe(true);
     });
   });
@@ -335,9 +340,7 @@ describe("FzChatContainer", () => {
     it("should match snapshot - with messages", () => {
       const wrapper = mount(FzChatContainer, {
         props: {
-          messages: [
-            createMockMessage({ message: "Test message" }),
-          ],
+          messages: [createMockMessage({ message: "Test message" })],
         },
       });
       expect(wrapper.html()).toMatchSnapshot();
@@ -346,7 +349,7 @@ describe("FzChatContainer", () => {
     it("should match snapshot - waiting for response", () => {
       const wrapper = mount(FzChatContainer, {
         props: {
-          messages: [createMockMessage({ variant: "primary" })],
+          messages: [createMockMessage({ variant: "invisible" })],
           waitingForResponseMessage: "Please wait...",
         },
       });

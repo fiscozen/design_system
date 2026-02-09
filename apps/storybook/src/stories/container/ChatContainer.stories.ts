@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from '@storybook/test'
+import { expect, within } from '@storybook/test'
 import { FzChatContainer } from '@fiscozen/chat-container'
 
 const meta = {
@@ -7,23 +7,16 @@ const meta = {
   component: FzChatContainer,
   tags: ['autodocs'],
   argTypes: {
-    environment: {
-      control: 'select',
-      options: ['backoffice', 'frontoffice'],
-      description: 'Component environment determining size and spacing',
-      table: {
-        defaultValue: { summary: 'frontoffice' }
-      }
-    },
-    disabled: { control: 'boolean' }
+    messages: { control: { type: 'object' } },
+    emptyMessage: { control: { type: 'text' } },
+    emptyMessageDescription: { control: { type: 'text' } },
+    waitingForResponseMessage: { control: { type: 'text' } }
   },
-  args: {
-    // Default args for all stories
-    disabled: false
-  },
+  args: {},
   decorators: [
     () => ({
-      template: '<div style="max-width: 400px; padding: 16px;"><story/></div>'
+      template:
+        '<div style="width: 700px; height: 200px; padding: 40px; margin: 0 auto;"><story/></div>'
     })
   ]
 } satisfies Meta<typeof FzChatContainer>
@@ -36,168 +29,169 @@ type Story = StoryObj<typeof meta>
 // ============================================
 
 export const Default: Story = {
-  args: {},
+  args: {
+    messages: [
+      {
+        message: 'Hello, world!',
+        variant: 'primary',
+        timestamp: new Date().toISOString(),
+        user: { firstName: 'John', lastName: 'Doe', avatar: '' },
+        attachments: []
+      }
+    ],
+    emptyMessage: 'No messages yet',
+    emptyMessageDescription: 'Start a conversation',
+    waitingForResponseMessage: 'Please wait...'
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify component renders', async () => {
-      // Adjust selector based on your component
-      const element = canvas.getByRole('button') // or 'textbox', etc.
-      await expect(element).toBeInTheDocument()
-      await expect(element).toBeVisible()
+      const container = canvasElement.querySelector('.grow.overflow-y-auto')
+      await expect(container).toBeInTheDocument()
+      await expect(container).toBeVisible()
     })
 
-    await step('Verify default ARIA attributes', async () => {
-      const element = canvas.getByRole('button')
-      await expect(element).toHaveAttribute('aria-disabled', 'false')
+    await step('Verify messages are displayed', async () => {
+      const messages = canvas.getAllByText(/Lorem ipsum/)
+      await expect(messages.length).toBeGreaterThanOrEqual(1)
     })
 
-    await step('Verify default environment styling (frontoffice)', async () => {
-      const element = canvas.getByRole('button')
-      await expect(element.classList.contains('h-44')).toBe(true)
+    await step('Verify scroll container has correct structure', async () => {
+      const container = canvasElement.querySelector('.grow.overflow-y-auto.pb-8')
+      await expect(container).toBeInTheDocument()
+    })
+
+    await step('Verify no duplicate IDs (accessibility)', async () => {
+      const ids = canvasElement.querySelectorAll('[id]')
+      const idValues = Array.from(ids)
+        .map((el) => el.id)
+        .filter(Boolean)
+      const duplicates = idValues.filter((id, index) => idValues.indexOf(id) !== index)
+      await expect(duplicates).toHaveLength(0)
     })
   }
 }
 
 // ============================================
-// ENVIRONMENT STORIES
+// EMPTY STATE STORY
 // ============================================
 
-export const Frontoffice: Story = {
+export const Empty: Story = {
   args: {
-    environment: 'frontoffice'
+    messages: [],
+    emptyMessage: 'No messages yet',
+    emptyMessageDescription: 'Start a conversation'
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
-    await step('Verify frontoffice height (44px = h-44)', async () => {
-      const element = canvas.getByRole('button')
-      await expect(element.classList.contains('h-44')).toBe(true)
+    await step('Verify empty state heading is accessible', async () => {
+      const heading = canvas.getByRole('heading', { level: 2, name: 'No messages yet' })
+      await expect(heading).toBeInTheDocument()
+    })
+
+    await step('Verify empty state description is visible', async () => {
+      const description = canvas.getByText('Start a conversation')
+      await expect(description).toBeVisible()
     })
   }
 }
 
-export const Backoffice: Story = {
+// ============================================
+// LAST MESSAGE FROM RECEIVER STORY
+// ============================================
+
+export const LastMessageFromReceiver: Story = {
   args: {
-    environment: 'backoffice'
+    messages: Array.from({ length: 6 }, (_, index) => ({
+      message:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      variant: index % 2 !== 0 ? 'primary' : 'invisible',
+      timestamp: new Date(Date.now() + index * 100000).toISOString(),
+      user: { firstName: 'John', lastName: 'Doe', avatar: '' },
+      attachments: []
+    })),
+    emptyMessage: 'No messages yet',
+    emptyMessageDescription: 'Start a conversation',
+    waitingForResponseMessage: 'Please wait...'
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
-    await step('Verify backoffice height (32px = h-32)', async () => {
-      const element = canvas.getByRole('button')
-      await expect(element.classList.contains('h-32')).toBe(true)
+    await step('Verify messages are displayed', async () => {
+      const messages = canvas.getAllByText(/Hello, world!/)
+      await expect(messages.length).toBeGreaterThanOrEqual(1)
     })
   }
 }
 
 // ============================================
-// STATE STORIES
+// LAST MESSAGE FROM SENDER STORY
 // ============================================
 
-export const Disabled: Story = {
+export const LastMessageFromSender: Story = {
   args: {
-    disabled: true
+    messages: Array.from({ length: 6 }, (_, index) => ({
+      message:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      variant: index % 2 === 0 ? 'primary' : 'invisible',
+      timestamp: new Date(Date.now() + index * 100000).toISOString(),
+      user: { firstName: 'John', lastName: 'Doe', avatar: '' },
+      attachments: []
+    })),
+    emptyMessage: 'No messages yet',
+    emptyMessageDescription: 'Start a conversation',
+    waitingForResponseMessage: 'Please wait...'
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const element = canvas.getByRole('button')
 
-    await step('Verify disabled state', async () => {
-      await expect(element).toBeDisabled()
-      await expect(element).toHaveAttribute('aria-disabled', 'true')
-    })
-
-    await step('Verify click does not fire when disabled', async () => {
-      await userEvent.click(element)
-      // No error should occur, component should not respond
+    await step('Verify messages are displayed', async () => {
+      const messages = canvas.getAllByText(/Hello, world!/)
+      await expect(messages.length).toBeGreaterThanOrEqual(1)
     })
   }
 }
-
 // ============================================
-// INTERACTION STORIES
+// WITH ATTACHMENTS STORY
 // ============================================
 
-export const UserInteraction: Story = {
-  args: {},
+export const WithAttachments: Story = {
+  args: {
+    messages: [
+      {
+        message: 'Here is the invoices you requested.',
+        variant: 'primary' as const,
+        timestamp: new Date().toISOString(),
+        user: { firstName: 'John', lastName: 'Doe', avatar: '' },
+        attachments: [
+          {
+            name: 'invoice_1.pdf',
+            url: 'https://example.com/document.pdf'
+          },
+          {
+            name: 'invoice_2.pdf',
+            url: 'https://example.com/document.pdf'
+          },
+          {
+            name: 'invoice_3.pdf',
+            url: 'https://example.com/document.pdf'
+          }
+        ]
+      }
+    ],
+    emptyMessage: 'No messages yet',
+    emptyMessageDescription: 'Start a conversation',
+    waitingForResponseMessage: 'Please wait...'
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const element = canvas.getByRole('button')
 
-    await step('Click the component', async () => {
-      await userEvent.click(element)
-      // Add assertions for expected behavior after click
+    await step('Verify download button is accessible', async () => {
+      const downloadButton = canvas.getByRole('button')
+      await expect(downloadButton).toBeInTheDocument()
+      await expect(downloadButton).toBeVisible()
     })
-  }
-}
-
-export const KeyboardNavigation: Story = {
-  args: {},
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-
-    await step('Tab to focus element', async () => {
-      await userEvent.tab()
-      const focusedElement = document.activeElement
-      await expect(focusedElement).toBe(canvas.getByRole('button'))
-    })
-
-    await step('Activate with Enter key', async () => {
-      await userEvent.keyboard('{Enter}')
-      // Add assertions for expected behavior
-    })
-
-    await step('Activate with Space key', async () => {
-      await userEvent.keyboard(' ')
-      // Add assertions for expected behavior
-    })
-  }
-}
-
-// ============================================
-// ADDITIONAL STORIES TO ADD (as needed)
-// ============================================
-// 
-// Add these stories if your component supports them:
-// 
-// - Variant stories (Primary, Secondary, etc.): If component has visual variants,
-//   add a story for each with play function verifying variant-specific CSS classes.
-// 
-// - Error state: If component supports error prop, add Error story with
-//   #errorMessage slot and verify aria-invalid="true" and role="alert".
-// 
-// - V-Model: If component supports v-model, add WithVModel story using
-//   render function with ref() and verify two-way binding works.
-// 
-// See existing stories in apps/storybook/src/stories/ for examples.
-
-// ============================================
-// ALL STATES STORY
-// ============================================
-
-export const AllStates: Story = {
-  render: () => ({
-    components: { FzChatContainer },
-    template: `
-      <div class="flex flex-col gap-4">
-        <div>
-          <p class="text-sm text-grey-500 mb-2">Default</p>
-          <FzChatContainer />
-        </div>
-        <div>
-          <p class="text-sm text-grey-500 mb-2">Disabled</p>
-          <FzChatContainer :disabled="true" />
-        </div>
-        <div>
-          <p class="text-sm text-grey-500 mb-2">Backoffice</p>
-          <FzChatContainer environment="backoffice" />
-        </div>
-      </div>
-    `
-  }),
-  play: async ({ canvasElement }) => {
-    const buttons = canvasElement.querySelectorAll('button, input, [role="button"]')
-    await expect(buttons.length).toBeGreaterThanOrEqual(3)
   }
 }
