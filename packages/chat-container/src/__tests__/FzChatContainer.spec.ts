@@ -1,36 +1,36 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
-import { FzChatContainer } from '..'
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { mount, VueWrapper } from "@vue/test-utils";
+import { FzChatContainer } from "..";
 
-describe('FzChatContainer', () => {
+describe("FzChatContainer", () => {
   // ============================================
   // RENDERING TESTS
   // ============================================
-  describe('Rendering', () => {
-    it('should render with default props', () => {
-      const wrapper = mount(FzChatContainer)
-      expect(wrapper.exists()).toBe(true)
-    })
+  describe("Rendering", () => {
+    it("should render with default props", () => {
+      const wrapper = mount(FzChatContainer);
+      expect(wrapper.exists()).toBe(true);
+    });
 
-    it('should render label when provided', () => {
+    it("should render label when provided", () => {
       const wrapper = mount(FzChatContainer, {
-        props: { label: 'Test Label' }
-      })
-      expect(wrapper.text()).toContain('Test Label')
-    })
+        props: { label: "Test Label" },
+      });
+      expect(wrapper.text()).toContain("Test Label");
+    });
 
-    it('should render default slot content', () => {
+    it("should render default slot content", () => {
       const wrapper = mount(FzChatContainer, {
-        slots: { default: 'Slot Content' }
-      })
-      expect(wrapper.text()).toContain('Slot Content')
-    })
-  })
+        slots: { default: "Slot Content" },
+      });
+      expect(wrapper.text()).toContain("Slot Content");
+    });
+  });
 
   // ============================================
   // PROPS TESTS
   // ============================================
-  describe('Props', () => {
+  describe("Props", () => {
     // Add tests for each prop your component accepts
     // Example for variant prop:
     // describe('variant prop', () => {
@@ -45,73 +45,73 @@ describe('FzChatContainer', () => {
     //   })
     // })
 
-    describe('disabled prop', () => {
-      it('should apply disabled attribute when true', () => {
+    describe("disabled prop", () => {
+      it("should apply disabled attribute when true", () => {
         const wrapper = mount(FzChatContainer, {
-          props: { disabled: true }
-        })
+          props: { disabled: true },
+        });
         // Adjust selector based on your component's structure
-        const element = wrapper.find('button, input, [role="button"]')
+        const element = wrapper.find('button, input, [role="button"]');
         if (element.exists()) {
-          expect(element.attributes('disabled')).toBeDefined()
+          expect(element.attributes("disabled")).toBeDefined();
         }
-      })
+      });
 
-      it('should set aria-disabled to true when disabled', () => {
+      it("should set aria-disabled to true when disabled", () => {
         const wrapper = mount(FzChatContainer, {
-          props: { disabled: true }
-        })
-        const element = wrapper.find('button, input, [role="button"]')
+          props: { disabled: true },
+        });
+        const element = wrapper.find('button, input, [role="button"]');
         if (element.exists()) {
-          expect(element.attributes('aria-disabled')).toBe('true')
+          expect(element.attributes("aria-disabled")).toBe("true");
         }
-      })
-    })
+      });
+    });
 
-    describe('environment prop', () => {
-      it('should apply frontoffice height by default', () => {
-        const wrapper = mount(FzChatContainer)
-        const element = wrapper.find('button, input, [role="button"]')
+    describe("environment prop", () => {
+      it("should apply frontoffice height by default", () => {
+        const wrapper = mount(FzChatContainer);
+        const element = wrapper.find('button, input, [role="button"]');
         if (element.exists()) {
-          expect(element.classes()).toContain('h-44')
+          expect(element.classes()).toContain("h-44");
         }
-      })
+      });
 
-      it('should apply backoffice height when environment is backoffice', () => {
+      it("should apply backoffice height when environment is backoffice", () => {
         const wrapper = mount(FzChatContainer, {
-          props: { environment: 'backoffice' }
-        })
-        const element = wrapper.find('button, input, [role="button"]')
+          props: { environment: "backoffice" },
+        });
+        const element = wrapper.find('button, input, [role="button"]');
         if (element.exists()) {
-          expect(element.classes()).toContain('h-32')
+          expect(element.classes()).toContain("h-32");
         }
-      })
-    })
-  })
+      });
+    });
+  });
 
   // ============================================
   // EVENTS TESTS
   // ============================================
-  describe('Events', () => {
-    it('should emit click event when clicked', async () => {
-      const wrapper = mount(FzChatContainer)
-      const element = wrapper.find('button, [role="button"]')
+  describe("Events", () => {
+    it("should emit click event when clicked", async () => {
+      const wrapper = mount(FzChatContainer);
+      const element = wrapper.find('button, [role="button"]');
       if (element.exists()) {
-        await element.trigger('click')
-        expect(wrapper.emitted('click')).toHaveLength(1)
+        await element.trigger("click");
+        expect(wrapper.emitted("click")).toHaveLength(1);
       }
-    })
+    });
 
-    it('should not emit click when disabled', async () => {
+    it("should not emit click when disabled", async () => {
       const wrapper = mount(FzChatContainer, {
-        props: { disabled: true }
-      })
-      const element = wrapper.find('button, [role="button"]')
+        props: { disabled: true },
+      });
+      const element = wrapper.find('button, [role="button"]');
       if (element.exists()) {
-        await element.trigger('click')
-        expect(wrapper.emitted('click')).toBeUndefined()
+        await element.trigger("click");
+        expect(wrapper.emitted("click")).toBeUndefined();
       }
-    })
+    });
 
     // Add v-model test if component supports it:
     // it('should emit update:modelValue on input', async () => {
@@ -122,31 +122,33 @@ describe('FzChatContainer', () => {
     //   expect(wrapper.emitted('update:modelValue')).toHaveLength(1)
     //   expect(wrapper.emitted('update:modelValue')![0]).toEqual(['new value'])
     // })
-  })
+  });
 
   // ============================================
   // ACCESSIBILITY TESTS
   // ============================================
-  describe('Accessibility', () => {
-    describe('ARIA attributes', () => {
-      it('should have aria-disabled set correctly', () => {
+  describe("Accessibility", () => {
+    describe("ARIA attributes", () => {
+      it("should have aria-disabled set correctly", () => {
         const wrapperEnabled = mount(FzChatContainer, {
-          props: { disabled: false }
-        })
+          props: { disabled: false },
+        });
         const wrapperDisabled = mount(FzChatContainer, {
-          props: { disabled: true }
-        })
+          props: { disabled: true },
+        });
 
-        const elEnabled = wrapperEnabled.find('button, input, [role="button"]')
-        const elDisabled = wrapperDisabled.find('button, input, [role="button"]')
+        const elEnabled = wrapperEnabled.find('button, input, [role="button"]');
+        const elDisabled = wrapperDisabled.find(
+          'button, input, [role="button"]',
+        );
 
         if (elEnabled.exists()) {
-          expect(elEnabled.attributes('aria-disabled')).toBe('false')
+          expect(elEnabled.attributes("aria-disabled")).toBe("false");
         }
         if (elDisabled.exists()) {
-          expect(elDisabled.attributes('aria-disabled')).toBe('true')
+          expect(elDisabled.attributes("aria-disabled")).toBe("true");
         }
-      })
+      });
 
       // Add label accessibility test if applicable:
       // it('should have aria-labelledby linking to label', async () => {
@@ -178,46 +180,46 @@ describe('FzChatContainer', () => {
       //   expect(errorId).toBeTruthy()
       //   expect(wrapper.find(`#${errorId}`).text()).toContain('Error text')
       // })
-    })
+    });
 
-    describe('Keyboard navigation', () => {
-      it('should be focusable when not disabled', () => {
-        const wrapper = mount(FzChatContainer)
-        const element = wrapper.find('button, input, [role="button"]')
+    describe("Keyboard navigation", () => {
+      it("should be focusable when not disabled", () => {
+        const wrapper = mount(FzChatContainer);
+        const element = wrapper.find('button, input, [role="button"]');
         if (element.exists()) {
-          expect(element.attributes('tabindex')).not.toBe('-1')
+          expect(element.attributes("tabindex")).not.toBe("-1");
         }
-      })
-    })
-  })
+      });
+    });
+  });
 
   // ============================================
   // CSS CLASSES TESTS
   // ============================================
-  describe('CSS Classes', () => {
-    it('should apply base styling classes', () => {
-      const wrapper = mount(FzChatContainer)
+  describe("CSS Classes", () => {
+    it("should apply base styling classes", () => {
+      const wrapper = mount(FzChatContainer);
       // Add assertions for your component's base classes
       // Example:
       // const element = wrapper.find('button')
       // expect(element.classes()).toContain('rounded')
       // expect(element.classes()).toContain('flex')
-    })
-  })
+    });
+  });
 
   // ============================================
   // EDGE CASES
   // ============================================
-  describe('Edge Cases', () => {
-    it('should handle undefined props gracefully', () => {
+  describe("Edge Cases", () => {
+    it("should handle undefined props gracefully", () => {
       const wrapper = mount(FzChatContainer, {
         props: {
           // @ts-expect-error testing undefined handling
-          modelValue: undefined
-        }
-      })
-      expect(wrapper.exists()).toBe(true)
-    })
+          modelValue: undefined,
+        },
+      });
+      expect(wrapper.exists()).toBe(true);
+    });
 
     // Add unique ID test if component generates IDs:
     // it('should generate unique IDs for multiple instances', async () => {
@@ -225,22 +227,22 @@ describe('FzChatContainer', () => {
     //     mount(FzChatContainer, { props: { label: 'Label' } })
     //   )
     //   await Promise.all(wrappers.map(w => w.vm.$nextTick()))
-    //   
+    //
     //   const ids = wrappers.map(w => w.find('input').attributes('id'))
     //   expect(new Set(ids).size).toBe(100)
     // })
-  })
+  });
 
   // ============================================
   // SNAPSHOTS
   // ============================================
-  describe('Snapshots', () => {
-    it('should match snapshot - default state', () => {
+  describe("Snapshots", () => {
+    it("should match snapshot - default state", () => {
       const wrapper = mount(FzChatContainer, {
-        props: {}
-      })
-      expect(wrapper.html()).toMatchSnapshot()
-    })
+        props: {},
+      });
+      expect(wrapper.html()).toMatchSnapshot();
+    });
 
     // Add snapshot for error state if applicable:
     // it('should match snapshot - error state', () => {
@@ -251,11 +253,11 @@ describe('FzChatContainer', () => {
     //   expect(wrapper.html()).toMatchSnapshot()
     // })
 
-    it('should match snapshot - disabled state', () => {
+    it("should match snapshot - disabled state", () => {
       const wrapper = mount(FzChatContainer, {
-        props: { disabled: true }
-      })
-      expect(wrapper.html()).toMatchSnapshot()
-    })
-  })
-})
+        props: { disabled: true },
+      });
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+  });
+});
