@@ -7,12 +7,12 @@ import { FzIcon } from "@fiscozen/icons";
 import { FzIconButton } from "@fiscozen/button";
 import { FzCard, FzCardColor } from "@fiscozen/card";
 import { parseISO, isValid, format } from "date-fns";
+import { FzDivider } from "@fiscozen/divider";
 
 const props = withDefaults(defineProps<FzChatContainerProps>(), {});
 
 const emit = defineEmits<{
   "load-more": [];
-  "download-attachment": [string];
 }>();
 
 const lastMessage = computed(() => props.messages[props.messages.length - 1]);
@@ -21,7 +21,7 @@ const showWaitingForResponseMessage = computed(
   () =>
     props.waitingForResponseMessage &&
     props.messages.length > 0 &&
-    lastMessage.value.variant === "primary",
+    lastMessage.value.variant === "invisible",
 );
 const showEmptyMessage = computed(
   () => props.emptyMessage && props.messages.length === 0,
@@ -43,7 +43,7 @@ function datetimeIsoToIt(isoDatetime: string): string {
   return "";
 }
 
-function scrollMessagesToBottom() {
+function scrollMessagesToBottom(): void {
   nextTick(() => {
     nextTick(() => {
       const chatElement = messagesContainerRef.value;
@@ -52,6 +52,10 @@ function scrollMessagesToBottom() {
       }
     });
   });
+}
+
+function downloadAttachment(fileUrl: string): void {
+  window.open(fileUrl, "_blank");
 }
 
 function getAlignItems(
@@ -80,10 +84,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    ref="messagesContainerRef"
-    class="grow overflow-y-auto no-scrollbar pb-8"
-  >
+  <div ref="messagesContainerRef" class="grow overflow-y-auto pb-8">
     <FzContainer
       :alignItems="messages.length === 0 ? 'center' : undefined"
       class="min-h-full"
@@ -114,23 +115,47 @@ onMounted(() => {
                   {{ message.user.firstName }} {{ message.user.lastName }}
                 </p>
                 <FzCard :color="getCardColor(message)">
-                  <FzContainer alignItems="end" gap="xs">
+                  <FzContainer alignItems="end" gap="none">
                     <p>{{ message.message }}</p>
                     <FzContainer
-                      v-for="attachment in message.attachments"
-                      :key="attachment.name"
-                      gap="xs"
-                      horizontal
+                      v-if="message.attachments?.length"
+                      gap="none"
+                      class="mt-16 w-full"
                     >
-                      <FzIcon name="file" size="md" />
-                      <p v-small>{{ attachment.name }}</p>
-                      <FzIconButton
-                        iconName="arrow-down-to-line"
-                        iconPosition="before"
-                        iconVariant="far"
-                        variant="secondary"
-                        @click="emit('download-attachment', attachment.url)"
-                      />
+                      <FzContainer
+                        v-for="(attachment, i) in message.attachments"
+                        gap="none"
+                      >
+                        <FzContainer
+                          :key="attachment.url"
+                          horizontal
+                          layout="expand-first"
+                          alignItems="center"
+                          gap="xs"
+                        >
+                          <FzContainer
+                            horizontal
+                            alignItems="center"
+                            gap="xs"
+                            class="min-w-0"
+                          >
+                            <span class="flex-shrink-0">
+                              <FzIcon name="file" size="md" variant="far" />
+                            </span>
+                            <p v-small class="truncate min-w-0">
+                              {{ attachment.name }}
+                            </p>
+                          </FzContainer>
+                          <FzIconButton
+                            iconName="arrow-down-to-bracket"
+                            iconVariant="fas"
+                            variant="secondary"
+                            :aria-label="`Scarica ${attachment.name}`"
+                            @click="downloadAttachment(attachment.url)"
+                          />
+                        </FzContainer>
+                        <FzDivider v-if="i < message.attachments.length - 1" />
+                      </FzContainer>
                     </FzContainer>
                   </FzContainer>
                 </FzCard>
@@ -142,11 +167,13 @@ onMounted(() => {
           </FzContainer>
         </FzContainer>
       </template>
-      <FzContainer v-if="showWaitingForResponseMessage" gap="xs" horizontal>
-        <FzIcon name="clock" size="sm" />
-        <p v-bold v-color:grey="300" v-small>
-          {{ waitingForResponseMessage }}
-        </p>
+      <FzContainer v-if="showWaitingForResponseMessage" alignItems="center">
+        <FzContainer gap="xs" horizontal>
+          <FzIcon name="clock" size="sm" />
+          <p v-bold v-color:grey="300" v-small>
+            {{ waitingForResponseMessage }}
+          </p>
+        </FzContainer>
       </FzContainer>
     </FzContainer>
   </div>

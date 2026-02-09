@@ -960,6 +960,9 @@ importers:
       '@fiscozen/container':
         specifier: ^0.4.0
         version: 0.4.0(@fiscozen/style@0.1.8-next.0(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3)))(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))
+      '@fiscozen/divider':
+        specifier: ^1.0.1
+        version: 1.0.1(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))
       '@fiscozen/icons':
         specifier: ^0.1.36
         version: 0.1.36(vue@3.5.26(typescript@5.3.3))
@@ -3963,6 +3966,12 @@ packages:
     resolution: {integrity: sha512-pbpuUJT96Wvh+mccOm2JN/njMeQhiq46qJxyXlOu2gEuWMA0GJk23aVsB2cPBfYAGQrEh8Oq/H0x59MM02n+8w==}
     peerDependencies:
       '@fiscozen/style': ^0.1.8-next.0
+      tailwindcss: ^3.4.1
+      vue: ^3.4.13
+
+  '@fiscozen/divider@1.0.1':
+    resolution: {integrity: sha512-2v+t8b/humTWYwRyZsmTlwaPCOE/vrAx5fvI+RFPkiRPG+2uUZ29pZvPeL/REENrEvmd4MA4JQWjRu0lwgc6RA==}
+    peerDependencies:
       tailwindcss: ^3.4.1
       vue: ^3.4.13
 
@@ -8850,6 +8859,11 @@ snapshots:
   '@fiscozen/container@0.4.0(@fiscozen/style@packages+style)(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))':
     dependencies:
       '@fiscozen/style': link:packages/style
+      tailwindcss: 3.4.19(yaml@2.8.2)
+      vue: 3.5.26(typescript@5.3.3)
+
+  '@fiscozen/divider@1.0.1(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))':
+    dependencies:
       tailwindcss: 3.4.19(yaml@2.8.2)
       vue: 3.5.26(typescript@5.3.3)
 

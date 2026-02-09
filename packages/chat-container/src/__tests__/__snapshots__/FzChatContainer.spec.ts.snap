@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzChatContainer > Snapshots > should match snapshot - empty state 1`] = `
-"<div class="grow overflow-y-auto no-scrollbar pb-8">
+"<div class="grow overflow-y-auto pb-8">
   <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-center min-h-full">
     <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-xs align-items-center">
       <h2>No messages</h2>
@@ -13,23 +13,21 @@ exports[`FzChatContainer > Snapshots > should match snapshot - empty state 1`] =
 `;
 
 exports[`FzChatContainer > Snapshots > should match snapshot - waiting for response 1`] = `
-"<div class="grow overflow-y-auto no-scrollbar pb-8">
+"<div class="grow overflow-y-auto pb-8">
   <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch min-h-full">
     <!--v-if-->
-    <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-start">
+    <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-end">
       <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-xs align-items-end">
         <div data-v-3ef68c3e="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-end layout-default">
-          <div class="flex items-center gap-12">
-            <div class="select-none object-cover size-44 rounded-full bg-core-black text-core-white grid place-content-center text-sm" title="John Doe" data-testid="avatar-placeholder">JD</div>
-            <!--v-if-->
-          </div>
+          <!--v-if-->
           <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch">
-            <p>John Doe</p>
-            <section class="border-1 border-solid rounded flex flex-col bg-core-white text-core-black border-grey-100">
+            <!--v-if-->
+            <section class="border-1 border-solid rounded flex flex-col bg-background-white-smoke text-core-black border-background-white-smoke">
               <!--v-if-->
               <article class="p-16">
-                <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-xs align-items-end">
+                <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-none align-items-end">
                   <p>Hello, world!</p>
+                  <!--v-if-->
                 </div>
               </article>
               <!--v-if-->
@@ -39,18 +37,20 @@ exports[`FzChatContainer > Snapshots > should match snapshot - waiting for respo
         <p>15/01/2024 11:30</p>
       </div>
     </div>
-    <div data-v-3ef68c3e="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-center layout-default">
-      <div class="flex items-center justify-center w-[15px] h-[15px]"><svg class="svg-inline--fa fa-clock fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="clock" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <path class="" fill="currentColor" d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"></path>
-        </svg></div>
-      <p>Please wait...</p>
+    <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-center">
+      <div data-v-3ef68c3e="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-center layout-default">
+        <div class="flex items-center justify-center w-[15px] h-[15px]"><svg class="svg-inline--fa fa-clock fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="clock" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path class="" fill="currentColor" d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"></path>
+          </svg></div>
+        <p>Please wait...</p>
+      </div>
     </div>
   </div>
 </div>"
 `;
 
 exports[`FzChatContainer > Snapshots > should match snapshot - with messages 1`] = `
-"<div class="grow overflow-y-auto no-scrollbar pb-8">
+"<div class="grow overflow-y-auto pb-8">
   <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch min-h-full">
     <!--v-if-->
     <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-start">
@@ -65,8 +65,9 @@ exports[`FzChatContainer > Snapshots > should match snapshot - with messages 1`]
             <section class="border-1 border-solid rounded flex flex-col bg-core-white text-core-black border-grey-100">
               <!--v-if-->
               <article class="p-16">
-                <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-xs align-items-end">
+                <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-none align-items-end">
                   <p>Test message</p>
+                  <!--v-if-->
                 </div>
               </article>
               <!--v-if-->
