@@ -1,0 +1,3 @@
+type FzChatContainerProps = {}
+
+export { FzChatContainerProps }
