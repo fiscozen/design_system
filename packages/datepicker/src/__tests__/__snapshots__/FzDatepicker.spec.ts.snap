@@ -12,7 +12,7 @@ exports[`FzDatepicker > Snapshots > matches disabled dates snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-2a84k" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-66" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -98,49 +98,49 @@ exports[`FzDatepicker > Snapshots > matches disabled dates snapshot 1`] = `
                         <div class="dp__calendar" role="rowgroup" aria-label="Calendar days">
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2025-12-29" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Dec 29 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-29" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Dec 29 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past dp__date_hover">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2025-12-30" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Dec 30 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-30" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Dec 30 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past dp__date_hover">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2025-12-31" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Dec 31 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-31" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Dec 31 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past dp__date_hover">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-01" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-01" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->1
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-02" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 02 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-02" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 02 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->2
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-03" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 03 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-03" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 03 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->3
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-04" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 04 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-04" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 04 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->4
                                 <!---->
@@ -150,49 +150,49 @@ exports[`FzDatepicker > Snapshots > matches disabled dates snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-05" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 05 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-05" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 05 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->5
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-06" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 06 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-06" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 06 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->6
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-07" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 07 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-07" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 07 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->7
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-08" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 08 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-08" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 08 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->8
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-09" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 09 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-09" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 09 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->9
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-10" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 10 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-10" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 10 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->10
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-11" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 11 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-11" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 11 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->11
                                 <!---->
@@ -202,49 +202,49 @@ exports[`FzDatepicker > Snapshots > matches disabled dates snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->12
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-13" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-13" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->13
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-14" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-14" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->14
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-15" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-15" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->15
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->18
                                 <!---->
@@ -254,49 +254,49 @@ exports[`FzDatepicker > Snapshots > matches disabled dates snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->20
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp__today dp__active_date">
                                 <!---->21
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" aria-disabled="true" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" aria-disabled="true" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_disabled dp--future">
                                 <!---->22
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-23" role="gridcell" class="dp__calendar_item" aria-disabled="true" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-23" role="gridcell" class="dp__calendar_item" aria-disabled="true" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_disabled dp--future">
                                 <!---->23
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-24" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-24" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->24
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-25" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-25" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->25
                                 <!---->
@@ -306,49 +306,49 @@ exports[`FzDatepicker > Snapshots > matches disabled dates snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->26
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->27
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->28
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future dp__date_hover">
                                 <!---->1
                                 <!---->
@@ -387,7 +387,7 @@ exports[`FzDatepicker > Snapshots > matches inline timepicker snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-2a84k" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-67" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -473,49 +473,49 @@ exports[`FzDatepicker > Snapshots > matches inline timepicker snapshot 1`] = `
                         <div class="dp__calendar" role="rowgroup" aria-label="Calendar days">
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2025-12-29" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Dec 29 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-29" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Dec 29 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past dp__date_hover">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2025-12-30" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Dec 30 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-30" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Dec 30 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past dp__date_hover">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2025-12-31" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Dec 31 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-31" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Dec 31 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past dp__date_hover">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-01" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-01" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->1
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-02" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 02 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-02" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 02 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->2
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-03" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 03 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-03" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 03 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->3
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-04" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 04 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-04" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 04 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->4
                                 <!---->
@@ -525,49 +525,49 @@ exports[`FzDatepicker > Snapshots > matches inline timepicker snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-05" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 05 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-05" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 05 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->5
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-06" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 06 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-06" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 06 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->6
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-07" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 07 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-07" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 07 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->7
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-08" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 08 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-08" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 08 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->8
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-09" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 09 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-09" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 09 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->9
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-10" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 10 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-10" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 10 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->10
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-11" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 11 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-11" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 11 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->11
                                 <!---->
@@ -577,49 +577,49 @@ exports[`FzDatepicker > Snapshots > matches inline timepicker snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->12
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-13" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-13" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->13
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-14" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-14" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->14
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-15" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-15" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->15
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->18
                                 <!---->
@@ -629,49 +629,49 @@ exports[`FzDatepicker > Snapshots > matches inline timepicker snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->20
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp__today dp__active_date">
                                 <!---->21
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->22
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-23" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-23" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->23
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-24" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-24" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->24
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-25" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-25" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->25
                                 <!---->
@@ -681,49 +681,49 @@ exports[`FzDatepicker > Snapshots > matches inline timepicker snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->26
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->27
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->28
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future dp__date_hover">
                                 <!---->1
                                 <!---->
@@ -792,7 +792,7 @@ exports[`FzDatepicker > Snapshots > matches monthpicker snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-2a84k" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-64" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -938,7 +938,7 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-2a84k" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-62" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -1023,49 +1023,49 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
                         <div class="dp__calendar" role="rowgroup" aria-label="Calendar days">
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2025-12-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Dec 29 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Dec 29 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2025-12-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Dec 30 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Dec 30 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2025-12-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Dec 31 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Dec 31 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->1
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-02" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 02 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-02" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 02 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->2
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-03" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 03 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-03" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 03 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->3
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-04" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 04 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-04" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 04 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->4
                                 <!---->
@@ -1075,49 +1075,49 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-05" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 05 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-05" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 05 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->5
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-06" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 06 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-06" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 06 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->6
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-07" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 07 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-07" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 07 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->7
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-08" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 08 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-08" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 08 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->8
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-09" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 09 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-09" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 09 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->9
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-10" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 10 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-10" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 10 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->10
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-11" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 11 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-11" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 11 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->11
                                 <!---->
@@ -1127,49 +1127,49 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->12
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-13" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-13" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->13
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-14" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-14" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->14
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-15" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-15" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->15
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->18
                                 <!---->
@@ -1179,49 +1179,49 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->20
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp__today">
                                 <!---->21
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->22
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-23" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-23" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->23
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-24" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-24" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->24
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-25" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-25" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->25
                                 <!---->
@@ -1231,49 +1231,49 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->26
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->27
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->28
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future">
                                 <!---->1
                                 <!---->
@@ -1339,49 +1339,49 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
                         <div class="dp__calendar" role="rowgroup" aria-label="Calendar days">
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future">
                                 <!---->26
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future">
                                 <!---->27
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future">
                                 <!---->28
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->1
                                 <!---->
@@ -1391,49 +1391,49 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-02-02" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Feb 02 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-02" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Feb 02 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->2
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-03" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Feb 03 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-03" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Feb 03 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->3
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-04" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Feb 04 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-04" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Feb 04 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->4
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-05" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Feb 05 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-05" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Feb 05 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->5
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-06" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Feb 06 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-06" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Feb 06 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->6
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-07" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Feb 07 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-07" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Feb 07 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->7
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-08" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 08 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-08" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 08 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->8
                                 <!---->
@@ -1443,49 +1443,49 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-02-09" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Feb 09 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-09" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Feb 09 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->9
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-10" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Feb 10 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-10" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Feb 10 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->10
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-11" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Feb 11 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-11" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Feb 11 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->11
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-12" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Feb 12 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-12" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Feb 12 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->12
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-13" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Feb 13 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-13" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Feb 13 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->13
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-14" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Feb 14 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-14" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Feb 14 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->14
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-15" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 15 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-15" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 15 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->15
                                 <!---->
@@ -1495,49 +1495,49 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-02-16" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Feb 16 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-16" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Feb 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-17" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Feb 17 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-17" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Feb 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-18" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Feb 18 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-18" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Feb 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->18
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-19" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Feb 19 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-19" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Feb 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-20" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Feb 20 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-20" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Feb 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->20
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-21" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Feb 21 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-21" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Feb 21 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->21
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-22" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 22 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-22" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 22 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->22
                                 <!---->
@@ -1547,49 +1547,49 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-02-23" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Feb 23 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-23" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Feb 23 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->23
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-24" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Feb 24 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-24" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Feb 24 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->24
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-25" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Feb 25 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-25" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Feb 25 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->25
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-26" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Feb 26 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-26" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Feb 26 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->26
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-27" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Feb 27 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-27" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Feb 27 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->27
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-28" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Feb 28 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-28" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Feb 28 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->28
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-03-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Mar 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-03-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Mar 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future">
                                 <!---->1
                                 <!---->
@@ -1628,7 +1628,7 @@ exports[`FzDatepicker > Snapshots > matches range snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-2a84k" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-61" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -1714,49 +1714,49 @@ exports[`FzDatepicker > Snapshots > matches range snapshot 1`] = `
                         <div class="dp__calendar" role="rowgroup" aria-label="Calendar days">
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2025-12-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Dec 29 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Dec 29 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2025-12-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Dec 30 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Dec 30 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2025-12-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Dec 31 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Dec 31 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->1
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-02" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 02 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-02" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 02 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->2
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-03" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 03 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-03" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 03 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->3
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-04" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 04 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-04" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 04 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->4
                                 <!---->
@@ -1766,49 +1766,49 @@ exports[`FzDatepicker > Snapshots > matches range snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-05" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 05 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-05" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 05 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->5
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-06" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 06 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-06" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 06 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->6
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-07" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 07 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-07" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 07 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->7
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-08" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 08 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-08" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 08 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->8
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-09" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 09 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-09" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 09 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->9
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-10" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 10 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-10" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 10 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->10
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-11" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 11 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-11" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 11 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->11
                                 <!---->
@@ -1818,49 +1818,49 @@ exports[`FzDatepicker > Snapshots > matches range snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->12
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-13" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-13" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->13
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-14" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-14" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->14
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-15" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-15" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->15
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->18
                                 <!---->
@@ -1870,49 +1870,49 @@ exports[`FzDatepicker > Snapshots > matches range snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->20
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp__today">
                                 <!---->21
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->22
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-23" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-23" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->23
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-24" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-24" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->24
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-25" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-25" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->25
                                 <!---->
@@ -1922,49 +1922,49 @@ exports[`FzDatepicker > Snapshots > matches range snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->26
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->27
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->28
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future">
                                 <!---->1
                                 <!---->
@@ -2003,7 +2003,7 @@ exports[`FzDatepicker > Snapshots > matches snapshot - disabled state 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" disabled="" readonly="" id="fz-input-168986420000-2a84k" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="true">
+            <!--v-if--><input type="text" disabled="" readonly="" id="fz-input-168986420000-69" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="true">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -2037,13 +2037,13 @@ exports[`FzDatepicker > Snapshots > matches snapshot - with label and error 1`] 
   <div>
     <!---->
     <div class="dp__input_wrap">
-      <div class="fz-input w-full flex flex-col gap-8"><label id="fz-input-168986420000-2a84k-label" class="font-normal text-base text-core-black" for="fz-input-168986420000-2a84k">Select Date</label>
+      <div class="fz-input w-full flex flex-col gap-8"><label id="fz-input-168986420000-68-label" class="font-normal text-base text-core-black" for="fz-input-168986420000-68">Select Date</label>
         <div class="flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none h-44 border-semantic-error-200 has-[:focus]:border-semantic-error-300 bg-core-white text-core-black cursor-text" tabindex="0">
           <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-calendar-lines h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar-lines" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-2a84k" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="true" aria-disabled="false" aria-labelledby="fz-input-168986420000-2a84k-label">
+            <!--v-if--><input type="text" id="fz-input-168986420000-68" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="true" aria-disabled="false" aria-labelledby="fz-input-168986420000-68-label">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -2084,7 +2084,7 @@ exports[`FzDatepicker > Snapshots > matches snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-2a84k" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-60" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -2170,49 +2170,49 @@ exports[`FzDatepicker > Snapshots > matches snapshot 1`] = `
                         <div class="dp__calendar" role="rowgroup" aria-label="Calendar days">
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2025-12-29" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Dec 29 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-29" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Dec 29 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past dp__date_hover">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2025-12-30" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Dec 30 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-30" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Dec 30 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past dp__date_hover">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2025-12-31" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Dec 31 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-31" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Dec 31 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past dp__date_hover">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-01" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-01" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->1
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-02" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 02 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-02" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 02 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->2
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-03" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 03 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-03" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 03 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->3
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-04" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 04 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-04" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 04 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->4
                                 <!---->
@@ -2222,49 +2222,49 @@ exports[`FzDatepicker > Snapshots > matches snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-05" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 05 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-05" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 05 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->5
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-06" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 06 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-06" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 06 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->6
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-07" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 07 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-07" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 07 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->7
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-08" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 08 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-08" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 08 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->8
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-09" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 09 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-09" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 09 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->9
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-10" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 10 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-10" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 10 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->10
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-11" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 11 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-11" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 11 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->11
                                 <!---->
@@ -2274,49 +2274,49 @@ exports[`FzDatepicker > Snapshots > matches snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->12
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-13" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-13" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->13
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-14" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-14" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->14
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-15" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-15" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->15
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->18
                                 <!---->
@@ -2326,49 +2326,49 @@ exports[`FzDatepicker > Snapshots > matches snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__date_hover">
                                 <!---->20
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp__today dp__active_date">
                                 <!---->21
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->22
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-23" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-23" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->23
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-24" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-24" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->24
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-25" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-25" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->25
                                 <!---->
@@ -2378,49 +2378,49 @@ exports[`FzDatepicker > Snapshots > matches snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->26
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->27
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->28
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__date_hover">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future dp__date_hover">
                                 <!---->1
                                 <!---->
@@ -2459,7 +2459,7 @@ exports[`FzDatepicker > Snapshots > matches weekpicker snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-2a84k" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-63" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -2545,49 +2545,49 @@ exports[`FzDatepicker > Snapshots > matches weekpicker snapshot 1`] = `
                         <div class="dp__calendar" role="rowgroup" aria-label="Calendar days">
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2025-12-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Dec 29 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Dec 29 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2025-12-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Dec 30 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Dec 30 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2025-12-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Dec 31 2025 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2025-12-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Dec 31 2025 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--past">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->1
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-02" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 02 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-02" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 02 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->2
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-03" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 03 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-03" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 03 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->3
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-04" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 04 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-04" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 04 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->4
                                 <!---->
@@ -2597,49 +2597,49 @@ exports[`FzDatepicker > Snapshots > matches weekpicker snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-05" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 05 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-05" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 05 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->5
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-06" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 06 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-06" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 06 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->6
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-07" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 07 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-07" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 07 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->7
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-08" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 08 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-08" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 08 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->8
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-09" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 09 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-09" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 09 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->9
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-10" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 10 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-10" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 10 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->10
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-11" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 11 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-11" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 11 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->11
                                 <!---->
@@ -2649,49 +2649,49 @@ exports[`FzDatepicker > Snapshots > matches weekpicker snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-12" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 12 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->12
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-13" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-13" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 13 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->13
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-14" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-14" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 14 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->14
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-15" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-15" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 15 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->15
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-16" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 16 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->16
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-17" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 17 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->17
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-18" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 18 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past">
                                 <!---->18
                                 <!---->
@@ -2701,49 +2701,49 @@ exports[`FzDatepicker > Snapshots > matches weekpicker snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-19" role="gridcell" class="dp__calendar_item" aria-selected="true" tabindex="0" data-test="Mon Jan 19 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__range_start">
                                 <!---->19
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-20" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 20 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--past dp__range_between_week">
                                 <!---->20
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-21" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 21 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp__today dp__range_between_week">
                                 <!---->21
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-22" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 22 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__range_between_week">
                                 <!---->22
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-23" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-23" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 23 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__range_between_week">
                                 <!---->23
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-24" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-24" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 24 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__range_between_week">
                                 <!---->24
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-25" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-25" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Jan 25 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future dp__range_end">
                                 <!---->25
                                 <!---->
@@ -2753,49 +2753,49 @@ exports[`FzDatepicker > Snapshots > matches weekpicker snapshot 1`] = `
                           </div>
                           <div class="dp__calendar_row" role="row">
                             <!---->
-                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-26" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Mon Jan 26 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->26
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-27" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Tue Jan 27 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->27
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-28" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Wed Jan 28 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->28
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-29" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Thu Jan 29 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->29
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-30" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Fri Jan 30 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->30
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-01-31" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sat Jan 31 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__pointer dp--future">
                                 <!---->31
                                 <!---->
                                 <!---->
                               </div>
                             </div>
-                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Central European Standard Time)">
+                            <div id="2026-02-01" role="gridcell" class="dp__calendar_item" aria-selected="false" tabindex="0" data-test="Sun Feb 01 2026 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)">
                               <div class="dp__cell_inner dp__cell_offset dp__pointer dp--future">
                                 <!---->1
                                 <!---->
@@ -2834,7 +2834,7 @@ exports[`FzDatepicker > Snapshots > matches yearpicker snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-2a84k" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-65" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->

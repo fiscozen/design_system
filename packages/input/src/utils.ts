@@ -21,17 +21,29 @@ export const sizeToEnvironmentMapping: Record<InputSize, InputEnvironment> = {
 };
 
 /**
+ * Auto-incrementing counter used by {@link generateId} to guarantee
+ * uniqueness even when multiple components are created within the
+ * same millisecond (e.g. in a v-for loop or during SSR).
+ *
+ * Using a counter instead of Math.random() makes ID generation fully
+ * deterministic, which is critical for snapshot testing stability.
+ *
+ * @internal
+ */
+let idCounter = 0;
+
+/**
  * Internal helper function to generate unique IDs with a given prefix.
  *
  * The ID is composed of:
  * - Prefix string (e.g., "fz-input")
  * - Obfuscated timestamp (Date.now() - epoch offset)
- * - Random alphanumeric suffix (5 characters)
+ * - Auto-incrementing counter (base-36 encoded)
  *
  * This strategy ensures uniqueness through:
  * - Different timestamps for components created at different times
- * - Random suffix prevents collisions within the same millisecond
- * - Stateless generation (no global counters to manage)
+ * - Counter prevents collisions within the same millisecond
+ * - Deterministic generation (no Math.random(), safe for snapshot tests)
  *
  * @param prefix - The prefix to use for the generated ID
  * @returns Unique ID with the specified prefix
@@ -39,14 +51,12 @@ export const sizeToEnvironmentMapping: Record<InputSize, InputEnvironment> = {
  * @internal
  *
  * @example
- * generateId("fz-input") // "fz-input-97123456-a8d3k"
+ * generateId("fz-input") // "fz-input-97123456-1"
  */
 function generateId(prefix: string): string {
   // Obfuscate timestamp (Sept 13, 2020 offset) for shorter IDs
   const timestamp = Date.now() - 1600000000000;
-  // Generate 5-char random alphanumeric suffix (base36: 0-9, a-z)
-  const random = Math.random().toString(36).slice(2, 7);
-  return `${prefix}-${timestamp}-${random}`;
+  return `${prefix}-${timestamp}-${++idCounter}`;
 }
 
 /**
@@ -55,8 +65,8 @@ function generateId(prefix: string): string {
  * @returns Unique input ID with "fz-input" prefix
  *
  * @example
- * generateInputId() // "fz-input-97123456-a8d3k"
- * generateInputId() // "fz-input-97123457-k2m9p"
+ * generateInputId() // "fz-input-97123456-1"
+ * generateInputId() // "fz-input-97123456-2"
  */
 export function generateInputId(): string {
   return generateId("fz-input");
