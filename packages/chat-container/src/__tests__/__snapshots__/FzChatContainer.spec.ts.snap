@@ -1,0 +1,5 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzChatContainer > Snapshots > should match snapshot - default state 1`] = `""`;
+
+exports[`FzChatContainer > Snapshots > should match snapshot - disabled state 1`] = `""`;
