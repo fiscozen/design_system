@@ -86,11 +86,24 @@ function resolveListParams(
  * **Discrimination:** When additionalOptions is present, additionalParamsOrOptions is treated as params.
  * When only additionalParamsOrOptions is present, it is discriminated via isParamsObject
  * (presence of filters, ordering, or pagination) to decide if it is params or options.
+ *
+ * **Pagination in params:** For useList, pagination must only be sent when explicitly requested
+ * (defaultParams or additionalParams include pagination). For usePaginatedList, pagination is
+ * always included so the action can apply default page/pageSize. Set forPaginatedList accordingly.
  */
 export interface MergeListActionArgsInput<
   T = unknown,
   TOptions extends QueryActionOptions<unknown> = QueryActionOptions<T[]>,
 > {
+  /**
+   * When true, merged params always include pagination (for usePaginatedList).
+   * When false/undefined, pagination is only included if defaultParams or additionalParams
+   * explicitly provided it (for useList – avoids adding page/page_size to list requests).
+   *
+   * @default false
+   */
+  forPaginatedList?: boolean;
+
   /**
    * Default params (filters, ordering, pagination).
    * Resolved at call time; supports ref/getter for reactive defaults (e.g. user: toValue(userId)).
@@ -199,7 +212,20 @@ export function mergeListActionArgs<
       : defaultPlain.ordering;
   const pagination: PaginationParams = { ...defaultPlain.pagination, ...additionalPlain.pagination };
 
-  const params: UseListActionParams = { filters, ordering, pagination };
+  const includePaginationInParams =
+    input?.forPaginatedList === true ||
+    (defaultParamsResolved != null &&
+      typeof defaultParamsResolved === "object" &&
+      "pagination" in defaultParamsResolved) ||
+    (additionalParamsResolved != null &&
+      typeof additionalParamsResolved === "object" &&
+      "pagination" in additionalParamsResolved);
+
+  const params: UseListActionParams = { filters, ordering };
+  if (includePaginationInParams) {
+    params.pagination = pagination;
+  }
+
   const options: TOptions = {
     ...defaultOptionsResolved,
     ...additionalOptionsOnlyResolved,
@@ -234,7 +260,10 @@ export function callPaginatedListActionWithDefaults<T>(
   action: UsePaginatedListAction<T>,
   input: MergeListActionArgsInput<T, UsePaginatedListActionOptions<T>>,
 ): UsePaginatedListActionReturn<T> {
-  const { params, options } = mergeListActionArgs<T, UsePaginatedListActionOptions<T>>(input);
+  const { params, options } = mergeListActionArgs<T, UsePaginatedListActionOptions<T>>({
+    ...input,
+    forPaginatedList: true,
+  });
   return action(params, options);
 }
 

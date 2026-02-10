@@ -1,30 +1,51 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { ref, computed, toValue } from "vue";
 import {
   mergeListActionArgs,
   mergeRetrieveActionArgs,
   mergeMutationActionArgs,
+  callListActionWithDefaults,
+  callPaginatedListActionWithDefaults,
+  callRetrieveActionWithDefaults,
+  callCreateActionWithDefaults,
+  callUpdateActionWithDefaults,
+  callDeleteActionWithDefaults,
 } from "../rest/actions/shared/merge";
 import type {
   UsePaginatedListActionParamsOrOptions,
   UsePaginatedListActionOptions,
+  UseListAction,
+  UsePaginatedListAction,
+  UseRetrieveAction,
+  UseCreateAction,
+  UseUpdateAction,
+  UseDeleteAction,
 } from "../rest/actions";
 
 describe("mergeListActionArgs", () => {
   describe("when input is empty or undefined", () => {
-    it("returns empty params and options when called with no input", () => {
+    it("returns empty params and options when called with no input (list mode: no pagination in params)", () => {
       const result = mergeListActionArgs();
 
       expect(result.params).toEqual({
         filters: {},
         ordering: [],
-        pagination: {},
       });
       expect(result.options).toEqual({});
     });
 
-    it("returns empty params and options when called with empty object", () => {
+    it("returns empty params and options when called with empty object (list mode: no pagination in params)", () => {
       const result = mergeListActionArgs({});
+
+      expect(result.params).toEqual({
+        filters: {},
+        ordering: [],
+      });
+      expect(result.options).toEqual({});
+    });
+
+    it("returns params with pagination when forPaginatedList: true and no input", () => {
+      const result = mergeListActionArgs({ forPaginatedList: true });
 
       expect(result.params).toEqual({
         filters: {},
@@ -51,12 +72,12 @@ describe("mergeListActionArgs", () => {
       expect(result.options).toEqual({});
     });
 
-    it("uses defaultOptions when no additional args", () => {
+    it("uses defaultOptions when no additional args (list mode: no pagination in params)", () => {
       const result = mergeListActionArgs({
         defaultOptions: { onMount: false, throwOnError: true },
       });
 
-      expect(result.params).toEqual({ filters: {}, ordering: [], pagination: {} });
+      expect(result.params).toEqual({ filters: {}, ordering: [] });
       expect(result.options).toEqual({ onMount: false, throwOnError: true });
     });
   });
@@ -72,25 +93,25 @@ describe("mergeListActionArgs", () => {
       expect(result.options).toEqual({ onMount: false });
     });
 
-    it("discriminates additionalParamsOrOptions as params when it has filters key", () => {
+    it("discriminates additionalParamsOrOptions as params when it has filters key (list mode: no pagination)", () => {
       const result = mergeListActionArgs({
         additionalParamsOrOptions: { filters: { active: true } },
       });
 
       expect(result.params.filters).toEqual({ active: true });
       expect(result.params.ordering).toEqual([]);
-      expect(result.params.pagination).toEqual({});
+      expect(result.params).not.toHaveProperty("pagination");
       expect(result.options).toEqual({});
     });
 
-    it("discriminates additionalParamsOrOptions as params when it has ordering key", () => {
+    it("discriminates additionalParamsOrOptions as params when it has ordering key (list mode: no pagination)", () => {
       const result = mergeListActionArgs({
         additionalParamsOrOptions: { ordering: [{ created_at: "desc" }] },
       });
 
       expect(result.params.ordering).toEqual([{ created_at: "desc" }]);
       expect(result.params.filters).toEqual({});
-      expect(result.params.pagination).toEqual({});
+      expect(result.params).not.toHaveProperty("pagination");
     });
 
     it("discriminates additionalParamsOrOptions as params when it has pagination key", () => {
@@ -118,7 +139,7 @@ describe("mergeListActionArgs", () => {
         additionalParamsOrOptions: { throwOnError: true },
       });
 
-      expect(result.params).toEqual({ filters: {}, ordering: [], pagination: {} });
+      expect(result.params).toEqual({ filters: {}, ordering: [] });
       expect(result.options).toEqual({ throwOnError: true });
     });
 
@@ -178,9 +199,10 @@ describe("mergeListActionArgs", () => {
 
       expect(result.params.ordering).toEqual([{ name: "asc" }]);
       expect(result.params.filters).toEqual({ active: true });
+      expect(result.params).not.toHaveProperty("pagination");
     });
 
-    it("merges pagination with additional winning on same key", () => {
+    it("merges pagination with additional winning on same key when pagination was provided", () => {
       const result = mergeListActionArgs({
         defaultParams: { pagination: { page: 1, pageSize: 50 } },
         additionalParamsOrOptions: { pagination: { page: 2 } },
@@ -262,16 +284,59 @@ describe("mergeListActionArgs", () => {
       expect(toValue(result.params.filters.status)).toBe("active");
     });
 
-    it("preserves refs as pagination values so reactivity is maintained", () => {
+    it("preserves refs as pagination values so reactivity is maintained when pagination is provided", () => {
       const page = ref(2);
       const result = mergeListActionArgs({
         defaultParams: { pagination: { page: 1, pageSize: 50 } },
         additionalParamsOrOptions: { pagination: { page } },
       });
 
-      expect(result.params.pagination.page).toBe(page);
-      expect(result.params.pagination.pageSize).toBe(50);
-      expect(toValue(result.params.pagination.page)).toBe(2);
+      expect(result.params.pagination).toBeDefined();
+      const pag = result.params.pagination as { page: typeof page; pageSize: number };
+      expect(pag.page).toBe(page);
+      expect(pag.pageSize).toBe(50);
+      expect(toValue(pag.page)).toBe(2);
+    });
+  });
+
+  describe("callListActionWithDefaults vs callPaginatedListActionWithDefaults", () => {
+    it("callListActionWithDefaults does not pass pagination to action when not in input", () => {
+      const mockListAction = vi.fn((_params: { filters?: unknown; ordering?: unknown; pagination?: unknown }) => ({
+        data: ref(null),
+        error: ref(null),
+        isLoading: { value: false },
+        execute: vi.fn(),
+        filters: {},
+        ordering: [],
+        pagination: {},
+      }));
+      callListActionWithDefaults(mockListAction as unknown as UseListAction<unknown>, {
+        defaultParams: { filters: { sts: true } },
+      });
+      expect(mockListAction).toHaveBeenCalledTimes(1);
+      const [params] = mockListAction.mock.calls[0];
+      expect(params).not.toHaveProperty("pagination");
+      expect(params.filters).toEqual({ sts: true });
+    });
+
+    it("callPaginatedListActionWithDefaults always passes pagination to action", () => {
+      const mockPaginatedListAction = vi.fn((_params: { filters?: unknown; ordering?: unknown; pagination?: unknown }) => ({
+        data: ref(null),
+        error: ref(null),
+        isLoading: { value: false },
+        execute: vi.fn(),
+        filters: {},
+        ordering: [],
+        pagination: {},
+        meta: computed(() => null),
+        handlePageChange: vi.fn(),
+        handleOrderingChange: vi.fn(),
+      }));
+      callPaginatedListActionWithDefaults(mockPaginatedListAction as unknown as UsePaginatedListAction<unknown>, {});
+      expect(mockPaginatedListAction).toHaveBeenCalledTimes(1);
+      const [params] = mockPaginatedListAction.mock.calls[0];
+      expect(params).toHaveProperty("pagination");
+      expect(params.pagination).toEqual({});
     });
   });
 
@@ -481,5 +546,86 @@ describe("mergeMutationActionArgs", () => {
 
       expect(result.options).toEqual({ throwOnError: true });
     });
+  });
+});
+
+describe("callRetrieveActionWithDefaults / callCreateActionWithDefaults / callUpdateActionWithDefaults / callDeleteActionWithDefaults", () => {
+  it("callRetrieveActionWithDefaults calls action with (pk, options)", () => {
+    const mockRetrieve = vi.fn(
+      (_pk: string | number | undefined, _opts?: unknown) => ({
+        data: ref(null),
+        error: ref(null),
+        isLoading: { value: false },
+        execute: vi.fn(),
+      }),
+    );
+    callRetrieveActionWithDefaults(mockRetrieve as unknown as UseRetrieveAction<unknown>, {
+      defaultPk: 1,
+      additionalOptions: { onMount: false },
+    });
+    expect(mockRetrieve).toHaveBeenCalledTimes(1);
+    const [pk, options] = mockRetrieve.mock.calls[0];
+    expect(pk).toBe(1);
+    expect(options).toEqual({ onMount: false });
+  });
+
+  it("callRetrieveActionWithDefaults uses overridePk over defaultPk", () => {
+    const mockRetrieve = vi.fn(
+      (_pk: string | number | undefined, _opts?: unknown) => ({
+        data: ref(null),
+        error: ref(null),
+        isLoading: { value: false },
+        execute: vi.fn(),
+      }),
+    );
+    callRetrieveActionWithDefaults(mockRetrieve as unknown as UseRetrieveAction<unknown>, {
+      defaultPk: 1,
+      overridePk: 99,
+    });
+    expect(mockRetrieve).toHaveBeenCalledWith(99, {});
+  });
+
+  it("callCreateActionWithDefaults calls action with merged options only", () => {
+    const mockCreate = vi.fn((_opts?: unknown) => ({
+      data: ref(null),
+      error: ref(null),
+      isLoading: { value: false },
+      execute: vi.fn(),
+    }));
+    callCreateActionWithDefaults(mockCreate as unknown as UseCreateAction<unknown>, {
+      defaultOptions: { throwOnError: false },
+      additionalOptions: { throwOnError: true },
+    });
+    expect(mockCreate).toHaveBeenCalledTimes(1);
+    expect(mockCreate).toHaveBeenCalledWith({ throwOnError: true });
+  });
+
+  it("callUpdateActionWithDefaults calls action with merged options only", () => {
+    const mockUpdate = vi.fn((_opts?: unknown) => ({
+      data: ref(null),
+      error: ref(null),
+      isLoading: { value: false },
+      execute: vi.fn(),
+    }));
+    callUpdateActionWithDefaults(mockUpdate as unknown as UseUpdateAction<unknown>, {
+      defaultOptions: { throwOnError: true },
+      additionalOptions: { throwOnError: false },
+    });
+    expect(mockUpdate).toHaveBeenCalledTimes(1);
+    expect(mockUpdate).toHaveBeenCalledWith({ throwOnError: false });
+  });
+
+  it("callDeleteActionWithDefaults calls action with merged options only", () => {
+    const mockDelete = vi.fn((_opts?: unknown) => ({
+      data: ref(null),
+      error: ref(null),
+      isLoading: { value: false },
+      execute: vi.fn(),
+    }));
+    callDeleteActionWithDefaults(mockDelete as unknown as UseDeleteAction<unknown>, {
+      additionalOptions: { throwOnError: true },
+    });
+    expect(mockDelete).toHaveBeenCalledTimes(1);
+    expect(mockDelete).toHaveBeenCalledWith({ throwOnError: true });
   });
 });
