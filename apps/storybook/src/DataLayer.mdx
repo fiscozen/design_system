@@ -138,19 +138,96 @@ setupFzFetcher({
 
 ### Setup Parameters
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `baseUrl` | `string \| Ref<string> \| ComputedRef<string>` | ✅ Yes | - | Base URL for all API requests. Can be reactive. |
-| `csrf` | `CsrfOptions` | ❌ No | - | CSRF protection configuration |
-| `csrf.enabled` | `boolean` | ❌ No | `false` | Enable CSRF token injection |
-| `csrf.cookieName` | `string` | ❌ No | `'csrf_token'` | Cookie name containing CSRF token |
-| `csrf.headerName` | `string` | ❌ No | `'X-CSRF-Token'` | Header name to send CSRF token |
-| `deduplication` | `boolean` | ❌ No | `false` | Enable request deduplication globally (disabled by default) |
-| `debug` | `boolean` | ❌ No | `false` | Enable debug logging |
-| `autoUpdateDebounceDelay` | `number` | ❌ No | `100` | Debounce time in milliseconds for autoUpdate watches in list/paginated-list actions. Groups rapid parameter changes into a single fetch request. |
-| `requestInterceptor` | `RequestInterceptor` | ❌ No | - | Function to modify/abort requests |
-| `responseInterceptor` | `ResponseInterceptor` | ❌ No | - | Function to modify/handle responses |
-| `fetchOptions` | `RequestInit` | ❌ No | - | Default options for fetch requests |
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>baseUrl</code></td>
+      <td><code>string | Ref | ComputedRef</code></td>
+      <td>Yes</td>
+      <td>-</td>
+      <td>Base URL for all API requests. Can be reactive.</td>
+    </tr>
+    <tr>
+      <td><code>csrf</code></td>
+      <td><code>CsrfOptions</code></td>
+      <td>No</td>
+      <td>-</td>
+      <td>CSRF protection configuration</td>
+    </tr>
+    <tr>
+      <td><code>csrf.enabled</code></td>
+      <td><code>boolean</code></td>
+      <td>No</td>
+      <td><code>false</code></td>
+      <td>Enable CSRF token injection</td>
+    </tr>
+    <tr>
+      <td><code>csrf.cookieName</code></td>
+      <td><code>string</code></td>
+      <td>No</td>
+      <td><code>'csrf_token'</code></td>
+      <td>Cookie name containing CSRF token</td>
+    </tr>
+    <tr>
+      <td><code>csrf.headerName</code></td>
+      <td><code>string</code></td>
+      <td>No</td>
+      <td><code>'X-CSRF-Token'</code></td>
+      <td>Header name to send CSRF token</td>
+    </tr>
+    <tr>
+      <td><code>deduplication</code></td>
+      <td><code>boolean</code></td>
+      <td>No</td>
+      <td><code>false</code></td>
+      <td>Enable request deduplication globally (disabled by default)</td>
+    </tr>
+    <tr>
+      <td><code>debug</code></td>
+      <td><code>boolean</code></td>
+      <td>No</td>
+      <td><code>false</code></td>
+      <td>Enable debug logging</td>
+    </tr>
+    <tr>
+      <td><code>autoUpdateDebounceDelay</code></td>
+      <td><code>number</code></td>
+      <td>No</td>
+      <td><code>100</code></td>
+      <td>Debounce time in milliseconds for autoUpdate watches in list/paginated-list actions. Groups rapid parameter changes into a single fetch request.</td>
+    </tr>
+    <tr>
+      <td><code>requestInterceptor</code></td>
+      <td><code>RequestInterceptor</code></td>
+      <td>No</td>
+      <td>-</td>
+      <td>Function to modify/abort requests</td>
+    </tr>
+    <tr>
+      <td><code>responseInterceptor</code></td>
+      <td><code>ResponseInterceptor</code></td>
+      <td>No</td>
+      <td>-</td>
+      <td>Function to modify/handle responses</td>
+    </tr>
+    <tr>
+      <td><code>fetchOptions</code></td>
+      <td><code>RequestInit</code></td>
+      <td>No</td>
+      <td>-</td>
+      <td>Default options for fetch requests</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Interceptors Examples
 
@@ -535,14 +612,47 @@ When you need **preconfigured actions** (e.g. a list with fixed filters) but sti
 
 ### Call-with-defaults helpers — one per action type
 
-| Helper | Action | Input shape |
-|--------|--------|-------------|
-| `callListActionWithDefaults` | useList | defaultParams?, defaultOptions?, additionalParamsOrOptions?, additionalOptions? |
-| `callPaginatedListActionWithDefaults` | usePaginatedList | defaultParams?, defaultOptions?, additionalParamsOrOptions?, additionalOptions? |
-| `callRetrieveActionWithDefaults` | useRetrieve | defaultPk?, defaultOptions?, overridePk?, additionalOptions? |
-| `callCreateActionWithDefaults` | useCreate | defaultOptions?, additionalOptions? |
-| `callUpdateActionWithDefaults` | useUpdate | defaultOptions?, additionalOptions? |
-| `callDeleteActionWithDefaults` | useDelete | defaultOptions?, additionalOptions? |
+<table>
+  <thead>
+    <tr>
+      <th>Helper</th>
+      <th>Action</th>
+      <th>Input shape</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>callListActionWithDefaults</code></td>
+      <td>useList</td>
+      <td>defaultParams?, defaultOptions?, additionalParamsOrOptions?, additionalOptions?</td>
+    </tr>
+    <tr>
+      <td><code>callPaginatedListActionWithDefaults</code></td>
+      <td>usePaginatedList</td>
+      <td>defaultParams?, defaultOptions?, additionalParamsOrOptions?, additionalOptions?</td>
+    </tr>
+    <tr>
+      <td><code>callRetrieveActionWithDefaults</code></td>
+      <td>useRetrieve</td>
+      <td>defaultPk?, defaultOptions?, overridePk?, additionalOptions?</td>
+    </tr>
+    <tr>
+      <td><code>callCreateActionWithDefaults</code></td>
+      <td>useCreate</td>
+      <td>defaultOptions?, additionalOptions?</td>
+    </tr>
+    <tr>
+      <td><code>callUpdateActionWithDefaults</code></td>
+      <td>useUpdate</td>
+      <td>defaultOptions?, additionalOptions?</td>
+    </tr>
+    <tr>
+      <td><code>callDeleteActionWithDefaults</code></td>
+      <td>useDelete</td>
+      <td>defaultOptions?, additionalOptions?</td>
+    </tr>
+  </tbody>
+</table>
 
 **List / Paginated list:** Merge semantics: filters and pagination merged (view wins); ordering: view wins if provided; options: view wins. **Pagination in the request:** For `callListActionWithDefaults` (useList), `page` and `page_size` are only sent when you explicitly pass `pagination` in `defaultParams` or the view passes it in params — so list requests do not get pagination by default. For `callPaginatedListActionWithDefaults` (usePaginatedList), pagination is always included in the merged params so the action can apply default page/pageSize when not specified.
 
@@ -948,12 +1058,32 @@ const handleMarkAsPaid = async (invoice: { id: number }) => {
 
 ### When to use which
 
-| Use case | Approach |
-|----------|----------|
-| Standard CRUD, fixed base path (`users`, `invoices`) | **useActions** and entity composable (e.g. `useUsers`, `useInvoices`) |
-| **Nested or custom GET** (list/retrieve with id or params in path/query) | Composable with **useFzFetch** and `computed` URL; **pass ref at setup** (e.g. `useGetUserStats(userId)`, `useExportInvoices(invoiceIds, format)`). URL refetches when ref changes. |
-| **Custom mutations** (POST/PUT/PATCH/DELETE with id in path or call-time params) | Composable with **useFzFetch** (immediate: false) and **execute(id)** or **execute(pk, payload)**; **pass values at call time** (like `useUpdate`’s `execute(pk, payload)`). |
-| Preconfigured list/retrieve with default params but same URL shape | Merge helpers + useActions (see [Custom Actions & Merge Helpers](#custom-actions--merge-helpers)) |
+<table>
+  <thead>
+    <tr>
+      <th>Use case</th>
+      <th>Approach</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Standard CRUD, fixed base path (e.g. users, invoices)</td>
+      <td><strong>useActions</strong> and entity composable (e.g. useUsers, useInvoices)</td>
+    </tr>
+    <tr>
+      <td><strong>Nested or custom GET</strong> (list/retrieve with id or params in path/query)</td>
+      <td>Composable with <strong>useFzFetch</strong> and computed URL; pass ref at setup (e.g. useGetUserStats(userId), useExportInvoices(invoiceIds, format)). URL refetches when ref changes.</td>
+    </tr>
+    <tr>
+      <td><strong>Custom mutations</strong> (POST/PUT/PATCH/DELETE with id in path or call-time params)</td>
+      <td>Composable with <strong>useFzFetch</strong> (immediate: false) and execute(id) or execute(pk, payload); pass values at call time (like useUpdate execute(pk, payload)).</td>
+    </tr>
+    <tr>
+      <td>Preconfigured list/retrieve with default params but same URL shape</td>
+      <td>Merge helpers + useActions (see Custom Actions &amp; Merge Helpers)</td>
+    </tr>
+  </tbody>
+</table>
 
 Consumers get a consistent API: composables return `data` / `error` / `isLoading` / `execute`. For GET you pass the ref (or params) at setup; for mutations you pass the values to `execute()` when the user acts.
 
@@ -979,10 +1109,30 @@ useRetrieve(
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `pk` | `string \| number \| Ref \| ComputedRef` | ✅ Yes | Primary key of the entity. Can be reactive - changes trigger refetch. |
-| `options` | `UseRetrieveActionOptions<T>` | ❌ No | Query options (see below) |
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>pk</code></td>
+      <td><code>string | number | Ref | ComputedRef</code></td>
+      <td>Yes</td>
+      <td>Primary key of the entity. Can be reactive - changes trigger refetch.</td>
+    </tr>
+    <tr>
+      <td><code>options</code></td>
+      <td><code>UseRetrieveActionOptions&lt;T&gt;</code></td>
+      <td>No</td>
+      <td>Query options (see below)</td>
+    </tr>
+  </tbody>
+</table>
 
 **Returns:**
 
@@ -1027,20 +1177,65 @@ useList(params: UseListActionParams, options: UseListActionOptions<T>): UseListA
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `params` | `UseListActionParams` | ❌ No | Query parameters (see below) |
-| `options` | `UseListActionOptions<T>` | ❌ No | Query options (see below) |
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>params</code></td>
+      <td><code>UseListActionParams</code></td>
+      <td>No</td>
+      <td>Query parameters (see below)</td>
+    </tr>
+    <tr>
+      <td><code>options</code></td>
+      <td><code>UseListActionOptions&lt;T&gt;</code></td>
+      <td>No</td>
+      <td>Query options (see below)</td>
+    </tr>
+  </tbody>
+</table>
 
 **UseListActionParams:**
 
 Initial parameters (used only for bootstrap). The composable returns reactive objects that can be modified directly.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `filters` | `Record<string, string \| number \| boolean \| null \| undefined> \| Ref \| ComputedRef` | ❌ No | Initial filter parameters. **Query semantics:** `undefined` = omit from request; `null` = send to server. After initialization, modify the returned `filters` reactive object directly. |
-| `ordering` | `Array<Record<string, 'asc' \| 'desc' \| 'none'>> \| Ref \| ComputedRef` | ❌ No | Initial ordering parameters as array (e.g., `[{ name: 'asc' }, { created_at: 'desc' }]`). Normalized to query string format: `ordering=name,-created_at`. After initialization, modify the returned `ordering` reactive array directly. |
-| `pagination` | `{ page?: number, pageSize?: number } \| Ref \| ComputedRef` | ❌ No | Initial pagination parameters. If provided (even if empty), default values are applied: `page` defaults to `1`, `pageSize` defaults to `50`. After initialization, modify the returned `pagination` reactive object directly. |
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>filters</code></td>
+      <td><code>Record | Ref | ComputedRef</code></td>
+      <td>No</td>
+      <td>Initial filter parameters. Query semantics: undefined = omit from request; null = send to server. After initialization, modify the returned filters reactive object directly.</td>
+    </tr>
+    <tr>
+      <td><code>ordering</code></td>
+      <td><code>Array | Ref | ComputedRef</code></td>
+      <td>No</td>
+      <td>Initial ordering parameters as array of objects (e.g. name: asc, created_at: desc). Normalized to query string format: ordering=name,-created_at. After initialization, modify the returned ordering reactive array directly.</td>
+    </tr>
+    <tr>
+      <td><code>pagination</code></td>
+      <td><code>object (page?, pageSize?) | Ref | ComputedRef</code></td>
+      <td>No</td>
+      <td>Initial pagination parameters. If provided (even if empty), default values are applied: page defaults to 1, pageSize defaults to 50. After initialization, modify the returned pagination reactive object directly.</td>
+    </tr>
+  </tbody>
+</table>
 
 **Returns:**
 
@@ -1147,17 +1342,60 @@ Expects API to return:
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `params` | `UsePaginatedListActionParams` | ❌ No | Same as `UseListActionParams` (filters, ordering, pagination) |
-| `options` | `UsePaginatedListActionOptions<T>` | ❌ No | Options including `dataKey` and `enableSingleOrdering` |
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>params</code></td>
+      <td><code>UsePaginatedListActionParams</code></td>
+      <td>No</td>
+      <td>Same as UseListActionParams (filters, ordering, pagination)</td>
+    </tr>
+    <tr>
+      <td><code>options</code></td>
+      <td><code>UsePaginatedListActionOptions&lt;T&gt;</code></td>
+      <td>No</td>
+      <td>Options including dataKey and enableSingleOrdering</td>
+    </tr>
+  </tbody>
+</table>
 
 **UsePaginatedListActionOptions:**
 
-| Option | Type | Required | Default | Description |
-|--------|------|----------|---------|-------------|
-| `dataKey` | `string` | ❌ No | `'results'` | Key name in paginated response that contains the data array |
-| `enableSingleOrdering` | `boolean` | ❌ No | `false` | When `true`, only one column can be ordered at a time |
+<table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>dataKey</code></td>
+      <td><code>string</code></td>
+      <td>No</td>
+      <td><code>'results'</code></td>
+      <td>Key name in paginated response that contains the data array</td>
+    </tr>
+    <tr>
+      <td><code>enableSingleOrdering</code></td>
+      <td><code>boolean</code></td>
+      <td>No</td>
+      <td><code>false</code></td>
+      <td>When true, only one column can be ordered at a time</td>
+    </tr>
+  </tbody>
+</table>
 
 **Returns:**
 
@@ -1293,9 +1531,24 @@ useCreate(options?: UseCreateActionOptions): UseCreateActionReturn<T>
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `options` | `UseCreateActionOptions` | ❌ No | Mutation options (see below) |
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>options</code></td>
+      <td><code>UseCreateActionOptions</code></td>
+      <td>No</td>
+      <td>Mutation options (see below)</td>
+    </tr>
+  </tbody>
+</table>
 
 **Returns:**
 
@@ -1341,9 +1594,24 @@ useUpdate(options?: UseUpdateActionOptions): UseUpdateActionReturn<T>
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `options` | `UseUpdateActionOptions` | ❌ No | Mutation options (see below) |
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>options</code></td>
+      <td><code>UseUpdateActionOptions</code></td>
+      <td>No</td>
+      <td>Mutation options (see below)</td>
+    </tr>
+  </tbody>
+</table>
 
 **Returns:**
 
@@ -1362,9 +1630,26 @@ useUpdate(options?: UseUpdateActionOptions): UseUpdateActionReturn<T>
 
 **UseUpdateExecuteOptions:**
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `partialUpdate` | `boolean` | ❌ No | `true` | `true` = PATCH (partial), `false` = PUT (full replacement) |
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>partialUpdate</code></td>
+      <td><code>boolean</code></td>
+      <td>No</td>
+      <td><code>true</code></td>
+      <td>true = PATCH (partial), false = PUT (full replacement)</td>
+    </tr>
+  </tbody>
+</table>
 
 **Example:**
 
@@ -1415,9 +1700,24 @@ useDelete(options?: UseDeleteActionOptions): UseDeleteActionReturn<T>
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `options` | `UseDeleteActionOptions` | ❌ No | Mutation options (see below) |
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>options</code></td>
+      <td><code>UseDeleteActionOptions</code></td>
+      <td>No</td>
+      <td>Mutation options (see below)</td>
+    </tr>
+  </tbody>
+</table>
 
 **Returns:**
 
@@ -1456,13 +1756,54 @@ const handleDelete = async () => {
 
 Options for query actions (`useRetrieve`, `useList`).
 
-| Option | Type | Required | Default | Description |
-|--------|------|----------|---------|-------------|
-| `onMount` | `boolean` | ❌ No | `true` | Automatically execute on component mount |
-| `autoUpdate` | `boolean \| Ref<boolean> \| ComputedRef<boolean>` | ❌ No | `true` | Automatically refetch when reactive parameters change |
-| `initialData` | `T \| null` | ❌ No | `null` | Initial data before request completes |
-| `deduplication` | `boolean` | ❌ No | `undefined` | Enable request deduplication (overrides global setting) |
-| `throwOnError` | `boolean` | ❌ No | `false` | Whether to throw errors instead of storing them in the error ref |
+<table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>onMount</code></td>
+      <td><code>boolean</code></td>
+      <td>No</td>
+      <td><code>true</code></td>
+      <td>Automatically execute on component mount</td>
+    </tr>
+    <tr>
+      <td><code>autoUpdate</code></td>
+      <td><code>boolean | Ref | ComputedRef</code></td>
+      <td>No</td>
+      <td><code>true</code></td>
+      <td>Automatically refetch when reactive parameters change</td>
+    </tr>
+    <tr>
+      <td><code>initialData</code></td>
+      <td><code>T | null</code></td>
+      <td>No</td>
+      <td><code>null</code></td>
+      <td>Initial data before request completes</td>
+    </tr>
+    <tr>
+      <td><code>deduplication</code></td>
+      <td><code>boolean</code></td>
+      <td>No</td>
+      <td><code>undefined</code></td>
+      <td>Enable request deduplication (overrides global setting)</td>
+    </tr>
+    <tr>
+      <td><code>throwOnError</code></td>
+      <td><code>boolean</code></td>
+      <td>No</td>
+      <td><code>false</code></td>
+      <td>Whether to throw errors instead of storing them in the error ref</td>
+    </tr>
+  </tbody>
+</table>
 
 **Example:**
 
@@ -1503,9 +1844,26 @@ ordering.push({ created_at: 'desc' }) // ✅ Auto-refetches
 
 Options for mutation actions (`useCreate`, `useUpdate`, `useDelete`).
 
-| Option | Type | Required | Default | Description |
-|--------|------|----------|---------|-------------|
-| `throwOnError` | `boolean` | ❌ No | `false` | Whether to throw errors instead of storing them in the error ref |
+<table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>throwOnError</code></td>
+      <td><code>boolean</code></td>
+      <td>No</td>
+      <td><code>false</code></td>
+      <td>Whether to throw errors instead of storing them in the error ref</td>
+    </tr>
+  </tbody>
+</table>
 
 **Example**
 
