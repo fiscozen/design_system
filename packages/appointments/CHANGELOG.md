@@ -16,6 +16,6 @@
 
 - Updated dependencies
   - @fiscozen/alert@1.0.0
-  - @fiscozen/button@1.0.0
+  - @fiscozen/button@1.0.1
   - @fiscozen/radio@1.0.0
   - @fiscozen/container@0.4.1

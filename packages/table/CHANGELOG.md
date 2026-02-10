@@ -8,7 +8,7 @@
 - Updated dependencies
   - @fiscozen/action@1.1.0
   - @fiscozen/checkbox@1.0.0
-  - @fiscozen/button@1.0.0
+  - @fiscozen/button@1.0.1
   - @fiscozen/input@1.0.0
   - @fiscozen/radio@1.0.0
   - @fiscozen/dropdown@1.0.2
