@@ -21,7 +21,7 @@ const showWaitingForResponseMessage = computed(
   () =>
     props.waitingForResponseMessage &&
     props.messages.length > 0 &&
-    lastMessage.value.variant === "invisible",
+    lastMessage.value.variant === "primary",
 );
 const showEmptyMessage = computed(
   () => props.emptyMessage && props.messages.length === 0,
@@ -62,8 +62,8 @@ function getAlignItems(
   message: FzChatContainerProps["messages"][number],
 ): string {
   const alignItems = {
-    primary: "start",
-    invisible: "end",
+    primary: "end",
+    invisible: "start",
   };
   return alignItems[message.variant];
 }
@@ -72,8 +72,8 @@ function getCardColor(
   message: FzChatContainerProps["messages"][number],
 ): FzCardColor {
   const cardColor: Record<string, any> = {
-    primary: "default",
-    invisible: "grey",
+    primary: "grey",
+    invisible: "default",
   };
   return cardColor[message.variant];
 }
@@ -81,10 +81,19 @@ function getCardColor(
 onMounted(() => {
   scrollMessagesToBottom();
 });
+
+// Scroll solo quando viene aggiunto un messaggio in fondo (nuovo messaggio),
+// non quando si caricano messaggi più vecchi in cima (prepend)
+watch(
+  () => lastMessage.value,
+  () => {
+    scrollMessagesToBottom();
+  },
+);
 </script>
 
 <template>
-  <div ref="messagesContainerRef" class="grow overflow-y-auto pb-8">
+  <div ref="messagesContainerRef" class="grow overflow-y-auto">
     <FzContainer
       :alignItems="messages.length === 0 ? 'center' : undefined"
       class="min-h-full"
@@ -100,7 +109,7 @@ onMounted(() => {
           <FzContainer alignItems="end" gap="xs">
             <FzContainer alignItems="end" gap="xs" horizontal>
               <FzAvatar
-                v-if="message.variant === 'primary'"
+                v-if="message.variant === 'invisible'"
                 environment="frontoffice"
                 :firstName="message.user.firstName"
                 :lastName="message.user.lastName"
@@ -108,7 +117,7 @@ onMounted(() => {
               />
               <FzContainer gap="xs">
                 <p
-                  v-if="message.variant === 'primary'"
+                  v-if="message.variant === 'invisible'"
                   v-color:grey="400"
                   v-small
                 >

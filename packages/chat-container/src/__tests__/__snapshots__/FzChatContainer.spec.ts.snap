@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzChatContainer > Snapshots > should match snapshot - empty state 1`] = `
-"<div class="grow overflow-y-auto pb-8">
+"<div class="grow overflow-y-auto">
   <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-center min-h-full">
     <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-xs align-items-center">
       <h2>No messages</h2>
@@ -13,7 +13,7 @@ exports[`FzChatContainer > Snapshots > should match snapshot - empty state 1`] =
 `;
 
 exports[`FzChatContainer > Snapshots > should match snapshot - waiting for response 1`] = `
-"<div class="grow overflow-y-auto pb-8">
+"<div class="grow overflow-y-auto">
   <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch min-h-full">
     <!--v-if-->
     <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-end">
@@ -50,7 +50,7 @@ exports[`FzChatContainer > Snapshots > should match snapshot - waiting for respo
 `;
 
 exports[`FzChatContainer > Snapshots > should match snapshot - with messages 1`] = `
-"<div class="grow overflow-y-auto pb-8">
+"<div class="grow overflow-y-auto">
   <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch min-h-full">
     <!--v-if-->
     <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-start">
