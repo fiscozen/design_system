@@ -107,20 +107,20 @@ describe("FzChatContainer", () => {
       expect(wrapper.text()).toContain("Message 2");
     });
 
-    it("should render waiting for response message when last message is invisible", () => {
+    it("should render waiting for response message when last message is primary (sent by user)", () => {
       const wrapper = mount(FzChatContainer, {
         props: {
-          messages: [createMockMessage({ variant: "invisible" })],
+          messages: [createMockMessage({ variant: "primary" })],
           waitingForResponseMessage: "Waiting for response...",
         },
       });
       expect(wrapper.text()).toContain("Waiting for response...");
     });
 
-    it("should not render waiting for response when last message is primary", () => {
+    it("should not render waiting for response when last message is invisible (received)", () => {
       const wrapper = mount(FzChatContainer, {
         props: {
-          messages: [createMockMessage({ variant: "primary" })],
+          messages: [createMockMessage({ variant: "invisible" })],
           waitingForResponseMessage: "Waiting for response...",
         },
       });
@@ -165,8 +165,8 @@ describe("FzChatContainer", () => {
       expect(container.exists()).toBe(true);
     });
 
-    it("should render primary variant with avatar", () => {
-      const messages = [createMockMessage({ variant: "primary" })];
+    it("should render avatar for invisible (receiver) variant", () => {
+      const messages = [createMockMessage({ variant: "invisible" })];
       const wrapper = mount(FzChatContainer, {
         props: { messages },
       });
@@ -174,8 +174,8 @@ describe("FzChatContainer", () => {
       expect(avatar.exists()).toBe(true);
     });
 
-    it("should not render avatar for invisible variant", () => {
-      const messages = [createMockMessage({ variant: "invisible" })];
+    it("should not render avatar for primary (sender) variant", () => {
+      const messages = [createMockMessage({ variant: "primary" })];
       const wrapper = mount(FzChatContainer, {
         props: { messages },
       });
@@ -288,8 +288,38 @@ describe("FzChatContainer", () => {
       const wrapper = mount(FzChatContainer, {
         props: { messages: [] },
       });
-      const container = wrapper.find(".grow.overflow-y-auto.pb-8");
+      const container = wrapper.find(".grow.overflow-y-auto");
       expect(container.exists()).toBe(true);
+    });
+  });
+
+  // ============================================
+  // ACCESSIBILITY
+  // ============================================
+  describe("Accessibility", () => {
+    it("should render empty state with heading level 2", () => {
+      const wrapper = mount(FzChatContainer, {
+        props: {
+          messages: [],
+          emptyMessage: "No messages yet",
+        },
+      });
+      const heading = wrapper.find("h2");
+      expect(heading.exists()).toBe(true);
+      expect(heading.text()).toBe("No messages yet");
+    });
+
+    it("should give download buttons an aria-label with attachment name", () => {
+      const messages = [
+        createMockMessage({
+          attachments: [{ name: "report.pdf", url: "https://example.com/r.pdf" }],
+        }),
+      ];
+      const wrapper = mount(FzChatContainer, {
+        props: { messages },
+      });
+      const button = wrapper.findComponent(FzIconButton);
+      expect(button.attributes("aria-label")).toBe("Scarica report.pdf");
     });
   });
 
@@ -349,7 +379,7 @@ describe("FzChatContainer", () => {
     it("should match snapshot - waiting for response", () => {
       const wrapper = mount(FzChatContainer, {
         props: {
-          messages: [createMockMessage({ variant: "invisible" })],
+          messages: [createMockMessage({ variant: "primary" })],
           waitingForResponseMessage: "Please wait...",
         },
       });
