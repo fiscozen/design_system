@@ -12,7 +12,7 @@
 - Rimozione della dipendenza da IconButton (LIB-1889)
 - Aggiornamento dello stile e del padding dell'articolo principale (LIB-1889)
 - Updated dependencies
-  - @fiscozen/button@1.0.0
+  - @fiscozen/button@1.0.1
   - @fiscozen/style@0.2.0
   - @fiscozen/composables@1.0.1
   - @fiscozen/container@0.4.1

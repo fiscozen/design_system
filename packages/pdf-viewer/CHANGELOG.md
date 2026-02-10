@@ -9,4 +9,4 @@
 - Aggiornamento della libreria **tato30/vue-pdf** a una nuova versione
 - Implementazione iniziale del componente FzPDFViewer (LIB-162)
 - Updated dependencies
-  - @fiscozen/button@1.0.0
+  - @fiscozen/button@1.0.1

@@ -16,5 +16,5 @@
 ### Patch Changes
 
 - Updated dependencies
-  - @fiscozen/button@1.0.0
+  - @fiscozen/button@1.0.1
   - @fiscozen/link@1.0.0

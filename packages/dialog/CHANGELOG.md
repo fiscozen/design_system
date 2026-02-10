@@ -8,6 +8,6 @@
 
 - Aggiunta della prop `closeOnEscape` con valore predefinito per consentire la chiusura del dialog premendo Escape
 - Updated dependencies
-  - @fiscozen/button@1.0.0
+  - @fiscozen/button@1.0.1
   - @fiscozen/style@0.2.0
   - @fiscozen/composables@1.0.1

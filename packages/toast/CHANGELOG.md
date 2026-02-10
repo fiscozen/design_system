@@ -6,4 +6,4 @@
 
 - Nessuna modifica funzionale. Aggiornamento per allineamento alle nuove versioni delle dipendenze.
 - Updated dependencies
-  - @fiscozen/button@1.0.0
+  - @fiscozen/button@1.0.1

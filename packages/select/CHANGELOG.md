@@ -37,7 +37,7 @@
 - Updated dependencies
   - @fiscozen/action@1.1.0
   - @fiscozen/alert@1.0.0
-  - @fiscozen/button@1.0.0
+  - @fiscozen/button@1.0.1
   - @fiscozen/input@1.0.0
   - @fiscozen/composables@1.0.1
   - @fiscozen/progress@1.0.1
