@@ -13,16 +13,17 @@ Complete guide for using the `@fiscozen/data` package in your Vue 3 application.
 1. [Introduction](#introduction)
 2. [Installation](#installation)
 3. [Setup](#setup)
-4. [Usage Pattern](#usage-pattern)
-5. [Custom Actions & Merge Helpers](#custom-actions--merge-helpers)
-6. [Nested and custom routes](#nested-and-custom-routes)
-7. [Actions Reference](#actions-reference)
-8. [Error Handling Patterns](#error-handling-patterns)
-9. [TypeScript Best Practices](#typescript-best-practices)
-10. [Testing](#testing)
-11. [Features](#features)
-12. [Future Enhancements](#future-enhancements)
-13. [Summary](#summary)
+4. [API Quick Reference](#api-quick-reference)
+5. [Usage Pattern](#usage-pattern)
+6. [Custom Actions & Merge Helpers](#custom-actions--merge-helpers)
+7. [Nested and custom routes](#nested-and-custom-routes)
+8. [Actions Reference](#actions-reference)
+9. [Error Handling Patterns](#error-handling-patterns)
+10. [TypeScript Best Practices](#typescript-best-practices)
+11. [Testing](#testing)
+12. [Features](#features)
+13. [Future Enhancements](#future-enhancements)
+14. [Summary](#summary)
 
 ---
 
@@ -248,6 +249,182 @@ const { data } = useListUsers(
 
 ---
 
+## API Quick Reference
+
+Use this section as a **cheat sheet**: all actions, call-with-defaults helpers, and useFzFetch in one place — params, options, return values, and how to call `execute` for mutations. For details and examples, see [Usage Pattern](#usage-pattern), [Custom Actions & Merge Helpers](#custom-actions--merge-helpers), and [Actions Reference](#actions-reference).
+
+### Actions from useActions (CRUD)
+
+Obtain actions from `useActions<T>(basePath)` (e.g. `const { useRetrieve, useList, usePaginatedList, useCreate, useUpdate, useDelete } = useActions<User>('users')`).
+
+<table>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th>Call</th>
+      <th>Params / Options</th>
+      <th>Returns</th>
+      <th>execute / usage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>useRetrieve</strong></td>
+      <td><code>useRetrieve(pk?, options?)</code></td>
+      <td><code>pk</code>: string | number | Ref | ComputedRef (required). <code>options</code>: onMount?, autoUpdate?, initialData?, deduplication?, throwOnError?</td>
+      <td><code>data</code>, <code>error</code>, <code>isLoading</code>, <code>execute</code></td>
+      <td>Query: auto on mount. Manual: <code>await execute(throwOnError?)</code></td>
+    </tr>
+    <tr>
+      <td><strong>useList</strong></td>
+      <td><code>useList()</code> / <code>useList(params?, options?)</code></td>
+      <td><code>params</code>: filters?, ordering?, pagination? (initial; then use returned reactive objects). <code>options</code>: onMount?, autoUpdate?, initialData?, deduplication?, throwOnError?</td>
+      <td><code>data</code>, <code>error</code>, <code>isLoading</code>, <code>execute</code>, <code>filters</code>, <code>ordering</code>, <code>pagination</code> (reactive)</td>
+      <td>Query: auto on mount; change filters/ordering/pagination to refetch. Manual: <code>await execute(throwOnError?)</code></td>
+    </tr>
+    <tr>
+      <td><strong>usePaginatedList</strong></td>
+      <td><code>usePaginatedList()</code> / <code>usePaginatedList(params?, options?)</code></td>
+      <td>Same params as useList. <code>options</code>: + dataKey?, enableSingleOrdering?, and query options</td>
+      <td>Like useList + <code>meta</code>, <code>handlePageChange(page)</code>, <code>handleOrderingChange(column, direction)</code></td>
+      <td>Same as useList; pagination always applied (default page 1, pageSize 50)</td>
+    </tr>
+    <tr>
+      <td><strong>useCreate</strong></td>
+      <td><code>useCreate(options?)</code></td>
+      <td><code>options</code>: throwOnError?</td>
+      <td><code>data</code>, <code>error</code>, <code>isLoading</code>, <code>execute</code></td>
+      <td><code>await execute(payload)</code> — payload = partial entity object (e.g. createUser with name, email)</td>
+    </tr>
+    <tr>
+      <td><strong>useUpdate</strong></td>
+      <td><code>useUpdate(options?)</code></td>
+      <td><code>options</code>: throwOnError?</td>
+      <td><code>data</code>, <code>error</code>, <code>isLoading</code>, <code>execute</code></td>
+      <td><code>await execute(pk, payload, opts)</code> — opts.partialUpdate = true (PATCH) or false (PUT). E.g. updateUser(1, payload)</td>
+    </tr>
+    <tr>
+      <td><strong>useDelete</strong></td>
+      <td><code>useDelete(options?)</code></td>
+      <td><code>options</code>: throwOnError?</td>
+      <td><code>data</code>, <code>error</code>, <code>isLoading</code>, <code>execute</code></td>
+      <td><code>await execute(pk)</code> — e.g. <code>await deleteUser(1)</code></td>
+    </tr>
+  </tbody>
+</table>
+
+**Query options (useRetrieve, useList, usePaginatedList):** `onMount` (default true), `autoUpdate` (default true), `initialData`, `deduplication`, `throwOnError` (default false). **Mutation options:** only `throwOnError` (default false).
+
+**List params:** `filters` = key/value (undefined = omit, null = send); `ordering` = e.g. `[{ name: 'asc' }, { created_at: 'desc' }]`; `pagination` = `{ page?, pageSize? }`. If you pass `pagination` (even `{}`), useList applies page 1, pageSize 50 by default.
+
+---
+
+### Call-with-defaults helpers
+
+Use when building **custom actions** that preconfigure defaults but let the view override or add params/options. Each helper **calls** the underlying action with merged args.
+
+<table>
+  <thead>
+    <tr>
+      <th>Helper</th>
+      <th>Action</th>
+      <th>Input</th>
+      <th>Note</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>callListActionWithDefaults</code></td>
+      <td>useList</td>
+      <td>defaultParams?, defaultOptions?, additionalParamsOrOptions?, additionalOptions?</td>
+      <td>Pagination in request only if you pass pagination in defaultParams or view params</td>
+    </tr>
+    <tr>
+      <td><code>callPaginatedListActionWithDefaults</code></td>
+      <td>usePaginatedList</td>
+      <td>defaultParams?, defaultOptions?, additionalParamsOrOptions?, additionalOptions?</td>
+      <td>Pagination always in params (default page/pageSize applied)</td>
+    </tr>
+    <tr>
+      <td><code>callRetrieveActionWithDefaults</code></td>
+      <td>useRetrieve</td>
+      <td>defaultPk?, defaultOptions?, overridePk?, additionalOptions?</td>
+      <td>overridePk wins over defaultPk; at least one of defaultPk or overridePk needed</td>
+    </tr>
+    <tr>
+      <td><code>callCreateActionWithDefaults</code></td>
+      <td>useCreate</td>
+      <td>defaultOptions?, additionalOptions?</td>
+      <td>Returns action(mergedOptions)</td>
+    </tr>
+    <tr>
+      <td><code>callUpdateActionWithDefaults</code></td>
+      <td>useUpdate</td>
+      <td>defaultOptions?, additionalOptions?</td>
+      <td>Returns action(mergedOptions)</td>
+    </tr>
+    <tr>
+      <td><code>callDeleteActionWithDefaults</code></td>
+      <td>useDelete</td>
+      <td>defaultOptions?, additionalOptions?</td>
+      <td>Returns action(mergedOptions)</td>
+    </tr>
+  </tbody>
+</table>
+
+**Example:** custom list with default filters, view can override:
+
+```typescript
+const useInvoicesList = (paramsOrOptions?, options?) =>
+  callListActionWithDefaults(useList, {
+    defaultParams: { filters: { status: 'active' } },
+    additionalParamsOrOptions: paramsOrOptions,
+    additionalOptions: options,
+  })
+// In view: useInvoicesList({ filters: { status: 'paid' }, pagination: { page: 2 } })
+```
+
+---
+
+### useFzFetch (low-level)
+
+Use for **custom or nested routes** (URL not from useActions), or when you need a reactive URL/body/headers. Supports GET and mutations (POST/PUT/PATCH/DELETE); CSRF and interceptors apply.
+
+**Signatures:**
+
+```typescript
+useFzFetch<T>(url: MaybeRefOrGetter<string>): UseFzFetchReturn<T>
+useFzFetch<T>(url, options?: UseFzFetchOptions): UseFzFetchReturn<T>
+useFzFetch<T>(url, params: { queryParams?, method?, body?, headers? }, options?: UseFzFetchOptions): UseFzFetchReturn<T>
+```
+
+**Returns:** `data`, `error`, `statusCode`, `response`, `isFetching`, `execute(throwOnFailed?)`.
+
+**Options:** `immediate` (default true), `refetch`, `initialData`, `deduplication`.
+
+**Examples:**
+
+```typescript
+// GET – reactive URL
+const userId = ref(1)
+const { data } = useFzFetch<User>(computed(() => `/users/${userId.value}`))
+
+// GET with query params
+const { data } = useFzFetch<User[]>('/users', { queryParams: { role: 'admin' } })
+
+// POST – body/headers evaluated at execute time
+const { execute } = useFzFetch<User>('/users', {
+  method: 'POST',
+  body: computed(() => JSON.stringify(payload.value)),
+  headers: { 'Content-Type': 'application/json' },
+}, { immediate: false })
+await execute()
+```
+
+When the URL depends on another resource (e.g. `/users/1/stats`), build the URL with `computed()` and pass it to `useFzFetch`. For one-off mutations (e.g. mark as paid), pass body/headers at call time and use `immediate: false` then `execute()`.
+
+---
+
 ## Usage Pattern
 
 ### Step 1: Create Entity Composable
@@ -367,7 +544,7 @@ When you need **preconfigured actions** (e.g. a list with fixed filters) but sti
 | `callUpdateActionWithDefaults` | useUpdate | defaultOptions?, additionalOptions? |
 | `callDeleteActionWithDefaults` | useDelete | defaultOptions?, additionalOptions? |
 
-**List / Paginated list:** Merge semantics: filters and pagination merged (view wins); ordering: view wins if provided; options: view wins.
+**List / Paginated list:** Merge semantics: filters and pagination merged (view wins); ordering: view wins if provided; options: view wins. **Pagination in the request:** For `callListActionWithDefaults` (useList), `page` and `page_size` are only sent when you explicitly pass `pagination` in `defaultParams` or the view passes it in params — so list requests do not get pagination by default. For `callPaginatedListActionWithDefaults` (usePaginatedList), pagination is always included in the merged params so the action can apply default page/pageSize when not specified.
 
 **Retrieve:** At least one of `defaultPk` or `overridePk` when calling the underlying action.
 
