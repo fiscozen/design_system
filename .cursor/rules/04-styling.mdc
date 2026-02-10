@@ -1,0 +1,121 @@
+---
+description: Tailwind CSS class ordering conventions
+alwaysApply: true
+---
+
+# Tailwind CSS Conventions
+
+## Class Ordering (Logical Order)
+
+Always order Tailwind classes in this sequence:
+
+```vue
+<template>
+  <div
+    class="
+      <!-- 1. Layout & Positioning -->
+      flex flex-col items-center justify-start
+      absolute fixed relative sticky
+      
+      <!-- 2. Sizing -->
+      w-full h-44 min-w-96 max-w-md
+      
+      <!-- 3. Spacing -->
+      p-12 px-4 py-8 m-12 mx-auto gap-8
+      
+      <!-- 4. Borders -->
+      border border-1 border-grey-200 rounded-lg
+      
+      <!-- 5. Background -->
+      bg-core-white bg-grey-50
+      
+      <!-- 6. Text & Typography -->
+      text-lg font-bold text-grey-500
+      
+      <!-- 7. Effects -->
+      opacity-50 shadow-md
+      
+      <!-- 8. Interaction States (always last) -->
+      hover:bg-blue-600
+      focus:border-blue-600
+      active:bg-blue-700
+      disabled:bg-blue-200
+    "
+  >
+```
+
+## Design Tokens Usage
+
+Use semantic tokens instead of hardcoded values:
+
+```typescript
+// GOOD - uses semantic tokens
+class="bg-core-white text-grey-500 border-grey-200"
+class="bg-semantic-error-200 hover:bg-semantic-error-300"
+class="bg-semantic-success-200 text-core-white"
+
+// BAD - hardcoded values
+class="bg-white text-gray-500 border-gray-200"
+class="bg-red-500 hover:bg-red-600"
+class="bg-green-500 text-white"
+```
+
+## Semantic Color Tokens
+
+| Token | Usage |
+|-------|-------|
+| `bg-core-white` | White background |
+| `text-grey-500` | Secondary text |
+| `bg-semantic-error-200` | Danger/Error background |
+| `bg-semantic-success-200` | Success background |
+| `bg-semantic-warning-200` | Warning background |
+| `bg-semantic-info-200` | Info/Primary background |
+
+## Environment-Specific Sizing
+
+```css
+/* Frontoffice - smaller sizes */
+.fz-button--frontoffice {
+  @apply h-44 px-12 text-base;
+}
+
+/* Backoffice - larger sizes */
+.fz-button--backoffice {
+  @apply h-32 px-16 text-lg;
+}
+```
+
+## Variant Class Pattern
+
+```vue
+<template>
+  <button :class="buttonClasses">
+    <slot />
+  </button>
+</template>
+
+<script setup lang="ts">
+const props = defineProps<{ variant?: 'primary' | 'secondary' }>()
+
+const variantClasses = {
+  primary: 'bg-blue-500 text-white hover:bg-blue-600',
+  secondary: 'bg-core-white text-grey-500 border-grey-200 hover:bg-grey-100'
+}
+
+const buttonClasses = computed(() => [
+  'fz-button',
+  variantClasses[props.variant]
+])
+</script>
+```
+
+## State Classes Order
+
+When combining states, use this order:
+```css
+/* Correct order */
+class="bg-blue-500 text-white h-44 px-12 gap-8 border-1 rounded-lg focus:bg-blue-500 hover:bg-blue-600 disabled:bg-blue-200"
+
+/* Wrong order */
+class="disabled:bg-blue-200 hover:bg-blue-600 focus:bg-blue-500 bg-blue-500"
+```
