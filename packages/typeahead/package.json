@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/typeahead",
-  "version": "1.0.0-next.0",
+  "version": "1.0.0",
   "description": "Design System Typeahead component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -13,25 +13,24 @@
   "keywords": [],
   "author": "Cristian Barraco",
   "dependencies": {
+    "@fiscozen/action": "workspace:*",
+    "@fiscozen/alert": "workspace:*",
+    "@fiscozen/button": "workspace:*",
+    "@fiscozen/composables": "workspace:*",
+    "@fiscozen/icons": "workspace:*",
+    "@fiscozen/input": "workspace:*",
+    "@fiscozen/progress": "workspace:*",
     "fuse.js": "^7.1.0"
   },
   "peerDependencies": {
-    "@fiscozen/action": "workspace:^",
-    "@fiscozen/alert": "workspace:^",
-    "@fiscozen/button": "workspace:^",
-    "@fiscozen/composables": "workspace:^",
-    "@fiscozen/icons": "workspace:^",
-    "@fiscozen/input": "workspace:^",
-    "@fiscozen/progress": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
   "devDependencies": {
     "@awesome.me/kit-8137893ad3": "^1.0.65",
     "@fiscozen/eslint-config": "workspace:^",
-    "@fiscozen/icons": "workspace:^",
     "@fiscozen/prettier-config": "workspace:^",
-    "@fiscozen/select": "workspace:^",
+    "@fiscozen/select": "workspace:*",
     "@fiscozen/tsconfig": "workspace:^",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/vue-fontawesome": "^3.0.6",

@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/navbar",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Design System Navbar Component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -14,7 +14,6 @@
   "keywords": [],
   "author": "Riccardo Agnoletto",
   "peerDependencies": {
-    "@fiscozen/button": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
@@ -40,7 +39,8 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@fiscozen/composables": "workspace:^",
-    "@fiscozen/style": "workspace:^"
+    "@fiscozen/button": "workspace:*",
+    "@fiscozen/composables": "workspace:*",
+    "@fiscozen/style": "workspace:*"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/pdf-viewer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Design System PdfViewer component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -13,7 +13,6 @@
   "keywords": [],
   "author": "Cristian Barraco",
   "peerDependencies": {
-    "@fiscozen/button": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
@@ -39,6 +38,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@fiscozen/button": "workspace:*",
     "@tato30/vue-pdf": "^1.11.4"
   }
 }

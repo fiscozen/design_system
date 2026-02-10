@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/style",
-  "version": "0.1.8-next.0",
+  "version": "0.2.0",
   "description": "Design System package providing design tokens, CSS variables, and Vue.js custom directives",
   "main": "src/index.ts",
   "scripts": {

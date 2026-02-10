@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/progress",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Design System Progress component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -12,11 +12,13 @@
   "type": "module",
   "keywords": [],
   "author": "Riccardo Agnoletto",
+  "dependencies": {
+    "@fiscozen/icons": "workspace:*",
+    "@fiscozen/style": "workspace:*"
+  },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
-    "vue": "^3.4.13",
-    "@fiscozen/icons": "workspace:^",
-    "@fiscozen/style": "workspace:^"
+    "vue": "^3.4.13"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",

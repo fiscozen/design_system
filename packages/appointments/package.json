@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/appointments",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Design System Appointments component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -12,13 +12,15 @@
   "type": "module",
   "keywords": [],
   "author": "Cristian Barraco",
+  "dependencies": {
+    "@fiscozen/alert": "workspace:*",
+    "@fiscozen/button": "workspace:*",
+    "@fiscozen/container": "workspace:*",
+    "@fiscozen/radio": "workspace:*"
+  },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13",
-    "@fiscozen/container": "workspace:^",
-    "@fiscozen/radio": "workspace:^",
-    "@fiscozen/button": "workspace:^",
-    "@fiscozen/alert": "workspace:^",
     "date-fns": "^3.6.0"
   },
   "devDependencies": {

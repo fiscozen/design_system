@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/checkbox",
-  "version": "1.0.0-next.0",
+  "version": "1.0.0",
   "description": "Design System Checkbox and Checkbox Group component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -13,19 +13,18 @@
   "keywords": [],
   "author": "Cristian Barraco",
   "dependencies": {
-    "@fiscozen/badge": "workspace:^",
-    "@fiscozen/composables": "workspace:^"
+    "@fiscozen/alert": "workspace:*",
+    "@fiscozen/badge": "workspace:*",
+    "@fiscozen/composables": "workspace:*",
+    "@fiscozen/icons": "workspace:*",
+    "@fiscozen/tooltip": "workspace:*"
   },
   "peerDependencies": {
-    "@fiscozen/alert": "workspace:^",
-    "@fiscozen/icons": "workspace:^",
-    "@fiscozen/tooltip": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",
-    "@fiscozen/icons": "workspace:^",
     "@fiscozen/prettier-config": "workspace:^",
     "@fiscozen/tsconfig": "workspace:^",
     "@rushstack/eslint-patch": "^1.3.3",

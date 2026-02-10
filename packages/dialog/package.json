@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/dialog",
-  "version": "0.1.25",
+  "version": "0.1.26",
   "description": "Design System Dialog component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -13,9 +13,6 @@
   "keywords": [],
   "author": "Riccardo Agnoletto",
   "peerDependencies": {
-    "@fiscozen/button": "workspace:^",
-    "@fiscozen/composables": "workspace:^",
-    "@fiscozen/style": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
@@ -43,7 +40,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@fiscozen/composables": "workspace:^",
+    "@fiscozen/button": "workspace:*",
+    "@fiscozen/composables": "workspace:*",
+    "@fiscozen/style": "workspace:*",
     "dialog-polyfill": "^0.5.6"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/input",
-  "version": "1.0.0-next.1",
+  "version": "1.0.0",
   "description": "Design System Input component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -12,12 +12,14 @@
   "type": "module",
   "keywords": [],
   "author": "Cristian Barraco",
+  "dependencies": {
+    "@fiscozen/button": "workspace:*",
+    "@fiscozen/composables": "workspace:*",
+    "@fiscozen/icons": "workspace:*"
+  },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
-    "vue": "^3.4.13",
-    "@fiscozen/button": "workspace:^",
-    "@fiscozen/composables": "workspace:^",
-    "@fiscozen/icons": "workspace:^"
+    "vue": "^3.4.13"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",
