@@ -14,8 +14,6 @@
   "keywords": [],
   "author": "Riccardo Agnoletto",
   "peerDependencies": {
-    "@fiscozen/collapse": "workspace:^",
-    "@fiscozen/navlink": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
@@ -41,6 +39,8 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@fiscozen/collapse": "workspace:*",
+    "@fiscozen/navlink": "workspace:*",
     "vue-router": "^4.3.0"
   }
 }

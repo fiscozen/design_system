@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/toast",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Design System Toast component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -17,8 +17,8 @@
     "vue": "^3.4.13"
   },
   "dependencies": {
-    "@fiscozen/icons": "workspace:^",
-    "@fiscozen/button": "workspace:^"
+    "@fiscozen/button": "workspace:*",
+    "@fiscozen/icons": "workspace:*"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",

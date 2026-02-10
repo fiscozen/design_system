@@ -80,7 +80,11 @@ exports[`FzTabs > Snapshots > should match snapshot - with badgeContent 1`] = `
   <div data-v-97c498eb="" class="flex flex-row">
     <div data-v-97c498eb="" class="tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto w-full sm:w-auto flex-row"><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 bg-white text-blue-500 cursor-pointer max-w-[136px]" title="tab1" badgecontent="1">
         <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab1</span>
-        <div class="flex items-center justify-center font-medium text-xs px-8 size-20 bg-blue-500 text-core-white rounded-full !px-0">1</div>
+        <div class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-blue-500 text-core-white" title="1">
+          <!--v-if-->
+          <p class="text-[inherit] text-sm">1</p>
+          <!--v-if-->
+        </div>
       </button><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer max-w-[136px]" title="tab2">
         <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab2</span>
         <!--v-if-->

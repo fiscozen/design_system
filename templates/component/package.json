@@ -12,6 +12,7 @@
   "type": "module",
   "keywords": [],
   "author": "{{titleCase author}}",
+  "dependencies": {},
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"

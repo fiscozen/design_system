@@ -12,14 +12,16 @@
   "type": "module",
   "keywords": [],
   "author": "Cristian Barraco",
+  "dependencies": {
+    "@fiscozen/alert": "workspace:*",
+    "@fiscozen/badge": "workspace:*",
+    "@fiscozen/composables": "workspace:*",
+    "@fiscozen/icons": "workspace:*",
+    "@fiscozen/tooltip": "workspace:*"
+  },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
-    "vue": "^3.4.13",
-    "@fiscozen/icons": "workspace:^",
-    "@fiscozen/tooltip": "workspace:^",
-    "@fiscozen/alert": "workspace:^",
-    "@fiscozen/badge": "workspace:^",
-    "@fiscozen/composables": "workspace:^"
+    "vue": "^3.4.13"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",

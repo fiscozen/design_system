@@ -13,9 +13,11 @@
   "type": "module",
   "keywords": [],
   "author": "Riccardo Agnoletto",
+  "dependencies": {
+    "@fiscozen/collapse": "workspace:*",
+    "@fiscozen/icons": "workspace:*"
+  },
   "peerDependencies": {
-    "@fiscozen/collapse": "workspace:^",
-    "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"

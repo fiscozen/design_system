@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/dropdown",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Design System Dropdown component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -13,9 +13,9 @@
   "keywords": [],
   "author": "Alen Ajam",
   "dependencies": {
-    "@fiscozen/button": "workspace:^",
-    "@fiscozen/composables": "workspace:^",
-    "@fiscozen/action": "workspace:^"
+    "@fiscozen/action": "workspace:*",
+    "@fiscozen/button": "workspace:*",
+    "@fiscozen/composables": "workspace:*"
   },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",

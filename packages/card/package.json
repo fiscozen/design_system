@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/card",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Design System Card component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -13,11 +13,11 @@
   "keywords": [],
   "author": "Cristian Barraco",
   "dependencies": {
-    "@fiscozen/button": "workspace:^",
-    "@fiscozen/composables": "workspace:^",
-    "@fiscozen/container": "workspace:^",
-    "@fiscozen/icons": "workspace:^",
-    "@fiscozen/style": "workspace:^"
+    "@fiscozen/button": "workspace:*",
+    "@fiscozen/composables": "workspace:*",
+    "@fiscozen/container": "workspace:*",
+    "@fiscozen/icons": "workspace:*",
+    "@fiscozen/style": "workspace:*"
   },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",

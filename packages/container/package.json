@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/container",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Design System Container component",
   "scripts": {
     "test": "pnpm run test:unit",
@@ -13,8 +13,10 @@
   "type": "module",
   "keywords": [],
   "author": "Sergio Terrasi",
+  "dependencies": {
+    "@fiscozen/style": "workspace:*"
+  },
   "peerDependencies": {
-    "@fiscozen/style": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },

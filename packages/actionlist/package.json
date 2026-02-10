@@ -14,7 +14,7 @@
   "keywords": [],
   "author": "Alen Ajam",
   "dependencies": {
-    "@fiscozen/navlink": "workspace:^"
+    "@fiscozen/navlink": "workspace:*"
   },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",

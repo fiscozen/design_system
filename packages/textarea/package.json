@@ -38,6 +38,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@fiscozen/icons": "workspace:^"
+    "@fiscozen/icons": "workspace:*"
   }
 }
