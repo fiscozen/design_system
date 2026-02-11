@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# ── Changeset check ─────────────────────────────────────────────────────────
+# Ensures that changes to packages/ are accompanied by a changeset file.
+# Skip with: SKIP_CHANGESET_CHECK=1 git push
+# ─────────────────────────────────────────────────────────────────────────────
+
+if [ "$SKIP_CHANGESET_CHECK" = "1" ]; then
+  echo "⏭  Changeset check skipped (SKIP_CHANGESET_CHECK=1)"
+  exit 0
+fi
+
+# Don't check when pushing main — that's where changesets get consumed
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH" = "main" ]; then
+  exit 0
+fi
+
+# Make sure we have a reference to compare against
+if ! git rev-parse --verify origin/main >/dev/null 2>&1; then
+  echo "⚠  origin/main not found — skipping changeset check"
+  exit 0
+fi
+
+# Check if any source files inside packages/ have changed
+MERGE_BASE=$(git merge-base origin/main HEAD 2>/dev/null || echo "origin/main")
+CHANGED_PACKAGE_FILES=$(git diff --name-only "$MERGE_BASE"...HEAD -- 'packages/*/src/' 2>/dev/null)
+
+if [ -z "$CHANGED_PACKAGE_FILES" ]; then
+  # No source changes in packages — no changeset needed
+  exit 0
+fi
+
+# There are source changes — check for changeset files
+CHANGESET_FILES=$(git diff --name-only "$MERGE_BASE"...HEAD -- '.changeset/*.md' 2>/dev/null | grep -v README.md)
+
+if [ -z "$CHANGESET_FILES" ]; then
+  echo ""
+  echo "🚨 Changeset mancante!"
+  echo ""
+  echo "   Hai modificato sorgenti in packages/ ma non hai aggiunto un changeset."
+  echo ""
+  echo "   Pacchetti modificati:"
+  echo "$CHANGED_PACKAGE_FILES" | sed 's|packages/\([^/]*\)/.*|     \1|' | sort -u
+  echo ""
+  echo "   Per aggiungere un changeset:"
+  echo "     pnpm changeset"
+  echo ""
+  echo "   Per skippare questo check (solo se sai cosa fai):"
+  echo "     SKIP_CHANGESET_CHECK=1 git push"
+  echo ""
+  exit 1
+fi
+
+exit 0

@@ -17,10 +17,15 @@
     "test:storybook:coverage": "cd apps/storybook && pnpm test:storybook:coverage",
     "test:storybook:ui": "cd apps/storybook && pnpm test:storybook --ui",
     "prepare": "husky",
-    "deps:check": "node scripts/check-versions.mjs",
+    "release:check": "node scripts/release-check.mjs",
+    "release:check:unpublished": "node scripts/release-check.mjs --unpublished",
+    "release:check:pending": "node scripts/release-check.mjs --pending",
+    "release:check:graph": "node scripts/release-check.mjs --graph",
+    "release:check:health": "node scripts/release-check.mjs --health",
     "changeset": "changeset",
-    "changeset:version": "changeset version",
-    "changeset:publish": "changeset publish"
+    "changeset:publish": "changeset publish",
+    "changeset:status": "changeset status",
+    "changeset:version": "changeset version"
   },
   "engines": {
     "pnpm": "^10",

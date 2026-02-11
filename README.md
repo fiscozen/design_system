@@ -68,13 +68,21 @@ We use [Changesets](https://github.com/changesets/changesets) to manage versioni
 pnpm changeset              # Create a changeset (select packages + semver bump)
 pnpm changeset:version      # Consume changesets → bump versions & update CHANGELOGs
 pnpm changeset:publish      # Publish updated packages to npm
+
+pnpm release:check              # Full release preview: all sections below
+pnpm release:check:unpublished  # Only: local vs npm — what's ready to publish?
+pnpm release:check:pending      # Only: what will the next release look like?
+pnpm release:check:graph        # Only: dependency graph & cascade analysis
+pnpm release:check:health       # Only: peer-dep alignment, 0.x warnings, etc.
 ```
 
 **Workflow**:
 1. before opening a PR that affects a package, run `pnpm changeset` and commit the generated file. The more readable is the changeset, the more useful the CHANGELOG will be.
 2. One ore more PRs with changesets gets merged
-3. When we want to release we use `pnpm changeset:version` to automatically bump versions and add CHANGELOGs
-4. Currently we will manually update tags and use `pnpm changeset:publish`, in the near future this step will be automated.
+3. Before releasing, run `pnpm release:check` to review impact, cascade and health
+4. When we want to release we use `pnpm changeset:version` to automatically bump versions and add CHANGELOGs
+5. After versioning, run `pnpm release:check:unpublished` to verify which packages have local versions ahead of npm (dry-run of publish)
+6. Currently we will manually update tags and use `pnpm changeset:publish`, in the near future this step will be automated.
 
 ### Test Coverage Requirements
 
