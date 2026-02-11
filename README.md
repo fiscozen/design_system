@@ -60,9 +60,26 @@ npx nx run-many -t test       # All unit tests
 npx nx affected -t test       # Only affected packages
 ```
 
+## Releasing (Changesets)
+
+We use [Changesets](https://github.com/changesets/changesets) to manage versioning and changelogs.
+
+```bash
+pnpm changeset              # Create a changeset (select packages + semver bump)
+pnpm changeset:version      # Consume changesets → bump versions & update CHANGELOGs
+pnpm changeset:publish      # Publish updated packages to npm
+```
+
+**Workflow**:
+1. before opening a PR that affects a package, run `pnpm changeset` and commit the generated file. The more readable is the changeset, the more useful the CHANGELOG will be.
+2. One ore more PRs with changesets gets merged
+3. When we want to release we use `pnpm changeset:version` to automatically bump versions and add CHANGELOGs
+4. Currently we will manually update tags and use `pnpm changeset:publish`, in the near future this step will be automated.
+
 ### Test Coverage Requirements
 
 - **Statements**: 80%
 - **Branches**: 75%
 - **Functions**: 80%
 - **Lines**: 80%
+
