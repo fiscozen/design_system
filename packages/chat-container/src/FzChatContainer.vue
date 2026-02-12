@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import { FzChatContainerProps } from "./types";
 import { FzContainer } from "@fiscozen/container";
 import { FzAvatar } from "@fiscozen/avatar";
@@ -64,29 +64,55 @@ function downloadAttachment(fileUrl: string): void {
   window.open(fileUrl, "_blank");
 }
 
+const alignItems = {
+  primary: "end",
+  invisible: "start",
+};
+
 function getAlignItems(
   message: FzChatContainerProps["messages"][number],
 ): string {
-  const alignItems = {
-    primary: "end",
-    invisible: "start",
-  };
   return alignItems[message.variant];
 }
+
+const cardColor: Record<string, FzCardColor> = {
+  primary: "grey",
+  invisible: "default",
+};
 
 function getCardColor(
   message: FzChatContainerProps["messages"][number],
 ): FzCardColor {
-  const cardColor: Record<string, any> = {
-    primary: "grey",
-    invisible: "default",
-  };
   return cardColor[message.variant];
+}
+
+const SCROLL_TOP_THRESHOLD = 10;
+const canLoadMore = ref(true);
+
+function onContainerScroll(): void {
+  const el = messagesContainerRef.value;
+  if (el && el.scrollTop <= SCROLL_TOP_THRESHOLD && canLoadMore.value) {
+    canLoadMore.value = false;
+    emit("load-more");
+  }
 }
 
 onMounted(() => {
   scrollMessagesToBottom();
+  messagesContainerRef.value?.addEventListener("scroll", onContainerScroll);
 });
+
+onUnmounted(() => {
+  messagesContainerRef.value?.removeEventListener("scroll", onContainerScroll);
+});
+
+// Riabilita load-more quando cambiano i messaggi
+watch(
+  () => props.messages.length,
+  () => {
+    canLoadMore.value = true;
+  },
+);
 
 // Scroll solo quando viene aggiunto un messaggio in fondo (nuovo messaggio),
 // non quando si caricano messaggi più vecchi in cima (prepend)
@@ -140,9 +166,9 @@ watch(
                       <FzContainer
                         v-for="(attachment, i) in message.attachments"
                         gap="none"
+                        :key="attachment.url"
                       >
                         <FzContainer
-                          :key="attachment.url"
                           horizontal
                           layout="expand-first"
                           alignItems="center"
