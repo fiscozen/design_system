@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within } from '@storybook/test'
+import { expect, within, waitFor } from '@storybook/test'
 import { FzChatContainer } from '@fiscozen/chat-container'
+import { ref } from 'vue'
 
 const meta = {
   title: 'Layout/FzChatContainer',
@@ -265,5 +266,77 @@ export const WithAttachments: Story = {
       const duplicates = idValues.filter((id, index) => idValues.indexOf(id) !== index)
       await expect(duplicates).toHaveLength(0)
     })
+  }
+}
+
+// ============================================
+// LOAD MORE STORY
+// ============================================
+
+export const LoadMore: Story = {
+  args: {
+    messages: Array.from({ length: 20 }, (_, index) => ({
+      message: `Messaggio ${index + 1} - Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+      variant: index % 2 === 0 ? 'primary' : 'invisible',
+      timestamp: new Date(Date.now() + index * 100000).toISOString(),
+      user: { firstName: 'John', lastName: 'Doe', avatar: '' },
+      attachments: []
+    })),
+    emptyMessage: 'Nessun messaggio',
+    emptyMessageDescription: 'Inizia una conversazione'
+  },
+  render: (args) => ({
+    components: { FzChatContainer },
+    setup() {
+      const messages = ref([...args.messages!])
+      let batch = 0
+
+      const onLoadMore = () => {
+        batch++
+        const olderMessages = Array.from({ length: 5 }, (_, i) => ({
+          message: `Messaggio più vecchio (batch ${batch}, #${i + 1})`,
+          variant: (i % 2 === 0 ? 'invisible' : 'primary') as 'invisible' | 'primary',
+          timestamp: new Date(Date.now() - (batch * 5 + i) * 100000).toISOString(),
+          user: { firstName: 'Jane', lastName: 'Smith', avatar: '' },
+          attachments: [] as { name: string; url: string }[]
+        }))
+        messages.value = [...olderMessages, ...messages.value]
+      }
+
+      return { messages, onLoadMore }
+    },
+    template: `<FzChatContainer :messages="messages" @load-more="onLoadMore" />`
+  }),
+  play: async ({ canvasElement, step }) => {
+    const scrollContainer = canvasElement.querySelector('.grow.overflow-y-auto') as HTMLElement
+
+    await step('Verify initial messages are rendered', async () => {
+      const canvas = within(canvasElement)
+      const messages = canvas.getAllByText(/Messaggio \d+ -/)
+      await expect(messages.length).toBe(20)
+    })
+
+    await step('Scroll to top triggers load-more and loads older messages', async () => {
+      scrollContainer.scrollTop = 0
+      scrollContainer.dispatchEvent(new Event('scroll'))
+
+      await waitFor(() => {
+        const canvas = within(canvasElement)
+        expect(canvas.getByText(/batch 1, #1/)).toBeInTheDocument()
+      })
+    })
+
+    await step(
+      'Scroll to top again loads another batch (guard was reset by new messages)',
+      async () => {
+        scrollContainer.scrollTop = 0
+        scrollContainer.dispatchEvent(new Event('scroll'))
+
+        await waitFor(() => {
+          const canvas = within(canvasElement)
+          expect(canvas.getByText(/batch 2, #1/)).toBeInTheDocument()
+        })
+      }
+    )
   }
 }
