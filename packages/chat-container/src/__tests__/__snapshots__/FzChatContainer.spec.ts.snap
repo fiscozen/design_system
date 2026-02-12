@@ -1,8 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzChatContainer > Snapshots > should match snapshot - empty state 1`] = `
-"<div class="grow overflow-y-auto">
-  <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-center min-h-full">
+"<div class="overflow-y-auto">
+  <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-center min-h-full mb-8">
     <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-xs align-items-center">
       <h2>No messages</h2>
       <p>Start chatting</p>
@@ -13,8 +13,8 @@ exports[`FzChatContainer > Snapshots > should match snapshot - empty state 1`] =
 `;
 
 exports[`FzChatContainer > Snapshots > should match snapshot - waiting for response 1`] = `
-"<div class="grow overflow-y-auto">
-  <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch min-h-full">
+"<div class="overflow-y-auto">
+  <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch min-h-full mb-8">
     <!--v-if-->
     <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-end">
       <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-xs align-items-end">
@@ -50,8 +50,8 @@ exports[`FzChatContainer > Snapshots > should match snapshot - waiting for respo
 `;
 
 exports[`FzChatContainer > Snapshots > should match snapshot - with messages 1`] = `
-"<div class="grow overflow-y-auto">
-  <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch min-h-full">
+"<div class="overflow-y-auto">
+  <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch min-h-full mb-8">
     <!--v-if-->
     <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-base align-items-start">
       <div data-v-3ef68c3e="" class="fz-container fz-container--vertical gap-section-content-xs align-items-end">

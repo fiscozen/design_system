@@ -10,7 +10,7 @@ import type { FzChatContainerProps } from "../types";
 // CONSTANTS & HELPERS
 // ============================================
 
-const SCROLL_CONTAINER_SELECTOR = ".grow.overflow-y-auto";
+const SCROLL_CONTAINER_SELECTOR = ".overflow-y-auto";
 
 beforeEach(() => {
   Object.defineProperty(window, "matchMedia", {
