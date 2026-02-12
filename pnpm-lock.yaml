@@ -1295,6 +1295,9 @@ importers:
       '@fiscozen/composables':
         specifier: workspace:*
         version: link:../composables
+      '@fiscozen/divider':
+        specifier: workspace:*
+        version: link:../divider
       '@fiscozen/icons':
         specifier: workspace:*
         version: link:../icons
@@ -1305,11 +1308,11 @@ importers:
         specifier: workspace:*
         version: link:../style
       '@vuepic/vue-datepicker':
-        specifier: ^8.8.1
-        version: 8.8.1(vue@3.5.26(typescript@5.3.3))
+        specifier: ^12.1.0
+        version: 12.1.0(vue@3.5.26(typescript@5.3.3))
       date-fns:
-        specifier: ^3.6.0
-        version: 3.6.0
+        specifier: ^4.1.0
+        version: 4.1.0
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.19(yaml@2.8.2)
@@ -3529,6 +3532,9 @@ packages:
   '@cypress/xvfb@1.2.4':
     resolution: {integrity: sha512-skbBzPggOVYCbnGgV+0dmBdW/s77ZkAOXIC1knS8NagwDjBrNC1LuXtQJeiN6l+m7lzmHtaoUw/ctJKdqkG57Q==}
 
+  '@date-fns/tz@1.4.1':
+    resolution: {integrity: sha512-P5LUNhtbj6YfI3iJjw5EL9eUAG6OitD0W3fWQcpQjDRc/QIsL0tRNuO1PcDvPccWL1fSTXXdE1ds+l95DV/OFA==}
+
   '@emnapi/core@1.8.1':
     resolution: {integrity: sha512-AvT9QFpxK0Zd8J0jopedNm+w/2fIzvtPKPjqyw9jwvBaReTTqPBk9Hixaz7KbjimP+QNz605/XnjFcDAL2pqBg==}
 
@@ -3849,6 +3855,18 @@ packages:
   '@eslint/js@8.57.1':
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+
+  '@floating-ui/core@1.7.4':
+    resolution: {integrity: sha512-C3HlIdsBxszvm5McXlB8PeOEWfBhcGBTZGkGlWc2U0KFY5IwG5OQEuQ8rq52DZmcHDlPLd+YFBK+cZcytwIFWg==}
+
+  '@floating-ui/dom@1.7.5':
+    resolution: {integrity: sha512-N0bD2kIPInNHUHehXhMke1rBGs1dwqvC9O9KYMyyjK7iXt7GAhnro7UlcuYcGdS/yYOlq0MAVgrow8IbWJwyqg==}
+
+  '@floating-ui/utils@0.2.10':
+    resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
+
+  '@floating-ui/vue@1.1.10':
+    resolution: {integrity: sha512-vdf8f6rHnFPPLRsmL4p12wYl+Ux4mOJOkjzKEMYVnwdf7UFdvBtHlLvQyx8iKG5vhPRbDRgZxdtpmyigDPjzYg==}
 
   '@fortawesome/fontawesome-common-types@6.7.2':
     resolution: {integrity: sha512-Zs+YeHUC5fkt7Mg1l6XTniei3k4bwG/yo3iFUtZWd/pMx9g3fdvkSK9E0FOC+++phXOka78uJcYb8JaFkW52Xg==}
@@ -4763,21 +4781,35 @@ packages:
   '@vue/tsconfig@0.5.1':
     resolution: {integrity: sha512-VcZK7MvpjuTPx2w6blwnwZAu5/LgBUtejFOi3pPGQFXQN5Ela03FUtd2Qtg4yWGGissVL0dr6Ro1LfOFh+PCuQ==}
 
-  '@vuepic/vue-datepicker@8.8.1':
-    resolution: {integrity: sha512-8ehfUz1m69Vuc16Pm4ukgb3Mg1VT14x4EsG1ag4O/qbSNRWztTo+pUV4JnFt0FGLl5gGb6NXlxIvR7EjLgD7Gg==}
+  '@vuepic/vue-datepicker@12.1.0':
+    resolution: {integrity: sha512-QuWcO+CqIGYFoRNCagp9xUY9sMK/OHUlVIDxBYjw7HjCTWXfuE/r3l3loB00faEtb0Teo3DeBn26hT3tYA5pgg==}
+    engines: {node: '>=18.12.0'}
     peerDependencies:
-      vue: '>=3.2.0'
+      vue: '>=3.5.0'
 
   '@vueuse/core@13.9.0':
     resolution: {integrity: sha512-ts3regBQyURfCE2BcytLqzm8+MmLlo5Ln/KLoxDVcsZ2gzIwVNnQpQOL/UKV8alUqjSZOlpFZcRNsLRqj+OzyA==}
     peerDependencies:
       vue: ^3.5.0
 
+  '@vueuse/core@14.2.1':
+    resolution: {integrity: sha512-3vwDzV+GDUNpdegRY6kzpLm4Igptq+GA0QkJ3W61Iv27YWwW/ufSlOfgQIpN6FZRMG0mkaz4gglJRtq5SeJyIQ==}
+    peerDependencies:
+      vue: ^3.5.0
+
   '@vueuse/metadata@13.9.0':
     resolution: {integrity: sha512-1AFRvuiGphfF7yWixZa0KwjYH8ulyjDCC0aFgrGRz8+P4kvDFSdXLVfTk5xAN9wEuD1J6z4/myMoYbnHoX07zg==}
 
+  '@vueuse/metadata@14.2.1':
+    resolution: {integrity: sha512-1ButlVtj5Sb/HDtIy1HFr1VqCP4G6Ypqt5MAo0lCgjokrk2mvQKsK2uuy0vqu/Ks+sHfuHo0B9Y9jn9xKdjZsw==}
+
   '@vueuse/shared@13.9.0':
     resolution: {integrity: sha512-e89uuTLMh0U5cZ9iDpEI2senqPGfbPRTHM/0AaQkcxnpqjkZqDYP8rpfm7edOz8s+pOCOROEy1PIveSW8+fL5g==}
+    peerDependencies:
+      vue: ^3.5.0
+
+  '@vueuse/shared@14.2.1':
+    resolution: {integrity: sha512-shTJncjV9JTI4oVNyF1FQonetYAiTBd+Qj7cY89SWbXSkx7gyhrgtEdF2ZAVWS1S3SHlaROO6F2IesJxQEkZBw==}
     peerDependencies:
       vue: ^3.5.0
 
@@ -5512,6 +5544,9 @@ packages:
 
   date-fns@3.6.0:
     resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
   dayjs@1.11.19:
     resolution: {integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==}
@@ -8040,6 +8075,17 @@ packages:
   vue-component-type-helpers@3.2.4:
     resolution: {integrity: sha512-05lR16HeZDcDpB23ku5b5f1fBOoHqFnMiKRr2CiEvbG5Ux4Yi0McmQBOET0dR0nxDXosxyVqv67q6CzS3AK8rw==}
 
+  vue-demi@0.14.10:
+    resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
+    engines: {node: '>=12'}
+    hasBin: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
     peerDependencies:
@@ -8485,6 +8531,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@date-fns/tz@1.4.1': {}
+
   '@emnapi/core@1.8.1':
     dependencies:
       '@emnapi/wasi-threads': 1.1.0
@@ -8667,6 +8715,26 @@ snapshots:
       - supports-color
 
   '@eslint/js@8.57.1': {}
+
+  '@floating-ui/core@1.7.4':
+    dependencies:
+      '@floating-ui/utils': 0.2.10
+
+  '@floating-ui/dom@1.7.5':
+    dependencies:
+      '@floating-ui/core': 1.7.4
+      '@floating-ui/utils': 0.2.10
+
+  '@floating-ui/utils@0.2.10': {}
+
+  '@floating-ui/vue@1.1.10(vue@3.5.26(typescript@5.3.3))':
+    dependencies:
+      '@floating-ui/dom': 1.7.5
+      '@floating-ui/utils': 0.2.10
+      vue-demi: 0.14.10(vue@3.5.26(typescript@5.3.3))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
 
   '@fortawesome/fontawesome-common-types@6.7.2': {}
 
@@ -9719,10 +9787,15 @@ snapshots:
 
   '@vue/tsconfig@0.5.1': {}
 
-  '@vuepic/vue-datepicker@8.8.1(vue@3.5.26(typescript@5.3.3))':
+  '@vuepic/vue-datepicker@12.1.0(vue@3.5.26(typescript@5.3.3))':
     dependencies:
-      date-fns: 3.6.0
+      '@date-fns/tz': 1.4.1
+      '@floating-ui/vue': 1.1.10(vue@3.5.26(typescript@5.3.3))
+      '@vueuse/core': 14.2.1(vue@3.5.26(typescript@5.3.3))
+      date-fns: 4.1.0
       vue: 3.5.26(typescript@5.3.3)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
 
   '@vueuse/core@13.9.0(vue@3.5.26(typescript@5.3.3))':
     dependencies:
@@ -9731,9 +9804,22 @@ snapshots:
       '@vueuse/shared': 13.9.0(vue@3.5.26(typescript@5.3.3))
       vue: 3.5.26(typescript@5.3.3)
 
+  '@vueuse/core@14.2.1(vue@3.5.26(typescript@5.3.3))':
+    dependencies:
+      '@types/web-bluetooth': 0.0.21
+      '@vueuse/metadata': 14.2.1
+      '@vueuse/shared': 14.2.1(vue@3.5.26(typescript@5.3.3))
+      vue: 3.5.26(typescript@5.3.3)
+
   '@vueuse/metadata@13.9.0': {}
 
+  '@vueuse/metadata@14.2.1': {}
+
   '@vueuse/shared@13.9.0(vue@3.5.26(typescript@5.3.3))':
+    dependencies:
+      vue: 3.5.26(typescript@5.3.3)
+
+  '@vueuse/shared@14.2.1(vue@3.5.26(typescript@5.3.3))':
     dependencies:
       vue: 3.5.26(typescript@5.3.3)
 
@@ -10771,6 +10857,8 @@ snapshots:
       whatwg-url: 14.2.0
 
   date-fns@3.6.0: {}
+
+  date-fns@4.1.0: {}
 
   dayjs@1.11.19: {}
 
@@ -13351,6 +13439,10 @@ snapshots:
   vue-component-type-helpers@2.2.12: {}
 
   vue-component-type-helpers@3.2.4: {}
+
+  vue-demi@0.14.10(vue@3.5.26(typescript@5.3.3)):
+    dependencies:
+      vue: 3.5.26(typescript@5.3.3)
 
   vue-docgen-api@4.79.2(vue@3.5.26(typescript@5.3.3)):
     dependencies:
