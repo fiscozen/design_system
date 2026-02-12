@@ -125,10 +125,10 @@ watch(
 </script>
 
 <template>
-  <div ref="messagesContainerRef" class="grow overflow-y-auto">
+  <div ref="messagesContainerRef" class="overflow-y-auto">
     <FzContainer
       :alignItems="messages.length === 0 ? 'center' : undefined"
-      class="min-h-full"
+      class="min-h-full mb-8"
     >
       <FzContainer v-if="showEmptyMessage" alignItems="center" gap="xs">
         <h2 v-color:grey="400">{{ emptyMessage }}</h2>
