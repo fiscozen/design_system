@@ -39,7 +39,7 @@
   "license": "MIT",
   "dependencies": {
     "@fiscozen/avatar": "^1.0.0",
-    "@fiscozen/button": "^0.1.13",
+    "@fiscozen/button": "^1.0.1",
     "@fiscozen/card": "^1.0.1",
     "@fiscozen/container": "^0.4.0",
     "@fiscozen/divider": "^1.0.1",

@@ -191,6 +191,7 @@ watch(
                             iconName="arrow-down-to-bracket"
                             iconVariant="fas"
                             variant="secondary"
+                            environment="frontoffice"
                             :aria-label="`Scarica ${attachment.name}`"
                             @click="downloadAttachment(attachment.url)"
                           />
