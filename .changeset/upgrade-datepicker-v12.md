@@ -1,5 +1,5 @@
 ---
-"@fiscozen/datepicker": minor
+"@fiscozen/datepicker": major
 ---
 
 ## Upgrade FzDatepicker to @vuepic/vue-datepicker v12
