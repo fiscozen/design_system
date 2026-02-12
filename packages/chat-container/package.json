@@ -38,12 +38,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@fiscozen/avatar": "^1.0.0",
-    "@fiscozen/button": "^1.0.1",
-    "@fiscozen/card": "^1.0.1",
-    "@fiscozen/container": "^0.4.0",
-    "@fiscozen/divider": "^1.0.1",
-    "@fiscozen/icons": "^0.1.36",
+    "@fiscozen/avatar": "workspace:*",
+    "@fiscozen/button": "workspace:*",
+    "@fiscozen/card": "workspace:*",
+    "@fiscozen/container": "workspace:*",
+    "@fiscozen/divider": "workspace:*",
+    "@fiscozen/icons": "workspace:*",
     "date-fns": "^3.6.0"
   }
 }
