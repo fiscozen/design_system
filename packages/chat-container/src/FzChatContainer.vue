@@ -125,7 +125,7 @@ watch(
 </script>
 
 <template>
-  <div ref="messagesContainerRef" class="overflow-y-auto">
+  <div ref="messagesContainerRef" class="overflow-y-auto fz-chat-container">
     <FzContainer
       :alignItems="messages.length === 0 ? 'center' : undefined"
       class="min-h-full mb-8"
@@ -221,4 +221,13 @@ watch(
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.fz-chat-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.fz-chat-container::-webkit-scrollbar {
+  display: none;
+}
+</style>

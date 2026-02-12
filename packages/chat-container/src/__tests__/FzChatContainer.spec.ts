@@ -10,7 +10,7 @@ import type { FzChatContainerProps } from "../types";
 // CONSTANTS & HELPERS
 // ============================================
 
-const SCROLL_CONTAINER_SELECTOR = ".overflow-y-auto";
+const SCROLL_CONTAINER_SELECTOR = ".fz-chat-container";
 
 beforeEach(() => {
   Object.defineProperty(window, "matchMedia", {
@@ -94,6 +94,13 @@ describe("FzChatContainer", () => {
     it("should apply base scroll container classes", () => {
       const wrapper = mountComponent({ messages: [] });
       expect(wrapper.find(SCROLL_CONTAINER_SELECTOR).exists()).toBe(true);
+    });
+
+    it("should apply fz-chat-container class for scrollbar hiding", () => {
+      const wrapper = mountComponent({ messages: [] });
+      const container = wrapper.find(SCROLL_CONTAINER_SELECTOR);
+      expect(container.classes()).toContain("fz-chat-container");
+      expect(container.classes()).toContain("overflow-y-auto");
     });
 
     it("should render empty state when messages is empty and emptyMessage is provided", () => {
@@ -276,7 +283,7 @@ describe("FzChatContainer", () => {
         ],
       });
 
-      await wrapper.findComponent(FzIconButton).trigger("click");
+      await wrapper.findComponent(FzIconButton).find("button").trigger("click");
       expect(openSpy).toHaveBeenCalledWith(downloadUrl, "_blank");
       openSpy.mockRestore();
     });
@@ -295,7 +302,7 @@ describe("FzChatContainer", () => {
         ],
       });
 
-      await wrapper.findAllComponents(FzIconButton)[0].trigger("click");
+      await wrapper.findAllComponents(FzIconButton)[0].find("button").trigger("click");
       expect(openSpy).toHaveBeenCalledWith(
         "https://example.com/first.pdf",
         "_blank",
@@ -456,7 +463,7 @@ describe("FzChatContainer", () => {
           }),
         ],
       });
-      const button = wrapper.findComponent(FzIconButton);
+      const button = wrapper.findComponent(FzIconButton).find("button");
       expect(button.attributes("aria-label")).toBe("Scarica report.pdf");
     });
   });

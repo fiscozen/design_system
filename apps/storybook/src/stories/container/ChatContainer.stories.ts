@@ -64,7 +64,7 @@ export const Default: Story = {
     const canvas = within(canvasElement)
 
     await step('Verify component renders', async () => {
-      const container = canvasElement.querySelector('.overflow-y-auto')
+      const container = canvasElement.querySelector('.fz-chat-container')
       await expect(container).toBeInTheDocument()
       await expect(container).toBeVisible()
     })
@@ -75,7 +75,7 @@ export const Default: Story = {
     })
 
     await step('Verify scroll container has correct structure', async () => {
-      const container = canvasElement.querySelector('.overflow-y-auto')
+      const container = canvasElement.querySelector('.fz-chat-container')
       await expect(container).toBeInTheDocument()
     })
 
@@ -168,7 +168,7 @@ export const LastMessageFromReceiver: Story = {
     })
 
     await step('Accessibility: scroll container is visible', async () => {
-      const container = canvasElement.querySelector('.overflow-y-auto')
+      const container = canvasElement.querySelector('.fz-chat-container')
       await expect(container).toBeInTheDocument()
       await expect(container).toBeVisible()
     })
@@ -308,7 +308,7 @@ export const LoadMore: Story = {
     template: `<FzChatContainer :messages="messages" @load-more="onLoadMore" />`
   }),
   play: async ({ canvasElement, step }) => {
-    const scrollContainer = canvasElement.querySelector('.overflow-y-auto') as HTMLElement
+    const scrollContainer = canvasElement.querySelector('.fz-chat-container') as HTMLElement
 
     await step('Verify initial messages are rendered', async () => {
       const canvas = within(canvasElement)
