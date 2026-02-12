@@ -11,7 +11,7 @@
   "main": "src/index.ts",
   "type": "module",
   "keywords": [],
-  "author": "Giulio Davide",
+  "author": "Giulio Davide Carparelli",
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
