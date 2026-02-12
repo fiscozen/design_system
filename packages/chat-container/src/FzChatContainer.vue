@@ -7,6 +7,7 @@ import { FzIcon } from "@fiscozen/icons";
 import { FzIconButton } from "@fiscozen/button";
 import { FzCard, FzCardColor } from "@fiscozen/card";
 import { parseISO, isValid, format } from "date-fns";
+import { it } from "date-fns/locale";
 import { FzDivider } from "@fiscozen/divider";
 
 const props = withDefaults(defineProps<FzChatContainerProps>(), {});
@@ -32,15 +33,20 @@ const showEmptyMessageDescription = computed(
 
 const messagesContainerRef = ref<HTMLElement | null>(null);
 
-function datetimeIsoToIt(isoDatetime: string): string {
-  if (isoDatetime) {
-    const date = parseISO(isoDatetime);
-    if (!isValid(date)) {
-      return "";
-    }
-    return format(date, "dd/MM/yyyy H:mm");
+function datetimeIsoToDateString(isoDatetime: string): string {
+  if (!isoDatetime) {
+    return "";
   }
-  return "";
+
+  const date = parseISO(isoDatetime);
+  if (!isValid(date)) {
+    return "";
+  }
+  const formatted = format(date, "dd MMM, HH:mm", { locale: it });
+  return formatted.replace(
+    /(\d{2}) (\w)/,
+    (_, day, firstChar) => `${day} ${firstChar.toUpperCase()}`,
+  );
 }
 
 function scrollMessagesToBottom(): void {
@@ -125,7 +131,7 @@ watch(
                 </p>
                 <FzCard :color="getCardColor(message)">
                   <FzContainer alignItems="end" gap="none">
-                    <p>{{ message.message }}</p>
+                    <p v-small>{{ message.message }}</p>
                     <FzContainer
                       v-if="message.attachments?.length"
                       gap="none"
@@ -171,14 +177,14 @@ watch(
               </FzContainer>
             </FzContainer>
             <p v-color:grey="300" v-small>
-              {{ datetimeIsoToIt(message.timestamp) }}
+              {{ datetimeIsoToDateString(message.timestamp) }}
             </p>
           </FzContainer>
         </FzContainer>
       </template>
       <FzContainer v-if="showWaitingForResponseMessage" alignItems="center">
-        <FzContainer gap="xs" horizontal>
-          <FzIcon name="clock" size="sm" />
+        <FzContainer gap="xs" horizontal alignItems="center">
+          <FzIcon name="clock" size="sm" variant="far" class="text-grey-300" />
           <p v-bold v-color:grey="300" v-small>
             {{ waitingForResponseMessage }}
           </p>
