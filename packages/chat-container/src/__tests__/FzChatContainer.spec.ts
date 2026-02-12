@@ -3,6 +3,7 @@ import { mount } from "@vue/test-utils";
 import { nextTick } from "vue";
 import { FzChatContainer } from "..";
 import { FzIconButton } from "@fiscozen/button";
+import { FzIcon } from "@fiscozen/icons";
 
 beforeEach(() => {
   // Mock matchMedia for useMediaQuery composable (used by FzCard)
@@ -85,6 +86,7 @@ describe("FzChatContainer", () => {
       const messages = [
         createMockMessage({
           message: "First message",
+          variant: "invisible",
           user: { firstName: "Jane", lastName: "Smith", avatar: "" },
         }),
       ];
@@ -135,6 +137,38 @@ describe("FzChatContainer", () => {
         },
       });
       expect(wrapper.text()).not.toContain("Waiting for response...");
+    });
+
+    it("should vertically center-align the icon with the text in the waiting message", () => {
+      const wrapper = mount(FzChatContainer, {
+        props: {
+          messages: [createMockMessage({ variant: "primary" })],
+          waitingForResponseMessage: "Waiting for response...",
+        },
+      });
+      const waitingIcon = wrapper
+        .findAllComponents(FzIcon)
+        .find((icon) => icon.props("name") === "clock");
+      expect(waitingIcon).toBeDefined();
+      // The direct parent FzContainer should have alignItems="center" for vertical alignment
+      const parentContainer = waitingIcon!.element.closest(
+        ".fz-container.align-items-center",
+      );
+      expect(parentContainer).not.toBeNull();
+    });
+
+    it("should apply grey-300 color to the clock icon in the waiting message", () => {
+      const wrapper = mount(FzChatContainer, {
+        props: {
+          messages: [createMockMessage({ variant: "primary" })],
+          waitingForResponseMessage: "Waiting for response...",
+        },
+      });
+      const waitingIcon = wrapper
+        .findAllComponents(FzIcon)
+        .find((icon) => icon.props("name") === "clock");
+      expect(waitingIcon).toBeDefined();
+      expect(waitingIcon!.classes()).toContain("text-grey-300");
     });
 
     it("should render attachments with download button", () => {
@@ -232,7 +266,7 @@ describe("FzChatContainer", () => {
   // TIMESTAMP FORMATTING
   // ============================================
   describe("Timestamp formatting", () => {
-    it("should format ISO timestamp to Italian format (dd/MM/yyyy H:mm)", () => {
+    it("should format ISO timestamp to Italian format (dd Mmm, HH:mm)", () => {
       const messages = [
         createMockMessage({ timestamp: "2024-01-15T10:30:00.000Z" }),
       ];
@@ -240,7 +274,8 @@ describe("FzChatContainer", () => {
         props: { messages },
       });
       // With TZ=Europe/Rome from vitest setup, 10:30 UTC = 11:30 CET
-      expect(wrapper.text()).toMatch(/\d{2}\/\d{2}\/\d{4} \d{1,2}:\d{2}/);
+      // Format: "15 Gen, 11:30"
+      expect(wrapper.text()).toMatch(/\d{2} [A-Z][a-z]{2}, \d{2}:\d{2}/);
     });
 
     it("should handle invalid timestamp gracefully", () => {
@@ -312,7 +347,9 @@ describe("FzChatContainer", () => {
     it("should give download buttons an aria-label with attachment name", () => {
       const messages = [
         createMockMessage({
-          attachments: [{ name: "report.pdf", url: "https://example.com/r.pdf" }],
+          attachments: [
+            { name: "report.pdf", url: "https://example.com/r.pdf" },
+          ],
         }),
       ];
       const wrapper = mount(FzChatContainer, {
@@ -370,7 +407,7 @@ describe("FzChatContainer", () => {
     it("should match snapshot - with messages", () => {
       const wrapper = mount(FzChatContainer, {
         props: {
-          messages: [createMockMessage({ message: "Test message" })],
+          messages: [createMockMessage({ message: "Test message", variant: "invisible" })],
         },
       });
       expect(wrapper.html()).toMatchSnapshot();
