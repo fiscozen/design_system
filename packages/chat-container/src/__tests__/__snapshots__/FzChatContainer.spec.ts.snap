@@ -2,7 +2,7 @@
 
 exports[`FzChatContainer > Snapshots > should match snapshot - empty state 1`] = `
 "<div data-v-5050224a="" class="overflow-y-auto fz-chat-container">
-  <div data-v-6b1cfa4d="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-base align-items-center min-h-full mb-8">
+  <div data-v-6b1cfa4d="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-base align-items-center min-h-full pb-16">
     <div data-v-6b1cfa4d="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-xs align-items-center">
       <h2 data-v-5050224a="">No messages</h2>
       <p data-v-5050224a="">Start chatting</p>
@@ -14,7 +14,7 @@ exports[`FzChatContainer > Snapshots > should match snapshot - empty state 1`] =
 
 exports[`FzChatContainer > Snapshots > should match snapshot - waiting for response 1`] = `
 "<div data-v-5050224a="" class="overflow-y-auto fz-chat-container">
-  <div data-v-6b1cfa4d="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch min-h-full mb-8">
+  <div data-v-6b1cfa4d="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch min-h-full pb-16">
     <!--v-if-->
     <div data-v-6b1cfa4d="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-base align-items-end">
       <div data-v-6b1cfa4d="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-xs align-items-end">
@@ -34,7 +34,7 @@ exports[`FzChatContainer > Snapshots > should match snapshot - waiting for respo
             </section>
           </div>
         </div>
-        <p data-v-5050224a="">15 Gen, 11:30</p>
+        <p data-v-5050224a="">15 gen, 11:30</p>
       </div>
     </div>
     <div data-v-6b1cfa4d="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-base align-items-center">
@@ -51,7 +51,7 @@ exports[`FzChatContainer > Snapshots > should match snapshot - waiting for respo
 
 exports[`FzChatContainer > Snapshots > should match snapshot - with messages 1`] = `
 "<div data-v-5050224a="" class="overflow-y-auto fz-chat-container">
-  <div data-v-6b1cfa4d="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch min-h-full mb-8">
+  <div data-v-6b1cfa4d="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch min-h-full pb-16">
     <!--v-if-->
     <div data-v-6b1cfa4d="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-base align-items-start">
       <div data-v-6b1cfa4d="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-xs align-items-end">
@@ -74,7 +74,7 @@ exports[`FzChatContainer > Snapshots > should match snapshot - with messages 1`]
             </section>
           </div>
         </div>
-        <p data-v-5050224a="">15 Gen, 11:30</p>
+        <p data-v-5050224a="">15 gen, 11:30</p>
       </div>
     </div>
     <!--v-if-->

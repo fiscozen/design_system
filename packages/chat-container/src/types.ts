@@ -11,7 +11,7 @@ type Message = {
   user: {
     firstName: string;
     lastName: string;
-    avatar: string;
+    avatar?: string;
   };
 };
 

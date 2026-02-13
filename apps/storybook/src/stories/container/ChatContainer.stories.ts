@@ -3,6 +3,7 @@ import { expect, within, waitFor } from '@storybook/test'
 import { FzChatContainer } from '@fiscozen/chat-container'
 import { ref } from 'vue'
 
+const avatar = 'consultant.jpg'
 const meta = {
   title: 'Layout/FzChatContainer',
   component: FzChatContainer,
@@ -52,7 +53,7 @@ export const Default: Story = {
         message: 'Hello, world!',
         variant: 'invisible',
         timestamp: new Date().toISOString(),
-        user: { firstName: 'John', lastName: 'Doe', avatar: '' },
+        user: { firstName: 'John', lastName: 'Doe', avatar },
         attachments: []
       }
     ],
@@ -127,7 +128,9 @@ export const Empty: Story = {
 
     await step('Accessibility: no duplicate IDs', async () => {
       const ids = canvasElement.querySelectorAll('[id]')
-      const idValues = Array.from(ids).map((el) => el.id).filter(Boolean)
+      const idValues = Array.from(ids)
+        .map((el) => el.id)
+        .filter(Boolean)
       const duplicates = idValues.filter((id, index) => idValues.indexOf(id) !== index)
       await expect(duplicates).toHaveLength(0)
     })
@@ -145,7 +148,11 @@ export const LastMessageFromReceiver: Story = {
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       variant: index % 2 === 0 ? 'primary' : 'invisible',
       timestamp: new Date(Date.now() + index * 100000).toISOString(),
-      user: { firstName: 'John', lastName: 'Doe', avatar: '' },
+      user: {
+        firstName: 'John',
+        lastName: 'Doe',
+        avatar
+      },
       attachments: []
     })),
     emptyMessage: 'Nessun messaggio',
@@ -162,7 +169,9 @@ export const LastMessageFromReceiver: Story = {
 
     await step('Accessibility: no duplicate IDs', async () => {
       const ids = canvasElement.querySelectorAll('[id]')
-      const idValues = Array.from(ids).map((el) => el.id).filter(Boolean)
+      const idValues = Array.from(ids)
+        .map((el) => el.id)
+        .filter(Boolean)
       const duplicates = idValues.filter((id, index) => idValues.indexOf(id) !== index)
       await expect(duplicates).toHaveLength(0)
     })
@@ -186,7 +195,11 @@ export const LastMessageFromSender: Story = {
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       variant: index % 2 !== 0 ? 'primary' : 'invisible',
       timestamp: new Date(Date.now() + index * 100000).toISOString(),
-      user: { firstName: 'John', lastName: 'Doe', avatar: '' },
+      user: {
+        firstName: 'John',
+        lastName: 'Doe',
+        avatar
+      },
       attachments: []
     })),
     emptyMessage: 'Nessun messaggio',
@@ -203,7 +216,9 @@ export const LastMessageFromSender: Story = {
 
     await step('Accessibility: no duplicate IDs', async () => {
       const ids = canvasElement.querySelectorAll('[id]')
-      const idValues = Array.from(ids).map((el) => el.id).filter(Boolean)
+      const idValues = Array.from(ids)
+        .map((el) => el.id)
+        .filter(Boolean)
       const duplicates = idValues.filter((id, index) => idValues.indexOf(id) !== index)
       await expect(duplicates).toHaveLength(0)
     })
@@ -221,7 +236,11 @@ export const WithAttachments: Story = {
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         variant: 'invisible',
         timestamp: new Date().toISOString(),
-        user: { firstName: 'John', lastName: 'Doe', avatar: '' },
+        user: {
+          firstName: 'John',
+          lastName: 'Doe',
+          avatar
+        },
         attachments: [
           {
             name: 'attachment_1.pdf',
@@ -262,7 +281,9 @@ export const WithAttachments: Story = {
 
     await step('Accessibility: no duplicate IDs', async () => {
       const ids = canvasElement.querySelectorAll('[id]')
-      const idValues = Array.from(ids).map((el) => el.id).filter(Boolean)
+      const idValues = Array.from(ids)
+        .map((el) => el.id)
+        .filter(Boolean)
       const duplicates = idValues.filter((id, index) => idValues.indexOf(id) !== index)
       await expect(duplicates).toHaveLength(0)
     })
@@ -279,7 +300,7 @@ export const LoadMore: Story = {
       message: `Messaggio ${index + 1} - Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
       variant: index % 2 === 0 ? 'primary' : 'invisible',
       timestamp: new Date(Date.now() + index * 100000).toISOString(),
-      user: { firstName: 'John', lastName: 'Doe', avatar: '' },
+      user: { firstName: 'John', lastName: 'Doe', avatar },
       attachments: []
     })),
     emptyMessage: 'Nessun messaggio',
@@ -297,7 +318,11 @@ export const LoadMore: Story = {
           message: `Messaggio più vecchio (batch ${batch}, #${i + 1})`,
           variant: (i % 2 === 0 ? 'invisible' : 'primary') as 'invisible' | 'primary',
           timestamp: new Date(Date.now() - (batch * 5 + i) * 100000).toISOString(),
-          user: { firstName: 'Jane', lastName: 'Smith', avatar: '' },
+          user: {
+            firstName: 'Jane',
+            lastName: 'Smith',
+            avatar
+          },
           attachments: [] as { name: string; url: string }[]
         }))
         messages.value = [...olderMessages, ...messages.value]
