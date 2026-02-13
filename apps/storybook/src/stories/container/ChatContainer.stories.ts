@@ -1,17 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, within, waitFor } from '@storybook/test'
-import { FzChatContainer, FzChatContainerProps } from '@fiscozen/chat-container'
+import { FzChatContainer, Message } from '@fiscozen/chat-container'
 import { onMounted, ref } from 'vue'
 
 const avatar = 'consultant.jpg'
-const fetchMessages = (messages: FzChatContainerProps['messages']) =>
-  new Promise<
-    typeof FzChatContainer extends new (...args: any) => { $props: infer P }
-      ? P extends { messages?: infer M }
-        ? M
-        : never
-      : never
-  >((resolve) => {
+const fetchMessages = (messages: Message[]) =>
+  new Promise<Message[]>((resolve) => {
     setTimeout(() => {
       resolve(messages)
     }, 1000)
