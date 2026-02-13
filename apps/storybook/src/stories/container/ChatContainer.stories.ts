@@ -4,12 +4,28 @@ import { FzChatContainer, Message } from '@fiscozen/chat-container'
 import { onMounted, ref } from 'vue'
 
 const avatar = 'consultant.jpg'
-const fetchMessages = (messages: Message[]) =>
-  new Promise<Message[]>((resolve) => {
+const fetchMessages = (messages: Message[]): Promise<Message[]> =>
+  new Promise((resolve) => {
     setTimeout(() => {
       resolve(messages)
-    }, 1000)
+    }, 100)
   })
+
+const messagesFactory = (
+  length: number = 1,
+  page: number = 1,
+  numberOfAttachments: number = 0
+): Message[] =>
+  Array.from({ length }, (_, index) => ({
+    message: `Prova messaggio ${index + 1} della pagina ${page}`,
+    variant: index % 2 !== 0 ? 'primary' : 'invisible',
+    timestamp: new Date(1997, 2, 24, 12, 30 - page * index).toISOString(),
+    user: { firstName: 'John', lastName: 'Doe', avatar },
+    attachments: Array.from({ length: numberOfAttachments }, (_, index) => ({
+      name: `attachment_${index + 1}.pdf`,
+      url: ''
+    }))
+  }))
 
 const meta = {
   title: 'Layout/FzChatContainer',
@@ -21,7 +37,8 @@ const meta = {
       description:
         'Insieme di messaggi da visualizzare. ' +
         'Ogni messaggio è un oggetto con le seguenti proprietà: message, variant, timestamp, user, attachments. ' +
-        'La variante serve ad indicare se il messaggio è stato inviato (`primary`) o ricevuto (`invisible`).'
+        'La variante serve ad indicare se il messaggio è stato inviato (`primary`) o ricevuto (`invisible`). ' +
+        'I messaggi devono essere ordinati per timestamp in ordine decrescente.'
     },
     emptyMessage: {
       control: { type: 'text' },
@@ -41,9 +58,20 @@ const meta = {
   args: {},
   decorators: [
     () => ({
-      template: `<div style="width: 100%; height: 500px; margin: 0 auto; display: flex; flex-direction: column; overflow: hidden;"><story /></div>`
+      template: `<div style="width: 70%; height: 300px; margin: 0 auto; display: flex; flex-direction: column; overflow: hidden; border: 10px solid #ccc;"><story /></div>`
     })
-  ]
+  ],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Un componente per visualizzare una chat con messaggi e allegati. ' +
+          'Il componente supporta infinite scrolling per caricare messaggi più vecchi, ' +
+          'a patto che il container superiore abbia una dimensione definita per permettere ' +
+          'overflow verticale e contestuale scroll.'
+      }
+    }
+  }
 } satisfies Meta<typeof FzChatContainer>
 
 export default meta
@@ -55,15 +83,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    messages: [
-      {
-        message: 'Hello, world!',
-        variant: 'invisible',
-        timestamp: new Date().toISOString(),
-        user: { firstName: 'John', lastName: 'Doe', avatar },
-        attachments: []
-      }
-    ],
+    messages: messagesFactory(),
     emptyMessage: 'Nessun messaggio',
     emptyMessageDescription: 'Inizia una conversazione',
     waitingForResponseMessage: 'Attendi...'
@@ -72,18 +92,18 @@ export const Default: Story = {
     const canvas = within(canvasElement)
 
     await step('Verify component renders', async () => {
-      const container = canvasElement.querySelector('.fz-chat-container')
+      const container = canvasElement.querySelector('.fz-container.overflow-y-auto')
       await expect(container).toBeInTheDocument()
       await expect(container).toBeVisible()
     })
 
     await step('Verify messages are displayed', async () => {
-      const messages = canvas.getAllByText(/Hello, world!/)
+      const messages = canvas.getAllByText(/Prova messaggio/)
       await expect(messages.length).toBeGreaterThanOrEqual(1)
     })
 
     await step('Verify scroll container has correct structure', async () => {
-      const container = canvasElement.querySelector('.fz-chat-container')
+      const container = canvasElement.querySelector('.fz-container.overflow-y-auto')
       await expect(container).toBeInTheDocument()
     })
 
@@ -97,7 +117,7 @@ export const Default: Story = {
     })
 
     await step('Accessibility: messages are in document and visible', async () => {
-      const msg = canvas.getByText(/Hello, world!/)
+      const msg = canvas.getByText(/Prova messaggio/)
       await expect(msg).toBeInTheDocument()
       await expect(msg).toBeVisible()
     })
@@ -110,7 +130,7 @@ export const Default: Story = {
 
 export const Empty: Story = {
   args: {
-    messages: [],
+    messages: messagesFactory(0),
     emptyMessage: 'Nessun messaggio',
     emptyMessageDescription: 'Inizia una conversazione',
     waitingForResponseMessage: 'Attendi...'
@@ -150,7 +170,7 @@ export const Empty: Story = {
 
 export const LastMessageFromReceiver: Story = {
   args: {
-    messages: [],
+    messages: messagesFactory(2),
     emptyMessage: 'Nessun messaggio',
     emptyMessageDescription: 'Inizia una conversazione',
     waitingForResponseMessage: 'Attendi...'
@@ -161,20 +181,7 @@ export const LastMessageFromReceiver: Story = {
       const messages = ref([...args.messages!])
 
       onMounted(async () => {
-        const fetched = await fetchMessages(
-          Array.from({ length: 6 }, (_, index) => ({
-            message: 'Hello, world!',
-            variant: index % 2 === 0 ? 'primary' : 'invisible',
-            timestamp: new Date(Date.now() + index * 100000).toISOString(),
-            user: {
-              firstName: 'John',
-              lastName: 'Doe',
-              avatar
-            },
-            attachments: []
-          }))
-        )
-        messages.value = fetched!
+        messages.value = await fetchMessages(messagesFactory())
       })
 
       return { args, messages }
@@ -186,7 +193,7 @@ export const LastMessageFromReceiver: Story = {
 
     await step('Verify messages are displayed', async () => {
       await waitFor(() => {
-        const messages = canvas.getAllByText(/Hello, world!/)
+        const messages = canvas.getAllByText(/Prova messaggio/)
         expect(messages.length).toBeGreaterThanOrEqual(1)
       })
     })
@@ -201,7 +208,7 @@ export const LastMessageFromReceiver: Story = {
     })
 
     await step('Accessibility: scroll container is visible', async () => {
-      const container = canvasElement.querySelector('.fz-chat-container')
+      const container = canvasElement.querySelector('.fz-container.overflow-y-auto')
       await expect(container).toBeInTheDocument()
       await expect(container).toBeVisible()
     })
@@ -214,7 +221,7 @@ export const LastMessageFromReceiver: Story = {
 
 export const LastMessageFromSender: Story = {
   args: {
-    messages: [],
+    messages: messagesFactory(),
     emptyMessage: 'Nessun messaggio',
     emptyMessageDescription: 'Inizia una conversazione',
     waitingForResponseMessage: 'Attendi...'
@@ -225,20 +232,8 @@ export const LastMessageFromSender: Story = {
       const messages = ref([...args.messages!])
 
       onMounted(async () => {
-        const fetched = await fetchMessages(
-          Array.from({ length: 6 }, (_, index) => ({
-            message: 'Hello, world!',
-            variant: index % 2 !== 0 ? 'primary' : 'invisible',
-            timestamp: new Date(Date.now() + index * 100000).toISOString(),
-            user: {
-              firstName: 'John',
-              lastName: 'Doe',
-              avatar
-            },
-            attachments: []
-          }))
-        )
-        messages.value = fetched!
+        messages.value = await fetchMessages(messagesFactory(3, 1))
+        messages.value[0].variant = 'primary'
       })
 
       return { args, messages }
@@ -250,7 +245,7 @@ export const LastMessageFromSender: Story = {
 
     await step('Verify messages are displayed', async () => {
       await waitFor(() => {
-        const messages = canvas.getAllByText(/Hello, world!/)
+        const messages = canvas.getAllByText(/Prova messaggio/)
         expect(messages.length).toBeGreaterThanOrEqual(1)
       })
     })
@@ -271,7 +266,7 @@ export const LastMessageFromSender: Story = {
 
 export const WithAttachments: Story = {
   args: {
-    messages: [],
+    messages: messagesFactory(),
     emptyMessage: 'Nessun messaggio',
     emptyMessageDescription: 'Inizia una conversazione',
     waitingForResponseMessage: 'Attendi...'
@@ -282,33 +277,7 @@ export const WithAttachments: Story = {
       const messages = ref([...args.messages!])
 
       onMounted(async () => {
-        const fetched = await fetchMessages([
-          {
-            message: 'Hello, world!',
-            variant: 'invisible',
-            timestamp: new Date().toISOString(),
-            user: {
-              firstName: 'John',
-              lastName: 'Doe',
-              avatar
-            },
-            attachments: [
-              {
-                name: 'attachment_1.pdf',
-                url: ''
-              },
-              {
-                name: 'attachment_2.pdf',
-                url: ''
-              },
-              {
-                name: 'attachment_3.pdf',
-                url: ''
-              }
-            ]
-          }
-        ])
-        messages.value = fetched!
+        messages.value = await fetchMessages(messagesFactory(1, 1, 3))
       })
 
       return { args, messages }
@@ -354,7 +323,7 @@ export const WithAttachments: Story = {
 
 export const LoadMore: Story = {
   args: {
-    messages: [],
+    messages: messagesFactory(),
     emptyMessage: 'Nessun messaggio',
     emptyMessageDescription: 'Inizia una conversazione'
   },
@@ -365,30 +334,16 @@ export const LoadMore: Story = {
       const page = ref(1)
 
       onMounted(async () => {
-        const fetched = await fetchMessages(
-          Array.from({ length: 6 }, (_, index) => ({
-            message: `Hello, world! (page ${page.value})`,
-            variant: index % 2 === 0 ? 'primary' : 'invisible',
-            timestamp: new Date(Date.now() + index * 100000).toISOString(),
-            user: { firstName: 'John', lastName: 'Doe', avatar },
-            attachments: []
-          }))
-        )
-        messages.value = fetched!
+        messages.value = await fetchMessages(messagesFactory(6, page.value))
       })
 
       const onLoadMore = async () => {
+        if (page.value === 3) return
         page.value++
-        const fetched = await fetchMessages(
-          Array.from({ length: 6 }, (_, index) => ({
-            message: `Hello, world! (page ${page.value})`,
-            variant: index % 2 === 0 ? 'primary' : 'invisible',
-            timestamp: new Date(Date.now() + index * 100000).toISOString(),
-            user: { firstName: 'John', lastName: 'Doe', avatar },
-            attachments: []
-          }))
-        )
-        messages.value = [...fetched!, ...messages.value]
+        messages.value = [
+          ...messages.value,
+          ...(await fetchMessages(messagesFactory(6, page.value)))
+        ]
       }
 
       return { args, messages, onLoadMore }
@@ -396,23 +351,25 @@ export const LoadMore: Story = {
     template: `<FzChatContainer v-bind="args" :messages="messages" @load-more="onLoadMore" />`
   }),
   play: async ({ canvasElement, step }) => {
-    const scrollContainer = canvasElement.querySelector('.fz-chat-container') as HTMLElement
-
     await step('Verify initial messages are rendered', async () => {
       await waitFor(() => {
         const canvas = within(canvasElement)
-        const messages = canvas.getAllByText(/Hello, world! \(page 1\)/)
+        const messages = canvas.getAllByText(/della pagina 1/)
         expect(messages.length).toBe(6)
       })
     })
 
+    const scrollContainer = canvasElement.querySelector(
+      '.fz-container.overflow-y-auto'
+    ) as HTMLElement
+
     await step('Scroll to top triggers load-more and loads older messages', async () => {
-      scrollContainer.scrollTop = 0
+      scrollContainer.scrollTop = -scrollContainer.scrollHeight
       scrollContainer.dispatchEvent(new Event('scroll'))
 
       await waitFor(() => {
         const canvas = within(canvasElement)
-        const messages = canvas.getAllByText(/Hello, world! \(page 2\)/)
+        const messages = canvas.getAllByText(/della pagina 2/)
         expect(messages.length).toBeGreaterThanOrEqual(1)
       })
     })
@@ -420,12 +377,12 @@ export const LoadMore: Story = {
     await step(
       'Scroll to top again loads another batch (guard was reset by new messages)',
       async () => {
-        scrollContainer.scrollTop = 0
+        scrollContainer.scrollTop = -scrollContainer.scrollHeight
         scrollContainer.dispatchEvent(new Event('scroll'))
 
         await waitFor(() => {
           const canvas = within(canvasElement)
-          const messages = canvas.getAllByText(/Hello, world! \(page 3\)/)
+          const messages = canvas.getAllByText(/della pagina 3/)
           expect(messages.length).toBeGreaterThanOrEqual(1)
         })
       }
