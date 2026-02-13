@@ -315,18 +315,47 @@ describe("FzChatContainer", () => {
   // TIMESTAMP FORMATTING
   // ============================================
   describe("Timestamp formatting", () => {
-    it("should format ISO timestamp to Italian format (dd Mmm, HH:mm)", () => {
+    it("should format ISO timestamp to Italian format (dd mmm, HH:mm)", () => {
       const wrapper = mountComponent({
         messages: [
           createMockMessage({ timestamp: "2024-01-15T10:30:00.000Z" }),
         ],
       });
-      expect(wrapper.text()).toMatch(/\d{2} [A-Z][a-z]{2}, \d{2}:\d{2}/);
+      expect(wrapper.text()).toMatch(/\d{2} [a-z]{3}, \d{2}:\d{2}/);
     });
 
     it("should handle invalid timestamp gracefully", () => {
       const wrapper = mountComponent({
         messages: [createMockMessage({ timestamp: "invalid-date" })],
+      });
+      expect(wrapper.exists()).toBe(true);
+    });
+
+    it("should handle null timestamp gracefully", () => {
+      const wrapper = mountComponent({
+        messages: [
+          createMockMessage({
+            timestamp: null as unknown as string,
+          }),
+        ],
+      });
+      expect(wrapper.exists()).toBe(true);
+    });
+
+    it("should handle undefined timestamp gracefully", () => {
+      const wrapper = mountComponent({
+        messages: [
+          createMockMessage({
+            timestamp: undefined as unknown as string,
+          }),
+        ],
+      });
+      expect(wrapper.exists()).toBe(true);
+    });
+
+    it("should handle empty string timestamp gracefully", () => {
+      const wrapper = mountComponent({
+        messages: [createMockMessage({ timestamp: "" })],
       });
       expect(wrapper.exists()).toBe(true);
     });

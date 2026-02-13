@@ -33,20 +33,15 @@ const showEmptyMessageDescription = computed(
 
 const messagesContainerRef = ref<HTMLElement | null>(null);
 
-function datetimeIsoToDateString(isoDatetime: string): string {
-  if (!isoDatetime) {
-    return "";
-  }
+function datetimeIsoToDateString(
+  isoDatetime: string | null | undefined,
+): string {
+  if (!isoDatetime) return "";
 
   const date = parseISO(isoDatetime);
-  if (!isValid(date)) {
-    return "";
-  }
-  const formatted = format(date, "dd MMM, HH:mm", { locale: it });
-  return formatted.replace(
-    /(\d{2}) (\w)/,
-    (_, day, firstChar) => `${day} ${firstChar.toUpperCase()}`,
-  );
+  if (!isValid(date)) return "";
+
+  return format(date, "dd MMM, HH:mm", { locale: it });
 }
 
 function scrollMessagesToBottom(): void {
@@ -106,7 +101,6 @@ onUnmounted(() => {
   messagesContainerRef.value?.removeEventListener("scroll", onContainerScroll);
 });
 
-// Riabilita load-more quando cambiano i messaggi
 watch(
   () => props.messages.length,
   () => {
@@ -128,7 +122,7 @@ watch(
   <div ref="messagesContainerRef" class="overflow-y-auto fz-chat-container">
     <FzContainer
       :alignItems="messages.length === 0 ? 'center' : undefined"
-      class="min-h-full mb-8"
+      class="min-h-full pb-16"
     >
       <FzContainer v-if="showEmptyMessage" alignItems="center" gap="xs">
         <h2 v-color:grey="400">{{ emptyMessage }}</h2>
@@ -146,6 +140,7 @@ watch(
                 :firstName="message.user.firstName"
                 :lastName="message.user.lastName"
                 size="lg"
+                :src="message.user.avatar"
               />
               <FzContainer gap="xs">
                 <p
