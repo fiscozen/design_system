@@ -130,7 +130,7 @@ watch(
           {{ emptyMessageDescription }}
         </p>
       </FzContainer>
-      <template v-for="message in messages" :key="message.timestamp">
+      <template v-for="(message, index) in messages" :key="index">
         <FzContainer :alignItems="getAlignItems(message)">
           <FzContainer alignItems="end" gap="xs">
             <FzContainer alignItems="end" gap="xs" horizontal>
@@ -159,9 +159,9 @@ watch(
                       class="mt-16 w-full"
                     >
                       <FzContainer
-                        v-for="(attachment, i) in message.attachments"
+                        v-for="(attachment, index) in message.attachments"
                         gap="none"
-                        :key="attachment.url"
+                        :key="index"
                       >
                         <FzContainer
                           horizontal
@@ -191,7 +191,9 @@ watch(
                             @click="downloadAttachment(attachment.url)"
                           />
                         </FzContainer>
-                        <FzDivider v-if="i < message.attachments.length - 1" />
+                        <FzDivider
+                          v-if="index < message.attachments.length - 1"
+                        />
                       </FzContainer>
                     </FzContainer>
                   </FzContainer>
