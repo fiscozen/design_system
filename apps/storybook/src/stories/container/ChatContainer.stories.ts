@@ -418,7 +418,7 @@ export const LoadMore: Story = {
 
       await waitFor(() => {
         const canvas = within(canvasElement)
-        const messages = canvas.getAllByText(/Hello, world! \(page 1\)/)
+        const messages = canvas.getAllByText(/Hello, world! \(page 2\)/)
         expect(messages.length).toBeGreaterThanOrEqual(1)
       })
     })
@@ -431,7 +431,7 @@ export const LoadMore: Story = {
 
         await waitFor(() => {
           const canvas = within(canvasElement)
-          const messages = canvas.getAllByText(/Hello, world! \(page 2\)/)
+          const messages = canvas.getAllByText(/Hello, world! \(page 3\)/)
           expect(messages.length).toBeGreaterThanOrEqual(1)
         })
       }
