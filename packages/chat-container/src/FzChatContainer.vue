@@ -115,6 +115,7 @@ watch(
   () => {
     scrollMessagesToBottom();
   },
+  { deep: true },
 );
 </script>
 
