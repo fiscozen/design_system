@@ -81,13 +81,18 @@ function getCardColor(
   return cardColor[message.variant];
 }
 
-const SCROLL_TOP_THRESHOLD = 10;
-const canLoadMore = ref(true);
+const SCROLL_TOP_THRESHOLD = 50;
+const messagesLengthAtLastLoadMore = ref(-1);
+const canLoadMore = computed(
+  () => props.messages.length !== messagesLengthAtLastLoadMore.value,
+);
+const isLoadingMore = ref(false);
 
 function onContainerScroll(): void {
   const el = messagesContainerRef.value;
   if (el && el.scrollTop <= SCROLL_TOP_THRESHOLD && canLoadMore.value) {
-    canLoadMore.value = false;
+    messagesLengthAtLastLoadMore.value = props.messages.length;
+    isLoadingMore.value = true;
     emit("load-more");
   }
 }
@@ -102,20 +107,32 @@ onUnmounted(() => {
 });
 
 watch(
-  () => props.messages.length,
-  () => {
-    canLoadMore.value = true;
-  },
-);
-
-// Scroll solo quando viene aggiunto un messaggio in fondo (nuovo messaggio),
-// non quando si caricano messaggi più vecchi in cima (prepend)
-watch(
   () => lastMessage.value,
   () => {
     scrollMessagesToBottom();
   },
   { deep: true },
+);
+
+watch(
+  () => props.messages.length,
+  () => {
+    if (!isLoadingMore.value) return;
+
+    const el = messagesContainerRef.value;
+    if (!el) return;
+
+    const prevScrollHeight = el.scrollHeight;
+    const prevScrollTop = el.scrollTop;
+
+    nextTick(() => {
+      nextTick(() => {
+        el.scrollTop = el.scrollHeight - prevScrollHeight + prevScrollTop;
+        isLoadingMore.value = false;
+      });
+    });
+  },
+  { flush: "pre" },
 );
 </script>
 
