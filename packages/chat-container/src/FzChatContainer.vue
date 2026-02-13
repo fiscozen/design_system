@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { FzChatContainerProps, Message } from "./types";
 import { FzContainer } from "@fiscozen/container";
 import { FzAvatar } from "@fiscozen/avatar";
@@ -16,13 +16,11 @@ const emit = defineEmits<{
   "load-more": [];
 }>();
 
-const lastMessage = computed(() => props.messages[props.messages.length - 1]);
-
 const showWaitingForResponseMessage = computed(
   () =>
     props.waitingForResponseMessage &&
     props.messages.length > 0 &&
-    lastMessage.value.variant === "primary",
+    props.messages[0].variant === "primary",
 );
 const showEmptyMessage = computed(
   () => props.emptyMessage && props.messages.length === 0,
@@ -30,8 +28,6 @@ const showEmptyMessage = computed(
 const showEmptyMessageDescription = computed(
   () => props.emptyMessageDescription && props.messages.length === 0,
 );
-
-const messagesContainerRef = ref<HTMLElement | null>(null);
 
 function datetimeIsoToDateString(
   isoDatetime: string | null | undefined,
@@ -44,17 +40,6 @@ function datetimeIsoToDateString(
   return format(date, "dd MMM, HH:mm", { locale: it });
 }
 
-function scrollMessagesToBottom(): void {
-  nextTick(() => {
-    nextTick(() => {
-      const chatElement = messagesContainerRef.value;
-      if (chatElement) {
-        chatElement.scrollTop = chatElement.scrollHeight;
-      }
-    });
-  });
-}
-
 function downloadAttachment(fileUrl: string): void {
   window.open(fileUrl, "_blank");
 }
@@ -64,181 +49,133 @@ const alignItems: Record<Message["variant"], "end" | "start"> = {
   invisible: "start",
 };
 
-function getAlignItems(message: Message): "end" | "start" {
-  return alignItems[message.variant];
-}
-
 const cardColor: Record<string, FzCardColor> = {
   primary: "grey",
   invisible: "default",
 };
 
-function getCardColor(message: Message): FzCardColor {
-  return cardColor[message.variant];
-}
-
-const SCROLL_TOP_THRESHOLD = 50;
+const SCROLL_TOP_THRESHOLD = 10;
 const messagesLengthAtLastLoadMore = ref(-1);
 const canLoadMore = computed(
   () => props.messages.length !== messagesLengthAtLastLoadMore.value,
 );
-const isLoadingMore = ref(false);
 
-function onContainerScroll(): void {
-  const el = messagesContainerRef.value;
-  if (el && el.scrollTop <= SCROLL_TOP_THRESHOLD && canLoadMore.value) {
+function onContainerScroll(event: Event): void {
+  const el = event.target as HTMLElement;
+  if (
+    el &&
+    el.scrollHeight - Math.abs(el.scrollTop) - el.clientHeight <=
+      SCROLL_TOP_THRESHOLD &&
+    canLoadMore.value
+  ) {
     messagesLengthAtLastLoadMore.value = props.messages.length;
-    isLoadingMore.value = true;
     emit("load-more");
   }
 }
-
-onMounted(() => {
-  scrollMessagesToBottom();
-  messagesContainerRef.value?.addEventListener("scroll", onContainerScroll);
-});
-
-onUnmounted(() => {
-  messagesContainerRef.value?.removeEventListener("scroll", onContainerScroll);
-});
-
-watch(
-  () => lastMessage.value,
-  () => {
-    scrollMessagesToBottom();
-  },
-  { deep: true },
-);
-
-watch(
-  () => props.messages.length,
-  () => {
-    if (!isLoadingMore.value) return;
-
-    const el = messagesContainerRef.value;
-    if (!el) return;
-
-    const prevScrollHeight = el.scrollHeight;
-    const prevScrollTop = el.scrollTop;
-
-    nextTick(() => {
-      nextTick(() => {
-        el.scrollTop = el.scrollHeight - prevScrollHeight + prevScrollTop;
-        isLoadingMore.value = false;
-      });
-    });
-  },
-  { flush: "pre" },
-);
 </script>
 
 <template>
-  <div ref="messagesContainerRef" class="overflow-y-auto fz-chat-container">
-    <FzContainer
-      :alignItems="messages.length === 0 ? 'center' : undefined"
-      class="min-h-full pb-16"
-    >
-      <FzContainer v-if="showEmptyMessage" alignItems="center" gap="xs">
-        <h2 v-color:grey="400">{{ emptyMessage }}</h2>
-        <p v-if="showEmptyMessageDescription" v-color:grey="500" v-small>
-          {{ emptyMessageDescription }}
+  <FzContainer
+    :alignItems="showEmptyMessage ? 'center' : undefined"
+    class="pb-16 overflow-y-auto flex !flex-col-reverse"
+    @scroll="onContainerScroll"
+  >
+    <!-- no messages -->
+    <FzContainer v-if="showEmptyMessage" alignItems="center" gap="xs">
+      <h2 v-color:grey="400">{{ emptyMessage }}</h2>
+      <p v-if="showEmptyMessageDescription" v-color:grey="500" v-small>
+        {{ emptyMessageDescription }}
+      </p>
+    </FzContainer>
+
+    <!-- waiting for response message -->
+    <FzContainer v-if="showWaitingForResponseMessage" alignItems="center">
+      <FzContainer gap="xs" horizontal alignItems="center">
+        <FzIcon name="clock" size="sm" variant="far" class="text-grey-300" />
+        <p v-bold v-color:grey="300" v-small>
+          {{ waitingForResponseMessage }}
         </p>
       </FzContainer>
-      <template v-for="(message, index) in messages" :key="index">
-        <FzContainer :alignItems="getAlignItems(message)">
-          <FzContainer alignItems="end" gap="xs">
-            <FzContainer alignItems="end" gap="xs" horizontal>
-              <FzAvatar
-                v-if="message.variant === 'invisible'"
-                environment="frontoffice"
-                :firstName="message.user.firstName"
-                :lastName="message.user.lastName"
-                size="lg"
-                :src="message.user.avatar"
-              />
-              <FzContainer gap="xs">
-                <p
-                  v-if="message.variant === 'invisible'"
-                  v-color:grey="400"
-                  v-small
+    </FzContainer>
+
+    <!-- messages -->
+    <FzContainer
+      v-for="(message, index) in messages"
+      :key="index"
+      :alignItems="alignItems[message.variant]"
+    >
+      <FzContainer alignItems="end" gap="xs">
+        <FzContainer alignItems="end" gap="xs" horizontal>
+          <FzAvatar
+            v-if="message.variant === 'invisible'"
+            environment="frontoffice"
+            :firstName="message.user.firstName"
+            :lastName="message.user.lastName"
+            size="lg"
+            :src="message.user.avatar"
+          />
+          <FzContainer gap="xs">
+            <p
+              v-if="message.variant === 'invisible'"
+              v-color:grey="400"
+              v-small
+            >
+              {{ message.user.firstName }} {{ message.user.lastName }}
+            </p>
+            <FzCard :color="cardColor[message.variant]">
+              <FzContainer alignItems="end" gap="none">
+                <p v-small>{{ message.message }}</p>
+                <FzContainer
+                  v-if="message.attachments?.length"
+                  gap="none"
+                  class="mt-16 w-full"
                 >
-                  {{ message.user.firstName }} {{ message.user.lastName }}
-                </p>
-                <FzCard :color="getCardColor(message)">
-                  <FzContainer alignItems="end" gap="none">
-                    <p v-small>{{ message.message }}</p>
+                  <FzContainer
+                    v-for="(attachment, index) in message.attachments"
+                    gap="none"
+                    :key="index"
+                  >
                     <FzContainer
-                      v-if="message.attachments?.length"
-                      gap="none"
-                      class="mt-16 w-full"
+                      horizontal
+                      layout="expand-first"
+                      alignItems="center"
+                      gap="xs"
                     >
                       <FzContainer
-                        v-for="(attachment, index) in message.attachments"
-                        gap="none"
-                        :key="index"
+                        horizontal
+                        alignItems="center"
+                        gap="xs"
+                        class="min-w-0"
                       >
-                        <FzContainer
-                          horizontal
-                          layout="expand-first"
-                          alignItems="center"
-                          gap="xs"
-                        >
-                          <FzContainer
-                            horizontal
-                            alignItems="center"
-                            gap="xs"
-                            class="min-w-0"
-                          >
-                            <span class="flex-shrink-0">
-                              <FzIcon name="file" size="md" variant="far" />
-                            </span>
-                            <p v-small class="truncate min-w-0">
-                              {{ attachment.name }}
-                            </p>
-                          </FzContainer>
-                          <FzIconButton
-                            iconName="arrow-down-to-bracket"
-                            iconVariant="fas"
-                            variant="secondary"
-                            environment="frontoffice"
-                            :aria-label="`Scarica ${attachment.name}`"
-                            @click="downloadAttachment(attachment.url)"
-                          />
-                        </FzContainer>
-                        <FzDivider
-                          v-if="index < message.attachments.length - 1"
-                        />
+                        <span class="flex-shrink-0">
+                          <FzIcon name="file" size="md" variant="far" />
+                        </span>
+                        <p v-small class="truncate min-w-0">
+                          {{ attachment.name }}
+                        </p>
                       </FzContainer>
+                      <FzIconButton
+                        iconName="arrow-down-to-bracket"
+                        iconVariant="fas"
+                        variant="secondary"
+                        environment="frontoffice"
+                        :aria-label="`Scarica ${attachment.name}`"
+                        @click="downloadAttachment(attachment.url)"
+                      />
                     </FzContainer>
+                    <FzDivider v-if="index < message.attachments.length - 1" />
                   </FzContainer>
-                </FzCard>
+                </FzContainer>
               </FzContainer>
-            </FzContainer>
-            <p v-color:grey="300" v-small>
-              {{ datetimeIsoToDateString(message.timestamp) }}
-            </p>
+            </FzCard>
           </FzContainer>
         </FzContainer>
-      </template>
-      <FzContainer v-if="showWaitingForResponseMessage" alignItems="center">
-        <FzContainer gap="xs" horizontal alignItems="center">
-          <FzIcon name="clock" size="sm" variant="far" class="text-grey-300" />
-          <p v-bold v-color:grey="300" v-small>
-            {{ waitingForResponseMessage }}
-          </p>
-        </FzContainer>
+        <p v-color:grey="300" v-small>
+          {{ datetimeIsoToDateString(message.timestamp) }}
+        </p>
       </FzContainer>
     </FzContainer>
-  </div>
+  </FzContainer>
 </template>
 
-<style scoped>
-.fz-chat-container {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.fz-chat-container::-webkit-scrollbar {
-  display: none;
-}
-</style>
+<style scoped></style>
