@@ -302,7 +302,10 @@ describe("FzChatContainer", () => {
         ],
       });
 
-      await wrapper.findAllComponents(FzIconButton)[0].find("button").trigger("click");
+      await wrapper
+        .findAllComponents(FzIconButton)[0]
+        .find("button")
+        .trigger("click");
       expect(openSpy).toHaveBeenCalledWith(
         "https://example.com/first.pdf",
         "_blank",
@@ -398,7 +401,7 @@ describe("FzChatContainer", () => {
       expect(wrapper.emitted("load-more")).toHaveLength(1);
     });
 
-    it("should emit load-more when scrollTop is within threshold (<=10)", async () => {
+    it("should emit load-more when scrollTop is within threshold (<=50)", async () => {
       const wrapper = mountComponent({
         messages: [createMockMessage()],
       });
@@ -419,7 +422,7 @@ describe("FzChatContainer", () => {
       await nextTick();
       await nextTick();
 
-      setScrollTop(11);
+      setScrollTop(51);
 
       expect(wrapper.emitted("load-more")).toBeUndefined();
     });
@@ -465,6 +468,119 @@ describe("FzChatContainer", () => {
       // Scroll to top again — should emit because guard was reset
       setScrollTop(0);
       expect(wrapper.emitted("load-more")).toHaveLength(2);
+    });
+
+    it("should preserve scroll position when older messages are prepended (load-more)", async () => {
+      const messages = [createMockMessage()];
+      const wrapper = mountComponent({ messages });
+      const container = wrapper.find(SCROLL_CONTAINER_SELECTOR);
+
+      let scrollTopValue = 200;
+      const scrollHeightValues = [1000];
+
+      Object.defineProperty(container.element, "scrollHeight", {
+        get: () => scrollHeightValues[0],
+        configurable: true,
+      });
+      Object.defineProperty(container.element, "scrollTop", {
+        get: () => scrollTopValue,
+        set: (v: number) => {
+          scrollTopValue = v;
+        },
+        configurable: true,
+      });
+
+      await nextTick();
+      await nextTick();
+
+      // Simulate scroll to top to trigger load-more
+      scrollTopValue = 0;
+      container.element.dispatchEvent(new Event("scroll"));
+      expect(wrapper.emitted("load-more")).toHaveLength(1);
+
+      // Simulate new messages being prepended (scrollHeight grows)
+      const prevScrollHeight = 1000;
+      const newScrollHeight = 1500;
+      scrollHeightValues[0] = newScrollHeight;
+
+      await wrapper.setProps({
+        messages: [
+          createMockMessage({
+            message: "Older message 1",
+            timestamp: "2024-01-13T10:00:00.000Z",
+          }),
+          createMockMessage({
+            message: "Older message 2",
+            timestamp: "2024-01-14T10:00:00.000Z",
+          }),
+          ...messages,
+        ],
+      });
+
+      await nextTick();
+      await nextTick();
+
+      // scrollTop should be adjusted to compensate for the new content above
+      expect(scrollTopValue).toBe(
+        newScrollHeight - prevScrollHeight + 0,
+      );
+    });
+
+    it("should not scroll to bottom when load-more adds older messages", async () => {
+      const messages = [createMockMessage()];
+      const wrapper = mountComponent({ messages });
+      const container = wrapper.find(SCROLL_CONTAINER_SELECTOR);
+
+      let scrollTopValue = 500;
+
+      Object.defineProperty(container.element, "scrollHeight", {
+        value: 1000,
+        configurable: true,
+      });
+      Object.defineProperty(container.element, "scrollTop", {
+        get: () => scrollTopValue,
+        set: (v: number) => {
+          scrollTopValue = v;
+        },
+        configurable: true,
+      });
+
+      await nextTick();
+      await nextTick();
+
+      // Trigger load-more
+      scrollTopValue = 0;
+      container.element.dispatchEvent(new Event("scroll"));
+
+      // Prepend messages without changing lastMessage
+      await wrapper.setProps({
+        messages: [
+          createMockMessage({
+            message: "Older",
+            timestamp: "2024-01-13T10:00:00.000Z",
+          }),
+          ...messages,
+        ],
+      });
+
+      await nextTick();
+      await nextTick();
+
+      // scrollTop should NOT be set to scrollHeight (not scrolled to bottom)
+      expect(scrollTopValue).not.toBe(1000);
+    });
+
+    it("should emit load-more at boundary value of threshold (scrollTop = 50)", async () => {
+      const wrapper = mountComponent({
+        messages: [createMockMessage()],
+      });
+      const { setScrollTop } = setupScrollContainer(wrapper);
+      await nextTick();
+      await nextTick();
+
+      setScrollTop(50);
+
+      expect(wrapper.emitted("load-more")).toHaveLength(1);
     });
   });
 

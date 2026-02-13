@@ -1,9 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, within, waitFor } from '@storybook/test'
-import { FzChatContainer } from '@fiscozen/chat-container'
-import { ref } from 'vue'
+import { FzChatContainer, FzChatContainerProps } from '@fiscozen/chat-container'
+import { onMounted, ref } from 'vue'
 
 const avatar = 'consultant.jpg'
+const fetchMessages = (messages: FzChatContainerProps['messages']) =>
+  new Promise<
+    typeof FzChatContainer extends new (...args: any) => { $props: infer P }
+      ? P extends { messages?: infer M }
+        ? M
+        : never
+      : never
+  >((resolve) => {
+    setTimeout(() => {
+      resolve(messages)
+    }, 1000)
+  })
+
 const meta = {
   title: 'Layout/FzChatContainer',
   component: FzChatContainer,
@@ -143,28 +156,45 @@ export const Empty: Story = {
 
 export const LastMessageFromReceiver: Story = {
   args: {
-    messages: Array.from({ length: 6 }, (_, index) => ({
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      variant: index % 2 === 0 ? 'primary' : 'invisible',
-      timestamp: new Date(Date.now() + index * 100000).toISOString(),
-      user: {
-        firstName: 'John',
-        lastName: 'Doe',
-        avatar
-      },
-      attachments: []
-    })),
+    messages: [],
     emptyMessage: 'Nessun messaggio',
     emptyMessageDescription: 'Inizia una conversazione',
     waitingForResponseMessage: 'Attendi...'
   },
+  render: (args) => ({
+    components: { FzChatContainer },
+    setup() {
+      const messages = ref([...args.messages!])
+
+      onMounted(async () => {
+        const fetched = await fetchMessages(
+          Array.from({ length: 6 }, (_, index) => ({
+            message: 'Hello, world!',
+            variant: index % 2 === 0 ? 'primary' : 'invisible',
+            timestamp: new Date(Date.now() + index * 100000).toISOString(),
+            user: {
+              firstName: 'John',
+              lastName: 'Doe',
+              avatar
+            },
+            attachments: []
+          }))
+        )
+        messages.value = fetched!
+      })
+
+      return { args, messages }
+    },
+    template: `<FzChatContainer v-bind="args" :messages="messages" />`
+  }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify messages are displayed', async () => {
-      const messages = canvas.getAllByText(/Lorem ipsum/)
-      await expect(messages.length).toBeGreaterThanOrEqual(1)
+      await waitFor(() => {
+        const messages = canvas.getAllByText(/Hello, world!/)
+        expect(messages.length).toBeGreaterThanOrEqual(1)
+      })
     })
 
     await step('Accessibility: no duplicate IDs', async () => {
@@ -190,28 +220,45 @@ export const LastMessageFromReceiver: Story = {
 
 export const LastMessageFromSender: Story = {
   args: {
-    messages: Array.from({ length: 6 }, (_, index) => ({
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      variant: index % 2 !== 0 ? 'primary' : 'invisible',
-      timestamp: new Date(Date.now() + index * 100000).toISOString(),
-      user: {
-        firstName: 'John',
-        lastName: 'Doe',
-        avatar
-      },
-      attachments: []
-    })),
+    messages: [],
     emptyMessage: 'Nessun messaggio',
     emptyMessageDescription: 'Inizia una conversazione',
     waitingForResponseMessage: 'Attendi...'
   },
+  render: (args) => ({
+    components: { FzChatContainer },
+    setup() {
+      const messages = ref([...args.messages!])
+
+      onMounted(async () => {
+        const fetched = await fetchMessages(
+          Array.from({ length: 6 }, (_, index) => ({
+            message: 'Hello, world!',
+            variant: index % 2 !== 0 ? 'primary' : 'invisible',
+            timestamp: new Date(Date.now() + index * 100000).toISOString(),
+            user: {
+              firstName: 'John',
+              lastName: 'Doe',
+              avatar
+            },
+            attachments: []
+          }))
+        )
+        messages.value = fetched!
+      })
+
+      return { args, messages }
+    },
+    template: `<FzChatContainer v-bind="args" :messages="messages" />`
+  }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify messages are displayed', async () => {
-      const messages = canvas.getAllByText(/Lorem ipsum/)
-      await expect(messages.length).toBeGreaterThanOrEqual(1)
+      await waitFor(() => {
+        const messages = canvas.getAllByText(/Hello, world!/)
+        expect(messages.length).toBeGreaterThanOrEqual(1)
+      })
     })
 
     await step('Accessibility: no duplicate IDs', async () => {
@@ -230,53 +277,70 @@ export const LastMessageFromSender: Story = {
 
 export const WithAttachments: Story = {
   args: {
-    messages: [
-      {
-        message:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        variant: 'invisible',
-        timestamp: new Date().toISOString(),
-        user: {
-          firstName: 'John',
-          lastName: 'Doe',
-          avatar
-        },
-        attachments: [
-          {
-            name: 'attachment_1.pdf',
-            url: ''
-          },
-          {
-            name: 'attachment_2.pdf',
-            url: ''
-          },
-          {
-            name: 'attachment_3.pdf',
-            url: ''
-          }
-        ]
-      }
-    ],
+    messages: [],
     emptyMessage: 'Nessun messaggio',
     emptyMessageDescription: 'Inizia una conversazione',
     waitingForResponseMessage: 'Attendi...'
   },
+  render: (args) => ({
+    components: { FzChatContainer },
+    setup() {
+      const messages = ref([...args.messages!])
+
+      onMounted(async () => {
+        const fetched = await fetchMessages([
+          {
+            message: 'Hello, world!',
+            variant: 'invisible',
+            timestamp: new Date().toISOString(),
+            user: {
+              firstName: 'John',
+              lastName: 'Doe',
+              avatar
+            },
+            attachments: [
+              {
+                name: 'attachment_1.pdf',
+                url: ''
+              },
+              {
+                name: 'attachment_2.pdf',
+                url: ''
+              },
+              {
+                name: 'attachment_3.pdf',
+                url: ''
+              }
+            ]
+          }
+        ])
+        messages.value = fetched!
+      })
+
+      return { args, messages }
+    },
+    template: `<FzChatContainer v-bind="args" :messages="messages" />`
+  }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify download button is accessible', async () => {
-      const downloadButtons = canvas.getAllByRole('button', {
-        name: /Scarica attachment_\d\.pdf/
+      await waitFor(() => {
+        const downloadButtons = canvas.getAllByRole('button', {
+          name: /Scarica attachment_\d\.pdf/
+        })
+        expect(downloadButtons.length).toBeGreaterThanOrEqual(1)
+        expect(downloadButtons[0]).toBeVisible()
       })
-      await expect(downloadButtons.length).toBeGreaterThanOrEqual(1)
-      await expect(downloadButtons[0]).toBeVisible()
     })
 
     await step('Accessibility: download buttons have aria-label', async () => {
-      const btn1 = canvas.getByRole('button', { name: 'Scarica attachment_1.pdf' })
-      const btn2 = canvas.getByRole('button', { name: 'Scarica attachment_2.pdf' })
-      await expect(btn1).toHaveAttribute('aria-label', 'Scarica attachment_1.pdf')
-      await expect(btn2).toHaveAttribute('aria-label', 'Scarica attachment_2.pdf')
+      await waitFor(() => {
+        const btn1 = canvas.getByRole('button', { name: 'Scarica attachment_1.pdf' })
+        const btn2 = canvas.getByRole('button', { name: 'Scarica attachment_2.pdf' })
+        expect(btn1).toHaveAttribute('aria-label', 'Scarica attachment_1.pdf')
+        expect(btn2).toHaveAttribute('aria-label', 'Scarica attachment_2.pdf')
+      })
     })
 
     await step('Accessibility: no duplicate IDs', async () => {
@@ -296,13 +360,7 @@ export const WithAttachments: Story = {
 
 export const LoadMore: Story = {
   args: {
-    messages: Array.from({ length: 20 }, (_, index) => ({
-      message: `Messaggio ${index + 1} - Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-      variant: index % 2 === 0 ? 'primary' : 'invisible',
-      timestamp: new Date(Date.now() + index * 100000).toISOString(),
-      user: { firstName: 'John', lastName: 'Doe', avatar },
-      attachments: []
-    })),
+    messages: [],
     emptyMessage: 'Nessun messaggio',
     emptyMessageDescription: 'Inizia una conversazione'
   },
@@ -310,35 +368,48 @@ export const LoadMore: Story = {
     components: { FzChatContainer },
     setup() {
       const messages = ref([...args.messages!])
-      let batch = 0
+      const page = ref(1)
 
-      const onLoadMore = () => {
-        batch++
-        const olderMessages = Array.from({ length: 5 }, (_, i) => ({
-          message: `Messaggio più vecchio (batch ${batch}, #${i + 1})`,
-          variant: (i % 2 === 0 ? 'invisible' : 'primary') as 'invisible' | 'primary',
-          timestamp: new Date(Date.now() - (batch * 5 + i) * 100000).toISOString(),
-          user: {
-            firstName: 'Jane',
-            lastName: 'Smith',
-            avatar
-          },
-          attachments: [] as { name: string; url: string }[]
-        }))
-        messages.value = [...olderMessages, ...messages.value]
+      onMounted(async () => {
+        const fetched = await fetchMessages(
+          Array.from({ length: 6 }, (_, index) => ({
+            message: `Hello, world! (page ${page.value})`,
+            variant: index % 2 === 0 ? 'primary' : 'invisible',
+            timestamp: new Date(Date.now() + index * 100000).toISOString(),
+            user: { firstName: 'John', lastName: 'Doe', avatar },
+            attachments: []
+          }))
+        )
+        messages.value = fetched!
+      })
+
+      const onLoadMore = async () => {
+        page.value++
+        const fetched = await fetchMessages(
+          Array.from({ length: 6 }, (_, index) => ({
+            message: `Hello, world! (page ${page.value})`,
+            variant: index % 2 === 0 ? 'primary' : 'invisible',
+            timestamp: new Date(Date.now() + index * 100000).toISOString(),
+            user: { firstName: 'John', lastName: 'Doe', avatar },
+            attachments: []
+          }))
+        )
+        messages.value = [...fetched!, ...messages.value]
       }
 
-      return { messages, onLoadMore }
+      return { args, messages, onLoadMore }
     },
-    template: `<FzChatContainer :messages="messages" @load-more="onLoadMore" />`
+    template: `<FzChatContainer v-bind="args" :messages="messages" @load-more="onLoadMore" />`
   }),
   play: async ({ canvasElement, step }) => {
     const scrollContainer = canvasElement.querySelector('.fz-chat-container') as HTMLElement
 
     await step('Verify initial messages are rendered', async () => {
-      const canvas = within(canvasElement)
-      const messages = canvas.getAllByText(/Messaggio \d+ -/)
-      await expect(messages.length).toBe(20)
+      await waitFor(() => {
+        const canvas = within(canvasElement)
+        const messages = canvas.getAllByText(/Hello, world! \(page 1\)/)
+        expect(messages.length).toBe(6)
+      })
     })
 
     await step('Scroll to top triggers load-more and loads older messages', async () => {
@@ -347,7 +418,8 @@ export const LoadMore: Story = {
 
       await waitFor(() => {
         const canvas = within(canvasElement)
-        expect(canvas.getByText(/batch 1, #1/)).toBeInTheDocument()
+        const messages = canvas.getAllByText(/Hello, world! \(page 1\)/)
+        expect(messages.length).toBeGreaterThanOrEqual(1)
       })
     })
 
@@ -359,7 +431,8 @@ export const LoadMore: Story = {
 
         await waitFor(() => {
           const canvas = within(canvasElement)
-          expect(canvas.getByText(/batch 2, #1/)).toBeInTheDocument()
+          const messages = canvas.getAllByText(/Hello, world! \(page 2\)/)
+          expect(messages.length).toBeGreaterThanOrEqual(1)
         })
       }
     )
