@@ -238,12 +238,12 @@ export function mergeListActionArgs<
  * Calls the list action with default args merged with additional args from the view.
  *
  * @param action - useList composable (from useActions)
- * @param input - defaultParams, defaultOptions, additionalParamsOrOptions, additionalOptions (see MergeListActionArgsInput)
+ * @param input - defaultParams, defaultOptions, additionalParamsOrOptions, additionalOptions (see MergeListActionArgsInput). forPaginatedList is omitted so list requests do not get pagination by default.
  * @returns Result of calling the action with merged params and options
  */
 export function callListActionWithDefaults<T>(
   action: UseListAction<T>,
-  input: MergeListActionArgsInput<T, UseListActionOptions<T>>,
+  input: Omit<MergeListActionArgsInput<T, UseListActionOptions<T>>, "forPaginatedList">,
 ): UseListActionReturn<T> {
   const { params, options } = mergeListActionArgs<T, UseListActionOptions<T>>(input);
   return action(params, options);
