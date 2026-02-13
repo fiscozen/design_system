@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
-import { FzChatContainerProps } from "./types";
+import { FzChatContainerProps, Message } from "./types";
 import { FzContainer } from "@fiscozen/container";
 import { FzAvatar } from "@fiscozen/avatar";
 import { FzIcon } from "@fiscozen/icons";
@@ -59,14 +59,12 @@ function downloadAttachment(fileUrl: string): void {
   window.open(fileUrl, "_blank");
 }
 
-const alignItems = {
+const alignItems: Record<Message["variant"], "end" | "start"> = {
   primary: "end",
   invisible: "start",
 };
 
-function getAlignItems(
-  message: FzChatContainerProps["messages"][number],
-): string {
+function getAlignItems(message: Message): "end" | "start" {
   return alignItems[message.variant];
 }
 
@@ -75,9 +73,7 @@ const cardColor: Record<string, FzCardColor> = {
   invisible: "default",
 };
 
-function getCardColor(
-  message: FzChatContainerProps["messages"][number],
-): FzCardColor {
+function getCardColor(message: Message): FzCardColor {
   return cardColor[message.variant];
 }
 
