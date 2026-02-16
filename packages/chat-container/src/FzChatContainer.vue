@@ -54,7 +54,7 @@ const cardColor: Record<string, FzCardColor> = {
   invisible: "default",
 };
 
-const SCROLL_TOP_THRESHOLD = 10;
+const SCROLL_TOP_THRESHOLD = 100;
 const messagesLengthAtLastLoadMore = ref(-1);
 const canLoadMore = computed(
   () => props.messages.length !== messagesLengthAtLastLoadMore.value,
@@ -75,19 +75,24 @@ function onContainerScroll(event: Event): void {
 </script>
 
 <template>
+  <!-- no messages -->
   <FzContainer
-    :alignItems="showEmptyMessage ? 'center' : undefined"
-    class="pb-16 overflow-y-auto flex !flex-col-reverse"
+    v-if="showEmptyMessage"
+    alignItems="center"
+    gap="xs"
+    class="w-full h-full"
+  >
+    <h2 v-color:grey="400">{{ emptyMessage }}</h2>
+    <p v-if="showEmptyMessageDescription" v-color:grey="500" v-small>
+      {{ emptyMessageDescription }}
+    </p>
+  </FzContainer>
+
+  <FzContainer
+    v-else
+    class="fz-chat-container pb-16 overflow-y-scroll flex !flex-col-reverse"
     @scroll="onContainerScroll"
   >
-    <!-- no messages -->
-    <FzContainer v-if="showEmptyMessage" alignItems="center" gap="xs">
-      <h2 v-color:grey="400">{{ emptyMessage }}</h2>
-      <p v-if="showEmptyMessageDescription" v-color:grey="500" v-small>
-        {{ emptyMessageDescription }}
-      </p>
-    </FzContainer>
-
     <!-- waiting for response message -->
     <FzContainer v-if="showWaitingForResponseMessage" alignItems="center">
       <FzContainer gap="xs" horizontal alignItems="center">
@@ -123,12 +128,14 @@ function onContainerScroll(event: Event): void {
               {{ message.user.firstName }} {{ message.user.lastName }}
             </p>
             <FzCard :color="cardColor[message.variant]">
-              <FzContainer alignItems="end" gap="none">
-                <p v-small>{{ message.message }}</p>
+              <FzContainer alignItems="end" gap="sm">
+                <p v-small v-if="message.message.trim().length">
+                  {{ message.message }}
+                </p>
                 <FzContainer
                   v-if="message.attachments?.length"
                   gap="none"
-                  class="mt-16 w-full"
+                  class="w-full"
                 >
                   <FzContainer
                     v-for="(attachment, index) in message.attachments"
@@ -141,16 +148,9 @@ function onContainerScroll(event: Event): void {
                       alignItems="center"
                       gap="xs"
                     >
-                      <FzContainer
-                        horizontal
-                        alignItems="center"
-                        gap="xs"
-                        class="min-w-0"
-                      >
-                        <span class="flex-shrink-0">
-                          <FzIcon name="file" size="md" variant="far" />
-                        </span>
-                        <p v-small class="truncate min-w-0">
+                      <FzContainer horizontal alignItems="center" gap="xs">
+                        <FzIcon name="file" size="md" variant="far" />
+                        <p v-small>
                           {{ attachment.name }}
                         </p>
                       </FzContainer>
@@ -178,4 +178,13 @@ function onContainerScroll(event: Event): void {
   </FzContainer>
 </template>
 
-<style scoped></style>
+<style scoped>
+.fz-chat-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.fz-chat-container::-webkit-scrollbar {
+  display: none;
+}
+</style>

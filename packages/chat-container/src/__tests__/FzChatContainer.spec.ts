@@ -10,7 +10,7 @@ import type { FzChatContainerProps } from "../types";
 // CONSTANTS & HELPERS
 // ============================================
 
-const SCROLL_CONTAINER_SELECTOR = ".fz-container.overflow-y-auto";
+const SCROLL_CONTAINER_SELECTOR = ".fz-chat-container";
 
 beforeEach(() => {
   Object.defineProperty(window, "matchMedia", {
@@ -95,16 +95,28 @@ describe("FzChatContainer", () => {
       expect(wrapper.exists()).toBe(true);
     });
 
-    it("should apply base scroll container classes", () => {
-      const wrapper = mountComponent({ messages: [] });
+    it("should apply base scroll container classes when messages exist", () => {
+      const wrapper = mountComponent({
+        messages: [createMockMessage()],
+      });
       expect(wrapper.find(SCROLL_CONTAINER_SELECTOR).exists()).toBe(true);
     });
 
-    it("should apply overflow-y-auto class for scrollable container with hidden scrollbar", () => {
-      const wrapper = mountComponent({ messages: [] });
+    it("should not render scroll container when empty state is shown", () => {
+      const wrapper = mountComponent({
+        messages: [],
+        emptyMessage: "No messages yet",
+      });
+      expect(wrapper.find(SCROLL_CONTAINER_SELECTOR).exists()).toBe(false);
+    });
+
+    it("should apply overflow-y-scroll class for scrollable container with hidden scrollbar", () => {
+      const wrapper = mountComponent({
+        messages: [createMockMessage()],
+      });
       const container = wrapper.find(SCROLL_CONTAINER_SELECTOR);
-      expect(container.classes()).toContain("fz-container");
-      expect(container.classes()).toContain("overflow-y-auto");
+      expect(container.classes()).toContain("fz-chat-container");
+      expect(container.classes()).toContain("overflow-y-scroll");
     });
 
     it("should render empty state when messages is empty and emptyMessage is provided", () => {
@@ -243,6 +255,26 @@ describe("FzChatContainer", () => {
         ],
       });
       expect(wrapper.findAllComponents(FzIconButton).length).toBe(2);
+    });
+
+    it("should not render message text when message is empty or whitespace", () => {
+      const wrapper = mountComponent({
+        messages: [createMockMessage({ message: "   " })],
+      });
+      const card = wrapper.findComponent({ name: "FzCard" });
+      expect(card.exists()).toBe(true);
+      const paragraphs = card.findAll("p");
+      const messageParagraphs = paragraphs.filter(
+        (p) => p.text().trim() === "",
+      );
+      expect(messageParagraphs.length).toBe(0);
+    });
+
+    it("should render message text when message is non-empty", () => {
+      const wrapper = mountComponent({
+        messages: [createMockMessage({ message: "Visible text" })],
+      });
+      expect(wrapper.text()).toContain("Visible text");
     });
   });
 
@@ -389,10 +421,10 @@ describe("FzChatContainer", () => {
     // With flex-col-reverse and setupScrollContainer defaults (scrollHeight=1000, clientHeight=500):
     // - scrollTop = 0 means bottom (newest messages visible)
     // - scrollTop = -500 means top (oldest messages visible)
-    // - Formula: scrollHeight - Math.abs(scrollTop) - clientHeight <= SCROLL_TOP_THRESHOLD (10)
-    // - At top (-500): 1000 - 500 - 500 = 0 <= 10 ✓
-    // - At threshold (-490): 1000 - 490 - 500 = 10 <= 10 ✓
-    // - Above threshold (-489): 1000 - 489 - 500 = 11 > 10 ✗
+    // - Formula: scrollHeight - Math.abs(scrollTop) - clientHeight <= SCROLL_TOP_THRESHOLD (100)
+    // - At top (-500): 1000 - 500 - 500 = 0 <= 100 ✓
+    // - At threshold (-400): 1000 - 400 - 500 = 100 <= 100 ✓
+    // - Above threshold (-399): 1000 - 399 - 500 = 101 > 100 ✗
 
     it("should emit load-more when scrolling to top of container", async () => {
       const wrapper = mountComponent({
@@ -415,7 +447,7 @@ describe("FzChatContainer", () => {
       await nextTick();
       await nextTick();
 
-      setScrollTop(-490);
+      setScrollTop(-400);
 
       expect(wrapper.emitted("load-more")).toHaveLength(1);
     });
@@ -428,7 +460,7 @@ describe("FzChatContainer", () => {
       await nextTick();
       await nextTick();
 
-      setScrollTop(-489);
+      setScrollTop(-399);
 
       expect(wrapper.emitted("load-more")).toBeUndefined();
     });
@@ -442,7 +474,7 @@ describe("FzChatContainer", () => {
       await nextTick();
 
       setScrollTop(-500);
-      setScrollTop(-495);
+      setScrollTop(-450);
       setScrollTop(-500);
 
       expect(wrapper.emitted("load-more")).toHaveLength(1);
@@ -484,7 +516,7 @@ describe("FzChatContainer", () => {
       await nextTick();
       await nextTick();
 
-      setScrollTop(-490);
+      setScrollTop(-400);
 
       expect(wrapper.emitted("load-more")).toHaveLength(1);
     });
