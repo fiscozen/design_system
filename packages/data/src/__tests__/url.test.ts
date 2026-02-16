@@ -144,14 +144,52 @@ describe("getUrlWithQueryParams", () => {
 });
 
 describe("applyTrailingSlash", () => {
+  /** Paths that occur with correct usage (list = basePath; retrieve = basePath + '/' + pk, no trailing on basePath, pk without slash). */
+  const pathPermutationsCorrectUsage = [
+    { path: "users", scenario: "useActions('users') → useList()" },
+    { path: "users/", scenario: "useActions('users/') → useList()" },
+    { path: "/users", scenario: "useActions('/users') → useList()" },
+    { path: "/users/", scenario: "useActions('/users/') → useList()" },
+    { path: "users/1", scenario: "useActions('users') + useRetrieve('1')" },
+    { path: "/users/1", scenario: "useActions('/users') + useRetrieve('1')" },
+  ] as const;
+
+  /**
+   * Paths that should NOT occur with correct usage (basePath with trailing in retrieve → // in middle;
+   * pk with trailing → invalid). We still verify the normalizer does not produce double slash at end.
+   */
+  const pathPermutationsWrongUsage = [
+    { path: "users/1/", scenario: "WRONG: useActions('users') + useRetrieve('1/') — pk with trailing" },
+    { path: "users//1", scenario: "WRONG: useActions('users/') + useRetrieve('1') — basePath trailing → //" },
+    { path: "users//1/", scenario: "WRONG: useActions('users/') + useRetrieve('1/')" },
+    { path: "/users/1/", scenario: "WRONG: useActions('/users') + useRetrieve('1/') — pk with trailing" },
+    { path: "/users//1", scenario: "WRONG: useActions('/users/') + useRetrieve('1') — basePath trailing → //" },
+    { path: "/users//1/", scenario: "WRONG: useActions('/users/') + useRetrieve('1/')" },
+  ] as const;
+
+  const pathPermutationsAll = [...pathPermutationsCorrectUsage, ...pathPermutationsWrongUsage];
+
   describe("when option is true", () => {
     it("adds trailing slash to path without one", () => {
       expect(applyTrailingSlash("users/1", true)).toBe("users/1/");
       expect(applyTrailingSlash("users", true)).toBe("users/");
     });
 
-    it("leaves path unchanged when it already ends with /", () => {
+    it("leaves path unchanged when it already ends with / (never adds second trailing slash)", () => {
+      expect(applyTrailingSlash("users/", true)).toBe("users/");
+      expect(applyTrailingSlash("/users/", true)).toBe("/users/");
       expect(applyTrailingSlash("users/1/", true)).toBe("users/1/");
+      expect(applyTrailingSlash("users//1/", true)).toBe("users//1/");
+      expect(applyTrailingSlash("/users//1/", true)).toBe("/users//1/");
+    });
+
+    it("adds single trailing slash for all path shapes without trailing slash", () => {
+      expect(applyTrailingSlash("users", true)).toBe("users/");
+      expect(applyTrailingSlash("/users", true)).toBe("/users/");
+      expect(applyTrailingSlash("users/1", true)).toBe("users/1/");
+      expect(applyTrailingSlash("/users/1", true)).toBe("/users/1/");
+      expect(applyTrailingSlash("users//1", true)).toBe("users//1/");
+      expect(applyTrailingSlash("/users//1", true)).toBe("/users//1/");
     });
 
     it("preserves query string and fragment", () => {
@@ -169,16 +207,34 @@ describe("applyTrailingSlash", () => {
     it("treats empty path as root and adds /", () => {
       expect(applyTrailingSlash("", true)).toBe("/");
     });
+
+    it("does not produce double slash at end for correct-usage paths", () => {
+      for (const { path, scenario } of pathPermutationsCorrectUsage) {
+        const result = applyTrailingSlash(path, true);
+        expect(result.endsWith("//"), `[${scenario}] ${path} -> ${result} must not end with //`).toBe(false);
+      }
+    });
+
+    it("does not produce double slash at end for wrong-usage paths (normalizer still safe)", () => {
+      for (const { path, scenario } of pathPermutationsWrongUsage) {
+        const result = applyTrailingSlash(path, true);
+        expect(result.endsWith("//"), `[${scenario}] ${path} -> ${result} must not end with //`).toBe(false);
+      }
+    });
   });
 
   describe("when option is false", () => {
-    it("removes trailing slash from path", () => {
-      expect(applyTrailingSlash("users/1/", false)).toBe("users/1");
+    it("removes trailing slash from path (does not touch middle slashes)", () => {
       expect(applyTrailingSlash("users/", false)).toBe("users");
+      expect(applyTrailingSlash("/users/", false)).toBe("/users");
+      expect(applyTrailingSlash("users//1/", false)).toBe("users//1");
+      expect(applyTrailingSlash("/users//1/", false)).toBe("/users//1");
     });
 
     it("leaves path unchanged when it has no trailing slash", () => {
       expect(applyTrailingSlash("users/1", false)).toBe("users/1");
+      expect(applyTrailingSlash("/users/1", false)).toBe("/users/1");
+      expect(applyTrailingSlash("users//1", false)).toBe("users//1");
     });
 
     it("preserves query string and fragment", () => {
@@ -193,13 +249,65 @@ describe("applyTrailingSlash", () => {
     it("removes trailing slash from root path", () => {
       expect(applyTrailingSlash("/", false)).toBe("");
     });
+
   });
 
   describe("when option is null or undefined", () => {
-    it("returns url unchanged", () => {
-      const url = "users/1/";
-      expect(applyTrailingSlash(url, null)).toBe(url);
-      expect(applyTrailingSlash(url, undefined)).toBe(url);
+    it("returns url unchanged for any path (correct and wrong usage)", () => {
+      for (const { path, scenario } of pathPermutationsAll) {
+        expect(applyTrailingSlash(path, null), scenario).toBe(path);
+        expect(applyTrailingSlash(path, undefined), scenario).toBe(path);
+      }
+    });
+  });
+
+  describe("full permutation matrix: path shape × option", () => {
+    const expectedWhenTrue: Record<string, string> = {
+      users: "users/",
+      "users/": "users/",
+      "/users": "/users/",
+      "/users/": "/users/",
+      "users/1": "users/1/",
+      "/users/1": "/users/1/",
+      "users/1/": "users/1/",
+      "users//1": "users//1/",
+      "users//1/": "users//1/",
+      "/users/1/": "/users/1/",
+      "/users//1": "/users//1/",
+      "/users//1/": "/users//1/",
+    };
+    const expectedWhenFalse: Record<string, string> = {
+      users: "users",
+      "users/": "users",
+      "/users": "/users",
+      "/users/": "/users",
+      "users/1": "users/1",
+      "/users/1": "/users/1",
+      "users/1/": "users/1",
+      "users//1": "users//1",
+      "users//1/": "users//1",
+      "/users/1/": "/users/1",
+      "/users//1": "/users//1",
+      "/users//1/": "/users//1",
+    };
+
+    it("option true: every path (correct and wrong usage) produces expected normalized path", () => {
+      for (const { path, scenario } of pathPermutationsAll) {
+        expect(applyTrailingSlash(path, true), scenario).toBe(expectedWhenTrue[path]);
+      }
+    });
+
+    it("option false: every path (correct and wrong usage) produces expected normalized path", () => {
+      for (const { path, scenario } of pathPermutationsAll) {
+        expect(applyTrailingSlash(path, false), scenario).toBe(expectedWhenFalse[path]);
+      }
+    });
+
+    it("option null/undefined: every path is returned unchanged", () => {
+      for (const { path, scenario } of pathPermutationsAll) {
+        expect(applyTrailingSlash(path, null), scenario).toBe(path);
+        expect(applyTrailingSlash(path, undefined), scenario).toBe(path);
+      }
     });
   });
 });
