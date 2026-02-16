@@ -36,6 +36,10 @@ export const setupFzFetcher: SetupFzFetcher = (options) => {
   state.globalDeduplication = options.deduplication || false;
   state.globalAutoUpdateDebounceDelay =
     options.autoUpdateDebounceDelay ?? 100;
+  state.globalTrailingSlash =
+    options.trailingSlash !== undefined && options.trailingSlash !== null
+      ? options.trailingSlash
+      : null;
   state.globalRequestInterceptor = options.requestInterceptor || null;
   state.globalResponseInterceptor = options.responseInterceptor || null;
 
@@ -123,6 +127,7 @@ export const resetFzFetcher = () => {
   state.globalDebug = false;
   state.globalDeduplication = false;
   state.globalAutoUpdateDebounceDelay = 100;
+  state.globalTrailingSlash = null;
   state.globalRequestInterceptor = null;
   state.globalResponseInterceptor = null;
   state.csrfManager = null;

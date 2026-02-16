@@ -136,6 +136,92 @@ describe("Integration Tests", () => {
     });
   });
 
+  describe("Trailing slash", () => {
+    it("should add trailing slash to URL when setup trailingSlash is true", async () => {
+      let interceptedUrl: string = "";
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        trailingSlash: true,
+        requestInterceptor: async (url) => {
+          interceptedUrl = url;
+          return {};
+        },
+      });
+
+      global.fetch = vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({}), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        ),
+      ) as typeof fetch;
+
+      const { execute } = useFzFetch<unknown>("users/1");
+      await execute();
+
+      expect(interceptedUrl).toBe("users/1/");
+    });
+
+    it("should remove trailing slash from URL when setup trailingSlash is false", async () => {
+      let interceptedUrl: string = "";
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        trailingSlash: false,
+        requestInterceptor: async (url) => {
+          interceptedUrl = url;
+          return {};
+        },
+      });
+
+      global.fetch = vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({}), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        ),
+      ) as typeof fetch;
+
+      const { execute } = useFzFetch<unknown>("users/1/");
+      await execute();
+
+      expect(interceptedUrl).toBe("users/1");
+    });
+
+    it("should allow per-request trailingSlash to override setup", async () => {
+      let interceptedUrl: string = "";
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        trailingSlash: true,
+        requestInterceptor: async (url) => {
+          interceptedUrl = url;
+          return {};
+        },
+      });
+
+      global.fetch = vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({}), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        ),
+      ) as typeof fetch;
+
+      const { execute } = useFzFetch<unknown>("users/1", {
+        trailingSlash: false,
+        immediate: false,
+      });
+      await execute();
+
+      expect(interceptedUrl).toBe("users/1");
+    });
+  });
+
   describe("Deduplication Integration", () => {
     it("should deduplicate identical simultaneous requests", async () => {
       setupFzFetcher({

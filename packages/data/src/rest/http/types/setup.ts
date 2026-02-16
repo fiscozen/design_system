@@ -52,6 +52,20 @@ export interface SetupFzFetcherOptions {
   deduplication?: boolean;
 
   /**
+   * Normalize trailing slash on the path of every request URL.
+   * Only the path (before ? or #) is modified; query and fragment are preserved.
+   *
+   * - `true`: ensure path always ends with /
+   * - `false`: ensure path never ends with /
+   * - `null` / `undefined`: do not modify the URL
+   *
+   * Can be overridden per-request via UseFzFetchOptions.trailingSlash
+   *
+   * @default undefined (no normalization)
+   */
+  trailingSlash?: true | false | null;
+
+  /**
    * Debounce delay in milliseconds for autoUpdate watch in list actions
    *
    * When autoUpdate is enabled, changes to filters, ordering, or pagination

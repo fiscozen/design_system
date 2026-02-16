@@ -6,7 +6,7 @@ import type {
 } from "./types";
 import { toValue, isRef, type MaybeRefOrGetter, computed } from "vue";
 import { state } from "./setup/state";
-import { getUrlWithQueryParams } from "./utils/url";
+import { getUrlWithQueryParams, applyTrailingSlash } from "./utils/url";
 import { injectCsrfToken } from "./utils/csrf";
 import { normalizeUseFzFetchOptions } from "./utils/options";
 import { DEFAULT_HTTP_METHOD } from "./common";
@@ -75,6 +75,16 @@ const createFetchResult = <T>(
   headersGetter?: MaybeRefOrGetter<Record<string, string> | undefined>,
   useFetchOptions?: UseFzFetchOptions,
 ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> => {
+  // Apply trailing slash normalization when configured (per-request or global)
+  const effectiveTrailingSlash =
+    useFetchOptions?.trailingSlash ?? state.globalTrailingSlash;
+  const urlToUse =
+    effectiveTrailingSlash === true || effectiveTrailingSlash === false
+      ? computed(() =>
+          applyTrailingSlash(toValue(finalUrl), effectiveTrailingSlash),
+        )
+      : finalUrl;
+
   // Check if interceptors are configured
   const hasInterceptors =
     state.globalRequestInterceptor || state.globalResponseInterceptor;
@@ -101,14 +111,14 @@ const createFetchResult = <T>(
       : undefined;
 
   const baseFetchResult = state.fzFetcher!<T>(
-    finalUrl,
+    urlToUse,
     requestInit,
     baseFetchOptions,
   ).json();
 
   // Create wrapper context (body/headers as getters for params resolver and deduplication)
   const context: WrapperContext = {
-    url: finalUrl,
+    url: urlToUse,
     requestInit,
     method,
     body: bodyGetter,
