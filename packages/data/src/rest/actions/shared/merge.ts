@@ -253,12 +253,12 @@ export function callListActionWithDefaults<T>(
  * Calls the paginated-list action with default args merged with additional args from the view.
  *
  * @param action - usePaginatedList composable (from useActions)
- * @param input - defaultParams, defaultOptions, additionalParamsOrOptions, additionalOptions (see MergeListActionArgsInput)
+ * @param input - defaultParams, defaultOptions, additionalParamsOrOptions, additionalOptions (see MergeListActionArgsInput). forPaginatedList is omitted so callers cannot override the internal flag; pagination is always applied.
  * @returns Result of calling the action with merged params and options
  */
 export function callPaginatedListActionWithDefaults<T>(
   action: UsePaginatedListAction<T>,
-  input: MergeListActionArgsInput<T, UsePaginatedListActionOptions<T>>,
+  input: Omit<MergeListActionArgsInput<T, UsePaginatedListActionOptions<T>>, "forPaginatedList">,
 ): UsePaginatedListActionReturn<T> {
   const { params, options } = mergeListActionArgs<T, UsePaginatedListActionOptions<T>>({
     ...input,
