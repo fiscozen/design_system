@@ -25,6 +25,57 @@ const removeTrailingSlash = (pathname: string): string => {
 };
 
 /**
+ * Trailing slash behavior: normalize the path part of the URL before the request.
+ */
+export type TrailingSlashOption = true | false | null | undefined;
+
+/**
+ * Applies trailing slash to the path part of a URL based on the option.
+ * Query string and fragment are preserved. Only the path (before ? or #) is modified.
+ *
+ * @param url - Full URL or path (relative or absolute)
+ * @param option - true = ensure path ends with /; false = ensure path has no trailing /; null/undefined = no change
+ * @returns URL with path normalized; query and fragment unchanged
+ *
+ * @example
+ * applyTrailingSlash('users/1', true) // 'users/1/'
+ * applyTrailingSlash('users/1/?foo=bar', false) // 'users/1?foo=bar'
+ * applyTrailingSlash('users/1', null) // 'users/1'
+ */
+export const applyTrailingSlash = (
+  url: string,
+  option: TrailingSlashOption,
+): string => {
+  if (option !== true && option !== false) {
+    return url;
+  }
+
+  const queryIndex = url.indexOf("?");
+  const hashIndex = url.indexOf("#");
+  const pathEnd =
+    queryIndex >= 0
+      ? hashIndex >= 0
+        ? Math.min(queryIndex, hashIndex)
+        : queryIndex
+      : hashIndex >= 0
+        ? hashIndex
+        : url.length;
+  const path = url.substring(0, pathEnd);
+  const rest = url.substring(pathEnd);
+
+  const normalizedPath =
+    option === true
+      ? path.endsWith("/")
+        ? path
+        : path
+          ? `${path}/`
+          : "/"
+      : path.replace(/\/$/, "");
+
+  return `${normalizedPath}${rest}`;
+};
+
+/**
  * Normalizes URL by removing trailing slashes and sorting query parameters
  *
  * This is a shared utility for URL normalization used in deduplication and other contexts.

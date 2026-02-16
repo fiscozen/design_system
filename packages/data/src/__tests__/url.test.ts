@@ -1,6 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { ref } from "vue";
-import { getUrlWithQueryParams } from "../rest/http/utils/url";
+import {
+  getUrlWithQueryParams,
+  applyTrailingSlash,
+} from "../rest/http/utils/url";
 
 describe("getUrlWithQueryParams", () => {
   it("should preserve query string when URL contains multiple '?' characters", () => {
@@ -137,5 +140,66 @@ describe("getUrlWithQueryParams", () => {
     const getter = () => null;
     expect(() => getUrlWithQueryParams(url, getter)).not.toThrow();
     expect(getUrlWithQueryParams(url, getter)).toBe("http://example.com/path");
+  });
+});
+
+describe("applyTrailingSlash", () => {
+  describe("when option is true", () => {
+    it("adds trailing slash to path without one", () => {
+      expect(applyTrailingSlash("users/1", true)).toBe("users/1/");
+      expect(applyTrailingSlash("users", true)).toBe("users/");
+    });
+
+    it("leaves path unchanged when it already ends with /", () => {
+      expect(applyTrailingSlash("users/1/", true)).toBe("users/1/");
+    });
+
+    it("preserves query string and fragment", () => {
+      expect(applyTrailingSlash("users/1?foo=bar", true)).toBe(
+        "users/1/?foo=bar",
+      );
+      expect(applyTrailingSlash("users/1#section", true)).toBe(
+        "users/1/#section",
+      );
+      expect(applyTrailingSlash("users/1?foo=bar#section", true)).toBe(
+        "users/1/?foo=bar#section",
+      );
+    });
+
+    it("treats empty path as root and adds /", () => {
+      expect(applyTrailingSlash("", true)).toBe("/");
+    });
+  });
+
+  describe("when option is false", () => {
+    it("removes trailing slash from path", () => {
+      expect(applyTrailingSlash("users/1/", false)).toBe("users/1");
+      expect(applyTrailingSlash("users/", false)).toBe("users");
+    });
+
+    it("leaves path unchanged when it has no trailing slash", () => {
+      expect(applyTrailingSlash("users/1", false)).toBe("users/1");
+    });
+
+    it("preserves query string and fragment", () => {
+      expect(applyTrailingSlash("users/1/?foo=bar", false)).toBe(
+        "users/1?foo=bar",
+      );
+      expect(applyTrailingSlash("users/1/#section", false)).toBe(
+        "users/1#section",
+      );
+    });
+
+    it("removes trailing slash from root path", () => {
+      expect(applyTrailingSlash("/", false)).toBe("");
+    });
+  });
+
+  describe("when option is null or undefined", () => {
+    it("returns url unchanged", () => {
+      const url = "users/1/";
+      expect(applyTrailingSlash(url, null)).toBe(url);
+      expect(applyTrailingSlash(url, undefined)).toBe(url);
+    });
   });
 });

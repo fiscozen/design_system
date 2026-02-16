@@ -38,6 +38,14 @@ export interface UseFzFetchOptions extends UseFetchOptions {
    * @default undefined (uses global deduplication setting)
    */
   deduplication?: boolean;
+
+  /**
+   * Normalize trailing slash on the path for this request.
+   * Overrides setup trailingSlash. true = add, false = remove, null/undefined = use setup or don't touch.
+   *
+   * @default undefined (use setup trailingSlash or no normalization)
+   */
+  trailingSlash?: true | false | null;
 }
 
 /**

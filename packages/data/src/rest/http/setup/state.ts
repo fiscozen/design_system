@@ -26,6 +26,8 @@ export const state = {
   globalDebug: false,
   globalDeduplication: false,
   globalAutoUpdateDebounceDelay: 100, // Default 100ms debounce for autoUpdate
+  /** true = add trailing slash, false = remove, null = don't touch */
+  globalTrailingSlash: null as boolean | null,
   globalRequestInterceptor: null as RequestInterceptor | null,
   globalResponseInterceptor: null as ResponseInterceptor | null,
 
