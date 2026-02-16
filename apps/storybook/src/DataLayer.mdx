@@ -196,7 +196,7 @@ setupFzFetcher({
       <td><code>true | false | null</code></td>
       <td>No</td>
       <td>-</td>
-      <td>Normalize path trailing slash: <code>true</code> = always add, <code>false</code> = always remove, <code>null</code>/omit = don't change. Overridable per-request via UseFzFetchOptions.trailingSlash.</td>
+      <td>Normalize path trailing slash: <code>true</code> = always add, <code>false</code> = always remove, <code>null</code>/omit = don't change. Per-request: UseFzFetchOptions.trailingSlash overrides setup; <code>null</code> = no normalization for that request, omit = use setup.</td>
     </tr>
     <tr>
       <td><code>debug</code></td>
@@ -484,7 +484,7 @@ useFzFetch<T>(url, params: { queryParams?, method?, body?, headers? }, options?:
 
 **Returns:** `data`, `error`, `statusCode`, `response`, `isFetching`, `execute(throwOnFailed?)`.
 
-**Options:** `immediate` (default true), `refetch`, `initialData`, `deduplication`, `trailingSlash` (overrides setup).
+**Options:** `immediate` (default true), `refetch`, `initialData`, `deduplication`, `trailingSlash` (true/false/null; null = no normalization for this request, omit = use setup).
 
 **Examples:**
 

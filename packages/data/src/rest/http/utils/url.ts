@@ -25,7 +25,8 @@ const removeTrailingSlash = (pathname: string): string => {
 };
 
 /**
- * Trailing slash behavior: normalize the path part of the URL before the request.
+ * Trailing slash behavior for URL path normalization.
+ * In useFzFetch options, null explicitly disables normalization for that request; undefined uses setup.
  */
 export type TrailingSlashOption = true | false | null | undefined;
 
@@ -34,7 +35,7 @@ export type TrailingSlashOption = true | false | null | undefined;
  * Query string and fragment are preserved. Only the path (before ? or #) is modified.
  *
  * @param url - Full URL or path (relative or absolute)
- * @param option - true = ensure path ends with /; false = ensure path has no trailing /; null/undefined = no change
+ * @param option - true = ensure path ends with /; false = ensure path has no trailing /; null or undefined = return url unchanged
  * @returns URL with path normalized; query and fragment unchanged
  *
  * @example
