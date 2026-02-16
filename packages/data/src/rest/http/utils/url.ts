@@ -25,6 +25,30 @@ const removeTrailingSlash = (pathname: string): string => {
 };
 
 /**
+ * Splits a URL into the path (before first ? or #) and the rest (from first ? or # to end).
+ * Shared by applyTrailingSlash and normalizeUrlForDeduplication to avoid duplicated parsing.
+ *
+ * @param url - Full URL or path string
+ * @returns path = segment before first ? or #; rest = from that character to end (e.g. "?foo=bar" or "#section" or "")
+ */
+function splitUrlPathAndRest(url: string): { path: string; rest: string } {
+  const queryIndex = url.indexOf("?");
+  const hashIndex = url.indexOf("#");
+  const pathEnd =
+    queryIndex >= 0
+      ? hashIndex >= 0
+        ? Math.min(queryIndex, hashIndex)
+        : queryIndex
+      : hashIndex >= 0
+        ? hashIndex
+        : url.length;
+  return {
+    path: url.substring(0, pathEnd),
+    rest: url.substring(pathEnd),
+  };
+}
+
+/**
  * Trailing slash behavior for URL path normalization.
  * In useFzFetch options, null explicitly disables normalization for that request; undefined uses setup.
  */
@@ -51,19 +75,7 @@ export const applyTrailingSlash = (
     return url;
   }
 
-  const queryIndex = url.indexOf("?");
-  const hashIndex = url.indexOf("#");
-  const pathEnd =
-    queryIndex >= 0
-      ? hashIndex >= 0
-        ? Math.min(queryIndex, hashIndex)
-        : queryIndex
-      : hashIndex >= 0
-        ? hashIndex
-        : url.length;
-  const path = url.substring(0, pathEnd);
-  const rest = url.substring(pathEnd);
-
+  const { path, rest } = splitUrlPathAndRest(url);
   const normalizedPath =
     option === true
       ? path.endsWith("/")
@@ -120,18 +132,14 @@ export const normalizeUrlForDeduplication = (
     }
 
     // Handle relative URLs without baseUrl
-    const queryIndex = url.indexOf("?");
-    const pathname = queryIndex === -1 ? url : url.substring(0, queryIndex);
-    const query = queryIndex === -1 ? "" : url.substring(queryIndex + 1);
-
-    if (query) {
-      const params = new URLSearchParams(query);
+    const { path, rest } = splitUrlPathAndRest(url);
+    if (rest.startsWith("?")) {
+      const params = new URLSearchParams(rest.slice(1));
       const sortedParams = sortQueryParams(params);
       const sortedQuery = new URLSearchParams(sortedParams).toString();
-      return `${removeTrailingSlash(pathname)}${sortedQuery ? `?${sortedQuery}` : ""}`;
+      return `${removeTrailingSlash(path)}${sortedQuery ? `?${sortedQuery}` : ""}`;
     }
-
-    return removeTrailingSlash(pathname);
+    return removeTrailingSlash(path) + rest;
   } catch {
     // If URL parsing fails, return as-is
     return url;
