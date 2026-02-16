@@ -92,7 +92,7 @@ export const Default: Story = {
     const canvas = within(canvasElement)
 
     await step('Verify component renders', async () => {
-      const container = canvasElement.querySelector('.fz-container.overflow-y-auto')
+      const container = canvasElement.querySelector('.fz-chat-container')
       await expect(container).toBeInTheDocument()
       await expect(container).toBeVisible()
     })
@@ -103,7 +103,7 @@ export const Default: Story = {
     })
 
     await step('Verify scroll container has correct structure', async () => {
-      const container = canvasElement.querySelector('.fz-container.overflow-y-auto')
+      const container = canvasElement.querySelector('.fz-chat-container')
       await expect(container).toBeInTheDocument()
     })
 
@@ -208,7 +208,7 @@ export const LastMessageFromReceiver: Story = {
     })
 
     await step('Accessibility: scroll container is visible', async () => {
-      const container = canvasElement.querySelector('.fz-container.overflow-y-auto')
+      const container = canvasElement.querySelector('.fz-chat-container')
       await expect(container).toBeInTheDocument()
       await expect(container).toBeVisible()
     })
@@ -360,7 +360,7 @@ export const LoadMore: Story = {
     })
 
     const scrollContainer = canvasElement.querySelector(
-      '.fz-container.overflow-y-auto'
+      '.fz-chat-container'
     ) as HTMLElement
 
     await step('Scroll to top triggers load-more and loads older messages', async () => {
