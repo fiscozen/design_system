@@ -279,6 +279,10 @@ describe("Integration Tests", () => {
       await expectUrlForPath("users/1", false, "users/1/", true);
     });
 
+    it("per-request trailingSlash null disables normalization (overrides setup true)", async () => {
+      await expectUrlForPath("users/1", true, "users/1", null);
+    });
+
     it("correct usage: intercepted URL never has double slash at end when setup trailingSlash true", async () => {
       const pathWithScenario: Array<{ path: string; scenario: string }> = [
         { path: "users", scenario: "useActions('users') → useList()" },

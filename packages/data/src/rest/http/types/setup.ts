@@ -59,7 +59,8 @@ export interface SetupFzFetcherOptions {
    * - `false`: ensure path never ends with /
    * - `null` / `undefined`: do not modify the URL
    *
-   * Can be overridden per-request via UseFzFetchOptions.trailingSlash
+   * Per-request override (UseFzFetchOptions.trailingSlash): omit = use this value;
+   * `null` = no normalization for that request; `true`/`false` = override for that request.
    *
    * @default undefined (no normalization)
    */

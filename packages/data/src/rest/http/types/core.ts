@@ -41,7 +41,8 @@ export interface UseFzFetchOptions extends UseFetchOptions {
 
   /**
    * Normalize trailing slash on the path for this request.
-   * Overrides setup trailingSlash. true = add, false = remove, null/undefined = use setup or don't touch.
+   * true = add, false = remove, null = no normalization for this request (overrides setup).
+   * Omit (undefined) = use setup trailingSlash.
    *
    * @default undefined (use setup trailingSlash or no normalization)
    */

@@ -64,7 +64,8 @@ const createDefaultWrapperChain = (): WrapperChain => {
  * @param method - HTTP method
  * @param bodyGetter - Optional reactive body (re-evaluated on each execute)
  * @param headersGetter - Optional reactive headers (re-evaluated on each execute)
- * @param useFetchOptions - Optional useFetchOptions for fzFetcher and interceptors
+ * @param useFetchOptions - Optional useFetchOptions for fzFetcher and interceptors. For trailingSlash:
+ *   omit (undefined) = use global setting; null = no normalization for this request; true/false = override.
  * @returns Wrapped fetch result with all wrappers applied
  */
 const createFetchResult = <T>(
@@ -75,9 +76,11 @@ const createFetchResult = <T>(
   headersGetter?: MaybeRefOrGetter<Record<string, string> | undefined>,
   useFetchOptions?: UseFzFetchOptions,
 ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> => {
-  // Apply trailing slash normalization when configured (per-request or global)
+  // Per-request null = no normalization; undefined = use global. See UseFzFetchOptions.trailingSlash JSDoc.
   const effectiveTrailingSlash =
-    useFetchOptions?.trailingSlash ?? state.globalTrailingSlash;
+    useFetchOptions?.trailingSlash !== undefined
+      ? useFetchOptions.trailingSlash
+      : state.globalTrailingSlash;
   const urlToUse =
     effectiveTrailingSlash === true || effectiveTrailingSlash === false
       ? computed(() =>
