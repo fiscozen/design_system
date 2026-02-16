@@ -137,19 +137,10 @@ describe("Integration Tests", () => {
   });
 
   describe("Trailing slash", () => {
-    it("should add trailing slash to URL when setup trailingSlash is true", async () => {
-      let interceptedUrl: string = "";
-
-      setupFzFetcher({
-        baseUrl: "https://api.example.com",
-        trailingSlash: true,
-        requestInterceptor: async (url) => {
-          interceptedUrl = url;
-          return {};
-        },
-      });
-
-      global.fetch = vi.fn(() =>
+    // We test both: (1) paths that occur with correct usage; (2) paths that should NOT occur
+    // (wrong usage) but we verify the normalizer still behaves safely (e.g. no // at end).
+    const mockFetch = () =>
+      vi.fn(() =>
         Promise.resolve(
           new Response(JSON.stringify({}), {
             status: 200,
@@ -158,67 +149,186 @@ describe("Integration Tests", () => {
         ),
       ) as typeof fetch;
 
-      const { execute } = useFzFetch<unknown>("users/1");
+    async function expectUrlForPath(
+      path: string,
+      setupTrailingSlash: true | false | null | undefined,
+      expectedUrl: string,
+      perRequestTrailingSlash?: true | false | null,
+    ): Promise<void> {
+      let interceptedUrl = "";
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        ...(setupTrailingSlash !== undefined && setupTrailingSlash !== null
+          ? { trailingSlash: setupTrailingSlash }
+          : {}),
+        requestInterceptor: async (url) => {
+          interceptedUrl = url;
+          return {};
+        },
+      });
+      global.fetch = mockFetch();
+      const options =
+        perRequestTrailingSlash !== undefined
+          ? { trailingSlash: perRequestTrailingSlash, immediate: false }
+          : undefined;
+      const { execute } = useFzFetch<unknown>(path, options ?? {});
       await execute();
+      expect(interceptedUrl).toBe(expectedUrl);
+    }
 
-      expect(interceptedUrl).toBe("users/1/");
+    const pathPermutationsCorrectUsage: string[] = [
+      "users",
+      "users/",
+      "/users",
+      "/users/",
+      "users/1",
+      "/users/1",
+    ];
+
+    /** Paths that should NOT occur with correct usage; we still verify normalizer output. */
+    const pathPermutationsWrongUsage: string[] = [
+      "users/1/",   // WRONG: pk with trailing
+      "users//1",   // WRONG: basePath with trailing → // in middle
+      "users//1/",
+      "/users/1/",  // WRONG: pk with trailing
+      "/users//1",  // WRONG: basePath with trailing → // in middle
+      "/users//1/",
+    ];
+
+    const expectedWhenSetupTrue: Record<string, string> = {
+      users: "users/",
+      "users/": "users/",
+      "/users": "/users/",
+      "/users/": "/users/",
+      "users/1": "users/1/",
+      "/users/1": "/users/1/",
+      "users/1/": "users/1/",
+      "users//1": "users//1/",
+      "users//1/": "users//1/",
+      "/users/1/": "/users/1/",
+      "/users//1": "/users//1/",
+      "/users//1/": "/users//1/",
+    };
+
+    const expectedWhenSetupFalse: Record<string, string> = {
+      users: "users",
+      "users/": "users",
+      "/users": "/users",
+      "/users/": "/users",
+      "users/1": "users/1",
+      "/users/1": "/users/1",
+      "users/1/": "users/1",
+      "users//1": "users//1",
+      "users//1/": "users//1",
+      "/users/1/": "/users/1",
+      "/users//1": "/users//1",
+      "/users//1/": "/users//1",
+    };
+
+    describe("correct usage paths (list = basePath; retrieve = basePath + '/' + pk, no trailing on basePath, pk without slash)", () => {
+      it.each(pathPermutationsCorrectUsage)(
+        "setup trailingSlash true: path %s → expected",
+        async (path) => {
+          await expectUrlForPath(path, true, expectedWhenSetupTrue[path]);
+        },
+      );
+
+      it.each(pathPermutationsCorrectUsage)(
+        "setup trailingSlash false: path %s → expected",
+        async (path) => {
+          await expectUrlForPath(path, false, expectedWhenSetupFalse[path]);
+        },
+      );
+
+      it.each(pathPermutationsCorrectUsage)(
+        "setup without trailingSlash: path %s left unchanged",
+        async (path) => {
+          await expectUrlForPath(path, undefined, path);
+        },
+      );
     });
 
-    it("should remove trailing slash from URL when setup trailingSlash is false", async () => {
-      let interceptedUrl: string = "";
-
-      setupFzFetcher({
-        baseUrl: "https://api.example.com",
-        trailingSlash: false,
-        requestInterceptor: async (url) => {
-          interceptedUrl = url;
-          return {};
+    describe("wrong usage paths (should not occur; we verify normalizer still safe)", () => {
+      it.each(pathPermutationsWrongUsage)(
+        "setup trailingSlash true: path %s → expected (no double slash at end)",
+        async (path) => {
+          await expectUrlForPath(path, true, expectedWhenSetupTrue[path]);
         },
-      });
+      );
 
-      global.fetch = vi.fn(() =>
-        Promise.resolve(
-          new Response(JSON.stringify({}), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          }),
-        ),
-      ) as typeof fetch;
+      it.each(pathPermutationsWrongUsage)(
+        "setup trailingSlash false: path %s → expected",
+        async (path) => {
+          await expectUrlForPath(path, false, expectedWhenSetupFalse[path]);
+        },
+      );
 
-      const { execute } = useFzFetch<unknown>("users/1/");
-      await execute();
-
-      expect(interceptedUrl).toBe("users/1");
+      it.each(pathPermutationsWrongUsage)(
+        "setup without trailingSlash: path %s left unchanged",
+        async (path) => {
+          await expectUrlForPath(path, undefined, path);
+        },
+      );
     });
 
-    it("should allow per-request trailingSlash to override setup", async () => {
-      let interceptedUrl: string = "";
+    it("per-request trailingSlash false overrides setup true", async () => {
+      await expectUrlForPath("users/1", true, "users/1", false);
+    });
 
-      setupFzFetcher({
-        baseUrl: "https://api.example.com",
-        trailingSlash: true,
-        requestInterceptor: async (url) => {
-          interceptedUrl = url;
-          return {};
-        },
-      });
+    it("per-request trailingSlash true overrides setup false", async () => {
+      await expectUrlForPath("users/1", false, "users/1/", true);
+    });
 
-      global.fetch = vi.fn(() =>
-        Promise.resolve(
-          new Response(JSON.stringify({}), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          }),
-        ),
-      ) as typeof fetch;
+    it("correct usage: intercepted URL never has double slash at end when setup trailingSlash true", async () => {
+      const pathWithScenario: Array<{ path: string; scenario: string }> = [
+        { path: "users", scenario: "useActions('users') → useList()" },
+        { path: "users/", scenario: "useActions('users/') → useList()" },
+        { path: "/users", scenario: "useActions('/users') → useList()" },
+        { path: "/users/", scenario: "useActions('/users/') → useList()" },
+        { path: "users/1", scenario: "useActions('users') + useRetrieve('1')" },
+        { path: "/users/1", scenario: "useActions('/users') + useRetrieve('1')" },
+      ];
+      for (const { path, scenario } of pathWithScenario) {
+        let url = "";
+        setupFzFetcher({
+          baseUrl: "https://api.example.com",
+          trailingSlash: true,
+          requestInterceptor: async (u) => {
+            url = u;
+            return {};
+          },
+        });
+        global.fetch = mockFetch();
+        const { execute } = useFzFetch<unknown>(path);
+        await execute();
+        expect(url.endsWith("//"), `[${scenario}] path ${path} → ${url} must not end with //`).toBe(false);
+      }
+    });
 
-      const { execute } = useFzFetch<unknown>("users/1", {
-        trailingSlash: false,
-        immediate: false,
-      });
-      await execute();
-
-      expect(interceptedUrl).toBe("users/1");
+    it("wrong usage: intercepted URL never has double slash at end when setup trailingSlash true", async () => {
+      const pathWithScenario: Array<{ path: string; scenario: string }> = [
+        { path: "users/1/", scenario: "WRONG: useRetrieve('1/') — pk with trailing" },
+        { path: "users//1", scenario: "WRONG: useActions('users/') + useRetrieve('1')" },
+        { path: "users//1/", scenario: "WRONG: useActions('users/') + useRetrieve('1/')" },
+        { path: "/users/1/", scenario: "WRONG: useRetrieve('1/') — pk with trailing" },
+        { path: "/users//1", scenario: "WRONG: useActions('/users/') + useRetrieve('1')" },
+        { path: "/users//1/", scenario: "WRONG: useActions('/users/') + useRetrieve('1/')" },
+      ];
+      for (const { path, scenario } of pathWithScenario) {
+        let url = "";
+        setupFzFetcher({
+          baseUrl: "https://api.example.com",
+          trailingSlash: true,
+          requestInterceptor: async (u) => {
+            url = u;
+            return {};
+          },
+        });
+        global.fetch = mockFetch();
+        const { execute } = useFzFetch<unknown>(path);
+        await execute();
+        expect(url.endsWith("//"), `[${scenario}] path ${path} → ${url} must not end with //`).toBe(false);
+      }
     });
   });
 
