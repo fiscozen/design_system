@@ -1,3 +1,5 @@
+export type FzTabStyle = "scroll" | "picker" | "fullWidth";
+
 export type FzTabsProps = {
   /**
    * Size variant
@@ -17,8 +19,9 @@ export type FzTabsProps = {
    * Controls tab style and overflow behavior
    * - 'scroll': Shows horizontal scroll when tabs overflow (default)
    * - 'picker': Shows picker dropdown
+   * - 'full-width': Shows full width tabs
    */
-  tabStyle?: "scroll" | "picker";
+  tabStyle?: FzTabStyle;
   /**
    * Environment variant for sizing
    * - 'backoffice': Backoffice environment sizing

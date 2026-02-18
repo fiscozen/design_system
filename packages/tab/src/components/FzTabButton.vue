@@ -6,13 +6,7 @@
     }}</span>
     <FzBadge
       v-if="tab.badgeContent != null"
-      :color="
-        selectedTab === tab.title
-          ? props.tone === 'alert'
-            ? 'error'
-            : 'blue'
-          : 'black'
-      "
+      :color="badgeColor"
       :environment="environment"
       size="md"
     >
@@ -44,16 +38,23 @@ const props = withDefaults(
     readonly?: boolean;
     maxWidth?: string;
     tone?: "neutral" | "alert";
+    fullWidth?: boolean;
   }>(),
   {
     type: "tab",
     readonly: false,
     tone: "neutral",
+    fullWidth: false,
   },
 );
 
 const selectedTab = inject<Ref<string>>("selectedTab");
 const emit = defineEmits(["click"]);
+
+const badgeColor = computed(() => {
+  if (selectedTab?.value !== props.tab.title) return "black";
+  return props.tone === "alert" ? "error" : "blue";
+});
 
 /**
  * Builds the CSS classes array for a tab button based on its state and configuration.
@@ -74,13 +75,15 @@ function getTabButtonClasses(
   isDisabled: boolean,
   maxWidth?: string,
   isXsBreakpoint: boolean = false,
+  fullWidth: boolean = false,
 ): string[] {
   const toneClasses = isSelected
     ? mapSelectedTabToClassesWithTone[tone][type]
     : mapUnselectedTabToClassesWithTone[tone][type];
 
   return [
-    "w-auto flex items-center rounded-md",
+    "flex items-center rounded-md",
+    fullWidth ? "flex-1 justify-center" : "w-auto",
     mapEnvironmentToClasses[environment],
     type === "picker" ? "text-left" : "",
     toneClasses,
@@ -102,6 +105,7 @@ const classes = computed(() => {
     props.tab.disabled ?? false,
     props.maxWidth,
     xs.value ?? false,
+    props.fullWidth,
   );
 });
 

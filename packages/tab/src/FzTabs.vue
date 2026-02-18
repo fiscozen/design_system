@@ -24,6 +24,7 @@
             :tone="tab.tone"
             type="tab"
             :readonly="false"
+            :fullWidth="effectiveTabStyle === 'fullWidth'"
           />
         </template>
         <slot name="tabs-container-end" />
@@ -36,7 +37,7 @@
 
 <script setup lang="ts">
 import { computed, ref, onMounted, provide, useSlots, watch, VNode } from "vue";
-import { FzTabsProps, FzTabProps } from "./types";
+import { FzTabsProps, FzTabProps, FzTabStyle } from "./types";
 import FzTabPicker from "./components/FzTabPicker.vue";
 import FzTabButton from "./components/FzTabButton.vue";
 import FzTab from "./FzTab.vue";
@@ -81,8 +82,13 @@ const tabs = computed(() => {
     .filter((el): el is FzTabProps => el != null);
 });
 
-const staticTabContainerClass =
-  "tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto";
+const staticTabContainerClass = computed(() => {
+  const base = "tab-container flex rounded-lg p-2 bg-grey-100";
+  if (effectiveTabStyle.value === "fullWidth") {
+    return `${base} w-full`;
+  }
+  return `${base} w-fit max-w-full w-full sm:w-auto`;
+});
 
 const computedClass = computed(() => [
   props.vertical ? "flex-col" : "flex-row",
@@ -118,7 +124,7 @@ const effectiveSize = computed<"frontoffice" | "backoffice">(() => {
  * Determines the effective overflow mode
  * Priority: overflowMode prop > horizontalOverflow prop (deprecated) > default 'scroll'
  */
-const effectiveTabStyle = computed<"scroll" | "picker">(() => {
+const effectiveTabStyle = computed<FzTabStyle>(() => {
   if (
     props.horizontalOverflow !== undefined &&
     props.horizontalOverflow === false

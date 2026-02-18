@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Documentation/Panel/FzTabs" />
 
@@ -35,15 +35,9 @@ import { FzTabs, FzTab } from '@fiscozen/tab'
 
 <template>
   <FzTabs>
-    <FzTab title="Tab 1">
-      Content for Tab 1
-    </FzTab>
-    <FzTab title="Tab 2">
-      Content for Tab 2
-    </FzTab>
-    <FzTab title="Tab 3">
-      Content for Tab 3
-    </FzTab>
+    <FzTab title="Tab 1"> Content for Tab 1 </FzTab>
+    <FzTab title="Tab 2"> Content for Tab 2 </FzTab>
+    <FzTab title="Tab 3"> Content for Tab 3 </FzTab>
   </FzTabs>
 </template>
 ```
@@ -75,12 +69,8 @@ import { FzTabs, FzTab } from '@fiscozen/tab'
 ```vue
 <template>
   <FzTabs>
-    <FzTab title="Notifications" icon="bell">
-      Notifications content
-    </FzTab>
-    <FzTab title="Settings" icon="cog">
-      Settings content
-    </FzTab>
+    <FzTab title="Notifications" icon="bell"> Notifications content </FzTab>
+    <FzTab title="Settings" icon="cog"> Settings content </FzTab>
   </FzTabs>
 </template>
 ```
@@ -90,12 +80,8 @@ import { FzTabs, FzTab } from '@fiscozen/tab'
 ```vue
 <template>
   <FzTabs>
-    <FzTab title="Inbox" badgeContent="5">
-      Inbox content
-    </FzTab>
-    <FzTab title="Archive" badgeContent="12">
-      Archive content
-    </FzTab>
+    <FzTab title="Inbox" badgeContent="5"> Inbox content </FzTab>
+    <FzTab title="Archive" badgeContent="12"> Archive content </FzTab>
   </FzTabs>
 </template>
 ```
@@ -145,7 +131,7 @@ import { FzTabs, FzTab } from '@fiscozen/tab'
   <FzTabs>
     <FzTab title="Tab 1">Content 1</FzTab>
     <FzTab title="Tab 2">Content 2</FzTab>
-    
+
     <template #tabs-end>
       <div class="flex-1" />
       <FzButton label="Action" variant="primary" />
@@ -158,32 +144,32 @@ import { FzTabs, FzTab } from '@fiscozen/tab'
 
 ### FzTabs Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `tabStyle` | `'scroll' \| 'picker' \| 'none'` | `'none'` | Controls overflow behavior when tabs exceed container width |
-| `environment` | `'backoffice' \| 'frontoffice'` | `undefined` | Environment variant for sizing |
-| `tone` | `'neutral' \| 'alert'` | `'neutral'` | Tone variant for styling (neutral or alert/red) |
-| `size` | `'sm' \| 'md'` | `undefined` | **Deprecated:** Use `environment` prop instead. This prop will be removed in a future version. |
-| `horizontalOverflow` | `boolean` | `undefined` | **Deprecated:** Use `tabStyle="scroll"` instead. This prop will be removed in a future version. |
-| `vertical` | `boolean` | `false` | **Deprecated:** This prop is deprecated and will be removed in a future version. |
+| Prop                 | Type                             | Default     | Description                                                                                     |
+| -------------------- | -------------------------------- | ----------- | ----------------------------------------------------------------------------------------------- |
+| `tabStyle`           | `'scroll' \| 'picker' \| 'none'` | `'none'`    | Controls overflow behavior when tabs exceed container width                                     |
+| `environment`        | `'backoffice' \| 'frontoffice'`  | `undefined` | Environment variant for sizing                                                                  |
+| `tone`               | `'neutral' \| 'alert'`           | `'neutral'` | Tone variant for styling (neutral or alert/red)                                                 |
+| `size`               | `'sm' \| 'md'`                   | `undefined` | **Deprecated:** Use `environment` prop instead. This prop will be removed in a future version.  |
+| `horizontalOverflow` | `boolean`                        | `undefined` | **Deprecated:** Use `tabStyle="scroll"` instead. This prop will be removed in a future version. |
+| `vertical`           | `boolean`                        | `false`     | **Deprecated:** This prop is deprecated and will be removed in a future version.                |
 
 ### FzTab Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | `string` | - | **Required.** Title of the tab |
-| `icon` | `string` | `undefined` | Icon name to display on the tab |
-| `badgeContent` | `string` | `undefined` | Badge text or number to display on the tab |
-| `disabled` | `boolean` | `false` | Disable the tab |
-| `initialSelected` | `boolean` | `false` | Show this tab's content initially |
-| `maxWidth` | `string` | `undefined` | Maximum width of the tab |
+| Prop              | Type      | Default     | Description                                |
+| ----------------- | --------- | ----------- | ------------------------------------------ |
+| `title`           | `string`  | -           | **Required.** Title of the tab             |
+| `icon`            | `string`  | `undefined` | Icon name to display on the tab            |
+| `badgeContent`    | `string`  | `undefined` | Badge text or number to display on the tab |
+| `disabled`        | `boolean` | `false`     | Disable the tab                            |
+| `initialSelected` | `boolean` | `false`     | Show this tab's content initially          |
+| `maxWidth`        | `string`  | `undefined` | Maximum width of the tab                   |
 
 ### FzTabs Slots
 
-| Slot | Description |
-|------|-------------|
-| `default` | Tab content (FzTab components) |
-| `tabs-end` | Content to display after the tabs container |
+| Slot                 | Description                                         |
+| -------------------- | --------------------------------------------------- |
+| `default`            | Tab content (FzTab components)                      |
+| `tabs-end`           | Content to display after the tabs container         |
 | `tabs-container-end` | Content to display at the end of the tabs container |
 
 ### FzTabs Scoped Slot
@@ -201,8 +187,8 @@ The default slot provides a scoped slot with the selected tab:
 
 ### Events
 
-| Event | Payload | Description |
-|-------|---------|-------------|
+| Event    | Payload              | Description                           |
+| -------- | -------------------- | ------------------------------------- |
 | `change` | `string` (tab title) | Emitted when the selected tab changes |
 
 ## Deprecation Guide
@@ -224,6 +210,7 @@ The `size` prop is deprecated. Use `environment` instead:
 ```
 
 **Migration mapping:**
+
 - `size="sm"` → `environment="backoffice"`
 - `size="md"` → `environment="backoffice"`
 
@@ -244,6 +231,7 @@ The `horizontalOverflow` prop is deprecated. Use `tabStyle` instead:
 ```
 
 **Migration mapping:**
+
 - `horizontalOverflow={true}` or `horizontalOverflow={undefined}` → `tabStyle="scroll"`
 - `horizontalOverflow={false}` → `tabStyle="picker"`
 
@@ -253,7 +241,7 @@ All deprecated props continue to work for backward compatibility but will show c
 
 ## Overflow Behavior
 
-Overflow behavior is now handled automatically. You can still 
+Overflow behavior is now handled automatically. You can still
 set the tabStyle prop to control how the tabs are displayed and how they overflow.
 
 ### `tabStyle="scroll"`
@@ -295,19 +283,20 @@ This component implements comprehensive accessibility features:
 
 ### Keyboard Interactions
 
-| Key | Action |
-|-----|--------|
-| `Tab` | Navigate to next tab |
-| `Shift + Tab` | Navigate to previous tab |
+| Key                | Action                                    |
+| ------------------ | ----------------------------------------- |
+| `Tab`              | Navigate to next tab                      |
+| `Shift + Tab`      | Navigate to previous tab                  |
 | `Arrow Left/Right` | Navigate between tabs (horizontal layout) |
-| `Arrow Up/Down` | Navigate between tabs (vertical layout) |
-| `Enter` or `Space` | Activate selected tab |
-| `Home` | Navigate to first tab |
-| `End` | Navigate to last tab |
+| `Arrow Up/Down`    | Navigate between tabs (vertical layout)   |
+| `Enter` or `Space` | Activate selected tab                     |
+| `Home`             | Navigate to first tab                     |
+| `End`              | Navigate to last tab                      |
 
 ### ARIA Attributes
 
 The component automatically sets:
+
 - `role="tablist"` on the tabs container
 - `role="tab"` on each tab button
 - `aria-selected` to indicate the active tab
@@ -336,6 +325,7 @@ Tabs use Tailwind CSS classes and can be customized through the design system's 
 ## Learn More
 
 ### Interactive Examples
+
 - **[Tabs Stories](../?path=/docs/panel-fztabs--docs)** - Live examples and interactive demos
 - **[Basic Tabs](../?path=/story/panel-fztabs--small)** - Basic tab example
 - **[With Overflow](../?path=/story/panel-fztabs--overflow-mode-scroll)** - Overflow handling demo
@@ -343,6 +333,7 @@ Tabs use Tailwind CSS classes and can be customized through the design system's 
 - **[With Badges](../?path=/story/panel-fztabs--with-badge-small)** - Tabs with badges
 
 ### Related Components
+
 - **[FzButton](../?path=/docs/button-fzbutton--docs)** - Button component
 - **[FzBadge](../?path=/docs/data-fzbadge--docs)** - Badge component
 - **[FzIcon](../?path=/docs/data-fzicon--docs)** - Icon component
