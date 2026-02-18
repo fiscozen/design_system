@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/tooltip",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Design System Tooltip Component",
   "scripts": {
     "coverage": "vitest run --coverage",

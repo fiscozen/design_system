@@ -1,5 +1,17 @@
 # @fiscozen/typeahead
 
+## 1.0.1
+
+### Patch Changes
+
+- 1a2df8c: Move @fiscozen/icons from dependencies to peerDependencies. Consumers now need to install @fiscozen/icons explicitly. This decouples icon updates from component version bumps.
+- Updated dependencies [1a2df8c]
+  - @fiscozen/action@1.1.1
+  - @fiscozen/alert@1.0.1
+  - @fiscozen/button@1.0.2
+  - @fiscozen/input@1.0.1
+  - @fiscozen/progress@1.0.2
+
 ## 1.0.0
 
 ### Major Changes
@@ -9,6 +21,7 @@
 ### Modifiche dalla versione 0.1.16
 
 #### Nuove funzionalità
+
 - **Ricerca fuzzy** con Fuse.js tramite la prop `fuzzySearch` (LIB-1918)
 - Pulsante icona a destra con gestione personalizzata (LIB-1918)
 - Evento rinominato in `fztypeahead:select` con namespace (LIB-1918)
@@ -17,11 +30,13 @@
 - Floating label con altezza adattata (LIB-1918)
 
 #### Refactoring
+
 - Merge architetturale con FzSelect: componenti condivisi e logica unificata (LIB-1918)
 - Deprecation warnings aggiornati per le prop legacy (LIB-1918)
 - Semplificazione della computation di `selectedOption` (LIB-1918)
 
 #### Dalla versione 0.1.16 (pre-redesign)
+
 - Fix per la preselezione tramite input che ora cerca nella label (non nel valore)
 - Slot `label` personalizzabile
 - Prop `allowFreeInput` per consentire input libero

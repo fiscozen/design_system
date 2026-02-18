@@ -1,5 +1,11 @@
 # @fiscozen/progress
 
+## 1.0.2
+
+### Patch Changes
+
+- 1a2df8c: Move @fiscozen/icons from dependencies to peerDependencies. Consumers now need to install @fiscozen/icons explicitly. This decouples icon updates from component version bumps.
+
 ## 1.0.1
 
 ### Minor Changes (dalla versione 0.1.0)
@@ -9,6 +15,7 @@
 ### Modifiche dalla versione 0.1.0
 
 #### Nuove funzionalità
+
 - Nuovo componente **FzProgressBar** con barra di avanzamento visuale (LIB-2341)
 - Prop `color` per personalizzare il colore della barra di progresso (LIB-2361)
 - Prop `size` per controllare la dimensione del componente (LIB-2361)

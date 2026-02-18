@@ -1,5 +1,15 @@
 # @fiscozen/radio
 
+## 1.0.1
+
+### Patch Changes
+
+- 1a2df8c: Move @fiscozen/icons from dependencies to peerDependencies. Consumers now need to install @fiscozen/icons explicitly. This decouples icon updates from component version bumps.
+- Updated dependencies [1a2df8c]
+  - @fiscozen/alert@1.0.1
+  - @fiscozen/badge@1.0.1
+  - @fiscozen/tooltip@1.0.3
+
 ## 1.0.0
 
 ### Major Changes
@@ -9,11 +19,13 @@
 ### Modifiche dalla versione 0.1.10
 
 #### Nuove funzionalità
+
 - Nuovo componente **FzRadioCard** con supporto per immagini e layout personalizzabile
 - Integrazione con FzAlert per la visualizzazione degli errori (`tone` prop)
 - Dimensione predefinita del gruppo radio impostata a `md`
 
 #### Correzioni
+
 - Correzione dello stile dell'input nascosto in FzRadio (LIB-820)
 - Correzione dell'evento `onChange` che veniva emesso alla creazione (LIB-569)
 - Correzioni al design e allo stile del radio e del radio group (LIB-491)
