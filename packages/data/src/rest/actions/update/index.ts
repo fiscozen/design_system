@@ -4,6 +4,7 @@ import { CONTENT_TYPE_JSON } from "../../http/common";
 import type { UseUpdateAction, UseUpdateExecuteOptions } from "./types";
 import type { MutationActionOptions } from "../shared/types";
 import { executeMutation } from "../shared/error-handling";
+import { mutationOptionsToFetchOptions } from "../shared/normalize";
 import { validatePrimaryKey } from "../shared/validation";
 
 /**
@@ -49,7 +50,7 @@ export const createUpdateAction = <T>(
           method,
           body,
           headers: { "Content-Type": CONTENT_TYPE_JSON },
-        });
+        }, mutationOptionsToFetchOptions(options));
 
         await response.execute(options?.throwOnError ?? false);
         return response;

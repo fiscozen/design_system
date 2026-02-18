@@ -3,6 +3,7 @@ import { useFzFetch } from "../../http";
 import type { UseDeleteAction } from "./types";
 import type { MutationActionOptions } from "../shared/types";
 import { executeMutation } from "../shared/error-handling";
+import { mutationOptionsToFetchOptions } from "../shared/normalize";
 import { validatePrimaryKey } from "../shared/validation";
 
 /**
@@ -27,7 +28,7 @@ export const createDeleteAction = <T>(
 
         const response = useFzFetch<T>(`${basePath}/${pk}`, {
           method: "DELETE",
-        });
+        }, mutationOptionsToFetchOptions(options));
 
         await response.execute(options?.throwOnError ?? false);
         return response;

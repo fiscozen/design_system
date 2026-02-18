@@ -1,7 +1,42 @@
 import { describe, it, expect } from "vitest";
-import { normalizeParams, normalizePaginatedListResponse } from "../rest/actions/shared/normalize";
+import {
+  normalizeParams,
+  normalizePaginatedListResponse,
+  normalizeOptions,
+  mutationOptionsToFetchOptions,
+} from "../rest/actions/shared/normalize";
 import { shallowRef } from "vue";
 import type { UseFzFetchReturn } from "../rest/http/types";
+
+describe("normalizeOptions", () => {
+  it("passes through trailingSlash when provided", () => {
+    expect(normalizeOptions({ trailingSlash: true }).trailingSlash).toBe(true);
+    expect(normalizeOptions({ trailingSlash: false }).trailingSlash).toBe(
+      false,
+    );
+    expect(normalizeOptions({ trailingSlash: null }).trailingSlash).toBe(null);
+  });
+
+  it("leaves trailingSlash undefined when not provided", () => {
+    expect(normalizeOptions({}).trailingSlash).toBeUndefined();
+    expect(normalizeOptions({ onMount: false }).trailingSlash).toBeUndefined();
+  });
+});
+
+describe("mutationOptionsToFetchOptions", () => {
+  it("returns immediate: false and trailingSlash when options.trailingSlash is set", () => {
+    const opts = mutationOptionsToFetchOptions({ trailingSlash: true });
+    expect(opts.immediate).toBe(false);
+    expect(opts.trailingSlash).toBe(true);
+  });
+
+  it("returns only immediate: false when options undefined or trailingSlash omitted", () => {
+    expect(mutationOptionsToFetchOptions(undefined)).toEqual({
+      immediate: false,
+    });
+    expect(mutationOptionsToFetchOptions({})).toEqual({ immediate: false });
+  });
+});
 
 describe("normalizeParams", () => {
   describe("Ordering normalization", () => {

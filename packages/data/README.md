@@ -37,6 +37,7 @@
 - ✅ Request deduplication (configurable globally and per-action)
 - ✅ Request and response interceptors (modify requests/responses, abort requests)
 - ✅ Reactive body and headers in `useFzFetch` (`MaybeRefOrGetter`; re-evaluated on each `execute()`)
+- ✅ Per-action trailing slash override (`trailingSlash` in QueryActionOptions and MutationActionOptions; overrides setup for that action)
 - ✅ Debug logging (configurable via `setupFzFetcher({ debug: true })`)
 - ✅ Call-with-defaults helpers for custom actions (`callListActionWithDefaults`, `callPaginatedListActionWithDefaults`, `callRetrieveActionWithDefaults`, `callCreateActionWithDefaults`, `callUpdateActionWithDefaults`, `callDeleteActionWithDefaults`)
 - ✅ Filter semantics: `undefined` = omit from request, `null` = send to server
@@ -378,7 +379,7 @@ return chain.apply(baseFetchResult, context)
 
 **Shared Utilities (`shared/`):**
 - `types.ts`: Common types for all actions
-- `normalize.ts`: Normalizes action options, `isParamsObject` (params vs options discrimination)
+- `normalize.ts`: Normalizes action options (including `trailingSlash` pass-through to UseFzFetchOptions), `isParamsObject` (params vs options discrimination), `mutationOptionsToFetchOptions` (MutationActionOptions → UseFzFetchOptions for create/update/delete)
 - `error-handling.ts`: Centralized error handling
 - `merge.ts`: Merge helpers for custom actions (default + view → merge → action)
 
