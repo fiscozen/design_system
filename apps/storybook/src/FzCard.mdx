@@ -1,0 +1,199 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Documentation/Panel/FzCard" />
+
+# FzCard
+
+A flexible container that groups related content and actions. Cards can include a title, header slots, main content, footer, and primary/secondary/tertiary actions. Supports multiple background color variants and optional collapsible content.
+
+## Features
+
+- Multiple color variants: default, blue, orange, purple, grey, yellow (warning tint), red (error tint)
+- Optional collapsible content with configurable default state
+- Primary, secondary, and tertiary action buttons
+- Header and footer slots for custom content
+- Optional info icon with dedicated event
+- Backoffice and frontoffice environment for button styling
+
+## Installation
+
+```bash
+npm install @fiscozen/card
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { FzCard } from '@fiscozen/card'
+</script>
+
+<template>
+  <FzCard title="Card Title" color="default">
+    <p>Card content goes here.</p>
+  </FzCard>
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>title</code></td>
+      <td><code>string | undefined</code></td>
+      <td><code>undefined</code></td>
+      <td>Card title displayed in the header</td>
+    </tr>
+    <tr>
+      <td><code>color</code></td>
+      <td><code>'default' | 'blue' | 'orange' | 'purple' | 'grey' | 'yellow' | 'red' | 'aliceblue'</code></td>
+      <td><code>undefined</code></td>
+      <td>Background color variant. <code>yellow</code> uses semantic warning tint; <code>red</code> uses semantic error tint. <code>aliceblue</code> is deprecated, use <code>blue</code>.</td>
+    </tr>
+    <tr>
+      <td><code>primaryAction</code></td>
+      <td><code>&#123; label: string; disabled?: boolean &#125; | undefined</code></td>
+      <td><code>undefined</code></td>
+      <td>Primary action button config</td>
+    </tr>
+    <tr>
+      <td><code>secondaryAction</code></td>
+      <td><code>&#123; label: string; disabled?: boolean &#125; | undefined</code></td>
+      <td><code>undefined</code></td>
+      <td>Secondary action button config</td>
+    </tr>
+    <tr>
+      <td><code>tertiaryAction</code></td>
+      <td><code>&#123; icon: string; disabled?: boolean &#125; | undefined</code></td>
+      <td><code>undefined</code></td>
+      <td>Tertiary icon button config</td>
+    </tr>
+    <tr>
+      <td><code>contentClass</code></td>
+      <td><code>string | undefined</code></td>
+      <td><code>undefined</code></td>
+      <td>Custom CSS class for the content area</td>
+    </tr>
+    <tr>
+      <td><code>collapsible</code></td>
+      <td><code>boolean</code></td>
+      <td><code>undefined</code></td>
+      <td>Whether the card content can be collapsed/expanded</td>
+    </tr>
+    <tr>
+      <td><code>defaultExpanded</code></td>
+      <td><code>boolean</code></td>
+      <td><code>undefined</code></td>
+      <td>Initial expanded state when collapsible</td>
+    </tr>
+    <tr>
+      <td><code>alwaysAlive</code></td>
+      <td><code>boolean</code></td>
+      <td><code>undefined</code></td>
+      <td>Keep content in DOM when collapsed (no destroy)</td>
+    </tr>
+    <tr>
+      <td><code>hasInfoIcon</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Show info icon in header</td>
+    </tr>
+    <tr>
+      <td><code>environment</code></td>
+      <td><code>'backoffice' | 'frontoffice'</code></td>
+      <td><code>'frontoffice'</code></td>
+      <td>Context for button styling</td>
+    </tr>
+  </tbody>
+</table>
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>default</code></td>
+      <td>Main card content</td>
+    </tr>
+    <tr>
+      <td><code>header</code></td>
+      <td>Content to the right of the title in the header</td>
+    </tr>
+    <tr>
+      <td><code>header-content</code></td>
+      <td>Content below the title row in the header</td>
+    </tr>
+    <tr>
+      <td><code>footer</code></td>
+      <td>Footer content (replaces default action buttons if provided)</td>
+    </tr>
+  </tbody>
+</table>
+
+## Events
+
+- <code>fzprimary:click</code> – primary action clicked
+- <code>fzsecondary:click</code> – secondary action clicked
+- <code>fztertiary:click</code> – tertiary action clicked
+- <code>fzcard:click-info</code> – info icon clicked
+
+## Color variants
+
+- <code>default</code>: white background
+- <code>blue</code>: alice-blue background
+- <code>orange</code>: seashell background
+- <code>purple</code>: pale-purple background
+- <code>grey</code>: white-smoke background
+- <code>yellow</code>: semantic warning tint (<code>--semantic-warning-50</code>)
+- <code>red</code>: semantic error tint (<code>--semantic-error-50</code>)
+
+## Examples
+
+### Card with actions and warning color
+
+```vue
+<template>
+  <FzCard
+    title="Attention needed"
+    color="yellow"
+    :primaryAction="{ label: 'Confirm' }"
+    :secondaryAction="{ label: 'Cancel' }"
+    @fzprimary:click="onConfirm"
+    @fzsecondary:click="onCancel"
+  >
+    <p>This card uses the warning tint background.</p>
+  </FzCard>
+</template>
+```
+
+### Card with error tint
+
+```vue
+<template>
+  <FzCard title="Error summary" color="red">
+    <p>This card uses the error tint background.</p>
+  </FzCard>
+</template>
+```
+
+## Accessibility
+
+- Semantic structure: <code>section</code>, <code>header</code>, <code>article</code>, <code>footer</code>
+- Title in <code>h2</code> with optional <code>title</code> attribute for tooltip
+- Action buttons are focusable and keyboard-activable
+- Collapsible header is focusable when <code>collapsible</code> is true

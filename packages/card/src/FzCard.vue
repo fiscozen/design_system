@@ -14,11 +14,11 @@
  * <FzCard title="Card Title" color="default">
  *   <p>Card content goes here</p>
  * </FzCard>
- * 
+ *
  * @example
- * <FzCard 
- *   title="Collapsible Card" 
- *   collapsible 
+ * <FzCard
+ *   title="Collapsible Card"
+ *   collapsible
  *   :primaryAction="{ label: 'Save' }"
  * >
  *   <p>This card can be collapsed</p>
@@ -34,7 +34,7 @@ import { breakpoints } from "@fiscozen/style";
 const smOrSmaller = useMediaQuery(`(max-width: ${breakpoints.sm})`);
 
 const props = withDefaults(defineProps<FzCardProps>(), {
-  environment: 'frontoffice'
+  environment: "frontoffice",
 });
 const emit = defineEmits<FzCardEvents>();
 const slots = defineSlots<FzCardSlots>();
@@ -42,7 +42,7 @@ const isOpen = ref(props.defaultExpanded ?? false);
 
 /**
  * Deprecation warning for 'aliceblue' color prop value.
- * 
+ *
  * Watches for 'aliceblue' color usage and logs warning once on mount or when color changes.
  * Using watch with immediate:true ensures the warning only fires once per component instance.
  */
@@ -52,19 +52,19 @@ watch(
     if (isAliceblue) {
       console.warn(
         "[FzCard] The color prop value 'aliceblue' is deprecated and will be removed in a future version. " +
-        "Please use 'blue' instead. The component will automatically map 'aliceblue' to 'blue' for now."
+          "Please use 'blue' instead. The component will automatically map 'aliceblue' to 'blue' for now.",
       );
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 /**
  * Normalizes deprecated color values to their replacements.
- * 
+ *
  * Maps deprecated colors to their replacements:
  * - 'aliceblue' → 'blue'
- * 
+ *
  * This ensures backward compatibility while encouraging migration to new values.
  * Deprecation warnings are handled separately via watch hooks.
  */
@@ -72,12 +72,11 @@ const normalizedColor = computed(() => {
   if (props.color === "aliceblue") {
     return "blue";
   }
-  
+
   return props.color;
 });
 
-const sectionStaticClass =
-  "border-1 border-solid rounded flex flex-col";
+const sectionStaticClass = "border-1 border-solid rounded flex flex-col";
 const headerStaticClass =
   "border-solid pt-16 px-16 flex flex-row justify-between";
 const footerStaticClass =
@@ -93,7 +92,7 @@ const headerContainerComputedClass = computed(() => [
 ]);
 
 const headerTitleClass = computed(() => {
-  return props.environment === 'backoffice' ? 'py-2' : 'py-8';
+  return props.environment === "backoffice" ? "py-2" : "py-8";
 });
 
 const backgroundColor = computed(() => {
@@ -106,6 +105,10 @@ const backgroundColor = computed(() => {
       return "bg-background-pale-purple";
     case "grey":
       return "bg-background-white-smoke";
+    case "yellow":
+      return "bg-semantic-warning-50";
+    case "red":
+      return "bg-semantic-error-50";
     default:
       return "bg-core-white";
   }
@@ -128,6 +131,10 @@ const borderColor = computed(() => {
       return "border-background-pale-purple";
     case "grey":
       return "border-background-white-smoke";
+    case "yellow":
+      return "border-semantic-warning-50";
+    case "red":
+      return "border-semantic-error-50";
     default:
       return "border-grey-100";
   }
@@ -164,7 +171,15 @@ defineExpose({
 </script>
 
 <template>
-  <section :class="[sectionStaticClass, backgroundColor, textColor, borderColor, {'pb-16': !showContent}]">
+  <section
+    :class="[
+      sectionStaticClass,
+      backgroundColor,
+      textColor,
+      borderColor,
+      { 'pb-16': !showContent },
+    ]"
+  >
     <header
       v-if="existHeader"
       :class="[headerContainerComputedClass]"
@@ -208,11 +223,11 @@ defineExpose({
     </article>
     <footer
       v-if="(slots.footer || atLeastOneButton) && isAlive"
-      :class="[footerStaticClass, {'justify-end': !smOrSmaller}]"
+      :class="[footerStaticClass, { 'justify-end': !smOrSmaller }]"
       v-show="showContent"
     >
       <slot name="footer">
-        <FzContainer horizontal gap="sm" :class="{'w-full': smOrSmaller}">
+        <FzContainer horizontal gap="sm" :class="{ 'w-full': smOrSmaller }">
           <FzIconButton
             v-if="tertiaryAction"
             @click="emit('fztertiary:click')"
@@ -223,7 +238,7 @@ defineExpose({
           />
           <FzButton
             v-if="secondaryAction"
-            :class="{'flex-grow': smOrSmaller}"
+            :class="{ 'flex-grow': smOrSmaller }"
             @click="emit('fzsecondary:click')"
             :label="secondaryAction.label"
             variant="secondary"
@@ -232,7 +247,7 @@ defineExpose({
           />
           <FzButton
             v-if="primaryAction"
-            :class="{'flex-grow': smOrSmaller}"
+            :class="{ 'flex-grow': smOrSmaller }"
             @click="emit('fzprimary:click')"
             :label="primaryAction.label"
             variant="primary"

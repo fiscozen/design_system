@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import FzCard from "../FzCard.vue";
 
 beforeEach(() => {
@@ -146,6 +146,8 @@ describe("FzCard", () => {
         ["orange", "bg-background-seashell"],
         ["purple", "bg-background-pale-purple"],
         ["grey", "bg-background-white-smoke"],
+        ["yellow", "bg-semantic-warning-50"],
+        ["red", "bg-semantic-error-50"],
       ])("should apply %s background color", async (color, expectedClass) => {
         const wrapper = mount(FzCard, {
           props: {
@@ -643,18 +645,25 @@ describe("FzCard", () => {
       expect(wrapper.find("section").classes()).toContain("bg-background-alice-blue");
     });
 
-    it("should apply color-specific border classes", async () => {
+    it.each([
+      ["blue", "border-background-alice-blue"],
+      ["orange", "border-background-seashell"],
+      ["purple", "border-background-pale-purple"],
+      ["grey", "border-background-white-smoke"],
+      ["yellow", "border-semantic-warning-50"],
+      ["red", "border-semantic-error-50"],
+    ])("should apply %s border color", async (color, expectedClass) => {
       const wrapper = mount(FzCard, {
         props: {
           title: "Test Card",
-          color: "blue",
+          color: color as any,
           primaryAction: {
             label: "Save",
           },
         },
       });
       await wrapper.vm.$nextTick();
-      expect(wrapper.find("section").classes()).toContain("border-background-alice-blue");
+      expect(wrapper.find("section").classes()).toContain(expectedClass);
     });
 
     it("should apply text color class", async () => {
