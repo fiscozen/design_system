@@ -30,8 +30,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.396
-        version: 1.0.396
+        specifier: ^1.0.398
+        version: 1.0.398
       '@fiscozen/action':
         specifier: workspace:^
         version: link:../../packages/action
@@ -301,7 +301,7 @@ importers:
   packages/action:
     dependencies:
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/link':
         specifier: workspace:*
@@ -447,7 +447,7 @@ importers:
         specifier: workspace:*
         version: link:../container
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/link':
         specifier: workspace:*
@@ -663,7 +663,7 @@ importers:
   packages/badge:
     dependencies:
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       tailwindcss:
         specifier: ^3.4.1
@@ -800,7 +800,7 @@ importers:
         specifier: workspace:*
         version: link:../container
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/style':
         specifier: workspace:*
@@ -879,7 +879,7 @@ importers:
         specifier: workspace:*
         version: link:../container
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/style':
         specifier: workspace:*
@@ -964,7 +964,7 @@ importers:
         specifier: workspace:*
         version: link:../divider
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       date-fns:
         specifier: ^3.6.0
@@ -1043,7 +1043,7 @@ importers:
         specifier: workspace:*
         version: link:../composables
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/tooltip':
         specifier: workspace:*
@@ -1112,6 +1112,9 @@ importers:
 
   packages/collapse:
     dependencies:
+      '@fiscozen/icons':
+        specifier: workspace:^
+        version: link:../icons
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.19(yaml@2.8.2)
@@ -1122,9 +1125,6 @@ importers:
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
-      '@fiscozen/icons':
-        specifier: workspace:*
-        version: link:../icons
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
@@ -1384,7 +1384,7 @@ importers:
         specifier: workspace:*
         version: link:../composables
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/input':
         specifier: workspace:*
@@ -1694,8 +1694,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.396
-        version: 1.0.396
+        specifier: ^1.0.398
+        version: 1.0.398
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.7.2
         version: 6.7.2
@@ -1770,7 +1770,7 @@ importers:
         specifier: workspace:*
         version: link:../composables
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       tailwindcss:
         specifier: ^3.4.1
@@ -2050,7 +2050,7 @@ importers:
         specifier: workspace:*
         version: link:../collapse
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       tailwindcss:
         specifier: ^3.4.1
@@ -2269,7 +2269,7 @@ importers:
   packages/progress:
     dependencies:
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/style':
         specifier: workspace:*
@@ -2348,7 +2348,7 @@ importers:
         specifier: workspace:*
         version: link:../composables
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/tooltip':
         specifier: workspace:*
@@ -2430,7 +2430,7 @@ importers:
         specifier: workspace:*
         version: link:../composables
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/input':
         specifier: workspace:*
@@ -2588,7 +2588,7 @@ importers:
         specifier: workspace:*
         version: link:../dropdown
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/style':
         specifier: workspace:*
@@ -2723,6 +2723,9 @@ importers:
       '@fiscozen/composables':
         specifier: workspace:*
         version: link:../composables
+      '@fiscozen/icons':
+        specifier: workspace:^
+        version: link:../icons
       '@fiscozen/style':
         specifier: workspace:*
         version: link:../style
@@ -2736,9 +2739,6 @@ importers:
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
-      '@fiscozen/icons':
-        specifier: workspace:*
-        version: link:../icons
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
@@ -2815,7 +2815,7 @@ importers:
         specifier: workspace:*
         version: link:../dropdown
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/input':
         specifier: workspace:*
@@ -2912,7 +2912,7 @@ importers:
   packages/textarea:
     dependencies:
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       tailwindcss:
         specifier: ^3.4.1
@@ -2982,7 +2982,7 @@ importers:
         specifier: workspace:*
         version: link:../button
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       tailwindcss:
         specifier: ^3.4.1
@@ -3055,7 +3055,7 @@ importers:
         specifier: workspace:*
         version: link:../composables
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/link':
         specifier: workspace:*
@@ -3228,7 +3228,7 @@ importers:
         specifier: workspace:*
         version: link:../composables
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/input':
         specifier: workspace:*
@@ -3471,6 +3471,10 @@ packages:
 
   '@awesome.me/kit-8137893ad3@1.0.396':
     resolution: {integrity: sha512-5wCCWxkOZrW0J/JVd9DOgIy6Xo5lwZzZqx1Uf1nMxQI4v4Dov02PKEmP+xBTVb3AyMTi/FXrJQkXsSGH7E4zew==}
+    engines: {node: '>=16'}
+
+  '@awesome.me/kit-8137893ad3@1.0.398':
+    resolution: {integrity: sha512-OH1wsabqaoUFrjkDRhN4z26laxfqaTv5l8mnJrgu2EIGGKmHBvW15Kd7sWHmzTcJRVZeU3iPkrA0tZFUtVjL/w==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.28.6':
@@ -4065,35 +4069,30 @@ packages:
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@napi-rs/canvas-linux-arm64-musl@0.1.88':
     resolution: {integrity: sha512-kYyNrUsHLkoGHBc77u4Unh067GrfiCUMbGHC2+OTxbeWfZkPt2o32UOQkhnSswKd9Fko/wSqqGkY956bIUzruA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@napi-rs/canvas-linux-riscv64-gnu@0.1.88':
     resolution: {integrity: sha512-HVuH7QgzB0yavYdNZDRyAsn/ejoXB0hn8twwFnOqUbCCdkV+REna7RXjSR7+PdfW0qMQ2YYWsLvVBT5iL/mGpw==}
     engines: {node: '>= 10'}
     cpu: [riscv64]
     os: [linux]
-    libc: [glibc]
 
   '@napi-rs/canvas-linux-x64-gnu@0.1.88':
     resolution: {integrity: sha512-hvcvKIcPEQrvvJtJnwD35B3qk6umFJ8dFIr8bSymfrSMem0EQsfn1ztys8ETIFndTwdNWJKWluvxztA41ivsEw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@napi-rs/canvas-linux-x64-musl@0.1.88':
     resolution: {integrity: sha512-eSMpGYY2xnZSQ6UxYJ6plDboxq4KeJ4zT5HaVkUnbObNN6DlbJe0Mclh3wifAmquXfrlgTZt6zhHsUgz++AK6g==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@napi-rs/canvas-win32-arm64-msvc@0.1.88':
     resolution: {integrity: sha512-qcIFfEgHrchyYqRrxsCeTQgpJZ/GqHiqPcU/Fvw/ARVlQeDX1VyFH+X+0gCR2tca6UJrq96vnW+5o7buCq+erA==}
@@ -4158,28 +4157,24 @@ packages:
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@nx/nx-linux-arm64-musl@20.7.1':
     resolution: {integrity: sha512-k5lLVWO1HF6FQkNs/7VfOqbaceWS01+2a6mD0aQoIr34FIhxJc7QHfOZ5c2xdCOrlNfY3iGiPf++KCpeuor0tg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@nx/nx-linux-x64-gnu@20.7.1':
     resolution: {integrity: sha512-crySPl4l4XJFDzGOuFjavkwLvo59wCx3pqgju3bMcQ+imUvAtUFHNUFfAr2CiEzYATuvbDcOQU1I5Fo40plagA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@nx/nx-linux-x64-musl@20.7.1':
     resolution: {integrity: sha512-eXUu5lKg2yiItItOThjV7ecPfxE1qcr4utAPy/3F9wjFale8RfZX2x+NllaA/7eh6ph0voqvdZrmZY+IDvTyRg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@nx/nx-win32-arm64-msvc@20.7.1':
     resolution: {integrity: sha512-dy+DxUJMixtSLi/9Y8dexGko3hrC/QB+fZ6uoJMoL8ey6xw5LFIWbi1tnJ04YEHMFQS1Y4+OEoNejUF0BTUcWw==}
@@ -4246,79 +4241,66 @@ packages:
     resolution: {integrity: sha512-Rn3n+FUk2J5VWx+ywrG/HGPTD9jXNbicRtTM11e/uorplArnXZYsVifnPPqNNP5BsO3roI4n8332ukpY/zN7rQ==}
     cpu: [arm]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-arm-musleabihf@4.55.1':
     resolution: {integrity: sha512-grPNWydeKtc1aEdrJDWk4opD7nFtQbMmV7769hiAaYyUKCT1faPRm2av8CX1YJsZ4TLAZcg9gTR1KvEzoLjXkg==}
     cpu: [arm]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-arm64-gnu@4.55.1':
     resolution: {integrity: sha512-a59mwd1k6x8tXKcUxSyISiquLwB5pX+fJW9TkWU46lCqD/GRDe9uDN31jrMmVP3feI3mhAdvcCClhV8V5MhJFQ==}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-arm64-musl@4.55.1':
     resolution: {integrity: sha512-puS1MEgWX5GsHSoiAsF0TYrpomdvkaXm0CofIMG5uVkP6IBV+ZO9xhC5YEN49nsgYo1DuuMquF9+7EDBVYu4uA==}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-loong64-gnu@4.55.1':
     resolution: {integrity: sha512-r3Wv40in+lTsULSb6nnoudVbARdOwb2u5fpeoOAZjFLznp6tDU8kd+GTHmJoqZ9lt6/Sys33KdIHUaQihFcu7g==}
     cpu: [loong64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-loong64-musl@4.55.1':
     resolution: {integrity: sha512-MR8c0+UxAlB22Fq4R+aQSPBayvYa3+9DrwG/i1TKQXFYEaoW3B5b/rkSRIypcZDdWjWnpcvxbNaAJDcSbJU3Lw==}
     cpu: [loong64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-ppc64-gnu@4.55.1':
     resolution: {integrity: sha512-3KhoECe1BRlSYpMTeVrD4sh2Pw2xgt4jzNSZIIPLFEsnQn9gAnZagW9+VqDqAHgm1Xc77LzJOo2LdigS5qZ+gw==}
     cpu: [ppc64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-ppc64-musl@4.55.1':
     resolution: {integrity: sha512-ziR1OuZx0vdYZZ30vueNZTg73alF59DicYrPViG0NEgDVN8/Jl87zkAPu4u6VjZST2llgEUjaiNl9JM6HH1Vdw==}
     cpu: [ppc64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-riscv64-gnu@4.55.1':
     resolution: {integrity: sha512-uW0Y12ih2XJRERZ4jAfKamTyIHVMPQnTZcQjme2HMVDAHY4amf5u414OqNYC+x+LzRdRcnIG1YodLrrtA8xsxw==}
     cpu: [riscv64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-riscv64-musl@4.55.1':
     resolution: {integrity: sha512-u9yZ0jUkOED1BFrqu3BwMQoixvGHGZ+JhJNkNKY/hyoEgOwlqKb62qu+7UjbPSHYjiVy8kKJHvXKv5coH4wDeg==}
     cpu: [riscv64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-s390x-gnu@4.55.1':
     resolution: {integrity: sha512-/0PenBCmqM4ZUd0190j7J0UsQ/1nsi735iPRakO8iPciE7BQ495Y6msPzaOmvx0/pn+eJVVlZrNrSh4WSYLxNg==}
     cpu: [s390x]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-x64-gnu@4.55.1':
     resolution: {integrity: sha512-a8G4wiQxQG2BAvo+gU6XrReRRqj+pLS2NGXKm8io19goR+K8lw269eTrPkSdDTALwMmJp4th2Uh0D8J9bEV1vg==}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-x64-musl@4.55.1':
     resolution: {integrity: sha512-bD+zjpFrMpP/hqkfEcnjXWHMw5BIghGisOKPj+2NaNDuVT+8Ds4mPf3XcPHuat1tz89WRL+1wbcxKY3WSbiT7w==}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-openbsd-x64@4.55.1':
     resolution: {integrity: sha512-eLXw0dOiqE4QmvikfQ6yjgkg/xDM+MdU9YJuP4ySTibXU0oAvnEWXt7UDJmD4UkYialMfOGFPJnIHSe/kdzPxg==}
@@ -8352,6 +8334,10 @@ snapshots:
       is-potential-custom-element-name: 1.0.1
 
   '@awesome.me/kit-8137893ad3@1.0.396':
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.7.2
+
+  '@awesome.me/kit-8137893ad3@1.0.398':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 

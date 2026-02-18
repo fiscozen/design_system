@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/icons",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "Design system icon plugin and component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -38,7 +38,7 @@
     "vue-tsc": "^1.8.25"
   },
   "dependencies": {
-    "@awesome.me/kit-8137893ad3": "^1.0.396",
+    "@awesome.me/kit-8137893ad3": "^1.0.398",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/vue-fontawesome": "^3.1.1"
   }
