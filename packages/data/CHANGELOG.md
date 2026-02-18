@@ -1,5 +1,11 @@
 # @fiscozen/data
 
+## 0.2.0
+
+### Minor Changes
+
+- 03c563c: Add a configuration to handle the trailing slash
+
 ## 0.1.1
 
 ### Patch Changes
