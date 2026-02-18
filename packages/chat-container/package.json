@@ -13,6 +13,7 @@
   "keywords": [],
   "author": "Giulio Davide Carparelli",
   "peerDependencies": {
+    "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
@@ -43,7 +44,6 @@
     "@fiscozen/card": "workspace:*",
     "@fiscozen/container": "workspace:*",
     "@fiscozen/divider": "workspace:*",
-    "@fiscozen/icons": "workspace:*",
     "date-fns": "^3.6.0"
   }
 }

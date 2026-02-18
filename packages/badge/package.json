@@ -12,10 +12,8 @@
   "type": "module",
   "keywords": [],
   "author": "Alen Ajam",
-  "dependencies": {
-    "@fiscozen/icons": "workspace:*"
-  },
   "peerDependencies": {
+    "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },

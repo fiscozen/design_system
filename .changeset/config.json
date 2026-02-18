@@ -7,5 +7,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["@fiscozen/storybook"]
+  "ignore": ["@fiscozen/storybook", "@fiscozen/icons"]
 }
