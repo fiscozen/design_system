@@ -1,5 +1,12 @@
 # @fiscozen/view-flag
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [1a2df8c]
+  - @fiscozen/badge@1.0.1
+
 ## 0.1.3
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @fiscozen/appointments
 
+## 1.1.2
+
+### Patch Changes
+
+- Updated dependencies [1a2df8c]
+  - @fiscozen/alert@1.0.1
+  - @fiscozen/button@1.0.2
+  - @fiscozen/radio@1.0.1
+
 ## 1.1.1
 
 ### Minor Changes
