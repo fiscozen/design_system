@@ -102,7 +102,7 @@ describe('FzProgressBar', () => {
       expect(container.classes()).toContain('w-full')
       expect(container.classes()).toContain('h-[20px]')
       expect(container.classes()).toContain('rounded-[4px]')
-      expect(container.classes()).toContain('bg-grey-100')
+      expect(container.classes()).toContain('bg-purple-100')
     })
 
     it('renders with default size md (20px height)', () => {
@@ -215,7 +215,7 @@ describe('FzProgressBar', () => {
       })
 
       const fill = wrapper.find('.fz-progress-bar__progress-indicator')
-      expect(fill.classes()).toContain('bg-yellow-500')
+      expect(fill.classes()).toContain('bg-semantic-warning-200')
     })
 
     it('renders with color grey', () => {
@@ -228,6 +228,34 @@ describe('FzProgressBar', () => {
 
       const fill = wrapper.find('.fz-progress-bar__progress-indicator')
       expect(fill.classes()).toContain('bg-grey-500')
+    })
+
+    it('renders with color red', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'red',
+        },
+      })
+
+      const fill = wrapper.find('.fz-progress-bar__progress-indicator')
+      expect(fill.classes()).toContain('bg-semantic-error-200')
+    })
+
+    it.each([
+      ['purple', 'bg-purple-100'],
+      ['blue', 'bg-blue-100'],
+      ['orange', 'bg-orange-100'],
+      ['pink', 'bg-pink-100'],
+      ['yellow', 'bg-semantic-warning-100'],
+      ['grey', 'bg-grey-100'],
+      ['red', 'bg-semantic-error-100'],
+    ])('applies color-specific background to container when color is %s', (color, expectedClass) => {
+      const wrapper = mount(FzProgressBar, {
+        props: { current: 50, color: color as any },
+      })
+      const container = wrapper.find('.fz-progress-bar')
+      expect(container.classes()).toContain(expectedClass)
     })
 
     it('matches snapshot with color purple', () => {
@@ -290,6 +318,17 @@ describe('FzProgressBar', () => {
         props: {
           current: 50,
           color: 'grey',
+        },
+      })
+
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('matches snapshot with color red', () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          color: 'red',
         },
       })
 

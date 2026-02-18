@@ -62,5 +62,5 @@ export interface FzProgressBarProps {
    * Color variant of the progress indicator
    * @default 'purple'
    */
-  color?: 'purple' | 'blue' | 'orange' | 'pink' | 'yellow' | 'grey';
+  color?: 'purple' | 'blue' | 'orange' | 'pink' | 'yellow' | 'grey' | 'red';
 }

@@ -25,7 +25,7 @@ const meta: Meta<typeof FzProgressBar> = {
     },
     color: {
       control: 'select',
-      options: ['purple', 'blue', 'orange', 'pink', 'yellow', 'grey'],
+      options: ['purple', 'blue', 'orange', 'pink', 'yellow', 'grey', 'red'],
     },
   },
   args: {
@@ -70,7 +70,7 @@ const Default: Story = {
       await expect(progressBar?.classList.contains('w-full')).toBe(true)
       await expect(progressBar?.classList.contains('h-[20px]')).toBe(true)
       await expect(progressBar?.classList.contains('rounded-[4px]')).toBe(true)
-      await expect(progressBar?.classList.contains('bg-grey-100')).toBe(true)
+      await expect(progressBar?.classList.contains('bg-purple-100')).toBe(true)
     })
 
     await step('Verify progress indicator has correct width', async () => {
@@ -251,8 +251,10 @@ const ColorPurple: Story = {
     color: 'purple',
   },
   play: async ({ canvasElement, step }: any) => {
-    await step('Verify purple color class', async () => {
+    await step('Verify purple fill and container background', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
       const indicator = canvasElement.querySelector('.fz-progress-bar__progress-indicator')
+      await expect(progressBar?.classList.contains('bg-purple-100')).toBe(true)
       await expect(indicator?.classList.contains('bg-purple-500')).toBe(true)
     })
   }
@@ -265,8 +267,10 @@ const ColorBlue: Story = {
     color: 'blue',
   },
   play: async ({ canvasElement, step }: any) => {
-    await step('Verify blue color class', async () => {
+    await step('Verify blue fill and container background', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
       const indicator = canvasElement.querySelector('.fz-progress-bar__progress-indicator')
+      await expect(progressBar?.classList.contains('bg-blue-100')).toBe(true)
       await expect(indicator?.classList.contains('bg-blue-500')).toBe(true)
     })
   }
@@ -279,8 +283,10 @@ const ColorOrange: Story = {
     color: 'orange',
   },
   play: async ({ canvasElement, step }: any) => {
-    await step('Verify orange color class', async () => {
+    await step('Verify orange fill and container background', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
       const indicator = canvasElement.querySelector('.fz-progress-bar__progress-indicator')
+      await expect(progressBar?.classList.contains('bg-orange-100')).toBe(true)
       await expect(indicator?.classList.contains('bg-orange-500')).toBe(true)
     })
   }
@@ -293,8 +299,10 @@ const ColorPink: Story = {
     color: 'pink',
   },
   play: async ({ canvasElement, step }: any) => {
-    await step('Verify pink color class', async () => {
+    await step('Verify pink fill and container background', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
       const indicator = canvasElement.querySelector('.fz-progress-bar__progress-indicator')
+      await expect(progressBar?.classList.contains('bg-pink-100')).toBe(true)
       await expect(indicator?.classList.contains('bg-pink-500')).toBe(true)
     })
   }
@@ -307,9 +315,11 @@ const ColorYellow: Story = {
     color: 'yellow',
   },
   play: async ({ canvasElement, step }: any) => {
-    await step('Verify yellow color class', async () => {
+    await step('Verify yellow fill and container background', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
       const indicator = canvasElement.querySelector('.fz-progress-bar__progress-indicator')
-      await expect(indicator?.classList.contains('bg-yellow-500')).toBe(true)
+      await expect(progressBar?.classList.contains('bg-semantic-warning-100')).toBe(true)
+      await expect(indicator?.classList.contains('bg-semantic-warning-200')).toBe(true)
     })
   }
 }
@@ -321,13 +331,31 @@ const ColorGrey: Story = {
     color: 'grey',
   },
   play: async ({ canvasElement, step }: any) => {
-    await step('Verify grey color class', async () => {
+    await step('Verify grey fill and container background', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
       const indicator = canvasElement.querySelector('.fz-progress-bar__progress-indicator')
+      await expect(progressBar?.classList.contains('bg-grey-100')).toBe(true)
       await expect(indicator?.classList.contains('bg-grey-500')).toBe(true)
     })
   }
 }
 
-export { Default, Full, Half, Zero, CustomRange, SizeSm, SizeMd, ColorPurple, ColorBlue, ColorOrange, ColorPink, ColorYellow, ColorGrey }
+const ColorRed: Story = {
+  ...Template,
+  args: {
+    current: 50,
+    color: 'red',
+  },
+  play: async ({ canvasElement, step }: any) => {
+    await step('Verify red fill and container background', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
+      const indicator = canvasElement.querySelector('.fz-progress-bar__progress-indicator')
+      await expect(progressBar?.classList.contains('bg-semantic-error-100')).toBe(true)
+      await expect(indicator?.classList.contains('bg-semantic-error-200')).toBe(true)
+    })
+  }
+}
+
+export { Default, Full, Half, Zero, CustomRange, SizeSm, SizeMd, ColorPurple, ColorBlue, ColorOrange, ColorPink, ColorYellow, ColorGrey, ColorRed }
 
 export default meta
