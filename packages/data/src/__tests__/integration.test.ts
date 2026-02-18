@@ -1,6 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { ref, computed } from "vue";
-import { setupFzFetcher, resetFzFetcher, useFzFetch } from "../rest";
+import {
+  setupFzFetcher,
+  resetFzFetcher,
+  useFzFetch,
+  useActions,
+} from "../rest";
 
 /**
  * Integration tests for the complete request flow
@@ -281,6 +286,115 @@ describe("Integration Tests", () => {
 
     it("per-request trailingSlash null disables normalization (overrides setup true)", async () => {
       await expectUrlForPath("users/1", true, "users/1", null);
+    });
+
+    describe("trailingSlash via action options (useActions)", () => {
+      it("useRetrieve with trailingSlash option overrides setup", async () => {
+        let interceptedUrl = "";
+        setupFzFetcher({
+          baseUrl: "https://api.example.com",
+          trailingSlash: true,
+          requestInterceptor: async (url) => {
+            interceptedUrl = url;
+            return {};
+          },
+        });
+        global.fetch = mockFetch();
+        const { useRetrieve } = useActions<{ id: number }>("users");
+        const { execute } = useRetrieve(1, {
+          trailingSlash: false,
+          onMount: false,
+        });
+        await execute();
+        expect(interceptedUrl).toBe("users/1");
+      });
+
+      it("useList with trailingSlash option overrides setup", async () => {
+        let interceptedUrl = "";
+        setupFzFetcher({
+          baseUrl: "https://api.example.com",
+          trailingSlash: false,
+          requestInterceptor: async (url) => {
+            interceptedUrl = url;
+            return {};
+          },
+        });
+        global.fetch = mockFetch();
+        const { useList } = useActions<{ id: number }>("users");
+        const { execute } = useList({ trailingSlash: true, onMount: false });
+        await execute();
+        expect(interceptedUrl).toBe("users/");
+      });
+
+      it("useCreate with trailingSlash option overrides setup", async () => {
+        let capturedUrl = "";
+        const captureFetch = vi.fn((url: string | URL) => {
+          capturedUrl = typeof url === "string" ? url : url.toString();
+          return Promise.resolve(
+            new Response(JSON.stringify({ id: 1, name: "Test" }), {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            }),
+          );
+        }) as typeof fetch;
+        global.fetch = captureFetch;
+        setupFzFetcher({
+          baseUrl: "https://api.example.com",
+          trailingSlash: true,
+        });
+        const { useCreate } = useActions<{ id: number; name: string }>(
+          "users",
+        );
+        const { execute } = useCreate({ trailingSlash: false });
+        await execute({ name: "Test" });
+        expect(capturedUrl).toBe("https://api.example.com/users");
+      });
+
+      it("useUpdate with trailingSlash option overrides setup", async () => {
+        let capturedUrl = "";
+        const captureFetch = vi.fn((url: string | URL) => {
+          capturedUrl = typeof url === "string" ? url : url.toString();
+          return Promise.resolve(
+            new Response(JSON.stringify({ id: 1, name: "Updated" }), {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            }),
+          );
+        }) as typeof fetch;
+        global.fetch = captureFetch;
+        setupFzFetcher({
+          baseUrl: "https://api.example.com",
+          trailingSlash: false,
+        });
+        const { useUpdate } = useActions<{ id: number; name: string }>(
+          "users",
+        );
+        const { execute } = useUpdate({ trailingSlash: true });
+        await execute(1, { name: "Updated" });
+        expect(capturedUrl).toBe("https://api.example.com/users/1/");
+      });
+
+      it("useDelete with trailingSlash option overrides setup", async () => {
+        let capturedUrl = "";
+        const captureFetch = vi.fn((url: string | URL) => {
+          capturedUrl = typeof url === "string" ? url : url.toString();
+          return Promise.resolve(
+            new Response(JSON.stringify({}), {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            }),
+          );
+        }) as typeof fetch;
+        global.fetch = captureFetch;
+        setupFzFetcher({
+          baseUrl: "https://api.example.com",
+          trailingSlash: true,
+        });
+        const { useDelete } = useActions<{ id: number }>("users");
+        const { execute } = useDelete({ trailingSlash: false });
+        await execute(1);
+        expect(capturedUrl).toBe("https://api.example.com/users/1");
+      });
     });
 
     it("correct usage: intercepted URL never has double slash at end when setup trailingSlash true", async () => {

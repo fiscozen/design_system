@@ -196,7 +196,7 @@ setupFzFetcher({
       <td><code>true | false | null</code></td>
       <td>No</td>
       <td>-</td>
-      <td>Normalize path trailing slash: <code>true</code> = always add, <code>false</code> = always remove, <code>null</code>/omit = don't change. Per-request: UseFzFetchOptions.trailingSlash overrides setup; <code>null</code> = no normalization for that request, omit = use setup.</td>
+      <td>Normalize path trailing slash: <code>true</code> = always add, <code>false</code> = always remove, <code>null</code>/omit = don't change. Per-action override: pass <code>trailingSlash</code> in action options (useRetrieve, useList, useCreate, useUpdate, useDelete) to override setup for that action; when using <code>useFzFetch</code> directly, pass <code>trailingSlash</code> in UseFzFetchOptions. <code>null</code> = no normalization for that request, omit = use setup.</td>
     </tr>
     <tr>
       <td><code>debug</code></td>
@@ -397,7 +397,7 @@ Obtain actions from `useActions<T>(basePath)` (e.g. `const { useRetrieve, useLis
   </tbody>
 </table>
 
-**Query options (useRetrieve, useList, usePaginatedList):** `onMount` (default true), `autoUpdate` (default true), `initialData`, `deduplication`, `throwOnError` (default false). **Mutation options:** only `throwOnError` (default false).
+**Query options (useRetrieve, useList, usePaginatedList):** `onMount` (default true), `autoUpdate` (default true), `initialData`, `deduplication`, `throwOnError` (default false), `trailingSlash` (true/false/null; overrides setup for that action). **Mutation options:** `throwOnError` (default false), `trailingSlash` (true/false/null; overrides setup for that action).
 
 **List params:** `filters` = key/value (undefined = omit, null = send); `ordering` = e.g. `[{ name: 'asc' }, { created_at: 'desc' }]`; `pagination` = `{ page?, pageSize? }`. If you pass `pagination` (even `{}`), useList applies page 1, pageSize 50 by default.
 
@@ -1809,6 +1809,13 @@ Options for query actions (`useRetrieve`, `useList`).
       <td><code>false</code></td>
       <td>Whether to throw errors instead of storing them in the error ref</td>
     </tr>
+    <tr>
+      <td><code>trailingSlash</code></td>
+      <td><code>true | false | null</code></td>
+      <td>No</td>
+      <td><code>undefined</code> (use setup)</td>
+      <td>Override setup trailing slash for this action: <code>true</code> = add trailing slash, <code>false</code> = remove, <code>null</code> = no normalization</td>
+    </tr>
   </tbody>
 </table>
 
@@ -1820,7 +1827,8 @@ const { data, execute } = useListUsers(
   {
     onMount: false,        // Don't fetch on mount
     autoUpdate: false,     // Don't auto-refetch when filters change
-    deduplication: true    // Enable deduplication for this action
+    deduplication: true,   // Enable deduplication for this action
+    trailingSlash: false   // Override: no trailing slash for this list (e.g. API expects /users)
   }
 )
 ```
@@ -1869,6 +1877,13 @@ Options for mutation actions (`useCreate`, `useUpdate`, `useDelete`).
       <td><code>false</code></td>
       <td>Whether to throw errors instead of storing them in the error ref</td>
     </tr>
+    <tr>
+      <td><code>trailingSlash</code></td>
+      <td><code>true | false | null</code></td>
+      <td>No</td>
+      <td><code>undefined</code> (use setup)</td>
+      <td>Override setup trailing slash for this action: <code>true</code> = add, <code>false</code> = remove, <code>null</code> = no normalization</td>
+    </tr>
   </tbody>
 </table>
 
@@ -1880,8 +1895,29 @@ import { useCreditNotes } from '@/composables/useCreditNotes'
 const { useCreateCreditNote } = useCreditNotes()
 
 const { execute: createCreditNote } = useCreateCreditNote({
-  throwOnError: true // Throw errors instead of storing in error ref
+  throwOnError: true,   // Throw errors instead of storing in error ref
+  trailingSlash: false  // Override: e.g. API expects POST /invoices without trailing slash
 })
+```
+
+**Per-action trailing slash override**
+
+You can override the global `trailingSlash` setup for a single action by passing `trailingSlash` in that action's options. Useful when one endpoint expects a different convention than the rest.
+
+```typescript
+// Setup: global trailing slash = true (e.g. /users/, /users/1/)
+setupFzFetcher({ baseUrl: 'https://api.example.com', trailingSlash: true })
+
+const { useRetrieve, useList, useCreate } = useActions<User>('users')
+
+// This list request uses /users/ (setup default)
+const { data: users } = useListUsers()
+
+// Override: this retrieve uses /users/1 (no trailing slash) for a legacy endpoint
+const { data: user } = useRetrieveUserById(1, { trailingSlash: false })
+
+// Override: this create uses POST /users (no trailing slash)
+const { execute: createUser } = useCreateUser({ trailingSlash: false })
 ```
 
 ### Manual Execution

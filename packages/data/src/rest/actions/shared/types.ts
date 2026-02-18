@@ -71,6 +71,15 @@ export interface QueryActionOptions<T = unknown> {
    * @default false
    */
   throwOnError?: boolean;
+
+  /**
+   * Per-request trailing slash normalization. Overrides setup value for this action.
+   * true = ensure path ends with /; false = remove trailing /; null = no normalization.
+   * Omit (undefined) = use setup trailingSlash.
+   *
+   * @default undefined (use setup trailingSlash)
+   */
+  trailingSlash?: true | false | null;
 }
 
 /**
@@ -89,6 +98,15 @@ export interface MutationActionOptions {
    * @default false
    */
   throwOnError?: boolean;
+
+  /**
+   * Per-request trailing slash normalization. Overrides setup value for this action.
+   * true = ensure path ends with /; false = remove trailing /; null = no normalization.
+   * Omit (undefined) = use setup trailingSlash.
+   *
+   * @default undefined (use setup trailingSlash)
+   */
+  trailingSlash?: true | false | null;
 
   // Reserved for future: optimistic?, retry?, debounce?, etc.
 }

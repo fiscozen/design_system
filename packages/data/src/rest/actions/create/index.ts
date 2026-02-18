@@ -4,6 +4,7 @@ import { CONTENT_TYPE_JSON } from "../../http/common";
 import type { UseCreateAction } from "./types";
 import type { MutationActionOptions } from "../shared/types";
 import { executeMutation } from "../shared/error-handling";
+import { mutationOptionsToFetchOptions } from "../shared/normalize";
 
 /**
  * Create a create action for creating a new entity
@@ -37,7 +38,7 @@ export const createCreateAction = <T>(
           method: "POST",
           body,
           headers: { "Content-Type": CONTENT_TYPE_JSON },
-        });
+        }, mutationOptionsToFetchOptions(options));
 
         await response.execute(options?.throwOnError ?? false);
         return response;

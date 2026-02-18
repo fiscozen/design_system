@@ -4,7 +4,11 @@ import type {
   UseFzFetchReturn,
   UseFzFetchParams,
 } from "../../http/types";
-import type { UseActionOptions, QueryActionReturn } from "./types";
+import type {
+  UseActionOptions,
+  QueryActionReturn,
+  MutationActionOptions,
+} from "./types";
 import type { PaginationParams, FilterParams, SortParams } from "../list/types";
 import { DEFAULT_DATA_KEY } from "../../http/config";
 import { validateOrderingDirection, validatePaginationValue } from "./validation";
@@ -124,7 +128,25 @@ export const normalizeOptions = (
     refetch: options.autoUpdate ?? true,
     initialData: options.initialData ?? null,
     deduplication: options.deduplication,
+    trailingSlash: options.trailingSlash,
   };
+};
+
+/**
+ * Build UseFzFetchOptions for mutation actions. Always sets immediate: false so
+ * the request runs only when execute() is called. Passes through trailingSlash when set.
+ *
+ * @param options - Mutation action options
+ * @returns UseFzFetchOptions (always defined; at least immediate: false)
+ */
+export const mutationOptionsToFetchOptions = (
+  options?: MutationActionOptions,
+): UseFzFetchOptions => {
+  const base = { immediate: false };
+  if (options?.trailingSlash !== undefined) {
+    return { ...base, trailingSlash: options.trailingSlash };
+  }
+  return base;
 };
 
 /**
