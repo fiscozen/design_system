@@ -1,5 +1,11 @@
 # @fiscozen/progress
 
+## 1.1.0
+
+### Minor Changes
+
+- 640ed46: Add red color variant
+
 ## 1.0.2
 
 ### Patch Changes

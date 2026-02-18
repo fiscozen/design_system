@@ -1,5 +1,12 @@
 # @fiscozen/table
 
+## 0.1.15
+
+### Patch Changes
+
+- Updated dependencies [640ed46]
+  - @fiscozen/progress@1.1.0
+
 ## 0.1.14
 
 ### Patch Changes
