@@ -76,7 +76,7 @@ import { FzProgressBar } from '@fiscozen/progress'
     </tr>
     <tr>
       <td><code>color</code></td>
-      <td><code>'purple' | 'blue' | 'orange' | 'pink' | 'yellow' | 'grey'</code></td>
+      <td><code>'purple' | 'blue' | 'orange' | 'pink' | 'yellow' | 'grey' | 'red'</code></td>
       <td><code>'purple'</code></td>
       <td>Color variant of the progress indicator</td>
     </tr>
@@ -156,6 +156,9 @@ import { FzProgressBar } from '@fiscozen/progress'
   
   <!-- Grey -->
   <FzProgressBar :current="50" color="grey" />
+  
+  <!-- Red (semantic error) -->
+  <FzProgressBar :current="50" color="red" />
 </template>
 ```
 

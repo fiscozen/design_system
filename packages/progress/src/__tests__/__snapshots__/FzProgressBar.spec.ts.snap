@@ -1,85 +1,91 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzProgressBar > Rendering > matches snapshot with 0% progress 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[20px]" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-purple-100" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-purple-500" style="width: 0%;"></div>
 </div>"
 `;
 
 exports[`FzProgressBar > Rendering > matches snapshot with 100% progress 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[20px]" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-purple-100" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-purple-500" style="width: 100%;"></div>
 </div>"
 `;
 
 exports[`FzProgressBar > Rendering > matches snapshot with color blue 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[20px]" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-blue-100" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-blue-500" style="width: 50%;"></div>
 </div>"
 `;
 
 exports[`FzProgressBar > Rendering > matches snapshot with color grey 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[20px]" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-grey-100" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-grey-500" style="width: 50%;"></div>
 </div>"
 `;
 
 exports[`FzProgressBar > Rendering > matches snapshot with color orange 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[20px]" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-orange-100" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-orange-500" style="width: 50%;"></div>
 </div>"
 `;
 
 exports[`FzProgressBar > Rendering > matches snapshot with color pink 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[20px]" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-pink-100" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-pink-500" style="width: 50%;"></div>
 </div>"
 `;
 
 exports[`FzProgressBar > Rendering > matches snapshot with color purple 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[20px]" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-purple-100" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-purple-500" style="width: 50%;"></div>
 </div>"
 `;
 
+exports[`FzProgressBar > Rendering > matches snapshot with color red 1`] = `
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-semantic-error-100" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+  <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-semantic-error-200" style="width: 50%;"></div>
+</div>"
+`;
+
 exports[`FzProgressBar > Rendering > matches snapshot with color yellow 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[20px]" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
-  <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-yellow-500" style="width: 50%;"></div>
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-semantic-warning-100" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+  <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-semantic-warning-200" style="width: 50%;"></div>
 </div>"
 `;
 
 exports[`FzProgressBar > Rendering > matches snapshot with custom name 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[20px]" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="upload-progress">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-purple-100" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="upload-progress">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-purple-500" style="width: 50%;"></div>
 </div>"
 `;
 
 exports[`FzProgressBar > Rendering > matches snapshot with custom range 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[20px]" role="progressbar" aria-valuenow="30" aria-valuemin="-15" aria-valuemax="50" aria-label="progress-bar">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-purple-100" role="progressbar" aria-valuenow="30" aria-valuemin="-15" aria-valuemax="50" aria-label="progress-bar">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-purple-500" style="width: 69%;"></div>
 </div>"
 `;
 
 exports[`FzProgressBar > Rendering > matches snapshot with default props 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[20px]" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-purple-100" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-purple-500" style="width: 50%;"></div>
 </div>"
 `;
 
 exports[`FzProgressBar > Rendering > matches snapshot with size md 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[20px]" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[20px] bg-purple-100" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-purple-500" style="width: 50%;"></div>
 </div>"
 `;
 
 exports[`FzProgressBar > Rendering > matches snapshot with size sm 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[8px]" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[8px] bg-purple-100" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-purple-500" style="width: 50%;"></div>
 </div>"
 `;
 
 exports[`FzProgressBar > Rendering > matches snapshot with size sm and color blue 1`] = `
-"<div class="fz-progress-bar w-full rounded-[4px] bg-grey-100 h-[8px]" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
+"<div class="fz-progress-bar w-full rounded-[4px] h-[8px] bg-blue-100" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="progress-bar">
   <div class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300 bg-blue-500" style="width: 75%;"></div>
 </div>"
 `;

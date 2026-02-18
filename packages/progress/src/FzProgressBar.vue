@@ -73,13 +73,30 @@ const progressBarSize = computed(() => {
  * Using explicit mapping ensures Tailwind can detect and include these classes
  * during compilation (dynamic template literals are not detected by Tailwind).
  */
-const colorClassMap = {
+const barColorClassMap = {
   purple: "bg-purple-500",
   blue: "bg-blue-500",
   orange: "bg-orange-500",
   pink: "bg-pink-500",
-  yellow: "bg-yellow-500",
+  yellow: "bg-semantic-warning-200",
   grey: "bg-grey-500",
+  red: "bg-semantic-error-200",
+} as const;
+
+/**
+ * Background color to Tailwind CSS class mapping for progress bar container.
+ *
+ * Maps color prop values to Tailwind CSS background color classes for the bar's background.
+ * This explicit mapping ensures proper inclusion by Tailwind at build time.
+ */
+const backgroundBarColorClassMap = {
+  purple: "bg-purple-100",
+  blue: "bg-blue-100",
+  orange: "bg-orange-100",
+  pink: "bg-pink-100",
+  yellow: "bg-semantic-warning-100",
+  grey: "bg-grey-100",
+  red: "bg-semantic-error-100",
 } as const;
 
 /**
@@ -87,15 +104,37 @@ const colorClassMap = {
  *
  * Returns the corresponding Tailwind CSS background color class from the mapping.
  * Falls back to 'purple' if color is undefined or not in the mapping.
+ *
+ * @returns {string} Tailwind CSS class for progress bar color
  */
 const progressBarColor = computed(() => {
   const color = props.color;
 
-  if (!color || !(color in colorClassMap)) {
-    return colorClassMap.purple;
+  if (!color || !(color in barColorClassMap)) {
+    return barColorClassMap.purple;
   }
 
-  return colorClassMap[color as keyof typeof colorClassMap];
+  return barColorClassMap[color as keyof typeof barColorClassMap];
+});
+
+/**
+ * Computes background color class for the progress bar container based on color prop.
+ *
+ * Returns the corresponding Tailwind CSS background color class from the backgroundBarColorClassMap.
+ * If the color prop is undefined or not found in the mapping, it falls back to 'purple'.
+ *
+ * @returns {string} Tailwind CSS class for progress bar background color
+ */
+const backgroundProgressBarColor = computed(() => {
+  const color = props.color;
+
+  if (!color || !(color in backgroundBarColorClassMap)) {
+    return backgroundBarColorClassMap.purple;
+  }
+
+  return backgroundBarColorClassMap[
+    color as keyof typeof backgroundBarColorClassMap
+  ];
 });
 
 /**
@@ -135,8 +174,8 @@ const ariaValuemax = computed(() => sanitizeAriaValue(props.max));
 
 <template>
   <div
-    class="fz-progress-bar w-full rounded-[4px] bg-grey-100"
-    :class="progressBarSize"
+    class="fz-progress-bar w-full rounded-[4px]"
+    :class="[progressBarSize, backgroundProgressBarColor]"
     role="progressbar"
     :aria-valuenow="ariaValuenow"
     :aria-valuemin="ariaValuemin"

@@ -143,6 +143,9 @@ import { FzProgressBar } from '@fiscozen/progress'
   
   <!-- Grey -->
   <FzProgressBar :current="50" color="grey" />
+  
+  <!-- Red (semantic error) -->
+  <FzProgressBar :current="50" color="red" />
 </template>
 ```
 
@@ -167,7 +170,7 @@ FzProgress inherits all props from `FzIcon` (from `@fiscozen/icons`):
 | `min` | `number` | `0` | Minimum value for progress calculation |
 | `name` | `string` | `'progress-bar'` | Accessible label for screen readers |
 | `size` | `'sm' \| 'md'` | `'md'` | Height of the progress bar |
-| `color` | `'purple' \| 'blue' \| 'orange' \| 'pink' \| 'yellow' \| 'grey'` | `'purple'` | Color variant of the progress indicator |
+| `color` | `'purple' \| 'blue' \| 'orange' \| 'pink' \| 'yellow' \| 'grey' \| 'red'` | `'purple'` | Color variant |
 
 ## Behavior & Concepts
 
