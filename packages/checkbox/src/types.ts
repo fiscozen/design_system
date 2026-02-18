@@ -7,6 +7,7 @@
  * @module @fiscozen/checkbox/types
  */
 import { FzTooltipProps } from "@fiscozen/tooltip";
+import { FzTooltipStatus } from "@fiscozen/tooltip";
 
 /**
  * Props for the FzCheckbox component.
@@ -155,7 +156,7 @@ export type FzCheckboxGroupProps = {
    *   }
    * ]
    */
-  options: ParentCheckbox[];
+  options?: ParentCheckbox[];
 
   /**
    * Applies emphasis styling to all checkboxes in the group.
@@ -216,3 +217,79 @@ export type ParentCheckbox = ChildCheckbox & {
  * Inherits all FzCheckboxProps except 'size' which is controlled by the parent group.
  */
 export type ChildCheckbox = Omit<FzCheckboxProps, "size">;
+
+/**
+ * Props for the FzCheckboxCard component.
+ *
+ * A card-style checkbox with title, subtitle, optional image and tooltip.
+ * Supports horizontal and vertical layouts. Uses array v-model for multi-select.
+ */
+export type FzCheckboxCardProps = Omit<
+  FzCheckboxProps,
+  "standalone" | "indeterminate" | "ariaOwns" | "checkboxId" | "value"
+> & {
+  /**
+   * Value associated with the card when used in array v-model.
+   * Falls back to label if not provided.
+   */
+  value?: string | number;
+  /**
+   * Layout direction of the card.
+   * - horizontal: image left, text right (compact)
+   * - vertical: image top, text bottom (full-width image)
+   *
+   * @default 'horizontal'
+   */
+  variant?: "horizontal" | "vertical";
+
+  /**
+   * Primary title text displayed in the card.
+   */
+  title: string;
+
+  /**
+   * Optional secondary description text below the title.
+   */
+  subtitle?: string;
+
+  /**
+   * URL of the image to display in the card.
+   * Only rendered when `hasImage` is true.
+   */
+  imageUrl?: string;
+
+  /**
+   * Alt text for the card image.
+   */
+  imageAlt?: string;
+
+  /**
+   * Controls whether the image is displayed.
+   * Requires `imageUrl` to be set.
+   *
+   * @default false
+   */
+  hasImage?: boolean;
+
+  /**
+   * Text to display in the tooltip.
+   */
+  tooltip?: string;
+
+  /**
+   * Status of the tooltip (determines color and icon).
+   */
+  tooltipStatus?: FzTooltipStatus;
+
+  /**
+   * Controls whether the checkbox icon is shown inside the card.
+   *
+   * @default true
+   */
+  hasCheckbox?: boolean;
+
+  /**
+   * Group name for the checkbox, used for form submission.
+   */
+  name?: string;
+};

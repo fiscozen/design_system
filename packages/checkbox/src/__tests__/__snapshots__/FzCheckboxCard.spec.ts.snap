@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzCheckboxCard > Rendering > should render correctly 1`] = `
+"<div data-v-7eaaa48f=""><input data-v-7eaaa48f="" type="checkbox" id="fz-checkbox-100000000001-2a84k" class="w-0 h-0 peer fz-hidden-input" tabindex="0" aria-checked="false" aria-required="false" aria-invalid="false" value="Checkbox"><label data-v-7eaaa48f="" class="relative flex block rounded-lg border-solid pt-12 px-12 cursor-pointer w-full flex-row pb-12 gap-12 border-1 border-grey-300 hover:bg-[#f9faff] peer-focus:outline peer-focus:bg-[#f9faff] peer-focus:outline-blue-200 peer-focus:outline-2 peer-checked:bg-[#f9faff]" for="fz-checkbox-100000000001-2a84k">
+    <div data-v-7eaaa48f="" class="flex items-center justify-center w-[20px] h-[20px] shrink-0 text-grey-400 self-center" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+        <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
+      </svg></div>
+    <!--v-if-->
+    <div data-v-7eaaa48f="" class="flex flex-row w-full justify-between min-w-0">
+      <div data-v-7eaaa48f="" class="justify-center flex flex-col w-full grow-0 min-w-0 gap-4">
+        <p data-v-7eaaa48f="" class="font-medium break-words !m-0 !leading-[20px]">Card title</p>
+        <!--v-if-->
+      </div>
+      <!--v-if-->
+    </div>
+  </label></div>"
+`;

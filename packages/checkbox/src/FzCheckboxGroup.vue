@@ -127,6 +127,22 @@ const computedSlotContainerClass = computed<string[]>(() => [
  * // Both help and error
  * "fz-checkbox-group-123-help fz-checkbox-group-123-error"
  */
+/** Whether the group has options to render (options-based mode vs slot-based mode) */
+const hasOptions = computed<boolean>(
+  () => Array.isArray(props.options) && props.options.length > 0,
+);
+
+/**
+ * Props passed down to child components via scoped slot.
+ * Used in slot-based mode (e.g., when rendering FzCheckboxCard components).
+ */
+const controlledProps = computed(() => ({
+  disabled: props.disabled,
+  error: props.error,
+  emphasis: props.emphasis,
+  required: props.required,
+}));
+
 const computedAriaDescribedby = computed<string | undefined>(() => {
   const descriptions: string[] = [];
 
@@ -181,15 +197,18 @@ const computedAriaDescribedby = computed<string | undefined>(() => {
         Supports both simple checkboxes and parent-child hierarchies
         Key uses value if available, falls back to label for uniqueness
       -->
-      <FzCheckboxGroupOption
-        v-for="option in options"
-        :key="option.value ? option.value.toString() : option.label"
-        v-model="model"
-        :disabled="disabled"
-        v-bind="option"
-        :emphasis="emphasis"
-        :error="error"
-      />
+      <template v-if="hasOptions">
+        <FzCheckboxGroupOption
+          v-for="option in options"
+          :key="option.value ? option.value.toString() : option.label"
+          v-model="model"
+          :disabled="disabled"
+          v-bind="option"
+          :emphasis="emphasis"
+          :error="error"
+        />
+      </template>
+      <slot v-else :checkboxGroupProps="controlledProps" />
     </div>
     <!-- Error message display with accessible ARIA live region -->
     <ErrorAlert v-if="error && $slots.error" :id="id + '-error'">

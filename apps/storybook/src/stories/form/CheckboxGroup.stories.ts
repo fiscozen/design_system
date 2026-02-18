@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
-import { ref, watch } from 'vue'
-import { FzCheckbox, FzCheckboxGroup } from '@fiscozen/checkbox'
+import { computed, ref, watch } from 'vue'
+import { FzCheckbox, FzCheckboxGroup, FzCheckboxCard } from '@fiscozen/checkbox'
 import { FzIcon } from '@fiscozen/icons'
 
 type PlayFunctionContext = {
@@ -52,24 +52,11 @@ const Template: CheckboxGroupStory = {
   render: (args) => ({
     components: { FzCheckboxGroup, FzCheckbox, FzIcon },
     setup() {
-      const { modelValue: initialValue, 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
-      const model = ref(initialValue || [])
-      
-      const handleUpdate = (val: any) => {
-        model.value = val
-        // Call spy if provided
-        if (onUpdateModelValue) {
-          onUpdateModelValue(val)
-        }
-      }
-      
-      return {
-        restArgs,
-        model,
-        handleUpdate
-      }
+      const model = ref(args.modelValue || [])
+      watch(() => args.modelValue, (v) => { model.value = v || [] })
+      return { args, model }
     },
-    template: `<FzCheckboxGroup v-bind="restArgs" :modelValue="model" @update:modelValue="handleUpdate($event)"/>`
+    template: `<FzCheckboxGroup v-bind="args" :modelValue="model" @update:modelValue="model = $event" />`
   }),
   args: {
     label: 'Field label',
@@ -274,24 +261,11 @@ export const Error: CheckboxGroupStory = {
   render: (args) => ({
     components: { FzCheckboxGroup, FzCheckbox, FzIcon },
     setup() {
-      const { modelValue: initialValue, 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
-      const model = ref(initialValue || [])
-      
-      const handleUpdate = (val: any) => {
-        model.value = val
-        // Call spy if provided
-        if (onUpdateModelValue) {
-          onUpdateModelValue(val)
-        }
-      }
-      
-      return {
-        restArgs,
-        model,
-        handleUpdate
-      }
+      const model = ref(args.modelValue || [])
+      watch(() => args.modelValue, (v) => { model.value = v || [] })
+      return { args, model }
     },
-    template: `<FzCheckboxGroup v-bind="restArgs" :modelValue="model" @update:modelValue="handleUpdate($event)"><template #error> Error message for the entire group </template></FzCheckboxGroup>`
+    template: `<FzCheckboxGroup v-bind="args" :modelValue="model" @update:modelValue="model = $event"><template #error> Error message for the entire group </template></FzCheckboxGroup>`
   }),
   args: {
     label: 'Field label',
@@ -330,24 +304,11 @@ export const ErrorAllCheckboxesNoMessage: CheckboxGroupStory = {
   render: (args) => ({
     components: { FzCheckboxGroup, FzCheckbox, FzIcon },
     setup() {
-      const { modelValue: initialValue, 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
-      const model = ref(initialValue || [])
-      
-      const handleUpdate = (val: any) => {
-        model.value = val
-        // Call spy if provided
-        if (onUpdateModelValue) {
-          onUpdateModelValue(val)
-        }
-      }
-      
-      return {
-        restArgs,
-        model,
-        handleUpdate
-      }
+      const model = ref(args.modelValue || [])
+      watch(() => args.modelValue, (v) => { model.value = v || [] })
+      return { args, model }
     },
-    template: `<FzCheckboxGroup v-bind="restArgs" :modelValue="model" @update:modelValue="handleUpdate($event)" />`
+    template: `<FzCheckboxGroup v-bind="args" :modelValue="model" @update:modelValue="model = $event" />`
   }),
   args: {
     label: 'Field label',
@@ -383,24 +344,11 @@ export const WithHelpText: CheckboxGroupStory = {
   render: (args) => ({
     components: { FzCheckboxGroup, FzCheckbox, FzIcon },
     setup() {
-      const { modelValue: initialValue, 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
-      const model = ref(initialValue || [])
-      
-      const handleUpdate = (val: any) => {
-        model.value = val
-        // Call spy if provided
-        if (onUpdateModelValue) {
-          onUpdateModelValue(val)
-        }
-      }
-      
-      return {
-        restArgs,
-        model,
-        handleUpdate
-      }
+      const model = ref(args.modelValue || [])
+      watch(() => args.modelValue, (v) => { model.value = v || [] })
+      return { args, model }
     },
-    template: `<FzCheckboxGroup v-bind="restArgs" :modelValue="model" @update:modelValue="handleUpdate($event)"><template #help> Description of help text </template></FzCheckboxGroup>`
+    template: `<FzCheckboxGroup v-bind="args" :modelValue="model" @update:modelValue="model = $event"><template #help> Description of help text </template></FzCheckboxGroup>`
   }),
   args: {
     label: 'Field label',
@@ -427,26 +375,13 @@ export const Required: CheckboxGroupStory = {
   render: (args) => ({
     components: { FzCheckboxGroup, FzCheckbox, FzIcon },
     setup() {
-      const { modelValue: initialValue, 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
-      const model = ref(initialValue || [])
-      
-      const handleUpdate = (val: any) => {
-        model.value = val
-        // Call spy if provided
-        if (onUpdateModelValue) {
-          onUpdateModelValue(val)
-        }
-      }
-      
-      return {
-        restArgs,
-        model,
-        handleUpdate
-      }
+      const model = ref(args.modelValue || [])
+      watch(() => args.modelValue, (v) => { model.value = v || [] })
+      return { args, model }
     },
     template: `
     <form action="#">
-      <FzCheckboxGroup v-bind="restArgs" :modelValue="model" @update:modelValue="handleUpdate($event)"/>
+      <FzCheckboxGroup v-bind="args" :modelValue="model" @update:modelValue="model = $event"/>
       <input type="submit" value="Submit" />
     </form>`
   }),
@@ -496,8 +431,8 @@ export const CheckboxGroupWithDynamicOptions: CheckboxGroupStory = {
   render: (args) => ({
     components: { FzCheckboxGroup, FzCheckbox, FzIcon },
     setup() {
-      const { modelValue: initialValue, 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
-      const model = ref(initialValue || [])
+      const model = ref(args.modelValue || [])
+      watch(() => args.modelValue, (v) => { model.value = v || [] })
       const dataFromServer = ref<{ label: string; value: any; disabled?: boolean }[]>([])
 
       setTimeout(() => {
@@ -515,24 +450,15 @@ export const CheckboxGroupWithDynamicOptions: CheckboxGroupStory = {
         })
       }, 1000)
 
-      const handleUpdate = (val: any) => {
-        model.value = val
-        // Call spy if provided
-        if (onUpdateModelValue) {
-          onUpdateModelValue(val)
-        }
-      }
-
       return {
-        restArgs,
+        args,
         model,
-        dataFromServer,
-        handleUpdate
+        dataFromServer
       }
     },
     template: `
     <form action="#">
-      <FzCheckboxGroup v-bind="restArgs" :modelValue="model" @update:modelValue="handleUpdate($event)" :options="dataFromServer"/>
+      <FzCheckboxGroup v-bind="args" :modelValue="model" @update:modelValue="model = $event" :options="dataFromServer"/>
       <input type="submit" value="Submit" />
     </form>`
   }),
@@ -673,6 +599,136 @@ export const LayoutTest: CheckboxGroupStory = {
       const group = canvas.getByRole('group')
       const classes = group.className
       expect(classes).toMatch(/gap-/)
+    })
+  }
+}
+
+const cardImage = 'consultant.jpg'
+
+export const VerticalCheckboxCardGroup: CheckboxGroupStory = {
+  render: (args) => ({
+    components: { FzCheckboxGroup, FzCheckboxCard },
+    setup() {
+      const selected = ref<(string | number | boolean)[]>(args.modelValue || [])
+      watch(() => args.modelValue, (v) => { selected.value = (v as any) || [] })
+      const groupArgs = computed(() => {
+        const { modelValue: _, 'onUpdate:modelValue': __, ...rest } = args
+        return rest
+      })
+      const handleUpdate = (val: any) => {
+        selected.value = val
+        if (args['onUpdate:modelValue']) {
+          (args['onUpdate:modelValue'] as Function)(val)
+        }
+      }
+
+      return {
+        groupArgs,
+        selected,
+        handleUpdate,
+        cardImage
+      }
+    },
+    template: `<FzCheckboxGroup v-bind="groupArgs">
+      <template v-slot="{ checkboxGroupProps }">
+        <FzCheckboxCard label="Option 1" title="Option 1" subtitle="lorem ipsum this is a description" value="option1" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="vertical" :hasImage="true" :imageUrl="cardImage" />
+        <FzCheckboxCard label="Option 2" title="Option 2" subtitle="lorem ipsum this is a description" value="option2" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="vertical" :hasImage="true" :imageUrl="cardImage" />
+        <FzCheckboxCard label="Option 3" title="Option 3" subtitle="lorem ipsum this is a description" value="option3" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="vertical" :hasImage="true" :imageUrl="cardImage" />
+      </template>
+    </FzCheckboxGroup>`
+  }),
+  args: {
+    label: 'Checkbox Card Group',
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify group renders with cards', async () => {
+      const group = canvas.getByRole('group')
+      expect(group).toBeInTheDocument()
+
+      const checkboxes = canvas.getAllByRole('checkbox')
+      expect(checkboxes.length).toBe(3)
+    })
+
+    await step('Select multiple cards and verify multi-select behavior', async () => {
+      const option1Label = canvas.getByText('Option 1')
+      const option2Label = canvas.getByText('Option 2')
+
+      await userEvent.click(option1Label.closest('label')!)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(1)
+
+      await userEvent.click(option2Label.closest('label')!)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(2)
+
+      const checkboxes = canvas.getAllByRole('checkbox')
+      const checkedBoxes = checkboxes.filter(cb => (cb as HTMLInputElement).checked)
+      expect(checkedBoxes.length).toBe(2)
+    })
+  }
+}
+
+export const HorizontalCheckboxCardGroup: CheckboxGroupStory = {
+  render: (args) => ({
+    components: { FzCheckboxGroup, FzCheckboxCard },
+    setup() {
+      const selected = ref<(string | number | boolean)[]>(args.modelValue || [])
+      watch(() => args.modelValue, (v) => { selected.value = (v as any) || [] })
+      const groupArgs = computed(() => {
+        const { modelValue: _, 'onUpdate:modelValue': __, ...rest } = args
+        return rest
+      })
+      const handleUpdate = (val: any) => {
+        selected.value = val
+        if (args['onUpdate:modelValue']) {
+          (args['onUpdate:modelValue'] as Function)(val)
+        }
+      }
+
+      return {
+        groupArgs,
+        selected,
+        handleUpdate,
+        cardImage
+      }
+    },
+    template: `<FzCheckboxGroup v-bind="groupArgs" :horizontal="true">
+      <template v-slot="{ checkboxGroupProps }">
+        <FzCheckboxCard label="Option 1" title="Option 1" subtitle="lorem ipsum this is a description" value="option1" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="horizontal" :hasImage="true" :imageUrl="cardImage" tooltip="this is a tooltip" />
+        <FzCheckboxCard label="Option 2" title="Option 2" subtitle="lorem ipsum this is a description" value="option2" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="horizontal" :hasImage="true" :imageUrl="cardImage" tooltip="this is a tooltip" />
+        <FzCheckboxCard label="Option 3" title="Option 3" subtitle="lorem ipsum this is a description" value="option3" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="horizontal" :hasImage="true" :imageUrl="cardImage" tooltip="this is a tooltip" />
+      </template>
+    </FzCheckboxGroup>`
+  }),
+  args: {
+    label: 'Checkbox Card Group (Horizontal)',
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify group renders with horizontal layout', async () => {
+      const group = canvas.getByRole('group')
+      expect(group).toBeInTheDocument()
+      expect(group).toHaveClass('flex-row')
+
+      const checkboxes = canvas.getAllByRole('checkbox')
+      expect(checkboxes.length).toBe(3)
+    })
+
+    await step('Select and deselect a card', async () => {
+      const option1Label = canvas.getByText('Option 1')
+
+      await userEvent.click(option1Label.closest('label')!)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(1)
+
+      await userEvent.click(option1Label.closest('label')!)
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(2)
+
+      const checkboxes = canvas.getAllByRole('checkbox')
+      const checkedBoxes = checkboxes.filter(cb => (cb as HTMLInputElement).checked)
+      expect(checkedBoxes.length).toBe(0)
     })
   }
 }
