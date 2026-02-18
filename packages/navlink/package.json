@@ -14,10 +14,10 @@
   "keywords": [],
   "author": "Riccardo Agnoletto",
   "dependencies": {
-    "@fiscozen/collapse": "workspace:*",
-    "@fiscozen/icons": "workspace:*"
+    "@fiscozen/collapse": "workspace:*"
   },
   "peerDependencies": {
+    "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13",
     "vue-router": "^4.3.0"

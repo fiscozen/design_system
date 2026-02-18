@@ -14,10 +14,10 @@
   "author": "Cristian Barraco",
   "dependencies": {
     "@fiscozen/button": "workspace:*",
-    "@fiscozen/composables": "workspace:*",
-    "@fiscozen/icons": "workspace:*"
+    "@fiscozen/composables": "workspace:*"
   },
   "peerDependencies": {
+    "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },

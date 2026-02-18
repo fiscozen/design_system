@@ -13,6 +13,7 @@
   "keywords": [],
   "author": "Riccardo Agnoletto",
   "peerDependencies": {
+    "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
@@ -40,7 +41,6 @@
   "dependencies": {
     "@fiscozen/button": "workspace:*",
     "@fiscozen/composables": "workspace:*",
-    "@fiscozen/icons": "workspace:*",
     "@fiscozen/input": "workspace:*",
     "@fiscozen/style": "workspace:*",
     "@vuepic/vue-datepicker": "^8.8.1",
