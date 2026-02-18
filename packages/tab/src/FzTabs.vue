@@ -161,8 +161,7 @@ watch(
     // (false is treated as not set, since the default behavior is no overflow)
     if (horizontalOverflow !== undefined) {
       debugWarn(
-        `[FzTabs] The "horizontalOverflow" prop is deprecated and will be removed in a future version. ` +
-          `Please use tabStyle="scroll" instead.`,
+        `[FzTabs] The "horizontalOverflow" prop is deprecated and will be removed in a future version. `,
         props.isDebug,
       );
     }

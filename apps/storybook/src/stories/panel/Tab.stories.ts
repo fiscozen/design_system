@@ -691,9 +691,6 @@ export const KeyboardNavigation: TabStory = {
   }
 }
 
-// ============================================
-// USER INTERACTION STORY
-// ============================================
 
 export const FullWidth: TabStory = {
   render: (args) => ({
@@ -714,7 +711,6 @@ export const FullWidth: TabStory = {
     template: `<FzTabs v-bind="args" v-slot="data"> 
                     <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
                     <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
-                    <FzTab v-bind="customProps.tab3"> {{ data.selected }} </FzTab>
                 </FzTabs>`
   }),
   args: {
@@ -769,7 +765,6 @@ export const FullWidthWithIconsAndBadges: TabStory = {
     template: `<FzTabs v-bind="args" v-slot="data"> 
                     <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
                     <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
-                    <FzTab v-bind="customProps.tab3"> {{ data.selected }} </FzTab>
                 </FzTabs>`
   }),
   args: {

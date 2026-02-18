@@ -66,24 +66,4 @@ const selectTab = (tab: FzTabProps) => {
   }
 };
 
-const getActionClasses = (tab: FzTabProps) => {
-  const isSelected = selectedTab?.value === tab.title;
-  const baseClasses = "!rounded-none !px-16 !py-12";
-
-  if (props.tone === "alert") {
-    return [
-      baseClasses,
-      isSelected
-        ? "!bg-red-100 !text-red-600"
-        : "!bg-core-white hover:!bg-red-50 !text-grey-500",
-    ];
-  }
-
-  return [
-    baseClasses,
-    isSelected
-      ? "!bg-blue-100 !text-blue-600"
-      : "!bg-core-white hover:!bg-grey-50 !text-grey-500",
-  ];
-};
 </script>

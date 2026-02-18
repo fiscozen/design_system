@@ -8,8 +8,9 @@ A flexible and accessible tabs component for Vue 3 applications. FzTabs allows u
 
 ## Features
 
-- **Flexible Overflow Handling** - Control overflow behavior with `tabStyle` prop (scroll, picker, or none)
+- **Flexible Tab Styles** - Control tab behavior with `tabStyle` prop (scroll, picker, or fullWidth)
 - **Environment-based Sizing** - Support for backoffice and frontoffice environments
+- **Per-tab Tone** - Apply `tone` variants (neutral or alert) on individual tabs
 - **Icon Support** - Display icons alongside tab labels
 - **Badge Support** - Show badges with text or numbers on tabs
 - **Vertical Layout** - Support for both horizontal and vertical tab layouts
@@ -53,13 +54,16 @@ import { FzTabs, FzTab } from '@fiscozen/tab'
 </template>
 ```
 
-### With Tone (Alert Variant)
+### With Tone (Per-tab Alert Variant)
+
+The `tone` prop is applied on individual `FzTab` components, allowing you to highlight specific tabs independently:
 
 ```vue
 <template>
-  <FzTabs tone="alert">
-    <FzTab title="Errors">Error content</FzTab>
-    <FzTab title="Warnings">Warning content</FzTab>
+  <FzTabs>
+    <FzTab title="Overview">Overview content</FzTab>
+    <FzTab title="Errors" tone="alert">Error content</FzTab>
+    <FzTab title="Settings">Settings content</FzTab>
   </FzTabs>
 </template>
 ```
@@ -86,11 +90,11 @@ import { FzTabs, FzTab } from '@fiscozen/tab'
 </template>
 ```
 
-### Overflow Handling
+### Tab Styles
 
 ```vue
 <template>
-  <!-- Scroll mode: shows horizontal scroll when tabs overflow -->
+  <!-- Scroll mode (default): shows horizontal scroll when tabs overflow -->
   <FzTabs tabStyle="scroll">
     <FzTab title="Tab 1">Content 1</FzTab>
     <FzTab title="Tab 2">Content 2</FzTab>
@@ -98,17 +102,18 @@ import { FzTabs, FzTab } from '@fiscozen/tab'
     <FzTab title="Tab 4">Content 4</FzTab>
   </FzTabs>
 
-  <!-- Picker mode: shows dropdown picker when tabs overflow -->
+  <!-- Picker mode: shows dropdown picker -->
   <FzTabs tabStyle="picker">
     <FzTab title="Tab 1">Content 1</FzTab>
     <FzTab title="Tab 2">Content 2</FzTab>
     <FzTab title="Tab 3">Content 3</FzTab>
   </FzTabs>
 
-  <!-- None mode: no overflow handling (default) -->
-  <FzTabs tabStyle="none">
+  <!-- Full width mode: tabs stretch to fill the entire container width -->
+  <FzTabs tabStyle="fullWidth">
     <FzTab title="Tab 1">Content 1</FzTab>
     <FzTab title="Tab 2">Content 2</FzTab>
+    <FzTab title="Tab 3">Content 3</FzTab>
   </FzTabs>
 </template>
 ```
@@ -144,25 +149,26 @@ import { FzTabs, FzTab } from '@fiscozen/tab'
 
 ### FzTabs Props
 
-| Prop                 | Type                             | Default     | Description                                                                                     |
-| -------------------- | -------------------------------- | ----------- | ----------------------------------------------------------------------------------------------- |
-| `tabStyle`           | `'scroll' \| 'picker' \| 'none'` | `'none'`    | Controls overflow behavior when tabs exceed container width                                     |
-| `environment`        | `'backoffice' \| 'frontoffice'`  | `undefined` | Environment variant for sizing                                                                  |
-| `tone`               | `'neutral' \| 'alert'`           | `'neutral'` | Tone variant for styling (neutral or alert/red)                                                 |
-| `size`               | `'sm' \| 'md'`                   | `undefined` | **Deprecated:** Use `environment` prop instead. This prop will be removed in a future version.  |
-| `horizontalOverflow` | `boolean`                        | `undefined` | **Deprecated:** Use `tabStyle="scroll"` instead. This prop will be removed in a future version. |
-| `vertical`           | `boolean`                        | `false`     | **Deprecated:** This prop is deprecated and will be removed in a future version.                |
+| Prop                 | Type                                          | Default      | Description                                                                                     |
+| -------------------- | --------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------- |
+| `tabStyle`           | `'scroll' \| 'picker' \| 'fullWidth'`         | `'scroll'`   | Controls tab style and overflow behavior                                                        |
+| `environment`        | `'backoffice' \| 'frontoffice'`               | `undefined`  | Environment variant for sizing                                                                  |
+| `vertical`           | `boolean`                                     | `false`      | Enable vertical tab layout                                                                      |
+| `isDebug`            | `boolean`                                     | `false`      | Enable debug mode with deprecation warnings in console                                          |
+| `size`               | `'sm' \| 'md'`                                | `undefined`  | **Deprecated:** Use `environment` prop instead. This prop will be removed in a future version.  |
+| `horizontalOverflow` | `boolean`                                     | `undefined`  | **Deprecated:** Use `tabStyle="scroll"` instead. This prop will be removed in a future version. |
 
 ### FzTab Props
 
-| Prop              | Type      | Default     | Description                                |
-| ----------------- | --------- | ----------- | ------------------------------------------ |
-| `title`           | `string`  | -           | **Required.** Title of the tab             |
-| `icon`            | `string`  | `undefined` | Icon name to display on the tab            |
-| `badgeContent`    | `string`  | `undefined` | Badge text or number to display on the tab |
-| `disabled`        | `boolean` | `false`     | Disable the tab                            |
-| `initialSelected` | `boolean` | `false`     | Show this tab's content initially          |
-| `maxWidth`        | `string`  | `undefined` | Maximum width of the tab                   |
+| Prop              | Type                     | Default     | Description                                                    |
+| ----------------- | ------------------------ | ----------- | -------------------------------------------------------------- |
+| `title`           | `string`                 | -           | **Required.** Title of the tab                                 |
+| `icon`            | `string`                 | `undefined` | Icon name to display on the tab                                |
+| `badgeContent`    | `string`                 | `undefined` | Badge text or number to display on the tab                     |
+| `disabled`        | `boolean`                | `false`     | Disable the tab                                                |
+| `initialSelected` | `boolean`                | `false`     | Show this tab's content initially                              |
+| `maxWidth`        | `string`                 | `undefined` | Maximum width of the tab                                       |
+| `tone`            | `'neutral' \| 'alert'`   | `'neutral'` | Tone variant for styling (neutral or alert/red) per single tab |
 
 ### FzTabs Slots
 
@@ -187,9 +193,49 @@ The default slot provides a scoped slot with the selected tab:
 
 ### Events
 
-| Event    | Payload              | Description                           |
-| -------- | -------------------- | ------------------------------------- |
-| `change` | `string` (tab title) | Emitted when the selected tab changes |
+| Event    | Payload                                        | Description                           |
+| -------- | ---------------------------------------------- | ------------------------------------- |
+| `change` | `(title: string, element: HTMLElement \| null)` | Emitted when the selected tab changes |
+
+## Tab Style Modes
+
+Tab style is controlled via the `tabStyle` prop. The default is `'scroll'`.
+
+### `tabStyle="scroll"` (default)
+
+Shows the tabs in a horizontally scrollable container when they overflow:
+
+```vue
+<FzTabs tabStyle="scroll">
+  <FzTab title="Tab 1">Content</FzTab>
+  <FzTab title="Tab 2">Content</FzTab>
+  <FzTab title="Tab 3">Content</FzTab>
+</FzTabs>
+```
+
+### `tabStyle="picker"`
+
+Replaces the tab buttons with a dropdown picker:
+
+```vue
+<FzTabs tabStyle="picker">
+  <FzTab title="Tab 1">Content</FzTab>
+  <FzTab title="Tab 2">Content</FzTab>
+  <FzTab title="Tab 3">Content</FzTab>
+</FzTabs>
+```
+
+### `tabStyle="fullWidth"`
+
+The tab container stretches to fill the full width of its parent. Each tab takes equal space and the text is centered:
+
+```vue
+<FzTabs tabStyle="fullWidth">
+  <FzTab title="Tab 1">Content</FzTab>
+  <FzTab title="Tab 2">Content</FzTab>
+  <FzTab title="Tab 3">Content</FzTab>
+</FzTabs>
+```
 
 ## Deprecation Guide
 
@@ -237,38 +283,7 @@ The `horizontalOverflow` prop is deprecated. Use `tabStyle` instead:
 
 ### Deprecated Props Behavior
 
-All deprecated props continue to work for backward compatibility but will show console warnings. They will be removed in a future major version.
-
-## Overflow Behavior
-
-Overflow behavior is now handled automatically. You can still
-set the tabStyle prop to control how the tabs are displayed and how they overflow.
-
-### `tabStyle="scroll"`
-
-Shows the tabs in a horizontal scroll:
-
-```vue
-<FzTabs tabStyle="scroll">
-  <FzTab title="Tab 1">Content</FzTab>
-  <FzTab title="Tab 2">Content</FzTab>
-  <FzTab title="Tab 3">Content</FzTab>
-</FzTabs>
-```
-
-### `tabStyle="picker"`
-
-Shows the tabs in a dropdown picker:
-
-```vue
-<FzTabs tabStyle="picker">
-  <FzTab title="Tab 1">Content</FzTab>
-  <FzTab title="Tab 2">Content</FzTab>
-  <FzTab title="Tab 3">Content</FzTab>
-</FzTabs>
-```
-
-**Note:** Unlike the previous automatic overflow detection, `tabStyle` must be explicitly set. The component no longer automatically switches between normal view and picker view.
+All deprecated props continue to work for backward compatibility but will show console warnings when `isDebug` is enabled. They will be removed in a future major version.
 
 ## Accessibility Features
 
@@ -311,12 +326,14 @@ The `environment` prop controls the sizing of tabs:
 - **`backoffice`**: Optimized for backoffice applications
 - **`frontoffice`**: Optimized for frontoffice applications
 
-### Tone Variants
+### Per-tab Tone Variants
 
-The `tone` prop controls the visual styling of tabs:
+The `tone` prop is set on individual `FzTab` components to control the visual styling of specific tabs:
 
 - **`neutral`** (default): Standard blue/neutral styling
 - **`alert`**: Red/error styling for alert or error states
+
+This allows you to highlight specific tabs (e.g. an "Errors" tab) without affecting the others.
 
 ### Custom Styling
 
@@ -327,10 +344,10 @@ Tabs use Tailwind CSS classes and can be customized through the design system's 
 ### Interactive Examples
 
 - **[Tabs Stories](../?path=/docs/panel-fztabs--docs)** - Live examples and interactive demos
-- **[Basic Tabs](../?path=/story/panel-fztabs--small)** - Basic tab example
-- **[With Overflow](../?path=/story/panel-fztabs--overflow-mode-scroll)** - Overflow handling demo
-- **[With Icons](../?path=/story/panel-fztabs--with-icon-small)** - Tabs with icons
-- **[With Badges](../?path=/story/panel-fztabs--with-badge-small)** - Tabs with badges
+- **[Full Width](../?path=/story/panel-fztabs--full-width)** - Full width tabs example
+- **[With Icons](../?path=/story/panel-fztabs--tabs-with-icon)** - Tabs with icons
+- **[With Badges](../?path=/story/panel-fztabs--tabs-with-badge)** - Tabs with badges
+- **[Tone Alert](../?path=/story/panel-fztabs--tone-alert)** - Per-tab alert tone example
 
 ### Related Components
 
