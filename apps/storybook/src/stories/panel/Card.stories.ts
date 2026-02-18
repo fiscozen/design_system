@@ -15,8 +15,8 @@ const meta = {
     },
     color: {
       control: 'select',
-      options: ['default', 'blue', 'orange', 'purple', 'grey', 'aliceblue'],
-      description: 'Card background color variant. Note: "aliceblue" is deprecated, use "blue" instead.',
+      options: ['default', 'blue', 'orange', 'purple', 'grey', 'yellow', 'red', 'aliceblue'],
+      description: 'Card background color variant. "yellow" uses semantic warning tint; "red" uses semantic error tint. "aliceblue" is deprecated, use "blue" instead.',
       table: {
         defaultValue: { summary: 'default' }
       }
@@ -355,11 +355,49 @@ export const CardGrey: CardStory = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    
+
     // Verify card has grey color (background-white-smoke)
     const card = canvasElement.querySelector('.bg-background-white-smoke')
     await expect(card).toBeTruthy()
-    
+
+    // Verify actions are present
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(3)
+  }
+}
+
+export const CardYellow: CardStory = {
+  ...CardWithActions,
+  args: {
+    ...CardWithActions.args,
+    color: 'yellow'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Verify card has yellow color (semantic-warning-50)
+    const card = canvasElement.querySelector('.bg-semantic-warning-50')
+    await expect(card).toBeTruthy()
+
+    // Verify actions are present
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(3)
+  }
+}
+
+export const CardRed: CardStory = {
+  ...CardWithActions,
+  args: {
+    ...CardWithActions.args,
+    color: 'red'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Verify card has red color (semantic-error-50)
+    const card = canvasElement.querySelector('.bg-semantic-error-50')
+    await expect(card).toBeTruthy()
+
     // Verify actions are present
     const buttons = canvas.getAllByRole('button')
     await expect(buttons.length).toBe(3)

@@ -59,17 +59,19 @@ type FzCardIconButton = {
 
 /**
  * Card background color variants.
- * 
+ *
  * @remarks
  * - 'default' renders a white background
  * - 'blue' renders an alice-blue background
  * - 'orange' renders a seashell background
  * - 'purple' renders a pale-purple background
  * - 'grey' renders a white-smoke background
- * 
+ * - 'yellow' uses --semantic-warning-50 (warning tint)
+ * - 'red' uses --semantic-error-50 (error tint)
+ *
  * @deprecated 'aliceblue' is deprecated and will be removed in a future version. Use 'blue' instead.
  */
-export type FzCardColor = "default" | "blue" | "orange" | "purple" | "grey" | "aliceblue";
+export type FzCardColor = "default" | "blue" | "orange" | "purple" | "grey" | "yellow" | "red" | "aliceblue";
 
 /**
  * Card environment context for buttons
