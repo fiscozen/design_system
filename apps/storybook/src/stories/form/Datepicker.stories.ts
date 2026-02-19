@@ -1344,6 +1344,67 @@ export const PlacementBottomEnd: Story = {
   }
 }
 
+export const CalendarFlipsAboveWhenAtBottom: Story = {
+  render: (args) => ({
+    components: { FzDatepicker },
+    setup() {
+      const date = ref()
+      const handleUpdate = (value: any) => {
+        date.value = value
+        if (args['onUpdate:modelValue']) {
+          args['onUpdate:modelValue'](value)
+        }
+      }
+      return {
+        date,
+        args,
+        handleUpdate
+      }
+    },
+    template: `
+      <div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100vh; padding: 0 12px 12px;">
+        <FzDatepicker v-bind="args" :modelValue="date" @update:modelValue="handleUpdate" />
+      </div>
+    `
+  }),
+  args: {},
+  decorators: [() => ({ template: '<div style="max-width: 400px; height: 100vh; overflow: hidden;"><story/></div>' })],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify datepicker renders at bottom of container', async () => {
+      const input = canvas.getByLabelText(/datepicker label/i)
+      await expect(input).toBeInTheDocument()
+      await expect(input).toBeVisible()
+
+      const inputRect = input.getBoundingClientRect()
+      const viewportHeight = window.innerHeight
+      await expect(inputRect.bottom).toBeGreaterThan(viewportHeight * 0.7)
+    })
+
+    await step('Open calendar popup', async () => {
+      await openCalendar(canvas)
+    })
+
+    await step('Verify calendar popup is positioned above the input', async () => {
+      const input = canvas.getByLabelText(/datepicker label/i)
+      const calendar = getCalendar()
+      await expect(calendar).toBeVisible()
+
+      const inputRect = input.getBoundingClientRect()
+      const calendarRect = calendar.getBoundingClientRect()
+
+      // The calendar's bottom edge should be at or above the input's top edge,
+      // meaning it flipped above instead of rendering below where there's no space
+      await expect(calendarRect.bottom).toBeLessThanOrEqual(inputRect.top + 2)
+    })
+
+    await step('Close calendar', async () => {
+      await closeCalendar()
+    })
+  }
+}
+
 export const Required: Story = {
   ...Template,
   args: {
