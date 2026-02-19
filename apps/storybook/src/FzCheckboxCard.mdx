@@ -1,0 +1,377 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Form/FzCheckboxCard" />
+
+# FzCheckboxCard
+
+A card-style checkbox component with a larger target area, designed for multi-selection scenarios that benefit from richer visual context. Supports images, titles, subtitles, and tooltips.
+
+## Features
+
+- **Two layout variants**: Horizontal (default, compact) and vertical (image-focused)
+- **Image support**: Optional image in horizontal mode, required in vertical mode (16:9 aspect ratio)
+- **Rich content**: Title and optional subtitle text
+- **Tooltip support**: Optional info tooltip with configurable status
+- **Checkbox icon control**: Show or hide the checkbox icon with `hasCheckbox`
+- **Multiple states**: Default, emphasis, error, and disabled
+- **Group integration**: Works standalone or inside `FzCheckboxGroup` via scoped slot
+- **Full keyboard navigation and WCAG 2.1 AA compliance**
+
+## Installation
+
+```bash
+npm install @fiscozen/checkbox
+```
+
+## Basic Usage
+
+### Horizontal (Default)
+
+```vue
+<script setup lang="ts">
+import { FzCheckboxCard } from '@fiscozen/checkbox'
+import { ref } from 'vue'
+
+const selected = ref<string[]>([])
+</script>
+
+<template>
+  <FzCheckboxCard
+    v-model="selected"
+    label="option1"
+    title="Basic Plan"
+    subtitle="Perfect for individuals"
+    value="option1"
+  />
+</template>
+```
+
+### Vertical (with image)
+
+```vue
+<template>
+  <FzCheckboxCard
+    v-model="selected"
+    label="option2"
+    title="Pro Plan"
+    subtitle="For growing teams"
+    value="option2"
+    variant="vertical"
+    imageUrl="/path/to/image.jpg"
+    imageAlt="Pro plan illustration"
+  />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>modelValue</code></td>
+      <td><code>(string | number | boolean)[]</code></td>
+      <td><code>[]</code></td>
+      <td>Array of selected values (v-model)</td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Accessible label for the checkbox input. Falls back as <code>value</code> when <code>value</code> is not provided</td>
+    </tr>
+    <tr>
+      <td><code>value</code></td>
+      <td><code>string | number</code></td>
+      <td><code>label</code></td>
+      <td>Value added to the model array when checked. Defaults to <code>label</code> if omitted</td>
+    </tr>
+    <tr>
+      <td><code>title</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Primary title text displayed in the card (required)</td>
+    </tr>
+    <tr>
+      <td><code>subtitle</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Optional secondary description text below the title</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'horizontal' | 'vertical'</code></td>
+      <td><code>'horizontal'</code></td>
+      <td>Layout variant. Horizontal: compact row layout. Vertical: stacked layout with full-width image</td>
+    </tr>
+    <tr>
+      <td><code>imageUrl</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>URL of the image. Optional in horizontal mode, required in vertical mode</td>
+    </tr>
+    <tr>
+      <td><code>imageAlt</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Alt text for the image (accessibility)</td>
+    </tr>
+    <tr>
+      <td><code>hasCheckbox</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Controls whether the checkbox icon is shown inside the card</td>
+    </tr>
+    <tr>
+      <td><code>tooltip</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Text to display in the info tooltip</td>
+    </tr>
+    <tr>
+      <td><code>tooltipStatus</code></td>
+      <td><code>FzTooltipStatus</code></td>
+      <td><code>'neutral'</code></td>
+      <td>Status of the tooltip (determines visual style)</td>
+    </tr>
+    <tr>
+      <td><code>emphasis</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Applies emphasis styling (blue checkbox icon when checked)</td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows error state with red checkbox icon</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Disables the card, preventing user interaction</td>
+    </tr>
+    <tr>
+      <td><code>required</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Marks the checkbox as required for form validation</td>
+    </tr>
+    <tr>
+      <td><code>name</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Group name for the checkbox, used for form submission</td>
+    </tr>
+  </tbody>
+</table>
+
+### Variant constraints
+
+The `variant` prop uses a discriminated union:
+
+- **`horizontal`** (default): `imageUrl` is optional. Shows a 58x58px square thumbnail when provided.
+- **`vertical`**: `imageUrl` is **required**. The image is displayed full-width with a 16:9 aspect ratio.
+
+## Examples
+
+### With Image (Horizontal)
+
+```vue
+<template>
+  <FzCheckboxCard
+    v-model="selected"
+    label="consultant"
+    title="Consultant Plan"
+    subtitle="Ideal for consultants"
+    value="consultant"
+    imageUrl="/images/consultant.jpg"
+    imageAlt="Consultant illustration"
+  />
+</template>
+```
+
+### With Image (Vertical)
+
+```vue
+<template>
+  <FzCheckboxCard
+    v-model="selected"
+    label="enterprise"
+    title="Enterprise Plan"
+    subtitle="For large organizations"
+    value="enterprise"
+    variant="vertical"
+    imageUrl="/images/enterprise.jpg"
+    imageAlt="Enterprise illustration"
+  />
+</template>
+```
+
+### Without Checkbox Icon
+
+```vue
+<template>
+  <FzCheckboxCard
+    v-model="selected"
+    label="option"
+    title="Clean Card"
+    subtitle="No checkbox icon shown"
+    value="option"
+    :hasCheckbox="false"
+  />
+</template>
+```
+
+### With Tooltip
+
+```vue
+<template>
+  <FzCheckboxCard
+    v-model="selected"
+    label="premium"
+    title="Premium Plan"
+    subtitle="All features included"
+    value="premium"
+    tooltip="Includes 24/7 support and dedicated account manager"
+    tooltipStatus="informative"
+  />
+</template>
+```
+
+### Emphasis State
+
+```vue
+<template>
+  <FzCheckboxCard
+    v-model="selected"
+    label="highlighted"
+    title="Highlighted Option"
+    subtitle="This option stands out"
+    value="highlighted"
+    emphasis
+  />
+</template>
+```
+
+### Error State
+
+```vue
+<template>
+  <FzCheckboxCard
+    v-model="selected"
+    label="invalid"
+    title="Invalid Option"
+    subtitle="Something went wrong"
+    value="invalid"
+    error
+  />
+</template>
+```
+
+### Disabled State
+
+```vue
+<template>
+  <FzCheckboxCard
+    v-model="selected"
+    label="unavailable"
+    title="Unavailable Plan"
+    subtitle="Currently not available"
+    value="unavailable"
+    disabled
+  />
+</template>
+```
+
+### Inside FzCheckboxGroup
+
+Use the scoped slot from `FzCheckboxGroup` to propagate group-level props (`disabled`, `error`, `emphasis`, `required`) to all cards.
+
+```vue
+<script setup lang="ts">
+import { FzCheckboxGroup, FzCheckboxCard } from '@fiscozen/checkbox'
+import { ref } from 'vue'
+
+const selected = ref<string[]>([])
+</script>
+
+<template>
+  <FzCheckboxGroup
+    v-model="selected"
+    label="Select your plans"
+    v-slot="{ checkboxGroupProps }"
+  >
+    <FzCheckboxCard
+      v-model="selected"
+      label="basic"
+      title="Basic Plan"
+      subtitle="Perfect for individuals"
+      value="basic"
+      v-bind="checkboxGroupProps"
+    />
+    <FzCheckboxCard
+      v-model="selected"
+      label="pro"
+      title="Pro Plan"
+      subtitle="For growing teams"
+      value="pro"
+      v-bind="checkboxGroupProps"
+    />
+    <FzCheckboxCard
+      v-model="selected"
+      label="enterprise"
+      title="Enterprise Plan"
+      subtitle="For large organizations"
+      value="enterprise"
+      v-bind="checkboxGroupProps"
+    />
+  </FzCheckboxGroup>
+</template>
+```
+
+## Image Dimensions
+
+### Horizontal variant
+- Image size: 58x58px (square thumbnail)
+
+### Vertical variant
+- Image size: full card width, 16:9 aspect ratio
+
+## Accessibility
+
+- **Keyboard navigation**: Tab to focus the card, Space to toggle selection
+- **Screen readers**: Proper ARIA attributes announce checked/unchecked state
+- **Focus indicators**: Visible focus ring with blue outline when navigating with keyboard
+- **Image alt text**: Always provide `imageAlt` when using images
+- **Semantic HTML**: Uses a native `<input type="checkbox">` for correct form behavior
+- **WCAG 2.1 AA**: Meets color contrast and accessibility requirements
+
+### ARIA Attributes
+
+- `aria-checked`: Announces checked/unchecked state
+- `aria-required`: Indicates required fields
+- `aria-invalid`: Indicates validation errors (set when `error` is true)
+
+## Best Practices
+
+- Use the **horizontal** variant for compact lists where options need a quick scan.
+- Use the **vertical** variant when the image is central to the selection (e.g., choosing a visual theme or plan).
+- Always provide `imageAlt` for images to ensure accessibility.
+- When using multiple cards, wrap them in `FzCheckboxGroup` to get consistent group-level state management, labeling, and error handling.
+- Set `hasCheckbox` to `false` when the card selection state is clear from the visual border highlight alone.
+
+## Related Components
+
+- **FzCheckbox**: Standard checkbox component for simpler use cases
+- **FzCheckboxGroup**: Container for grouping checkbox cards with shared state
+- **FzRadioCard**: Similar card-based component for single-selection (radio) scenarios
+- **FzTooltip**: Used internally for tooltip functionality

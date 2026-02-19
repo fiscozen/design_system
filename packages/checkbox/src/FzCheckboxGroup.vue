@@ -35,9 +35,10 @@
  *   ]"
  * />
  */
-import { computed, useSlots, watch } from "vue";
+import { computed, provide, useSlots, watch } from "vue";
 import { FzCheckboxGroupProps } from "./types";
 import { generateGroupId } from "./utils";
+import { CHECKED_SET_KEY } from "./common";
 import FzCheckboxGroupOption from "./components/FzCheckboxGroupOption.vue";
 import ErrorAlert from "./components/ErrorAlert.vue";
 
@@ -79,6 +80,9 @@ const model = defineModel<(string | number | boolean)[]>({
   required: true,
   default: [],
 });
+
+const checkedSet = computed(() => new Set(model.value));
+provide(CHECKED_SET_KEY, { source: model, set: checkedSet });
 
 /** Base layout for the label element */
 const staticLabeldClass: string = "flex flex-col";

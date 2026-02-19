@@ -1,6 +1,7 @@
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { FzCheckboxCard } from "..";
+import { defineComponent, ref, nextTick } from "vue";
+import { FzCheckboxCard, FzCheckboxGroup } from "..";
 import type { FzCheckboxCardProps } from "../types";
 
 const createWrapper = (
@@ -307,6 +308,116 @@ describe("FzCheckboxCard", () => {
       const wrapper = createWrapper({});
       const tooltip = wrapper.findComponent({ name: "FzTooltip" });
       expect(tooltip.exists()).toBe(false);
+    });
+  });
+
+  describe("Inside FzCheckboxGroup (integration)", () => {
+    function mountGroupWithCards(initialSelected: (string | number | boolean)[] = []) {
+      const Wrapper = defineComponent({
+        components: { FzCheckboxGroup, FzCheckboxCard },
+        setup() {
+          const selected = ref<(string | number | boolean)[]>(initialSelected);
+          const handleUpdate = (val: (string | number | boolean)[]) => {
+            selected.value = val;
+          };
+          return { selected, handleUpdate };
+        },
+        template: `
+          <FzCheckboxGroup label="Test Group">
+            <template #default="{ checkboxGroupProps }">
+              <FzCheckboxCard
+                label="Card 1"
+                title="Card 1"
+                value="card1"
+                :modelValue="selected"
+                @update:modelValue="handleUpdate"
+                v-bind="checkboxGroupProps"
+              />
+              <FzCheckboxCard
+                label="Card 2"
+                title="Card 2"
+                value="card2"
+                :modelValue="selected"
+                @update:modelValue="handleUpdate"
+                v-bind="checkboxGroupProps"
+              />
+              <FzCheckboxCard
+                label="Card 3"
+                title="Card 3"
+                value="card3"
+                :modelValue="selected"
+                @update:modelValue="handleUpdate"
+                v-bind="checkboxGroupProps"
+              />
+            </template>
+          </FzCheckboxGroup>
+        `,
+      });
+
+      return mount(Wrapper);
+    }
+
+    function getCheckboxInputs(wrapper: ReturnType<typeof mount>) {
+      return wrapper
+        .findAll("input[type='checkbox']")
+        .map((w) => w.element as HTMLInputElement);
+    }
+
+    it("should show pre-checked cards when modelValue contains their values", async () => {
+      const wrapper = mountGroupWithCards(["card1", "card3"]);
+      await nextTick();
+
+      const inputs = getCheckboxInputs(wrapper);
+      expect(inputs[0].checked).toBe(true);
+      expect(inputs[1].checked).toBe(false);
+      expect(inputs[2].checked).toBe(true);
+    });
+
+    it("should check a card when clicking it", async () => {
+      const wrapper = mountGroupWithCards();
+      await nextTick();
+
+      const wrappers = wrapper.findAll("input[type='checkbox']");
+      const inputs = getCheckboxInputs(wrapper);
+      expect(inputs[0].checked).toBe(false);
+
+      await wrappers[0].trigger("change");
+      await nextTick();
+
+      expect(wrapper.vm.selected).toContain("card1");
+      expect(inputs[0].checked).toBe(true);
+    });
+
+    it("should uncheck a card when clicking a checked card", async () => {
+      const wrapper = mountGroupWithCards(["card2"]);
+      await nextTick();
+
+      const wrappers = wrapper.findAll("input[type='checkbox']");
+      const inputs = getCheckboxInputs(wrapper);
+      expect(inputs[1].checked).toBe(true);
+
+      await wrappers[1].trigger("change");
+      await nextTick();
+
+      expect(wrapper.vm.selected).not.toContain("card2");
+      expect(inputs[1].checked).toBe(false);
+    });
+
+    it("should support selecting multiple cards", async () => {
+      const wrapper = mountGroupWithCards();
+      await nextTick();
+
+      const wrappers = wrapper.findAll("input[type='checkbox']");
+      const inputs = getCheckboxInputs(wrapper);
+      await wrappers[0].trigger("change");
+      await nextTick();
+      await wrappers[2].trigger("change");
+      await nextTick();
+
+      expect(wrapper.vm.selected).toEqual(["card1", "card3"]);
+      expect(inputs[0].checked).toBe(true);
+      expect(inputs[1].checked).toBe(false);
+      expect(inputs[2].checked).toBe(true);
     });
   });
 });

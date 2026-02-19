@@ -223,7 +223,7 @@ export type ChildCheckbox = Omit<FzCheckboxProps, "size">;
  */
 type FzCheckboxCardBaseProps = Omit<
   FzCheckboxProps,
-  "standalone" | "indeterminate" | "ariaOwns" | "checkboxId" | "value"
+  "standalone" | "indeterminate" | "ariaOwns" | "checkboxId" | "value" | "tooltip"
 > & {
   /**
    * Value associated with the card when used in array v-model.

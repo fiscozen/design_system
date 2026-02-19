@@ -4,6 +4,8 @@
  * @module @fiscozen/checkbox/common
  */
 
+import type { ComputedRef, InjectionKey, Ref } from "vue";
+
 /**
  * Maps checkbox size variants to corresponding Tailwind CSS text size classes.
  *
@@ -22,3 +24,20 @@ export const mapSizeToClasses = {
   /** Medium size: 16px font size (1rem) - default */
   md: "text-base",
 };
+
+export interface CheckedSetProvision {
+  /** The group's model ref — consumers compare by reference identity to decide
+   *  whether the shared Set is built from the same data they hold. */
+  source: Ref<(string | number | boolean)[]>;
+  /** Pre-built Set for O(1) lookups, derived from `source`. */
+  set: ComputedRef<Set<string | number | boolean>>;
+}
+
+/**
+ * Injection key for the shared checked-values Set.
+ * Provided by FzCheckboxGroup so child cards/checkboxes can do O(1) membership
+ * checks instead of O(N) Array.includes scans — but only when the group's
+ * model and the child's model reference the same array.
+ */
+export const CHECKED_SET_KEY: InjectionKey<CheckedSetProvision> =
+  Symbol("FzCheckboxCheckedSet");

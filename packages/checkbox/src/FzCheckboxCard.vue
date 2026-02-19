@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { FzCheckboxCardProps } from "./types";
 import { generateCheckboxId } from "./utils";
+import { CHECKED_SET_KEY } from "./common";
 import { FzIcon, type IconVariant } from "@fiscozen/icons";
 import { FzTooltip } from "@fiscozen/tooltip";
 
@@ -21,8 +22,13 @@ const model = defineModel<(string | number | boolean)[]>({
   default: [],
 });
 
+const injected = inject(CHECKED_SET_KEY, null);
+
 const isChecked = computed<boolean>(() => {
   if (model.value == null) return false;
+  if (injected && injected.source.value === model.value) {
+    return injected.set.value.has(computedValue.value);
+  }
   return model.value.includes(computedValue.value);
 });
 
