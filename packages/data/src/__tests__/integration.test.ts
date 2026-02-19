@@ -6,6 +6,10 @@ import {
   useFzFetch,
   useActions,
 } from "../rest";
+import {
+  joinPathSegments,
+  applyTrailingSlash,
+} from "../rest/http/utils/url";
 
 /**
  * Integration tests for the complete request flow
@@ -372,6 +376,56 @@ describe("Integration Tests", () => {
         const { execute } = useUpdate({ trailingSlash: true });
         await execute(1, { name: "Updated" });
         expect(capturedUrl).toBe("https://api.example.com/users/1/");
+      });
+
+      it("useRetrieve: all permutations basePath × pk × trailingSlash never produce double slash", async () => {
+        const basePaths = ["users", "/users", "/users/", "users/"] as const;
+        const pks = ["self", "/self", "self/", "/self/"] as const;
+        const trailingSlashOptions = [true, false] as const;
+
+        for (const trailingSlash of trailingSlashOptions) {
+          for (const basePath of basePaths) {
+            for (const pk of pks) {
+              resetFzFetcher();
+              let capturedUrl = "";
+              const captureFetch = vi.fn((url: string | URL) => {
+                capturedUrl = typeof url === "string" ? url : url.toString();
+                return Promise.resolve(
+                  new Response(JSON.stringify({ id: 1 }), {
+                    status: 200,
+                    headers: { "Content-Type": "application/json" },
+                  }),
+                );
+              }) as typeof fetch;
+              global.fetch = captureFetch;
+              setupFzFetcher({
+                baseUrl: "https://api.example.com",
+                trailingSlash,
+              });
+              const { useRetrieve } = useActions<{ id: number }>(basePath);
+              const { execute } = useRetrieve(pk, { onMount: false });
+              await execute();
+
+              const pathname = new URL(capturedUrl).pathname;
+              expect(
+                pathname.includes("//"),
+                `basePath=${JSON.stringify(basePath)} pk=${JSON.stringify(pk)} trailingSlash=${trailingSlash} → ${pathname} must not contain //`,
+              ).toBe(false);
+
+              const expectedPath = applyTrailingSlash(
+                joinPathSegments(basePath, pk),
+                trailingSlash,
+              );
+              const expectedPathname = expectedPath.startsWith("/")
+                ? expectedPath
+                : `/${expectedPath}`;
+              expect(
+                pathname,
+                `basePath=${JSON.stringify(basePath)} pk=${JSON.stringify(pk)} trailingSlash=${trailingSlash}`,
+              ).toBe(expectedPathname);
+            }
+          }
+        }
       });
 
       it("useDelete with trailingSlash option overrides setup", async () => {

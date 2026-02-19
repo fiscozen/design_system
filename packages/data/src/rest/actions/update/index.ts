@@ -1,5 +1,6 @@
 import { shallowRef } from "vue";
 import { useFzFetch } from "../../http";
+import { joinPathSegments } from "../../http/utils/url";
 import { CONTENT_TYPE_JSON } from "../../http/common";
 import type { UseUpdateAction, UseUpdateExecuteOptions } from "./types";
 import type { MutationActionOptions } from "../shared/types";
@@ -46,7 +47,7 @@ export const createUpdateAction = <T>(
           );
         }
 
-        const response = useFzFetch<T>(`${basePath}/${pk}`, {
+        const response = useFzFetch<T>(joinPathSegments(basePath, String(pk)), {
           method,
           body,
           headers: { "Content-Type": CONTENT_TYPE_JSON },

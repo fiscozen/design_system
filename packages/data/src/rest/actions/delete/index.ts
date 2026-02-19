@@ -1,5 +1,6 @@
 import { shallowRef } from "vue";
 import { useFzFetch } from "../../http";
+import { joinPathSegments } from "../../http/utils/url";
 import type { UseDeleteAction } from "./types";
 import type { MutationActionOptions } from "../shared/types";
 import { executeMutation } from "../shared/error-handling";
@@ -26,7 +27,7 @@ export const createDeleteAction = <T>(
       async () => {
         validatePrimaryKey(pk, "createDeleteAction");
 
-        const response = useFzFetch<T>(`${basePath}/${pk}`, {
+        const response = useFzFetch<T>(joinPathSegments(basePath, String(pk)), {
           method: "DELETE",
         }, mutationOptionsToFetchOptions(options));
 
