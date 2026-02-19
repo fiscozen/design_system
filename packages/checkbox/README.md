@@ -7,6 +7,7 @@ A fully accessible, WCAG 2.1 AA compliant checkbox component library for Vue 3 a
 - **WCAG 2.1 AA Compliant** - Full accessibility support with comprehensive ARIA attributes
 - **Flexible Data Models** - Support for boolean (single) and array (multi-select) v-model binding
 - **Hierarchical Structures** - Parent-child checkbox relationships with automatic indeterminate state
+- **Card-style Checkboxes** - Rich selection cards with images, titles, subtitles, and tooltips
 - **Keyboard Navigation** - Complete keyboard accessibility with visible focus indicators
 - **Screen Reader Optimized** - Proper semantic markup and live region announcements
 - **Error Handling** - Built-in validation states with accessible error messages
@@ -113,6 +114,37 @@ const options = [
 </template>
 ```
 
+### Checkbox Card
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { FzCheckboxCard } from '@fiscozen/checkbox';
+
+const selected = ref<(string | number)[]>([]);
+</script>
+
+<template>
+  <div style="display: flex; gap: 12px;">
+    <FzCheckboxCard
+      v-model="selected"
+      label="option-a"
+      value="option-a"
+      title="Option A"
+      subtitle="Description for option A"
+    />
+
+    <FzCheckboxCard
+      v-model="selected"
+      label="option-b"
+      value="option-b"
+      title="Option B"
+      subtitle="Description for option B"
+    />
+  </div>
+</template>
+```
+
 ## API Reference
 
 ### FzCheckbox
@@ -188,6 +220,45 @@ v-model: string[]
 |------|-------------|
 | `help` | Help text displayed below the label |
 | `error` | Error message content |
+
+---
+
+### FzCheckboxCard
+
+A card-style checkbox component with support for title, subtitle, optional image, and tooltip. Available in horizontal and vertical layout variants. Uses array v-model for multi-select patterns.
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | **required** | Accessible label for the underlying checkbox input |
+| `value` | `string \| number` | `label` | Value tracked in the array v-model |
+| `title` | `string` | **required** | Primary title text displayed in the card |
+| `subtitle` | `string` | `undefined` | Optional secondary text below the title |
+| `variant` | `'horizontal' \| 'vertical'` | `'horizontal'` | Layout direction of the card |
+| `imageUrl` | `string` | `undefined` | URL of the card image (required when `variant` is `'vertical'`) |
+| `imageAlt` | `string` | `undefined` | Alt text for the card image |
+| `hasCheckbox` | `boolean` | `true` | Whether to show the checkbox icon inside the card |
+| `emphasis` | `boolean` | `false` | Applies emphasis styling (blue icon when checked) |
+| `disabled` | `boolean` | `false` | Disables the card |
+| `error` | `boolean` | `false` | Shows error state (red checkbox icon) |
+| `required` | `boolean` | `false` | Marks the input as required |
+| `tooltip` | `string` | `undefined` | Text to display in the info tooltip |
+| `tooltipStatus` | `FzTooltipStatus` | `'neutral'` | Tooltip color/status variant |
+| `name` | `string` | `undefined` | Input `name` attribute for form submission |
+
+> **Note:** When `variant` is `'vertical'`, the `imageUrl` prop is required since the vertical layout is designed around a full-width image.
+
+#### v-model
+
+```typescript
+v-model: (string | number | boolean)[]
+```
+
+#### Variant Layouts
+
+- **Horizontal** (default) — Checkbox icon, optional thumbnail image (58×58), and text are arranged in a row. Compact layout suited for lists.
+- **Vertical** — Full-width 16:9 image on top, checkbox icon overlaid, and text below. Designed for visually rich selections.
 
 ---
 
@@ -368,6 +439,67 @@ const dayOptions = [
 </template>
 ```
 
+### Checkbox Card — Vertical with Image
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { FzCheckboxCard } from '@fiscozen/checkbox';
+
+const selected = ref<(string | number)[]>([]);
+</script>
+
+<template>
+  <div style="display: flex; gap: 16px; max-width: 720px;">
+    <FzCheckboxCard
+      v-model="selected"
+      label="plan-basic"
+      value="basic"
+      variant="vertical"
+      image-url="/images/basic-plan.jpg"
+      image-alt="Basic plan illustration"
+      title="Basic Plan"
+      subtitle="For individuals getting started"
+      tooltip="Includes 5 GB storage"
+    />
+
+    <FzCheckboxCard
+      v-model="selected"
+      label="plan-pro"
+      value="pro"
+      variant="vertical"
+      image-url="/images/pro-plan.jpg"
+      image-alt="Pro plan illustration"
+      title="Pro Plan"
+      subtitle="For growing teams"
+      tooltip="Includes 50 GB storage"
+    />
+  </div>
+</template>
+```
+
+### Checkbox Card — Without Checkbox Icon
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { FzCheckboxCard } from '@fiscozen/checkbox';
+
+const selected = ref<(string | number)[]>([]);
+</script>
+
+<template>
+  <FzCheckboxCard
+    v-model="selected"
+    label="option"
+    value="option"
+    title="Selectable Card"
+    subtitle="The card border highlights on selection"
+    :has-checkbox="false"
+  />
+</template>
+```
+
 ### Disabled State
 
 ```vue
@@ -458,6 +590,7 @@ This package is written in TypeScript and provides full type definitions.
 import type { 
   FzCheckboxProps, 
   FzCheckboxGroupProps,
+  FzCheckboxCardProps,
   ParentCheckbox,
   ChildCheckbox 
 } from '@fiscozen/checkbox';
@@ -473,6 +606,15 @@ const options: ParentCheckbox[] = [
     ]
   }
 ];
+
+// Example: Typed card props (vertical variant requires imageUrl)
+const verticalCard: FzCheckboxCardProps = {
+  label: 'card',
+  title: 'Card Title',
+  subtitle: 'Description',
+  variant: 'vertical',
+  imageUrl: '/images/card.jpg',
+};
 ```
 
 ## Accessibility Features
