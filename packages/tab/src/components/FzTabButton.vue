@@ -1,7 +1,7 @@
 <template>
   <button :class="classes" @click="onClickTab" v-bind="tab" :title="tab.title">
     <FzIcon v-if="tab.icon" :name="tab.icon" size="md" />
-    <span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">{{
+    <span class="text-ellipsis whitespace-nowrap overflow-hidden">{{
       tab.title
     }}</span>
     <FzBadge
@@ -82,7 +82,7 @@ function getTabButtonClasses(
     : mapUnselectedTabToClassesWithTone[tone][type];
 
   return [
-    "flex items-center rounded-md",
+    "flex items-center rounded-md focus:z-10",
     fullWidth ? "flex-1 justify-center" : "w-auto",
     mapEnvironmentToClasses[environment],
     type === "picker" ? "text-left" : "",
