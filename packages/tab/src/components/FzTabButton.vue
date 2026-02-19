@@ -1,13 +1,14 @@
 <template>
-  <button :class="classes" @click="onClickTab" v-bind="tab">
-    <FzIcon v-if="tab.icon" :name="tab.icon" :size="size" />
-    <span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">{{
+  <button :class="classes" @click="onClickTab" v-bind="tab" :title="tab.title">
+    <FzIcon v-if="tab.icon" :name="tab.icon" size="md" />
+    <span class="text-ellipsis whitespace-nowrap overflow-hidden">{{
       tab.title
     }}</span>
     <FzBadge
       v-if="tab.badgeContent != null"
-      :color="selectedTab === tab.title ? 'blue' : 'black'"
-      :size="size"
+      :color="badgeColor"
+      :environment="environment"
+      size="md"
     >
       {{ tab.badgeContent }}
     </FzBadge>
@@ -22,9 +23,9 @@ import { useMediaQuery } from "@fiscozen/composables";
 import { breakpoints } from "@fiscozen/style";
 import { FzTabProps } from "../types";
 import {
-  mapSelectedTabToClasses,
-  mapSizeToClasses,
-  mapUnselectedTabToClasses,
+  mapEnvironmentToClasses,
+  mapSelectedTabToClassesWithTone,
+  mapUnselectedTabToClassesWithTone,
 } from "../common";
 
 const xs = useMediaQuery(`(max-width: ${breakpoints.xs})`);
@@ -32,32 +33,81 @@ const xs = useMediaQuery(`(max-width: ${breakpoints.xs})`);
 const props = withDefaults(
   defineProps<{
     tab: FzTabProps;
-    size: "sm" | "md";
+    environment: "frontoffice" | "backoffice";
     type: "picker" | "tab";
-    readonly: boolean;
+    readonly?: boolean;
     maxWidth?: string;
+    tone?: "neutral" | "alert";
+    fullWidth?: boolean;
   }>(),
   {
     type: "tab",
     readonly: false,
-    maxWidth: "136px",
+    tone: "neutral",
+    fullWidth: false,
   },
 );
 
 const selectedTab = inject<Ref<string>>("selectedTab");
 const emit = defineEmits(["click"]);
 
-const classes = computed(() => [
-  "w-auto flex font-medium items-center  rounded-md",
-  mapSizeToClasses[props.size],
-  props.type === "picker" ? "text-left" : "",
-  selectedTab?.value === props.tab.title
-    ? mapSelectedTabToClasses[props.type]
-    : mapUnselectedTabToClasses[props.type],
-  props.tab.disabled ? "cursor-not-allowed" : "cursor-pointer",
-  props.maxWidth && !xs.value ? `max-w-[${props.maxWidth}]` : "",
-  xs.value ? "!max-w-full !w-full" : "",
-]);
+const badgeColor = computed(() => {
+  if (selectedTab?.value !== props.tab.title) return "black";
+  return props.tone === "alert" ? "error" : "blue";
+});
+
+/**
+ * Builds the CSS classes array for a tab button based on its state and configuration.
+ * @param tone - The tone of the tab (neutral or alert)
+ * @param isSelected - Whether the tab is currently selected
+ * @param type - The type of tab (picker or tab)
+ * @param environment - The environment (frontoffice or backoffice)
+ * @param isDisabled - Whether the tab is disabled
+ * @param maxWidth - Optional max width value
+ * @param isXsBreakpoint - Whether the current viewport is at xs breakpoint (defaults to false)
+ * @returns Array of CSS class strings
+ */
+function getTabButtonClasses(
+  tone: "neutral" | "alert",
+  isSelected: boolean,
+  type: "picker" | "tab",
+  environment: "frontoffice" | "backoffice",
+  isDisabled: boolean,
+  maxWidth?: string,
+  isXsBreakpoint: boolean = false,
+  fullWidth: boolean = false,
+): string[] {
+  const toneClasses = isSelected
+    ? mapSelectedTabToClassesWithTone[tone][type]
+    : mapUnselectedTabToClassesWithTone[tone][type];
+
+  return [
+    "flex items-center rounded-md focus:z-10",
+    fullWidth ? "flex-1 justify-center" : "w-auto",
+    mapEnvironmentToClasses[environment],
+    type === "picker" ? "text-left" : "",
+    toneClasses,
+    isDisabled ? "cursor-not-allowed" : "cursor-pointer",
+    maxWidth && !isXsBreakpoint ? `max-w-[${maxWidth}]` : "",
+    isXsBreakpoint ? "!max-w-full !w-full" : "",
+  ];
+}
+
+const classes = computed(() => {
+  const tone = props.tone || "neutral";
+  const isSelected = selectedTab?.value === props.tab.title;
+
+  return getTabButtonClasses(
+    tone,
+    isSelected,
+    props.type,
+    props.environment,
+    props.tab.disabled ?? false,
+    props.maxWidth,
+    xs.value ?? false,
+    props.fullWidth,
+  );
+});
 
 const onClickTab = () => {
   if (!props.tab.disabled) {

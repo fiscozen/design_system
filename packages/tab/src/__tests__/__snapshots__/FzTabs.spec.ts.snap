@@ -1,13 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzTabs > Snapshots > should match snapshot - default state 1`] = `
-"<div data-v-97c498eb="" class="flex flex-col">
-  <div data-v-97c498eb="" class="flex flex-row">
-    <div data-v-97c498eb="" class="tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto w-full sm:w-auto flex-row"><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 bg-white text-blue-500 cursor-pointer max-w-[136px]" title="tab1">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab1</span>
+"<div class="flex flex-col">
+  <div class="flex flex-row">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer" title="tab1">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
         <!--v-if-->
-      </button><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer max-w-[136px]" title="tab2">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab2</span>
+      </button><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer" title="tab2">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab2</span>
         <!--v-if-->
       </button></div>
   </div>Content tab1
@@ -16,13 +16,43 @@ exports[`FzTabs > Snapshots > should match snapshot - default state 1`] = `
 `;
 
 exports[`FzTabs > Snapshots > should match snapshot - disabled tab 1`] = `
-"<div data-v-97c498eb="" class="flex flex-col">
-  <div data-v-97c498eb="" class="flex flex-row">
-    <div data-v-97c498eb="" class="tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto w-full sm:w-auto flex-row"><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 bg-white text-blue-500 cursor-not-allowed max-w-[136px]" title="tab1" disabled="">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab1</span>
+"<div class="flex flex-col">
+  <div class="flex flex-row">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 bg-white text-blue-500 cursor-not-allowed" title="tab1" disabled="">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
         <!--v-if-->
-      </button><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer max-w-[136px]" title="tab2">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab2</span>
+      </button><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer" title="tab2">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab2</span>
+        <!--v-if-->
+      </button></div>
+  </div>Content tab1
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzTabs > Snapshots > should match snapshot - environment backoffice 1`] = `
+"<div class="flex flex-col">
+  <div class="flex flex-row">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer" title="tab1">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
+        <!--v-if-->
+      </button><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer" title="tab2">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab2</span>
+        <!--v-if-->
+      </button></div>
+  </div>Content tab1
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzTabs > Snapshots > should match snapshot - environment frontoffice 1`] = `
+"<div class="flex flex-col">
+  <div class="flex flex-row">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-48 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer" title="tab1">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
+        <!--v-if-->
+      </button><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-48 gap-8 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer" title="tab2">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab2</span>
         <!--v-if-->
       </button></div>
   </div>Content tab1
@@ -31,13 +61,13 @@ exports[`FzTabs > Snapshots > should match snapshot - disabled tab 1`] = `
 `;
 
 exports[`FzTabs > Snapshots > should match snapshot - md size 1`] = `
-"<div data-v-97c498eb="" class="flex flex-col">
-  <div data-v-97c498eb="" class="flex flex-row">
-    <div data-v-97c498eb="" class="tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto w-full sm:w-auto flex-row"><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-md h-40 gap-8 py-12 px-14 bg-white text-blue-500 cursor-pointer max-w-[136px]" title="tab1">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab1</span>
+"<div class="flex flex-col">
+  <div class="flex flex-row">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-48 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer" title="tab1">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
         <!--v-if-->
-      </button><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-md h-40 gap-8 py-12 px-14 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer max-w-[136px]" title="tab2">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab2</span>
+      </button><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-48 gap-8 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer" title="tab2">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab2</span>
         <!--v-if-->
       </button></div>
   </div>Content tab1
@@ -46,13 +76,13 @@ exports[`FzTabs > Snapshots > should match snapshot - md size 1`] = `
 `;
 
 exports[`FzTabs > Snapshots > should match snapshot - tab change 1`] = `
-"<div data-v-97c498eb="" class="flex flex-col">
-  <div data-v-97c498eb="" class="flex flex-row">
-    <div data-v-97c498eb="" class="tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto w-full sm:w-auto flex-row"><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer max-w-[136px]" title="tab1">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab1</span>
+"<div class="flex flex-col">
+  <div class="flex flex-row">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer" title="tab1">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
         <!--v-if-->
-      </button><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 bg-white text-blue-500 cursor-pointer max-w-[136px]" title="tab2">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab2</span>
+      </button><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer" title="tab2">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab2</span>
         <!--v-if-->
       </button></div>
   </div>
@@ -60,14 +90,98 @@ exports[`FzTabs > Snapshots > should match snapshot - tab change 1`] = `
 </div>"
 `;
 
-exports[`FzTabs > Snapshots > should match snapshot - vertical direction 1`] = `
-"<div data-v-97c498eb="" class="flex flex-row">
-  <div data-v-97c498eb="" class="flex flex-col">
-    <div data-v-97c498eb="" class="tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto w-full sm:w-auto flex-col"><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 bg-white text-blue-500 cursor-pointer max-w-[136px]" title="tab1">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab1</span>
+exports[`FzTabs > Snapshots > should match snapshot - tabStyle picker 1`] = `
+"<div class="flex flex-col">
+  <div class="flex flex-row">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row">
+      <div class="w-full overflow-hidden">
+        <div class="inline-flex w-full sm:w-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer w-full sm:w-auto" title="tab1" initialselected="true" data-testid="fz-tab-picker-opener">
+            <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
+            <!--v-if-->
+            <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path>
+              </svg></div>
+          </button></div>
+        <div class="fz__floating__content w-full sm:w-auto bg-core-white fixed mt-4 bg-transparent z-70" style="display: none;">
+          <div data-v-ca7f3405="" class="fz__actionlist bg-core-white rounded flex flex-col gap-20 p-4 min-w-[240px]">
+            <div class="flex flex-col gap-4" role="group" aria-labelledby="fz-action-section-label-2a84k84">
+              <!--v-if--><button data-v-f322a564="" aria-disabled="false" aria-selected="false" type="button" class="group inline-flex max-w-full rounded border border-transparent border-2 transition-colors duration-200 gap-2 px-12 py-6 flex-row gap-8 text-core-black hover:bg-background-alice-blue hover:!text-blue-500 focus:!border-blue-200 focus:!outline-none focus:text-core-black">
+                <!--v-if-->
+                <div data-v-f322a564="" class="flex flex-1 flex-col gap-4 overflow-hidden"><span data-v-f322a564="" class="text-base text-left" title="tab1">tab1</span>
+                  <!--v-if-->
+                </div>
+                <!--v-if-->
+              </button><button data-v-f322a564="" aria-disabled="false" aria-selected="false" type="button" class="group inline-flex max-w-full rounded border border-transparent border-2 transition-colors duration-200 gap-2 px-12 py-6 flex-row gap-8 text-core-black hover:bg-background-alice-blue hover:!text-blue-500 focus:!border-blue-200 focus:!outline-none focus:text-core-black">
+                <!--v-if-->
+                <div data-v-f322a564="" class="flex flex-1 flex-col gap-4 overflow-hidden"><span data-v-f322a564="" class="text-base text-left" title="tab2">tab2</span>
+                  <!--v-if-->
+                </div>
+                <!--v-if-->
+              </button>
+            </div>
+          </div>
+        </div>
         <!--v-if-->
-      </button><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer max-w-[136px]" title="tab2">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab2</span>
+      </div>
+    </div>
+  </div>Content tab1
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzTabs > Snapshots > should match snapshot - tabStyle scroll 1`] = `
+"<div class="flex flex-col">
+  <div class="flex flex-row">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer" title="tab1">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
+        <!--v-if-->
+      </button><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer" title="tab2">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab2</span>
+        <!--v-if-->
+      </button></div>
+  </div>Content tab1
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzTabs > Snapshots > should match snapshot - tone alert 1`] = `
+"<div class="flex flex-col" tone="alert">
+  <div class="flex flex-row">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer" title="tab1">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
+        <!--v-if-->
+      </button><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer" title="tab2">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab2</span>
+        <!--v-if-->
+      </button></div>
+  </div>Content tab1
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzTabs > Snapshots > should match snapshot - tone neutral 1`] = `
+"<div class="flex flex-col" tone="neutral">
+  <div class="flex flex-row">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer" title="tab1">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
+        <!--v-if-->
+      </button><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer" title="tab2">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab2</span>
+        <!--v-if-->
+      </button></div>
+  </div>Content tab1
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzTabs > Snapshots > should match snapshot - vertical direction 1`] = `
+"<div class="flex flex-row">
+  <div class="flex flex-col">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-col overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer" title="tab1">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
+        <!--v-if-->
+      </button><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer" title="tab2">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab2</span>
         <!--v-if-->
       </button></div>
   </div>Content tab1
@@ -76,17 +190,17 @@ exports[`FzTabs > Snapshots > should match snapshot - vertical direction 1`] = `
 `;
 
 exports[`FzTabs > Snapshots > should match snapshot - with badgeContent 1`] = `
-"<div data-v-97c498eb="" class="flex flex-col">
-  <div data-v-97c498eb="" class="flex flex-row">
-    <div data-v-97c498eb="" class="tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto w-full sm:w-auto flex-row"><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 bg-white text-blue-500 cursor-pointer max-w-[136px]" title="tab1" badgecontent="1">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab1</span>
-        <div class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-blue-500 text-core-white" title="1">
+"<div class="flex flex-col">
+  <div class="flex flex-row">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer" title="tab1" badgecontent="1">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
+        <div class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-blue-500 text-core-white" title="1" environment="backoffice">
           <!--v-if-->
           <p class="text-[inherit] text-sm">1</p>
           <!--v-if-->
         </div>
-      </button><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer max-w-[136px]" title="tab2">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab2</span>
+      </button><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer" title="tab2">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab2</span>
         <!--v-if-->
       </button></div>
   </div>Content tab1
@@ -95,15 +209,15 @@ exports[`FzTabs > Snapshots > should match snapshot - with badgeContent 1`] = `
 `;
 
 exports[`FzTabs > Snapshots > should match snapshot - with icon 1`] = `
-"<div data-v-97c498eb="" class="flex flex-col">
-  <div data-v-97c498eb="" class="flex flex-row">
-    <div data-v-97c498eb="" class="tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto w-full sm:w-auto flex-row"><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 bg-white text-blue-500 cursor-pointer max-w-[136px]" title="tab1" icon="bell">
-        <div class="flex items-center justify-center w-[15px] h-[15px]"><svg class="svg-inline--fa fa-bell fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+"<div class="flex flex-col">
+  <div class="flex flex-row">
+    <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer" title="tab1" icon="bell">
+        <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-bell h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
             <path class="" fill="currentColor" d="M224 0c-17.7 0-32 14.3-32 32l0 19.2C119 66 64 130.6 64 208l0 25.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416l400 0c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4l0-25.4c0-77.4-55-142-128-156.8L256 32c0-17.7-14.3-32-32-32zm0 96c61.9 0 112 50.1 112 112l0 25.4c0 47.9 13.9 94.6 39.7 134.6L72.3 368C98.1 328 112 281.3 112 233.4l0-25.4c0-61.9 50.1-112 112-112zm64 352l-64 0-64 0c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"></path>
-          </svg></div><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab1</span>
+          </svg></div><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
         <!--v-if-->
-      </button><button data-v-97c498eb="" class="w-auto flex font-medium items-center  rounded-md text-sm h-40 gap-6 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer max-w-[136px]" title="tab2">
-        <!--v-if--><span class="text-ellipsis flex-1 whitespace-nowrap overflow-hidden">tab2</span>
+      </button><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 text-grey-500 bg-grey-100 hover:bg-background-alice-blue active:bg-white active:text-blue-500 cursor-pointer" title="tab2">
+        <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab2</span>
         <!--v-if-->
       </button></div>
   </div>Content tab1

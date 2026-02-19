@@ -16,7 +16,41 @@ const meta = {
       options: ['sm', 'md'],
       control: {
         type: 'select'
-      }
+      },
+      description: 'Deprecated: Use environment prop instead'
+    },
+    tabStyle: {
+      options: ['scroll', 'picker', 'fullWidth'],
+      control: {
+        type: 'select'
+      },
+      description: 'Controls overflow behavior'
+    },
+    environment: {
+      options: ['backoffice', 'frontoffice'],
+      control: {
+        type: 'select'
+      },
+      description: 'Environment variant for sizing'
+    },
+    tone: {
+      options: ['neutral', 'alert'],
+      control: {
+        type: 'select'
+      },
+      description: 'Tone variant for styling (neutral or alert/red)'
+    },
+    horizontalOverflow: {
+      control: {
+        type: 'boolean'
+      },
+      description: 'Deprecated: Use tabStyle prop instead'
+    },
+    vertical: {
+      control: {
+        type: 'boolean'
+      },
+      description: 'Deprecated: Will be removed in future version'
     }
   }
 } satisfies Meta<typeof FzTabs>
@@ -54,76 +88,43 @@ const Template: TabStory = {
   }
 }
 
-export const Medium: TabStory = {
+export const Tabs: TabStory = {
   ...Template,
   args: {
     size: 'md'
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify medium size variant renders', async () => {
       const tabContainer = canvasElement.querySelector('.tab-container')
       await expect(tabContainer).toBeInTheDocument()
-      
+
       const firstButton = canvasElement.querySelector('button[title="Active tab"]')
       await expect(firstButton).toBeInTheDocument()
-      
+
       // Verify medium size classes
       await expect(firstButton?.classList.contains('text-md')).toBe(true)
     })
   }
 }
 
-export const Small: TabStory = {
+export const TabsVertical: TabStory = {
   ...Template,
   args: {
-    size: 'sm'
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Verify component renders correctly', async () => {
-      const tabContainer = canvasElement.querySelector('.tab-container')
-      await expect(tabContainer).toBeInTheDocument()
-      
-      const buttons = canvasElement.querySelectorAll('button[title]')
-      await expect(buttons.length).toBeGreaterThanOrEqual(3)
-    })
-    
-    await step('Verify first tab is selected by default', async () => {
-      const firstTab = canvas.getByRole('button', { name: /active tab/i })
-      await expect(firstTab).toBeInTheDocument()
-      
-      // Verify selected tab has active styling
-      const selectedTab = canvasElement.querySelector('button[title="Active tab"]')
-      await expect(selectedTab?.classList.contains('bg-white')).toBe(true)
-    })
-    
-    await step('Verify tab content is displayed', async () => {
-      const content = canvasElement.textContent
-      await expect(content).toContain('Active tab')
-    })
-  }
-}
-
-export const MediumVertical: TabStory = {
-  ...Template,
-  args: {
-    size: 'md',
     vertical: true
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify vertical layout is applied', async () => {
       const tabContainer = canvasElement.querySelector('.tab-container')
       await expect(tabContainer).toBeInTheDocument()
-      
+
       // Verify vertical layout classes
       await expect(tabContainer?.classList.contains('flex-col')).toBe(true)
     })
-    
+
     await step('Verify tabs are still functional in vertical layout', async () => {
       const buttons = canvasElement.querySelectorAll('button[title]')
       await expect(buttons.length).toBeGreaterThanOrEqual(3)
@@ -131,7 +132,7 @@ export const MediumVertical: TabStory = {
   }
 }
 
-const TemplateWithIcon: TabStory = {
+export const TabsWithIcon: TabStory = {
   render: (args) => ({
     components: { FzTabs, FzTab, FzBadge, FzIcon },
     setup() {
@@ -154,45 +155,10 @@ const TemplateWithIcon: TabStory = {
                     <FzTab v-bind="customProps.tab1"> Content tab1 </FzTab> 
                     <FzTab v-bind="customProps.tab2"> Content tab2 </FzTab> 
                 </FzTabs>`
-  }),
-  args: {
-    size: 'sm'
-  }
+  })
 }
 
-export const WithIconMedium: TabStory = {
-  ...TemplateWithIcon,
-  args: {
-    size: 'md'
-  }
-}
-
-export const WithIconSmall: TabStory = {
-  ...TemplateWithIcon,
-  args: {
-    size: 'sm'
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Verify icons are displayed on tabs', async () => {
-      const tabContainer = canvasElement.querySelector('.tab-container')
-      await expect(tabContainer).toBeInTheDocument()
-      
-      // Verify icons are present (FzIcon components)
-      const icons = canvasElement.querySelectorAll('svg')
-      await expect(icons.length).toBeGreaterThanOrEqual(2)
-    })
-    
-    await step('Verify tab with initialSelected shows correct content', async () => {
-      const content = canvasElement.textContent
-      await expect(content).toContain('Content tab2')
-      await expect(content).not.toContain('Content tab1')
-    })
-  }
-}
-
-const TemplateWithBadge: TabStory = {
+export const TabsWithBadge: TabStory = {
   render: (args) => ({
     components: { FzTabs, FzTab, FzBadge, FzIcon },
     setup() {
@@ -215,43 +181,10 @@ const TemplateWithBadge: TabStory = {
                     <FzTab v-bind="customProps.tab1"> Content tab1 </FzTab> 
                     <FzTab v-bind="customProps.tab2"> Content tab2 </FzTab> 
                 </FzTabs>`
-  }),
-  args: {
-    size: 'sm'
-  }
+  })
 }
 
-export const WithBadgeMedium: TabStory = {
-  ...TemplateWithBadge,
-  args: {
-    size: 'md'
-  }
-}
-
-export const WithBadgeSmall: TabStory = {
-  ...TemplateWithBadge,
-  args: {
-    size: 'sm'
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Verify badges are displayed on tabs', async () => {
-      const badge1 = canvas.getByText('testo')
-      await expect(badge1).toBeInTheDocument()
-      
-      const badge2 = canvas.getByText('1')
-      await expect(badge2).toBeInTheDocument()
-    })
-    
-    await step('Verify selected tab content is displayed', async () => {
-      const content = canvasElement.textContent
-      await expect(content).toContain('Content tab2')
-    })
-  }
-}
-
-const TemplateWithOverflow: TabStory = {
+export const TabsOverflow: TabStory = {
   render: (args) => ({
     components: { FzTabs, FzTab, FzBadge, FzIcon },
     setup() {
@@ -279,7 +212,7 @@ const TemplateWithOverflow: TabStory = {
       }
     },
     template: `
-            <div style='width:200px; overflow:hidden; height:800px'>
+            <div style='width:300px; overflow:hidden; height:800px'>
                 <FzTabs v-bind="args" > 
                     <FzTab v-bind="customProps.tab1"> Content tab1 </FzTab> 
                     <FzTab v-bind="customProps.tab2"> Content tab2 </FzTab> 
@@ -293,37 +226,92 @@ const TemplateWithOverflow: TabStory = {
   }
 }
 
-export const Overflow: TabStory = {
-  ...TemplateWithOverflow,
+export const TabPicker: TabStory = {
+  ...TabsOverflow,
   args: {
-    size: 'sm'
+    tabStyle: 'picker'
+  },
+  play: async ({ canvasElement }) => {
+    // Verify picker is rendered instead of individual tabs
+    const picker = canvasElement.querySelector('[data-testid="fz-tab-picker-opener"]')
+    await expect(picker).toBeInTheDocument()
+    // Picker should be present (FzTabPicker component)
+    await expect(canvasElement.querySelector('.tab-container')).toBeInTheDocument()
   }
 }
 
-export const OverflowMedium: TabStory = {
-  ...TemplateWithOverflow,
+// Environment stories
+export const EnvironmentBackoffice: TabStory = {
+  ...Template,
   args: {
-    size: 'md'
+    environment: 'backoffice'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const tab1 = canvas.getByRole('button', { name: 'Active tab' })
+    await expect(tab1).toBeInTheDocument()
   }
 }
 
-export const OverflowWithScroll: TabStory = {
-  ...TemplateWithOverflow,
+export const EnvironmentFrontoffice: TabStory = {
+  ...Template,
   args: {
-    size: 'sm',
-    horizontalOverflow: true
+    environment: 'frontoffice'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const tab1 = canvas.getByRole('button', { name: 'Active tab' })
+    await expect(tab1).toBeInTheDocument()
   }
 }
 
-export const OverflowWithScrollMedium: TabStory = {
-  ...TemplateWithOverflow,
+// Tone stories
+export const ToneNeutral: TabStory = {
+  ...Template,
   args: {
-    size: 'md',
-    horizontalOverflow: true
+    tone: 'neutral'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const tab1 = canvas.getByRole('button', { name: 'Active tab' })
+    await expect(tab1).toBeInTheDocument()
   }
 }
 
-const TemplateWithTabArray: TabStory = {
+export const ToneAlert: TabStory = {
+  render: (args) => ({
+    components: { FzTabs, FzTab, FzBadge, FzIcon },
+    setup() {
+      return {
+        args,
+        customProps: {
+          tab1: {
+            title: 'Active tab'
+          },
+          tab2: {
+            title: 'Default tab',
+            tone: 'alert'
+          },
+          tab3: {
+            title: 'Default tab 2'
+          }
+        }
+      }
+    },
+    template: `<FzTabs v-bind="args" v-slot="data" > 
+                    <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
+                    <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
+                    <FzTab v-bind="customProps.tab3"> {{ data.selected }} </FzTab>
+                </FzTabs>`
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const tab1 = canvas.getByRole('button', { name: 'Active tab' })
+    await expect(tab1).toBeInTheDocument()
+  }
+}
+
+export const TabArray: TabStory = {
   render: (args) => ({
     components: { FzTabs, FzTab, FzBadge, FzIcon },
     setup() {
@@ -365,20 +353,6 @@ const TemplateWithTabArray: TabStory = {
   }),
   args: {
     size: 'sm'
-  }
-}
-
-export const TabArray: TabStory = {
-  ...TemplateWithTabArray,
-  args: {
-    size: 'sm'
-  }
-}
-
-export const TabArrayMedium: TabStory = {
-  ...TemplateWithTabArray,
-  args: {
-    size: 'md'
   }
 }
 
@@ -597,41 +571,41 @@ export const Disabled: TabStory = {
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify disabled tab has disabled styling', async () => {
       const disabledTab = canvasElement.querySelector('button[title="Disabled tab"]')
       await expect(disabledTab).toBeInTheDocument()
       await expect(disabledTab?.classList.contains('cursor-not-allowed')).toBe(true)
     })
-    
+
     await step('Verify disabled tab does not respond to clicks', async () => {
       // Reset spy to ignore any initial onChange calls from component mounting
       args.onChange.mockClear()
-      
+
       const disabledTab = canvasElement.querySelector('button[title="Disabled tab"]') as HTMLElement
       const contentBefore = canvasElement.textContent
-      
+
       await userEvent.click(disabledTab)
-      
+
       // Content should not change (disabled tab should not be selected)
       const contentAfter = canvasElement.textContent
       await expect(contentAfter).toBe(contentBefore)
-      
+
       // ROBUST CHECK: Verify the onChange spy was NOT called when clicking disabled tab
       await expect(args.onChange).not.toHaveBeenCalled()
     })
-    
+
     await step('Verify enabled tabs are clickable and onChange IS called', async () => {
       const enabledTab = canvas.getByRole('button', { name: /default tab 2/i })
       await userEvent.click(enabledTab)
-      
+
       // Content should update to show selected tab
       const content = canvasElement.textContent
       await expect(content).toContain('Default tab 2')
-      
+
       // ROBUST CHECK: Verify the onChange spy WAS called when clicking enabled tab
       await expect(args.onChange).toHaveBeenCalledTimes(1)
-      await expect(args.onChange).toHaveBeenCalledWith('Default tab 2')
+      await expect(args.onChange).toHaveBeenCalledWith('Default tab 2', expect.anything())
     })
   }
 }
@@ -671,55 +645,132 @@ export const KeyboardNavigation: TabStory = {
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Tab to focus first tab', async () => {
       await userEvent.tab()
       const firstTab = canvasElement.querySelector('button[title="Active tab"]')
       await expect(document.activeElement).toBe(firstTab)
     })
-    
+
     await step('Navigate to second tab with Tab key', async () => {
       await userEvent.tab()
       const secondTab = canvasElement.querySelector('button[title="Default tab"]')
       await expect(document.activeElement).toBe(secondTab)
     })
-    
+
     await step('Activate tab with Enter key', async () => {
       // Reset spy to ignore any initial onChange calls from component mounting
       args.onChange.mockClear()
-      
+
       const secondTab = canvasElement.querySelector('button[title="Default tab"]') as HTMLElement
       secondTab.focus()
       await userEvent.keyboard('{Enter}')
-      
+
       // Verify tab content changes
       const content = canvasElement.textContent
       await expect(content).toContain('Default tab')
-      
+
       // ROBUST CHECK: Verify the onChange spy WAS called when activating tab with Enter
       await expect(args.onChange).toHaveBeenCalledTimes(1)
-      await expect(args.onChange).toHaveBeenCalledWith('Default tab')
+      await expect(args.onChange).toHaveBeenCalledWith('Default tab', expect.anything())
     })
-    
+
     await step('Activate tab with Space key', async () => {
       const thirdTab = canvasElement.querySelector('button[title="Default tab 2"]') as HTMLElement
       thirdTab.focus()
       await userEvent.keyboard(' ')
-      
+
       // Verify tab content changes
       const content = canvasElement.textContent
       await expect(content).toContain('Default tab 2')
-      
+
       // ROBUST CHECK: Verify the onChange spy WAS called when activating tab with Space
       await expect(args.onChange).toHaveBeenCalledTimes(2)
-      await expect(args.onChange).toHaveBeenCalledWith('Default tab 2')
+      await expect(args.onChange).toHaveBeenCalledWith('Default tab 2', expect.anything())
     })
   }
 }
 
-// ============================================
-// USER INTERACTION STORY
-// ============================================
+
+export const FullWidth: TabStory = {
+  render: (args) => ({
+    components: { FzTabs, FzTab, FzBadge, FzIcon },
+    setup() {
+      return {
+        args,
+        customProps: {
+          tab1: {
+            title: 'Active tab'
+          },
+          tab2: {
+            title: 'Default tab'
+          }
+        }
+      }
+    },
+    template: `<FzTabs v-bind="args" v-slot="data"> 
+                    <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
+                    <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
+                </FzTabs>`
+  }),
+  args: {
+    tabStyle: 'fullWidth'
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Verify full width container', async () => {
+      const tabContainer = canvasElement.querySelector('.tab-container')
+      await expect(tabContainer).toBeInTheDocument()
+      await expect(tabContainer?.classList.contains('w-full')).toBe(true)
+    })
+
+    await step('Verify tabs have flex-1 and centered text', async () => {
+      const buttons = canvasElement.querySelectorAll('button[title]')
+      await expect(buttons.length).toBe(2)
+
+      buttons.forEach((button) => {
+        expect(button.classList.contains('flex-1')).toBe(true)
+        expect(button.classList.contains('justify-center')).toBe(true)
+      })
+    })
+
+    await step('Verify tab switching works', async () => {
+      const secondTab = canvasElement.querySelector('button[title="Default tab"]') as HTMLElement
+      await userEvent.click(secondTab)
+      const content = canvasElement.textContent
+      await expect(content).toContain('Default tab')
+    })
+  }
+}
+
+export const FullWidthWithIconsAndBadges: TabStory = {
+  render: (args) => ({
+    components: { FzTabs, FzTab, FzBadge, FzIcon },
+    setup() {
+      return {
+        args,
+        customProps: {
+          tab1: {
+            title: 'Dashboard',
+            icon: 'bell',
+            badgeContent: '3'
+          },
+          tab2: {
+            title: 'Settings',
+            icon: 'cog',
+            initialSelected: true
+          }
+        }
+      }
+    },
+    template: `<FzTabs v-bind="args" v-slot="data"> 
+                    <FzTab v-bind="customProps.tab1"> {{ data.selected }} </FzTab> 
+                    <FzTab v-bind="customProps.tab2"> {{ data.selected }} </FzTab> 
+                </FzTabs>`
+  }),
+  args: {
+    tabStyle: 'fullWidth'
+  }
+}
 
 export const UserInteraction: TabStory = {
   render: (args) => ({
@@ -752,50 +803,50 @@ export const UserInteraction: TabStory = {
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Click second tab to switch', async () => {
       // Reset spy to ignore any initial onChange calls from component mounting
       args.onChange.mockClear()
-      
+
       const secondTab = canvasElement.querySelector('button[title="Default tab"]') as HTMLElement
       await expect(secondTab).toBeInTheDocument()
       await userEvent.click(secondTab)
-      
+
       // Verify content updates
       const content = canvasElement.textContent
       await expect(content).toContain('Default tab')
-      
+
       // ROBUST CHECK: Verify the onChange spy WAS called when clicking tab
       await expect(args.onChange).toHaveBeenCalledTimes(1)
-      await expect(args.onChange).toHaveBeenCalledWith('Default tab')
+      await expect(args.onChange).toHaveBeenCalledWith('Default tab', expect.anything())
     })
-    
+
     await step('Click third tab to switch again', async () => {
       const thirdTab = canvasElement.querySelector('button[title="Default tab 2"]') as HTMLElement
       await expect(thirdTab).toBeInTheDocument()
       await userEvent.click(thirdTab)
-      
+
       // Verify content updates
       const content = canvasElement.textContent
       await expect(content).toContain('Default tab 2')
-      
+
       // ROBUST CHECK: Verify the onChange spy WAS called again
       await expect(args.onChange).toHaveBeenCalledTimes(2)
-      await expect(args.onChange).toHaveBeenCalledWith('Default tab 2')
+      await expect(args.onChange).toHaveBeenCalledWith('Default tab 2', expect.anything())
     })
-    
+
     await step('Click first tab to return', async () => {
       const firstTab = canvasElement.querySelector('button[title="Active tab"]') as HTMLElement
       await expect(firstTab).toBeInTheDocument()
       await userEvent.click(firstTab)
-      
+
       // Verify content updates back
       const content = canvasElement.textContent
       await expect(content).toContain('Active tab')
-      
+
       // ROBUST CHECK: Verify the onChange spy WAS called again
       await expect(args.onChange).toHaveBeenCalledTimes(3)
-      await expect(args.onChange).toHaveBeenCalledWith('Active tab')
+      await expect(args.onChange).toHaveBeenCalledWith('Active tab', expect.anything())
     })
   }
 }

@@ -2,20 +2,29 @@
   <div :class="computedClassWrapper">
     <div :class="['flex', computedClass]">
       <div
-        :class="[staticTabContainerClass, computedClass]"
+        :class="[
+          staticTabContainerClass,
+          computedClass,
+          overflowContainerClass,
+        ]"
         ref="tabContainer"
-        @wheel="onWheel"
       >
-        <template v-if="!horizontalOverflow && isOverflowing">
-          <FzTabPicker :tabs="tabs" :size="size" />
-        </template>
+        <FzTabPicker
+          v-if="effectiveTabStyle === 'picker'"
+          :tabs="tabs"
+          :environment="effectiveSize"
+        />
         <template v-else>
           <FzTabButton
             v-for="tab in tabs"
             :tab="tab"
             :key="tab.title"
-            :size="size"
+            :environment="effectiveSize"
             :maxWidth="tab.maxWidth"
+            :tone="tab.tone"
+            type="tab"
+            :readonly="false"
+            :fullWidth="effectiveTabStyle === 'fullWidth'"
           />
         </template>
         <slot name="tabs-container-end" />
@@ -27,24 +36,18 @@
 </template>
 
 <script setup lang="ts">
-import {
-  computed,
-  ref,
-  onMounted,
-  provide,
-  useSlots,
-  watch,
-  VNode,
-  onBeforeUnmount,
-} from "vue";
-import { FzTabsProps, FzTabProps } from "./types";
+import { computed, ref, onMounted, provide, useSlots, watch, VNode } from "vue";
+import { FzTabsProps, FzTabProps, FzTabStyle } from "./types";
 import FzTabPicker from "./components/FzTabPicker.vue";
 import FzTabButton from "./components/FzTabButton.vue";
 import FzTab from "./FzTab.vue";
+import { debugWarn, mapSizeToEnvironment } from "./common";
 
 const props = withDefaults(defineProps<FzTabsProps>(), {
-  size: "sm",
   vertical: false,
+  horizontalOverflow: undefined,
+  tabStyle: "scroll",
+  isDebug: false,
 });
 
 const emit = defineEmits(["change"]);
@@ -52,7 +55,6 @@ const emit = defineEmits(["change"]);
 const slots = useSlots();
 
 const tabContainer = ref<HTMLElement>();
-const isOverflowing = ref(false);
 const selectedTab = ref("");
 provide("selectedTab", selectedTab);
 
@@ -80,8 +82,13 @@ const tabs = computed(() => {
     .filter((el): el is FzTabProps => el != null);
 });
 
-const staticTabContainerClass =
-  "tab-container flex rounded-lg gap-8 p-2 bg-grey-100 w-fit max-w-full overflow-x-auto w-full sm:w-auto";
+const staticTabContainerClass = computed(() => {
+  const base = "tab-container flex rounded-lg p-2 bg-grey-100";
+  if (effectiveTabStyle.value === "fullWidth") {
+    return `${base} w-full`;
+  }
+  return `${base} w-fit max-w-full w-full sm:w-auto`;
+});
 
 const computedClass = computed(() => [
   props.vertical ? "flex-col" : "flex-row",
@@ -92,24 +99,81 @@ const computedClassWrapper = computed(() => [
   !props.vertical ? "flex-col" : "flex-row",
 ]);
 
-function onWheel(e: WheelEvent) {
-  e.preventDefault();
-  e.stopPropagation();
-  if (e.deltaY > 0) tabContainer.value!.scrollLeft += 100;
-  else tabContainer.value!.scrollLeft -= 100;
-}
+const overflowContainerClass = computed(() => {
+  if (effectiveTabStyle.value === "scroll") {
+    return "overflow-x-auto";
+  }
+  return "";
+});
 
-function updateIsOverflowing() {
-  if (!tabContainer.value) return false;
+/**
+ * Determines the effective size based on environment or deprecated size prop
+ * Priority: environment prop > size prop (deprecated) > default 'sm'
+ */
+const effectiveSize = computed<"frontoffice" | "backoffice">(() => {
+  if (props.environment) {
+    return props.environment;
+  }
+  if (props.size) {
+    return mapSizeToEnvironment[props.size];
+  }
+  return "backoffice";
+});
 
-  const parent = tabContainer.value.parentElement ?? document.body;
-  isOverflowing.value = tabContainer.value.scrollWidth > parent.clientWidth;
-}
+/**
+ * Determines the effective overflow mode
+ * Priority: overflowMode prop > horizontalOverflow prop (deprecated) > default 'scroll'
+ */
+const effectiveTabStyle = computed<FzTabStyle>(() => {
+  if (
+    props.horizontalOverflow !== undefined &&
+    props.horizontalOverflow === false
+  )
+    return "picker";
+
+  return props.tabStyle;
+});
+
+/**
+ * Deprecation warning for size prop
+ */
+watch(
+  () => props.size,
+  (size) => {
+    if (size !== undefined) {
+      debugWarn(
+        `[FzTabs] The "size" prop is deprecated and will be removed in a future version. ` +
+          `Please use environment="backoffice" instead of size="${size}".`,
+        props.isDebug,
+      );
+    }
+  },
+  { immediate: true },
+);
+
+/**
+ * Deprecation warning for horizontalOverflow prop
+ */
+watch(
+  () => props.horizontalOverflow,
+  (horizontalOverflow) => {
+    // Only warn if horizontalOverflow is explicitly set to true
+    // (false is treated as not set, since the default behavior is no overflow)
+    if (horizontalOverflow !== undefined) {
+      debugWarn(
+        `[FzTabs] The "horizontalOverflow" prop is deprecated and will be removed in a future version. `,
+        props.isDebug,
+      );
+    }
+  },
+  { immediate: true },
+);
 
 onMounted(() => {
   if (tabs.value.length === 0) {
-    console.warn(
+    debugWarn(
       "[Fiscozen Design System]: FzTabs must have at least one FzTab child",
+      props.isDebug,
     );
   } else {
     const findSelected = tabs.value.find((tab) => tab.initialSelected);
@@ -124,18 +188,12 @@ onMounted(() => {
       .filter((title, index, self) => self.indexOf(title) !== index);
 
     if (duplicateTitles.length) {
-      console.warn(
+      debugWarn(
         `[Fiscozen Design System]: FzTabs has duplicate titles: ${duplicateTitles.join(", ")}, this may cause unexpected behavior.`,
+        props.isDebug,
       );
     }
   }
-
-  updateIsOverflowing();
-  window.addEventListener("resize", updateIsOverflowing);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", updateIsOverflowing);
 });
 
 watch(
@@ -148,25 +206,11 @@ watch(
           tabs.value[0].title;
     }
 
-    const selectedTabElement = tabContainer.value!.querySelector(
+    const selectedTabElement = tabContainer.value?.querySelector(
       `button[title="${selectedTab.value}"]`,
     );
 
-    if (selectedTabElement && isOverflowing.value) {
-      selectedTabElement.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "center",
-      });
-    }
-
-    emit("change", selectedTab.value);
+    emit("change", selectedTab.value, selectedTabElement);
   },
 );
 </script>
-<style scoped>
-.tab-container::-webkit-scrollbar {
-  width: 0em;
-  height: 0em;
-}
-</style>
