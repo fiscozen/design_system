@@ -1,0 +1,206 @@
+---
+description: MDX documentation standards for Storybook component docs (location, structure, tables, curly braces, full template)
+globs: ["apps/storybook/src/**/*.mdx"]
+alwaysApply: true
+---
+
+# MDX Documentation File Rules
+
+When creating or editing component MDX documentation in Storybook, follow these rules. This rule is always applied so that MDX can be created or updated correctly even when working only via the agent (no file open): if the user asks to add or create MDX documentation for a component, apply these rules and infer component name and package from the request or from the codebase.
+
+**Where to put the MDX file:** `apps/storybook/src/Fz{ComponentName}.mdx` (e.g. `apps/storybook/src/FzProgressBar.mdx`).
+
+## 1. File location and naming
+
+- **Required path**: All component MDX files must be placed in `apps/storybook/src/`
+- **File name**: `Fz{ComponentName}.mdx` (e.g. `FzProgressBar.mdx`, `FzCard.mdx`)
+
+## 2. Purpose and audience (MDX = user-oriented documentation)
+
+**Purpose:** Documentation for package **consumers** (who use it), not for those who develop it.
+
+**Target audience:** Developers who use the component in their applications.
+
+**Difference from README:** The README is for package maintainers/developers; the MDX is for those who install and use the component.
+
+## 3. What to include (content focus)
+
+1. **What it does**: High-level description of the component's purpose
+2. **Installation**: How to install the package (`npm install`)
+3. **Basic usage**: Simple, working examples to get started
+4. **Props/API**: Complete list of props with type, default, and description
+5. **Slots/Events**: Available slots and events
+6. **Examples**: Common use cases with code examples
+7. **Behavior**: How the component behaves in different scenarios (from the user's perspective)
+8. **Configuration**: How to customize and configure the component
+9. **Accessibility**: Keyboard navigation, ARIA, screen reader support
+10. **Best practices**: When to use it, recommended patterns, common pitfalls to avoid
+
+## 4. Style
+
+- **User-friendly**, practical language
+- Focus on **"how to use"**, not "how it works internally"
+- **Copy-pasteable**, working code examples
+- **Concise** explanations
+- **No emojis**
+- **Language**: English
+
+## 5. What NOT to include
+
+- Internal implementation details
+- Developer setup instructions (dev environment, run dev server)
+- Testing strategies
+- Build/release processes
+- Architectural decisions
+- Package code organization
+
+## 6. Technical format of the MDX file
+
+### Import and Meta
+
+- Import: `import { Meta } from '@storybook/addon-docs/blocks';`
+- Title: `<Meta title="Documentation/{Category}/Fz{ComponentName}" />`  
+  (replace `{Category}` with the Storybook category, e.g. "form", "layout")
+
+### Installation
+
+- In the Installation section use **only** `npm install`, **not** `pnpm add`.
+
+### Tables
+
+- **Tables must be in HTML**, not markdown (markdown tables are not supported without additional plugins).
+
+### Curly braces in MDX (critical)
+
+- Storybook indexes MDX with Acorn; `{` and `}` inside JSX (e.g. in table cells) are parsed as JavaScript expressions and can cause "Could not parse expression with acorn" errors.
+- For object types in Props tables (e.g. `{ label: string; disabled?: boolean }`), use **HTML entities**:
+  - `&#123;` for `{`
+  - `&#125;` for `}`
+- Example: `<code>&#123; label: string; disabled?: boolean &#125; | undefined</code>`
+
+### Other
+
+- Use **code blocks only** for examples (no Canvas/Controls components).
+- Keep the documentation **concise and practical**.
+
+## 7. MDX table format
+
+Tables must be written in HTML. Example:
+
+```html
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>propName</code></td>
+      <td><code>type</code></td>
+      <td><code>default</code></td>
+      <td>Description of the prop from the user's perspective</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+For types containing `{` and `}`, use `&#123;` and `&#125;` as described in section 6.
+
+## 8. Recommended structure
+
+- **Title**: `# FzComponentName` plus a short description.
+- **Features**: Bullet list of main features.
+- **Installation**: Code block with `npm install @fiscozen/component-name`.
+- **Basic usage**: Minimal Vue example (script setup + template with the component).
+- **Props**: HTML table with columns Prop, Type, Default, Description.
+- **Examples**: One or more subsections with Vue examples (Common Use Case, Advanced Configuration, etc.).
+- **Accessibility**: Bullets on keyboard, ARIA, screen reader.
+- **Best practices**: When to use the component, recommended patterns, things to avoid.
+
+## 9. Full template (new component scaffolding)
+
+When creating a new component, create the MDX file with this template. Replace `{ComponentName}`, `{category}`, `{kebab-case-name}` (e.g. Accordion, form, accordion). Use fenced code blocks with ` ```bash ` for Installation and ` ```vue ` for Vue examples.
+
+````mdx
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/{Category}/Fz{ComponentName}" />
+
+# Fz{ComponentName}
+
+Brief description of what the component does and its main features.
+
+## Features
+
+- Feature 1
+- Feature 2
+- Feature 3
+
+## Installation
+
+```bash
+npm install @fiscozen/{kebab-case-name}
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { Fz{ComponentName} } from '@fiscozen/{kebab-case-name}'
+</script>
+
+<template>
+  <Fz{ComponentName} prop="value" />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>propName</code></td>
+      <td><code>type</code></td>
+      <td><code>defaultValue</code></td>
+      <td>Description of the prop</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Example 1
+
+```vue
+<template>
+  <Fz{ComponentName} prop="value" />
+</template>
+```
+
+## Accessibility
+
+Brief description of accessibility features and requirements.
+
+## Related Components
+
+- **RelatedComponent**: Description of relationship
+````
+
+## 10. When to update the MDX
+
+- **Feature addition (Phase 4 – Documentation):** Update the MDX file in `apps/storybook/src/FzComponentName.mdx` and add JSDoc to the code.
+- **Bug fix:** If behavior or API change, update the MDX file (and README and JSDoc if needed).
+- **Breaking changes (Phase BC4):** Update the MDX with the new API and migration notes; document the new API with examples.
+- **Final checklist:** Before considering work complete, ensure the MDX is up to date (`apps/storybook/src/FzComponentName.mdx`).

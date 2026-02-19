@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { FzCheckbox } from '@fiscozen/checkbox'
 import { FzIcon } from '@fiscozen/icons'
 
@@ -23,14 +23,11 @@ const Template: CheckboxStory = {
   render: (args) => ({
     components: { FzCheckbox, FzIcon },
     setup() {
-      const { modelValue: initialValue, ...restArgs } = args
-      const modelValue = ref(initialValue)
-      return {
-        restArgs,
-        modelValue
-      }
+      const modelValue = ref(args.modelValue)
+      watch(() => args.modelValue, (v) => { modelValue.value = v })
+      return { args, modelValue }
     },
-    template: `<FzCheckbox v-bind="restArgs" v-model="modelValue" @update:modelValue="console.log('update model value', $event)" />`
+    template: `<FzCheckbox v-bind="args" :modelValue="modelValue" @update:modelValue="modelValue = $event" />`
   }),
   args: {
     label: 'Checkbox'
@@ -239,14 +236,11 @@ export const Error: CheckboxStory = {
   render: (args) => ({
     components: { FzCheckbox, FzIcon },
     setup() {
-      const { modelValue: initialValue, ...restArgs } = args
-      const modelValue = ref(initialValue)
-      return {
-        restArgs,
-        modelValue
-      }
+      const modelValue = ref(args.modelValue)
+      watch(() => args.modelValue, (v) => { modelValue.value = v })
+      return { args, modelValue }
     },
-    template: `<FzCheckbox v-bind="restArgs" v-model="modelValue">
+    template: `<FzCheckbox v-bind="args" :modelValue="modelValue" @update:modelValue="modelValue = $event">
             <template #error>
                 Error
             </template>
@@ -282,14 +276,11 @@ export const ErrorWithoutMessage: CheckboxStory = {
   render: (args) => ({
     components: { FzCheckbox, FzIcon },
     setup() {
-      const { modelValue: initialValue, ...restArgs } = args
-      const modelValue = ref(initialValue)
-      return {
-        restArgs,
-        modelValue
-      }
+      const modelValue = ref(args.modelValue)
+      watch(() => args.modelValue, (v) => { modelValue.value = v })
+      return { args, modelValue }
     },
-    template: `<FzCheckbox v-bind="restArgs" v-model="modelValue" />`
+    template: `<FzCheckbox v-bind="args" :modelValue="modelValue" @update:modelValue="modelValue = $event" />`
   }),
   args: {
     label: 'Checkbox',

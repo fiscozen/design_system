@@ -7,6 +7,7 @@
  * @module @fiscozen/checkbox/types
  */
 import { FzTooltipProps } from "@fiscozen/tooltip";
+import { FzTooltipStatus } from "@fiscozen/tooltip";
 
 /**
  * Props for the FzCheckbox component.
@@ -155,7 +156,7 @@ export type FzCheckboxGroupProps = {
    *   }
    * ]
    */
-  options: ParentCheckbox[];
+  options?: ParentCheckbox[];
 
   /**
    * Applies emphasis styling to all checkboxes in the group.
@@ -216,3 +217,87 @@ export type ParentCheckbox = ChildCheckbox & {
  * Inherits all FzCheckboxProps except 'size' which is controlled by the parent group.
  */
 export type ChildCheckbox = Omit<FzCheckboxProps, "size">;
+
+/**
+ * Shared props for all FzCheckboxCard variants.
+ */
+type FzCheckboxCardBaseProps = Omit<
+  FzCheckboxProps,
+  "standalone" | "indeterminate" | "ariaOwns" | "checkboxId" | "value" | "tooltip"
+> & {
+  /**
+   * Value associated with the card when used in array v-model.
+   * Falls back to label if not provided.
+   */
+  value?: string | number;
+
+  /**
+   * Primary title text displayed in the card.
+   */
+  title: string;
+
+  /**
+   * Optional secondary description text below the title.
+   */
+  subtitle?: string;
+
+  /**
+   * Alt text for the card image.
+   */
+  imageAlt?: string;
+
+  /**
+   * Text to display in the tooltip.
+   */
+  tooltip?: string;
+
+  /**
+   * Status of the tooltip (determines color and icon).
+   */
+  tooltipStatus?: FzTooltipStatus;
+
+  /**
+   * Controls whether the checkbox icon is shown inside the card.
+   *
+   * @default true
+   */
+  hasCheckbox?: boolean;
+
+  /**
+   * Group name for the checkbox, used for form submission.
+   */
+  name?: string;
+};
+
+/**
+ * Horizontal card layout: image left, text right (compact).
+ * Image is optional.
+ *
+ * @default variant is 'horizontal' when omitted
+ */
+type FzCheckboxCardHorizontal = FzCheckboxCardBaseProps & {
+  variant?: "horizontal";
+  imageUrl?: string;
+};
+
+/**
+ * Vertical card layout: image top, text bottom (full-width image).
+ * Image is required — the vertical layout is designed around the image.
+ */
+type FzCheckboxCardVertical = FzCheckboxCardBaseProps & {
+  variant: "vertical";
+  imageUrl: string;
+};
+
+/**
+ * Props for the FzCheckboxCard component.
+ *
+ * A card-style checkbox with title, subtitle, optional image and tooltip.
+ * Uses a discriminated union on `variant` to enforce that the vertical layout
+ * always includes an image (since the layout is designed around it).
+ *
+ * Uses array v-model for multi-select.
+ */
+export type FzCheckboxCardProps =
+  | FzCheckboxCardHorizontal
+  | FzCheckboxCardVertical;
