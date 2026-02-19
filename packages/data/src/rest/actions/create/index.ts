@@ -1,5 +1,6 @@
 import { shallowRef } from "vue";
 import { useFzFetch } from "../../http";
+import { removeTrailingSlash } from "../../http/utils/url";
 import { CONTENT_TYPE_JSON } from "../../http/common";
 import type { UseCreateAction } from "./types";
 import type { MutationActionOptions } from "../shared/types";
@@ -34,7 +35,7 @@ export const createCreateAction = <T>(
           );
         }
 
-        const response = useFzFetch<T>(basePath, {
+        const response = useFzFetch<T>(removeTrailingSlash(basePath), {
           method: "POST",
           body,
           headers: { "Content-Type": CONTENT_TYPE_JSON },

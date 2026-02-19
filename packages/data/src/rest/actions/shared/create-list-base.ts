@@ -1,5 +1,6 @@
 import { reactive, toValue, watch } from "vue";
 import { useFzFetch } from "../../http";
+import { removeTrailingSlash } from "../../http/utils/url";
 import type { UseFzFetchReturn } from "../../http/types";
 import type { QueryActionReturn } from "./types";
 import type {
@@ -104,7 +105,7 @@ export const createListBase = <TResponse, TData>(
   const normalizedOptions = normalizeOptions(optionsToNormalize);
 
   const response = useFzFetch<TResponse>(
-    `${basePath}`,
+    removeTrailingSlash(basePath),
     normalizeParams({ filters, ordering, pagination }),
     normalizedOptions,
   );

@@ -1,5 +1,6 @@
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 import { useFzFetch } from "../../http";
+import { joinPathSegments } from "../../http/utils/url";
 import type { UseRetrieveAction } from "./types";
 import type { QueryActionOptions } from "../shared/types";
 import { normalizeOptions, normalizeResponse } from "../shared/normalize";
@@ -55,7 +56,7 @@ export const createRetrieveAction = <T>(
 
     validatePrimaryKey(resolvedPk, "createRetrieveAction");
 
-    return `${basePath}/${resolvedPk}`;
+    return joinPathSegments(basePath, String(resolvedPk));
   });
   const response = useFzFetch<T>(url, normalizeOptions(options));
   return normalizeResponse<T>(response, options?.throwOnError ?? false);

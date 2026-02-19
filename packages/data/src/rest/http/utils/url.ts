@@ -15,13 +15,33 @@ const sortQueryParams = (
 };
 
 /**
- * Removes trailing slash from a pathname
+ * Removes trailing slash from a pathname.
+ * Used when building action URLs to avoid double slashes when basePath ends with /.
  *
  * @param pathname - Pathname string
  * @returns Pathname without trailing slash
  */
-const removeTrailingSlash = (pathname: string): string => {
+export const removeTrailingSlash = (pathname: string): string => {
   return pathname.replace(/\/$/, "");
+};
+
+/**
+ * Joins two path segments with a single slash. Strips trailing slash from the left
+ * and leading slash from the right so that concatenation never produces "//".
+ *
+ * @param left - First segment (e.g. basePath)
+ * @param right - Second segment (e.g. pk or path segment)
+ * @returns left + '/' + right with no double slash at the boundary
+ *
+ * @example
+ * joinPathSegments('api/v1/users/', 'self')   // 'api/v1/users/self'
+ * joinPathSegments('api/v1/users', 'self')    // 'api/v1/users/self'
+ * joinPathSegments('api/v1/users/', '/self')  // 'api/v1/users/self'
+ */
+export const joinPathSegments = (left: string, right: string): string => {
+  const a = left.replace(/\/$/, "");
+  const b = right.replace(/^\//, "");
+  return b ? `${a}/${b}` : a;
 };
 
 /**

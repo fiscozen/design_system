@@ -3,7 +3,31 @@ import { ref } from "vue";
 import {
   getUrlWithQueryParams,
   applyTrailingSlash,
+  joinPathSegments,
 } from "../rest/http/utils/url";
+
+describe("joinPathSegments", () => {
+  it("joins with single slash when left has no trailing and right has no leading", () => {
+    expect(joinPathSegments("api/v1/users", "self")).toBe("api/v1/users/self");
+  });
+
+  it("strips trailing slash from left to avoid double slash", () => {
+    expect(joinPathSegments("api/v1/users/", "self")).toBe("api/v1/users/self");
+  });
+
+  it("strips leading slash from right to avoid double slash", () => {
+    expect(joinPathSegments("api/v1/users", "/self")).toBe("api/v1/users/self");
+  });
+
+  it("strips both when both have slash at boundary", () => {
+    expect(joinPathSegments("api/v1/users/", "/self")).toBe("api/v1/users/self");
+  });
+
+  it("returns left only when right is empty after strip", () => {
+    expect(joinPathSegments("api/v1/users", "")).toBe("api/v1/users");
+    expect(joinPathSegments("api/v1/users/", "")).toBe("api/v1/users");
+  });
+});
 
 describe("getUrlWithQueryParams", () => {
   it("should preserve query string when URL contains multiple '?' characters", () => {
