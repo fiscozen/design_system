@@ -26,8 +26,8 @@ const meta = {
     hasCheckbox: {
       control: { type: 'boolean' }
     },
-    hasImage: {
-      control: { type: 'boolean' }
+    imageUrl: {
+      control: { type: 'text' }
     }
   }
 } satisfies Meta<typeof FzCheckboxCard>
@@ -62,7 +62,6 @@ export const Vertical: CheckboxCardStory = {
     label: 'Checkbox',
     variant: 'vertical',
     title: 'CheckboxCard',
-    hasImage: true,
     imageUrl: sampleImage,
     subtitle: 'This is a CheckboxCard label',
     tooltip: 'this is a tooltip',
@@ -103,7 +102,6 @@ export const Horizontal: CheckboxCardStory = {
     label: 'Checkbox',
     variant: 'horizontal',
     title: 'CheckboxCard',
-    hasImage: true,
     imageUrl: sampleImage,
     subtitle: 'This is a CheckboxCard label',
     tooltip: 'this is a tooltip',
@@ -144,7 +142,6 @@ export const HorizontalNoCheckboxNoImage: CheckboxCardStory = {
     title: 'CheckboxCard',
     subtitle: 'This is a CheckboxCard label',
     hasCheckbox: false,
-    hasImage: false,
     value: 'test3',
     modelValue: []
   }
@@ -158,7 +155,6 @@ export const HorizontalCheckboxNoImage: CheckboxCardStory = {
     title: 'CheckboxCard',
     subtitle: 'This is a CheckboxCard label',
     hasCheckbox: true,
-    hasImage: false,
     value: 'test4',
     modelValue: []
   }
@@ -169,7 +165,6 @@ export const HorizontalNoCheckboxWithImage: CheckboxCardStory = {
   args: {
     label: 'Checkbox',
     variant: 'horizontal',
-    hasImage: true,
     imageUrl: sampleImage,
     title: 'CheckboxCard',
     subtitle: 'This is a CheckboxCard label',
@@ -187,7 +182,6 @@ export const HorizontalNoCheckboxNoImageWithTooltip: CheckboxCardStory = {
     title: 'CheckboxCard',
     subtitle: 'This is a CheckboxCard label',
     hasCheckbox: false,
-    hasImage: false,
     value: 'test6',
     modelValue: [],
     tooltip: 'this is a tooltip'
@@ -202,7 +196,6 @@ export const HorizontalNoImageWithTooltip: CheckboxCardStory = {
     title: 'CheckboxCard',
     subtitle: 'This is a CheckboxCard label',
     hasCheckbox: true,
-    hasImage: false,
     value: 'test7',
     modelValue: [],
     tooltip: 'this is a tooltip'
@@ -214,7 +207,6 @@ export const HorizontalNoCheckboxWithImageWithTooltip: CheckboxCardStory = {
   args: {
     label: 'Checkbox',
     variant: 'horizontal',
-    hasImage: true,
     imageUrl: sampleImage,
     title: 'CheckboxCard',
     subtitle: 'This is a CheckboxCard label',
@@ -229,7 +221,6 @@ export const VerticalWithImage: CheckboxCardStory = {
   ...Template,
   args: {
     label: 'Checkbox',
-    hasImage: true,
     imageUrl: sampleImage,
     variant: 'vertical',
     title: 'CheckboxCard',
@@ -243,7 +234,6 @@ export const VerticalWithCheckboxWithImage: CheckboxCardStory = {
   ...Template,
   args: {
     label: 'Checkbox',
-    hasImage: true,
     imageUrl: sampleImage,
     variant: 'vertical',
     hasCheckbox: true,
@@ -258,7 +248,6 @@ export const VerticalWithImageWithTooltip: CheckboxCardStory = {
   ...Template,
   args: {
     label: 'Checkbox',
-    hasImage: true,
     imageUrl: sampleImage,
     variant: 'vertical',
     title: 'CheckboxCard',
@@ -273,7 +262,6 @@ export const VerticalWithCheckboxWithImageWithTooltip: CheckboxCardStory = {
   ...Template,
   args: {
     label: 'Checkbox',
-    hasImage: true,
     imageUrl: sampleImage,
     variant: 'vertical',
     hasCheckbox: true,

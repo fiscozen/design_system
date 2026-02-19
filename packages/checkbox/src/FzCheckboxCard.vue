@@ -8,7 +8,6 @@ import { FzTooltip } from "@fiscozen/tooltip";
 const props = withDefaults(defineProps<FzCheckboxCardProps>(), {
   variant: "horizontal",
   hasCheckbox: true,
-  hasImage: false,
 });
 
 const computedValue = computed<string | number>(
@@ -62,7 +61,7 @@ const computedIconColor = computed<string>(() => {
   return isChecked.value ? "text-blue-500" : "text-grey-400";
 });
 
-const showImage = computed(() => props.hasImage && props.imageUrl);
+const showImage = computed(() => props.variant === "vertical" || !!props.imageUrl);
 
 const staticInputClass: string = "w-0 h-0 peer fz-hidden-input";
 
@@ -118,7 +117,7 @@ const labelClass = computed(() => ({
           computedIconColor,
           {
             'absolute top-[23px] left-[23px]': variant === 'vertical',
-            'self-center': variant === 'horizontal',
+            'self-start': variant === 'horizontal',
           },
         ]"
         :variant="computedIconVariant"

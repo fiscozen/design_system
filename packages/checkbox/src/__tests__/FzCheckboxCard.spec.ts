@@ -63,9 +63,8 @@ describe("FzCheckboxCard", () => {
       expect(paragraphs.length).toBe(1);
     });
 
-    it("should render image when hasImage is true and imageUrl is set", () => {
+    it("should render image when imageUrl is provided", () => {
       const wrapper = createWrapper({
-        hasImage: true,
         imageUrl: "test.jpg",
         imageAlt: "Test image",
       });
@@ -75,18 +74,8 @@ describe("FzCheckboxCard", () => {
       expect(img.attributes("alt")).toBe("Test image");
     });
 
-    it("should not render image when hasImage is false", () => {
-      const wrapper = createWrapper({
-        hasImage: false,
-        imageUrl: "test.jpg",
-      });
-      expect(wrapper.find("img").exists()).toBe(false);
-    });
-
-    it("should not render image when imageUrl is not set even if hasImage is true", () => {
-      const wrapper = createWrapper({
-        hasImage: true,
-      });
+    it("should not render image when imageUrl is not provided", () => {
+      const wrapper = createWrapper({});
       expect(wrapper.find("img").exists()).toBe(false);
     });
 
@@ -221,7 +210,7 @@ describe("FzCheckboxCard", () => {
     });
 
     it("should apply vertical classes when variant is vertical", () => {
-      const wrapper = createWrapper({ variant: "vertical" });
+      const wrapper = createWrapper({ variant: "vertical", imageUrl: "test.jpg" });
       const label = wrapper.find("label");
       expect(label.classes()).toContain("flex-col");
     });

@@ -219,12 +219,9 @@ export type ParentCheckbox = ChildCheckbox & {
 export type ChildCheckbox = Omit<FzCheckboxProps, "size">;
 
 /**
- * Props for the FzCheckboxCard component.
- *
- * A card-style checkbox with title, subtitle, optional image and tooltip.
- * Supports horizontal and vertical layouts. Uses array v-model for multi-select.
+ * Shared props for all FzCheckboxCard variants.
  */
-export type FzCheckboxCardProps = Omit<
+type FzCheckboxCardBaseProps = Omit<
   FzCheckboxProps,
   "standalone" | "indeterminate" | "ariaOwns" | "checkboxId" | "value"
 > & {
@@ -233,14 +230,6 @@ export type FzCheckboxCardProps = Omit<
    * Falls back to label if not provided.
    */
   value?: string | number;
-  /**
-   * Layout direction of the card.
-   * - horizontal: image left, text right (compact)
-   * - vertical: image top, text bottom (full-width image)
-   *
-   * @default 'horizontal'
-   */
-  variant?: "horizontal" | "vertical";
 
   /**
    * Primary title text displayed in the card.
@@ -253,23 +242,9 @@ export type FzCheckboxCardProps = Omit<
   subtitle?: string;
 
   /**
-   * URL of the image to display in the card.
-   * Only rendered when `hasImage` is true.
-   */
-  imageUrl?: string;
-
-  /**
    * Alt text for the card image.
    */
   imageAlt?: string;
-
-  /**
-   * Controls whether the image is displayed.
-   * Requires `imageUrl` to be set.
-   *
-   * @default false
-   */
-  hasImage?: boolean;
 
   /**
    * Text to display in the tooltip.
@@ -293,3 +268,36 @@ export type FzCheckboxCardProps = Omit<
    */
   name?: string;
 };
+
+/**
+ * Horizontal card layout: image left, text right (compact).
+ * Image is optional.
+ *
+ * @default variant is 'horizontal' when omitted
+ */
+type FzCheckboxCardHorizontal = FzCheckboxCardBaseProps & {
+  variant?: "horizontal";
+  imageUrl?: string;
+};
+
+/**
+ * Vertical card layout: image top, text bottom (full-width image).
+ * Image is required — the vertical layout is designed around the image.
+ */
+type FzCheckboxCardVertical = FzCheckboxCardBaseProps & {
+  variant: "vertical";
+  imageUrl: string;
+};
+
+/**
+ * Props for the FzCheckboxCard component.
+ *
+ * A card-style checkbox with title, subtitle, optional image and tooltip.
+ * Uses a discriminated union on `variant` to enforce that the vertical layout
+ * always includes an image (since the layout is designed around it).
+ *
+ * Uses array v-model for multi-select.
+ */
+export type FzCheckboxCardProps =
+  | FzCheckboxCardHorizontal
+  | FzCheckboxCardVertical;
