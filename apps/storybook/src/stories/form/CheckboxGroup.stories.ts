@@ -631,9 +631,9 @@ export const VerticalCheckboxCardGroup: CheckboxGroupStory = {
     },
     template: `<FzCheckboxGroup v-bind="groupArgs">
       <template v-slot="{ checkboxGroupProps }">
-        <FzCheckboxCard label="Option 1" title="Option 1" subtitle="lorem ipsum this is a description" value="option1" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="vertical" :hasImage="true" :imageUrl="cardImage" />
-        <FzCheckboxCard label="Option 2" title="Option 2" subtitle="lorem ipsum this is a description" value="option2" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="vertical" :hasImage="true" :imageUrl="cardImage" />
-        <FzCheckboxCard label="Option 3" title="Option 3" subtitle="lorem ipsum this is a description" value="option3" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="vertical" :hasImage="true" :imageUrl="cardImage" />
+        <FzCheckboxCard label="Option 1" title="Option 1" subtitle="lorem ipsum this is a description" value="option1" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="vertical" :imageUrl="cardImage" />
+        <FzCheckboxCard label="Option 2" title="Option 2" subtitle="lorem ipsum this is a description" value="option2" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="vertical" :imageUrl="cardImage" />
+        <FzCheckboxCard label="Option 3" title="Option 3" subtitle="lorem ipsum this is a description" value="option3" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="vertical" :imageUrl="cardImage" />
       </template>
     </FzCheckboxGroup>`
   }),
@@ -695,9 +695,9 @@ export const HorizontalCheckboxCardGroup: CheckboxGroupStory = {
     },
     template: `<FzCheckboxGroup v-bind="groupArgs" :horizontal="true">
       <template v-slot="{ checkboxGroupProps }">
-        <FzCheckboxCard label="Option 1" title="Option 1" subtitle="lorem ipsum this is a description" value="option1" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="horizontal" :hasImage="true" :imageUrl="cardImage" tooltip="this is a tooltip" />
-        <FzCheckboxCard label="Option 2" title="Option 2" subtitle="lorem ipsum this is a description" value="option2" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="horizontal" :hasImage="true" :imageUrl="cardImage" tooltip="this is a tooltip" />
-        <FzCheckboxCard label="Option 3" title="Option 3" subtitle="lorem ipsum this is a description" value="option3" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="horizontal" :hasImage="true" :imageUrl="cardImage" tooltip="this is a tooltip" />
+        <FzCheckboxCard label="Option 1" title="Option 1" subtitle="lorem ipsum this is a description" value="option1" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="horizontal" :imageUrl="cardImage" tooltip="this is a tooltip" />
+        <FzCheckboxCard label="Option 2" title="Option 2" subtitle="lorem ipsum this is a description" value="option2" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="horizontal" :imageUrl="cardImage" tooltip="this is a tooltip" />
+        <FzCheckboxCard label="Option 3" title="Option 3" subtitle="lorem ipsum this is a description" value="option3" :modelValue="selected" @update:modelValue="handleUpdate" v-bind="checkboxGroupProps" variant="horizontal" :imageUrl="cardImage" tooltip="this is a tooltip" />
       </template>
     </FzCheckboxGroup>`
   }),

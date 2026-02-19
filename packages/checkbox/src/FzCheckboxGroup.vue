@@ -113,6 +113,22 @@ const computedSlotContainerClass = computed<string[]>(() => [
   props.horizontal ? "flex-row" : "flex-col",
 ]);
 
+/** Whether the group has options to render (options-based mode vs slot-based mode) */
+const hasOptions = computed<boolean>(
+  () => Array.isArray(props.options) && props.options.length > 0,
+);
+
+/**
+ * Props passed down to child components via scoped slot.
+ * Used in slot-based mode (e.g., when rendering FzCheckboxCard components).
+ */
+const controlledProps = computed(() => ({
+  disabled: props.disabled,
+  error: props.error,
+  emphasis: props.emphasis,
+  required: props.required,
+}));
+
 /**
  * Computes the aria-describedby attribute value for the checkbox group.
  * Combines help text and error message IDs when present.
@@ -131,22 +147,6 @@ const computedSlotContainerClass = computed<string[]>(() => [
  * // Both help and error
  * "fz-checkbox-group-123-help fz-checkbox-group-123-error"
  */
-/** Whether the group has options to render (options-based mode vs slot-based mode) */
-const hasOptions = computed<boolean>(
-  () => Array.isArray(props.options) && props.options.length > 0,
-);
-
-/**
- * Props passed down to child components via scoped slot.
- * Used in slot-based mode (e.g., when rendering FzCheckboxCard components).
- */
-const controlledProps = computed(() => ({
-  disabled: props.disabled,
-  error: props.error,
-  emphasis: props.emphasis,
-  required: props.required,
-}));
-
 const computedAriaDescribedby = computed<string | undefined>(() => {
   const descriptions: string[] = [];
 
