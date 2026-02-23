@@ -4,7 +4,7 @@
     ref="dp"
     :key="floatingKey"
     v-bind="mappedProps"
-    text-input
+    :text-input="stableTextInput"
     :ui="{ menu: calendarClassName }"
     @date-update="handleDateUpdate"
     @update:model-value="
@@ -16,6 +16,7 @@
             : e
         )
     "
+    @closed="handleMenuClosed"
     @flow-step="handleFlowStep"
     :model-value="modelValue"
   >
@@ -218,67 +219,51 @@ const closeMenu = () => {
   dp.value.closeMenu();
 };
 
+const handleMenuClosed = () => {
+  activeOverlay.value = null;
+  emit("closed");
+};
+
 /**
- * Compute the props to pass to VueDatePicker v12,
- * remapping legacy v8 props to their new v12 equivalents.
+ * Stable sub-objects for mappedProps – kept outside the computed so that
+ * VueDatePicker receives the **same reference** across re-evaluations when
+ * only unrelated props (e.g. modelValue) change.  This prevents v12's
+ * internal `watch([placement, y])` / `shouldRender` toggle from firing
+ * unnecessary DOM cycles that manifest as a visual flicker.
  */
-const mappedProps = computed(() => {
-  // Start with a shallow copy so we can delete legacy keys
-  const p = { ...props } as Record<string, any>;
+const stableFormats = computed(() => {
+  const fmt = props.format;
+  return fmt && !props.formats ? { input: fmt } : props.formats;
+});
 
-  // ── format / formatLocale → formats / locale ──────────────
-  // Map legacy `format` prop to `formats.input`
-  const legacyFormat = p.format;
-  const legacyFormatLocale = p.formatLocale;
+const stableLocale = computed(() => {
+  const loc = props.locale ?? props.formatLocale;
+  return typeof loc === "string" ? it : loc;
+});
 
-  // Build `formats` from legacy `format` if no explicit `formats` was given
-  if (legacyFormat && !p.formats) {
-    p.formats = { input: legacyFormat };
+const stableInputAttrs = computed(() => {
+  const base = props.inputAttrs ?? {};
+  const attrs: Record<string, unknown> = { ...base };
+  if (props.state !== undefined && attrs.state === undefined) attrs.state = props.state;
+  if (props.name !== undefined && attrs.name === undefined) attrs.name = props.name;
+  return attrs;
+});
+
+const stableTextInput = computed<boolean | Partial<import("@vuepic/vue-datepicker").TextInputConfig>>(() => {
+  if (!props.textInput) return false;
+  const fmt = typeof props.format === "string" ? props.format : "dd/MM/yyyy";
+  return { format: fmt };
+});
+
+const stableFloating = computed(() => {
+  const base = props.floating;
+  if (props.placement) {
+    return { ...(base ?? {}), placement: props.placement };
   }
-  delete p.format;
+  return base;
+});
 
-  // Map legacy `formatLocale` (date-fns Locale) → `locale`
-  if (legacyFormatLocale && !p.locale) {
-    p.locale = legacyFormatLocale;
-  }
-  delete p.formatLocale;
-
-  // If locale is a string, we can't use it directly in v12
-  // (v12 only accepts date-fns Locale objects)
-  // Fall back to `it` if string was provided
-  if (typeof p.locale === "string") {
-    p.locale = it;
-  }
-
-  // ── autoPosition + placement → floating ──────────────────
-  // In v12, autoPosition no longer exists. The floating prop
-  // controls positioning via @floating-ui/vue.
-  delete p.autoPosition;
-
-  // Map our convenience `placement` prop into `floating.placement`
-  const legacyPlacement = p.placement;
-  if (legacyPlacement) {
-    p.floating = { ...(p.floating ?? {}), placement: legacyPlacement };
-  }
-  delete p.placement;
-
-  // ── state / name → inputAttrs ─────────────────────────────
-  const legacyState = p.state;
-  const legacyName = p.name;
-
-  if ((legacyState !== undefined || legacyName !== undefined) && !p.inputAttrs) {
-    p.inputAttrs = {};
-  }
-  if (legacyState !== undefined && p.inputAttrs && p.inputAttrs.state === undefined) {
-    p.inputAttrs.state = legacyState;
-  }
-  if (legacyName !== undefined && p.inputAttrs && p.inputAttrs.name === undefined) {
-    p.inputAttrs.name = legacyName;
-  }
-  delete p.state;
-  delete p.name;
-
-  // ── time-related props → timeConfig ───────────────────────
+const stableTimeConfig = computed(() => {
   const timeKeys = [
     "enableTimePicker",
     "enableMinutes",
@@ -290,29 +275,64 @@ const mappedProps = computed(() => {
     "noSecondsOverlay",
   ] as const;
 
-  const hasLegacyTimeProps = timeKeys.some((k) => p[k] !== undefined);
+  const hasLegacy = timeKeys.some((k) => (props as any)[k] !== undefined);
+  if (!hasLegacy) return props.timeConfig;
 
-  if (hasLegacyTimeProps && !p.timeConfig) {
-    p.timeConfig = {};
-  }
-
+  const cfg: Record<string, unknown> = { ...(props.timeConfig ?? {}) };
   for (const key of timeKeys) {
-    if (p[key] !== undefined) {
-      if (p.timeConfig && (p.timeConfig as any)[key] === undefined) {
-        (p.timeConfig as any)[key] = p[key];
-      }
-      delete p[key];
-    }
+    const val = (props as any)[key];
+    if (val !== undefined && cfg[key] === undefined) cfg[key] = val;
   }
+  return cfg;
+});
 
-  // ── flow: array → { steps } ───────────────────────────────
-  if (Array.isArray(p.flow)) {
-    p.flow = { steps: p.flow };
-  }
+const stableFlow = computed(() => {
+  const f = props.flow;
+  return Array.isArray(f) ? { steps: f } : f;
+});
 
-  // ── Remove our custom props that VueDatePicker doesn't need
+/**
+ * Compute the props to pass to VueDatePicker v12,
+ * remapping legacy v8 props to their new v12 equivalents.
+ *
+ * Sub-objects are individually memoised (computed) so that VueDatePicker
+ * only sees a new reference when the relevant inputs actually change.
+ * Props already bound explicitly in the template (modelValue, textInput)
+ * are excluded to avoid redundant merge work.
+ */
+const mappedProps = computed(() => {
+  const p = { ...props } as Record<string, any>;
+
+  // ── Replace legacy scalars with stable sub-objects ────────
+  delete p.format;
+  delete p.formatLocale;
+  p.formats = stableFormats.value;
+  p.locale = stableLocale.value;
+
+  delete p.autoPosition;
+  delete p.placement;
+  p.floating = stableFloating.value;
+
+  delete p.state;
+  delete p.name;
+  p.inputAttrs = stableInputAttrs.value;
+
+  const timeKeys = [
+    "enableTimePicker", "enableMinutes", "is24", "timePickerInline",
+    "enableSeconds", "noHoursOverlay", "noMinutesOverlay", "noSecondsOverlay",
+  ];
+  for (const key of timeKeys) delete p[key];
+  p.timeConfig = stableTimeConfig.value;
+
+  p.flow = stableFlow.value;
+
+  // ── Remove custom props that VueDatePicker doesn't need ───
   delete p.inputProps;
   delete p.valueFormat;
+
+  // ── Remove props already bound explicitly in the template ─
+  delete p.modelValue;
+  delete p.textInput;
 
   return p;
 });
@@ -329,7 +349,8 @@ const floatingKey = computed(() => {
 
 const handleDateUpdate = (e: string | Date) => {
   let res: string | Date = e;
-  const formatStr = props.format;
+  const effectiveInput = stableFormats.value?.input;
+  const formatStr = typeof effectiveInput === "string" ? effectiveInput : props.format;
   if (props.modelType === "iso" && e instanceof Date) {
     res = e.toISOString();
   } else if (typeof e === "string" && typeof formatStr === "string") {

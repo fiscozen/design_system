@@ -12,7 +12,7 @@ exports[`FzDatepicker > Snapshots > matches disabled dates snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-97" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-101" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -53,7 +53,7 @@ exports[`FzDatepicker > Snapshots > matches inline timepicker snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-98" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-102" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -94,7 +94,7 @@ exports[`FzDatepicker > Snapshots > matches monthpicker snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-95" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-99" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -136,7 +136,7 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-93" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-97" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -177,7 +177,7 @@ exports[`FzDatepicker > Snapshots > matches range snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-92" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-96" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -218,7 +218,7 @@ exports[`FzDatepicker > Snapshots > matches snapshot - disabled state 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" disabled="" readonly="" id="fz-input-168986420000-100" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="true">
+            <!--v-if--><input type="text" disabled="" readonly="" id="fz-input-168986420000-104" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="true">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -253,13 +253,13 @@ exports[`FzDatepicker > Snapshots > matches snapshot - with label and error 1`] 
   <div>
     <!---->
     <div class="dp__input_wrap">
-      <div class="fz-input w-full flex flex-col gap-8"><label id="fz-input-168986420000-99-label" class="font-normal text-base text-core-black" for="fz-input-168986420000-99">Select Date</label>
+      <div class="fz-input w-full flex flex-col gap-8"><label id="fz-input-168986420000-103-label" class="font-normal text-base text-core-black" for="fz-input-168986420000-103">Select Date</label>
         <div class="flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none h-44 border-semantic-error-200 has-[:focus]:border-semantic-error-300 bg-core-white text-core-black cursor-text" tabindex="0">
           <div class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-calendar-lines h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar-lines" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-99" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="true" aria-disabled="false" aria-labelledby="fz-input-168986420000-99-label">
+            <!--v-if--><input type="text" id="fz-input-168986420000-103" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="true" aria-disabled="false" aria-labelledby="fz-input-168986420000-103-label">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -301,7 +301,7 @@ exports[`FzDatepicker > Snapshots > matches snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-91" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-95" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -342,7 +342,7 @@ exports[`FzDatepicker > Snapshots > matches weekpicker snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-94" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-98" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->
@@ -383,7 +383,7 @@ exports[`FzDatepicker > Snapshots > matches yearpicker snapshot 1`] = `
               <path class="" fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256zm48 88c0 13.3 10.7 24 24 24l208 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-208 0c-13.3 0-24 10.7-24 24zm24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"></path>
             </svg></div>
           <div class="flex flex-col justify-around min-w-0 grow">
-            <!--v-if--><input type="text" id="fz-input-168986420000-96" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
+            <!--v-if--><input type="text" id="fz-input-168986420000-100" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
             <!--v-if-->

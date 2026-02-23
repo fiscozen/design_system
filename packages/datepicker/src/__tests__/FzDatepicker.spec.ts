@@ -933,6 +933,30 @@ describe("FzDatepicker", () => {
       expect((lastEmit[0] as string)).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     });
 
+    it("should parse string using formats.input when formats prop is provided (not legacy format)", async () => {
+      const wrapper = mount(FzDatepicker, {
+        props: {
+          modelValue: null,
+          formats: { input: "yyyy-MM-dd" },
+          inputProps: {},
+        },
+      });
+
+      const dp = wrapper.findComponent({ name: "VueDatePicker" });
+
+      dp.vm.$emit("date-update", "2024-01-15");
+      await wrapper.vm.$nextTick();
+
+      const emitted = wrapper.emitted("update:model-value");
+      expect(emitted).toBeTruthy();
+      const lastEmit = emitted![emitted!.length - 1];
+      expect(lastEmit[0] instanceof Date).toBe(true);
+      const parsed = lastEmit[0] as Date;
+      expect(parsed.getFullYear()).toBe(2024);
+      expect(parsed.getMonth()).toBe(0); // January
+      expect(parsed.getDate()).toBe(15);
+    });
+
     it("should format Date with custom modelType string", async () => {
       const wrapper = mount(FzDatepicker, {
         props: {
@@ -1337,6 +1361,81 @@ describe("FzDatepicker", () => {
 
       expect(wrapper.exists()).toBe(true);
     });
+  });
+
+  // ============================================
+  // ACTIVE OVERLAY RESET ON MENU CLOSE
+  // ============================================
+  describe("activeOverlay reset on menu close", () => {
+    it("should reset activeOverlay to null when handleMenuClosed is called", async () => {
+      const wrapper = mount(FzDatepicker, {
+        props: {
+          modelValue: new Date(),
+          enableTimePicker: true,
+          timePickerInline: true,
+          inputProps: {},
+        },
+      });
+
+      const setupState = (wrapper.vm as any).$.setupState;
+
+      expect(setupState.activeOverlay).toBe(null);
+
+      setupState.activeOverlay = "hours";
+      await wrapper.vm.$nextTick();
+      expect(setupState.activeOverlay).toBe("hours");
+
+      setupState.handleMenuClosed();
+      await wrapper.vm.$nextTick();
+
+      expect(setupState.activeOverlay).toBe(null);
+    });
+
+    it("should reset activeOverlay for any overlay type (hours, minutes, seconds)", async () => {
+      const wrapper = mount(FzDatepicker, {
+        props: {
+          modelValue: new Date(),
+          enableTimePicker: true,
+          enableSeconds: true,
+          timePickerInline: true,
+          inputProps: {},
+        },
+      });
+
+      const setupState = (wrapper.vm as any).$.setupState;
+
+      for (const field of ["hours", "minutes", "seconds"] as const) {
+        setupState.activeOverlay = field;
+        await wrapper.vm.$nextTick();
+        expect(setupState.activeOverlay).toBe(field);
+
+        setupState.handleMenuClosed();
+        await wrapper.vm.$nextTick();
+        expect(setupState.activeOverlay).toBe(null);
+      }
+    });
+
+    it("should emit 'closed' event to parent when menu closes", async () => {
+      const wrapper = mount(FzDatepicker, {
+        props: {
+          modelValue: new Date(),
+          enableTimePicker: true,
+          timePickerInline: true,
+          inputProps: {},
+        },
+      });
+
+      const setupState = (wrapper.vm as any).$.setupState;
+
+      setupState.activeOverlay = "hours";
+      setupState.handleMenuClosed();
+      await wrapper.vm.$nextTick();
+
+      const emitted = wrapper.emitted("closed");
+      expect(emitted).toBeTruthy();
+      expect(emitted!.length).toBeGreaterThanOrEqual(1);
+    });
+
   });
 
   // ============================================
