@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzDisplayField > Snapshots > should match snapshot - all props combined 1`] = `"<div class="flex flex-col gap-12" data-testid="fz-display-field"><span class="text-grey-500 text-xs">Total Amount</span><span class="text-core-black text-sm font-semibold">€ 1.234,56</span></div>"`;
+
+exports[`FzDisplayField > Snapshots > should match snapshot - default state 1`] = `"<div class="flex flex-col gap-0" data-testid="fz-display-field"><span class="text-grey-500 text-sm">Label</span><span class="text-core-black text-sm font-normal">Value</span></div>"`;
+
+exports[`FzDisplayField > Snapshots > should match snapshot - emphasized value 1`] = `"<div class="flex flex-col gap-0" data-testid="fz-display-field"><span class="text-grey-500 text-sm">Label</span><span class="text-core-black text-sm font-semibold">Value</span></div>"`;
+
+exports[`FzDisplayField > Snapshots > should match snapshot - medium gap 1`] = `"<div class="flex flex-col gap-12" data-testid="fz-display-field"><span class="text-grey-500 text-sm">Label</span><span class="text-core-black text-sm font-normal">Value</span></div>"`;
+
+exports[`FzDisplayField > Snapshots > should match snapshot - small gap 1`] = `"<div class="flex flex-col gap-8" data-testid="fz-display-field"><span class="text-grey-500 text-sm">Label</span><span class="text-core-black text-sm font-normal">Value</span></div>"`;
+
+exports[`FzDisplayField > Snapshots > should match snapshot - small size 1`] = `"<div class="flex flex-col gap-0" data-testid="fz-display-field"><span class="text-grey-500 text-xs">Label</span><span class="text-core-black text-sm font-normal">Value</span></div>"`;

@@ -1,0 +1,150 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Form/FzDisplayField" />
+
+# FzDisplayField
+
+Read-only key-value display component for presenting labeled data. Renders a label above a value with configurable text sizes, emphasis, and spacing.
+
+## Features
+
+- Label and value pair display in a vertical layout
+- Configurable label size (small or normal)
+- Emphasized (bold) value support
+- Three gap options between label and value (none, small, medium)
+- Uses design system typography tokens
+
+## Installation
+
+```bash
+npm install @fiscozen/display
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzDisplayField } from '@fiscozen/display'
+</script>
+
+<template>
+  <FzDisplayField label="Full Name" value="John Doe" />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td><strong>required</strong></td>
+      <td>Label text displayed above the value</td>
+    </tr>
+    <tr>
+      <td><code>value</code></td>
+      <td><code>string</code></td>
+      <td><strong>required</strong></td>
+      <td>Value text displayed below the label</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'small' | 'normal'</code></td>
+      <td><code>'normal'</code></td>
+      <td>Controls the label font size. <code>small</code> uses 12px, <code>normal</code> uses 14px.</td>
+    </tr>
+    <tr>
+      <td><code>isEmphasized</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>When true, the value text is rendered in semibold weight</td>
+    </tr>
+    <tr>
+      <td><code>gap</code></td>
+      <td><code>'none' | 'small' | 'medium'</code></td>
+      <td><code>'none'</code></td>
+      <td>Spacing between label and value. <code>none</code> = 0px, <code>small</code> = 8px, <code>medium</code> = 12px.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Different Sizes
+
+```vue
+<template>
+  <!-- Small label (12px) -->
+  <FzDisplayField label="Email" value="john@example.com" size="small" />
+
+  <!-- Normal label (14px, default) -->
+  <FzDisplayField label="Email" value="john@example.com" size="normal" />
+</template>
+```
+
+### Emphasized Value
+
+```vue
+<template>
+  <!-- Normal weight -->
+  <FzDisplayField label="Status" value="Active" />
+
+  <!-- Bold/semibold value -->
+  <FzDisplayField label="Status" value="Active" :isEmphasized="true" />
+</template>
+```
+
+### Gap Options
+
+```vue
+<template>
+  <!-- No gap (default) -->
+  <FzDisplayField label="Label" value="Value" gap="none" />
+
+  <!-- Small gap (8px) -->
+  <FzDisplayField label="Label" value="Value" gap="small" />
+
+  <!-- Medium gap (12px) -->
+  <FzDisplayField label="Label" value="Value" gap="medium" />
+</template>
+```
+
+### Complete Configuration
+
+```vue
+<template>
+  <FzDisplayField
+    label="Account Balance"
+    value="EUR 12,500.00"
+    size="small"
+    :isEmphasized="true"
+    gap="small"
+  />
+</template>
+```
+
+## Accessibility
+
+- The component uses semantic HTML with `span` elements for label and value
+- Label and value are visually distinguishable through color contrast (grey label, black value)
+- Text is accessible to screen readers in natural reading order (label first, then value)
+
+## Best Practices
+
+- Use `FzDisplayField` for read-only data presentation, not for editable fields
+- Choose `isEmphasized` when the value needs to stand out (e.g., totals, important statuses)
+- Use `size="small"` for dense layouts or secondary information
+- Pick an appropriate `gap` based on the surrounding layout density
+
+## Related Components
+
+- **FzInput**: For editable text fields
