@@ -451,6 +451,49 @@ describe("Integration Tests", () => {
       });
     });
 
+    it("DELETE with 204 No Content (empty body) does not throw and sets data to null", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+      });
+      global.fetch = vi.fn(() =>
+        Promise.resolve(new Response(null, { status: 204 })),
+      ) as typeof fetch;
+      const { useDelete } = useActions<{ id: number }>("users");
+      const { data, error, execute } = useDelete();
+      await execute(1);
+      expect(error.value).toBeNull();
+      expect(data.value).toBeNull();
+    });
+
+    it("on non-204 error (e.g. 500) data retains previous value and is not cleared", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+      });
+      global.fetch = vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({ id: 1, name: "Alice" }), {
+            status: 200,
+          }),
+        ),
+      ) as typeof fetch;
+      const { data, error, execute } = useFzFetch<{ id: number; name: string }>(
+        "users/1",
+        { method: "GET" },
+      );
+      await execute();
+      expect(error.value).toBeNull();
+      expect(data.value).toEqual({ id: 1, name: "Alice" });
+      global.fetch = vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({ message: "Server error" }), {
+            status: 500,
+          }),
+        ),
+      ) as typeof fetch;
+      await execute();
+      expect(data.value).toEqual({ id: 1, name: "Alice" });
+    });
+
     it("correct usage: intercepted URL never has double slash at end when setup trailingSlash true", async () => {
       const pathWithScenario: Array<{ path: string; scenario: string }> = [
         { path: "users", scenario: "useActions('users') → useList()" },

@@ -11,6 +11,7 @@ import { state } from "../../setup/state";
 import { normalizeUseFzFetchOptions } from "../../utils/options";
 import { handleFetchError } from "../../utils/error";
 import { parseResponseBody } from "../../utils/response";
+import { isEmptyResponseStatus } from "../empty-response/predicate";
 import { wrapWithDeduplication } from "../deduplication/wrapper";
 
 /**
@@ -263,10 +264,12 @@ export const syncFetchResultState = <T>(
       () => source.isFetching.value,
     ],
     () => {
+      const status = source.statusCode.value;
+      const isEmptyResponse = isEmptyResponseStatus(status);
       target.response.value = source.response.value;
       target.statusCode.value = source.statusCode.value;
-      target.data.value = source.data.value;
-      target.error.value = source.error.value;
+      target.data.value = isEmptyResponse ? null : source.data.value;
+      target.error.value = isEmptyResponse ? null : source.error.value;
       // VueUse may expose isFetching as Readonly; skip assign to avoid Vue warning
       if (!isReadonly(target.isFetching)) {
         (target.isFetching as ShallowRef<boolean>).value =

@@ -12,6 +12,7 @@ import { normalizeUseFzFetchOptions } from "./utils/options";
 import { DEFAULT_HTTP_METHOD } from "./common";
 import { WrapperChain } from "./wrappers/chain";
 import {
+  emptyResponseWrapper,
   paramsResolverWrapper,
   requestInterceptorWrapper,
   responseInterceptorWrapper,
@@ -38,6 +39,7 @@ export { getCsrfOptions, getGlobalDebug as getDebug } from "./setup/state";
  */
 const createDefaultWrapperChain = (): WrapperChain => {
   const chain = new WrapperChain();
+  chain.add(emptyResponseWrapper);
   chain.add(requestInterceptorWrapper);
   chain.add(responseInterceptorWrapper);
   chain.add(deduplicationWrapper);

@@ -1,10 +1,24 @@
 import type { UseFzFetchReturn } from "../types";
 import type { Wrapper, WrapperContext } from "./types";
+import { wrapWithEmptyResponseNormalizer } from "../features/empty-response/wrapper";
 import { wrapWithParamsResolver } from "../features/params-resolver/wrapper";
 import { wrapWithRequestInterceptor } from "../features/interceptors/request";
 import { wrapWithResponseInterceptor } from "../features/interceptors/response";
 import { wrapWithDeduplication } from "../features/deduplication/wrapper";
 import { state } from "../setup/state";
+
+/**
+ * Wrapper adapter for 204/205 empty response normalization.
+ * Applied first (innermost) so the base fetch result is normalized.
+ */
+export const emptyResponseWrapper: Wrapper = {
+  wrap<T>(
+    fetchResult: UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>>,
+    context: WrapperContext,
+  ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> {
+    return wrapWithEmptyResponseNormalizer(fetchResult);
+  },
+};
 
 /**
  * Wrapper adapter for params resolver (reactive body and headers).
