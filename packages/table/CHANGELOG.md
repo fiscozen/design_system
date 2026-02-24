@@ -1,5 +1,12 @@
 # @fiscozen/table
 
+## 0.1.16
+
+### Patch Changes
+
+- Updated dependencies [04244a5]
+  - @fiscozen/checkbox@1.1.0
+
 ## 0.1.15
 
 ### Patch Changes

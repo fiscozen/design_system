@@ -1,5 +1,12 @@
 # @fiscozen/data
 
+## 0.2.1
+
+### Patch Changes
+
+- 6e79f7e: Gestione risposte 204 con empty response: non viene più sollevato errore e data resta null.
+- 7adf117: Fixed double slash when basePath ended with /
+
 ## 0.2.0
 
 ### Minor Changes
