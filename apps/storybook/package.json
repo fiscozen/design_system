@@ -40,7 +40,7 @@
     "@fiscozen/data": "workspace:*",
     "@fiscozen/datepicker": "workspace:^",
     "@fiscozen/dialog": "workspace:^",
-    "@fiscozen/display": "workspace:^",
+    "@fiscozen/displayfield": "workspace:^",
     "@fiscozen/divider": "workspace:^",
     "@fiscozen/dropdown": "workspace:^",
     "@fiscozen/icons": "workspace:^",

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, within } from '@storybook/test'
-import { FzDisplayField } from '@fiscozen/display'
+import { FzDisplayField } from '@fiscozen/displayfield'
 
 type PlayFunctionContext = {
   args: any
@@ -68,7 +68,7 @@ export const SizeSmall: Story = {
     await step('Verify label uses small text class', async () => {
       const label = canvas.getByText('Label')
       expect(label).toBeVisible()
-      expect(label.classList.contains('text-xs')).toBe(true)
+      expect(label.classList.contains('text-sm')).toBe(true)
     })
   }
 }
@@ -85,7 +85,7 @@ export const SizeNormal: Story = {
     await step('Verify label uses normal text class', async () => {
       const label = canvas.getByText('Label')
       expect(label).toBeVisible()
-      expect(label.classList.contains('text-sm')).toBe(true)
+      expect(label.classList.contains('text-base')).toBe(true)
     })
   }
 }
@@ -193,7 +193,7 @@ export const FullExample: Story = {
       expect(display.classList.contains('gap-8')).toBe(true)
 
       const label = canvas.getByText('Full Name')
-      expect(label.classList.contains('text-sm')).toBe(true)
+      expect(label.classList.contains('text-base')).toBe(true)
 
       const value = canvas.getByText('John Doe')
       expect(value.classList.contains('font-semibold')).toBe(true)

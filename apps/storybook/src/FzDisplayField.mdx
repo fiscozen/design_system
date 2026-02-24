@@ -17,14 +17,14 @@ Read-only key-value display component for presenting labeled data. Renders a lab
 ## Installation
 
 ```bash
-npm install @fiscozen/display
+npm install @fiscozen/displayfield
 ```
 
 ## Basic Usage
 
 ```vue
 <script setup>
-import { FzDisplayField } from '@fiscozen/display'
+import { FzDisplayField } from '@fiscozen/displayfield'
 </script>
 
 <template>
@@ -60,7 +60,7 @@ import { FzDisplayField } from '@fiscozen/display'
       <td><code>size</code></td>
       <td><code>'small' | 'normal'</code></td>
       <td><code>'normal'</code></td>
-      <td>Controls the label font size. <code>small</code> uses 12px, <code>normal</code> uses 14px.</td>
+      <td>Controls the label font size. <code>small</code> uses 14px, <code>normal</code> uses 16px.</td>
     </tr>
     <tr>
       <td><code>isEmphasized</code></td>
@@ -83,10 +83,10 @@ import { FzDisplayField } from '@fiscozen/display'
 
 ```vue
 <template>
-  <!-- Small label (12px) -->
+  <!-- Small label (14px) -->
   <FzDisplayField label="Email" value="john@example.com" size="small" />
 
-  <!-- Normal label (14px, default) -->
+  <!-- Normal label (16px, default) -->
   <FzDisplayField label="Email" value="john@example.com" size="normal" />
 </template>
 ```

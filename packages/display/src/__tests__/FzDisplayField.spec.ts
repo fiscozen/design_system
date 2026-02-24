@@ -85,31 +85,31 @@ describe("FzDisplayField", () => {
     });
 
     describe("size prop", () => {
-      it("should default to normal size (text-sm on label)", () => {
+      it("should default to normal size (text-base on label)", () => {
         const wrapper = mount(FzDisplayField, {
           props: defaultProps,
         });
 
         const labelSpan = wrapper.findAll("span")[0];
-        expect(labelSpan.classes()).toContain("text-sm");
+        expect(labelSpan.classes()).toContain("text-base");
       });
 
-      it("should apply text-xs on label when size is small", () => {
+      it("should apply text-sm on label when size is small", () => {
         const wrapper = mount(FzDisplayField, {
           props: { ...defaultProps, size: "small" as const },
         });
 
         const labelSpan = wrapper.findAll("span")[0];
-        expect(labelSpan.classes()).toContain("text-xs");
+        expect(labelSpan.classes()).toContain("text-sm");
       });
 
-      it("should apply text-sm on label when size is normal", () => {
+      it("should apply text-base on label when size is normal", () => {
         const wrapper = mount(FzDisplayField, {
           props: { ...defaultProps, size: "normal" as const },
         });
 
         const labelSpan = wrapper.findAll("span")[0];
-        expect(labelSpan.classes()).toContain("text-sm");
+        expect(labelSpan.classes()).toContain("text-base");
       });
     });
 

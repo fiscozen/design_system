@@ -83,7 +83,7 @@ importers:
       '@fiscozen/dialog':
         specifier: workspace:^
         version: link:../../packages/dialog
-      '@fiscozen/display':
+      '@fiscozen/displayfield':
         specifier: workspace:^
         version: link:../../packages/display
       '@fiscozen/divider':

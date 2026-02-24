@@ -18,11 +18,11 @@ const gapClass = computed(() => {
 });
 
 const labelClass = computed(() => {
-  return props.size === "small" ? "text-xs" : "text-sm";
+  return props.size === "small" ? "text-sm" : "text-base";
 });
 
 const valueClass = computed(() => {
-  return props.isEmphasized ? "text-sm font-semibold" : "text-sm font-normal";
+  return props.isEmphasized ? "text-base font-semibold" : "text-base font-normal";
 });
 </script>
 
