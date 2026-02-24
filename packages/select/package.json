@@ -27,7 +27,7 @@
     "vue": "^3.4.13"
   },
   "devDependencies": {
-    "@awesome.me/kit-8137893ad3": "^1.0.65",
+    "@awesome.me/kit-8137893ad3": "^1.0.401",
     "@fiscozen/eslint-config": "workspace:^",
     "@fiscozen/prettier-config": "workspace:^",
     "@fiscozen/tsconfig": "workspace:^",
