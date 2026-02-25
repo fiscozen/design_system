@@ -16,10 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { byPrefixAndName } from '@awesome.me/kit-8137893ad3/icons'
 import type { IconProps, IconSize } from './types'
 
-withDefaults(
-  defineProps<IconProps>(),
-  { size: 'lg', variant: 'far' }
-)
+withDefaults(defineProps<IconProps>(), { size: 'lg', variant: 'far' })
 
 const staticContainerClasses = ['flex', 'items-center', 'justify-center']
 const containerClassSizeMap: Record<IconSize, string> = {
@@ -41,10 +38,7 @@ const iconClassSizeMap: Record<IconSize, string> = {
 </script>
 
 <template>
-  <span
-    role="presentation"
-    :class="[staticContainerClasses, containerClassSizeMap[size]]"
-  >
+  <span role="presentation" :class="[staticContainerClasses, containerClassSizeMap[size]]">
     <FontAwesomeIcon
       :class="iconClassSizeMap[size]"
       :icon="typeof name === 'string' ? byPrefixAndName[variant][name] : name"
