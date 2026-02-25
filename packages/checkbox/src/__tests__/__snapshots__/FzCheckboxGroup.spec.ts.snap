@@ -59,10 +59,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`]
           Visual checkbox icon (replaces hidden native checkbox)
           aria-hidden because it's purely decorative - the native input conveys state
           @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
-        -->
-          <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-              <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
-            </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 1
+        --><span data-v-79ecb611="" role="presentation" class="flex items-center justify-center inline-flex w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path></svg></span><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 1
         </label>
         <!-- 
         Optional tooltip for additional context
@@ -111,10 +108,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`]
           Visual checkbox icon (replaces hidden native checkbox)
           aria-hidden because it's purely decorative - the native input conveys state
           @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
-        -->
-          <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-              <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
-            </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 2
+        --><span data-v-79ecb611="" role="presentation" class="flex items-center justify-center inline-flex w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path></svg></span><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 2
         </label>
         <!-- 
         Optional tooltip for additional context
@@ -192,10 +186,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - disabled 1`] = `
           Visual checkbox icon (replaces hidden native checkbox)
           aria-hidden because it's purely decorative - the native input conveys state
           @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
-        -->
-          <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-300" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-              <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
-            </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 1
+        --><span data-v-79ecb611="" role="presentation" class="flex items-center justify-center inline-flex w-[20px] h-[20px] relative text-grey-300" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path></svg></span><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 1
         </label>
         <!-- 
         Optional tooltip for additional context
@@ -273,10 +264,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
           Visual checkbox icon (replaces hidden native checkbox)
           aria-hidden because it's purely decorative - the native input conveys state
           @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
-        -->
-          <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-              <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
-            </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Parent Option
+        --><span data-v-79ecb611="" role="presentation" class="flex items-center justify-center inline-flex w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path></svg></span><!-- Label text (hidden in standalone mode for checkbox-only display) -->Parent Option
         </label>
         <!-- 
         Optional tooltip for additional context
@@ -326,10 +314,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
           Visual checkbox icon (replaces hidden native checkbox)
           aria-hidden because it's purely decorative - the native input conveys state
           @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
-        -->
-              <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                  <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
-                </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Child 1
+        --><span data-v-79ecb611="" role="presentation" class="flex items-center justify-center inline-flex w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path></svg></span><!-- Label text (hidden in standalone mode for checkbox-only display) -->Child 1
             </label>
             <!-- 
         Optional tooltip for additional context
@@ -371,10 +356,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
           Visual checkbox icon (replaces hidden native checkbox)
           aria-hidden because it's purely decorative - the native input conveys state
           @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
-        -->
-              <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                  <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
-                </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Child 2
+        --><span data-v-79ecb611="" role="presentation" class="flex items-center justify-center inline-flex w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path></svg></span><!-- Label text (hidden in standalone mode for checkbox-only display) -->Child 2
             </label>
             <!-- 
         Optional tooltip for additional context
@@ -454,10 +436,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout
           Visual checkbox icon (replaces hidden native checkbox)
           aria-hidden because it's purely decorative - the native input conveys state
           @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
-        -->
-          <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-              <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
-            </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 1
+        --><span data-v-79ecb611="" role="presentation" class="flex items-center justify-center inline-flex w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path></svg></span><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 1
         </label>
         <!-- 
         Optional tooltip for additional context
@@ -506,10 +485,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout
           Visual checkbox icon (replaces hidden native checkbox)
           aria-hidden because it's purely decorative - the native input conveys state
           @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
-        -->
-          <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-              <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
-            </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 2
+        --><span data-v-79ecb611="" role="presentation" class="flex items-center justify-center inline-flex w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path></svg></span><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 2
         </label>
         <!-- 
         Optional tooltip for additional context
@@ -587,10 +563,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - required 1`] = `
           Visual checkbox icon (replaces hidden native checkbox)
           aria-hidden because it's purely decorative - the native input conveys state
           @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
-        -->
-          <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-              <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
-            </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 1
+        --><span data-v-79ecb611="" role="presentation" class="flex items-center justify-center inline-flex w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path></svg></span><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 1
         </label>
         <!-- 
         Optional tooltip for additional context
@@ -668,10 +641,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with error 1`] = 
           Visual checkbox icon (replaces hidden native checkbox)
           aria-hidden because it's purely decorative - the native input conveys state
           @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
-        -->
-          <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-semantic-error-200" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-              <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
-            </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 1
+        --><span data-v-79ecb611="" role="presentation" class="flex items-center justify-center inline-flex w-[20px] h-[20px] relative text-semantic-error-200" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path></svg></span><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 1
         </label>
         <!-- 
         Optional tooltip for additional context
@@ -702,10 +672,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with error 1`] = 
       would automatically get role="alert" and aria-live="assertive"
   -->
   <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between bg-transparent" id="fz-checkbox-group-100000000001-2a84k-error" role="alert" aria-live="assertive" aria-atomic="true">
-    <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-start layout-default flex-1">
-      <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px] text-semantic-error" aria-hidden="true"><svg class="svg-inline--fa fa-circle-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path>
-        </svg></div>
+    <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-start layout-default flex-1"><span data-v-9bf2fc2e="" role="presentation" class="flex items-center justify-center inline-flex w-[20px] h-[20px] text-semantic-error" aria-hidden="true"><svg class="svg-inline--fa fa-circle-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path></svg></span>
       <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
         <!--v-if-->
         <p data-v-9bf2fc2e="" class="font-normal !leading-[20px]">Test error message</p>
@@ -776,10 +743,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with help text 1`
           Visual checkbox icon (replaces hidden native checkbox)
           aria-hidden because it's purely decorative - the native input conveys state
           @TODO: When FzIcon natively supports ariaHidden prop, remove aria-hidden as HTML attribute and use :aria-hidden as prop
-        -->
-          <div data-v-79ecb611="" class="flex items-center justify-center w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-              <path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path>
-            </svg></div><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 1
+        --><span data-v-79ecb611="" role="presentation" class="flex items-center justify-center inline-flex w-[20px] h-[20px] relative text-grey-400" aria-hidden="true"><svg class="svg-inline--fa fa-square h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path></svg></span><!-- Label text (hidden in standalone mode for checkbox-only display) -->Option 1
         </label>
         <!-- 
         Optional tooltip for additional context

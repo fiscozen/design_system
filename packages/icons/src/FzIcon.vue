@@ -1,4 +1,17 @@
 <script setup lang="ts">
+/**
+ * FzIcon – Design system icon component (Font Awesome).
+ *
+ * Renders a single icon with configurable size and variant. The root element is a
+ * <span role="presentation"> so that v-color can be applied (e.g. <FzIcon v-color:blue="500" />)
+ * and the icon can be nested inside <p> or <span> without invalid HTML. role="presentation"
+ * removes semantics for accessibility.
+ *
+ * @component
+ * @example
+ * <FzIcon name="check" />
+ * <p v-color:blue>Ciao <FzIcon name="check" v-color:yellow /></p>
+ */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { byPrefixAndName } from '@awesome.me/kit-8137893ad3/icons'
 import type { IconProps, IconSize } from './types'
@@ -7,7 +20,8 @@ withDefaults(
   defineProps<IconProps>(),
   { size: 'lg', variant: 'far' }
 )
-const staticContainerClasses = ['flex', 'items-center', 'justify-center']
+
+const staticContainerClasses = ['flex', 'items-center', 'justify-center', 'inline-flex']
 const containerClassSizeMap: Record<IconSize, string> = {
   xs: 'size-[12.5px]',
   sm: 'w-[15px] h-[15px]',
@@ -27,12 +41,15 @@ const iconClassSizeMap: Record<IconSize, string> = {
 </script>
 
 <template>
-  <div :class="[staticContainerClasses, containerClassSizeMap[size]]">
-    <font-awesome-icon
+  <span
+    role="presentation"
+    :class="[staticContainerClasses, containerClassSizeMap[size]]"
+  >
+    <FontAwesomeIcon
       :class="iconClassSizeMap[size]"
       :icon="typeof name === 'string' ? byPrefixAndName[variant][name] : name"
       :size="size !== 'md' ? size : undefined"
       :spin="spin"
     />
-  </div>
+  </span>
 </template>

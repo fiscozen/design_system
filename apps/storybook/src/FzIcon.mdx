@@ -1,0 +1,129 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Media/FzIcon" />
+
+# FzIcon
+
+Design system icon component built on Font Awesome. Renders a single icon with configurable size and variant. To apply design system text color, use the <code>v-color</code> directive on the component (see Coloring with v-color below).
+
+## Features
+
+- Font Awesome icon set (Pro, via icon kits)
+- Configurable size (xs, sm, md, lg, xl, 2xl) and variant (fas, far, fal, etc.)
+- Color via <code>v-color</code> directive (requires @fiscozen/style and <code>setupFzStyle</code>)
+- Spin animation support
+
+## Installation
+
+```bash
+npm install @fiscozen/icons
+```
+
+To use <code>v-color</code> for icon color, also install and register <code>@fiscozen/style</code> (see Typography documentation).
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzIcon } from '@fiscozen/icons'
+</script>
+
+<template>
+  <FzIcon name="check" />
+  <FzIcon name="bell" size="lg" />
+  <FzIcon name="check" v-color:blue />
+  <FzIcon name="check" v-color:blue="500" />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>name</code></td>
+      <td><code>string</code></td>
+      <td><em>required</em></td>
+      <td>Font Awesome icon name (e.g. bell, check, alert-circle). Use the icon kit or Font Awesome search for available names.</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'</code></td>
+      <td><code>'lg'</code></td>
+      <td>Visual size of the icon container and icon.</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>IconVariant</code></td>
+      <td><code>'far'</code></td>
+      <td>Font Awesome style (e.g. fas, far, fal, fat, fad).</td>
+    </tr>
+    <tr>
+      <td><code>spin</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>When true, applies a spinning animation to the icon.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Coloring with v-color
+
+Apply design system text color by using the <code>v-color</code> directive on <code>FzIcon</code>. The directive runs on the component root (<code>&lt;p role="presentation"&gt;</code>), and the icon inherits the color via <code>currentColor</code>.
+
+**Syntax:** <code>v-color:colorName</code> (default weight) or <code>v-color:colorName="weight"</code> (e.g. <code>v-color:blue="500"</code>, <code>v-color:semantic-error="200"</code>).
+
+For the full list of supported colors (base, semantic, core) and default weights, see [Typography – v-color](../?path=/docs/foundations-typography--docs#v-color).
+
+**Example:**
+
+```vue
+<template>
+  <FzIcon name="check" v-color:blue />
+  <FzIcon name="check" v-color:blue="500" />
+  <FzIcon name="alert-circle" v-color:semantic-error />
+  <FzIcon name="info" v-color:semantic-info="300" />
+</template>
+```
+
+## Examples
+
+### Sizes
+
+```vue
+<template>
+  <div class="flex items-center gap-4">
+    <FzIcon name="bell" size="xs" />
+    <FzIcon name="bell" size="sm" />
+    <FzIcon name="bell" size="md" />
+    <FzIcon name="bell" size="lg" />
+    <FzIcon name="bell" size="xl" />
+    <FzIcon name="bell" size="2xl" />
+  </div>
+</template>
+```
+
+### Spin
+
+```vue
+<template>
+  <FzIcon name="spinner" spin />
+</template>
+```
+
+## Accessibility
+
+FzIcon renders a decorative icon by default (no aria-label). The root <code>&lt;p role="presentation"&gt;</code> ensures the wrapper is not announced as a paragraph. When the icon conveys meaning, wrap it in a button or link and provide an accessible label on that control (e.g. <code>FzIconButton</code> with <code>ariaLabel</code>).
+
+## Related Components
+
+- **FzIconButton**: Icon-only button that uses FzIcon; use when the icon is actionable.
+- **FzProgress**: Uses FzIcon with spin for loading states.

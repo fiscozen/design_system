@@ -17,7 +17,7 @@ const meta: Meta<typeof FzIcon> = {
     },
     size: {
       control: 'select',
-      options: ['xs', 'sm', 'md', 'lg']
+      options: ['xs', 'sm', 'md', 'lg', 'xl', '2xl']
     },
     variant: {
       control: 'select',
@@ -39,7 +39,7 @@ export const Primary: Story = {
     const canvas = within(canvasElement)
     
     await step('Verify icon renders correctly', async () => {
-      const iconContainer = canvasElement.querySelector('div.flex')
+      const iconContainer = canvasElement.querySelector('span.flex')
       await expect(iconContainer).toBeInTheDocument()
       await expect(iconContainer).toBeVisible()
     })
@@ -51,14 +51,14 @@ export const Primary: Story = {
     })
     
     await step('Verify icon has correct size classes', async () => {
-      const iconContainer = canvasElement.querySelector('div.flex')
+      const iconContainer = canvasElement.querySelector('span.flex')
       // Default size is 'lg', which should have w-[25px] h-[25px] classes
       await expect(iconContainer).toHaveClass('w-[25px]')
       await expect(iconContainer).toHaveClass('h-[25px]')
     })
     
     await step('Verify icon container has flex classes', async () => {
-      const iconContainer = canvasElement.querySelector('div.flex')
+      const iconContainer = canvasElement.querySelector('span.flex')
       await expect(iconContainer).toHaveClass('flex')
       await expect(iconContainer).toHaveClass('items-center')
       await expect(iconContainer).toHaveClass('justify-center')
@@ -140,7 +140,7 @@ export const PreviewAllIcons: Story = {
     })
     
     await step('Verify icons are rendered in the preview', async () => {
-      const iconContainers = canvasElement.querySelectorAll('div.flex.items-center.justify-center')
+      const iconContainers = canvasElement.querySelectorAll('span.flex.items-center.justify-center')
       // Should have multiple icons rendered
       await expect(iconContainers.length).toBeGreaterThan(0)
     })
@@ -163,7 +163,7 @@ export const SizeXS: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('Verify XS size classes are applied', async () => {
-      const iconContainer = canvasElement.querySelector('div.flex')
+      const iconContainer = canvasElement.querySelector('span.flex')
       await expect(iconContainer).toHaveClass('size-[12.5px]')
     })
     
@@ -182,7 +182,7 @@ export const SizeSM: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('Verify SM size classes are applied', async () => {
-      const iconContainer = canvasElement.querySelector('div.flex')
+      const iconContainer = canvasElement.querySelector('span.flex')
       await expect(iconContainer).toHaveClass('w-[15px]')
       await expect(iconContainer).toHaveClass('h-[15px]')
     })
@@ -196,7 +196,7 @@ export const SizeMD: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('Verify MD size classes are applied', async () => {
-      const iconContainer = canvasElement.querySelector('div.flex')
+      const iconContainer = canvasElement.querySelector('span.flex')
       await expect(iconContainer).toHaveClass('w-[20px]')
       await expect(iconContainer).toHaveClass('h-[20px]')
     })
@@ -210,7 +210,7 @@ export const SizeLG: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('Verify LG size classes are applied', async () => {
-      const iconContainer = canvasElement.querySelector('div.flex')
+      const iconContainer = canvasElement.querySelector('span.flex')
       await expect(iconContainer).toHaveClass('w-[25px]')
       await expect(iconContainer).toHaveClass('h-[25px]')
     })
@@ -260,7 +260,7 @@ export const Accessibility: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('Verify icon container is present', async () => {
-      const iconContainer = canvasElement.querySelector('div.flex')
+      const iconContainer = canvasElement.querySelector('span.flex')
       await expect(iconContainer).toBeInTheDocument()
     })
     
@@ -273,7 +273,7 @@ export const Accessibility: Story = {
       // Icons are typically decorative and should be hidden from screen readers
       // when used standalone. If the icon has meaning, it should be wrapped in
       // a button or link with appropriate aria-label.
-      const iconContainer = canvasElement.querySelector('div.flex')
+      const iconContainer = canvasElement.querySelector('span.flex')
       // Icon container should not have aria-label when used as decorative element
       await expect(iconContainer).not.toHaveAttribute('aria-label')
     })

@@ -61,7 +61,8 @@ describe("FzCheckboxCard", () => {
     it("should not render subtitle when not provided", () => {
       const wrapper = createWrapper({ title: "Title" });
       const paragraphs = wrapper.findAll("p");
-      expect(paragraphs.length).toBe(1);
+      const contentParagraphs = paragraphs.filter((p) => p.attributes("role") !== "presentation");
+      expect(contentParagraphs.length).toBe(1);
     });
 
     it("should render image when imageUrl is provided", () => {

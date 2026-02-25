@@ -7,7 +7,7 @@ import type { ValidationRule } from './validation';
 /**
  * HTML element tag names supported by directives.
  */
-export type ValidElementTag = 'P' | 'H1' | 'H2' | 'H3';
+export type ValidElementTag = 'P' | 'H1' | 'H2' | 'H3' | 'SPAN';
 
 /**
  * Directive name type for type safety.
@@ -40,8 +40,8 @@ export type DirectiveName = 'v-color' | 'v-bold' | 'v-small';
  */
 export const DIRECTIVE_VALIDATION_CONFIG: Record<DirectiveName, readonly ValidationRule[]> = {
   'v-color': [
-    // P, H1, H2, H3 supports v-color with any modifier and any value
-    { tags: ['P', 'H1', 'H2', 'H3'] },
+    // P, H1, H2, H3, SPAN supports v-color with any modifier and any value
+    { tags: ['P', 'H1', 'H2', 'H3', 'SPAN'] },
   ],
   'v-bold': [
     // P supports v-bold (no modifiers/values for this directive)

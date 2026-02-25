@@ -46,7 +46,7 @@ describe('FzIcon', () => {
         }
       })
       expect(wrapper.exists()).toBe(true)
-      expect(wrapper.find('div').exists()).toBe(true)
+      expect(wrapper.find('span').exists()).toBe(true)
     })
 
     it('should render with name prop', () => {
@@ -76,7 +76,7 @@ describe('FzIcon', () => {
           }
         }
       })
-      const container = wrapper.find('div')
+      const container = wrapper.find('span')
       expect(container.classes()).toContain('w-[25px]')
       expect(container.classes()).toContain('h-[25px]')
     })
@@ -95,7 +95,7 @@ describe('FzIcon', () => {
           }
         }
       })
-      const container = wrapper.find('div')
+      const container = wrapper.find('span')
       expect(container.classes()).toContain('custom-class')
     })
   })
@@ -154,7 +154,7 @@ describe('FzIcon', () => {
             }
           }
         })
-        const container = wrapper.find('div')
+        const container = wrapper.find('span')
         expect(container.classes()).toContain(containerClass)
         
         // Verify icon class is passed via :class binding to FontAwesome component
@@ -178,7 +178,7 @@ describe('FzIcon', () => {
             }
           }
         })
-        const container = wrapper.find('div')
+        const container = wrapper.find('span')
         expect(container.classes()).toContain('w-[25px]')
         expect(container.classes()).toContain('h-[25px]')
       })
@@ -274,10 +274,11 @@ describe('FzIcon', () => {
           }
         }
       })
-      const container = wrapper.find('div')
+      const container = wrapper.find('span')
       expect(container.classes()).toContain('flex')
       expect(container.classes()).toContain('items-center')
       expect(container.classes()).toContain('justify-center')
+      expect(container.classes()).toContain('inline-flex')
     })
 
     it('should apply size-specific container classes', () => {
@@ -292,7 +293,7 @@ describe('FzIcon', () => {
           }
         }
       })
-      const container = wrapper.find('div')
+      const container = wrapper.find('span')
       expect(container.classes()).toContain('w-[20px]')
       expect(container.classes()).toContain('h-[20px]')
     })
@@ -355,7 +356,7 @@ describe('FzIcon', () => {
             }
           }
         })
-        const container = wrapper.find('div')
+        const container = wrapper.find('span')
         expect(container.attributes('aria-label')).toBe('Notification bell')
       })
 
@@ -374,7 +375,7 @@ describe('FzIcon', () => {
             }
           }
         })
-        const container = wrapper.find('div')
+        const container = wrapper.find('span')
         expect(container.attributes('role')).toBe('img')
       })
     })
@@ -391,8 +392,9 @@ describe('FzIcon', () => {
             }
           }
         })
-        // Decorative icons should not have aria-label
-        const container = wrapper.find('div')
+        // Decorative: root has role="presentation", no aria-label
+        const container = wrapper.find('span')
+        expect(container.attributes('role')).toBe('presentation')
         expect(container.attributes('aria-label')).toBeUndefined()
       })
     })

@@ -75,7 +75,8 @@ describe('FzNavlink', () => {
       })
       expect(wrapper.find('button').classes()).toContain('flex')
       expect(wrapper.find('button').classes()).toContain('w-32')
-      expect(wrapper.find('span').exists()).toBe(false)
+      expect(wrapper.findComponent({ name: 'FzIcon' }).exists()).toBe(true)
+      expect(wrapper.find('span').exists()).toBe(true)
     })
 
     it('should render slot content', () => {
@@ -665,7 +666,8 @@ describe('FzRouterNavlink', () => {
           plugins: [router]
         }
       })
-      expect(wrapper.find('span').exists()).toBe(false)
+      expect(wrapper.findComponent({ name: 'FzIcon' }).exists()).toBe(true)
+      expect(wrapper.find('span').exists()).toBe(true)
     })
 
     it('should render slot content', () => {
