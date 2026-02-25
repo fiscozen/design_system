@@ -1,0 +1,130 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Media/FzIconBackground" />
+
+# FzIconBackground
+
+Wrapper around FzIcon that adds a background to the icon container. Use it when you need an icon with a visible background (e.g. status indicators, badges, or highlighted icons). It accepts the same props as FzIcon.
+
+## Features
+
+- Same API as FzIcon (name, size, variant, spin) plus <code>backgroundColor</code>
+- Configurable background on the icon container (rounded, padded)
+- Color via <code>v-color</code> directive (requires @fiscozen/style and <code>setupFzStyle</code>)
+- Font Awesome icon set (Pro, via icon kits)
+
+## Installation
+
+```bash
+npm install @fiscozen/icons
+```
+
+To use <code>v-color</code> for icon color, also install and register <code>@fiscozen/style</code> (see Typography documentation).
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzIconBackground } from '@fiscozen/icons'
+</script>
+
+<template>
+  <FzIconBackground name="check" />
+  <FzIconBackground name="bell" size="lg" />
+  <FzIconBackground name="check" v-color:blue="500" />
+</template>
+```
+
+## Coloring with v-color
+
+You can apply the design system text color to <code>FzIconBackground</code> with the <code>v-color</code> directive, same as <code>FzIcon</code>. The directive targets the inner icon root, and the icon inherits the color via <code>currentColor</code>.
+
+**Syntax:** <code>v-color:colorName</code> or <code>v-color:colorName="weight"</code> (e.g. <code>v-color:blue="500"</code>). For supported colors and weights, see [Typography – v-color](../?path=/docs/foundations-typography--docs#v-color).
+
+```vue
+<template>
+  <FzIconBackground name="check" v-color:blue />
+  <FzIconBackground name="alert-circle" v-color:semantic-error="200" />
+</template>
+```
+
+## Props
+
+FzIconBackground uses the same props as FzIcon plus <code>backgroundColor</code>.
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>name</code></td>
+      <td><code>string</code></td>
+      <td><em>required</em></td>
+      <td>Font Awesome icon name (e.g. bell, check). Use the icon kit or Font Awesome search for available names.</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'</code></td>
+      <td><code>'lg'</code></td>
+      <td>Visual size of the icon container and icon.</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>IconVariant</code></td>
+      <td><code>'far'</code></td>
+      <td>Font Awesome style (e.g. fas, far, fal).</td>
+    </tr>
+    <tr>
+      <td><code>spin</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>When true, applies a spinning animation to the icon.</td>
+    </tr>
+    <tr>
+      <td><code>backgroundColor</code></td>
+      <td><code>string</code></td>
+      <td><code>'core-white'</code></td>
+      <td>Tailwind background color token applied to the icon container (e.g. core-white, grey-100, blue-500). Used as <code>bg-&#123;backgroundColor&#125;</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Sizes
+
+```vue
+<template>
+  <div class="flex items-center gap-4">
+    <FzIconBackground name="bell" size="xs" />
+    <FzIconBackground name="bell" size="sm" />
+    <FzIconBackground name="bell" size="md" />
+    <FzIconBackground name="bell" size="lg" />
+  </div>
+</template>
+```
+
+### Custom background
+
+```vue
+<template>
+  <FzIconBackground name="check" backgroundColor="core-white" />
+  <FzIconBackground name="bell" backgroundColor="grey-100" />
+  <FzIconBackground name="alert-circle" backgroundColor="blue-500" />
+</template>
+```
+
+## Accessibility
+
+Same as FzIcon: the icon is decorative by default. When it conveys meaning, use it inside a button or link with an accessible label.
+
+## Related Components
+
+- **FzIcon**: Base icon component without background; use when you only need the icon.
+- **FzIconButton**: Icon-only button; use when the icon is actionable.

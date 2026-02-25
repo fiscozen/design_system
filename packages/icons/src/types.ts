@@ -8,4 +8,8 @@ interface IconProps {
   spin?: boolean;
 }
 
-export type { IconVariant, IconSize, IconProps }
+interface IconBackgroundProps extends IconProps {
+  backgroundColor?: string;
+}
+
+export type { IconVariant, IconSize, IconProps, IconBackgroundProps }
