@@ -447,6 +447,69 @@ describe('FzAlert', () => {
       })
     })
 
+    describe('showAction (no empty action wrapper)', () => {
+      it('should not render action slot when variant is background and both showButtonAction and showLinkAction are false', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'background',
+            showButtonAction: false,
+            showLinkAction: false
+          },
+          slots: { default: 'Message' }
+        })
+        const containers = wrapper.findAllComponents({ name: 'FzContainer' })
+        expect(containers.length).toBe(1)
+        expect(wrapper.findComponent({ name: 'FzButton' }).exists()).toBe(false)
+        expect(wrapper.findComponent({ name: 'FzLink' }).exists()).toBe(false)
+      })
+
+      it('should render action slot when variant is background and custom action slot is provided', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'background',
+            showButtonAction: false,
+            showLinkAction: false
+          },
+          slots: {
+            default: 'Message',
+            action: '<span data-testid="custom-action">Custom</span>'
+          }
+        })
+        expect(wrapper.find('[data-testid="custom-action"]').exists()).toBe(true)
+      })
+    })
+
+    describe('showDescriptionArea (no empty description wrapper)', () => {
+      it('should not render description paragraph when no default slot is provided', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'background',
+            title: 'Title only'
+          },
+          slots: {}
+        })
+        const description = wrapper.find('p.font-normal')
+        expect(description.exists()).toBe(false)
+        expect(wrapper.text()).toContain('Title only')
+      })
+
+      it('should render description paragraph when default slot is provided', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'background'
+          },
+          slots: { default: 'Message content' }
+        })
+        const description = wrapper.find('p.font-normal')
+        expect(description.exists()).toBe(true)
+        expect(description.text()).toContain('Message content')
+      })
+    })
+
     describe('linkActionLabel prop', () => {
       it('should render link with label', () => {
         wrapper = mount(FzAlert, {

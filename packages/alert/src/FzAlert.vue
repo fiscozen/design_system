@@ -10,7 +10,7 @@
  * <FzAlert tone="info" title="Note" variant="background">Message</FzAlert>
  * <FzAlert tone="info" variant="text">Inline message</FzAlert>
  */
-import { computed, ref } from 'vue'
+import { computed, ref, useSlots } from 'vue'
 import { FzButton, FzIconButton } from '@fiscozen/button'
 import { FzIcon } from '@fiscozen/icons'
 import { AlertProps, AlertVariant } from './types'
@@ -26,6 +26,7 @@ const props = withDefaults(defineProps<AlertProps>(), {
 })
 
 const emit = defineEmits(['fzAlert:click', 'fzAlert:dismiss'])
+const slots = useSlots()
 const isOpen = ref(props.defaultOpen)
 
 const mapToneToContainerClass = {
@@ -77,30 +78,37 @@ const iconSize = computed(() =>
   isTextVariant.value && safeEnvironment.value === 'backoffice' ? 'sm' : 'md'
 )
 
+/** True when variant allows actions and there is content: button, link, or action slot. Avoids empty action wrapper in DOM. */
+const showAction = computed(() => {
+  if (isTextVariant.value) return false
+  const hasActionContent = props.showButtonAction || props.showLinkAction || !!slots.action
+  if (!hasActionContent) return false
+  if (safeVariant.value === 'background') return true
+  return isOpen.value
+})
+
 const descriptionClass = computed(() => [
   'font-normal',
   '!leading-[20px]',
   {
     'mt-8': props.title && !isTextVariant.value,
-    'mb-16': (props.showButtonAction || props.showLinkAction) && !isTextVariant.value
+    'mb-16': showAction.value && !isTextVariant.value
   }
 ])
-
-const showAction = computed(() => {
-  if (isTextVariant.value) return false
-  if (safeVariant.value === 'background') return true
-  return isOpen.value
-})
 const collapseIcon = computed(() => (isOpen.value ? 'angle-up' : 'angle-down'))
 const rightIconName = computed(() => {
   if (safeVariant.value === 'accordion') return collapseIcon.value
   if (props.isDismissible) return 'xmark'
 })
+/** True when description area should be visible. Used together with default slot so we don't render an empty paragraph. */
 const showDescription = computed(() => {
   if (isTextVariant.value || safeVariant.value === 'background') return true
   if (safeVariant.value === 'accordion') return isOpen.value
   return true
 })
+
+/** Only render description wrapper when we have default slot content; avoids empty <p> in DOM. */
+const showDescriptionArea = computed(() => showDescription.value && !!slots.default)
 
 function handleButtonClick(event: Event) {
   event.stopPropagation()
@@ -149,7 +157,7 @@ const handleClick = () => {
           {{ title }}
         </p>
 
-        <p v-if="showDescription" :class="descriptionClass">
+        <p v-if="showDescriptionArea" :class="descriptionClass">
           <slot></slot>
         </p>
 

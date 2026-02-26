@@ -118,7 +118,7 @@ exports[`FzAppointments > Snapshots > should match snapshot - no slots available
       <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
         <p data-v-9bf2fc2e="" class="leading-[20px]">No slots</p>
         <p data-v-9bf2fc2e="" class="font-normal !leading-[20px] mt-8">No available slots</p>
-        <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default"></div>
+        <!--v-if-->
       </div>
     </div>
     <!--v-if-->
