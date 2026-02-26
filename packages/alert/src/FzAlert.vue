@@ -1,4 +1,15 @@
 <script setup lang="ts">
+/**
+ * FzAlert – callout for timely information (info, error, warning, success, danger).
+ *
+ * Variants: background (expanded), accordion (collapsible), text (description only, transparent, no actions).
+ * Supports button/link actions, dismiss, and environment (frontoffice/backoffice) for padding and icon size.
+ *
+ * @component
+ * @example
+ * <FzAlert tone="info" title="Note" variant="background">Message</FzAlert>
+ * <FzAlert tone="info" variant="text">Inline message</FzAlert>
+ */
 import { computed, ref } from 'vue'
 import { FzButton, FzIconButton } from '@fiscozen/button'
 import { FzIcon } from '@fiscozen/icons'
@@ -31,9 +42,11 @@ const sizeToEnvironmentMapping = {
   lg: 'frontoffice'
 }
 
+const isTextVariant = computed(() => safeVariant.value === 'text')
+
 const containerClass = computed(() => [
   'flex select-none gap-12 rounded justify-between',
-  mapToneToContainerClass[props.tone],
+  ...(isTextVariant.value ? ['bg-transparent'] : [mapToneToContainerClass[props.tone]]),
   safeEnvironment.value === 'backoffice' ? 'p-6' : '',
   ...(safeVariant.value === 'accordion' ? ['cursor-pointer'] : [])
 ])
@@ -59,17 +72,22 @@ const iconClass = computed(() => [
   }[props.tone]
 ])
 
+/** Icon size: `sm` when variant is text and environment is backoffice, `md` otherwise. */
+const iconSize = computed(() =>
+  isTextVariant.value && safeEnvironment.value === 'backoffice' ? 'sm' : 'md'
+)
 
 const descriptionClass = computed(() => [
   'font-normal',
   '!leading-[20px]',
   {
-    'mt-8': props.title,
-    'mb-16': (props.showButtonAction || props.showLinkAction)
+    'mt-8': props.title && !isTextVariant.value,
+    'mb-16': (props.showButtonAction || props.showLinkAction) && !isTextVariant.value
   }
 ])
 
 const showAction = computed(() => {
+  if (isTextVariant.value) return false
   if (safeVariant.value === 'background') return true
   return isOpen.value
 })
@@ -79,8 +97,9 @@ const rightIconName = computed(() => {
   if (props.isDismissible) return 'xmark'
 })
 const showDescription = computed(() => {
-  if (safeVariant.value !== 'accordion') return true
-  return isOpen.value
+  if (isTextVariant.value || safeVariant.value === 'background') return true
+  if (safeVariant.value === 'accordion') return isOpen.value
+  return true
 })
 
 function handleButtonClick(event: Event) {
@@ -102,7 +121,9 @@ const safeVariant = computed<AlertVariant>(() => {
   return ['default', 'simple'].includes(props.alertStyle) ? 'background' : 'accordion'
 })
 
-const hasRightIcon = computed(() => safeVariant.value === 'accordion' || props.isDismissible)
+const hasRightIcon = computed(
+  () => !isTextVariant.value && (safeVariant.value === 'accordion' || props.isDismissible)
+)
 const handleRightIconClick = () => {
   if (safeVariant.value === 'accordion') {
     isOpen.value = !isOpen.value
@@ -113,7 +134,7 @@ const handleRightIconClick = () => {
 }
 
 const handleClick = () => {
-  if (safeVariant.value === 'accordion') {
+  if (!isTextVariant.value && safeVariant.value === 'accordion') {
     isOpen.value = !isOpen.value
   }
 }
@@ -122,9 +143,9 @@ const handleClick = () => {
 <template>
   <div :class="containerClass" @click="handleClick">
     <FzContainer horizontal gap="sm" :class="['flex-1', safeEnvironment === 'backoffice' ? 'p-6' : 'p-12']" alignItems="start">
-      <FzIcon :name="iconName" size="md" :class="iconClass" />
+      <FzIcon :name="iconName" :size="iconSize" :class="iconClass" />
       <div class="flex flex-col flex-1">
-        <p v-if="title" v-bold class="leading-[20px]">
+        <p v-if="title && !isTextVariant" v-bold class="leading-[20px]">
           {{ title }}
         </p>
 

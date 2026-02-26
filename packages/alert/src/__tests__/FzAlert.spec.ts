@@ -228,6 +228,140 @@ describe('FzAlert', () => {
         })
         expect(wrapper.text()).toContain('Description text')
       })
+
+      it('should show description when variant is text', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'text'
+          },
+          slots: {
+            default: 'Text variant description'
+          }
+        })
+        expect(wrapper.text()).toContain('Text variant description')
+      })
+
+      it('should not show title when variant is text', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'text',
+            title: 'Hidden title'
+          },
+          slots: {
+            default: 'Description'
+          }
+        })
+        expect(wrapper.text()).not.toContain('Hidden title')
+        expect(wrapper.text()).toContain('Description')
+      })
+
+      it('should not show button action when variant is text', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'text',
+            buttonActionLabel: 'Action'
+          }
+        })
+        const button = wrapper.findComponent({ name: 'FzButton' })
+        expect(button.exists()).toBe(false)
+      })
+
+      it('should not show link action when variant is text', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'text',
+            showLinkAction: true,
+            linkActionLabel: 'Link',
+            linkActionLocation: '/example'
+          },
+          global: {
+            plugins: [router]
+          }
+        })
+        const link = wrapper.findComponent({ name: 'FzLink' })
+        expect(link.exists()).toBe(false)
+      })
+
+      it('should not show dismiss button when variant is text even if isDismissible', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'text',
+            isDismissible: true
+          }
+        })
+        const iconButtons = wrapper.findAllComponents({ name: 'FzIconButton' })
+        expect(iconButtons.length).toBe(0)
+      })
+
+      it('should not apply cursor-pointer when variant is text', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'text'
+          }
+        })
+        const container = wrapper.find('div')
+        expect(container.classes()).not.toContain('cursor-pointer')
+      })
+
+      it('should not toggle content on click when variant is text', async () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'text'
+          },
+          slots: {
+            default: 'Description'
+          }
+        })
+        expect(wrapper.text()).toContain('Description')
+        const container = wrapper.find('div')
+        await container.trigger('click')
+        await nextTick()
+        expect(wrapper.text()).toContain('Description')
+      })
+
+      it('should have transparent background and ignore tone classes when variant is text', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'text'
+          }
+        })
+        const container = wrapper.find('div')
+        expect(container.classes()).toContain('bg-transparent')
+        expect(container.classes()).not.toContain('bg-semantic-info-50')
+        expect(container.classes()).not.toContain('border-semantic-info')
+      })
+
+      it('should use icon size sm when variant is text and environment is backoffice', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'text',
+            environment: 'backoffice'
+          }
+        })
+        const icon = wrapper.findComponent({ name: 'FzIcon' })
+        expect(icon.props('size')).toBe('sm')
+      })
+
+      it('should use icon size md when variant is text and environment is frontoffice', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'text',
+            environment: 'frontoffice'
+          }
+        })
+        const icon = wrapper.findComponent({ name: 'FzIcon' })
+        expect(icon.props('size')).toBe('md')
+      })
     })
 
     describe('alertStyle prop (deprecated)', () => {
@@ -1142,6 +1276,33 @@ describe('FzAlert', () => {
         props: {
           tone: 'info',
           title: 'Title here',
+          environment: 'backoffice'
+        },
+        slots: {
+          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        }
+      })
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('should match snapshot - text variant', () => {
+      wrapper = mount(FzAlert, {
+        props: {
+          tone: 'info',
+          variant: 'text'
+        },
+        slots: {
+          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        }
+      })
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('should match snapshot - text variant backoffice', () => {
+      wrapper = mount(FzAlert, {
+        props: {
+          tone: 'info',
+          variant: 'text',
           environment: 'backoffice'
         },
         slots: {

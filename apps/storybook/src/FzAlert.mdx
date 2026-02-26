@@ -1,0 +1,194 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Messages/FzAlert" />
+
+# FzAlert
+
+Callout component for timely information: info, error, danger, warning, or success. Supports optional title, button or link action, dismiss, and collapsible (accordion) or text-only variant.
+
+## Features
+
+- Five tones: info, error, danger, warning, success
+- Variants: background (expanded), accordion (collapsible), text (description only, transparent, no actions)
+- Optional title, primary button action, and link action
+- Dismissible option with close icon
+- Environment: frontoffice (default) or backoffice (compact padding; text variant uses smaller icon in backoffice)
+- Slot for custom action content
+
+## Installation
+
+```bash
+npm install @fiscozen/alert
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzAlert } from '@fiscozen/alert'
+</script>
+
+<template>
+  <FzAlert tone="info" title="Note" variant="background">
+    Your message here.
+  </FzAlert>
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tone</code></td>
+      <td><code>'info' | 'error' | 'danger' | 'warning' | 'success'</code></td>
+      <td>—</td>
+      <td>Required. Sets icon and (for background/accordion) background and border color.</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'background' | 'accordion' | 'text'</code></td>
+      <td><code>'background'</code></td>
+      <td>background: expanded with optional title/actions; accordion: collapsible; text: description only, transparent, no title/actions/dismiss; tone ignored for container in text.</td>
+    </tr>
+    <tr>
+      <td><code>title</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>Optional title. Not shown when variant is text.</td>
+    </tr>
+    <tr>
+      <td><code>environment</code></td>
+      <td><code>'frontoffice' | 'backoffice'</code></td>
+      <td><code>'frontoffice'</code></td>
+      <td>Affects padding and button/icon styling. With variant text and backoffice, the leading icon uses size sm.</td>
+    </tr>
+    <tr>
+      <td><code>showButtonAction</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Whether to show the button action. Ignored when variant is text.</td>
+    </tr>
+    <tr>
+      <td><code>buttonActionLabel</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>Label for the button action.</td>
+    </tr>
+    <tr>
+      <td><code>buttonActionTooltip</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>Tooltip for the button action.</td>
+    </tr>
+    <tr>
+      <td><code>showLinkAction</code></td>
+      <td><code>boolean</code></td>
+      <td>—</td>
+      <td>Whether to show the link action. Ignored when variant is text.</td>
+    </tr>
+    <tr>
+      <td><code>linkActionLabel</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>Label for the link action.</td>
+    </tr>
+    <tr>
+      <td><code>linkActionLocation</code></td>
+      <td><code>RouteLocationRaw</code></td>
+      <td>—</td>
+      <td>Target for the link (path or route object).</td>
+    </tr>
+    <tr>
+      <td><code>linkActionTarget</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>e.g. <code>_blank</code> for link target.</td>
+    </tr>
+    <tr>
+      <td><code>linkActionExternal</code></td>
+      <td><code>boolean</code></td>
+      <td>—</td>
+      <td>Whether the link is external.</td>
+    </tr>
+    <tr>
+      <td><code>isDismissible</code></td>
+      <td><code>boolean</code></td>
+      <td>—</td>
+      <td>Shows close icon and enables dismiss. Ignored when variant is text.</td>
+    </tr>
+    <tr>
+      <td><code>defaultOpen</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Initial open state for accordion variant.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Events
+
+- <code>fzAlert:click</code>: emitted when the button or link action is clicked.
+- <code>fzAlert:dismiss</code>: emitted when the dismiss button is clicked (when <code>isDismissible</code> is true).
+
+## Slots
+
+- Default: alert message/description.
+- <code>action</code>: overrides the default button/link action area.
+
+## Examples
+
+### Text variant (inline message, no background)
+
+```vue
+<template>
+  <FzAlert tone="info" variant="text">
+    Short inline message with transparent background. No title or actions.
+  </FzAlert>
+</template>
+```
+
+### Text variant in backoffice (smaller icon)
+
+```vue
+<template>
+  <FzAlert tone="info" variant="text" environment="backoffice">
+    Compact message for backoffice; icon size is small.
+  </FzAlert>
+</template>
+```
+
+### Accordion with action
+
+```vue
+<template>
+  <FzAlert
+    tone="warning"
+    variant="accordion"
+    title="Warning"
+    buttonActionLabel="Accept"
+    @fzAlert:click="handleClick"
+  >
+    Collapsible content with optional action.
+  </FzAlert>
+</template>
+```
+
+## Accessibility
+
+- Use appropriate <code>tone</code> for semantics (e.g. error for critical messages).
+- Provide clear <code>buttonActionLabel</code> and <code>linkActionLabel</code> for screen readers.
+- Dismissible alerts should be announced; consider <code>aria-live</code> in the app for dynamic removal.
+
+## Related components
+
+- **FzButton**, **FzLink**: used for actions.
+- **FzIcon**, **FzIconButton**: used for tone icon and dismiss/collapse.

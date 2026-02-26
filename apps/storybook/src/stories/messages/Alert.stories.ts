@@ -15,7 +15,7 @@ const meta: Meta<typeof FzAlert> = {
     },
     variant: {
       control: 'select',
-      options: ['background', 'accordion']
+      options: ['background', 'accordion', 'text']
     },
     environment: {
       control: 'select',
@@ -403,6 +403,87 @@ const WithoutAction: Story = {
   }
 }
 
+const TextVariant: Story = {
+  args: {
+    tone: 'info',
+    variant: 'text',
+    title: undefined,
+    showButtonAction: false
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify description is displayed', async () => {
+      const description = canvas.getByText(/Lorem ipsum dolor sit amet/)
+      await expect(description).toBeVisible()
+    })
+
+    await step('Verify no title is displayed', async () => {
+      const title = canvas.queryByText('Title')
+      await expect(title).toBeNull()
+    })
+
+    await step('Verify no button action', async () => {
+      const button = canvas.queryByRole('button', { name: /This is a button/i })
+      await expect(button).toBeNull()
+    })
+
+    await step('Verify no icon button (dismiss/collapse)', async () => {
+      const iconButtons = canvasElement.querySelectorAll('button')
+      const iconOnlyButtons = Array.from(iconButtons).filter(
+        (btn) => btn.querySelector('svg') && !btn.textContent?.trim()
+      )
+      await expect(iconOnlyButtons.length).toBe(0)
+    })
+
+    await step('Verify transparent background (text variant ignores tone)', async () => {
+      const container = canvasElement.querySelector('.rounded')
+      await expect(container).toBeInTheDocument()
+      if (container) {
+        await expect(container.classList.contains('bg-transparent')).toBe(true)
+        await expect(container.classList.contains('bg-semantic-info-50')).toBe(false)
+      }
+    })
+  }
+}
+
+const TextVariantBackoffice: Story = {
+  args: {
+    tone: 'info',
+    variant: 'text',
+    environment: 'backoffice',
+    title: undefined,
+    showButtonAction: false
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify description is displayed', async () => {
+      const description = canvas.getByText(/Lorem ipsum dolor sit amet/)
+      await expect(description).toBeVisible()
+    })
+
+    await step('Verify no title and no actions', async () => {
+      const title = canvas.queryByText('Title')
+      await expect(title).toBeNull()
+      const button = canvas.queryByRole('button', { name: /This is a button/i })
+      await expect(button).toBeNull()
+    })
+
+    await step('Verify backoffice compact padding', async () => {
+      const containerWithPadding = canvasElement.querySelector('.p-6')
+      await expect(containerWithPadding).toBeInTheDocument()
+    })
+
+    await step('Verify transparent background', async () => {
+      const container = canvasElement.querySelector('.rounded')
+      if (container) {
+        await expect(container.classList.contains('bg-transparent')).toBe(true)
+      }
+    })
+  }
+}
+
 const Dismissible: Story = {
   args: {
     tone: 'info',
@@ -753,6 +834,8 @@ export {
   LinkExternal,
   OnlyLink,
   WithoutAction,
+  TextVariant,
+  TextVariantBackoffice,
   Dismissible,
   NoTitleWithButtonAction,
   NoTitleWithLinkAction,

@@ -1,7 +1,7 @@
 import { RouteLocationRaw } from 'vue-router'
 import { ButtonEnvironment } from '@fiscozen/button'
 
-type AlertVariant = 'accordion' | 'background'
+type AlertVariant = 'accordion' | 'background' | 'text'
 
 type AlertProps = {
   /**
@@ -67,7 +67,11 @@ type AlertProps = {
    */
   defaultOpen?: boolean
   /**
-   * Variant of the alert
+   * Variant of the alert.
+   * - background: always expanded, optional title and actions; tone sets background and border
+   * - accordion: collapsible content; tone sets background and border
+   * - text: description only (no title, no actions, not collapsible, not dismissible);
+   *   transparent background (tone ignored); icon size is `sm` when environment is backoffice, `md` otherwise
    */
   variant?: AlertVariant
 }
