@@ -40,7 +40,7 @@ const helpClass = computed(() => {
     v-if="error && $slots.error"
     tone="error"
     alertStyle="simple"
-    :showButtonAction="false"
+    variant="text"
   >
     <slot name="error"></slot>
   </FzAlert>
