@@ -13,6 +13,7 @@
  */
 import { computed, toRefs, Ref, ref, watch, useSlots } from "vue";
 import { FzInputProps, type InputEnvironment } from "./types";
+import { FzAlert } from "@fiscozen/alert";
 import { FzIcon } from "@fiscozen/icons";
 import { FzIconButton } from "@fiscozen/button";
 import useInputStyle from "./useInputStyle";
@@ -103,7 +104,6 @@ const {
   staticInputClass,
   computedInputClass,
   computedHelpClass,
-  computedErrorClass,
   containerWidth,
   showNormalPlaceholder,
 } = useInputStyle(
@@ -496,23 +496,16 @@ defineExpose({
         </div>
       </slot>
     </div>
-    <div
+    <FzAlert
       v-if="error && $slots.errorMessage"
       :id="`${uniqueId}-error`"
       role="alert"
-      class="flex items-start gap-[6px]"
+      tone="error"
+      variant="text"
       :style="{ width: containerWidth }"
     >
-      <FzIcon
-        name="circle-xmark"
-        class="text-semantic-error-200"
-        size="md"
-        aria-hidden="true"
-      />
-      <div :class="computedErrorClass">
-        <slot name="errorMessage"></slot>
-      </div>
-    </div>
+      <slot name="errorMessage"></slot>
+    </FzAlert>
     <span
       v-else-if="$slots.helpText"
       :id="`${uniqueId}-help`"

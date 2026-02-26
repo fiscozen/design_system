@@ -1836,6 +1836,9 @@ importers:
 
   packages/input:
     dependencies:
+      '@fiscozen/alert':
+        specifier: workspace:*
+        version: link:../alert
       '@fiscozen/button':
         specifier: workspace:*
         version: link:../button
