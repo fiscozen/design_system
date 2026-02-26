@@ -278,7 +278,7 @@ describe('FzIcon', () => {
       expect(container.classes()).toContain('flex')
       expect(container.classes()).toContain('items-center')
       expect(container.classes()).toContain('justify-center')
-      expect(container.classes()).toContain('inline-flex')
+      expect(container.classes()).toContain('flex')
     })
 
     it('should apply size-specific container classes', () => {

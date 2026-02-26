@@ -21,7 +21,7 @@ withDefaults(
   { size: 'lg', variant: 'far' }
 )
 
-const staticContainerClasses = ['flex', 'items-center', 'justify-center', 'inline-flex']
+const staticContainerClasses = ['flex', 'items-center', 'justify-center']
 const containerClassSizeMap: Record<IconSize, string> = {
   xs: 'size-[12.5px]',
   sm: 'w-[15px] h-[15px]',

@@ -1,11 +1,11 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzProgress > Snapshots > should match snapshot - default state 1`] = `"<span role="presentation" class="flex items-center justify-center inline-flex w-[25px] h-[25px]" style="--fa-animation-duration: 0.86s; --fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85);"><svg class="h-[20px]"></svg></span>"`;
+exports[`FzProgress > Snapshots > should match snapshot - default state 1`] = `"<span role="presentation" class="flex items-center justify-center w-[25px] h-[25px]" style="--fa-animation-duration: 0.86s; --fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85);"><svg class="h-[20px]"></svg></span>"`;
 
-exports[`FzProgress > Snapshots > should match snapshot - with all custom props 1`] = `"<span role="presentation" class="flex items-center justify-center inline-flex w-[32px] h-[32px]" style="--fa-animation-duration: 0.86s; --fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85);"><svg class="h-[24px]"></svg></span>"`;
+exports[`FzProgress > Snapshots > should match snapshot - with all custom props 1`] = `"<span role="presentation" class="flex items-center justify-center w-[32px] h-[32px]" style="--fa-animation-duration: 0.86s; --fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85);"><svg class="h-[24px]"></svg></span>"`;
 
-exports[`FzProgress > Snapshots > should match snapshot - with custom name 1`] = `"<span role="presentation" class="flex items-center justify-center inline-flex w-[25px] h-[25px]" style="--fa-animation-duration: 0.86s; --fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85);"><svg class="h-[20px]"></svg></span>"`;
+exports[`FzProgress > Snapshots > should match snapshot - with custom name 1`] = `"<span role="presentation" class="flex items-center justify-center w-[25px] h-[25px]" style="--fa-animation-duration: 0.86s; --fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85);"><svg class="h-[20px]"></svg></span>"`;
 
-exports[`FzProgress > Snapshots > should match snapshot - with custom size 1`] = `"<span role="presentation" class="flex items-center justify-center inline-flex w-[25px] h-[25px]" style="--fa-animation-duration: 0.86s; --fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85);"><svg class="h-[20px]"></svg></span>"`;
+exports[`FzProgress > Snapshots > should match snapshot - with custom size 1`] = `"<span role="presentation" class="flex items-center justify-center w-[25px] h-[25px]" style="--fa-animation-duration: 0.86s; --fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85);"><svg class="h-[20px]"></svg></span>"`;
 
-exports[`FzProgress > Snapshots > should match snapshot - with custom variant 1`] = `"<span role="presentation" class="flex items-center justify-center inline-flex w-[25px] h-[25px]" style="--fa-animation-duration: 0.86s; --fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85);"><svg class="h-[20px]"></svg></span>"`;
+exports[`FzProgress > Snapshots > should match snapshot - with custom variant 1`] = `"<span role="presentation" class="flex items-center justify-center w-[25px] h-[25px]" style="--fa-animation-duration: 0.86s; --fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85);"><svg class="h-[20px]"></svg></span>"`;
