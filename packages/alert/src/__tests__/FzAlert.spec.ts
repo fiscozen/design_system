@@ -339,6 +339,46 @@ describe('FzAlert', () => {
         expect(container.classes()).not.toContain('border-semantic-info')
       })
 
+      it('should not apply padding on root or inner container when variant is text', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'text',
+            environment: 'frontoffice'
+          },
+          slots: { default: 'Message' }
+        })
+        const root = wrapper.find('div.rounded')
+        expect(root.classes()).not.toContain('p-6')
+        const innerContainer = wrapper.findComponent({ name: 'FzContainer' })
+        expect(innerContainer.classes()).not.toContain('p-12')
+        expect(innerContainer.classes()).not.toContain('p-6')
+      })
+
+      it('should use gap xs on inner container when variant is text', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'text'
+          },
+          slots: { default: 'Message' }
+        })
+        const innerContainer = wrapper.findComponent({ name: 'FzContainer' })
+        expect(innerContainer.props('gap')).toBe('xs')
+      })
+
+      it('should use gap sm on inner container when variant is not text', () => {
+        wrapper = mount(FzAlert, {
+          props: {
+            tone: 'info',
+            variant: 'background'
+          },
+          slots: { default: 'Message' }
+        })
+        const innerContainer = wrapper.findComponent({ name: 'FzContainer' })
+        expect(innerContainer.props('gap')).toBe('sm')
+      })
+
       it('should use icon size sm when variant is text and environment is backoffice', () => {
         wrapper = mount(FzAlert, {
           props: {

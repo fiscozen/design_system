@@ -48,7 +48,7 @@ const isTextVariant = computed(() => safeVariant.value === 'text')
 const containerClass = computed(() => [
   'flex select-none gap-12 rounded justify-between',
   ...(isTextVariant.value ? ['bg-transparent'] : [mapToneToContainerClass[props.tone]]),
-  safeEnvironment.value === 'backoffice' ? 'p-6' : '',
+  ...(!isTextVariant.value && safeEnvironment.value === 'backoffice' ? ['p-6'] : []),
   ...(safeVariant.value === 'accordion' ? ['cursor-pointer'] : [])
 ])
 
@@ -77,6 +77,14 @@ const iconClass = computed(() => [
 const iconSize = computed(() =>
   isTextVariant.value && safeEnvironment.value === 'backoffice' ? 'sm' : 'md'
 )
+
+/** Inner content padding: none for text variant, p-6/p-12 by environment otherwise. */
+const innerContainerPaddingClass = computed(() =>
+  isTextVariant.value ? '' : safeEnvironment.value === 'backoffice' ? 'p-6' : 'p-12'
+)
+
+/** Gap between icon and content: xs for text variant, sm otherwise. */
+const innerContainerGap = computed(() => (isTextVariant.value ? 'xs' : 'sm'))
 
 /** True when variant allows actions and there is content: button, link, or action slot. Avoids empty action wrapper in DOM. */
 const showAction = computed(() => {
@@ -150,7 +158,7 @@ const handleClick = () => {
 
 <template>
   <div :class="containerClass" @click="handleClick">
-    <FzContainer horizontal gap="sm" :class="['flex-1', safeEnvironment === 'backoffice' ? 'p-6' : 'p-12']" alignItems="start">
+    <FzContainer horizontal :gap="innerContainerGap" :class="['flex-1', innerContainerPaddingClass]" alignItems="start">
       <FzIcon :name="iconName" :size="iconSize" :class="iconClass" />
       <div class="flex flex-col flex-1">
         <p v-if="title && !isTextVariant" v-bold class="leading-[20px]">
