@@ -159,7 +159,7 @@ const handleClick = () => {
 <template>
   <div :class="containerClass" @click="handleClick">
     <FzContainer horizontal :gap="innerContainerGap" :class="['flex-1', innerContainerPaddingClass]" alignItems="start">
-      <FzIcon :name="iconName" :size="iconSize" :class="iconClass" />
+      <FzIcon :name="iconName" :size="iconSize" :class="iconClass" aria-hidden="true" />
       <div class="flex flex-col flex-1">
         <p v-if="title && !isTextVariant" v-bold class="leading-[20px]">
           {{ title }}
