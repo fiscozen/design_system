@@ -470,9 +470,9 @@ const TextVariantBackoffice: Story = {
       await expect(button).toBeNull()
     })
 
-    await step('Verify backoffice compact padding', async () => {
+    await step('Verify text variant has no padding (even in backoffice)', async () => {
       const containerWithPadding = canvasElement.querySelector('.p-6')
-      await expect(containerWithPadding).toBeInTheDocument()
+      await expect(containerWithPadding).toBeNull()
     })
 
     await step('Verify transparent background', async () => {
