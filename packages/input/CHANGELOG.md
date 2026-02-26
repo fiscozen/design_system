@@ -1,5 +1,13 @@
 # @fiscozen/input
 
+## 1.0.2
+
+### Patch Changes
+
+- 26cd2bf: Use FzAlert to display the error message
+- Updated dependencies [a42b3b4]
+  - @fiscozen/alert@1.1.0
+
 ## 1.0.1
 
 ### Patch Changes

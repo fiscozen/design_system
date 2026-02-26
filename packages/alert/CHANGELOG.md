@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0
+
+### Minor Changes
+
+- a42b3b4: Add text variant
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -10,9 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ⚠️ BREAKING CHANGES
 
 #### Prop `type` renamed to `tone`
+
 The `type` prop has been renamed to `tone` for better semantic clarity.
 
 **Migration:**
+
 ```vue
 <!-- Before (v0.1.4) -->
 <FzAlert type="info" />
@@ -22,11 +30,14 @@ The `type` prop has been renamed to `tone` for better semantic clarity.
 ```
 
 #### Event names changed
+
 Event names have been updated to follow a more consistent naming convention:
+
 - `fzaction:click` → `fzAlert:click`
 - New event: `fzAlert:dismiss`
 
 **Migration:**
+
 ```vue
 <!-- Before (v0.1.4) -->
 <FzAlert @fzaction:click="handleClick" />
@@ -36,16 +47,20 @@ Event names have been updated to follow a more consistent naming convention:
 ```
 
 #### Visual structure redesign
+
 The internal structure has been completely redesigned:
+
 - New layout using `FzContainer` for consistent spacing
 - Improved responsive behavior with `justify-between` layout
 - Icon and content now wrapped in a flex container with better alignment
 - Padding logic centralized: backoffice uses `p-6`, frontoffice uses `p-12`
 
 #### Removed `simple` alert style
+
 The `simple` style variant has been removed in favor of the new `variant` prop system.
 
 **Migration:**
+
 ```vue
 <!-- Before (v0.1.4) -->
 <FzAlert alertStyle="simple" size="sm" />
@@ -57,36 +72,45 @@ The `simple` style variant has been removed in favor of the new `variant` prop s
 ### Added
 
 #### New `variant` prop
+
 Introduced a new `variant` prop to replace `alertStyle` with clearer semantics:
+
 - `'background'`: Alert with visible background (replaces `default` and `simple`)
 - `'accordion'`: Collapsable alert (replaces `collapsable`)
 
 **Usage:**
+
 ```vue
 <FzAlert variant="background" />
 <FzAlert variant="accordion" />
 ```
 
 #### New `environment` prop
+
 Added `environment` prop to explicitly control the alert context:
+
 - `'frontoffice'`: Larger padding (12px) and standard button sizing
 - `'backoffice'`: Compact padding (6px) and smaller button sizing
 
 **Usage:**
+
 ```vue
 <FzAlert environment="backoffice" />
 <FzAlert environment="frontoffice" />
 ```
 
 #### Dismissible alerts
+
 New `isDismissible` prop allows users to dismiss alerts with a close button.
 
 **Usage:**
+
 ```vue
 <FzAlert isDismissible @fzAlert:dismiss="handleDismiss" />
 ```
 
 #### Right icon support
+
 Added `FzIconButton` for collapse/dismiss functionality positioned on the right side of the alert.
 
 ### Changed

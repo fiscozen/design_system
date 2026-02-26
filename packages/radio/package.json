@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/radio",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Design System Radio and Radiogroup component",
   "scripts": {
     "coverage": "vitest run --coverage",

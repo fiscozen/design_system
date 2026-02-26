@@ -1,5 +1,21 @@
 # @fiscozen/select
 
+## 1.0.4
+
+### Patch Changes
+
+- 457253d: Use FzAlert variant text for error message
+
+## 1.0.3
+
+### Patch Changes
+
+- 26cd2bf: Use FzAlert to display the error message
+- Updated dependencies [a42b3b4]
+- Updated dependencies [26cd2bf]
+  - @fiscozen/alert@1.1.0
+  - @fiscozen/input@1.0.2
+
 ## 1.0.2
 
 ### Patch Changes

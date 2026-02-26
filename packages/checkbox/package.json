@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/checkbox",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "Design System Checkbox and Checkbox Group component",
   "scripts": {
     "coverage": "vitest run --coverage",

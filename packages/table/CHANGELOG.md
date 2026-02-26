@@ -1,5 +1,22 @@
 # @fiscozen/table
 
+## 0.1.18
+
+### Patch Changes
+
+- Updated dependencies [457253d]
+  - @fiscozen/checkbox@1.1.2
+  - @fiscozen/radio@1.0.3
+
+## 0.1.17
+
+### Patch Changes
+
+- Updated dependencies [26cd2bf]
+  - @fiscozen/input@1.0.2
+  - @fiscozen/checkbox@1.1.1
+  - @fiscozen/radio@1.0.2
+
 ## 0.1.16
 
 ### Patch Changes

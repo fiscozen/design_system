@@ -1,5 +1,18 @@
 # @fiscozen/radio
 
+## 1.0.3
+
+### Patch Changes
+
+- 457253d: Use FzAlert variant text for error message
+
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies [a42b3b4]
+  - @fiscozen/alert@1.1.0
+
 ## 1.0.1
 
 ### Patch Changes

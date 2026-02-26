@@ -23,6 +23,12 @@ importers:
       plop:
         specifier: ^4.0.1
         version: 4.0.4(@types/node@18.19.130)
+      prettier:
+        specifier: ^3.0.3
+        version: 3.7.4
+      prettier-plugin-tailwindcss:
+        specifier: ^0.5.11
+        version: 0.5.14(prettier@3.7.4)
       vitest:
         specifier: ^1.0.4
         version: 1.6.1(@types/node@18.19.130)(jsdom@23.2.0)
