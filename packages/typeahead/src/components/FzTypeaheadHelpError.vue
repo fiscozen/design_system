@@ -36,7 +36,7 @@ const helpClass = computed(() => {
 </script>
 
 <template>
-  <FzAlert v-if="error && $slots.error" tone="error" alertStyle="simple">
+  <FzAlert v-if="error && $slots.error" tone="error" variant="text">
     <slot name="error"></slot>
   </FzAlert>
   <span v-else-if="$slots.help" :class="helpClass">

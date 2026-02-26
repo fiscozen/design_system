@@ -18,7 +18,7 @@
  *   This field is required
  * </ErrorAlert>
  */
-import { FzAlert } from "@fiscozen/alert";
+import { FzAlert } from '@fiscozen/alert'
 
 defineProps<{
   /**
@@ -27,8 +27,8 @@ defineProps<{
    *
    * @example "checkbox-123-error"
    */
-  id: string;
-}>();
+  id: string
+}>()
 </script>
 
 <template>
@@ -50,7 +50,7 @@ defineProps<{
   <FzAlert
     :id="id"
     tone="error"
-    alertStyle="simple"
+    variant="text"
     role="alert"
     aria-live="assertive"
     aria-atomic="true"

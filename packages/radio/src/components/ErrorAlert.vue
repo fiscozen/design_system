@@ -50,7 +50,7 @@ defineProps<{
   <FzAlert
     :id="id"
     tone="error"
-    alertStyle="simple"
+    variant="text"
     role="alert"
     aria-live="assertive"
     aria-atomic="true"
@@ -59,4 +59,3 @@ defineProps<{
     <slot />
   </FzAlert>
 </template>
-

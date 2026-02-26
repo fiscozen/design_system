@@ -334,23 +334,17 @@ exports[`FzTypeahead > Snapshots > should match snapshot - error state 1`] = `
       <!--v-if-->
     </div>
   </div>
-  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between bg-semantic-error-50 border-semantic-error">
-    <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-start layout-default flex-1 p-12">
+  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between bg-transparent">
+    <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-start layout-default flex-1">
       <div data-v-9bf2fc2e="" class="flex items-center justify-center w-[20px] h-[20px] text-semantic-error" aria-hidden="true"><svg class="svg-inline--fa fa-circle-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path>
         </svg></div>
       <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
         <!--v-if-->
-        <p data-v-9bf2fc2e="" class="font-normal !leading-[20px] mb-16">
+        <p data-v-9bf2fc2e="" class="font-normal !leading-[20px]">
         <div>Error message</div>
         </p>
-        <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default"><button data-v-9bf2fc2e="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200">
-            <!--v-if-->
-            <div class="truncate font-normal !text-[16px] !leading-[20px]"></div>
-            <!--v-if-->
-          </button>
-          <!--v-if-->
-        </div>
+        <!--v-if-->
       </div>
     </div>
     <!--v-if-->
