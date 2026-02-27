@@ -116,7 +116,7 @@ function getMessageAlignment(message: Message): "end" | "start" {
     <FzContainer
       v-for="(message, index) in messages"
       :key="index"
-      :alignItems="alignItems[message.variant]"
+      :alignItems="getMessageAlignment(message)"
     >
       <FzContainer alignItems="end" gap="xs">
         <FzContainer alignItems="end" gap="xs" horizontal>
