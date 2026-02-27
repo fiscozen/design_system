@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<IconBackgroundProps>(), {
 })
 
 const iconClasses = computed(() => {
-  return ['box-content', 'p-[8px]', 'rounded-full', `bg-${props.backgroundColor}`]
+  return ['box-content', 'p-8', 'rounded-full', `bg-${props.backgroundColor}`]
 })
 
 /** Props passed to FzIcon; excludes backgroundColor to avoid fallthrough to DOM. */

@@ -1,13 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzIconBackground > Snapshots > should match snapshot - default state 1`] = `"<span role="presentation" class="flex items-center justify-center w-[25px] h-[25px] box-content p-[8px] rounded-full bg-core-white"><svg class="h-[20px]" data-testid="fa-icon"></svg></span>"`;
+exports[`FzIconBackground > Snapshots > should match snapshot - default state 1`] = `"<span role="presentation" class="flex items-center justify-center w-[25px] h-[25px] box-content p-8 rounded-full bg-core-white"><svg class="h-[20px]" data-testid="fa-icon"></svg></span>"`;
 
-exports[`FzIconBackground > Snapshots > should match snapshot - large size 1`] = `"<span role="presentation" class="flex items-center justify-center w-[32px] h-[32px] box-content p-[8px] rounded-full bg-core-white"><svg class="h-[24px]" data-testid="fa-icon"></svg></span>"`;
+exports[`FzIconBackground > Snapshots > should match snapshot - large size 1`] = `"<span role="presentation" class="flex items-center justify-center w-[32px] h-[32px] box-content p-8 rounded-full bg-core-white"><svg class="h-[24px]" data-testid="fa-icon"></svg></span>"`;
 
-exports[`FzIconBackground > Snapshots > should match snapshot - small size 1`] = `"<span role="presentation" class="flex items-center justify-center w-[15px] h-[15px] box-content p-[8px] rounded-full bg-core-white"><svg class="h-[12px]" data-testid="fa-icon"></svg></span>"`;
+exports[`FzIconBackground > Snapshots > should match snapshot - small size 1`] = `"<span role="presentation" class="flex items-center justify-center w-[15px] h-[15px] box-content p-8 rounded-full bg-core-white"><svg class="h-[12px]" data-testid="fa-icon"></svg></span>"`;
 
-exports[`FzIconBackground > Snapshots > should match snapshot - with backgroundColor 1`] = `"<span role="presentation" class="flex items-center justify-center w-[25px] h-[25px] box-content p-[8px] rounded-full bg-grey-100"><svg class="h-[20px]" data-testid="fa-icon"></svg></span>"`;
+exports[`FzIconBackground > Snapshots > should match snapshot - with backgroundColor 1`] = `"<span role="presentation" class="flex items-center justify-center w-[25px] h-[25px] box-content p-8 rounded-full bg-grey-100"><svg class="h-[20px]" data-testid="fa-icon"></svg></span>"`;
 
-exports[`FzIconBackground > Snapshots > should match snapshot - with spin 1`] = `"<span role="presentation" class="flex items-center justify-center w-[25px] h-[25px] box-content p-[8px] rounded-full bg-core-white"><svg class="h-[20px]" data-testid="fa-icon"></svg></span>"`;
+exports[`FzIconBackground > Snapshots > should match snapshot - with spin 1`] = `"<span role="presentation" class="flex items-center justify-center w-[25px] h-[25px] box-content p-8 rounded-full bg-core-white"><svg class="h-[20px]" data-testid="fa-icon"></svg></span>"`;
 
-exports[`FzIconBackground > Snapshots > should match snapshot - with variant 1`] = `"<span role="presentation" class="flex items-center justify-center w-[25px] h-[25px] box-content p-[8px] rounded-full bg-core-white"><svg class="h-[20px]" data-testid="fa-icon"></svg></span>"`;
+exports[`FzIconBackground > Snapshots > should match snapshot - with variant 1`] = `"<span role="presentation" class="flex items-center justify-center w-[25px] h-[25px] box-content p-8 rounded-full bg-core-white"><svg class="h-[20px]" data-testid="fa-icon"></svg></span>"`;
