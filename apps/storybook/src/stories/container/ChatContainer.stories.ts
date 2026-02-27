@@ -16,13 +16,13 @@ const messagesFactory = (
   page: number = 1,
   numberOfAttachments: number = 0
 ): Message[] =>
-  Array.from({ length }, (_, index) => ({
-    message: `Prova messaggio ${index + 1} della pagina ${page}`,
-    variant: index % 2 !== 0 ? 'primary' : 'invisible',
-    timestamp: new Date(1997, 2, 24, 12, 30 - page * index).toISOString(),
-    user: { firstName: 'John', lastName: 'Doe', avatar },
-    attachments: Array.from({ length: numberOfAttachments }, (_, index) => ({
-      name: `attachment_${index + 1}.pdf`,
+  Array.from({ length }, (_, i) => ({
+    message: `${i + 1}° pagina ${page}`,
+    variant: i % 2 !== 0 ? 'primary' : 'invisible',
+    timestamp: new Date(1997, 2, 24, 12, 30 - page * i).toISOString(),
+    user: { firstName: 'Rupert', lastName: 'Sciamenna', avatar },
+    attachments: Array.from({ length: numberOfAttachments }, (_, j) => ({
+      name: `${i % 2 !== 0 ? 'primary' : 'invisible'} attachment_${j + 1}.pdf`,
       url: ''
     }))
   }))
@@ -58,7 +58,7 @@ const meta = {
   args: {},
   decorators: [
     () => ({
-      template: `<div style="width: 70%; height: 300px; margin: 0 auto; display: flex; flex-direction: column; overflow: hidden; border: 10px solid #ccc;"><story /></div>`
+      template: `<div style="width: 280px; height: 700px; margin: 0 auto; display: flex; flex-direction: column; overflow: hidden; border: 3px solid #ccc;"><story /></div>`
     })
   ],
   parameters: {
@@ -84,9 +84,9 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     messages: messagesFactory(),
-    emptyMessage: 'Nessun messaggio',
-    emptyMessageDescription: 'Inizia una conversazione',
-    waitingForResponseMessage: 'Attendi...'
+    emptyMessage: 'Non ci sono ancora messaggi',
+    emptyMessageDescription: 'Scrivi qui sotto per contattare il nostro team',
+    waitingForResponseMessage: 'Un nostro operatore ti risponderà a breve...'
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -98,7 +98,7 @@ export const Default: Story = {
     })
 
     await step('Verify messages are displayed', async () => {
-      const messages = canvas.getAllByText(/Prova messaggio/)
+      const messages = canvas.getAllByText(/pagina 1/)
       await expect(messages.length).toBeGreaterThanOrEqual(1)
     })
 
@@ -117,7 +117,7 @@ export const Default: Story = {
     })
 
     await step('Accessibility: messages are in document and visible', async () => {
-      const msg = canvas.getByText(/Prova messaggio/)
+      const msg = canvas.getByText(/pagina 1/)
       await expect(msg).toBeInTheDocument()
       await expect(msg).toBeVisible()
     })
@@ -131,20 +131,20 @@ export const Default: Story = {
 export const Empty: Story = {
   args: {
     messages: messagesFactory(0),
-    emptyMessage: 'Nessun messaggio',
-    emptyMessageDescription: 'Inizia una conversazione',
-    waitingForResponseMessage: 'Attendi...'
+    emptyMessage: 'Non ci sono ancora messaggi',
+    emptyMessageDescription: 'Scrivi qui sotto per contattare il nostro team',
+    waitingForResponseMessage: 'Un nostro operatore ti risponderà a breve...'
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify empty state heading is accessible', async () => {
-      const heading = canvas.getByRole('heading', { level: 2, name: 'Nessun messaggio' })
+      const heading = canvas.getByRole('heading', { level: 2, name: /Non ci sono ancora messaggi/ })
       await expect(heading).toBeInTheDocument()
     })
 
     await step('Verify empty state description is visible', async () => {
-      const description = canvas.getByText('Inizia una conversazione')
+      const description = canvas.getByText(/Scrivi qui sotto per contattare il nostro team/)
       await expect(description).toBeVisible()
     })
 
@@ -171,9 +171,9 @@ export const Empty: Story = {
 export const LastMessageFromReceiver: Story = {
   args: {
     messages: messagesFactory(2),
-    emptyMessage: 'Nessun messaggio',
-    emptyMessageDescription: 'Inizia una conversazione',
-    waitingForResponseMessage: 'Attendi...'
+    emptyMessage: 'Non ci sono ancora messaggi',
+    emptyMessageDescription: 'Scrivi qui sotto per contattare il nostro team',
+    waitingForResponseMessage: 'Un nostro operatore ti risponderà a breve...'
   },
   render: (args) => ({
     components: { FzChatContainer },
@@ -193,7 +193,7 @@ export const LastMessageFromReceiver: Story = {
 
     await step('Verify messages are displayed', async () => {
       await waitFor(() => {
-        const messages = canvas.getAllByText(/Prova messaggio/)
+        const messages = canvas.getAllByText(/pagina/)
         expect(messages.length).toBeGreaterThanOrEqual(1)
       })
     })
@@ -222,9 +222,9 @@ export const LastMessageFromReceiver: Story = {
 export const LastMessageFromSender: Story = {
   args: {
     messages: messagesFactory(),
-    emptyMessage: 'Nessun messaggio',
-    emptyMessageDescription: 'Inizia una conversazione',
-    waitingForResponseMessage: 'Attendi...'
+    emptyMessage: 'Non ci sono ancora messaggi',
+    emptyMessageDescription: 'Scrivi qui sotto per contattare il nostro team',
+    waitingForResponseMessage: 'Un nostro operatore ti risponderà a breve...'
   },
   render: (args) => ({
     components: { FzChatContainer },
@@ -245,7 +245,7 @@ export const LastMessageFromSender: Story = {
 
     await step('Verify messages are displayed', async () => {
       await waitFor(() => {
-        const messages = canvas.getAllByText(/Prova messaggio/)
+        const messages = canvas.getAllByText(/pagina/)
         expect(messages.length).toBeGreaterThanOrEqual(1)
       })
     })
@@ -267,9 +267,9 @@ export const LastMessageFromSender: Story = {
 export const WithAttachments: Story = {
   args: {
     messages: messagesFactory(),
-    emptyMessage: 'Nessun messaggio',
-    emptyMessageDescription: 'Inizia una conversazione',
-    waitingForResponseMessage: 'Attendi...'
+    emptyMessage: 'Non ci sono ancora messaggi',
+    emptyMessageDescription: 'Scrivi qui sotto per contattare il nostro team',
+    waitingForResponseMessage: 'Un nostro operatore ti risponderà a breve...'
   },
   render: (args) => ({
     components: { FzChatContainer },
@@ -277,7 +277,7 @@ export const WithAttachments: Story = {
       const messages = ref([...args.messages!])
 
       onMounted(async () => {
-        messages.value = await fetchMessages(messagesFactory(1, 1, 3))
+        messages.value = await fetchMessages(messagesFactory(2, 1, 3))
       })
 
       return { args, messages }
@@ -290,19 +290,26 @@ export const WithAttachments: Story = {
     await step('Verify download button is accessible', async () => {
       await waitFor(() => {
         const downloadButtons = canvas.getAllByRole('button', {
-          name: /Scarica attachment_\d\.pdf/
+          name: /attachment_\d\.pdf/
         })
-        expect(downloadButtons.length).toBeGreaterThanOrEqual(1)
-        expect(downloadButtons[0]).toBeVisible()
+        expect(downloadButtons.length).toBe(6)
       })
     })
 
     await step('Accessibility: download buttons have aria-label', async () => {
       await waitFor(() => {
-        const btn1 = canvas.getByRole('button', { name: 'Scarica attachment_1.pdf' })
-        const btn2 = canvas.getByRole('button', { name: 'Scarica attachment_2.pdf' })
-        expect(btn1).toHaveAttribute('aria-label', 'Scarica attachment_1.pdf')
-        expect(btn2).toHaveAttribute('aria-label', 'Scarica attachment_2.pdf')
+        const btn1 = canvas.getByRole('button', { name: 'Scarica primary attachment_1.pdf' })
+        const btn2 = canvas.getByRole('button', { name: 'Scarica primary attachment_2.pdf' })
+        const btn3 = canvas.getByRole('button', { name: 'Scarica primary attachment_3.pdf' })
+        const btn4 = canvas.getByRole('button', { name: 'Scarica invisible attachment_1.pdf' })
+        const btn5 = canvas.getByRole('button', { name: 'Scarica invisible attachment_2.pdf' })
+        const btn6 = canvas.getByRole('button', { name: 'Scarica invisible attachment_3.pdf' })
+        expect(btn1).toHaveAttribute('aria-label', 'Scarica primary attachment_1.pdf')
+        expect(btn2).toHaveAttribute('aria-label', 'Scarica primary attachment_2.pdf')
+        expect(btn3).toHaveAttribute('aria-label', 'Scarica primary attachment_3.pdf')
+        expect(btn4).toHaveAttribute('aria-label', 'Scarica invisible attachment_1.pdf')
+        expect(btn5).toHaveAttribute('aria-label', 'Scarica invisible attachment_2.pdf')
+        expect(btn6).toHaveAttribute('aria-label', 'Scarica invisible attachment_3.pdf')
       })
     })
 
@@ -324,8 +331,8 @@ export const WithAttachments: Story = {
 export const LoadMore: Story = {
   args: {
     messages: messagesFactory(),
-    emptyMessage: 'Nessun messaggio',
-    emptyMessageDescription: 'Inizia una conversazione'
+    emptyMessage: 'Non ci sono ancora messaggi',
+    emptyMessageDescription: 'Scrivi qui sotto per contattare il nostro team'
   },
   render: (args) => ({
     components: { FzChatContainer },
@@ -354,14 +361,12 @@ export const LoadMore: Story = {
     await step('Verify initial messages are rendered', async () => {
       await waitFor(() => {
         const canvas = within(canvasElement)
-        const messages = canvas.getAllByText(/della pagina 1/)
+        const messages = canvas.getAllByText(/pagina 1/)
         expect(messages.length).toBe(6)
       })
     })
 
-    const scrollContainer = canvasElement.querySelector(
-      '.fz-chat-container'
-    ) as HTMLElement
+    const scrollContainer = canvasElement.querySelector('.fz-chat-container') as HTMLElement
 
     await step('Scroll to top triggers load-more and loads older messages', async () => {
       scrollContainer.scrollTop = -scrollContainer.scrollHeight
@@ -369,7 +374,7 @@ export const LoadMore: Story = {
 
       await waitFor(() => {
         const canvas = within(canvasElement)
-        const messages = canvas.getAllByText(/della pagina 2/)
+        const messages = canvas.getAllByText(/pagina 2/)
         expect(messages.length).toBeGreaterThanOrEqual(1)
       })
     })
@@ -382,7 +387,7 @@ export const LoadMore: Story = {
 
         await waitFor(() => {
           const canvas = within(canvasElement)
-          const messages = canvas.getAllByText(/della pagina 3/)
+          const messages = canvas.getAllByText(/pagina 3/)
           expect(messages.length).toBeGreaterThanOrEqual(1)
         })
       }
