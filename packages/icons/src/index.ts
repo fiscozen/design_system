@@ -9,9 +9,10 @@ const IconPlugin : Plugin = {
     // @ts-ignore
     library.add(...all)
     app.component('fz-icon', FzIcon)
+    app.component('fz-icon-background', FzIconBackground)
   }
 }
 
 export { FzIcon, FzIconBackground, IconPlugin }
 
-export type { IconVariant, IconSize, IconProps } from './types'
+export type { IconVariant, IconSize, IconProps, IconBackgroundProps } from './types'
