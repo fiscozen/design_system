@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/displayfield",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Design System Display component for key-value pairs",
   "scripts": {
     "coverage": "vitest run --coverage",

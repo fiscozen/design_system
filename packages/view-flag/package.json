@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/view-flag",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Design System View Flag component",
   "scripts": {
     "coverage": "vitest run --coverage",

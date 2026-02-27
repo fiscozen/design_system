@@ -1,5 +1,16 @@
 # @fiscozen/input
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [a26bc2c]
+- Updated dependencies [2d4fc5e]
+  - @fiscozen/icons@0.2.0
+  - @fiscozen/button@2.0.0
+  - @fiscozen/composables@1.0.2
+  - @fiscozen/alert@2.0.0
+
 ## 1.0.2
 
 ### Patch Changes
