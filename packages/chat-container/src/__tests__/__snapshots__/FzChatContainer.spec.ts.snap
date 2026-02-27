@@ -3,8 +3,8 @@
 exports[`FzChatContainer > Snapshots > should match snapshot - empty state 1`] = `
 "<!-- no messages -->
 <div data-v-da7f5873="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-xs align-items-center w-full h-full">
-  <h2 data-v-5050224a="">No messages</h2>
-  <p data-v-5050224a="">Start chatting</p>
+  <h2 data-v-5050224a="" class="text-center">No messages</h2>
+  <p data-v-5050224a="" class="text-center">Start chatting</p>
 </div>"
 `;
 
@@ -59,7 +59,7 @@ exports[`FzChatContainer > Snapshots > should match snapshot - with messages 1`]
           <section data-v-5050224a="" class="border-1 border-solid rounded flex flex-col bg-core-white text-core-black border-grey-100">
             <!--v-if-->
             <article class="p-16">
-              <div data-v-da7f5873="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-sm align-items-end">
+              <div data-v-da7f5873="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-sm align-items-start">
                 <p data-v-5050224a="">Test message</p>
                 <!--v-if-->
               </div>
