@@ -1,5 +1,18 @@
 # @fiscozen/stepper
 
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies [a26bc2c]
+- Updated dependencies [a26bc2c]
+- Updated dependencies [2d4fc5e]
+  - @fiscozen/style@0.3.0
+  - @fiscozen/icons@0.2.0
+  - @fiscozen/composables@1.0.2
+  - @fiscozen/badge@2.0.0
+  - @fiscozen/dropdown@1.0.4
+
 ## 0.1.4
 
 ### Patch Changes

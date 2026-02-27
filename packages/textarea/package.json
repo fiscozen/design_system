@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/textarea",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "description": "Design System Textarea component",
   "scripts": {
     "coverage": "vitest run --coverage",

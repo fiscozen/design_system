@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/stepper",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "description": "Design System Stepper component",
   "scripts": {
     "coverage": "vitest run --coverage",

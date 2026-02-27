@@ -1,5 +1,12 @@
 # @fiscozen/container
 
+## 0.4.2
+
+### Patch Changes
+
+- Updated dependencies [a26bc2c]
+  - @fiscozen/style@0.3.0
+
 ## 0.4.1
 
 ### Minor Changes (dalla creazione del componente)
