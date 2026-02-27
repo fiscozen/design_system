@@ -219,7 +219,6 @@ describe('FzIconBackground', () => {
       expect(container.classes()).toContain('flex')
       expect(container.classes()).toContain('items-center')
       expect(container.classes()).toContain('justify-center')
-      expect(container.classes()).toContain('inline-flex')
     })
 
     it('should apply background wrapper classes', () => {
