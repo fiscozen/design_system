@@ -102,7 +102,7 @@ function onContainerScroll(event: Event): void {
     <FzContainer v-if="showWaitingForResponseMessage" alignItems="center">
       <FzContainer gap="xs" horizontal alignItems="center">
         <FzIcon name="clock" size="sm" variant="far" class="text-grey-300" />
-        <p v-bold v-color:grey="300" v-small>
+        <p v-color:grey="300" v-small>
           {{ waitingForResponseMessage }}
         </p>
       </FzContainer>
