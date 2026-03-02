@@ -72,10 +72,6 @@ function onContainerScroll(event: Event): void {
     emit("load-more");
   }
 }
-
-function getMessageAlignment(message: Message): "end" | "start" {
-  return alignItems[message.variant];
-}
 </script>
 
 <template>
@@ -116,7 +112,7 @@ function getMessageAlignment(message: Message): "end" | "start" {
     <FzContainer
       v-for="(message, index) in messages"
       :key="index"
-      :alignItems="getMessageAlignment(message)"
+      :alignItems="alignItems[message.variant]"
     >
       <FzContainer alignItems="end" gap="xs">
         <FzContainer alignItems="end" gap="xs" horizontal>
@@ -137,7 +133,7 @@ function getMessageAlignment(message: Message): "end" | "start" {
               {{ message.user.firstName }} {{ message.user.lastName }}
             </p>
             <FzCard :color="cardColor[message.variant]">
-              <FzContainer :alignItems="getMessageAlignment(message)" gap="sm">
+              <FzContainer alignItems="start" gap="sm">
                 <p v-small v-if="message.message.trim().length">
                   {{ message.message }}
                 </p>

@@ -4,6 +4,7 @@ import { nextTick } from "vue";
 import { FzChatContainer } from "..";
 import { FzIconButton } from "@fiscozen/button";
 import { FzIcon } from "@fiscozen/icons";
+import { FzDivider } from "@fiscozen/divider";
 import type { FzChatContainerProps } from "../types";
 
 // ============================================
@@ -255,6 +256,22 @@ describe("FzChatContainer", () => {
         ],
       });
       expect(wrapper.findAllComponents(FzIconButton).length).toBe(2);
+    });
+
+    it("should render FzDivider between multiple attachments", () => {
+      const wrapper = mountComponent({
+        messages: [
+          createMockMessage({
+            attachments: [
+              { name: "a.pdf", url: "url1" },
+              { name: "b.pdf", url: "url2" },
+              { name: "c.pdf", url: "url3" },
+            ],
+          }),
+        ],
+      });
+      const dividers = wrapper.findAllComponents(FzDivider);
+      expect(dividers.length).toBe(2);
     });
 
     it("should not render message text when message is empty or whitespace", () => {

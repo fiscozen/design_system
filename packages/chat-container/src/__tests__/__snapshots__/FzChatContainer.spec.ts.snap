@@ -26,7 +26,7 @@ exports[`FzChatContainer > Snapshots > should match snapshot - waiting for respo
           <section data-v-5050224a="" class="border-1 border-solid rounded flex flex-col bg-background-white-smoke text-core-black border-background-white-smoke">
             <!--v-if-->
             <article class="p-16">
-              <div data-v-da7f5873="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-sm align-items-end">
+              <div data-v-da7f5873="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-sm align-items-start">
                 <p data-v-5050224a="">Hello, world!</p>
                 <!--v-if-->
               </div>
