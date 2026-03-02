@@ -1,5 +1,14 @@
 # @fiscozen/chat-container
 
+## 1.0.1
+
+### Patch Changes
+
+- 4ab39fe: fix(chat-container): refine waiting for response message and message alignment
+  - Remove unnecessary v-bold directive from waiting for response message text
+  - Unify message card content alignment to start (alignItems="start") for consistent formatting
+  - Remove getMessageAlignment helper in favor of fixed alignment
+
 ## 1.0.0
 
 ### Patch Changes
