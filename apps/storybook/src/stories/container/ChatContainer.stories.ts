@@ -86,7 +86,7 @@ export const Default: Story = {
     messages: messagesFactory(),
     emptyMessage: 'Non ci sono ancora messaggi',
     emptyMessageDescription: 'Scrivi qui sotto per contattare il nostro team',
-    waitingForResponseMessage: 'Un nostro operatore ti risponderà a breve...'
+    waitingForResponseMessage: 'Un operatore ti risponderà a breve...'
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -133,7 +133,7 @@ export const Empty: Story = {
     messages: messagesFactory(0),
     emptyMessage: 'Non ci sono ancora messaggi',
     emptyMessageDescription: 'Scrivi qui sotto per contattare il nostro team',
-    waitingForResponseMessage: 'Un nostro operatore ti risponderà a breve...'
+    waitingForResponseMessage: 'Un operatore ti risponderà a breve...'
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -173,7 +173,7 @@ export const LastMessageFromReceiver: Story = {
     messages: messagesFactory(2),
     emptyMessage: 'Non ci sono ancora messaggi',
     emptyMessageDescription: 'Scrivi qui sotto per contattare il nostro team',
-    waitingForResponseMessage: 'Un nostro operatore ti risponderà a breve...'
+    waitingForResponseMessage: 'Un operatore ti risponderà a breve...'
   },
   render: (args) => ({
     components: { FzChatContainer },
@@ -224,7 +224,7 @@ export const LastMessageFromSender: Story = {
     messages: messagesFactory(),
     emptyMessage: 'Non ci sono ancora messaggi',
     emptyMessageDescription: 'Scrivi qui sotto per contattare il nostro team',
-    waitingForResponseMessage: 'Un nostro operatore ti risponderà a breve...'
+    waitingForResponseMessage: 'Un operatore ti risponderà a breve...'
   },
   render: (args) => ({
     components: { FzChatContainer },
@@ -269,7 +269,7 @@ export const WithAttachments: Story = {
     messages: messagesFactory(),
     emptyMessage: 'Non ci sono ancora messaggi',
     emptyMessageDescription: 'Scrivi qui sotto per contattare il nostro team',
-    waitingForResponseMessage: 'Un nostro operatore ti risponderà a breve...'
+    waitingForResponseMessage: 'Un operatore ti risponderà a breve...'
   },
   render: (args) => ({
     components: { FzChatContainer },
