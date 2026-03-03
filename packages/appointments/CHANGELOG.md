@@ -1,5 +1,13 @@
 # @fiscozen/appointments
 
+## 1.1.6
+
+### Patch Changes
+
+- @fiscozen/alert@3.0.0
+- @fiscozen/button@3.0.0
+- @fiscozen/radio@3.0.0
+
 ## 1.1.5
 
 ### Patch Changes
