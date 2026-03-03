@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/collapse",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Design System Icon Collapse Component",
   "scripts": {
     "coverage": "vitest run --coverage",

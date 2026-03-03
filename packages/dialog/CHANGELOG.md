@@ -1,5 +1,11 @@
 # @fiscozen/dialog
 
+## 0.1.29
+
+### Patch Changes
+
+- @fiscozen/button@3.0.0
+
 ## 0.1.28
 
 ### Patch Changes

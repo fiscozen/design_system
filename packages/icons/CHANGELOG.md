@@ -1,5 +1,11 @@
 # @fiscozen/icons
 
+## 1.0.0
+
+### Major Changes
+
+- Add FzIconBackground component
+
 ## 0.2.0
 
 ### Minor Changes

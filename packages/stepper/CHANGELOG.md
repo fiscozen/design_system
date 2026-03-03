@@ -1,5 +1,14 @@
 # @fiscozen/stepper
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @fiscozen/icons@1.0.0
+  - @fiscozen/badge@3.0.0
+  - @fiscozen/dropdown@1.0.5
+
 ## 1.0.0
 
 ### Patch Changes
