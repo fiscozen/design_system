@@ -3,6 +3,7 @@ import { toValue } from "vue";
 import type { SetupFzFetcher } from "../types";
 import { CsrfManager } from "../managers/csrf";
 import { DeduplicationManager } from "../managers/deduplication";
+import { normalizeHeadersInit } from "../utils/headers";
 import { state } from "./state";
 
 /**
@@ -103,14 +104,11 @@ export const setupFzFetcher: SetupFzFetcher = (options) => {
     }
   }
 
-  // Extract headers from fetchOptions so we control the merge (supporting undefined to remove).
-  // Other fetchOptions properties (credentials, mode, etc.) are still passed to createFetch.
   const { headers: setupHeaders, ...fetchOptionsWithoutHeaders } =
     options.fetchOptions || {};
-  state.globalDefaultHeaders =
-    setupHeaders && typeof setupHeaders === "object" && !(setupHeaders instanceof Headers)
-      ? { ...(setupHeaders as Record<string, string>) }
-      : null;
+  state.globalDefaultHeaders = setupHeaders
+    ? normalizeHeadersInit(setupHeaders)
+    : null;
 
   state.fzFetcher = createFetch({
     baseUrl: options.baseUrl,

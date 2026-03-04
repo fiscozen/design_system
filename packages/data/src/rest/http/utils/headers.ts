@@ -1,6 +1,37 @@
 import { state } from "../setup/state";
 
 /**
+ * Converts any valid `HeadersInit` format to a plain `Record<string, string>`.
+ *
+ * Handles `Headers` instances, `string[][]` tuples, and plain objects.
+ * Needed because `RequestInit.headers` accepts all three formats.
+ *
+ * @param headers - Headers in any `HeadersInit`-compatible format
+ * @returns Plain key-value record
+ */
+export const normalizeHeadersInit = (
+  headers: HeadersInit,
+): Record<string, string> => {
+  if (headers instanceof Headers) {
+    const result: Record<string, string> = {};
+    headers.forEach((value, key) => {
+      result[key] = value;
+    });
+    return result;
+  }
+
+  if (Array.isArray(headers)) {
+    const result: Record<string, string> = {};
+    for (const [key, value] of headers) {
+      result[key] = value;
+    }
+    return result;
+  }
+
+  return { ...headers };
+};
+
+/**
  * Merges global default headers with per-request headers.
  *
  * Per-request keys set to `undefined` remove the corresponding default header.
