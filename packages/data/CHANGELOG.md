@@ -1,5 +1,11 @@
 # @fiscozen/data
 
+## 0.2.2
+
+### Patch Changes
+
+- 98de9d5: Fix default headers and handle per-request headers
+
 ## 0.2.1
 
 ### Patch Changes
