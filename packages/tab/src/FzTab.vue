@@ -6,6 +6,8 @@
 import { inject, onMounted, Ref, computed, onBeforeUnmount } from "vue";
 import { FzTabProps } from "./types";
 
+defineOptions({ _isFzTab: true });
+
 const props = defineProps<FzTabProps>();
 
 const selectedTab = inject<Ref<string>>("selectedTab");

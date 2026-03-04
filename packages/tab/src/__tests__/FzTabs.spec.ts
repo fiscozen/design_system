@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { h } from "vue";
+import { defineComponent, h } from "vue";
 import { FzTab, FzTabs } from "..";
 import { FzTabProps, FzTabsProps } from "../types";
 
@@ -929,6 +929,37 @@ describe("FzTabs", () => {
 
       const container = wrapper.find(".tab-container");
       expect(container.classes()).toContain("flex-row");
+    });
+  });
+
+  // ============================================
+  // TAB IDENTIFICATION (marker-based)
+  // ============================================
+  describe("Tab identification", () => {
+    it("should have _isFzTab marker on FzTab component", () => {
+      expect((FzTab as any)._isFzTab).toBe(true);
+    });
+
+    it("should not render non-FzTab components as tabs", async () => {
+      const FakeTab = defineComponent({
+        props: { title: String },
+        template: "<div>Fake</div>",
+      });
+
+      const wrapper = mount(FzTabs, {
+        props: { isDebug: true } as FzTabsProps,
+        slots: {
+          default: () => [
+            h(FzTab, { title: "real" }, "Real content"),
+            h(FakeTab, { title: "fake" }, "Fake content"),
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      const buttons = wrapper.findAll("button[title]");
+      expect(buttons).toHaveLength(1);
+      expect(buttons[0].attributes("title")).toBe("real");
     });
   });
 
