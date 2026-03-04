@@ -6,7 +6,6 @@
     v-bind="mappedProps"
     :text-input="stableTextInput"
     :ui="{ menu: calendarClassName }"
-    @date-update="handleDateUpdate"
     @update:model-value="
       (e: any) =>
         $emit(
@@ -196,7 +195,7 @@ import { FzIconButton, FzButton } from "@fiscozen/button";
 import { FzInput, FzInputProps } from "@fiscozen/input";
 import { FzDivider } from "@fiscozen/divider";
 import { it } from "date-fns/locale";
-import { format, parse } from "date-fns";
+import { format } from "date-fns";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = withDefaults(defineProps<FzDatepickerProps>(), {
@@ -347,24 +346,6 @@ const floatingKey = computed(() => {
   return f ? JSON.stringify(f) : "default";
 });
 
-const handleDateUpdate = (e: string | Date) => {
-  let res: string | Date = e;
-  const effectiveInput = stableFormats.value?.input;
-  const formatStr = typeof effectiveInput === "string" ? effectiveInput : props.format;
-  if (props.modelType === "iso" && e instanceof Date) {
-    res = e.toISOString();
-  } else if (typeof e === "string" && typeof formatStr === "string") {
-    res = parse(e, formatStr, new Date());
-    if (props.modelType === "iso") {
-      res = res.toISOString();
-    }
-    // TODO handle custom props.format functions
-  } else if (typeof props.modelType === "string") {
-    res = format(e as Date, props.modelType);
-  }
-  emit("update:model-value", res);
-};
-
 const emit = defineEmits([
   "update:model-value",
   "text-submit",
@@ -384,7 +365,6 @@ const emit = defineEmits([
   "am-pm-change",
   "range-start",
   "range-end",
-  "date-update",
   "invalid-date",
   "overlay-toggle",
 ]);
@@ -430,11 +410,7 @@ const handlePaste = (
   e: ClipboardEvent,
   value: string
 ) => {
-  e.stopPropagation();
-  e.preventDefault();
-  const rawPastedText = e.clipboardData?.getData("text/plain");
-  //@ts-ignore
-  handleDateUpdate(rawPastedText);
+  onPaste(e);
   nextTick(() => {
     closeMenu();
   });
