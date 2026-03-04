@@ -40,8 +40,14 @@ import { computed, ref, onMounted, provide, useSlots, watch, VNode } from "vue";
 import { FzTabsProps, FzTabProps, FzTabStyle } from "./types";
 import FzTabPicker from "./components/FzTabPicker.vue";
 import FzTabButton from "./components/FzTabButton.vue";
-import FzTab from "./FzTab.vue";
 import { debugWarn, mapSizeToEnvironment } from "./common";
+
+/**
+ * Identifies FzTab vnodes via marker instead of reference identity.
+ * Avoids module deduplication issues when the package is excluded from Vite's optimizeDeps.
+ */
+const isFzTab = (vnode: VNode): boolean =>
+  (vnode.type as any)?._isFzTab === true;
 
 const props = withDefaults(defineProps<FzTabsProps>(), {
   vertical: false,
@@ -64,17 +70,17 @@ const tabs = computed(() => {
   return slots
     .default()
     .filter((tab) => {
-      return tab.type === FzTab || typeof tab.type === "symbol";
+      return isFzTab(tab) || typeof tab.type === "symbol";
     })
     .map((tab) => {
-      if (tab.type === FzTab) return tab.props as FzTabProps;
+      if (isFzTab(tab)) return tab.props as FzTabProps;
 
       if (typeof tab.type === "symbol") {
         const children = tab.children as VNode[] | "v-if";
         if (!children || children === "v-if") return null;
 
         return children
-          .filter((child) => child.type === FzTab)
+          .filter((child) => isFzTab(child))
           .map((child) => child.props as FzTabProps);
       }
     })
