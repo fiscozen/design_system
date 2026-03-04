@@ -1,0 +1,200 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Navigation/FzPagination" />
+
+# FzPagination
+
+Page-based navigation control for paginated data sets. Provides intuitive page navigation with support for two-way binding, configurable labels, ellipsis handling, and responsive behavior.
+
+## Features
+
+- Two-way binding via v-model:currentPage for current page
+- Configurable total number of pages
+- Responsive layout (icon-only prev/next on mobile)
+- Accessible navigation with semantic HTML and ARIA attributes
+- Frontoffice and backoffice environment support
+
+## Installation
+
+```bash
+npm install @fiscozen/pagination
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzPagination } from '@fiscozen/pagination'
+import { ref } from 'vue'
+
+const currentPage = ref(1)
+</script>
+
+<template>
+  <FzPagination v-model:currentPage="currentPage" :total-pages="10" />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>currentPage</code></td>
+      <td><code>number</code></td>
+      <td><code>0</code></td>
+      <td>Currently active page (v-model:currentPage)</td>
+    </tr>
+    <tr>
+      <td><code>totalPages</code></td>
+      <td><code>number</code></td>
+      <td><code>0</code></td>
+      <td>Total number of pages available. Component is hidden when &lt;= 1</td>
+    </tr>
+    <tr>
+      <td><code>environment</code></td>
+      <td><code>'frontoffice' | 'backoffice'</code></td>
+      <td><code>'frontoffice'</code></td>
+      <td>Visual environment passed to inner buttons for styling</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Backoffice Environment
+
+```vue
+<template>
+  <FzPagination
+    v-model:currentPage="currentPage"
+    :total-pages="10"
+    environment="backoffice"
+  />
+</template>
+```
+
+## Custom UI with usePagination
+
+If you need a fully custom pagination UI but want to reuse the page calculation logic (clamping, ellipsis, anchors, prev/next), import the `usePagination` composable directly. It returns a reactive list of `PaginationItem` objects that you can render however you like.
+
+```vue
+<script setup>
+import { usePagination } from '@fiscozen/pagination'
+import { ref } from 'vue'
+
+const currentPage = ref(1)
+const totalPages = 20
+
+const { items } = usePagination(currentPage, totalPages, {
+  firstPage: { show: true },
+  lastPage: { show: true },
+  prev: { label: 'Prev' },
+  next: { label: 'Next' }
+})
+
+const goToPage = (page) => {
+  currentPage.value = page
+}
+</script>
+
+<template>
+    <nav aria-label="Paginazione">
+    <ul class="flex gap-2">
+      <li v-for="(item, i) in items" :key="`${item.type}-${item.value}-${i}`">
+        <span v-if="item.type === 'ellipsis'" class="px-2">...</span>
+        <button
+          v-else
+          :disabled="item.disabled"
+          :aria-current="item.current ? 'page' : undefined"
+          class="px-3 py-1 rounded"
+          :class="item.current ? 'bg-blue-500 text-white' : 'bg-gray-100'"
+          @click="goToPage(item.value)"
+        >
+          {{ item.label }}
+        </button>
+      </li>
+    </ul>
+  </nav>
+</template>
+```
+
+Each `PaginationItem` exposes:
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>type</code></td>
+      <td><code>'prev' | 'next' | 'ellipsis' | 'firstPage' | 'lastPage' | 'page'</code></td>
+      <td>Kind of item. Use it to choose how to render each element (button, icon, separator, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>value</code></td>
+      <td><code>number</code></td>
+      <td>Page number to navigate to on click</td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td>Display text (page number, or prev/next label)</td>
+    </tr>
+    <tr>
+      <td><code>current</code></td>
+      <td><code>boolean</code></td>
+      <td>Whether this item represents the currently active page</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td>Whether the item should be non-interactive (prev on first page, next on last, ellipsis)</td>
+    </tr>
+  </tbody>
+</table>
+
+The composable accepts `PaginationOptions` to control ellipsis, anchors, and prev/next visibility independently from the UI.
+
+## Events
+
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Payload</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>update:currentPage</code></td>
+      <td><code>number</code></td>
+      <td>Emitted when user navigates to a different page</td>
+    </tr>
+  </tbody>
+</table>
+
+## Accessibility
+
+- Uses semantic `nav` element with `aria-label="Paginazione"`
+- Keyboard navigable controls (Tab, Enter, Space)
+- Disabled state on prev/next buttons at boundaries
+- Screen reader compatible button labels
+
+## Best Practices
+
+- Always bind `v-model:currentPage` to a reactive `ref` for two-way page tracking
+- The component hides itself when `totalPages` is 1 or less

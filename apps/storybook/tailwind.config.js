@@ -21,6 +21,7 @@ export default {
     './node_modules/@fiscozen/container/src/**/*.{html,js,ts,vue}',
     './node_modules/@fiscozen/action/src/**/*.{html,js,ts,vue}',
     './node_modules/@fiscozen/tab/src/**/*.{html,js,ts,vue}',
-    './node_modules/@fiscozen/chat-container/src/**/*.{html,js,ts,vue}'
+    './node_modules/@fiscozen/chat-container/src/**/*.{html,js,ts,vue}',
+    './node_modules/@fiscozen/pagination/src/**/*.{html,js,ts,vue}'
   ]
 }
