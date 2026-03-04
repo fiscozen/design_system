@@ -201,8 +201,11 @@ const gridTemplateStyle = computed(() => {
   if (props.actions) {
     res = `${res} min-content`;
   }
-  if (props.selectable || props.variant === "radio" || props.variant === "accordion") {
+  if (props.selectable || props.variant === "radio") {
     res = `min-content ${res}`;
+  }
+  if (props.variant === "accordion") {
+    res = `40px ${res}`;
   }
   return res;
 });
@@ -533,14 +536,14 @@ onUnmounted(() => {
           <FzRow :id="index" :columns="columns" :data="row"
             :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions" :isList="['radio', 'list'].includes(variant)"
             :hasRadio="props.variant === 'radio'" :selectable="props.selectable" :selected="isSelected(row.id || index)"
-            :isOverflowing :leftColIconClass="openRowIds.has(index) ? 'text-blue-500' : ''"
-            :leftColIcon="openRowIds.has(index) ? 'angle-up' : 'angle-right'" :actionDisabled="props.actionsDisabled"
+            :isOverflowing :showLeftCol="true" :leftColIconClass="row.subRows?.length && openRowIds.has(row.id || index) ? 'text-blue-500' : ''"
+            :leftColIcon="row.subRows?.length ? (openRowIds.has(row.id || index) ? 'angle-up' : 'angle-right') : undefined" :actionsDisabled="props.actionsDisabled"
             @fztable:rowactionclick="(...args) =>
               emit('fztable:rowactionclick', ...args)" @update:selected="toggleRowSelection(row.id || index)"
-            @click="toggleSubRow(row.id || index)" />
+            @click="row.subRows?.length && toggleSubRow(row.id || index)" />
           <template v-for="(subrow, subindex) in row.subRows" v-if="openRowIds.has(row.id || index)" :key="subindex">
             <FzRow :id="subindex" :columns="columns" :data="subrow"
-              :actions="typeof props.actions === 'function' ? props.actions(row) : props.actions"
+              :actions="typeof props.actions === 'function' ? props.actions(subrow) : props.actions"
               :isOverflowing :actionsDisabled="props.actionsDisabled" leftColIcon="circle" leftColIconSize="xs"
               leftColIconClass="text-blue-500" rowClass="subrow-grey" @fztable:rowactionclick="(...args) =>
                 emit('fztable:rowactionclick', ...args)" />

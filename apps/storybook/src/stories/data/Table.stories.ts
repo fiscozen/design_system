@@ -782,12 +782,22 @@ const Selectable: Story = {
 
 const Accordion: Story = {
   args: {
-    modelValue: Array(10)
-      .fill({})
-      .map(() => ({
+    modelValue: [
+      ...Array(10)
+        .fill({})
+        .map((_, index) => ({
+          ...sampleObj,
+          id: index,
+          subRows: Array(5).fill({}).map(() => sampleObj)
+        })),
+      {
         ...sampleObj,
-        subRows: Array(5).fill({}).map(() => sampleObj)
-      })),
+        id: 'no-subrows',
+        nome: 'No SubRows',
+        cognome: 'Row',
+        subRows: []
+      }
+    ],
     actionLabel: '',
     actions: {
       items
@@ -817,7 +827,35 @@ const Accordion: Story = {
         </FzTable>
       </div>
     `
-  })
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify row without subRows has no expand icon but still has aligned cells', async () => {
+      const noSubRowsCell = canvas.getByText('No SubRows')
+      const rowDiv = noSubRowsCell.closest('.grid')
+      await expect(rowDiv).not.toBeNull()
+      if (rowDiv) {
+        const icons = rowDiv.querySelectorAll('svg[data-icon="angle-right"], svg[data-icon="angle-up"]')
+        await expect(icons.length).toBe(0)
+
+        const cells = rowDiv.querySelectorAll('[role="cell"]')
+        const firstRow = canvas.getAllByText('Riccardo')[0]
+        const firstRowDiv = firstRow.closest('.grid')
+        const firstRowCells = firstRowDiv!.querySelectorAll('[role="cell"]')
+        await expect(cells.length).toBe(firstRowCells.length)
+      }
+    })
+
+    await step('Verify row with subRows has expand icon', async () => {
+      const firstRow = canvas.getAllByText('Riccardo')[0]
+      const rowDiv = firstRow.closest('.grid')
+      if (rowDiv) {
+        const icon = rowDiv.querySelector('svg[data-icon="angle-right"]')
+        await expect(icon).not.toBeNull()
+      }
+    })
+  }
 }
 
 const FullScreen: Story = {

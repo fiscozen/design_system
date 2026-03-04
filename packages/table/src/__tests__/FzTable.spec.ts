@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h } from 'vue'
-import { FzTable } from '..'
+import { FzTable, FzRow } from '..'
 import { FzColumn } from '@fiscozen/simple-table'
 import { FzOrdering } from '../types'
 
@@ -565,6 +565,237 @@ describe('FzTable', () => {
       await wrapper.vm.$nextTick()
       const headers = wrapper.findAll('[role="columnheader"]')
       expect(headers.length).toBeGreaterThan(0)
+    })
+  })
+
+  // ============================================
+  // ACCORDION VARIANT TESTS
+  // ============================================
+  describe('Accordion variant', () => {
+    const accordionData = [
+      {
+        id: 'row-alpha',
+        name: 'Parent 1',
+        email: 'parent1@example.com',
+        subRows: [
+          { id: 'sub-1', name: 'Sub 1', email: 'sub1@example.com' },
+          { id: 'sub-2', name: 'Sub 2', email: 'sub2@example.com' },
+        ],
+      },
+      {
+        id: 'row-beta',
+        name: 'Parent 2',
+        email: 'parent2@example.com',
+        subRows: [
+          { id: 'sub-3', name: 'Sub 3', email: 'sub3@example.com' },
+        ],
+      },
+      {
+        id: 'row-gamma',
+        name: 'No SubRows',
+        email: 'nosub@example.com',
+        subRows: [],
+      },
+    ]
+
+    describe('leftColIcon reflects open state using row.id', () => {
+      it('should show angle-up icon when an accordion row with a string id is opened', async () => {
+        const wrapper = createWrapper({
+          modelValue: accordionData,
+          variant: 'accordion',
+        })
+        await wrapper.vm.$nextTick()
+
+        const rows = wrapper.findAllComponents(FzRow)
+        const parentRow = rows[0]
+
+        expect(parentRow.props('leftColIcon')).toBe('angle-right')
+
+        await parentRow.find('div').trigger('click')
+        await wrapper.vm.$nextTick()
+
+        const rowsAfterClick = wrapper.findAllComponents(FzRow)
+        const parentRowAfterClick = rowsAfterClick[0]
+        expect(parentRowAfterClick.props('leftColIcon')).toBe('angle-up')
+      })
+
+      it('should apply text-blue-500 class to leftColIconClass when row with id is open', async () => {
+        const wrapper = createWrapper({
+          modelValue: accordionData,
+          variant: 'accordion',
+        })
+        await wrapper.vm.$nextTick()
+
+        const rows = wrapper.findAllComponents(FzRow)
+        const parentRow = rows[0]
+
+        expect(parentRow.props('leftColIconClass')).toBe('')
+
+        await parentRow.find('div').trigger('click')
+        await wrapper.vm.$nextTick()
+
+        const rowsAfterClick = wrapper.findAllComponents(FzRow)
+        const parentRowAfterClick = rowsAfterClick[0]
+        expect(parentRowAfterClick.props('leftColIconClass')).toBe('text-blue-500')
+      })
+    })
+
+    describe('rows without subRows', () => {
+      it('should not show leftColIcon for rows with empty subRows', async () => {
+        const wrapper = createWrapper({
+          modelValue: accordionData,
+          variant: 'accordion',
+        })
+        await wrapper.vm.$nextTick()
+
+        const rows = wrapper.findAllComponents(FzRow)
+        const noSubRowsRow = rows[rows.length - 1]
+        expect(noSubRowsRow.props('leftColIcon')).toBeUndefined()
+      })
+
+      it('should pass showLeftCol to all accordion parent rows', async () => {
+        const wrapper = createWrapper({
+          modelValue: accordionData,
+          variant: 'accordion',
+        })
+        await wrapper.vm.$nextTick()
+
+        const rows = wrapper.findAllComponents(FzRow)
+        rows.forEach(row => {
+          expect(row.props('showLeftCol')).toBe(true)
+        })
+      })
+
+      it('should render left cell for rows without subRows to maintain column alignment', async () => {
+        const wrapper = createWrapper({
+          modelValue: accordionData,
+          variant: 'accordion',
+        })
+        await wrapper.vm.$nextTick()
+
+        const rows = wrapper.findAllComponents(FzRow)
+        const parentWithSubRows = rows[0]
+        const noSubRowsRow = rows[rows.length - 1]
+
+        const parentCells = parentWithSubRows.findAll('[role="cell"]')
+        const noSubRowsCells = noSubRowsRow.findAll('[role="cell"]')
+        expect(noSubRowsCells.length).toBe(parentCells.length)
+      })
+
+      it('should not apply leftColIconClass for rows without subRows', async () => {
+        const wrapper = createWrapper({
+          modelValue: accordionData,
+          variant: 'accordion',
+        })
+        await wrapper.vm.$nextTick()
+
+        const rows = wrapper.findAllComponents(FzRow)
+        const noSubRowsRow = rows[rows.length - 1]
+        expect(noSubRowsRow.props('leftColIconClass')).toBe('')
+      })
+
+      it('should not expand when clicking a row without subRows', async () => {
+        const wrapper = createWrapper({
+          modelValue: accordionData,
+          variant: 'accordion',
+        })
+        await wrapper.vm.$nextTick()
+
+        const rowsBefore = wrapper.findAllComponents(FzRow)
+        const countBefore = rowsBefore.length
+        const noSubRowsRow = rowsBefore[rowsBefore.length - 1]
+
+        await noSubRowsRow.find('div').trigger('click')
+        await wrapper.vm.$nextTick()
+
+        const rowsAfter = wrapper.findAllComponents(FzRow)
+        expect(rowsAfter.length).toBe(countBefore)
+      })
+
+      it('should still show leftColIcon for rows that have subRows', async () => {
+        const wrapper = createWrapper({
+          modelValue: accordionData,
+          variant: 'accordion',
+        })
+        await wrapper.vm.$nextTick()
+
+        const rows = wrapper.findAllComponents(FzRow)
+        expect(rows[0].props('leftColIcon')).toBe('angle-right')
+        expect(rows[1].props('leftColIcon')).toBe('angle-right')
+      })
+    })
+
+    describe('subrow actions receive subrow data', () => {
+      it('should pass subrow data (not parent row) to actions function for subrows', async () => {
+        const actionsFn = vi.fn((rowData: any) => ({
+          items: [{ label: `Action for ${rowData.name}` }],
+        }))
+
+        const wrapper = createWrapper({
+          modelValue: accordionData,
+          variant: 'accordion',
+          actions: actionsFn,
+        })
+        await wrapper.vm.$nextTick()
+
+        // Click parent row to expand subrows
+        const rows = wrapper.findAllComponents(FzRow)
+        await rows[0].find('div').trigger('click')
+        await wrapper.vm.$nextTick()
+
+        const allRows = wrapper.findAllComponents(FzRow)
+        // After expanding first parent: parent1, sub1, sub2, parent2, noSubRows
+        expect(allRows.length).toBe(5)
+
+        const subRow1 = allRows[1]
+        const subRow1Actions = subRow1.props('actions')
+        // FzTable evaluates the actions function and passes the resolved result as a prop.
+        // For subrows, it should have been called with the subrow data, not the parent row.
+        if (typeof subRow1Actions === 'function') {
+          const result = subRow1Actions(accordionData[0].subRows[0])
+          expect(result.items[0].label).toBe('Action for Sub 1')
+        } else {
+          expect(subRow1Actions.items[0].label).toBe('Action for Sub 1')
+        }
+      })
+
+      it('should resolve different actions for each subrow when using a function', async () => {
+        const actionsFn = vi.fn((rowData: any) => ({
+          items: [{ label: `Edit ${rowData.name}` }],
+        }))
+
+        const wrapper = createWrapper({
+          modelValue: accordionData,
+          variant: 'accordion',
+          actions: actionsFn,
+        })
+        await wrapper.vm.$nextTick()
+
+        // Expand first parent
+        const rows = wrapper.findAllComponents(FzRow)
+        await rows[0].find('div').trigger('click')
+        await wrapper.vm.$nextTick()
+
+        const allRows = wrapper.findAllComponents(FzRow)
+        // parent1, sub1, sub2, parent2, noSubRows
+        expect(allRows.length).toBe(5)
+
+        const subRow1 = allRows[1]
+        const subRow2 = allRows[2]
+
+        const sub1Actions = subRow1.props('actions')
+        const sub2Actions = subRow2.props('actions')
+
+        if (typeof sub1Actions !== 'function' && typeof sub2Actions !== 'function') {
+          expect(sub1Actions.items[0].label).toBe('Edit Sub 1')
+          expect(sub2Actions.items[0].label).toBe('Edit Sub 2')
+        } else {
+          const r1 = typeof sub1Actions === 'function' ? sub1Actions(accordionData[0].subRows[0]) : sub1Actions
+          const r2 = typeof sub2Actions === 'function' ? sub2Actions(accordionData[0].subRows[1]) : sub2Actions
+          expect(r1.items[0].label).toBe('Edit Sub 1')
+          expect(r2.items[0].label).toBe('Edit Sub 2')
+        }
+      })
     })
   })
 

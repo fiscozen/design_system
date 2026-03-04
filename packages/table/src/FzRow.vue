@@ -33,18 +33,15 @@ const handleClick = (event: MouseEvent) => {
   <slot :columns :data :actions>
     <div class="grid grid-cols-subgrid border-b-1 border-solid border-grey-100 col-span-full" :style="colSpan" @mouseover="hover = true" @mouseleave="hover = false"
       @click="handleClick">
-      <div v-if="leftColIcon" role="cell" :class="[
-        'w-[40px]',
+      <div v-if="leftColIcon || showLeftCol" role="cell" :class="[
         bodyStaticClasses,
         '!px-0',
-        'self-center',
-        'justify-self-center',
-        'flex',
+        '!items-center',
         'justify-center',
         rowClass,
         { 'bg-core-white': !hover, '!bg-background-alice-blue': hover },
       ]">
-        <FzIcon :name="leftColIcon" :class="leftColIconClass" variant="fas" :size="leftColIconSize || 'md'" />
+        <FzIcon v-if="leftColIcon" :name="leftColIcon" :class="leftColIconClass" variant="fas" :size="leftColIconSize || 'md'" />
       </div>
       <div v-if="props.selectable" role="cell" :class="[
         'w-[36px]',

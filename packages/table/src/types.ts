@@ -164,6 +164,11 @@ type FzRowProps<T> = {
    */
   colSpan?: Record<string, string>;
   /**
+   * Whether to always render the left column cell (even without an icon),
+   * keeping cells aligned in accordion rows that have no subRows.
+   */
+  showLeftCol?: boolean;
+  /**
    * icon to show in a leftmost dedicated column
    */
   leftColIcon?: string;
