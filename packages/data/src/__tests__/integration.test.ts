@@ -1264,6 +1264,75 @@ describe("Integration Tests", () => {
       expect(capturedHeaders[1]["Content-Type"]).toBe("application/json");
     });
 
+    it("should handle Headers instance in fetchOptions.headers", async () => {
+      const headersInstance = new Headers();
+      headersInstance.set("X-Realm", "frontoffice");
+      headersInstance.set("X-App", "web");
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        fetchOptions: {
+          headers: headersInstance,
+        },
+      });
+
+      let capturedHeaders: HeadersInit | undefined;
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        capturedHeaders = init?.headers;
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test");
+      await execute();
+
+      expect(capturedHeaders).toBeDefined();
+      const headersObj =
+        capturedHeaders instanceof Headers
+          ? Object.fromEntries(capturedHeaders.entries())
+          : (capturedHeaders as Record<string, string>) ?? {};
+      expect(headersObj["x-realm"]).toBe("frontoffice");
+      expect(headersObj["x-app"]).toBe("web");
+    });
+
+    it("should handle string[][] tuples in fetchOptions.headers", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        fetchOptions: {
+          headers: [
+            ["X-Realm", "frontoffice"],
+            ["X-App", "web"],
+          ],
+        },
+      });
+
+      let capturedHeaders: HeadersInit | undefined;
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        capturedHeaders = init?.headers;
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test");
+      await execute();
+
+      expect(capturedHeaders).toBeDefined();
+      const headersObj =
+        capturedHeaders instanceof Headers
+          ? Object.fromEntries(capturedHeaders.entries())
+          : (capturedHeaders as Record<string, string>) ?? {};
+      expect(headersObj["X-Realm"]).toBe("frontoffice");
+      expect(headersObj["X-App"]).toBe("web");
+    });
+
     it("should pass non-header fetchOptions (like credentials) to createFetch", async () => {
       let capturedCredentials: RequestCredentials | undefined;
       global.fetch = vi.fn((_url: string, init?: RequestInit) => {
