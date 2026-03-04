@@ -23,7 +23,17 @@ export interface SetupFzFetcherOptions {
   options?: UseFzFetchOptions;
 
   /**
-   * Options for the fetch request
+   * Default options for every fetch request (credentials, mode, headers, etc.).
+   *
+   * Headers defined here are merged with per-request headers. Per-request values
+   * override defaults for the same key; setting a key to `undefined` removes
+   * the default header for that request.
+   *
+   * @example
+   * fetchOptions: {
+   *   credentials: 'include',
+   *   headers: { 'X-Realm': 'frontoffice' }
+   * }
    */
   fetchOptions?: RequestInit;
 

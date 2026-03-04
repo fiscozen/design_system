@@ -2,6 +2,7 @@ import { toValue, nextTick, type MaybeRefOrGetter } from "vue";
 import type { UseFzFetchReturn, UseFzFetchOptions } from "../../types";
 import { state } from "../../setup/state";
 import { injectCsrfToken } from "../../utils/csrf";
+import { mergeHeaders } from "../../utils/headers";
 import { handleFetchError } from "../../utils/error";
 import { wrapWithDeduplication } from "../deduplication/wrapper";
 import {
@@ -72,7 +73,7 @@ export const wrapWithParamsResolver = <T>(
           : requestInit.body;
       headersValue =
         headersGetter !== undefined
-          ? injectCsrfToken(method, toValue(headersGetter) ?? {})
+          ? injectCsrfToken(method, mergeHeaders(toValue(headersGetter) ?? {}))
           : requestInit.headers;
 
       requestInitForThisCall = {

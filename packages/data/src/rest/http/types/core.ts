@@ -60,8 +60,8 @@ export interface UseFzFetchParams {
   queryParams?: MaybeRefOrGetter<Record<string, string | number | boolean | null>>;
   /** Request body. Reactive: re-evaluated on each execute(). */
   body?: MaybeRefOrGetter<BodyInit | null>;
-  /** Request headers. Reactive: re-evaluated on each execute(). */
-  headers?: MaybeRefOrGetter<Record<string, string>>;
+  /** Request headers. Reactive: re-evaluated on each execute(). Set a key to undefined to remove a default header from setup. */
+  headers?: MaybeRefOrGetter<Record<string, string | undefined>>;
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS";
 }
 
