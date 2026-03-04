@@ -1,5 +1,11 @@
 # @fiscozen/tab
 
+## 3.0.1
+
+### Patch Changes
+
+- 51aba38: Fix FzTab componenent identification
+
 ## 3.0.0
 
 ### Patch Changes
