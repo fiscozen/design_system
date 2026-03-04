@@ -12,7 +12,7 @@ Complete guide for using the `@fiscozen/data` package in your Vue 3 application.
 
 1. [Introduction](#introduction)
 2. [Installation](#installation)
-3. [Setup](#setup)
+3. [Setup](#setup) (includes Interceptors, Deduplication, Default Headers)
 4. [API Quick Reference](#api-quick-reference)
 5. [Usage Pattern](#usage-pattern)
 6. [Custom Actions & Merge Helpers](#custom-actions--merge-helpers)
@@ -131,7 +131,10 @@ setupFzFetcher({
   // Default Fetch Options (optional)
   fetchOptions: {
     credentials: 'include',
-    mode: 'cors'
+    mode: 'cors',
+    headers: {
+      'X-Realm': 'frontoffice'
+    }
   }
 })
 ```
@@ -231,7 +234,7 @@ setupFzFetcher({
       <td><code>RequestInit</code></td>
       <td>No</td>
       <td>-</td>
-      <td>Default options for fetch requests</td>
+      <td>Default options for every fetch request (credentials, mode, headers, etc.). Headers defined here are merged with per-request headers; per-request values override defaults. Set a header to <code>undefined</code> per-request to remove it.</td>
     </tr>
   </tbody>
 </table>
@@ -329,6 +332,71 @@ const { data } = useListUsers(
   { filters: { enabled: true } },
   { deduplication: true } // Enable for this action (overrides global)
 )
+```
+
+### Default Headers
+
+Headers configured in `fetchOptions.headers` are automatically included in every request and merged with per-request headers.
+
+**Setting default headers:**
+
+```typescript
+setupFzFetcher({
+  baseUrl: 'https://api.example.com/v1',
+  fetchOptions: {
+    headers: {
+      'X-Realm': 'frontoffice',
+      'X-App': 'web'
+    }
+  }
+})
+```
+
+**Merging behavior:** Per-request headers are merged with setup headers. When both define the same key, the per-request value wins.
+
+```typescript
+// Setup defines X-Realm: 'frontoffice'
+const { execute } = useFzFetch<User>('/users', {
+  method: 'POST',
+  body: null,
+  headers: {
+    'Content-Type': 'application/json',  // added
+    'X-Realm': 'backoffice'              // overrides setup default
+  }
+}, { immediate: false })
+// Final headers: X-Realm: 'backoffice', X-App: 'web', Content-Type: 'application/json'
+```
+
+**Removing a default header:** Set the header value to `undefined` in per-request headers to exclude it from that request.
+
+```typescript
+// Setup defines X-Realm: 'frontoffice' and X-App: 'web'
+const { execute } = useFzFetch<User>('/users', {
+  headers: { 'X-Realm': undefined }   // removes X-Realm for this request only
+})
+// Final headers: X-App: 'web' (X-Realm excluded)
+```
+
+This also works with reactive headers:
+
+```typescript
+const headers = ref<Record<string, string | undefined>>({
+  'X-Realm': undefined
+})
+
+const { execute } = useFzFetch<User>('/users', {
+  method: 'POST',
+  body: null,
+  headers
+}, { immediate: false })
+
+// First call: X-Realm removed
+await execute()
+
+// Change headers: X-Realm restored, Content-Type added
+headers.value = { 'Content-Type': 'application/json' }
+await execute()
+// Final headers: X-Realm: 'frontoffice', X-App: 'web', Content-Type: 'application/json'
 ```
 
 ---

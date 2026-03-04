@@ -8,6 +8,7 @@ import { toValue, isRef, type MaybeRefOrGetter, computed } from "vue";
 import { state } from "./setup/state";
 import { getUrlWithQueryParams, applyTrailingSlash } from "./utils/url";
 import { injectCsrfToken } from "./utils/csrf";
+import { mergeHeaders } from "./utils/headers";
 import { normalizeUseFzFetchOptions } from "./utils/options";
 import { DEFAULT_HTTP_METHOD } from "./common";
 import { WrapperChain } from "./wrappers/chain";
@@ -223,7 +224,7 @@ export const useFzFetch: UseFzFetch = <T>(
         params?.body !== undefined ? toValue(params.body) : undefined,
       headers: injectCsrfToken(
         method,
-        params?.headers !== undefined ? toValue(params.headers ?? {}) : {},
+        mergeHeaders(params?.headers !== undefined ? toValue(params.headers ?? {}) : {}),
       ),
     };
 
@@ -267,7 +268,7 @@ export const useFzFetch: UseFzFetch = <T>(
         body: params.body !== undefined ? toValue(params.body) : undefined,
         headers: injectCsrfToken(
           method,
-          params.headers !== undefined ? toValue(params.headers ?? {}) : {},
+          mergeHeaders(params.headers !== undefined ? toValue(params.headers ?? {}) : {}),
         ),
       };
 
@@ -299,7 +300,7 @@ export const useFzFetch: UseFzFetch = <T>(
       const method = DEFAULT_HTTP_METHOD;
       const requestInit = {
         method,
-        headers: injectCsrfToken(method, {}),
+        headers: injectCsrfToken(method, mergeHeaders()),
       };
 
       return createFetchResult<T>(
@@ -320,7 +321,7 @@ export const useFzFetch: UseFzFetch = <T>(
   const method = DEFAULT_HTTP_METHOD;
   const requestInit = {
     method,
-    headers: injectCsrfToken(method, {}),
+    headers: injectCsrfToken(method, mergeHeaders()),
   };
 
   return createFetchResult<T>(

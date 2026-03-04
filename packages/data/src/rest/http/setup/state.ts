@@ -21,6 +21,7 @@ export const state = {
   fzFetcher: null as ReturnType<typeof createFetch> | null,
 
   // Configuration state
+  globalDefaultHeaders: null as Record<string, string> | null,
   globalBaseUrl: null as string | null, // Resolved baseUrl for interceptor use
   globalCsrfOptions: null as CsrfOptions | null,
   globalDebug: false,

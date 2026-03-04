@@ -1072,6 +1072,225 @@ describe("Integration Tests", () => {
     });
   });
 
+  describe("Setup fetchOptions", () => {
+    it("should include headers from setupFzFetcher fetchOptions in every request", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        fetchOptions: {
+          headers: {
+            "X-Realm": "frontoffice",
+          },
+        },
+      });
+
+      let capturedHeaders: HeadersInit | undefined;
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        capturedHeaders = init?.headers;
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test");
+      await execute();
+
+      expect(capturedHeaders).toBeDefined();
+      const headersObj =
+        capturedHeaders instanceof Headers
+          ? Object.fromEntries(capturedHeaders.entries())
+          : (capturedHeaders as Record<string, string>) ?? {};
+      expect(headersObj["X-Realm"]).toBe("frontoffice");
+    });
+
+    it("should merge per-request headers with setup fetchOptions headers", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        fetchOptions: {
+          headers: {
+            "X-Realm": "frontoffice",
+          },
+        },
+      });
+
+      let capturedHeaders: HeadersInit | undefined;
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        capturedHeaders = init?.headers;
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test", {
+        headers: { "Content-Type": "application/json" },
+      });
+      await execute();
+
+      expect(capturedHeaders).toBeDefined();
+      const headersObj =
+        capturedHeaders instanceof Headers
+          ? Object.fromEntries(capturedHeaders.entries())
+          : (capturedHeaders as Record<string, string>) ?? {};
+      expect(headersObj["X-Realm"]).toBe("frontoffice");
+      expect(headersObj["Content-Type"]).toBe("application/json");
+    });
+
+    it("should remove a default header when per-request sets it to undefined", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        fetchOptions: {
+          headers: {
+            "X-Realm": "frontoffice",
+            "X-App": "web",
+          },
+        },
+      });
+
+      let capturedHeaders: HeadersInit | undefined;
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        capturedHeaders = init?.headers;
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test", {
+        headers: { "X-Realm": undefined },
+      });
+      await execute();
+
+      expect(capturedHeaders).toBeDefined();
+      const headersObj =
+        capturedHeaders instanceof Headers
+          ? Object.fromEntries(capturedHeaders.entries())
+          : (capturedHeaders as Record<string, string>) ?? {};
+      expect(headersObj["X-Realm"]).toBeUndefined();
+      expect(headersObj["X-App"]).toBe("web");
+    });
+
+    it("should override a default header with per-request value", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        fetchOptions: {
+          headers: {
+            "X-Realm": "frontoffice",
+          },
+        },
+      });
+
+      let capturedHeaders: HeadersInit | undefined;
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        capturedHeaders = init?.headers;
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test", {
+        headers: { "X-Realm": "backoffice" },
+      });
+      await execute();
+
+      expect(capturedHeaders).toBeDefined();
+      const headersObj =
+        capturedHeaders instanceof Headers
+          ? Object.fromEntries(capturedHeaders.entries())
+          : (capturedHeaders as Record<string, string>) ?? {};
+      expect(headersObj["X-Realm"]).toBe("backoffice");
+    });
+
+    it("should remove a default header with reactive headers set to undefined", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        fetchOptions: {
+          headers: {
+            "X-Realm": "frontoffice",
+            "X-App": "web",
+          },
+        },
+      });
+
+      const capturedHeaders: Record<string, string>[] = [];
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        const h = init?.headers;
+        capturedHeaders.push(
+          h instanceof Headers
+            ? Object.fromEntries(h.entries())
+            : (h as Record<string, string>) ?? {},
+        );
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const headersRef = ref<Record<string, string | undefined>>({
+        "X-Realm": undefined,
+      });
+
+      const { execute } = useFzFetch<{ ok: boolean }>(
+        "/test",
+        {
+          method: "POST",
+          body: null,
+          headers: headersRef,
+        },
+        { immediate: false },
+      );
+
+      await execute();
+      expect(capturedHeaders).toHaveLength(1);
+      expect(capturedHeaders[0]["X-Realm"]).toBeUndefined();
+      expect(capturedHeaders[0]["X-App"]).toBe("web");
+
+      headersRef.value = { "Content-Type": "application/json" };
+      await execute();
+      expect(capturedHeaders).toHaveLength(2);
+      expect(capturedHeaders[1]["X-Realm"]).toBe("frontoffice");
+      expect(capturedHeaders[1]["X-App"]).toBe("web");
+      expect(capturedHeaders[1]["Content-Type"]).toBe("application/json");
+    });
+
+    it("should pass non-header fetchOptions (like credentials) to createFetch", async () => {
+      let capturedCredentials: RequestCredentials | undefined;
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        capturedCredentials = init?.credentials;
+        return Promise.resolve(
+          new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        fetchOptions: {
+          credentials: "include",
+          headers: { "X-Realm": "frontoffice" },
+        },
+      });
+
+      const { execute } = useFzFetch<{ ok: boolean }>("/test");
+      await execute();
+
+      expect(capturedCredentials).toBe("include");
+    });
+  });
+
   describe("CSRF Integration", () => {
     it("should inject CSRF token for mutation methods", async () => {
       // Set CSRF cookie

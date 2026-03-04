@@ -103,10 +103,21 @@ export const setupFzFetcher: SetupFzFetcher = (options) => {
     }
   }
 
+  // Extract headers from fetchOptions so we control the merge (supporting undefined to remove).
+  // Other fetchOptions properties (credentials, mode, etc.) are still passed to createFetch.
+  const { headers: setupHeaders, ...fetchOptionsWithoutHeaders } =
+    options.fetchOptions || {};
+  state.globalDefaultHeaders =
+    setupHeaders && typeof setupHeaders === "object" && !(setupHeaders instanceof Headers)
+      ? { ...(setupHeaders as Record<string, string>) }
+      : null;
+
   state.fzFetcher = createFetch({
     baseUrl: options.baseUrl,
-    ...options.options,
-    ...options.fetchOptions,
+    options: options.options,
+    fetchOptions: Object.keys(fetchOptionsWithoutHeaders).length > 0
+      ? fetchOptionsWithoutHeaders
+      : undefined,
   });
 
   if (state.globalDebug) {
@@ -122,6 +133,7 @@ export const resetFzFetcher = () => {
   const wasDebug = state.globalDebug;
 
   state.fzFetcher = null;
+  state.globalDefaultHeaders = null;
   state.globalBaseUrl = null;
   state.globalCsrfOptions = null;
   state.globalDebug = false;

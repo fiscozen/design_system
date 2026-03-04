@@ -13,8 +13,8 @@ export interface WrapperContext {
   method: string;
   /** Request body (reactive; for params resolver and deduplication key) */
   body?: MaybeRefOrGetter<BodyInit | null | undefined>;
-  /** Request headers (reactive; for params resolver) */
-  headers?: MaybeRefOrGetter<Record<string, string> | undefined>;
+  /** Request headers (reactive; for params resolver). undefined values remove setup defaults. */
+  headers?: MaybeRefOrGetter<Record<string, string | undefined> | undefined>;
   /** Optional useFetchOptions */
   useFetchOptions?: UseFzFetchOptions;
 }
