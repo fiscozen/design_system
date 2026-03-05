@@ -32,6 +32,12 @@ const preview: Preview = {
     viewport: {
       options: viewports
     },
+    options: {
+      storySort: {
+        method: 'alphabetical',
+        order: ['Welcome', 'Documentation', 'Foundations', '*'],
+      }
+    },
     layout: 'fullscreen',
     a11y: {
       // Configurazione axe-core
