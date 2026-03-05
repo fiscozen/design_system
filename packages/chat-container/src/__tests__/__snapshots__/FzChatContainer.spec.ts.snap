@@ -51,7 +51,7 @@ exports[`FzChatContainer > Snapshots > should match snapshot - with messages 1`]
     <div data-v-da7f5873="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-xs align-items-end">
       <div data-v-da7f5873="" data-v-5050224a="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-end layout-default">
         <div data-v-5050224a="" class="flex items-center gap-12">
-          <div class="select-none object-cover size-44 rounded-full bg-core-black text-core-white grid place-content-center text-sm" title="John Doe" data-testid="avatar-placeholder">JD</div>
+          <div class="select-none object-cover size-44 min-w-44 min-h-44 rounded-full bg-core-black text-core-white grid place-content-center text-sm" title="John Doe" data-testid="avatar-placeholder">JD</div>
           <!--v-if-->
         </div>
         <div data-v-da7f5873="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch">
