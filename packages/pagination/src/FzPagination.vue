@@ -18,6 +18,26 @@ import { computed } from 'vue'
 import { usePagination } from './usePagination'
 import type { PaginationItem, FzPaginationProps } from './types'
 
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+/** Single source of truth for prev/next so the template stays free of ternaries. */
+const NAV_ICON_MAP: Record<string, { name: string; position: 'before' | 'after'; ariaLabel: string }> = {
+  prev: { name: 'chevron-left', position: 'before', ariaLabel: 'Pagina precedente' },
+  next: { name: 'chevron-right', position: 'after', ariaLabel: 'Pagina successiva' }
+}
+
+const POSITION_CLASS_MAP: Record<string, string> = {
+  start: 'justify-start',
+  center: 'justify-center',
+  end: 'justify-end'
+}
+
+// ---------------------------------------------------------------------------
+// Props & Emits
+// ---------------------------------------------------------------------------
+
 const props = withDefaults(defineProps<FzPaginationProps>(), {
   currentPage: 0,
   environment: 'frontoffice',
@@ -30,6 +50,10 @@ const emit = defineEmits<{
   'update:currentPage': [value: number]
 }>()
 
+// ---------------------------------------------------------------------------
+// Composables
+// ---------------------------------------------------------------------------
+
 const isDesktop = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
 const { items: paginationItems } = usePagination(
@@ -38,10 +62,15 @@ const { items: paginationItems } = usePagination(
   props.options
 )
 
-const NAV_ICON_MAP: Record<string, { name: string; position: 'before' | 'after' }> = {
-  prev: { name: 'chevron-left', position: 'before' },
-  next: { name: 'chevron-right', position: 'after' }
-}
+// ---------------------------------------------------------------------------
+// Computed
+// ---------------------------------------------------------------------------
+
+const justifyClass = computed(() => POSITION_CLASS_MAP[props.position] ?? 'justify-end')
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
 const paginationIcon = (item: PaginationItem) => NAV_ICON_MAP[item.type]?.name
 
@@ -49,44 +78,23 @@ const paginationIconPosition = (item: PaginationItem) => NAV_ICON_MAP[item.type]
 
 const isDisabled = (item: PaginationItem) => item.disabled || item.type === 'ellipsis'
 
-/** Maps `position` prop to the corresponding Tailwind justify utility class for FzContainer. */
-const justifyClass = computed(() => {
-  switch (props.position) {
-    case 'start':
-      return 'justify-start'
-    case 'center':
-      return 'justify-center'
-    case 'end':
-    default:
-      return 'justify-end'
-  }
+/** Mobile prev/next renders as icon-only FzIconButton instead of FzButton with label. */
+const isMobileNav = (item: PaginationItem) =>
+  !isDesktop.value && (item.type === 'prev' || item.type === 'next')
+
+/** `fz-pagination-disable-truncate` triggers a scoped :deep() CSS override on FzButton's internal .truncate. */
+const buttonClasses = (item: PaginationItem) => ({
+  '!min-w-44': true,
+  'flex-1': isMobileNav(item),
+  'justify-start': isMobileNav(item) && item.type === 'prev',
+  'flex': isMobileNav(item) && item.type === 'next',
+  'justify-end': isMobileNav(item) && item.type === 'next',
+  'fz-pagination-disable-truncate': item.current
 })
 
-/**
- * Builds the CSS class array for a pagination item.
- *
- * Applies minimum width, mobile-specific flex layout for prev/next,
- * and a truncate-override marker on the active page button.
- */
-const buttonClasses = (item: PaginationItem) => {
-  const classes = ['!min-w-44']
-
-  if (!isDesktop.value && (item.type === 'prev' || item.type === 'next')) {
-    classes.push('flex-1')
-
-    if (item.type === 'prev') {
-      classes.push('justify-start')
-    } else {
-      classes.push('flex', 'justify-end')
-    }
-  }
-
-  if (item.current) {
-    classes.push('fz-pagination-disable-truncate')
-  }
-
-  return classes
-}
+// ---------------------------------------------------------------------------
+// Event handlers
+// ---------------------------------------------------------------------------
 
 const handlePageClick = (page: number) => {
   emit('update:currentPage', page)
@@ -112,7 +120,7 @@ const handlePageClick = (page: number) => {
         :class="buttonClasses(item)"
       >
         <FzIconButton
-          :ariaLabel="item.type === 'prev' ? 'Pagina precedente' : 'Pagina successiva'"
+          :ariaLabel="NAV_ICON_MAP[item.type]?.ariaLabel"
           :disabled="item.disabled"
           :environment="environment"
           :iconName="paginationIcon(item) ?? ''"
