@@ -143,12 +143,47 @@ describe('usePagination', () => {
             expect(pageItems.length).toBeGreaterThan(0)
         })
 
-        it('hides page numbers when pages.show is false', () => {
-            const { items } = usePagination(3, 10, { pages: { show: false } })
+        it('retains only the current page when pages.show is false', () => {
+            const { items } = usePagination(5, 10, { pages: { show: false } })
             const pageItems = items.value.filter(i =>
                 i.type === 'page' || i.type === 'firstPage' || i.type === 'lastPage'
             )
-            expect(pageItems).toHaveLength(0)
+            expect(pageItems).toHaveLength(1)
+            expect(pageItems[0].value).toBe(5)
+            expect(pageItems[0].current).toBe(true)
+        })
+
+        it('retains current page and anchors when pages.show is false with anchors enabled', () => {
+            const { items } = usePagination(5, 10, {
+                pages: { show: false },
+                firstPage: { show: true },
+                lastPage: { show: true }
+            })
+            const pageItems = items.value.filter(i =>
+                i.type === 'page' || i.type === 'firstPage' || i.type === 'lastPage'
+            )
+            const values = pageItems.map(i => i.value)
+            expect(values).toContain(1)
+            expect(values).toContain(5)
+            expect(values).toContain(10)
+        })
+
+        it('does not duplicate current page when it coincides with first page', () => {
+            const { items } = usePagination(1, 10, { pages: { show: false } })
+            const pageItems = items.value.filter(i =>
+                i.type === 'page' || i.type === 'firstPage' || i.type === 'lastPage'
+            )
+            expect(pageItems).toHaveLength(1)
+            expect(pageItems[0].value).toBe(1)
+        })
+
+        it('does not duplicate current page when it coincides with last page', () => {
+            const { items } = usePagination(10, 10, { pages: { show: false } })
+            const pageItems = items.value.filter(i =>
+                i.type === 'page' || i.type === 'firstPage' || i.type === 'lastPage'
+            )
+            expect(pageItems).toHaveLength(1)
+            expect(pageItems[0].value).toBe(10)
         })
     })
 
