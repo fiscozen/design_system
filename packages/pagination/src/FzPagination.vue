@@ -104,7 +104,9 @@ const handlePageClick = (page: number) => {
     ariaLabel="Paginazione"
   >
     <template v-for="(item, index) in paginationItems" :key="`${item.type}-${item.value}-${index}`">
-      <FzIcon v-if="item.type === 'ellipsis'" name="ellipsis" size="md" aria-hidden="true" />
+      <span v-if="item.type === 'ellipsis'" class="flex min-w-44 items-center justify-center">
+        <FzIcon v-color:grey name="ellipsis" size="md" aria-hidden="true" />
+      </span>
       <span
         v-else-if="!isDesktop && (item.type === 'prev' || item.type === 'next')"
         :class="buttonClasses(item)"
