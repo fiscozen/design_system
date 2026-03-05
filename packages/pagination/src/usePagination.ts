@@ -197,7 +197,7 @@ const stripUnwantedAnchors = (
     });
 };
 
-/** When pages.show is false, strip all page numbers and keep only first/last anchors (if enabled). */
+/** When pages.show is false, keep only the current page and first/last anchors (if enabled) for minimal UIs. */
 const filterByPagesVisibility = (
     tokens: PageToken[],
     options: ResolvedPaginationOptions,
@@ -213,6 +213,9 @@ const filterByPagesVisibility = (
             return true;
         }
         if (typeof token === 'number') {
+            if (token === currentPage) {
+                return true;
+            }
             const keepFirst = options.firstPage.show || currentPage === 1;
             const keepLast = options.lastPage.show || currentPage === totalPages;
             return (token === 1 && keepFirst) || (token === totalPages && keepLast);
