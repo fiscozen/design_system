@@ -19,7 +19,7 @@
     "@fiscozen/style": "workspace:*"
   },
   "peerDependencies": {
-    "@fiscozen/icons": "^workspace:*",
+    "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
   },
