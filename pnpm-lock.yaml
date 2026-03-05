@@ -2287,7 +2287,7 @@ importers:
         specifier: workspace:*
         version: link:../container
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/style':
         specifier: workspace:*
