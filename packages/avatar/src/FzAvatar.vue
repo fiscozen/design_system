@@ -61,8 +61,8 @@ const avatarClasses = computed(() => {
     'select-none',
     'object-cover',
     {
-      'size-32': mappedEnvironment.value === 'backoffice',
-      'size-44': mappedEnvironment.value === 'frontoffice'
+      'size-32 min-w-32 min-h-32': mappedEnvironment.value === 'backoffice',
+      'size-44 min-w-44 min-h-44': mappedEnvironment.value === 'frontoffice'
     }
   ]
 
