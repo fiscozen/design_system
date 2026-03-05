@@ -1,5 +1,12 @@
 # @fiscozen/chat-container
 
+## 2.0.1
+
+### Patch Changes
+
+- Updated dependencies [41a084c]
+  - @fiscozen/avatar@1.0.1
+
 ## 2.0.0
 
 ### Patch Changes
