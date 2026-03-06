@@ -77,12 +77,13 @@ describe("FzViewFlag", () => {
       const wrapper = mount(FzViewFlag);
       const html = wrapper.html();
 
-      // Single border wrapper (border-8, border-semantic-warning, fixed, inset-0, isolate)
+      // Single border wrapper
       expect(html).toContain("border-8");
       expect(html).toContain("border-semantic-warning");
       expect(html).toContain("fixed");
       expect(html).toContain("inset-0");
-      expect(html).toContain("isolate");
+      expect(html).toContain("pointer-events-none");
+      expect(html).toContain("z-50");
       expect(html).toContain("bg-semantic-warning");
     });
 
@@ -101,6 +102,7 @@ describe("FzViewFlag", () => {
       expect(html).toContain("m-auto");
       expect(html).toContain("empty:hidden");
       expect(html).toContain("w-fit");
+      expect(html).toContain("pointer-events-auto");
     });
   });
 
