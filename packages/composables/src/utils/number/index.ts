@@ -1,24 +1,37 @@
 /**
  * Truncates a number to the specified maximum decimal places (without rounding)
  *
- * Uses `toPrecision(12)` on the intermediate multiplication to correct IEEE 754
- * floating-point drift. Without it, `value * factor` can land just below the
- * expected integer, causing `Math.trunc` to drop a unit:
+ * Uses `String(value)` — the shortest decimal that uniquely identifies the
+ * IEEE 754 double — then slices the string to `maxDecimals` places.
+ * This sidesteps both IEEE 754 drift (e.g. `40.3 * 100 → 4029.999…`) and the
+ * significant-digit ceiling that `toPrecision(n)` imposes on large products
+ * (e.g. `10 000 000 000.01 * 100` has 13 significant digits, which
+ * `toPrecision(12)` silently rounds away).
  *
- *   40.3 * 100  → 4029.9999999999995 → Math.trunc → 4029 → 40.29  (wrong)
- *   299.96 * 100 → 29995.999999999996 → Math.trunc → 29995 → 299.95 (wrong)
- *
- * `toPrecision(12)` rounds the intermediate result to 12 significant digits,
- * eliminating the noise digits while preserving enough precision for any
- * realistic currency value (JS doubles carry ~15.9 significant digits).
+ * For values where `String()` emits scientific notation (|value| >= 1e21 or
+ * < 1e-7), plain `Math.trunc(value * factor)` is used — drift is irrelevant
+ * at those magnitudes.
  *
  * @param value - Number to truncate
  * @param maxDecimals - Maximum number of decimal places
  * @returns Truncated number
  */
 export const truncateDecimals = (value: number, maxDecimals: number): number => {
-  const factor = Math.pow(10, maxDecimals);
-  return Math.trunc(+(value * factor).toPrecision(12)) / factor;
+  if (!isFinite(value) || maxDecimals < 0) return value;
+  if (maxDecimals === 0) return Math.trunc(value);
+
+  const str = String(value);
+
+  if (str.includes('e') || str.includes('E')) {
+    const factor = Math.pow(10, maxDecimals);
+    return Math.trunc(value * factor) / factor;
+  }
+
+  const dotIndex = str.indexOf('.');
+  if (dotIndex === -1) return value;
+  if (str.length - dotIndex - 1 <= maxDecimals) return value;
+
+  return Number(str.slice(0, dotIndex + maxDecimals + 1));
 };
 
 /**

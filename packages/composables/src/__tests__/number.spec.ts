@@ -82,6 +82,31 @@ describe('number utilities', () => {
         expect(truncateDecimals(input, 2)).toBe(expected)
       })
     })
+
+    describe('large values (regression: toPrecision(12) dropped digits)', () => {
+      it.each([
+        [10000000000.01, 2, 10000000000.01],
+        [99999999999.99, 2, 99999999999.99],
+        [10000000000.99, 2, 10000000000.99],
+        [100000000000.01, 2, 100000000000.01],
+      ])('preserves %f with %i decimals → %f', (input, decimals, expected) => {
+        expect(truncateDecimals(input, decimals)).toBe(expected)
+      })
+
+      it.each([
+        [100000000.0001, 4, 100000000.0001],
+        [999999999.9999, 4, 999999999.9999],
+      ])('preserves %f with %i decimals → %f', (input, decimals, expected) => {
+        expect(truncateDecimals(input, decimals)).toBe(expected)
+      })
+
+      it.each([
+        [1000000.000001, 6, 1000000.000001],
+        [9999999.999999, 6, 9999999.999999],
+      ])('preserves %f with %i decimals → %f', (input, decimals, expected) => {
+        expect(truncateDecimals(input, decimals)).toBe(expected)
+      })
+    })
   })
 
   describe('parse', () => {
