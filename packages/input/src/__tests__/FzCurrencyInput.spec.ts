@@ -734,12 +734,11 @@ describe('FzCurrencyInput', () => {
         const inputElement = wrapper.find('input')
         await inputElement.trigger('blur')
         await new Promise((resolve) => window.setTimeout(resolve, 100))
-        // Should be formatted with thousand separators
-        // Note: decimals are truncated to maximumFractionDigits (2), so 89 becomes 88 (truncated, not rounded)
-        expect(inputElement.element.value).toBe('1.234.567,88')
-        // Verify the numeric value in v-model is correct (truncated to 2 decimals)
+        // Should be formatted with thousand separators and preserve original decimals
+        expect(inputElement.element.value).toBe('1.234.567,89')
+        // Verify the numeric value in v-model is correct
         expect(typeof modelValue).toBe('number')
-        expect(modelValue).toBeCloseTo(1234567.88, 2)
+        expect(modelValue).toBeCloseTo(1234567.89, 2)
 
         consoleSpy.mockRestore()
       })
@@ -1521,6 +1520,71 @@ describe('FzCurrencyInput', () => {
         await new Promise((resolve) => window.setTimeout(resolve, 150))
         expect(inputElement.element.value).toBe('1,00')
         expect(wrapper.props('modelValue')).toBe(1)
+      })
+    })
+
+    describe('Floating-point precision (regression)', () => {
+      it.each([
+        ['40,30', 40.3, '40,30'],
+        ['40,20', 40.2, '40,20'],
+        ['40,40', 40.4, '40,40'],
+        ['299,96', 299.96, '299,96'],
+        ['0,30', 0.3, '0,30'],
+        ['10,30', 10.3, '10,30'],
+        ['99,99', 99.99, '99,99'],
+      ])('should preserve "%s" without floating-point drift', async (input, expectedModel, expectedDisplay) => {
+        let modelValue: number | string | undefined = undefined
+        let wrapper: ReturnType<typeof mount> | null = null
+        wrapper = mount(FzCurrencyInput, {
+          props: {
+            label: 'Label',
+            modelValue,
+            'onUpdate:modelValue': (e) => {
+              modelValue = e as number
+              if (wrapper) wrapper.setProps({ modelValue })
+            },
+          },
+        })
+
+        const inputElement = wrapper.find('input')
+
+        // Focus, type the value, blur
+        await inputElement.trigger('focus')
+        await inputElement.setValue(input)
+        await wrapper.vm.$nextTick()
+        await inputElement.trigger('blur')
+        await new Promise((resolve) => window.setTimeout(resolve, 100))
+
+        expect(wrapper.props('modelValue')).toBe(expectedModel)
+        expect(inputElement.element.value).toBe(expectedDisplay)
+      })
+
+      it.each([
+        [40.3, '40,30'],
+        [40.2, '40,20'],
+        [40.4, '40,40'],
+        [299.96, '299,96'],
+        [1234567.89, '1.234.567,89'],
+      ])('should display correct raw value on focus for v-model %f', async (numericValue, expectedRaw) => {
+        const wrapper = mount(FzCurrencyInput, {
+          props: {
+            label: 'Label',
+            modelValue: numericValue,
+            'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
+          },
+        })
+
+        await wrapper.vm.$nextTick()
+        await new Promise((resolve) => window.setTimeout(resolve, 100))
+
+        const inputElement = wrapper.find('input')
+
+        // Focus to see raw value (without thousand separators)
+        await inputElement.trigger('focus')
+        await wrapper.vm.$nextTick()
+
+        const rawExpected = expectedRaw.replace(/\./g, '')
+        expect(inputElement.element.value).toBe(rawExpected)
       })
     })
   })
