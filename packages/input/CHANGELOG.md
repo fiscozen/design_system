@@ -1,5 +1,13 @@
 # @fiscozen/input
 
+## 3.0.1
+
+### Patch Changes
+
+- 34a7934: Fix decimal precision (IEEE 754 floating-point drift)
+- Updated dependencies [34a7934]
+  - @fiscozen/composables@1.0.3
+
 ## 3.0.0
 
 ### Patch Changes
