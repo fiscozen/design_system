@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/pagination",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Design System Pagination component",
   "scripts": {
     "coverage": "vitest run --coverage",

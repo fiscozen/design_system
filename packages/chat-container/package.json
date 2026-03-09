@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/chat-container",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Design System ChatContainer component",
   "scripts": {
     "coverage": "vitest run --coverage",

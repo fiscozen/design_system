@@ -1,5 +1,12 @@
 # @fiscozen/layout
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [34a7934]
+  - @fiscozen/composables@1.0.3
+
 ## 0.1.5
 
 ### Patch Changes
