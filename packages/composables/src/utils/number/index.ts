@@ -1,13 +1,24 @@
 /**
  * Truncates a number to the specified maximum decimal places (without rounding)
  *
+ * Uses `toPrecision(12)` on the intermediate multiplication to correct IEEE 754
+ * floating-point drift. Without it, `value * factor` can land just below the
+ * expected integer, causing `Math.trunc` to drop a unit:
+ *
+ *   40.3 * 100  → 4029.9999999999995 → Math.trunc → 4029 → 40.29  (wrong)
+ *   299.96 * 100 → 29995.999999999996 → Math.trunc → 29995 → 299.95 (wrong)
+ *
+ * `toPrecision(12)` rounds the intermediate result to 12 significant digits,
+ * eliminating the noise digits while preserving enough precision for any
+ * realistic currency value (JS doubles carry ~15.9 significant digits).
+ *
  * @param value - Number to truncate
  * @param maxDecimals - Maximum number of decimal places
  * @returns Truncated number
  */
 export const truncateDecimals = (value: number, maxDecimals: number): number => {
   const factor = Math.pow(10, maxDecimals);
-  return Math.trunc(value * factor) / factor;
+  return Math.trunc(+(value * factor).toPrecision(12)) / factor;
 };
 
 /**
