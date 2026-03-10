@@ -51,7 +51,7 @@ export const Primary: Story = {
     components: { FzViewFlag, FzBadge },
     template: `
       <FzViewFlag>
-        <div class="flex items-center gap-16">
+        <div class="flex gap-16 justify-between px-8 sm:px-0">
           <FzBadge>staging.D</FzBadge>
           <p>Operatore: Mario R.</p>
         </div>
@@ -141,27 +141,29 @@ export const hasWarning: Story = {
       return { showErrors, toggleShowError }
     },
     template: `
-      <FzViewFlag>
+      <FzViewFlag :open="showErrors">
         <div class="w-full">
-          <div class="flex justify-between gap-80 items-center w-auto">
-            <div class="flex items-center gap-16">
-              <FzBadge>staging.D</FzBadge>
+          <div class="flex sm:gap-80 items-center flex-wrap sm:flex-nowrap w-full">
+            <div class="flex items-center gap-8 sm:order-1 w-full justify-end">
+              <FzBadge color="error"> 3 criticità </FzBadge>
+              <FzIconButton
+                    :iconName="showErrors ? 'chevron-down': 'chevron-up'"
+                    variant="invisible"
+                    @click="toggleShowError" />
+            </div>
+            <div class="flex gap-16 justify-between p-8 sm:p-0 w-full shrink-0 sm:w-fit items-center">
+              <FzBadge class="overflow-auto">staging.D</FzBadge>
               <p class="m-0">Operatore: Mario R.</p>
             </div>
-            <div class="flex items-center gap-8">
-            <FzBadge color="error"> 3 criticità </FzBadge>
-            <FzIconButton
-                  :iconName="showErrors ? 'chevron-up' : 'chevron-down'"
-                  variant="invisible"
-                  @click="toggleShowError" />
-            </div>
           </div>
-          <ul v-if="showErrors" class="py-24 pl-16 pr-8 w-min min-w-full break-word list-disc list-inside">
-            <li>Utente insolvente: l'utente non ha pagato l'abbonamento</li>
-            <li class="mt-4">Privacy & Policy: l'utente deve accettare i nuovi termini e condizioni</li>
-            <li class="mt-4">Deleghe: l’utente deve attivare la delega a fatture e corrispettivi.</li>
-          </ul>
         </div>
+        <template #banner>
+            <ul class="py-24 pl-16 pr-8 w-min min-w-full break-word list-disc list-inside">
+              <li>Utente insolvente: l'utente non ha pagato l'abbonamento</li>
+              <li class="mt-4">Privacy & Policy: l'utente deve accettare i nuovi termini e condizioni</li>
+              <li class="mt-4">Deleghe: l’utente deve attivare la delega a fatture e corrispettivi.</li>
+            </ul>
+          </template>
       </FzViewFlag>`
   }),
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
@@ -211,8 +213,10 @@ export const Accessibility: Story = {
     components: { FzViewFlag },
     template: `
       <FzViewFlag>
-        <span>Ambiente: staging.D</span>
-        <span>Operatore: Mario R.</span>
+        <div class="flex gap-16 justify-between px-8 sm:px-0">
+          <span>Ambiente: staging.D</span>
+          <span>Operatore: Mario R.</span>
+        </div>
       </FzViewFlag>
     `
   }),
