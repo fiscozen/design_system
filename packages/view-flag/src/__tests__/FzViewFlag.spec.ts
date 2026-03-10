@@ -12,7 +12,7 @@ describe("FzViewFlag", () => {
       expect(wrapper.exists()).toBe(true);
     });
 
-    it("should render slot content when provided", () => {
+    it("should render default slot content when provided", () => {
       const wrapper = mount(FzViewFlag, {
         slots: {
           default: "Custom slot content",
@@ -22,26 +22,48 @@ describe("FzViewFlag", () => {
       expect(wrapper.text()).toContain("Custom slot content");
     });
 
-    it("should render empty slot when slot is not provided", () => {
+    it("should render empty when no slot content is provided", () => {
       const wrapper = mount(FzViewFlag);
 
-      // Component renders structure but slot has no default content
-      expect(wrapper.exists()).toBe(true);
       const inner = wrapper.find(".rounded-t-base");
       expect(inner.exists()).toBe(true);
       expect(inner.text()).toBe("");
     });
 
-    it("should render border indicators (top, bottom, left, right)", () => {
+    it("should not render banner section when open is false", () => {
+      const wrapper = mount(FzViewFlag, {
+        props: { open: false },
+      });
+
+      expect(wrapper.find(".isolate").exists()).toBe(false);
+    });
+
+    it("should not render banner section when open is undefined", () => {
+      const wrapper = mount(FzViewFlag);
+
+      expect(wrapper.find(".isolate").exists()).toBe(false);
+    });
+
+    it("should render banner slot when open is true", () => {
+      const wrapper = mount(FzViewFlag, {
+        props: { open: true },
+        slots: {
+          banner: "Banner content",
+        },
+      });
+
+      expect(wrapper.find(".isolate").exists()).toBe(true);
+      expect(wrapper.text()).toContain("Banner content");
+    });
+
+    it("should render border wrapper", () => {
       const wrapper = mount(FzViewFlag);
       const html = wrapper.html();
 
-      // Single border wrapper with inset-0 (covers all edges)
       expect(html).toContain("border-8");
       expect(html).toContain("border-semantic-warning");
       expect(html).toContain("fixed");
       expect(html).toContain("inset-0");
-      expect(html).toContain("bg-semantic-warning");
     });
   });
 
@@ -49,11 +71,32 @@ describe("FzViewFlag", () => {
   // PROPS TESTS
   // ============================================
   describe("Props", () => {
-    it("should not render FzBadge (content is via slot only)", () => {
-      const wrapper = mount(FzViewFlag);
+    describe("open prop", () => {
+      it("should hide banner section when open is false", () => {
+        const wrapper = mount(FzViewFlag, {
+          props: { open: false },
+          slots: { banner: "Banner content" },
+        });
 
-      const badge = wrapper.findComponent({ name: "FzBadge" });
-      expect(badge.exists()).toBe(false);
+        expect(wrapper.find(".isolate").exists()).toBe(false);
+        expect(wrapper.text()).not.toContain("Banner content");
+      });
+
+      it("should show banner section when open is true", () => {
+        const wrapper = mount(FzViewFlag, {
+          props: { open: true },
+          slots: { banner: "Banner content" },
+        });
+
+        expect(wrapper.find(".isolate").exists()).toBe(true);
+        expect(wrapper.text()).toContain("Banner content");
+      });
+
+      it("should default open to falsy when not provided", () => {
+        const wrapper = mount(FzViewFlag);
+
+        expect(wrapper.find(".isolate").exists()).toBe(false);
+      });
     });
   });
 
@@ -64,7 +107,6 @@ describe("FzViewFlag", () => {
     it("should not emit any events (presentational component)", () => {
       const wrapper = mount(FzViewFlag);
 
-      // Component is presentational, no events should be emitted
       expect(wrapper.emitted()).toEqual({});
     });
   });
@@ -73,21 +115,19 @@ describe("FzViewFlag", () => {
   // CSS CLASSES TESTS
   // ============================================
   describe("CSS Classes", () => {
-    it("should apply static base classes to border indicators", () => {
+    it("should apply static base classes to the outer border wrapper", () => {
       const wrapper = mount(FzViewFlag);
       const html = wrapper.html();
 
-      // Single border wrapper
       expect(html).toContain("border-8");
       expect(html).toContain("border-semantic-warning");
       expect(html).toContain("fixed");
       expect(html).toContain("inset-0");
       expect(html).toContain("pointer-events-none");
       expect(html).toContain("z-50");
-      expect(html).toContain("bg-semantic-warning");
     });
 
-    it("should apply static base classes to main container", () => {
+    it("should apply static base classes to the inner container", () => {
       const wrapper = mount(FzViewFlag);
       const html = wrapper.html();
 
@@ -101,7 +141,7 @@ describe("FzViewFlag", () => {
       expect(html).toContain("fixed");
       expect(html).toContain("m-auto");
       expect(html).toContain("empty:hidden");
-      expect(html).toContain("w-fit");
+      expect(html).toContain("w-full");
       expect(html).toContain("pointer-events-auto");
     });
   });
@@ -110,50 +150,38 @@ describe("FzViewFlag", () => {
   // ACCESSIBILITY TESTS
   // ============================================
   describe("Accessibility", () => {
-    describe("ARIA attributes", () => {
-      it("should have main container with rounded-t-base", () => {
-        const wrapper = mount(FzViewFlag);
+    it("should have main container with rounded-t-base", () => {
+      const wrapper = mount(FzViewFlag);
 
-        const mainContainer = wrapper.find(".rounded-t-base");
-        expect(mainContainer.exists()).toBe(true);
-      });
-
-      it("should have role attribute on main container", () => {
-        const wrapper = mount(FzViewFlag);
-
-        const mainContainer = wrapper.find(".rounded-t-base");
-        expect(mainContainer.exists()).toBe(true);
-      });
-
-      it("should have semantic HTML structure", () => {
-        const wrapper = mount(FzViewFlag);
-
-        const mainContainer = wrapper.find(".rounded-t-base");
-        expect(mainContainer.exists()).toBe(true);
-        expect(mainContainer.element.tagName).toBe("DIV");
-      });
-
-      it("should show slot content for screen readers when provided", () => {
-        const wrapper = mount(FzViewFlag, {
-          slots: {
-            default: "View flag: staging – Operatore Mario R.",
-          },
-        });
-
-        expect(wrapper.text()).toContain("View flag: staging – Operatore Mario R.");
-      });
+      expect(wrapper.find(".rounded-t-base").exists()).toBe(true);
     });
 
-    describe("Screen reader support", () => {
-      it("should expose slot content as visible text", () => {
-        const wrapper = mount(FzViewFlag, {
-          slots: {
-            default: "Production – Admin",
-          },
-        });
+    it("should have semantic HTML structure (div elements)", () => {
+      const wrapper = mount(FzViewFlag);
 
-        expect(wrapper.text()).toContain("Production – Admin");
+      const mainContainer = wrapper.find(".rounded-t-base");
+      expect(mainContainer.element.tagName).toBe("DIV");
+    });
+
+    it("should expose default slot content as visible text", () => {
+      const wrapper = mount(FzViewFlag, {
+        slots: {
+          default: "Staging – Operatore Mario R.",
+        },
       });
+
+      expect(wrapper.text()).toContain("Staging – Operatore Mario R.");
+    });
+
+    it("should expose banner slot content as visible text when open", () => {
+      const wrapper = mount(FzViewFlag, {
+        props: { open: true },
+        slots: {
+          banner: "Banner: Admin",
+        },
+      });
+
+      expect(wrapper.text()).toContain("Banner: Admin");
     });
   });
 
@@ -161,14 +189,35 @@ describe("FzViewFlag", () => {
   // EDGE CASES
   // ============================================
   describe("Edge Cases", () => {
-    it("should handle slot override with custom content", () => {
+    it("should render without errors when no props or slots are provided", () => {
+      const wrapper = mount(FzViewFlag);
+
+      expect(wrapper.exists()).toBe(true);
+      expect(wrapper.html()).toBeTruthy();
+    });
+
+    it("should render default slot even when open is true", () => {
       const wrapper = mount(FzViewFlag, {
+        props: { open: true },
         slots: {
-          default: "Custom content only",
+          default: "Main content",
+          banner: "Banner content",
         },
       });
 
-      expect(wrapper.text()).toContain("Custom content only");
+      expect(wrapper.text()).toContain("Main content");
+      expect(wrapper.text()).toContain("Banner content");
+    });
+
+    it("should not render banner slot content when open is false even if banner slot is provided", () => {
+      const wrapper = mount(FzViewFlag, {
+        props: { open: false },
+        slots: {
+          banner: "Should not appear",
+        },
+      });
+
+      expect(wrapper.text()).not.toContain("Should not appear");
     });
   });
 
@@ -181,10 +230,34 @@ describe("FzViewFlag", () => {
       expect(wrapper.html()).toMatchSnapshot();
     });
 
-    it("should match snapshot - with custom slot", () => {
+    it("should match snapshot - with default slot content", () => {
       const wrapper = mount(FzViewFlag, {
         slots: {
           default: "Custom slot content",
+        },
+      });
+
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - open with banner slot", () => {
+      const wrapper = mount(FzViewFlag, {
+        props: { open: true },
+        slots: {
+          default: "Main content",
+          banner: "Banner content",
+        },
+      });
+
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - closed with banner slot", () => {
+      const wrapper = mount(FzViewFlag, {
+        props: { open: false },
+        slots: {
+          default: "Main content",
+          banner: "Banner content",
         },
       });
 
