@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, within } from '@storybook/test'
+import { ref } from 'vue'
 import { FzViewFlag } from '@fiscozen/view-flag'
+import { FzBadge } from '@fiscozen/badge'
 import type { PlayFunctionContext } from '../test-utils'
+import { FzIconButton } from '@fiscozen/button'
 
 const meta: Meta<typeof FzViewFlag> = {
   title: 'Overlay/FzViewFlag',
@@ -45,10 +48,13 @@ const getBorderWrapper = (canvasElement: HTMLElement): HTMLElement => {
 
 export const Primary: Story = {
   render: () => ({
-    components: { FzViewFlag },
+    components: { FzViewFlag, FzBadge },
     template: `
       <FzViewFlag>
-        <span>Operatore: Mario R.</span>
+        <div class="flex items-center gap-16">
+          <FzBadge>staging.D</FzBadge>
+          <p>Operatore: Mario R.</p>
+        </div>
       </FzViewFlag>
     `
   }),
@@ -92,7 +98,7 @@ export const Primary: Story = {
   }
 }
 
-export const WithSlot: Story = {
+export const WithCustomSlot: Story = {
   render: () => ({
     components: { FzViewFlag },
     template: `
@@ -123,6 +129,55 @@ export const WithSlot: Story = {
 // ============================================
 // VARIANT STORIES
 // ============================================
+
+export const hasWarning: Story = {
+  render: () => ({
+    components: { FzViewFlag, FzBadge, FzIconButton },
+    setup() {
+      const showErrors = ref(false)
+      const toggleShowError = () => {
+        showErrors.value = !showErrors.value
+      }
+      return { showErrors, toggleShowError }
+    },
+    template: `
+      <FzViewFlag>
+        <div class="w-full">
+          <div class="flex justify-between gap-80 items-center w-auto">
+            <div class="flex items-center gap-16">
+              <FzBadge>staging.D</FzBadge>
+              <p class="m-0">Operatore: Mario R.</p>
+            </div>
+            <div class="flex items-center gap-8">
+            <FzBadge color="error"> 3 criticità </FzBadge>
+            <FzIconButton
+                  :iconName="showErrors ? 'chevron-up' : 'chevron-down'"
+                  variant="invisible"
+                  @click="toggleShowError" />
+            </div>
+          </div>
+          <ul v-if="showErrors" class="py-24 pl-16 pr-8 w-min min-w-full break-word list-disc list-inside">
+            <li>Utente insolvente: l'utente non ha pagato l'abbonamento</li>
+            <li class="mt-4">Privacy & Policy: l'utente deve accettare i nuovi termini e condizioni</li>
+            <li class="mt-4">Deleghe: l’utente deve attivare la delega a fatture e corrispettivi.</li>
+          </ul>
+        </div>
+      </FzViewFlag>`
+  }),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    await step('Verify border wrapper is present', async () => {
+      const borderWrapper = getBorderWrapper(canvasElement)
+      await expect(borderWrapper).toBeInTheDocument()
+      await expect(borderWrapper).toBeVisible()
+    })
+
+    await step('Verify banner is visible when slot has content', async () => {
+      const banner = getBanner(canvasElement)
+      await expect(banner).toBeInTheDocument()
+      await expect(banner).toBeVisible()
+    })
+  }
+}
 
 export const EmptySlot: Story = {
   render: () => ({
@@ -210,6 +265,23 @@ export const BorderWrapper: Story = {
       await expect(rect.left).toBeLessThanOrEqual(0)
       await expect(rect.width).toBeGreaterThanOrEqual(window.innerWidth)
       await expect(rect.height).toBeGreaterThanOrEqual(window.innerHeight)
+    })
+
+    await step('Verify component is rendered on top of other elements', async () => {
+      const borderWrapper = getBorderWrapper(canvasElement)
+      const computedStyles = window.getComputedStyle(borderWrapper)
+      const zIndex = parseInt(computedStyles.zIndex, 10)
+
+      // z-50 in Tailwind maps to z-index: 50; the component must stack above regular content
+      await expect(zIndex).toBeGreaterThanOrEqual(50)
+
+      // Verify the banner inside also stacks above regular content
+      const banner = getBanner(canvasElement)
+      if (banner) {
+        const bannerStyles = window.getComputedStyle(banner)
+        const bannerZIndex = parseInt(bannerStyles.zIndex, 10)
+        await expect(isNaN(bannerZIndex) || bannerZIndex >= 0).toBe(true)
+      }
     })
   }
 }
