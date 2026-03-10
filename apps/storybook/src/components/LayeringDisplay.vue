@@ -6,47 +6,54 @@
   </p>
   <div class="flex flex-col gap-16 h-auto w-full">
     <h2 class="text-2xl font-bold">Playground</h2>
-    <div class="w-full h-screen flex gap-16 flex-col border-1 rounded p-16 relative overflow-hidden">
-      <FzViewFlag role="operatore" firstName="Mario" lastName="Rossi" environment="staging" class="fz-override" />
+    <div
+      class="sb-unstyled relative flex h-screen w-full flex-col gap-16 overflow-hidden rounded border-1 p-16"
+    >
+      <FzViewFlag>
+        <div class="flex items-center gap-16">
+          <FzBadge>staging.D</FzBadge>
+          <p>Operatore: Mario R.</p>
+        </div>
+      </FzViewFlag>
       <FzNavbar variant="horizontal">
-          <template #brand-logo>
+        <template #brand-logo>
               <FzIcon name="fiscozen" variant="fak" size="xl" class="text-core-black text-[32px] !w-[40px] ml-[-4px] cursor-pointer" />
-          </template>
-          <template #navigation>
-              <FzNavlink label="Fatture" />
-              <FzNavlink label="Spese" />
-              <FzNavlink label="Corrispettivi" />
-              <FzNavlink label="Adempimenti" />
-              <FzNavlink label="Documenti" />
-              <FzNavlink label="Dichiarazione" />
-          </template>
+        </template>
+        <template #navigation>
+          <FzNavlink label="Fatture" />
+          <FzNavlink label="Spese" />
+          <FzNavlink label="Corrispettivi" />
+          <FzNavlink label="Adempimenti" />
+          <FzNavlink label="Documenti" />
+          <FzNavlink label="Dichiarazione" />
+        </template>
       </FzNavbar>
       <FzTopbar>This is a Topbar</FzTopbar>
       <FzToastQueue  class="fixed top-16 right-16"/>
       <FzButton class="w-fit" @click="dialog?.show()">Open dialog</FzButton>
       <FzConfirmDialog title="Title" confirmLabel="OK" cancelLabel="Cancel" ref="dialog">
-          <template #body>
+        <template #body>
               <div class="grid grid-cols-2 gap-8 !mb-8">
-                  <FzDatepicker
-                      :inputProps="{label: 'datepicker label'}"
-                      valueFormat="YYYY-MM-DD"
-                      teleport
-                      v-model="date" />
-                  <FzSelect
-                      label="select label"
-                      :options
-                      v-model="selection" />
-                  <FzTooltip text="tooltip text" status="neutral">
-                      <FzButton>hover</FzButton>
-                  </FzTooltip>
-              </div>
-              <div class="flex my-4 gap-8 items-start">
-                  <FzButton @click="handleEnqueue('success')">Success</FzButton>
-                  <FzButton @click="handleEnqueue('warning')">Warning</FzButton>
-                  <FzButton @click="handleEnqueue('error')" class="mb-6">Error</FzButton>
-                  <FzButton @click="handleEnqueueLong('error')" class="mb-6 mr-auto">Error long</FzButton>
-              </div>
-          </template>
+            <FzDatepicker
+              :inputProps="{label: 'datepicker label'}"
+              valueFormat="YYYY-MM-DD"
+              teleport
+              v-model="date" />
+              <FzSelect
+                  label="select label"
+                  :options
+                  v-model="selection" />
+            <FzTooltip text="tooltip text" status="neutral">
+              <FzButton>hover</FzButton>
+            </FzTooltip>
+          </div>
+            <div class="flex my-4 gap-8 items-start">
+            <FzButton @click="handleEnqueue('success')">Success</FzButton>
+            <FzButton @click="handleEnqueue('warning')">Warning</FzButton>
+            <FzButton @click="handleEnqueue('error')" class="mb-6">Error</FzButton>
+            <FzButton @click="handleEnqueueLong('error')" class="mb-6 mr-auto">Error long</FzButton>
+          </div>
+        </template>
       </FzConfirmDialog>
     </div>
     <h2 class="text-2xl font-bold">Z-index values</h2>
@@ -138,39 +145,40 @@
   import { FzViewFlag } from '@fiscozen/view-flag';
   import { FzNavlink } from '@fiscozen/navlink';
   import { FzIcon } from '@fiscozen/icons';
+  import { FzBadge } from '@fiscozen/badge';
 
   const dialog = ref<typeof FzConfirmDialog>();
   const date = ref();
 
   const selection = ref();
   const options = ref([
-      {
-          label: 'one',
-          value: 'one',
-      },
-      {
-          label: 'two',
-          value: 'two',
-      },
-      {
-          label: 'three',
-          value: 'three',
-      },
-      {
-          label: 'four',
-          value: 'four',
-      },
-      {
-          label: 'five',
-          value: 'five',
-      },
+    {
+      label: 'one',
+      value: 'one',
+    },
+    {
+      label: 'two',
+      value: 'two',
+    },
+    {
+      label: 'three',
+      value: 'three',
+    },
+    {
+      label: 'four',
+      value: 'four',
+    },
+    {
+      label: 'five',
+      value: 'five',
+    },
   ]);
   function handleEnqueue(type: 'success' | 'warning' | 'error') {
-      enqueueToast({ type, message: 'This is a toast.' })
+    enqueueToast({ type, message: 'This is a toast.' })
   }
 
   function handleEnqueueLong(type: 'success' | 'warning' | 'error') {
-      enqueueToast({ type, message: 'This is a long long long long long long long long long long long long long long long long long long long long long long long long long toast.' })
+        enqueueToast({ type, message: 'This is a long long long long long long long long long long long long long long long long long long long long long long long long long toast.' })
   }
 </script>
 
