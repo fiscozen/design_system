@@ -29,6 +29,10 @@ const props = withDefaults(defineProps<FzInputProps>(), {
   autocomplete: false,
 });
 
+defineOptions({
+  inheritAttrs: false,
+});
+
 /**
  * Deprecation warning and normalization for size prop.
  * Watches the size prop and warns once on mount if it's provided.
@@ -45,17 +49,17 @@ watch(
         console.warn(
           `[FzInput] Both "size" and "environment" props are provided. ` +
             `"environment=${props.environment}" will be used and "size=${size}" will be ignored. ` +
-            `Please remove the deprecated "size" prop.`
+            `Please remove the deprecated "size" prop.`,
         );
       } else {
         console.warn(
           `[FzInput] The "size" prop is deprecated and will be removed in a future version. ` +
-            `Please use environment="${mappedEnvironment}" instead of size="${size}".`
+            `Please use environment="${mappedEnvironment}" instead of size="${size}".`,
         );
       }
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 /**
@@ -68,11 +72,11 @@ watch(
     if (rightIconSize !== undefined) {
       console.warn(
         `[FzInput] The "rightIconSize" prop is deprecated and will be removed in a future version. ` +
-          `Icons now have a fixed size of "md". The provided value "${rightIconSize}" will be ignored.`
+          `Icons now have a fixed size of "md". The provided value "${rightIconSize}" will be ignored.`,
       );
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 /**
@@ -111,7 +115,7 @@ const {
   containerRef,
   model,
   effectiveEnvironment,
-  isFocused
+  isFocused,
 );
 
 const slots = defineSlots<{
@@ -213,7 +217,7 @@ const handleIconKeydown = (
   emitEvent:
     | "fzinput:left-icon-click"
     | "fzinput:right-icon-click"
-    | "fzinput:second-right-icon-click"
+    | "fzinput:second-right-icon-click",
 ) => {
   if (e.key === "Enter" || e.key === " ") {
     e.preventDefault();
@@ -273,7 +277,7 @@ const isLeftIconClickable = computed(() => !!props.leftIcon);
  * Icons are only accessible via keyboard when aria-label is provided.
  */
 const isLeftIconAccessible = computed(
-  () => isLeftIconClickable.value && !!props.leftIconAriaLabel
+  () => isLeftIconClickable.value && !!props.leftIconAriaLabel,
 );
 
 /**
@@ -282,14 +286,14 @@ const isLeftIconAccessible = computed(
  * Readonly inputs have the same visual styling and behavior as disabled inputs.
  */
 const isReadonlyOrDisabled = computed(
-  () => !!props.disabled || !!props.readonly
+  () => !!props.disabled || !!props.readonly,
 );
 
 /**
  * Determines if right icon is clickable (not rendered as button)
  */
 const isRightIconClickable = computed(
-  () => !!props.rightIcon && !props.rightIconButton
+  () => !!props.rightIcon && !props.rightIconButton,
 );
 
 /**
@@ -298,14 +302,14 @@ const isRightIconClickable = computed(
  * Icons are only accessible via keyboard when aria-label is provided.
  */
 const isRightIconAccessible = computed(
-  () => isRightIconClickable.value && !!props.rightIconAriaLabel
+  () => isRightIconClickable.value && !!props.rightIconAriaLabel,
 );
 
 /**
  * Determines if second right icon is clickable (not rendered as button)
  */
 const isSecondRightIconClickable = computed(
-  () => !!props.secondRightIcon && !props.secondRightIconButton
+  () => !!props.secondRightIcon && !props.secondRightIconButton,
 );
 
 /**
@@ -314,7 +318,7 @@ const isSecondRightIconClickable = computed(
  * Icons are only accessible via keyboard when aria-label is provided.
  */
 const isSecondRightIconAccessible = computed(
-  () => isSecondRightIconClickable.value && !!props.secondRightIconAriaLabel
+  () => isSecondRightIconClickable.value && !!props.secondRightIconAriaLabel,
 );
 
 defineExpose({
