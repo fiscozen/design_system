@@ -3,9 +3,6 @@ import { mount } from '@vue/test-utils'
 import { FzTextarea } from '..'
 
 describe('FzTextarea', () => {
-  // ============================================
-  // RENDERING TESTS
-  // ============================================
   describe('Rendering', () => {
     it('should render with default props', () => {
       const wrapper = mount(FzTextarea, {
@@ -110,9 +107,6 @@ describe('FzTextarea', () => {
     })
   })
 
-  // ============================================
-  // PROPS TESTS
-  // ============================================
   describe('Props', () => {
     describe('size prop', () => {
       it.each([
@@ -318,7 +312,7 @@ describe('FzTextarea', () => {
     })
 
     describe('id prop', () => {
-      it('should apply id to textarea and label for attribute', () => {
+      it('should apply explicit id to textarea and label for attribute', () => {
         const wrapper = mount(FzTextarea, {
           props: {
             label: 'Test Label',
@@ -327,6 +321,20 @@ describe('FzTextarea', () => {
         })
         expect(wrapper.find('textarea').attributes('id')).toBe('test-textarea-id')
         expect(wrapper.find('label').attributes('for')).toBe('test-textarea-id')
+      })
+
+      it('should auto-generate id when id prop is not provided', () => {
+        const wrapper = mount(FzTextarea, {
+          props: {
+            label: 'Test Label',
+          },
+        })
+        const textarea = wrapper.find('textarea')
+        const label = wrapper.find('label')
+        const textareaId = textarea.attributes('id')
+        expect(textareaId).toBeTruthy()
+        expect(textareaId).toMatch(/^fz-textarea-/)
+        expect(label.attributes('for')).toBe(textareaId)
       })
     })
 
@@ -343,9 +351,6 @@ describe('FzTextarea', () => {
     })
   })
 
-  // ============================================
-  // EVENTS TESTS
-  // ============================================
   describe('Events', () => {
     it('should emit blur event', async () => {
       const wrapper = mount(FzTextarea, {
@@ -400,7 +405,6 @@ describe('FzTextarea', () => {
         },
       })
       await wrapper.find('textarea').trigger('blur')
-      // Disabled textareas do not fire blur events when triggered programmatically
       expect(wrapper.emitted('blur')).toBeUndefined()
     })
 
@@ -412,14 +416,10 @@ describe('FzTextarea', () => {
         },
       })
       await wrapper.find('textarea').trigger('focus')
-      // Disabled textareas do not fire focus events when triggered programmatically
       expect(wrapper.emitted('focus')).toBeUndefined()
     })
   })
 
-  // ============================================
-  // ACCESSIBILITY TESTS
-  // ============================================
   describe('Accessibility', () => {
     describe('ARIA attributes', () => {
       it('should have label associated with textarea via id and for attributes', () => {
@@ -435,33 +435,26 @@ describe('FzTextarea', () => {
         expect(label.attributes('for')).toBe('test-id')
       })
 
-      it('should have aria-disabled when disabled', async () => {
-        const wrapper = mount(FzTextarea, {
-          props: {
-            label: 'Test Label',
-            disabled: true,
-          },
-        })
-        await wrapper.vm.$nextTick()
-        const textarea = wrapper.find('textarea').element as HTMLTextAreaElement
-        // Note: aria-disabled may not be set by default, but disabled attribute should be present
-        expect(textarea.hasAttribute('disabled')).toBe(true)
-      })
-
-      it('should have aria-required when required', async () => {
+      it('should have aria-required="true" when required', () => {
         const wrapper = mount(FzTextarea, {
           props: {
             label: 'Test Label',
             required: true,
           },
         })
-        await wrapper.vm.$nextTick()
-        const textarea = wrapper.find('textarea').element as HTMLTextAreaElement
-        // Note: aria-required may not be set by default, but required attribute should be present
-        expect(textarea.hasAttribute('required')).toBe(true)
+        expect(wrapper.find('textarea').attributes('aria-required')).toBe('true')
       })
 
-      it('should have aria-invalid when error', async () => {
+      it('should have aria-required="false" when not required', () => {
+        const wrapper = mount(FzTextarea, {
+          props: {
+            label: 'Test Label',
+          },
+        })
+        expect(wrapper.find('textarea').attributes('aria-required')).toBe('false')
+      })
+
+      it('should have aria-invalid="true" when error', () => {
         const wrapper = mount(FzTextarea, {
           props: {
             label: 'Test Label',
@@ -469,42 +462,80 @@ describe('FzTextarea', () => {
             errorMessage: 'Error message',
           },
         })
-        await wrapper.vm.$nextTick()
-        const textarea = wrapper.find('textarea').element as HTMLTextAreaElement
-        // Note: Component may not set aria-invalid by default, documenting expected behavior
-        // The error state is visually indicated via border classes
-        expect(textarea.hasAttribute('aria-invalid')).toBe(false) // Currently not implemented
+        expect(wrapper.find('textarea').attributes('aria-invalid')).toBe('true')
       })
 
-      it('should have aria-describedby linking to error message when error is present', async () => {
+      it('should have aria-invalid="false" when no error', () => {
         const wrapper = mount(FzTextarea, {
           props: {
             label: 'Test Label',
+          },
+        })
+        expect(wrapper.find('textarea').attributes('aria-invalid')).toBe('false')
+      })
+
+      it('should have aria-disabled="true" when disabled', () => {
+        const wrapper = mount(FzTextarea, {
+          props: {
+            label: 'Test Label',
+            disabled: true,
+          },
+        })
+        expect(wrapper.find('textarea').attributes('aria-disabled')).toBe('true')
+      })
+
+      it('should have aria-disabled="false" when not disabled', () => {
+        const wrapper = mount(FzTextarea, {
+          props: {
+            label: 'Test Label',
+          },
+        })
+        expect(wrapper.find('textarea').attributes('aria-disabled')).toBe('false')
+      })
+
+      it('should have aria-describedby linking to error message when error is present', () => {
+        const wrapper = mount(FzTextarea, {
+          props: {
+            label: 'Test Label',
+            id: 'test-id',
             error: true,
             errorMessage: 'Error message',
           },
         })
-        await wrapper.vm.$nextTick()
-        const textarea = wrapper.find('textarea').element as HTMLTextAreaElement
-        // Note: Component may not set aria-describedby by default, documenting expected behavior
-        const describedBy = textarea.getAttribute('aria-describedby')
-        // Currently not implemented - this is an accessibility gap
-        expect(describedBy).toBeNull() // Documenting current state
+        expect(wrapper.find('textarea').attributes('aria-describedby')).toBe('test-id-error')
       })
 
-      it('should have aria-describedby linking to help message when helpMessage is present', async () => {
+      it('should have aria-describedby linking to help message when helpMessage is present', () => {
         const wrapper = mount(FzTextarea, {
           props: {
             label: 'Test Label',
+            id: 'test-id',
             helpMessage: 'Help message',
           },
         })
-        await wrapper.vm.$nextTick()
-        const textarea = wrapper.find('textarea').element as HTMLTextAreaElement
-        // Note: Component may not set aria-describedby by default, documenting expected behavior
-        const describedBy = textarea.getAttribute('aria-describedby')
-        // Currently not implemented - this is an accessibility gap
-        expect(describedBy).toBeNull() // Documenting current state
+        expect(wrapper.find('textarea').attributes('aria-describedby')).toBe('test-id-help')
+      })
+
+      it('should not have aria-describedby when no error or help message', () => {
+        const wrapper = mount(FzTextarea, {
+          props: {
+            label: 'Test Label',
+          },
+        })
+        expect(wrapper.find('textarea').attributes('aria-describedby')).toBeUndefined()
+      })
+
+      it('should link aria-describedby to error message over help message when both present', () => {
+        const wrapper = mount(FzTextarea, {
+          props: {
+            label: 'Test Label',
+            id: 'test-id',
+            error: true,
+            errorMessage: 'Error message',
+            helpMessage: 'Help message',
+          },
+        })
+        expect(wrapper.find('textarea').attributes('aria-describedby')).toBe('test-id-error')
       })
     })
 
@@ -518,30 +549,52 @@ describe('FzTextarea', () => {
           },
         })
         await wrapper.vm.$nextTick()
-        // Note: Component may not set role="alert" by default, documenting expected behavior
         const errorContainer = wrapper.find('[role="alert"]')
-        // Currently not implemented - this is an accessibility gap
-        expect(errorContainer.exists()).toBe(false) // Documenting current state
+        expect(errorContainer.exists()).toBe(true)
+        expect(errorContainer.text()).toContain('Error message')
+      })
+
+      it('should have id on error message container matching aria-describedby', () => {
+        const wrapper = mount(FzTextarea, {
+          props: {
+            label: 'Test Label',
+            id: 'test-id',
+            error: true,
+            errorMessage: 'Error message',
+          },
+        })
+        const errorContainer = wrapper.find('[role="alert"]')
+        expect(errorContainer.attributes('id')).toBe('test-id-error')
+      })
+
+      it('should have id on help message matching aria-describedby', () => {
+        const wrapper = mount(FzTextarea, {
+          props: {
+            label: 'Test Label',
+            id: 'test-id',
+            helpMessage: 'Help message',
+          },
+        })
+        const helpSpan = wrapper.find(`#test-id-help`)
+        expect(helpSpan.exists()).toBe(true)
+        expect(helpSpan.text()).toContain('Help message')
       })
     })
 
     describe('Decorative icons accessibility', () => {
-      it('should render valid check icon (decorative)', async () => {
+      it('should have aria-hidden on valid check icon', () => {
         const wrapper = mount(FzTextarea, {
           props: {
             label: 'Test Label',
             valid: true,
           },
         })
-        await wrapper.vm.$nextTick()
         const icon = wrapper.findComponent({ name: 'FzIcon' })
         expect(icon.exists()).toBe(true)
-        expect(icon.props('name')).toBe('check')
-        // Note: FzIcon uses FontAwesome which handles aria-hidden internally
-        // The icon is decorative and should not be announced by screen readers
+        expect(icon.attributes('aria-hidden')).toBe('true')
       })
 
-      it('should render error icon (decorative)', async () => {
+      it('should have aria-hidden on error icon', () => {
         const wrapper = mount(FzTextarea, {
           props: {
             label: 'Test Label',
@@ -549,13 +602,11 @@ describe('FzTextarea', () => {
             errorMessage: 'Error message',
           },
         })
-        await wrapper.vm.$nextTick()
         const errorIcon = wrapper
           .findAllComponents({ name: 'FzIcon' })
           .find((icon) => icon.props('name') === 'triangle-exclamation')
         expect(errorIcon?.exists()).toBe(true)
-        // Note: FzIcon uses FontAwesome which handles aria-hidden internally
-        // The icon is decorative and should not be announced by screen readers
+        expect(errorIcon?.attributes('aria-hidden')).toBe('true')
       })
     })
 
@@ -567,7 +618,6 @@ describe('FzTextarea', () => {
           },
         })
         const textarea = wrapper.find('textarea')
-        // Textarea should be focusable by default
         expect(textarea.attributes('disabled')).toBeUndefined()
         expect(textarea.attributes('readonly')).toBeUndefined()
       })
@@ -585,9 +635,6 @@ describe('FzTextarea', () => {
     })
   })
 
-  // ============================================
-  // CSS CLASSES TESTS
-  // ============================================
   describe('CSS Classes', () => {
     it('should apply static base classes to textarea', () => {
       const wrapper = mount(FzTextarea, {
@@ -659,9 +706,6 @@ describe('FzTextarea', () => {
     })
   })
 
-  // ============================================
-  // EDGE CASES
-  // ============================================
   describe('Edge Cases', () => {
     it('should handle undefined modelValue gracefully', () => {
       const wrapper = mount(FzTextarea, {
@@ -697,18 +741,6 @@ describe('FzTextarea', () => {
       expect(wrapper.emitted('update:modelValue')![0]).toEqual([longText])
     })
 
-    it('should handle undefined id prop', () => {
-      const wrapper = mount(FzTextarea, {
-        props: {
-          label: 'Test Label',
-        },
-      })
-      // Component should still render without id
-      expect(wrapper.exists()).toBe(true)
-      const textarea = wrapper.find('textarea')
-      expect(textarea.exists()).toBe(true)
-    })
-
     it('should handle empty errorMessage when error is true', async () => {
       const wrapper = mount(FzTextarea, {
         props: {
@@ -718,8 +750,7 @@ describe('FzTextarea', () => {
         },
       })
       await wrapper.vm.$nextTick()
-      // Error message container should not show when errorMessage is empty
-      const errorContainer = wrapper.find('.text-sm.flex')
+      const errorContainer = wrapper.find('[role="alert"]')
       expect(errorContainer.exists()).toBe(false)
     })
 
@@ -731,8 +762,7 @@ describe('FzTextarea', () => {
         },
       })
       await wrapper.vm.$nextTick()
-      // Error message container should not show when errorMessage is undefined
-      const errorContainer = wrapper.find('.text-sm.flex')
+      const errorContainer = wrapper.find('[role="alert"]')
       expect(errorContainer.exists()).toBe(false)
     })
 
@@ -772,14 +802,12 @@ describe('FzTextarea', () => {
     })
   })
 
-  // ============================================
-  // SNAPSHOTS
-  // ============================================
   describe('Snapshots', () => {
     it('should match snapshot - default state', () => {
       const wrapper = mount(FzTextarea, {
         props: {
           label: 'Test Label',
+          id: 'snapshot-default',
         },
       })
       expect(wrapper.html()).toMatchSnapshot()
@@ -789,6 +817,7 @@ describe('FzTextarea', () => {
       const wrapper = mount(FzTextarea, {
         props: {
           label: 'Test Label',
+          id: 'snapshot-required',
           required: true,
         },
       })
@@ -799,6 +828,7 @@ describe('FzTextarea', () => {
       const wrapper = mount(FzTextarea, {
         props: {
           label: 'Test Label',
+          id: 'snapshot-disabled',
           disabled: true,
         },
       })
@@ -809,6 +839,7 @@ describe('FzTextarea', () => {
       const wrapper = mount(FzTextarea, {
         props: {
           label: 'Test Label',
+          id: 'snapshot-error',
           error: true,
           errorMessage: 'This field is required',
         },
@@ -820,6 +851,7 @@ describe('FzTextarea', () => {
       const wrapper = mount(FzTextarea, {
         props: {
           label: 'Test Label',
+          id: 'snapshot-valid',
           valid: true,
         },
       })
@@ -830,6 +862,7 @@ describe('FzTextarea', () => {
       const wrapper = mount(FzTextarea, {
         props: {
           label: 'Test Label',
+          id: 'snapshot-help',
           helpMessage: 'This is helpful text',
         },
       })
@@ -840,6 +873,7 @@ describe('FzTextarea', () => {
       const wrapper = mount(FzTextarea, {
         props: {
           label: 'Test Label',
+          id: 'snapshot-readonly',
           readonly: true,
         },
       })
@@ -850,6 +884,7 @@ describe('FzTextarea', () => {
       const wrapper = mount(FzTextarea, {
         props: {
           label: 'Test Label',
+          id: 'snapshot-sm',
           size: 'sm',
         },
       })
@@ -860,6 +895,7 @@ describe('FzTextarea', () => {
       const wrapper = mount(FzTextarea, {
         props: {
           label: 'Test Label',
+          id: 'snapshot-lg',
           size: 'lg',
         },
       })
@@ -870,7 +906,7 @@ describe('FzTextarea', () => {
       const wrapper = mount(FzTextarea, {
         props: {
           label: 'Test Label',
-          id: 'test-id',
+          id: 'snapshot-all',
           name: 'test-name',
           placeholder: 'Enter text',
           required: true,
