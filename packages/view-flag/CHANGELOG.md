@@ -1,5 +1,11 @@
 # @fiscozen/view-flag
 
+## 1.0.0
+
+### Major Changes
+
+- f4999cc: Refactored FzViewFlag to a slot-only API to remove business logic. The component now renders a fixed border overlay with a default slot for custom content and a named `banner` slot (shown when the `open` prop is `true`) for optional expanded content.
+
 ## 0.1.6
 
 ### Patch Changes
