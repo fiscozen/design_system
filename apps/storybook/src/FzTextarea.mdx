@@ -1,0 +1,291 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Form/FzTextarea" />
+
+# FzTextarea
+
+Multi-line text input component with label, validation states, resize control, and full WCAG 2.1 AA accessibility support.
+
+## Features
+
+- Configurable text sizes (sm, md, lg)
+- Resize control (none, vertical, horizontal, all)
+- Error and valid states with visual feedback
+- Help text and error messages
+- Required, disabled, and readonly states
+- Full ARIA accessibility (aria-required, aria-invalid, aria-disabled, aria-describedby)
+- Error messages announced via role="alert"
+- Auto-generated IDs for label association
+
+## Installation
+
+```bash
+npm install @fiscozen/textarea
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzTextarea } from '@fiscozen/textarea'
+import { ref } from 'vue'
+
+const notes = ref('')
+</script>
+
+<template>
+  <FzTextarea label="Notes" v-model="notes" />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Text label displayed above the textarea (required)</td>
+    </tr>
+    <tr>
+      <td><code>id</code></td>
+      <td><code>string</code></td>
+      <td>auto-generated</td>
+      <td>HTML id attribute. Falls back to auto-generated ID for label association.</td>
+    </tr>
+    <tr>
+      <td><code>name</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Form field name for submission</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>'sm' | 'md' | 'lg'</code></td>
+      <td><code>'md'</code></td>
+      <td>Text size variant affecting font size</td>
+    </tr>
+    <tr>
+      <td><code>placeholder</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Placeholder text shown when textarea is empty</td>
+    </tr>
+    <tr>
+      <td><code>required</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Marks field as required. Adds asterisk to label.</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Disables interaction and applies muted styling</td>
+    </tr>
+    <tr>
+      <td><code>readonly</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Prevents editing while keeping field focusable</td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Enables error state with red border</td>
+    </tr>
+    <tr>
+      <td><code>errorMessage</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Error text displayed below textarea when error is true</td>
+    </tr>
+    <tr>
+      <td><code>helpMessage</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Help text displayed below textarea (hidden when error message is shown)</td>
+    </tr>
+    <tr>
+      <td><code>valid</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows success checkmark icon</td>
+    </tr>
+    <tr>
+      <td><code>resize</code></td>
+      <td><code>'none' | 'vertical' | 'horizontal' | 'all'</code></td>
+      <td><code>'all'</code></td>
+      <td>Controls resize behavior of the textarea</td>
+    </tr>
+    <tr>
+      <td><code>rows</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Number of visible text rows</td>
+    </tr>
+    <tr>
+      <td><code>cols</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Visible width in average character widths</td>
+    </tr>
+    <tr>
+      <td><code>minlength</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Native minlength constraint</td>
+    </tr>
+    <tr>
+      <td><code>maxlength</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Native maxlength constraint</td>
+    </tr>
+  </tbody>
+</table>
+
+## Events
+
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Payload</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>update:modelValue</code></td>
+      <td><code>string</code></td>
+      <td>Emitted when text content changes (v-model)</td>
+    </tr>
+    <tr>
+      <td><code>blur</code></td>
+      <td><code>FocusEvent</code></td>
+      <td>Fired when textarea loses focus</td>
+    </tr>
+    <tr>
+      <td><code>focus</code></td>
+      <td><code>FocusEvent</code></td>
+      <td>Fired when textarea gains focus</td>
+    </tr>
+    <tr>
+      <td><code>paste</code></td>
+      <td><code>ClipboardEvent</code></td>
+      <td>Fired when content is pasted</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### With Validation
+
+```vue
+<script setup>
+import { FzTextarea } from '@fiscozen/textarea'
+import { ref, computed } from 'vue'
+
+const description = ref('')
+const hasError = computed(() => description.value.length > 0 && description.value.length < 10)
+</script>
+
+<template>
+  <FzTextarea
+    label="Description"
+    v-model="description"
+    :error="hasError"
+    errorMessage="Description must be at least 10 characters"
+    required
+  />
+</template>
+```
+
+### With Help Text
+
+```vue
+<template>
+  <FzTextarea
+    label="Bio"
+    v-model="bio"
+    helpMessage="Tell us about yourself (max 500 characters)"
+    :maxlength="500"
+    resize="vertical"
+  />
+</template>
+```
+
+### Disabled State
+
+```vue
+<template>
+  <FzTextarea
+    label="Locked Field"
+    modelValue="This content cannot be edited"
+    disabled
+  />
+</template>
+```
+
+### Readonly State
+
+```vue
+<template>
+  <FzTextarea
+    label="Terms and Conditions"
+    modelValue="Lorem ipsum dolor sit amet..."
+    readonly
+    :rows="6"
+  />
+</template>
+```
+
+### Custom Size and Resize
+
+```vue
+<template>
+  <FzTextarea
+    label="Small, vertical-only resize"
+    v-model="text"
+    size="sm"
+    resize="vertical"
+    :rows="4"
+  />
+</template>
+```
+
+## Accessibility
+
+FzTextarea meets WCAG 2.1 AA standards:
+
+- **ARIA attributes**: `aria-required`, `aria-invalid`, `aria-disabled` always present with string values ("true"/"false") for screen reader compatibility
+- **aria-describedby**: Links textarea to error or help message when present
+- **role="alert"**: Error messages are announced immediately by screen readers
+- **Label association**: Label is always associated with textarea via `for`/`id` binding (auto-generated ID fallback)
+- **Decorative icons**: Check and error icons have `aria-hidden="true"`
+- **Keyboard navigation**: Full keyboard support (Tab to focus, type to input)
+
+## Best Practices
+
+- Always provide a descriptive `label` for accessibility
+- Use `helpMessage` to guide users on expected input format
+- Use `errorMessage` paired with `error` prop for validation feedback
+- Set `resize="vertical"` for most use cases to prevent horizontal overflow
+- Use `rows` to set a sensible initial height based on expected content length
+- Use `maxlength` to enforce content limits
+
+## Related Components
+
+- **FzInput**: Single-line text input with icon support and floating label variant
