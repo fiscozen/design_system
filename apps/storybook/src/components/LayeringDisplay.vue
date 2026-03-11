@@ -28,7 +28,6 @@
           <FzNavlink label="Dichiarazione" />
         </template>
       </FzNavbar>
-      <FzTopbar>This is a Topbar</FzTopbar>
       <FzToastQueue  class="fixed top-16 right-16"/>
       <FzButton class="w-fit" @click="dialog?.show()">Open dialog</FzButton>
       <FzConfirmDialog title="Title" confirmLabel="OK" cancelLabel="Cancel" ref="dialog">
@@ -83,7 +82,7 @@
           <td>z-10</td>
           <td>z-index:10</td>
           <td>Z-index for sticky elements</td>
-          <td>FzTopbar, FzNavbar</td>
+          <td>FzNavbar</td>
         </tr>
         <tr>
           <td>z-20</td>
@@ -141,7 +140,6 @@
   import { FzSelect } from '@fiscozen/select'
   import { FzToastQueue, enqueueToast } from '@fiscozen/toast'
   import { FzTooltip } from '@fiscozen/tooltip'
-  import { FzTopbar } from '@fiscozen/topbar';
   import { FzViewFlag } from '@fiscozen/view-flag';
   import { FzNavlink } from '@fiscozen/navlink';
   import { FzIcon } from '@fiscozen/icons';
