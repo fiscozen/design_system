@@ -610,6 +610,21 @@ describe('FzTextarea', () => {
         expect(wrapper.find('textarea').attributes('aria-describedby')).toBe('test-id-help')
       })
 
+      it('should have aria-describedby linking to help text when error is true but no errorMessage slot', () => {
+        const wrapper = mount(FzTextarea, {
+          props: {
+            label: 'Test Label',
+            id: 'test-id',
+            error: true,
+          },
+          slots: {
+            helpText: 'Help message',
+          },
+        })
+        expect(wrapper.find('textarea').attributes('aria-describedby')).toBe('test-id-help')
+        expect(wrapper.text()).toContain('Help message')
+      })
+
       it('should not have aria-describedby when no error or help message', () => {
         const wrapper = mount(FzTextarea, {
           props: {

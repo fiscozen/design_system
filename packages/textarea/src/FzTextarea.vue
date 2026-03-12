@@ -60,13 +60,15 @@ const effectiveId = computed(() => props.id || uniqueId);
 
 /**
  * Links textarea to its error or help message for screen readers.
- * Uses runtimeSlots (not defineSlots) because defineSlots is only for TypeScript typing.
+ * Mirrors the template v-if/v-else-if chain: error+errorMessage slot → error id,
+ * otherwise helpText slot → help id. This ensures help text is always linked
+ * even when error is true but no errorMessage slot is provided.
  */
 const ariaDescribedBy = computed(() => {
   if (props.error && runtimeSlots.errorMessage) {
     return `${effectiveId.value}-error`;
   }
-  if (!props.error && runtimeSlots.helpText) {
+  if (runtimeSlots.helpText) {
     return `${effectiveId.value}-help`;
   }
   return undefined;
