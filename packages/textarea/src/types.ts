@@ -1,87 +1,108 @@
+/**
+ * Type definitions for the Fiscozen Textarea component library.
+ *
+ * @module @fiscozen/textarea/types
+ */
+
+/**
+ * Props for the FzTextarea component.
+ *
+ * Multi-line text input with label, validation states, resize control,
+ * and full WCAG 2.1 AA accessibility support. Error and help content
+ * are provided via slots (errorMessage, helpText) following the same
+ * pattern as FzInput.
+ *
+ * @example
+ * <FzTextarea label="Notes" v-model="notes" resize="vertical">
+ *   <template #helpText>Max 500 characters</template>
+ * </FzTextarea>
+ */
 type FzTextareaProps = {
   /**
-   * Uniquely identifies textarea and binds label to it
+   * HTML id attribute. Falls back to auto-generated ID for label association.
    */
   id?: string;
   /**
-   * Defines the textarea key in a form
+   * Form field name for submission and identification
    */
   name?: string;
   /**
-   * Size of the textarea
+   * @deprecated Not part of the Figma design. Will be removed in the next major version.
+   * The textarea always uses text-base (16px). This prop is accepted but ignored.
    */
   size?: "sm" | "md" | "lg";
   /**
-   * A message shown above the textarea describing what to insert
+   * Text label displayed above the textarea. When omitted, no label element is rendered.
    */
-  label: string;
+  label?: string;
   /**
-   * Whether a value is required
+   * Marks field as required. Adds asterisk to label and sets native required attribute.
+   * @default false
    */
   required?: boolean;
   /**
-   * A message shown inside the textarea to guide the user
+   * Placeholder text shown when textarea is empty
    */
   placeholder?: string;
   /**
-   * Signals an error to the user
+   * Enables error state with red border. Paired with errorMessage slot
+   * to display error via FzAlert. Works with disabled (both states reflected in ARIA).
+   * @default false
    */
   error?: boolean;
   /**
-   * A message of error shown under the textarea if error is true
-   */
-  errorMessage?: string;
-  /**
-   * Disables any user interaction
+   * Disables interaction and applies muted styling
+   * @default false
    */
   disabled?: boolean;
   /**
-   * Whether and how the user can resize
+   * Controls resize behavior of the textarea
+   * @default 'all'
    */
   resize?: "none" | "vertical" | "horizontal" | "all";
   /**
-   * Number of rows that fit in the textarea
+   * Number of visible text rows
+   * @default 2
    */
   rows?: number;
   /**
-   * Number of characters that horizontally fit in the textarea
+   * Visible width in average character widths
    */
   cols?: number;
   /**
-   * A message shown under the textarea
-   */
-  helpMessage?: string;
-  /**
-   * Whether to toggle the green check icon
+   * Shows success checkmark icon when true
+   * @default false
    */
   valid?: boolean;
   /**
-   * Permitted minimum length
+   * Native minlength constraint
    */
   minlength?: number;
   /**
-   * Permitted maximum length
+   * Native maxlength constraint
    */
   maxlength?: number;
   /**
-   * If true, cannot be edited but can still be focused
+   * Prevents editing while keeping field focusable and selectable
+   * @default false
    */
   readonly?: boolean;
+  /**
+   * Enables automatic height adjustment based on content.
+   * The textarea grows as the user types and shrinks when content is removed.
+   * Uses `rows` as minimum height and `maxRows` as the ceiling.
+   * Vertical resize is disabled when enabled; horizontal resize is preserved.
+   *
+   * Must be set at mount time — changing at runtime is not supported.
+   * @default false
+   */
+  autoHeight?: boolean;
+  /**
+   * Maximum number of visible rows before scrollbar appears.
+   * Only effective when `autoHeight` is true; a runtime warning is
+   * emitted if set without `autoHeight`.
+   */
+  maxRows?: number;
 };
 
-interface FzTextareaEvents {
-  /**
-   * Blur event emitted when the textarea loses focus
-   */
-  (event: "blur", e: FocusEvent): void;
-  /**
-   * Focus event emitted when the textarea gains focus
-   */
-  (event: "focus", e: FocusEvent): void;
-  /**
-   * Paste event emitted when the user pastes text in the textarea
-   */
-  (event: "paste", e: ClipboardEvent): void;
-}
-
-export { FzTextareaProps, FzTextareaEvents };
+export { FzTextareaProps };
