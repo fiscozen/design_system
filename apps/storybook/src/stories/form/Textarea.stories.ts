@@ -485,8 +485,50 @@ const RequiredWithHelp: TextareaStory = {
   }
 }
 
+const ErrorWithHelpOnly: TextareaStory = {
+  args: {
+    id: 'error-help-only',
+    error: true
+  },
+  render: (args) => ({
+    components: { FzTextarea },
+    setup() { return { args } },
+    template: `<FzTextarea v-bind="args"><template #helpText>Please fill out this field</template></FzTextarea>`
+  }),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify error border is applied', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i)
+      await expect(textarea).toHaveClass('border-semantic-error-200')
+    })
+
+    await step('Verify no error alert is rendered', async () => {
+      const alertContainer = canvasElement.querySelector('[role="alert"]')
+      await expect(alertContainer).not.toBeInTheDocument()
+    })
+
+    await step('Verify help text is displayed as fallback', async () => {
+      const helpText = canvas.getByText('Please fill out this field')
+      await expect(helpText).toBeVisible()
+    })
+
+    await step('Verify aria-describedby links to help text (not undefined)', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i)
+      await expect(textarea).toHaveAttribute('aria-describedby', 'error-help-only-help')
+      const helpElement = canvasElement.querySelector('#error-help-only-help')
+      await expect(helpElement).toBeInTheDocument()
+    })
+
+    await step('Verify aria-invalid is still true', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i)
+      await expect(textarea).toHaveAttribute('aria-invalid', 'true')
+    })
+  }
+}
+
 export {
   Default, Error, Help, Valid, Required, Disabled, Readonly,
   ErrorWithValue, ValidWithValue, DisabledWithValue,
-  HelpDisabled, RequiredWithHelp
+  HelpDisabled, RequiredWithHelp, ErrorWithHelpOnly
 }
