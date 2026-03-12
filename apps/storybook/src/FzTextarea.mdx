@@ -9,6 +9,7 @@ Multi-line text input component with label, validation states, resize control, a
 ## Features
 
 - Resize control (none, vertical, horizontal, all)
+- Auto-height mode: textarea grows/shrinks with content, optional max-row cap
 - Error and valid states with visual feedback
 - Error messages via FzAlert component (circle-xmark icon, consistent with FzInput)
 - Custom focus styling (blue border on focus, error border maintained on error+focus)
@@ -123,7 +124,7 @@ const notes = ref('')
     <tr>
       <td><code>rows</code></td>
       <td><code>number</code></td>
-      <td>-</td>
+      <td><code>2</code></td>
       <td>Number of visible text rows</td>
     </tr>
     <tr>
@@ -143,6 +144,18 @@ const notes = ref('')
       <td><code>number</code></td>
       <td>-</td>
       <td>Native maxlength constraint</td>
+    </tr>
+    <tr>
+      <td><code>autoHeight</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Enables automatic height adjustment based on content. Vertical resize is disabled when active. Must be set at mount time (runtime changes not supported).</td>
+    </tr>
+    <tr>
+      <td><code>maxRows</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Maximum visible rows before a scrollbar appears. Only effective when <code>autoHeight</code> is true; a console warning is emitted otherwise.</td>
     </tr>
   </tbody>
 </table>
@@ -364,6 +377,72 @@ const hasError = computed(() => description.value.length > 0 && description.valu
 </template>
 ```
 
+## Auto Height
+
+When `autoHeight` is `true`, the textarea automatically grows as the user types and shrinks when content is removed. The `rows` prop defines the minimum visible height and `maxRows` caps the growth; once content exceeds `maxRows` a vertical scrollbar appears.
+
+### Basic Auto Height
+
+```vue
+<template>
+  <FzTextarea
+    label="Description"
+    v-model="text"
+    autoHeight
+    :rows="2"
+  />
+</template>
+```
+
+### Auto Height with Maximum Rows
+
+```vue
+<template>
+  <FzTextarea
+    label="Notes"
+    v-model="notes"
+    autoHeight
+    :rows="2"
+    :maxRows="10"
+  />
+</template>
+```
+
+### Resize Behavior
+
+Vertical resize is automatically disabled when `autoHeight` is active because the component controls the height programmatically. Horizontal resize is preserved if explicitly set (via `resize="horizontal"` or the default `resize="all"`).
+
+A console warning is emitted if:
+- `maxRows` is used without `autoHeight`
+- `autoHeight` is active with a resize value that includes vertical resizing (`all` or `vertical`)
+
+### Anchoring (Growth Direction)
+
+The textarea always grows **downward** (anchored at the top). This is the native browser behavior: as new lines are added, the bottom edge of the textarea moves down while the top edge stays in place.
+
+If you need the textarea to appear to grow **upward** (e.g. a chat-like input pinned at the bottom of a container), the component itself does not need to change. Instead, use CSS on the parent container:
+
+```vue
+<template>
+  <div class="flex flex-col justify-end h-[400px]">
+    <FzTextarea
+      label="Message"
+      v-model="message"
+      autoHeight
+      :rows="2"
+      :maxRows="8"
+    />
+  </div>
+</template>
+```
+
+With `flex-col justify-end`, the textarea sits at the bottom of the container. As it grows, the flex layout pushes the content above it upward, creating the illusion of upward growth. The textarea itself is still anchored at its top edge.
+
+### Important Notes
+
+- `autoHeight` must be set at mount time. Changing it at runtime is not supported.
+- When `autoHeight` is enabled and the textarea has pre-filled content (via `v-model`), the height is adjusted on mount.
+
 ## Accessibility
 
 FzTextarea meets WCAG 2.1 AA standards:
@@ -384,8 +463,10 @@ FzTextarea meets WCAG 2.1 AA standards:
 - Use `helpText` slot to guide users on expected input format
 - Use `errorMessage` slot paired with `error` prop for validation feedback
 - Combine `required` with `helpText` slot to explain what the field needs
-- Set `resize="vertical"` for most use cases to prevent horizontal overflow
+- Set `resize="vertical"` for most use cases to prevent horizontal overflow (unless using `autoHeight`)
 - Use `rows` to set a sensible initial height based on expected content length
+- Use `autoHeight` with `maxRows` when the textarea should grow with content but stay bounded
+- Prefer `autoHeight` over manual resize for a smoother user experience in forms
 - Use `maxlength` to enforce content limits
 - When showing pre-filled disabled fields, ensure the value conveys why the field is locked
 
