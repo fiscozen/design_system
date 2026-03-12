@@ -3075,6 +3075,9 @@ importers:
 
   packages/textarea:
     dependencies:
+      '@fiscozen/alert':
+        specifier: workspace:*
+        version: link:../alert
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
