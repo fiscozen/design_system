@@ -1,8 +1,17 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`FzTextarea > Snapshots > should match snapshot - autoHeight 1`] = `
+"<div class="fz-textarea flex flex-col gap-8 items-start w-full"><label id="snapshot-auto-height-label" class="font-normal text-base text-core-black" for="snapshot-auto-height">Test Label</label>
+  <div class="relative w-full"><textarea id="snapshot-auto-height" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize-x" rows="2" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-auto-height-label" style="height: 2px; overflow-y: hidden;"></textarea>
+    <!--v-if-->
+  </div>
+  <!--v-if-->
+</div>"
+`;
+
 exports[`FzTextarea > Snapshots > should match snapshot - default state 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full"><label id="snapshot-default-label" class="font-normal text-base text-core-black" for="snapshot-default">Test Label</label>
-  <div class="relative w-full"><textarea id="snapshot-default" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-default-label"></textarea>
+  <div class="relative w-full"><textarea id="snapshot-default" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" rows="2" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-default-label"></textarea>
     <!--v-if-->
   </div>
   <!--v-if-->
@@ -11,7 +20,7 @@ exports[`FzTextarea > Snapshots > should match snapshot - default state 1`] = `
 
 exports[`FzTextarea > Snapshots > should match snapshot - disabled state 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full cursor-not-allowed"><label id="snapshot-disabled-label" class="font-normal text-base text-grey-300" for="snapshot-disabled">Test Label</label>
-  <div class="relative w-full"><textarea id="snapshot-disabled" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed resize" disabled="" aria-required="false" aria-invalid="false" aria-disabled="true" aria-labelledby="snapshot-disabled-label"></textarea>
+  <div class="relative w-full"><textarea id="snapshot-disabled" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed resize" disabled="" rows="2" aria-required="false" aria-invalid="false" aria-disabled="true" aria-labelledby="snapshot-disabled-label"></textarea>
     <!--v-if-->
   </div>
   <!--v-if-->
@@ -20,7 +29,7 @@ exports[`FzTextarea > Snapshots > should match snapshot - disabled state 1`] = `
 
 exports[`FzTextarea > Snapshots > should match snapshot - error state 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full"><label id="snapshot-error-label" class="font-normal text-base text-core-black" for="snapshot-error">Test Label</label>
-  <div class="relative w-full"><textarea id="snapshot-error" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] border-semantic-error-200 focus:border-semantic-error-300 bg-core-white text-core-black cursor-text resize" aria-required="false" aria-invalid="true" aria-disabled="false" aria-labelledby="snapshot-error-label" aria-describedby="snapshot-error-error"></textarea>
+  <div class="relative w-full"><textarea id="snapshot-error" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-semantic-error-200 focus:border-semantic-error-300 bg-core-white text-core-black cursor-text resize" rows="2" aria-required="false" aria-invalid="true" aria-disabled="false" aria-labelledby="snapshot-error-label" aria-describedby="snapshot-error-error"></textarea>
     <!--v-if-->
   </div>
   <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between bg-transparent" id="snapshot-error-error" role="alert">
@@ -38,7 +47,7 @@ exports[`FzTextarea > Snapshots > should match snapshot - error state 1`] = `
 
 exports[`FzTextarea > Snapshots > should match snapshot - error with disabled 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full cursor-not-allowed"><label id="snapshot-error-disabled-label" class="font-normal text-base text-grey-300" for="snapshot-error-disabled">Test Label</label>
-  <div class="relative w-full"><textarea id="snapshot-error-disabled" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] border-semantic-error-200 focus:border-semantic-error-300 bg-core-white text-core-black cursor-text resize" disabled="" aria-required="false" aria-invalid="true" aria-disabled="true" aria-labelledby="snapshot-error-disabled-label" aria-describedby="snapshot-error-disabled-error"></textarea>
+  <div class="relative w-full"><textarea id="snapshot-error-disabled" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-semantic-error-200 focus:border-semantic-error-300 bg-core-white text-core-black cursor-text resize" disabled="" rows="2" aria-required="false" aria-invalid="true" aria-disabled="true" aria-labelledby="snapshot-error-disabled-label" aria-describedby="snapshot-error-disabled-error"></textarea>
     <!--v-if-->
   </div>
   <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between bg-transparent" id="snapshot-error-disabled-error" role="alert">
@@ -56,7 +65,7 @@ exports[`FzTextarea > Snapshots > should match snapshot - error with disabled 1`
 
 exports[`FzTextarea > Snapshots > should match snapshot - help with disabled 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full cursor-not-allowed"><label id="snapshot-help-disabled-label" class="font-normal text-base text-grey-300" for="snapshot-help-disabled">Test Label</label>
-  <div class="relative w-full"><textarea id="snapshot-help-disabled" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed resize" disabled="" aria-required="false" aria-invalid="false" aria-disabled="true" aria-labelledby="snapshot-help-disabled-label" aria-describedby="snapshot-help-disabled-help"></textarea>
+  <div class="relative w-full"><textarea id="snapshot-help-disabled" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed resize" disabled="" rows="2" aria-required="false" aria-invalid="false" aria-disabled="true" aria-labelledby="snapshot-help-disabled-label" aria-describedby="snapshot-help-disabled-help"></textarea>
     <!--v-if-->
   </div><span id="snapshot-help-disabled-help" class="font-normal text-base text-grey-300">Help text</span>
 </div>"
@@ -64,7 +73,7 @@ exports[`FzTextarea > Snapshots > should match snapshot - help with disabled 1`]
 
 exports[`FzTextarea > Snapshots > should match snapshot - large size 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full"><label id="snapshot-lg-label" class="font-normal text-base text-core-black" for="snapshot-lg">Test Label</label>
-  <div class="relative w-full"><textarea id="snapshot-lg" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-lg-label"></textarea>
+  <div class="relative w-full"><textarea id="snapshot-lg" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" rows="2" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-lg-label"></textarea>
     <!--v-if-->
   </div>
   <!--v-if-->
@@ -73,7 +82,7 @@ exports[`FzTextarea > Snapshots > should match snapshot - large size 1`] = `
 
 exports[`FzTextarea > Snapshots > should match snapshot - readonly state 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full cursor-not-allowed"><label id="snapshot-readonly-label" class="font-normal text-base text-grey-300" for="snapshot-readonly">Test Label</label>
-  <div class="relative w-full"><textarea id="snapshot-readonly" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed resize" readonly="" aria-required="false" aria-invalid="false" aria-disabled="true" aria-labelledby="snapshot-readonly-label"></textarea>
+  <div class="relative w-full"><textarea id="snapshot-readonly" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed resize" rows="2" readonly="" aria-required="false" aria-invalid="false" aria-disabled="true" aria-labelledby="snapshot-readonly-label"></textarea>
     <!--v-if-->
   </div>
   <!--v-if-->
@@ -82,7 +91,7 @@ exports[`FzTextarea > Snapshots > should match snapshot - readonly state 1`] = `
 
 exports[`FzTextarea > Snapshots > should match snapshot - required with help 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full"><label id="snapshot-required-help-label" class="font-normal text-base text-core-black" for="snapshot-required-help">Test Label *</label>
-  <div class="relative w-full"><textarea id="snapshot-required-help" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" required="" aria-required="true" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-required-help-label" aria-describedby="snapshot-required-help-help"></textarea>
+  <div class="relative w-full"><textarea id="snapshot-required-help" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" required="" rows="2" aria-required="true" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-required-help-label" aria-describedby="snapshot-required-help-help"></textarea>
     <!--v-if-->
   </div><span id="snapshot-required-help-help" class="font-normal text-base text-grey-500">Mandatory field</span>
 </div>"
@@ -90,7 +99,7 @@ exports[`FzTextarea > Snapshots > should match snapshot - required with help 1`]
 
 exports[`FzTextarea > Snapshots > should match snapshot - small size 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full"><label id="snapshot-sm-label" class="font-normal text-base text-core-black" for="snapshot-sm">Test Label</label>
-  <div class="relative w-full"><textarea id="snapshot-sm" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-sm-label"></textarea>
+  <div class="relative w-full"><textarea id="snapshot-sm" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" rows="2" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-sm-label"></textarea>
     <!--v-if-->
   </div>
   <!--v-if-->
@@ -99,20 +108,20 @@ exports[`FzTextarea > Snapshots > should match snapshot - small size 1`] = `
 
 exports[`FzTextarea > Snapshots > should match snapshot - valid state 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full"><label id="snapshot-valid-label" class="font-normal text-base text-core-black" for="snapshot-valid">Test Label</label>
-  <div class="relative w-full"><textarea id="snapshot-valid" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize pr-[38px]" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-valid-label"></textarea><span role="presentation" class="flex items-center justify-center w-[15px] h-[15px] text-semantic-success absolute top-10 right-10" aria-hidden="true"><svg class="svg-inline--fa fa-check fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M441 103c9.4 9.4 9.4 24.6 0 33.9L177 401c-9.4 9.4-24.6 9.4-33.9 0L7 265c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l119 119L407 103c9.4-9.4 24.6-9.4 33.9 0z"></path></svg></span></div>
+  <div class="relative w-full"><textarea id="snapshot-valid" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize pr-[38px]" rows="2" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-valid-label"></textarea><span role="presentation" class="flex items-center justify-center w-[15px] h-[15px] text-semantic-success absolute right-10 top-10" aria-hidden="true"><svg class="svg-inline--fa fa-check fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M441 103c9.4 9.4 9.4 24.6 0 33.9L177 401c-9.4 9.4-24.6 9.4-33.9 0L7 265c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l119 119L407 103c9.4-9.4 24.6-9.4 33.9 0z"></path></svg></span></div>
   <!--v-if-->
 </div>"
 `;
 
 exports[`FzTextarea > Snapshots > should match snapshot - with all props and slots 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full"><label id="snapshot-all-label" class="font-normal text-base text-core-black" for="snapshot-all">Test Label *</label>
-  <div class="relative w-full"><textarea id="snapshot-all" name="test-name" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize-y pr-[38px]" placeholder="Enter text" required="" rows="5" cols="50" minlength="10" maxlength="100" aria-required="true" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-all-label" aria-describedby="snapshot-all-help"></textarea><span role="presentation" class="flex items-center justify-center w-[15px] h-[15px] text-semantic-success absolute top-10 right-10" aria-hidden="true"><svg class="svg-inline--fa fa-check fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M441 103c9.4 9.4 9.4 24.6 0 33.9L177 401c-9.4 9.4-24.6 9.4-33.9 0L7 265c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l119 119L407 103c9.4-9.4 24.6-9.4 33.9 0z"></path></svg></span></div><span id="snapshot-all-help" class="font-normal text-base text-grey-500">Help text</span>
+  <div class="relative w-full"><textarea id="snapshot-all" name="test-name" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize-y pr-[38px]" placeholder="Enter text" required="" rows="5" cols="50" minlength="10" maxlength="100" aria-required="true" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-all-label" aria-describedby="snapshot-all-help"></textarea><span role="presentation" class="flex items-center justify-center w-[15px] h-[15px] text-semantic-success absolute right-10 top-10" aria-hidden="true"><svg class="svg-inline--fa fa-check fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M441 103c9.4 9.4 9.4 24.6 0 33.9L177 401c-9.4 9.4-24.6 9.4-33.9 0L7 265c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l119 119L407 103c9.4-9.4 24.6-9.4 33.9 0z"></path></svg></span></div><span id="snapshot-all-help" class="font-normal text-base text-grey-500">Help text</span>
 </div>"
 `;
 
 exports[`FzTextarea > Snapshots > should match snapshot - with help text slot 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full"><label id="snapshot-help-label" class="font-normal text-base text-core-black" for="snapshot-help">Test Label</label>
-  <div class="relative w-full"><textarea id="snapshot-help" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-help-label" aria-describedby="snapshot-help-help"></textarea>
+  <div class="relative w-full"><textarea id="snapshot-help" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" rows="2" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-help-label" aria-describedby="snapshot-help-help"></textarea>
     <!--v-if-->
   </div><span id="snapshot-help-help" class="font-normal text-base text-grey-500">This is helpful text</span>
 </div>"
@@ -120,7 +129,7 @@ exports[`FzTextarea > Snapshots > should match snapshot - with help text slot 1`
 
 exports[`FzTextarea > Snapshots > should match snapshot - with required 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full"><label id="snapshot-required-label" class="font-normal text-base text-core-black" for="snapshot-required">Test Label *</label>
-  <div class="relative w-full"><textarea id="snapshot-required" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" required="" aria-required="true" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-required-label"></textarea>
+  <div class="relative w-full"><textarea id="snapshot-required" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" required="" rows="2" aria-required="true" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-required-label"></textarea>
     <!--v-if-->
   </div>
   <!--v-if-->

@@ -774,6 +774,7 @@ describe('FzTextarea', () => {
       expect(textarea.classes()).toContain('text-core-black')
       expect(textarea.classes()).toContain('cursor-text')
       expect(textarea.classes()).toContain('min-w-[96px]')
+      expect(textarea.classes()).toContain('min-h-[77px]')
       expect(textarea.classes()).toContain('placeholder:text-grey-300')
     })
 
@@ -1200,6 +1201,159 @@ describe('FzTextarea', () => {
         },
       })
       expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('should match snapshot - autoHeight', () => {
+      const wrapper = mount(FzTextarea, {
+        props: {
+          label: 'Test Label',
+          id: 'snapshot-auto-height',
+          autoHeight: true,
+        },
+      })
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+  })
+
+  describe('Auto Height', () => {
+    describe('autoHeight prop', () => {
+      it('should apply resize-x instead of resize when autoHeight is true (default resize=all)', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', autoHeight: true },
+        })
+        const textarea = wrapper.find('textarea')
+        expect(textarea.classes()).toContain('resize-x')
+        expect(textarea.classes()).not.toContain('resize')
+        expect(textarea.classes()).not.toContain('resize-y')
+      })
+
+      it('should apply resize-none when autoHeight is true and resize=vertical', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', autoHeight: true, resize: 'vertical' },
+        })
+        expect(wrapper.find('textarea').classes()).toContain('resize-none')
+      })
+
+      it('should apply resize-x when autoHeight is true and resize=horizontal', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', autoHeight: true, resize: 'horizontal' },
+        })
+        expect(wrapper.find('textarea').classes()).toContain('resize-x')
+      })
+
+      it('should apply resize-none when autoHeight is true and resize=none', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', autoHeight: true, resize: 'none' },
+        })
+        expect(wrapper.find('textarea').classes()).toContain('resize-none')
+      })
+
+      it('should not change resize classes when autoHeight is false', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', autoHeight: false, resize: 'all' },
+        })
+        expect(wrapper.find('textarea').classes()).toContain('resize')
+      })
+    })
+
+    describe('warnings', () => {
+      it('should warn when maxRows is set without autoHeight', () => {
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        mount(FzTextarea, {
+          props: { label: 'Test Label', maxRows: 5 },
+        })
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('"maxRows" has no effect without "autoHeight"')
+        )
+        warnSpy.mockRestore()
+      })
+
+      it('should not warn when maxRows is set with autoHeight', () => {
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        mount(FzTextarea, {
+          props: { label: 'Test Label', maxRows: 5, autoHeight: true },
+        })
+        expect(warnSpy).not.toHaveBeenCalledWith(
+          expect.stringContaining('"maxRows" has no effect')
+        )
+        warnSpy.mockRestore()
+      })
+
+      it('should warn when autoHeight is true and resize has vertical component (all)', () => {
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        mount(FzTextarea, {
+          props: { label: 'Test Label', autoHeight: true, resize: 'all' },
+        })
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('Vertical resize is disabled when "autoHeight" is enabled')
+        )
+        warnSpy.mockRestore()
+      })
+
+      it('should warn when autoHeight is true and resize=vertical', () => {
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        mount(FzTextarea, {
+          props: { label: 'Test Label', autoHeight: true, resize: 'vertical' },
+        })
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('Vertical resize is disabled when "autoHeight" is enabled')
+        )
+        warnSpy.mockRestore()
+      })
+
+      it('should not warn when autoHeight is true and resize=horizontal', () => {
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        mount(FzTextarea, {
+          props: { label: 'Test Label', autoHeight: true, resize: 'horizontal' },
+        })
+        expect(warnSpy).not.toHaveBeenCalledWith(
+          expect.stringContaining('Vertical resize is disabled')
+        )
+        warnSpy.mockRestore()
+      })
+
+      it('should not warn when autoHeight is true and resize=none', () => {
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        mount(FzTextarea, {
+          props: { label: 'Test Label', autoHeight: true, resize: 'none' },
+        })
+        expect(warnSpy).not.toHaveBeenCalledWith(
+          expect.stringContaining('Vertical resize is disabled')
+        )
+        warnSpy.mockRestore()
+      })
+    })
+
+    describe('height adjustment', () => {
+      it('should set overflow-y hidden when autoHeight is true and no maxRows', async () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', autoHeight: true },
+          attachTo: document.body,
+        })
+        await wrapper.vm.$nextTick()
+        const textarea = wrapper.find('textarea').element as HTMLTextAreaElement
+        expect(textarea.style.overflowY).toBe('hidden')
+        wrapper.unmount()
+      })
+
+      it('should set style.height when autoHeight is true', async () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', autoHeight: true },
+          attachTo: document.body,
+        })
+        await wrapper.vm.$nextTick()
+        const textarea = wrapper.find('textarea').element as HTMLTextAreaElement
+        expect(textarea.style.height).toBeTruthy()
+        wrapper.unmount()
+      })
+
+      it('should not set style.height when autoHeight is false', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label' },
+        })
+        const textarea = wrapper.find('textarea').element as HTMLTextAreaElement
+        expect(textarea.style.height).toBe('')
+      })
     })
   })
 })

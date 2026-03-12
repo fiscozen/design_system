@@ -15,17 +15,18 @@
  * @example
  * <FzTextarea label="Description" v-model="text" @blur="onBlur" />
  */
-import { computed, ref, watch, useSlots } from "vue";
-import { FzTextareaProps } from "./types";
-import { FzAlert } from "@fiscozen/alert";
-import { FzIcon } from "@fiscozen/icons";
-import { generateTextareaId } from "./utils";
+import { computed, ref, watch, onMounted, onBeforeUnmount, nextTick, useSlots } from 'vue'
+import { FzTextareaProps } from './types'
+import { FzAlert } from '@fiscozen/alert'
+import { FzIcon } from '@fiscozen/icons'
+import { generateTextareaId } from './utils'
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<FzTextareaProps>(), {
-  resize: "all",
-});
+  resize: 'all',
+  rows: 2
+})
 
 watch(
   () => props.size,
@@ -33,30 +34,52 @@ watch(
     if (size !== undefined) {
       console.warn(
         `[FzTextarea] The "size" prop is deprecated and will be removed in the next major version. The textarea always uses text-base (16px).`
-      );
+      )
     }
   },
-  { immediate: true },
-);
+  { immediate: true }
+)
+
+watch(
+  () => props.maxRows,
+  (maxRows) => {
+    if (maxRows !== undefined && !props.autoHeight) {
+      console.warn(`[FzTextarea] "maxRows" has no effect without "autoHeight" enabled.`)
+    }
+  },
+  { immediate: true }
+)
+
+watch(
+  () => props.autoHeight,
+  (autoHeight) => {
+    if (autoHeight && (props.resize === 'all' || props.resize === 'vertical')) {
+      console.warn(
+        `[FzTextarea] Vertical resize is disabled when "autoHeight" is enabled. Only horizontal resize is preserved.`
+      )
+    }
+  },
+  { immediate: true }
+)
 
 defineSlots<{
-  errorMessage?: () => unknown;
-  helpText?: () => unknown;
-}>();
+  errorMessage?: () => unknown
+  helpText?: () => unknown
+}>()
 
-const runtimeSlots = useSlots();
+const runtimeSlots = useSlots()
 
-const model = defineModel<string>();
+const model = defineModel<string>()
 
-const textareaRef = ref<HTMLTextAreaElement | null>(null);
+const textareaRef = ref<HTMLTextAreaElement | null>(null)
 
-const uniqueId = generateTextareaId();
+const uniqueId = generateTextareaId()
 
 /**
  * Falls back to auto-generated ID when no explicit id prop is provided,
  * ensuring label-textarea association always works via for/id binding.
  */
-const effectiveId = computed(() => props.id || uniqueId);
+const effectiveId = computed(() => props.id || uniqueId)
 
 /**
  * Links textarea to its error or help message for screen readers.
@@ -66,44 +89,118 @@ const effectiveId = computed(() => props.id || uniqueId);
  */
 const ariaDescribedBy = computed(() => {
   if (props.error && runtimeSlots.errorMessage) {
-    return `${effectiveId.value}-error`;
+    return `${effectiveId.value}-error`
   }
   if (runtimeSlots.helpText) {
-    return `${effectiveId.value}-help`;
+    return `${effectiveId.value}-help`
   }
-  return undefined;
-});
+  return undefined
+})
 
 /**
  * References label ID for aria-labelledby when default label is rendered,
  * providing stronger screen reader association alongside for/id binding.
  */
-const ariaLabelledBy = computed(() =>
-  props.label ? `${effectiveId.value}-label` : undefined,
-);
+const ariaLabelledBy = computed(() => (props.label ? `${effectiveId.value}-label` : undefined))
 
-const isReadonlyOrDisabled = computed(() => !!props.disabled || !!props.readonly);
+const isReadonlyOrDisabled = computed(() => !!props.disabled || !!props.readonly)
 
 const containerClasses = computed(() => [
-  "fz-textarea flex flex-col gap-8 items-start w-full",
+  'fz-textarea flex flex-col gap-8 items-start w-full',
   {
-    "cursor-not-allowed": isReadonlyOrDisabled.value,
-  },
-]);
+    'cursor-not-allowed': isReadonlyOrDisabled.value
+  }
+])
 
-defineExpose({ textareaRef });
+defineExpose({ textareaRef })
+
+// --- Auto-height ---
+
+let cachedLineHeight = 0
+let cachedPaddingY = 0
+let cachedBorderY = 0
+let resizeObserver: ResizeObserver | null = null
+
+/**
+ * Reads font metrics once from the DOM. These values are stable because
+ * font-size (text-base), padding (p-10), and border (border-1) are fixed.
+ */
+function measureMetrics() {
+  const el = textareaRef.value
+  if (!el) return
+  const styles = getComputedStyle(el)
+  cachedLineHeight = parseFloat(styles.lineHeight)
+  cachedPaddingY = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom)
+  cachedBorderY = parseFloat(styles.borderTopWidth) + parseFloat(styles.borderBottomWidth)
+}
+
+/**
+ * Resets height to auto (falling back to `rows`-based height), reads the
+ * natural scrollHeight, and applies the constrained height.
+ * scrollHeight includes padding but not border; with border-box we add borderY.
+ */
+function adjustHeight() {
+  const el = textareaRef.value
+  if (!el) return
+
+  el.style.height = 'auto'
+
+  let targetHeight = el.scrollHeight
+
+  if (props.maxRows && cachedLineHeight > 0) {
+    const maxHeight = props.maxRows * cachedLineHeight + cachedPaddingY
+    if (targetHeight > maxHeight) {
+      targetHeight = maxHeight
+      el.style.overflowY = 'auto'
+    } else {
+      el.style.overflowY = 'hidden'
+    }
+  } else {
+    el.style.overflowY = 'hidden'
+  }
+
+  el.style.height = `${targetHeight + cachedBorderY}px`
+}
+
+if (props.autoHeight) {
+  watch(model, () => nextTick(adjustHeight), { flush: 'post' })
+
+  onMounted(() => {
+    measureMetrics()
+    adjustHeight()
+    if (textareaRef.value) {
+      resizeObserver = new ResizeObserver(() => adjustHeight())
+      resizeObserver.observe(textareaRef.value)
+    }
+  })
+
+  onBeforeUnmount(() => {
+    resizeObserver?.disconnect()
+  })
+}
 
 const labelClasses = computed(() => [
-  "font-normal text-base",
-  (props.disabled || props.readonly) ? "text-grey-300" : "text-core-black",
-]);
+  'font-normal text-base',
+  props.disabled || props.readonly ? 'text-grey-300' : 'text-core-black'
+])
 
 const mapResizeToClass = {
-  none: "resize-none",
-  vertical: "resize-y",
-  horizontal: "resize-x",
-  all: "resize",
-} as const;
+  none: 'resize-none',
+  vertical: 'resize-y',
+  horizontal: 'resize-x',
+  all: 'resize'
+} as const
+
+/**
+ * When autoHeight is active, vertical resize is disabled.
+ * Horizontal resize is preserved if originally requested.
+ */
+const autoHeightResizeMap = {
+  none: 'resize-none',
+  vertical: 'resize-none',
+  horizontal: 'resize-x',
+  all: 'resize-x'
+} as const
 
 /**
  * Generates textarea state-specific classes following the same priority order
@@ -113,36 +210,35 @@ const mapResizeToClass = {
 const evaluateStateClasses = () => {
   switch (true) {
     case !!props.error:
-      return "border-semantic-error-200 focus:border-semantic-error-300 bg-core-white text-core-black cursor-text";
+      return 'border-semantic-error-200 focus:border-semantic-error-300 bg-core-white text-core-black cursor-text'
 
     case isReadonlyOrDisabled.value:
-      return "bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed";
+      return 'bg-grey-100 border-grey-100 text-grey-300 cursor-not-allowed'
 
     default:
-      return "border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text";
+      return 'border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text'
   }
-};
+}
 
 const classes = computed(() => [
-  "border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px]",
+  'border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px]',
   evaluateStateClasses(),
-  mapResizeToClass[props.resize],
+  props.autoHeight ? autoHeightResizeMap[props.resize] : mapResizeToClass[props.resize],
   {
-    "pr-[38px]": props.valid,
-  },
-]);
+    'pr-[38px]': props.valid
+  }
+])
 
 const helpClasses = computed(() => [
-  "font-normal text-base",
-  (props.disabled || props.readonly) ? "text-grey-300" : "text-grey-500",
-]);
-
+  'font-normal text-base',
+  props.disabled || props.readonly ? 'text-grey-300' : 'text-grey-500'
+])
 </script>
 
 <template>
   <div :class="containerClasses">
     <label v-if="label" :id="`${effectiveId}-label`" :class="labelClasses" :for="effectiveId"
-      >{{ label }}{{ required ? " *" : "" }}</label
+      >{{ label }}{{ required ? ' *' : '' }}</label
     >
     <div class="relative w-full">
       <textarea
@@ -170,7 +266,7 @@ const helpClasses = computed(() => [
         v-if="valid"
         name="check"
         size="sm"
-        class="text-semantic-success absolute top-10 right-10"
+        class="text-semantic-success absolute right-10 top-10"
         aria-hidden="true"
       />
     </div>
@@ -183,11 +279,7 @@ const helpClasses = computed(() => [
     >
       <slot name="errorMessage"></slot>
     </FzAlert>
-    <span
-      v-else-if="$slots.helpText"
-      :id="`${effectiveId}-help`"
-      :class="helpClasses"
-    >
+    <span v-else-if="$slots.helpText" :id="`${effectiveId}-help`" :class="helpClasses">
       <slot name="helpText"></slot>
     </span>
   </div>

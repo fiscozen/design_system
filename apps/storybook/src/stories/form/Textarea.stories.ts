@@ -527,8 +527,129 @@ const ErrorWithHelpOnly: TextareaStory = {
   }
 }
 
+const AutoHeight: TextareaStory = {
+  args: {
+    id: 'auto-height',
+    autoHeight: true,
+    rows: 2,
+    'onUpdate:modelValue': fn()
+  },
+  render: (args) => ({
+    components: { FzTextarea },
+    setup() {
+      const value = ref('')
+      return { args, value }
+    },
+    template: `<FzTextarea v-bind="args" :modelValue="value" @update:modelValue="args['onUpdate:modelValue']($event); value = $event" />`
+  }),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify textarea renders with autoHeight', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i)
+      await expect(textarea).toBeInTheDocument()
+    })
+
+    await step('Verify vertical resize is disabled', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i)
+      await expect(textarea).toHaveClass('resize-x')
+      await expect(textarea).not.toHaveClass('resize')
+      await expect(textarea).not.toHaveClass('resize-y')
+    })
+
+    await step('Verify typing triggers height adjustment', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
+      const initialHeight = textarea.offsetHeight
+      await userEvent.type(textarea, 'Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nLine 8')
+      await new Promise(r => setTimeout(r, 100))
+      await expect(textarea.style.height).toBeTruthy()
+    })
+  }
+}
+
+const AutoHeightWithMaxRows: TextareaStory = {
+  args: {
+    id: 'auto-height-max-rows',
+    autoHeight: true,
+    maxRows: 6,
+    rows: 2
+  },
+  render: (args) => ({
+    components: { FzTextarea },
+    setup() {
+      const value = ref('')
+      return { args, value }
+    },
+    template: `<FzTextarea v-bind="args" :modelValue="value" @update:modelValue="value = $event" />`
+  }),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify textarea renders with autoHeight and maxRows', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i)
+      await expect(textarea).toBeInTheDocument()
+    })
+
+    await step('Verify vertical resize is disabled', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i)
+      await expect(textarea).toHaveClass('resize-x')
+    })
+
+    await step('Verify height is constrained after exceeding maxRows', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
+      const manyLines = Array.from({ length: 20 }, (_, i) => `Line ${i + 1}`).join('\n')
+      await userEvent.type(textarea, manyLines)
+      await new Promise(r => setTimeout(r, 100))
+      await expect(textarea.style.overflowY).toBe('auto')
+    })
+  }
+}
+
+const AutoHeightBottomAnchored: TextareaStory = {
+  args: {
+    id: 'auto-height-bottom',
+    autoHeight: true,
+    maxRows: 8,
+    rows: 2
+  },
+  render: (args) => ({
+    components: { FzTextarea },
+    setup() {
+      const value = ref('')
+      return { args, value }
+    },
+    template: `
+      <div class="flex flex-col justify-end h-[400px] border border-dashed border-grey-300 rounded p-16">
+        <FzTextarea v-bind="args" :modelValue="value" @update:modelValue="value = $event" />
+      </div>`
+  }),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify textarea is rendered inside bottom-anchored container', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i)
+      await expect(textarea).toBeInTheDocument()
+    })
+
+    await step('Verify container uses flex-col justify-end', async () => {
+      const container = canvasElement.querySelector('.flex.flex-col.justify-end')
+      await expect(container).toBeInTheDocument()
+    })
+
+    await step('Verify textarea grows upward when typing', async () => {
+      const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
+      const containerBottom = canvasElement.querySelector('.flex.flex-col.justify-end')!.getBoundingClientRect().bottom
+      await userEvent.type(textarea, 'Line 1\nLine 2\nLine 3\nLine 4\nLine 5')
+      await new Promise(r => setTimeout(r, 100))
+      const newContainerBottom = canvasElement.querySelector('.flex.flex-col.justify-end')!.getBoundingClientRect().bottom
+      await expect(newContainerBottom).toBeCloseTo(containerBottom, 0)
+    })
+  }
+}
+
 export {
   Default, Error, Help, Valid, Required, Disabled, Readonly,
   ErrorWithValue, ValidWithValue, DisabledWithValue,
-  HelpDisabled, RequiredWithHelp, ErrorWithHelpOnly
+  HelpDisabled, RequiredWithHelp, ErrorWithHelpOnly,
+  AutoHeight, AutoHeightWithMaxRows, AutoHeightBottomAnchored
 }

@@ -62,6 +62,7 @@ type FzTextareaProps = {
   resize?: "none" | "vertical" | "horizontal" | "all";
   /**
    * Number of visible text rows
+   * @default 2
    */
   rows?: number;
   /**
@@ -86,6 +87,22 @@ type FzTextareaProps = {
    * @default false
    */
   readonly?: boolean;
+  /**
+   * Enables automatic height adjustment based on content.
+   * The textarea grows as the user types and shrinks when content is removed.
+   * Uses `rows` as minimum height and `maxRows` as the ceiling.
+   * Vertical resize is disabled when enabled; horizontal resize is preserved.
+   *
+   * Must be set at mount time — changing at runtime is not supported.
+   * @default false
+   */
+  autoHeight?: boolean;
+  /**
+   * Maximum number of visible rows before scrollbar appears.
+   * Only effective when `autoHeight` is true; a runtime warning is
+   * emitted if set without `autoHeight`.
+   */
+  maxRows?: number;
 };
 
 export { FzTextareaProps };
