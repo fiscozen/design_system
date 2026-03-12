@@ -8,10 +8,14 @@
  * Props for the FzTextarea component.
  *
  * Multi-line text input with label, validation states, resize control,
- * and full WCAG 2.1 AA accessibility support.
+ * and full WCAG 2.1 AA accessibility support. Error and help content
+ * are provided via slots (errorMessage, helpText) following the same
+ * pattern as FzInput.
  *
  * @example
- * <FzTextarea label="Notes" v-model="notes" resize="vertical" />
+ * <FzTextarea label="Notes" v-model="notes" resize="vertical">
+ *   <template #helpText>Max 500 characters</template>
+ * </FzTextarea>
  */
 type FzTextareaProps = {
   /**
@@ -23,14 +27,14 @@ type FzTextareaProps = {
    */
   name?: string;
   /**
-   * Text size variant affecting font size
-   * @default 'md'
+   * @deprecated Not part of the Figma design. Will be removed in the next major version.
+   * The textarea always uses text-base (16px). This prop is accepted but ignored.
    */
   size?: "sm" | "md" | "lg";
   /**
-   * Text label displayed above the textarea
+   * Text label displayed above the textarea. When omitted, no label element is rendered.
    */
-  label: string;
+  label?: string;
   /**
    * Marks field as required. Adds asterisk to label and sets native required attribute.
    * @default false
@@ -41,14 +45,11 @@ type FzTextareaProps = {
    */
   placeholder?: string;
   /**
-   * Enables error state with red border. Paired with errorMessage to display error text.
+   * Enables error state with red border. Paired with errorMessage slot
+   * to display error via FzAlert. Works with disabled (both states reflected in ARIA).
    * @default false
    */
   error?: boolean;
-  /**
-   * Error text displayed below textarea when error is true
-   */
-  errorMessage?: string;
   /**
    * Disables interaction and applies muted styling
    * @default false
@@ -67,10 +68,6 @@ type FzTextareaProps = {
    * Visible width in average character widths
    */
   cols?: number;
-  /**
-   * Help text displayed below textarea. Hidden when error message is shown.
-   */
-  helpMessage?: string;
   /**
    * Shows success checkmark icon when true
    * @default false
@@ -91,19 +88,4 @@ type FzTextareaProps = {
   readonly?: boolean;
 };
 
-interface FzTextareaEvents {
-  /**
-   * Fired when textarea loses focus
-   */
-  (event: "blur", e: FocusEvent): void;
-  /**
-   * Fired when textarea gains focus
-   */
-  (event: "focus", e: FocusEvent): void;
-  /**
-   * Fired when content is pasted into textarea
-   */
-  (event: "paste", e: ClipboardEvent): void;
-}
-
-export { FzTextareaProps, FzTextareaEvents };
+export { FzTextareaProps };

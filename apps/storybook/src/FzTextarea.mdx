@@ -8,14 +8,18 @@ Multi-line text input component with label, validation states, resize control, a
 
 ## Features
 
-- Configurable text sizes (sm, md, lg)
 - Resize control (none, vertical, horizontal, all)
 - Error and valid states with visual feedback
-- Help text and error messages
-- Required, disabled, and readonly states
-- Full ARIA accessibility (aria-required, aria-invalid, aria-disabled, aria-describedby)
+- Error messages via FzAlert component (circle-xmark icon, consistent with FzInput)
+- Custom focus styling (blue border on focus, error border maintained on error+focus)
+- Help text and error messages with multiline wrapping support
+- Required, disabled, and readonly states with proper visual cues
+- Combined states support (error+disabled, required+help, disabled+compiled)
+- Full ARIA accessibility (aria-required, aria-invalid, aria-disabled, aria-labelledby, aria-describedby)
 - Error messages announced via role="alert"
 - Auto-generated IDs for label association
+- Exposed `textareaRef` for programmatic focus
+- Native event forwarding via `v-bind="$attrs"` (inheritAttrs: false)
 
 ## Installation
 
@@ -72,7 +76,7 @@ const notes = ref('')
       <td><code>size</code></td>
       <td><code>'sm' | 'md' | 'lg'</code></td>
       <td><code>'md'</code></td>
-      <td>Text size variant affecting font size</td>
+      <td><strong>Deprecated.</strong> Accepted but ignored. The textarea always uses text-base (16px). Will be removed in the next major version.</td>
     </tr>
     <tr>
       <td><code>placeholder</code></td>
@@ -102,19 +106,7 @@ const notes = ref('')
       <td><code>error</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
-      <td>Enables error state with red border</td>
-    </tr>
-    <tr>
-      <td><code>errorMessage</code></td>
-      <td><code>string</code></td>
-      <td>-</td>
-      <td>Error text displayed below textarea when error is true</td>
-    </tr>
-    <tr>
-      <td><code>helpMessage</code></td>
-      <td><code>string</code></td>
-      <td>-</td>
-      <td>Help text displayed below textarea (hidden when error message is shown)</td>
+      <td>Enables error state with red border. Paired with <code>errorMessage</code> slot.</td>
     </tr>
     <tr>
       <td><code>valid</code></td>
@@ -171,20 +163,73 @@ const notes = ref('')
       <td><code>string</code></td>
       <td>Emitted when text content changes (v-model)</td>
     </tr>
+  </tbody>
+</table>
+
+All native DOM events (<code>blur</code>, <code>focus</code>, <code>paste</code>, <code>keydown</code>, etc.) are automatically forwarded to the native <code>&lt;textarea&gt;</code> element via <code>v-bind="$attrs"</code>. You can listen to any native event directly on the component:
+
+```vue
+<template>
+  <FzTextarea label="Notes" @blur="onBlur" @keydown.enter="onEnter" />
+</template>
+```
+
+Any extra HTML attributes (e.g. <code>data-*</code>, <code>class</code>, <code>style</code>) are also applied to the native textarea, not the wrapper div.
+
+## Exposed Refs
+
+<table>
+  <thead>
     <tr>
-      <td><code>blur</code></td>
-      <td><code>FocusEvent</code></td>
-      <td>Fired when textarea loses focus</td>
+      <th>Ref</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>textareaRef</code></td>
+      <td><code>HTMLTextAreaElement | null</code></td>
+      <td>Reference to the native textarea element for programmatic focus or measurement</td>
+    </tr>
+  </tbody>
+</table>
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { FzTextarea } from '@fiscozen/textarea'
+
+const textarea = ref()
+
+function focusTextarea() {
+  textarea.value?.textareaRef?.focus()
+}
+</script>
+
+<template>
+  <FzTextarea ref="textarea" label="Notes" v-model="notes" />
+  <button @click="focusTextarea">Focus textarea</button>
+</template>
+```
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>errorMessage</code></td>
+      <td>Error content displayed below textarea via FzAlert when <code>error</code> is true. Takes precedence over <code>helpText</code>.</td>
     </tr>
     <tr>
-      <td><code>focus</code></td>
-      <td><code>FocusEvent</code></td>
-      <td>Fired when textarea gains focus</td>
-    </tr>
-    <tr>
-      <td><code>paste</code></td>
-      <td><code>ClipboardEvent</code></td>
-      <td>Fired when content is pasted</td>
+      <td><code>helpText</code></td>
+      <td>Help content displayed below textarea. Hidden when error message is shown. Greyed out when disabled or readonly.</td>
     </tr>
   </tbody>
 </table>
@@ -207,9 +252,10 @@ const hasError = computed(() => description.value.length > 0 && description.valu
     label="Description"
     v-model="description"
     :error="hasError"
-    errorMessage="Description must be at least 10 characters"
     required
-  />
+  >
+    <template #errorMessage>Description must be at least 10 characters</template>
+  </FzTextarea>
 </template>
 ```
 
@@ -220,10 +266,11 @@ const hasError = computed(() => description.value.length > 0 && description.valu
   <FzTextarea
     label="Bio"
     v-model="bio"
-    helpMessage="Tell us about yourself (max 500 characters)"
     :maxlength="500"
     resize="vertical"
-  />
+  >
+    <template #helpText>Tell us about yourself (max 500 characters)</template>
+  </FzTextarea>
 </template>
 ```
 
@@ -252,16 +299,67 @@ const hasError = computed(() => description.value.length > 0 && description.valu
 </template>
 ```
 
-### Custom Size and Resize
+### Vertical-only Resize
 
 ```vue
 <template>
   <FzTextarea
-    label="Small, vertical-only resize"
+    label="Vertical-only resize"
     v-model="text"
-    size="sm"
     resize="vertical"
     :rows="4"
+  />
+</template>
+```
+
+### Error with Pre-filled Content
+
+```vue
+<template>
+  <FzTextarea
+    label="Description"
+    v-model="description"
+    :error="true"
+  >
+    <template #errorMessage>Content does not meet requirements</template>
+  </FzTextarea>
+</template>
+```
+
+### Valid with Content
+
+```vue
+<template>
+  <FzTextarea
+    label="Notes"
+    v-model="notes"
+    :valid="true"
+  />
+</template>
+```
+
+### Required with Help Text
+
+```vue
+<template>
+  <FzTextarea
+    label="Comments"
+    v-model="comments"
+    required
+  >
+    <template #helpText>This field is mandatory</template>
+  </FzTextarea>
+</template>
+```
+
+### Disabled with Value
+
+```vue
+<template>
+  <FzTextarea
+    label="Archived Notes"
+    modelValue="This content is archived and cannot be edited"
+    disabled
   />
 </template>
 ```
@@ -270,21 +368,26 @@ const hasError = computed(() => description.value.length > 0 && description.valu
 
 FzTextarea meets WCAG 2.1 AA standards:
 
+- **Focus indicator**: Custom blue border (`blue-600`) on focus replaces browser default outline. Error state maintains error border color on focus (`semantic-error-300`).
 - **ARIA attributes**: `aria-required`, `aria-invalid`, `aria-disabled` always present with string values ("true"/"false") for screen reader compatibility
 - **aria-describedby**: Links textarea to error or help message when present
 - **role="alert"**: Error messages are announced immediately by screen readers
-- **Label association**: Label is always associated with textarea via `for`/`id` binding (auto-generated ID fallback)
-- **Decorative icons**: Check and error icons have `aria-hidden="true"`
+- **aria-labelledby**: References the label element ID for stronger screen reader association
+- **Label association**: Label is always associated with textarea via `for`/`id` binding and `aria-labelledby` (auto-generated ID fallback)
+- **Decorative icons**: Check icon and FzAlert error icon have `aria-hidden="true"`
+- **Combined states**: Error+disabled, required+help, and other combinations maintain correct ARIA semantics
 - **Keyboard navigation**: Full keyboard support (Tab to focus, type to input)
 
 ## Best Practices
 
 - Always provide a descriptive `label` for accessibility
-- Use `helpMessage` to guide users on expected input format
-- Use `errorMessage` paired with `error` prop for validation feedback
+- Use `helpText` slot to guide users on expected input format
+- Use `errorMessage` slot paired with `error` prop for validation feedback
+- Combine `required` with `helpText` slot to explain what the field needs
 - Set `resize="vertical"` for most use cases to prevent horizontal overflow
 - Use `rows` to set a sensible initial height based on expected content length
 - Use `maxlength` to enforce content limits
+- When showing pre-filled disabled fields, ensure the value conveys why the field is locked
 
 ## Related Components
 
