@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent } from 'storybook/test'
+import { expect, userEvent, within } from 'storybook/test'
 import { ref } from 'vue'
 import { FzPagination } from '@fiscozen/pagination'
 
@@ -54,6 +54,8 @@ export const Default: PaginationStory = {
     currentPage: 1
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
     await step('Verify component renders with nav', async () => {
       const nav = canvasElement.querySelector('nav')
       await expect(nav).toBeTruthy()
@@ -61,12 +63,12 @@ export const Default: PaginationStory = {
     })
 
     await step('Verify prev/next buttons exist', async () => {
-      const buttons = canvasElement.querySelectorAll('button')
+      const buttons = canvas.getAllByRole('button')
       await expect(buttons.length).toBeGreaterThan(2)
     })
 
     await step('Navigate to next page', async () => {
-      const buttons = canvasElement.querySelectorAll('button')
+      const buttons = canvas.getAllByRole('button')
       const nextButton = buttons[buttons.length - 1]
       await userEvent.click(nextButton)
     })
@@ -87,9 +89,11 @@ export const FewPages: PaginationStory = {
     currentPage: 1
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
     await step('Verify all pages are visible without ellipsis', async () => {
-      const buttons = canvasElement.querySelectorAll('button')
-      const labels = Array.from(buttons).map(b => b.textContent?.trim())
+      const buttons = canvas.getAllByRole('button')
+      const labels = buttons.map(b => b.textContent?.trim())
       await expect(labels).toContain('1')
       await expect(labels).toContain('2')
       await expect(labels).toContain('3')
@@ -132,14 +136,16 @@ export const FirstPage: PaginationStory = {
     currentPage: 1
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
     await step('Verify prev button is disabled on first page', async () => {
-      const buttons = canvasElement.querySelectorAll('button')
+      const buttons = canvas.getAllByRole('button')
       const prevButton = buttons[0]
       await expect(prevButton?.hasAttribute('disabled')).toBe(true)
     })
 
     await step('Verify next button is enabled', async () => {
-      const buttons = canvasElement.querySelectorAll('button')
+      const buttons = canvas.getAllByRole('button')
       const nextButton = buttons[buttons.length - 1]
       await expect(nextButton?.hasAttribute('disabled')).toBe(false)
     })
@@ -160,14 +166,16 @@ export const LastPage: PaginationStory = {
     currentPage: 10
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
     await step('Verify next button is disabled on last page', async () => {
-      const buttons = canvasElement.querySelectorAll('button')
+      const buttons = canvas.getAllByRole('button')
       const nextButton = buttons[buttons.length - 1]
       await expect(nextButton?.hasAttribute('disabled')).toBe(true)
     })
 
     await step('Verify prev button is enabled', async () => {
-      const buttons = canvasElement.querySelectorAll('button')
+      const buttons = canvas.getAllByRole('button')
       const prevButton = buttons[0]
       await expect(prevButton?.hasAttribute('disabled')).toBe(false)
     })
@@ -189,13 +197,15 @@ export const Backoffice: PaginationStory = {
     environment: 'backoffice'
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
     await step('Verify component renders in backoffice mode', async () => {
       const nav = canvasElement.querySelector('nav')
       await expect(nav).toBeTruthy()
     })
 
     await step('Verify navigation works', async () => {
-      const buttons = canvasElement.querySelectorAll('button')
+      const buttons = canvas.getAllByRole('button')
       const nextButton = buttons[buttons.length - 1]
       await userEvent.click(nextButton)
     })

@@ -10,6 +10,7 @@ Page-based navigation control for paginated data sets. Provides intuitive page n
 
 - Two-way binding via v-model:currentPage for current page
 - Configurable total number of pages
+- Automatic URL sync with query parameters (enabled by default)
 - Responsive layout (icon-only prev/next on mobile)
 - Accessible navigation with semantic HTML and ARIA attributes
 - Frontoffice and backoffice environment support
@@ -31,7 +32,7 @@ const currentPage = ref(1)
 </script>
 
 <template>
-  <FzPagination v-model:currentPage="currentPage" :total-pages="10" />
+  <FzPagination v-model:currentPage="currentPage" :totalPages="10" />
 </template>
 ```
 
@@ -65,6 +66,18 @@ const currentPage = ref(1)
       <td><code>'frontoffice'</code></td>
       <td>Visual environment passed to inner buttons for styling</td>
     </tr>
+    <tr>
+      <td><code>syncUrl</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Enables two-way sync between currentPage and a URL query parameter. Set to false to disable</td>
+    </tr>
+    <tr>
+      <td><code>urlKey</code></td>
+      <td><code>string</code></td>
+      <td><code>'page'</code></td>
+      <td>URL query parameter name used for currentPage synchronization. Only effective when syncUrl is true</td>
+    </tr>
   </tbody>
 </table>
 
@@ -76,9 +89,98 @@ const currentPage = ref(1)
 <template>
   <FzPagination
     v-model:currentPage="currentPage"
-    :total-pages="10"
+    :totalPages="10"
     environment="backoffice"
   />
+</template>
+```
+
+## URL Sync
+
+URL sync is **enabled by default**. The component reads the initial page from `?page=` in the URL on mount and writes page changes back automatically.
+
+### Setup (once, at app level)
+
+Provide the Vue Router route so all FzPagination instances (even nested inside other components) can access it without prop drilling:
+
+```vue
+<script setup>
+import { provideQueryStringRoute } from '@fiscozen/composables'
+import { useRoute } from 'vue-router'
+
+provideQueryStringRoute(useRoute())
+</script>
+```
+
+If `provideQueryStringRoute()` is not called, the component falls back to the browser History API directly. This works in any environment (standalone pages, micro-frontends, non-Vue-Router apps).
+
+### Initializing currentPage from the URL
+
+Use `getInitialPageFromUrl` to set the correct page **before** the first API request. Without it, the ref would start at the default value and FzPagination would emit a corrected `update:currentPage` on mount, causing a redundant request.
+
+```vue
+<script setup>
+import { FzPagination, getInitialPageFromUrl } from '@fiscozen/pagination'
+import { ref } from 'vue'
+
+const currentPage = ref(getInitialPageFromUrl())
+
+// fetchData(currentPage.value) — first request already uses the correct page
+</script>
+
+<template>
+  <FzPagination v-model:currentPage="currentPage" :totalPages="20" />
+</template>
+```
+
+`getInitialPageFromUrl(defaultValue = 1, urlKey = 'page')` accepts an optional default and a custom query parameter key:
+
+```ts
+const page = getInitialPageFromUrl(0, 'p') // reads ?p=, defaults to 0
+```
+
+### Default behavior
+
+```vue
+<script setup>
+import { FzPagination } from '@fiscozen/pagination'
+import { ref } from 'vue'
+
+const currentPage = ref(1)
+</script>
+
+<template>
+  <!-- Syncs with ?page= by default -->
+  <FzPagination v-model:currentPage="currentPage" :totalPages="20" />
+</template>
+```
+
+With the URL `?page=5`, the component will emit `update:currentPage` with `5` on mount. Clicking page 3 updates the URL to `?page=3`.
+
+### Custom query parameter
+
+```vue
+<template>
+  <FzPagination v-model:currentPage="currentPage" :totalPages="20" urlKey="p" />
+</template>
+```
+
+### Multiple paginations
+
+Assign distinct `urlKey` values to avoid conflicts:
+
+```vue
+<template>
+  <FzPagination v-model:currentPage="itemsPage" :totalPages="20" urlKey="itemsPage" />
+  <FzPagination v-model:currentPage="commentsPage" :totalPages="5" urlKey="commentsPage" />
+</template>
+```
+
+### Disabling URL sync
+
+```vue
+<template>
+  <FzPagination v-model:currentPage="currentPage" :totalPages="20" :syncUrl="false" />
 </template>
 ```
 

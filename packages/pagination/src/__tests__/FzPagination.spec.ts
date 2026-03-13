@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { defineComponent, h } from 'vue'
 import { mount } from '@vue/test-utils'
+import { provideQueryStringRoute } from '@fiscozen/composables'
+import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import FzPagination from '../FzPagination.vue'
 
 describe('FzPagination', () => {
@@ -318,6 +321,136 @@ describe('FzPagination', () => {
       const nextSpan = wrapper.find('span.justify-end')
       expect(nextSpan.exists()).toBe(true)
       expect(nextSpan.classes()).toContain('flex-1')
+    })
+  })
+
+  describe('URL sync (syncUrl)', () => {
+    beforeEach(() => {
+      Object.defineProperty(window, 'location', {
+        value: { pathname: '/app', search: '', hash: '' },
+        writable: true,
+      })
+      vi.spyOn(window.history, 'replaceState').mockImplementation(() => {})
+      vi.spyOn(window.history, 'pushState').mockImplementation(() => {})
+      vi.spyOn(window, 'history', 'get').mockReturnValue({
+        ...window.history,
+        state: {},
+        replaceState: window.history.replaceState,
+        pushState: window.history.pushState,
+      })
+    })
+
+    it('uses "page" as default urlKey', () => {
+      window.location.search = '?page=5'
+      const wrapper = mount(FzPagination, {
+        props: { totalPages: 10, currentPage: 1 }
+      })
+
+      expect(wrapper.emitted('update:currentPage')).toBeTruthy()
+      expect(wrapper.emitted('update:currentPage')![0]).toEqual([5])
+    })
+
+    it('emits initial page from URL on mount', () => {
+      window.location.search = '?page=5'
+      const wrapper = mount(FzPagination, {
+        props: { totalPages: 10, currentPage: 1 }
+      })
+
+      expect(wrapper.emitted('update:currentPage')).toBeTruthy()
+      expect(wrapper.emitted('update:currentPage')![0]).toEqual([5])
+    })
+
+    it('does not emit if URL value matches currentPage', () => {
+      window.location.search = '?page=3'
+      const wrapper = mount(FzPagination, {
+        props: { totalPages: 10, currentPage: 3 }
+      })
+
+      expect(wrapper.emitted('update:currentPage')).toBeFalsy()
+    })
+
+    it('does not emit if urlKey is absent from URL', () => {
+      window.location.search = ''
+      const wrapper = mount(FzPagination, {
+        props: { totalPages: 10, currentPage: 1 }
+      })
+
+      expect(wrapper.emitted('update:currentPage')).toBeFalsy()
+    })
+
+    it('updates URL on page click', async () => {
+      window.location.search = '?page=1'
+      const wrapper = mount(FzPagination, {
+        props: { totalPages: 5, currentPage: 1 }
+      })
+
+      const pageButtons = wrapper.findAll('button').filter(
+        btn => btn.text() === '3'
+      )
+      expect(pageButtons.length).toBeGreaterThan(0)
+      await pageButtons[0].trigger('click')
+
+      expect(wrapper.emitted('update:currentPage')).toBeTruthy()
+      expect(window.history.replaceState).toHaveBeenCalledWith(
+        expect.objectContaining({ __queryString: expect.objectContaining({ page: 3 }) }),
+        '',
+        expect.any(String)
+      )
+    })
+
+    it('supports custom urlKey', () => {
+      window.location.search = '?p=7'
+      const wrapper = mount(FzPagination, {
+        props: { totalPages: 10, currentPage: 1, urlKey: 'p' }
+      })
+
+      expect(wrapper.emitted('update:currentPage')).toBeTruthy()
+      expect(wrapper.emitted('update:currentPage')![0]).toEqual([7])
+    })
+
+    it('works with provideQueryStringRoute', () => {
+      window.location.search = '?page=4'
+      const mockRoute = { query: { page: '4' } } as unknown as RouteLocationNormalizedLoaded
+
+      const Parent = defineComponent({
+        setup() {
+          provideQueryStringRoute(mockRoute)
+          return () => h(FzPagination, {
+            totalPages: 10,
+            currentPage: 1,
+          })
+        }
+      })
+
+      const wrapper = mount(Parent)
+      const pagination = wrapper.findComponent(FzPagination)
+
+      expect(pagination.emitted('update:currentPage')).toBeTruthy()
+      expect(pagination.emitted('update:currentPage')![0]).toEqual([4])
+    })
+
+    it('does not sync when syncUrl is false', () => {
+      window.location.search = '?page=5'
+      const wrapper = mount(FzPagination, {
+        props: { totalPages: 10, currentPage: 1, syncUrl: false }
+      })
+
+      expect(wrapper.emitted('update:currentPage')).toBeFalsy()
+    })
+
+    it('does not update URL on click when syncUrl is false', async () => {
+      window.location.search = ''
+      const wrapper = mount(FzPagination, {
+        props: { totalPages: 5, currentPage: 1, syncUrl: false }
+      })
+
+      const pageButtons = wrapper.findAll('button').filter(
+        btn => btn.text() === '3'
+      )
+      await pageButtons[0].trigger('click')
+
+      expect(wrapper.emitted('update:currentPage')).toBeTruthy()
+      expect(window.history.replaceState).not.toHaveBeenCalled()
     })
   })
 })
