@@ -1,4 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { defineComponent, h, inject } from 'vue'
+import { mount } from '@vue/test-utils'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import type { HandledQueryStringKeys } from '../composables/useQueryString/types'
 import {
@@ -8,6 +10,11 @@ import {
     removeEmptyValues,
     buildHistoryState,
 } from '../composables/useQueryString/utils'
+import {
+    provideQueryStringRoute,
+    injectQueryStringRoute,
+    QUERY_STRING_ROUTE_KEY,
+} from '../composables/useQueryString/provider'
 import {
     transformQueryStringValue,
     extractValues,
@@ -462,5 +469,152 @@ describe('useQueryString composable', () => {
                 expect.any(String)
             )
         })
+    })
+})
+
+describe('useQueryString auto-inject (route omitted)', () => {
+    const mockRoute = { query: { page: '1', search: 'injected' } } as unknown as RouteLocationNormalizedLoaded
+
+    beforeEach(() => {
+        Object.defineProperty(window, 'location', {
+            value: { pathname: '/app', search: '?page=3', hash: '' },
+            writable: true,
+        })
+        vi.spyOn(window.history, 'replaceState').mockImplementation(() => {})
+        vi.spyOn(window.history, 'pushState').mockImplementation(() => {})
+        vi.spyOn(window, 'history', 'get').mockReturnValue({
+            ...window.history,
+            state: {},
+            replaceState: window.history.replaceState,
+            pushState: window.history.pushState,
+        })
+    })
+
+    it('auto-injects route from provider when route is omitted', () => {
+        let result: ReturnType<typeof useQueryString> | null = null
+
+        const Child = defineComponent({
+            setup() {
+                result = useQueryString(
+                    [{ key: 'page', transform: 'number', defaultValue: 1 }]
+                )
+                return () => h('div')
+            }
+        })
+
+        const Parent = defineComponent({
+            setup() {
+                provideQueryStringRoute(mockRoute)
+                return () => h(Child)
+            }
+        })
+
+        mount(Parent)
+        expect(result).not.toBeNull()
+        expect(result!.initialValuesInQueryString.page).toBe(3)
+    })
+
+    it('uses injected route.query for merge during setValuesInQueryString', () => {
+        let sync: ReturnType<typeof useQueryString> | null = null
+
+        const Child = defineComponent({
+            setup() {
+                sync = useQueryString(['page', 'search'])
+                return () => h('div')
+            }
+        })
+
+        const Parent = defineComponent({
+            setup() {
+                provideQueryStringRoute(mockRoute)
+                return () => h(Child)
+            }
+        })
+
+        mount(Parent)
+        sync!.setValuesInQueryString({ page: '5' })
+
+        expect(window.history.replaceState).toHaveBeenCalledWith(
+            expect.objectContaining({
+                __queryString: expect.objectContaining({ page: '5', search: 'injected' })
+            }),
+            '',
+            expect.any(String)
+        )
+    })
+
+    it('falls back to router-agnostic mode when route is omitted and no provider exists', () => {
+        window.location.search = '?page=7'
+        let sync: ReturnType<typeof useQueryString> | null = null
+
+        const Standalone = defineComponent({
+            setup() {
+                sync = useQueryString([{ key: 'page', transform: 'number', defaultValue: 1 }])
+                return () => h('div')
+            }
+        })
+
+        mount(Standalone)
+        expect(sync!.initialValuesInQueryString.page).toBe(7)
+    })
+})
+
+describe('useQueryString provider', () => {
+    const mockRoute = { query: { page: '1' } } as unknown as RouteLocationNormalizedLoaded
+
+    it('injectQueryStringRoute returns the route provided by provideQueryStringRoute', () => {
+        let injectedRoute: RouteLocationNormalizedLoaded | null = null
+
+        const Child = defineComponent({
+            setup() {
+                injectedRoute = injectQueryStringRoute()
+                return () => h('div')
+            }
+        })
+
+        const Parent = defineComponent({
+            setup() {
+                provideQueryStringRoute(mockRoute)
+                return () => h(Child)
+            }
+        })
+
+        mount(Parent)
+        expect(injectedRoute).toBe(mockRoute)
+    })
+
+    it('injectQueryStringRoute returns null when no provide was called', () => {
+        let injectedRoute: RouteLocationNormalizedLoaded | null = 'not-null' as any
+
+        const Standalone = defineComponent({
+            setup() {
+                injectedRoute = injectQueryStringRoute()
+                return () => h('div')
+            }
+        })
+
+        mount(Standalone)
+        expect(injectedRoute).toBe(null)
+    })
+
+    it('QUERY_STRING_ROUTE_KEY can be used directly with Vue inject', () => {
+        let injectedRoute: RouteLocationNormalizedLoaded | null = null
+
+        const Child = defineComponent({
+            setup() {
+                injectedRoute = inject(QUERY_STRING_ROUTE_KEY, null)
+                return () => h('div')
+            }
+        })
+
+        const Parent = defineComponent({
+            setup() {
+                provideQueryStringRoute(mockRoute)
+                return () => h(Child)
+            }
+        })
+
+        mount(Parent)
+        expect(injectedRoute).toBe(mockRoute)
     })
 })

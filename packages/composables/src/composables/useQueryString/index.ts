@@ -19,8 +19,10 @@ import {
 } from './utils';
 
 import { extractValues, hasAnyHandledKey } from './transform';
+import { injectQueryStringRoute } from './provider';
 
 export type * from './types';
+export { provideQueryStringRoute, injectQueryStringRoute, QUERY_STRING_ROUTE_KEY } from './provider';
 
 /**
  * Manages URL query parameters with type-safe extraction and History API synchronization.
@@ -30,32 +32,34 @@ export type * from './types';
  * Values are persisted in both the URL and history state to survive
  * Vue Router navigation quirks.
  *
- * Pass `null` as `route` to use the composable without Vue Router — all reads
- * and writes go through the browser History API and `window.location` directly.
- * This makes the composable usable in non-Vue-Router contexts (e.g. standalone pages,
- * micro-frontends, or any vanilla JS/TS environment).
+ * The `route` parameter controls how existing query params are read during writes:
+ * - **omitted** (default): auto-injects the route from `provideQueryStringRoute()`.
+ *   Falls back to router-agnostic mode if no provider exists.
+ * - **RouteLocationNormalizedLoaded**: uses that specific route instance.
+ * - **null**: forces router-agnostic mode (pure History API via `window.location`).
  *
  * @param handledQueryStringKeys - Keys to manage (strings or config objects with transform/defaults)
- * @param route - Vue Router route for merge during writes, or `null` for router-agnostic mode
+ * @param route - Vue Router route, `null` for router-agnostic, or omit to auto-inject
  *
  * @example
  * ```ts
- * // With Vue Router
+ * // Auto-inject from provider (recommended)
  * const { initialValuesInQueryString, setValuesInQueryString } = useQueryString([
  *   { key: 'page', defaultValue: 1, transform: 'number' },
- *   { key: 'search', defaultValue: '' },
- * ], route);
+ * ]);
  *
- * // Without Vue Router (router-agnostic)
- * const { initialValuesInQueryString, setValuesInQueryString } = useQueryString([
- *   { key: 'page', defaultValue: 1, transform: 'number' },
- * ], null);
+ * // Explicit route
+ * const { ... } = useQueryString([...], route);
  *
- * setValuesInQueryString({ page: 2, search: 'test' });
- * setValuesInQueryString({ page: 1 }, { replaceQueryString: true });
+ * // Force router-agnostic
+ * const { ... } = useQueryString([...], null);
  * ```
  */
-export const useQueryString = (handledQueryStringKeys: HandledQueryStringKeys, route: RouteLocationNormalizedLoaded | null) => {
+export const useQueryString = (
+    handledQueryStringKeys: HandledQueryStringKeys,
+    route?: RouteLocationNormalizedLoaded | null
+) => {
+    const resolvedRoute = route === undefined ? injectQueryStringRoute() : route;
     const getValuesFromQueryString: GetValuesFromQueryString = (
         specificHandledQueryStringKeys = handledQueryStringKeys
     ): ValuesInQueryStrings => {
@@ -91,7 +95,7 @@ export const useQueryString = (handledQueryStringKeys: HandledQueryStringKeys, r
     ) => {
         const { replaceQueryString = false, __forcePushState = false } = options;
 
-        const currentQuery = route ? route.query : getQueryFromUrl();
+        const currentQuery = resolvedRoute ? resolvedRoute.query : getQueryFromUrl();
         const mergedQuery = (replaceQueryString
             ? { ...values }
             : { ...currentQuery, ...values }) as ValuesInQueryStrings;
