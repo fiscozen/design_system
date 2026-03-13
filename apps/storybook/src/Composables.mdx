@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Composables/Overview" />
+
+# Composables
+
+Reusable Vue composables provided by `@fiscozen/composables`. Each composable encapsulates a specific concern and can be used independently.
+
+## Installation
+
+```bash
+npm install @fiscozen/composables
+```
+
+## Available Composables
+
+<table>
+  <thead>
+    <tr>
+      <th>Composable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>useQueryString</code></td>
+      <td>Type-safe URL query parameter management with History API synchronization</td>
+    </tr>
+    <tr>
+      <td><code>useFloating</code></td>
+      <td>Positioning logic for floating elements (tooltips, dropdowns, popovers)</td>
+    </tr>
+    <tr>
+      <td><code>useMediaQuery</code></td>
+      <td>Reactive CSS media query matching</td>
+    </tr>
+    <tr>
+      <td><code>useBreakpoints</code></td>
+      <td>Responsive breakpoint detection based on design system tokens</td>
+    </tr>
+    <tr>
+      <td><code>useClickOutside</code></td>
+      <td>Detects clicks outside a target element (for closing dropdowns, modals, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>useKeyDown</code></td>
+      <td>Keyboard event listener for keydown events</td>
+    </tr>
+    <tr>
+      <td><code>useKeyUp</code></td>
+      <td>Keyboard event listener for keyup events</td>
+    </tr>
+    <tr>
+      <td><code>useCurrency</code></td>
+      <td>Currency formatting and parsing utilities</td>
+    </tr>
+  </tbody>
+</table>
+
+## Optional Dependencies
+
+Some composables have optional peer dependencies:
+
+- **vue-router** (optional): Required by `useQueryString` when using `provideQueryStringRoute()` for Vue Router integration. Without it, the composable falls back to the browser History API.
