@@ -36,7 +36,7 @@ export type * from './types';
  * micro-frontends, or any vanilla JS/TS environment).
  *
  * @param handledQueryStringKeys - Keys to manage (strings or config objects with transform/defaults)
- * @param route - Vue Router route for merge during writes, or `null` for router-agnostic mode
+ * @param route - Vue Router route reference, or `null` for router-agnostic mode
  *
  * @example
  * ```ts
@@ -91,7 +91,7 @@ export const useQueryString = (handledQueryStringKeys: HandledQueryStringKeys, r
     ) => {
         const { replaceQueryString = false, __forcePushState = false } = options;
 
-        const currentQuery = route ? route.query : getQueryFromUrl();
+        const currentQuery = getQueryFromUrl();
         const mergedQuery = (replaceQueryString
             ? { ...values }
             : { ...currentQuery, ...values }) as ValuesInQueryStrings;

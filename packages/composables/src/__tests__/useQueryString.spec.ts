@@ -317,7 +317,7 @@ describe('useQueryString composable', () => {
 
     describe('setValuesInQueryString', () => {
         it('merges values with existing query by default', () => {
-            window.location.search = ''
+            window.location.search = '?page=1&search=old'
             const route = createMockRoute({ page: '1', search: 'old' })
             const { setValuesInQueryString } = useQueryString(['page', 'search'], route)
 
@@ -325,6 +325,23 @@ describe('useQueryString composable', () => {
 
             expect(window.history.replaceState).toHaveBeenCalledWith(
                 expect.objectContaining({ __queryString: expect.objectContaining({ page: '2', search: 'old' }) }),
+                '',
+                expect.any(String)
+            )
+        })
+
+        it('uses current URL query as merge base across consecutive writes', () => {
+            window.location.search = '?page=1&search=old'
+            const route = createMockRoute({ page: '1', search: 'old' })
+            const { setValuesInQueryString } = useQueryString(['page', 'search'], route)
+
+            setValuesInQueryString({ page: '2' })
+            window.location.search = '?page=2&search=old'
+
+            setValuesInQueryString({ search: 'new' })
+
+            expect(window.history.replaceState).toHaveBeenLastCalledWith(
+                expect.objectContaining({ __queryString: { page: '2', search: 'new' } }),
                 '',
                 expect.any(String)
             )

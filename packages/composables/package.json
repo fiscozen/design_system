@@ -18,7 +18,8 @@
   },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
-    "vue": "^3.4.13"
+    "vue": "^3.4.13",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",
