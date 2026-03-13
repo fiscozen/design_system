@@ -88,6 +88,29 @@ const buildHistoryState = (query: Record<string, unknown>): Record<string, unkno
     };
 };
 
+/**
+ * Flattens a query object that may contain array values (Vue Router's LocationQuery)
+ * into a plain Record<string, string>. For arrays, takes the first element — consistent
+ * with URLSearchParams.entries() which also returns only the first value per key.
+ * Null values are dropped (same semantics as removeEmptyValues).
+ */
+const flattenQuery = (query: Record<string, unknown>): Record<string, string> => {
+    const flat: Record<string, string> = {};
+
+    Object.entries(query).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            const first = value[0];
+            if (first != null) {
+                flat[key] = String(first);
+            }
+        } else if (!isEmptyValue(value)) {
+            flat[key] = String(value);
+        }
+    });
+
+    return flat;
+};
+
 export {
     HISTORY_STATE_QUERY_KEY,
     getQueryFromUrl,
@@ -97,4 +120,5 @@ export {
     setQueryToUrl,
     removeEmptyValues,
     buildHistoryState,
+    flattenQuery,
 };

@@ -16,6 +16,7 @@ import {
     setQueryToUrl,
     removeEmptyValues,
     buildHistoryState,
+    flattenQuery,
 } from './utils';
 
 import { extractValues, hasAnyHandledKey } from './transform';
@@ -76,8 +77,7 @@ export const useQueryString = (
         const valuesFromState = extractValues(specificHandledQueryStringKeys, queryState);
 
         if (Object.keys(queryState).length > 0) {
-            const currentUrlQuery = getQueryFromUrl();
-            const mergedQuery: Record<string, string> = { ...currentUrlQuery, ...normalizeQueryValues(valuesFromState) };
+            const mergedQuery: Record<string, string> = { ...urlQuery, ...normalizeQueryValues(valuesFromState) };
             removeEmptyValues(mergedQuery);
 
             const newUrl = buildUrlWithQuery(mergedQuery);
@@ -95,7 +95,7 @@ export const useQueryString = (
     ) => {
         const { replaceQueryString = false, __forcePushState = false } = options;
 
-        const currentQuery = resolvedRoute ? resolvedRoute.query : getQueryFromUrl();
+        const currentQuery = resolvedRoute ? flattenQuery(resolvedRoute.query) : getQueryFromUrl();
         const mergedQuery = (replaceQueryString
             ? { ...values }
             : { ...currentQuery, ...values }) as ValuesInQueryStrings;

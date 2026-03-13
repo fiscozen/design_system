@@ -9,6 +9,7 @@ import {
     buildUrlWithQuery,
     removeEmptyValues,
     buildHistoryState,
+    flattenQuery,
 } from '../composables/useQueryString/utils'
 import {
     provideQueryStringRoute,
@@ -125,6 +126,36 @@ describe('useQueryString utilities', () => {
             })
             const state = buildHistoryState({ page: '1' })
             expect(state).toEqual({ __queryString: { page: '1' } })
+        })
+    })
+
+    describe('flattenQuery', () => {
+        it('passes through simple string values', () => {
+            expect(flattenQuery({ page: '1', search: 'foo' })).toEqual({ page: '1', search: 'foo' })
+        })
+
+        it('takes the first element of arrays', () => {
+            expect(flattenQuery({ tag: ['a', 'b'] })).toEqual({ tag: 'a' })
+        })
+
+        it('drops null values', () => {
+            expect(flattenQuery({ page: '1', removed: null })).toEqual({ page: '1' })
+        })
+
+        it('drops arrays where the first element is null', () => {
+            expect(flattenQuery({ tag: [null, 'b'] })).toEqual({})
+        })
+
+        it('drops empty arrays', () => {
+            expect(flattenQuery({ tag: [] })).toEqual({})
+        })
+
+        it('converts non-string scalars to strings', () => {
+            expect(flattenQuery({ count: 42 as any, active: true as any })).toEqual({ count: '42', active: 'true' })
+        })
+
+        it('drops undefined and empty string values', () => {
+            expect(flattenQuery({ a: undefined, b: '' })).toEqual({})
         })
     })
 })
@@ -371,6 +402,20 @@ describe('useQueryString composable', () => {
 
             expect(window.history.replaceState).toHaveBeenCalledWith(
                 expect.objectContaining({ __queryString: { page: '2' } }),
+                '',
+                expect.any(String)
+            )
+        })
+
+        it('flattens array values from route.query instead of corrupting them', () => {
+            window.location.search = ''
+            const route = { query: { page: '1', tag: ['a', 'b'] } } as unknown as RouteLocationNormalizedLoaded
+            const { setValuesInQueryString } = useQueryString(['page'], route)
+
+            setValuesInQueryString({ page: '2' })
+
+            expect(window.history.replaceState).toHaveBeenCalledWith(
+                expect.objectContaining({ __queryString: expect.objectContaining({ page: '2', tag: 'a' }) }),
                 '',
                 expect.any(String)
             )
