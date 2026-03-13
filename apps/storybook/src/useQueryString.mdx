@@ -1,0 +1,331 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Composables/useQueryString" />
+
+# useQueryString
+
+Type-safe URL query parameter management with History API synchronization. Bridges the gap between Vue Router's read-only `route.query` and the need to read/write typed query params directly.
+
+## Features
+
+- Type-safe extraction with automatic transformation (string, number, boolean, custom)
+- Default values for missing or invalid parameters
+- History API synchronization (replaceState / pushState)
+- Vue Router integration via provide/inject (optional)
+- Router-agnostic mode for non-Vue-Router environments
+- History state persistence to survive Vue Router navigation quirks
+
+## Installation
+
+```bash
+npm install @fiscozen/composables
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { useQueryString } from '@fiscozen/composables'
+
+const { initialValuesInQueryString, setValuesInQueryString } = useQueryString([
+  { key: 'page', defaultValue: 1, transform: 'number' },
+  { key: 'search', defaultValue: '', transform: 'string' },
+])
+
+// Read initial values (frozen at mount time)
+console.log(initialValuesInQueryString.page)   // number
+console.log(initialValuesInQueryString.search)  // string
+
+// Write values to the URL
+setValuesInQueryString({ page: 2, search: 'hello' })
+</script>
+```
+
+## Vue Router Integration
+
+For apps using Vue Router, provide the route once at app level so all consumers can access it without prop drilling:
+
+```vue
+<script setup>
+// App.vue (once)
+import { provideQueryStringRoute } from '@fiscozen/composables'
+import { useRoute } from 'vue-router'
+
+provideQueryStringRoute(useRoute())
+</script>
+```
+
+Then any component can call `useQueryString` without passing a route:
+
+```ts
+const { initialValuesInQueryString, setValuesInQueryString } = useQueryString([
+  { key: 'tab', defaultValue: 'overview', transform: 'string' },
+])
+```
+
+The composable auto-injects the provided route. If no provider exists, it falls back to router-agnostic mode automatically.
+
+### Explicit Route
+
+You can pass a specific route instance directly:
+
+```ts
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const { ... } = useQueryString([...], route)
+```
+
+### Force Router-Agnostic Mode
+
+Pass `null` to bypass Vue Router entirely, even when a provider exists:
+
+```ts
+const { ... } = useQueryString([...], null)
+```
+
+## Key Configuration
+
+Each key can be a simple string or a configuration object:
+
+### Simple String Key
+
+```ts
+useQueryString(['page', 'search'])
+```
+
+Reads the raw string value as-is; no transformation or default.
+
+### Configuration Object
+
+```ts
+useQueryString([
+  {
+    key: 'page',
+    defaultValue: 1,
+    transform: 'number',
+  },
+  {
+    key: 'active',
+    defaultValue: true,
+    transform: 'boolean',
+  },
+  {
+    key: 'filter',
+    defaultValue: null,
+    transform: 'string',
+    nullStringIsNullValue: true,
+  },
+])
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>key</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Query parameter name</td>
+    </tr>
+    <tr>
+      <td><code>defaultValue</code></td>
+      <td><code>string | number | boolean | null | undefined</code></td>
+      <td><code>undefined</code></td>
+      <td>Fallback when the key is absent or the value cannot be transformed</td>
+    </tr>
+    <tr>
+      <td><code>transform</code></td>
+      <td><code>'none' | 'string' | 'number' | 'boolean' | Function</code></td>
+      <td><code>'none'</code></td>
+      <td>Type coercion applied to the raw URL string value</td>
+    </tr>
+    <tr>
+      <td><code>nullStringIsNullValue</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Treats the literal string "null" as <code>null</code>. Useful when backends serialize null in URLs</td>
+    </tr>
+  </tbody>
+</table>
+
+## Return Value
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>initialValuesInQueryString</code></td>
+      <td><code>Readonly&lt;ValuesInQueryStrings&gt;</code></td>
+      <td>Frozen snapshot of query values at initialization time. Does not change after mount</td>
+    </tr>
+    <tr>
+      <td><code>getValuesFromQueryString</code></td>
+      <td><code>(keys?) =&gt; ValuesInQueryStrings</code></td>
+      <td>Reads current values from the URL. Optionally pass different keys to override the default set</td>
+    </tr>
+    <tr>
+      <td><code>setValuesInQueryString</code></td>
+      <td><code>(values, options?) =&gt; void</code></td>
+      <td>Writes values to the URL via the History API. Merges with existing params by default</td>
+    </tr>
+  </tbody>
+</table>
+
+## setValuesInQueryString Options
+
+<table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>replaceQueryString</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Replace the entire query string instead of merging with existing values</td>
+    </tr>
+  </tbody>
+</table>
+
+## Transform Types
+
+<table>
+  <thead>
+    <tr>
+      <th>Transform</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>'none'</code></td>
+      <td>Returns the raw value as-is (or <code>defaultValue</code> if absent)</td>
+    </tr>
+    <tr>
+      <td><code>'string'</code></td>
+      <td>Converts to string via <code>toString()</code></td>
+    </tr>
+    <tr>
+      <td><code>'number'</code></td>
+      <td>Converts via <code>Number()</code>; returns <code>defaultValue</code> for empty, null, or NaN</td>
+    </tr>
+    <tr>
+      <td><code>'boolean'</code></td>
+      <td>Recognizes "true"/"1" as <code>true</code>, "false"/"0" as <code>false</code>; returns <code>defaultValue</code> for empty/null</td>
+    </tr>
+    <tr>
+      <td><code>Function</code></td>
+      <td>Custom transform function receiving the raw value and returning the desired type</td>
+    </tr>
+  </tbody>
+</table>
+
+## Provider API
+
+The provider pattern eliminates prop drilling when multiple components need query string access.
+
+<table>
+  <thead>
+    <tr>
+      <th>Export</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>provideQueryStringRoute(route)</code></td>
+      <td>Call once at app level (e.g. App.vue) to share the Vue Router route with all descendants</td>
+    </tr>
+    <tr>
+      <td><code>injectQueryStringRoute()</code></td>
+      <td>Returns the provided route, or <code>null</code> if no provider exists. Used internally by <code>useQueryString</code></td>
+    </tr>
+    <tr>
+      <td><code>QUERY_STRING_ROUTE_KEY</code></td>
+      <td>The InjectionKey symbol, exposed for advanced use cases</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Paginated Table
+
+```vue
+<script setup>
+import { ref, watch } from 'vue'
+import { useQueryString } from '@fiscozen/composables'
+
+const { initialValuesInQueryString, setValuesInQueryString } = useQueryString([
+  { key: 'page', defaultValue: 1, transform: 'number' },
+  { key: 'perPage', defaultValue: 25, transform: 'number' },
+])
+
+const page = ref(initialValuesInQueryString.page)
+const perPage = ref(initialValuesInQueryString.perPage)
+
+watch([page, perPage], ([p, pp]) => {
+  setValuesInQueryString({ page: p, perPage: pp })
+  fetchData(p, pp)
+})
+</script>
+```
+
+### Search with Filters
+
+```vue
+<script setup>
+import { useQueryString } from '@fiscozen/composables'
+
+const { initialValuesInQueryString, setValuesInQueryString } = useQueryString([
+  { key: 'q', defaultValue: '', transform: 'string' },
+  { key: 'category', defaultValue: 'all', transform: 'string' },
+  { key: 'active', defaultValue: true, transform: 'boolean' },
+])
+</script>
+```
+
+### Custom Transform Function
+
+```ts
+const { initialValuesInQueryString } = useQueryString([
+  {
+    key: 'tags',
+    defaultValue: [],
+    transform: (value) => (typeof value === 'string' ? value.split(',') : []),
+  },
+])
+// ?tags=vue,react → initialValuesInQueryString.tags === ['vue', 'react']
+```
+
+## Accessibility
+
+This composable does not render UI and has no direct accessibility implications. Components that use it (like FzPagination) are responsible for accessible rendering.
+
+## Best Practices
+
+- Call `provideQueryStringRoute(useRoute())` once in App.vue for Vue Router apps
+- Use `transform: 'number'` for pagination and numeric filters to avoid string comparisons
+- Set meaningful `defaultValue` for every key to handle missing params gracefully
+- Use `getInitialPageFromUrl` from `@fiscozen/pagination` for the specific case of initializing a page ref synchronously in `setup()`
