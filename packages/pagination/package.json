@@ -21,9 +21,16 @@
   "peerDependencies": {
     "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
-    "vue": "^3.4.13"
+    "vue": "^3.4.13",
+    "vue-router": "^4.3.0"
+  },
+  "peerDependenciesMeta": {
+    "vue-router": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "vue-router": "^4.3.0",
     "@fiscozen/eslint-config": "workspace:^",
     "@fiscozen/prettier-config": "workspace:^",
     "@fiscozen/tsconfig": "workspace:^",

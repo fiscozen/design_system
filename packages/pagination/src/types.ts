@@ -116,6 +116,20 @@ export type FzPaginationProps = {
     options?: PaginationOptions
     /** Position of the pagination controls. @default 'end' */
     position?: 'start' | 'center' | 'end'
+    /**
+     * URL query parameter name for currentPage synchronization.
+     * Only effective when syncUrl is true.
+     * @default 'page'
+     */
+    urlKey?: string
+    /**
+     * Enables two-way sync between currentPage and a URL query parameter.
+     * On mount, reads the page from the URL and emits update:currentPage.
+     * On page change, writes the new value back to the URL.
+     * Uses provideQueryStringRoute() if available, otherwise falls back to browser History API.
+     * @default true
+     */
+    syncUrl?: boolean
     /** Total number of pages available. @default 0 */
     totalPages?: number
 }
