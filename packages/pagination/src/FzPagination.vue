@@ -18,7 +18,7 @@
 import { FzContainer } from '@fiscozen/container'
 import { FzButton, FzIconButton } from '@fiscozen/button'
 import { FzIcon } from '@fiscozen/icons'
-import { useMediaQuery } from '@fiscozen/composables'
+import { useMediaQuery, useQueryString } from '@fiscozen/composables'
 import { breakpoints } from '@fiscozen/style'
 import { computed } from 'vue'
 import { usePagination } from './usePagination'
