@@ -22,13 +22,15 @@ The package is split into two layers:
 
 ```
 src/
-  index.ts              Main exports (component, composable, types)
+  index.ts              Main exports (component, composable, utility, types)
   types.ts              All public types (FzPaginationProps, PaginationOptions, PaginationItem, etc.)
   usePagination.ts      Composable: token generation, clamping, ellipsis filtering
+  utils.ts              Standalone helpers (getInitialPageFromUrl)
   FzPagination.vue      Component: renders items, handles v-model
   __tests__/
     FzPagination.spec.ts  Component unit tests
     usePagination.spec.ts Composable unit tests
+    utils.spec.ts         Utility function unit tests
 ```
 
 ### Key Concepts
@@ -87,13 +89,47 @@ Coverage target: >90% line coverage.
 5. **Update stories** in `apps/storybook/src/stories/navigation/Pagination.stories.ts`
 6. **Update MDX** in `apps/storybook/src/FzPagination.mdx`
 
+### getInitialPageFromUrl
+
+Synchronous utility that reads a page number from `window.location.search`. Designed to be called in `setup()` so the parent can initialise its `currentPage` ref with the value already in the URL — avoiding a redundant API request that would otherwise occur when `FzPagination` emits a corrected `update:currentPage` on mount.
+
+Works on every component mount, not just the initial app load: by the time `setup()` runs, `window.location.search` already reflects the current route.
+
+Signature: `getInitialPageFromUrl(defaultValue = 1, urlKey = 'page'): number`.
+
+### URL Sync
+
+URL sync is **enabled by default** (`syncUrl: true`, `urlKey: 'page'`). The component reads the initial page from the URL and writes page changes back via `useQueryString`.
+
+**How it works internally:**
+
+1. If `syncUrl` is `false`, no sync logic runs — the component behaves as a pure controlled component
+2. `useQueryString` is called with a single key config `{ key: urlKey, transform: 'number', defaultValue: currentPage }` (no explicit `route` argument — auto-inject resolves it)
+3. `useQueryString` internally calls `injectQueryStringRoute()` to obtain the Vue Router route provided at app level, or falls back to router-agnostic mode (pure History API) if no provider exists
+4. If the URL contains a value for the key that differs from `currentPage`, the component emits `update:currentPage` to notify the parent
+5. On every page click, `setValuesInQueryString` updates the URL alongside the `update:currentPage` emit
+
+The component remains fully controlled: the parent always owns state via `v-model:currentPage`. The URL sync is a transparent side-channel.
+
+**Multiple paginations on the same page:** assign distinct `urlKey` values (e.g. `urlKey="page"` and `urlKey="commentsPage"`).
+
 ### Dependencies
 
 - `@fiscozen/button` - `FzButton` and `FzIconButton` for page controls
 - `@fiscozen/container` - `FzContainer` for layout
 - `@fiscozen/icons` - `FzIcon` for ellipsis indicator
-- `@fiscozen/composables` - `useMediaQuery` for responsive layout
+- `@fiscozen/composables` - `useMediaQuery` for responsive layout, `useQueryString` for URL sync (route injection handled internally by the composable)
 - `@fiscozen/style` - `breakpoints` for media query thresholds
+- `vue-router` (optional peer) - needed only when `provideQueryStringRoute()` is used at app level
+
+### Hidden Props
+
+The following props exist in `FzPaginationProps` but are intentionally **not documented in the public MDX** and **not exposed in Storybook argTypes/stories**:
+
+- **`options`** (`PaginationOptions`): Fine-grained control over ellipsis, anchors, prev/next labels and visibility. Exposed only through `usePagination` for custom UIs.
+- **`position`** (`'start' | 'center' | 'end'`): Controls horizontal alignment of the pagination bar via `justify-*` classes. Default is `'end'`.
+
+These props are available for internal use and advanced consumers who import types directly, but are kept out of the public API surface to avoid exposing configuration complexity that most users do not need.
 
 ### Build
 
