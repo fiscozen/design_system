@@ -4,15 +4,22 @@
  *
  * Page-based navigation control for paginated data sets.
  * Supports v-model:currentPage for two-way binding of the active page.
+ * URL sync is enabled by default (syncUrl): reads the initial page from the URL
+ * on mount and writes page changes back via useQueryString.
+ * Set :syncUrl="false" to disable.
  *
  * @component
  * @example
  * <FzPagination :totalPages="10" v-model:currentPage="page" />
+ * @example
+ * <FzPagination :totalPages="10" v-model:currentPage="page" :syncUrl="false" />
+ * @example
+ * <FzPagination :totalPages="10" v-model:currentPage="page" urlKey="p" />
  */
 import { FzContainer } from '@fiscozen/container'
 import { FzButton, FzIconButton } from '@fiscozen/button'
 import { FzIcon } from '@fiscozen/icons'
-import { useMediaQuery } from '@fiscozen/composables'
+import { useMediaQuery, useQueryString } from '@fiscozen/composables'
 import { breakpoints } from '@fiscozen/style'
 import { computed } from 'vue'
 import { usePagination } from './usePagination'
@@ -43,6 +50,8 @@ const props = withDefaults(defineProps<FzPaginationProps>(), {
   environment: 'frontoffice',
   options: () => ({}),
   position: 'end',
+  urlKey: 'page',
+  syncUrl: true,
   totalPages: 0
 })
 
@@ -61,6 +70,23 @@ const { items: paginationItems } = usePagination(
   () => props.totalPages,
   props.options
 )
+
+// URL sync: reads the initial page from the URL and writes back on changes.
+// When syncUrl is true, useQueryString auto-injects the route from the provider
+// (or falls back to router-agnostic mode if no provider exists).
+// When syncUrl is false, null forces router-agnostic mode with no overhead.
+const queryStringSync = props.syncUrl
+  ? useQueryString(
+      [{ key: props.urlKey, transform: 'number', defaultValue: props.currentPage }],
+    )
+  : null
+
+if (queryStringSync) {
+  const initialPage = queryStringSync.initialValuesInQueryString[props.urlKey]
+  if (initialPage !== undefined && initialPage !== null && initialPage !== props.currentPage) {
+    emit('update:currentPage', initialPage as number)
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Computed
@@ -98,6 +124,9 @@ const buttonClasses = (item: PaginationItem) => ({
 
 const handlePageClick = (page: number) => {
   emit('update:currentPage', page)
+  if (queryStringSync) {
+    queryStringSync.setValuesInQueryString({ [props.urlKey]: page })
+  }
 }
 </script>
 
