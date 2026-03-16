@@ -58,8 +58,19 @@ Type-safe URL query parameter management with History API synchronization.
 **Design decisions:**
 
 - **Route parameter tri-state**: `undefined` (auto-inject from provider), `RouteLocationNormalizedLoaded` (explicit), `null` (force router-agnostic). This avoids a boolean flag and lets the consumer control the strategy naturally.
-- **History state persistence**: Values are stored under `__queryString` in `window.history.state` because Vue Router does not reflect History API changes in `route.query`. On read, the composable checks the URL first, then falls back to history state.
 - **Frozen initial values**: `initialValuesInQueryString` is `Object.freeze()`-d at init time so consumers always see the state at mount, regardless of subsequent URL changes.
+
+#### Why `window.location.search` is the single source of truth
+
+Vue Router re-mounts components when query parameters change via `router.push()` or `router.replace()`. This is unacceptable for a composable that updates query params frequently (e.g. on every page change in a paginated table) without destroying and recreating the component tree.
+
+To avoid re-mounting, this composable writes directly to the browser's History API (`replaceState`/`pushState`), which modifies the URL without triggering Vue Router's navigation lifecycle. The trade-off is that Vue Router does not know the URL changed, which has two consequences:
+
+1. **`route.query` becomes stale.** It stays frozen at whatever it was when the router last resolved the route. If `setValuesInQueryString` used `route.query` as the merge base for subsequent writes, the stale snapshot would silently revert values written in previous calls. For this reason, `setValuesInQueryString` always reads the live URL via `getQueryFromUrl()`. The old `route.query` code path is preserved behind the `_useRouteQueryAsMergeBase` flag (currently `false`) and can be re-enabled if Vue Router adds non-re-mounting query updates.
+
+2. **Query params written via History API are invisible to Vue Router.** On read, the composable checks the URL first. If the handled keys are not present (e.g. after a Vue Router navigation that strips them), it falls back to values persisted in `window.history.state` under the `__queryString` key, and restores them into the URL.
+
+The `route` parameter and the `provideQueryStringRoute`/`injectQueryStringRoute` provider pattern are retained in the public API for backward compatibility and future-proofing.
 
 ### useFloating
 
