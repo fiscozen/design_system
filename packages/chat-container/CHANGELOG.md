@@ -1,5 +1,11 @@
 # @fiscozen/chat-container
 
+## 2.0.3
+
+### Patch Changes
+
+- 33f9bf4: Update chat container to support preformatted message display. Message content is now rendered inside a `<pre>` element with appropriate styling (`whitespace-pre-wrap`, sans font) so that line breaks and spacing in chat messages are preserved.
+
 ## 2.0.2
 
 ### Patch Changes
