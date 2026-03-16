@@ -90,16 +90,23 @@ describe('useQueryString utilities', () => {
     })
 
     describe('removeEmptyValues', () => {
-        it('removes null, undefined and empty string keys', () => {
+        it('returns a new object without null, undefined and empty string keys', () => {
             const query: Record<string, any> = { a: 'keep', b: null, c: undefined, d: '', e: '0' }
-            removeEmptyValues(query)
-            expect(query).toEqual({ a: 'keep', e: '0' })
+            const result = removeEmptyValues(query)
+            expect(result).toEqual({ a: 'keep', e: '0' })
         })
 
-        it('does nothing on clean objects', () => {
-            const query: Record<string, any> = { a: '1', b: '2' }
+        it('does not mutate the original object', () => {
+            const query: Record<string, any> = { a: 'keep', b: null, c: undefined }
+            const original = { ...query }
             removeEmptyValues(query)
-            expect(query).toEqual({ a: '1', b: '2' })
+            expect(query).toEqual(original)
+        })
+
+        it('returns all keys for clean objects', () => {
+            const query: Record<string, any> = { a: '1', b: '2' }
+            const result = removeEmptyValues(query)
+            expect(result).toEqual({ a: '1', b: '2' })
         })
     })
 
