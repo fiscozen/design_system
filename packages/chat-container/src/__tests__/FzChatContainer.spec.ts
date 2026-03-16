@@ -280,11 +280,7 @@ describe("FzChatContainer", () => {
       });
       const card = wrapper.findComponent({ name: "FzCard" });
       expect(card.exists()).toBe(true);
-      const paragraphs = card.findAll("p");
-      const messageParagraphs = paragraphs.filter(
-        (p) => p.text().trim() === "",
-      );
-      expect(messageParagraphs.length).toBe(0);
+      expect(card.find("pre").exists()).toBe(false);
     });
 
     it("should render message text when message is non-empty", () => {
@@ -292,6 +288,15 @@ describe("FzChatContainer", () => {
         messages: [createMockMessage({ message: "Visible text" })],
       });
       expect(wrapper.text()).toContain("Visible text");
+    });
+
+    it("should render message content inside pre with preformatted styling", () => {
+      const wrapper = mountComponent({
+        messages: [createMockMessage({ message: "Preformatted\ncontent" })],
+      });
+      const pre = wrapper.find("pre");
+      expect(pre.exists()).toBe(true);
+      expect(pre.text()).toBe("Preformatted\ncontent");
     });
   });
 

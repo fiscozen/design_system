@@ -134,9 +134,11 @@ function onContainerScroll(event: Event): void {
             </p>
             <FzCard :color="cardColor[message.variant]">
               <FzContainer alignItems="start" gap="sm">
-                <p v-small v-if="message.message.trim().length">
-                  {{ message.message }}
-                </p>
+                <pre
+                  v-if="message.message.trim().length"
+                  class="text-sm whitespace-pre-wrap m-0 [font-family:var(--font-sans-inter)]"
+                  >{{ message.message }}</pre
+                >
                 <FzContainer
                   v-if="message.attachments?.length"
                   gap="none"

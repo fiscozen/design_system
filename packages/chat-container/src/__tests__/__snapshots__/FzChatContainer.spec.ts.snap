@@ -26,8 +26,7 @@ exports[`FzChatContainer > Snapshots > should match snapshot - waiting for respo
           <section data-v-5050224a="" class="border-1 border-solid rounded flex flex-col bg-background-white-smoke text-core-black border-background-white-smoke">
             <!--v-if-->
             <article class="p-16">
-              <div data-v-da7f5873="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-sm align-items-start">
-                <p data-v-5050224a="">Hello, world!</p>
+              <div data-v-da7f5873="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-sm align-items-start"><pre data-v-5050224a="" class="text-sm whitespace-pre-wrap m-0 [font-family:var(--font-sans-inter)]">Hello, world!</pre>
                 <!--v-if-->
               </div>
             </article>
@@ -59,8 +58,7 @@ exports[`FzChatContainer > Snapshots > should match snapshot - with messages 1`]
           <section data-v-5050224a="" class="border-1 border-solid rounded flex flex-col bg-core-white text-core-black border-grey-100">
             <!--v-if-->
             <article class="p-16">
-              <div data-v-da7f5873="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-sm align-items-start">
-                <p data-v-5050224a="">Test message</p>
+              <div data-v-da7f5873="" data-v-5050224a="" class="fz-container fz-container--vertical gap-section-content-sm align-items-start"><pre data-v-5050224a="" class="text-sm whitespace-pre-wrap m-0 [font-family:var(--font-sans-inter)]">Test message</pre>
                 <!--v-if-->
               </div>
             </article>
