@@ -26,34 +26,28 @@ export type * from './types';
 export { provideQueryStringRoute, injectQueryStringRoute, QUERY_STRING_ROUTE_KEY } from './provider';
 
 /**
- * Manages URL query parameters with type-safe extraction and History API synchronization.
+ * Type-safe URL query parameter management with History API synchronization.
  *
- * Bridges the gap between Vue Router's `route.query` (read-only, not updated by
- * direct History API calls) and the need to read/write typed query params.
- * Values are persisted in both the URL and history state to survive
- * Vue Router navigation quirks.
+ * Vue Router re-mounts components when query params change via `router.push()`
+ * or `router.replace()`, so this composable bypasses the router and writes
+ * directly to the History API (`replaceState`/`pushState`). As a consequence,
+ * `route.query` is never updated by the router and becomes stale after the
+ * first write. Both reads and writes therefore use `window.location.search`
+ * as the single source of truth (see `_useRouteQueryAsMergeBase`).
  *
- * The `route` parameter controls how existing query params are read during writes:
- * - **omitted** (default): auto-injects the route from `provideQueryStringRoute()`.
- *   Falls back to router-agnostic mode if no provider exists.
- * - **RouteLocationNormalizedLoaded**: uses that specific route instance.
- * - **null**: forces router-agnostic mode (pure History API via `window.location`).
+ * Values are also persisted in `window.history.state` so they survive
+ * Vue Router navigations that would otherwise strip unknown query params.
  *
  * @param handledQueryStringKeys - Keys to manage (strings or config objects with transform/defaults)
- * @param route - Vue Router route, `null` for router-agnostic, or omit to auto-inject
+ * @param route - `undefined` to auto-inject from `provideQueryStringRoute()`,
+ *   a `RouteLocationNormalizedLoaded` (reserved for future use), or `null` for
+ *   router-agnostic mode. Currently does not affect read/write behavior.
  *
  * @example
  * ```ts
- * // Auto-inject from provider (recommended)
  * const { initialValuesInQueryString, setValuesInQueryString } = useQueryString([
  *   { key: 'page', defaultValue: 1, transform: 'number' },
  * ]);
- *
- * // Explicit route
- * const { ... } = useQueryString([...], route);
- *
- * // Force router-agnostic
- * const { ... } = useQueryString([...], null);
  * ```
  */
 export const useQueryString = (
@@ -94,7 +88,16 @@ export const useQueryString = (
     ) => {
         const { replaceQueryString = false, __forcePushState = false } = options;
 
-        const currentQuery = resolvedRoute ? flattenQuery(resolvedRoute.query) : getQueryFromUrl();
+        // Intentionally disabled. Vue Router's route.query does not update after
+        // direct History API calls (replaceState/pushState) that this composable
+        // uses to avoid component re-mounting. Using the stale route.query as
+        // merge base causes consecutive setValuesInQueryString calls to silently
+        // revert previously written values. Always read the live URL instead.
+        // Re-enable when Vue Router supports non-re-mounting query updates.
+        const _useRouteQueryAsMergeBase = false;
+        const currentQuery = _useRouteQueryAsMergeBase && resolvedRoute
+            ? flattenQuery(resolvedRoute.query)
+            : getQueryFromUrl();
         const mergedQuery = removeEmptyValues(
             (replaceQueryString
                 ? { ...values }
