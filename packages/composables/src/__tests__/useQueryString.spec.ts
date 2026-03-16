@@ -452,6 +452,29 @@ describe('useQueryString composable', () => {
             const result = getValuesFromQueryString([{ key: 'page', transform: 'number' }])
             expect(result).toEqual({ page: 10 })
         })
+
+        it('preserves other instances keys in history state during fallback restore', () => {
+            window.location.search = ''
+            vi.spyOn(window, 'history', 'get').mockReturnValue({
+                ...window.history,
+                state: {
+                    __queryString: { page: '2', tab: 'settings' },
+                },
+                replaceState: window.history.replaceState,
+                pushState: window.history.pushState,
+            })
+
+            const { initialValuesInQueryString } = useQueryString(['page'], createMockRoute())
+
+            expect(initialValuesInQueryString).toEqual({ page: '2' })
+            expect(window.history.replaceState).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    __queryString: expect.objectContaining({ page: '2', tab: 'settings' }),
+                }),
+                '',
+                expect.any(String)
+            )
+        })
     })
 
     describe('router-agnostic mode (route: null)', () => {

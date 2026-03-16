@@ -71,7 +71,7 @@ export const useQueryString = (
         const valuesFromState = extractValues(specificHandledQueryStringKeys, queryState);
 
         if (Object.keys(queryState).length > 0) {
-            const mergedQuery = removeEmptyValues({ ...urlQuery, ...normalizeQueryValues(valuesFromState) });
+            const mergedQuery = removeEmptyValues({ ...urlQuery, ...normalizeQueryValues(queryState) });
 
             const newUrl = buildUrlWithQuery(mergedQuery as Record<string, string>);
             window.history.replaceState(buildHistoryState(mergedQuery), '', newUrl);
