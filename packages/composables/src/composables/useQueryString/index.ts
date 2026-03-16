@@ -77,10 +77,9 @@ export const useQueryString = (
         const valuesFromState = extractValues(specificHandledQueryStringKeys, queryState);
 
         if (Object.keys(queryState).length > 0) {
-            const mergedQuery: Record<string, string> = { ...urlQuery, ...normalizeQueryValues(valuesFromState) };
-            removeEmptyValues(mergedQuery);
+            const mergedQuery = removeEmptyValues({ ...urlQuery, ...normalizeQueryValues(valuesFromState) });
 
-            const newUrl = buildUrlWithQuery(mergedQuery);
+            const newUrl = buildUrlWithQuery(mergedQuery as Record<string, string>);
             window.history.replaceState(buildHistoryState(mergedQuery), '', newUrl);
 
             return valuesFromState;
@@ -96,11 +95,12 @@ export const useQueryString = (
         const { replaceQueryString = false, __forcePushState = false } = options;
 
         const currentQuery = resolvedRoute ? flattenQuery(resolvedRoute.query) : getQueryFromUrl();
-        const mergedQuery = (replaceQueryString
-            ? { ...values }
-            : { ...currentQuery, ...values }) as ValuesInQueryStrings;
+        const mergedQuery = removeEmptyValues(
+            (replaceQueryString
+                ? { ...values }
+                : { ...currentQuery, ...values }) as ValuesInQueryStrings
+        );
 
-        removeEmptyValues(mergedQuery);
         setQueryToUrl(mergedQuery, buildHistoryState(mergedQuery), __forcePushState);
     };
 
