@@ -63,16 +63,17 @@ const setQueryToUrl = (
     }
 };
 
-/**
- * Strips empty keys in-place. Mutates for performance since this
- * runs on every get/set operation in hot paths.
- */
-const removeEmptyValues = (query: Record<string, QueryStringValue>): void => {
+/** Returns a shallow copy with empty keys (null, undefined, '') removed */
+const removeEmptyValues = (query: Record<string, QueryStringValue>): Record<string, QueryStringValue> => {
+    const cleaned: Record<string, QueryStringValue> = {};
+
     Object.keys(query).forEach((key) => {
-        if (isEmptyValue(query[key])) {
-            delete query[key];
+        if (!isEmptyValue(query[key])) {
+            cleaned[key] = query[key];
         }
     });
+
+    return cleaned;
 };
 
 /**
