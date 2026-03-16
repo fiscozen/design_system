@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import { h } from 'vue'
 import { FzTable, FzRow } from '..'
 import { FzColumn } from '@fiscozen/simple-table'
+import { FzPagination } from '@fiscozen/pagination'
 import { FzOrdering } from '../types'
 
 describe('FzTable', () => {
@@ -196,14 +197,14 @@ describe('FzTable', () => {
       it('should show pagination when pages > 1', async () => {
         const wrapper = createWrapper({ pages: 5 })
         await wrapper.vm.$nextTick()
-        const pagination = wrapper.find('.fz__table__pagination')
+        const pagination = wrapper.find('.fz__table__footer')
         expect(pagination.exists()).toBe(true)
       })
 
       it('should not show pagination when pages <= 1', async () => {
         const wrapper = createWrapper({ pages: 1 })
         await wrapper.vm.$nextTick()
-        const pagination = wrapper.find('.fz__table__pagination')
+        const pagination = wrapper.find('.fz__table__footer')
         expect(pagination.exists()).toBe(false)
       })
     })
@@ -795,6 +796,98 @@ describe('FzTable', () => {
           expect(r1.items[0].label).toBe('Edit Sub 1')
           expect(r2.items[0].label).toBe('Edit Sub 2')
         }
+      })
+    })
+  })
+
+  // ============================================
+  // URL SYNC PROPS TESTS
+  // ============================================
+  describe('URL Sync Props', () => {
+    describe('paginationSyncUrl', () => {
+      it('should default paginationSyncUrl to true and pass it to FzPagination', async () => {
+        const wrapper = createWrapper({ pages: 5 })
+        await wrapper.vm.$nextTick()
+        const pagination = wrapper.findComponent(FzPagination)
+        expect(pagination.exists()).toBe(true)
+        expect(pagination.props('syncUrl')).toBe(true)
+      })
+
+      it('should pass paginationSyncUrl=false to FzPagination', async () => {
+        const wrapper = createWrapper({ pages: 5, paginationSyncUrl: false })
+        await wrapper.vm.$nextTick()
+        const pagination = wrapper.findComponent(FzPagination)
+        expect(pagination.exists()).toBe(true)
+        expect(pagination.props('syncUrl')).toBe(false)
+      })
+    })
+
+    describe('urlKeyPrefix', () => {
+      it('should pass default urlKey "page" when no prefix is set', async () => {
+        const wrapper = createWrapper({ pages: 5 })
+        await wrapper.vm.$nextTick()
+        const pagination = wrapper.findComponent(FzPagination)
+        expect(pagination.props('urlKey')).toBe('page')
+      })
+
+      it('should prefix urlKey with urlKeyPrefix and underscore separator', async () => {
+        const wrapper = createWrapper({ pages: 5, urlKeyPrefix: 'invoices' })
+        await wrapper.vm.$nextTick()
+        const pagination = wrapper.findComponent(FzPagination)
+        expect(pagination.props('urlKey')).toBe('invoices_page')
+      })
+
+      it('should combine urlKeyPrefix with custom paginationUrlKey', async () => {
+        const wrapper = createWrapper({ pages: 5, urlKeyPrefix: 'orders', paginationUrlKey: 'p' })
+        await wrapper.vm.$nextTick()
+        const pagination = wrapper.findComponent(FzPagination)
+        expect(pagination.props('urlKey')).toBe('orders_p')
+      })
+
+      it('should use paginationUrlKey as-is when urlKeyPrefix is empty string', async () => {
+        const wrapper = createWrapper({ pages: 5, urlKeyPrefix: '', paginationUrlKey: 'myPage' })
+        await wrapper.vm.$nextTick()
+        const pagination = wrapper.findComponent(FzPagination)
+        expect(pagination.props('urlKey')).toBe('myPage')
+      })
+    })
+
+    describe('environment', () => {
+      it('should default environment to frontoffice', async () => {
+        const wrapper = createWrapper({ pages: 5 })
+        await wrapper.vm.$nextTick()
+        const pagination = wrapper.findComponent(FzPagination)
+        expect(pagination.props('environment')).toBe('frontoffice')
+      })
+
+      it('should pass environment=backoffice to FzPagination', async () => {
+        const wrapper = createWrapper({ pages: 5, environment: 'backoffice' })
+        await wrapper.vm.$nextTick()
+        const pagination = wrapper.findComponent(FzPagination)
+        expect(pagination.props('environment')).toBe('backoffice')
+      })
+    })
+
+    describe('pagination visibility', () => {
+      it('should not render FzPagination when pages <= 1', async () => {
+        const wrapper = createWrapper({ pages: 1 })
+        await wrapper.vm.$nextTick()
+        const pagination = wrapper.findComponent(FzPagination)
+        expect(pagination.exists()).toBe(false)
+      })
+
+      it('should not render FzPagination when no data', async () => {
+        const wrapper = createWrapper({ pages: 5, modelValue: [] })
+        await wrapper.vm.$nextTick()
+        const pagination = wrapper.findComponent(FzPagination)
+        expect(pagination.exists()).toBe(false)
+      })
+
+      it('should render FzPagination when pages > 1 and data exists', async () => {
+        const wrapper = createWrapper({ pages: 5 })
+        await wrapper.vm.$nextTick()
+        const pagination = wrapper.findComponent(FzPagination)
+        expect(pagination.exists()).toBe(true)
       })
     })
   })

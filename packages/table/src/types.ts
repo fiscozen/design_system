@@ -125,6 +125,30 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
    * @default false
    * */
   loading?: boolean;
+  /**
+   * Enables two-way sync between the pagination's currentPage and a URL query parameter.
+   * Passed through to FzPagination's syncUrl prop.
+   * @default true
+   */
+  paginationSyncUrl?: boolean;
+  /**
+   * URL query parameter name used for pagination synchronization.
+   * Passed through to FzPagination's urlKey prop.
+   * @default 'page'
+   */
+  paginationUrlKey?: string;
+  /**
+   * Visual environment for button styling
+   * @default 'frontoffice'
+   */
+  environment?: 'frontoffice' | 'backoffice';
+  /**
+   * Prefix prepended (with `_` separator) to all URL query parameter keys
+   * managed by the table (pagination, future integrated filters, ordering).
+   * Useful to avoid key collisions when multiple tables share the same page.
+   * @default ''
+   */
+  urlKeyPrefix?: string;
 }
 
 type FzTableSlots = {

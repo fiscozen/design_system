@@ -2990,6 +2990,9 @@ importers:
       '@fiscozen/input':
         specifier: workspace:*
         version: link:../input
+      '@fiscozen/pagination':
+        specifier: workspace:*
+        version: link:../pagination
       '@fiscozen/progress':
         specifier: workspace:*
         version: link:../progress

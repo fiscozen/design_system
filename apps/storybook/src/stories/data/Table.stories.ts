@@ -1029,7 +1029,7 @@ const DynamicColumns: Story = {
   })
 }
 
-const EpmtyTable: Story = {
+const EmptyTable: Story = {
   args: {
     modelValue: [],
     placeholder: 'Nessun valore',
@@ -1261,6 +1261,339 @@ const CustomNewItemButton: Story = {
   })
 }
 
-export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns, EpmtyTable, Radio, List, ListWithSelection, CustomNewItemButton }
+// ============================================
+// URL SYNC STORIES
+// ============================================
+
+const NoUrlSync: Story = {
+  args: {
+    modelValue: Array(20).fill({}).map(() => sampleObj),
+    pages: 5,
+    title: 'No URL Sync',
+    subtitle: 'Pagination does not update the URL',
+    paginationSyncUrl: false,
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: { FzColumn, FzTable },
+    template: `
+      <div class="p-12">
+        <FzTable v-bind="args">
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+        </FzTable>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify table renders', async () => {
+      const table = canvas.getByRole('table')
+      await expect(table).toBeInTheDocument()
+    })
+
+    await step('Verify title and subtitle are displayed', async () => {
+      await expect(canvas.getByText('No URL Sync')).toBeInTheDocument()
+      await expect(canvas.getByText('Pagination does not update the URL')).toBeInTheDocument()
+    })
+
+    await step('Verify pagination is present', async () => {
+      const nav = canvasElement.querySelector('nav')
+      await expect(nav).toBeTruthy()
+    })
+
+    await step('Verify page navigation works without URL update', async () => {
+      const buttons = canvas.getAllByRole('button')
+      const page2 = buttons.find(b => b.textContent?.trim() === '2')
+      if (page2) {
+        await userEvent.click(page2)
+      }
+    })
+  }
+}
+
+const MixedUrlSync: Story = {
+  render: () => ({
+    setup() {
+      const data = Array(20).fill({}).map(() => sampleObj)
+      return { data }
+    },
+    components: { FzColumn, FzTable },
+    template: `
+      <div class="p-12 flex flex-col gap-32">
+        <FzTable
+          :modelValue="data"
+          :pages="5"
+          title="Synced table"
+          subtitle="Pagination syncs with ?page="
+          :paginationSyncUrl="true"
+        >
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email" />
+        </FzTable>
+        <FzTable
+          :modelValue="data"
+          :pages="8"
+          title="Unsynced table"
+          subtitle="Pagination does NOT update the URL"
+          :paginationSyncUrl="false"
+        >
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email" />
+        </FzTable>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify both tables render', async () => {
+      const tables = canvasElement.querySelectorAll('[role="table"]')
+      await expect(tables.length).toBe(2)
+    })
+
+    await step('Verify both tables have pagination', async () => {
+      const navs = canvasElement.querySelectorAll('nav')
+      await expect(navs.length).toBe(2)
+    })
+
+    await step('Verify table titles', async () => {
+      await expect(canvas.getByText('Synced table')).toBeInTheDocument()
+      await expect(canvas.getByText('Unsynced table')).toBeInTheDocument()
+    })
+
+    await step('Navigate synced table to page 2', async () => {
+      const navs = canvasElement.querySelectorAll('nav')
+      const syncedNav = navs[0]
+      const buttons = syncedNav.querySelectorAll('button')
+      const page2 = Array.from(buttons).find(b => b.textContent?.trim() === '2')
+      if (page2) {
+        await userEvent.click(page2)
+      }
+    })
+
+    await step('Navigate unsynced table to page 3', async () => {
+      const navs = canvasElement.querySelectorAll('nav')
+      const unsyncedNav = navs[1]
+      const buttons = unsyncedNav.querySelectorAll('button')
+      const page3 = Array.from(buttons).find(b => b.textContent?.trim() === '3')
+      if (page3) {
+        await userEvent.click(page3)
+      }
+    })
+  }
+}
+
+const DualTablesWithPrefix: Story = {
+  render: () => ({
+    setup() {
+      const data = Array(20).fill({}).map(() => sampleObj)
+      return { data }
+    },
+    components: { FzColumn, FzTable },
+    template: `
+      <div class="p-12 flex flex-col gap-32">
+        <FzTable
+          :modelValue="data"
+          :pages="5"
+          title="Invoices table"
+          subtitle='urlKeyPrefix=&quot;invoices&quot; → ?invoices_page='
+          urlKeyPrefix="invoices"
+        >
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email" />
+        </FzTable>
+        <FzTable
+          :modelValue="data"
+          :pages="8"
+          title="Users table"
+          subtitle='urlKeyPrefix=&quot;users&quot; → ?users_page='
+          urlKeyPrefix="users"
+        >
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email" />
+        </FzTable>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify both tables render', async () => {
+      const tables = canvasElement.querySelectorAll('[role="table"]')
+      await expect(tables.length).toBe(2)
+    })
+
+    await step('Verify both tables have pagination', async () => {
+      const navs = canvasElement.querySelectorAll('nav')
+      await expect(navs.length).toBe(2)
+    })
+
+    await step('Verify table titles', async () => {
+      await expect(canvas.getByText('Invoices table')).toBeInTheDocument()
+      await expect(canvas.getByText('Users table')).toBeInTheDocument()
+    })
+
+    await step('Navigate invoices table to page 2', async () => {
+      const navs = canvasElement.querySelectorAll('nav')
+      const invoicesNav = navs[0]
+      const buttons = invoicesNav.querySelectorAll('button')
+      const page2 = Array.from(buttons).find(b => b.textContent?.trim() === '2')
+      if (page2) {
+        await userEvent.click(page2)
+      }
+    })
+
+    await step('Navigate users table to page 3', async () => {
+      const navs = canvasElement.querySelectorAll('nav')
+      const usersNav = navs[1]
+      const buttons = usersNav.querySelectorAll('button')
+      const page3 = Array.from(buttons).find(b => b.textContent?.trim() === '3')
+      if (page3) {
+        await userEvent.click(page3)
+      }
+    })
+  }
+}
+
+const DualTablesCustomUrlKey: Story = {
+  render: () => ({
+    setup() {
+      const data = Array(20).fill({}).map(() => sampleObj)
+      return { data }
+    },
+    components: { FzColumn, FzTable },
+    template: `
+      <div class="p-12 flex flex-col gap-32">
+        <FzTable
+          :modelValue="data"
+          :pages="5"
+          title="Invoices table"
+          subtitle='paginationUrlKey=&quot;invoicesPage&quot; → ?invoicesPage='
+          paginationUrlKey="invoicesPage"
+        >
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email" />
+        </FzTable>
+        <FzTable
+          :modelValue="data"
+          :pages="8"
+          title="Users table"
+          subtitle='paginationUrlKey=&quot;usersPage&quot; → ?usersPage='
+          paginationUrlKey="usersPage"
+        >
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email" />
+        </FzTable>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify both tables render', async () => {
+      const tables = canvasElement.querySelectorAll('[role="table"]')
+      await expect(tables.length).toBe(2)
+    })
+
+    await step('Verify both tables have pagination', async () => {
+      const navs = canvasElement.querySelectorAll('nav')
+      await expect(navs.length).toBe(2)
+    })
+
+    await step('Verify table titles', async () => {
+      await expect(canvas.getByText('Invoices table')).toBeInTheDocument()
+      await expect(canvas.getByText('Users table')).toBeInTheDocument()
+    })
+
+    await step('Navigate invoices table to page 2', async () => {
+      const navs = canvasElement.querySelectorAll('nav')
+      const invoicesNav = navs[0]
+      const buttons = invoicesNav.querySelectorAll('button')
+      const page2 = Array.from(buttons).find(b => b.textContent?.trim() === '2')
+      if (page2) {
+        await userEvent.click(page2)
+      }
+    })
+
+    await step('Navigate users table to page 4', async () => {
+      const navs = canvasElement.querySelectorAll('nav')
+      const usersNav = navs[1]
+      const buttons = usersNav.querySelectorAll('button')
+      const page4 = Array.from(buttons).find(b => b.textContent?.trim() === '4')
+      if (page4) {
+        await userEvent.click(page4)
+      }
+    })
+  }
+}
+
+const SingleTableWithPrefix: Story = {
+  args: {
+    modelValue: Array(20).fill({}).map(() => sampleObj),
+    pages: 5,
+    title: 'Table with URL key prefix',
+    subtitle: 'urlKeyPrefix="dashboard" → ?dashboard_page=',
+    urlKeyPrefix: 'dashboard',
+  },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: { FzColumn, FzTable },
+    template: `
+      <div class="p-12">
+        <FzTable v-bind="args">
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+        </FzTable>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify table renders', async () => {
+      const table = canvas.getByRole('table')
+      await expect(table).toBeInTheDocument()
+    })
+
+    await step('Verify title and subtitle are displayed', async () => {
+      await expect(canvas.getByText('Table with URL key prefix')).toBeInTheDocument()
+    })
+
+    await step('Verify pagination is present', async () => {
+      const nav = canvasElement.querySelector('nav')
+      await expect(nav).toBeTruthy()
+    })
+
+    await step('Verify page navigation works with prefix', async () => {
+      const buttons = canvas.getAllByRole('button')
+      const page2 = buttons.find(b => b.textContent?.trim() === '2')
+      if (page2) {
+        await userEvent.click(page2)
+      }
+    })
+  }
+}
+
+export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns, EmptyTable, Radio, List, ListWithSelection, CustomNewItemButton, NoUrlSync, MixedUrlSync, DualTablesWithPrefix, DualTablesCustomUrlKey, SingleTableWithPrefix }
 
 export default meta

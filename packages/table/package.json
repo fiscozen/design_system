@@ -55,6 +55,7 @@
     "@fiscozen/progress": "workspace:*",
     "@fiscozen/radio": "workspace:*",
     "@fiscozen/simple-table": "workspace:*",
+    "@fiscozen/pagination": "workspace:*",
     "@types/ramda": "^0.30.2",
     "ramda": "^0.30.1"
   }
