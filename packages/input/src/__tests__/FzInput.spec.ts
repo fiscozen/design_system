@@ -1024,6 +1024,85 @@ describe('FzInput', () => {
     })
   })
 
+  describe('Attribute forwarding (inheritAttrs: false)', () => {
+    it('applies consumer class to root wrapper div', async () => {
+      const wrapper = mount(FzInput, {
+        props: { label: 'Label' },
+        attrs: { class: 'max-w-xs custom-class' },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const rootDiv = wrapper.element as HTMLElement
+      expect(rootDiv.classList.contains('max-w-xs')).toBe(true)
+      expect(rootDiv.classList.contains('custom-class')).toBe(true)
+      expect(rootDiv.classList.contains('fz-input')).toBe(true)
+    })
+
+    it('does not apply consumer class to native input element', async () => {
+      const wrapper = mount(FzInput, {
+        props: { label: 'Label' },
+        attrs: { class: 'max-w-xs' },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const input = wrapper.find('input').element as HTMLInputElement
+      expect(input.classList.contains('max-w-xs')).toBe(false)
+    })
+
+    it('forwards data-* attributes to native input element', async () => {
+      const wrapper = mount(FzInput, {
+        props: { label: 'Label' },
+        attrs: { 'data-cy': 'my-input', 'data-testid': 'test-input' },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const input = wrapper.find('input').element as HTMLInputElement
+      expect(input.getAttribute('data-cy')).toBe('my-input')
+      expect(input.getAttribute('data-testid')).toBe('test-input')
+
+      const rootDiv = wrapper.element as HTMLElement
+      expect(rootDiv.getAttribute('data-cy')).toBeNull()
+    })
+
+    it('forwards consumer id to native input element (overriding internal id)', async () => {
+      const wrapper = mount(FzInput, {
+        props: { label: 'Label' },
+        attrs: { id: 'custom-id' },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const input = wrapper.find('input').element as HTMLInputElement
+      expect(input.getAttribute('id')).toBe('custom-id')
+
+      const rootDiv = wrapper.element as HTMLElement
+      expect(rootDiv.getAttribute('id')).toBeNull()
+    })
+
+    it('forwards consumer aria-* attributes to native input element', async () => {
+      const wrapper = mount(FzInput, {
+        props: { label: 'Label' },
+        attrs: {
+          'aria-expanded': 'true',
+          'aria-haspopup': 'listbox',
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const input = wrapper.find('input').element as HTMLInputElement
+      expect(input.getAttribute('aria-expanded')).toBe('true')
+      expect(input.getAttribute('aria-haspopup')).toBe('listbox')
+
+      const rootDiv = wrapper.element as HTMLElement
+      expect(rootDiv.getAttribute('aria-expanded')).toBeNull()
+      expect(rootDiv.getAttribute('aria-haspopup')).toBeNull()
+    })
+  })
+
   describe('Edge cases', () => {
     it(`renders ${NUMBER_OF_INPUTS} input with different ids`, async () => {
       const wrapperList = Array.from({ length: NUMBER_OF_INPUTS }).map((_, i) =>

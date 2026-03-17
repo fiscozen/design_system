@@ -11,7 +11,7 @@
  * <FzInput label="Email" type="email" v-model="email" />
  * <FzInput label="Password" type="password" rightIcon="eye" @fzinput:right-icon-click="toggleVisibility" />
  */
-import { computed, toRefs, Ref, ref, watch, useSlots } from "vue";
+import { computed, toRefs, Ref, ref, watch, useSlots, useAttrs } from "vue";
 import { FzInputProps, type InputEnvironment } from "./types";
 import { FzAlert } from "@fiscozen/alert";
 import { FzIcon } from "@fiscozen/icons";
@@ -32,6 +32,22 @@ const props = withDefaults(defineProps<FzInputProps>(), {
 defineOptions({
   inheritAttrs: false,
 });
+
+const attrs = useAttrs();
+
+/**
+ * Attrs forwarded to the native input element.
+ * Excludes class which are applied to the root wrapper div
+ * so that consumers can control layout/positioning of the component.
+ */
+const inputAttrs = computed(() => {
+  return {
+    ...attrs,
+    class: undefined,
+  };
+});
+
+const rootClass = computed(() => attrs.class);
 
 /**
  * Deprecation warning and normalization for size prop.
@@ -328,7 +344,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="fz-input w-full flex flex-col gap-8">
+  <div class="fz-input w-full flex flex-col gap-8" :class="rootClass">
     <slot name="label">
       <label
         v-if="label"
@@ -395,7 +411,7 @@ defineExpose({
           :aria-disabled="isReadonlyOrDisabled ? 'true' : 'false'"
           :aria-labelledby="ariaLabelledBy"
           :aria-describedby="ariaDescribedBy"
-          v-bind="$attrs"
+          v-bind="inputAttrs"
           @blur="
             (e) => {
               isFocused = false;
