@@ -1,5 +1,11 @@
 # @fiscozen/textarea
 
+## 3.0.0
+
+### Major Changes
+
+- New layout textarea with auto-height resizing
+
 ## 2.0.0
 
 ### Patch Changes
