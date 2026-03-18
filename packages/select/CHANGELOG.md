@@ -1,5 +1,12 @@
 # @fiscozen/select
 
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies [d662a78]
+  - @fiscozen/input@3.0.2
+
 ## 3.0.1
 
 ### Patch Changes
