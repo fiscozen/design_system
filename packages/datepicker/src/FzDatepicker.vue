@@ -206,6 +206,7 @@ const props = withDefaults(defineProps<FzDatepickerProps>(), {
   autoPosition: true,
   textInput: true,
   arrowNavigation: true,
+  teleport: "body",
 });
 
 const dp = ref();
@@ -324,6 +325,13 @@ const mappedProps = computed(() => {
   p.timeConfig = stableTimeConfig.value;
 
   p.flow = stableFlow.value;
+
+  // ── Normalize teleport: true/"" → "body", falsy → remove ─
+  if (p.teleport === true || p.teleport === '') {
+    p.teleport = 'body';
+  } else if (!p.teleport) {
+    delete p.teleport;
+  }
 
   // ── Remove custom props that VueDatePicker doesn't need ───
   delete p.inputProps;
