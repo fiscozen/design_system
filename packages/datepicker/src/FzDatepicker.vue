@@ -1,191 +1,19 @@
-<template>
-  <VueDatePicker
-    class="fz-datepicker"
-    ref="dp"
-    :key="floatingKey"
-    v-bind="mappedProps"
-    :text-input="stableTextInput"
-    :ui="{ menu: calendarClassName }"
-    @update:model-value="
-      (e: any) =>
-        $emit(
-          'update:model-value',
-          props.valueFormat && e instanceof Date
-            ? format(e, props.valueFormat)
-            : e
-        )
-    "
-    @closed="handleMenuClosed"
-    @flow-step="handleFlowStep"
-    :model-value="modelValue"
-  >
-    <template
-      #dp-input="{ value, onBlur, onFocus, onInput, onEnter, onTab, onKeypress, onPaste, closeMenu, onClear }"
-    >
-      <FzInput
-        @focus="onFocus"
-        @blur="onBlur"
-        @update:modelValue="(e: string | number | undefined) => handleInputModelUpdate(onInput, onClear, String(e ?? ''))"
-        @keyup.enter="onEnter"
-        @keydown.tab="onTab"
-        @keypress="onKeypress"
-        @paste="
-          (e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)
-        "
-        v-bind="safeInputProps"
-        :modelValue="value"
-      >
-      </FzInput>
-    </template>
-    <template #arrow-left>
-      <FzIconButton
-        iconName="angle-left"
-        size="md"
-        variant="secondary"
-      ></FzIconButton>
-    </template>
-    <template #arrow-right>
-      <FzIconButton
-        iconName="angle-right"
-        size="md"
-        variant="secondary"
-      ></FzIconButton>
-    </template>
-    <template #time-picker="{ time, updateTime }">
-      <!-- Overlay grid for hours/minutes/seconds — positioned over calendar -->
-      <div v-if="activeOverlay" class="fz-time-picker__overlay">
-        <div class="fz-time-picker__overlay-header">
-          <span class="fz-time-picker__overlay-title">
-            {{ activeOverlay === 'hours' ? 'Ora' : activeOverlay === 'minutes' ? 'Minuti' : 'Secondi' }}
-          </span>
-        </div>
-        <FzDivider margin="none" />
-        <div class="fz-time-picker__overlay-grid">
-          <button
-            v-for="item in overlayItems"
-            :key="item"
-            :class="[
-              'fz-time-picker__overlay-cell',
-              { 'fz-time-picker__overlay-cell--selected': isOverlayItemSelected(time, item) }
-            ]"
-            @click="selectOverlayItem(time, updateTime, item)"
-          >
-            {{ String(item).padStart(2, '0') }}
-          </button>
-        </div>
-      </div>
-      <div v-else class="fz-time-picker">
-        <FzDivider margin="none" />
-        <!-- Time controls row -->
-        <div class="fz-time-picker__row mt-8">
-          <!-- Hours column -->
-          <div class="fz-time-picker__col">
-            <span class="fz-time-picker__label">Ora</span>
-            <div class="fz-time-picker__controls">
-              <FzIconButton
-                iconName="angle-up"
-                size="sm"
-                variant="secondary"
-                ariaLabel="Increment hours"
-                @click="handleTimeIncrement(time, updateTime, 'hours', 1)"
-              />
-              <FzButton
-                variant="invisible"
-                environment="backoffice"
-                :label="formatTimeValue(time.hours)"
-                containerClass="fz-time-picker__btn-label"
-                overrideContainerClass
-                class="fz-time-picker__display-btn"
-                @click="openOverlay('hours')"
-              />
-              <FzIconButton
-                iconName="angle-down"
-                size="sm"
-                variant="secondary"
-                ariaLabel="Decrement hours"
-                @click="handleTimeIncrement(time, updateTime, 'hours', -1)"
-              />
-            </div>
-          </div>
-          <!-- Separator -->
-          <template v-if="showMinutes">
-            <span class="fz-time-picker__separator">:</span>
-            <!-- Minutes column -->
-            <div class="fz-time-picker__col">
-              <span class="fz-time-picker__label">Minuti</span>
-              <div class="fz-time-picker__controls">
-                <FzIconButton
-                  iconName="angle-up"
-                  size="sm"
-                  variant="secondary"
-                  ariaLabel="Increment minutes"
-                  @click="handleTimeIncrement(time, updateTime, 'minutes', 1)"
-                />
-                <FzButton
-                  variant="invisible"
-                  environment="backoffice"
-                  :label="formatTimeValue(time.minutes)"
-                  containerClass="fz-time-picker__btn-label"
-                  overrideContainerClass
-                  class="fz-time-picker__display-btn"
-                  @click="openOverlay('minutes')"
-                />
-                <FzIconButton
-                  iconName="angle-down"
-                  size="sm"
-                  variant="secondary"
-                  ariaLabel="Decrement minutes"
-                  @click="handleTimeIncrement(time, updateTime, 'minutes', -1)"
-                />
-              </div>
-            </div>
-          </template>
-          <!-- Seconds -->
-          <template v-if="showSeconds">
-            <span class="fz-time-picker__separator">:</span>
-            <div class="fz-time-picker__col">
-              <span class="fz-time-picker__label">Secondi</span>
-              <div class="fz-time-picker__controls">
-                <FzIconButton
-                  iconName="angle-up"
-                  size="sm"
-                  variant="secondary"
-                  ariaLabel="Increment seconds"
-                  @click="handleTimeIncrement(time, updateTime, 'seconds', 1)"
-                />
-                <FzButton
-                  variant="invisible"
-                  environment="backoffice"
-                  :label="formatTimeValue(time.seconds)"
-                  containerClass="fz-time-picker__btn-label"
-                  overrideContainerClass
-                  class="fz-time-picker__display-btn"
-                  @click="openOverlay('seconds')"
-                />
-                <FzIconButton
-                  iconName="angle-down"
-                  size="sm"
-                  variant="secondary"
-                  ariaLabel="Decrement seconds"
-                  @click="handleTimeIncrement(time, updateTime, 'seconds', -1)"
-                />
-              </div>
-            </div>
-          </template>
-        </div>
-      </div>
-    </template>
-    <template #action-buttons>
-      <FzButton size="xs" variant="invisible" @click="closeMenu"
-        >Cancella</FzButton
-      >
-      <FzButton size="xs" @click="selectDate" class="ml-4">Seleziona</FzButton>
-    </template>
-    <template #clear-icon></template>
-  </VueDatePicker>
-</template>
-
 <script setup lang="ts">
+/**
+ * FzDatepicker – Date/date-range picker built on VueDatePicker v12.
+ *
+ * Wraps `@vuepic/vue-datepicker` with Fiscozen-branded styling, FzInput
+ * integration, legacy v8-prop mapping, and a custom time-picker overlay.
+ * The calendar menu is teleported to `<body>` by default so it renders
+ * correctly inside modals, dialogs, and other overflow-hidden containers.
+ *
+ * @component
+ * @example
+ * <FzDatepicker
+ *   v-model="date"
+ *   :inputProps="{ label: 'Data', placeholder: 'gg/mm/aaaa' }"
+ * />
+ */
 import { computed, nextTick, ref } from "vue";
 import { FzDatepickerProps } from "./types";
 import { VueDatePicker, type TimeInternalModel } from "@vuepic/vue-datepicker";
@@ -199,13 +27,20 @@ import { format } from "date-fns";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = withDefaults(defineProps<FzDatepickerProps>(), {
+  /** @default true */
   autoApply: true,
+  /** @default 'dd/MM/yyyy' */
   format: "dd/MM/yyyy",
+  /** @default it (Italian locale from date-fns) */
   formatLocale: () => it,
   state: undefined,
+  /** @default true */
   autoPosition: true,
+  /** @default true – enables keyboard date entry */
   textInput: true,
+  /** @default true */
   arrowNavigation: true,
+  /** @default 'body' – teleports the calendar menu to body */
   teleport: "body",
 });
 
@@ -524,7 +359,202 @@ const selectOverlayItem = (
 };
 </script>
 
+<template>
+  <VueDatePicker
+    class="fz-datepicker"
+    ref="dp"
+    :key="floatingKey"
+    v-bind="mappedProps"
+    :text-input="stableTextInput"
+    :ui="{ menu: calendarClassName }"
+    @update:model-value="
+      (e: any) =>
+        $emit(
+          'update:model-value',
+          props.valueFormat && e instanceof Date
+            ? format(e, props.valueFormat)
+            : e
+        )
+    "
+    @closed="handleMenuClosed"
+    @flow-step="handleFlowStep"
+    :model-value="modelValue"
+  >
+    <template
+      #dp-input="{ value, onBlur, onFocus, onInput, onEnter, onTab, onKeypress, onPaste, closeMenu, onClear }"
+    >
+      <FzInput
+        @focus="onFocus"
+        @blur="onBlur"
+        @update:modelValue="(e: string | number | undefined) => handleInputModelUpdate(onInput, onClear, String(e ?? ''))"
+        @keyup.enter="onEnter"
+        @keydown.tab="onTab"
+        @keypress="onKeypress"
+        @paste="
+          (e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)
+        "
+        v-bind="safeInputProps"
+        :modelValue="value"
+      >
+      </FzInput>
+    </template>
+    <template #arrow-left>
+      <FzIconButton
+        iconName="angle-left"
+        size="md"
+        variant="secondary"
+      ></FzIconButton>
+    </template>
+    <template #arrow-right>
+      <FzIconButton
+        iconName="angle-right"
+        size="md"
+        variant="secondary"
+      ></FzIconButton>
+    </template>
+    <template #time-picker="{ time, updateTime }">
+      <!-- Overlay grid for hours/minutes/seconds — positioned over calendar -->
+      <div v-if="activeOverlay" class="fz-time-picker__overlay">
+        <div class="fz-time-picker__overlay-header">
+          <span class="fz-time-picker__overlay-title">
+            {{ activeOverlay === 'hours' ? 'Ora' : activeOverlay === 'minutes' ? 'Minuti' : 'Secondi' }}
+          </span>
+        </div>
+        <FzDivider margin="none" />
+        <div class="fz-time-picker__overlay-grid">
+          <button
+            v-for="item in overlayItems"
+            :key="item"
+            :class="[
+              'fz-time-picker__overlay-cell',
+              { 'fz-time-picker__overlay-cell--selected': isOverlayItemSelected(time, item) }
+            ]"
+            @click="selectOverlayItem(time, updateTime, item)"
+          >
+            {{ String(item).padStart(2, '0') }}
+          </button>
+        </div>
+      </div>
+      <div v-else class="fz-time-picker">
+        <FzDivider margin="none" />
+        <!-- Time controls row -->
+        <div class="fz-time-picker__row mt-8">
+          <!-- Hours column -->
+          <div class="fz-time-picker__col">
+            <span class="fz-time-picker__label">Ora</span>
+            <div class="fz-time-picker__controls">
+              <FzIconButton
+                iconName="angle-up"
+                size="sm"
+                variant="secondary"
+                ariaLabel="Increment hours"
+                @click="handleTimeIncrement(time, updateTime, 'hours', 1)"
+              />
+              <FzButton
+                variant="invisible"
+                environment="backoffice"
+                :label="formatTimeValue(time.hours)"
+                containerClass="fz-time-picker__btn-label"
+                overrideContainerClass
+                class="fz-time-picker__display-btn"
+                @click="openOverlay('hours')"
+              />
+              <FzIconButton
+                iconName="angle-down"
+                size="sm"
+                variant="secondary"
+                ariaLabel="Decrement hours"
+                @click="handleTimeIncrement(time, updateTime, 'hours', -1)"
+              />
+            </div>
+          </div>
+          <!-- Separator -->
+          <template v-if="showMinutes">
+            <span class="fz-time-picker__separator">:</span>
+            <!-- Minutes column -->
+            <div class="fz-time-picker__col">
+              <span class="fz-time-picker__label">Minuti</span>
+              <div class="fz-time-picker__controls">
+                <FzIconButton
+                  iconName="angle-up"
+                  size="sm"
+                  variant="secondary"
+                  ariaLabel="Increment minutes"
+                  @click="handleTimeIncrement(time, updateTime, 'minutes', 1)"
+                />
+                <FzButton
+                  variant="invisible"
+                  environment="backoffice"
+                  :label="formatTimeValue(time.minutes)"
+                  containerClass="fz-time-picker__btn-label"
+                  overrideContainerClass
+                  class="fz-time-picker__display-btn"
+                  @click="openOverlay('minutes')"
+                />
+                <FzIconButton
+                  iconName="angle-down"
+                  size="sm"
+                  variant="secondary"
+                  ariaLabel="Decrement minutes"
+                  @click="handleTimeIncrement(time, updateTime, 'minutes', -1)"
+                />
+              </div>
+            </div>
+          </template>
+          <!-- Seconds -->
+          <template v-if="showSeconds">
+            <span class="fz-time-picker__separator">:</span>
+            <div class="fz-time-picker__col">
+              <span class="fz-time-picker__label">Secondi</span>
+              <div class="fz-time-picker__controls">
+                <FzIconButton
+                  iconName="angle-up"
+                  size="sm"
+                  variant="secondary"
+                  ariaLabel="Increment seconds"
+                  @click="handleTimeIncrement(time, updateTime, 'seconds', 1)"
+                />
+                <FzButton
+                  variant="invisible"
+                  environment="backoffice"
+                  :label="formatTimeValue(time.seconds)"
+                  containerClass="fz-time-picker__btn-label"
+                  overrideContainerClass
+                  class="fz-time-picker__display-btn"
+                  @click="openOverlay('seconds')"
+                />
+                <FzIconButton
+                  iconName="angle-down"
+                  size="sm"
+                  variant="secondary"
+                  ariaLabel="Decrement seconds"
+                  @click="handleTimeIncrement(time, updateTime, 'seconds', -1)"
+                />
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </template>
+    <template #action-buttons>
+      <FzButton size="xs" variant="invisible" @click="closeMenu"
+        >Cancella</FzButton
+      >
+      <FzButton size="xs" @click="selectDate" class="ml-4">Seleziona</FzButton>
+    </template>
+    <template #clear-icon></template>
+  </VueDatePicker>
+</template>
+
 <style>
+/**
+ * Global (unscoped) styles – required because VueDatePicker's calendar menu
+ * is teleported to <body> by default.  Scoped styles would not reach the
+ * teleported DOM, so all `.dp__*` overrides and custom `.fz-time-picker*`
+ * classes must be global.
+ */
+
+/* ── Design tokens: Fiscozen brand colours applied to VueDatePicker ── */
 :root {
   --dp-menu-min-width: 320px;
   --dp-font-family: var(--font-sans-inter, "Inter", sans-serif);
@@ -591,6 +621,7 @@ const selectOverlayItem = (
   @apply mx-8;
 }
 
+/* ── Custom time-picker controls (replaces VueDatePicker's default) ── */
 .fz-time-picker {
   @apply flex flex-col items-center;
 }
@@ -624,9 +655,7 @@ const selectOverlayItem = (
   @apply text-base font-medium text-core-black self-end pb-8;
 }
 
-/* ── Overlay ─────────────────────────────── */
-
-/* Make the menu inner a positioning context for the overlay */
+/* ── Time-picker overlay: covers the calendar grid when selecting h/m/s ── */
 .dp__menu_inner:has(.fz-time-picker__overlay) {
   @apply relative;
 }
@@ -670,6 +699,7 @@ const selectOverlayItem = (
   @apply h-32;
 }
 
+/* ── Hidden VueDatePicker elements not needed in Fiscozen design ── */
 .dp__calendar_header_separator,
 .dp__arrow_top {
   @apply hidden;
@@ -682,6 +712,7 @@ const selectOverlayItem = (
 .dp--menu--inner-stretched {
   @apply p-0;
 }
+/* z-index override: ensures the teleported calendar floats above modals/dialogs */
 .dp--menu-wrapper {
   z-index: unset;
   @apply z-70;
