@@ -1,5 +1,11 @@
 # @fiscozen/input
 
+## 3.0.2
+
+### Patch Changes
+
+- d662a78: Disable attrs fallthrough duplication on FzInput root element
+
 ## 3.0.1
 
 ### Patch Changes
