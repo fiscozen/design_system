@@ -381,9 +381,7 @@ describe("FzDatepicker", () => {
         expect(label.text()).toContain("Select Date");
       });
 
-      it("should have aria-describedby when helpText slot is provided to FzInput", async () => {
-        // Note: FzDatepicker uses FzInput internally but doesn't currently pass slots through
-        // This test documents the expected behavior if slot support is added
+      it("should have aria-describedby pointing to help text when helpText slot is provided", async () => {
         const wrapper = mount(FzDatepicker, {
           props: {
             modelValue: new Date(),
@@ -391,24 +389,23 @@ describe("FzDatepicker", () => {
               label: "Date",
             },
           },
+          slots: {
+            helpText: "Select a valid date",
+          },
         });
 
         await wrapper.vm.$nextTick();
 
-        // Currently, slots are not passed through to FzInput
-        // This test verifies the component structure exists
-        const inputComponent = wrapper.findComponent({ name: "FzInput" });
-        expect(inputComponent.exists()).toBe(true);
-        
-        // If slot support is added, aria-describedby should be set
-        // For now, we verify the component renders correctly
         const input = wrapper.find("input").element as HTMLInputElement;
-        expect(input).toBeTruthy();
+        const describedBy = input.getAttribute("aria-describedby");
+        expect(describedBy).toBeTruthy();
+
+        const helpElement = wrapper.find(`#${describedBy}`);
+        expect(helpElement.exists()).toBe(true);
+        expect(helpElement.text()).toContain("Select a valid date");
       });
 
-      it("should have aria-describedby when error is true in inputProps", async () => {
-        // Note: FzDatepicker uses FzInput internally but doesn't currently pass slots through
-        // Error message slot would need to be passed through for full aria-describedby support
+      it("should have aria-describedby pointing to error message when error is true and errorMessage slot is provided", async () => {
         const wrapper = mount(FzDatepicker, {
           props: {
             modelValue: new Date(),
@@ -417,18 +414,23 @@ describe("FzDatepicker", () => {
               error: true,
             },
           },
+          slots: {
+            errorMessage: "This field is required",
+          },
         });
 
         await wrapper.vm.$nextTick();
 
-        // Verify error state is passed to FzInput
-        const inputComponent = wrapper.findComponent({ name: "FzInput" });
-        expect(inputComponent.props("error")).toBe(true);
-        
-        // aria-describedby requires errorMessage slot to be passed through
-        // For now, we verify the error prop is correctly passed
         const input = wrapper.find("input").element as HTMLInputElement;
         expect(input.getAttribute("aria-invalid")).toBe("true");
+
+        const describedBy = input.getAttribute("aria-describedby");
+        expect(describedBy).toBeTruthy();
+
+        const errorElement = wrapper.find(`#${describedBy}`);
+        expect(errorElement.exists()).toBe(true);
+        expect(errorElement.attributes("role")).toBe("alert");
+        expect(errorElement.text()).toContain("This field is required");
       });
 
       it("should have aria-invalid when error is true in inputProps", async () => {
@@ -529,9 +531,7 @@ describe("FzDatepicker", () => {
         expect(input.getAttribute("aria-disabled")).toBe("false");
       });
 
-      it("should have role='alert' on error message when error is true and errorMessage slot is provided", async () => {
-        // Note: FzDatepicker uses FzInput internally but doesn't currently pass slots through
-        // This test documents the expected behavior if slot support is added
+      it("should render FzAlert with role='alert' when error is true and errorMessage slot is provided", async () => {
         const wrapper = mount(FzDatepicker, {
           props: {
             modelValue: new Date(),
@@ -540,19 +540,79 @@ describe("FzDatepicker", () => {
               error: true,
             },
           },
+          slots: {
+            errorMessage: "Invalid date",
+          },
         });
 
         await wrapper.vm.$nextTick();
 
-        // Currently, slots are not passed through to FzInput
-        // If slot support is added, role="alert" should be present on error message
-        // For now, we verify the error prop is correctly passed to FzInput
-        const inputComponent = wrapper.findComponent({ name: "FzInput" });
-        expect(inputComponent.props("error")).toBe(true);
-        
-        // Verify aria-invalid is set correctly
-        const input = wrapper.find("input").element as HTMLInputElement;
-        expect(input.getAttribute("aria-invalid")).toBe("true");
+        const alertElement = wrapper.find("[role='alert']");
+        expect(alertElement.exists()).toBe(true);
+        expect(alertElement.text()).toContain("Invalid date");
+      });
+
+      it("should not render error message when error is false even with errorMessage slot", async () => {
+        const wrapper = mount(FzDatepicker, {
+          props: {
+            modelValue: new Date(),
+            inputProps: {
+              label: "Date",
+              error: false,
+            },
+          },
+          slots: {
+            errorMessage: "Should not appear",
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        const alertElement = wrapper.find("[role='alert']");
+        expect(alertElement.exists()).toBe(false);
+      });
+
+      it("should not render helpText when error is true and errorMessage slot is provided", async () => {
+        const wrapper = mount(FzDatepicker, {
+          props: {
+            modelValue: new Date(),
+            inputProps: {
+              label: "Date",
+              error: true,
+            },
+          },
+          slots: {
+            errorMessage: "Error text",
+            helpText: "Help text",
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        const alertElement = wrapper.find("[role='alert']");
+        expect(alertElement.exists()).toBe(true);
+        expect(alertElement.text()).toContain("Error text");
+        expect(wrapper.text()).not.toContain("Help text");
+      });
+
+      it("should render helpText when error is false and helpText slot is provided", async () => {
+        const wrapper = mount(FzDatepicker, {
+          props: {
+            modelValue: new Date(),
+            inputProps: {
+              label: "Date",
+            },
+          },
+          slots: {
+            helpText: "Pick a date from the calendar",
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.text()).toContain("Pick a date from the calendar");
+        const alertElement = wrapper.find("[role='alert']");
+        expect(alertElement.exists()).toBe(false);
       });
     });
 

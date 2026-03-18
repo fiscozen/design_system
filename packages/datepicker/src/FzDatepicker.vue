@@ -44,6 +44,11 @@ const props = withDefaults(defineProps<FzDatepickerProps>(), {
   teleport: "body",
 });
 
+defineSlots<{
+  errorMessage?: () => unknown;
+  helpText?: () => unknown;
+}>();
+
 const dp = ref();
 
 const selectDate = () => {
@@ -396,6 +401,12 @@ const selectOverlayItem = (
         v-bind="safeInputProps"
         :modelValue="value"
       >
+        <template v-if="$slots.errorMessage" #errorMessage>
+          <slot name="errorMessage"></slot>
+        </template>
+        <template v-if="$slots.helpText" #helpText>
+          <slot name="helpText"></slot>
+        </template>
       </FzInput>
     </template>
     <template #arrow-left>

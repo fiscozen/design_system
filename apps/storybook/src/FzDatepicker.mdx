@@ -271,6 +271,27 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
   </tbody>
 </table>
 
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>errorMessage</code></td>
+      <td>Content displayed below the input when <code>inputProps.error</code> is <code>true</code>. Rendered as an alert with <code>role="alert"</code> and linked to the input via <code>aria-describedby</code></td>
+    </tr>
+    <tr>
+      <td><code>helpText</code></td>
+      <td>Help text displayed below the input when no error is active. Linked to the input via <code>aria-describedby</code></td>
+    </tr>
+  </tbody>
+</table>
+
 ## Examples
 
 ### Date Range
@@ -358,6 +379,19 @@ const range = ref()
 </template>
 ```
 
+### Help Text
+
+```vue
+<template>
+  <FzDatepicker
+    v-model="date"
+    :inputProps="{ label: 'Birth date' }"
+  >
+    <template #helpText>Format: dd/mm/yyyy</template>
+  </FzDatepicker>
+</template>
+```
+
 ### Flow Mode (calendar then time)
 
 ```vue
@@ -383,7 +417,9 @@ const range = ref()
 - Calendar popup is focusable and supports arrow key navigation
 - Escape key closes the calendar popup
 - Tab key moves focus away from the datepicker
-- ARIA attributes are managed by the underlying `FzInput` component (`aria-invalid`, `aria-disabled`, `aria-required`, `aria-labelledby`)
+- ARIA attributes are managed by the underlying `FzInput` component (`aria-invalid`, `aria-disabled`, `aria-required`, `aria-labelledby`, `aria-describedby`)
+- Error messages are rendered with `role="alert"` and linked to the input via `aria-describedby`
+- Help text is linked to the input via `aria-describedby` when no error is active
 
 ## Best Practices
 
