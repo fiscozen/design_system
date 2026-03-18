@@ -1,0 +1,402 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Form/FzDatepicker" />
+
+# FzDatepicker
+
+Date and date-range picker for the Fiscozen design system, built on top of [VueDatePicker v12](https://vue3datepicker.com/). Provides Fiscozen-branded styling, `FzInput` integration, and a custom time-picker overlay.
+
+## Features
+
+- Single date, date range, week, month, and year selection
+- Inline time picker with hours, minutes, and optional seconds
+- Calendar menu teleported to `<body>` by default (works inside modals/dialogs)
+- Keyboard navigation and text input support
+- Customizable placement via Floating UI
+- Legacy v8 prop compatibility (transparent remapping)
+- Responsive mobile layout
+
+## Installation
+
+```bash
+npm install @fiscozen/datepicker
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { FzDatepicker } from '@fiscozen/datepicker'
+
+const date = ref()
+</script>
+
+<template>
+  <FzDatepicker
+    v-model="date"
+    :inputProps="{ label: 'Select a date', placeholder: 'dd/mm/yyyy' }"
+  />
+</template>
+```
+
+## Props
+
+The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/props/general/) and adds the following custom props.
+
+### Custom Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>inputProps</code></td>
+      <td><code>FzInputProps</code></td>
+      <td>&mdash;</td>
+      <td>Props forwarded to the inner <code>FzInput</code> component (label, placeholder, environment, error, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>valueFormat</code></td>
+      <td><code>string | undefined</code></td>
+      <td><code>undefined</code></td>
+      <td>Optional date-fns format string. When set, the emitted <code>update:model-value</code> value is formatted as a string instead of a Date object</td>
+    </tr>
+    <tr>
+      <td><code>placement</code></td>
+      <td><code>FloatingPlacement</code></td>
+      <td><code>undefined</code></td>
+      <td>Shorthand for <code>floating.placement</code>. Controls where the calendar popup appears relative to the input</td>
+    </tr>
+    <tr>
+      <td><code>teleport</code></td>
+      <td><code>string | boolean</code></td>
+      <td><code>'body'</code></td>
+      <td>CSS selector or boolean for teleporting the calendar menu. Defaults to <code>'body'</code> so the popup renders outside overflow-hidden containers</td>
+    </tr>
+  </tbody>
+</table>
+
+### Commonly Used VueDatePicker Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>modelValue</code></td>
+      <td><code>Date | Date[] | string | null</code></td>
+      <td><code>undefined</code></td>
+      <td>The selected date value (use with <code>v-model</code>)</td>
+    </tr>
+    <tr>
+      <td><code>range</code></td>
+      <td><code>boolean | &#123; autoRange: number &#125;</code></td>
+      <td><code>false</code></td>
+      <td>Enable date range selection</td>
+    </tr>
+    <tr>
+      <td><code>autoApply</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Automatically apply selection without confirmation buttons</td>
+    </tr>
+    <tr>
+      <td><code>format</code></td>
+      <td><code>string</code></td>
+      <td><code>'dd/MM/yyyy'</code></td>
+      <td>Display format for the date in the input field</td>
+    </tr>
+    <tr>
+      <td><code>textInput</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Allow typing dates directly into the input field</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Disable the datepicker</td>
+    </tr>
+    <tr>
+      <td><code>monthPicker</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Show month picker instead of calendar</td>
+    </tr>
+    <tr>
+      <td><code>yearPicker</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Show year picker instead of calendar</td>
+    </tr>
+    <tr>
+      <td><code>weekPicker</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Enable week selection mode</td>
+    </tr>
+    <tr>
+      <td><code>multiCalendars</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Show multiple calendar months side by side</td>
+    </tr>
+    <tr>
+      <td><code>modelType</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Format string for the emitted model value (e.g. <code>'yyyy-MM-dd'</code>)</td>
+    </tr>
+    <tr>
+      <td><code>disabledDates</code></td>
+      <td><code>Date[] | (date: Date) =&gt; boolean</code></td>
+      <td><code>undefined</code></td>
+      <td>Array of disabled dates or a function returning true for dates to disable</td>
+    </tr>
+    <tr>
+      <td><code>minDate</code></td>
+      <td><code>Date | string</code></td>
+      <td><code>undefined</code></td>
+      <td>Minimum selectable date</td>
+    </tr>
+    <tr>
+      <td><code>maxDate</code></td>
+      <td><code>Date | string</code></td>
+      <td><code>undefined</code></td>
+      <td>Maximum selectable date</td>
+    </tr>
+  </tbody>
+</table>
+
+### Time Picker Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>enableTimePicker</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Show time selection controls</td>
+    </tr>
+    <tr>
+      <td><code>enableMinutes</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Show minutes in time picker</td>
+    </tr>
+    <tr>
+      <td><code>enableSeconds</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Show seconds in time picker</td>
+    </tr>
+    <tr>
+      <td><code>is24</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Use 24-hour format</td>
+    </tr>
+    <tr>
+      <td><code>timePickerInline</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Show time picker inline below the calendar</td>
+    </tr>
+  </tbody>
+</table>
+
+## Events
+
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Payload</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>update:model-value</code></td>
+      <td><code>Date | string | null</code></td>
+      <td>Emitted when a date is selected. Payload is formatted if <code>valueFormat</code> is set</td>
+    </tr>
+    <tr>
+      <td><code>text-input</code></td>
+      <td><code>string</code></td>
+      <td>Emitted when the user types into the input field</td>
+    </tr>
+    <tr>
+      <td><code>cleared</code></td>
+      <td><code>string</code></td>
+      <td>Emitted when the input value is cleared</td>
+    </tr>
+    <tr>
+      <td><code>closed</code></td>
+      <td>&mdash;</td>
+      <td>Emitted when the calendar menu is closed</td>
+    </tr>
+    <tr>
+      <td><code>open</code></td>
+      <td>&mdash;</td>
+      <td>Emitted when the calendar menu is opened</td>
+    </tr>
+    <tr>
+      <td><code>flow-step</code></td>
+      <td><code>number</code></td>
+      <td>Emitted when the flow moves to the next step</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Date Range
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { FzDatepicker } from '@fiscozen/datepicker'
+
+const range = ref()
+</script>
+
+<template>
+  <FzDatepicker
+    v-model="range"
+    :range="true"
+    :inputProps="{ label: 'Date range' }"
+  />
+</template>
+```
+
+### With Time Picker
+
+```vue
+<template>
+  <FzDatepicker
+    v-model="date"
+    :enableTimePicker="true"
+    :timePickerInline="true"
+    :is24="true"
+    :enableMinutes="true"
+    :autoApply="false"
+    format="dd/MM/yyyy HH:mm"
+    :inputProps="{ label: 'Date and time' }"
+  />
+</template>
+```
+
+### String Model Value
+
+```vue
+<template>
+  <FzDatepicker
+    v-model="date"
+    modelType="yyyy-MM-dd"
+    :inputProps="{ label: 'ISO date', placeholder: 'yyyy-mm-dd' }"
+  />
+</template>
+```
+
+### Custom Placement
+
+```vue
+<template>
+  <FzDatepicker
+    v-model="date"
+    placement="bottom-start"
+    :inputProps="{ label: 'Bottom start' }"
+  />
+</template>
+```
+
+### With Value Format (emit formatted string)
+
+```vue
+<template>
+  <FzDatepicker
+    v-model="date"
+    valueFormat="yyyy-MM-dd"
+    :inputProps="{ label: 'Formatted output' }"
+  />
+</template>
+```
+
+### Error State
+
+```vue
+<template>
+  <FzDatepicker
+    v-model="date"
+    :inputProps="{ label: 'Required field', error: true }"
+  >
+    <template #errorMessage>This field is required</template>
+  </FzDatepicker>
+</template>
+```
+
+### Flow Mode (calendar then time)
+
+```vue
+<template>
+  <FzDatepicker
+    v-model="date"
+    :enableTimePicker="true"
+    :timePickerInline="true"
+    :is24="true"
+    :enableMinutes="true"
+    :flow="['calendar', 'hours', 'minutes']"
+    format="dd/MM/yyyy HH:mm"
+    :autoApply="false"
+    :inputProps="{ label: 'Date with flow' }"
+  />
+</template>
+```
+
+## Accessibility
+
+- Full keyboard navigation support via `arrowNavigation` (enabled by default)
+- Text input support for typing dates directly
+- Calendar popup is focusable and supports arrow key navigation
+- Escape key closes the calendar popup
+- Tab key moves focus away from the datepicker
+- ARIA attributes are managed by the underlying `FzInput` component (`aria-invalid`, `aria-disabled`, `aria-required`, `aria-labelledby`)
+
+## Best Practices
+
+- Always provide a `label` via `inputProps` for accessibility
+- Use `placement` to control where the calendar appears relative to the input
+- The `teleport` prop defaults to `"body"` which is the recommended setting, especially inside modals or dialogs
+- Use `modelType` when you need the emitted value in a specific string format (e.g. `'yyyy-MM-dd'`)
+- Use `valueFormat` when you want to format the emitted value with date-fns before emission
+- Set `autoApply: false` when using time picker or multi-date selection to give users a confirm/cancel step
+- For forms, pass `name` via props or `inputProps` so the datepicker value is included in form submissions
+
+## Related Components
+
+- **FzInput**: The inner input element used by the datepicker
+- **FzButton / FzIconButton**: Used for calendar navigation arrows and action buttons
+- **FzDivider**: Used as a visual separator in the time picker

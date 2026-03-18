@@ -11,7 +11,7 @@ const FIXED_DATE = new Date(2025, 0, 15) // January 15, 2025
 const FIXED_TOMORROW = new Date(2025, 0, 16)
 const FIXED_AFTER_TOMORROW = new Date(2025, 0, 17)
 
-const meta: Meta<typeof FzDatepicker> = {
+const meta = {
   title: 'Form/FzDatepicker',
   component: FzDatepicker,
   tags: ['autodocs'],
@@ -72,12 +72,11 @@ const meta: Meta<typeof FzDatepicker> = {
       label: 'datepicker label'
     },
     name: 'fz-datepicker',
-    // Pin all stories to a fixed month/year so Chromatic snapshots are stable
     startDate: FIXED_DATE,
     noToday: true
   },
   decorators: [() => ({ template: '<div style="max-width: 400px; padding: 12px;"><story/></div>' })]
-}
+} satisfies Meta<typeof FzDatepicker>
 
 export default meta
 
