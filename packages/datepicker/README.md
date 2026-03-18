@@ -30,9 +30,10 @@ FzDatepicker is a shallow wrapper around [`@vuepic/vue-datepicker` v12](https://
 
 1. **Fiscozen-branded styling** via global (unscoped) CSS overrides of `.dp__*` classes
 2. **FzInput integration** by replacing the default input slot with `FzInput`
-3. **Custom time-picker overlay** (hours/minutes/seconds grid) instead of VueDatePicker's default
-4. **Legacy v8 prop mapping** so consumers don't need to update their code after the v8 → v12 migration
-5. **Teleport normalization** to ensure the calendar menu renders correctly inside modals/dialogs
+3. **Slot forwarding** (`errorMessage`, `helpText`) from FzDatepicker through to the inner FzInput
+4. **Custom time-picker overlay** (hours/minutes/seconds grid) instead of VueDatePicker's default
+5. **Legacy v8 prop mapping** so consumers don't need to update their code after the v8 → v12 migration
+6. **Teleport normalization** to ensure the calendar menu renders correctly inside modals/dialogs
 
 ### Why Global CSS
 
@@ -84,6 +85,12 @@ Vue 3's boolean casting rules can cause `<FzDatepicker teleport />` to pass an e
 - Explicit string (e.g. `"#container"`) → passed through as-is
 
 Default is `"body"`, ensuring the calendar always renders outside overflow-hidden containers.
+
+### Slot Forwarding (Error & Help Text)
+
+FzDatepicker conditionally forwards `errorMessage` and `helpText` slots to the inner FzInput. The forwarding uses `v-if="$slots.slotName"` guards so that FzInput only sees the slot when the consumer of FzDatepicker actually provides it. Without these guards, FzInput's `$slots.helpText` check would always be truthy (because the template exists), causing an empty help text span to render on every instance.
+
+This pattern follows the same approach used by `FzCurrencyInput`.
 
 ### Floating Key (Forced Remount)
 

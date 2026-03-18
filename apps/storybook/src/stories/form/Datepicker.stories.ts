@@ -995,17 +995,75 @@ export const ErrorState: Story = {
       }
     })
 
-    await step('Verify error message container has proper accessibility', async () => {
-      const input = canvas.getByLabelText(/Date with error/i)
+    await step('Verify error message is rendered', async () => {
+      const errorAlert = canvasElement.querySelector('[role="alert"]')
+      await expect(errorAlert).toBeInTheDocument()
+      await expect(errorAlert?.textContent).toContain('This field is required')
+    })
 
-      // Verify aria-describedby links to error message
+    await step('Verify aria-describedby links to error message', async () => {
+      const input = canvas.getByLabelText(/Date with error/i)
       const describedBy = input.getAttribute('aria-describedby')
-      if (describedBy) {
-        const errorElement = canvasElement.querySelector(`#${describedBy}`)
-        if (errorElement) {
-          await expect(errorElement).toHaveAttribute('role', 'alert')
+      await expect(describedBy).toBeTruthy()
+      const errorElement = canvasElement.querySelector(`#${describedBy}`)
+      await expect(errorElement).toHaveAttribute('role', 'alert')
+    })
+  }
+}
+
+export const HelpText: Story = {
+  render: (args) => ({
+    components: { FzDatepicker },
+    setup() {
+      const date = ref()
+      const handleUpdate = (value: any) => {
+        date.value = value
+        if (args['onUpdate:modelValue']) {
+          args['onUpdate:modelValue'](value)
         }
       }
+      return {
+        date,
+        args,
+        handleUpdate
+      }
+    },
+    template: `
+      <FzDatepicker v-bind="args" :modelValue="date" @update:modelValue="handleUpdate">
+        <template #helpText>Format: dd/mm/yyyy</template>
+      </FzDatepicker>
+    `
+  }),
+  args: {
+    inputProps: {
+      label: 'Birth date'
+    },
+    name: 'fz-datepicker-help'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify help text is rendered', async () => {
+      const input = canvas.getByLabelText(/Birth date/i)
+      await expect(input).toBeInTheDocument()
+
+      const fzInput = input.closest('.fz-input')
+      await expect(fzInput?.textContent).toContain('Format: dd/mm/yyyy')
+    })
+
+    await step('Verify aria-describedby links to help text', async () => {
+      const input = canvas.getByLabelText(/Birth date/i)
+      const describedBy = input.getAttribute('aria-describedby')
+      await expect(describedBy).toBeTruthy()
+
+      const helpElement = canvasElement.querySelector(`#${describedBy}`)
+      await expect(helpElement).toBeInTheDocument()
+      await expect(helpElement?.textContent).toContain('Format: dd/mm/yyyy')
+    })
+
+    await step('Verify no error alert is rendered', async () => {
+      const errorAlert = canvasElement.querySelector('[role="alert"]')
+      await expect(errorAlert).not.toBeInTheDocument()
     })
   }
 }
