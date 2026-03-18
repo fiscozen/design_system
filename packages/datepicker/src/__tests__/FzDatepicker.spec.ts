@@ -857,6 +857,72 @@ describe("FzDatepicker", () => {
       // valueFormat and inputProps are our custom props, not VueDatePicker's
       expect(wrapper.exists()).toBe(true);
     });
+
+    describe("teleport prop normalization", () => {
+      const getMappedTeleport = (wrapper: ReturnType<typeof mount>) => {
+        const mapped = (wrapper.vm as any).$.setupState.mappedProps;
+        return mapped.teleport;
+      };
+
+      it("should default teleport to 'body' when not provided", () => {
+        const wrapper = mount(FzDatepicker, {
+          props: {
+            modelValue: new Date(),
+            inputProps: {},
+          },
+        });
+
+        expect(getMappedTeleport(wrapper)).toBe("body");
+      });
+
+      it("should normalize teleport boolean true to 'body'", () => {
+        const wrapper = mount(FzDatepicker, {
+          props: {
+            modelValue: new Date(),
+            teleport: true,
+            inputProps: {},
+          },
+        });
+
+        expect(getMappedTeleport(wrapper)).toBe("body");
+      });
+
+      it("should normalize teleport empty string to 'body'", () => {
+        const wrapper = mount(FzDatepicker, {
+          props: {
+            modelValue: new Date(),
+            teleport: "",
+            inputProps: {},
+          },
+        });
+
+        expect(getMappedTeleport(wrapper)).toBe("body");
+      });
+
+      it("should pass through explicit teleport string value", () => {
+        const wrapper = mount(FzDatepicker, {
+          props: {
+            modelValue: new Date(),
+            teleport: "#my-container",
+            inputProps: {},
+          },
+        });
+
+        expect(getMappedTeleport(wrapper)).toBe("#my-container");
+      });
+
+      it("should not pass teleport to VueDatePicker when set to false", () => {
+        const wrapper = mount(FzDatepicker, {
+          props: {
+            modelValue: new Date(),
+            teleport: false,
+            inputProps: {},
+          },
+        });
+
+        expect(getMappedTeleport(wrapper)).toBeUndefined();
+      });
+    });
   });
 
   // handleDateUpdate tests removed: the date-update event was a v8
