@@ -217,6 +217,20 @@ const emit = defineEmits([
   "overlay-toggle",
 ]);
 
+/**
+ * Formats and emits the selected date value.
+ * When `valueFormat` is set and the value is a Date, applies date-fns
+ * formatting so consumers receive a string instead of a Date object.
+ */
+const handleModelValueUpdate = (e: any) => {
+  emit(
+    "update:model-value",
+    props.valueFormat && e instanceof Date
+      ? format(e, props.valueFormat)
+      : e
+  );
+};
+
 const breakpointsMatch = useBreakpoints(breakpoints);
 const isMobile = breakpointsMatch.isSmaller("sm");
 
@@ -372,15 +386,7 @@ const selectOverlayItem = (
     v-bind="mappedProps"
     :text-input="stableTextInput"
     :ui="{ menu: calendarClassName }"
-    @update:model-value="
-      (e: any) =>
-        $emit(
-          'update:model-value',
-          props.valueFormat && e instanceof Date
-            ? format(e, props.valueFormat)
-            : e
-        )
-    "
+    @update:model-value="handleModelValueUpdate"
     @closed="handleMenuClosed"
     @flow-step="handleFlowStep"
     :model-value="modelValue"
