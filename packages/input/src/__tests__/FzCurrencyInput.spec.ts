@@ -1588,5 +1588,109 @@ describe('FzCurrencyInput', () => {
       })
     })
   })
+
+  describe('Slot forwarding', () => {
+    it('should not render empty help text span when helpText slot is not provided', async () => {
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          modelValue: 10,
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const helpSpan = wrapper.find(`[id$="-help"]`)
+      expect(helpSpan.exists()).toBe(false)
+    })
+
+    it('should render help text span when helpText slot is provided', async () => {
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          modelValue: 10,
+        },
+        slots: {
+          helpText: 'Enter an amount',
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const helpSpan = wrapper.find(`[id$="-help"]`)
+      expect(helpSpan.exists()).toBe(true)
+      expect(helpSpan.text()).toContain('Enter an amount')
+    })
+
+    it('should render label from label prop when label slot is not provided', async () => {
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Amount',
+          modelValue: 10,
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const label = wrapper.find('label')
+      expect(label.exists()).toBe(true)
+      expect(label.text()).toContain('Amount')
+    })
+
+    it('should render custom label slot instead of label prop', async () => {
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Amount',
+          modelValue: 10,
+        },
+        slots: {
+          label: '<strong>Custom Label</strong>',
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const strong = wrapper.find('strong')
+      expect(strong.exists()).toBe(true)
+      expect(strong.text()).toBe('Custom Label')
+
+      const defaultLabel = wrapper.find('label')
+      expect(defaultLabel.exists()).toBe(false)
+    })
+
+    it('should not render error message container when errorMessage slot is not provided', async () => {
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          modelValue: 10,
+          error: true,
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const errorContainer = wrapper.find('[role="alert"]')
+      expect(errorContainer.exists()).toBe(false)
+    })
+
+    it('should render error message when error is true and errorMessage slot is provided', async () => {
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          modelValue: 10,
+          error: true,
+        },
+        slots: {
+          errorMessage: 'Invalid amount',
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const errorContainer = wrapper.find('[role="alert"]')
+      expect(errorContainer.exists()).toBe(true)
+      expect(errorContainer.text()).toContain('Invalid amount')
+    })
+  })
 })
 

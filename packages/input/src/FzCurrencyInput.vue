@@ -78,7 +78,7 @@ const getEmptyValue = (): number | null | undefined => {
  */
 const getEmptyDisplayValue = (
   isEmptyValueZero: boolean,
-  isCurrentlyFocused: boolean
+  isCurrentlyFocused: boolean,
 ): string => {
   if (isEmptyValueZero) {
     // During typing, show empty string. Formatting happens on blur
@@ -327,7 +327,7 @@ const handleBlur = () => {
     // Display empty value (formatted zero if zeroOnEmpty is true, empty string otherwise)
     fzInputModel.value = getEmptyDisplayValue(
       expectedEmptyValue === 0,
-      false // Not focused during blur
+      false, // Not focused during blur
     );
     return;
   }
@@ -395,7 +395,7 @@ const handleFocus = () => {
  * @returns Normalized number value, undefined, or null
  */
 const normalizeModelValue = (
-  value: number | string | undefined | null
+  value: number | string | undefined | null,
 ): number | undefined | null => {
   if (value === undefined || value === null || value === "") {
     return value === null ? null : undefined;
@@ -406,7 +406,7 @@ const normalizeModelValue = (
   if (typeof value === "string") {
     console.warn(
       "[FzCurrencyInput] String values in v-model are deprecated. Please use number instead. " +
-        `Received: "${value}". This will be parsed to a number for retrocompatibility, but string support may be removed in a future version.`
+        `Received: "${value}". This will be parsed to a number for retrocompatibility, but string support may be removed in a future version.`,
     );
     const parsed = parse(value);
     return isNaN(parsed) ? undefined : parsed;
@@ -512,7 +512,7 @@ onMounted(() => {
     // Display empty value (formatted zero if zeroOnEmpty is true, empty string otherwise)
     fzInputModel.value = getEmptyDisplayValue(
       expectedEmptyValue === 0,
-      false // Not focused during mount
+      false, // Not focused during mount
     );
     return;
   }
@@ -585,7 +585,7 @@ onMounted(() => {
       // Display empty value (formatted zero if zeroOnEmpty is true, empty string otherwise)
       fzInputModel.value = getEmptyDisplayValue(
         emptyValue === 0,
-        false // Not focused during mount
+        false, // Not focused during mount
       );
     }
     return;
@@ -621,7 +621,7 @@ watch(
       // Display empty value (formatted zero if zeroOnEmpty is true, empty string otherwise)
       fzInputModel.value = getEmptyDisplayValue(
         expectedEmptyValue === 0,
-        isFocused.value
+        isFocused.value,
       );
       return;
     }
@@ -705,12 +705,12 @@ watch(
         // Display empty value (formatted zero if zeroOnEmpty is true, empty string otherwise)
         fzInputModel.value = getEmptyDisplayValue(
           emptyValue === 0,
-          isFocused.value
+          isFocused.value,
         );
       }
       return;
     }
-  }
+  },
 );
 
 defineExpose({
@@ -731,10 +731,10 @@ defineExpose({
     @blur="handleBlur"
     @paste="handlePaste"
   >
-    <template #label>
+    <template v-if="$slots.label" #label>
       <slot name="label"></slot>
     </template>
-    <template #left-icon>
+    <template v-if="$slots['left-icon']" #left-icon>
       <slot name="left-icon"></slot>
     </template>
     <template #right-icon>
@@ -786,10 +786,10 @@ defineExpose({
         </div>
       </div>
     </template>
-    <template #helpText>
+    <template v-if="$slots.helpText" #helpText>
       <slot name="helpText"></slot>
     </template>
-    <template #errorMessage>
+    <template v-if="$slots.errorMessage" #errorMessage>
       <slot name="errorMessage"></slot>
     </template>
   </FzInput>
