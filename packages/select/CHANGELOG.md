@@ -1,5 +1,11 @@
 # @fiscozen/select
 
+## 3.0.4
+
+### Patch Changes
+
+- Handle empty slot forwarding for help and error messages
+
 ## 3.0.3
 
 ### Patch Changes
