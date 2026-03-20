@@ -1145,10 +1145,10 @@ defineExpose({
 
     <template #opener-end>
       <FzSelectHelpError :error :disabled :readonly>
-        <template #error>
+        <template v-if="$slots.error" #error>
           <slot name="error" />
         </template>
-        <template #help>
+        <template v-if="$slots.help" #help>
           <slot name="help" />
         </template>
       </FzSelectHelpError>

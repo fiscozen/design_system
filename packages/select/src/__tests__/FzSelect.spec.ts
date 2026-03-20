@@ -2395,4 +2395,84 @@ describe("FzSelect", () => {
       expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([undefined]);
     });
   });
+
+  describe("Slot forwarding", () => {
+    it("should not render empty help span when help slot is not provided", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          options: [
+            { value: "option1", label: "Option 1" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const helpSpan = wrapper.findComponent({ name: "FzSelectHelpError" });
+      const span = helpSpan.find("span");
+      expect(span.exists()).toBe(false);
+    });
+
+    it("should render help text when help slot is provided", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          options: [
+            { value: "option1", label: "Option 1" },
+          ],
+        },
+        slots: {
+          help: "Help message",
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const helpSpan = wrapper.findComponent({ name: "FzSelectHelpError" });
+      const span = helpSpan.find("span");
+      expect(span.exists()).toBe(true);
+      expect(span.text()).toContain("Help message");
+    });
+
+    it("should not render empty error alert when error is true but error slot is not provided", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          error: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+          ],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const helpError = wrapper.findComponent({ name: "FzSelectHelpError" });
+      const alert = helpError.findComponent({ name: "FzAlert" });
+      expect(alert.exists()).toBe(false);
+    });
+
+    it("should render error message when error is true and error slot is provided", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          error: true,
+          options: [
+            { value: "option1", label: "Option 1" },
+          ],
+        },
+        slots: {
+          error: "Error message",
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const helpError = wrapper.findComponent({ name: "FzSelectHelpError" });
+      const alert = helpError.findComponent({ name: "FzAlert" });
+      expect(alert.exists()).toBe(true);
+      expect(alert.text()).toContain("Error message");
+    });
+  });
 });
