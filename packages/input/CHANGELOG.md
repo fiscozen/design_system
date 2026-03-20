@@ -1,5 +1,11 @@
 # @fiscozen/input
 
+## 3.0.3
+
+### Patch Changes
+
+- c2a049e: Hide helpText and errorMessage slot when empty
+
 ## 3.0.2
 
 ### Patch Changes

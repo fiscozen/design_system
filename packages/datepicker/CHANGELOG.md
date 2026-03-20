@@ -1,5 +1,13 @@
 # @fiscozen/datepicker
 
+## 3.0.4
+
+### Patch Changes
+
+- 877e577: Fix teleport and adds error and helpText slots
+- Updated dependencies [c2a049e]
+  - @fiscozen/input@3.0.3
+
 ## 3.0.3
 
 ### Patch Changes
