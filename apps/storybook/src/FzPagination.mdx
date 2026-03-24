@@ -186,7 +186,14 @@ Assign distinct `urlKey` values to avoid conflicts:
 
 ## Custom UI with usePagination
 
-If you need a fully custom pagination UI but want to reuse the page calculation logic (clamping, ellipsis, anchors, prev/next), import the `usePagination` composable directly. It returns a reactive list of `PaginationItem` objects that you can render however you like.
+If you need a fully custom pagination UI but want to reuse the page calculation logic (clamping, ellipsis, anchors, prev/next) **and URL synchronization**, import the `usePagination` composable directly.
+
+The composable returns:
+- `items` — reactive list of `PaginationItem` objects to render
+- `initialPage` — the page number read from the URL (or the `currentPage` fallback if sync is disabled)
+- `syncPageToUrl(page)` — writes the page value to the URL query string
+
+URL sync is enabled by default, just like in `FzPagination`.
 
 ```vue
 <script setup>
@@ -196,15 +203,21 @@ import { ref } from 'vue'
 const currentPage = ref(1)
 const totalPages = 20
 
-const { items } = usePagination(currentPage, totalPages, {
+const { items, initialPage, syncPageToUrl } = usePagination(currentPage, totalPages, {
   firstPage: { show: true },
   lastPage: { show: true },
   prev: { label: 'Prev' },
   next: { label: 'Next' }
 })
 
+// Initialize from URL
+if (initialPage !== currentPage.value) {
+  currentPage.value = initialPage
+}
+
 const goToPage = (page) => {
   currentPage.value = page
+  syncPageToUrl(page)
 }
 </script>
 
@@ -227,6 +240,23 @@ const goToPage = (page) => {
     </ul>
   </nav>
 </template>
+```
+
+### Disabling URL sync in usePagination
+
+```ts
+const { items, initialPage, syncPageToUrl } = usePagination(currentPage, totalPages, {
+  urlSync: { syncUrl: false }
+})
+// initialPage === currentPage.value, syncPageToUrl is a noop
+```
+
+### Custom URL key in usePagination
+
+```ts
+const { items, initialPage, syncPageToUrl } = usePagination(currentPage, totalPages, {
+  urlSync: { urlKey: 'myPage' }
+})
 ```
 
 Each `PaginationItem` exposes:
@@ -268,7 +298,7 @@ Each `PaginationItem` exposes:
   </tbody>
 </table>
 
-The composable accepts `PaginationOptions` to control ellipsis, anchors, and prev/next visibility independently from the UI.
+The composable accepts `PaginationOptions` to control ellipsis, anchors, prev/next visibility, and URL synchronization independently from the UI.
 
 ## Events
 

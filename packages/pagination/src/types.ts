@@ -43,6 +43,24 @@ export interface SlotConfig {
 // ---------------------------------------------------------------------------
 
 /**
+ * Controls URL synchronization of the current page via useQueryString.
+ * When enabled (default), the composable reads the initial page from the URL
+ * and writes page changes back via the History API.
+ */
+export interface PaginationUrlSyncOptions {
+    /**
+     * Enables two-way sync between currentPage and a URL query parameter.
+     * @default true
+     */
+    syncUrl?: boolean;
+    /**
+     * URL query parameter name for currentPage synchronization.
+     * @default 'page'
+     */
+    urlKey?: string;
+}
+
+/**
  * firstPage/lastPage affect only the anchored 1 and N (when they sit next to an ellipsis).
  * pages.show = false strips all page numbers except first/last and current, for minimal UIs.
  */
@@ -68,6 +86,8 @@ export interface PaginationOptions {
         label?: string;
         show?: boolean;
     };
+    /** URL synchronization configuration. Enabled by default. */
+    urlSync?: PaginationUrlSyncOptions;
 }
 
 /** Fully resolved options where every nested field is guaranteed present after merging with defaults. */
@@ -112,24 +132,25 @@ export type FzPaginationProps = {
     environment?: 'frontoffice' | 'backoffice'
     /** Currently active page (v-model:currentPage). @default 0 */
     currentPage?: number
-    /** Configuration for pagination controls (prev/next labels, ellipsis visibility, anchors). Merged with composable defaults. */
+    /** Configuration for pagination controls (prev/next labels, ellipsis visibility, anchors, URL sync). Merged with composable defaults. */
     options?: PaginationOptions
     /** Position of the pagination controls. @default 'end' */
     position?: 'start' | 'center' | 'end'
     /**
-     * URL query parameter name for currentPage synchronization.
-     * Only effective when syncUrl is true.
-     * @default 'page'
-     */
-    urlKey?: string
-    /**
      * Enables two-way sync between currentPage and a URL query parameter.
      * On mount, reads the page from the URL and emits update:currentPage.
      * On page change, writes the new value back to the URL.
-     * Uses provideQueryStringRoute() if available, otherwise falls back to browser History API.
+     * Shortcut for `options.urlSync.syncUrl`. Takes priority over options when both are set.
      * @default true
      */
     syncUrl?: boolean
     /** Total number of pages available. @default 0 */
     totalPages?: number
+    /**
+     * URL query parameter name for currentPage synchronization.
+     * Only effective when syncUrl is true.
+     * Shortcut for `options.urlSync.urlKey`. Takes priority over options when both are set.
+     * @default 'page'
+     */
+    urlKey?: string
 }

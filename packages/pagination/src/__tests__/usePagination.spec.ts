@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ref, nextTick } from 'vue'
 import { usePagination } from '../usePagination'
 import type { PaginationItem } from '../types'
@@ -306,6 +306,88 @@ describe('usePagination', () => {
                     expect(items.value[i - 1].type).not.toBe('ellipsis')
                 }
             }
+        })
+    })
+
+    describe('URL sync', () => {
+        beforeEach(() => {
+            Object.defineProperty(window, 'location', {
+                value: { pathname: '/app', search: '', hash: '' },
+                writable: true,
+            })
+            vi.spyOn(window.history, 'replaceState').mockImplementation(() => {})
+            vi.spyOn(window.history, 'pushState').mockImplementation(() => {})
+            vi.spyOn(window, 'history', 'get').mockReturnValue({
+                ...window.history,
+                state: {},
+                replaceState: window.history.replaceState,
+                pushState: window.history.pushState,
+            })
+        })
+
+        afterEach(() => {
+            vi.restoreAllMocks()
+        })
+
+        it('reads initialPage from URL when sync is enabled (default)', () => {
+            window.location.search = '?page=5'
+            const { initialPage } = usePagination(1, 10)
+            expect(initialPage).toBe(5)
+        })
+
+        it('returns currentPage as initialPage when key is absent from URL', () => {
+            window.location.search = ''
+            const { initialPage } = usePagination(3, 10)
+            expect(initialPage).toBe(3)
+        })
+
+        it('syncPageToUrl calls replaceState with correct key/value', () => {
+            window.location.search = '?page=1'
+            const { syncPageToUrl } = usePagination(1, 10)
+
+            syncPageToUrl(4)
+
+            expect(window.history.replaceState).toHaveBeenCalledWith(
+                expect.objectContaining({ __queryString: expect.objectContaining({ page: 4 }) }),
+                '',
+                expect.any(String)
+            )
+        })
+
+        it('returns currentPage as initialPage when syncUrl is false', () => {
+            window.location.search = '?page=5'
+            const { initialPage } = usePagination(1, 10, { urlSync: { syncUrl: false } })
+            expect(initialPage).toBe(1)
+        })
+
+        it('syncPageToUrl is a noop when syncUrl is false', () => {
+            window.location.search = ''
+            const { syncPageToUrl } = usePagination(1, 10, { urlSync: { syncUrl: false } })
+
+            syncPageToUrl(4)
+
+            expect(window.history.replaceState).not.toHaveBeenCalled()
+        })
+
+        it('supports custom urlKey', () => {
+            window.location.search = '?p=7'
+            const { initialPage, syncPageToUrl } = usePagination(1, 10, { urlSync: { urlKey: 'p' } })
+            expect(initialPage).toBe(7)
+
+            syncPageToUrl(3)
+            expect(window.history.replaceState).toHaveBeenCalledWith(
+                expect.objectContaining({ __queryString: expect.objectContaining({ p: 3 }) }),
+                '',
+                expect.any(String)
+            )
+        })
+
+        it('does not break existing item computation', () => {
+            window.location.search = ''
+            const { items, initialPage } = usePagination(1, 5)
+            expect(initialPage).toBe(1)
+            expect(items.value.length).toBeGreaterThan(0)
+            expect(items.value.find(i => i.current)!.value).toBe(1)
         })
     })
 })
