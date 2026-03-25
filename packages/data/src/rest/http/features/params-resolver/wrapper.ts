@@ -42,7 +42,7 @@ export const wrapWithParamsResolver = <T>(
   method: string,
   url: MaybeRefOrGetter<string>,
   bodyGetter?: MaybeRefOrGetter<BodyInit | null | undefined>,
-  headersGetter?: MaybeRefOrGetter<Record<string, string> | undefined>,
+  headersGetter?: MaybeRefOrGetter<Record<string, string | undefined> | undefined>,
   useFetchOptions?: UseFzFetchOptions,
 ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> => {
   if (bodyGetter === undefined && headersGetter === undefined) {

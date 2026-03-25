@@ -76,7 +76,7 @@ const createFetchResult = <T>(
   requestInit: RequestInit,
   method: string,
   bodyGetter?: MaybeRefOrGetter<BodyInit | null | undefined>,
-  headersGetter?: MaybeRefOrGetter<Record<string, string> | undefined>,
+  headersGetter?: MaybeRefOrGetter<Record<string, string | undefined> | undefined>,
   useFetchOptions?: UseFzFetchOptions,
 ): UseFzFetchReturn<T> & PromiseLike<UseFzFetchReturn<T>> => {
   // Per-request null = no normalization; undefined = use global. See UseFzFetchOptions.trailingSlash JSDoc.
