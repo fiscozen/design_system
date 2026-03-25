@@ -19,13 +19,11 @@ const createWrapper = (
 
 describe("FzCheckboxCard", () => {
   beforeEach(() => {
-    const mockIntersectionObserver = vi.fn();
-    mockIntersectionObserver.mockReturnValue({
-      observe: () => null,
-      unobserve: () => null,
-      disconnect: () => null,
+    window.IntersectionObserver = vi.fn().mockImplementation(function (this: any) {
+      this.observe = vi.fn();
+      this.unobserve = vi.fn();
+      this.disconnect = vi.fn();
     });
-    window.IntersectionObserver = mockIntersectionObserver;
 
     window.matchMedia = vi.fn().mockImplementation((query: string) => ({
       matches: false,

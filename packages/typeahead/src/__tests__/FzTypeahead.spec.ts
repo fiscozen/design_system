@@ -5,22 +5,18 @@ import { calculateContainerWidth } from "../common";
 
 describe("FzTypeahead", () => {
   beforeEach(() => {
-    const mockIntersectionObserver = vi.fn();
-    mockIntersectionObserver.mockReturnValue({
-      observe: () => null,
-      unobserve: () => null,
-      disconnect: () => null,
+    window.IntersectionObserver = vi.fn().mockImplementation(function (this: any) {
+      this.observe = vi.fn();
+      this.unobserve = vi.fn();
+      this.disconnect = vi.fn();
     });
-    window.IntersectionObserver = mockIntersectionObserver;
 
     // Mock ResizeObserver for FzFloating component
-    const mockResizeObserver = vi.fn();
-    mockResizeObserver.mockReturnValue({
-      observe: () => null,
-      unobserve: () => null,
-      disconnect: () => null,
+    window.ResizeObserver = vi.fn().mockImplementation(function (this: any) {
+      this.observe = vi.fn();
+      this.unobserve = vi.fn();
+      this.disconnect = vi.fn();
     });
-    window.ResizeObserver = mockResizeObserver;
 
     // Mock window.matchMedia for FzFloating component
     Object.defineProperty(window, "matchMedia", {

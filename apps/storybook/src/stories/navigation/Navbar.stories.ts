@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, fn } from '@storybook/test'
+import { expect, userEvent, within, fn } from 'storybook/test'
 
 import { FzNavbar, FzNavbarProps } from '@fiscozen/navbar'
 import { FzIcon } from '@fiscozen/icons'

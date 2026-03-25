@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within } from '@storybook/test'
+import { expect, within } from 'storybook/test'
 import { FzProgress } from '@fiscozen/progress'
 
 const meta: Meta<typeof FzProgress> = {
@@ -48,7 +48,7 @@ const Default: Story = {
     })
 
     await step('Verify custom animation styles are applied', async () => {
-      const container = canvasElement.querySelector('div[style*="--fa-animation-duration"]')
+      const container = canvasElement.querySelector('[style*="--fa-animation-duration"]')
       await expect(container).toBeTruthy()
       await expect(container?.getAttribute('style')).toContain('--fa-animation-duration: 0.86s')
       await expect(container?.getAttribute('style')).toContain('--fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85)')

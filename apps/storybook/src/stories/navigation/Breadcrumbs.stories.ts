@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor, fn } from '@storybook/test'
+import { expect, userEvent, within, waitFor, fn } from 'storybook/test'
 import { vueRouter } from 'storybook-vue3-router'
 import { useRoute, useRouter } from 'vue-router'
 

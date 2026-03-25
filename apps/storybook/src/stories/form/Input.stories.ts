@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, fn, userEvent, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
 import { ref } from 'vue'
 import { FzInput } from '@fiscozen/input'
 import { all } from '@awesome.me/kit-8137893ad3/icons'
@@ -424,8 +424,8 @@ export const LeftIconAccessible: Story = {
     const iconSvg = canvasElement.querySelector('.fa-calendar-lines')
     await expect(iconSvg).toBeInTheDocument()
 
-    // Find the wrapper div (FzIcon wrapper) which has the role="button"
-    const iconWrapper = iconSvg?.closest('div[role="button"]')
+    // Find the FzIcon wrapper which has the role="button"
+    const iconWrapper = iconSvg?.closest('[role="button"]')
     await expect(iconWrapper).toBeInTheDocument()
 
     // Verify accessibility attributes are present on the wrapper
@@ -474,8 +474,8 @@ export const RightIconAccessible: Story = {
     const iconSvg = canvasElement.querySelector('.fa-eye')
     await expect(iconSvg).toBeInTheDocument()
 
-    // Find the wrapper div (FzIcon wrapper) which has the role="button"
-    const iconWrapper = iconSvg?.closest('div[role="button"]')
+    // Find the FzIcon wrapper which has the role="button"
+    const iconWrapper = iconSvg?.closest('[role="button"]')
     await expect(iconWrapper).toBeInTheDocument()
 
     // Verify accessibility attributes are present on the wrapper
@@ -506,8 +506,8 @@ export const Valid: Story = {
     await expect(checkIconSvg).toBeInTheDocument()
 
     if (checkIconSvg) {
-      // Find the wrapper div which has the success styling
-      const checkIconWrapper = checkIconSvg.closest('div')
+      // Find the FzIcon wrapper which has the success styling
+      const checkIconWrapper = checkIconSvg.closest('[role="presentation"]')
       if (checkIconWrapper) {
         // Verify success styling is applied on the wrapper
         await expect(checkIconWrapper).toHaveClass('text-semantic-success')
@@ -569,8 +569,7 @@ export const LeftAndRightWithValid: Story = {
     await expect(checkIcon).toBeInTheDocument()
 
     // Verify left icon accessibility attributes
-    // Find the wrapper div which has the role="button"
-    const leftIconWrapper = leftIcon?.closest('div[role="button"]')
+    const leftIconWrapper = leftIcon?.closest('[role="button"]')
     if (leftIconWrapper) {
       await expect(leftIconWrapper).toHaveAttribute('role', 'button')
       await expect(leftIconWrapper).toHaveAttribute('aria-label', 'Open calendar')
@@ -668,8 +667,8 @@ export const ShowHidePassword: Story = {
     const eyeIconSvg = canvasElement.querySelector('.fa-eye')
     await expect(eyeIconSvg).toBeInTheDocument()
 
-    // Find the wrapper div (FzIcon wrapper) which has the role="button"
-    const eyeIconWrapper = eyeIconSvg?.closest('div[role="button"]')
+    // Find the FzIcon wrapper which has the role="button"
+    const eyeIconWrapper = eyeIconSvg?.closest('[role="button"]')
     await expect(eyeIconWrapper).toBeInTheDocument()
 
     // Verify accessibility attributes are present on the wrapper

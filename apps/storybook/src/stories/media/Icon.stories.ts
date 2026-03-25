@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within } from '@storybook/test'
+import { expect, within } from 'storybook/test'
 import { FzIcon } from '@fiscozen/icons'
 import { all, byPrefixAndName } from '@awesome.me/kit-8137893ad3/icons'
 import { FzButton } from '@fiscozen/button'

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor } from 'storybook/test'
 import { computed, ref, watch } from 'vue'
 import { FzCheckbox, FzCheckboxGroup, FzCheckboxCard } from '@fiscozen/checkbox'
 import { FzIcon } from '@fiscozen/icons'

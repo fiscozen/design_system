@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzCheckboxCard } from '@fiscozen/checkbox'
 import { ref, watch } from 'vue'
-import { expect, fn, within, userEvent } from '@storybook/test'
+import { expect, fn, within, userEvent } from 'storybook/test'
 
 const sampleImage = 'consultant.jpg'
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor } from 'storybook/test'
 import { FzUpload } from '@fiscozen/upload'
 import { ref } from 'vue'
 

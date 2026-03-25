@@ -29,11 +29,11 @@ describe("FzRadio", () => {
     // Mock IntersectionObserver
     Object.defineProperty(window, "IntersectionObserver", {
       writable: true,
-      value: vi.fn().mockImplementation(() => ({
-        observe: vi.fn(),
-        unobserve: vi.fn(),
-        disconnect: vi.fn(),
-      })),
+      value: vi.fn().mockImplementation(function (this: any) {
+        this.observe = vi.fn();
+        this.unobserve = vi.fn();
+        this.disconnect = vi.fn();
+      }),
     });
   });
 

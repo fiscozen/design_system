@@ -5,7 +5,7 @@
  * consistent test behavior across stories per testing-standards.mdc.
  */
 
-import { expect, within, waitFor } from '@storybook/test'
+import { expect, within, waitFor } from 'storybook/test'
 
 // ============================================
 // TYPE DEFINITIONS

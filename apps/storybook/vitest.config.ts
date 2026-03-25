@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { mergeConfig, defineConfig, configDefaults } from 'vitest/config'
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin'
+import { playwright } from '@vitest/browser-playwright'
 import viteConfig from './vite.config'
 
 export default mergeConfig(
@@ -29,7 +30,7 @@ export default mergeConfig(
       fileParallelism: false,
       browser: {
         enabled: true,
-        provider: 'playwright',
+        provider: playwright(),
         headless: true,
         instances: [
           { browser: 'chromium' }

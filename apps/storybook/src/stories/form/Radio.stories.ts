@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadio } from '@fiscozen/radio'
-import { expect, fn, within, userEvent } from '@storybook/test'
+import { expect, fn, within, userEvent } from 'storybook/test'
 import { ref } from 'vue'
 
 const meta = {

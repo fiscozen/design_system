@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, fn, userEvent, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
 import { ref } from 'vue'
 import { FzTabs, FzTab } from '@fiscozen/tab'
 import FzBadge from '@fiscozen/badge/src/FzBadge.vue'

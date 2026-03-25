@@ -11,11 +11,10 @@ describe('useFloating', () => {
 
   beforeEach(() => {
     // Mock IntersectionObserver
-    mockIntersectionObserver = vi.fn()
-    mockIntersectionObserver.mockReturnValue({
-      observe: vi.fn(),
-      unobserve: vi.fn(),
-      disconnect: vi.fn()
+    mockIntersectionObserver = vi.fn().mockImplementation(function (this: any) {
+      this.observe = vi.fn()
+      this.unobserve = vi.fn()
+      this.disconnect = vi.fn()
     })
     window.IntersectionObserver = mockIntersectionObserver
 

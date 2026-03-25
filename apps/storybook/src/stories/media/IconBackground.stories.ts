@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within } from '@storybook/test'
+import { expect, within } from 'storybook/test'
 import { FzIconBackground } from '@fiscozen/icons'
 import { byPrefixAndName } from '@awesome.me/kit-8137893ad3/icons'
 
@@ -49,7 +49,7 @@ export const Default: Story = {
       const container = canvasElement.querySelector('span.flex')
       await expect(container).toHaveClass('rounded-full')
       await expect(container).toHaveClass('box-content')
-      await expect(container).toHaveClass('p-[8px]')
+      await expect(container).toHaveClass('p-8')
       const bgToken = args?.backgroundColor ?? 'core-white'
       await expect(container).toHaveClass(`bg-${bgToken}`)
     })

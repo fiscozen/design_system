@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, userEvent, within, waitFor } from 'storybook/test'
 import { FzPdfViewer } from '@fiscozen/pdf-viewer'
 
 const meta: Meta<typeof FzPdfViewer> = {

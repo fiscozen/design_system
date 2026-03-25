@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, fn, userEvent, within, waitFor, fireEvent } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor, fireEvent } from 'storybook/test'
 import { ref, onMounted } from 'vue'
 import { FzTypeahead, FzTypeaheadOptionsProps } from '@fiscozen/typeahead'
 import { FzButton } from '@fiscozen/button'

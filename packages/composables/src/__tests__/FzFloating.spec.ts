@@ -19,11 +19,10 @@ const positions: FzFloatingPosition[] = [
   'right-end'
 ]
 beforeEach(() => {
-  const mockIntersectionObserver = vi.fn()
-  mockIntersectionObserver.mockReturnValue({
-    observe: () => null,
-    unobserve: () => null,
-    disconnect: () => null
+  const mockIntersectionObserver = vi.fn().mockImplementation(function (this: any) {
+    this.observe = () => null
+    this.unobserve = () => null
+    this.disconnect = () => null
   })
   window.IntersectionObserver = mockIntersectionObserver
 

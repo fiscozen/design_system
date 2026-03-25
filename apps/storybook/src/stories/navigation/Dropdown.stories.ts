@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, fn, within, userEvent, waitFor } from '@storybook/test'
+import { expect, fn, within, userEvent, waitFor } from 'storybook/test'
 import { FzDropdown } from '@fiscozen/dropdown'
 import { vueRouter } from 'storybook-vue3-router'
 import { FzActionProps, FzActionSectionProps } from '@fiscozen/action'
