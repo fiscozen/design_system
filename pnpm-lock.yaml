@@ -36,8 +36,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.401
-        version: 1.0.401
+        specifier: ^1.0.405
+        version: 1.0.405
       '@fiscozen/action':
         specifier: workspace:^
         version: link:../../packages/action
@@ -1773,8 +1773,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.401
-        version: 1.0.401
+        specifier: ^1.0.405
+        version: 1.0.405
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.7.2
         version: 6.7.2
@@ -2610,8 +2610,8 @@ importers:
         version: 3.5.26(typescript@5.7.3)
     devDependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.401
-        version: 1.0.401
+        specifier: ^1.0.405
+        version: 1.0.405
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
@@ -3335,8 +3335,8 @@ importers:
         version: 3.5.26(typescript@5.7.3)
     devDependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.65
-        version: 1.0.396
+        specifier: ^1.0.405
+        version: 1.0.405
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
@@ -3554,8 +3554,8 @@ packages:
     resolution: {integrity: sha512-5wCCWxkOZrW0J/JVd9DOgIy6Xo5lwZzZqx1Uf1nMxQI4v4Dov02PKEmP+xBTVb3AyMTi/FXrJQkXsSGH7E4zew==}
     engines: {node: '>=16'}
 
-  '@awesome.me/kit-8137893ad3@1.0.401':
-    resolution: {integrity: sha512-DXkIh9NXkhUzmBCor1dF5gK/PvomG6DhgPnFr7ANVNX5xsufzUAtgA20LWkffPUZbXxL3EXtm6qnZWJVpcTkNg==}
+  '@awesome.me/kit-8137893ad3@1.0.405':
+    resolution: {integrity: sha512-oPNP9Qc6SekCtRjRn/1LqEgnJfYJRhxNkWhyt9Wy4bxx4XsCx5HqVpRK0QRYb6j0XXPWb3Ux0l6tluVdQGXy1w==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.28.6':
@@ -8442,7 +8442,7 @@ snapshots:
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
-  '@awesome.me/kit-8137893ad3@1.0.401':
+  '@awesome.me/kit-8137893ad3@1.0.405':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
