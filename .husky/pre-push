@@ -89,4 +89,48 @@ else
   fi
 fi
 
+# ── Build check ──────────────────────────────────────────────────────────────
+# Builds all packages to catch transitive breakage.
+# Skip with: SKIP_BUILD_CHECK=1 git push
+# ─────────────────────────────────────────────────────────────────────────────
+
+if [ "$SKIP_BUILD_CHECK" = "1" ]; then
+  echo "⏭  Build check skipped (SKIP_BUILD_CHECK=1)"
+else
+  echo "🔨 Building all packages..."
+  pnpm nx run-many -t build
+  BUILD_EXIT=$?
+  if [ $BUILD_EXIT -ne 0 ]; then
+    echo ""
+    echo "🚨 Build failed! Fix build errors before pushing."
+    echo ""
+    echo "   To skip this check (only if you know what you're doing):"
+    echo "     SKIP_BUILD_CHECK=1 git push"
+    echo ""
+    exit 1
+  fi
+fi
+
+# ── Storybook interaction tests ──────────────────────────────────────────────
+# Runs play-function tests to catch DOM selector / rendering regressions.
+# Skip with: SKIP_STORYBOOK_CHECK=1 git push
+# ─────────────────────────────────────────────────────────────────────────────
+
+if [ "$SKIP_STORYBOOK_CHECK" = "1" ]; then
+  echo "⏭  Storybook interaction tests skipped (SKIP_STORYBOOK_CHECK=1)"
+else
+  echo "🎭 Running Storybook interaction tests..."
+  pnpm --filter @fiscozen/storybook run test:storybook
+  STORYBOOK_EXIT=$?
+  if [ $STORYBOOK_EXIT -ne 0 ]; then
+    echo ""
+    echo "🚨 Storybook interaction tests failed! Fix play-function tests before pushing."
+    echo ""
+    echo "   To skip this check (only if you know what you're doing):"
+    echo "     SKIP_STORYBOOK_CHECK=1 git push"
+    echo ""
+    exit 1
+  fi
+fi
+
 exit 0
