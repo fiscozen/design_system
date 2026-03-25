@@ -1396,7 +1396,7 @@ importers:
         specifier: workspace:*
         version: link:../divider
       '@fiscozen/icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@fiscozen/input':
         specifier: workspace:*
