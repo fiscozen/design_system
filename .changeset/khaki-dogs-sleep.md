@@ -1,6 +1,4 @@
 ---
-"@fiscozen/typeahead": patch
-"@fiscozen/select": patch
 "@fiscozen/icons": patch
 ---
 
