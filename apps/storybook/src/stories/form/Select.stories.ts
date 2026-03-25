@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, fn, waitFor } from '@storybook/test'
+import { expect, userEvent, within, fn, waitFor } from 'storybook/test'
 import { ref, onMounted } from 'vue'
 import { FzSelect, FzSelectOptionsProps } from '@fiscozen/select'
 import { FzButton } from '@fiscozen/button'

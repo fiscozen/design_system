@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within } from '@storybook/test'
+import { expect, within } from 'storybook/test'
 import { FzDivider, FzDividerProps } from '@fiscozen/divider'
 
 const meta: Meta<typeof FzDivider> = {

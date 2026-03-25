@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzContainer } from '@fiscozen/container'
 import { FzInput } from '@fiscozen/input'
 import { FzButton } from '@fiscozen/button'
-import { within, expect } from '@storybook/test'
+import { within, expect } from 'storybook/test'
 
 const meta: Meta<any> = {
   title: 'Layout/FzContainer',

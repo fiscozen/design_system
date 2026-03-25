@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, userEvent, within, waitFor } from 'storybook/test'
 import { FzLayout, FzLayoutProps } from '@fiscozen/layout'
 import { FzBadge } from '@fiscozen/badge'
 import { useBreakpoints } from '@fiscozen/composables'

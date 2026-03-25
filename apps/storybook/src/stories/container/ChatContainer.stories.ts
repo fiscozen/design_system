@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within, waitFor } from '@storybook/test'
+import { expect, within, waitFor } from 'storybook/test'
 import { FzChatContainer, Message } from '@fiscozen/chat-container'
 import { onMounted, ref } from 'vue'
 

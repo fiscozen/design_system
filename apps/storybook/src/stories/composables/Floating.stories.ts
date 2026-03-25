@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within, screen, waitFor } from '@storybook/test'
+import { expect, within, screen, waitFor } from 'storybook/test'
 import { reactive, ref } from 'vue'
 
 import { FzFloating } from '@fiscozen/composables'

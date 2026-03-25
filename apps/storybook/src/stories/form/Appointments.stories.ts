@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, fn, userEvent, within, waitFor } from '@storybook/test'
+import { expect, fn, userEvent, within, waitFor } from 'storybook/test'
 import { FzAppointments } from '@fiscozen/appointments'
 import { ref } from 'vue'
 import { addDays, formatISO, startOfDay } from 'date-fns'

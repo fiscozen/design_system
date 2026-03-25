@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadioGroup, FzRadio, FzRadioCard } from '@fiscozen/radio'
 import { FzIcon } from '@fiscozen/icons'
-import { expect, fn, within, userEvent } from '@storybook/test'
+import { expect, fn, within, userEvent } from 'storybook/test'
 const checker = 'consultant.jpg'
 
 const meta = {

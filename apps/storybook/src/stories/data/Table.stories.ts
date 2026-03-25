@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within, waitFor, fn } from '@storybook/test'
+import { expect, userEvent, within, waitFor, fn } from 'storybook/test'
 import { FzTable, FzRow, FzOrdering } from '@fiscozen/table'
 import { FzColumn } from '@fiscozen/simple-table'
 import { FzCollapse } from '@fiscozen/collapse'

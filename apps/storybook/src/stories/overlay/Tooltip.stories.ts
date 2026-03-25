@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzTooltip } from '@fiscozen/tooltip'
 import { FzButton } from '@fiscozen/button'
 import { FzLink } from '@fiscozen/link'
-import { expect, userEvent, within, waitFor } from '@storybook/test'
+import { expect, userEvent, within, waitFor } from 'storybook/test'
 
 const meta = {
   title: 'Overlay/FzTooltip',

@@ -16,7 +16,7 @@ import type { IconProps } from "@fiscozen/icons";
  * <FzProgress />
  * <FzProgress size="lg" variant="far" />
  */
-export type FzProgressProps = IconProps;
+export type FzProgressProps = Omit<IconProps, 'name'> & { name?: IconProps['name'] };
 
 /**
  * Props for the FzProgressBar component.

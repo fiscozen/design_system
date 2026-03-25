@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent } from '@storybook/test'
+import { expect, userEvent } from 'storybook/test'
 import { ref } from 'vue'
 import { FzPagination } from '@fiscozen/pagination'
 

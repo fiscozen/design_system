@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, fn, userEvent, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
 import { ref } from 'vue'
 import { vueRouter } from 'storybook-vue3-router'
 import { FzActionList, FzActionSection, FzAction } from '@fiscozen/action'

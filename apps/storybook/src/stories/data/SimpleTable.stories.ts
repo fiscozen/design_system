@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within } from '@storybook/test'
+import { expect, within } from 'storybook/test'
 import { FzSimpleTable, FzColumn } from '@fiscozen/simple-table'
 import { FzLink } from '@fiscozen/link'
 import { vueRouter } from 'storybook-vue3-router'
