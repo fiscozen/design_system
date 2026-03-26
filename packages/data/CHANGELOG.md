@@ -1,5 +1,11 @@
 # @fiscozen/data
 
+## 0.2.3
+
+### Patch Changes
+
+- 4a21a18: Fix a type signature
+
 ## 0.2.2
 
 ### Patch Changes

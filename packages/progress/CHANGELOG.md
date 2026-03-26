@@ -1,5 +1,11 @@
 # @fiscozen/progress
 
+## 3.0.1
+
+### Patch Changes
+
+- d706523: Make name prop optional in FzProgressProps to match withDefaults behavior
+
 ## 3.0.0
 
 ### Patch Changes
