@@ -18,13 +18,7 @@
   },
   "peerDependencies": {
     "tailwindcss": "^3.4.1",
-    "vue": "^3.4.13",
-    "vue-router": "^4.3.0"
-  },
-  "peerDependenciesMeta": {
-    "vue-router": {
-      "optional": true
-    }
+    "vue": "^3.4.13"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",
@@ -43,7 +37,6 @@
     "typescript": "~5.7.0",
     "vite": "^8.0.0",
     "vitest": "^4.1.1",
-    "vue-router": "^4.6.4",
     "vue-tsc": "^2.2.12"
   },
   "license": "MIT"

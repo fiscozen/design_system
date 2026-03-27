@@ -99,20 +99,7 @@ const currentPage = ref(1)
 
 URL sync is **enabled by default**. The component reads the initial page from `?page=` in the URL on mount and writes page changes back automatically.
 
-### Setup (once, at app level)
-
-Provide the Vue Router route so all FzPagination instances (even nested inside other components) can access it without prop drilling:
-
-```vue
-<script setup>
-import { provideQueryStringRoute } from '@fiscozen/composables'
-import { useRoute } from 'vue-router'
-
-provideQueryStringRoute(useRoute())
-</script>
-```
-
-If `provideQueryStringRoute()` is not called, the component falls back to the browser History API directly. This works in any environment (standalone pages, micro-frontends, non-Vue-Router apps).
+URL sync requires `vue-router` in the consuming application (used internally by `@fzp/composables`). If your app does not use vue-router, disable URL sync with `:syncUrl="false"`.
 
 ### Initializing currentPage from the URL
 

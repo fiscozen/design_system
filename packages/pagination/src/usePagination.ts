@@ -9,7 +9,7 @@
  */
 import type { MaybeRefOrGetter } from 'vue';
 import { computed, toValue } from 'vue';
-import { useQueryString } from '@fiscozen/composables';
+import { useQueryString } from '@fzp/composables';
 
 import type { PaginationOptions, ResolvedPaginationOptions, PaginationItem, PaginationItemType, EllipsisVisibility, PageToken, SlotConfig } from './types';
 

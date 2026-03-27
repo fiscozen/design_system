@@ -15,7 +15,7 @@ pnpm --filter @fiscozen/pagination build
 
 The package is split into two layers:
 
-- **`usePagination` composable** (`src/usePagination.ts`): Builds a reactive list of `PaginationItem` objects from `currentPage`, `totalPages`, and `PaginationOptions`. Accepts `MaybeRefOrGetter` inputs so it works with refs, computed values, and getter functions. Also integrates `useQueryString` for URL sync (enabled by default), returning `initialPage` and `syncPageToUrl()` alongside `items`.
+- **`usePagination` composable** (`src/usePagination.ts`): Builds a reactive list of `PaginationItem` objects from `currentPage`, `totalPages`, and `PaginationOptions`. Accepts `MaybeRefOrGetter` inputs so it works with refs, computed values, and getter functions. Also integrates `useQueryString` from `@fzp/composables` for URL sync (enabled by default), returning `initialPage` and `syncPageToUrl()` alongside `items`.
 - **`FzPagination` component** (`src/FzPagination.vue`): Thin UI wrapper that delegates to `usePagination` for both item computation and URL sync, maps items to `FzButton` / `FzIconButton` / `FzIcon` components, and emits `update:currentPage` on click.
 
 ### Code Organization
@@ -106,9 +106,9 @@ URL sync is **enabled by default** (`syncUrl: true`, `urlKey: 'page'`). The feat
 **How it works internally:**
 
 1. `usePagination` reads `options.urlSync` and resolves defaults: `syncUrl = true`, `urlKey = 'page'`
-2. When `syncUrl !== false`, `useQueryString` is called with a single key config `{ key: urlKey, transform: 'number', defaultValue: currentPage }`
-3. `useQueryString` internally calls `injectQueryStringRoute()` to obtain the Vue Router route provided at app level, or falls back to router-agnostic mode (pure History API) if no provider exists
-4. `usePagination` returns `initialPage` (page from URL or `currentPage` fallback) and `syncPageToUrl(page)` (writes to URL via History API)
+2. When `syncUrl !== false`, `useQueryString` (from `@fzp/composables`) is called with a single key config `{ key: urlKey, transform: 'number', defaultValue: currentPage }`
+3. `useQueryString` internally uses `useRoute()` / `useRouter()` from vue-router to read `route.query` and write via `router.replace()`
+4. `usePagination` returns `initialPage` (page from URL or `currentPage` fallback) and `syncPageToUrl(page)` (writes to URL via the router)
 5. `FzPagination` merges top-level `syncUrl`/`urlKey` props into `options.urlSync` (with priority), then passes the merged options to `usePagination`. It uses `initialPage` to emit `update:currentPage` if the URL page differs from `currentPage`, and calls `syncPageToUrl` on every page click
 6. When `syncUrl === false`, `initialPage` equals `toValue(currentPage)` and `syncPageToUrl` is a noop
 
@@ -121,9 +121,10 @@ The component remains fully controlled: the parent always owns state via `v-mode
 - `@fiscozen/button` - `FzButton` and `FzIconButton` for page controls
 - `@fiscozen/container` - `FzContainer` for layout
 - `@fiscozen/icons` - `FzIcon` for ellipsis indicator
-- `@fiscozen/composables` - `useMediaQuery` for responsive layout, `useQueryString` for URL sync (route injection handled internally by the composable)
+- `@fiscozen/composables` - `useMediaQuery` for responsive layout
+- `@fzp/composables` - `useQueryString` for URL sync (requires vue-router in the consuming app)
 - `@fiscozen/style` - `breakpoints` for media query thresholds
-- `vue-router` (optional peer) - needed only when `provideQueryStringRoute()` is used at app level
+- `vue-router` (optional peer) - required by `@fzp/composables` for URL sync; not needed when `syncUrl: false`
 
 ### Hidden Props
 
