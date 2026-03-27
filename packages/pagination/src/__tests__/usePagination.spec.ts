@@ -3,6 +3,56 @@ import { ref, nextTick } from 'vue'
 import { usePagination } from '../usePagination'
 import type { PaginationItem } from '../types'
 
+/**
+ * Mocks @fzp/composables so usePagination tests run without Vue Router.
+ * Simulates useQueryString by reading from window.location.search and
+ * writing via window.history.replaceState, matching the assertions in
+ * the URL sync test suite.
+ */
+vi.mock('@fzp/composables', () => ({
+    useQueryString: (keys: Array<string | { key: string; transform?: string; defaultValue?: unknown }>) => {
+        const params = new URLSearchParams(window.location.search)
+        const initial: Record<string, unknown> = {}
+
+        for (const keyConfig of keys) {
+            const key = typeof keyConfig === 'string' ? keyConfig : keyConfig.key
+            const transform = typeof keyConfig === 'string' ? undefined : keyConfig.transform
+            const defaultValue = typeof keyConfig === 'string' ? undefined : keyConfig.defaultValue
+            const raw = params.get(key)
+
+            if (raw !== null) {
+                initial[key] = transform === 'number' ? Number(raw) : raw
+            } else if (defaultValue !== undefined) {
+                initial[key] = defaultValue
+            }
+        }
+
+        return {
+            initialValuesInQueryString: Object.freeze(initial),
+            getValuesFromQueryString: () => initial,
+            setValuesInQueryString: (values: Record<string, unknown>) => {
+                const currentParams = new URLSearchParams(window.location.search)
+                for (const [k, v] of Object.entries(values)) {
+                    if (v == null || v === '') {
+                        currentParams.delete(k)
+                    } else {
+                        currentParams.set(k, String(v))
+                    }
+                }
+                const queryStr = currentParams.toString()
+                const url = queryStr
+                    ? `${window.location.pathname}?${queryStr}`
+                    : window.location.pathname
+                window.history.replaceState(
+                    { ...window.history.state, __queryString: values },
+                    '',
+                    url
+                )
+            }
+        }
+    }
+}))
+
 const getLabels = (items: PaginationItem[]) => items.map(i => i.label)
 const getTypes = (items: PaginationItem[]) => items.map(i => i.type)
 

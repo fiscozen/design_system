@@ -43,7 +43,7 @@ export interface SlotConfig {
 // ---------------------------------------------------------------------------
 
 /**
- * Controls URL synchronization of the current page via useQueryString.
+ * Controls URL synchronization of the current page via useQueryString from @fzp/composables.
  * When enabled (default), the composable reads the initial page from the URL
  * and writes page changes back via the History API.
  */

@@ -23,10 +23,6 @@ npm install @fiscozen/composables
   </thead>
   <tbody>
     <tr>
-      <td><code>useQueryString</code></td>
-      <td>Type-safe URL query parameter management with History API synchronization</td>
-    </tr>
-    <tr>
       <td><code>useFloating</code></td>
       <td>Positioning logic for floating elements (tooltips, dropdowns, popovers)</td>
     </tr>
@@ -56,9 +52,3 @@ npm install @fiscozen/composables
     </tr>
   </tbody>
 </table>
-
-## Optional Dependencies
-
-Some composables have optional peer dependencies:
-
-- **vue-router** (optional): Required by `useQueryString` when using `provideQueryStringRoute()` for Vue Router integration. Without it, the composable falls back to the browser History API.

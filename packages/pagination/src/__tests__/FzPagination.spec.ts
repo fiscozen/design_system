@@ -1,9 +1,55 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { defineComponent, h } from 'vue'
 import { mount } from '@vue/test-utils'
-import { provideQueryStringRoute } from '@fiscozen/composables'
-import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import FzPagination from '../FzPagination.vue'
+
+/**
+ * Mocks @fzp/composables so FzPagination tests run without Vue Router.
+ * Simulates useQueryString by reading from window.location.search and
+ * writing via window.history.replaceState.
+ */
+vi.mock('@fzp/composables', () => ({
+    useQueryString: (keys: Array<string | { key: string; transform?: string; defaultValue?: unknown }>) => {
+        const params = new URLSearchParams(window.location.search)
+        const initial: Record<string, unknown> = {}
+
+        for (const keyConfig of keys) {
+            const key = typeof keyConfig === 'string' ? keyConfig : keyConfig.key
+            const transform = typeof keyConfig === 'string' ? undefined : keyConfig.transform
+            const defaultValue = typeof keyConfig === 'string' ? undefined : keyConfig.defaultValue
+            const raw = params.get(key)
+
+            if (raw !== null) {
+                initial[key] = transform === 'number' ? Number(raw) : raw
+            } else if (defaultValue !== undefined) {
+                initial[key] = defaultValue
+            }
+        }
+
+        return {
+            initialValuesInQueryString: Object.freeze(initial),
+            getValuesFromQueryString: () => initial,
+            setValuesInQueryString: (values: Record<string, unknown>) => {
+                const currentParams = new URLSearchParams(window.location.search)
+                for (const [k, v] of Object.entries(values)) {
+                    if (v == null || v === '') {
+                        currentParams.delete(k)
+                    } else {
+                        currentParams.set(k, String(v))
+                    }
+                }
+                const queryStr = currentParams.toString()
+                const url = queryStr
+                    ? `${window.location.pathname}?${queryStr}`
+                    : window.location.pathname
+                window.history.replaceState(
+                    { ...window.history.state, __queryString: values },
+                    '',
+                    url
+                )
+            }
+        }
+    }
+}))
 
 describe('FzPagination', () => {
   beforeEach(() => {
@@ -406,27 +452,6 @@ describe('FzPagination', () => {
 
       expect(wrapper.emitted('update:currentPage')).toBeTruthy()
       expect(wrapper.emitted('update:currentPage')![0]).toEqual([7])
-    })
-
-    it('works with provideQueryStringRoute', () => {
-      window.location.search = '?page=4'
-      const mockRoute = { query: { page: '4' } } as unknown as RouteLocationNormalizedLoaded
-
-      const Parent = defineComponent({
-        setup() {
-          provideQueryStringRoute(mockRoute)
-          return () => h(FzPagination, {
-            totalPages: 10,
-            currentPage: 1,
-          })
-        }
-      })
-
-      const wrapper = mount(Parent)
-      const pagination = wrapper.findComponent(FzPagination)
-
-      expect(pagination.emitted('update:currentPage')).toBeTruthy()
-      expect(pagination.emitted('update:currentPage')![0]).toEqual([4])
     })
 
     it('does not sync when syncUrl is false', () => {
