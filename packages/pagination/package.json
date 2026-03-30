@@ -16,22 +16,14 @@
     "@fiscozen/button": "workspace:*",
     "@fiscozen/composables": "workspace:*",
     "@fiscozen/container": "workspace:*",
-    "@fiscozen/style": "workspace:*",
-    "@fzp/composables": "^1.0.3"
+    "@fiscozen/style": "workspace:*"
   },
   "peerDependencies": {
     "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
-    "vue": "^3.4.13",
-    "vue-router": "^4.2.5"
-  },
-  "peerDependenciesMeta": {
-    "vue-router": {
-      "optional": true
-    }
+    "vue": "^3.4.13"
   },
   "devDependencies": {
-    "vue-router": "^4.2.5",
     "@fiscozen/eslint-config": "workspace:^",
     "@fiscozen/prettier-config": "workspace:^",
     "@fiscozen/tsconfig": "workspace:^",

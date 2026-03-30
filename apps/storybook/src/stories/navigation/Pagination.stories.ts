@@ -67,10 +67,14 @@ export const Default: PaginationStory = {
       await expect(buttons.length).toBeGreaterThan(2)
     })
 
-    await step('Navigate to next page', async () => {
+    await step('Navigate to next page and verify', async () => {
       const buttons = canvas.getAllByRole('button')
       const nextButton = buttons[buttons.length - 1]
       await userEvent.click(nextButton)
+
+      const updatedButtons = canvas.getAllByRole('button')
+      const page2 = updatedButtons.find(b => b.textContent?.trim() === '2')
+      await expect(page2?.getAttribute('aria-current')).toBe('page')
     })
   }
 }
@@ -116,8 +120,9 @@ export const ManyPages: PaginationStory = {
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
     await step('Verify ellipsis is present for many pages', async () => {
-      const ellipsisIcons = canvasElement.querySelectorAll('[data-icon="ellipsis"], .fa-ellipsis')
-      await expect(ellipsisIcons.length).toBeGreaterThan(0)
+      const nav = canvasElement.querySelector('nav')
+      const ellipsisSpans = nav?.querySelectorAll('span.flex.min-w-44')
+      await expect(ellipsisSpans?.length).toBeGreaterThan(0)
     })
   }
 }
@@ -204,11 +209,16 @@ export const Backoffice: PaginationStory = {
       await expect(nav).toBeTruthy()
     })
 
-    await step('Verify navigation works', async () => {
+    await step('Verify navigation works and page changes', async () => {
       const buttons = canvas.getAllByRole('button')
       const nextButton = buttons[buttons.length - 1]
       await userEvent.click(nextButton)
+
+      const updatedButtons = canvas.getAllByRole('button')
+      const page6 = updatedButtons.find(b => b.textContent?.trim() === '6')
+      await expect(page6?.getAttribute('aria-current')).toBe('page')
     })
   }
 }
+
 
