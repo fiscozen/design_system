@@ -12,7 +12,7 @@
 import { FzContainer } from '@fiscozen/container'
 import { FzButton, FzIconButton } from '@fiscozen/button'
 import { FzIcon } from '@fiscozen/icons'
-import { useMediaQuery, useQueryString } from '@fiscozen/composables'
+import { useMediaQuery } from '@fiscozen/composables'
 import { breakpoints } from '@fiscozen/style'
 import { computed } from 'vue'
 import { usePagination } from './usePagination'
@@ -23,7 +23,10 @@ import type { PaginationItem, FzPaginationProps } from './types'
 // ---------------------------------------------------------------------------
 
 /** Single source of truth for prev/next so the template stays free of ternaries. */
-const NAV_ICON_MAP: Record<string, { name: string; position: 'before' | 'after'; ariaLabel: string }> = {
+const NAV_ICON_MAP: Record<
+  string,
+  { name: string; position: 'before' | 'after'; ariaLabel: string }
+> = {
   prev: { name: 'chevron-left', position: 'before', ariaLabel: 'Pagina precedente' },
   next: { name: 'chevron-right', position: 'after', ariaLabel: 'Pagina successiva' }
 }
@@ -43,7 +46,7 @@ const props = withDefaults(defineProps<FzPaginationProps>(), {
   environment: 'frontoffice',
   options: () => ({}),
   position: 'end',
-  totalPages: 0,
+  totalPages: 0
 })
 
 const emit = defineEmits<{
@@ -59,7 +62,7 @@ const isDesktop = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 const { items: paginationItems } = usePagination(
   () => props.currentPage,
   () => props.totalPages,
-  props.options,
+  props.options
 )
 
 // ---------------------------------------------------------------------------
@@ -87,7 +90,7 @@ const buttonClasses = (item: PaginationItem) => ({
   '!min-w-44': true,
   'flex-1': isMobileNav(item),
   'justify-start': isMobileNav(item) && item.type === 'prev',
-  'flex': isMobileNav(item) && item.type === 'next',
+  flex: isMobileNav(item) && item.type === 'next',
   'justify-end': isMobileNav(item) && item.type === 'next',
   'fz-pagination-disable-truncate': item.current
 })
