@@ -308,5 +308,4 @@ describe('usePagination', () => {
             }
         })
     })
-
 })
