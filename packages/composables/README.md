@@ -17,7 +17,12 @@ pnpm --filter @fiscozen/composables build
 src/
   index.ts                        Re-exports everything (composables, types, utils, FzFloating)
   types.ts                        Shared types (FzFloatingPosition, FzRect, FzUseCurrencyOptions, etc.)
-  utils.ts                        Shared utilities (currency format/parse, position helpers)
+  utils/
+    index.ts                      Barrel file for utilities
+    number/
+      index.ts                    Currency format/parse helpers
+    position/
+      index.ts                    Floating position calculation helpers
   FzFloating.vue                  Component wrapper for useFloating
   composables/
     index.ts                      Barrel file for all composables
@@ -72,7 +77,7 @@ Attaches a `keyup` listener to a component ref or to `document` when no componen
 
 ### useCurrency
 
-**Deprecated.** Wraps `format` and `parse` from `src/utils.ts`. Consumers should import those functions directly instead.
+**Deprecated.** Wraps `format` and `parse` from `src/utils/number`. Consumers should import those functions directly instead.
 
 ## Testing
 
@@ -88,7 +93,7 @@ pnpm --filter @fiscozen/composables coverage
 - `useFloating.spec.ts` / `FzFloating.spec.ts`: Position calculation and component rendering.
 - `number.spec.ts`: Currency format/parse utilities.
 
-Tests mock browser APIs (`window.location`, `window.history`, `window.matchMedia`) in `beforeEach`. Coverage target: >90%.
+Tests mock `window.matchMedia` in `beforeEach`. Coverage target: >90%.
 
 ## Dependencies
 

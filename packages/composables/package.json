@@ -39,5 +39,5 @@
     "vitest": "^4.1.1",
     "vue-tsc": "^2.2.12"
   },
-  "license": "MIT"
+  "license": "ISC"
 }
