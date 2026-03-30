@@ -1246,9 +1246,6 @@ importers:
       vitest:
         specifier: ^4.1.1
         version: 4.1.1(@types/node@18.19.130)(@vitest/browser-playwright@4.1.1)(@vitest/ui@4.1.1)(jsdom@23.2.0)(vite@8.0.2(@types/node@18.19.130)(jiti@1.21.7)(yaml@2.8.2))
-      vue-router:
-        specifier: ^4.6.4
-        version: 4.6.4(vue@3.5.26(typescript@5.7.3))
       vue-tsc:
         specifier: ^2.2.12
         version: 2.2.12(typescript@5.7.3)
@@ -2314,6 +2311,9 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.6
         version: 21.1.7
+      '@types/lodash':
+        specifier: ^4.17.0
+        version: 4.17.24
       '@types/node':
         specifier: ^18.19.3
         version: 18.19.130
@@ -4598,6 +4598,9 @@ packages:
 
   '@types/liftoff@4.0.3':
     resolution: {integrity: sha512-UgbL2kR5pLrWICvr8+fuSg0u43LY250q7ZMkC+XKC3E+rs/YBDEnQIzsnhU5dYsLlwMi3R75UvCL87pObP1sxw==}
+
+  '@types/lodash@4.17.24':
+    resolution: {integrity: sha512-gIW7lQLZbue7lRSWEFql49QJJWThrTFFeIMJdp3eH4tKoxm1OvEPg02rm4wCCSHS0cL3/Fizimb35b7k8atwsQ==}
 
   '@types/mdx@2.0.13':
     resolution: {integrity: sha512-+OWZQfAYyio6YkJb3HLxDrvnx6SWWDbC0zVPfBRzUk0/nqoDyf6dNxQi3eArPe8rJ473nobTMQ/8Zk+LxJ+Yuw==}
@@ -9403,6 +9406,8 @@ snapshots:
     dependencies:
       '@types/fined': 1.1.5
       '@types/node': 18.19.130
+
+  '@types/lodash@4.17.24': {}
 
   '@types/mdx@2.0.13': {}
 
