@@ -15,22 +15,20 @@ pnpm --filter @fiscozen/pagination build
 
 The package is split into two layers:
 
-- **`usePagination` composable** (`src/usePagination.ts`): Builds a reactive list of `PaginationItem` objects from `currentPage`, `totalPages`, and `PaginationOptions`. Accepts `MaybeRefOrGetter` inputs so it works with refs, computed values, and getter functions. Also integrates `useQueryString` from `@fzp/composables` for URL sync (enabled by default), returning `initialPage` and `syncPageToUrl()` alongside `items`.
-- **`FzPagination` component** (`src/FzPagination.vue`): Thin UI wrapper that delegates to `usePagination` for both item computation and URL sync, maps items to `FzButton` / `FzIconButton` / `FzIcon` components, and emits `update:currentPage` on click.
+- **`usePagination` composable** (`src/usePagination.ts`): Builds a reactive list of `PaginationItem` objects from `currentPage`, `totalPages`, and `PaginationOptions`. Accepts `MaybeRefOrGetter` inputs so it works with refs, computed values, and getter functions.
+- **`FzPagination` component** (`src/FzPagination.vue`): Thin UI wrapper that delegates to `usePagination` for item computation, maps items to `FzButton` / `FzIconButton` / `FzIcon` components, and emits `update:currentPage` on click.
 
 ### Code Organization
 
 ```
 src/
-  index.ts              Main exports (component, composable, utility, types)
+  index.ts              Main exports (component, composable, types)
   types.ts              All public types (FzPaginationProps, PaginationOptions, PaginationItem, etc.)
   usePagination.ts      Composable: token generation, clamping, ellipsis filtering
-  utils.ts              Standalone helpers (getInitialPageFromUrl)
   FzPagination.vue      Component: renders items, handles v-model
   __tests__/
     FzPagination.spec.ts  Component unit tests
     usePagination.spec.ts Composable unit tests
-    utils.spec.ts         Utility function unit tests
 ```
 
 ### Key Concepts
@@ -89,48 +87,19 @@ Coverage target: >90% line coverage.
 5. **Update stories** in `apps/storybook/src/stories/navigation/Pagination.stories.ts`
 6. **Update MDX** in `apps/storybook/src/FzPagination.mdx`
 
-### getInitialPageFromUrl
-
-Synchronous utility that reads a page number from `window.location.search`. Designed to be called in `setup()` so the parent can initialise its `currentPage` ref with the value already in the URL — avoiding a redundant API request that would otherwise occur when `FzPagination` emits a corrected `update:currentPage` on mount.
-
-Works on every component mount, not just the initial app load: by the time `setup()` runs, `window.location.search` already reflects the current route.
-
-Signature: `getInitialPageFromUrl(defaultValue = 1, urlKey = 'page'): number`.
-
-### URL Sync
-
-URL sync is **enabled by default** (`syncUrl: true`, `urlKey: 'page'`). The feature lives in `usePagination`, so both `FzPagination` and custom UIs built with `usePagination()` benefit from it.
-
-`FzPagination` exposes `syncUrl` and `urlKey` as convenient top-level props (e.g. `<FzPagination :syncUrl="false" urlKey="p" />`). These are shortcuts for `options.urlSync.syncUrl` and `options.urlSync.urlKey` — when both are set, the top-level props take priority. For `usePagination` consumers, the same options are available via `options.urlSync`.
-
-**How it works internally:**
-
-1. `usePagination` reads `options.urlSync` and resolves defaults: `syncUrl = true`, `urlKey = 'page'`
-2. When `syncUrl !== false`, `useQueryString` (from `@fzp/composables`) is called with a single key config `{ key: urlKey, transform: 'number', defaultValue: currentPage }`
-3. `useQueryString` internally uses `useRoute()` / `useRouter()` from vue-router to read `route.query` and write via `router.replace()`
-4. `usePagination` returns `initialPage` (page from URL or `currentPage` fallback) and `syncPageToUrl(page)` (writes to URL via the router)
-5. `FzPagination` merges top-level `syncUrl`/`urlKey` props into `options.urlSync` (with priority), then passes the merged options to `usePagination`. It uses `initialPage` to emit `update:currentPage` if the URL page differs from `currentPage`, and calls `syncPageToUrl` on every page click
-6. When `syncUrl === false`, `initialPage` equals `toValue(currentPage)` and `syncPageToUrl` is a noop
-
-The component remains fully controlled: the parent always owns state via `v-model:currentPage`. The URL sync is a transparent side-channel.
-
-**Multiple paginations on the same page:** assign distinct `urlKey` values (e.g. `urlKey="itemsPage"` and `urlKey="commentsPage"`).
-
 ### Dependencies
 
 - `@fiscozen/button` - `FzButton` and `FzIconButton` for page controls
 - `@fiscozen/container` - `FzContainer` for layout
 - `@fiscozen/icons` - `FzIcon` for ellipsis indicator
 - `@fiscozen/composables` - `useMediaQuery` for responsive layout
-- `@fzp/composables` - `useQueryString` for URL sync (requires vue-router in the consuming app)
 - `@fiscozen/style` - `breakpoints` for media query thresholds
-- `vue-router` (optional peer) - required by `@fzp/composables` for URL sync; not needed when `syncUrl: false`
 
 ### Hidden Props
 
 The following props exist in `FzPaginationProps` but are intentionally **not exposed in Storybook argTypes/stories**:
 
-- **`options`** (`PaginationOptions`): Fine-grained control over ellipsis, anchors, prev/next labels and visibility. URL sync fields (`urlSync`) are also available here but are more commonly used via the top-level `syncUrl`/`urlKey` props.
+- **`options`** (`PaginationOptions`): Fine-grained control over ellipsis, anchors, prev/next labels and visibility.
 - **`position`** (`'start' | 'center' | 'end'`): Controls horizontal alignment of the pagination bar via `justify-*` classes. Default is `'end'`.
 
 These props are available for internal use and advanced consumers who import types directly.

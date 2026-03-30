@@ -4,16 +4,10 @@
  *
  * Page-based navigation control for paginated data sets.
  * Supports v-model:currentPage for two-way binding of the active page.
- * URL sync is enabled by default: reads the initial page from the URL
- * on mount and writes page changes back. Disable with :syncUrl="false".
  *
  * @component
  * @example
  * <FzPagination :totalPages="10" v-model:currentPage="page" />
- * @example
- * <FzPagination :totalPages="10" v-model:currentPage="page" :syncUrl="false" />
- * @example
- * <FzPagination :totalPages="10" v-model:currentPage="page" urlKey="p" />
  */
 import { FzContainer } from '@fiscozen/container'
 import { FzButton, FzIconButton } from '@fiscozen/button'
@@ -49,9 +43,7 @@ const props = withDefaults(defineProps<FzPaginationProps>(), {
   environment: 'frontoffice',
   options: () => ({}),
   position: 'end',
-  syncUrl: true,
   totalPages: 0,
-  urlKey: 'page'
 })
 
 const emit = defineEmits<{
@@ -64,18 +56,11 @@ const emit = defineEmits<{
 
 const isDesktop = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
-const { items: paginationItems, initialPage, syncPageToUrl } = usePagination(
+const { items: paginationItems } = usePagination(
   () => props.currentPage,
   () => props.totalPages,
-  {
-    ...props.options,
-    urlSync: { syncUrl: props.syncUrl, urlKey: props.urlKey },
-  }
+  props.options,
 )
-
-if (initialPage !== props.currentPage) {
-  emit('update:currentPage', initialPage)
-}
 
 // ---------------------------------------------------------------------------
 // Computed
@@ -113,7 +98,6 @@ const buttonClasses = (item: PaginationItem) => ({
 
 const handlePageClick = (page: number) => {
   emit('update:currentPage', page)
-  syncPageToUrl(page)
 }
 </script>
 

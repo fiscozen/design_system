@@ -2,14 +2,9 @@
  * Pagination composable: builds a list of items for a prev | pages | next UI.
  * Options drive how many slots are shown and whether anchors/ellipsis appear, so the same logic
  * works for both compact and full layouts without magic numbers.
- *
- * URL sync is enabled by default: the composable reads the initial page from
- * the URL and exposes syncPageToUrl() for writing page changes back.
- * Disable via `options.urlSync.syncUrl = false`.
  */
 import type { MaybeRefOrGetter } from 'vue';
 import { computed, toValue } from 'vue';
-import { useQueryString } from '@fzp/composables';
 
 import type { PaginationOptions, ResolvedPaginationOptions, PaginationItem, PaginationItemType, EllipsisVisibility, PageToken, SlotConfig } from './types';
 
@@ -293,19 +288,15 @@ const wrapWithNavButtons = (
 };
 
 /**
- * Returns a reactive list of pagination items for a prev | pages | next bar,
- * with optional URL synchronization.
+ * Returns a reactive list of pagination items for a prev | pages | next bar.
  *
  * Accepts refs or getters for currentPage and totalPages so it works with both ref-based and
  * computed inputs. Options are merged once at setup; the computed items update when page or total change.
  *
- * When URL sync is enabled (default), the composable reads the initial page from
- * the URL via useQueryString and exposes `syncPageToUrl` for writing changes back.
- *
  * @param currentPage - Current 1-based page (reactive)
  * @param totalPages - Total number of pages (reactive)
- * @param options - Overrides for labels, visibility, URL sync config
- * @returns `{ items, initialPage, syncPageToUrl }`
+ * @param options - Overrides for labels, visibility
+ * @returns `{ items }`
  */
 export const usePagination = (
     currentPage: MaybeRefOrGetter<number>,
@@ -314,26 +305,6 @@ export const usePagination = (
 ) => {
     const resolvedOptions = getResolvedOptions(options);
     const slotConfig = getSlotConfig(resolvedOptions);
-
-    const syncEnabled = options.urlSync?.syncUrl !== false;
-    const urlKey = options.urlSync?.urlKey ?? 'page';
-
-    let initialPage: number;
-    let syncPageToUrl: (page: number) => void;
-
-    if (syncEnabled) {
-        const queryStringSync = useQueryString(
-            [{ key: urlKey, transform: 'number' as const, defaultValue: toValue(currentPage) }],
-        );
-        const urlValue = queryStringSync.initialValuesInQueryString[urlKey] as number | undefined;
-        initialPage = urlValue ?? toValue(currentPage);
-        syncPageToUrl = (page: number) => {
-            queryStringSync.setValuesInQueryString({ [urlKey]: page });
-        };
-    } else {
-        initialPage = toValue(currentPage);
-        syncPageToUrl = () => {};
-    }
 
     const items = computed<PaginationItem[]>(() => {
         const total = Math.max(0, Number(toValue(totalPages)) || 0);
@@ -355,9 +326,5 @@ export const usePagination = (
         return wrapWithNavButtons(pageItems, resolvedOptions, current, total);
     });
 
-    return {
-        items,
-        initialPage,
-        syncPageToUrl
-    };
+    return { items };
 };
