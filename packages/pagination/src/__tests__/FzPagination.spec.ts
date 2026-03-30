@@ -320,5 +320,4 @@ describe('FzPagination', () => {
       expect(nextSpan.classes()).toContain('flex-1')
     })
   })
-
 })
