@@ -1070,6 +1070,131 @@ describe("Integration Tests", () => {
       expect(bodiesSeenByInterceptor[1]).toBe(JSON.stringify({ value: 2 }));
       expect(headersSeenByInterceptor[1]["X-Seq"]).toBe("second");
     });
+
+    it("should transition isFetching false -> true -> false with reactive body", async () => {
+      setupFzFetcher({ baseUrl: "https://api.example.com" });
+
+      let fetchResolve: (() => void) | null = null;
+      global.fetch = vi.fn(() => {
+        return new Promise<Response>((resolve) => {
+          fetchResolve = () =>
+            resolve(
+              new Response(JSON.stringify({ ok: true }), {
+                status: 200,
+                headers: { "Content-Type": "application/json" },
+              }),
+            );
+        });
+      }) as typeof fetch;
+
+      const bodyRef = ref(JSON.stringify({ value: 1 }));
+      const { isFetching, execute } = useFzFetch<{ ok: boolean }>("/test", {
+        method: "POST",
+        body: bodyRef,
+        headers: { "Content-Type": "application/json" },
+      }, { immediate: false });
+
+      expect(isFetching.value).toBe(false);
+
+      const executePromise = execute();
+
+      await new Promise((r) => setTimeout(r, 50));
+      expect(isFetching.value).toBe(true);
+
+      fetchResolve!();
+      await executePromise;
+
+      expect(isFetching.value).toBe(false);
+    });
+
+    it("should transition isFetching correctly when request interceptor modifies request", async () => {
+      let fetchResolve: (() => void) | null = null;
+      global.fetch = vi.fn(() => {
+        return new Promise<Response>((resolve) => {
+          fetchResolve = () =>
+            resolve(
+              new Response(JSON.stringify({ ok: true }), {
+                status: 200,
+                headers: { "Content-Type": "application/json" },
+              }),
+            );
+        });
+      }) as typeof fetch;
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (_url, requestInit) => {
+          return {
+            ...requestInit,
+            headers: {
+              ...(requestInit.headers as Record<string, string>),
+              "X-Injected": "token-123",
+            },
+          };
+        },
+      });
+
+      const { isFetching, execute } = useFzFetch<{ ok: boolean }>("/test", {
+        method: "POST",
+        body: JSON.stringify({ value: 1 }),
+        headers: { "Content-Type": "application/json" },
+      }, { immediate: false });
+
+      expect(isFetching.value).toBe(false);
+
+      const executePromise = execute();
+
+      await new Promise((r) => setTimeout(r, 50));
+      expect(isFetching.value).toBe(true);
+
+      fetchResolve!();
+      await executePromise;
+
+      expect(isFetching.value).toBe(false);
+    });
+
+    it("should transition isFetching correctly during dedup with reactive body", async () => {
+      let fetchResolve: (() => void) | null = null;
+      let fetchCallCount = 0;
+      global.fetch = vi.fn(() => {
+        fetchCallCount++;
+        return new Promise<Response>((resolve) => {
+          fetchResolve = () =>
+            resolve(
+              new Response(JSON.stringify({ id: 1 }), {
+                status: 200,
+                headers: { "Content-Type": "application/json" },
+              }),
+            );
+        });
+      }) as typeof fetch;
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        deduplication: true,
+      });
+
+      const bodyRef = ref(JSON.stringify({ value: 1 }));
+      const { isFetching, execute } = useFzFetch<{ id: number }>("/test", {
+        method: "POST",
+        body: bodyRef,
+        headers: { "Content-Type": "application/json" },
+      }, { immediate: false });
+
+      expect(isFetching.value).toBe(false);
+
+      const promise1 = execute();
+      const promise2 = execute();
+
+      await new Promise((r) => setTimeout(r, 50));
+      expect(isFetching.value).toBe(true);
+
+      fetchResolve!();
+      await Promise.all([promise1, promise2]);
+
+      expect(isFetching.value).toBe(false);
+      expect(fetchCallCount).toBeLessThanOrEqual(2);
+    });
   });
 
   describe("Setup fetchOptions", () => {

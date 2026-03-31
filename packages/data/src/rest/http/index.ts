@@ -11,6 +11,7 @@ import { injectCsrfToken } from "./utils/csrf";
 import { mergeHeaders } from "./utils/headers";
 import { normalizeUseFzFetchOptions } from "./utils/options";
 import { DEFAULT_HTTP_METHOD } from "./common";
+import { makeIsFetchingWritable } from "./utils/fetch-result";
 import { WrapperChain } from "./wrappers/chain";
 import {
   emptyResponseWrapper,
@@ -121,6 +122,8 @@ const createFetchResult = <T>(
     requestInit,
     baseFetchOptions,
   ).json();
+
+  makeIsFetchingWritable(baseFetchResult);
 
   // Create wrapper context (body/headers as getters for params resolver and deduplication)
   const context: WrapperContext = {
