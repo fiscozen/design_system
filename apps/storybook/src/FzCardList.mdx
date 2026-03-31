@@ -1,0 +1,337 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Documentation/Panel/FzCardList" />
+
+# FzCardList
+
+A container that renders a vertical list of `FzCardListItem` rows from the required `items` array. Use your own heading and surrounding layout (for example an `h2` and filters) beside or above the list—`FzCardList` does not render a section title or accept slots.
+
+## Features
+
+- Data-driven list via the `items` prop (each entry maps to one row)
+- Optional badge, value, descriptions, indicator icon, and row actions (arrow or overflow menu)
+- `fzaction:click` on the list includes the item index plus the action index and action payload
+
+## Installation
+
+```bash
+npm install @fiscozen/card-list
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzCardList } from '@fiscozen/card-list'
+
+const items = [
+  {
+    title: 'Fattura #001',
+    value: '1.200,00 €',
+    badge: { text: 'Bozza', tone: 'dark' },
+    showIndicator: true,
+    descriptions: ['Cliente: Rossi S.r.l.'],
+    actions: [{ type: 'action', variant: 'textLeft', label: 'Apri' }]
+  },
+  {
+    title: 'Fattura #002',
+    value: '3.450,00 €',
+    showIndicator: false,
+    descriptions: ['Cliente: Bianchi S.p.A.']
+  }
+]
+
+function onRowAction(itemIndex, actionIndex, action) {
+  console.log(itemIndex, actionIndex, action)
+}
+</script>
+
+<template>
+  <div>
+    <h2 class="m-0">Fatture</h2>
+    <FzCardList :items="items" @fzaction:click="onRowAction" />
+  </div>
+</template>
+```
+
+## Props (FzCardList)
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>items</code>
+      </td>
+      <td>
+        <code>FzCardListItem[]</code>
+      </td>
+      <td>(required)</td>
+      <td>One row per element. An empty array renders an empty list.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Item shape (<code>items[]</code>)
+
+Each object follows <code>FzCardListItem</code> props (same as using <code>FzCardListItem</code> directly):
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>title</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>—</td>
+      <td>Main title, shown in bold. Required.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>badge</code>
+      </td>
+      <td>
+        <code>&#123; text: string; tone: FzBadgeTone &#125; | undefined</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>
+        Optional text badge and tone (see <code>FzBadge</code>). When only <code>title</code> is
+        set, the layout uses a compact title row without a second line for value.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>value</code>
+      </td>
+      <td>
+        <code>string | undefined</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Optional value aligned on the right of the title row (e.g. currency).</td>
+    </tr>
+    <tr>
+      <td>
+        <code>descriptions</code>
+      </td>
+      <td>
+        <code>string[] | undefined</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Additional lines below the title row.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>showIndicator</code>
+      </td>
+      <td>
+        <code>boolean | undefined</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>When true, shows a small indicator icon before the title.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>actions</code>
+      </td>
+      <td>
+        <code>[FzActionLinkProps] | FzActionProps[] | undefined</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>
+        Row actions: one entry shows an arrow button; two or more show an ellipsis menu. Omit or
+        pass an empty array to hide the trailing control. Use <code>@fiscozen/action</code> types
+        for each entry (e.g. <code>type: &apos;action&apos;</code> with <code>label</code>, or a
+        link with <code>type: &apos;link&apos;</code> and <code>to</code>).
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Events (FzCardList)
+
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Payload</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>fzaction:click</code>
+      </td>
+      <td>
+        <code>(itemIndex: number, actionIndex: number, action: FzActionProps)</code>
+      </td>
+      <td>
+        Fired when a row action runs: single-arrow tap, or an option chosen from the overflow menu.
+        <code>itemIndex</code> is the index in <code>items</code>.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>fzmenu:click</code>
+      </td>
+      <td>
+        <code>(index: number)</code>
+      </td>
+      <td>
+        Declared on the list for API compatibility; the current <code>FzCardListItem</code> uses
+        <code>actions</code> and <code>fzaction:click</code> instead. Prefer handling{' '}
+        <code>fzaction:click</code>.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### List with row actions
+
+```vue
+<script setup>
+import { FzCardList } from '@fiscozen/card-list'
+
+const items = [
+  {
+    title: 'Fattura #001',
+    value: '1.200,00 €',
+    badge: { text: 'Bozza', tone: 'dark' },
+    showIndicator: true,
+    descriptions: ['Cliente: Rossi S.r.l.', 'Scadenza: 31/03/2024'],
+    actions: [{ type: 'action', variant: 'textLeft', label: 'Apri' }]
+  },
+  {
+    title: 'Fattura #002',
+    value: '3.450,00 €',
+    badge: { text: 'Inviata', tone: 'dark' },
+    descriptions: ['Cliente: Bianchi S.p.A.'],
+    actions: [{ type: 'action', variant: 'textLeft', label: 'Apri' }]
+  }
+]
+
+function onRowAction(itemIndex, actionIndex, action) {
+  console.log(itemIndex, actionIndex, action)
+}
+</script>
+
+<template>
+  <div>
+    <h2 class="m-0">Fatture</h2>
+    <FzCardList :items="items" @fzaction:click="onRowAction" />
+  </div>
+</template>
+```
+
+### Multiple actions (overflow menu)
+
+```vue
+<script setup>
+import { FzCardList } from '@fiscozen/card-list'
+
+const items = [
+  {
+    title: 'Documento',
+    actions: [
+      { type: 'action', variant: 'textLeft', label: 'Apri' },
+      { type: 'action', variant: 'textLeft', label: 'Elimina' }
+    ]
+  }
+]
+
+function onRowAction(itemIndex, actionIndex, action) {
+  console.log(itemIndex, actionIndex, action)
+}
+</script>
+
+<template>
+  <FzCardList :items="items" @fzaction:click="onRowAction" />
+</template>
+```
+
+### Using FzCardListItem without FzCardList
+
+`FzCardList` has no default slot. Compose `FzCardListItem` yourself when you need custom wrappers or non-uniform rows.
+
+```vue
+<script setup>
+import { FzCardListItem } from '@fiscozen/card-list'
+</script>
+
+<template>
+  <div>
+    <FzCardListItem
+      title="Voce personalizzata"
+      value="200,00 €"
+      :badge="{ text: 'Custom', tone: 'dark' }"
+      :show-indicator="true"
+      :descriptions="['Nota: verifica allegati']"
+      :actions="[{ type: 'action', variant: 'textLeft', label: 'Apri' }]"
+    />
+  </div>
+</template>
+```
+
+### Indicator on or off
+
+```vue
+<script setup>
+import { FzCardList } from '@fiscozen/card-list'
+
+const items = [
+  { title: 'With indicator', showIndicator: true, descriptions: ['Row A'] },
+  { title: 'Without indicator', showIndicator: false, descriptions: ['Row B'] }
+]
+</script>
+
+<template>
+  <FzCardList :items="items" />
+</template>
+```
+
+## Accessibility
+
+- Provide a visible section title in the parent layout (for example an `h2`) so the list sits in a clear heading structure.
+- Row actions use an icon button with `aria-label` “Open” (single action) or an overflow control with “Open menu” (multiple actions); keyboard users can Tab to these controls.
+- Title text is truncated with a single-line paragraph so long labels stay usable in narrow layouts.
+
+## Best Practices
+
+- Keep `items` as the source of truth for homogeneous lists (API results, tables of cards).
+- Use one action for a primary navigation or command; use several when you need a compact overflow menu.
+- Handle `fzaction:click` using `itemIndex` to map back to your data row.
+- Import `FzCardListItem` when you need slots or mixed content around each row; `FzCardList` is only for the data-driven array pattern.
+
+## Related Components
+
+- **FzCardListItem**: Single row; same props as each `items` entry; also emits `fzaction:click` and `update:isOpen` when used standalone.
+- **FzAction / FzIconDropdown**: Underlying action model for `actions`.
