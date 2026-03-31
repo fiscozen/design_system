@@ -1528,4 +1528,206 @@ describe("Integration Tests", () => {
       }
     });
   });
+
+  describe("Immediate execution with interceptors", () => {
+    it("should auto-execute when immediate: true (default) with request interceptor that does not modify request", async () => {
+      let interceptorCalled = false;
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (url, init) => {
+          interceptorCalled = true;
+          return init;
+        },
+      });
+
+      global.fetch = vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({ id: 1 }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        ),
+      ) as typeof fetch;
+
+      const { data, isFetching } = useFzFetch<{ id: number }>("/users/1");
+
+      expect(isFetching.value).toBe(false);
+
+      await new Promise((r) => setTimeout(r, 150));
+
+      expect(interceptorCalled).toBe(true);
+      expect(data.value).toEqual({ id: 1 });
+      expect(isFetching.value).toBe(false);
+    });
+
+    it("should auto-execute when immediate: true with request interceptor that modifies headers", async () => {
+      let capturedHeaders: HeadersInit | undefined;
+
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        requestInterceptor: async (_url, init) => ({
+          ...init,
+          headers: {
+            ...(init.headers as Record<string, string>),
+            Authorization: "Bearer test-token",
+          },
+        }),
+      });
+
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        capturedHeaders = init?.headers;
+        return Promise.resolve(
+          new Response(JSON.stringify({ authorized: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { data, isFetching } = useFzFetch<{ authorized: boolean }>(
+        "/protected",
+      );
+
+      await new Promise((r) => setTimeout(r, 150));
+
+      expect(data.value).toEqual({ authorized: true });
+      expect(isFetching.value).toBe(false);
+      expect(global.fetch).toHaveBeenCalled();
+
+      const headers = capturedHeaders as Record<string, string> | undefined;
+      expect(headers?.Authorization).toBe("Bearer test-token");
+    });
+
+    it("should auto-execute when immediate: true with response interceptor", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        responseInterceptor: async (response) => {
+          const body = await response.clone().json();
+          return new Response(
+            JSON.stringify({ ...body, intercepted: true }),
+            { status: response.status, headers: response.headers },
+          );
+        },
+      });
+
+      global.fetch = vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({ original: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        ),
+      ) as typeof fetch;
+
+      const { data } = useFzFetch<{ original: boolean; intercepted: boolean }>(
+        "/data",
+      );
+
+      await new Promise((r) => setTimeout(r, 150));
+
+      expect(data.value).toEqual({ original: true, intercepted: true });
+    });
+  });
+
+  describe("Immediate execution with interceptors and deduplication", () => {
+    it("should auto-execute with request interceptor and deduplication enabled", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        deduplication: true,
+        requestInterceptor: async (_url, init) => init,
+      });
+
+      global.fetch = vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({ value: 42 }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        ),
+      ) as typeof fetch;
+
+      const { data, isFetching } = useFzFetch<{ value: number }>("/resource");
+
+      await new Promise((r) => setTimeout(r, 150));
+
+      expect(data.value).toEqual({ value: 42 });
+      expect(isFetching.value).toBe(false);
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("should complete both requests when two identical immediate requests are made with interceptors and dedup", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        deduplication: true,
+        requestInterceptor: async (_url, init) => init,
+      });
+
+      global.fetch = vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({ shared: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        ),
+      ) as typeof fetch;
+
+      const result1 = useFzFetch<{ shared: boolean }>("/same", {
+        immediate: false,
+      });
+      const result2 = useFzFetch<{ shared: boolean }>("/same", {
+        immediate: false,
+      });
+
+      const p1 = result1.execute();
+      const p2 = result2.execute();
+      await Promise.all([p1, p2]);
+
+      await new Promise((r) => setTimeout(r, 150));
+
+      expect(result1.data.value).toEqual({ shared: true });
+      expect(result2.data.value).toEqual({ shared: true });
+    });
+
+    it("should auto-execute with slow async request interceptor and deduplication", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+        deduplication: true,
+        requestInterceptor: async (_url, init) => {
+          await new Promise((r) => setTimeout(r, 50));
+          return {
+            ...init,
+            headers: {
+              ...(init.headers as Record<string, string>),
+              Authorization: "Bearer slow-token",
+            },
+          };
+        },
+      });
+
+      let capturedHeaders: HeadersInit | undefined;
+      global.fetch = vi.fn((_url: string, init?: RequestInit) => {
+        capturedHeaders = init?.headers;
+        return Promise.resolve(
+          new Response(JSON.stringify({ delayed: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }) as typeof fetch;
+
+      const { data, isFetching } = useFzFetch<{ delayed: boolean }>(
+        "/slow-auth",
+      );
+
+      await new Promise((r) => setTimeout(r, 300));
+
+      expect(data.value).toEqual({ delayed: true });
+      expect(isFetching.value).toBe(false);
+      expect(global.fetch).toHaveBeenCalled();
+
+      const headers = capturedHeaders as Record<string, string> | undefined;
+      expect(headers?.Authorization).toBe("Bearer slow-token");
+    });
+  });
 });
