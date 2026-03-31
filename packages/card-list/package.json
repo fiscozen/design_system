@@ -16,7 +16,6 @@
     "@fiscozen/action": "workspace:*",
     "@fiscozen/badge": "workspace:*",
     "@fiscozen/button": "workspace:*",
-    "@fiscozen/card": "workspace:*",
     "@fiscozen/divider": "^1.0.1",
     "@fiscozen/dropdown": "workspace:*"
   },

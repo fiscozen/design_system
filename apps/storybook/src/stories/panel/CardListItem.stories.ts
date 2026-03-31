@@ -58,8 +58,8 @@ export const CardWithBadgeAndAmount: CardListItemStory = {
     <div class="min-w-[355px]">
       <FzCardListItem
         v-bind="args"
-        @fzmenu:click="args.onFzmenuClick"
-        @fzaction:click="args.onFzactionClick"
+        @fzmenu:click="args['onFzmenu:click']"
+        @fzaction:click="args['onFzaction:click']"
       />
     </div>`
   }),
@@ -89,6 +89,7 @@ export const CardWithBadgeAndAmount: CardListItemStory = {
         label: 'Elimina'
       }
     ] as FzActionProps[],
+    'onFzmenu:click': fn(),
     'onFzaction:click': fn()
   },
   play: async ({ canvasElement }) => {
@@ -116,8 +117,8 @@ export const CardWithTitleAndDescriptions: CardListItemStory = {
     <div class="min-w-[355px]">
       <FzCardListItem
         v-bind="args"
-        @fzmenu:click="args.onFzmenuClick"
-        @fzaction:click="args.onFzactionClick"
+        @fzmenu:click="args['onFzmenu:click']"
+        @fzaction:click="args['onFzaction:click']"
       />
     </div>`
   }),
@@ -131,6 +132,7 @@ export const CardWithTitleAndDescriptions: CardListItemStory = {
         to: '/'
       }
     ] as FzActionProps[],
+    'onFzmenu:click': fn(),
     'onFzaction:click': fn()
   },
   play: async ({ canvasElement }) => {
@@ -152,8 +154,8 @@ export const CardWithTitleOnly: CardListItemStory = {
     <div class="min-w-[355px]">
       <FzCardListItem
         v-bind="args"
-        @fzmenu:click="args.onFzmenuClick"
-        @fzaction:click="args.onFzactionClick"
+        @fzmenu:click="args['onFzmenu:click']"
+        @fzaction:click="args['onFzaction:click']"
       />
     </div>`
   }),
@@ -165,6 +167,7 @@ export const CardWithTitleOnly: CardListItemStory = {
         to: '/'
       }
     ] as FzActionProps[],
+    'onFzmenu:click': fn(),
     'onFzaction:click': fn()
   },
   play: async ({ canvasElement }) => {
@@ -184,8 +187,8 @@ export const CardWithLongTitle: CardListItemStory = {
     <div class="min-w-[355px]">
       <FzCardListItem
         v-bind="args"
-        @fzmenu:click="args.onFzmenuClick"
-        @fzaction:click="args.onFzactionClick"
+        @fzmenu:click="args['onFzmenu:click']"
+        @fzaction:click="args['onFzaction:click']"
       />
     </div>`
   }),
@@ -216,6 +219,7 @@ export const CardWithLongTitle: CardListItemStory = {
         label: 'Elimina'
       }
     ] as FzActionProps[],
+    'onFzmenu:click': fn(),
     'onFzaction:click': fn()
   },
   play: async ({ canvasElement }) => {
