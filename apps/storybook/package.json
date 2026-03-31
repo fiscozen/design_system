@@ -32,6 +32,7 @@
     "@fiscozen/breadcrumbs": "workspace:^",
     "@fiscozen/button": "workspace:^",
     "@fiscozen/card": "workspace:^",
+    "@fiscozen/card-list": "workspace:^",
     "@fiscozen/chat-container": "workspace:*",
     "@fiscozen/checkbox": "workspace:^",
     "@fiscozen/collapse": "workspace:^",
