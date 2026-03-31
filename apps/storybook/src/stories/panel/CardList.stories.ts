@@ -70,12 +70,11 @@ export const DefaultCardList: CardListStory = {
       <div class="p-8">
         <h2 class="m-0 p-0">Fatture</h2>
       </div>
-      <FzCardList v-bind="args" @fzmenu:click="args['onFzmenu:click']" @fzaction:click="args['onFzaction:click']" />
+      <FzCardList v-bind="args" @fzaction:click="args['onFzaction:click']" />
     </div>`
   }),
   args: {
     items: defaultItems,
-    'onFzmenu:click': fn(),
     'onFzaction:click': fn()
   },
   play: async ({ canvasElement }) => {
@@ -136,7 +135,7 @@ export const CardListWithFilters: CardListStory = {
           v-model="searchQuery"
         />
       </div>
-      <FzCardList v-bind="args" @fzmenu:click="args['onFzmenu:click']" @fzaction:click="args['onFzaction:click']" />
+      <FzCardList v-bind="args" @fzaction:click="args['onFzaction:click']" />
     </div>`
   }),
   args: {
@@ -146,7 +145,6 @@ export const CardListWithFilters: CardListStory = {
       { ...defaultItems[1], title: 'Fattura #005' },
       { ...defaultItems[2], title: 'Fattura #006' }
     ],
-    'onFzmenu:click': fn(),
     'onFzaction:click': fn()
   },
   play: async ({ canvasElement }) => {

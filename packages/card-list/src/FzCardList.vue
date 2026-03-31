@@ -20,7 +20,7 @@ import FzCardListItem from './FzCardListItem.vue';
 import type { FzActionProps } from '@fiscozen/action';
 import { FzCardListProps, FzCardListEmits } from './types';
 
-const props = defineProps<FzCardListProps>();
+defineProps<FzCardListProps>();
 
 const emit = defineEmits<FzCardListEmits>();
 
@@ -44,7 +44,6 @@ function emitItemActionClick(
       :descriptions="item.descriptions"
       :showIndicator="item.showIndicator"
       :actions="item.actions"
-      @fzmenu:click="emit('fzmenu:click', index)"
       @fzaction:click="
         (actionIndex, action) =>
           emitItemActionClick(index, actionIndex, action)
