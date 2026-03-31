@@ -1,0 +1,324 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Panel/FzCollapse" />
+
+# FzCollapse
+
+A collapsible panel component built on native `<details>/<summary>` HTML elements. Supports two visual variants (`section` and `button`), an optional leading icon with content indentation, and subtitle text.
+
+## Features
+
+- Two variants: `section` (larger, with optional subtitle) and `button` (compact, with right content slot)
+- Built on semantic `<details>/<summary>` for native accessibility
+- Optional leading icon with automatic content indentation
+- Subtitle visible only when collapsed (section variant)
+- `v-model:open` for controlled open/close state
+- Works standalone or inside `FzAccordion` for coordinated panels
+
+## Installation
+
+```bash
+npm install @fiscozen/collapse
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzCollapse } from '@fiscozen/collapse'
+import { ref } from 'vue'
+
+const isOpen = ref(false)
+</script>
+
+<template>
+  <FzCollapse
+    title="Section title"
+    subtitle="Additional info shown when collapsed"
+    icon="face-smile"
+    v-model:open="isOpen"
+  >
+    <template #content>
+      <p>Your content here.</p>
+    </template>
+  </FzCollapse>
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>title</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>The main heading text displayed in the header</td>
+    </tr>
+    <tr>
+      <td><code>subtitle</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Secondary text below the title, visible only when closed and in section variant</td>
+    </tr>
+    <tr>
+      <td><code>icon</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Name of the leading FzIcon. When set, content is indented to align with the title</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'section' | 'button'</code></td>
+      <td><code>'section'</code></td>
+      <td>Visual variant controlling sizing, typography, and layout</td>
+    </tr>
+    <tr>
+      <td><code>headerClass</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Additional CSS classes applied to the summary/header element</td>
+    </tr>
+    <tr>
+      <td><code>contentClass</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Additional CSS classes applied to the content wrapper</td>
+    </tr>
+    <tr>
+      <td><code>open</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Controls the open/closed state. Supports <code>v-model:open</code></td>
+    </tr>
+  </tbody>
+</table>
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>#header</code></td>
+      <td>Custom header content, replaces the default title rendering</td>
+    </tr>
+    <tr>
+      <td><code>#icon</code></td>
+      <td>Custom leading icon, replaces the default FzIcon</td>
+    </tr>
+    <tr>
+      <td><code>#chevron</code></td>
+      <td>Custom chevron/toggle icon on the right side</td>
+    </tr>
+    <tr>
+      <td><code>#content</code></td>
+      <td>The collapsible content area</td>
+    </tr>
+    <tr>
+      <td><code>#rightContent</code></td>
+      <td>Additional content to the right of the header (button variant only)</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Section Variant (default)
+
+The section variant uses larger typography (semibold 17px title) and supports a subtitle that is visible only when the panel is closed.
+
+```vue
+<template>
+  <FzCollapse
+    title="Customer Details"
+    subtitle="Mario Rossi - MR di Mario Rossi"
+    icon="user"
+    v-model:open="isOpen"
+  >
+    <template #content>
+      <div class="grid grid-cols-2 gap-24">
+        <div>
+          <span class="text-grey-500">Nome e Cognome</span>
+          <p>Mario Rossi</p>
+        </div>
+        <div>
+          <span class="text-grey-500">Codice Fiscale</span>
+          <p>RSSMRA74A01F205Z</p>
+        </div>
+      </div>
+    </template>
+  </FzCollapse>
+</template>
+```
+
+### Button Variant
+
+The button variant is compact (regular 16px title) and supports a `#rightContent` slot for badges, prices, or other inline information.
+
+```vue
+<template>
+  <FzCollapse
+    title="Order total"
+    variant="button"
+    icon="cart-shopping"
+    v-model:open="isOpen"
+  >
+    <template #rightContent>
+      <span class="text-sm font-semibold">€ 1.250,00</span>
+    </template>
+    <template #content>
+      <p>Order breakdown details here.</p>
+    </template>
+  </FzCollapse>
+</template>
+```
+
+### Without Icon
+
+When no `icon` prop is provided, the leading icon is hidden and content is not indented.
+
+```vue
+<template>
+  <FzCollapse title="Simple collapse" v-model:open="isOpen">
+    <template #content>
+      <p>No icon, no indentation.</p>
+    </template>
+  </FzCollapse>
+</template>
+```
+
+## Accessibility
+
+- Built on native `<details>/<summary>` elements for built-in keyboard support and screen reader announcements
+- Summary element is focusable and can be activated with Enter or Space keys
+- The `open` attribute on `<details>` communicates expanded/collapsed state to assistive technologies
+- Leading icons are decorative and hidden from screen readers via FzIcon's internal `aria-hidden`
+
+## Best Practices
+
+- Use the **section** variant for page sections with rich content (forms, data displays)
+- Use the **button** variant for compact inline toggles (prices, summaries, settings)
+- Provide a `subtitle` in the section variant to give users a preview of the content when collapsed
+- Use the `icon` prop to visually categorize sections; the automatic content indentation aligns the content with the title
+- For groups of related collapsible panels, use `FzAccordion` instead of managing open states manually
+
+---
+
+# FzAccordion
+
+A wrapper component that coordinates multiple `FzCollapse` children. Supports exclusive mode (only one panel open at a time) and multiple mode (any number of panels open simultaneously).
+
+## Installation
+
+`FzAccordion` is exported from the same package:
+
+```bash
+npm install @fiscozen/collapse
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzAccordion, FzCollapse } from '@fiscozen/collapse'
+import { ref } from 'vue'
+
+const open1 = ref(false)
+const open2 = ref(false)
+const open3 = ref(false)
+</script>
+
+<template>
+  <FzAccordion>
+    <FzCollapse title="Section 1" icon="user" v-model:open="open1">
+      <template #content><p>Content 1</p></template>
+    </FzCollapse>
+    <FzCollapse title="Section 2" icon="gear" v-model:open="open2">
+      <template #content><p>Content 2</p></template>
+    </FzCollapse>
+    <FzCollapse title="Section 3" icon="file" v-model:open="open3">
+      <template #content><p>Content 3</p></template>
+    </FzCollapse>
+  </FzAccordion>
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>multiple</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>When false (default), opening a panel closes all others. When true, any number of panels can be open</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Exclusive Mode (default)
+
+Only one panel can be open at a time. Opening a new panel automatically closes the previously open one.
+
+```vue
+<template>
+  <FzAccordion>
+    <FzCollapse title="Panel A" v-model:open="openA">
+      <template #content><p>Content A</p></template>
+    </FzCollapse>
+    <FzCollapse title="Panel B" v-model:open="openB">
+      <template #content><p>Content B</p></template>
+    </FzCollapse>
+  </FzAccordion>
+</template>
+```
+
+### Multiple Mode
+
+Any number of panels can be open simultaneously.
+
+```vue
+<template>
+  <FzAccordion :multiple="true">
+    <FzCollapse title="Panel A" v-model:open="openA">
+      <template #content><p>Content A</p></template>
+    </FzCollapse>
+    <FzCollapse title="Panel B" v-model:open="openB">
+      <template #content><p>Content B</p></template>
+    </FzCollapse>
+  </FzAccordion>
+</template>
+```
+
+## Accessibility
+
+- Accordion coordination is implemented via Vue's provide/inject; no additional ARIA attributes are added beyond what each FzCollapse provides natively
+- Each panel remains independently focusable and keyboard-operable
+
+## Related Components
+
+- **FzCollapse**: The individual collapsible panel component used inside FzAccordion

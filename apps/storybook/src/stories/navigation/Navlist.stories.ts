@@ -117,7 +117,7 @@ export const Default: Story = {
             type: 'link'
           },
           {
-            summary: 'Item #2',
+            title: 'Item #2',
             subitems: [
               {
                 label: 'Sub-Item #1',
@@ -339,7 +339,7 @@ export const WithSubitems: Story = {
         label: 'Menu',
         items: [
           {
-            summary: 'Products',
+            title: 'Products',
             subitems: [
               {
                 label: 'All Products',
@@ -360,7 +360,7 @@ export const WithSubitems: Story = {
             ]
           },
           {
-            summary: 'Orders',
+            title: 'Orders',
             subitems: [
               {
                 label: 'Pending Orders',

@@ -22,9 +22,9 @@ const emit = defineEmits<{
       </div>
       <div class="flex flex-col">
         <template v-for="(item, itemIndex) in section.items" :key="itemIndex">
-          <FzCollapse v-if="isSubMenu(item)" :summary-class="'px-12'">
-            <template #summary
-              ><span class="grow">{{ item.summary }}</span></template
+          <FzCollapse v-if="isSubMenu(item)" :header-class="'px-12'">
+            <template #header
+              ><span class="grow">{{ item.title }}</span></template
             >
             <template #content>
               <div class="flex flex-col">

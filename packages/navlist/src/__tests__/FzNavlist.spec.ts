@@ -23,7 +23,7 @@ const sections: FzNavlistSection[] = [
         type: 'link'
       },
       {
-        summary: 'Item #2',
+        title: 'Item #2',
         subitems: [
           {
             label: 'Sub-Item #1',
@@ -149,7 +149,7 @@ describe('FzNavlist', () => {
               label: 'Section 1',
               items: [
                 {
-                  summary: 'Parent Item',
+                  title: 'Parent Item',
                   subitems: [
                     {
                       label: 'Sub-Item 1',
@@ -427,7 +427,7 @@ describe('FzNavlist', () => {
               label: 'Section 1',
               items: [
                 {
-                  summary: 'Parent',
+                  title: 'Parent',
                   subitems: [
                     {
                       label: 'Sub-Item',
@@ -785,7 +785,7 @@ describe('FzNavlist', () => {
                 label: 'Section 1',
                 items: [
                   {
-                    summary: 'Parent',
+                    title: 'Parent',
                     subitems: [
                       {
                         label: 'Sub-Item',
@@ -1026,7 +1026,7 @@ describe('FzNavlist', () => {
               label: 'Section 1',
               items: [
                 {
-                  summary: 'Parent',
+                  title: 'Parent',
                   subitems: manySubitems
                 }
               ]
@@ -1092,7 +1092,7 @@ describe('FzNavlist', () => {
               label: 'Section 1',
               items: [
                 {
-                  summary: 'Parent Item',
+                  title: 'Parent Item',
                   subitems: [
                     {
                       label: 'Sub-Item 1',

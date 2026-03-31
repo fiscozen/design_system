@@ -1209,6 +1209,9 @@ importers:
 
   packages/collapse:
     dependencies:
+      '@fiscozen/container':
+        specifier: workspace:^
+        version: link:../container
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
