@@ -24,107 +24,209 @@ describe('FzCollapse', () => {
   describe('Rendering', () => {
     it('should render with default props', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary',
-          content: 'Test Content'
-        }
+        props: { title: 'Test Title' },
       })
       expect(wrapper.exists()).toBe(true)
       expect(wrapper.find('[data-e2e="details"]').exists()).toBe(true)
       expect(wrapper.find('[data-e2e="summary"]').exists()).toBe(true)
-      expect(wrapper.find('[data-e2e="content"]').exists()).toBe(true)
+      expect(wrapper.find('[data-e2e="title"]').exists()).toBe(true)
     })
 
-    it('should render summary text when provided', () => {
+    it('should render title text when provided', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary Text'
-        }
+        props: { title: 'My Title' },
       })
-      expect(wrapper.text()).toContain('Test Summary Text')
+      expect(wrapper.find('[data-e2e="title"]').text()).toBe('My Title')
     })
 
-    it('should render content text when provided', async () => {
+    it('should render content slot when open', async () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary',
-          content: 'Test Content Text',
-          open: true
-        }
+        props: { title: 'Title', open: true },
+        slots: { content: '<div>Slot Content</div>' },
       })
       await nextTick()
-      expect(wrapper.text()).toContain('Test Content Text')
+      expect(wrapper.text()).toContain('Slot Content')
     })
 
-    it('should render summary slot content', () => {
+    it('should render header slot content', () => {
       wrapper = mount(FzCollapse, {
         props: {},
-        slots: {
-          summary: '<span>Custom Summary Slot</span>'
-        }
+        slots: { header: '<span>Custom Header</span>' },
       })
-      expect(wrapper.text()).toContain('Custom Summary Slot')
-    })
-
-    it('should render content slot content when open', async () => {
-      wrapper = mount(FzCollapse, {
-        props: {
-          open: true
-        },
-        slots: {
-          content: '<div>Custom Content Slot</div>'
-        }
-      })
-      await nextTick()
-      expect(wrapper.text()).toContain('Custom Content Slot')
+      expect(wrapper.text()).toContain('Custom Header')
     })
 
     it('should render icon slot when provided', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary'
-        },
-        slots: {
-          icon: '<span class="custom-icon">Custom Icon</span>'
-        }
+        props: { title: 'Title' },
+        slots: { icon: '<span class="custom-icon">Custom Icon</span>' },
       })
       expect(wrapper.find('.custom-icon').exists()).toBe(true)
     })
 
-    it('should render default chevron icon when icon slot not provided', () => {
+    it('should render default chevron icon (angle-down) when closed', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary'
-        }
+        props: { title: 'Title' },
       })
-      const icon = wrapper.findComponent({ name: 'FzIcon' })
+      const icon = wrapper.find('[data-e2e="chevron-icon"]')
       expect(icon.exists()).toBe(true)
     })
 
-    it('should show chevron-up icon when open', async () => {
+    it('should render leading icon when icon prop is set', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary',
-          open: true
-        }
+        props: { title: 'Title', icon: 'face-smile' },
       })
-      await nextTick()
-      const icon = wrapper.findComponent({ name: 'FzIcon' })
-      expect(icon.exists()).toBe(true)
-      expect(icon.props('name')).toBe('chevron-up')
+      const leadingIcon = wrapper.find('[data-e2e="leading-icon"]')
+      expect(leadingIcon.exists()).toBe(true)
     })
 
-    it('should show chevron-down icon when closed', async () => {
+    it('should not render leading icon when icon prop is not set', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary',
-          open: false
-        }
+        props: { title: 'Title' },
       })
-      await nextTick()
-      const icon = wrapper.findComponent({ name: 'FzIcon' })
-      expect(icon.exists()).toBe(true)
-      expect(icon.props('name')).toBe('chevron-down')
+      const leadingIcon = wrapper.find('[data-e2e="leading-icon"]')
+      expect(leadingIcon.exists()).toBe(false)
+    })
+  })
+
+  // ============================================
+  // VARIANT TESTS
+  // ============================================
+  describe('Variants', () => {
+    describe('section variant (default)', () => {
+      it('should default to section variant', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title' },
+        })
+        const wrapper_el = wrapper.find('[data-e2e="header-wrapper"]')
+        expect(wrapper_el.classes()).toContain('items-start')
+      })
+
+      it('should apply semibold title typography', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', variant: 'section' },
+        })
+        const title = wrapper.find('[data-e2e="title"]')
+        expect(title.classes()).toContain('font-semibold')
+        expect(title.classes()).toContain('text-[17px]')
+        expect(title.classes()).toContain('leading-[24px]')
+      })
+
+      it('should show subtitle when closed', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', subtitle: 'Subtitle text', variant: 'section', open: false },
+        })
+        const subtitle = wrapper.find('[data-e2e="subtitle"]')
+        expect(subtitle.exists()).toBe(true)
+        expect(subtitle.text()).toBe('Subtitle text')
+      })
+
+      it('should hide subtitle when open', async () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', subtitle: 'Subtitle text', variant: 'section', open: true },
+        })
+        await nextTick()
+        const subtitle = wrapper.find('[data-e2e="subtitle"]')
+        expect(subtitle.exists()).toBe(false)
+      })
+
+      it('should use lg icon size', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', icon: 'face-smile', variant: 'section' },
+        })
+        const leadingIcon = wrapper.findComponent({ name: 'FzIcon' })
+        expect(leadingIcon.exists()).toBe(true)
+      })
+
+      it('should apply 32px indent when icon is present and open', async () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', icon: 'face-smile', variant: 'section', open: true },
+        })
+        await nextTick()
+        const indent = wrapper.find('[data-e2e="indent-space"]')
+        expect(indent.exists()).toBe(true)
+        expect(indent.classes()).toContain('w-[32px]')
+      })
+
+      it('should not render rightContent slot', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', variant: 'section' },
+          slots: { rightContent: '<span>Right</span>' },
+        })
+        expect(wrapper.text()).not.toContain('Right')
+      })
+
+      it('should apply mt-24 for content spacing', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', variant: 'section', open: true },
+          slots: { content: '<div>Content</div>' },
+        })
+        const content = wrapper.find('[data-e2e="content"]')
+        expect(content.classes()).toContain('mt-24')
+      })
+    })
+
+    describe('button variant', () => {
+      it('should apply items-center header layout', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', variant: 'button' },
+        })
+        const wrapper_el = wrapper.find('[data-e2e="header-wrapper"]')
+        expect(wrapper_el.classes()).toContain('items-center')
+      })
+
+      it('should apply normal-weight title typography', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', variant: 'button' },
+        })
+        const title = wrapper.find('[data-e2e="title"]')
+        expect(title.classes()).toContain('font-normal')
+        expect(title.classes()).toContain('text-base')
+        expect(title.classes()).toContain('leading-[20px]')
+      })
+
+      it('should never show subtitle', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', subtitle: 'Sub', variant: 'button', open: false },
+        })
+        const subtitle = wrapper.find('[data-e2e="subtitle"]')
+        expect(subtitle.exists()).toBe(false)
+      })
+
+      it('should apply 28px indent when icon is present and open', async () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', icon: 'face-smile', variant: 'button', open: true },
+        })
+        await nextTick()
+        const indent = wrapper.find('[data-e2e="indent-space"]')
+        expect(indent.exists()).toBe(true)
+        expect(indent.classes()).toContain('w-[28px]')
+      })
+
+      it('should render rightContent slot', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', variant: 'button' },
+          slots: { rightContent: '<span class="right-content">Right</span>' },
+        })
+        expect(wrapper.find('.right-content').exists()).toBe(true)
+      })
+
+      it('should apply mt-16 for content spacing', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', variant: 'button', open: true },
+          slots: { content: '<div>Content</div>' },
+        })
+        const content = wrapper.find('[data-e2e="content"]')
+        expect(content.classes()).toContain('mt-16')
+      })
+
+      it('should apply tabular number font features', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', variant: 'button' },
+        })
+        const title = wrapper.find('[data-e2e="title"]')
+        expect(title.classes()).toContain('[font-feature-settings:"lnum"_1,"tnum"_1]')
+      })
     })
   })
 
@@ -132,127 +234,112 @@ describe('FzCollapse', () => {
   // PROPS TESTS
   // ============================================
   describe('Props', () => {
-    describe('summary prop', () => {
-      it('should display summary text', () => {
+    describe('title prop', () => {
+      it('should display title text', () => {
         wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'My Summary'
-          }
+          props: { title: 'My Title' },
         })
-        expect(wrapper.text()).toContain('My Summary')
+        expect(wrapper.find('[data-e2e="title"]').text()).toBe('My Title')
       })
 
-      it('should handle empty summary string', () => {
+      it('should handle empty title string', () => {
         wrapper = mount(FzCollapse, {
-          props: {
-            summary: ''
-          }
+          props: { title: '' },
         })
         expect(wrapper.exists()).toBe(true)
       })
 
-      it('should handle undefined summary', () => {
+      it('should handle undefined title', () => {
         wrapper = mount(FzCollapse, {
-          props: {}
+          props: {},
         })
         expect(wrapper.exists()).toBe(true)
       })
     })
 
-    describe('content prop', () => {
-      it('should display content text when open', async () => {
+    describe('subtitle prop', () => {
+      it('should display subtitle when closed in section variant', () => {
         wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Summary',
-            content: 'My Content',
-            open: true
-          }
+          props: { title: 'Title', subtitle: 'My Subtitle', open: false },
         })
-        await nextTick()
-        expect(wrapper.text()).toContain('My Content')
+        const subtitle = wrapper.find('[data-e2e="subtitle"]')
+        expect(subtitle.exists()).toBe(true)
+        expect(subtitle.text()).toBe('My Subtitle')
       })
 
-      it('should not display content when closed', async () => {
+      it('should hide subtitle when open in section variant', async () => {
         wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Summary',
-            content: 'My Content',
-            open: false
-          }
+          props: { title: 'Title', subtitle: 'My Subtitle', open: true },
         })
         await nextTick()
-        const content = wrapper.find('[data-e2e="content"]')
-        expect(content.isVisible()).toBe(false)
+        expect(wrapper.find('[data-e2e="subtitle"]').exists()).toBe(false)
       })
 
-      it('should handle empty content string', async () => {
+      it('should never show subtitle in button variant', () => {
         wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Summary',
-            content: '',
-            open: true
-          }
+          props: { title: 'Title', subtitle: 'My Subtitle', variant: 'button', open: false },
         })
-        await nextTick()
-        expect(wrapper.exists()).toBe(true)
+        expect(wrapper.find('[data-e2e="subtitle"]').exists()).toBe(false)
+      })
+
+      it('should not render subtitle element when subtitle prop is not set', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title' },
+        })
+        expect(wrapper.find('[data-e2e="subtitle"]').exists()).toBe(false)
       })
     })
 
-    describe('summaryClass prop', () => {
-      it('should apply custom summary class', () => {
+    describe('icon prop', () => {
+      it('should render leading icon when icon prop is provided', () => {
         wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Summary',
-            summaryClass: 'custom-summary-class'
-          }
+          props: { title: 'Title', icon: 'face-smile' },
+        })
+        expect(wrapper.find('[data-e2e="leading-icon"]').exists()).toBe(true)
+      })
+
+      it('should render content indent when icon is set and open', async () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', icon: 'face-smile', open: true },
+        })
+        await nextTick()
+        expect(wrapper.find('[data-e2e="indent-space"]').exists()).toBe(true)
+      })
+
+      it('should not render content indent when icon is not set', async () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', open: true },
+        })
+        await nextTick()
+        expect(wrapper.find('[data-e2e="indent-space"]').exists()).toBe(false)
+      })
+    })
+
+    describe('headerClass prop', () => {
+      it('should apply custom header class', () => {
+        wrapper = mount(FzCollapse, {
+          props: { title: 'Title', headerClass: 'custom-header-class' },
         })
         const summary = wrapper.find('[data-e2e="summary"]')
-        expect(summary.classes()).toContain('custom-summary-class')
-      })
-
-      it('should handle undefined summaryClass', () => {
-        wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Summary'
-          }
-        })
-        expect(wrapper.exists()).toBe(true)
+        expect(summary.classes()).toContain('custom-header-class')
       })
     })
 
     describe('contentClass prop', () => {
       it('should apply custom content class', async () => {
         wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Summary',
-            content: 'Content',
-            contentClass: 'custom-content-class',
-            open: true
-          }
+          props: { title: 'Title', contentClass: 'custom-content-class', open: true },
         })
         await nextTick()
         const content = wrapper.find('[data-e2e="content"]')
         expect(content.classes()).toContain('custom-content-class')
-      })
-
-      it('should handle undefined contentClass', async () => {
-        wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Summary',
-            open: true
-          }
-        })
-        await nextTick()
-        expect(wrapper.exists()).toBe(true)
       })
     })
 
     describe('open prop (v-model)', () => {
       it('should be closed by default when open prop not provided', () => {
         wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Summary'
-          }
+          props: { title: 'Title' },
         })
         const details = wrapper.find('[data-e2e="details"]')
         expect(details.attributes('open')).toBeUndefined()
@@ -260,10 +347,7 @@ describe('FzCollapse', () => {
 
       it('should be open when open prop is true', async () => {
         wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Summary',
-            open: true
-          }
+          props: { title: 'Title', open: true },
         })
         await nextTick()
         const details = wrapper.find('[data-e2e="details"]')
@@ -272,10 +356,7 @@ describe('FzCollapse', () => {
 
       it('should be closed when open prop is false', async () => {
         wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Summary',
-            open: false
-          }
+          props: { title: 'Title', open: false },
         })
         await nextTick()
         const details = wrapper.find('[data-e2e="details"]')
@@ -290,11 +371,8 @@ describe('FzCollapse', () => {
   describe('Events', () => {
     it('should emit update:open when toggled from closed to open', async () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Summary',
-          open: false
-        },
-        attachTo: document.body
+        props: { title: 'Title', open: false },
+        attachTo: document.body,
       })
       await nextTick()
 
@@ -308,11 +386,8 @@ describe('FzCollapse', () => {
 
     it('should emit update:open when toggled from open to closed', async () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Summary',
-          open: true
-        },
-        attachTo: document.body
+        props: { title: 'Title', open: true },
+        attachTo: document.body,
       })
       await nextTick()
 
@@ -326,39 +401,28 @@ describe('FzCollapse', () => {
 
     it('should handle toggle event on details element', async () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Summary',
-          open: false
-        },
-        attachTo: document.body
+        props: { title: 'Title', open: false },
+        attachTo: document.body,
       })
       await nextTick()
 
-      // The component's handleToggle checks e.newState
-      // Note: Native toggle event doesn't have newState, but component expects it
-      // This test verifies the toggle handler exists and can be called
       const details = wrapper.find('[data-e2e="details"]')
       const toggleEvent = new Event('toggle')
-      // Add newState property to match component's expectation
       Object.defineProperty(toggleEvent, 'newState', {
         value: 'open',
-        writable: false
+        writable: false,
       })
       await details.element.dispatchEvent(toggleEvent)
 
       await nextTick()
-      // Verify the component emits update:open when toggle event fires
       expect(wrapper.emitted('update:open')).toBeTruthy()
       expect(wrapper.emitted('update:open')![0]).toEqual([true])
     })
 
     it('should update open state when summary is clicked', async () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Summary',
-          open: false
-        },
-        attachTo: document.body
+        props: { title: 'Title', open: false },
+        attachTo: document.body,
       })
       await nextTick()
 
@@ -372,184 +436,60 @@ describe('FzCollapse', () => {
       const contentAfter = wrapper.find('[data-e2e="content"]')
       expect(contentAfter.isVisible()).toBe(true)
     })
-
-    it('should update open state when details element receives toggle event with newState', async () => {
-      wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Summary',
-          open: false
-        },
-        attachTo: document.body
-      })
-      await nextTick()
-
-      const details = wrapper.find('[data-e2e="details"]')
-      const content = wrapper.find('[data-e2e="content"]')
-      expect(content.isVisible()).toBe(false)
-
-      // The component's handleToggle checks e.newState
-      // Simulate toggle event with newState property
-      const toggleEvent = new Event('toggle')
-      Object.defineProperty(toggleEvent, 'newState', {
-        value: 'open',
-        writable: false
-      })
-      await details.element.dispatchEvent(toggleEvent)
-
-      await nextTick()
-      // Verify the component emits update:open
-      expect(wrapper.emitted('update:open')).toBeTruthy()
-      expect(wrapper.emitted('update:open')![0]).toEqual([true])
-      // Verify content becomes visible after state update
-      // Note: This requires the parent to update the open prop, which happens via v-model
-      // In a real scenario, the parent would update the prop based on the emitted event
-    })
   })
 
   // ============================================
   // ACCESSIBILITY TESTS
   // ============================================
   describe('Accessibility', () => {
-    describe('ARIA attributes', () => {
-      it('should use native details element for semantic structure', () => {
-        wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Test Summary'
-          }
-        })
-        const details = wrapper.find('details')
-        expect(details.exists()).toBe(true)
-        // Native details element provides semantic structure
+    it('should use native details element for semantic structure', () => {
+      wrapper = mount(FzCollapse, {
+        props: { title: 'Test Title' },
       })
-
-      it('should use native summary element for semantic structure', () => {
-        wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Test Summary'
-          }
-        })
-        const summary = wrapper.find('summary')
-        expect(summary.exists()).toBe(true)
-        // Native summary element provides semantic structure
-      })
-
-      it('should have details open attribute when open', async () => {
-        wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Test Summary',
-            open: true
-          }
-        })
-        await nextTick()
-        const details = wrapper.find('details')
-        expect(details.attributes('open')).toBeDefined()
-      })
-
-      it('should not have details open attribute when closed', async () => {
-        wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Test Summary',
-            open: false
-          }
-        })
-        await nextTick()
-        const details = wrapper.find('details')
-        expect(details.attributes('open')).toBeUndefined()
-      })
-
-      it('should have accessible summary text', () => {
-        wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Accessible Summary Text'
-          }
-        })
-        const summary = wrapper.find('summary')
-        expect(summary.text()).toContain('Accessible Summary Text')
-      })
-
-      it('should have accessible content when open', async () => {
-        wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Summary',
-            content: 'Accessible Content',
-            open: true
-          }
-        })
-        await nextTick()
-        const content = wrapper.find('[data-e2e="content"]')
-        expect(content.text()).toContain('Accessible Content')
-        expect(content.isVisible()).toBe(true)
-      })
+      const details = wrapper.find('details')
+      expect(details.exists()).toBe(true)
     })
 
-    describe('Keyboard navigation', () => {
-      it('should be focusable via summary element', () => {
-        wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Test Summary'
-          }
-        })
-        const summary = wrapper.find('summary')
-        // Native summary element is focusable
-        expect(summary.element.tagName).toBe('SUMMARY')
+    it('should use native summary element for semantic structure', () => {
+      wrapper = mount(FzCollapse, {
+        props: { title: 'Test Title' },
       })
-
-      it('should support Enter key activation on summary', async () => {
-        wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Test Summary',
-            open: false
-          },
-          attachTo: document.body
-        })
-        await nextTick()
-
-        const summary = wrapper.find('summary')
-        summary.element.focus()
-        await summary.trigger('keydown', { key: 'Enter' })
-
-        await nextTick()
-        // Native details element handles Enter key
-        const details = wrapper.find('details')
-        // The behavior depends on browser implementation
-        expect(details.exists()).toBe(true)
-      })
-
-      it('should support Space key activation on summary', async () => {
-        wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Test Summary',
-            open: false
-          },
-          attachTo: document.body
-        })
-        await nextTick()
-
-        const summary = wrapper.find('summary')
-        summary.element.focus()
-        await summary.trigger('keydown', { key: ' ' })
-
-        await nextTick()
-        // Native details element handles Space key
-        const details = wrapper.find('details')
-        expect(details.exists()).toBe(true)
-      })
+      const summary = wrapper.find('summary')
+      expect(summary.exists()).toBe(true)
     })
 
-    describe('Decorative elements', () => {
-      it('should have decorative icon with aria-hidden when using default icon', () => {
-        wrapper = mount(FzCollapse, {
-          props: {
-            summary: 'Test Summary'
-          }
-        })
-        const icon = wrapper.findComponent({ name: 'FzIcon' })
-        if (icon.exists()) {
-          // Icon should be decorative (chevron) and hidden from screen readers
-          // Note: FzIcon component should handle aria-hidden internally
-          expect(icon.exists()).toBe(true)
-        }
+    it('should have details open attribute when open', async () => {
+      wrapper = mount(FzCollapse, {
+        props: { title: 'Test Title', open: true },
       })
+      await nextTick()
+      const details = wrapper.find('details')
+      expect(details.attributes('open')).toBeDefined()
+    })
+
+    it('should not have details open attribute when closed', async () => {
+      wrapper = mount(FzCollapse, {
+        props: { title: 'Test Title', open: false },
+      })
+      await nextTick()
+      const details = wrapper.find('details')
+      expect(details.attributes('open')).toBeUndefined()
+    })
+
+    it('should have accessible title text', () => {
+      wrapper = mount(FzCollapse, {
+        props: { title: 'Accessible Title' },
+      })
+      const title = wrapper.find('[data-e2e="title"]')
+      expect(title.text()).toContain('Accessible Title')
+    })
+
+    it('should be focusable via summary element', () => {
+      wrapper = mount(FzCollapse, {
+        props: { title: 'Test Title' },
+      })
+      const summary = wrapper.find('summary')
+      expect(summary.element.tagName).toBe('SUMMARY')
     })
   })
 
@@ -559,42 +499,17 @@ describe('FzCollapse', () => {
   describe('CSS Classes', () => {
     it('should apply static base classes to summary', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary'
-        }
+        props: { title: 'Test Title' },
       })
       const summary = wrapper.find('[data-e2e="summary"]')
-      expect(summary.classes()).toContain('text-grey-500')
-      expect(summary.classes()).toContain('flex')
-      expect(summary.classes()).toContain('h-32')
       expect(summary.classes()).toContain('cursor-pointer')
       expect(summary.classes()).toContain('select-none')
       expect(summary.classes()).toContain('list-none')
-      expect(summary.classes()).toContain('items-center')
-      expect(summary.classes()).toContain('text-sm')
-      expect(summary.classes()).toContain('rounded')
-      expect(summary.classes()).toContain('font-medium')
     })
 
-    it('should apply open state classes when open', async () => {
+    it('should not apply open state highlight classes (removed by design)', async () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary',
-          open: true
-        }
-      })
-      await nextTick()
-      const summary = wrapper.find('[data-e2e="summary"]')
-      expect(summary.classes()).toContain('bg-background-alice-blue')
-      expect(summary.classes()).toContain('!text-blue-500')
-    })
-
-    it('should not apply open state classes when closed', async () => {
-      wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary',
-          open: false
-        }
+        props: { title: 'Test Title', open: true },
       })
       await nextTick()
       const summary = wrapper.find('[data-e2e="summary"]')
@@ -602,41 +517,21 @@ describe('FzCollapse', () => {
       expect(summary.classes()).not.toContain('!text-blue-500')
     })
 
-    it('should apply custom summaryClass', () => {
+    it('should apply custom headerClass', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary',
-          summaryClass: 'custom-summary'
-        }
+        props: { title: 'Title', headerClass: 'custom-header' },
       })
       const summary = wrapper.find('[data-e2e="summary"]')
-      expect(summary.classes()).toContain('custom-summary')
+      expect(summary.classes()).toContain('custom-header')
     })
 
     it('should apply custom contentClass', async () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary',
-          content: 'Test Content',
-          contentClass: 'custom-content',
-          open: true
-        }
+        props: { title: 'Title', contentClass: 'custom-content', open: true },
       })
       await nextTick()
       const content = wrapper.find('[data-e2e="content"]')
       expect(content.classes()).toContain('custom-content')
-    })
-
-    it('should apply text-sm class to content', async () => {
-      wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary',
-          open: true
-        }
-      })
-      await nextTick()
-      const content = wrapper.find('[data-e2e="content"]')
-      expect(content.classes()).toContain('text-sm')
     })
   })
 
@@ -644,83 +539,38 @@ describe('FzCollapse', () => {
   // EDGE CASES
   // ============================================
   describe('Edge Cases', () => {
-    it('should handle undefined summary prop', () => {
+    it('should handle undefined title prop', () => {
       wrapper = mount(FzCollapse, {
-        props: {}
+        props: {},
       })
       expect(wrapper.exists()).toBe(true)
     })
 
-    it('should handle undefined content prop', async () => {
+    it('should handle empty string title', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Summary',
-          open: true
-        }
-      })
-      await nextTick()
-      expect(wrapper.exists()).toBe(true)
-    })
-
-    it('should handle empty string summary', () => {
-      wrapper = mount(FzCollapse, {
-        props: {
-          summary: ''
-        }
+        props: { title: '' },
       })
       expect(wrapper.exists()).toBe(true)
     })
 
-    it('should handle empty string content', async () => {
+    it('should handle very long title text', () => {
+      const longTitle = 'A'.repeat(1000)
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Summary',
-          content: '',
-          open: true
-        }
-      })
-      await nextTick()
-      expect(wrapper.exists()).toBe(true)
-    })
-
-    it('should handle very long summary text', () => {
-      const longSummary = 'A'.repeat(1000)
-      wrapper = mount(FzCollapse, {
-        props: {
-          summary: longSummary
-        }
+        props: { title: longTitle },
       })
       expect(wrapper.exists()).toBe(true)
-      expect(wrapper.text()).toContain(longSummary)
-    })
-
-    it('should handle very long content text', async () => {
-      const longContent = 'B'.repeat(1000)
-      wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Summary',
-          content: longContent,
-          open: true
-        }
-      })
-      await nextTick()
-      expect(wrapper.exists()).toBe(true)
-      expect(wrapper.text()).toContain(longContent)
+      expect(wrapper.text()).toContain(longTitle)
     })
 
     it('should handle rapid toggle clicks', async () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Summary',
-          open: false
-        },
-        attachTo: document.body
+        props: { title: 'Title', open: false },
+        attachTo: document.body,
       })
       await nextTick()
 
       const summary = wrapper.find('[data-e2e="summary"]')
-      
-      // Rapid clicks
+
       await summary.trigger('click')
       await nextTick()
       await summary.trigger('click')
@@ -731,47 +581,25 @@ describe('FzCollapse', () => {
       expect(wrapper.exists()).toBe(true)
     })
 
-    it('should handle multiple custom classes in summaryClass', () => {
+    it('should handle slot content overriding props', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Summary',
-          summaryClass: 'class1 class2 class3'
-        }
+        props: { title: 'Prop Title' },
+        slots: {
+          header: '<span>Slot Header</span>',
+        },
+      })
+      expect(wrapper.text()).toContain('Slot Header')
+      expect(wrapper.text()).not.toContain('Prop Title')
+    })
+
+    it('should handle multiple custom classes in headerClass', () => {
+      wrapper = mount(FzCollapse, {
+        props: { title: 'Title', headerClass: 'class1 class2 class3' },
       })
       const summary = wrapper.find('[data-e2e="summary"]')
       expect(summary.classes()).toContain('class1')
       expect(summary.classes()).toContain('class2')
       expect(summary.classes()).toContain('class3')
-    })
-
-    it('should handle multiple custom classes in contentClass', async () => {
-      wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Summary',
-          contentClass: 'class1 class2 class3',
-          open: true
-        }
-      })
-      await nextTick()
-      const content = wrapper.find('[data-e2e="content"]')
-      expect(content.classes()).toContain('class1')
-      expect(content.classes()).toContain('class2')
-      expect(content.classes()).toContain('class3')
-    })
-
-    it('should handle slot content overriding props', () => {
-      wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Prop Summary',
-          content: 'Prop Content'
-        },
-        slots: {
-          summary: '<span>Slot Summary</span>',
-          content: '<div>Slot Content</div>'
-        }
-      })
-      expect(wrapper.text()).toContain('Slot Summary')
-      expect(wrapper.text()).not.toContain('Prop Summary')
     })
   })
 
@@ -779,48 +607,33 @@ describe('FzCollapse', () => {
   // SNAPSHOTS
   // ============================================
   describe('Snapshots', () => {
-    it('should match snapshot - default state (closed)', () => {
+    it('should match snapshot - section variant closed', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary',
-          content: 'Test Content'
-        }
+        props: { title: 'Test Title', subtitle: 'Test Subtitle', icon: 'face-smile' },
       })
       expect(wrapper.html()).toMatchSnapshot()
     })
 
-    it('should match snapshot - open state', () => {
+    it('should match snapshot - section variant open', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary',
-          content: 'Test Content',
-          open: true
-        }
+        props: { title: 'Test Title', icon: 'face-smile', open: true },
+        slots: { content: '<div>Test Content</div>' },
       })
       expect(wrapper.html()).toMatchSnapshot()
     })
 
-    it('should match snapshot - with custom classes', () => {
+    it('should match snapshot - button variant closed', () => {
       wrapper = mount(FzCollapse, {
-        props: {
-          summary: 'Test Summary',
-          content: 'Test Content',
-          summaryClass: 'custom-summary',
-          contentClass: 'custom-content',
-          open: true
-        }
+        props: { title: 'Test Title', variant: 'button', icon: 'face-smile' },
+        slots: { rightContent: '<span>Badge</span>' },
       })
       expect(wrapper.html()).toMatchSnapshot()
     })
 
-    it('should match snapshot - with slots', () => {
+    it('should match snapshot - button variant open', () => {
       wrapper = mount(FzCollapse, {
-        props: {},
-        slots: {
-          summary: '<span>Custom Summary</span>',
-          content: '<div>Custom Content</div>',
-          icon: '<span>Custom Icon</span>'
-        }
+        props: { title: 'Test Title', variant: 'button', icon: 'face-smile', open: true },
+        slots: { content: '<div>Test Content</div>', rightContent: '<span>Badge</span>' },
       })
       expect(wrapper.html()).toMatchSnapshot()
     })

@@ -1,31 +1,77 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzCollapse > Snapshots > should match snapshot - default state (closed) 1`] = `
-"<details data-v-d76ce47a="" data-e2e="details">
-  <summary data-v-d76ce47a="" data-e2e="summary" class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded font-medium">Test Summary<span data-v-d76ce47a="" role="presentation" class="flex items-center justify-center w-[20px] h-[20px] ml-32"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path></svg></span></summary>
-  <div data-v-d76ce47a="" data-e2e="content" class="text-sm" style="display: none;">Test Content</div>
+exports[`FzCollapse > Snapshots > should match snapshot - button variant closed 1`] = `
+"<details data-e2e="details" class="overflow-clip w-full">
+  <summary data-e2e="summary" class="w-full block cursor-pointer select-none list-none [&amp;::-webkit-details-marker]:hidden">
+    <div class="flex w-full items-center gap-24" data-e2e="header-wrapper">
+      <div class="flex gap-8 items-start cursor-pointer flex-[1_0_0]" data-e2e="header-row"><span role="presentation" class="flex items-center justify-center w-[20px] h-[20px]" data-e2e="leading-icon"><svg class="svg-inline--fa fa-face-smile h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="face-smile" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"></path></svg></span>
+        <div class="flex flex-col items-start justify-center min-w-0 shrink-0" data-e2e="text-container"><span class="font-normal text-base leading-[20px] [font-feature-settings:&quot;lnum&quot;_1,&quot;tnum&quot;_1] text-core-black" data-e2e="title">Test Title</span>
+          <!--v-if-->
+        </div><span role="presentation" class="flex items-center justify-center w-[20px] h-[20px]" data-e2e="chevron-icon"><svg class="svg-inline--fa fa-angle-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path></svg></span>
+      </div><span>Badge</span>
+    </div>
+  </summary>
+  <div data-e2e="content" class="flex items-start w-full mt-16" style="display: none;">
+    <div class="w-[28px] self-stretch shrink-0" data-e2e="indent-space"></div>
+    <div class="flex flex-col flex-[1_0_0] min-w-0"></div>
+  </div>
 </details>"
 `;
 
-exports[`FzCollapse > Snapshots > should match snapshot - open state 1`] = `
-"<details data-v-d76ce47a="" open="" data-e2e="details">
-  <summary data-v-d76ce47a="" data-e2e="summary" class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded font-medium bg-background-alice-blue !text-blue-500">Test Summary<span data-v-d76ce47a="" role="presentation" class="flex items-center justify-center w-[20px] h-[20px] ml-32"><svg class="svg-inline--fa fa-chevron-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M239 111c9.4-9.4 24.6-9.4 33.9 0L465 303c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-175-175L81 337c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L239 111z"></path></svg></span></summary>
-  <div data-v-d76ce47a="" data-e2e="content" class="text-sm">Test Content</div>
+exports[`FzCollapse > Snapshots > should match snapshot - button variant open 1`] = `
+"<details open="" data-e2e="details" class="overflow-clip w-full">
+  <summary data-e2e="summary" class="w-full block cursor-pointer select-none list-none [&amp;::-webkit-details-marker]:hidden">
+    <div class="flex w-full items-center gap-24" data-e2e="header-wrapper">
+      <div class="flex gap-8 items-start cursor-pointer flex-[1_0_0]" data-e2e="header-row"><span role="presentation" class="flex items-center justify-center w-[20px] h-[20px]" data-e2e="leading-icon"><svg class="svg-inline--fa fa-face-smile h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="face-smile" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"></path></svg></span>
+        <div class="flex flex-col items-start justify-center min-w-0 shrink-0" data-e2e="text-container"><span class="font-normal text-base leading-[20px] [font-feature-settings:&quot;lnum&quot;_1,&quot;tnum&quot;_1] text-core-black" data-e2e="title">Test Title</span>
+          <!--v-if-->
+        </div><span role="presentation" class="flex items-center justify-center w-[20px] h-[20px]" data-e2e="chevron-icon"><svg class="svg-inline--fa fa-angle-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M207 143c9.4-9.4 24.6-9.4 33.9 0L401 303c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-143-143L81 337c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L207 143z"></path></svg></span>
+      </div><span>Badge</span>
+    </div>
+  </summary>
+  <div data-e2e="content" class="flex items-start w-full mt-16">
+    <div class="w-[28px] self-stretch shrink-0" data-e2e="indent-space"></div>
+    <div class="flex flex-col flex-[1_0_0] min-w-0">
+      <div>Test Content</div>
+    </div>
+  </div>
 </details>"
 `;
 
-exports[`FzCollapse > Snapshots > should match snapshot - with custom classes 1`] = `
-"<details data-v-d76ce47a="" open="" data-e2e="details">
-  <summary data-v-d76ce47a="" data-e2e="summary" class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded font-medium custom-summary bg-background-alice-blue !text-blue-500">Test Summary<span data-v-d76ce47a="" role="presentation" class="flex items-center justify-center w-[20px] h-[20px] ml-32"><svg class="svg-inline--fa fa-chevron-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M239 111c9.4-9.4 24.6-9.4 33.9 0L465 303c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-175-175L81 337c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L239 111z"></path></svg></span></summary>
-  <div data-v-d76ce47a="" data-e2e="content" class="text-sm custom-content">Test Content</div>
+exports[`FzCollapse > Snapshots > should match snapshot - section variant closed 1`] = `
+"<details data-e2e="details" class="overflow-clip w-full">
+  <summary data-e2e="summary" class="w-full block cursor-pointer select-none list-none [&amp;::-webkit-details-marker]:hidden">
+    <div class="flex w-full items-start" data-e2e="header-wrapper">
+      <div class="flex gap-8 items-start cursor-pointer w-full" data-e2e="header-row"><span role="presentation" class="flex items-center justify-center w-[25px] h-[25px]" data-e2e="leading-icon"><svg class="svg-inline--fa fa-face-smile fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="face-smile" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"></path></svg></span>
+        <div class="flex flex-col items-start justify-center min-w-0 flex-[1_0_0]" data-e2e="text-container"><span class="font-semibold text-[17px] leading-[24px] text-core-black" data-e2e="title">Test Title</span><span class="font-normal text-base leading-[20px] text-grey-500" data-e2e="subtitle">Test Subtitle</span></div><span role="presentation" class="flex items-center justify-center w-[25px] h-[25px]" data-e2e="chevron-icon"><svg class="svg-inline--fa fa-angle-down fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path></svg></span>
+      </div>
+      <!--v-if-->
+    </div>
+  </summary>
+  <div data-e2e="content" class="flex items-start w-full mt-24" style="display: none;">
+    <div class="w-[32px] self-stretch shrink-0" data-e2e="indent-space"></div>
+    <div class="flex flex-col flex-[1_0_0] min-w-0"></div>
+  </div>
 </details>"
 `;
 
-exports[`FzCollapse > Snapshots > should match snapshot - with slots 1`] = `
-"<details data-v-d76ce47a="" data-e2e="details">
-  <summary data-v-d76ce47a="" data-e2e="summary" class="text-grey-500 flex h-32 cursor-pointer select-none list-none items-center text-sm rounded font-medium"><span>Custom Summary</span><span>Custom Icon</span></summary>
-  <div data-v-d76ce47a="" data-e2e="content" class="text-sm" style="display: none;">
-    <div>Custom Content</div>
+exports[`FzCollapse > Snapshots > should match snapshot - section variant open 1`] = `
+"<details open="" data-e2e="details" class="overflow-clip w-full">
+  <summary data-e2e="summary" class="w-full block cursor-pointer select-none list-none [&amp;::-webkit-details-marker]:hidden">
+    <div class="flex w-full items-start" data-e2e="header-wrapper">
+      <div class="flex gap-8 items-start cursor-pointer w-full" data-e2e="header-row"><span role="presentation" class="flex items-center justify-center w-[25px] h-[25px]" data-e2e="leading-icon"><svg class="svg-inline--fa fa-face-smile fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="face-smile" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"></path></svg></span>
+        <div class="flex flex-col items-start justify-center min-w-0 flex-[1_0_0]" data-e2e="text-container"><span class="font-semibold text-[17px] leading-[24px] text-core-black" data-e2e="title">Test Title</span>
+          <!--v-if-->
+        </div><span role="presentation" class="flex items-center justify-center w-[25px] h-[25px]" data-e2e="chevron-icon"><svg class="svg-inline--fa fa-angle-up fa-lg h-[20px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M207 143c9.4-9.4 24.6-9.4 33.9 0L401 303c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-143-143L81 337c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L207 143z"></path></svg></span>
+      </div>
+      <!--v-if-->
+    </div>
+  </summary>
+  <div data-e2e="content" class="flex items-start w-full mt-24">
+    <div class="w-[32px] self-stretch shrink-0" data-e2e="indent-space"></div>
+    <div class="flex flex-col flex-[1_0_0] min-w-0">
+      <div>Test Content</div>
+    </div>
   </div>
 </details>"
 `;

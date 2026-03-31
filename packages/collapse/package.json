@@ -1,7 +1,7 @@
 {
   "name": "@fiscozen/collapse",
   "version": "2.0.0",
-  "description": "Design System Icon Collapse Component",
+  "description": "Design System Collapse and Accordion Components",
   "scripts": {
     "coverage": "vitest run --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
@@ -14,6 +14,7 @@
   "keywords": [],
   "author": "Riccardo Agnoletto",
   "peerDependencies": {
+    "@fiscozen/container": "workspace:^",
     "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.13"
