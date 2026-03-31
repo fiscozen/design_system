@@ -1,4 +1,4 @@
-import { toValue, watchEffect, nextTick, type MaybeRefOrGetter } from "vue";
+import { toValue, watchEffect, nextTick, type MaybeRefOrGetter, type ShallowRef } from "vue";
 import type { UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
 
@@ -48,6 +48,8 @@ const waitForPendingAndSyncState = async <T>(
     target.response.value = source.response.value;
     target.error.value = source.error.value;
     target.data.value = source.data.value;
+    (target.isFetching as ShallowRef<boolean>).value =
+      source.isFetching.value;
   };
 
   syncState();

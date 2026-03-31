@@ -2,7 +2,6 @@ import {
   toValue,
   watch,
   nextTick,
-  isReadonly,
   type MaybeRefOrGetter,
   type ShallowRef,
 } from "vue";
@@ -12,6 +11,7 @@ import { normalizeUseFzFetchOptions } from "../../utils/options";
 import { handleFetchError } from "../../utils/error";
 import { parseResponseBody } from "../../utils/response";
 import { isEmptyResponseStatus } from "../empty-response/predicate";
+import { makeIsFetchingWritable } from "../../utils/fetch-result";
 import { wrapWithDeduplication } from "../deduplication/wrapper";
 
 /**
@@ -236,12 +236,15 @@ export const createModifiedFetchRequest = <T>(
     ? normalizeUseFzFetchOptions(useFetchOptions)
     : {};
 
-  return state
+  const result = state
     .fzFetcher<T>(fullUrl, interceptedRequest, {
       ...normalizedOptions,
       immediate: false,
     })
     .json();
+
+  makeIsFetchingWritable(result);
+  return result;
 };
 
 /**
@@ -270,11 +273,8 @@ export const syncFetchResultState = <T>(
       target.statusCode.value = source.statusCode.value;
       target.data.value = isEmptyResponse ? null : source.data.value;
       target.error.value = isEmptyResponse ? null : source.error.value;
-      // VueUse may expose isFetching as Readonly; skip assign to avoid Vue warning
-      if (!isReadonly(target.isFetching)) {
-        (target.isFetching as ShallowRef<boolean>).value =
-          source.isFetching.value;
-      }
+      (target.isFetching as ShallowRef<boolean>).value =
+        source.isFetching.value;
     },
     { immediate: true, deep: false },
   );
