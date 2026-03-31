@@ -13,7 +13,7 @@
  *   title="Title"
  *   amount="0,00 €"
  *   :descriptions="['Description 1', 'Description 2']"
- *   @fzmenu:click="onMenuClick"
+ *   @fzaction:click="onActionClick"
  * />
  */
 import { computed } from 'vue';

@@ -40,7 +40,7 @@ Each list element matches `FzCardListItemProps`: `title` (required), optional `b
 #### Events
 
 - **`FzCardListItem`** emits `fzaction:click` with `(actionIndex, action)` when the arrow or one dropdown entry is chosen, and `update:isOpen` when the dropdown open state changes.
-- **`FzCardList`** re-emits `fzaction:click` as `(itemIndex, actionIndex, action)` so the consumer knows which row was acted on. It also listens for `fzmenu:click` on each row and re-emits with `itemIndex` (useful if you wrap or extend rows that emit that event).
+- **`FzCardList`** re-emits `fzaction:click` as `(itemIndex, actionIndex, action)` so the consumer knows which row was acted on.
 
 ### Design decisions
 
