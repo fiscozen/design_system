@@ -4,7 +4,7 @@ import type {
   UseFzFetchParams,
   UseFzFetchReturn,
 } from "./types";
-import { toValue, isRef, type MaybeRefOrGetter, computed } from "vue";
+import { toValue, isRef, nextTick, type MaybeRefOrGetter, computed } from "vue";
 import { state } from "./setup/state";
 import { getUrlWithQueryParams, applyTrailingSlash } from "./utils/url";
 import { injectCsrfToken } from "./utils/csrf";
@@ -140,13 +140,14 @@ const createFetchResult = <T>(
   const wrappedResult = wrapperChain.apply(baseFetchResult, context);
 
   // If we disabled immediate (interceptors or reactive params) and user wanted immediate,
-  // run execute() once so the first request goes through the wrapper chain
+  // run execute() once so the first request goes through the wrapper chain.
+  // nextTick guarantees Vue's reactivity cycle is consistent when execute() runs.
   if (shouldExecuteImmediate) {
-    // Use nextTick to ensure all reactive setup is complete
-    Promise.resolve().then(() => {
-      wrappedResult.execute().catch(() => {
-        // Errors are already handled in execute() and stored in error.value
-        // We just need to catch to prevent unhandled promise rejection
+    nextTick(() => {
+      wrappedResult.execute().catch((err: unknown) => {
+        if (state.globalDebug) {
+          console.debug("[useFzFetch] Auto-execute error:", err);
+        }
       });
     });
   }
