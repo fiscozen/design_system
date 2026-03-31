@@ -187,21 +187,19 @@ export class DeduplicationManager {
     
     this.pendingRequests.set(key, fetchResult);
 
-    // Clean up when request completes (success or error)
-    // We watch the isFetching state to detect completion
+    // Clean up when request completes (isFetching transitions from true to false).
+    // immediate: false so the initial false (request not yet started) is ignored;
+    // the callback only fires on actual value changes.
     const unwatch = watch(
       () => fetchResult.isFetching.value,
       (isFetching: boolean) => {
         if (!isFetching) {
-          // Request completed, clean up after nextTick to allow
-          // other pending requests to sync state before cleanup
-          // This ensures deduplicated requests can access the result
           nextTick(() => {
             this.cleanupRequest(key);
           });
         }
       },
-      { immediate: true },
+      { immediate: false },
     );
 
     // Store watch cleanup function for explicit cleanup (e.g., in clear())
