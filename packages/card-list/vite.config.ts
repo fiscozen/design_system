@@ -22,7 +22,15 @@ export default defineConfig({
       name: 'FzCardList',
     },
     rollupOptions: {
-      external: ['vue', '@fiscozen/icons', '@fiscozen/card'],
+      external: [
+        'vue',
+        '@fiscozen/icons',
+        '@fiscozen/action',
+        '@fiscozen/badge',
+        '@fiscozen/button',
+        '@fiscozen/divider',
+        '@fiscozen/dropdown',
+      ],
       output: {
         globals: {
           vue: 'Vue',

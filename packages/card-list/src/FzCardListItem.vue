@@ -3,7 +3,7 @@
  * FzCardListItem Component
  *
  * A list item row used inside FzCardList.
- * Displays an optional badge, row actions (legacy menu, single arrow, or action dropdown),
+ * Displays an optional badge, row actions (single arrow, or action dropdown),
  * a status indicator dot, a bold title with an optional amount on the right, and optional description lines.
  *
  * @component
@@ -23,29 +23,33 @@ import { FzIconDropdown } from '@fiscozen/dropdown';
 import { FzIcon } from '@fiscozen/icons';
 import { FzDivider } from '@fiscozen/divider';
 import type { FzCardListItemProps, FzCardListItemEmits } from './types';
-import { FzActionProps } from '@fiscozen/action';
+import type { FzActionProps } from '@fiscozen/action';
 
-const props = defineProps<FzCardListItemProps>();
+const { actions, badge, value } = defineProps<FzCardListItemProps>();
 
 const emit = defineEmits<FzCardListItemEmits>();
 
 type ActionsMode = 'none' | 'single' | 'multiple';
 
 const actionsMode = computed<ActionsMode>(() => {
-  if (!props.actions?.length) return 'none';
-  if (props.actions.length === 1) return 'single';
+  if (!actions?.length) return 'none';
+  if (actions.length === 1) return 'single';
   return 'multiple';
 });
 
 function emitSingleAction() {
-  const list = props.actions;
-  if (list?.length === 1) {
-    emit('fzaction:click', 0, list[0]);
+  if (!actions || actions.length !== 1) {
+    return;
   }
+  emit('fzaction:click', 0, actions[0]);
 }
 
-const hasTitleOnly = computed(() => !props.badge && !props.value);
-const hasAmount = computed(() => !hasTitleOnly.value && !!props.value);
+function emitActionClick(actionIndex: number, action: FzActionProps) {
+  emit('fzaction:click', actionIndex, action);
+}
+
+const hasTitleOnly = computed(() => !badge && !value);
+const hasAmount = computed(() => !hasTitleOnly.value && !!value);
 </script>
 
 <template>
@@ -87,7 +91,7 @@ const hasAmount = computed(() => !hasTitleOnly.value && !!props.value);
           iconName="ellipsis-vertical"
           variant="invisible"
           aria-label="Open menu"
-          @fzaction:click="(actionIndex: number, action: FzActionProps) => emit('fzaction:click', actionIndex, action)"
+          @fzaction:click="emitActionClick"
           @update:isOpen="emit('update:isOpen', $event)"
         />
       </div>
