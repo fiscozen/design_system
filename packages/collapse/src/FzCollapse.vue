@@ -30,7 +30,7 @@ watch(isOpen, (val) => {
   if (val) {
     accordion?.notifyOpen(collapseId)
   }
-})
+}, { immediate: true })
 
 const handleToggle = (e: ToggleEvent) => {
   if (e.newState === 'open' && isOpen.value === false) {
