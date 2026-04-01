@@ -17,7 +17,7 @@
     "@fiscozen/container": "workspace:^",
     "@fiscozen/icons": "workspace:^",
     "tailwindcss": "^3.4.1",
-    "vue": "^3.4.13"
+    "vue": "^3.5.0"
   },
   "devDependencies": {
     "@fiscozen/eslint-config": "workspace:^",
