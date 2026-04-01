@@ -969,9 +969,12 @@ importers:
       '@fiscozen/button':
         specifier: workspace:*
         version: link:../button
+      '@fiscozen/container':
+        specifier: workspace:*
+        version: link:../container
       '@fiscozen/divider':
-        specifier: ^1.0.1
-        version: 1.0.1(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))
+        specifier: workspace:*
+        version: link:../divider
       '@fiscozen/dropdown':
         specifier: workspace:*
         version: link:../dropdown
@@ -4104,12 +4107,6 @@ packages:
   '@eslint/js@8.57.1':
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-
-  '@fiscozen/divider@1.0.1':
-    resolution: {integrity: sha512-2v+t8b/humTWYwRyZsmTlwaPCOE/vrAx5fvI+RFPkiRPG+2uUZ29pZvPeL/REENrEvmd4MA4JQWjRu0lwgc6RA==}
-    peerDependencies:
-      tailwindcss: ^3.4.1
-      vue: ^3.4.13
 
   '@floating-ui/core@1.7.4':
     resolution: {integrity: sha512-C3HlIdsBxszvm5McXlB8PeOEWfBhcGBTZGkGlWc2U0KFY5IwG5OQEuQ8rq52DZmcHDlPLd+YFBK+cZcytwIFWg==}
@@ -9421,11 +9418,6 @@ snapshots:
       - supports-color
 
   '@eslint/js@8.57.1': {}
-
-  '@fiscozen/divider@1.0.1(tailwindcss@3.4.19(yaml@2.8.2))(vue@3.5.26(typescript@5.3.3))':
-    dependencies:
-      tailwindcss: 3.4.19(yaml@2.8.2)
-      vue: 3.5.26(typescript@5.3.3)
 
   '@floating-ui/core@1.7.4':
     dependencies:

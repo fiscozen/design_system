@@ -1,4 +1,4 @@
-import { mount } from "@vue/test-utils";
+import { mount, config } from "@vue/test-utils";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { FzActionProps } from "@fiscozen/action";
 import FzCardListItem from "../FzCardListItem.vue";
@@ -15,21 +15,37 @@ const actionB: FzActionProps = {
   label: "Action B",
 };
 
-/** Status indicator icons: full circle in title-only row, circle-small in title+amount row */
+/** Status indicator icons (circle-small in both title-only and title+value rows) */
 function indicatorIcons(wrapper: ReturnType<typeof mount>) {
   return wrapper.findAllComponents({ name: "FzIcon" }).filter((w) => {
     const name = w.props("name");
-    return name === "circle" || name === "circle-small";
+    return name === "circle-small";
   });
 }
 
 function descriptionParagraphs(wrapper: ReturnType<typeof mount>) {
-  return wrapper.findAll("p.text-sm.text-grey-500");
+  const block = wrapper.find(".gap-section-content-none");
+  if (!block.exists()) return [];
+  return block.findAll("p");
 }
 
 const badgeDraft = { text: "Bozza", tone: "dark" as const };
 
 beforeEach(() => {
+  // Mock IntersectionObserver for FzFloating / dropdown (not in jsdom)
+  global.IntersectionObserver = class IntersectionObserver {
+    constructor() {}
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  } as any;
+
+  config.global.directives = {
+    bold: () => {},
+    color: () => {},
+    small: () => {},
+  };
+
   Object.defineProperty(window, "matchMedia", {
     writable: true,
     value: vi.fn().mockImplementation((query) => ({
@@ -109,9 +125,7 @@ describe("FzCardListItem", () => {
         props: { title: "Item" },
       });
       await wrapper.vm.$nextTick();
-      const valueEl = wrapper.find(
-        "p.text-blue-500.text-base.whitespace-nowrap",
-      );
+      const valueEl = wrapper.find("p.text-base.whitespace-nowrap");
       expect(valueEl.exists()).toBe(false);
     });
 
@@ -216,14 +230,14 @@ describe("FzCardListItem", () => {
         expect(indicatorIcons(wrapper)).toHaveLength(0);
       });
 
-      it("should render circle icon when showIndicator is true (title-only layout)", async () => {
+      it("should render circle-small icon when showIndicator is true (title-only layout)", async () => {
         const wrapper = mount(FzCardListItem, {
           props: { title: "Item", showIndicator: true },
         });
         await wrapper.vm.$nextTick();
         const icons = indicatorIcons(wrapper);
         expect(icons).toHaveLength(1);
-        expect(icons[0].props("name")).toBe("circle");
+        expect(icons[0].props("name")).toBe("circle-small");
       });
 
       it("should render circle-small icon when showIndicator is true (with badge and amount)", async () => {

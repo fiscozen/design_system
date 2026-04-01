@@ -1,41 +1,53 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzCardList > Snapshots > should match snapshot - default state 1`] = `"<div></div>"`;
+exports[`FzCardList > Snapshots > should match snapshot - default state 1`] = `"<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch"></div>"`;
 
 exports[`FzCardList > Snapshots > should match snapshot - with items 1`] = `
-"<div>
-  <div class="hover:bg-semantic-info-50 p-8 rounded my-8 cursor-pointer">
-    <div class="flex items-center justify-between mb-4">
-      <div></div>
+"<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch">
+  <div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded cursor-pointer">
+    <!-- Header -->
+    <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-space-between">
+      <!-- Badge -->
+      <div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch"></div><!-- Actions -->
       <!--v-if-->
-    </div>
-    <div class="flex items-center justify-between gap-8 mb-4">
-      <div class="flex min-w-0 flex-1 items-center gap-8"><span role="presentation" class="flex items-center justify-center size-[12.5px]"><svg class="svg-inline--fa fa-circle-small fa-xs h-[10px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-small" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M0 256a160 160 0 1 1 320 0A160 160 0 1 1 0 256z"></path></svg></span>
+    </div><!-- Title and value -->
+    <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-space-between">
+      <!-- Title and indicator -->
+      <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-center layout-default min-w-0">
+        <!-- Indicator --><span role="presentation" class="flex items-center justify-center size-[12.5px]"><svg class="svg-inline--fa fa-circle-small fa-xs h-[10px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-small" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M0 256a160 160 0 1 1 320 0A160 160 0 1 1 0 256z"></path></svg></span><!-- Title -->
         <p class="min-w-0 flex-1 truncate">Item 1</p>
-      </div>
-      <p class="text-blue-500 text-base whitespace-nowrap">1.200,00 €</p>
-    </div>
+      </div><!-- Value -->
+      <p class="text-base whitespace-nowrap">1.200,00 €</p>
+    </div><!-- Descriptions -->
+    <!--v-if-->
   </div>
   <div class="w-full my-0">
     <div class="border-solid border-t-1 border-grey-200"></div>
   </div>
-  <div class="hover:bg-semantic-info-50 p-8 rounded my-8 cursor-pointer">
-    <div class="flex items-center justify-between mb-4">
+  <div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded cursor-pointer">
+    <!-- Header -->
+    <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-space-between">
+      <!-- Badge -->
       <div class="flex items-center justify-center truncate max-w-full gap-4 py-4 px-12 h-24 w-fit rounded-2xl bg-grey-500 text-core-white" title="New">
         <!--v-if-->
         <p class="text-[inherit] text-sm">New</p>
         <!--v-if-->
-      </div>
+      </div><!-- Actions -->
       <!--v-if-->
-    </div>
-    <div class="flex items-center justify-between gap-8 mb-4">
-      <div class="flex min-w-0 flex-1 items-center gap-8">
+    </div><!-- Title and value -->
+    <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-space-between">
+      <!-- Title and indicator -->
+      <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-center layout-default min-w-0">
+        <!-- Indicator -->
         <!--v-if-->
+        <!-- Title -->
         <p class="min-w-0 flex-1 truncate">Item 2</p>
-      </div>
+      </div><!-- Value -->
       <!--v-if-->
+    </div><!-- Descriptions -->
+    <div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-none align-items-stretch">
+      <p>Due date: 2024-03-01</p>
     </div>
-    <p class="text-sm text-grey-500 m-0 p-0 mb-4">Due date: 2024-03-01</p>
   </div>
   <div class="w-full my-0">
     <div class="border-solid border-t-1 border-grey-200"></div>

@@ -1,6 +1,8 @@
 import type { FzActionLinkProps, FzActionProps } from "@fiscozen/action";
 import type { FzBadgeTone } from "@fiscozen/badge";
 
+export type ActionsMode = "none" | "single" | "multiple";
+
 export interface FzCardListItemProps {
   /**
    * Badge displayed inside the card at the top-left.
@@ -58,8 +60,7 @@ export type FzCardListItem = FzCardListItemProps;
 export type FzCardListProps = {
   /**
    * Array of card item data for data-driven rendering.
-   * When provided and non-empty, each item is rendered as an FzCard.
-   * When absent or empty, the default slot is used instead.
+   * Each item is rendered as an FzCardListItem.
    */
   items: FzCardListItem[];
 };
