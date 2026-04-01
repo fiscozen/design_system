@@ -16,75 +16,102 @@
  *   @fzaction:click="onActionClick"
  * />
  */
-import { computed } from 'vue';
-import { FzBadge } from '@fiscozen/badge';
-import { FzIconButton } from '@fiscozen/button';
-import { FzIconDropdown } from '@fiscozen/dropdown';
-import { FzIcon } from '@fiscozen/icons';
-import { FzDivider } from '@fiscozen/divider';
-import type { FzCardListItemProps, FzCardListItemEmits } from './types';
-import type { FzActionProps } from '@fiscozen/action';
+import { computed } from "vue";
+import { FzBadge } from "@fiscozen/badge";
+import { FzIconButton } from "@fiscozen/button";
+import { FzIconDropdown } from "@fiscozen/dropdown";
+import { FzIcon } from "@fiscozen/icons";
+import { FzDivider } from "@fiscozen/divider";
+import type {
+  ActionsMode,
+  FzCardListItemProps,
+  FzCardListItemEmits,
+} from "./types";
+import type { FzActionProps } from "@fiscozen/action";
+import { FzContainer } from "@fiscozen/container";
 
 const { actions, badge, value } = defineProps<FzCardListItemProps>();
 
 const emit = defineEmits<FzCardListItemEmits>();
 
-type ActionsMode = 'none' | 'single' | 'multiple';
-
 const actionsMode = computed<ActionsMode>(() => {
-  if (!actions?.length) return 'none';
-  if (actions.length === 1) return 'single';
-  return 'multiple';
+  if (!actions?.length) return "none";
+  if (actions.length === 1) return "single";
+  return "multiple";
 });
 
 function emitSingleAction() {
   if (!actions || actions.length !== 1) {
     return;
   }
-  emit('fzaction:click', 0, actions[0]);
+  emit("fzaction:click", 0, actions[0]);
+}
+
+function handleRowClick(e: MouseEvent) {
+  if (actionsMode.value !== "single") return;
+  e.stopPropagation();
+  emitSingleAction();
 }
 
 function emitActionClick(actionIndex: number, action: FzActionProps) {
-  emit('fzaction:click', actionIndex, action);
+  emit("fzaction:click", actionIndex, action);
 }
 
 const hasTitleOnly = computed(() => !badge && !value);
-const hasAmount = computed(() => !hasTitleOnly.value && !!value);
+const hasValue = computed(() => !hasTitleOnly.value && !!value);
 </script>
 
 <template>
-  <div class="hover:bg-semantic-info-50 p-8 rounded my-8 cursor-pointer">
-    <div class="flex items-center justify-between mb-4">
-      <FzBadge
-        v-if="badge"
-        :tone="badge.tone"
-        variant="text"
-      >
+  <FzContainer
+    gap="xs"
+    class="p-8 hover:bg-semantic-info-50 hover:rounded cursor-pointer"
+    @click="handleRowClick"
+  >
+    <!-- Header -->
+    <FzContainer horizontal alignItems="center" layout="space-between">
+      <!-- Badge -->
+      <FzBadge v-if="badge" :tone="badge.tone" variant="text">
         {{ badge.text }}
       </FzBadge>
-      <div v-else-if="hasTitleOnly" class="flex min-w-0 flex-1 items-center gap-8">
+      <!-- Title only -->
+      <FzContainer
+        v-else-if="hasTitleOnly"
+        horizontal
+        gap="xs"
+        alignItems="center"
+        class="min-w-0 flex-1"
+      >
+        <!-- Indicator -->
         <FzIcon
           v-if="showIndicator"
-          name="circle"
+          name="circle-small"
           size="xs"
           variant="fas"
           v-color:blue
-        />
+        >
+        </FzIcon>
+        <!-- Title -->
         <p v-bold class="min-w-0 flex-1 truncate">{{ title }}</p>
-      </div>
-      <div v-else></div>
-      <div
+      </FzContainer>
+      <FzContainer v-else></FzContainer>
+      <!-- Actions -->
+      <FzContainer
         v-if="actionsMode !== 'none'"
-        class="shrink-0 flex items-center justify-end"
+        horizontal
+        gap="xs"
+        alignItems="center"
+        layout="expand-last"
+        class="shrink-0"
       >
+        <!-- Single action -->
         <FzIconButton
           v-if="actionsMode === 'single'"
           iconName="arrow-right"
           variant="invisible"
           environment="frontoffice"
           aria-label="Open"
-          @click.stop="emitSingleAction"
         />
+        <!-- Multiple actions -->
         <FzIconDropdown
           v-else
           :actions="actions!"
@@ -94,11 +121,20 @@ const hasAmount = computed(() => !hasTitleOnly.value && !!value);
           @fzaction:click="emitActionClick"
           @update:isOpen="emit('update:isOpen', $event)"
         />
-      </div>
-    </div>
+      </FzContainer>
+    </FzContainer>
 
-    <div class="flex items-center justify-between gap-8 mb-4" v-if="!hasTitleOnly">
-      <div class="flex min-w-0 flex-1 items-center gap-8">
+    <!-- Title and value -->
+    <FzContainer
+      v-if="!hasTitleOnly"
+      horizontal
+      gap="sm"
+      alignItems="center"
+      layout="space-between"
+    >
+      <!-- Title and indicator -->
+      <FzContainer horizontal gap="xs" alignItems="center" class="min-w-0">
+        <!-- Indicator -->
         <FzIcon
           v-if="showIndicator"
           name="circle-small"
@@ -106,24 +142,21 @@ const hasAmount = computed(() => !hasTitleOnly.value && !!value);
           variant="fas"
           v-color:blue
         />
+        <!-- Title -->
         <p v-bold class="min-w-0 flex-1 truncate">{{ title }}</p>
-      </div>
-      <p
-        v-if="hasAmount"
-        v-bold
-        class="text-blue-500 text-base whitespace-nowrap"
-      >
+      </FzContainer>
+      <!-- Value -->
+      <p v-if="hasValue" v-bold v-color:blue class="text-base whitespace-nowrap">
         {{ value }}
       </p>
-    </div>
+    </FzContainer>
 
-    <p
-      v-for="(desc, i) in descriptions"
-      :key="i"
-      class="text-sm text-grey-500 m-0 p-0 mb-4"
-    >
-      {{ desc }}
-    </p>
-  </div>
+    <!-- Descriptions -->
+    <FzContainer v-if="descriptions" gap="none">
+      <p v-for="(desc, i) in descriptions" :key="i" v-small v-color:grey>
+        {{ desc }}
+      </p>
+    </FzContainer>
+  </FzContainer>
   <FzDivider margin="none" />
 </template>

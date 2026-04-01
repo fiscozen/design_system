@@ -19,6 +19,7 @@
 import FzCardListItem from './FzCardListItem.vue';
 import type { FzActionProps } from '@fiscozen/action';
 import { FzCardListProps, FzCardListEmits } from './types';
+import { FzContainer } from '@fiscozen/container';
 
 defineProps<FzCardListProps>();
 
@@ -34,7 +35,7 @@ function emitItemActionClick(
 </script>
 
 <template>
-  <div>
+  <FzContainer gap="xs">
     <FzCardListItem
       v-for="(item, index) in items"
       :key="index"
@@ -49,5 +50,5 @@ function emitItemActionClick(
           emitItemActionClick(index, actionIndex, action)
       "
     />
-  </div>
+  </FzContainer>
 </template>

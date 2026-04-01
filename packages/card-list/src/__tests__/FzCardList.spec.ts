@@ -1,4 +1,4 @@
-import { mount } from "@vue/test-utils";
+import { mount, config } from "@vue/test-utils";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { FzActionProps } from "@fiscozen/action";
 import FzCardList from "../FzCardList.vue";
@@ -10,6 +10,20 @@ const sampleAction: FzActionProps = {
 };
 
 beforeEach(() => {
+  // Mock IntersectionObserver for FzFloating / dropdown (not in jsdom)
+  global.IntersectionObserver = class IntersectionObserver {
+    constructor() {}
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  } as any;
+
+  config.global.directives = {
+    bold: () => {},
+    color: () => {},
+    small: () => {},
+  };
+
   Object.defineProperty(window, "matchMedia", {
     writable: true,
     value: vi.fn().mockImplementation((query) => ({

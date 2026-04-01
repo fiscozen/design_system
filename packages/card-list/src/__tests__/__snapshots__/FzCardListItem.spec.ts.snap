@@ -1,14 +1,18 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzCardListItem > Snapshots > should match snapshot - full featured item 1`] = `
-"<div class="hover:bg-semantic-info-50 p-8 rounded my-8 cursor-pointer">
-  <div class="flex items-center justify-between mb-4">
+"<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded cursor-pointer">
+  <!-- Header -->
+  <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-space-between">
+    <!-- Badge -->
     <div class="flex items-center justify-center truncate max-w-full gap-4 py-4 px-12 h-24 w-fit rounded-2xl bg-grey-500 text-core-white" title="Bozza">
       <!--v-if-->
       <p class="text-[inherit] text-sm">Bozza</p>
       <!--v-if-->
-    </div>
-    <div class="shrink-0 flex items-center justify-end">
+    </div><!-- Actions -->
+    <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-center layout-expand-last shrink-0">
+      <!-- Single action -->
+      <!-- Multiple actions -->
       <div iconname="ellipsis-vertical" hasnotification="false" label="Open dropdown" variant="invisible" aria-label="Open menu">
         <div class="inline-flex w-full sm:w-auto"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Open dropdown"><div class="flex items-center justify-items-center"><span role="presentation" class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-ellipsis-vertical h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="ellipsis-vertical" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512"><path class="" fill="currentColor" d="M64 368a48 48 0 1 0 0 96 48 48 0 1 0 0-96zm0-160a48 48 0 1 0 0 96 48 48 0 1 0 0-96zM112 96A48 48 0 1 0 16 96a48 48 0 1 0 96 0z"></path></svg></span></div>
         <!--v-if-->
@@ -20,15 +24,19 @@ exports[`FzCardListItem > Snapshots > should match snapshot - full featured item
       <!--teleport end-->
     </div>
   </div>
-</div>
-<div class="flex items-center justify-between gap-8 mb-4">
-  <div class="flex min-w-0 flex-1 items-center gap-8"><span role="presentation" class="flex items-center justify-center size-[12.5px]"><svg class="svg-inline--fa fa-circle-small fa-xs h-[10px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-small" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M0 256a160 160 0 1 1 320 0A160 160 0 1 1 0 256z"></path></svg></span>
+</div><!-- Title and value -->
+<div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-space-between">
+  <!-- Title and indicator -->
+  <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-center layout-default min-w-0">
+    <!-- Indicator --><span role="presentation" class="flex items-center justify-center size-[12.5px]"><svg class="svg-inline--fa fa-circle-small fa-xs h-[10px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-small" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M0 256a160 160 0 1 1 320 0A160 160 0 1 1 0 256z"></path></svg></span><!-- Title -->
     <p class="min-w-0 flex-1 truncate">Fattura #001</p>
-  </div>
-  <p class="text-blue-500 text-base whitespace-nowrap">1.200,00 €</p>
+  </div><!-- Value -->
+  <p class="text-base whitespace-nowrap">1.200,00 €</p>
+</div><!-- Descriptions -->
+<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-none align-items-stretch">
+  <p>Cliente: Rossi S.r.l.</p>
+  <p>Scadenza: 31/03/2024</p>
 </div>
-<p class="text-sm text-grey-500 m-0 p-0 mb-4">Cliente: Rossi S.r.l.</p>
-<p class="text-sm text-grey-500 m-0 p-0 mb-4">Scadenza: 31/03/2024</p>
 </div>
 <div class="w-full my-0">
   <div class="border-solid border-t-1 border-grey-200"></div>
@@ -36,14 +44,21 @@ exports[`FzCardListItem > Snapshots > should match snapshot - full featured item
 `;
 
 exports[`FzCardListItem > Snapshots > should match snapshot - minimal (title only) 1`] = `
-"<div class="hover:bg-semantic-info-50 p-8 rounded my-8 cursor-pointer">
-  <div class="flex items-center justify-between mb-4">
-    <div class="flex min-w-0 flex-1 items-center gap-8">
+"<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded cursor-pointer">
+  <!-- Header -->
+  <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-space-between">
+    <!-- Badge -->
+    <!-- Title only -->
+    <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-center layout-default min-w-0 flex-1">
+      <!-- Indicator -->
       <!--v-if-->
+      <!-- Title -->
       <p class="min-w-0 flex-1 truncate">Item Title</p>
-    </div>
+    </div><!-- Actions -->
     <!--v-if-->
-  </div>
+  </div><!-- Title and value -->
+  <!--v-if-->
+  <!-- Descriptions -->
   <!--v-if-->
 </div>
 <div class="w-full my-0">
@@ -52,13 +67,19 @@ exports[`FzCardListItem > Snapshots > should match snapshot - minimal (title onl
 `;
 
 exports[`FzCardListItem > Snapshots > should match snapshot - with showIndicator 1`] = `
-"<div class="hover:bg-semantic-info-50 p-8 rounded my-8 cursor-pointer">
-  <div class="flex items-center justify-between mb-4">
-    <div class="flex min-w-0 flex-1 items-center gap-8"><span role="presentation" class="flex items-center justify-center size-[12.5px]"><svg class="svg-inline--fa fa-circle fa-xs h-[10px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"></path></svg></span>
+"<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded cursor-pointer">
+  <!-- Header -->
+  <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-space-between">
+    <!-- Badge -->
+    <!-- Title only -->
+    <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-center layout-default min-w-0 flex-1">
+      <!-- Indicator --><span role="presentation" class="flex items-center justify-center size-[12.5px]"><svg class="svg-inline--fa fa-circle-small fa-xs h-[10px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-small" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M0 256a160 160 0 1 1 320 0A160 160 0 1 1 0 256z"></path></svg></span><!-- Title -->
       <p class="min-w-0 flex-1 truncate">Item</p>
-    </div>
+    </div><!-- Actions -->
     <!--v-if-->
-  </div>
+  </div><!-- Title and value -->
+  <!--v-if-->
+  <!-- Descriptions -->
   <!--v-if-->
 </div>
 <div class="w-full my-0">

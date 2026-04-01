@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/card-list",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Design System CardList component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -11,13 +11,14 @@
   "main": "src/index.ts",
   "type": "module",
   "keywords": [],
-  "author": "",
+  "author": "Francesca Vago",
   "dependencies": {
     "@fiscozen/action": "workspace:*",
     "@fiscozen/badge": "workspace:*",
     "@fiscozen/button": "workspace:*",
-    "@fiscozen/divider": "^1.0.1",
-    "@fiscozen/dropdown": "workspace:*"
+    "@fiscozen/divider": "workspace:*",
+    "@fiscozen/dropdown": "workspace:*",
+    "@fiscozen/container": "workspace:*"
   },
   "peerDependencies": {
     "@fiscozen/icons": "workspace:^",
