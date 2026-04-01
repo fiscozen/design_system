@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/card-list",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Design System CardList component",
   "scripts": {
     "coverage": "vitest run --coverage",
