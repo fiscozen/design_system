@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzCardListItem > Snapshots > should match snapshot - full featured item 1`] = `
-"<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded cursor-pointer">
+"<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded">
   <!-- Header -->
   <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-space-between">
     <!-- Badge -->
@@ -13,7 +13,7 @@ exports[`FzCardListItem > Snapshots > should match snapshot - full featured item
     <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-center layout-expand-last shrink-0">
       <!-- Single action -->
       <!-- Multiple actions -->
-      <div iconname="ellipsis-vertical" hasnotification="false" label="Open dropdown" variant="invisible" aria-label="Open menu">
+      <div iconname="ellipsis-vertical" hasnotification="false" label="Open dropdown" variant="invisible" aria-label="Mostra azioni">
         <div class="inline-flex w-full sm:w-auto"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-transparent gap-8 h-44 px-12 min-w-96 bg-core-white text-grey-500 !border-grey-200 hover:bg-grey-100 hover:!border-grey-200 focus:bg-core-white focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label="Open dropdown"><div class="flex items-center justify-items-center"><span role="presentation" class="flex items-center justify-center w-[20px] h-[20px]"><svg class="svg-inline--fa fa-ellipsis-vertical h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="ellipsis-vertical" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512"><path class="" fill="currentColor" d="M64 368a48 48 0 1 0 0 96 48 48 0 1 0 0-96zm0-160a48 48 0 1 0 0 96 48 48 0 1 0 0-96zM112 96A48 48 0 1 0 16 96a48 48 0 1 0 96 0z"></path></svg></span></div>
         <!--v-if-->
         <!--v-if--></button>
@@ -44,7 +44,7 @@ exports[`FzCardListItem > Snapshots > should match snapshot - full featured item
 `;
 
 exports[`FzCardListItem > Snapshots > should match snapshot - minimal (title only) 1`] = `
-"<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded cursor-pointer">
+"<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded">
   <!-- Header -->
   <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-space-between">
     <!-- Badge -->
@@ -67,7 +67,7 @@ exports[`FzCardListItem > Snapshots > should match snapshot - minimal (title onl
 `;
 
 exports[`FzCardListItem > Snapshots > should match snapshot - with showIndicator 1`] = `
-"<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded cursor-pointer">
+"<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded">
   <!-- Header -->
   <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-space-between">
     <!-- Badge -->
