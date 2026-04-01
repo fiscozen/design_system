@@ -465,6 +465,74 @@ describe("Integration Tests", () => {
       expect(data.value).toBeNull();
     });
 
+    it("DELETE with 204 No Content and throwOnError: true does not throw", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+      });
+      global.fetch = vi.fn(() =>
+        Promise.resolve(new Response(null, { status: 204 })),
+      ) as typeof fetch;
+      const { useDelete } = useActions<{ id: number }>("users");
+      const { data, error, execute } = useDelete({ throwOnError: true });
+      await expect(execute(1)).resolves.not.toThrow();
+      expect(error.value).toBeNull();
+      expect(data.value).toBeNull();
+    });
+
+    it("CREATE with 204 No Content and throwOnError: true does not throw", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+      });
+      global.fetch = vi.fn(() =>
+        Promise.resolve(new Response(null, { status: 204 })),
+      ) as typeof fetch;
+      const { useCreate } = useActions<{ id: number; name: string }>("users");
+      const { data, error, execute } = useCreate({ throwOnError: true });
+      await expect(execute({ name: "John" })).resolves.not.toThrow();
+      expect(error.value).toBeNull();
+      expect(data.value).toBeNull();
+    });
+
+    it("UPDATE with 204 No Content and throwOnError: true does not throw", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+      });
+      global.fetch = vi.fn(() =>
+        Promise.resolve(new Response(null, { status: 204 })),
+      ) as typeof fetch;
+      const { useUpdate } = useActions<{ id: number; name: string }>("users");
+      const { data, error, execute } = useUpdate({ throwOnError: true });
+      await expect(execute(1, { name: "Jane" })).resolves.not.toThrow();
+      expect(error.value).toBeNull();
+      expect(data.value).toBeNull();
+    });
+
+    it("DELETE with 205 Reset Content and throwOnError: true does not throw", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+      });
+      global.fetch = vi.fn(() =>
+        Promise.resolve(new Response(null, { status: 205 })),
+      ) as typeof fetch;
+      const { useDelete } = useActions<{ id: number }>("users");
+      const { data, error, execute } = useDelete({ throwOnError: true });
+      await expect(execute(1)).resolves.not.toThrow();
+      expect(error.value).toBeNull();
+      expect(data.value).toBeNull();
+    });
+
+    it("DELETE with 500 and throwOnError: true still throws", async () => {
+      setupFzFetcher({
+        baseUrl: "https://api.example.com",
+      });
+      global.fetch = vi.fn(() =>
+        Promise.resolve(new Response("Internal Server Error", { status: 500 })),
+      ) as typeof fetch;
+      const { useDelete } = useActions<{ id: number }>("users");
+      const { execute } = useDelete({ throwOnError: true });
+      await expect(execute(1)).rejects.toThrow();
+    });
+
     it("on non-204 error (e.g. 500) data retains previous value and is not cleared", async () => {
       setupFzFetcher({
         baseUrl: "https://api.example.com",

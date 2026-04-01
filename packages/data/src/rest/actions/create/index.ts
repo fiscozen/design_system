@@ -1,6 +1,7 @@
 import { shallowRef } from "vue";
 import { useFzFetch } from "../../http";
 import { removeTrailingSlash } from "../../http/utils/url";
+import { isEmptyResponseStatus } from "../../http/features/empty-response/predicate";
 import { CONTENT_TYPE_JSON } from "../../http/common";
 import type { UseCreateAction } from "./types";
 import type { MutationActionOptions } from "../shared/types";
@@ -41,7 +42,14 @@ export const createCreateAction = <T>(
           headers: { "Content-Type": CONTENT_TYPE_JSON },
         }, mutationOptionsToFetchOptions(options));
 
-        await response.execute(options?.throwOnError ?? false);
+        try {
+          await response.execute(options?.throwOnError ?? false);
+        } catch (err) {
+          if (isEmptyResponseStatus(response.statusCode.value)) {
+            return response;
+          }
+          throw err;
+        }
         return response;
       },
       data,
