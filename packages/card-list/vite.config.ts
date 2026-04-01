@@ -1,41 +1,42 @@
-import { fileURLToPath, URL } from 'node:url'
-import { resolve } from 'node:path';
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import dts from 'vite-plugin-dts'
+import { fileURLToPath, URL } from "node:url";
+import { resolve } from "node:path";
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import dts from "vite-plugin-dts";
 
 export default defineConfig({
   plugins: [
     vue(),
     dts({
       insertTypesEntry: true,
-    })
+    }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
   },
   build: {
     lib: {
-      entry: resolve(__dirname, './src/index.ts'),
-      name: 'FzCardList',
+      entry: resolve(__dirname, "./src/index.ts"),
+      name: "FzCardList",
     },
     rollupOptions: {
       external: [
-        'vue',
-        '@fiscozen/icons',
-        '@fiscozen/action',
-        '@fiscozen/badge',
-        '@fiscozen/button',
-        '@fiscozen/divider',
-        '@fiscozen/dropdown',
+        "vue",
+        "@fiscozen/icons",
+        "@fiscozen/action",
+        "@fiscozen/badge",
+        "@fiscozen/button",
+        "@fiscozen/divider",
+        "@fiscozen/dropdown",
+        "@fiscozen/container",
       ],
       output: {
         globals: {
-          vue: 'Vue',
+          vue: "Vue",
         },
       },
-    }
-  }
-})
+    },
+  },
+});

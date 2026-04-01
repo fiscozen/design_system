@@ -4,10 +4,12 @@ exports[`FzCardList > Snapshots > should match snapshot - default state 1`] = `"
 
 exports[`FzCardList > Snapshots > should match snapshot - with items 1`] = `
 "<div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch">
-  <div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded cursor-pointer">
+  <div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded">
     <!-- Header -->
     <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-space-between">
       <!-- Badge -->
+      <!-- Empty container -->
+      <!-- needed to keep the icon button aligned to the right when no badge is provided -->
       <div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-base align-items-stretch"></div><!-- Actions -->
       <!--v-if-->
     </div><!-- Title and value -->
@@ -24,7 +26,7 @@ exports[`FzCardList > Snapshots > should match snapshot - with items 1`] = `
   <div class="w-full my-0">
     <div class="border-solid border-t-1 border-grey-200"></div>
   </div>
-  <div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded cursor-pointer">
+  <div data-v-da7f5873="" class="fz-container fz-container--vertical gap-section-content-xs align-items-stretch p-8 hover:bg-semantic-info-50 hover:rounded">
     <!-- Header -->
     <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-base align-items-center layout-space-between">
       <!-- Badge -->

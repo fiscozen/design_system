@@ -173,6 +173,24 @@ describe("FzCardListItem", () => {
       expect(buttons[0].props("iconName")).toBe("arrow-right");
     });
 
+    it("should apply cursor-pointer on the row only when exactly one action is passed", async () => {
+      const none = mount(FzCardListItem, { props: { title: "Item" } });
+      const many = mount(FzCardListItem, {
+        props: { title: "Item", actions: [actionA, actionB] },
+      });
+      const one = mount(FzCardListItem, {
+        props: { title: "Item", actions: [actionA] },
+      });
+      await Promise.all([
+        none.vm.$nextTick(),
+        many.vm.$nextTick(),
+        one.vm.$nextTick(),
+      ]);
+      expect(none.find(".cursor-pointer").exists()).toBe(false);
+      expect(many.find(".cursor-pointer").exists()).toBe(false);
+      expect(one.find(".cursor-pointer").exists()).toBe(true);
+    });
+
     it("should render dropdown when more than one action is passed", async () => {
       const wrapper = mount(FzCardListItem, {
         props: { title: "Item", actions: [actionA, actionB] },
@@ -275,13 +293,26 @@ describe("FzCardListItem", () => {
   });
 
   describe("Events", () => {
+    it("should emit fzaction:click when single-action row (title) is clicked", async () => {
+      const wrapper = mount(FzCardListItem, {
+        props: { title: "Item", actions: [actionA] },
+      });
+      await wrapper.vm.$nextTick();
+
+      await wrapper.get("p.truncate").trigger("click");
+
+      expect(wrapper.emitted("fzaction:click")).toBeTruthy();
+      expect(wrapper.emitted("fzaction:click")).toHaveLength(1);
+      expect(wrapper.emitted("fzaction:click")![0]).toEqual([0, actionA]);
+    });
+
     it("should emit fzaction:click when single-action arrow is clicked", async () => {
       const wrapper = mount(FzCardListItem, {
         props: { title: "Item", actions: [actionA] },
       });
       await wrapper.vm.$nextTick();
 
-      const button = wrapper.get('button[aria-label="Open"]');
+      const button = wrapper.getComponent({ name: "FzIconButton" }).get("button");
       await button.trigger("click");
 
       expect(wrapper.emitted("fzaction:click")).toBeTruthy();
@@ -295,7 +326,7 @@ describe("FzCardListItem", () => {
       });
       await wrapper.vm.$nextTick();
 
-      const button = wrapper.get('button[aria-label="Open"]');
+      const button = wrapper.getComponent({ name: "FzIconButton" }).get("button");
       await button.trigger("click");
       await button.trigger("click");
       await button.trigger("click");

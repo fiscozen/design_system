@@ -64,7 +64,10 @@ const hasValue = computed(() => !hasTitleOnly.value && !!value);
 <template>
   <FzContainer
     gap="xs"
-    class="p-8 hover:bg-semantic-info-50 hover:rounded cursor-pointer"
+    :class="[
+      'p-8 hover:bg-semantic-info-50 hover:rounded',
+      { 'cursor-pointer': actionsMode === 'single' },
+    ]"
     @click="handleRowClick"
   >
     <!-- Header -->
@@ -93,6 +96,8 @@ const hasValue = computed(() => !hasTitleOnly.value && !!value);
         <!-- Title -->
         <p v-bold class="min-w-0 flex-1 truncate">{{ title }}</p>
       </FzContainer>
+      <!-- Empty container -->
+      <!-- needed to keep the icon button aligned to the right when no badge is provided -->
       <FzContainer v-else></FzContainer>
       <!-- Actions -->
       <FzContainer
@@ -109,7 +114,7 @@ const hasValue = computed(() => !hasTitleOnly.value && !!value);
           iconName="arrow-right"
           variant="invisible"
           environment="frontoffice"
-          aria-label="Open"
+          aria-label="Link all'elemento"
         />
         <!-- Multiple actions -->
         <FzIconDropdown
@@ -117,7 +122,7 @@ const hasValue = computed(() => !hasTitleOnly.value && !!value);
           :actions="actions!"
           iconName="ellipsis-vertical"
           variant="invisible"
-          aria-label="Open menu"
+          aria-label="Mostra azioni"
           @fzaction:click="emitActionClick"
           @update:isOpen="emit('update:isOpen', $event)"
         />

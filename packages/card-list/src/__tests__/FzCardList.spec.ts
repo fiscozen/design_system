@@ -186,7 +186,9 @@ describe("FzCardList", () => {
       await wrapper.vm.$nextTick();
 
       const items = wrapper.findAllComponents({ name: "FzCardListItem" });
-      const button = items[1].get('button[aria-label="Open"]');
+      const button = items[1]
+        .getComponent({ name: "FzIconButton" })
+        .get("button");
       await button.trigger("click");
 
       expect(wrapper.emitted("fzaction:click")).toBeTruthy();
@@ -206,7 +208,7 @@ describe("FzCardList", () => {
       await wrapper.vm.$nextTick();
 
       const item = wrapper.findComponent({ name: "FzCardListItem" });
-      const button = item.get('button[aria-label="Open"]');
+      const button = item.getComponent({ name: "FzIconButton" }).get("button");
       await button.trigger("click");
 
       expect(wrapper.emitted("fzaction:click")).toBeTruthy();
