@@ -91,7 +91,7 @@ const staticLabeldClass: string = "flex flex-col";
 const staticContainerClass: string = "flex flex-col gap-10";
 
 /** Base layout for the checkboxes container */
-const staticSlotContainerClass: string = "flex items-start";
+const staticSlotContainerClass: string = "flex self-stretch";
 
 /** Dynamic label classes based on spacing and disabled state */
 const computedLabelClass = computed<string[]>(() => [

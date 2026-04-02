@@ -18,7 +18,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`]
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="false" aria-invalid="false">
+  <div class="flex self-stretch text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="false" aria-invalid="false">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -145,7 +145,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - disabled 1`] = `
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="false" aria-invalid="false">
+  <div class="flex self-stretch text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="false" aria-invalid="false">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -223,7 +223,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="false" aria-invalid="false">
+  <div class="flex self-stretch text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="false" aria-invalid="false">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -395,7 +395,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-16 flex-row" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="false" aria-invalid="false">
+  <div class="flex self-stretch text-base gap-16 flex-row" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="false" aria-invalid="false">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -522,7 +522,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - required 1`] = `
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="true" aria-invalid="false">
+  <div class="flex self-stretch text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-required="true" aria-invalid="false">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -600,7 +600,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with error 1`] = 
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-describedby="fz-checkbox-group-100000000001-2a84k-error" aria-required="false" aria-invalid="true">
+  <div class="flex self-stretch text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-describedby="fz-checkbox-group-100000000001-2a84k-error" aria-required="false" aria-invalid="true">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
@@ -702,7 +702,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with help text 1`
       - aria-required: Indicates if selection is mandatory
       - aria-invalid: Indicates validation state
     -->
-  <div class="flex items-start text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-describedby="fz-checkbox-group-100000000001-2a84k-help" aria-required="false" aria-invalid="false">
+  <div class="flex self-stretch text-base gap-8 flex-col" id="fz-checkbox-group-100000000001-2a84k" role="group" aria-labelledby="fz-checkbox-group-100000000001-2a84k-label" aria-describedby="fz-checkbox-group-100000000001-2a84k-help" aria-required="false" aria-invalid="false">
     <!-- 
         Render each checkbox option
         Supports both simple checkboxes and parent-child hierarchies
