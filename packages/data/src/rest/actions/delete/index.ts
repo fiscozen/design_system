@@ -1,10 +1,9 @@
 import { shallowRef } from "vue";
 import { useFzFetch } from "../../http";
 import { joinPathSegments } from "../../http/utils/url";
-import { isEmptyResponseStatus } from "../../http/features/empty-response/predicate";
 import type { UseDeleteAction } from "./types";
 import type { MutationActionOptions } from "../shared/types";
-import { executeMutation } from "../shared/error-handling";
+import { executeMutation, executeWithEmptyResponseGuard } from "../shared/error-handling";
 import { mutationOptionsToFetchOptions } from "../shared/normalize";
 import { validatePrimaryKey } from "../shared/validation";
 
@@ -32,15 +31,7 @@ export const createDeleteAction = <T>(
           method: "DELETE",
         }, mutationOptionsToFetchOptions(options));
 
-        try {
-          await response.execute(options?.throwOnError ?? false);
-        } catch (err) {
-          if (isEmptyResponseStatus(response.statusCode.value)) {
-            return response;
-          }
-          throw err;
-        }
-        return response;
+        return executeWithEmptyResponseGuard(response, options?.throwOnError ?? false);
       },
       data,
       error,

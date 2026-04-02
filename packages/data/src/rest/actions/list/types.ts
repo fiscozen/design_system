@@ -1,4 +1,4 @@
-import type { ShallowRef, MaybeRefOrGetter, Reactive } from "vue";
+import type { Ref, MaybeRefOrGetter, Reactive } from "vue";
 import type { QueryActionOptions, QueryActionReturn } from "../shared/types";
 
 /**
@@ -109,7 +109,7 @@ export interface UseListActionReturn<T>
   /**
    * The response data from server (array of entities)
    */
-  data: ShallowRef<T[] | null>;
+  data: Readonly<Ref<T[] | null>>;
 
   /**
    * Reactive filters object - modify directly to trigger refetch

@@ -1,5 +1,30 @@
 import type { ShallowRef } from "vue";
 import type { UseFzFetchReturn } from "../../http/types";
+import { isEmptyResponseStatus } from "../../http/features/empty-response/predicate";
+import { normalizeError } from "../../http/utils/error";
+
+/**
+ * Executes a fetch response, suppressing parse errors for empty-body status codes (204, 205).
+ *
+ * VueUse throws a SyntaxError when .json() is called on an empty body.
+ * The sync watcher in wrapWithEmptyResponseNormalizer clears data/error,
+ * but the original error is still thrown by execute(). This guard catches it
+ * and returns the (already cleaned) response for empty-body statuses.
+ */
+export async function executeWithEmptyResponseGuard<T>(
+  response: UseFzFetchReturn<T>,
+  throwOnError: boolean,
+): Promise<UseFzFetchReturn<T>> {
+  try {
+    await response.execute(throwOnError);
+  } catch (err) {
+    if (isEmptyResponseStatus(response.statusCode.value)) {
+      return response;
+    }
+    throw err;
+  }
+  return response;
+}
 
 /**
  * Executes a mutation action with standardized error handling
@@ -46,8 +71,7 @@ export async function executeMutation<T>(
       return;
     }
   } catch (err: unknown) {
-    // Normalize error to Error type
-    const normalizedError = err instanceof Error ? err : new Error(String(err));
+    const normalizedError = normalizeError(err);
     error.value = normalizedError;
     // Explicitly set data to null on error for consistency
     data.value = null;

@@ -1,4 +1,4 @@
-import { reactive, toValue, watch } from "vue";
+import { reactive, toValue, watch, onScopeDispose, getCurrentScope } from "vue";
 import { useFzFetch } from "../../http";
 import { removeTrailingSlash } from "../../http/utils/url";
 import type { UseFzFetchReturn } from "../../http/types";
@@ -157,8 +157,19 @@ export const createListBase = <TResponse, TData>(
       },
       { deep: true, immediate: false },
     );
-    // Note: watch() is automatically cleaned up by Vue when the component using this
-    // composable unmounts. The setTimeout is short-lived (debounce delay) and safe.
+
+    // Debounce timeouts outlive the watcher if the component unmounts mid-wait.
+    // Without cleanup, the callback fires on a destroyed scope — causing
+    // stale fetches and potential memory leaks.
+    // Guard: onScopeDispose warns when called outside an effect scope (e.g. in tests).
+    if (getCurrentScope()) {
+      onScopeDispose(() => {
+        if (watchTimeout !== null) {
+          clearTimeout(watchTimeout);
+          watchTimeout = null;
+        }
+      });
+    }
   }
 
   // Return normalized response with reactive objects

@@ -25,37 +25,11 @@ export const createRetrieveAction = <T>(
     );
   }
 
-  // Validate initial pk value (only once, not on every computed evaluation)
-  const initialPk = toValue(pk);
-  if (
-    initialPk === null ||
-    initialPk === undefined ||
-    (typeof initialPk === "string" && initialPk.trim() === "") ||
-    (typeof initialPk === "number" && isNaN(initialPk))
-  ) {
-    throw new Error(
-      "[createRetrieveAction] Primary key (pk) must be a valid non-empty string or number",
-    );
-  }
+  validatePrimaryKey(toValue(pk), "createRetrieveAction");
 
-  // Create reactive URL with validation for reactive values
   const url = computed(() => {
     const resolvedPk = toValue(pk);
-
-    // Validate pk when resolved (handles reactive values that change)
-    if (
-      resolvedPk === null ||
-      resolvedPk === undefined ||
-      (typeof resolvedPk === "string" && resolvedPk.trim() === "") ||
-      (typeof resolvedPk === "number" && isNaN(resolvedPk))
-    ) {
-      throw new Error(
-        "[createRetrieveAction] Primary key (pk) must be a valid non-empty string or number",
-      );
-    }
-
     validatePrimaryKey(resolvedPk, "createRetrieveAction");
-
     return joinPathSegments(basePath, String(resolvedPk));
   });
   const response = useFzFetch<T>(url, normalizeOptions(options));

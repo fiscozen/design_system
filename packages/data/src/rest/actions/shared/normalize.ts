@@ -270,7 +270,7 @@ export const normalizeResponse = <T>(
     execute: async () => {
       await originalExecute(throwOnError);
     },
-  } as QueryActionReturn<T>;
+  };
 };
 
 /**
@@ -297,7 +297,7 @@ export const normalizeListResponse = <T>(
     execute: async () => {
       await originalExecute(throwOnError);
     },
-  } as QueryActionReturn<T[]>;
+  };
 };
 
 /**
@@ -360,5 +360,5 @@ export const normalizePaginatedListResponse = <T>(
     execute: async () => {
       await originalExecute(throwOnError);
     },
-  } as QueryActionReturn<T[]>;
+  };
 };
