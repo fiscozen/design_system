@@ -1,5 +1,13 @@
 # @fiscozen/data
 
+## 0.2.4
+
+### Patch Changes
+
+- ef0702c: Fix isFetching staying false with reactive body/headers and interceptor-modified requests
+- 2932bf9: Fix `immediate: true` not working when global interceptors are configured
+- e875735: Fix throw error on 204
+
 ## 0.2.3
 
 ### Patch Changes

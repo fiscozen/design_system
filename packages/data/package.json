@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/data",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Design System Data Layer",
   "scripts": {
     "coverage": "vitest run --coverage",
