@@ -1,5 +1,13 @@
 # @fiscozen/datepicker
 
+## 3.0.5
+
+### Patch Changes
+
+- 5a39547: Remove icons from dependencies (remians a peerDep)
+- Updated dependencies [5000905]
+  - @fiscozen/icons@1.0.1
+
 ## 3.0.4
 
 ### Patch Changes
