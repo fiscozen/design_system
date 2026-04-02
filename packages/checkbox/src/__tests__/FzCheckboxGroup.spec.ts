@@ -524,7 +524,7 @@ describe("FzCheckboxGroup", () => {
       await wrapper.vm.$nextTick();
       const container = wrapper.find("[role='group']");
       expect(container.classes()).toContain("flex");
-      expect(container.classes()).toContain("items-start");
+      expect(container.classes()).toContain("self-stretch");
     });
 
     it("should apply horizontal layout classes when horizontal is true", async () => {

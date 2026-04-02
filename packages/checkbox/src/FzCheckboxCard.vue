@@ -69,7 +69,7 @@ const computedIconColor = computed<string>(() => {
 
 const showImage = computed(() => props.variant === "vertical" || !!props.imageUrl);
 
-const staticInputClass: string = "w-0 h-0 peer fz-hidden-input";
+const staticInputClass: string = "peer h-0 w-0 absolute fz-hidden-input";
 
 const labelClass = computed(() => ({
   "flex-col": props.variant === "vertical",
