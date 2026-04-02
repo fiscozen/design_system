@@ -110,7 +110,7 @@ const createFetchResult = <T>(
   // request goes through the wrapper chain; we call execute() manually after wrapping.
   const baseFetchOptions = useFetchOptions
     ? {
-        ...(useFetchOptions ?? {}),
+        ...useFetchOptions,
         immediate: mustDisableImmediate ? false : useFetchOptions.immediate,
       }
     : mustDisableImmediate

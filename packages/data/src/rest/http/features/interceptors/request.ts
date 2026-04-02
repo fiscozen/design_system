@@ -232,9 +232,7 @@ export const createModifiedFetchRequest = <T>(
     );
   }
 
-  const normalizedOptions = useFetchOptions
-    ? (useFetchOptions ?? {})
-    : {};
+  const normalizedOptions = useFetchOptions ?? {};
 
   const result = state
     .fzFetcher<T>(fullUrl, interceptedRequest, {
