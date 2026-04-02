@@ -7,7 +7,7 @@ import {
 } from "vue";
 import type { UseFzFetchOptions, UseFzFetchReturn } from "../../types";
 import { state } from "../../setup/state";
-import { normalizeUseFzFetchOptions } from "../../utils/options";
+
 import { handleFetchError } from "../../utils/error";
 import { parseResponseBody } from "../../utils/response";
 import { isEmptyResponseStatus } from "../empty-response/predicate";
@@ -233,7 +233,7 @@ export const createModifiedFetchRequest = <T>(
   }
 
   const normalizedOptions = useFetchOptions
-    ? normalizeUseFzFetchOptions(useFetchOptions)
+    ? (useFetchOptions ?? {})
     : {};
 
   const result = state
@@ -346,31 +346,6 @@ export const waitForFetchCompletion = <T>(
 
   return new Promise<void>((resolve) => {
     setupFetchCompletionWatcher(fetchResult, resolve);
-  });
-};
-
-/**
- * Cleans up watcher and stops execution when an error occurs
- *
- * Ensures request completion and proper cleanup before returning.
- * Only clears currentWatch if it still refers to the watcher being cleaned up,
- * preventing race conditions when execute() is called multiple times rapidly.
- *
- * @param modifiedFetchResult - Modified fetch result to wait for
- * @param unwatchSync - Function to stop watching
- * @param cleanupCallback - Callback to conditionally set currentWatch to null
- */
-/** Reserved for future use: cleanup watcher on error to prevent memory leaks. */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- reserved for future error-path cleanup
-const _cleanupWatcherOnError = async <T>(
-  modifiedFetchResult: UseFzFetchReturn<T>,
-  unwatchSync: () => void,
-  cleanupCallback: (watcherToCleanup: () => void) => void,
-): Promise<void> => {
-  await waitForFetchCompletion(modifiedFetchResult);
-  nextTick(() => {
-    unwatchSync();
-    cleanupCallback(unwatchSync);
   });
 };
 

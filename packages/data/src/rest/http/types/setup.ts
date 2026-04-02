@@ -11,7 +11,18 @@ import type {
  */
 export interface SetupFzFetcherOptions {
   /**
-   * The base URL that will be prefixed to all urls unless urls are absolute
+   * The base URL prefixed to all relative URLs.
+   *
+   * Accepts MaybeRefOrGetter for compatibility with reactive app config,
+   * but the value is resolved once at setup time via `toValue()`.
+   * Subsequent changes to the underlying ref/getter are NOT propagated
+   * to the deduplication manager, interceptors, or createFetch instance.
+   *
+   * Reactive propagation could be implemented (e.g. by watching the
+   * ref and re-initializing dependents), but in practice the base URL
+   * is fixed for the entire application lifecycle — it mirrors the
+   * deployment environment, not runtime state. If you do need to
+   * change it, call `setupFzFetcher` again with the new value.
    *
    * @required
    */

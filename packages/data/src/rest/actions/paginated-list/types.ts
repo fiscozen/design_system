@@ -1,4 +1,4 @@
-import type { ShallowRef, Reactive, ComputedRef } from "vue";
+import type { Ref, Reactive, ComputedRef } from "vue";
 import type { QueryActionOptions, QueryActionReturn } from "../shared/types";
 import type {
   UseListActionParams,
@@ -88,7 +88,7 @@ export interface UsePaginatedListActionReturn<T>
   /**
    * The data array extracted from paginated response (e.g., results)
    */
-  data: ShallowRef<T[] | null>;
+  data: Readonly<Ref<T[] | null>>;
 
   /**
    * Pagination metadata extracted from API response

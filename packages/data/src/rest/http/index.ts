@@ -9,7 +9,7 @@ import { state } from "./setup/state";
 import { getUrlWithQueryParams, applyTrailingSlash } from "./utils/url";
 import { injectCsrfToken } from "./utils/csrf";
 import { mergeHeaders } from "./utils/headers";
-import { normalizeUseFzFetchOptions } from "./utils/options";
+
 import { DEFAULT_HTTP_METHOD } from "./common";
 import { makeIsFetchingWritable } from "./utils/fetch-result";
 import { WrapperChain } from "./wrappers/chain";
@@ -110,7 +110,7 @@ const createFetchResult = <T>(
   // request goes through the wrapper chain; we call execute() manually after wrapping.
   const baseFetchOptions = useFetchOptions
     ? {
-        ...normalizeUseFzFetchOptions(useFetchOptions),
+        ...(useFetchOptions ?? {}),
         immediate: mustDisableImmediate ? false : useFetchOptions.immediate,
       }
     : mustDisableImmediate

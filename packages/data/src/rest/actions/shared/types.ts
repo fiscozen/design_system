@@ -1,4 +1,4 @@
-import type { ShallowRef, MaybeRefOrGetter } from "vue";
+import type { Ref, MaybeRefOrGetter } from "vue";
 
 // ============================================================
 // BASE TYPES
@@ -11,17 +11,17 @@ export interface BaseActionReturn<T> {
   /**
    * Any errors that may have occurred
    */
-  error: ShallowRef<Error | null>;
+  error: Readonly<Ref<Error | null>>;
 
   /**
    * The response data from server
    */
-  data: ShallowRef<T | null>;
+  data: Readonly<Ref<T | null>>;
 
   /**
    * Indicates if the action is currently being executed
    */
-  isLoading: Readonly<ShallowRef<boolean>>;
+  isLoading: Readonly<Ref<boolean>>;
 }
 
 /**
