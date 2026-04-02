@@ -1,5 +1,11 @@
 # @fiscozen/checkbox
 
+## 3.0.2
+
+### Patch Changes
+
+- 2ce9f77: Fix FzCheckboxCard spacing
+
 ## 3.0.1
 
 ### Patch Changes
