@@ -1381,9 +1381,10 @@ const AccordionDynamicActions: Story = {
       const actionButton = subRowDiv.querySelector('button')
       if (actionButton) {
         await userEvent.click(actionButton)
+        const body = within(document.body)
         await waitFor(() => {
-          expect(canvas.getByText('Scarica PDF')).toBeInTheDocument()
-          expect(canvas.getByText('Invia promemoria')).toBeInTheDocument()
+          expect(body.getByText('Scarica PDF')).toBeInTheDocument()
+          expect(body.getByText('Invia promemoria')).toBeInTheDocument()
         })
       }
     })
