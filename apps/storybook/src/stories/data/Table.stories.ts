@@ -1261,6 +1261,142 @@ const CustomNewItemButton: Story = {
   })
 }
 
-export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns, EpmtyTable, Radio, List, ListWithSelection, CustomNewItemButton }
+const AccordionDynamicActions: Story = {
+  args: {
+    modelValue: [
+      {
+        id: 'inv-001',
+        nome: 'Mario',
+        cognome: 'Rossi',
+        email: 'mario.rossi@example.it',
+        phone_number: '333-1111111',
+        subRows: [
+          { id: 'sub-001a', nome: 'Fattura Q1', cognome: '2.500,00 €', email: 'emessa', phone_number: '01/03/2026' },
+          { id: 'sub-001b', nome: 'Fattura Q2', cognome: '1.800,00 €', email: 'bozza', phone_number: '15/06/2026' },
+        ],
+      },
+      {
+        id: 'inv-002',
+        nome: 'Giulia',
+        cognome: 'Bianchi',
+        email: 'giulia.bianchi@example.it',
+        phone_number: '333-2222222',
+        subRows: [
+          { id: 'sub-002a', nome: 'Fattura Q1', cognome: '3.200,00 €', email: 'emessa', phone_number: '10/02/2026' },
+          { id: 'sub-002b', nome: 'Fattura Q2', cognome: '4.100,00 €', email: 'scaduta', phone_number: '01/05/2026' },
+          { id: 'sub-002c', nome: 'Fattura Q3', cognome: '2.900,00 €', email: 'bozza', phone_number: '01/09/2026' },
+        ],
+      },
+      {
+        id: 'inv-003',
+        nome: 'Luca',
+        cognome: 'Verdi',
+        email: 'luca.verdi@example.it',
+        phone_number: '333-3333333',
+        subRows: [],
+      },
+    ],
+    actionLabel: '',
+    actions: (row: Record<string, any>) => {
+      switch (row.email) {
+        case 'emessa':
+          return { items: [
+            { type: 'button' as const, label: 'Scarica PDF' },
+            { type: 'button' as const, label: 'Invia promemoria' },
+          ] }
+        case 'bozza':
+          return { items: [
+            { type: 'button' as const, label: 'Modifica' },
+            { type: 'button' as const, label: 'Emetti fattura' },
+            { type: 'button' as const, label: 'Elimina bozza' },
+          ] }
+        case 'scaduta':
+          return { items: [
+            { type: 'button' as const, label: 'Scarica PDF' },
+            { type: 'button' as const, label: 'Segna come pagata' },
+            { type: 'button' as const, label: 'Sollecita pagamento' },
+          ] }
+        default:
+          return { items: [
+            { type: 'button' as const, label: 'Visualizza dettaglio' },
+            { type: 'button' as const, label: 'Esporta' },
+          ] }
+      }
+    },
+    placeholder: 'Nessun valore',
+    title: 'Accordion with dynamic sub-row actions',
+    subtitle: 'Each sub-row receives its own data in the actions function, enabling context-aware action menus',
+    variant: 'accordion',
+    onFztableRowactionclick: fn(),
+  },
+  render: (args) => ({
+    setup() {
+      const handleRowAction = (index: number, actionListItem: ActionlistItem, rowData: Record<string, any>) => {
+        args.onFztableRowactionclick(index, actionListItem, rowData)
+      }
+      return { args, handleRowAction }
+    },
+    components: {
+      FzColumn,
+      FzTable,
+    },
+    template: `
+      <div class="p-12 h-[600px]">
+        <FzTable v-bind="args" @fztable:rowactionclick="handleRowAction">
+          <FzColumn header="Descrizione" field="nome" />
+          <FzColumn header="Importo" field="cognome" />
+          <FzColumn header="Stato" field="email" />
+          <FzColumn header="Data" field="phone_number" />
+        </FzTable>
+      </div>
+    `,
+  }),
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify accordion table renders', async () => {
+      const table = canvas.getByRole('table')
+      await expect(table).toBeInTheDocument()
+    })
+
+    await step('Verify parent rows are rendered', async () => {
+      await expect(canvas.getByText('Mario')).toBeInTheDocument()
+      await expect(canvas.getByText('Giulia')).toBeInTheDocument()
+      await expect(canvas.getByText('Luca')).toBeInTheDocument()
+    })
+
+    await step('Expand first parent row and verify sub-rows appear', async () => {
+      const marioCell = canvas.getByText('Mario')
+      const parentRow = marioCell.closest('.grid')!
+      await userEvent.click(parentRow)
+      await waitFor(() => {
+        expect(canvas.getByText('Fattura Q1')).toBeInTheDocument()
+        expect(canvas.getByText('Fattura Q2')).toBeInTheDocument()
+      })
+    })
+
+    await step('Verify sub-rows get context-specific actions (open dropdown on "emessa" sub-row)', async () => {
+      const subRowCell = canvas.getAllByText('Fattura Q1')[0]
+      const subRowDiv = subRowCell.closest('.grid')!
+      const actionButton = subRowDiv.querySelector('button')
+      if (actionButton) {
+        await userEvent.click(actionButton)
+        await waitFor(() => {
+          expect(canvas.getByText('Scarica PDF')).toBeInTheDocument()
+          expect(canvas.getByText('Invia promemoria')).toBeInTheDocument()
+        })
+      }
+    })
+
+    await step('Verify row without subRows has no expand icon', async () => {
+      const lucaCell = canvas.getByText('Luca')
+      const rowDiv = lucaCell.closest('.grid')!
+      const expandIcons = rowDiv.querySelectorAll('svg[data-icon="angle-right"], svg[data-icon="angle-up"]')
+      await expect(expandIcons.length).toBe(0)
+    })
+  },
+}
+
+export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, AccordionDynamicActions, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns, EpmtyTable, Radio, List, ListWithSelection, CustomNewItemButton }
 
 export default meta

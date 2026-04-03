@@ -111,7 +111,8 @@ const handleClick = (event: MouseEvent) => {
         bodyStaticClasses,
         '!p-[12px]',
         'sticky right-0 z-[2] flex justify-center items-start',
-        { 'bg-core-white': !hover, 'bg-background-alice-blue': hover, 'left-shadow': props.isOverflowing },
+        rowClass,
+        { 'bg-core-white': !hover, '!bg-background-alice-blue': hover, 'left-shadow': props.isOverflowing },
       ]">
         <FzIconDropdown :actions="(typeof actions === 'function' ? actions(props.data as T) : actions).items as FzActionProps[]" buttonVariant="invisible" :openerDisabled="actionsDisabled"
           iconName="ellipsis-vertical" size="sm" @fzaction:click="
