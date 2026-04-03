@@ -32,6 +32,12 @@ module.exports = function (plop) {
         type: "input",
         name: "component",
         message: "Insert component name",
+        validate: (value) => {
+          if (/^[a-zA-Z][a-zA-Z0-9\s_-]*$/.test(value.trim())) {
+            return true;
+          }
+          return "Component name must start with a letter (e.g. DatePicker, Date Picker, date_picker)";
+        },
       },
       {
         type: "input",
