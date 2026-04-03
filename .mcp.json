@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "description": "Up-to-date documentation for Vue, Vite, Vitest, Storybook, Tailwind, and other libraries"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-playwright@latest"],
+      "description": "Browser automation for visual testing, accessibility inspection, and screenshot comparison"
+    }
+  }
+}
