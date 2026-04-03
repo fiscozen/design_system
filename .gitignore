@@ -36,3 +36,14 @@ coverage
 .nx/cache
 .nx/workspace-data
 shell.nix
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+!.env.dist
+
+# AI tooling (local configs only)
+.claude/settings.local.json
+.serena/cache/
+.serena/project.local.yml

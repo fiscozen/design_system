@@ -1,0 +1,54 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm test*)",
+      "Bash(pnpm run test*)",
+      "Bash(pnpm build*)",
+      "Bash(pnpm run build*)",
+      "Bash(pnpm storybook*)",
+      "Bash(pnpm run storybook*)",
+      "Bash(pnpm run lint*)",
+      "Bash(pnpm changeset)",
+      "Bash(pnpm changeset:status)",
+      "Bash(pnpm run release:check*)",
+      "Bash(node scripts/release-check.mjs*)",
+      "Bash(npx nx *)",
+      "Bash(pnpm nx *)",
+      "Bash(pnpm generate:component*)",
+      "Bash(pnpm run generate:component*)",
+      "Bash(gh pr *)",
+      "Bash(gh issue *)",
+      "WebFetch(domain:github.com)",
+      "WebSearch"
+    ],
+    "deny": [
+      "Bash(pnpm changeset:publish*)",
+      "Bash(pnpm run changeset:publish*)",
+      "Bash(pnpm changeset:version*)",
+      "Bash(pnpm run changeset:version*)",
+      "Bash(pnpm publish*)",
+      "Bash(npm publish*)",
+      "Bash(*--no-verify*)",
+      "Bash(*SKIP_CHANGESET_CHECK*)",
+      "Bash(*SKIP_BUILD_CHECK*)",
+      "Bash(*SKIP_STORYBOOK_CHECK*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Edit|Write|Bash",
+        "hooks": [".claude/hooks/guard-sensitive-files.sh"]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [".claude/hooks/lint-on-save.sh"]
+      }
+    ]
+  }
+}
