@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
 import { Fz{{pascalCase component}} } from '..'
 
 describe('Fz{{pascalCase component}}', () => {
@@ -31,17 +31,17 @@ describe('Fz{{pascalCase component}}', () => {
   // PROPS TESTS
   // ============================================
   describe('Props', () => {
-    // Add tests for each prop your component accepts
+    // Add tests for each prop your component accepts.
     // Example for variant prop:
     // describe('variant prop', () => {
     //   it.each([
-    //     ['primary', 'bg-blue-500'],
-    //     ['secondary', 'bg-core-white'],
-    //   ])('should apply %s variant classes', (variant, expectedClass) => {
+    //     ['primary', 'expected-behavior'],
+    //     ['secondary', 'expected-behavior'],
+    //   ])('should apply %s variant', (variant, expected) => {
     //     const wrapper = mount(Fz{{pascalCase component}}, {
     //       props: { variant }
     //     })
-    //     expect(wrapper.find('button').classes()).toContain(expectedClass)
+    //     // Test observable behavior, NOT CSS class names
     //   })
     // })
 
@@ -50,7 +50,6 @@ describe('Fz{{pascalCase component}}', () => {
         const wrapper = mount(Fz{{pascalCase component}}, {
           props: { disabled: true }
         })
-        // Adjust selector based on your component's structure
         const element = wrapper.find('button, input, [role="button"]')
         if (element.exists()) {
           expect(element.attributes('disabled')).toBeDefined()
@@ -64,26 +63,6 @@ describe('Fz{{pascalCase component}}', () => {
         const element = wrapper.find('button, input, [role="button"]')
         if (element.exists()) {
           expect(element.attributes('aria-disabled')).toBe('true')
-        }
-      })
-    })
-
-    describe('environment prop', () => {
-      it('should apply frontoffice height by default', () => {
-        const wrapper = mount(Fz{{pascalCase component}})
-        const element = wrapper.find('button, input, [role="button"]')
-        if (element.exists()) {
-          expect(element.classes()).toContain('h-44')
-        }
-      })
-
-      it('should apply backoffice height when environment is backoffice', () => {
-        const wrapper = mount(Fz{{pascalCase component}}, {
-          props: { environment: 'backoffice' }
-        })
-        const element = wrapper.find('button, input, [role="button"]')
-        if (element.exists()) {
-          expect(element.classes()).toContain('h-32')
         }
       })
     })
@@ -113,14 +92,14 @@ describe('Fz{{pascalCase component}}', () => {
       }
     })
 
-    // Add v-model test if component supports it:
+    // v-model test (enable if component uses defineModel):
     // it('should emit update:modelValue on input', async () => {
+    //   const onUpdate = vi.fn()
     //   const wrapper = mount(Fz{{pascalCase component}}, {
-    //     props: { modelValue: '' }
+    //     props: { modelValue: '', 'onUpdate:modelValue': onUpdate }
     //   })
     //   await wrapper.find('input').setValue('new value')
-    //   expect(wrapper.emitted('update:modelValue')).toHaveLength(1)
-    //   expect(wrapper.emitted('update:modelValue')![0]).toEqual(['new value'])
+    //   expect(onUpdate).toHaveBeenCalledWith('new value')
     // })
   })
 
@@ -148,36 +127,10 @@ describe('Fz{{pascalCase component}}', () => {
         }
       })
 
-      // Add label accessibility test if applicable:
-      // it('should have aria-labelledby linking to label', async () => {
-      //   const wrapper = mount(Fz{{pascalCase component}}, {
-      //     props: { label: 'Test Label' }
-      //   })
-      //   await wrapper.vm.$nextTick()
-      //   const input = wrapper.find('input')
-      //   const labelId = input.attributes('aria-labelledby')
-      //   expect(labelId).toBeTruthy()
-      //   expect(wrapper.find(`#${labelId}`).exists()).toBe(true)
-      // })
-
-      // Add error accessibility test if applicable:
-      // it('should have aria-invalid when error is true', () => {
-      //   const wrapper = mount(Fz{{pascalCase component}}, {
-      //     props: { error: true }
-      //   })
-      //   expect(wrapper.find('input').attributes('aria-invalid')).toBe('true')
-      // })
-
-      // it('should have aria-describedby linking to error message', () => {
-      //   const wrapper = mount(Fz{{pascalCase component}}, {
-      //     props: { error: true },
-      //     slots: { errorMessage: 'Error text' }
-      //   })
-      //   const input = wrapper.find('input')
-      //   const errorId = input.attributes('aria-describedby')
-      //   expect(errorId).toBeTruthy()
-      //   expect(wrapper.find(`#${errorId}`).text()).toContain('Error text')
-      // })
+      // For form elements, add:
+      // it('should have aria-labelledby linking to label', () => { ... })
+      // it('should have aria-invalid when error is true', () => { ... })
+      // it('should have aria-describedby linking to error message', () => { ... })
     })
 
     describe('Keyboard navigation', () => {
@@ -188,20 +141,6 @@ describe('Fz{{pascalCase component}}', () => {
           expect(element.attributes('tabindex')).not.toBe('-1')
         }
       })
-    })
-  })
-
-  // ============================================
-  // CSS CLASSES TESTS
-  // ============================================
-  describe('CSS Classes', () => {
-    it('should apply base styling classes', () => {
-      const wrapper = mount(Fz{{pascalCase component}})
-      // Add assertions for your component's base classes
-      // Example:
-      // const element = wrapper.find('button')
-      // expect(element.classes()).toContain('rounded')
-      // expect(element.classes()).toContain('flex')
     })
   })
 
@@ -219,13 +158,12 @@ describe('Fz{{pascalCase component}}', () => {
       expect(wrapper.exists()).toBe(true)
     })
 
-    // Add unique ID test if component generates IDs:
+    // Unique ID generation test (enable if component generates IDs):
     // it('should generate unique IDs for multiple instances', async () => {
     //   const wrappers = Array.from({ length: 100 }).map(() =>
     //     mount(Fz{{pascalCase component}}, { props: { label: 'Label' } })
     //   )
     //   await Promise.all(wrappers.map(w => w.vm.$nextTick()))
-    //   
     //   const ids = wrappers.map(w => w.find('input').attributes('id'))
     //   expect(new Set(ids).size).toBe(100)
     // })
@@ -241,15 +179,6 @@ describe('Fz{{pascalCase component}}', () => {
       })
       expect(wrapper.html()).toMatchSnapshot()
     })
-
-    // Add snapshot for error state if applicable:
-    // it('should match snapshot - error state', () => {
-    //   const wrapper = mount(Fz{{pascalCase component}}, {
-    //     props: { error: true },
-    //     slots: { errorMessage: 'Error message' }
-    //   })
-    //   expect(wrapper.html()).toMatchSnapshot()
-    // })
 
     it('should match snapshot - disabled state', () => {
       const wrapper = mount(Fz{{pascalCase component}}, {

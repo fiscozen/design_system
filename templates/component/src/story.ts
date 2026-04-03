@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
 import { Fz{{pascalCase component}} } from '@fiscozen/{{kebabCase component}}'
 
 const meta = {
@@ -18,7 +18,6 @@ const meta = {
     disabled: { control: 'boolean' }
   },
   args: {
-    // Default args for all stories
     disabled: false
   },
   decorators: [
@@ -36,57 +35,28 @@ type Story = StoryObj<typeof meta>
 // ============================================
 
 export const Default: Story = {
-  args: {},
-  play: async ({ canvasElement, step }) => {
+  args: {
+    onClick: fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify component renders', async () => {
-      // Adjust selector based on your component
-      const element = canvas.getByRole('button') // or 'textbox', etc.
+      // Adjust selector based on your component's role
+      const element = canvas.getByRole('button')
       await expect(element).toBeInTheDocument()
       await expect(element).toBeVisible()
     })
-    
+
     await step('Verify default ARIA attributes', async () => {
       const element = canvas.getByRole('button')
       await expect(element).toHaveAttribute('aria-disabled', 'false')
     })
-    
-    await step('Verify default environment styling (frontoffice)', async () => {
-      const element = canvas.getByRole('button')
-      await expect(element.classList.contains('h-44')).toBe(true)
-    })
-  }
-}
 
-// ============================================
-// ENVIRONMENT STORIES
-// ============================================
-
-export const Frontoffice: Story = {
-  args: {
-    environment: 'frontoffice'
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Verify frontoffice height (44px = h-44)', async () => {
+    await step('Verify click handler IS called', async () => {
       const element = canvas.getByRole('button')
-      await expect(element.classList.contains('h-44')).toBe(true)
-    })
-  }
-}
-
-export const Backoffice: Story = {
-  args: {
-    environment: 'backoffice'
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Verify backoffice height (32px = h-32)', async () => {
-      const element = canvas.getByRole('button')
-      await expect(element.classList.contains('h-32')).toBe(true)
+      await userEvent.click(element)
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
     })
   }
 }
@@ -97,20 +67,21 @@ export const Backoffice: Story = {
 
 export const Disabled: Story = {
   args: {
-    disabled: true
+    disabled: true,
+    onClick: fn()
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     const element = canvas.getByRole('button')
-    
+
     await step('Verify disabled state', async () => {
       await expect(element).toBeDisabled()
       await expect(element).toHaveAttribute('aria-disabled', 'true')
     })
-    
-    await step('Verify click does not fire when disabled', async () => {
+
+    await step('Verify click handler is NOT called when disabled', async () => {
       await userEvent.click(element)
-      // No error should occur, component should not respond
+      await expect(args.onClick).not.toHaveBeenCalled()
     })
   }
 }
@@ -120,37 +91,41 @@ export const Disabled: Story = {
 // ============================================
 
 export const UserInteraction: Story = {
-  args: {},
-  play: async ({ canvasElement, step }) => {
+  args: {
+    onClick: fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
     const element = canvas.getByRole('button')
-    
+
     await step('Click the component', async () => {
       await userEvent.click(element)
-      // Add assertions for expected behavior after click
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
     })
   }
 }
 
 export const KeyboardNavigation: Story = {
-  args: {},
-  play: async ({ canvasElement, step }) => {
+  args: {
+    onClick: fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Tab to focus element', async () => {
       await userEvent.tab()
       const focusedElement = document.activeElement
       await expect(focusedElement).toBe(canvas.getByRole('button'))
     })
-    
+
     await step('Activate with Enter key', async () => {
       await userEvent.keyboard('{Enter}')
-      // Add assertions for expected behavior
+      await expect(args.onClick).toHaveBeenCalledTimes(1)
     })
-    
+
     await step('Activate with Space key', async () => {
       await userEvent.keyboard(' ')
-      // Add assertions for expected behavior
+      await expect(args.onClick).toHaveBeenCalledTimes(2)
     })
   }
 }
@@ -158,18 +133,17 @@ export const KeyboardNavigation: Story = {
 // ============================================
 // ADDITIONAL STORIES TO ADD (as needed)
 // ============================================
-// 
-// Add these stories if your component supports them:
-// 
-// - Variant stories (Primary, Secondary, etc.): If component has visual variants,
-//   add a story for each with play function verifying variant-specific CSS classes.
-// 
+//
+// - Variant stories (Primary, Secondary, etc.): Add a story for each variant
+//   with play function verifying variant-specific behavior.
+//
 // - Error state: If component supports error prop, add Error story with
 //   #errorMessage slot and verify aria-invalid="true" and role="alert".
-// 
+//
 // - V-Model: If component supports v-model, add WithVModel story using
-//   render function with ref() and verify two-way binding works.
-// 
+//   render function with ref() and verify two-way binding with:
+//   args: { 'onUpdate:modelValue': fn() }
+//
 // See existing stories in apps/storybook/src/stories/ for examples.
 
 // ============================================
@@ -189,15 +163,15 @@ export const AllStates: Story = {
           <p class="text-sm text-grey-500 mb-2">Disabled</p>
           <Fz{{pascalCase component}} :disabled="true" />
         </div>
-        <div>
-          <p class="text-sm text-grey-500 mb-2">Backoffice</p>
-          <Fz{{pascalCase component}} environment="backoffice" />
-        </div>
       </div>
     `
   }),
-  play: async ({ canvasElement }) => {
-    const buttons = canvasElement.querySelectorAll('button, input, [role="button"]')
-    await expect(buttons.length).toBeGreaterThanOrEqual(3)
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify all states render', async () => {
+      const buttons = canvas.getAllByRole('button')
+      await expect(buttons.length).toBeGreaterThanOrEqual(2)
+    })
   }
 }

@@ -23,6 +23,8 @@ export default defineConfig({
       name: 'Fz{{pascalCase component}}',
     },
     rollupOptions: {
+      // Add @fiscozen/* dependencies here when used
+      // e.g. ['vue', '@fiscozen/icons', '@fiscozen/composables']
       external: ['vue'],
       output: {
         globals: {

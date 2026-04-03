@@ -2,12 +2,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { Fz{{pascalCase component}}Props } from './types'
+import type { Fz{{pascalCase component}}Props } from './types'
 
-const props = withDefaults(defineProps<Fz{{pascalCase component}}Props>(), {})
+const props = withDefaults(defineProps<Fz{{pascalCase component}}Props>(), {
+  disabled: false,
+  environment: 'frontoffice'
+})
 
-const emit = defineEmits([])
+const emit = defineEmits<{
+  click: [event: MouseEvent]
+}>()
+
+// For v-model support, use defineModel():
+// const modelValue = defineModel<string>()
 </script>
 
 <style scoped>
