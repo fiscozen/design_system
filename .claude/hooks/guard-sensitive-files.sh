@@ -89,7 +89,7 @@ if [[ "$TOOL_NAME" == "Bash" && -n "$COMMAND" ]]; then
   fi
 
   # Block destructive git operations
-  if echo "$COMMAND" | grep -qE 'git\s+push\s+.*(-f|--force)'; then
+  if echo "$COMMAND" | grep -qE 'git\s+push\s+.*(\s|^)(-f|--force)'; then
     echo "BLOCKED: Force push is destructive. Use regular push." >&2
     exit 2
   fi

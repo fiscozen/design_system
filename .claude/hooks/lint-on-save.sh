@@ -12,7 +12,7 @@ set -euo pipefail
 INPUT=$(cat)
 
 TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // empty')
 
 # Only run on Edit/Write
 if [[ "$TOOL_NAME" != "Edit" && "$TOOL_NAME" != "Write" ]]; then
@@ -26,7 +26,7 @@ case "$FILE_PATH" in
 esac
 
 # Only lint files in packages/*/src/ or apps/storybook/src/
-if [[ "$FILE_PATH" != *"/packages/"*"/src/"* && "$FILE_PATH" != *"/apps/storybook/src/"* ]]; then
+if [[ "$FILE_PATH" != *"/packages/"*"/src/"* && "$FILE_PATH" != packages/*/src/* && "$FILE_PATH" != *"/apps/storybook/src/"* && "$FILE_PATH" != apps/storybook/src/* ]]; then
   exit 0
 fi
 
