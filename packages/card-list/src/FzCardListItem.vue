@@ -16,9 +16,8 @@
  *   @fzaction:click="onActionClick"
  * />
  */
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { FzBadge } from "@fiscozen/badge";
-import { FzIconButton } from "@fiscozen/button";
 import { FzIconDropdown } from "@fiscozen/dropdown";
 import { FzIcon } from "@fiscozen/icons";
 import { FzDivider } from "@fiscozen/divider";
@@ -34,44 +33,60 @@ const { actions, badge, value } = defineProps<FzCardListItemProps>();
 
 const emit = defineEmits<FzCardListItemEmits>();
 
+const rowTitleId = useId();
+
 const actionsMode = computed<ActionsMode>(() => {
   if (!actions?.length) return "none";
   if (actions.length === 1) return "single";
   return "multiple";
 });
 
-function emitSingleAction() {
-  if (!actions || actions.length !== 1) {
-    return;
+function handleRowInteraction(e: MouseEvent | KeyboardEvent) {
+  if (e instanceof KeyboardEvent) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault();
   }
-  emit("fzaction:click", 0, actions[0]);
-}
-
-function handleRowClick(e: MouseEvent) {
-  if (actionsMode.value !== "single") return;
   e.stopPropagation();
-  emitSingleAction();
+  emitActionClick();
 }
 
-function emitActionClick(actionIndex: number, action: FzActionProps) {
+const singleActionListeners = computed(() =>
+  actionsMode.value === "single"
+    ? { click: handleRowInteraction, keydown: handleRowInteraction }
+    : {},
+);
+
+function emitActionClick(actionIndex: number = 0, action: FzActionProps = actions![0]) {
   emit("fzaction:click", actionIndex, action);
 }
 
 const hasTitleOnly = computed(() => !badge && !value);
-const hasValue = computed(() => !hasTitleOnly.value && !!value);
+const hasValue = computed(() => !!value);
 </script>
 
 <template>
   <FzContainer
     gap="xs"
+    :role="actionsMode === 'single' ? 'button' : undefined"
+    :tabindex="actionsMode === 'single' ? 0 : undefined"
+    :aria-labelledby="actionsMode === 'single' ? rowTitleId : undefined"
     :class="[
       'p-8 hover:bg-semantic-info-50 hover:rounded',
       { 'cursor-pointer': actionsMode === 'single' },
+      {
+        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-200 focus-visible:rounded':
+          actionsMode === 'single',
+      },
     ]"
-    @click="handleRowClick"
+    v-on="singleActionListeners"
   >
-    <!-- Header -->
-    <FzContainer horizontal alignItems="center" layout="space-between">
+    <!--
+      Header row layout:
+      - badge present → badge + actions
+      - hasTitleOnly (no badge, no value) → title + actions (inline)
+      - value present, no badge → actions only; title + value are in the second row
+    -->
+    <FzContainer horizontal alignItems="center">
       <!-- Badge -->
       <FzBadge v-if="badge" :tone="badge.tone" variant="text">
         {{ badge.text }}
@@ -94,11 +109,14 @@ const hasValue = computed(() => !hasTitleOnly.value && !!value);
         >
         </FzIcon>
         <!-- Title -->
-        <p v-bold class="min-w-0 flex-1 truncate">{{ title }}</p>
+        <p
+          v-bold
+          class="min-w-0 flex-1 truncate"
+          :id="actionsMode === 'single' ? rowTitleId : undefined"
+        >
+          {{ title }}
+        </p>
       </FzContainer>
-      <!-- Empty container -->
-      <!-- needed to keep the icon button aligned to the right when no badge is provided -->
-      <FzContainer v-else></FzContainer>
       <!-- Actions -->
       <FzContainer
         v-if="actionsMode !== 'none'"
@@ -106,19 +124,19 @@ const hasValue = computed(() => !hasTitleOnly.value && !!value);
         gap="xs"
         alignItems="center"
         layout="expand-last"
-        class="shrink-0"
+        class="shrink-0 ml-auto"
       >
-        <!-- Single action -->
-        <FzIconButton
+        <!-- Single action: decorative; row is role="button" and keyboard-activatable -->
+        <span
           v-if="actionsMode === 'single'"
-          iconName="arrow-right"
-          variant="invisible"
-          environment="frontoffice"
-          aria-label="Link all'elemento"
-        />
+          class="inline-flex shrink-0 text-inherit"
+          aria-hidden="true"
+        >
+          <FzIcon name="arrow-right" size="md" variant="fas" v-color:grey />
+        </span>
         <!-- Multiple actions -->
         <FzIconDropdown
-          v-else
+          v-else-if="actionsMode === 'multiple'"
           :actions="actions!"
           iconName="ellipsis-vertical"
           variant="invisible"
@@ -148,7 +166,13 @@ const hasValue = computed(() => !hasTitleOnly.value && !!value);
           v-color:blue
         />
         <!-- Title -->
-        <p v-bold class="min-w-0 flex-1 truncate">{{ title }}</p>
+        <p
+          v-bold
+          class="min-w-0 flex-1 truncate"
+          :id="actionsMode === 'single' ? rowTitleId : undefined"
+        >
+          {{ title }}
+        </p>
       </FzContainer>
       <!-- Value -->
       <p v-if="hasValue" v-bold v-color:blue class="text-base whitespace-nowrap">
