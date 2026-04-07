@@ -186,10 +186,7 @@ describe("FzCardList", () => {
       await wrapper.vm.$nextTick();
 
       const items = wrapper.findAllComponents({ name: "FzCardListItem" });
-      const button = items[1]
-        .getComponent({ name: "FzIconButton" })
-        .get("button");
-      await button.trigger("click");
+      await items[1].get('[role="button"]').trigger("click");
 
       expect(wrapper.emitted("fzaction:click")).toBeTruthy();
       expect(wrapper.emitted("fzaction:click")![0]).toEqual([
@@ -208,8 +205,7 @@ describe("FzCardList", () => {
       await wrapper.vm.$nextTick();
 
       const item = wrapper.findComponent({ name: "FzCardListItem" });
-      const button = item.getComponent({ name: "FzIconButton" }).get("button");
-      await button.trigger("click");
+      await item.get('[role="button"]').trigger("click");
 
       expect(wrapper.emitted("fzaction:click")).toBeTruthy();
       expect(wrapper.emitted("fzaction:click")![0]).toEqual([

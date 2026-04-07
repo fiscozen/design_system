@@ -163,14 +163,15 @@ describe("FzCardListItem", () => {
       );
     });
 
-    it("should render arrow button when exactly one action is passed", async () => {
+    it("should render arrow icon when exactly one action is passed", async () => {
       const wrapper = mount(FzCardListItem, {
         props: { title: "Item", actions: [actionA] },
       });
       await wrapper.vm.$nextTick();
-      const buttons = wrapper.findAllComponents({ name: "FzIconButton" });
-      expect(buttons).toHaveLength(1);
-      expect(buttons[0].props("iconName")).toBe("arrow-right");
+      const arrows = wrapper
+        .findAllComponents({ name: "FzIcon" })
+        .filter((w) => w.props("name") === "arrow-right");
+      expect(arrows).toHaveLength(1);
     });
 
     it("should apply cursor-pointer on the row only when exactly one action is passed", async () => {
@@ -306,30 +307,43 @@ describe("FzCardListItem", () => {
       expect(wrapper.emitted("fzaction:click")![0]).toEqual([0, actionA]);
     });
 
-    it("should emit fzaction:click when single-action arrow is clicked", async () => {
+    it("should emit fzaction:click when single-action row is activated via Enter", async () => {
       const wrapper = mount(FzCardListItem, {
         props: { title: "Item", actions: [actionA] },
       });
       await wrapper.vm.$nextTick();
 
-      const button = wrapper.getComponent({ name: "FzIconButton" }).get("button");
-      await button.trigger("click");
+      const row = wrapper.get('[role="button"]');
+      await row.trigger("keydown", { key: "Enter" });
 
       expect(wrapper.emitted("fzaction:click")).toBeTruthy();
       expect(wrapper.emitted("fzaction:click")).toHaveLength(1);
       expect(wrapper.emitted("fzaction:click")![0]).toEqual([0, actionA]);
     });
 
-    it("should emit fzaction:click multiple times on repeated arrow clicks", async () => {
+    it("should emit fzaction:click when single-action row is activated via Space", async () => {
       const wrapper = mount(FzCardListItem, {
         props: { title: "Item", actions: [actionA] },
       });
       await wrapper.vm.$nextTick();
 
-      const button = wrapper.getComponent({ name: "FzIconButton" }).get("button");
-      await button.trigger("click");
-      await button.trigger("click");
-      await button.trigger("click");
+      const row = wrapper.get('[role="button"]');
+      await row.trigger("keydown", { key: " " });
+
+      expect(wrapper.emitted("fzaction:click")).toHaveLength(1);
+      expect(wrapper.emitted("fzaction:click")![0]).toEqual([0, actionA]);
+    });
+
+    it("should emit fzaction:click multiple times on repeated row activations", async () => {
+      const wrapper = mount(FzCardListItem, {
+        props: { title: "Item", actions: [actionA] },
+      });
+      await wrapper.vm.$nextTick();
+
+      const row = wrapper.get('[role="button"]');
+      await row.trigger("keydown", { key: "Enter" });
+      await row.trigger("keydown", { key: "Enter" });
+      await row.trigger("keydown", { key: "Enter" });
 
       expect(wrapper.emitted("fzaction:click")).toHaveLength(3);
       for (const payload of wrapper.emitted("fzaction:click")!) {
@@ -358,6 +372,20 @@ describe("FzCardListItem", () => {
       });
       await wrapper.vm.$nextTick();
       expect(wrapper.find(".hover\\:bg-semantic-info-50").exists()).toBe(true);
+    });
+
+    it("should expose single-action row as focusable button with labelled title", async () => {
+      const wrapper = mount(FzCardListItem, {
+        props: { title: "Pay invoice", actions: [actionA] },
+      });
+      await wrapper.vm.$nextTick();
+      const row = wrapper.get('[role="button"]');
+      expect(row.attributes("tabindex")).toBe("0");
+      const labelledBy = row.attributes("aria-labelledby");
+      expect(labelledBy).toBeTruthy();
+      const titleEl = wrapper.get("p.truncate");
+      expect(titleEl.attributes("id")).toBe(labelledBy);
+      expect(titleEl.text()).toBe("Pay invoice");
     });
   });
 
