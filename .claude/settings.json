@@ -33,7 +33,7 @@
       "Bash(*SKIP_BUILD_CHECK*)",
       "Bash(*SKIP_STORYBOOK_CHECK*)",
       "Bash(git push --force*)",
-      "Bash(git push -f *)",
+      "Bash(git push -f*)",
       "Bash(git reset --hard*)"
     ]
   },
