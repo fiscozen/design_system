@@ -41,13 +41,23 @@
     "PreToolUse": [
       {
         "matcher": "Read|Edit|Write|Bash",
-        "hooks": [".claude/hooks/guard-sensitive-files.sh"]
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/guard-sensitive-files.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
-        "hooks": [".claude/hooks/lint-on-save.sh"]
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/lint-on-save.sh"
+          }
+        ]
       }
     ]
   }
