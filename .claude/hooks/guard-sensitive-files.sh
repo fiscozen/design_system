@@ -65,13 +65,13 @@ fi
 if [[ "$TOOL_NAME" == "Bash" && -n "$COMMAND" ]]; then
 
   # Block publish commands
-  if echo "$COMMAND" | grep -qiE '(changeset\s+publish|changeset:publish|npm\s+publish|pnpm\s+publish)'; then
+  if echo "$COMMAND" | grep -qiE '(changeset[[:space:]]+publish|changeset:publish|npm[[:space:]]+publish|pnpm[[:space:]]+publish)'; then
     echo "BLOCKED: Publishing is CI-only. Never run publish commands locally." >&2
     exit 2
   fi
 
   # Block changeset version (silent version bumps need review)
-  if echo "$COMMAND" | grep -qiE 'changeset:version|changeset\s+version'; then
+  if echo "$COMMAND" | grep -qiE 'changeset:version|changeset[[:space:]]+version'; then
     echo "BLOCKED: changeset version bumps all package.json files. Run manually with review." >&2
     exit 2
   fi
@@ -89,33 +89,33 @@ if [[ "$TOOL_NAME" == "Bash" && -n "$COMMAND" ]]; then
   fi
 
   # Block destructive git operations
-  if echo "$COMMAND" | grep -qE 'git\s+push\s+(.*\s)?(-f|--force)'; then
+  if echo "$COMMAND" | grep -qE 'git[[:space:]]+push[[:space:]]+(.*[[:space:]])?(-f|--force)'; then
     echo "BLOCKED: Force push is destructive. Use regular push." >&2
     exit 2
   fi
-  if echo "$COMMAND" | grep -qE 'git\s+reset\s+--hard'; then
+  if echo "$COMMAND" | grep -qE 'git[[:space:]]+reset[[:space:]]+--hard'; then
     echo "BLOCKED: git reset --hard discards work. Use git stash or git checkout for specific files." >&2
     exit 2
   fi
 
   # Block bare env/printenv (would dump FONTAWESOME_PACKAGE_TOKEN)
-  if echo "$COMMAND" | grep -qE '^\s*(env|printenv)\s*$'; then
+  if echo "$COMMAND" | grep -qE '^[[:space:]]*(env|printenv)[[:space:]]*$'; then
     echo "BLOCKED: Bare env/printenv would expose environment tokens." >&2
     exit 2
   fi
 
   # Block reading sensitive files via shell commands
-  if echo "$COMMAND" | grep -qE '(cat|head|tail|less|more|bat)\s+.*\.(env|npmrc|pem|key|crt)'; then
+  if echo "$COMMAND" | grep -qE '(cat|head|tail|less|more|bat)[[:space:]]+.*\.(env|npmrc|pem|key|crt)'; then
     echo "BLOCKED: Cannot read sensitive files via shell. Use environment variables." >&2
     exit 2
   fi
-  if echo "$COMMAND" | grep -qE '(cat|head|tail|less|more|bat)\s+.*_secrets'; then
+  if echo "$COMMAND" | grep -qE '(cat|head|tail|less|more|bat)[[:space:]]+.*_secrets'; then
     echo "BLOCKED: Cannot read secrets files via shell." >&2
     exit 2
   fi
 
   # Block source .env
-  if echo "$COMMAND" | grep -qE '(source|\.)\s+.*\.env'; then
+  if echo "$COMMAND" | grep -qE '(source|\.)[[:space:]]+.*\.env'; then
     echo "BLOCKED: Cannot source .env files — would load tokens into shell." >&2
     exit 2
   fi
