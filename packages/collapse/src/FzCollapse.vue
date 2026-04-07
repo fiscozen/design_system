@@ -4,7 +4,7 @@ import { FzCollapseProps, ACCORDION_KEY } from './types'
 import { FzIcon } from '@fiscozen/icons'
 
 const props = withDefaults(defineProps<FzCollapseProps>(), {
-  variant: 'section',
+  variant: 'section'
 })
 const isOpen = defineModel<boolean>('open', { default: false })
 const detailsRef = ref<HTMLDetailsElement | null>(null)
@@ -26,11 +26,15 @@ onBeforeUnmount(() => {
   }
 })
 
-watch(isOpen, (val) => {
-  if (val) {
-    accordion?.notifyOpen(collapseId)
-  }
-}, { immediate: true })
+watch(
+  isOpen,
+  (val) => {
+    if (val) {
+      accordion?.notifyOpen(collapseId)
+    }
+  },
+  { immediate: true }
+)
 
 const handleToggle = (e: ToggleEvent) => {
   if (e.newState === 'open' && isOpen.value === false) {
@@ -59,7 +63,7 @@ const staticHeaderClasses = [
   'cursor-pointer',
   'select-none',
   'list-none',
-  '[&::-webkit-details-marker]:hidden',
+  '[&::-webkit-details-marker]:hidden'
 ]
 
 const headerWrapperClasses = computed(() => ({
@@ -69,7 +73,7 @@ const headerWrapperClasses = computed(() => ({
   'items-start': isSection.value,
 
   // Button: header row + rightContent side by side
-  'items-center gap-24': isButton.value,
+  'items-center gap-24': isButton.value
 }))
 
 const headerRowClasses = computed(() => ({
@@ -78,7 +82,7 @@ const headerRowClasses = computed(() => ({
 
   // Width — section fills parent, button grows within flex
   'w-full': isSection.value,
-  'flex-[1_0_0]': isButton.value,
+  'flex-[1_0_0]': isButton.value
 }))
 
 const titleClasses = computed(() => ({
@@ -92,7 +96,7 @@ const titleClasses = computed(() => ({
   '[font-feature-settings:"lnum"_1,"tnum"_1]': isButton.value,
 
   // Color
-  'text-core-black': true,
+  'text-core-black': true
 }))
 
 const textContainerClasses = computed(() => ({
@@ -102,7 +106,7 @@ const textContainerClasses = computed(() => ({
   'flex-[1_0_0]': isSection.value,
 
   // Button: text wraps content, chevron stays close to title
-  'shrink-0': isButton.value,
+  'shrink-0': isButton.value
 }))
 
 const subtitleClasses = 'font-normal text-base leading-[20px] text-grey-500'
@@ -110,7 +114,7 @@ const subtitleClasses = 'font-normal text-base leading-[20px] text-grey-500'
 const contentSpacingClasses = computed(() => ({
   // Spacing from header (replaces gap on details, which doesn't support flex reliably)
   'mt-16': isButton.value,
-  'mt-24': isSection.value,
+  'mt-24': isSection.value
 }))
 
 const indentClasses = computed(() => ({
@@ -118,7 +122,7 @@ const indentClasses = computed(() => ({
   'w-[28px]': isButton.value,
   'w-[32px]': isSection.value,
 
-  'self-stretch shrink-0': true,
+  'self-stretch shrink-0': true
 }))
 </script>
 
@@ -127,7 +131,7 @@ const indentClasses = computed(() => ({
     ref="detailsRef"
     :open="isOpen"
     data-e2e="details"
-    class="overflow-clip w-full"
+    class="w-full overflow-clip"
     @toggle="handleToggle"
   >
     <summary
@@ -140,6 +144,7 @@ const indentClasses = computed(() => ({
           <slot name="icon">
             <FzIcon
               v-if="icon"
+              class="text-blue-500"
               :name="icon"
               :size="iconSizeMap[variant]"
               data-e2e="leading-icon"
@@ -168,9 +173,13 @@ const indentClasses = computed(() => ({
         <slot v-if="isButton" name="rightContent" />
       </div>
     </summary>
-    <div data-e2e="content" v-show="isOpen" :class="['flex items-start w-full', contentSpacingClasses, contentClass]">
+    <div
+      data-e2e="content"
+      v-show="isOpen"
+      :class="['flex w-full items-start', contentSpacingClasses, contentClass]"
+    >
       <div v-if="icon" :class="indentClasses" data-e2e="indent-space" />
-      <div class="flex flex-col flex-[1_0_0] min-w-0">
+      <div class="flex min-w-0 flex-[1_0_0] flex-col">
         <slot name="content" />
       </div>
     </div>

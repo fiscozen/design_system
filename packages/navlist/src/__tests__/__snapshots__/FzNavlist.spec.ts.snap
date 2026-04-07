@@ -7,7 +7,7 @@ exports[`FzNavlist > Snapshots > should match snapshot - default state 1`] = `
     <div class="flex flex-col"><a href="/foo" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start" type="link">
         <!--v-if-->Item #1
       </a>
-      <details data-e2e="details" class="overflow-clip w-full">
+      <details data-e2e="details" class="w-full overflow-clip">
         <summary data-e2e="summary" class="w-full block cursor-pointer select-none list-none [&amp;::-webkit-details-marker]:hidden px-12">
           <div class="flex w-full items-start" data-e2e="header-wrapper">
             <div class="flex gap-8 items-start cursor-pointer w-full" data-e2e="header-row">
@@ -19,9 +19,9 @@ exports[`FzNavlist > Snapshots > should match snapshot - default state 1`] = `
             <!--v-if-->
           </div>
         </summary>
-        <div data-e2e="content" class="flex items-start w-full mt-24" style="display: none;">
+        <div data-e2e="content" class="flex w-full items-start mt-24" style="display: none;">
           <!--v-if-->
-          <div class="flex flex-col flex-[1_0_0] min-w-0">
+          <div class="flex min-w-0 flex-[1_0_0] flex-col">
             <div class="flex flex-col">
               <!--v-if--><a href="/foo" class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start pl-24 !font-normal" type="link">
                 <!--v-if-->Sub-Item #1
@@ -100,7 +100,7 @@ exports[`FzNavlist > Snapshots > should match snapshot - with subitems 1`] = `
   <div class="fz__navlist__section border-grey-200">
     <div class="text-grey-400 flex h-32 items-center px-12 text-xs"><span>Section 1</span></div>
     <div class="flex flex-col">
-      <details data-e2e="details" class="overflow-clip w-full">
+      <details data-e2e="details" class="w-full overflow-clip">
         <summary data-e2e="summary" class="w-full block cursor-pointer select-none list-none [&amp;::-webkit-details-marker]:hidden px-12">
           <div class="flex w-full items-start" data-e2e="header-wrapper">
             <div class="flex gap-8 items-start cursor-pointer w-full" data-e2e="header-row">
@@ -112,9 +112,9 @@ exports[`FzNavlist > Snapshots > should match snapshot - with subitems 1`] = `
             <!--v-if-->
           </div>
         </summary>
-        <div data-e2e="content" class="flex items-start w-full mt-24" style="display: none;">
+        <div data-e2e="content" class="flex w-full items-start mt-24" style="display: none;">
           <!--v-if-->
-          <div class="flex flex-col flex-[1_0_0] min-w-0">
+          <div class="flex min-w-0 flex-[1_0_0] flex-col">
             <div class="flex flex-col"><button class="px-12 py-6 text-grey-500 hover:bg-background-alice-blue border-1 focus:border-1 focus:bg-background-alice-blue disabled:text-grey-100 disabled:bg-core-white h-32 items-center rounded border-transparent text-sm hover:text-blue-500 focus:border-blue-500 focus:text-blue-500 disabled:border-transparent font-medium grow-1 flex justify-start pl-24 !font-normal" type="button">
                 <!--v-if-->Sub-Item 1
               </button>
