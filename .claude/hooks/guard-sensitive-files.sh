@@ -46,8 +46,8 @@ if [[ "$TOOL_NAME" == "Read" || "$TOOL_NAME" == "Edit" || "$TOOL_NAME" == "Write
         ;;
     esac
 
-    # Block git internals
-    if [[ "$FILE_PATH" == *"/.git/"* ]]; then
+    # Block git internals (absolute or repo-relative paths)
+    if [[ "$FILE_PATH" == *"/.git/"* || "$FILE_PATH" == .git/* ]]; then
       echo "BLOCKED: $FILE_PATH — git internals." >&2
       exit 2
     fi
