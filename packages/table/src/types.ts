@@ -119,12 +119,6 @@ interface FzTableProps extends Omit<FzSimpleTableProps, "value"> {
    */
   variant?: "normal" | "accordion" | "list" | "radio";
   /**
-   * Set of open (expanded) row IDs for the accordion variant.
-   * Row identity: row.id if present, otherwise array index.
-   * Only applies when variant is 'accordion'.
-   */
-  openRowIds?: Set<string | number>;
-  /**
    * Action column label
    *
    * @default 'Azione'
