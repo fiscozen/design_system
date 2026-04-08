@@ -55,6 +55,7 @@ function handleRowInteraction(e: MouseEvent | KeyboardEvent) {
         has-title-only
         :show-indicator="showIndicator"
         :title="title"
+        :title-id="rowTitleId"
       />
       <!-- Single action arrow -->
       <FzContainer
@@ -66,7 +67,7 @@ function handleRowInteraction(e: MouseEvent | KeyboardEvent) {
         class="shrink-0 ml-auto"
       >
         <span class="inline-flex shrink-0 text-inherit" aria-hidden="true">
-          <FzIcon name="arrow-right" size="md" variant="fas" v-color:grey />
+          <FzIcon name="chevron-right" size="md" variant="fas" v-color:grey />
         </span>
       </FzContainer>
     </FzContainer>
@@ -77,6 +78,7 @@ function handleRowInteraction(e: MouseEvent | KeyboardEvent) {
       :show-indicator="showIndicator"
       :title="title"
       :value="value"
+      :title-id="titleId"
     />
     <FzCardFooter :descriptions="descriptions" />
   </FzContainer>
