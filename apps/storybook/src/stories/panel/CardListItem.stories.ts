@@ -27,7 +27,7 @@ const meta = {
     actions: {
       control: 'object',
       description:
-        'Row actions: omit or `[]` for none; one item shows an arrow; more than one shows an overflow menu (`fzaction:click`)'
+        'Row actions: omit or `[]` for none (no trailing control); one `type: "link"` item shows a clickable arrow row; one or more `type: "action"` items show an ellipsis dropdown (`fzaction:click`)'
     },
     showIndicator: {
       control: 'boolean',
@@ -140,7 +140,7 @@ export const CardWithTitleAndDescriptions: CardListItemStory = {
   }
 }
 
-export const CardWithTitleOnly: CardListItemStory = {
+export const CardWithLinkAction: CardListItemStory = {
   render: (args) => ({
     components: { FzCardListItem },
     setup() {
@@ -168,6 +168,80 @@ export const CardWithTitleOnly: CardListItemStory = {
     const canvas = within(canvasElement)
 
     await expect(canvas.getByText('Fattura #001')).toBeInTheDocument()
+    await expect(canvas.getByRole('button')).toBeInTheDocument()
+  }
+}
+
+export const CardWithSingleNonLinkAction: CardListItemStory = {
+  render: (args) => ({
+    components: { FzCardListItem },
+    setup() {
+      return { args }
+    },
+    template: `
+    <div class="min-w-[355px]">
+      <FzCardListItem
+        v-bind="args"
+        @fzaction:click="args['onFzaction:click']"
+      />
+    </div>`
+  }),
+  args: {
+    title: 'Fattura #001',
+    value: '1.200,00 €',
+    badge: {
+      text: 'Bozza',
+      tone: 'dark'
+    },
+    showIndicator: true,
+    descriptions: ['Cliente: Rossi S.r.l.', 'Scadenza: 31/03/2024'],
+    actions: [
+      {
+        type: 'action',
+        variant: 'textLeft',
+        label: 'Apri'
+      }
+    ] as FzActionProps[],
+    'onFzaction:click': fn()
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.getByText('Fattura #001')).toBeInTheDocument()
+    await expect(canvas.getByText('Bozza')).toBeInTheDocument()
+
+    const menuButtons = canvas.getAllByRole('button')
+    await expect(menuButtons.length).toBeGreaterThanOrEqual(1)
+  }
+}
+
+export const CardWithNoActions: CardListItemStory = {
+  render: (args) => ({
+    components: { FzCardListItem },
+    setup() {
+      return { args }
+    },
+    template: `
+    <div class="min-w-[355px]">
+      <FzCardListItem v-bind="args" />
+    </div>`
+  }),
+  args: {
+    title: 'Fattura #001',
+    value: '1.200,00 €',
+    badge: {
+      text: 'Bozza',
+      tone: 'dark'
+    },
+    showIndicator: true,
+    descriptions: ['Cliente: Rossi S.r.l.', 'Scadenza: 31/03/2024']
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.getByText('Fattura #001')).toBeInTheDocument()
+    await expect(canvas.getByText('Bozza')).toBeInTheDocument()
+    await expect(canvas.getByText('1.200,00 €')).toBeInTheDocument()
   }
 }
 

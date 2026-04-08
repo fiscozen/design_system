@@ -17,45 +17,119 @@ export default meta
 
 type CardListStory = StoryObj<typeof FzCardList>
 
-const rowAction: FzActionProps = {
-  type: 'action',
-  variant: 'textLeft',
-  label: 'Apri'
+const linkAction = {
+  type: 'link' as const,
+  to: '/'
 }
+
+const multiActions: FzActionProps[] = [
+  { type: 'action', variant: 'textLeft', label: 'Apri' },
+  { type: 'action', variant: 'textLeft', label: 'Download' },
+  { type: 'action', variant: 'textLeft', label: 'Elimina' }
+]
 
 const defaultItems: FzCardListItemProps[] = [
   {
     title: 'Fattura #001',
     value: '1.200,00 €',
-    badge: {
-      text: 'Bozza',
-      tone: 'dark'
-    },
+    badge: { text: 'Bozza', tone: 'dark' },
     showIndicator: true,
     descriptions: ['Cliente: Rossi S.r.l.', 'Scadenza: 31/03/2024'],
-    actions: [rowAction]
+    actions: [linkAction]
   },
   {
     title: 'Fattura #002',
     value: '3.450,00 €',
-    badge: {
-      text: 'Inviata',
-      tone: 'dark'
-    },
+    badge: { text: 'Inviata', tone: 'dark' },
     showIndicator: false,
     descriptions: ['Cliente: Bianchi S.p.A.'],
-    actions: [rowAction]
+    actions: [linkAction]
   },
   {
     title: 'Fattura #003',
     value: '780,00 €',
-    badge: {
-      text: 'Bozza',
-      tone: 'dark'
-    },
+    badge: { text: 'Bozza', tone: 'dark' },
     showIndicator: false,
     descriptions: ['Cliente: Verdi & Co.', 'In scadenza oggi'],
-    actions: [rowAction]
+    actions: [linkAction]
+  }
+]
+
+const singleNonLinkActionItems: FzCardListItemProps[] = [
+  {
+    title: 'Fattura #001',
+    value: '1.200,00 €',
+    badge: { text: 'Bozza', tone: 'dark' },
+    showIndicator: true,
+    descriptions: ['Cliente: Rossi S.r.l.', 'Scadenza: 31/03/2024'],
+    actions: [{ type: 'action', variant: 'textLeft', label: 'Apri' }]
+  },
+  {
+    title: 'Fattura #002',
+    value: '3.450,00 €',
+    badge: { text: 'Inviata', tone: 'dark' },
+    showIndicator: false,
+    descriptions: ['Cliente: Bianchi S.p.A.'],
+    actions: [{ type: 'action', variant: 'textLeft', label: 'Apri' }]
+  },
+  {
+    title: 'Fattura #003',
+    value: '780,00 €',
+    badge: { text: 'Bozza', tone: 'dark' },
+    showIndicator: false,
+    descriptions: ['Cliente: Verdi & Co.', 'In scadenza oggi'],
+    actions: [{ type: 'action', variant: 'textLeft', label: 'Apri' }]
+  }
+]
+
+const noActionItems: FzCardListItemProps[] = [
+  {
+    title: 'Fattura #001',
+    value: '1.200,00 €',
+    badge: { text: 'Bozza', tone: 'dark' },
+    showIndicator: true,
+    descriptions: ['Cliente: Rossi S.r.l.', 'Scadenza: 31/03/2024']
+  },
+  {
+    title: 'Fattura #002',
+    value: '3.450,00 €',
+    badge: { text: 'Inviata', tone: 'dark' },
+    showIndicator: false,
+    descriptions: ['Cliente: Bianchi S.p.A.']
+  },
+  {
+    title: 'Fattura #003',
+    value: '780,00 €',
+    badge: { text: 'Bozza', tone: 'dark' },
+    showIndicator: false,
+    descriptions: ['Cliente: Verdi & Co.', 'In scadenza oggi']
+  }
+]
+
+const multiActionsItems: FzCardListItemProps[] = [
+  {
+    title: 'Fattura #001',
+    value: '1.200,00 €',
+    badge: { text: 'Bozza', tone: 'dark' },
+    showIndicator: true,
+    descriptions: ['Cliente: Rossi S.r.l.', 'Scadenza: 31/03/2024'],
+    actions: multiActions
+  },
+  {
+    title: 'Fattura #002',
+    value: '3.450,00 €',
+    badge: { text: 'Inviata', tone: 'dark' },
+    showIndicator: false,
+    descriptions: ['Cliente: Bianchi S.p.A.'],
+    actions: multiActions
+  },
+  {
+    title: 'Fattura #003',
+    value: '780,00 €',
+    badge: { text: 'Bozza', tone: 'dark' },
+    showIndicator: false,
+    descriptions: ['Cliente: Verdi & Co.', 'In scadenza oggi'],
+    actions: multiActions
   }
 ]
 
@@ -91,6 +165,86 @@ export const DefaultCardList: CardListStory = {
 
     const thirdItem = canvas.getByText('Fattura #003')
     await expect(thirdItem).toBeInTheDocument()
+  }
+}
+
+export const CardListWithMultiActions: CardListStory = {
+  render: (args) => ({
+    components: { FzCardList },
+    setup() {
+      return { args }
+    },
+    template: `
+    <div class="min-w-[355px]">
+      <div class="p-8">
+        <h2 class="m-0 p-0">Fatture</h2>
+      </div>
+      <FzCardList v-bind="args" @fzaction:click="args['onFzaction:click']" />
+    </div>`
+  }),
+  args: {
+    items: multiActionsItems,
+    'onFzaction:click': fn()
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.getByText('Fattura #001')).toBeInTheDocument()
+    await expect(canvas.getByText('Fattura #002')).toBeInTheDocument()
+    await expect(canvas.getByText('Fattura #003')).toBeInTheDocument()
+  }
+}
+
+export const CardListWithSingleNonLinkActions: CardListStory = {
+  render: (args) => ({
+    components: { FzCardList },
+    setup() {
+      return { args }
+    },
+    template: `
+    <div class="min-w-[355px]">
+      <div class="p-8">
+        <h2 class="m-0 p-0">Fatture</h2>
+      </div>
+      <FzCardList v-bind="args" @fzaction:click="args['onFzaction:click']" />
+    </div>`
+  }),
+  args: {
+    items: singleNonLinkActionItems,
+    'onFzaction:click': fn()
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.getByText('Fattura #001')).toBeInTheDocument()
+    await expect(canvas.getByText('Fattura #002')).toBeInTheDocument()
+    await expect(canvas.getByText('Fattura #003')).toBeInTheDocument()
+  }
+}
+
+export const CardListWithNoActions: CardListStory = {
+  render: (args) => ({
+    components: { FzCardList },
+    setup() {
+      return { args }
+    },
+    template: `
+    <div class="min-w-[355px]">
+      <div class="p-8">
+        <h2 class="m-0 p-0">Fatture</h2>
+      </div>
+      <FzCardList v-bind="args" />
+    </div>`
+  }),
+  args: {
+    items: noActionItems
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.getByText('Fattura #001')).toBeInTheDocument()
+    await expect(canvas.getByText('Fattura #002')).toBeInTheDocument()
+    await expect(canvas.getByText('Fattura #003')).toBeInTheDocument()
   }
 }
 
