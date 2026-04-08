@@ -1,0 +1,570 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Data/FzTable" />
+
+# FzTable
+
+A feature-rich data table component with sorting, filtering, pagination, row selection, accordion sub-rows, and programmatic state control. Renders rows using a CSS grid layout with support for multiple variants.
+
+## Features
+
+- **Multiple Variants**: `normal`, `accordion`, `list`, and `radio` display modes
+- **Column Sorting**: Orderable columns with ascending/descending/none cycle
+- **Pagination**: Built-in pagination with configurable page intervals
+- **Row Selection**: Checkbox-based multi-select or radio single-select
+- **Accordion Sub-Rows**: Expandable parent rows with nested sub-row data, with programmatic open/close control via `v-model:openRowIds`
+- **Search**: Integrated fulltext search input with debounced updates
+- **Filters**: Side panel with customizable filter slots
+- **Actions**: Per-row action dropdown menus, supporting static or dynamic (function-based) actions
+- **Loading State**: Overlay spinner during async operations
+- **Fullscreen Mode**: Optional fullscreen toggle
+- **Responsive**: Adapts layout for small screens
+- **Accessibility**: Semantic `role="table"` structure with `aria-sort`, `aria-rowcount`, and `aria-colcount`
+
+## Installation
+
+```bash
+npm install @fiscozen/table
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTable } from '@fiscozen/table'
+import { FzColumn } from '@fiscozen/simple-table'
+
+const data = ref([
+  { name: 'Alice', email: 'alice@example.com' },
+  { name: 'Bob', email: 'bob@example.com' },
+])
+</script>
+
+<template>
+  <FzTable v-model="data" title="Users">
+    <FzColumn header="Name" field="name" />
+    <FzColumn header="Email" field="email" />
+  </FzTable>
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>title</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Title displayed above the table</td>
+    </tr>
+    <tr>
+      <td><code>subtitle</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Subtitle displayed below the title</td>
+    </tr>
+    <tr>
+      <td><code>tableClass</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Custom CSS class applied to the table container</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'normal' | 'accordion' | 'list' | 'radio'</code></td>
+      <td><code>'normal'</code></td>
+      <td>Display variant. <code>accordion</code> enables expandable sub-rows, <code>radio</code> enables single-select with radio inputs, <code>list</code> renders a simplified list layout</td>
+    </tr>
+    <tr>
+      <td><code>placeholder</code></td>
+      <td><code>string</code></td>
+      <td><code>'No data available'</code></td>
+      <td>Text shown when there is no data</td>
+    </tr>
+    <tr>
+      <td><code>recordLabel</code></td>
+      <td><code>string</code></td>
+      <td><code>'risultati'</code></td>
+      <td>Label for the record count (e.g. "risultati", "selezionate")</td>
+    </tr>
+    <tr>
+      <td><code>recordNumber</code></td>
+      <td><code>number</code></td>
+      <td><code>undefined</code></td>
+      <td>Override the displayed total record count</td>
+    </tr>
+    <tr>
+      <td><code>selectable</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Enable checkbox-based row selection</td>
+    </tr>
+    <tr>
+      <td><code>searchable</code></td>
+      <td><code>boolean</code></td>
+      <td><code>undefined</code></td>
+      <td>Show fulltext search input</td>
+    </tr>
+    <tr>
+      <td><code>searchFilterPlaceholder</code></td>
+      <td><code>string</code></td>
+      <td><code>'Cerca...'</code></td>
+      <td>Placeholder text for the search input</td>
+    </tr>
+    <tr>
+      <td><code>loading</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Show a loading overlay with spinner</td>
+    </tr>
+    <tr>
+      <td><code>actions</code></td>
+      <td><code>FzActionlistProps | ((data: any) =&gt; FzActionlistProps)</code></td>
+      <td><code>undefined</code></td>
+      <td>Actions dropdown configuration. Can be a static object or a function receiving the row data for dynamic actions per row</td>
+    </tr>
+    <tr>
+      <td><code>actionsDisabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>undefined</code></td>
+      <td>Disable the actions dropdown button for all rows</td>
+    </tr>
+    <tr>
+      <td><code>actionLabel</code></td>
+      <td><code>string</code></td>
+      <td><code>''</code></td>
+      <td>Header label for the actions column</td>
+    </tr>
+    <tr>
+      <td><code>pages</code></td>
+      <td><code>number</code></td>
+      <td><code>undefined</code></td>
+      <td>Total number of pages. Pagination is shown when <code>pages &gt; 1</code></td>
+    </tr>
+    <tr>
+      <td><code>pageInterval</code></td>
+      <td><code>number</code></td>
+      <td><code>2</code></td>
+      <td>Number of page buttons to show around the active page</td>
+    </tr>
+    <tr>
+      <td><code>gridTemplateColumns</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Override the CSS <code>grid-template-columns</code> value</td>
+    </tr>
+    <tr>
+      <td><code>internalOrdering</code></td>
+      <td><code>boolean</code></td>
+      <td><code>undefined</code></td>
+      <td>Enable client-side sorting using Ramda's <code>sortWith</code></td>
+    </tr>
+    <tr>
+      <td><code>allowFullscreen</code></td>
+      <td><code>boolean</code></td>
+      <td><code>undefined</code></td>
+      <td>Show a fullscreen toggle button</td>
+    </tr>
+    <tr>
+      <td><code>hasActiveFilters</code></td>
+      <td><code>boolean</code></td>
+      <td><code>undefined</code></td>
+      <td>Whether there are active filters (shows notification badge on filter icon)</td>
+    </tr>
+    <tr>
+      <td><code>extFilters</code></td>
+      <td><code>Record&lt;string, string&gt;</code></td>
+      <td><code>undefined</code></td>
+      <td>Additional filter entries not derived from columns</td>
+    </tr>
+    <tr>
+      <td><code>newItemButton</code></td>
+      <td><code>boolean</code></td>
+      <td><code>undefined</code></td>
+      <td>Show a "new item" button in the toolbar</td>
+    </tr>
+    <tr>
+      <td><code>newItemButtonLabel</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Label for the new item button</td>
+    </tr>
+    <tr>
+      <td><code>newItemButtonIcon</code></td>
+      <td><code>string</code></td>
+      <td><code>'plus'</code></td>
+      <td>Icon name for the new item button</td>
+    </tr>
+    <tr>
+      <td><code>newItemButtonDisabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>undefined</code></td>
+      <td>Disable the new item button</td>
+    </tr>
+  </tbody>
+</table>
+
+## v-model Bindings
+
+FzTable exposes multiple named v-model bindings for two-way state control. All are optional -- the component manages state internally when unbound.
+
+<table>
+  <thead>
+    <tr>
+      <th>Binding</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>v-model</code></td>
+      <td><code>T[]</code></td>
+      <td><code>undefined</code></td>
+      <td>The row data array. <code>T</code> must extend <code>Record&lt;string, any&gt;</code>. Rows may include a <code>subRows</code> array for the accordion variant</td>
+    </tr>
+    <tr>
+      <td><code>v-model:ordering</code></td>
+      <td><code>Record&lt;string, FzOrdering&gt;</code></td>
+      <td><code>{'{}'}</code></td>
+      <td>Column ordering state. Keys are lowercase column field/header names. Each value has <code>orderable</code>, <code>direction</code> (<code>'asc' | 'desc' | 'none'</code>), and <code>field</code> properties</td>
+    </tr>
+    <tr>
+      <td><code>v-model:activePage</code></td>
+      <td><code>number</code></td>
+      <td><code>0</code></td>
+      <td>Zero-based index of the currently active page</td>
+    </tr>
+    <tr>
+      <td><code>v-model:selectedRowIds</code></td>
+      <td><code>Set&lt;string | number&gt;</code></td>
+      <td><code>undefined</code></td>
+      <td>Set of selected row IDs. Used with <code>selectable</code> or <code>variant="radio"</code>. Row identity is determined by <code>row.id</code> or the row's array index as fallback</td>
+    </tr>
+    <tr>
+      <td><code>v-model:openRowIds</code></td>
+      <td><code>Set&lt;string | number&gt;</code></td>
+      <td><code>new Set()</code></td>
+      <td>Set of open (expanded) row IDs for the <code>accordion</code> variant. Allows programmatic control of which rows are expanded. Row identity follows the same <code>row.id || index</code> pattern</td>
+    </tr>
+  </tbody>
+</table>
+
+## Events
+
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Payload</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>fztable:rowactionclick</code></td>
+      <td><code>(actionIndex: number, action: FzActionProps, rowData?: Record&lt;string, any&gt;)</code></td>
+      <td>Emitted when a row action is clicked</td>
+    </tr>
+    <tr>
+      <td><code>fztable:ordering</code></td>
+      <td><code>(ordering: FzOrdering, newDirection: FzOrdering['direction'])</code></td>
+      <td>Emitted when a column header is clicked to change sort order</td>
+    </tr>
+    <tr>
+      <td><code>update:searchTerm</code></td>
+      <td><code>(searchTerm: string | undefined)</code></td>
+      <td>Emitted when the search input value changes</td>
+    </tr>
+    <tr>
+      <td><code>fztable:newitem</code></td>
+      <td><code>()</code></td>
+      <td>Emitted when the new item button is clicked</td>
+    </tr>
+    <tr>
+      <td><code>fztable:updateFilters</code></td>
+      <td><code>(filters: FzTableFilters)</code></td>
+      <td>Emitted when filters are updated</td>
+    </tr>
+    <tr>
+      <td><code>fztable:emptyFilters</code></td>
+      <td><code>()</code></td>
+      <td>Emitted when the "clear filters" button is clicked</td>
+    </tr>
+  </tbody>
+</table>
+
+## Slots
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>default</code></td>
+      <td>Column definitions using <code>FzColumn</code> components. Each column defines a header, field mapping, and optional cell template via its own default slot</td>
+    </tr>
+    <tr>
+      <td><code>loading</code></td>
+      <td>Custom loading indicator. Defaults to <code>FzProgress</code> spinner</td>
+    </tr>
+    <tr>
+      <td><code>row-{'{index}'}</code></td>
+      <td>Override the rendering of a specific row by index (e.g. <code>#row-0</code>)</td>
+    </tr>
+    <tr>
+      <td><code>filter-{'{key}'}</code></td>
+      <td>Content for a specific filter in the filters panel. The key matches the column's <code>field</code> or <code>header</code></td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### With Sorting and Pagination
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTable, FzOrdering } from '@fiscozen/table'
+import { FzColumn } from '@fiscozen/simple-table'
+
+const data = ref([...])
+const activePage = ref(0)
+const ordering = ref<Record<string, FzOrdering>>({
+  name: { orderable: true, direction: 'none' },
+  email: { orderable: true, direction: 'none' },
+})
+</script>
+
+<template>
+  <FzTable
+    v-model="data"
+    v-model:ordering="ordering"
+    v-model:activePage="activePage"
+    :pages="10"
+    :internalOrdering="true"
+    title="Users"
+  >
+    <FzColumn header="Name" field="name" />
+    <FzColumn header="Email" field="email" />
+  </FzTable>
+</template>
+```
+
+### Selectable Rows
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTable } from '@fiscozen/table'
+import { FzColumn } from '@fiscozen/simple-table'
+
+const data = ref([...])
+const selectedRowIds = ref(new Set<string | number>())
+</script>
+
+<template>
+  <FzTable
+    v-model="data"
+    v-model:selectedRowIds="selectedRowIds"
+    :selectable="true"
+    title="Select users"
+  >
+    <FzColumn header="Name" field="name" />
+    <FzColumn header="Email" field="email" />
+  </FzTable>
+</template>
+```
+
+### Accordion with Programmatic Control
+
+Use `v-model:openRowIds` to control which accordion rows are expanded. The Set contains row IDs (from `row.id` or the row's array index).
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTable } from '@fiscozen/table'
+import { FzColumn } from '@fiscozen/simple-table'
+
+const data = ref([
+  {
+    id: 'team-a',
+    name: 'Team A',
+    email: 'team-a@example.com',
+    subRows: [
+      { name: 'Alice', email: 'alice@example.com' },
+      { name: 'Bob', email: 'bob@example.com' },
+    ],
+  },
+  {
+    id: 'team-b',
+    name: 'Team B',
+    email: 'team-b@example.com',
+    subRows: [
+      { name: 'Charlie', email: 'charlie@example.com' },
+    ],
+  },
+])
+
+// Pre-expand Team A
+const openRowIds = ref(new Set<string | number>(['team-a']))
+
+const openAll = () => {
+  openRowIds.value = new Set(data.value.map(r => r.id))
+}
+
+const closeAll = () => {
+  openRowIds.value = new Set()
+}
+</script>
+
+<template>
+  <button @click="openAll">Open All</button>
+  <button @click="closeAll">Close All</button>
+
+  <FzTable
+    v-model="data"
+    v-model:openRowIds="openRowIds"
+    variant="accordion"
+    title="Teams"
+  >
+    <FzColumn header="Name" field="name" />
+    <FzColumn header="Email" field="email" />
+  </FzTable>
+</template>
+```
+
+When no `v-model:openRowIds` is provided, the component manages the open state internally (clicking a row toggles it).
+
+### Radio Variant
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTable } from '@fiscozen/table'
+import { FzColumn } from '@fiscozen/simple-table'
+
+const data = ref([...])
+const selectedRowIds = ref(new Set<string | number>())
+</script>
+
+<template>
+  <FzTable
+    v-model="data"
+    v-model:selectedRowIds="selectedRowIds"
+    variant="radio"
+    title="Select one"
+  >
+    <FzColumn header="Name" field="name" />
+    <FzColumn header="Email" field="email" />
+  </FzTable>
+</template>
+```
+
+### With Search and Filters
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTable } from '@fiscozen/table'
+import { FzColumn } from '@fiscozen/simple-table'
+
+const data = ref([...])
+const searchTerm = ref('')
+const hasActiveFilters = ref(false)
+
+const handleSearch = (term: string | undefined) => {
+  searchTerm.value = term || ''
+  // Filter data based on searchTerm...
+}
+</script>
+
+<template>
+  <FzTable
+    v-model="data"
+    :searchable="true"
+    :hasActiveFilters="hasActiveFilters"
+    title="Users"
+    @update:searchTerm="handleSearch"
+    @fztable:emptyFilters="hasActiveFilters = false"
+  >
+    <FzColumn header="Name" field="name" :filterable="true" />
+    <FzColumn header="Email" field="email" />
+    <template #filter-name>
+      <!-- Custom filter UI for the Name column -->
+    </template>
+  </FzTable>
+</template>
+```
+
+### Dynamic Actions per Row
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzTable } from '@fiscozen/table'
+import { FzColumn } from '@fiscozen/simple-table'
+
+const data = ref([
+  { name: 'Alice', role: 'admin' },
+  { name: 'Bob', role: 'user' },
+])
+
+const getActions = (row: any) => ({
+  items: [
+    { type: 'button' as const, label: 'Edit' },
+    ...(row.role === 'admin'
+      ? [{ type: 'button' as const, label: 'Manage permissions' }]
+      : []),
+  ],
+})
+</script>
+
+<template>
+  <FzTable v-model="data" :actions="getActions" title="Users">
+    <FzColumn header="Name" field="name" />
+    <FzColumn header="Role" field="role" />
+  </FzTable>
+</template>
+```
+
+## Accessibility
+
+FzTable follows WCAG 2.1 AA guidelines:
+
+- **Semantic Structure**: Uses `role="table"`, `role="columnheader"`, and `role="cell"` for assistive technology
+- **ARIA Attributes**: `aria-rowcount`, `aria-colcount`, `aria-rowindex`, and `aria-sort` on sortable columns
+- **Keyboard Navigation**: Column headers are clickable to toggle sort order
+- **Selection**: Checkbox and radio inputs provide accessible selection patterns
+- **Fullscreen**: Escape key exits fullscreen mode
+
+## Related Components
+
+- [FzColumn](../?path=/docs/documentation-data-fzsimpletable--docs) -- Column definition component
+- [FzPagination](../?path=/docs/documentation-data-fzpagination--docs) -- Standalone pagination
+- [FzCheckbox](../?path=/docs/documentation-form-fzcheckbox--docs) -- Used internally for row selection
+
+## Interactive Examples
+
+- [Default Table](../?path=/story/data-fztable--default)
+- [Accordion](../?path=/story/data-fztable--accordion)
+- [Accordion Controlled](../?path=/story/data-fztable--accordion-controlled)
+- [Selectable](../?path=/story/data-fztable--selectable)
+- [Radio](../?path=/story/data-fztable--radio)
+- [List](../?path=/story/data-fztable--list)
