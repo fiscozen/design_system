@@ -24,7 +24,7 @@ const props = defineProps<FzCardHeaderProps>();
     alignItems="center"
     layout="space-between"
   >
-    <FzCardTitle :show-indicator="showIndicator" :title="title" />
+    <FzCardTitle :show-indicator="showIndicator" :title="title" :title-id="titleId" />
     <!-- Value -->
     <p v-if="value" v-bold v-color:blue class="text-base whitespace-nowrap">
       {{ value }}

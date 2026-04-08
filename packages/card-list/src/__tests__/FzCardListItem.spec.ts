@@ -173,7 +173,7 @@ describe("FzCardListItem", () => {
       await wrapper.vm.$nextTick();
       const arrows = wrapper
         .findAllComponents({ name: "FzIcon" })
-        .filter((w) => w.props("name") === "arrow-right");
+        .filter((w) => w.props("name") === "chevron-right");
       expect(arrows).toHaveLength(1);
     });
 
