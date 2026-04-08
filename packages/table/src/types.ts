@@ -1,4 +1,8 @@
-import { FzColumnSlots, type FzColumnProps, type FzSimpleTableProps } from "@fiscozen/simple-table";
+import {
+  FzColumnSlots,
+  type FzColumnProps,
+  type FzSimpleTableProps,
+} from "@fiscozen/simple-table";
 import { type FzActionlistProps } from "@fiscozen/actionlist";
 import { IconSize } from "@fiscozen/icons";
 
@@ -8,13 +12,13 @@ export interface FzOrdering {
    */
   orderable?: boolean;
   /**
-   *  Type of ordering 
+   *  Type of ordering
    */
-  direction?: 'asc' | 'desc' | 'none';
+  direction?: "asc" | "desc" | "none";
   /**
    *  field to be ordered
    */
-  field?: boolean
+  field?: boolean;
 }
 
 export interface FzTableFilter {
@@ -22,9 +26,9 @@ export interface FzTableFilter {
   label: string;
 }
 
-export type FzTableFilters = Record<string, FzTableFilter>
+export type FzTableFilters = Record<string, FzTableFilter>;
 
-interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
+interface FzTableProps extends Omit<FzSimpleTableProps, "value"> {
   /**
    * Title of the table
    */
@@ -113,7 +117,13 @@ interface FzTableProps extends Omit<FzSimpleTableProps, 'value'> {
   /**
    * Table variant
    */
-  variant?: 'normal' | 'accordion' | 'list' | 'radio';
+  variant?: "normal" | "accordion" | "list" | "radio";
+  /**
+   * Set of open (expanded) row IDs for the accordion variant.
+   * Row identity: row.id if present, otherwise array index.
+   * Only applies when variant is 'accordion'.
+   */
+  openRowIds?: Set<string | number>;
   /**
    * Action column label
    *
@@ -154,7 +164,7 @@ type FzRowProps<T> = {
   /**
    * Column configuration
    */
-  columns: {props: FzColumnProps, children: FzColumnSlots}[];
+  columns: { props: FzColumnProps; children: FzColumnSlots }[];
   /**
    * Whether the row is selectable
    */
@@ -180,8 +190,8 @@ type FzRowProps<T> = {
    * left icon CSS class
    */
   leftColIconClass?: string;
-  /** 
-   * Is the row overflowing 
+  /**
+   * Is the row overflowing
    */
   isOverflowing?: boolean;
   /**
