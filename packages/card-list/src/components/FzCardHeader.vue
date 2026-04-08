@@ -15,7 +15,7 @@ const props = defineProps<FzCardHeaderProps>();
     alignItems="center"
     class="min-w-0 flex-1"
   >
-    <FzCardTitle :show-indicator="showIndicator" :title="title" />
+    <FzCardTitle :show-indicator="showIndicator" :title="title" :title-id="titleId" />
   </FzContainer>
   <FzContainer
     v-else

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import { FzBadge } from "@fiscozen/badge";
 import { FzContainer } from "@fiscozen/container";
 import { FzDivider } from "@fiscozen/divider";
