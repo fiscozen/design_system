@@ -1,5 +1,15 @@
 # @fiscozen/table
 
+## 2.1.0
+
+### Minor Changes
+
+- 0fd9f63: Add `openRowIds` v-model to FzTable for programmatic control of accordion row expansion
+
+### Patch Changes
+
+- 9a63193: Fix accordion sub-row action cell background and hover not matching the rest of the row
+
 ## 2.0.6
 
 ### Patch Changes
