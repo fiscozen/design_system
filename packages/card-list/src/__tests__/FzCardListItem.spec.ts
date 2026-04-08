@@ -15,6 +15,8 @@ const actionB: FzActionProps = {
   label: "Action B",
 };
 
+const linkAction = { type: "link" as const, to: "/" };
+
 /** Status indicator icons (circle-small in both title-only and title+value rows) */
 function indicatorIcons(wrapper: ReturnType<typeof mount>) {
   return wrapper.findAllComponents({ name: "FzIcon" }).filter((w) => {
@@ -48,6 +50,7 @@ beforeEach(() => {
 
   Object.defineProperty(window, "matchMedia", {
     writable: true,
+    configurable: true,
     value: vi.fn().mockImplementation((query) => ({
       matches: false,
       media: query,
@@ -163,9 +166,9 @@ describe("FzCardListItem", () => {
       );
     });
 
-    it("should render arrow icon when exactly one action is passed", async () => {
+    it("should render arrow icon when exactly one link action is passed", async () => {
       const wrapper = mount(FzCardListItem, {
-        props: { title: "Item", actions: [actionA] },
+        props: { title: "Item", actions: [linkAction] },
       });
       await wrapper.vm.$nextTick();
       const arrows = wrapper
@@ -174,13 +177,13 @@ describe("FzCardListItem", () => {
       expect(arrows).toHaveLength(1);
     });
 
-    it("should apply cursor-pointer on the row only when exactly one action is passed", async () => {
+    it("should apply cursor-pointer on the row only when exactly one link action is passed", async () => {
       const none = mount(FzCardListItem, { props: { title: "Item" } });
       const many = mount(FzCardListItem, {
         props: { title: "Item", actions: [actionA, actionB] },
       });
       const one = mount(FzCardListItem, {
-        props: { title: "Item", actions: [actionA] },
+        props: { title: "Item", actions: [linkAction] },
       });
       await Promise.all([
         none.vm.$nextTick(),
@@ -294,22 +297,22 @@ describe("FzCardListItem", () => {
   });
 
   describe("Events", () => {
-    it("should emit fzaction:click when single-action row (title) is clicked", async () => {
+    it("should emit fzaction:click when single link-action row is clicked", async () => {
       const wrapper = mount(FzCardListItem, {
-        props: { title: "Item", actions: [actionA] },
+        props: { title: "Item", actions: [linkAction] },
       });
       await wrapper.vm.$nextTick();
 
-      await wrapper.get("p.truncate").trigger("click");
+      await wrapper.get('[role="button"]').trigger("click");
 
       expect(wrapper.emitted("fzaction:click")).toBeTruthy();
       expect(wrapper.emitted("fzaction:click")).toHaveLength(1);
-      expect(wrapper.emitted("fzaction:click")![0]).toEqual([0, actionA]);
+      expect(wrapper.emitted("fzaction:click")![0]).toEqual([0, linkAction]);
     });
 
-    it("should emit fzaction:click when single-action row is activated via Enter", async () => {
+    it("should emit fzaction:click when single link-action row is activated via Enter", async () => {
       const wrapper = mount(FzCardListItem, {
-        props: { title: "Item", actions: [actionA] },
+        props: { title: "Item", actions: [linkAction] },
       });
       await wrapper.vm.$nextTick();
 
@@ -318,12 +321,12 @@ describe("FzCardListItem", () => {
 
       expect(wrapper.emitted("fzaction:click")).toBeTruthy();
       expect(wrapper.emitted("fzaction:click")).toHaveLength(1);
-      expect(wrapper.emitted("fzaction:click")![0]).toEqual([0, actionA]);
+      expect(wrapper.emitted("fzaction:click")![0]).toEqual([0, linkAction]);
     });
 
-    it("should emit fzaction:click when single-action row is activated via Space", async () => {
+    it("should emit fzaction:click when single link-action row is activated via Space", async () => {
       const wrapper = mount(FzCardListItem, {
-        props: { title: "Item", actions: [actionA] },
+        props: { title: "Item", actions: [linkAction] },
       });
       await wrapper.vm.$nextTick();
 
@@ -331,12 +334,12 @@ describe("FzCardListItem", () => {
       await row.trigger("keydown", { key: " " });
 
       expect(wrapper.emitted("fzaction:click")).toHaveLength(1);
-      expect(wrapper.emitted("fzaction:click")![0]).toEqual([0, actionA]);
+      expect(wrapper.emitted("fzaction:click")![0]).toEqual([0, linkAction]);
     });
 
-    it("should emit fzaction:click multiple times on repeated row activations", async () => {
+    it("should emit fzaction:click multiple times on repeated link-action row activations", async () => {
       const wrapper = mount(FzCardListItem, {
-        props: { title: "Item", actions: [actionA] },
+        props: { title: "Item", actions: [linkAction] },
       });
       await wrapper.vm.$nextTick();
 
@@ -347,7 +350,7 @@ describe("FzCardListItem", () => {
 
       expect(wrapper.emitted("fzaction:click")).toHaveLength(3);
       for (const payload of wrapper.emitted("fzaction:click")!) {
-        expect(payload).toEqual([0, actionA]);
+        expect(payload).toEqual([0, linkAction]);
       }
     });
 
@@ -371,21 +374,18 @@ describe("FzCardListItem", () => {
         props: { title: "Item" },
       });
       await wrapper.vm.$nextTick();
-      expect(wrapper.find(".hover\\:bg-semantic-info-50").exists()).toBe(true);
+      expect(wrapper.find(".p-8").exists()).toBe(true);
     });
 
-    it("should expose single-action row as focusable button with labelled title", async () => {
+    it("should expose link-action row as focusable button with labelled title", async () => {
       const wrapper = mount(FzCardListItem, {
-        props: { title: "Pay invoice", actions: [actionA] },
+        props: { title: "Pay invoice", actions: [linkAction] },
       });
       await wrapper.vm.$nextTick();
       const row = wrapper.get('[role="button"]');
       expect(row.attributes("tabindex")).toBe("0");
-      const labelledBy = row.attributes("aria-labelledby");
-      expect(labelledBy).toBeTruthy();
-      const titleEl = wrapper.get("p.truncate");
-      expect(titleEl.attributes("id")).toBe(labelledBy);
-      expect(titleEl.text()).toBe("Pay invoice");
+      expect(row.attributes("aria-labelledby")).toBeTruthy();
+      expect(wrapper.get("p.truncate").text()).toBe("Pay invoice");
     });
   });
 

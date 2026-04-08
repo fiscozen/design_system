@@ -9,6 +9,8 @@ const sampleAction: FzActionProps = {
   label: "Go",
 };
 
+const linkAction = { type: "link" as const, to: "/" };
+
 beforeEach(() => {
   // Mock IntersectionObserver for FzFloating / dropdown (not in jsdom)
   global.IntersectionObserver = class IntersectionObserver {
@@ -26,6 +28,7 @@ beforeEach(() => {
 
   Object.defineProperty(window, "matchMedia", {
     writable: true,
+    configurable: true,
     value: vi.fn().mockImplementation((query) => ({
       matches: false,
       media: query,
@@ -174,12 +177,12 @@ describe("FzCardList", () => {
   });
 
   describe("Events", () => {
-    it("should emit fzaction:click with item index when single-action arrow is clicked", async () => {
+    it("should emit fzaction:click with item index when link-action arrow is clicked", async () => {
       const wrapper = mount(FzCardList, {
         props: {
           items: [
-            { title: "Item 0", actions: [sampleAction] },
-            { title: "Item 1", actions: [sampleAction] },
+            { title: "Item 0", actions: [linkAction] },
+            { title: "Item 1", actions: [linkAction] },
           ],
         },
       });
@@ -192,14 +195,14 @@ describe("FzCardList", () => {
       expect(wrapper.emitted("fzaction:click")![0]).toEqual([
         1,
         0,
-        sampleAction,
+        linkAction,
       ]);
     });
 
-    it("should emit fzaction:click with index 0 when first item arrow is clicked", async () => {
+    it("should emit fzaction:click with index 0 when first item link-action arrow is clicked", async () => {
       const wrapper = mount(FzCardList, {
         props: {
-          items: [{ title: "Item 0", actions: [sampleAction] }],
+          items: [{ title: "Item 0", actions: [linkAction] }],
         },
       });
       await wrapper.vm.$nextTick();
@@ -211,7 +214,7 @@ describe("FzCardList", () => {
       expect(wrapper.emitted("fzaction:click")![0]).toEqual([
         0,
         0,
-        sampleAction,
+        linkAction,
       ]);
     });
 

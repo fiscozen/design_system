@@ -1,7 +1,7 @@
-import type { FzActionLinkProps, FzActionProps } from "@fiscozen/action";
+import type { FzActionProps } from "@fiscozen/action";
 import type { FzBadgeTone } from "@fiscozen/badge";
 
-export type ActionsMode = "none" | "single" | "multiple";
+export type ActionsMode = "none" | "link" | "actions";
 
 export interface FzCardListItemProps {
   /**
@@ -37,7 +37,7 @@ export interface FzCardListItemProps {
   /**
    * Row actions. When omitted or `[]`, no trailing control is shown. With one item, an arrow button is shown; with more than one, an ellipsis opens a dropdown.
    */
-  actions?: [FzActionLinkProps] | FzActionProps[];
+  actions?: FzActionProps[];
 }
 
 export interface FzCardListItemEmits {
@@ -45,10 +45,6 @@ export interface FzCardListItemEmits {
    * Emitted when a row action is chosen: single-arrow click, or an item from the overflow dropdown.
    */
   (event: "fzaction:click", actionIndex: number, action: FzActionProps): void;
-  /**
-   * Emitted when the actions dropdown open state changes (forwarded from the icon dropdown).
-   */
-  (event: "update:isOpen", value: boolean): void;
 }
 
 /**
