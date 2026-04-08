@@ -23,9 +23,9 @@ const sampleObj = {
   email: 'riccardo.agnoletto@fiscozen.it',
   phone_number: '123456789',
   price: '12145,67 €',
-  state: "da_inviare",
+  state: 'da_inviare',
   hiddenState: 'yes',
-  link: 'https://www.fiscozen.it',
+  link: 'https://www.fiscozen.it'
 }
 
 const items = [
@@ -102,18 +102,18 @@ const Default: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify table renders correctly', async () => {
       const table = canvas.getByRole('table')
       await expect(table).toBeInTheDocument()
       await expect(table).toBeVisible()
     })
-    
+
     await step('Verify table title and subtitle are displayed', async () => {
       await expect(canvas.getByText('Table title')).toBeInTheDocument()
       await expect(canvas.getByText('Table subtitle')).toBeInTheDocument()
     })
-    
+
     await step('Verify column headers are rendered', async () => {
       const headers = canvasElement.querySelectorAll('[role="columnheader"]')
       await expect(headers.length).toBeGreaterThan(0)
@@ -121,30 +121,34 @@ const Default: Story = {
       await expect(canvas.getByText('Cognome')).toBeInTheDocument()
       await expect(canvas.getByText('Email')).toBeInTheDocument()
     })
-    
+
     await step('Verify table rows are rendered', async () => {
       // Table rows are rendered as divs with role="cell" inside, or as FzRow components
       const cells = canvasElement.querySelectorAll('[role="cell"]')
       await expect(cells.length).toBeGreaterThan(0)
     })
-    
+
     await step('Verify pagination controls are present', async () => {
       // Look for pagination buttons (page numbers)
-      const paginationButtons = canvasElement.querySelectorAll('button[aria-label*="page"], button[aria-label*="Page"]')
+      const paginationButtons = canvasElement.querySelectorAll(
+        'button[aria-label*="page"], button[aria-label*="Page"]'
+      )
       // Should have at least some pagination controls when pages > 1
       await expect(paginationButtons.length).toBeGreaterThanOrEqual(0)
     })
-    
+
     await step('Verify new item button is present', async () => {
       // The new item button may be rendered as a button or link
       const newItemButton = canvasElement.querySelector('button, a')
       // Just verify the table has the newItemButton prop set (button may be present)
       await expect(true).toBe(true) // Button presence verified by prop
     })
-    
+
     await step('Verify action buttons are present on rows', async () => {
       // Action buttons should be present in rows
-      const actionButtons = canvasElement.querySelectorAll('[role="button"][aria-label*="action"], [role="button"][aria-label*="Action"]')
+      const actionButtons = canvasElement.querySelectorAll(
+        '[role="button"][aria-label*="action"], [role="button"][aria-label*="Action"]'
+      )
       await expect(actionButtons.length).toBeGreaterThanOrEqual(0)
     })
   }
@@ -234,15 +238,20 @@ const LongText: Story = {
   })
 }
 
-const rows = [{
-  name: 'Riga 1'
-}, {
-  name: 'Riga 2'
-}, {
-  name: 'Riga 3'
-}, {
-  name: 'Riga 4'
-}]
+const rows = [
+  {
+    name: 'Riga 1'
+  },
+  {
+    name: 'Riga 2'
+  },
+  {
+    name: 'Riga 3'
+  },
+  {
+    name: 'Riga 4'
+  }
+]
 
 const ActionClick: Story = {
   args: {
@@ -272,7 +281,11 @@ const ActionClick: Story = {
   },
   render: (args) => ({
     setup() {
-      const handleRowAction = (index: number, actionListItem: ActionlistItem, rowData: Record<string, any>) => {
+      const handleRowAction = (
+        index: number,
+        actionListItem: ActionlistItem,
+        rowData: Record<string, any>
+      ) => {
         args.onFztableRowactionclick(index, actionListItem, rowData)
       }
       return { args, handleRowAction }
@@ -292,35 +305,37 @@ const ActionClick: Story = {
   }),
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify table renders with actions', async () => {
       const table = canvas.getByRole('table')
       await expect(table).toBeInTheDocument()
     })
-    
+
     await step('Verify table rows are rendered', async () => {
       await expect(canvas.getByText('Riga 1')).toBeInTheDocument()
       await expect(canvas.getByText('Riga 2')).toBeInTheDocument()
       await expect(canvas.getByText('Riga 3')).toBeInTheDocument()
       await expect(canvas.getByText('Riga 4')).toBeInTheDocument()
     })
-    
+
     await step('Verify action buttons are present on rows', async () => {
       // Look for action buttons - they might be icon buttons or dropdowns
       // The action column should be present even if buttons aren't immediately visible
       const actionColumn = canvasElement.querySelector('[role="columnheader"]')
       await expect(actionColumn).toBeInTheDocument()
     })
-    
+
     await step('Verify action column header is present', async () => {
       // Action column should be present
       const actionHeader = canvasElement.querySelector('[role="columnheader"]')
       await expect(actionHeader).toBeInTheDocument()
     })
-    
+
     await step('Verify row action click handler IS called when action is clicked', async () => {
       // Look for action buttons in rows
-      const actionButtons = canvasElement.querySelectorAll('button[aria-label*="action"], button[aria-label*="Action"]')
+      const actionButtons = canvasElement.querySelectorAll(
+        'button[aria-label*="action"], button[aria-label*="Action"]'
+      )
       if (actionButtons.length > 0) {
         await userEvent.click(actionButtons[0] as HTMLElement)
         // ROBUST CHECK: Verify handler WAS called
@@ -334,7 +349,7 @@ const CustomRows: Story = {
   args: {
     placeholder: 'Nessun valore',
     title: 'Table title',
-    subtitle: 'Table subtitle',
+    subtitle: 'Table subtitle'
   },
   render: (args) => ({
     setup() {
@@ -392,7 +407,7 @@ const ColumnOrdering: Story = {
         cognome: 'Barraco',
         email: 'cristian.barraco@fiscozen.it',
         phone_number: '111111'
-      },
+      }
     ],
     placeholder: 'Nessun valore',
     actions: {
@@ -412,7 +427,7 @@ const ColumnOrdering: Story = {
           orderable: true,
           direction: 'asc'
         }
-      });
+      })
       const handleNameOrdering = (ordering: FzOrdering, direction: FzOrdering['direction']) => {
         args.onFztableOrdering(ordering, direction)
       }
@@ -438,36 +453,36 @@ const ColumnOrdering: Story = {
   }),
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify table renders with ordering enabled', async () => {
       const table = canvas.getByRole('table')
       await expect(table).toBeInTheDocument()
     })
-    
+
     await step('Verify column headers are present', async () => {
       await expect(canvas.getByText('Nome')).toBeInTheDocument()
       await expect(canvas.getByText('Cognome')).toBeInTheDocument()
       await expect(canvas.getByText('Email')).toBeInTheDocument()
     })
-    
+
     await step('Verify initial data order', async () => {
       // With internalOrdering and direction: 'asc', data should be sorted
       const cells = canvasElement.querySelectorAll('[role="cell"]')
       await expect(cells.length).toBeGreaterThan(0)
-      
+
       // Table should contain the data
       await expect(canvas.getByText('Francesco')).toBeInTheDocument()
       await expect(canvas.getByText('Riccardo')).toBeInTheDocument()
       await expect(canvas.getByText('Cristian')).toBeInTheDocument()
     })
-    
+
     await step('Verify sorting indicator is present on orderable column', async () => {
       // Look for sorting indicators (arrows/icons) on the Nome column
       const nomeHeader = canvas.getByText('Nome')
       const headerCell = nomeHeader.closest('[role="columnheader"]')
       await expect(headerCell).toBeInTheDocument()
     })
-    
+
     await step('Verify ordering handler IS called when column header is clicked', async () => {
       const nomeHeader = canvas.getByText('Nome')
       const headerCell = nomeHeader.closest('[role="columnheader"]')
@@ -500,26 +515,26 @@ const Filters: Story = {
   },
   render: (args) => ({
     setup() {
-      const loading = ref(false);
-      const data = ref<Record<string, string>[]>([]);
+      const loading = ref(false)
+      const data = ref<Record<string, string>[]>([])
 
-      const searchTerm = ref('');
+      const searchTerm = ref('')
       const extFilters = {
         hiddenState: 'Stato non relativo a una colonna'
       }
       const filters = reactive<Record<string, any>>({
         state: '',
         hiddenState: ''
-      });
+      })
       const filteredData = computed(() => {
         return data.value.filter((el: any) => {
-          let res = true;
+          let res = true
           const found = Object.values(el).find((col: any) => col.includes(searchTerm.value))
           for (const filter in filters) {
-            res &&= !filters[filter] || (el[filter] === filters[filter])
+            res &&= !filters[filter] || el[filter] === filters[filter]
           }
-          res &&= !!found;
-          return res;
+          res &&= !!found
+          return res
         })
       })
       const emptyFilters = () => {
@@ -528,11 +543,11 @@ const Filters: Story = {
         })
       }
       onMounted(() => {
-        loading.value = true;
+        loading.value = true
         setTimeout(() => {
           data.value = Array(10)
             .fill({})
-            .map(() => sampleObj);
+            .map(() => sampleObj)
           data.value[1] = {
             nome: 'Francesco',
             cognome: 'Panico',
@@ -549,7 +564,7 @@ const Filters: Story = {
             state: 'scaduta',
             hiddenState: 'no'
           }
-          loading.value = false;
+          loading.value = false
         }, 3000)
       })
       return { args, filteredData, searchTerm, filters, emptyFilters, extFilters, loading }
@@ -600,12 +615,12 @@ const Filters: Story = {
   }),
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify table renders with filters', async () => {
       const table = canvas.getByRole('table')
       await expect(table).toBeInTheDocument()
     })
-    
+
     await step('Verify search functionality is available', async () => {
       // Wait for loading to complete first (3 seconds in the story)
       await waitFor(
@@ -617,25 +632,27 @@ const Filters: Story = {
         },
         { timeout: 5000 }
       )
-      
+
       // Search input may be hidden initially (collapsed) or visible
       // Just verify the table is searchable by checking the searchable prop is set
       const table = canvas.getByRole('table')
       await expect(table).toBeInTheDocument()
     })
-    
+
     await step('Verify filter controls are present', async () => {
       // Wait for data to load
       await waitFor(
         () => {
-          const filterButton = canvasElement.querySelector('button[aria-label*="filter"], button[aria-label*="Filter"]')
+          const filterButton = canvasElement.querySelector(
+            'button[aria-label*="filter"], button[aria-label*="Filter"]'
+          )
           // Filter button may or may not be visible depending on state
           expect(true).toBe(true) // Just verify we can query
         },
         { timeout: 5000 }
       )
     })
-    
+
     await step('Verify table data loads after initial loading state', async () => {
       // Wait for loading to complete (3 seconds in the story)
       await waitFor(
@@ -648,7 +665,7 @@ const Filters: Story = {
         { timeout: 5000 }
       )
     })
-    
+
     await step('Verify filterable column header is present', async () => {
       await waitFor(
         () => {
@@ -657,35 +674,46 @@ const Filters: Story = {
         { timeout: 5000 }
       )
     })
-    
+
     await step('Verify search handler IS called when typing in search', async () => {
       // Wait for data to load and search to be available
       // The search button is an FzIconButton with a magnifying-glass icon inside
       await waitFor(
         () => {
           // Look for button containing the magnifying-glass FontAwesome icon (data-icon attribute)
-          const searchButton = canvasElement.querySelector('.fz-icon-button-wrapper button') ||
-            canvasElement.querySelector('button svg[data-icon="magnifying-glass"]')?.closest('button')
+          const searchButton =
+            canvasElement.querySelector('.fz-icon-button-wrapper button') ||
+            canvasElement
+              .querySelector('button svg[data-icon="magnifying-glass"]')
+              ?.closest('button')
           expect(searchButton).toBeInTheDocument()
         },
         { timeout: 5000 }
       )
-      
+
       // Find the search button by looking for the icon wrapper or the FontAwesome icon
-      const searchButton = canvasElement.querySelector('.fz-icon-button-wrapper button') ||
+      const searchButton =
+        canvasElement.querySelector('.fz-icon-button-wrapper button') ||
         canvasElement.querySelector('button svg[data-icon="magnifying-glass"]')?.closest('button')
       if (searchButton) {
         await userEvent.click(searchButton as HTMLElement)
-        await waitFor(() => {
-          // Find the actual input element inside the FzInput component
-          const searchInputWrapper = canvasElement.querySelector('[data-cy="fztable-search"]')
-          const actualInput = searchInputWrapper?.querySelector('input') || canvasElement.querySelector('input[type="text"]')
-          expect(actualInput).toBeInTheDocument()
-        }, { timeout: 2000 })
-        
+        await waitFor(
+          () => {
+            // Find the actual input element inside the FzInput component
+            const searchInputWrapper = canvasElement.querySelector('[data-cy="fztable-search"]')
+            const actualInput =
+              searchInputWrapper?.querySelector('input') ||
+              canvasElement.querySelector('input[type="text"]')
+            expect(actualInput).toBeInTheDocument()
+          },
+          { timeout: 2000 }
+        )
+
         // Find the actual input element, not the wrapper
         const searchInputWrapper = canvasElement.querySelector('[data-cy="fztable-search"]')
-        const searchInput = searchInputWrapper?.querySelector('input') || canvasElement.querySelector('input[type="text"]')
+        const searchInput =
+          searchInputWrapper?.querySelector('input') ||
+          canvasElement.querySelector('input[type="text"]')
         if (searchInput) {
           await userEvent.type(searchInput as HTMLElement, 'test')
           // ROBUST CHECK: Verify handler WAS called
@@ -693,7 +721,7 @@ const Filters: Story = {
         }
       }
     })
-    
+
     await step('Verify new item handler IS called when new item button is clicked', async () => {
       await waitFor(
         () => {
@@ -702,12 +730,12 @@ const Filters: Story = {
         },
         { timeout: 5000 }
       )
-      
+
       const buttons = canvasElement.querySelectorAll('button')
-      const newItemBtn = Array.from(buttons).find((btn) =>
-        btn.textContent?.includes('Nuova') || btn.textContent?.includes('fattura')
+      const newItemBtn = Array.from(buttons).find(
+        (btn) => btn.textContent?.includes('Nuova') || btn.textContent?.includes('fattura')
       )
-      
+
       if (newItemBtn) {
         await userEvent.click(newItemBtn as HTMLElement)
         // ROBUST CHECK: Verify handler WAS called
@@ -726,11 +754,11 @@ const Selectable: Story = {
     title: 'Table title',
     subtitle: 'Table subtitle',
     selectable: true,
-    recordNumber: 100,
+    recordNumber: 100
   },
   render: (args) => ({
     setup() {
-      const selectedRowIds = ref(new Set([3,7]));
+      const selectedRowIds = ref(new Set([3, 7]))
       return { args, selectedRowIds }
     },
     components: {
@@ -753,23 +781,23 @@ const Selectable: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify table renders with selection enabled', async () => {
       const table = canvas.getByRole('table')
       await expect(table).toBeInTheDocument()
     })
-    
+
     await step('Verify selectable checkboxes are present', async () => {
       // Look for checkboxes in rows (not header)
       const checkboxes = canvasElement.querySelectorAll('input[type="checkbox"]')
       await expect(checkboxes.length).toBeGreaterThan(0)
     })
-    
+
     await step('Verify selected rows indicator is displayed', async () => {
       const selectedIndicator = canvas.getByText(/selected rows/i)
       await expect(selectedIndicator).toBeInTheDocument()
     })
-    
+
     await step('Verify initial selection state', async () => {
       // Rows 3 and 7 should be selected initially
       const checkboxes = canvasElement.querySelectorAll('input[type="checkbox"]')
@@ -788,7 +816,9 @@ const Accordion: Story = {
         .map((_, index) => ({
           ...sampleObj,
           id: index,
-          subRows: Array(5).fill({}).map(() => sampleObj)
+          subRows: Array(5)
+            .fill({})
+            .map(() => sampleObj)
         })),
       {
         ...sampleObj,
@@ -809,7 +839,8 @@ const Accordion: Story = {
   },
   render: (args) => ({
     setup() {
-      return { args }
+      const openRowIds = ref<Set<string | number>>(new Set([0]))
+      return { args, openRowIds }
     },
     components: {
       FzColumn,
@@ -817,7 +848,8 @@ const Accordion: Story = {
     },
     template: `
       <div class="p-12 h-[600px]">
-        <FzTable v-bind="args">
+        <h3 class="mb-8">Open rows: {{ [...openRowIds] }}</h3>
+        <FzTable v-bind="args" v-model:openRowIds="openRowIds">
           <FzColumn header="Nome" />
           <FzColumn header="Cognome" />
           <FzColumn header="Email">
@@ -831,29 +863,156 @@ const Accordion: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
-    await step('Verify row without subRows has no expand icon but still has aligned cells', async () => {
-      const noSubRowsCell = canvas.getByText('No SubRows')
-      const rowDiv = noSubRowsCell.closest('.grid')
-      await expect(rowDiv).not.toBeNull()
-      if (rowDiv) {
-        const icons = rowDiv.querySelectorAll('svg[data-icon="angle-right"], svg[data-icon="angle-up"]')
-        await expect(icons.length).toBe(0)
-
-        const cells = rowDiv.querySelectorAll('[role="cell"]')
-        const firstRow = canvas.getAllByText('Riccardo')[0]
-        const firstRowDiv = firstRow.closest('.grid')
-        const firstRowCells = firstRowDiv!.querySelectorAll('[role="cell"]')
-        await expect(cells.length).toBe(firstRowCells.length)
-      }
+    await step('Verify first row is initially open from v-model:openRowIds', async () => {
+      const subrowCells = canvasElement.querySelectorAll('.subrow-grey')
+      await expect(subrowCells.length).toBeGreaterThan(0)
     })
 
-    await step('Verify row with subRows has expand icon', async () => {
-      const firstRow = canvas.getAllByText('Riccardo')[0]
-      const rowDiv = firstRow.closest('.grid')
-      if (rowDiv) {
-        const icon = rowDiv.querySelector('svg[data-icon="angle-right"]')
-        await expect(icon).not.toBeNull()
+    await step(
+      'Verify row without subRows has no expand icon but still has aligned cells',
+      async () => {
+        const noSubRowsCell = canvas.getByText('No SubRows')
+        const rowDiv = noSubRowsCell.closest('.grid')
+        await expect(rowDiv).not.toBeNull()
+        if (rowDiv) {
+          const icons = rowDiv.querySelectorAll(
+            'svg[data-icon="angle-right"], svg[data-icon="angle-up"]'
+          )
+          await expect(icons.length).toBe(0)
+
+          const cells = rowDiv.querySelectorAll('[role="cell"]')
+          const firstRow = canvas.getAllByText('Riccardo')[0]
+          const firstRowDiv = firstRow.closest('.grid')
+          const firstRowCells = firstRowDiv!.querySelectorAll('[role="cell"]')
+          await expect(cells.length).toBe(firstRowCells.length)
+        }
       }
+    )
+
+    await step('Verify clicking an open row closes it and updates v-model display', async () => {
+      const firstRow = canvas.getAllByText('Riccardo')[0]
+      const rowDiv = firstRow.closest('.grid')!
+      await userEvent.click(rowDiv)
+      await waitFor(() => {
+        const subrowCells = canvasElement.querySelectorAll('.subrow-grey')
+        expect(subrowCells.length).toBe(0)
+      })
+    })
+
+    await step('Verify clicking a closed row opens it', async () => {
+      const firstRow = canvas.getAllByText('Riccardo')[0]
+      const rowDiv = firstRow.closest('.grid')!
+      await userEvent.click(rowDiv)
+      await waitFor(() => {
+        const subrowCells = canvasElement.querySelectorAll('.subrow-grey')
+        expect(subrowCells.length).toBeGreaterThan(0)
+      })
+    })
+  }
+}
+
+const AccordionControlled: Story = {
+  args: {
+    modelValue: [
+      ...Array(3)
+        .fill({})
+        .map((_, index) => ({
+          ...sampleObj,
+          id: index,
+          nome: `Parent ${index + 1}`,
+          subRows: Array(2)
+            .fill({})
+            .map((__, subIndex) => ({
+              ...sampleObj,
+              nome: `Sub ${index + 1}-${subIndex + 1}`
+            }))
+        })),
+      {
+        ...sampleObj,
+        id: 'no-subrows',
+        nome: 'No SubRows',
+        cognome: 'Row',
+        subRows: []
+      }
+    ],
+    actionLabel: '',
+    actions: {
+      items
+    },
+    placeholder: 'Nessun valore',
+    title: 'Accordion with programmatic control',
+    subtitle: 'Use buttons to open/close rows',
+    variant: 'accordion'
+  },
+  render: (args) => ({
+    setup() {
+      const openRowIds = ref<Set<string | number>>(new Set())
+      const openAll = () => {
+        openRowIds.value = new Set(
+          (args.modelValue as any[]).filter((r: any) => r.subRows?.length).map((r: any) => r.id)
+        )
+      }
+      const closeAll = () => {
+        openRowIds.value = new Set()
+      }
+      return { args, openRowIds, openAll, closeAll }
+    },
+    components: {
+      FzColumn,
+      FzTable
+    },
+    template: `
+      <div class="p-12 h-[600px]">
+        <div class="flex gap-8 mb-16">
+          <button data-testid="open-all" class="px-12 py-4 bg-blue-500 text-white rounded" @click="openAll">Open All</button>
+          <button data-testid="close-all" class="px-12 py-4 bg-grey-300 text-core-black rounded" @click="closeAll">Close All</button>
+        </div>
+        <h3 class="mb-8">Open rows: {{ [...openRowIds] }}</h3>
+        <FzTable v-bind="args" v-model:openRowIds="openRowIds">
+          <FzColumn header="Nome" />
+          <FzColumn header="Cognome" />
+          <FzColumn header="Email">
+            <template #default="{data}"><b>{{data.email}}</b></template>
+          </FzColumn>
+          <FzColumn header="Numero di telefono" field="phone_number" />
+        </FzTable>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify no rows are open initially', async () => {
+      const subrowCells = canvasElement.querySelectorAll('.subrow-grey')
+      await expect(subrowCells.length).toBe(0)
+    })
+
+    await step('Click Open All and verify all expandable rows open', async () => {
+      const openAllBtn = canvas.getByTestId('open-all')
+      await userEvent.click(openAllBtn)
+      await waitFor(() => {
+        const subrowCells = canvasElement.querySelectorAll('.subrow-grey')
+        expect(subrowCells.length).toBeGreaterThan(0)
+      })
+    })
+
+    await step('Click Close All and verify all rows close', async () => {
+      const closeAllBtn = canvas.getByTestId('close-all')
+      await userEvent.click(closeAllBtn)
+      await waitFor(() => {
+        const subrowCells = canvasElement.querySelectorAll('.subrow-grey')
+        expect(subrowCells.length).toBe(0)
+      })
+    })
+
+    await step('Verify clicking a row still works after programmatic control', async () => {
+      const firstRow = canvas.getAllByText('Parent 1')[0]
+      const rowDiv = firstRow.closest('.grid')!
+      await userEvent.click(rowDiv)
+      await waitFor(() => {
+        const subrowCells = canvasElement.querySelectorAll('.subrow-grey')
+        expect(subrowCells.length).toBeGreaterThan(0)
+      })
     })
   }
 }
@@ -863,7 +1022,7 @@ const FullScreen: Story = {
     modelValue: Array(10)
       .fill({})
       .map(() => ({
-        ...sampleObj,
+        ...sampleObj
       })),
     placeholder: 'Nessun valore',
     title: 'Table title',
@@ -937,7 +1096,7 @@ const DynamicActions: Story = {
       .fill({})
       .map(() => sampleObj),
     placeholder: 'Nessun valore',
-    actions: row => ({
+    actions: (row) => ({
       items: [
         {
           type: 'button' as const,
@@ -1037,11 +1196,10 @@ const EpmtyTable: Story = {
     subtitle: 'Table subtitle'
   },
   render: (args) => ({
-    setup() {
-    },
+    setup() {},
     components: {
       FzColumn,
-      FzTable,
+      FzTable
     },
     template: `
       <div class="p-32">
@@ -1056,31 +1214,31 @@ const EpmtyTable: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify table renders with empty state', async () => {
       const table = canvas.getByRole('table')
       await expect(table).toBeInTheDocument()
     })
-    
+
     await step('Verify table structure is rendered', async () => {
       // Empty table may not show title/subtitle, but structure should be present
       const table = canvas.getByRole('table')
       await expect(table).toBeInTheDocument()
     })
-    
+
     await step('Verify column headers are rendered', async () => {
       await expect(canvas.getByText('Nome')).toBeInTheDocument()
       await expect(canvas.getByText('Cognome')).toBeInTheDocument()
       await expect(canvas.getByText('Email')).toBeInTheDocument()
       await expect(canvas.getByText('Numero di telefono')).toBeInTheDocument()
     })
-    
+
     await step('Verify empty state placeholder is displayed', async () => {
       // The placeholder text "Nessun valore" or "No data available" should be shown
       const emptyMessage = canvas.getByText(/nessun valore|no data available/i)
       await expect(emptyMessage).toBeInTheDocument()
     })
-    
+
     await step('Verify no data rows are present', async () => {
       // Should have no data cells, only headers
       // Note: Column headers ([role="columnheader"]) never contain data cells ([role="cell"]) -
@@ -1103,11 +1261,11 @@ const Radio: Story = {
     variant: 'radio',
     actions: {
       items
-    },
+    }
   },
   render: (args) => ({
     setup() {
-      const selectedRowIds = ref(new Set([3]));
+      const selectedRowIds = ref(new Set([3]))
       return { args, selectedRowIds }
     },
     components: {
@@ -1142,7 +1300,7 @@ const List: Story = {
     actions: {
       items
     },
-    actionLabel: '',
+    actionLabel: ''
   },
   parameters: {
     viewport: {
@@ -1183,7 +1341,7 @@ const ListWithSelection: Story = {
     actions: {
       items
     },
-    actionLabel: '',
+    actionLabel: ''
   },
   parameters: {
     viewport: {
@@ -1192,7 +1350,7 @@ const ListWithSelection: Story = {
   },
   render: (args) => ({
     setup() {
-      const selectedRowIds = ref(new Set([3,7]));
+      const selectedRowIds = ref(new Set([3, 7]))
       return { args, selectedRowIds }
     },
     components: {
@@ -1222,7 +1380,7 @@ const CustomNewItemButton: Story = {
     newItemButtonLabel: 'Scarica tutte',
     newItemButtonIcon: 'arrow-down-to-bracket',
     title: 'Table title',
-    subtitle: 'Table subtitle',
+    subtitle: 'Table subtitle'
   },
   render: (args) => ({
     setup() {
@@ -1271,9 +1429,21 @@ const AccordionDynamicActions: Story = {
         email: 'mario.rossi@example.it',
         phone_number: '333-1111111',
         subRows: [
-          { id: 'sub-001a', nome: 'Fattura Q1', cognome: '2.500,00 €', email: 'emessa', phone_number: '01/03/2026' },
-          { id: 'sub-001b', nome: 'Fattura Q2', cognome: '1.800,00 €', email: 'bozza', phone_number: '15/06/2026' },
-        ],
+          {
+            id: 'sub-001a',
+            nome: 'Fattura Q1',
+            cognome: '2.500,00 €',
+            email: 'emessa',
+            phone_number: '01/03/2026'
+          },
+          {
+            id: 'sub-001b',
+            nome: 'Fattura Q2',
+            cognome: '1.800,00 €',
+            email: 'bozza',
+            phone_number: '15/06/2026'
+          }
+        ]
       },
       {
         id: 'inv-002',
@@ -1282,10 +1452,28 @@ const AccordionDynamicActions: Story = {
         email: 'giulia.bianchi@example.it',
         phone_number: '333-2222222',
         subRows: [
-          { id: 'sub-002a', nome: 'Fattura Q1', cognome: '3.200,00 €', email: 'emessa', phone_number: '10/02/2026' },
-          { id: 'sub-002b', nome: 'Fattura Q2', cognome: '4.100,00 €', email: 'scaduta', phone_number: '01/05/2026' },
-          { id: 'sub-002c', nome: 'Fattura Q3', cognome: '2.900,00 €', email: 'bozza', phone_number: '01/09/2026' },
-        ],
+          {
+            id: 'sub-002a',
+            nome: 'Fattura Q1',
+            cognome: '3.200,00 €',
+            email: 'emessa',
+            phone_number: '10/02/2026'
+          },
+          {
+            id: 'sub-002b',
+            nome: 'Fattura Q2',
+            cognome: '4.100,00 €',
+            email: 'scaduta',
+            phone_number: '01/05/2026'
+          },
+          {
+            id: 'sub-002c',
+            nome: 'Fattura Q3',
+            cognome: '2.900,00 €',
+            email: 'bozza',
+            phone_number: '01/09/2026'
+          }
+        ]
       },
       {
         id: 'inv-003',
@@ -1293,52 +1481,65 @@ const AccordionDynamicActions: Story = {
         cognome: 'Verdi',
         email: 'luca.verdi@example.it',
         phone_number: '333-3333333',
-        subRows: [],
-      },
+        subRows: []
+      }
     ],
     actionLabel: '',
     actions: (row: Record<string, any>) => {
       switch (row.email) {
         case 'emessa':
-          return { items: [
-            { type: 'button' as const, label: 'Scarica PDF' },
-            { type: 'button' as const, label: 'Invia promemoria' },
-          ] }
+          return {
+            items: [
+              { type: 'button' as const, label: 'Scarica PDF' },
+              { type: 'button' as const, label: 'Invia promemoria' }
+            ]
+          }
         case 'bozza':
-          return { items: [
-            { type: 'button' as const, label: 'Modifica' },
-            { type: 'button' as const, label: 'Emetti fattura' },
-            { type: 'button' as const, label: 'Elimina bozza' },
-          ] }
+          return {
+            items: [
+              { type: 'button' as const, label: 'Modifica' },
+              { type: 'button' as const, label: 'Emetti fattura' },
+              { type: 'button' as const, label: 'Elimina bozza' }
+            ]
+          }
         case 'scaduta':
-          return { items: [
-            { type: 'button' as const, label: 'Scarica PDF' },
-            { type: 'button' as const, label: 'Segna come pagata' },
-            { type: 'button' as const, label: 'Sollecita pagamento' },
-          ] }
+          return {
+            items: [
+              { type: 'button' as const, label: 'Scarica PDF' },
+              { type: 'button' as const, label: 'Segna come pagata' },
+              { type: 'button' as const, label: 'Sollecita pagamento' }
+            ]
+          }
         default:
-          return { items: [
-            { type: 'button' as const, label: 'Visualizza dettaglio' },
-            { type: 'button' as const, label: 'Esporta' },
-          ] }
+          return {
+            items: [
+              { type: 'button' as const, label: 'Visualizza dettaglio' },
+              { type: 'button' as const, label: 'Esporta' }
+            ]
+          }
       }
     },
     placeholder: 'Nessun valore',
     title: 'Accordion with dynamic sub-row actions',
-    subtitle: 'Each sub-row receives its own data in the actions function, enabling context-aware action menus',
+    subtitle:
+      'Each sub-row receives its own data in the actions function, enabling context-aware action menus',
     variant: 'accordion',
-    onFztableRowactionclick: fn(),
+    onFztableRowactionclick: fn()
   },
   render: (args) => ({
     setup() {
-      const handleRowAction = (index: number, actionListItem: ActionlistItem, rowData: Record<string, any>) => {
+      const handleRowAction = (
+        index: number,
+        actionListItem: ActionlistItem,
+        rowData: Record<string, any>
+      ) => {
         args.onFztableRowactionclick(index, actionListItem, rowData)
       }
       return { args, handleRowAction }
     },
     components: {
       FzColumn,
-      FzTable,
+      FzTable
     },
     template: `
       <div class="p-12 h-[600px]">
@@ -1349,7 +1550,7 @@ const AccordionDynamicActions: Story = {
           <FzColumn header="Data" field="phone_number" />
         </FzTable>
       </div>
-    `,
+    `
   }),
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -1375,29 +1576,55 @@ const AccordionDynamicActions: Story = {
       })
     })
 
-    await step('Verify sub-rows get context-specific actions (open dropdown on "emessa" sub-row)', async () => {
-      const subRowCell = canvas.getAllByText('Fattura Q1')[0]
-      const subRowDiv = subRowCell.closest('.grid')!
-      const actionButton = subRowDiv.querySelector('button')
-      if (actionButton) {
-        await userEvent.click(actionButton)
-        const body = within(document.body)
-        await waitFor(() => {
-          expect(body.getByText('Scarica PDF')).toBeInTheDocument()
-          expect(body.getByText('Invia promemoria')).toBeInTheDocument()
-        })
+    await step(
+      'Verify sub-rows get context-specific actions (open dropdown on "emessa" sub-row)',
+      async () => {
+        const subRowCell = canvas.getAllByText('Fattura Q1')[0]
+        const subRowDiv = subRowCell.closest('.grid')!
+        const actionButton = subRowDiv.querySelector('button')
+        if (actionButton) {
+          await userEvent.click(actionButton)
+          const body = within(document.body)
+          await waitFor(() => {
+            expect(body.getByText('Scarica PDF')).toBeInTheDocument()
+            expect(body.getByText('Invia promemoria')).toBeInTheDocument()
+          })
+        }
       }
-    })
+    )
 
     await step('Verify row without subRows has no expand icon', async () => {
       const lucaCell = canvas.getByText('Luca')
       const rowDiv = lucaCell.closest('.grid')!
-      const expandIcons = rowDiv.querySelectorAll('svg[data-icon="angle-right"], svg[data-icon="angle-up"]')
+      const expandIcons = rowDiv.querySelectorAll(
+        'svg[data-icon="angle-right"], svg[data-icon="angle-up"]'
+      )
       await expect(expandIcons.length).toBe(0)
     })
-  },
+  }
 }
 
-export { Default, FixedColumnWidth, LongText, ActionClick, CustomRows, ColumnOrdering, Filters, Selectable, Accordion, AccordionDynamicActions, FullScreen, ActionsDisabled, DynamicActions, DynamicColumns, EpmtyTable, Radio, List, ListWithSelection, CustomNewItemButton }
+export {
+  Default,
+  FixedColumnWidth,
+  LongText,
+  ActionClick,
+  CustomRows,
+  ColumnOrdering,
+  Filters,
+  Selectable,
+  Accordion,
+  AccordionControlled,
+  AccordionDynamicActions,
+  FullScreen,
+  ActionsDisabled,
+  DynamicActions,
+  DynamicColumns,
+  EpmtyTable,
+  Radio,
+  List,
+  ListWithSelection,
+  CustomNewItemButton
+}
 
 export default meta
