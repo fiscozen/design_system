@@ -78,7 +78,7 @@ function handleRowInteraction(e: MouseEvent | KeyboardEvent) {
       :show-indicator="showIndicator"
       :title="title"
       :value="value"
-      :title-id="titleId"
+      :title-id="rowTitleId"
     />
     <FzCardFooter :descriptions="descriptions" />
   </FzContainer>
