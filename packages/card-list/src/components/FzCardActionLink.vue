@@ -67,7 +67,7 @@ function handleRowInteraction(e: MouseEvent | KeyboardEvent) {
         class="shrink-0 ml-auto"
       >
         <span class="inline-flex shrink-0 text-inherit" aria-hidden="true">
-          <FzIcon name="chevron-right" size="md" variant="fas" v-color:grey />
+          <FzIcon name="chevron-right" size="md" variant="far" v-color:grey />
         </span>
       </FzContainer>
     </FzContainer>
