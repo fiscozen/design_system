@@ -6,6 +6,8 @@ export interface FzCollapseProps {
   title?: string
   subtitle?: string
   icon?: string
+  /** CSS class applied to the leading icon (default: `'text-blue-500'`) */
+  iconClass?: string
   variant?: FzCollapseVariant
   headerClass?: string
   contentClass?: string
