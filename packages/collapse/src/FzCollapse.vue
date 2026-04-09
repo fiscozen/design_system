@@ -4,7 +4,8 @@ import { FzCollapseProps, ACCORDION_KEY } from './types'
 import { FzIcon } from '@fiscozen/icons'
 
 const props = withDefaults(defineProps<FzCollapseProps>(), {
-  variant: 'section'
+  variant: 'section',
+  iconClass: 'text-blue-500'
 })
 const isOpen = defineModel<boolean>('open', { default: false })
 const detailsRef = ref<HTMLDetailsElement | null>(null)
@@ -144,7 +145,7 @@ const indentClasses = computed(() => ({
           <slot name="icon">
             <FzIcon
               v-if="icon"
-              class="text-blue-500"
+              :class="iconClass"
               :name="icon"
               :size="iconSizeMap[variant]"
               data-e2e="leading-icon"
@@ -170,7 +171,9 @@ const indentClasses = computed(() => ({
             />
           </slot>
         </div>
-        <slot v-if="isButton" name="rightContent" />
+        <div v-if="isButton" @click.stop>
+          <slot name="rightContent" />
+        </div>
       </div>
     </summary>
     <div

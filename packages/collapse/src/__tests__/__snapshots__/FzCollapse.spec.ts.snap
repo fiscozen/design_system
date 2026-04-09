@@ -8,7 +8,8 @@ exports[`FzCollapse > Snapshots > should match snapshot - button variant closed 
         <div class="flex flex-col items-start justify-center min-w-0 gap-4 shrink-0" data-e2e="text-container"><span class="font-normal text-base leading-[20px] [font-feature-settings:&quot;lnum&quot;_1,&quot;tnum&quot;_1] text-core-black" data-e2e="title">Test Title</span>
           <!--v-if-->
         </div><span role="presentation" class="flex items-center justify-center w-[20px] h-[20px]" data-e2e="chevron-icon"><svg class="svg-inline--fa fa-angle-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M241 369c-9.4 9.4-24.6 9.4-33.9 0L47 209c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l143 143L367 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L241 369z"></path></svg></span>
-      </div><span>Badge</span>
+      </div>
+      <div><span>Badge</span></div>
     </div>
   </summary>
   <div data-e2e="content" class="flex w-full items-start mt-16" style="display: none;">
@@ -26,7 +27,8 @@ exports[`FzCollapse > Snapshots > should match snapshot - button variant open 1`
         <div class="flex flex-col items-start justify-center min-w-0 gap-4 shrink-0" data-e2e="text-container"><span class="font-normal text-base leading-[20px] [font-feature-settings:&quot;lnum&quot;_1,&quot;tnum&quot;_1] text-core-black" data-e2e="title">Test Title</span>
           <!--v-if-->
         </div><span role="presentation" class="flex items-center justify-center w-[20px] h-[20px]" data-e2e="chevron-icon"><svg class="svg-inline--fa fa-angle-up h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="angle-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M207 143c9.4-9.4 24.6-9.4 33.9 0L401 303c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-143-143L81 337c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L207 143z"></path></svg></span>
-      </div><span>Badge</span>
+      </div>
+      <div><span>Badge</span></div>
     </div>
   </summary>
   <div data-e2e="content" class="flex w-full items-start mt-16">

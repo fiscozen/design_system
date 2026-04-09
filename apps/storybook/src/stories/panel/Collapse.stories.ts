@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, userEvent, within, waitFor } from 'storybook/test'
 import { ref } from 'vue'
 import { FzCollapse } from '@fiscozen/collapse'
+import { FzButton } from '@fiscozen/button'
 
 const meta = {
   title: 'Panel/FzCollapse',
@@ -10,12 +11,12 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['section', 'button'],
-    },
+      options: ['section', 'button']
+    }
   },
   args: {
     title: 'Collapse',
-    variant: 'section',
+    variant: 'section'
   },
   decorators: [
     () => ({
@@ -35,7 +36,7 @@ export const SectionDefault: Story = {
   args: {
     title: 'Collapse',
     subtitle: 'Lorem ipsum',
-    icon: 'face-smile',
+    icon: 'face-smile'
   },
   render: (args) => ({
     components: { FzCollapse },
@@ -49,7 +50,7 @@ export const SectionDefault: Story = {
           <p>Content goes here. This is the section variant with subtitle and leading icon.</p>
         </template>
       </FzCollapse>
-    `,
+    `
   }),
   play: async ({ canvasElement, step }) => {
     await step('Verify collapse renders correctly', async () => {
@@ -83,14 +84,14 @@ export const SectionDefault: Story = {
       const details = canvasElement.querySelector('details')
       await expect(details).not.toHaveAttribute('open')
     })
-  },
+  }
 }
 
 export const SectionOpen: Story = {
   args: {
     title: 'Collapse',
     icon: 'face-smile',
-    open: true,
+    open: true
   },
   render: (args) => ({
     components: { FzCollapse },
@@ -104,7 +105,7 @@ export const SectionOpen: Story = {
           <p>This content is visible because the collapse is open. The subtitle is hidden in the open state.</p>
         </template>
       </FzCollapse>
-    `,
+    `
   }),
   play: async ({ canvasElement, step }) => {
     await step('Verify collapse is open', async () => {
@@ -115,10 +116,13 @@ export const SectionOpen: Story = {
     await step('Verify content is visible', async () => {
       const content = canvasElement.querySelector('[data-e2e="content"]')
       await expect(content).toBeInTheDocument()
-      await waitFor(() => {
-        const styles = window.getComputedStyle(content as Element)
-        expect(styles.display).not.toBe('none')
-      }, { timeout: 500 })
+      await waitFor(
+        () => {
+          const styles = window.getComputedStyle(content as Element)
+          expect(styles.display).not.toBe('none')
+        },
+        { timeout: 500 }
+      )
     })
 
     await step('Verify subtitle is NOT visible when open', async () => {
@@ -135,13 +139,13 @@ export const SectionOpen: Story = {
       const indent = canvasElement.querySelector('[data-e2e="indent-space"]')
       await expect(indent).toBeInTheDocument()
     })
-  },
+  }
 }
 
 export const SectionWithoutIcon: Story = {
   args: {
     title: 'Collapse without icon',
-    subtitle: 'No leading icon in this variant',
+    subtitle: 'No leading icon in this variant'
   },
   render: (args) => ({
     components: { FzCollapse },
@@ -155,7 +159,7 @@ export const SectionWithoutIcon: Story = {
           <p>Content without indent since no icon is present.</p>
         </template>
       </FzCollapse>
-    `,
+    `
   }),
   play: async ({ canvasElement, step }) => {
     await step('Verify no leading icon', async () => {
@@ -167,7 +171,7 @@ export const SectionWithoutIcon: Story = {
       const indent = canvasElement.querySelector('[data-e2e="indent-space"]')
       await expect(indent).not.toBeInTheDocument()
     })
-  },
+  }
 }
 
 // ============================================
@@ -178,10 +182,10 @@ export const ButtonDefault: Story = {
   args: {
     title: 'Collapse',
     variant: 'button',
-    icon: 'face-smile',
+    icon: 'face-smile'
   },
   render: (args) => ({
-    components: { FzCollapse },
+    components: { FzCollapse, FzButton },
     setup() {
       const isOpen = ref(false)
       return { args, isOpen }
@@ -189,13 +193,13 @@ export const ButtonDefault: Story = {
     template: `
       <FzCollapse v-bind="args" v-model:open="isOpen">
         <template #rightContent>
-          <span class="text-sm text-grey-400">Badge</span>
+          <FzButton variant="secondary" size="sm">Action</FzButton>
         </template>
         <template #content>
           <p>Button variant content. Compact layout with right content slot.</p>
         </template>
       </FzCollapse>
-    `,
+    `
   }),
   play: async ({ canvasElement, step }) => {
     await step('Verify button variant layout', async () => {
@@ -216,17 +220,53 @@ export const ButtonDefault: Story = {
     })
 
     await step('Verify right content is rendered', async () => {
-      const summary = canvasElement.querySelector('summary')
-      await expect(summary?.textContent).toContain('Badge')
+      const button = canvasElement.querySelector('[data-e2e="header-wrapper"] button')
+      await expect(button).toBeInTheDocument()
+      await expect(button?.textContent).toContain('Action')
     })
+  }
+}
+
+export const ButtonCustomIconColor: Story = {
+  args: {
+    title: 'Collapse',
+    variant: 'button',
+    icon: 'face-smile',
+    iconClass: 'text-red-500'
   },
+  render: (args) => ({
+    components: { FzCollapse },
+    setup() {
+      const isOpen = ref(false)
+      return { args, isOpen }
+    },
+    template: `
+      <FzCollapse v-bind="args" v-model:open="isOpen">
+        <template #content>
+          <p>Button variant with custom red icon color.</p>
+        </template>
+      </FzCollapse>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    await step('Verify leading icon is present', async () => {
+      const icon = canvasElement.querySelector('[data-e2e="leading-icon"]')
+      await expect(icon).toBeInTheDocument()
+    })
+
+    await step('Verify custom icon color class', async () => {
+      const icon = canvasElement.querySelector('[data-e2e="leading-icon"]')
+      await expect(icon).toHaveClass('text-red-500')
+      await expect(icon).not.toHaveClass('text-blue-500')
+    })
+  }
 }
 
 export const ButtonNoRightContent: Story = {
   args: {
     title: 'Collapse',
     variant: 'button',
-    icon: 'face-smile',
+    icon: 'face-smile'
   },
   render: (args) => ({
     components: { FzCollapse },
@@ -240,7 +280,7 @@ export const ButtonNoRightContent: Story = {
           <p>Button variant without right content. The chevron stays close to the title.</p>
         </template>
       </FzCollapse>
-    `,
+    `
   }),
   play: async ({ canvasElement, step }) => {
     await step('Verify summary stretches full width', async () => {
@@ -260,7 +300,7 @@ export const ButtonNoRightContent: Story = {
       const chevron = canvasElement.querySelector('[data-e2e="chevron-icon"]')
       await expect(chevron).toBeInTheDocument()
     })
-  },
+  }
 }
 
 export const ButtonOpen: Story = {
@@ -268,10 +308,10 @@ export const ButtonOpen: Story = {
     title: 'Collapse',
     variant: 'button',
     icon: 'face-smile',
-    open: true,
+    open: true
   },
   render: (args) => ({
-    components: { FzCollapse },
+    components: { FzCollapse, FzButton },
     setup() {
       const isOpen = ref(true)
       return { args, isOpen }
@@ -279,13 +319,13 @@ export const ButtonOpen: Story = {
     template: `
       <FzCollapse v-bind="args" v-model:open="isOpen">
         <template #rightContent>
-          <span class="text-sm text-grey-400">Badge</span>
+          <FzButton variant="secondary" size="sm">Action</FzButton>
         </template>
         <template #content>
           <p>Button variant content when open. Note the 28px indent.</p>
         </template>
       </FzCollapse>
-    `,
+    `
   }),
   play: async ({ canvasElement, step }) => {
     await step('Verify collapse is open', async () => {
@@ -302,7 +342,7 @@ export const ButtonOpen: Story = {
       const content = canvasElement.querySelector('[data-e2e="content"]')
       await expect(content).toHaveClass('mt-16')
     })
-  },
+  }
 }
 
 // ============================================
@@ -323,12 +363,12 @@ export const UserInteraction: Story = {
     },
     template: `<FzCollapse v-bind="args" :open="isOpen" @update:open="handleUpdate">
       <template #content><p>Interactive content</p></template>
-    </FzCollapse>`,
+    </FzCollapse>`
   }),
   args: {
     title: 'Click to toggle',
     icon: 'face-smile',
-    'onUpdate:open': fn(),
+    'onUpdate:open': fn()
   },
   play: async ({ args, canvasElement, step }) => {
     await step('Verify collapse starts closed', async () => {
@@ -343,10 +383,13 @@ export const UserInteraction: Story = {
       args['onUpdate:open'].mockClear()
       await userEvent.click(summary as HTMLElement)
 
-      await waitFor(() => {
-        const details = canvasElement.querySelector('details')
-        expect(details).toHaveAttribute('open')
-      }, { timeout: 500 })
+      await waitFor(
+        () => {
+          const details = canvasElement.querySelector('details')
+          expect(details).toHaveAttribute('open')
+        },
+        { timeout: 500 }
+      )
 
       await expect(args['onUpdate:open']).toHaveBeenCalled()
       await expect(args['onUpdate:open']).toHaveBeenLastCalledWith(true)
@@ -356,10 +399,13 @@ export const UserInteraction: Story = {
       const content = canvasElement.querySelector('[data-e2e="content"]')
       await expect(content).toBeInTheDocument()
 
-      await waitFor(() => {
-        const styles = window.getComputedStyle(content as Element)
-        expect(styles.display).not.toBe('none')
-      }, { timeout: 500 })
+      await waitFor(
+        () => {
+          const styles = window.getComputedStyle(content as Element)
+          expect(styles.display).not.toBe('none')
+        },
+        { timeout: 500 }
+      )
     })
 
     await step('Click summary again to close', async () => {
@@ -367,15 +413,18 @@ export const UserInteraction: Story = {
       args['onUpdate:open'].mockClear()
       await userEvent.click(summary as HTMLElement)
 
-      await waitFor(() => {
-        const details = canvasElement.querySelector('details')
-        expect(details).not.toHaveAttribute('open')
-      }, { timeout: 500 })
+      await waitFor(
+        () => {
+          const details = canvasElement.querySelector('details')
+          expect(details).not.toHaveAttribute('open')
+        },
+        { timeout: 500 }
+      )
 
       await expect(args['onUpdate:open']).toHaveBeenCalled()
       await expect(args['onUpdate:open']).toHaveBeenLastCalledWith(false)
     })
-  },
+  }
 }
 
 // ============================================
@@ -396,11 +445,11 @@ export const KeyboardNavigation: Story = {
     },
     template: `<FzCollapse v-bind="args" :open="isOpen" @update:open="handleUpdate">
       <template #content><p>Keyboard-accessible content</p></template>
-    </FzCollapse>`,
+    </FzCollapse>`
   }),
   args: {
     title: 'Keyboard navigation',
-    'onUpdate:open': fn(),
+    'onUpdate:open': fn()
   },
   play: async ({ args, canvasElement, step }) => {
     await step('Focus summary element', async () => {
@@ -417,10 +466,13 @@ export const KeyboardNavigation: Story = {
 
       await userEvent.click(summary)
 
-      await waitFor(() => {
-        const details = canvasElement.querySelector('details')
-        expect(details).toHaveAttribute('open')
-      }, { timeout: 1000 })
+      await waitFor(
+        () => {
+          const details = canvasElement.querySelector('details')
+          expect(details).toHaveAttribute('open')
+        },
+        { timeout: 1000 }
+      )
 
       await expect(args['onUpdate:open']).toHaveBeenCalled()
       await expect(args['onUpdate:open']).toHaveBeenLastCalledWith(true)
@@ -433,13 +485,16 @@ export const KeyboardNavigation: Story = {
 
       await userEvent.click(summary)
 
-      await waitFor(() => {
-        const details = canvasElement.querySelector('details')
-        expect(details).not.toHaveAttribute('open')
-      }, { timeout: 1000 })
+      await waitFor(
+        () => {
+          const details = canvasElement.querySelector('details')
+          expect(details).not.toHaveAttribute('open')
+        },
+        { timeout: 1000 }
+      )
 
       await expect(args['onUpdate:open']).toHaveBeenCalled()
       await expect(args['onUpdate:open']).toHaveBeenLastCalledWith(false)
     })
-  },
+  }
 }
