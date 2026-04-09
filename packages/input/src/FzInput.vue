@@ -27,6 +27,8 @@ const props = withDefaults(defineProps<FzInputProps>(), {
   variant: "normal",
   environment: "frontoffice",
   autocomplete: false,
+  highlighted: false,
+  aiReasoning: false,
 });
 
 defineOptions({
@@ -306,6 +308,15 @@ const isReadonlyOrDisabled = computed(
 );
 
 /**
+ * Computed class for the auto-rendered AI sparkles icon.
+ * Muted when the input is in error, disabled, or readonly state.
+ */
+const aiIconClass = computed(() => {
+  if (isReadonlyOrDisabled.value || props.error) return "text-grey-300";
+  return "text-purple-600";
+});
+
+/**
  * Determines if right icon is clickable (not rendered as button)
  */
 const isRightIconClickable = computed(
@@ -384,6 +395,13 @@ defineExpose({
                   handleIconKeydown(e, 'fzinput:left-icon-click')
               : undefined
           "
+        />
+        <FzIcon
+          v-else-if="aiReasoning"
+          name="sparkles"
+          size="md"
+          aria-hidden="true"
+          :class="aiIconClass"
         />
       </slot>
       <div class="flex flex-col justify-around min-w-0 grow">

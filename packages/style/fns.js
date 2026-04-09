@@ -210,17 +210,19 @@ function generateColorSafelist(colors) {
     patterns.push(`text-${colorName}`);
     patterns.push(`bg-${colorName}`);
     patterns.push(`border-${colorName}`);
+    patterns.push(`ring-${colorName}`);
     patterns.push(`hover:text-${colorName}`);
     patterns.push(`hover:bg-${colorName}`);
     patterns.push(`hover:border-${colorName}`);
   });
-  
+
   // Add default weight classes (e.g., text-blue uses weight 500 by default)
   SAFE_COLOR_NAMES.forEach(colorName => {
     if (colorName !== 'core') {
       patterns.push(`text-${colorName}`);
       patterns.push(`bg-${colorName}`);
       patterns.push(`border-${colorName}`);
+      patterns.push(`ring-${colorName}`);
       patterns.push(`hover:text-${colorName}`);
       patterns.push(`hover:bg-${colorName}`);
       patterns.push(`hover:border-${colorName}`);
@@ -237,19 +239,21 @@ function generateColorSafelist(colors) {
           patterns.push(`text-${fullColorName}`);
           patterns.push(`bg-${fullColorName}`);
           patterns.push(`border-${fullColorName}`);
+          patterns.push(`ring-${fullColorName}`);
           patterns.push(`hover:text-${fullColorName}`);
           patterns.push(`hover:bg-${fullColorName}`);
           patterns.push(`hover:border-${fullColorName}`);
         });
       }
     });
-    
+
     // Add default semantic color classes (e.g., text-semantic-error uses weight 200)
     SEMANTIC_COLOR_NAMES.forEach(semanticType => {
       const fullColorName = `semantic-${semanticType}`;
       patterns.push(`text-${fullColorName}`);
       patterns.push(`bg-${fullColorName}`);
       patterns.push(`border-${fullColorName}`);
+      patterns.push(`ring-${fullColorName}`);
       patterns.push(`hover:text-${fullColorName}`);
       patterns.push(`hover:bg-${fullColorName}`);
       patterns.push(`hover:border-${fullColorName}`);
