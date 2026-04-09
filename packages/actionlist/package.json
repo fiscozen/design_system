@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/actionlist",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Design System Navlist Component",
   "scripts": {
     "coverage": "vitest run --coverage",

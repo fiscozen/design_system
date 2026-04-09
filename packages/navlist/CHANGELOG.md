@@ -1,5 +1,19 @@
 # @fiscozen/navlist
 
+## 1.0.0
+
+### Major Changes
+
+- 267ce05: Breaking change: `FzNavlistSub` extends `FzCollapseProps` which renamed `summary` to `title`.
+
+  Consumers passing `summary` in navlist sub-menu items must rename the property to `title`.
+
+### Patch Changes
+
+- Updated dependencies [267ce05]
+  - @fiscozen/collapse@3.0.0
+  - @fiscozen/navlink@2.0.1
+
 ## 0.1.5
 
 ### Patch Changes

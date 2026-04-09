@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/navlink",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Design System Navlink Component",
   "scripts": {
     "coverage": "vitest run --coverage",

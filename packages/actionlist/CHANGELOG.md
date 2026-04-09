@@ -1,5 +1,11 @@
 # @fiscozen/actionlist
 
+## 0.1.13
+
+### Patch Changes
+
+- @fiscozen/navlink@2.0.1
+
 ## 0.1.12
 
 ### Patch Changes

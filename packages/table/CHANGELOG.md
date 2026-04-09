@@ -1,5 +1,11 @@
 # @fiscozen/table
 
+## 2.1.1
+
+### Patch Changes
+
+- @fiscozen/actionlist@0.1.13
+
 ## 2.1.0
 
 ### Minor Changes
