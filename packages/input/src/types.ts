@@ -1,5 +1,5 @@
 import { IconButtonVariant } from "@fiscozen/button";
-import { IconSize , IconVariant } from "@fiscozen/icons";
+import { IconSize, IconVariant } from "@fiscozen/icons";
 
 export type InputEnvironment = "backoffice" | "frontoffice";
 
@@ -128,7 +128,7 @@ type FzInputProps = {
    * Visual presentation style. 'floating-label' moves placeholder above input when focused/filled
    * @default 'normal'
    */
-  variant?: 'normal' | 'floating-label';
+  variant?: "normal" | "floating-label";
   /**
    * HTML5 pattern attribute for native browser validation
    */
@@ -142,6 +142,22 @@ type FzInputProps = {
    * @default false
    */
   readonly?: boolean;
+  /**
+   * Shows highlighted state with warning colors (orange border, warm background, glow ring).
+   * Overridden by error, disabled, and readonly states.
+   * If both highlighted and aiReasoning are true, highlighted takes priority.
+   * @default false
+   */
+  highlighted?: boolean;
+  /**
+   * Shows AI reasoning state with purple colors (purple border, light purple background, glow ring).
+   * Auto-renders a sparkles icon unless leftIcon prop or left-icon slot is provided.
+   * Overridden by error, disabled, readonly, and highlighted states.
+   * @note When both aiReasoning and leftIcon are provided, leftIcon takes visual precedence
+   * and no sparkles icon is rendered.
+   * @default false
+   */
+  aiReasoning?: boolean;
   /**
    * Native maxlength attribute. Limits maximum number of characters
    */
@@ -158,39 +174,38 @@ type FzInputProps = {
   leftIconClass?: string;
 };
 
-interface FzCurrencyInputProps
-  extends Omit<
-    FzInputProps,
-    | "type"
-    | "modelValue"
-    | "rightIcon"
-    | "rightIconSize"
-    | "rightIconVariant"
-    | "rightIconButton"
-    | "rightIconButtonVariant"
-    | "rightIconAriaLabel"
-    | "rightIconClass"
-    | "secondRightIcon"
-    | "secondRightIconClass"
-    | "secondRightIconVariant"
-    | "secondRightIconButton"
-    | "secondRightIconButtonVariant"
-    | "secondRightIconAriaLabel"
-  > {
+interface FzCurrencyInputProps extends Omit<
+  FzInputProps,
+  | "type"
+  | "modelValue"
+  | "rightIcon"
+  | "rightIconSize"
+  | "rightIconVariant"
+  | "rightIconButton"
+  | "rightIconButtonVariant"
+  | "rightIconAriaLabel"
+  | "rightIconClass"
+  | "secondRightIcon"
+  | "secondRightIconClass"
+  | "secondRightIconVariant"
+  | "secondRightIconButton"
+  | "secondRightIconButtonVariant"
+  | "secondRightIconAriaLabel"
+> {
   /**
    * The v-model value.
-   * 
+   *
    * **Type assertion**: This prop accepts `number | string | undefined | null` as input,
    * but the component **always emits** `number | undefined | null` (never `string`).
    * Strings are automatically parsed (Italian format: "1.234,56" → 1234.56) and converted
    * to numbers internally.
-   * 
+   *
    * **nullOnEmpty**: When `nullOnEmpty` is `true`, empty input emits `null` instead of `undefined`.
-   * 
+   *
    * **Deprecation**: String values are deprecated and will be removed in a future version.
    * A console warning is shown when strings are used. Please use `number | undefined | null` instead
    * for type safety and future compatibility.
-   * 
+   *
    * @example
    * ```vue
    * <!-- ✅ Recommended: number | undefined | null -->
@@ -200,7 +215,7 @@ interface FzCurrencyInputProps
    * <template>
    *   <FzCurrencyInput v-model="amount" />
    * </template>
-   * 
+   *
    * <!-- ✅ With nullOnEmpty: number | null -->
    * <script setup>
    * const amount = ref<number | null>(null);
@@ -208,7 +223,7 @@ interface FzCurrencyInputProps
    * <template>
    *   <FzCurrencyInput v-model="amount" :nullOnEmpty="true" />
    * </template>
-   * 
+   *
    * <!-- ⚠️ Deprecated: string (still works but shows warning) -->
    * <script setup>
    * const amount = ref<string>("1234,56");

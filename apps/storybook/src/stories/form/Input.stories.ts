@@ -27,7 +27,8 @@ const meta = {
         type: { summary: "'sm' | 'md' | 'lg'" },
         category: 'Deprecated'
       },
-      description: 'Deprecated: Use environment prop instead. Size values map to environments: sm/md → backoffice, lg → frontoffice'
+      description:
+        'Deprecated: Use environment prop instead. Size values map to environments: sm/md → backoffice, lg → frontoffice'
     },
     type: {
       options: ['text', 'password', 'email', 'number', 'tel', 'url'],
@@ -62,6 +63,16 @@ const meta = {
       options: all.map((icon) => icon.prefix) as string[],
       control: {
         type: 'select'
+      }
+    },
+    highlighted: {
+      control: {
+        type: 'boolean'
+      }
+    },
+    aiReasoning: {
+      control: {
+        type: 'boolean'
       }
     }
   },
@@ -124,7 +135,7 @@ export const Default: Story = {
       inputElement.value = 'Test value'
       inputElement.dispatchEvent(new Event('input', { bubbles: true }))
       await expect(input).toHaveValue('Test value')
-      
+
       // ROBUST CHECK: Verify the update:modelValue spy WAS called
       await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
@@ -134,7 +145,7 @@ export const Default: Story = {
       await expect(input).toHaveAttribute('aria-required', 'false')
       await expect(input).toHaveAttribute('aria-invalid', 'false')
       await expect(input).toHaveAttribute('aria-disabled', 'false')
-      
+
       // Verify aria-labelledby links to label
       const labelledBy = input.getAttribute('aria-labelledby')
       await expect(labelledBy).toBeTruthy()
@@ -184,10 +195,10 @@ export const Disabled: Story = {
 
     await step('Verify update:modelValue is NOT called when typing in disabled input', async () => {
       const input = canvas.getByRole('textbox', { name: /Input Label/i })
-      
+
       // Attempt to type in the disabled input
       await userEvent.type(input, 'Test')
-      
+
       // ROBUST CHECK: Verify the update:modelValue spy was NOT called
       await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
     })
@@ -232,10 +243,10 @@ export const Readonly: Story = {
 
     await step('Verify update:modelValue is NOT called when typing in readonly input', async () => {
       const input = canvas.getByRole('textbox', { name: /Input Label/i })
-      
+
       // Attempt to type in the readonly input
       await userEvent.type(input, 'New text')
-      
+
       // ROBUST CHECK: Verify the update:modelValue spy was NOT called
       await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
     })
@@ -725,6 +736,221 @@ export const FloatingLabelEmpty: Story = {
     if (floatingPlaceholderFocused) {
       await expect(floatingPlaceholderFocused.textContent).toBe('Enter your email')
     }
+  }
+}
+
+export const Highlighted: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    highlighted: true,
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify input is rendered and accessible', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await expect(input).toBeInTheDocument()
+      await expect(input).toHaveAttribute('aria-invalid', 'false')
+      await expect(input).toHaveAttribute('aria-disabled', 'false')
+    })
+
+    await step('Verify container is keyboard accessible', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      const container = input.closest('.fz-input > div')
+      await expect(container).toHaveAttribute('tabindex', '0')
+    })
+
+    await step('Verify input is interactive', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await userEvent.clear(input)
+      const inputElement = input as HTMLInputElement
+      inputElement.value = 'Test value'
+      inputElement.dispatchEvent(new Event('input', { bubbles: true }))
+      await expect(input).toHaveValue('Test value')
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+    })
+  }
+}
+
+export const HighlightedBackoffice: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    highlighted: true,
+    environment: 'backoffice'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify highlighted input renders with backoffice environment', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await expect(input).toBeInTheDocument()
+      await expect(input).toHaveAttribute('aria-invalid', 'false')
+    })
+
+    await step('Verify container is keyboard accessible', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      const container = input.closest('.fz-input > div')
+      await expect(container).toHaveAttribute('tabindex', '0')
+    })
+  }
+}
+
+export const AIReasoning: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    aiReasoning: true,
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify sparkles icon is auto-rendered with aria-hidden', async () => {
+      const sparklesIcon = canvasElement.querySelector('.fa-sparkles')
+      await expect(sparklesIcon).toBeInTheDocument()
+
+      const iconWrapper = sparklesIcon?.closest('[aria-hidden="true"]')
+      await expect(iconWrapper).toBeInTheDocument()
+    })
+
+    await step('Verify input is accessible', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await expect(input).toHaveAttribute('aria-invalid', 'false')
+      await expect(input).toHaveAttribute('aria-disabled', 'false')
+    })
+
+    await step('Verify input is interactive', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await userEvent.clear(input)
+      const inputElement = input as HTMLInputElement
+      inputElement.value = 'AI suggestion'
+      inputElement.dispatchEvent(new Event('input', { bubbles: true }))
+      await expect(input).toHaveValue('AI suggestion')
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+    })
+  }
+}
+
+export const AIReasoningWithLeftIcon: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    aiReasoning: true,
+    leftIcon: 'search'
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Verify leftIcon overrides auto sparkles', async () => {
+      const searchIcon = canvasElement.querySelector('.fa-search')
+      await expect(searchIcon).toBeInTheDocument()
+
+      const sparklesIcon = canvasElement.querySelector('.fa-sparkles')
+      await expect(sparklesIcon).not.toBeInTheDocument()
+    })
+
+    await step('Verify input is accessible', async () => {
+      const canvas = within(canvasElement)
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await expect(input).toBeInTheDocument()
+      await expect(input).toHaveAttribute('aria-invalid', 'false')
+    })
+  }
+}
+
+export const HighlightedError: Story = {
+  ...Template,
+  render: (args) => ({
+    components: { FzInput },
+    setup() {
+      const modelValue = ref(args.modelValue || '')
+      return { args, modelValue }
+    },
+    template: `
+      <FzInput v-bind="args" v-model="modelValue">
+        <template #errorMessage>This field has an error</template>
+      </FzInput>
+    `
+  }),
+  args: {
+    ...Template.args,
+    highlighted: true,
+    error: true
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify error state takes priority via ARIA', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await expect(input).toHaveAttribute('aria-invalid', 'true')
+    })
+
+    await step('Verify error message is displayed', async () => {
+      const errorMessage = canvas.getByText('This field has an error')
+      await expect(errorMessage).toBeVisible()
+    })
+
+    await step('Verify error message is linked via aria-describedby', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      const describedBy = input.getAttribute('aria-describedby')
+      await expect(describedBy).toBeTruthy()
+      if (describedBy) {
+        const errorElement = canvasElement.querySelector(`#${describedBy}`)
+        await expect(errorElement).toBeInTheDocument()
+      }
+    })
+  }
+}
+
+export const HighlightedDisabled: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    highlighted: true,
+    disabled: true
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify disabled state takes priority', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await expect(input).toBeDisabled()
+      await expect(input).toHaveAttribute('aria-disabled', 'true')
+    })
+
+    await step('Verify container is not keyboard accessible when disabled', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      const container = input.closest('.fz-input > div')
+      await expect(container).not.toHaveAttribute('tabindex')
+    })
+  }
+}
+
+export const AIReasoningFloatingLabel: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    aiReasoning: true,
+    variant: 'floating-label',
+    placeholder: 'AI-generated suggestion'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify sparkles icon is rendered with aria-hidden', async () => {
+      const sparklesIcon = canvasElement.querySelector('.fa-sparkles')
+      await expect(sparklesIcon).toBeInTheDocument()
+
+      const iconWrapper = sparklesIcon?.closest('[aria-hidden="true"]')
+      await expect(iconWrapper).toBeInTheDocument()
+    })
+
+    await step('Verify input is accessible with floating label', async () => {
+      const input = canvas.getByRole('textbox', { name: /Input Label/i })
+      await expect(input).toBeInTheDocument()
+      await expect(input).toHaveAttribute('aria-invalid', 'false')
+    })
   }
 }
 
