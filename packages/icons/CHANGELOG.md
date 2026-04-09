@@ -1,5 +1,11 @@
 # @fiscozen/icons
 
+## 1.0.2
+
+### Patch Changes
+
+- 0bff17c: Update fontawesome icon package to version 1.0.412
+
 ## 1.0.1
 
 ### Patch Changes
