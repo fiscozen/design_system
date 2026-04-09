@@ -100,7 +100,7 @@ const titleClasses = computed(() => ({
 }))
 
 const textContainerClasses = computed(() => ({
-  'flex flex-col items-start justify-center min-w-0': true,
+  'flex flex-col items-start justify-center min-w-0 gap-4': true,
 
   // Section: text expands, pushes chevron to far right
   'flex-[1_0_0]': isSection.value,
