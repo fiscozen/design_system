@@ -36,8 +36,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.405
-        version: 1.0.405
+        specifier: ^1.0.412
+        version: 1.0.412
       '@fiscozen/action':
         specifier: workspace:^
         version: link:../../packages/action
@@ -1011,7 +1011,7 @@ importers:
         version: 4.6.2(vite@5.4.21(@types/node@18.19.130)(lightningcss@1.32.0))(vue@3.5.26(typescript@5.3.3))
       '@vitest/coverage-v8':
         specifier: ^1.2.1
-        version: 1.6.1(vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0))
+        version: 1.6.1(vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0))
       '@vue/test-utils':
         specifier: ^2.4.3
         version: 2.4.6
@@ -1038,7 +1038,7 @@ importers:
         version: 3.9.1(@types/node@18.19.130)(rollup@4.55.1)(typescript@5.3.3)(vite@5.4.21(@types/node@18.19.130)(lightningcss@1.32.0))
       vitest:
         specifier: ^1.2.0
-        version: 1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0)
+        version: 1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0)
       vue-tsc:
         specifier: ^1.8.25
         version: 1.8.27(typescript@5.3.3)
@@ -1864,8 +1864,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.405
-        version: 1.0.405
+        specifier: ^1.0.412
+        version: 1.0.412
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.7.2
         version: 6.7.2
@@ -3627,12 +3627,12 @@ packages:
   '@asamuzakjp/dom-selector@2.0.2':
     resolution: {integrity: sha512-x1KXOatwofR6ZAYzXRBL5wrdV0vwNxlTCK9NCuLqAzQYARqGcvFwiJA6A1ERuh+dgeA4Dxm3JBYictIes+SqUQ==}
 
-  '@awesome.me/kit-8137893ad3@1.0.405':
-    resolution: {integrity: sha512-oPNP9Qc6SekCtRjRn/1LqEgnJfYJRhxNkWhyt9Wy4bxx4XsCx5HqVpRK0QRYb6j0XXPWb3Ux0l6tluVdQGXy1w==}
+  '@awesome.me/kit-8137893ad3@1.0.412':
+    resolution: {integrity: sha512-45PbTyQHoqnoq8oXZS8Cgx09Gsgh4brnO0bBs97xZKxZm6QJwX7z2cgYZIY/3XAZBoABMe836gSan+/GmO5MFw==}
     engines: {node: '>=16'}
 
-  '@babel/code-frame@7.28.6':
-    resolution: {integrity: sha512-JYgintcMjRiCvS8mMECzaEn+m3PfoQiyqukOMCCVQtoJGYJw8j/8LBJEiqkHLkfwCcs74E3pbAUFNg7d9VNJ+Q==}
+  '@babel/code-frame@7.29.0':
+    resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/helper-string-parser@7.27.1':
@@ -3655,6 +3655,10 @@ packages:
 
   '@babel/runtime@7.28.6':
     resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.29.2':
+    resolution: {integrity: sha512-JiDShH45zKHWyGe4ZNVRrCjBz8Nh9TMmZG1kh4QTK8hCBTWBi8Da+i7s1fJw7/lYpM4ccepSNfqzZ/QvABBi5g==}
     engines: {node: '>=6.9.0'}
 
   '@babel/types@7.28.6':
@@ -8950,11 +8954,11 @@ snapshots:
       css-tree: 2.3.1
       is-potential-custom-element-name: 1.0.1
 
-  '@awesome.me/kit-8137893ad3@1.0.405':
+  '@awesome.me/kit-8137893ad3@1.0.412':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
-  '@babel/code-frame@7.28.6':
+  '@babel/code-frame@7.29.0':
     dependencies:
       '@babel/helper-validator-identifier': 7.28.5
       js-tokens: 4.0.0
@@ -8973,6 +8977,8 @@ snapshots:
       '@babel/types': 7.29.0
 
   '@babel/runtime@7.28.6': {}
+
+  '@babel/runtime@7.29.2': {}
 
   '@babel/types@7.28.6':
     dependencies:
@@ -10009,8 +10015,8 @@ snapshots:
 
   '@testing-library/dom@10.4.1':
     dependencies:
-      '@babel/code-frame': 7.28.6
-      '@babel/runtime': 7.28.6
+      '@babel/code-frame': 7.29.0
+      '@babel/runtime': 7.29.2
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       dom-accessibility-api: 0.5.16
@@ -10324,7 +10330,7 @@ snapshots:
       - vite
     optional: true
 
-  '@vitest/coverage-v8@1.6.1(vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0))':
+  '@vitest/coverage-v8@1.6.1(vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -10339,7 +10345,7 @@ snapshots:
       std-env: 3.10.0
       strip-literal: 2.1.1
       test-exclude: 6.0.0
-      vitest: 1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0)
+      vitest: 1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -14375,7 +14381,7 @@ snapshots:
       jiti: 1.21.7
       yaml: 2.8.2
 
-  vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0):
+  vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0):
     dependencies:
       '@vitest/expect': 1.6.1
       '@vitest/runner': 1.6.1
