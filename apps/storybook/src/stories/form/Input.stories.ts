@@ -839,12 +839,14 @@ export const AIReasoningWithLeftIcon: Story = {
   args: {
     ...Template.args,
     aiReasoning: true,
-    leftIcon: 'search'
+    leftIcon: 'magnifying-glass'
   },
   play: async ({ canvasElement, step }) => {
     await step('Verify leftIcon overrides auto sparkles', async () => {
-      const searchIcon = canvasElement.querySelector('.fa-search')
-      await expect(searchIcon).toBeInTheDocument()
+      const leftIcon = canvasElement.querySelector(
+        '[class*="magnifying-glass"], [data-icon="magnifying-glass"]'
+      )
+      await expect(leftIcon).toBeInTheDocument()
 
       const sparklesIcon = canvasElement.querySelector('.fa-sparkles')
       await expect(sparklesIcon).not.toBeInTheDocument()
