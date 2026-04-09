@@ -1,5 +1,11 @@
 # @fiscozen/card-list
 
+## 1.0.1
+
+### Patch Changes
+
+- 0f07343: Update FzCardListItem chevron-right icon variant
+
 ## 1.0.0
 
 ### Major Changes
