@@ -1,5 +1,11 @@
 # @fiscozen/input
 
+## 3.1.0
+
+### Minor Changes
+
+- 9b12cbf: Add emphasis reset on user input: highlighted and aiReasoning states revert to default when the user types, while programmatic value changes preserve emphasis. Sparkles icon now uses solid variant.
+
 ## 3.0.3
 
 ### Patch Changes
