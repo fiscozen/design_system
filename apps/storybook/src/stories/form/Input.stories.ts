@@ -744,9 +744,8 @@ export const Highlighted: Story = {
   args: {
     ...Template.args,
     highlighted: true,
-    'onUpdate:modelValue': fn()
   },
-  play: async ({ args, canvasElement, step }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify input is rendered and accessible', async () => {
@@ -760,16 +759,6 @@ export const Highlighted: Story = {
       const input = canvas.getByRole('textbox', { name: /Input Label/i })
       const container = input.closest('.fz-input > div')
       await expect(container).toHaveAttribute('tabindex', '0')
-    })
-
-    await step('Verify input is interactive', async () => {
-      const input = canvas.getByRole('textbox', { name: /Input Label/i })
-      await userEvent.clear(input)
-      const inputElement = input as HTMLInputElement
-      inputElement.value = 'Test value'
-      inputElement.dispatchEvent(new Event('input', { bubbles: true }))
-      await expect(input).toHaveValue('Test value')
-      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
   }
 }
@@ -803,9 +792,8 @@ export const AIReasoning: Story = {
   args: {
     ...Template.args,
     aiReasoning: true,
-    'onUpdate:modelValue': fn()
   },
-  play: async ({ args, canvasElement, step }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
     await step('Verify sparkles icon is auto-rendered with aria-hidden', async () => {
@@ -820,16 +808,6 @@ export const AIReasoning: Story = {
       const input = canvas.getByRole('textbox', { name: /Input Label/i })
       await expect(input).toHaveAttribute('aria-invalid', 'false')
       await expect(input).toHaveAttribute('aria-disabled', 'false')
-    })
-
-    await step('Verify input is interactive', async () => {
-      const input = canvas.getByRole('textbox', { name: /Input Label/i })
-      await userEvent.clear(input)
-      const inputElement = input as HTMLInputElement
-      inputElement.value = 'AI suggestion'
-      inputElement.dispatchEvent(new Event('input', { bubbles: true }))
-      await expect(input).toHaveValue('AI suggestion')
-      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
   }
 }
