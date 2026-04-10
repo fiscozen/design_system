@@ -119,6 +119,46 @@ const inputRef: Ref<HTMLInputElement | null> = ref(null);
 const uniqueId = generateInputId();
 const isFocused = ref(false);
 
+/**
+ * Internal visual state for emphasis props.
+ * These track the effective visual state which can differ from props when
+ * the user types into a highlighted/aiReasoning input (user input resets emphasis).
+ * Programmatic value changes (via v-model) do not affect these states.
+ */
+const effectiveHighlighted = ref(props.highlighted);
+const effectiveAiReasoning = ref(props.aiReasoning);
+
+watch(
+  () => props.highlighted,
+  (val) => {
+    effectiveHighlighted.value = val;
+  },
+);
+watch(
+  () => props.aiReasoning,
+  (val) => {
+    effectiveAiReasoning.value = val;
+  },
+);
+
+/**
+ * Resets visual emphasis (highlighted/aiReasoning) when user physically types.
+ * Only triggered by native input events (user interaction), not programmatic v-model updates.
+ * Emits update events so parents using v-model:highlighted / v-model:aiReasoning stay in sync.
+ */
+const handleUserInput = () => {
+  if (effectiveHighlighted.value) {
+    effectiveHighlighted.value = false;
+    emit("update:highlighted", false);
+  }
+  if (effectiveAiReasoning.value) {
+    effectiveAiReasoning.value = false;
+    emit("update:aiReasoning", false);
+  }
+};
+
+const propsRefs = toRefs(props);
+
 const {
   staticContainerClass,
   computedContainerClass,
@@ -129,7 +169,11 @@ const {
   containerWidth,
   showNormalPlaceholder,
 } = useInputStyle(
-  toRefs(props),
+  {
+    ...propsRefs,
+    highlighted: effectiveHighlighted,
+    aiReasoning: effectiveAiReasoning,
+  },
   containerRef,
   model,
   effectiveEnvironment,
@@ -187,6 +231,8 @@ const emit = defineEmits<{
   "fzinput:left-icon-click": [];
   "fzinput:right-icon-click": [];
   "fzinput:second-right-icon-click": [];
+  "update:highlighted": [value: boolean];
+  "update:aiReasoning": [value: boolean];
 }>();
 
 /**
@@ -397,8 +443,9 @@ defineExpose({
           "
         />
         <FzIcon
-          v-else-if="aiReasoning"
+          v-else-if="effectiveAiReasoning"
           name="sparkles"
+          variant="fas"
           size="md"
           aria-hidden="true"
           :class="aiIconClass"
@@ -430,6 +477,7 @@ defineExpose({
           :aria-labelledby="ariaLabelledBy"
           :aria-describedby="ariaDescribedBy"
           v-bind="inputAttrs"
+          @input="handleUserInput"
           @blur="
             (e) => {
               isFocused = false;

@@ -1226,9 +1226,10 @@ describe("FzInput", () => {
 
         const icons = wrapper.findAllComponents({ name: "FzIcon" });
         const sparklesIcon = icons.find(
-          (icon) => icon.props("name") === "sparkles",
+          (icon: any) => icon.props("name") === "sparkles",
         );
         expect(sparklesIcon?.exists()).toBe(true);
+        expect(sparklesIcon?.props("variant")).toBe("fas");
 
         const rootElement = sparklesIcon?.element as HTMLElement;
         expect(rootElement.getAttribute("aria-hidden")).toBe("true");
@@ -1489,6 +1490,334 @@ describe("FzInput", () => {
           true,
         );
         expect(container.classList.contains("bg-purple-50")).toBe(false);
+      });
+    });
+  });
+
+  describe("User input resets emphasis", () => {
+    const findSparkles = (wrapper: ReturnType<typeof mount>) => {
+      const icons = wrapper.findAllComponents({ name: "FzIcon" });
+      return icons.find((icon: any) => icon.props("name") === "sparkles");
+    };
+
+    describe("programmatic modelValue change preserves emphasis", () => {
+      it("highlighted styling persists after programmatic value change", async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: "Label",
+            highlighted: true,
+            modelValue: "",
+          },
+          slots: {},
+        });
+
+        await wrapper.vm.$nextTick();
+        const container = wrapper.find(".fz-input > div")
+          .element as HTMLElement;
+        expect(container.classList.contains("bg-semantic-warning-50")).toBe(
+          true,
+        );
+
+        await wrapper.setProps({ modelValue: "programmatic value" });
+
+        expect(container.classList.contains("bg-semantic-warning-50")).toBe(
+          true,
+        );
+        expect(container.classList.contains("ring-semantic-warning-100")).toBe(
+          true,
+        );
+        expect(wrapper.emitted("update:highlighted")).toBeUndefined();
+      });
+
+      it("aiReasoning styling and sparkles persist after programmatic value change", async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: "Label",
+            aiReasoning: true,
+            modelValue: "",
+          },
+          slots: {},
+        });
+
+        await wrapper.vm.$nextTick();
+        const container = wrapper.find(".fz-input > div")
+          .element as HTMLElement;
+        expect(container.classList.contains("bg-purple-50")).toBe(true);
+        expect(findSparkles(wrapper)?.exists()).toBe(true);
+
+        await wrapper.setProps({ modelValue: "programmatic value" });
+
+        expect(container.classList.contains("bg-purple-50")).toBe(true);
+        expect(container.classList.contains("ring-purple-200")).toBe(true);
+        expect(findSparkles(wrapper)?.exists()).toBe(true);
+        expect(wrapper.emitted("update:aiReasoning")).toBeUndefined();
+      });
+
+      it("emphasis persists through multiple programmatic value changes", async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: "Label",
+            highlighted: true,
+            modelValue: "",
+          },
+          slots: {},
+        });
+
+        await wrapper.vm.$nextTick();
+        const container = wrapper.find(".fz-input > div")
+          .element as HTMLElement;
+
+        await wrapper.setProps({ modelValue: "first" });
+        await wrapper.setProps({ modelValue: "second" });
+        await wrapper.setProps({ modelValue: "third" });
+
+        expect(container.classList.contains("bg-semantic-warning-50")).toBe(
+          true,
+        );
+        expect(wrapper.emitted("update:highlighted")).toBeUndefined();
+      });
+
+      it("emphasis persists when programmatic value is cleared to empty string", async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: "Label",
+            aiReasoning: true,
+            modelValue: "initial",
+          },
+          slots: {},
+        });
+
+        await wrapper.vm.$nextTick();
+        const container = wrapper.find(".fz-input > div")
+          .element as HTMLElement;
+
+        await wrapper.setProps({ modelValue: "" });
+
+        expect(container.classList.contains("bg-purple-50")).toBe(true);
+        expect(findSparkles(wrapper)?.exists()).toBe(true);
+        expect(wrapper.emitted("update:aiReasoning")).toBeUndefined();
+      });
+    });
+
+    describe("user input reverts to default state", () => {
+      it("highlighted reverts to default styling on user input", async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: "Label",
+            highlighted: true,
+          },
+          slots: {},
+        });
+
+        await wrapper.vm.$nextTick();
+        const container = wrapper.find(".fz-input > div")
+          .element as HTMLElement;
+        expect(container.classList.contains("bg-semantic-warning-50")).toBe(
+          true,
+        );
+
+        await wrapper.find("input").setValue("user typed");
+
+        expect(container.classList.contains("bg-semantic-warning-50")).toBe(
+          false,
+        );
+        expect(
+          container.classList.contains("border-semantic-warning-200"),
+        ).toBe(false);
+        expect(container.classList.contains("ring-semantic-warning-100")).toBe(
+          false,
+        );
+        expect(container.classList.contains("border-grey-300")).toBe(true);
+      });
+
+      it("aiReasoning reverts to default styling and hides sparkles on user input", async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: "Label",
+            aiReasoning: true,
+          },
+          slots: {},
+        });
+
+        await wrapper.vm.$nextTick();
+        const container = wrapper.find(".fz-input > div")
+          .element as HTMLElement;
+        expect(container.classList.contains("bg-purple-50")).toBe(true);
+        expect(findSparkles(wrapper)?.exists()).toBe(true);
+
+        await wrapper.find("input").setValue("user typed");
+
+        expect(container.classList.contains("bg-purple-50")).toBe(false);
+        expect(container.classList.contains("border-purple-600")).toBe(false);
+        expect(container.classList.contains("ring-purple-200")).toBe(false);
+        expect(container.classList.contains("border-grey-300")).toBe(true);
+        expect(findSparkles(wrapper)).toBeUndefined();
+      });
+
+      it("both highlighted and aiReasoning revert on user input", async () => {
+        const wrapper = mount(FzInput, {
+          props: {
+            label: "Label",
+            highlighted: true,
+            aiReasoning: true,
+          },
+          slots: {},
+        });
+
+        await wrapper.vm.$nextTick();
+        const container = wrapper.find(".fz-input > div")
+          .element as HTMLElement;
+        // highlighted takes priority
+        expect(container.classList.contains("bg-semantic-warning-50")).toBe(
+          true,
+        );
+
+        await wrapper.find("input").setValue("user typed");
+
+        expect(container.classList.contains("bg-semantic-warning-50")).toBe(
+          false,
+        );
+        expect(container.classList.contains("bg-purple-50")).toBe(false);
+        expect(container.classList.contains("border-grey-300")).toBe(true);
+        expect(findSparkles(wrapper)).toBeUndefined();
+      });
+
+      it("emits update:highlighted false on user input", async () => {
+        const wrapper = mount(FzInput, {
+          props: { label: "Label", highlighted: true },
+          slots: {},
+        });
+
+        await wrapper.find("input").setValue("typed");
+
+        expect(wrapper.emitted("update:highlighted")).toEqual([[false]]);
+      });
+
+      it("emits update:aiReasoning false on user input", async () => {
+        const wrapper = mount(FzInput, {
+          props: { label: "Label", aiReasoning: true },
+          slots: {},
+        });
+
+        await wrapper.find("input").setValue("typed");
+
+        expect(wrapper.emitted("update:aiReasoning")).toEqual([[false]]);
+      });
+
+      it("emits both update events when both are active", async () => {
+        const wrapper = mount(FzInput, {
+          props: { label: "Label", highlighted: true, aiReasoning: true },
+          slots: {},
+        });
+
+        await wrapper.find("input").setValue("typed");
+
+        expect(wrapper.emitted("update:highlighted")).toEqual([[false]]);
+        expect(wrapper.emitted("update:aiReasoning")).toEqual([[false]]);
+      });
+
+      it("does not emit update events when no emphasis is active", async () => {
+        const wrapper = mount(FzInput, {
+          props: { label: "Label" },
+          slots: {},
+        });
+
+        await wrapper.find("input").setValue("typed");
+
+        expect(wrapper.emitted("update:highlighted")).toBeUndefined();
+        expect(wrapper.emitted("update:aiReasoning")).toBeUndefined();
+      });
+
+      it("only emits once even with multiple user keystrokes", async () => {
+        const wrapper = mount(FzInput, {
+          props: { label: "Label", highlighted: true },
+          slots: {},
+        });
+
+        const input = wrapper.find("input");
+        await input.setValue("a");
+        await input.setValue("ab");
+        await input.setValue("abc");
+
+        // First keystroke resets emphasis; subsequent ones have nothing to reset
+        expect(wrapper.emitted("update:highlighted")).toEqual([[false]]);
+      });
+    });
+
+    describe("re-enabling emphasis after user reset", () => {
+      it("re-applies highlighted when prop cycles false → true after user reset", async () => {
+        const wrapper = mount(FzInput, {
+          props: { label: "Label", highlighted: true },
+          slots: {},
+        });
+
+        const container = wrapper.find(".fz-input > div")
+          .element as HTMLElement;
+        await wrapper.find("input").setValue("typed");
+        expect(container.classList.contains("bg-semantic-warning-50")).toBe(
+          false,
+        );
+
+        // Parent syncs to false then re-enables
+        await wrapper.setProps({ highlighted: false });
+        await wrapper.setProps({ highlighted: true });
+
+        expect(container.classList.contains("bg-semantic-warning-50")).toBe(
+          true,
+        );
+      });
+
+      it("re-applies aiReasoning and sparkles when prop cycles false → true after user reset", async () => {
+        const wrapper = mount(FzInput, {
+          props: { label: "Label", aiReasoning: true },
+          slots: {},
+        });
+
+        const container = wrapper.find(".fz-input > div")
+          .element as HTMLElement;
+        await wrapper.find("input").setValue("typed");
+        expect(container.classList.contains("bg-purple-50")).toBe(false);
+        expect(findSparkles(wrapper)).toBeUndefined();
+
+        await wrapper.setProps({ aiReasoning: false });
+        await wrapper.setProps({ aiReasoning: true });
+
+        expect(container.classList.contains("bg-purple-50")).toBe(true);
+        expect(findSparkles(wrapper)?.exists()).toBe(true);
+      });
+
+      it("user can type again after re-enabled emphasis to reset it a second time", async () => {
+        const wrapper = mount(FzInput, {
+          props: { label: "Label", highlighted: true },
+          slots: {},
+        });
+
+        const container = wrapper.find(".fz-input > div")
+          .element as HTMLElement;
+        const input = wrapper.find("input");
+
+        // First cycle: user types → reset
+        await input.setValue("first");
+        expect(container.classList.contains("bg-semantic-warning-50")).toBe(
+          false,
+        );
+
+        // Parent re-enables
+        await wrapper.setProps({ highlighted: false });
+        await wrapper.setProps({ highlighted: true });
+        expect(container.classList.contains("bg-semantic-warning-50")).toBe(
+          true,
+        );
+
+        // Second cycle: user types again → reset again
+        await input.setValue("second");
+        expect(container.classList.contains("bg-semantic-warning-50")).toBe(
+          false,
+        );
+        expect(wrapper.emitted("update:highlighted")).toEqual([
+          [false],
+          [false],
+        ]);
       });
     });
   });
