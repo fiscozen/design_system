@@ -91,9 +91,17 @@ export interface FzSelectButtonProps {
    */
   highlighted?: boolean;
   /**
+   * Accessible description announced by screen readers when highlighted is active
+   */
+  highlightedDescription?: string;
+  /**
    * Whether typeahead is in AI reasoning state
    */
   aiReasoning?: boolean;
+  /**
+   * Accessible description announced by screen readers when aiReasoning is active
+   */
+  aiReasoningDescription?: string;
   /**
    * Left icon name
    */

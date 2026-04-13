@@ -24,7 +24,7 @@ const labelClass = computed(() => {
       break;
 
     default:
-      baseClasses.push("text-core-black");
+      baseClasses.push("text-grey-500");
       break;
   }
 
