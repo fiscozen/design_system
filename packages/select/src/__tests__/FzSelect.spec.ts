@@ -5,7 +5,9 @@ import { calculateContainerWidth } from "../common";
 
 describe("FzSelect", () => {
   beforeEach(() => {
-    window.IntersectionObserver = vi.fn().mockImplementation(function (this: any) {
+    window.IntersectionObserver = vi.fn().mockImplementation(function (
+      this: any,
+    ) {
       this.observe = vi.fn();
       this.unobserve = vi.fn();
       this.disconnect = vi.fn();
@@ -51,9 +53,9 @@ describe("FzSelect", () => {
       });
 
       expect(wrapper.html()).toBeTruthy();
-      expect(
-        wrapper.find('button[test-id="fzselect-opener"]').exists(),
-      ).toBe(true);
+      expect(wrapper.find('button[test-id="fzselect-opener"]').exists()).toBe(
+        true,
+      );
     });
 
     it("displays label when provided", () => {
@@ -1968,7 +1970,9 @@ describe("FzSelect", () => {
       const options = document.querySelectorAll('button[role="option"]');
       expect(options.length).toBeGreaterThan(0);
       const optionTexts = Array.from(options).map((opt) => opt.textContent);
-      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(
+        true,
+      );
     });
 
     it("uses simple includes search when fuzzySearch is false", async () => {
@@ -2002,7 +2006,9 @@ describe("FzSelect", () => {
       const options = document.querySelectorAll('button[role="option"]');
       expect(options.length).toBe(2);
       const optionTexts = Array.from(options).map((opt) => opt.textContent);
-      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(
+        true,
+      );
       expect(optionTexts.some((text) => text?.includes("Java"))).toBe(true);
     });
 
@@ -2037,7 +2043,9 @@ describe("FzSelect", () => {
       const options = document.querySelectorAll('button[role="option"]');
       expect(options.length).toBeGreaterThan(0);
       const optionTexts = Array.from(options).map((opt) => opt.textContent);
-      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(
+        true,
+      );
     });
 
     it("simple search does not handle typos (exact substring match only)", async () => {
@@ -2101,7 +2109,9 @@ describe("FzSelect", () => {
       const options = document.querySelectorAll('button[role="option"]');
       expect(options.length).toBeGreaterThan(0);
       const optionTexts = Array.from(options).map((opt) => opt.textContent);
-      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(
+        true,
+      );
     });
 
     it("simple search is case-insensitive", async () => {
@@ -2169,7 +2179,9 @@ describe("FzSelect", () => {
       const options = document.querySelectorAll('button[role="option"]');
       expect(options.length).toBeGreaterThan(0);
       const optionTexts = Array.from(options).map((opt) => opt.textContent);
-      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(
+        true,
+      );
     });
 
     it("simple search works with grouped options", async () => {
@@ -2205,7 +2217,9 @@ describe("FzSelect", () => {
       const options = document.querySelectorAll('button[role="option"]');
       expect(options.length).toBe(2);
       const optionTexts = Array.from(options).map((opt) => opt.textContent);
-      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(true);
+      expect(optionTexts.some((text) => text?.includes("JavaScript"))).toBe(
+        true,
+      );
       expect(optionTexts.some((text) => text?.includes("Java"))).toBe(true);
     });
   });
@@ -2399,9 +2413,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          options: [
-            { value: "option1", label: "Option 1" },
-          ],
+          options: [{ value: "option1", label: "Option 1" }],
         },
       });
 
@@ -2416,9 +2428,7 @@ describe("FzSelect", () => {
       const wrapper = mount(FzSelect, {
         props: {
           modelValue: "",
-          options: [
-            { value: "option1", label: "Option 1" },
-          ],
+          options: [{ value: "option1", label: "Option 1" }],
         },
         slots: {
           help: "Help message",
@@ -2438,9 +2448,7 @@ describe("FzSelect", () => {
         props: {
           modelValue: "",
           error: true,
-          options: [
-            { value: "option1", label: "Option 1" },
-          ],
+          options: [{ value: "option1", label: "Option 1" }],
         },
       });
 
@@ -2456,9 +2464,7 @@ describe("FzSelect", () => {
         props: {
           modelValue: "",
           error: true,
-          options: [
-            { value: "option1", label: "Option 1" },
-          ],
+          options: [{ value: "option1", label: "Option 1" }],
         },
         slots: {
           error: "Error message",
@@ -2471,6 +2477,625 @@ describe("FzSelect", () => {
       const alert = helpError.findComponent({ name: "FzAlert" });
       expect(alert.exists()).toBe(true);
       expect(alert.text()).toContain("Error message");
+    });
+  });
+
+  describe("Visual emphasis states", () => {
+    const defaultOptions = [
+      { value: "option1", label: "Option 1" },
+      { value: "option2", label: "Option 2" },
+    ];
+
+    describe("Highlighted state", () => {
+      it("applies highlighted button classes when highlighted is true", () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            highlighted: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-semantic-warning-50");
+        expect(button.classes()).toContain("border-semantic-warning-200");
+        expect(button.classes()).toContain("ring-2");
+        expect(button.classes()).toContain("ring-semantic-warning-100");
+      });
+
+      it("works with backoffice environment", () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            highlighted: true,
+            environment: "backoffice",
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("h-32");
+        expect(button.classes()).toContain("bg-semantic-warning-50");
+      });
+
+      it("works with filterable mode (button shows emphasis when closed)", () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            highlighted: true,
+            filterable: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-semantic-warning-50");
+        expect(button.classes()).toContain("border-semantic-warning-200");
+      });
+    });
+
+    describe("AI Reasoning state", () => {
+      it("applies aiReasoning button classes when aiReasoning is true", () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            aiReasoning: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-purple-50");
+        expect(button.classes()).toContain("border-purple-600");
+        expect(button.classes()).toContain("ring-2");
+        expect(button.classes()).toContain("ring-purple-200");
+      });
+
+      it("auto-renders sparkles icon with aria-hidden", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            aiReasoning: true,
+            options: defaultOptions,
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        const icons = wrapper.findAllComponents({ name: "FzIcon" });
+        const sparklesIcon = icons.find(
+          (icon: any) => icon.props("name") === "sparkles",
+        );
+        expect(sparklesIcon?.exists()).toBe(true);
+        expect(sparklesIcon?.props("variant")).toBe("fas");
+
+        const rootElement = sparklesIcon?.element as HTMLElement;
+        expect(rootElement.getAttribute("aria-hidden")).toBe("true");
+      });
+
+      it("does not render sparkles when leftIcon is provided", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            aiReasoning: true,
+            leftIcon: "bell",
+            options: defaultOptions,
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        const icons = wrapper.findAllComponents({ name: "FzIcon" });
+        const sparklesIcon = icons.find(
+          (icon: any) => icon.props("name") === "sparkles",
+        );
+        expect(sparklesIcon).toBeUndefined();
+
+        const bellIcon = icons.find(
+          (icon: any) => icon.props("name") === "bell",
+        );
+        expect(bellIcon?.exists()).toBe(true);
+      });
+
+      it("sparkles icon is purple-600 by default", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            aiReasoning: true,
+            options: defaultOptions,
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        const icons = wrapper.findAllComponents({ name: "FzIcon" });
+        const sparklesIcon = icons.find(
+          (icon: any) => icon.props("name") === "sparkles",
+        );
+        expect(sparklesIcon?.classes()).toContain("text-purple-600");
+      });
+
+      it("sparkles icon is grey-300 when disabled", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            aiReasoning: true,
+            disabled: true,
+            options: defaultOptions,
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        const icons = wrapper.findAllComponents({ name: "FzIcon" });
+        const sparklesIcon = icons.find(
+          (icon: any) => icon.props("name") === "sparkles",
+        );
+        expect(sparklesIcon?.classes()).toContain("text-grey-300");
+      });
+
+      it("sparkles icon is grey-300 when error", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            aiReasoning: true,
+            error: true,
+            options: defaultOptions,
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        const icons = wrapper.findAllComponents({ name: "FzIcon" });
+        const sparklesIcon = icons.find(
+          (icon: any) => icon.props("name") === "sparkles",
+        );
+        expect(sparklesIcon?.classes()).toContain("text-grey-300");
+      });
+    });
+
+    describe("Priority overrides", () => {
+      it("error overrides highlighted", () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            error: true,
+            highlighted: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("border-semantic-error-200");
+        expect(button.classes()).not.toContain("bg-semantic-warning-50");
+      });
+
+      it("error overrides aiReasoning", () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            error: true,
+            aiReasoning: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("border-semantic-error-200");
+        expect(button.classes()).not.toContain("bg-purple-50");
+      });
+
+      it("disabled overrides highlighted", () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            disabled: true,
+            highlighted: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-grey-100");
+        expect(button.classes()).not.toContain("bg-semantic-warning-50");
+      });
+
+      it("disabled overrides aiReasoning", () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            disabled: true,
+            aiReasoning: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-grey-100");
+        expect(button.classes()).not.toContain("bg-purple-50");
+      });
+
+      it("readonly overrides highlighted", () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            readonly: true,
+            highlighted: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-grey-100");
+        expect(button.classes()).not.toContain("bg-semantic-warning-50");
+      });
+
+      it("highlighted takes priority over aiReasoning", () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            highlighted: true,
+            aiReasoning: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-semantic-warning-50");
+        expect(button.classes()).not.toContain("bg-purple-50");
+      });
+    });
+
+    describe("Reset on user selection", () => {
+      it("highlighted reverts to default on click selection", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            highlighted: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-semantic-warning-50");
+
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        const optionButton = document.querySelector(
+          'button[role="option"]',
+        ) as HTMLElement;
+        optionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(button.classes()).not.toContain("bg-semantic-warning-50");
+        expect(button.classes()).toContain("border-grey-300");
+      });
+
+      it("aiReasoning reverts to default on click selection", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            aiReasoning: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-purple-50");
+
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        const optionButton = document.querySelector(
+          'button[role="option"]',
+        ) as HTMLElement;
+        optionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(button.classes()).not.toContain("bg-purple-50");
+        expect(button.classes()).toContain("border-grey-300");
+      });
+
+      it("emits update:highlighted false on selection", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            highlighted: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        const optionButton = document.querySelector(
+          'button[role="option"]',
+        ) as HTMLElement;
+        optionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("update:highlighted")).toBeTruthy();
+        expect(wrapper.emitted("update:highlighted")?.[0]).toEqual([false]);
+      });
+
+      it("emits update:aiReasoning false on selection", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            aiReasoning: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        const optionButton = document.querySelector(
+          'button[role="option"]',
+        ) as HTMLElement;
+        optionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("update:aiReasoning")).toBeTruthy();
+        expect(wrapper.emitted("update:aiReasoning")?.[0]).toEqual([false]);
+      });
+
+      it("emits both update events when both are active", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            highlighted: true,
+            aiReasoning: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        const optionButton = document.querySelector(
+          'button[role="option"]',
+        ) as HTMLElement;
+        optionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("update:highlighted")?.[0]).toEqual([false]);
+        expect(wrapper.emitted("update:aiReasoning")?.[0]).toEqual([false]);
+      });
+
+      it("does not emit update events when no emphasis is active", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        const optionButton = document.querySelector(
+          'button[role="option"]',
+        ) as HTMLElement;
+        optionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("update:highlighted")).toBeFalsy();
+        expect(wrapper.emitted("update:aiReasoning")).toBeFalsy();
+      });
+
+      it("keyboard selection (Enter) triggers same reset", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            highlighted: true,
+            filterable: false,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-semantic-warning-50");
+
+        // Open dropdown
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        // Navigate and select via options container keyboard events
+        const container = document.querySelector(
+          '[test-id="fzselect-options-container"]',
+        ) as HTMLElement;
+
+        container.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter" }),
+        );
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("update:highlighted")).toBeTruthy();
+        expect(wrapper.emitted("update:highlighted")?.[0]).toEqual([false]);
+      });
+    });
+
+    describe("Reset on clear", () => {
+      it("highlighted reverts on clear click", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "option1",
+            highlighted: true,
+            clearable: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-semantic-warning-50");
+
+        const clearButton = wrapper.find(
+          'button[aria-label="Clear selection"]',
+        );
+        await clearButton.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        expect(button.classes()).not.toContain("bg-semantic-warning-50");
+      });
+
+      it("emits update:highlighted false on clear", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "option1",
+            highlighted: true,
+            clearable: true,
+            options: defaultOptions,
+          },
+        });
+
+        const clearButton = wrapper.find(
+          'button[aria-label="Clear selection"]',
+        );
+        await clearButton.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("update:highlighted")).toBeTruthy();
+        expect(wrapper.emitted("update:highlighted")?.[0]).toEqual([false]);
+      });
+    });
+
+    describe("Re-enabling emphasis", () => {
+      it("re-applies highlighted when prop cycles false -> true after selection", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            highlighted: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-semantic-warning-50");
+
+        // Select an option to reset emphasis
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+        const optionButton = document.querySelector(
+          'button[role="option"]',
+        ) as HTMLElement;
+        optionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(button.classes()).not.toContain("bg-semantic-warning-50");
+
+        // Re-enable highlighted
+        await wrapper.setProps({ highlighted: false });
+        await wrapper.setProps({ highlighted: true });
+        await wrapper.vm.$nextTick();
+
+        expect(button.classes()).toContain("bg-semantic-warning-50");
+      });
+
+      it("re-applies aiReasoning and sparkles via prop cycle", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            aiReasoning: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-purple-50");
+
+        // Select an option to reset emphasis
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+        const optionButton = document.querySelector(
+          'button[role="option"]',
+        ) as HTMLElement;
+        optionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        expect(button.classes()).not.toContain("bg-purple-50");
+
+        // Re-enable aiReasoning
+        await wrapper.setProps({ aiReasoning: false });
+        await wrapper.setProps({ aiReasoning: true });
+        await wrapper.vm.$nextTick();
+
+        expect(button.classes()).toContain("bg-purple-50");
+
+        const icons = wrapper.findAllComponents({ name: "FzIcon" });
+        const sparklesIcon = icons.find(
+          (icon: any) => icon.props("name") === "sparkles",
+        );
+        expect(sparklesIcon?.exists()).toBe(true);
+      });
+    });
+
+    describe("Filterable mode emphasis persistence", () => {
+      it("emphasis styling persists when user types in filter input", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            highlighted: true,
+            filterable: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+        expect(button.classes()).toContain("bg-semantic-warning-50");
+
+        // Open dropdown (shows FzInput)
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        // Find the inner FzInput and type in it
+        const input = wrapper.find("input");
+        if (input.exists()) {
+          await input.setValue("Option");
+          await wrapper.vm.$nextTick();
+        }
+
+        // Close without selecting
+        await button.trigger("keydown", { key: "Escape" });
+        await wrapper.vm.$nextTick();
+
+        // Emphasis should still be on the button
+        expect(button.classes()).toContain("bg-semantic-warning-50");
+        expect(wrapper.emitted("update:highlighted")).toBeFalsy();
+      });
+
+      it("emphasis resets only on option selection in filterable mode", async () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            highlighted: true,
+            filterable: true,
+            options: defaultOptions,
+          },
+        });
+
+        const button = wrapper.find('button[test-id="fzselect-opener"]');
+
+        // Open dropdown
+        await button.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        // Select an option
+        const optionButton = document.querySelector(
+          'button[role="option"]',
+        ) as HTMLElement;
+        optionButton?.click();
+        await wrapper.vm.$nextTick();
+
+        // Emphasis should be reset
+        expect(button.classes()).not.toContain("bg-semantic-warning-50");
+        expect(wrapper.emitted("update:highlighted")?.[0]).toEqual([false]);
+      });
     });
   });
 });

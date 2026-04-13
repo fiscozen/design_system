@@ -69,6 +69,8 @@ const props = withDefaults(defineProps<FzSelectProps>(), {
   environment: "frontoffice",
   error: false,
   filterable: false,
+  highlighted: false,
+  aiReasoning: false,
   noResultsMessage: "Nessun risultato trovato",
   optionsToShow: 25,
   position: "auto-vertical-start",
@@ -89,6 +91,22 @@ const model = defineModel<string | number | undefined>({
 // STATE
 // ============================================================================
 
+const effectiveHighlighted = ref(props.highlighted);
+const effectiveAiReasoning = ref(props.aiReasoning);
+
+watch(
+  () => props.highlighted,
+  (val) => {
+    effectiveHighlighted.value = val;
+  },
+);
+watch(
+  () => props.aiReasoning,
+  (val) => {
+    effectiveAiReasoning.value = val;
+  },
+);
+
 const isOpen = ref(false);
 const buttonRef = ref<InstanceType<typeof FzSelectButton>>();
 const optionsListRef = ref<InstanceType<typeof FzSelectOptionsList>>();
@@ -102,7 +120,7 @@ const isScrollingToFocus = ref(false);
 const searchValue = ref<string>("");
 const debouncedSearchValue = ref<string>("");
 const internalFilteredOptions = ref<FzSelectOptionsProps[] | undefined>(
-  undefined
+  undefined,
 );
 
 /**
@@ -189,7 +207,7 @@ const updateFilteredOptions = async () => {
       internalFilteredOptions.value = undefined;
       internalFilteredOptions.value = await applyCustomFilter(
         props.filterFn,
-        debouncedSearchValue.value || ""
+        debouncedSearchValue.value || "",
       );
       return;
     }
@@ -223,7 +241,7 @@ const updateFilteredOptions = async () => {
     props.options,
     debouncedSearchValue.value,
     useFuzzySearch,
-    fuseInstance.value
+    fuseInstance.value,
   );
 };
 
@@ -235,7 +253,7 @@ const debouncedUpdateSearchValue = debounce(
   (value: unknown) => {
     debouncedSearchValue.value = value as string;
   },
-  (props as any).delayTime ?? 500
+  (props as any).delayTime ?? 500,
 );
 
 watch(
@@ -247,7 +265,7 @@ watch(
       debouncedUpdateSearchValue(newValue);
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 watch(
@@ -255,7 +273,7 @@ watch(
   () => {
     updateFilteredOptions();
   },
-  { immediate: false }
+  { immediate: false },
 );
 
 watch(
@@ -284,11 +302,11 @@ watch(
     if (!props.filterable) {
       loadedOptionsCount.value = Math.min(
         props.optionsToShow,
-        props.options?.length || 0
+        props.options?.length || 0,
       );
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 /**
@@ -314,14 +332,14 @@ watch(
       fuseInstance.value = undefined;
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const containerElement = computed(
   () =>
     optionsListRef.value?.containerElement?.containerElement as
       | HTMLElement
-      | undefined
+      | undefined,
 );
 
 const instanceId = Math.random().toString(36).substring(2, 9);
@@ -344,7 +362,7 @@ const selectedOption = computed(() => {
   if (!props.options || !model.value) return undefined;
   return props.options.find(
     (option): option is FzSelectOptionProps =>
-      isSelectableOption(option) && option.value === model.value
+      isSelectableOption(option) && option.value === model.value,
   );
 });
 
@@ -367,7 +385,7 @@ const selectableOptions = computed(() => {
 const selectedOptionIndex = computed(() => {
   if (!selectedOption.value) return -1;
   return selectableOptions.value.findIndex(
-    (option) => option.value === selectedOption.value?.value
+    (option) => option.value === selectedOption.value?.value,
   );
 });
 
@@ -404,6 +422,8 @@ useClickOutside(safeOpener, () => {
 
 const emit = defineEmits([
   "fzselect:select",
+  "update:highlighted",
+  "update:aiReasoning",
   "fzselect:clear",
   "fzselect:right-icon-click",
 ]);
@@ -417,7 +437,7 @@ const calculateMaxHeight = (
   openerRect: Ref<DOMRect | undefined>,
   _containerRect: Ref<DOMRect | undefined>,
   position: Ref<FzFloatingPosition>,
-  actualPosition: Ref<FzFloatingPosition | undefined>
+  actualPosition: Ref<FzFloatingPosition | undefined>,
 ): void => {
   nextTick(() => {
     if (props.floatingPanelMaxHeight) {
@@ -570,6 +590,17 @@ const handleSelect = (option: FzSelectOptionProps) => {
   } else {
     emit("fzselect:select", option.value, option);
   }
+
+  // Reset visual emphasis on user selection
+  if (effectiveHighlighted.value) {
+    effectiveHighlighted.value = false;
+    emit("update:highlighted", false);
+  }
+  if (effectiveAiReasoning.value) {
+    effectiveAiReasoning.value = false;
+    emit("update:aiReasoning", false);
+  }
+
   isOpen.value = false;
 
   // Reset flag after nextTick to allow watch to process the change
@@ -593,6 +624,16 @@ const handleClearClick = () => {
   internalFilteredOptions.value = props.options;
   // Reset lastFilterFnSearchValue to allow filterFn to be called on next input
   lastFilterFnSearchValue.value = undefined;
+
+  // Reset visual emphasis on user clear
+  if (effectiveHighlighted.value) {
+    effectiveHighlighted.value = false;
+    emit("update:highlighted", false);
+  }
+  if (effectiveAiReasoning.value) {
+    effectiveAiReasoning.value = false;
+    emit("update:aiReasoning", false);
+  }
 
   emit("fzselect:clear");
   emit("fzselect:select", undefined, undefined);
@@ -817,7 +858,7 @@ function updateVisibleOptions() {
     // Increment count to load next batch
     loadedOptionsCount.value = Math.min(
       loadedOptionsCount.value + props.optionsToShow,
-      props.options.length
+      props.options.length,
     );
     return;
   }
@@ -833,7 +874,7 @@ function updateVisibleOptions() {
   // Increment count to load next batch
   loadedOptionsCount.value = Math.min(
     loadedOptionsCount.value + props.optionsToShow,
-    internalFilteredOptions.value.length
+    internalFilteredOptions.value.length,
   );
 }
 
@@ -846,7 +887,7 @@ function ensureSelectedOptionVisible() {
     // Find the index of the selected option in props.options (including labels)
     const optionIndexInFullArray = props.options.findIndex(
       (opt) =>
-        isSelectableOption(opt) && opt.value === selectedOption.value?.value
+        isSelectableOption(opt) && opt.value === selectedOption.value?.value,
     );
 
     if (optionIndexInFullArray < 0) return; // Should not happen, but safety check
@@ -867,7 +908,7 @@ function ensureSelectedOptionVisible() {
   // Find the index of the selected option in internalFilteredOptions (including labels)
   const optionIndexInFullArray = internalFilteredOptions.value.findIndex(
     (opt) =>
-      isSelectableOption(opt) && opt.value === selectedOption.value?.value
+      isSelectableOption(opt) && opt.value === selectedOption.value?.value,
   );
 
   if (optionIndexInFullArray < 0) return; // Should not happen, but safety check
@@ -903,7 +944,7 @@ watch(
       loadedOptionsCount.value = Math.min(props.optionsToShow, newValue.length);
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 watch(isInteractive, (newIsInteractive) => {
@@ -951,7 +992,7 @@ watch(isOpen, (newValue) => {
                 } catch (error) {
                   console.warn(
                     "[FzSelect] Failed to scroll to selected option:",
-                    error
+                    error,
                   );
                   resetScrollPosition();
                 }
@@ -1006,42 +1047,42 @@ onMounted(() => {
   if (props.size !== undefined) {
     console.warn(
       `[FzSelect] The 'size' prop is deprecated and will be removed in a future version. ` +
-        `The component now uses a fixed 'lg' size. Please remove the size prop from your usage.`
+        `The component now uses a fixed 'lg' size. Please remove the size prop from your usage.`,
     );
   }
 
   if (props.selectProps !== undefined) {
     console.warn(
       `[FzSelect] The 'selectProps' prop is deprecated and will be removed in a future version. ` +
-        `Please use the 'options' prop instead.`
+        `Please use the 'options' prop instead.`,
     );
   }
 
   if (props.inputProps !== undefined) {
     console.warn(
       `[FzSelect] The 'inputProps' prop is deprecated and will be removed in a future version. ` +
-        `Please use the 'options' prop instead.`
+        `Please use the 'options' prop instead.`,
     );
   }
 
   if (props.filteredOptions !== undefined) {
     console.warn(
       `[FzSelect] The 'filteredOptions' prop is deprecated and will be removed in a future version. ` +
-        `Please use the 'options' prop instead.`
+        `Please use the 'options' prop instead.`,
     );
   }
 
   if (props.disableEmitOnFocus !== undefined) {
     console.warn(
       `[FzSelect] The 'disableEmitOnFocus' prop is deprecated and will be removed in a future version. ` +
-        `The component no longer emits input events on focus, so this prop has no effect. Please remove it from your usage.`
+        `The component no longer emits input events on focus, so this prop has no effect. Please remove it from your usage.`,
     );
   }
 
   if (props.emptySearchNoFilter !== undefined) {
     console.warn(
       `[FzSelect] The 'emptySearchNoFilter' prop is deprecated and will be removed in a future version. ` +
-        `The component now always shows all options when the input is empty, so this prop has no effect. Please remove it from your usage.`
+        `The component now always shows all options when the input is empty, so this prop has no effect. Please remove it from your usage.`,
     );
   }
 
@@ -1051,7 +1092,7 @@ onMounted(() => {
   ) {
     console.warn(
       `[FzSelect] The 'rightIconLast' prop is deprecated and will be removed in a future version. ` +
-        `The right icon is now always positioned before the chevron. Please remove the rightIconLast prop from your usage.`
+        `The right icon is now always positioned before the chevron. Please remove the rightIconLast prop from your usage.`,
     );
   }
 
@@ -1107,11 +1148,13 @@ defineExpose({
     <template #opener="{ floating }">
       <FzSelectButton
         v-model="searchValue"
+        :aiReasoning="effectiveAiReasoning"
         :clearable
         :disabled
         :environment
         :error
         :filterable
+        :highlighted="effectiveHighlighted"
         :isOpen
         :label
         :labelId

@@ -87,6 +87,14 @@ export interface FzSelectButtonProps {
    */
   error?: boolean;
   /**
+   * Whether typeahead is in highlighted state
+   */
+  highlighted?: boolean;
+  /**
+   * Whether typeahead is in AI reasoning state
+   */
+  aiReasoning?: boolean;
+  /**
    * Left icon name
    */
   leftIcon?: string;

@@ -40,6 +40,22 @@ interface FzSelectBaseProps extends FzFloatingProps {
    */
   error?: boolean;
   /**
+   * Shows highlighted state with warning colors (orange border, warm background, glow ring).
+   * Overridden by error, disabled, and readonly states.
+   * If both highlighted and aiReasoning are true, highlighted takes priority.
+   * Resets to default when user selects or clears a value.
+   * @default false
+   */
+  highlighted?: boolean;
+  /**
+   * Shows AI reasoning state with purple colors (purple border, light purple background, glow ring).
+   * Auto-renders a sparkles icon unless leftIcon prop is provided.
+   * Overridden by error, disabled, readonly, and highlighted states.
+   * Resets to default when user selects or clears a value.
+   * @default false
+   */
+  aiReasoning?: boolean;
+  /**
    * FontAwesome icon name displayed on the left side of the typeahead
    */
   leftIcon?: string;
@@ -214,14 +230,10 @@ interface FzSelectDeprecatedProps {
  * This provides compile-time type checking to guide developers on which props
  * can be used in each mode.
  */
-export type FzSelectProps = FzSelectDeprecatedProps & (
-  FzSelectFilterableProps
-  | FzSelectNonFilterableProps
-);
+export type FzSelectProps = FzSelectDeprecatedProps &
+  (FzSelectFilterableProps | FzSelectNonFilterableProps);
 
-export type FzSelectOptionsProps =
-  | FzSelectOptionProps
-  | FzSelectLabelProps;
+export type FzSelectOptionsProps = FzSelectOptionProps | FzSelectLabelProps;
 
 export type FzSelectOptionProps = {
   /**
