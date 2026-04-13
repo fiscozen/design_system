@@ -48,6 +48,11 @@ interface FzSelectBaseProps extends FzFloatingProps {
    */
   highlighted?: boolean;
   /**
+   * Accessible description announced by screen readers when highlighted is active.
+   * @default 'Campo in evidenza'
+   */
+  highlightedDescription?: string;
+  /**
    * Shows AI reasoning state with purple colors (purple border, light purple background, glow ring).
    * Auto-renders a sparkles icon unless leftIcon prop is provided.
    * Overridden by error, disabled, readonly, and highlighted states.
@@ -55,6 +60,11 @@ interface FzSelectBaseProps extends FzFloatingProps {
    * @default false
    */
   aiReasoning?: boolean;
+  /**
+   * Accessible description announced by screen readers when aiReasoning is active.
+   * @default 'Suggerito dall\'intelligenza artificiale'
+   */
+  aiReasoningDescription?: string;
   /**
    * FontAwesome icon name displayed on the left side of the typeahead
    */

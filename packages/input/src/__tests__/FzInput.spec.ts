@@ -1627,7 +1627,7 @@ describe("FzInput", () => {
         expect(container.classList.contains("ring-semantic-warning-100")).toBe(
           false,
         );
-        expect(container.classList.contains("border-grey-300")).toBe(true);
+        expect(container.classList.contains("border-grey-200")).toBe(true);
       });
 
       it("aiReasoning reverts to default styling and hides sparkles on user input", async () => {
@@ -1650,7 +1650,7 @@ describe("FzInput", () => {
         expect(container.classList.contains("bg-purple-50")).toBe(false);
         expect(container.classList.contains("border-purple-600")).toBe(false);
         expect(container.classList.contains("ring-purple-200")).toBe(false);
-        expect(container.classList.contains("border-grey-300")).toBe(true);
+        expect(container.classList.contains("border-grey-200")).toBe(true);
         expect(findSparkles(wrapper)).toBeUndefined();
       });
 
@@ -1678,7 +1678,7 @@ describe("FzInput", () => {
           false,
         );
         expect(container.classList.contains("bg-purple-50")).toBe(false);
-        expect(container.classList.contains("border-grey-300")).toBe(true);
+        expect(container.classList.contains("border-grey-200")).toBe(true);
         expect(findSparkles(wrapper)).toBeUndefined();
       });
 

@@ -70,7 +70,9 @@ const props = withDefaults(defineProps<FzSelectProps>(), {
   error: false,
   filterable: false,
   highlighted: false,
+  highlightedDescription: "Campo in evidenza",
   aiReasoning: false,
+  aiReasoningDescription: "Suggerito dall'intelligenza artificiale",
   noResultsMessage: "Nessun risultato trovato",
   optionsToShow: 25,
   position: "auto-vertical-start",
@@ -428,6 +430,17 @@ const emit = defineEmits([
   "fzselect:right-icon-click",
 ]);
 
+const resetEmphasis = () => {
+  if (effectiveHighlighted.value) {
+    effectiveHighlighted.value = false;
+    emit("update:highlighted", false);
+  }
+  if (effectiveAiReasoning.value) {
+    effectiveAiReasoning.value = false;
+    emit("update:aiReasoning", false);
+  }
+};
+
 // ============================================================================
 // FLOATING PANEL
 // ============================================================================
@@ -591,15 +604,7 @@ const handleSelect = (option: FzSelectOptionProps) => {
     emit("fzselect:select", option.value, option);
   }
 
-  // Reset visual emphasis on user selection
-  if (effectiveHighlighted.value) {
-    effectiveHighlighted.value = false;
-    emit("update:highlighted", false);
-  }
-  if (effectiveAiReasoning.value) {
-    effectiveAiReasoning.value = false;
-    emit("update:aiReasoning", false);
-  }
+  resetEmphasis();
 
   isOpen.value = false;
 
@@ -625,15 +630,7 @@ const handleClearClick = () => {
   // Reset lastFilterFnSearchValue to allow filterFn to be called on next input
   lastFilterFnSearchValue.value = undefined;
 
-  // Reset visual emphasis on user clear
-  if (effectiveHighlighted.value) {
-    effectiveHighlighted.value = false;
-    emit("update:highlighted", false);
-  }
-  if (effectiveAiReasoning.value) {
-    effectiveAiReasoning.value = false;
-    emit("update:aiReasoning", false);
-  }
+  resetEmphasis();
 
   emit("fzselect:clear");
   emit("fzselect:select", undefined, undefined);
@@ -1149,12 +1146,14 @@ defineExpose({
       <FzSelectButton
         v-model="searchValue"
         :aiReasoning="effectiveAiReasoning"
+        :aiReasoningDescription
         :clearable
         :disabled
         :environment
         :error
         :filterable
         :highlighted="effectiveHighlighted"
+        :highlightedDescription
         :isOpen
         :label
         :labelId

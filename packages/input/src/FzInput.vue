@@ -28,7 +28,9 @@ const props = withDefaults(defineProps<FzInputProps>(), {
   environment: "frontoffice",
   autocomplete: false,
   highlighted: false,
+  highlightedDescription: "Campo in evidenza",
   aiReasoning: false,
+  aiReasoningDescription: "Suggerito dall'intelligenza artificiale",
   disableEmphasisReset: false,
 });
 
@@ -364,6 +366,13 @@ const aiIconClass = computed(() => {
   return "text-purple-600";
 });
 
+const emphasisDescription = computed(() => {
+  if (isReadonlyOrDisabled.value || props.error) return undefined;
+  if (effectiveHighlighted.value) return props.highlightedDescription;
+  if (effectiveAiReasoning.value) return props.aiReasoningDescription;
+  return undefined;
+});
+
 /**
  * Determines if right icon is clickable (not rendered as button)
  */
@@ -445,7 +454,7 @@ defineExpose({
           "
         />
         <FzIcon
-          v-else-if="effectiveAiReasoning"
+          v-else-if="effectiveAiReasoning && !effectiveHighlighted"
           name="sparkles"
           variant="fas"
           size="md"
@@ -478,6 +487,7 @@ defineExpose({
           :aria-disabled="isReadonlyOrDisabled ? 'true' : 'false'"
           :aria-labelledby="ariaLabelledBy"
           :aria-describedby="ariaDescribedBy"
+          :aria-description="emphasisDescription"
           v-bind="inputAttrs"
           @input="handleUserInput"
           @blur="

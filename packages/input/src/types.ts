@@ -150,6 +150,11 @@ type FzInputProps = {
    */
   highlighted?: boolean;
   /**
+   * Accessible description announced by screen readers when highlighted is active.
+   * @default 'Campo in evidenza'
+   */
+  highlightedDescription?: string;
+  /**
    * Shows AI reasoning state with purple colors (purple border, light purple background, glow ring).
    * Auto-renders a sparkles icon unless leftIcon prop or left-icon slot is provided.
    * Overridden by error, disabled, readonly, and highlighted states.
@@ -158,6 +163,11 @@ type FzInputProps = {
    * @default false
    */
   aiReasoning?: boolean;
+  /**
+   * Accessible description announced by screen readers when aiReasoning is active.
+   * @default 'Suggerito dall\'intelligenza artificiale'
+   */
+  aiReasoningDescription?: string;
   /**
    * When true, prevents emphasis (highlighted/aiReasoning) from being reset on user input.
    * Used by FzSelect to prevent emphasis reset when typing in the filter input,

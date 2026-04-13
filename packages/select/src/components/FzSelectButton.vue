@@ -58,7 +58,7 @@ const showNormalPlaceholder = computed(() => {
 });
 
 const staticPickerClass =
-  "flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-300 w-full gap-8 text-left relative outline-none focus:outline-none";
+  "flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-200 w-full gap-8 text-left relative outline-none focus:outline-none";
 
 const environmentPickerClasses = {
   backoffice: "h-32 text-base",
@@ -81,7 +81,7 @@ const pickerStateClasses = computed(() => {
       return "bg-purple-50 border-purple-600 ring-2 ring-purple-200 text-core-black cursor-pointer focus:border-purple-600";
 
     default:
-      return "border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500";
+      return "border-grey-200 bg-white text-core-black cursor-pointer focus:border-blue-500";
   }
 });
 
@@ -140,6 +140,13 @@ const aiIconClass = computed(() => {
   if (isDisabled.value || isReadonly.value || props.error)
     return "text-grey-300";
   return "text-purple-600";
+});
+
+const emphasisDescription = computed(() => {
+  if (!isInteractive.value || isError.value) return undefined;
+  if (props.highlighted) return props.highlightedDescription;
+  if (props.aiReasoning) return props.aiReasoningDescription;
+  return undefined;
 });
 
 const handleClick = () => {
@@ -231,9 +238,10 @@ defineExpose({
       :aria-invalid="error ? 'true' : 'false'"
       :aria-disabled="isInteractive ? 'false' : 'true'"
       :aria-hidden="shouldShowTheInput ? 'true' : 'false'"
+      :aria-description="emphasisDescription"
     >
       <FzIcon
-        v-if="!leftIcon && aiReasoning"
+        v-if="!leftIcon && aiReasoning && !highlighted"
         name="sparkles"
         variant="fas"
         size="md"

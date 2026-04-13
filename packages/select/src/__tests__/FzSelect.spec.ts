@@ -2769,7 +2769,7 @@ describe("FzSelect", () => {
         await wrapper.vm.$nextTick();
 
         expect(button.classes()).not.toContain("bg-semantic-warning-50");
-        expect(button.classes()).toContain("border-grey-300");
+        expect(button.classes()).toContain("border-grey-200");
       });
 
       it("aiReasoning reverts to default on click selection", async () => {
@@ -2794,7 +2794,7 @@ describe("FzSelect", () => {
         await wrapper.vm.$nextTick();
 
         expect(button.classes()).not.toContain("bg-purple-50");
-        expect(button.classes()).toContain("border-grey-300");
+        expect(button.classes()).toContain("border-grey-200");
       });
 
       it("emits update:highlighted false on selection", async () => {
@@ -2911,9 +2911,7 @@ describe("FzSelect", () => {
           '[test-id="fzselect-options-container"]',
         ) as HTMLElement;
 
-        container.dispatchEvent(
-          new KeyboardEvent("keydown", { key: "Enter" }),
-        );
+        container.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
         await wrapper.vm.$nextTick();
 
         expect(wrapper.emitted("update:highlighted")).toBeTruthy();

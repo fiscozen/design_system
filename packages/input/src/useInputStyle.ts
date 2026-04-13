@@ -47,7 +47,7 @@ export default function useInputStyle(
     "font-normal text-base",
     props.disabled?.value || props.readonly?.value
       ? "text-grey-300"
-      : "text-core-black",
+      : "text-grey-500",
   ]);
 
   // Input styles: transparent background (inherits from container), no border, placeholder color grey-300
@@ -142,7 +142,7 @@ export default function useInputStyle(
         return "bg-purple-50 border-purple-600 ring-2 ring-purple-200 text-core-black cursor-text";
 
       default:
-        return "border-grey-300 has-[:focus]:border-blue-600 bg-core-white text-core-black cursor-text";
+        return "border-grey-200 has-[:focus]:border-blue-600 bg-core-white text-core-black cursor-text";
     }
   };
 
