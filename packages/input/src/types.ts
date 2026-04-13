@@ -159,6 +159,13 @@ type FzInputProps = {
    */
   aiReasoning?: boolean;
   /**
+   * When true, prevents emphasis (highlighted/aiReasoning) from being reset on user input.
+   * Used by FzSelect to prevent emphasis reset when typing in the filter input,
+   * since FzSelect resets emphasis on option selection instead.
+   * @default false
+   */
+  disableEmphasisReset?: boolean;
+  /**
    * Native maxlength attribute. Limits maximum number of characters
    */
   maxlength?: number;

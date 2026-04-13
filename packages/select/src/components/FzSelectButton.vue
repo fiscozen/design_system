@@ -43,7 +43,7 @@ const isReadonly = computed(() => props.readonly);
 const isInteractive = computed(() => !isDisabled.value && !isReadonly.value);
 const isError = computed(() => !!props.error && isInteractive.value);
 const isSelectedValue = computed(
-  () => props.selectedOption && isInteractive.value
+  () => props.selectedOption && isInteractive.value,
 );
 
 const showNormalPlaceholder = computed(() => {
@@ -73,6 +73,12 @@ const pickerStateClasses = computed(() => {
 
     case isError.value:
       return "border-semantic-error-200 bg-white text-core-black cursor-pointer focus:border-semantic-error-300";
+
+    case !!props.highlighted:
+      return "bg-semantic-warning-50 border-semantic-warning-200 ring-2 ring-semantic-warning-100 text-core-black cursor-pointer focus:border-semantic-warning-200";
+
+    case !!props.aiReasoning:
+      return "bg-purple-50 border-purple-600 ring-2 ring-purple-200 text-core-black cursor-pointer focus:border-purple-600";
 
     default:
       return "border-grey-300 bg-white text-core-black cursor-pointer focus:border-blue-500";
@@ -130,6 +136,12 @@ const iconColorClass = computed(() => {
   return "text-core-black";
 });
 
+const aiIconClass = computed(() => {
+  if (isDisabled.value || isReadonly.value || props.error)
+    return "text-grey-300";
+  return "text-purple-600";
+});
+
 const handleClick = () => {
   emit("click");
 };
@@ -163,6 +175,9 @@ const inputProps = computed<FzInputProps>(() => ({
   environment: props.environment,
   leftIcon: props.leftIcon,
   leftIconVariant: props.leftIconVariant,
+  highlighted: props.highlighted,
+  aiReasoning: props.aiReasoning,
+  disableEmphasisReset: true, // FzSelect controls emphasis lifecycle, not FzInput
   // rightIcon is handled via right-icon slot (chevron is always last)
 }));
 
@@ -218,11 +233,20 @@ defineExpose({
       :aria-hidden="shouldShowTheInput ? 'true' : 'false'"
     >
       <FzIcon
+        v-if="!leftIcon && aiReasoning"
+        name="sparkles"
+        variant="fas"
+        size="md"
+        :class="aiIconClass"
+        aria-hidden="true"
+      />
+      <FzIcon
         v-if="leftIcon"
         :name="leftIcon"
         :variant="leftIconVariant"
         size="md"
         :class="iconColorClass"
+        aria-hidden="true"
       />
       <!--
         Floating-label variant: two-span layout for compact form styling

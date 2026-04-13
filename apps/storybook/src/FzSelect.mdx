@@ -160,6 +160,18 @@ const options = [
       <td>If true, the input is in error state (shows error styling and error slot if provided)</td>
     </tr>
     <tr>
+      <td><code>highlighted</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows highlighted state with warning colors (orange border, warm background, glow ring). Overridden by error, disabled, and readonly states. If both highlighted and aiReasoning are true, highlighted takes priority. Resets to default when user selects or clears a value. Supports <code>v-model:highlighted</code></td>
+    </tr>
+    <tr>
+      <td><code>aiReasoning</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows AI reasoning state with purple colors (purple border, light purple background, glow ring). Auto-renders a sparkles icon unless <code>leftIcon</code> prop is provided. Overridden by error, disabled, readonly, and highlighted states. Resets to default when user selects or clears a value. Supports <code>v-model:aiReasoning</code></td>
+    </tr>
+    <tr>
       <td><code>clearable</code></td>
       <td><code>boolean</code></td>
       <td><code>true</code></td>
@@ -288,6 +300,16 @@ const options = [
       <td><code>update:modelValue</code></td>
       <td><code>string | number | undefined</code></td>
       <td>Emitted when the model value changes. Emits the option's value (string or number), or undefined if cleared</td>
+    </tr>
+    <tr>
+      <td><code>update:highlighted</code></td>
+      <td><code>boolean</code></td>
+      <td>Emitted with <code>false</code> when the highlighted state resets (on user selection or clear). Use with <code>v-model:highlighted</code> for two-way binding</td>
+    </tr>
+    <tr>
+      <td><code>update:aiReasoning</code></td>
+      <td><code>boolean</code></td>
+      <td>Emitted with <code>false</code> when the AI reasoning state resets (on user selection or clear). Use with <code>v-model:aiReasoning</code> for two-way binding</td>
     </tr>
   </tbody>
 </table>

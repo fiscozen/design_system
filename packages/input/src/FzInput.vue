@@ -29,6 +29,7 @@ const props = withDefaults(defineProps<FzInputProps>(), {
   autocomplete: false,
   highlighted: false,
   aiReasoning: false,
+  disableEmphasisReset: false,
 });
 
 defineOptions({
@@ -147,6 +148,7 @@ watch(
  * Emits update events so parents using v-model:highlighted / v-model:aiReasoning stay in sync.
  */
 const handleUserInput = () => {
+  if (props.disableEmphasisReset) return;
   if (effectiveHighlighted.value) {
     effectiveHighlighted.value = false;
     emit("update:highlighted", false);
