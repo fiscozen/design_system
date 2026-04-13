@@ -1576,6 +1576,23 @@ export const Highlighted: SelectStory = {
   ...Template,
   args: {
     ...Template.args,
+    highlighted: true
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    const buttons = canvas.getAllByRole('button')
+    const opener = buttons.find((btn) => btn.getAttribute('test-id') === 'fzselect-opener')
+    await expect(opener).toBeTruthy()
+    await expect(opener).toHaveAttribute('aria-invalid', 'false')
+    await expect(opener).toHaveAttribute('aria-disabled', 'false')
+  }
+}
+
+export const HighlightedResetOnSelect: SelectStory = {
+  ...Template,
+  args: {
+    ...Template.args,
     highlighted: true,
     'onUpdate:highlighted': fn()
   },
@@ -1585,8 +1602,6 @@ export const Highlighted: SelectStory = {
     const buttons = canvas.getAllByRole('button')
     const opener = buttons.find((btn) => btn.getAttribute('test-id') === 'fzselect-opener')
     await expect(opener).toBeTruthy()
-    await expect(opener).toHaveAttribute('aria-invalid', 'false')
-    await expect(opener).toHaveAttribute('aria-disabled', 'false')
 
     // Open dropdown and select an option to verify emphasis reset
     await userEvent.click(opener!)
