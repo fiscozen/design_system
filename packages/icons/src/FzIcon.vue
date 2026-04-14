@@ -18,7 +18,7 @@ import type { IconProps, IconSize } from './types'
 
 withDefaults(defineProps<IconProps>(), { size: 'lg', variant: 'far' })
 
-const staticContainerClasses = ['flex', 'items-center', 'justify-center']
+const staticContainerClasses = ['flex', 'items-center', 'justify-center', 'shrink-0']
 const containerClassSizeMap: Record<IconSize, string> = {
   xs: 'size-[12.5px]',
   sm: 'w-[15px] h-[15px]',

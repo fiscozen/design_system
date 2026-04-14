@@ -11,7 +11,7 @@ exports[`FzCardList > Snapshots > should match snapshot - with items 1`] = `
     <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-space-between">
       <!-- Title and indicator -->
       <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-center layout-default min-w-0">
-        <!-- Indicator --><span role="presentation" class="flex items-center justify-center size-[12.5px]"><svg class="svg-inline--fa fa-circle-small fa-xs h-[10px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-small" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M0 256a160 160 0 1 1 320 0A160 160 0 1 1 0 256z"></path></svg></span><!-- Title -->
+        <!-- Indicator --><span role="presentation" class="flex items-center justify-center shrink-0 size-[12.5px]"><svg class="svg-inline--fa fa-circle-small fa-xs h-[10px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-small" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M0 256a160 160 0 1 1 320 0A160 160 0 1 1 0 256z"></path></svg></span><!-- Title -->
         <p class="min-w-0 flex-1 truncate">Item 1</p>
       </div><!-- Value -->
       <p class="text-base whitespace-nowrap">1.200,00 €</p>
