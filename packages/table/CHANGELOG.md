@@ -1,5 +1,14 @@
 # @fiscozen/table
 
+## 2.1.3
+
+### Patch Changes
+
+- Updated dependencies [b4ae9e4]
+- Updated dependencies [3428436]
+  - @fiscozen/input@3.2.0
+  - @fiscozen/icons@1.0.3
+
 ## 2.1.2
 
 ### Patch Changes

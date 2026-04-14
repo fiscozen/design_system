@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/icons",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Design system icon plugin and component",
   "scripts": {
     "coverage": "vitest run --coverage",
