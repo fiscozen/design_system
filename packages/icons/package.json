@@ -38,7 +38,7 @@
     "vue-tsc": "^2.2.12"
   },
   "dependencies": {
-    "@awesome.me/kit-8137893ad3": "^1.0.412",
+    "@awesome.me/kit-8137893ad3": "^1.0.414",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/vue-fontawesome": "^3.1.1"
   }
