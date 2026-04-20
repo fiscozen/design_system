@@ -1,5 +1,11 @@
 # @fiscozen/icons
 
+## 1.0.4
+
+### Patch Changes
+
+- e21feb2: update fontawesome kit@1.0.414
+
 ## 1.0.3
 
 ### Patch Changes
