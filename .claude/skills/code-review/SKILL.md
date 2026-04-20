@@ -6,7 +6,7 @@ trigger: /code-review [path|PR#]
 
 # Code Review — Fiscozen Design System
 
-Multi-agent adversarial review tailored for a published Vue 3 component library. 6 agents across 4 phases: commission investigation, prosecution triage, adversarial challenge, and report assembly.
+Multi-agent adversarial review tailored for a published Vue 3 component library. Up to 7 agents across 5 phases: optional git-history profiling, commission investigation, prosecution triage, adversarial challenge, and report assembly.
 
 ## Architecture
 
@@ -15,11 +15,17 @@ Phase 0: Input Parsing
   Parse target -> read code/diff -> measure change size
   FAST PATH: if < 50 lines changed -> Quick Check (skip full pipeline)
                            |
+Phase 0.5: Git Advisor Profiling (1 optional agent)
+  Extract touched files -> git-advisor JSON -> confidence context
+  SKIP if: no files with git history, or --no-git flag
+                           |
 Phase 1: Commission (4 parallel agents)
   Component Quality + Accessibility + Performance + Maintainability
+  (each agent receives file-confidence context from Phase 0.5)
                            |
 Phase 2: Prosecutor (1 sequential agent)
   Triage findings -> Build exhibits with evidence triples
+  (uses confidence context to calibrate severity: HOT/VOLATILE files -> +1 severity)
   GATE: if 0 substantive -> skip Phase 3, report trivial only
                            |
 Phase 3: Adversarial Challenger (1 sequential agent, FRESH context)
@@ -28,7 +34,7 @@ Phase 3: Adversarial Challenger (1 sequential agent, FRESH context)
 Phase 4: Orchestrator assembles report with three-tier findings
 ```
 
-**Total: 6 agent spawns** (4 commission + 1 prosecutor + 1 challenger)
+**Total: up to 7 agent spawns** (1 git-advisor + 4 commission + 1 prosecutor + 1 challenger)
 
 ---
 
@@ -77,6 +83,41 @@ If a file or directory path is provided, read the files directly.
    SCRATCHPAD=$(mktemp -d)
    mkdir -p "$SCRATCHPAD/review"
    ```
+5. Extract the list of touched files for Phase 0.5 (skip if `--no-git` appears in input):
+   ```bash
+   # PR mode
+   gh pr diff {number} --name-only
+   # Branch diff mode
+   git diff --name-only main...HEAD
+   # File/Path mode: use the input paths directly
+   ```
+   Filter to `.vue|.ts|.tsx|.mdx` under `packages/` or `apps/storybook/src/`. Keep only files that exist in git history (`git log -1 -- <file>` returns a commit). Write the list to `{SCRATCHPAD}/review/touched-files.txt`.
+
+---
+
+## Phase 0.5: Git Advisor Profiling (Optional, 1 Agent)
+
+**Skip conditions:**
+- `--no-git` flag in input
+- `touched-files.txt` is empty (all files are brand new, no history)
+- Quick Check path was taken
+
+**Otherwise**, spawn one `git-advisor` agent in composable mode:
+
+```
+Agent(subagent_type="git-advisor", model="sonnet")
+Prompt: "Assess the following files. Return composable JSON only.
+
+## Files
+{contents of SCRATCHPAD/review/touched-files.txt}
+"
+```
+
+Write the returned JSON to `{SCRATCHPAD}/review/git-confidence.json`.
+
+**Report to user**: `Git advisor: profiled {N} files — {hot} hot, {volatile} volatile, {stable} stable. Feeding context to commission agents.`
+
+**Degrade gracefully**: if the git-advisor agent fails or returns invalid JSON, write an empty `{"files": []}` object to the scratchpad file and continue. Note the degradation in the final report.
 
 ---
 
@@ -97,6 +138,15 @@ For each of [component-reviewer, a11y-reviewer, performance-reviewer, maintainab
 
   ## Project Review Rules
   {contents of REVIEW.md}
+
+  ## File Confidence Context (from git-advisor)
+  {contents of SCRATCHPAD/review/git-confidence.json, or "skipped" if Phase 0.5 was skipped}
+
+  Use the confidence context to calibrate your findings:
+  - HOT/VOLATILE files: apply stricter scrutiny; assume the file has churn-driven bugs
+  - Bus factor 1: flag any change that widens the API surface (harder to review without the original author)
+  - Coupling drift: if the component file is changing without its stories/tests, flag it
+  - Do NOT invent findings just because a file is hot — only weight findings you already have
 
   Return your findings as the JSON specified in your role definition."
 ```
@@ -149,6 +199,15 @@ Apply these domain-specific triage adjustments:
 - Generic web security findings (XSS, injection, CSRF) = likely trivial for a component library
 - Performance findings without bundle size or render cost measurement = likely trivial
 - Missing features that are not bugs in existing code = trivial (scope confusion)
+
+## File Confidence Context (from git-advisor)
+Read: {SCRATCHPAD}/review/git-confidence.json (may be empty if Phase 0.5 was skipped)
+
+Use this to calibrate severity, NOT to invent findings:
+- Findings on HOT/VOLATILE files -> keep or bump severity one level (regression risk is high)
+- Findings on STABLE files with bus factor >= 2 -> severity is fine as stated
+- Missing test/story co-changes when the file's coupling metric says they normally co-change -> promote from trivial to substantive
+- If a finding targets a file with `confidence: LEGACY`, note in the exhibit that the file is dormant (context for reviewer priority)
 
 ## REVIEW.md Rules (for reference)
 {contents of REVIEW.md}
@@ -240,7 +299,17 @@ Group merged findings into three tiers:
 # Code Review: {target}
 
 **Date:** {timestamp}
-**Process:** Design system multi-agent review (4 commission + prosecutor + challenger)
+**Process:** Design system multi-agent review (git-advisor + 4 commission + prosecutor + challenger)
+
+## File Confidence (git-advisor)
+
+If Phase 0.5 ran, render a table of touched files from `{SCRATCHPAD}/review/git-confidence.json`:
+
+| File | Confidence | Score | Bus Factor | Fix Ratio | Advisory |
+|------|-----------|-------|------------|-----------|----------|
+| {path} | {label} | {score}/100 | {n} | {pct} | {advisory} |
+
+Otherwise: `_git-advisor was skipped (quick-check / no git history / --no-git flag)._`
 
 ## Verdict Summary
 
@@ -341,6 +410,7 @@ From survived and weakened findings only:
 
 ## Error Handling
 
+- **Git advisor (Phase 0.5) fails or times out**: Write `{"files": []}` to `git-confidence.json`, continue without confidence context. Note "git-advisor skipped due to failure" in the final report.
 - **Commission agent fails**: Proceed with remaining agents. Note the gap in the report header ("3/4 commission agents completed").
 - **Prosecutor fails**: Fall back to presenting raw commission findings grouped by agent. Skip Phase 3 (no exhibits to challenge). Mark report as "degraded — no triage applied".
 - **Challenger fails**: Present all exhibits as "unchallenged" with a note that adversarial validation was skipped. Exhibits keep prosecutor severity ratings.
@@ -352,11 +422,13 @@ From survived and weakened findings only:
 
 ```yaml
 models:
+  git_advisor: sonnet     # Phase 0.5 file confidence profiling
   commission: sonnet      # 4 domain-specific agents
   prosecutor: sonnet      # Triage + exhibit construction
   challenger: sonnet      # Adversarial 5-check challenge
 
 agents:
+  git_advisor: git-advisor              # .claude/agents/git-advisor.md (optional Phase 0.5)
   commission:
     - .claude/agents/component-reviewer.md    # API stability, naming, exports, props
     - .claude/agents/a11y-reviewer.md         # WCAG 2.1 AA, keyboard nav, aria-*
@@ -376,5 +448,12 @@ gate_check:
 
 quick_check:
   threshold: 50  # lines changed
-  action: skip_full_pipeline
+  action: skip_full_pipeline  # also skips Phase 0.5
+
+phase_0_5:
+  skip_conditions:
+    - "--no-git flag in input"
+    - "touched-files.txt empty (no files with git history)"
+    - "quick-check path taken"
+  timeout_seconds: 60
 ```

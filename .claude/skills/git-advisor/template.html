@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git Advisor Report</title>
+<style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --border: #30363d;
+  --text: #e6edf3; --muted: #9ca3b0; --accent: #58a6ff;
+  --green: #3fb950; --red: #f85149; --amber: #d29922; --purple: #d2a8ff;
+  --hot: #f85149; --volatile: #d29922; --active: #58a6ff; --stable: #3fb950; --legacy: #7d8590;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.6; }
+code, .mono { font-family: 'SF Mono', 'Menlo', 'Consolas', monospace; font-size: 13px; }
+.container { max-width: 76rem; margin: 0 auto; padding: 0 1.5rem 3rem; }
+
+/* Header */
+header { background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); border-bottom: 1px solid var(--border); padding: 1.5rem 0 0; }
+header .inner { max-width: 76rem; margin: 0 auto; padding: 0 1.5rem; }
+.header-scope { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.header-scope span { background: var(--surface); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; }
+h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+.header-stats { font-size: 13px; color: var(--muted); display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+
+/* Tabs */
+.tabs { display: flex; gap: 2px; }
+.tab { background: transparent; border: none; color: var(--muted); font-size: 14px; font-weight: 500; padding: 8px 16px; border-radius: 6px 6px 0 0; cursor: pointer; transition: all 0.15s; }
+.tab:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.tab.active { color: var(--text); background: var(--bg); }
+.tab .icon { margin-right: 5px; }
+
+/* Tab panels */
+.panel { display: none; padding-top: 1.5rem; }
+.panel.active { display: block; }
+
+/* Section headers */
+.section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 2rem 0 0.75rem; font-weight: 600; }
+.section-title:first-child { margin-top: 0; }
+
+/* KPI cards */
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.kpi .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+.kpi .value { font-size: 28px; font-weight: 700; line-height: 1.2; }
+.kpi .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.kpi .value.danger { color: var(--red); }
+.kpi .value.warn { color: var(--amber); }
+.kpi .value.ok { color: var(--green); }
+
+/* Distribution bar */
+.dist-bar { display: flex; height: 32px; border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
+.dist-segment { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; min-width: 28px; transition: flex 0.3s; cursor: default; }
+.dist-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.dist-legend-item { display: flex; align-items: center; gap: 5px; font-size: 13px; }
+.dist-legend-item .dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); padding: 8px 12px; border-bottom: 1px solid var(--border); font-weight: 600; cursor: pointer; user-select: none; white-space: nowrap; }
+th:hover { color: var(--text); }
+th .sort-arrow { margin-left: 4px; font-size: 10px; }
+th.no-sort { cursor: default; }
+td { padding: 8px 12px; border-bottom: 1px solid rgba(48,54,61,0.4); font-size: 14px; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: rgba(88,166,255,0.06); }
+
+/* Badges */
+.badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.badge-hot { background: rgba(248,81,73,0.2); color: var(--hot); }
+.badge-volatile { background: rgba(210,153,34,0.2); color: var(--volatile); }
+.badge-active { background: rgba(88,166,255,0.2); color: var(--active); }
+.badge-stable { background: rgba(63,185,80,0.2); color: var(--stable); }
+.badge-legacy { background: rgba(125,133,144,0.2); color: var(--legacy); }
+
+/* Severity badges */
+.sev { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; margin-right: 8px; }
+.sev-high { background: rgba(248,81,73,0.2); color: var(--red); }
+.sev-medium { background: rgba(210,153,34,0.2); color: var(--amber); }
+.sev-low { background: rgba(88,166,255,0.2); color: var(--accent); }
+
+/* Score pill */
+.score { display: inline-block; font-size: 12px; font-weight: 700; font-family: 'SF Mono', 'Menlo', monospace; min-width: 32px; text-align: center; }
+
+/* Bar chart */
+.bar-chart { margin: 0.5rem 0; }
+.bar-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; }
+.bar-label { font-family: 'SF Mono', 'Menlo', monospace; font-size: 12px; color: var(--text); width: 260px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; }
+.bar-track { flex: 1; height: 20px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; display: flex; align-items: center; padding-left: 6px; }
+.bar-fill span { font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap; }
+.bar-value { font-family: 'SF Mono', 'Menlo', monospace; font-size: 12px; color: var(--muted); width: 60px; flex-shrink: 0; text-align: right; }
+
+/* Detail row (expandable) */
+.detail-row td { padding: 0; border-bottom: 1px solid var(--border); }
+.detail-content { background: var(--surface); padding: 16px 20px; }
+.detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 24px; margin-bottom: 12px; }
+.detail-metric .dm-label { font-size: 11px; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.detail-metric .dm-value { font-size: 15px; font-weight: 600; }
+.detail-advisory { background: rgba(88,166,255,0.06); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13px; line-height: 1.6; margin-top: 8px; }
+.detail-coupling { margin-top: 10px; }
+.coupling-item { font-size: 12px; color: var(--muted); padding: 2px 0; }
+.coupling-item .count { color: var(--text); font-weight: 600; margin-right: 4px; }
+
+/* Trend indicators */
+.trend { font-size: 12px; font-weight: 600; }
+.trend-up { color: var(--red); }
+.trend-down { color: var(--green); }
+.trend-flat { color: var(--muted); }
+
+/* Action cards */
+.action-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; font-size: 14px; line-height: 1.6; }
+
+/* Filter pills */
+.filter-row { display: flex; gap: 6px; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+.filter-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 4px 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; color: var(--muted); }
+.filter-pill:hover { border-color: var(--accent); color: var(--text); }
+.filter-pill.active { border-color: var(--accent); color: var(--accent); background: rgba(88,166,255,0.1); }
+.filter-pill .cnt { margin-left: 4px; opacity: 0.7; }
+.search-box { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: 13px; color: var(--text); width: 200px; margin-left: auto; font-family: inherit; }
+.search-box::placeholder { color: var(--muted); }
+.search-box:focus { outline: none; border-color: var(--accent); }
+
+/* Cluster cards */
+.cluster-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
+.cluster-card h4 { font-size: 14px; margin-bottom: 6px; }
+.cluster-files { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.cluster-file { font-family: 'SF Mono', 'Menlo', monospace; font-size: 11px; background: rgba(88,166,255,0.1); color: var(--accent); padding: 2px 8px; border-radius: 4px; }
+.cluster-desc { font-size: 13px; color: var(--muted); }
+
+/* Owner rows */
+.owner-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-bottom: 1px solid rgba(48,54,61,0.4); cursor: pointer; }
+.owner-row:hover { background: rgba(255,255,255,0.02); }
+.owner-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: var(--accent); flex-shrink: 0; }
+.owner-info { flex: 1; }
+.owner-name { font-weight: 600; font-size: 14px; }
+.owner-domain { font-size: 12px; color: var(--muted); }
+.owner-stats { display: flex; gap: 16px; font-size: 13px; }
+.owner-stat { display: flex; flex-direction: column; align-items: center; }
+.owner-stat .os-val { font-weight: 700; font-size: 16px; }
+.owner-stat .os-label { font-size: 10px; text-transform: uppercase; color: var(--muted); }
+.active-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+.active-dot.yes { background: var(--green); }
+.active-dot.no { background: var(--red); }
+.owner-files { padding: 0 12px 12px 60px; display: none; }
+.owner-files.open { display: block; }
+.owner-files .of-item { font-family: 'SF Mono', 'Menlo', monospace; font-size: 12px; padding: 2px 0; color: var(--muted); }
+
+/* Empty state */
+.empty { text-align: center; padding: 3rem; color: var(--muted); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .bar-label { width: 140px; font-size: 11px; }
+  .detail-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <div class="header-scope" id="hdr-scope"></div>
+    <h1>Git Advisor Report</h1>
+    <div class="header-stats" id="hdr-stats"></div>
+    <div class="tabs" id="tab-bar"></div>
+  </div>
+</header>
+
+<div class="container">
+  <div id="panel-dashboard" class="panel"></div>
+  <div id="panel-files" class="panel"></div>
+  <div id="panel-activity" class="panel"></div>
+  <div id="panel-ownership" class="panel"></div>
+</div>
+
+<script>var REPORT_DATA = __REPORT_DATA__;</script>
+<script>
+/* ------------------------------------------------------------------ *
+ *  Git Advisor Report — client-side renderer                         *
+ *  All dynamic values are escaped via esc() before DOM insertion.    *
+ *  Data source is local git history only (never user web input).     *
+ * ------------------------------------------------------------------ */
+var D = REPORT_DATA;
+var tabKeys = ['dashboard', 'files', 'activity', 'ownership'];
+var tabLabels = ['Dashboard', 'Files', 'Activity', 'Ownership'];
+var currentFilter = 'ALL';
+var currentSort = { col: 'score', asc: true };
+var expandedFiles = {};
+var expandedOwners = {};
+
+/* --- Helpers --- */
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function confidenceColor(label) {
+  var m = { HOT:'var(--hot)', VOLATILE:'var(--volatile)', ACTIVE:'var(--active)', STABLE:'var(--stable)', LEGACY:'var(--legacy)' };
+  return m[label] || 'var(--muted)';
+}
+
+function badgeClass(label) { return 'badge badge-' + label.toLowerCase(); }
+
+function trendIcon(trend) {
+  if (trend === 'increasing' || trend === 'growing') return '<span class="trend trend-up">\u2191</span>';
+  if (trend === 'decreasing' || trend === 'shrinking') return '<span class="trend trend-down">\u2193</span>';
+  return '<span class="trend trend-flat">\u2192</span>';
+}
+
+function scoreColor(score) {
+  if (score < 35) return 'var(--red)';
+  if (score < 55) return 'var(--amber)';
+  if (score < 70) return 'var(--accent)';
+  return 'var(--green)';
+}
+
+function shortPath(path) {
+  var prefix = D.meta.commonPrefix || '';
+  return prefix && path.indexOf(prefix) === 0 ? path.slice(prefix.length) : path;
+}
+
+/* --- Tab switching --- */
+function switchTab(idx) {
+  document.querySelectorAll('.tab').forEach(function(t, i) { t.classList.toggle('active', i === idx); });
+  document.querySelectorAll('.panel').forEach(function(p, i) { p.classList.toggle('active', i === idx); });
+}
+
+/* --- Safe DOM builder --- */
+function setText(el, text) { el.textContent = text; }
+function setHTML(container, trustedMarkup) { container.innerHTML = trustedMarkup; }
+
+/* =================================================================
+ *  DASHBOARD
+ * ================================================================= */
+function renderDashboard() {
+  var el = document.getElementById('panel-dashboard');
+  var parts = [];
+
+  var avgBf = D.summary.avgBusFactor;
+  var bfClass = avgBf <= 1.2 ? 'danger' : avgBf <= 1.5 ? 'warn' : 'ok';
+  var hotVol = D.summary.hotCount + D.summary.volatileCount;
+  var hvClass = hotVol > 3 ? 'danger' : hotVol > 0 ? 'warn' : 'ok';
+
+  parts.push('<div class="kpi-row">');
+  parts.push('<div class="kpi"><div class="label">Files Analyzed</div><div class="value">' + D.meta.filesAnalyzed + '</div><div class="sub">' + esc(D.meta.timeWindow) + ' window</div></div>');
+  parts.push('<div class="kpi"><div class="label">Active Contributors</div><div class="value">' + D.summary.activeContributors.length + '</div><div class="sub">last 90 days</div></div>');
+  parts.push('<div class="kpi"><div class="label">Avg Bus Factor</div><div class="value ' + bfClass + '">' + avgBf.toFixed(1) + '</div><div class="sub">' + (avgBf <= 1.2 ? 'critical' : avgBf <= 1.5 ? 'low' : 'healthy') + '</div></div>');
+  parts.push('<div class="kpi"><div class="label">Hot / Volatile</div><div class="value ' + hvClass + '">' + hotVol + '</div><div class="sub">' + D.summary.hotCount + ' hot, ' + D.summary.volatileCount + ' volatile</div></div>');
+  parts.push('</div>');
+
+  /* Confidence distribution bar */
+  parts.push('<div class="section-title">Confidence Distribution</div>');
+  parts.push('<div class="dist-bar">');
+  D.distribution.forEach(function(d) {
+    if (d.count > 0) {
+      parts.push('<div class="dist-segment" style="flex:' + d.count + ';background:' + esc(d.color) + '" title="' + esc(d.label) + ': ' + d.count + ' files">' + d.count + '</div>');
+    }
+  });
+  parts.push('</div><div class="dist-legend">');
+  D.distribution.forEach(function(d) {
+    parts.push('<div class="dist-legend-item"><span class="dot" style="background:' + esc(d.color) + '"></span>' + esc(d.label) + ' (' + d.count + ')</div>');
+  });
+  parts.push('</div>');
+
+  /* Active contributors */
+  parts.push('<div class="section-title">Active Contributors (90d)</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem">');
+  D.summary.activeContributors.forEach(function(name) {
+    parts.push('<span style="background:var(--surface);border:1px solid var(--border);padding:4px 10px;border-radius:16px;font-size:13px">' + esc(name) + '</span>');
+  });
+  parts.push('</div>');
+
+  /* Action items */
+  if (D.actions && D.actions.length) {
+    parts.push('<div class="section-title">Action Items</div>');
+    D.actions.forEach(function(a) {
+      parts.push('<div class="action-card"><span class="sev sev-' + esc(a.severity.toLowerCase()) + '">' + esc(a.severity) + '</span>' + esc(a.text) + '</div>');
+    });
+  }
+
+  setHTML(el, parts.join(''));
+}
+
+/* =================================================================
+ *  FILES TABLE
+ * ================================================================= */
+function renderFiles() {
+  var el = document.getElementById('panel-files');
+  var parts = [];
+
+  /* Filter row */
+  var counts = { ALL: D.files.length };
+  D.distribution.forEach(function(d) { counts[d.label] = d.count; });
+  parts.push('<div class="filter-row">');
+  ['ALL','HOT','VOLATILE','ACTIVE','STABLE','LEGACY'].forEach(function(label) {
+    var c = counts[label] || 0;
+    if (label === 'ALL' || c > 0) {
+      parts.push('<span class="filter-pill' + (currentFilter === label ? ' active' : '') + '" data-filter="' + label + '">' + label + '<span class="cnt">' + c + '</span></span>');
+    }
+  });
+  parts.push('<input class="search-box" type="text" placeholder="Filter files\u2026" id="file-search">');
+  parts.push('</div>');
+
+  /* Table skeleton */
+  var cols = [
+    { key:'path', label:'File' },
+    { key:'confidence', label:'Status' },
+    { key:'score', label:'Score' },
+    { key:'commits90d', label:'Commits 90d' },
+    { key:'churn', label:'Churn/mo' },
+    { key:'busFactor', label:'Bus Factor' },
+    { key:'author', label:'Top Author' }
+  ];
+  parts.push('<table id="files-table"><thead><tr>');
+  cols.forEach(function(c) {
+    var arrow = currentSort.col === c.key ? (currentSort.asc ? ' \u25B2' : ' \u25BC') : '';
+    parts.push('<th data-sort="' + c.key + '">' + c.label + '<span class="sort-arrow">' + arrow + '</span></th>');
+  });
+  parts.push('</tr></thead><tbody id="files-tbody"></tbody></table>');
+
+  setHTML(el, parts.join(''));
+
+  /* Wire events via delegation */
+  el.querySelectorAll('.filter-pill').forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      currentFilter = this.getAttribute('data-filter');
+      renderFiles();
+    });
+  });
+  el.querySelectorAll('th[data-sort]').forEach(function(th) {
+    th.addEventListener('click', function() {
+      var col = this.getAttribute('data-sort');
+      if (currentSort.col === col) { currentSort.asc = !currentSort.asc; }
+      else { currentSort.col = col; currentSort.asc = (col === 'path' || col === 'author' || col === 'confidence'); }
+      renderFiles();
+    });
+  });
+  var searchBox = document.getElementById('file-search');
+  if (searchBox) searchBox.addEventListener('input', function() { renderFileRows(); });
+
+  renderFileRows();
+}
+
+function renderFileRows() {
+  var tbody = document.getElementById('files-tbody');
+  if (!tbody) return;
+  var searchVal = (document.getElementById('file-search') || {}).value || '';
+  searchVal = searchVal.toLowerCase();
+
+  var files = D.files.filter(function(f) {
+    if (currentFilter !== 'ALL' && f.confidence !== currentFilter) return false;
+    if (searchVal && shortPath(f.path).toLowerCase().indexOf(searchVal) === -1) return false;
+    return true;
+  });
+
+  /* Sort */
+  var col = currentSort.col, asc = currentSort.asc;
+  files.sort(function(a, b) {
+    var va, vb;
+    switch (col) {
+      case 'path': va = shortPath(a.path); vb = shortPath(b.path); break;
+      case 'confidence': va = a.confidence; vb = b.confidence; break;
+      case 'score': va = a.confidence_score; vb = b.confidence_score; break;
+      case 'commits90d': va = a.metrics.activity.commits_90d; vb = b.metrics.activity.commits_90d; break;
+      case 'churn': va = a.metrics.churn.monthly_avg_12m; vb = b.metrics.churn.monthly_avg_12m; break;
+      case 'busFactor': va = a.metrics.ownership.bus_factor; vb = b.metrics.ownership.bus_factor; break;
+      case 'author': va = a.metrics.ownership.top_author; vb = b.metrics.ownership.top_author; break;
+      default: va = a.confidence_score; vb = b.confidence_score;
+    }
+    if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+    return (va < vb ? -1 : va > vb ? 1 : 0) * (asc ? 1 : -1);
+  });
+
+  var parts = [];
+  files.forEach(function(f) {
+    var sp = shortPath(f.path);
+    var expanded = expandedFiles[f.path];
+    var m = f.metrics;
+    var bfColor = m.ownership.bus_factor <= 1 ? 'var(--red)' : m.ownership.bus_factor <= 2 ? 'var(--amber)' : 'var(--green)';
+
+    parts.push('<tr class="clickable" data-path="' + esc(f.path) + '">');
+    parts.push('<td class="mono" style="font-size:12px">' + esc(sp) + '</td>');
+    parts.push('<td><span class="' + badgeClass(f.confidence) + '">' + esc(f.confidence) + '</span></td>');
+    parts.push('<td><span class="score" style="color:' + scoreColor(f.confidence_score) + '">' + Math.round(f.confidence_score) + '</span></td>');
+    parts.push('<td>' + m.activity.commits_90d + '</td>');
+    parts.push('<td>' + m.churn.monthly_avg_12m.toFixed(1) + ' ' + trendIcon(m.churn.trend) + '</td>');
+    parts.push('<td><span style="color:' + bfColor + ';font-weight:600">' + m.ownership.bus_factor + '</span></td>');
+    parts.push('<td style="font-size:13px">' + esc(m.ownership.top_author) + ' <span style="color:var(--muted);font-size:11px">(' + Math.round(m.ownership.top_author_pct * 100) + '%)</span></td>');
+    parts.push('</tr>');
+
+    if (expanded) {
+      parts.push('<tr class="detail-row"><td colspan="7">' + renderFileDetail(f) + '</td></tr>');
+    }
+  });
+
+  if (!files.length) {
+    parts.push('<tr><td colspan="7" class="empty">No files match the current filter</td></tr>');
+  }
+
+  setHTML(tbody, parts.join(''));
+
+  /* Click handlers for expand/collapse */
+  tbody.querySelectorAll('tr.clickable').forEach(function(row) {
+    row.addEventListener('click', function() {
+      var path = this.getAttribute('data-path');
+      expandedFiles[path] = !expandedFiles[path];
+      renderFileRows();
+    });
+  });
+}
+
+function renderFileDetail(f) {
+  var m = f.metrics;
+  var parts = [];
+  parts.push('<div class="detail-content"><div class="detail-grid">');
+  parts.push('<div class="detail-metric"><div class="dm-label">Created</div><div class="dm-value">' + esc(m.age.created) + '</div></div>');
+  parts.push('<div class="detail-metric"><div class="dm-label">Last Modified</div><div class="dm-value">' + esc(m.age.last_modified) + '</div></div>');
+  parts.push('<div class="detail-metric"><div class="dm-label">Age</div><div class="dm-value">' + m.age.age_days + ' days</div></div>');
+  parts.push('<div class="detail-metric"><div class="dm-label">Total Commits</div><div class="dm-value">' + m.activity.total_commits + '</div></div>');
+  parts.push('<div class="detail-metric"><div class="dm-label">Lines (current)</div><div class="dm-value">' + m.stability.size_current_lines + '</div></div>');
+  parts.push('<div class="detail-metric"><div class="dm-label">Lines (6m ago)</div><div class="dm-value">' + m.stability.size_6m_ago_lines + ' ' + trendIcon(m.stability.trend) + '</div></div>');
+  parts.push('<div class="detail-metric"><div class="dm-label">Lines +/- (6m)</div><div class="dm-value"><span style="color:var(--green)">+' + m.churn.lines_added_6m + '</span> <span style="color:var(--red)">-' + m.churn.lines_removed_6m + '</span></div></div>');
+  parts.push('<div class="detail-metric"><div class="dm-label">Fix Density</div><div class="dm-value">' + Math.round(m.fix_density.fix_ratio_12m * 100) + '% <span style="color:var(--muted);font-size:12px">(' + m.fix_density.fix_count_12m + '/' + m.fix_density.total_count_12m + ')</span></div></div>');
+
+  if (m.ownership.active_authors_90d && m.ownership.active_authors_90d.length) {
+    parts.push('<div class="detail-metric"><div class="dm-label">Active Authors (90d)</div><div class="dm-value" style="font-size:13px">' + m.ownership.active_authors_90d.map(esc).join(', ') + '</div></div>');
+  }
+  parts.push('</div>');
+
+  if (m.coupling.top_cochanged && m.coupling.top_cochanged.length) {
+    parts.push('<div class="detail-coupling"><div class="dm-label" style="font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px">Co-Change Coupling</div>');
+    m.coupling.top_cochanged.forEach(function(c) {
+      parts.push('<div class="coupling-item"><span class="count">' + c.count + '\u00D7</span><span class="mono">' + esc(shortPath(c.path)) + '</span></div>');
+    });
+    parts.push('</div>');
+  }
+
+  if (f.advisory) {
+    parts.push('<div class="detail-advisory">' + esc(f.advisory) + '</div>');
+  }
+  parts.push('</div>');
+  return parts.join('');
+}
+
+/* =================================================================
+ *  ACTIVITY
+ * ================================================================= */
+function renderActivity() {
+  var el = document.getElementById('panel-activity');
+  var parts = [];
+
+  /* Churn chart */
+  parts.push('<div class="section-title">Churn Rate (commits/month, 12m average)</div>');
+  if (D.churn && D.churn.length) {
+    var maxRate = D.churn[0].rate;
+    parts.push('<div class="bar-chart">');
+    D.churn.forEach(function(c) {
+      var w = maxRate > 0 ? (c.rate / maxRate * 100) : 0;
+      var conf = D.files.find(function(f) { return f.path === c.fullPath; });
+      var color = conf ? confidenceColor(conf.confidence) : 'var(--accent)';
+      parts.push('<div class="bar-row"><div class="bar-label" title="' + esc(c.fullPath || c.path) + '">' + esc(c.path) + '</div>');
+      parts.push('<div class="bar-track"><div class="bar-fill" style="width:' + w + '%;background:' + color + '"><span>' + c.rate.toFixed(1) + '</span></div></div>');
+      parts.push('<div class="bar-value">' + c.rate.toFixed(1) + '/mo</div></div>');
+    });
+    parts.push('</div>');
+  } else {
+    parts.push('<div class="empty">No churn data available</div>');
+  }
+
+  /* Coupling pairs */
+  parts.push('<div class="section-title" style="margin-top:2.5rem">Co-Change Coupling (top pairs)</div>');
+  if (D.coupling && D.coupling.length) {
+    var maxC = D.coupling[0].count;
+    parts.push('<table><tr><th class="no-sort">File A</th><th class="no-sort">File B</th><th class="no-sort">Co-changes</th><th class="no-sort" style="width:30%">Strength</th></tr>');
+    D.coupling.forEach(function(c) {
+      var w = maxC > 0 ? (c.count / maxC * 100) : 0;
+      var clr = w > 66 ? 'var(--red)' : w > 33 ? 'var(--amber)' : 'var(--accent)';
+      parts.push('<tr><td class="mono" style="font-size:12px">' + esc(c.fileA) + '</td><td class="mono" style="font-size:12px">' + esc(c.fileB) + '</td>');
+      parts.push('<td style="font-weight:700">' + c.count + '</td><td><div class="bar-track" style="height:12px"><div class="bar-fill" style="width:' + w + '%;background:' + clr + ';height:12px"></div></div></td></tr>');
+    });
+    parts.push('</table>');
+  } else {
+    parts.push('<div class="empty">No coupling data available</div>');
+  }
+
+  /* Clusters */
+  if (D.clusters && D.clusters.length) {
+    parts.push('<div class="section-title" style="margin-top:2.5rem">Change Clusters</div>');
+    D.clusters.forEach(function(cl) {
+      parts.push('<div class="cluster-card"><h4>' + esc(cl.name) + '</h4><div class="cluster-files">');
+      cl.files.forEach(function(f) { parts.push('<span class="cluster-file">' + esc(f) + '</span>'); });
+      parts.push('</div><div class="cluster-desc">' + esc(cl.description) + '</div></div>');
+    });
+  }
+
+  setHTML(el, parts.join(''));
+}
+
+/* =================================================================
+ *  OWNERSHIP
+ * ================================================================= */
+function renderOwnership() {
+  var el = document.getElementById('panel-ownership');
+  var parts = [];
+
+  parts.push('<div class="section-title">Code Ownership</div>');
+  if (D.ownership && D.ownership.length) {
+    D.ownership.forEach(function(o, idx) {
+      var initials = o.author.split(' ').map(function(w) { return w[0]; }).join('').slice(0,2).toUpperCase();
+      parts.push('<div class="owner-row" data-idx="' + idx + '">');
+      parts.push('<div class="owner-avatar">' + esc(initials) + '</div>');
+      parts.push('<div class="owner-info"><div class="owner-name"><span class="active-dot ' + (o.active ? 'yes' : 'no') + '"></span>' + esc(o.author) + '</div><div class="owner-domain">' + esc(o.domain) + '</div></div>');
+      parts.push('<div class="owner-stats"><div class="owner-stat"><span class="os-val">' + o.filesOwned + '</span><span class="os-label">Files</span></div>');
+      parts.push('<div class="owner-stat"><span class="os-val" style="color:' + (o.active ? 'var(--green)' : 'var(--red)') + '">' + (o.active ? 'Yes' : 'No') + '</span><span class="os-label">Active 90d</span></div></div>');
+      parts.push('</div>');
+      parts.push('<div class="owner-files" id="ofiles-' + idx + '">');
+      if (o.files && o.files.length) {
+        o.files.forEach(function(fp) { parts.push('<div class="of-item">' + esc(fp) + '</div>'); });
+      }
+      parts.push('</div>');
+    });
+  } else {
+    parts.push('<div class="empty">No ownership data available</div>');
+  }
+
+  /* Bus factor distribution */
+  parts.push('<div class="section-title" style="margin-top:2.5rem">Bus Factor Distribution</div>');
+  var bfCounts = {};
+  D.files.forEach(function(f) { var bf = f.metrics.ownership.bus_factor; bfCounts[bf] = (bfCounts[bf] || 0) + 1; });
+  var bfKeys = Object.keys(bfCounts).sort(function(a,b) { return Number(a) - Number(b); });
+  parts.push('<div class="dist-bar" style="max-width:400px">');
+  bfKeys.forEach(function(k) {
+    var color = Number(k) <= 1 ? 'var(--red)' : Number(k) <= 2 ? 'var(--amber)' : 'var(--green)';
+    parts.push('<div class="dist-segment" style="flex:' + bfCounts[k] + ';background:' + color + '" title="Bus factor ' + k + ': ' + bfCounts[k] + ' files">' + bfCounts[k] + '</div>');
+  });
+  parts.push('</div><div class="dist-legend">');
+  bfKeys.forEach(function(k) {
+    var color = Number(k) <= 1 ? 'var(--red)' : Number(k) <= 2 ? 'var(--amber)' : 'var(--green)';
+    parts.push('<div class="dist-legend-item"><span class="dot" style="background:' + color + '"></span>BF=' + k + ' (' + bfCounts[k] + ' files)</div>');
+  });
+  parts.push('</div>');
+
+  setHTML(el, parts.join(''));
+
+  /* Wire owner expand/collapse */
+  el.querySelectorAll('.owner-row').forEach(function(row) {
+    row.addEventListener('click', function() {
+      var idx = this.getAttribute('data-idx');
+      var files = document.getElementById('ofiles-' + idx);
+      if (files) files.classList.toggle('open');
+    });
+  });
+}
+
+/* =================================================================
+ *  INIT
+ * ================================================================= */
+function init() {
+  /* Header */
+  document.getElementById('hdr-scope').textContent = D.meta.scope;
+  document.getElementById('hdr-stats').textContent =
+    D.meta.filesAnalyzed + ' files \u00B7 ' + D.meta.date + ' \u00B7 ' + D.meta.timeWindow + ' window';
+
+  /* Tabs */
+  var bar = document.getElementById('tab-bar');
+  tabKeys.forEach(function(key, idx) {
+    var btn = document.createElement('button');
+    btn.className = 'tab' + (idx === 0 ? ' active' : '');
+    btn.textContent = tabLabels[idx];
+    btn.addEventListener('click', function() { switchTab(idx); });
+    bar.appendChild(btn);
+  });
+
+  renderDashboard();
+  renderFiles();
+  renderActivity();
+  renderOwnership();
+  document.getElementById('panel-dashboard').classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
