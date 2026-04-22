@@ -14,23 +14,23 @@
  *   :inputProps="{ label: 'Data', placeholder: 'gg/mm/aaaa' }"
  * />
  */
-import { computed, nextTick, ref } from "vue";
-import { FzDatepickerProps } from "./types";
-import { VueDatePicker, type TimeInternalModel } from "@vuepic/vue-datepicker";
-import { useBreakpoints } from "@fiscozen/composables";
-import { breakpoints } from "@fiscozen/style";
-import { FzIconButton, FzButton } from "@fiscozen/button";
-import { FzInput, FzInputProps } from "@fiscozen/input";
-import { FzDivider } from "@fiscozen/divider";
-import { it } from "date-fns/locale";
-import { format } from "date-fns";
-import "@vuepic/vue-datepicker/dist/main.css";
+import { computed, nextTick, ref } from 'vue'
+import { FzDatepickerProps } from './types'
+import { VueDatePicker, type TimeInternalModel } from '@vuepic/vue-datepicker'
+import { useBreakpoints } from '@fiscozen/composables'
+import { breakpoints } from '@fiscozen/style'
+import { FzIconButton, FzButton } from '@fiscozen/button'
+import { FzInput, FzInputProps } from '@fiscozen/input'
+import { FzDivider } from '@fiscozen/divider'
+import { it } from 'date-fns/locale'
+import { format } from 'date-fns'
+import '@vuepic/vue-datepicker/dist/main.css'
 
 const props = withDefaults(defineProps<FzDatepickerProps>(), {
   /** @default true */
   autoApply: true,
   /** @default 'dd/MM/yyyy' */
-  format: "dd/MM/yyyy",
+  format: 'dd/MM/yyyy',
   /** @default it (Italian locale from date-fns) */
   formatLocale: () => it,
   state: undefined,
@@ -41,28 +41,30 @@ const props = withDefaults(defineProps<FzDatepickerProps>(), {
   /** @default true */
   arrowNavigation: true,
   /** @default 'body' – teleports the calendar menu to body */
-  teleport: "body",
-});
+  teleport: 'body',
+  clearable: false,
+  clearAriaLabel: 'Cancella'
+})
 
 defineSlots<{
-  errorMessage?: () => unknown;
-  helpText?: () => unknown;
-}>();
+  errorMessage?: () => unknown
+  helpText?: () => unknown
+}>()
 
-const dp = ref();
+const dp = ref()
 
 const selectDate = () => {
-  dp.value.selectDate();
-};
+  dp.value.selectDate()
+}
 
 const closeMenu = () => {
-  dp.value.closeMenu();
-};
+  dp.value.closeMenu()
+}
 
 const handleMenuClosed = () => {
-  activeOverlay.value = null;
-  emit("closed");
-};
+  activeOverlay.value = null
+  emit('closed')
+}
 
 /**
  * Stable sub-objects for mappedProps – kept outside the computed so that
@@ -72,64 +74,66 @@ const handleMenuClosed = () => {
  * unnecessary DOM cycles that manifest as a visual flicker.
  */
 const stableFormats = computed(() => {
-  const fmt = props.format;
-  return fmt && !props.formats ? { input: fmt } : props.formats;
-});
+  const fmt = props.format
+  return fmt && !props.formats ? { input: fmt } : props.formats
+})
 
 const stableLocale = computed(() => {
-  const loc = props.locale ?? props.formatLocale;
-  return typeof loc === "string" ? it : loc;
-});
+  const loc = props.locale ?? props.formatLocale
+  return typeof loc === 'string' ? it : loc
+})
 
 const stableInputAttrs = computed(() => {
-  const base = props.inputAttrs ?? {};
-  const attrs: Record<string, unknown> = { ...base };
-  if (props.state !== undefined && attrs.state === undefined) attrs.state = props.state;
-  if (props.name !== undefined && attrs.name === undefined) attrs.name = props.name;
-  return attrs;
-});
+  const base = props.inputAttrs ?? {}
+  const attrs: Record<string, unknown> = { ...base }
+  if (props.state !== undefined && attrs.state === undefined) attrs.state = props.state
+  if (props.name !== undefined && attrs.name === undefined) attrs.name = props.name
+  return attrs
+})
 
-const stableTextInput = computed<boolean | Partial<import("@vuepic/vue-datepicker").TextInputConfig>>(() => {
-  if (!props.textInput) return false;
-  const fmt = typeof props.format === "string" ? props.format : "dd/MM/yyyy";
-  return { format: fmt };
-});
+const stableTextInput = computed<
+  boolean | Partial<import('@vuepic/vue-datepicker').TextInputConfig>
+>(() => {
+  if (!props.textInput) return false
+  const fmt = typeof props.format === 'string' ? props.format : 'dd/MM/yyyy'
+  return { format: fmt }
+})
 
 const stableFloating = computed(() => {
-  const base = props.floating;
+  const base = props.floating
   if (props.placement) {
-    return { ...(base ?? {}), placement: props.placement };
+    return { ...(base ?? {}), placement: props.placement }
   }
-  return base;
-});
+  return base
+})
 
 const stableTimeConfig = computed(() => {
   const timeKeys = [
-    "enableTimePicker",
-    "enableMinutes",
-    "is24",
-    "timePickerInline",
-    "enableSeconds",
-    "noHoursOverlay",
-    "noMinutesOverlay",
-    "noSecondsOverlay",
-  ] as const;
+    'enableTimePicker',
+    'enableMinutes',
+    'is24',
+    'timePickerInline',
+    'enableSeconds',
+    'noHoursOverlay',
+    'noMinutesOverlay',
+    'noSecondsOverlay'
+  ] as const
 
-  const hasLegacy = timeKeys.some((k) => (props as any)[k] !== undefined);
-  if (!hasLegacy) return props.timeConfig;
+  const hasLegacy = timeKeys.some((k) => (props as any)[k] !== undefined)
+  if (!hasLegacy) return props.timeConfig
 
-  const cfg: Record<string, unknown> = { ...(props.timeConfig ?? {}) };
+  const cfg: Record<string, unknown> = { ...(props.timeConfig ?? {}) }
   for (const key of timeKeys) {
-    const val = (props as any)[key];
-    if (val !== undefined && cfg[key] === undefined) cfg[key] = val;
+    const val = (props as any)[key]
+    if (val !== undefined && cfg[key] === undefined) cfg[key] = val
   }
-  return cfg;
-});
+  return cfg
+})
 
 const stableFlow = computed(() => {
-  const f = props.flow;
-  return Array.isArray(f) ? { steps: f } : f;
-});
+  const f = props.flow
+  return Array.isArray(f) ? { steps: f } : f
+})
 
 /**
  * Compute the props to pass to VueDatePicker v12,
@@ -141,50 +145,56 @@ const stableFlow = computed(() => {
  * are excluded to avoid redundant merge work.
  */
 const mappedProps = computed(() => {
-  const p = { ...props } as Record<string, any>;
+  const p = { ...props } as Record<string, any>
 
   // ── Replace legacy scalars with stable sub-objects ────────
-  delete p.format;
-  delete p.formatLocale;
-  p.formats = stableFormats.value;
-  p.locale = stableLocale.value;
+  delete p.format
+  delete p.formatLocale
+  p.formats = stableFormats.value
+  p.locale = stableLocale.value
 
-  delete p.autoPosition;
-  delete p.placement;
-  p.floating = stableFloating.value;
+  delete p.autoPosition
+  delete p.placement
+  p.floating = stableFloating.value
 
-  delete p.state;
-  delete p.name;
-  p.inputAttrs = stableInputAttrs.value;
+  delete p.state
+  delete p.name
+  p.inputAttrs = stableInputAttrs.value
 
   const timeKeys = [
-    "enableTimePicker", "enableMinutes", "is24", "timePickerInline",
-    "enableSeconds", "noHoursOverlay", "noMinutesOverlay", "noSecondsOverlay",
-  ];
-  for (const key of timeKeys) delete p[key];
-  p.timeConfig = stableTimeConfig.value;
+    'enableTimePicker',
+    'enableMinutes',
+    'is24',
+    'timePickerInline',
+    'enableSeconds',
+    'noHoursOverlay',
+    'noMinutesOverlay',
+    'noSecondsOverlay'
+  ]
+  for (const key of timeKeys) delete p[key]
+  p.timeConfig = stableTimeConfig.value
 
-  p.flow = stableFlow.value;
+  p.flow = stableFlow.value
 
   // ── Normalize teleport: true/"" → "body", falsy → remove ─
   if (p.teleport === true || p.teleport === '') {
-    p.teleport = 'body';
+    p.teleport = 'body'
   } else if (!p.teleport) {
-    delete p.teleport;
+    delete p.teleport
   }
 
   // ── Remove custom props that VueDatePicker doesn't need ───
-  delete p.inputProps;
-  delete p.valueFormat;
-  delete p.clearable;
-  delete p.clearAriaLabel;
+  delete p.inputProps
+  delete p.valueFormat
+  delete p.clearable
+  delete p.clearAriaLabel
 
   // ── Remove props already bound explicitly in the template ─
-  delete p.modelValue;
-  delete p.textInput;
+  delete p.modelValue
+  delete p.textInput
 
-  return p;
-});
+  return p
+})
 
 /**
  * VueDatePicker reads `floating.placement` once during setup (it passes a
@@ -192,33 +202,34 @@ const mappedProps = computed(() => {
  * reactive we force a remount via `:key` whenever the floating config changes.
  */
 const floatingKey = computed(() => {
-  const f = mappedProps.value.floating;
-  return f ? JSON.stringify(f) : "default";
-});
+  const f = mappedProps.value.floating
+  return f ? JSON.stringify(f) : 'default'
+})
 
-const emit = defineEmits([
-  "update:model-value",
-  "text-submit",
-  "closed",
-  "cleared",
-  "fzdatepicker:clear",
-  "open",
-  "focus",
-  "blur",
-  "internal-model-change",
-  "flow-step",
-  "update-month-year",
-  "invalid-select",
-  "tooltip-open",
-  "tooltip-close",
-  "invalid-fixed-range",
-  "text-input",
-  "am-pm-change",
-  "range-start",
-  "range-end",
-  "invalid-date",
-  "overlay-toggle",
-]);
+const emit = defineEmits<{
+  'update:model-value': [value: unknown]
+  'text-submit': [value: string]
+  closed: []
+  /** @deprecated Use `fzdatepicker:clear` instead. Will be removed in next major. */
+  cleared: [value: string]
+  'fzdatepicker:clear': []
+  open: []
+  focus: []
+  blur: []
+  'internal-model-change': [...args: any[]]
+  'flow-step': [...args: any[]]
+  'update-month-year': [...args: any[]]
+  'invalid-select': [...args: any[]]
+  'tooltip-open': [...args: any[]]
+  'tooltip-close': [...args: any[]]
+  'invalid-fixed-range': [...args: any[]]
+  'text-input': [value: string]
+  'am-pm-change': [...args: any[]]
+  'range-start': [...args: any[]]
+  'range-end': [...args: any[]]
+  'invalid-date': [...args: any[]]
+  'overlay-toggle': [...args: any[]]
+}>()
 
 /**
  * Formats and emits the selected date value.
@@ -227,49 +238,47 @@ const emit = defineEmits([
  */
 const handleModelValueUpdate = (e: any) => {
   emit(
-    "update:model-value",
-    props.valueFormat && e instanceof Date
-      ? format(e, props.valueFormat)
-      : e
-  );
-};
+    'update:model-value',
+    props.valueFormat && e instanceof Date ? format(e, props.valueFormat) : e
+  )
+}
 
-const breakpointsMatch = useBreakpoints(breakpoints);
-const isMobile = breakpointsMatch.isSmaller("sm");
+const breakpointsMatch = useBreakpoints(breakpoints)
+const isMobile = breakpointsMatch.isSmaller('sm')
 
 const calendarClassName = computed(() => {
-  const classString: string[] = [];
+  const classString: string[] = []
 
   if (isMobile.value) {
-    classString.push("is-mobile");
+    classString.push('is-mobile')
   }
 
-  return classString;
-});
+  return classString
+})
 
 const safeInputProps = computed<FzInputProps>(() => {
   return {
-    leftIcon: "calendar-lines",
+    leftIcon: 'calendar-lines',
     name: props.name,
     ...props.inputProps,
     clearable: props.clearable,
     clearAriaLabel: props.clearAriaLabel,
     readonly: !props.textInput || props.disabled,
-    disabled: !props.textInput || props.disabled,
-  };
-});
+    disabled: !props.textInput || props.disabled
+  }
+})
 
 const handleFlowStep = (step: number) => {
-  const flowProp = props.flow;
+  const flowProp = props.flow
   const steps = Array.isArray(flowProp)
     ? flowProp
-    : flowProp && typeof flowProp === "object" && "steps" in flowProp
+    : flowProp && typeof flowProp === 'object' && 'steps' in flowProp
       ? flowProp.steps
-      : undefined;
+      : undefined
   if (steps?.length === step) {
-    dp.value.closeMenu();
+    dp.value.closeMenu()
   }
-};
+}
 
 const handlePaste = (
   onPaste: (() => void) | ((e: ClipboardEvent) => any),
@@ -277,49 +286,57 @@ const handlePaste = (
   e: ClipboardEvent,
   value: string
 ) => {
-  onPaste(e);
+  onPaste(e)
   nextTick(() => {
-    closeMenu();
-  });
-};
+    closeMenu()
+  })
+}
 
 const handleInputModelUpdate = (
   onInput: (val: string) => void,
   onClear: () => void,
   value: string
 ) => {
-  onInput(value);
-  emit("text-input", value);
+  onInput(value)
+  emit('text-input', value)
   if (!value) {
-    onClear();
-    emit("cleared", value);
+    onClear()
+    emit('cleared', value)
   }
-};
+}
 
 // ── Time-picker slot helpers ─────────────────────────────────
 
-type OverlayField = keyof TimeInternalModel;
+type OverlayField = keyof TimeInternalModel
 
-const activeOverlay = ref<OverlayField | null>(null);
+const activeOverlay = ref<OverlayField | null>(null)
 
 const showMinutes = computed(() => {
-  return props.enableMinutes ?? (props.timeConfig as Record<string, unknown> | undefined)?.enableMinutes ?? true;
-});
+  return (
+    props.enableMinutes ??
+    (props.timeConfig as Record<string, unknown> | undefined)?.enableMinutes ??
+    true
+  )
+})
 
 const showSeconds = computed(() => {
-  return props.enableSeconds ?? (props.timeConfig as Record<string, unknown> | undefined)?.enableSeconds ?? false;
-});
+  return (
+    props.enableSeconds ??
+    (props.timeConfig as Record<string, unknown> | undefined)?.enableSeconds ??
+    false
+  )
+})
 
 const formatTimeValue = (val: number | number[]) => {
-  const v = Array.isArray(val) ? val[0] : val;
-  return String(v).padStart(2, "0");
-};
+  const v = Array.isArray(val) ? val[0] : val
+  return String(v).padStart(2, '0')
+}
 
 const wrapTimeValue = (val: number, min: number, max: number) => {
-  if (val > max) return min;
-  if (val < min) return max;
-  return val;
-};
+  if (val > max) return min
+  if (val < min) return max
+  return val
+}
 
 const handleTimeIncrement = (
   time: TimeInternalModel,
@@ -327,60 +344,60 @@ const handleTimeIncrement = (
   field: keyof TimeInternalModel,
   delta: number
 ) => {
-  const max = field === "hours" ? 23 : 59;
-  const currentVal = time[field];
+  const max = field === 'hours' ? 23 : 59
+  const currentVal = time[field]
 
   if (Array.isArray(currentVal)) {
-    const newArr = [...currentVal];
-    newArr[0] = wrapTimeValue(newArr[0] + delta, 0, max);
-    updateTime({ ...time, [field]: newArr });
+    const newArr = [...currentVal]
+    newArr[0] = wrapTimeValue(newArr[0] + delta, 0, max)
+    updateTime({ ...time, [field]: newArr })
   } else {
-    updateTime({ ...time, [field]: wrapTimeValue(currentVal + delta, 0, max) });
+    updateTime({ ...time, [field]: wrapTimeValue(currentVal + delta, 0, max) })
   }
-};
+}
 
 // ── Overlay helpers ──────────────────────────────────────────
 
 const openOverlay = (field: OverlayField) => {
-  activeOverlay.value = field;
-};
+  activeOverlay.value = field
+}
 
 const overlayItems = computed<number[]>(() => {
-  if (!activeOverlay.value) return [];
-  if (activeOverlay.value === "hours") {
+  if (!activeOverlay.value) return []
+  if (activeOverlay.value === 'hours') {
     // 0–23
-    return Array.from({ length: 24 }, (_, i) => i);
+    return Array.from({ length: 24 }, (_, i) => i)
   }
   // minutes/seconds: 5-minute intervals (00, 05, 10, ... 55)
-  return Array.from({ length: 12 }, (_, i) => i * 5);
-});
+  return Array.from({ length: 12 }, (_, i) => i * 5)
+})
 
 const isOverlayItemSelected = (time: TimeInternalModel, value: number) => {
-  const field = activeOverlay.value;
-  if (!field) return false;
-  const current = time[field];
-  const currentVal = Array.isArray(current) ? current[0] : current;
-  return currentVal === value;
-};
+  const field = activeOverlay.value
+  if (!field) return false
+  const current = time[field]
+  const currentVal = Array.isArray(current) ? current[0] : current
+  return currentVal === value
+}
 
 const selectOverlayItem = (
   time: TimeInternalModel,
   updateTime: (time: TimeInternalModel) => void,
   value: number
 ) => {
-  const field = activeOverlay.value;
-  if (!field) return;
-  const current = time[field];
+  const field = activeOverlay.value
+  if (!field) return
+  const current = time[field]
 
   if (Array.isArray(current)) {
-    const newArr = [...current];
-    newArr[0] = value;
-    updateTime({ ...time, [field]: newArr });
+    const newArr = [...current]
+    newArr[0] = value
+    updateTime({ ...time, [field]: newArr })
   } else {
-    updateTime({ ...time, [field]: value });
+    updateTime({ ...time, [field]: value })
   }
-  activeOverlay.value = null;
-};
+  activeOverlay.value = null
+}
 </script>
 
 <template>
@@ -397,18 +414,30 @@ const selectOverlayItem = (
     :model-value="modelValue"
   >
     <template
-      #dp-input="{ value, onBlur, onFocus, onInput, onEnter, onTab, onKeypress, onPaste, closeMenu, onClear }"
+      #dp-input="{
+        value,
+        onBlur,
+        onFocus,
+        onInput,
+        onEnter,
+        onTab,
+        onKeypress,
+        onPaste,
+        closeMenu,
+        onClear
+      }"
     >
       <FzInput
         @focus="onFocus"
         @blur="onBlur"
-        @update:modelValue="(e: string | number | undefined) => handleInputModelUpdate(onInput, onClear, String(e ?? ''))"
+        @update:modelValue="
+          (e: string | number | undefined) =>
+            handleInputModelUpdate(onInput, onClear, String(e ?? ''))
+        "
         @keyup.enter="onEnter"
         @keydown.tab="onTab"
         @keypress="onKeypress"
-        @paste="
-          (e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)
-        "
+        @paste="(e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)"
         @fzinput:clear="emit('fzdatepicker:clear')"
         v-bind="safeInputProps"
         :modelValue="value"
@@ -422,25 +451,19 @@ const selectOverlayItem = (
       </FzInput>
     </template>
     <template #arrow-left>
-      <FzIconButton
-        iconName="angle-left"
-        size="md"
-        variant="secondary"
-      ></FzIconButton>
+      <FzIconButton iconName="angle-left" size="md" variant="secondary"></FzIconButton>
     </template>
     <template #arrow-right>
-      <FzIconButton
-        iconName="angle-right"
-        size="md"
-        variant="secondary"
-      ></FzIconButton>
+      <FzIconButton iconName="angle-right" size="md" variant="secondary"></FzIconButton>
     </template>
     <template #time-picker="{ time, updateTime }">
       <!-- Overlay grid for hours/minutes/seconds — positioned over calendar -->
       <div v-if="activeOverlay" class="fz-time-picker__overlay">
         <div class="fz-time-picker__overlay-header">
           <span class="fz-time-picker__overlay-title">
-            {{ activeOverlay === 'hours' ? 'Ora' : activeOverlay === 'minutes' ? 'Minuti' : 'Secondi' }}
+            {{
+              activeOverlay === 'hours' ? 'Ora' : activeOverlay === 'minutes' ? 'Minuti' : 'Secondi'
+            }}
           </span>
         </div>
         <FzDivider margin="none" />
@@ -560,9 +583,7 @@ const selectOverlayItem = (
       </div>
     </template>
     <template #action-buttons>
-      <FzButton size="xs" variant="invisible" @click="closeMenu"
-        >Cancella</FzButton
-      >
+      <FzButton size="xs" variant="invisible" @click="closeMenu">Cancella</FzButton>
       <FzButton size="xs" @click="selectDate" class="ml-4">Seleziona</FzButton>
     </template>
     <template #clear-icon></template>
@@ -580,7 +601,7 @@ const selectOverlayItem = (
 /* ── Design tokens: Fiscozen brand colours applied to VueDatePicker ── */
 :root {
   --dp-menu-min-width: 320px;
-  --dp-font-family: var(--font-sans-inter, "Inter", sans-serif);
+  --dp-font-family: var(--font-sans-inter, 'Inter', sans-serif);
 }
 .dp__theme_light {
   --dp-range-between-dates-background-color: var(--blue-100, #dee2ff);
@@ -613,7 +634,7 @@ const selectOverlayItem = (
 .dp__cell_auto_range,
 .dp__cell_auto_range_start,
 .dp__cell_auto_range_end {
-  @apply border-2 border-dashed border-blue-400 rounded;
+  @apply rounded border-2 border-dashed border-blue-400;
 }
 
 .dp__cell_inner:hover {
@@ -658,7 +679,7 @@ const selectOverlayItem = (
 }
 
 .fz-time-picker__label {
-  @apply text-sm font-medium text-core-black;
+  @apply text-core-black text-sm font-medium;
 }
 
 .fz-time-picker__controls {
@@ -671,11 +692,11 @@ const selectOverlayItem = (
 }
 
 .fz-time-picker__btn-label {
-  @apply text-base font-normal text-core-black text-center;
+  @apply text-core-black text-center text-base font-normal;
 }
 
 .fz-time-picker__separator {
-  @apply text-base font-medium text-core-black self-end pb-8;
+  @apply text-core-black self-end pb-8 text-base font-medium;
 }
 
 /* ── Time-picker overlay: covers the calendar grid when selecting h/m/s ── */
@@ -684,7 +705,7 @@ const selectOverlayItem = (
 }
 
 .fz-time-picker__overlay {
-  @apply absolute inset-0 flex flex-col bg-core-white z-10 rounded;
+  @apply bg-core-white absolute inset-0 z-10 flex flex-col rounded;
 }
 
 .fz-time-picker__overlay-header {
@@ -692,21 +713,21 @@ const selectOverlayItem = (
 }
 
 .fz-time-picker__overlay-title {
-  @apply text-base font-semibold text-core-black;
+  @apply text-core-black text-base font-semibold;
 }
 
 .fz-time-picker__overlay-grid {
-  @apply grid grid-cols-3 gap-4 p-8 overflow-y-auto;
+  @apply grid grid-cols-3 gap-4 overflow-y-auto p-8;
 }
 
 .fz-time-picker__overlay-cell {
-  @apply flex items-center justify-center rounded text-base font-normal text-core-black bg-core-white cursor-pointer;
-  @apply hover:bg-blue-500 hover:text-core-white;
+  @apply text-core-black bg-core-white flex cursor-pointer items-center justify-center rounded text-base font-normal;
+  @apply hover:text-core-white hover:bg-blue-500;
   padding: 8px;
 }
 
 .fz-time-picker__overlay-cell--selected {
-  @apply bg-blue-500 text-core-white;
+  @apply text-core-white bg-blue-500;
 }
 
 .dp--header-wrap,
@@ -762,6 +783,6 @@ button.dp__overlay_action.dp__button_bottom {
 }
 
 .dp__clear_icon {
-  @apply absolute right-0 top-1/2 cursor-pointer transform-none;
+  @apply absolute right-0 top-1/2 transform-none cursor-pointer;
 }
 </style>
