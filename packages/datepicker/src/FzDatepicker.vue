@@ -176,6 +176,7 @@ const mappedProps = computed(() => {
   // ── Remove custom props that VueDatePicker doesn't need ───
   delete p.inputProps;
   delete p.valueFormat;
+  delete p.clearable;
 
   // ── Remove props already bound explicitly in the template ─
   delete p.modelValue;
@@ -199,6 +200,7 @@ const emit = defineEmits([
   "text-submit",
   "closed",
   "cleared",
+  "fzdatepicker:clear",
   "open",
   "focus",
   "blur",
@@ -249,6 +251,7 @@ const safeInputProps = computed<FzInputProps>(() => {
     leftIcon: "calendar-lines",
     name: props.name,
     ...props.inputProps,
+    clearable: props.clearable,
     readonly: !props.textInput || props.disabled,
     disabled: !props.textInput || props.disabled,
   };
@@ -404,6 +407,7 @@ const selectOverlayItem = (
         @paste="
           (e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)
         "
+        @fzinput:clear="emit('fzdatepicker:clear')"
         v-bind="safeInputProps"
         :modelValue="value"
       >

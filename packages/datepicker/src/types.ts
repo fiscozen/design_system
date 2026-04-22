@@ -21,6 +21,12 @@ interface FzDatepickerProps
   inputProps: FzInputProps;
   /** Optional date-fns format string to format the emitted value */
   valueFormat?: string;
+  /**
+   * Shows a clear (×) button when the input has a value.
+   * Forwarded to the inner FzInput component.
+   * @default false
+   */
+  clearable?: boolean;
 
   /**
    * Floating-UI placement for the datepicker menu.
