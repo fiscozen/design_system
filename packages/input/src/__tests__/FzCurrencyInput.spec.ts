@@ -1692,5 +1692,86 @@ describe('FzCurrencyInput', () => {
       expect(errorContainer.text()).toContain('Invalid amount')
     })
   })
+
+  describe('Clearable', () => {
+    it('does not show clear icon when clearable is false (default)', () => {
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          modelValue: 100,
+        },
+      })
+
+      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(false)
+    })
+
+    it('shows clear icon when clearable is true and model has value', async () => {
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          clearable: true,
+          modelValue: 100,
+        },
+      })
+
+      await wrapper.find('input').trigger('blur')
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+
+      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(true)
+    })
+
+    it('does not show clear icon when clearable is true but model is empty', () => {
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          clearable: true,
+          modelValue: undefined,
+        },
+      })
+
+      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(false)
+    })
+
+    it('clears model when clear icon is clicked', async () => {
+      let modelValue: number | undefined = 100
+      let wrapper: ReturnType<typeof mount> | null = null
+      wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          clearable: true,
+          modelValue,
+          'onUpdate:modelValue': (e) => {
+            modelValue = e as number
+            if (wrapper) wrapper.setProps({ modelValue })
+          },
+        },
+      })
+
+      await wrapper.find('input').trigger('blur')
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+
+      await wrapper.find('[aria-label="Clear"]').trigger('click')
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.emitted('fzcurrencyinput:clear')).toBeTruthy()
+    })
+
+    it('coexists with step controls', async () => {
+      const wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: 'Label',
+          clearable: true,
+          modelValue: 100,
+        },
+      })
+
+      await wrapper.find('input').trigger('blur')
+      await new Promise((resolve) => window.setTimeout(resolve, 100))
+
+      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(true)
+      expect(wrapper.find('.fz__currencyinput__arrowup').exists()).toBe(true)
+      expect(wrapper.find('.fz__currencyinput__arrowdown').exists()).toBe(true)
+    })
+  })
 })
 

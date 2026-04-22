@@ -41,6 +41,9 @@ const props = withDefaults(defineProps<FzCurrencyInputProps>(), {
   step: 1,
 });
 
+const emit = defineEmits<{
+  "fzcurrencyinput:clear": [];
+}>();
 const model = defineModel<FzCurrencyInputProps["modelValue"]>();
 
 let isInternalUpdate = false;
@@ -730,6 +733,7 @@ defineExpose({
     @focus="handleFocus"
     @blur="handleBlur"
     @paste="handlePaste"
+    @fzinput:clear="emit('fzcurrencyinput:clear')"
   >
     <template v-if="$slots.label" #label>
       <slot name="label"></slot>

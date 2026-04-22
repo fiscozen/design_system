@@ -600,3 +600,51 @@ export const WithLeftIcon: Story = {
     await expect(arrowDown).toBeInTheDocument()
   }
 }
+
+export const Clearable: Story = {
+  ...Template,
+  args: {
+    ...Template.args,
+    clearable: true,
+    modelValue: 1234.56,
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('textbox', { name: /Amount/i })
+
+    // Trigger blur so the value is formatted and model is set
+    await fireEvent.blur(input)
+
+    await waitFor(
+      () => {
+        const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+        expect(clearButton).toBeInTheDocument()
+      },
+      { timeout: 1000 }
+    )
+
+    // Verify step controls coexist with clear icon
+    const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
+    await expect(arrowUp).toBeInTheDocument()
+
+    // Click clear and verify input is emptied
+    const clearButton = canvasElement.querySelector('[aria-label="Clear"]')!
+    await userEvent.click(clearButton)
+
+    await waitFor(
+      () => {
+        expect((input as HTMLInputElement).value).toBe('')
+      },
+      { timeout: 1000 }
+    )
+
+    // Verify clear icon disappears after clearing
+    await waitFor(
+      () => {
+        expect(canvasElement.querySelector('[aria-label="Clear"]')).not.toBeInTheDocument()
+      },
+      { timeout: 1000 }
+    )
+  }
+}

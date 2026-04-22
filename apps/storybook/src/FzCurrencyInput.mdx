@@ -200,6 +200,31 @@ const amount = ref<number | undefined>(undefined)
       <td>-</td>
       <td>Native maxlength attribute. Limits maximum number of characters</td>
     </tr>
+    <tr>
+      <td><code>clearable</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows a clear (×) button when the input has a value. The clear icon appears before the step controls</td>
+    </tr>
+  </tbody>
+</table>
+
+## Events
+
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Payload</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>fzcurrencyinput:clear</code></td>
+      <td>&mdash;</td>
+      <td>Emitted when the clear icon is clicked (<code>clearable</code> must be <code>true</code>)</td>
+    </tr>
   </tbody>
 </table>
 
