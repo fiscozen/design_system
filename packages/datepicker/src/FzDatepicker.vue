@@ -177,6 +177,7 @@ const mappedProps = computed(() => {
   delete p.inputProps;
   delete p.valueFormat;
   delete p.clearable;
+  delete p.clearAriaLabel;
 
   // ── Remove props already bound explicitly in the template ─
   delete p.modelValue;
@@ -252,6 +253,7 @@ const safeInputProps = computed<FzInputProps>(() => {
     name: props.name,
     ...props.inputProps,
     clearable: props.clearable,
+    clearAriaLabel: props.clearAriaLabel,
     readonly: !props.textInput || props.disabled,
     disabled: !props.textInput || props.disabled,
   };

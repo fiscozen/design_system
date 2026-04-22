@@ -192,6 +192,11 @@ type FzInputProps = {
    */
   clearable?: boolean;
   /**
+   * Accessible label for the clear button.
+   * @default 'Cancella'
+   */
+  clearAriaLabel?: string;
+  /**
    * Additional CSS classes applied to left icon container
    */
   leftIconClass?: string;
