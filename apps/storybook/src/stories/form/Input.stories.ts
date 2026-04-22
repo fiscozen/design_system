@@ -934,6 +934,98 @@ export const AIReasoningFloatingLabel: Story = {
   }
 }
 
+export const Clearable: Story = {
+  render: (args) => ({
+    components: { FzInput },
+    setup() {
+      const modelValue = ref(args.modelValue || '')
+      const { 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
+      return { args: restArgs, modelValue, onUpdateModelValue }
+    },
+    template: `<FzInput v-bind="args" v-model="modelValue" @update:modelValue="onUpdateModelValue ? onUpdateModelValue($event) : null" />`
+  }),
+  args: {
+    label: 'Clearable Input',
+    placeholder: 'Type something...',
+    clearable: true,
+    modelValue: 'Initial value',
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify clear icon is visible when input has value', async () => {
+      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+      await expect(clearButton).toBeInTheDocument()
+    })
+
+    await step('Click clear icon and verify input is cleared', async () => {
+      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')!
+      await userEvent.click(clearButton)
+
+      const input = canvas.getByRole('textbox', { name: /Clearable Input/i })
+      await expect(input).toHaveValue('')
+    })
+
+    await step('Verify clear icon disappears after clearing', async () => {
+      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+      await expect(clearButton).not.toBeInTheDocument()
+    })
+
+    await step('Verify update:modelValue was called with empty string', async () => {
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith('')
+    })
+  }
+}
+
+export const ClearableWithRightIcon: Story = {
+  render: (args) => ({
+    components: { FzInput },
+    setup() {
+      const modelValue = ref(args.modelValue || '')
+      const { 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
+      return { args: restArgs, modelValue, onUpdateModelValue }
+    },
+    template: `<FzInput v-bind="args" v-model="modelValue" @update:modelValue="onUpdateModelValue ? onUpdateModelValue($event) : null" />`
+  }),
+  args: {
+    label: 'Search',
+    placeholder: 'Type to search...',
+    clearable: true,
+    modelValue: 'Some query',
+    rightIcon: 'magnifying-glass',
+    rightIconAriaLabel: 'Search',
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify both clear icon and right icon are visible', async () => {
+      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+      await expect(clearButton).toBeInTheDocument()
+
+      const rightIcon = canvasElement.querySelector('.fa-magnifying-glass')
+      await expect(rightIcon).toBeInTheDocument()
+    })
+
+    await step('Click clear icon and verify input is cleared', async () => {
+      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')!
+      await userEvent.click(clearButton)
+
+      const input = canvas.getByRole('textbox', { name: /Search/i })
+      await expect(input).toHaveValue('')
+    })
+
+    await step('Verify clear icon disappears but right icon remains', async () => {
+      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+      await expect(clearButton).not.toBeInTheDocument()
+
+      const rightIcon = canvasElement.querySelector('.fa-magnifying-glass')
+      await expect(rightIcon).toBeInTheDocument()
+    })
+  }
+}
+
 // Note: All stories are exported above with 'export const'
 
 export default meta

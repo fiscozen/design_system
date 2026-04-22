@@ -225,6 +225,12 @@ import { FzInput } from '@fiscozen/input'
       <td>Native maxlength attribute. Limits maximum number of characters</td>
     </tr>
     <tr>
+      <td><code>clearable</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows a clear (×) button when the input has a value. Clicking it clears the model and emits <code>fzinput:clear</code></td>
+    </tr>
+    <tr>
       <td><code>autocomplete</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
@@ -241,6 +247,40 @@ import { FzInput } from '@fiscozen/input'
       <td><code>string</code></td>
       <td>-</td>
       <td>Additional CSS classes applied to left icon container</td>
+    </tr>
+  </tbody>
+</table>
+
+## Events
+
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Payload</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>fzinput:clear</code></td>
+      <td>&mdash;</td>
+      <td>Emitted when the clear icon is clicked (<code>clearable</code> must be <code>true</code>). The model is also reset to an empty string via <code>update:modelValue</code></td>
+    </tr>
+    <tr>
+      <td><code>fzinput:right-icon-click</code></td>
+      <td>&mdash;</td>
+      <td>Emitted when the right icon is clicked</td>
+    </tr>
+    <tr>
+      <td><code>fzinput:left-icon-click</code></td>
+      <td>&mdash;</td>
+      <td>Emitted when the left icon is clicked</td>
+    </tr>
+    <tr>
+      <td><code>fzinput:second-right-icon-click</code></td>
+      <td>&mdash;</td>
+      <td>Emitted when the second right icon is clicked</td>
     </tr>
   </tbody>
 </table>

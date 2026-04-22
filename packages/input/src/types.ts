@@ -186,6 +186,12 @@ type FzInputProps = {
    */
   autocomplete?: boolean;
   /**
+   * Shows a clear (×) button when the input has a value.
+   * Clicking it clears the model and emits `fzinput:clear`.
+   * @default false
+   */
+  clearable?: boolean;
+  /**
    * Additional CSS classes applied to left icon container
    */
   leftIconClass?: string;

@@ -32,6 +32,7 @@
     aiReasoning: false,
     aiReasoningDescription: "Suggerito dall'intelligenza artificiale",
     disableEmphasisReset: false,
+    clearable: false,
   });
 
   defineOptions({
@@ -237,6 +238,7 @@
     "fzinput:second-right-icon-click": [];
     "update:highlighted": [value: boolean];
     "update:aiReasoning": [value: boolean];
+    "fzinput:clear": [];
   }>();
 
   /**
@@ -405,6 +407,14 @@
     () => isSecondRightIconClickable.value && !!props.secondRightIconAriaLabel,
   );
 
+  const shouldShowClearIcon = computed(() => {
+    return props.clearable && !!model.value && !isReadonlyOrDisabled.value;
+  });
+
+  const handleClear = () => {
+    model.value = "";
+    emit("fzinput:clear");
+  };
 
   defineExpose({
     inputRef,
@@ -457,8 +467,10 @@
             }
           " />
       </div>
-      <slot name="right-icon">
-        <div class="flex items-center gap-4">
+      <div class="flex items-center gap-4">
+        <FzIconButton v-if="shouldShowClearIcon" iconName="xmark" size="md" variant="invisible" aria-label="Clear"
+          @click.stop="handleClear" />
+        <slot name="right-icon">
           <FzIcon v-if="secondRightIcon && !secondRightIconButton" :name="secondRightIcon" size="md"
             :variant="secondRightIconVariant" :role="isSecondRightIconAccessible ? 'button' : undefined" :aria-label="isSecondRightIconAccessible ? secondRightIconAriaLabel : undefined
               " :aria-disabled="isSecondRightIconAccessible && isReadonlyOrDisabled
@@ -496,8 +508,8 @@
                 rightIconClass,
               ]" />
           <FzIcon v-if="valid" name="check" size="md" class="text-semantic-success" aria-hidden="true" />
-        </div>
-      </slot>
+        </slot>
+      </div>
     </div>
     <FzAlert v-if="error && $slots.errorMessage" :id="`${uniqueId}-error`" role="alert" tone="error" variant="text"
       :style="{ width: containerWidth }">
