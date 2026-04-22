@@ -1490,3 +1490,132 @@ export const Required: Story = {
     })
   }
 }
+
+export const Clearable: Story = {
+  render: (args) => ({
+    components: { FzDatepicker },
+    setup() {
+      const date = ref(FIXED_DATE)
+      const handleUpdate = (value: any) => {
+        date.value = value
+        if (args['onUpdate:modelValue']) {
+          args['onUpdate:modelValue'](value)
+        }
+      }
+      return {
+        date,
+        args,
+        handleUpdate
+      }
+    },
+    template: `
+    <pre data-testid="date-value">{{ date }}</pre>
+    <FzDatepicker v-bind="args" :modelValue="date" @update:modelValue="handleUpdate" />
+    `
+  }),
+  args: {
+    clearable: true,
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify clear icon is visible when date is selected', async () => {
+      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+      await expect(clearButton).toBeInTheDocument()
+    })
+
+    await step('Click clear icon and verify date is cleared', async () => {
+      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')!
+      await userEvent.click(clearButton)
+
+      await waitFor(
+        () => {
+          const input = canvas.getByLabelText(/datepicker label/i) as HTMLInputElement
+          expect(input.value).toBe('')
+        },
+        { timeout: 1000 }
+      )
+    })
+
+    await step('Verify clear icon disappears after clearing', async () => {
+      await waitFor(
+        () => {
+          const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+          expect(clearButton).not.toBeInTheDocument()
+        },
+        { timeout: 1000 }
+      )
+    })
+  }
+}
+
+export const ClearableWithRightIcon: Story = {
+  render: (args) => ({
+    components: { FzDatepicker },
+    setup() {
+      const date = ref(FIXED_DATE)
+      const handleUpdate = (value: any) => {
+        date.value = value
+        if (args['onUpdate:modelValue']) {
+          args['onUpdate:modelValue'](value)
+        }
+      }
+      return {
+        date,
+        args,
+        handleUpdate
+      }
+    },
+    template: `
+    <pre data-testid="date-value">{{ date }}</pre>
+    <FzDatepicker v-bind="args" :modelValue="date" @update:modelValue="handleUpdate" />
+    `
+  }),
+  args: {
+    clearable: true,
+    inputProps: {
+      label: 'datepicker label',
+      rightIcon: 'circle-info',
+      rightIconAriaLabel: 'Info'
+    },
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify both clear icon and right icon are visible', async () => {
+      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+      await expect(clearButton).toBeInTheDocument()
+
+      const rightIcon = canvasElement.querySelector('.fa-circle-info')
+      await expect(rightIcon).toBeInTheDocument()
+    })
+
+    await step('Click clear icon and verify date is cleared', async () => {
+      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')!
+      await userEvent.click(clearButton)
+
+      await waitFor(
+        () => {
+          const input = canvas.getByLabelText(/datepicker label/i) as HTMLInputElement
+          expect(input.value).toBe('')
+        },
+        { timeout: 1000 }
+      )
+    })
+
+    await step('Verify clear icon disappears but right icon remains', async () => {
+      await waitFor(
+        () => {
+          const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+          expect(clearButton).not.toBeInTheDocument()
+        },
+        { timeout: 1000 }
+      )
+
+      const rightIcon = canvasElement.querySelector('.fa-circle-info')
+      await expect(rightIcon).toBeInTheDocument()
+    })
+  }
+}

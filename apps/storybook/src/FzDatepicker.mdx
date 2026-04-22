@@ -63,6 +63,12 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
       <td>Props forwarded to the inner <code>FzInput</code> component (label, placeholder, environment, error, etc.)</td>
     </tr>
     <tr>
+      <td><code>clearable</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Shows a clear (×) button when the input has a value</td>
+    </tr>
+    <tr>
       <td><code>valueFormat</code></td>
       <td><code>string | undefined</code></td>
       <td><code>undefined</code></td>
@@ -251,7 +257,12 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
     <tr>
       <td><code>cleared</code></td>
       <td><code>string</code></td>
-      <td>Emitted when the input value is cleared</td>
+      <td>Emitted when the input value is cleared (e.g. via the clear icon when <code>clearable</code> is <code>true</code>, or when the user manually empties the field)</td>
+    </tr>
+    <tr>
+      <td><code>fzdatepicker:clear</code></td>
+      <td>&mdash;</td>
+      <td>Emitted when the clear icon is clicked (<code>clearable</code> must be <code>true</code>)</td>
     </tr>
     <tr>
       <td><code>closed</code></td>

@@ -17,6 +17,7 @@ exports[`FzDatepicker > Snapshots > matches disabled dates snapshot 1`] = `
             <!--v-if-->
             <!--v-if-->
             <!--v-if-->
+            <!--v-if-->
           </div>
         </div>
         <!--v-if-->
@@ -50,6 +51,7 @@ exports[`FzDatepicker > Snapshots > matches inline timepicker snapshot 1`] = `
             <!--v-if-->
             <!--v-if-->
             <!--v-if-->
+            <!--v-if-->
           </div>
         </div>
         <!--v-if-->
@@ -78,6 +80,7 @@ exports[`FzDatepicker > Snapshots > matches monthpicker snapshot 1`] = `
             <!--v-if--><input type="text" id="fz-input-168986420000-102" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
+            <!--v-if-->
             <!--v-if-->
             <!--v-if-->
             <!--v-if-->
@@ -117,6 +120,7 @@ exports[`FzDatepicker > Snapshots > matches multicalendars range snapshot 1`] = 
             <!--v-if-->
             <!--v-if-->
             <!--v-if-->
+            <!--v-if-->
           </div>
         </div>
         <!--v-if-->
@@ -145,6 +149,7 @@ exports[`FzDatepicker > Snapshots > matches range snapshot 1`] = `
             <!--v-if--><input type="text" id="fz-input-168986420000-99" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
+            <!--v-if-->
             <!--v-if-->
             <!--v-if-->
             <!--v-if-->
@@ -183,6 +188,7 @@ exports[`FzDatepicker > Snapshots > matches snapshot - disabled state 1`] = `
             <!--v-if-->
             <!--v-if-->
             <!--v-if-->
+            <!--v-if-->
           </div>
         </div>
         <!--v-if-->
@@ -211,6 +217,7 @@ exports[`FzDatepicker > Snapshots > matches snapshot - with label and error 1`] 
             <!--v-if--><input type="text" id="fz-input-168986420000-106" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="true" aria-disabled="false" aria-labelledby="fz-input-168986420000-106-label" aria-describedby="fz-input-168986420000-106-error">
           </div>
           <div class="flex items-center gap-4">
+            <!--v-if-->
             <!--v-if-->
             <!--v-if-->
             <!--v-if-->
@@ -259,6 +266,7 @@ exports[`FzDatepicker > Snapshots > matches snapshot 1`] = `
             <!--v-if-->
             <!--v-if-->
             <!--v-if-->
+            <!--v-if-->
           </div>
         </div>
         <!--v-if-->
@@ -292,6 +300,7 @@ exports[`FzDatepicker > Snapshots > matches weekpicker snapshot 1`] = `
             <!--v-if-->
             <!--v-if-->
             <!--v-if-->
+            <!--v-if-->
           </div>
         </div>
         <!--v-if-->
@@ -320,6 +329,7 @@ exports[`FzDatepicker > Snapshots > matches yearpicker snapshot 1`] = `
             <!--v-if--><input type="text" id="fz-input-168986420000-103" class="peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base" autocomplete="off" aria-required="false" aria-invalid="false" aria-disabled="false">
           </div>
           <div class="flex items-center gap-4">
+            <!--v-if-->
             <!--v-if-->
             <!--v-if-->
             <!--v-if-->
