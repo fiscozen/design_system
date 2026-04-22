@@ -1,5 +1,11 @@
 # @fiscozen/input
 
+## 3.3.0
+
+### Minor Changes
+
+- 4a4cde6: Add clearable prop. When enabled, a clear (×) icon appears when the input has a value.
+
 ## 3.2.0
 
 ### Minor Changes

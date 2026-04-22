@@ -1,5 +1,16 @@
 # @fiscozen/datepicker
 
+## 3.1.0
+
+### Minor Changes
+
+- 4a4cde6: Add clearable prop. When enabled, a clear (×) icon appears when the input has a value.
+
+### Patch Changes
+
+- Updated dependencies [4a4cde6]
+  - @fiscozen/input@3.3.0
+
 ## 3.0.7
 
 ### Patch Changes
