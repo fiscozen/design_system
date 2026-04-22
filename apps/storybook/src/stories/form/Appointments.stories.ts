@@ -2,23 +2,21 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, userEvent, within, waitFor } from 'storybook/test'
 import { FzAppointments } from '@fiscozen/appointments'
 import { ref } from 'vue'
-import { addDays, formatISO, startOfDay } from 'date-fns'
+import { addDays, formatISO } from 'date-fns'
 
-// Helper function to get current hour in ISO-8601 format
-// This ensures slots are always available regardless of when tests run
-const getCurrentStartTimeISO = (): string => {
-  const now = new Date()
-  now.setHours(now.getHours() + 1, 0, 0, 0)
-  return formatISO(now)
-}
-
-// Helper to get current time string "HH:00" for verification
-const getCurrentTimeString = (): string => {
-  const now = new Date()
-  now.setHours(now.getHours() + 1, 0, 0, 0)
-  const hours = now.getHours().toString().padStart(2, '0')
-  return `${hours}:00`
-}
+// ============================================
+// FIXED DATES — deterministic across all runs
+// to avoid visual-regression flakiness (Chromatic)
+// Uses a Wednesday to avoid weekend exclusion issues
+// ============================================
+const FIXED_DATE = new Date(2030, 3, 10) // Wednesday, April 10, 2030
+const FIXED_TOMORROW = new Date(2030, 3, 11) // Thursday
+const FIXED_START_TIME = (() => {
+  const d = new Date(FIXED_DATE)
+  d.setHours(10, 0, 0, 0)
+  return formatISO(d)
+})()
+const FIXED_START_TIME_STRING = '10:00'
 
 const meta: Meta<typeof FzAppointments> = {
   title: 'Form/FzAppointments',
@@ -43,8 +41,8 @@ const meta: Meta<typeof FzAppointments> = {
     }
   },
   args: {
-    startDate: formatISO(new Date()),
-    slotStartTime: getCurrentStartTimeISO(),
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
     slotCount: 8,
     slotInterval: 30,
     breakDuration: 0,
@@ -110,8 +108,8 @@ export const Default: Story = {
   ...Template,
   args: {
     type: 'auto',
-    startDate: formatISO(new Date()),
-    slotStartTime: getCurrentStartTimeISO(),
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
     slotCount: 24,
     slotInterval: 30,
     breakDuration: 0,
@@ -156,7 +154,7 @@ export const Default: Story = {
       )
     })
 
-    await step('Verify back button is disabled for today', async () => {
+    await step('Verify back button is disabled on start date', async () => {
       const backButton = canvas.getByLabelText('Giorno precedente')
       await expect(backButton).toBeDisabled()
       await expect(backButton).toHaveAttribute('aria-disabled', 'true')
@@ -178,8 +176,8 @@ export const WithBreakDuration: Story = {
   ...Template,
   args: {
     type: 'auto',
-    startDate: formatISO(new Date()),
-    slotStartTime: getCurrentStartTimeISO(),
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
     slotCount: 3,
     slotInterval: 30,
     breakDuration: 10
@@ -199,7 +197,7 @@ export const WithBreakDuration: Story = {
         label.textContent?.trim()
       )
 
-      const currentHour = getCurrentTimeString()
+      const currentHour = FIXED_START_TIME_STRING
       expect(slotLabels.some((text) => text?.includes(currentHour))).toBe(true)
       expect(slotLabels.some((text) => text?.includes('40'))).toBe(true)
       expect(slotLabels.some((text) => text?.includes('20'))).toBe(true)
@@ -211,8 +209,8 @@ export const WithExcludedDays: Story = {
   ...Template,
   args: {
     type: 'auto',
-    startDate: formatISO(new Date()),
-    slotStartTime: getCurrentStartTimeISO(),
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
@@ -221,26 +219,36 @@ export const WithExcludedDays: Story = {
       0,
       6,
       // Exclude a specific date (tomorrow)
-      addDays(new Date(), 1).toISOString().split('T')[0]
+      FIXED_TOMORROW.toISOString().split('T')[0]
     ]
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
-    await step('Verify component renders', async () => {
-      const component = canvas.getByRole('group', { hidden: true })
-      expect(component).toBeInTheDocument()
+    await step('Verify component renders with navigation', async () => {
+      await waitFor(
+        () => {
+          const forwardButton = canvas.getByLabelText('Giorno successivo')
+          expect(forwardButton).toBeInTheDocument()
+        },
+        { timeout: 2000 }
+      )
     })
 
     await step('Verify navigation skips excluded days', async () => {
       const forwardButton = canvas.getByLabelText('Giorno successivo')
 
-      // Click forward multiple times to verify it skips excluded days
+      // Click forward to navigate to the next non-excluded day
       if (!forwardButton.hasAttribute('disabled')) {
         await userEvent.click(forwardButton)
-        await waitFor(() => {
-          expect(forwardButton).toBeInTheDocument()
-        })
+        await waitFor(
+          () => {
+            // After navigating, slots should be available on a non-excluded day
+            const slots = canvasElement.querySelectorAll('input[type="radio"]')
+            expect(slots.length).toBeGreaterThan(0)
+          },
+          { timeout: 2000 }
+        )
       }
     })
   }
@@ -248,33 +256,28 @@ export const WithExcludedDays: Story = {
 
 export const WithexcludedSlots: Story = {
   ...Template,
-  args: (() => {
-    const now = new Date()
-    const currentHour = now.getHours()
-
-    return {
-      type: 'auto',
-      startDate: formatISO(new Date()),
-      slotStartTime: getCurrentStartTimeISO(),
-      slotCount: 5,
-      slotInterval: 30,
-      breakDuration: 0,
-      excludedSlots: [
-        // Disable first and second slot (current time and +30 minutes)
-        (() => {
-          const date = new Date()
-          date.setHours(currentHour + 1, 0, 0, 0)
-          return formatISO(date)
-        })(),
-        (() => {
-          const date = new Date()
-          date.setHours(currentHour + 1, 30, 0, 0)
-          return formatISO(date)
-        })()
-      ],
-      'update:modelValue': fn()
-    }
-  })(),
+  args: {
+    type: 'auto',
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
+    slotCount: 5,
+    slotInterval: 30,
+    breakDuration: 0,
+    excludedSlots: [
+      // Disable first and second slot (10:00 and 10:30)
+      (() => {
+        const date = new Date(FIXED_DATE)
+        date.setHours(10, 0, 0, 0)
+        return formatISO(date)
+      })(),
+      (() => {
+        const date = new Date(FIXED_DATE)
+        date.setHours(10, 30, 0, 0)
+        return formatISO(date)
+      })()
+    ],
+    'update:modelValue': fn()
+  },
   play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
@@ -284,7 +287,7 @@ export const WithexcludedSlots: Story = {
           const slotLabels = Array.from(canvasElement.querySelectorAll('label')).map((label) =>
             label.textContent?.trim()
           )
-          const currentHour = getCurrentTimeString()
+          const currentHour = FIXED_START_TIME_STRING
           expect(slotLabels.length).toBeGreaterThan(0)
 
           // Inside slots container should not contain the current hour and the current hour + 30 minutes
@@ -340,12 +343,12 @@ export const WithMaxDate: Story = {
   ...Template,
   args: {
     type: 'auto',
-    startDate: formatISO(new Date()),
-    slotStartTime: getCurrentStartTimeISO(),
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
-    maxDate: formatISO(addDays(new Date(), 7))
+    maxDate: formatISO(addDays(FIXED_DATE, 7))
   },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
@@ -375,28 +378,19 @@ export const WithMaxDate: Story = {
 
 export const NoAvailableSlots: Story = {
   ...Template,
-  args: (() => {
-    const now = new Date()
-    const currentHour = now.getHours() + 1
-
-    // Disable all slots by marking them as disabled
-    const excludedSlots: string[] = []
-    for (let i = 0; i < 5; i++) {
-      const slot = new Date(now)
-      slot.setHours(currentHour, i * 30, 0, 0)
-      excludedSlots.push(formatISO(slot))
-    }
-
-    return {
-      type: 'auto',
-      startDate: formatISO(new Date()),
-      slotStartTime: getCurrentStartTimeISO(),
-      slotCount: 5,
-      slotInterval: 30,
-      breakDuration: 0,
-      excludedSlots
-    }
-  })(),
+  args: {
+    type: 'auto',
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
+    slotCount: 5,
+    slotInterval: 30,
+    breakDuration: 0,
+    excludedSlots: Array.from({ length: 5 }, (_, i) => {
+      const slot = new Date(FIXED_DATE)
+      slot.setHours(10, i * 30, 0, 0)
+      return formatISO(slot)
+    })
+  },
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
@@ -421,8 +415,8 @@ export const SlotSelection: Story = {
   ...Template,
   args: {
     type: 'auto',
-    startDate: formatISO(new Date()),
-    slotStartTime: getCurrentStartTimeISO(),
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
@@ -473,8 +467,8 @@ export const DateNavigation: Story = {
   ...Template,
   args: {
     type: 'auto',
-    startDate: formatISO(new Date()),
-    slotStartTime: getCurrentStartTimeISO(),
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
@@ -564,8 +558,8 @@ export const CustomSlotConfiguration: Story = {
   ...Template,
   args: {
     type: 'auto',
-    startDate: formatISO(new Date()),
-    slotStartTime: getCurrentStartTimeISO(),
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
     slotCount: 10,
     slotInterval: 15,
     breakDuration: 5
@@ -592,7 +586,7 @@ export const CustomSlotConfiguration: Story = {
         label.textContent?.trim()
       )
 
-      const currentHour = getCurrentTimeString()
+      const currentHour = FIXED_START_TIME_STRING
       // First slot should be current hour
       expect(slotLabels.some((text) => text?.includes(currentHour))).toBe(true)
       // Second slot should be current hour + 15 minutes + 5 minutes break (20 minutes)
@@ -605,8 +599,8 @@ export const RequiredField: Story = {
   ...Template,
   args: {
     type: 'auto',
-    startDate: formatISO(new Date()),
-    slotStartTime: getCurrentStartTimeISO(),
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
@@ -633,8 +627,8 @@ export const KeyboardNavigation: Story = {
   ...Template,
   args: {
     type: 'auto',
-    startDate: formatISO(new Date()),
-    slotStartTime: getCurrentStartTimeISO(),
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
@@ -712,8 +706,8 @@ export const DisabledNavigation: Story = {
   ...Template,
   args: {
     type: 'auto',
-    startDate: formatISO(new Date()),
-    slotStartTime: getCurrentStartTimeISO(),
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0
@@ -721,7 +715,7 @@ export const DisabledNavigation: Story = {
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
     const canvas = within(canvasElement)
 
-    await step('Verify back button is disabled for today', async () => {
+    await step('Verify back button is disabled on start date', async () => {
       const backButton = canvas.getByLabelText('Giorno precedente')
       await expect(backButton).toBeDisabled()
       await expect(backButton).toHaveAttribute('aria-disabled', 'true')
@@ -747,8 +741,8 @@ export const Accessibility: Story = {
   ...Template,
   args: {
     type: 'auto',
-    startDate: formatISO(new Date()),
-    slotStartTime: getCurrentStartTimeISO(),
+    startDate: formatISO(FIXED_DATE),
+    slotStartTime: FIXED_START_TIME,
     slotCount: 5,
     slotInterval: 30,
     breakDuration: 0,
@@ -865,7 +859,7 @@ const ManualTemplate: Story = {
 export const ManualBasic: Story = {
   ...ManualTemplate,
   args: (() => {
-    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const tomorrow = FIXED_TOMORROW
     const slots = generateManualSlots(tomorrow, [
       '09:00',
       '09:30',
@@ -914,9 +908,9 @@ export const ManualBasic: Story = {
 export const ManualMultipleDays: Story = {
   ...ManualTemplate,
   args: (() => {
-    const day1 = addDays(startOfDay(new Date()), 1)
-    const day2 = addDays(startOfDay(new Date()), 3)
-    const day3 = addDays(startOfDay(new Date()), 5)
+    const day1 = FIXED_TOMORROW
+    const day2 = addDays(FIXED_DATE, 3)
+    const day3 = addDays(FIXED_DATE, 5)
 
     const slots = [
       ...generateManualSlots(day1, ['09:00', '10:00', '11:00']),
@@ -984,7 +978,7 @@ export const ManualMultipleDays: Story = {
 export const ManualWithCustomInfoText: Story = {
   ...ManualTemplate,
   args: (() => {
-    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const tomorrow = FIXED_TOMORROW
     const slots = generateManualSlots(tomorrow, ['10:00', '11:00', '12:00', '14:00', '15:00'])
 
     return {
@@ -1007,7 +1001,7 @@ export const ManualWithCustomInfoText: Story = {
 export const ManualWithISOStrings: Story = {
   ...ManualTemplate,
   args: (() => {
-    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const tomorrow = FIXED_TOMORROW
     const slots = generateManualSlots(tomorrow, ['09:00', '10:30', '14:00', '16:30'])
 
     return {
@@ -1061,7 +1055,7 @@ export const ManualEmptySlots: Story = {
 export const ManualSlotSelection: Story = {
   ...ManualTemplate,
   args: (() => {
-    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const tomorrow = FIXED_TOMORROW
     const slots = generateManualSlots(tomorrow, ['09:00', '10:00', '11:00'])
 
     return {
@@ -1115,7 +1109,7 @@ export const ManualSlotSelection: Story = {
 export const ManualRequired: Story = {
   ...ManualTemplate,
   args: (() => {
-    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const tomorrow = FIXED_TOMORROW
     const slots = generateManualSlots(tomorrow, ['09:00', '10:00', '11:00'])
 
     return {
@@ -1144,7 +1138,7 @@ export const ManualRequired: Story = {
 export const ManualKeyboardNavigation: Story = {
   ...ManualTemplate,
   args: (() => {
-    const tomorrow = addDays(startOfDay(new Date()), 1)
+    const tomorrow = FIXED_TOMORROW
     const slots = generateManualSlots(tomorrow, ['09:00', '10:00', '11:00', '14:00', '15:00'])
 
     return {
