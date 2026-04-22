@@ -1840,4 +1840,98 @@ describe("FzInput", () => {
       expect(new Set(ids).size).toBe(NUMBER_OF_INPUTS);
     });
   });
+
+  describe("Clearable", () => {
+    it("does not show clear icon when clearable is false (default)", () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Label",
+          modelValue: "some value",
+        },
+      });
+
+      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(false);
+    });
+
+    it("does not show clear icon when clearable is true but model is empty", () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Label",
+          clearable: true,
+          modelValue: "",
+        },
+      });
+
+      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(false);
+    });
+
+    it("does not show clear icon when clearable is true but disabled", () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Label",
+          clearable: true,
+          modelValue: "some value",
+          disabled: true,
+        },
+      });
+
+      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(false);
+    });
+
+    it("does not show clear icon when clearable is true but readonly", () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Label",
+          clearable: true,
+          modelValue: "some value",
+          readonly: true,
+        },
+      });
+
+      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(false);
+    });
+
+    it("shows clear icon when clearable is true and model has value", () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Label",
+          clearable: true,
+          modelValue: "some value",
+        },
+      });
+
+      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(true);
+    });
+
+    it("clears model and emits fzinput:clear when clear icon is clicked", async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Label",
+          clearable: true,
+          modelValue: "some value",
+        },
+      });
+
+      await wrapper.find('[aria-label="Clear"]').trigger("click");
+
+      expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([""]);
+      expect(wrapper.emitted("fzinput:clear")).toBeTruthy();
+    });
+
+    it("shows clear icon when right-icon slot is overridden", () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Label",
+          clearable: true,
+          modelValue: "some value",
+        },
+        slots: {
+          "right-icon": "<span class='custom-chevron'>▼</span>",
+        },
+      });
+
+      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(true);
+      expect(wrapper.find(".custom-chevron").exists()).toBe(true);
+    });
+  });
 });
