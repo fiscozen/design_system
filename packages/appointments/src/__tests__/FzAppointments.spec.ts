@@ -3,7 +3,23 @@ import { mount } from "@vue/test-utils";
 import { FzAppointments } from "..";
 import { addDays, formatISO, startOfDay } from "date-fns";
 
+// ============================================
+// FIXED TIME — deterministic across all runs
+// Uses vi.useFakeTimers so new Date() always returns a known Wednesday
+// ============================================
+const FIXED_NOW = new Date("2030-04-10T08:00:00.000Z"); // Wednesday, April 10, 2030
+const FIXED_TOMORROW = new Date("2030-04-11T00:00:00.000Z"); // Thursday
+
 describe("FzAppointments", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(FIXED_NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe("Rendering", () => {
     it("should render with default props (auto mode)", () => {
       const wrapper = mount(FzAppointments, {
@@ -796,18 +812,7 @@ describe("FzAppointments", () => {
   });
 
   describe("Snapshots", () => {
-    /** Fixed date for deterministic snapshot output: 22 Jan 2026 10:00 Europe/Rome so that 23 Jan has next day available. */
-    const SNAPSHOT_FIXED_DATE = new Date("2026-01-22T09:00:00.000Z");
-    const defaultDate = new Date(2026, 0, 23, 10, 0, 0, 0);
-
-    beforeEach(() => {
-      vi.useFakeTimers();
-      vi.setSystemTime(SNAPSHOT_FIXED_DATE);
-    });
-
-    afterEach(() => {
-      vi.useRealTimers();
-    });
+    const defaultDate = new Date(2030, 3, 11, 10, 0, 0, 0);
 
     it("should match snapshot - default state (auto mode)", () => {
       const wrapper = mount(FzAppointments, {
