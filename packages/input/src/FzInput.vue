@@ -414,6 +414,7 @@
   const handleClear = () => {
     model.value = "";
     emit("fzinput:clear");
+    inputRef.value?.focus();
   };
 
   defineExpose({
