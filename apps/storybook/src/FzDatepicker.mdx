@@ -66,7 +66,13 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
       <td><code>clearable</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
-      <td>Shows a clear (×) button when the input has a value</td>
+      <td>Shows a clear (×) button when the input has a value. Has no effect when <code>textInput</code> is <code>false</code> (the input is readonly in icon-only mode)</td>
+    </tr>
+    <tr>
+      <td><code>clearAriaLabel</code></td>
+      <td><code>string</code></td>
+      <td><code>'Cancella'</code></td>
+      <td>Accessible label for the clear button. Override to localize or customize the screen reader announcement</td>
     </tr>
     <tr>
       <td><code>valueFormat</code></td>
@@ -255,9 +261,9 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
       <td>Emitted when the user types into the input field</td>
     </tr>
     <tr>
-      <td><code>cleared</code></td>
+      <td><code>cleared</code> <em>(deprecated)</em></td>
       <td><code>string</code></td>
-      <td>Emitted when the input value is cleared (e.g. via the clear icon when <code>clearable</code> is <code>true</code>, or when the user manually empties the field)</td>
+      <td><strong>Deprecated:</strong> use <code>fzdatepicker:clear</code> instead. Emitted when the input value is cleared (e.g. via the clear icon when <code>clearable</code> is <code>true</code>, or when the user manually empties the field). Will be removed in next major.</td>
     </tr>
     <tr>
       <td><code>fzdatepicker:clear</code></td>

@@ -1950,5 +1950,19 @@ describe("FzInput", () => {
       expect(wrapper.find('[aria-label="Cancella"]').exists()).toBe(true);
       expect(wrapper.find(".custom-chevron").exists()).toBe(true);
     });
+
+    it("propagates custom clearAriaLabel to the clear button", () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Label",
+          clearable: true,
+          clearAriaLabel: "Svuota campo",
+          modelValue: "some value",
+        },
+      });
+
+      expect(wrapper.find('[aria-label="Svuota campo"]').exists()).toBe(true);
+      expect(wrapper.find('[aria-label="Cancella"]').exists()).toBe(false);
+    });
   });
 });
