@@ -41,6 +41,9 @@ const props = withDefaults(defineProps<FzCurrencyInputProps>(), {
   step: 1,
 });
 
+// DOM events (@focus, @blur, @keydown, …) propagate via v-bind fallthrough on the
+// inner FzInput. @update:modelValue is handled by defineModel. Only custom events
+// emitted explicitly by this component need to be declared here.
 const emit = defineEmits<{
   "fzcurrencyinput:clear": [];
 }>();
