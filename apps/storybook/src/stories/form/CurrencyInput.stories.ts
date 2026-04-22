@@ -107,39 +107,45 @@ export const WithStep: Story = {
     await step('Click arrowUp and verify update:modelValue IS called', async () => {
       const input = canvas.getByRole('textbox', { name: /Amount/i })
       const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup') as HTMLElement
-      
+
       // Initial value is undefined, so clicking arrowUp should set it to 5 (0 + 5)
       await userEvent.click(arrowUp)
-      
-      await waitFor(async () => {
-        await expect(input).toHaveValue('5,00')
-      }, { timeout: 3000 })
-      
+
+      await waitFor(
+        async () => {
+          await expect(input).toHaveValue('5,00')
+        },
+        { timeout: 3000 }
+      )
+
       // ROBUST CHECK: Verify the update:modelValue spy WAS called
       await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
 
     await step('Click arrowDown and verify update:modelValue IS called again', async () => {
       const input = canvas.getByRole('textbox', { name: /Amount/i }) as HTMLInputElement
-      
+
       // Verify the value is actually 5 before clicking arrowDown
       await expect(input).toHaveValue('5,00')
-      
+
       // Re-query the arrowDown element to ensure we have a fresh reference
       const arrowDown = canvasElement.querySelector('.fz__currencyinput__arrowdown') as HTMLElement
-      
+
       // Clicking arrowDown should decrease by 5, so 5 - 5 = 0
       expect(arrowDown).toBeInTheDocument()
-      
+
       // Use fireEvent.click for more reliable event triggering on Vue components
       await fireEvent.click(arrowDown)
-      
+
       // ROBUST CHECK: Verify the value actually changed (not just that it's truthy)
       // This catches cases where the interaction had no effect
-      await waitFor(async () => {
-        await expect(input).toHaveValue('0,00')
-      }, { timeout: 3000 })
-      
+      await waitFor(
+        async () => {
+          await expect(input).toHaveValue('0,00')
+        },
+        { timeout: 3000 }
+      )
+
       // ROBUST CHECK: Verify the update:modelValue spy WAS called again
       await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
     })
@@ -160,15 +166,18 @@ export const WithDecimalStep: Story = {
     const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
 
     // Verify initial value is formatted correctly
-    await waitFor(async () => {
-      await expect(input).toHaveValue('10,50')
-    }, { timeout: 3000 })
+    await waitFor(
+      async () => {
+        await expect(input).toHaveValue('10,50')
+      },
+      { timeout: 3000 }
+    )
 
     // Verify arrowUp element exists and is accessible
     await expect(arrowUp).toBeInTheDocument()
     await expect(arrowUp).toHaveAttribute('role', 'button')
     await expect(arrowUp).toHaveAttribute('aria-label', 'Incrementa di 0.25')
-    
+
     // Note: Full interaction testing (click to increment) is covered in unit tests
     // Storybook play functions verify UI presence and accessibility
   }
@@ -211,17 +220,20 @@ export const WithMinMax: Story = {
 
     await step('Type value below min and verify update:modelValue IS called', async () => {
       const input = canvas.getByRole('textbox', { name: /Amount/i })
-      
+
       // Set value below min
       await userEvent.clear(input)
       await userEvent.type(input, '5')
       await userEvent.click(document.body) // Trigger blur
-      
+
       // Clamping happens on blur
-      await waitFor(async () => {
-        await expect(input).toHaveValue('10,00')
-      }, { timeout: 1000 })
-      
+      await waitFor(
+        async () => {
+          await expect(input).toHaveValue('10,00')
+        },
+        { timeout: 1000 }
+      )
+
       // ROBUST CHECK: Verify the update:modelValue spy WAS called (typing triggers multiple calls)
       if (args['onUpdate:modelValue']) {
         await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
@@ -230,17 +242,20 @@ export const WithMinMax: Story = {
 
     await step('Type value above max and verify update:modelValue IS called again', async () => {
       const input = canvas.getByRole('textbox', { name: /Amount/i })
-      
+
       // Set value above max
       await userEvent.clear(input)
       await userEvent.type(input, '150')
       await userEvent.click(document.body) // Trigger blur
-      
+
       // Clamping happens on blur
-      await waitFor(async () => {
-        await expect(input).toHaveValue('100,00')
-      }, { timeout: 1000 })
-      
+      await waitFor(
+        async () => {
+          await expect(input).toHaveValue('100,00')
+        },
+        { timeout: 1000 }
+      )
+
       // ROBUST CHECK: Verify the update:modelValue spy WAS called again (typing triggers multiple calls)
       if (args['onUpdate:modelValue']) {
         await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
@@ -264,9 +279,12 @@ export const WithForceStep: Story = {
     // Value should be rounded to nearest step (4) on blur
     await userEvent.click(input)
     await userEvent.click(document.body) // Trigger blur
-    await waitFor(async () => {
-      await expect(input).toHaveValue('4,00')
-    }, { timeout: 1000 })
+    await waitFor(
+      async () => {
+        await expect(input).toHaveValue('4,00')
+      },
+      { timeout: 1000 }
+    )
   }
 }
 
@@ -390,28 +408,31 @@ export const Readonly: Story = {
 
     await step('Verify update:modelValue is NOT called when typing in readonly input', async () => {
       const input = canvas.getByRole('textbox', { name: /Amount/i })
-      
+
       // Attempt to type in readonly input
       await userEvent.type(input, '999')
-      
+
       // ROBUST CHECK: Verify the update:modelValue spy was NOT called
       await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
-      
+
       // Verify value hasn't changed
       await expect(input).toHaveValue('123,45')
     })
 
-    await step('Verify update:modelValue is NOT called when clicking readonly step controls', async () => {
-      const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup') as HTMLElement
-      
-      // Attempt to click readonly step control
-      if (arrowUp) {
-        await userEvent.click(arrowUp)
-        
-        // ROBUST CHECK: Verify the update:modelValue spy was NOT called
-        await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+    await step(
+      'Verify update:modelValue is NOT called when clicking readonly step controls',
+      async () => {
+        const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup') as HTMLElement
+
+        // Attempt to click readonly step control
+        if (arrowUp) {
+          await userEvent.click(arrowUp)
+
+          // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+          await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+        }
       }
-    })
+    )
   }
 }
 
@@ -440,21 +461,26 @@ export const Disabled: Story = {
       await expect(arrowDown).toHaveAttribute('aria-disabled', 'true')
     })
 
-    await step('Verify update:modelValue is NOT called when clicking disabled step controls', async () => {
-      const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup') as HTMLElement
-      const arrowDown = canvasElement.querySelector('.fz__currencyinput__arrowdown') as HTMLElement
-      
-      // Attempt to click disabled step controls
-      if (arrowUp) {
-        await userEvent.click(arrowUp)
+    await step(
+      'Verify update:modelValue is NOT called when clicking disabled step controls',
+      async () => {
+        const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup') as HTMLElement
+        const arrowDown = canvasElement.querySelector(
+          '.fz__currencyinput__arrowdown'
+        ) as HTMLElement
+
+        // Attempt to click disabled step controls
+        if (arrowUp) {
+          await userEvent.click(arrowUp)
+        }
+        if (arrowDown) {
+          await userEvent.click(arrowDown)
+        }
+
+        // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+        await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
       }
-      if (arrowDown) {
-        await userEvent.click(arrowDown)
-      }
-      
-      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
-      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
-    })
+    )
   }
 }
 
@@ -476,10 +502,10 @@ export const NullOnEmpty: Story = {
 
     await step('Type value and verify update:modelValue IS called', async () => {
       const input = canvas.getByRole('textbox', { name: /Amount/i })
-      
+
       // Type value (typing '100' triggers 3 update:modelValue events)
       await userEvent.type(input, '100')
-      
+
       // ROBUST CHECK: Verify the update:modelValue spy WAS called (typing triggers multiple calls)
       if (args['onUpdate:modelValue']) {
         await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
@@ -488,16 +514,19 @@ export const NullOnEmpty: Story = {
 
     await step('Clear value and verify update:modelValue IS called again', async () => {
       const input = canvas.getByRole('textbox', { name: /Amount/i })
-      
+
       // Clear input
       await userEvent.clear(input)
       await userEvent.click(document.body) // Trigger blur
-      
+
       // With nullOnEmpty, empty should remain empty (not 0)
-      await waitFor(async () => {
-        await expect(input).toHaveValue('')
-      }, { timeout: 1000 })
-      
+      await waitFor(
+        async () => {
+          await expect(input).toHaveValue('')
+        },
+        { timeout: 1000 }
+      )
+
       // ROBUST CHECK: Verify the update:modelValue spy WAS called again
       if (args['onUpdate:modelValue']) {
         await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
@@ -518,7 +547,7 @@ export const KeyboardNavigation: Story = {
 
     const input = canvas.getByRole('textbox', { name: /Amount/i })
     const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
-    
+
     if (!arrowUp) {
       throw new Error('Arrow up element not found')
     }
@@ -530,7 +559,7 @@ export const KeyboardNavigation: Story = {
     await expect(arrowUp).toHaveAttribute('role', 'button')
     await expect(arrowUp).toHaveAttribute('aria-label', 'Incrementa di 2')
     await expect(arrowUp).toHaveAttribute('tabindex', '0')
-    
+
     // Verify keyboard navigation attributes are present
     // Note: Full keyboard interaction testing (Enter/Space keys) is covered in unit tests
     // Storybook play functions verify UI presence and accessibility attributes
@@ -548,7 +577,7 @@ export const FloatingLabel: Story = {
     const canvas = within(canvasElement)
 
     const input = canvas.getByRole('textbox', { name: /Amount/i })
-    
+
     // When empty and not focused, placeholder should be visible above
     await expect(input).toHaveValue('')
 
@@ -618,7 +647,7 @@ export const Clearable: Story = {
 
     await waitFor(
       () => {
-        const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+        const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')
         expect(clearButton).toBeInTheDocument()
       },
       { timeout: 1000 }
@@ -629,7 +658,7 @@ export const Clearable: Story = {
     await expect(arrowUp).toBeInTheDocument()
 
     // Click clear and verify input is emptied
-    const clearButton = canvasElement.querySelector('[aria-label="Clear"]')!
+    const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')!
     await userEvent.click(clearButton)
 
     await waitFor(
@@ -642,7 +671,7 @@ export const Clearable: Story = {
     // Verify clear icon disappears after clearing
     await waitFor(
       () => {
-        expect(canvasElement.querySelector('[aria-label="Clear"]')).not.toBeInTheDocument()
+        expect(canvasElement.querySelector('[aria-label="Cancella"]')).not.toBeInTheDocument()
       },
       { timeout: 1000 }
     )

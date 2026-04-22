@@ -743,7 +743,7 @@ export const Highlighted: Story = {
   ...Template,
   args: {
     ...Template.args,
-    highlighted: true,
+    highlighted: true
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -791,7 +791,7 @@ export const AIReasoning: Story = {
   ...Template,
   args: {
     ...Template.args,
-    aiReasoning: true,
+    aiReasoning: true
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -955,12 +955,12 @@ export const Clearable: Story = {
     const canvas = within(canvasElement)
 
     await step('Verify clear icon is visible when input has value', async () => {
-      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+      const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')
       await expect(clearButton).toBeInTheDocument()
     })
 
     await step('Click clear icon and verify input is cleared', async () => {
-      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')!
+      const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')!
       await userEvent.click(clearButton)
 
       const input = canvas.getByRole('textbox', { name: /Clearable Input/i })
@@ -968,7 +968,7 @@ export const Clearable: Story = {
     })
 
     await step('Verify clear icon disappears after clearing', async () => {
-      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+      const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')
       await expect(clearButton).not.toBeInTheDocument()
     })
 
@@ -1001,7 +1001,7 @@ export const ClearableWithRightIcon: Story = {
     const canvas = within(canvasElement)
 
     await step('Verify both clear icon and right icon are visible', async () => {
-      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+      const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')
       await expect(clearButton).toBeInTheDocument()
 
       const rightIcon = canvasElement.querySelector('.fa-magnifying-glass')
@@ -1009,7 +1009,7 @@ export const ClearableWithRightIcon: Story = {
     })
 
     await step('Click clear icon and verify input is cleared', async () => {
-      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')!
+      const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')!
       await userEvent.click(clearButton)
 
       const input = canvas.getByRole('textbox', { name: /Search/i })
@@ -1017,7 +1017,7 @@ export const ClearableWithRightIcon: Story = {
     })
 
     await step('Verify clear icon disappears but right icon remains', async () => {
-      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+      const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')
       await expect(clearButton).not.toBeInTheDocument()
 
       const rightIcon = canvasElement.querySelector('.fa-magnifying-glass')

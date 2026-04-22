@@ -1850,7 +1850,7 @@ describe("FzInput", () => {
         },
       });
 
-      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(false);
+      expect(wrapper.find('[aria-label="Cancella"]').exists()).toBe(false);
     });
 
     it("does not show clear icon when clearable is true but model is empty", () => {
@@ -1862,7 +1862,7 @@ describe("FzInput", () => {
         },
       });
 
-      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(false);
+      expect(wrapper.find('[aria-label="Cancella"]').exists()).toBe(false);
     });
 
     it("does not show clear icon when clearable is true but disabled", () => {
@@ -1875,7 +1875,7 @@ describe("FzInput", () => {
         },
       });
 
-      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(false);
+      expect(wrapper.find('[aria-label="Cancella"]').exists()).toBe(false);
     });
 
     it("does not show clear icon when clearable is true but readonly", () => {
@@ -1888,7 +1888,7 @@ describe("FzInput", () => {
         },
       });
 
-      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(false);
+      expect(wrapper.find('[aria-label="Cancella"]').exists()).toBe(false);
     });
 
     it("shows clear icon when clearable is true and model has value", () => {
@@ -1900,7 +1900,7 @@ describe("FzInput", () => {
         },
       });
 
-      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(true);
+      expect(wrapper.find('[aria-label="Cancella"]').exists()).toBe(true);
     });
 
     it("clears model and emits fzinput:clear when clear icon is clicked", async () => {
@@ -1912,7 +1912,7 @@ describe("FzInput", () => {
         },
       });
 
-      await wrapper.find('[aria-label="Clear"]').trigger("click");
+      await wrapper.find('[aria-label="Cancella"]').trigger("click");
 
       expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([""]);
       expect(wrapper.emitted("fzinput:clear")).toBeTruthy();
@@ -1947,7 +1947,7 @@ describe("FzInput", () => {
         },
       });
 
-      expect(wrapper.find('[aria-label="Clear"]').exists()).toBe(true);
+      expect(wrapper.find('[aria-label="Cancella"]').exists()).toBe(true);
       expect(wrapper.find(".custom-chevron").exists()).toBe(true);
     });
   });

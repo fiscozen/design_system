@@ -33,6 +33,7 @@
     aiReasoningDescription: "Suggerito dall'intelligenza artificiale",
     disableEmphasisReset: false,
     clearable: false,
+    clearAriaLabel: "Cancella",
   });
 
   defineOptions({
@@ -469,8 +470,8 @@
           " />
       </div>
       <div class="flex items-center gap-4">
-        <FzIconButton v-if="shouldShowClearIcon" iconName="xmark" size="md" variant="invisible" aria-label="Clear"
-          @click.stop="handleClear" />
+        <FzIconButton v-if="shouldShowClearIcon" iconName="xmark" size="md" variant="invisible"
+          :ariaLabel="clearAriaLabel" @click.stop="handleClear" />
         <slot name="right-icon">
           <FzIcon v-if="secondRightIcon && !secondRightIconButton" :name="secondRightIcon" size="md"
             :variant="secondRightIconVariant" :role="isSecondRightIconAccessible ? 'button' : undefined" :aria-label="isSecondRightIconAccessible ? secondRightIconAriaLabel : undefined

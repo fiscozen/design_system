@@ -253,10 +253,11 @@ export const Default: Story = {
       await expect(calendar).toBeVisible()
 
       // Select today's date (first available date cell)
-      const todayCell = calendar.querySelector('.dp__cell_offset') || calendar.querySelector('.dp__cell')
+      const todayCell =
+        calendar.querySelector('.dp__cell_offset') || calendar.querySelector('.dp__cell')
       if (todayCell) {
         await userEvent.click(todayCell as HTMLElement)
-        
+
         // Wait for calendar to potentially close (if autoApply is true)
         await waitFor(
           () => {
@@ -313,11 +314,11 @@ export const Disabled: Story = {
 
     await step('Verify update:modelValue is NOT called when disabled', async () => {
       const input = canvas.getByLabelText(/datepicker label/i)
-      
+
       // Try to interact with disabled input
       await userEvent.click(input)
       await userEvent.type(input, '15/01/2024')
-      
+
       // ROBUST CHECK: Verify the update:modelValue spy was NOT called
       await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
     })
@@ -1111,12 +1112,13 @@ export const KeyboardNavigation: Story = {
 
     await step('Select date by clicking a date cell and verify handler IS called', async () => {
       const calendar = getCalendar()
-      
+
       // Select a date by clicking on a date cell
-      const dateCell = calendar.querySelector('.dp__cell_offset') || calendar.querySelector('.dp__cell')
+      const dateCell =
+        calendar.querySelector('.dp__cell_offset') || calendar.querySelector('.dp__cell')
       if (dateCell) {
         await userEvent.click(dateCell as HTMLElement)
-        
+
         // Wait for selection to process
         await waitFor(
           () => {
@@ -1166,19 +1168,22 @@ export const TimePickerWithSeconds: Story = {
       await openCalendar(canvas)
     })
 
-    await step('Verify time picker section is displayed with hours, minutes, and seconds', async () => {
-      const calendar = getCalendar()
-      await expect(calendar).toBeInTheDocument()
+    await step(
+      'Verify time picker section is displayed with hours, minutes, and seconds',
+      async () => {
+        const calendar = getCalendar()
+        await expect(calendar).toBeInTheDocument()
 
-      // Custom time picker slot should be rendered
-      const timePicker = calendar.querySelector('.fz-time-picker')
-      await expect(timePicker).toBeInTheDocument()
+        // Custom time picker slot should be rendered
+        const timePicker = calendar.querySelector('.fz-time-picker')
+        await expect(timePicker).toBeInTheDocument()
 
-      // Seconds column should be visible (enableSeconds: true)
-      const labels = calendar.querySelectorAll('.fz-time-picker__label')
-      const labelTexts = Array.from(labels).map((l) => l.textContent?.trim())
-      await expect(labelTexts).toContain('Secondi')
-    })
+        // Seconds column should be visible (enableSeconds: true)
+        const labels = calendar.querySelectorAll('.fz-time-picker__label')
+        const labelTexts = Array.from(labels).map((l) => l.textContent?.trim())
+        await expect(labelTexts).toContain('Secondi')
+      }
+    )
 
     await step('Verify 24-hour format (no AM/PM)', async () => {
       const calendar = getCalendar()
@@ -1239,7 +1244,8 @@ export const ValueFormat: Story = {
       await expect(calendar).toBeVisible()
 
       // Select a date cell
-      const dateCell = calendar.querySelector('.dp__cell_offset') || calendar.querySelector('.dp__cell')
+      const dateCell =
+        calendar.querySelector('.dp__cell_offset') || calendar.querySelector('.dp__cell')
       if (dateCell) {
         await userEvent.click(dateCell as HTMLElement)
         await waitFor(
@@ -1328,7 +1334,9 @@ export const PlacementBottomStart: Story = {
   args: {
     placement: 'bottom-start'
   },
-  decorators: [() => ({ template: '<div style="max-width: 400px; padding: 80px 12px;"><story/></div>' })],
+  decorators: [
+    () => ({ template: '<div style="max-width: 400px; padding: 80px 12px;"><story/></div>' })
+  ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
@@ -1367,7 +1375,9 @@ export const PlacementBottomEnd: Story = {
   args: {
     placement: 'bottom-end'
   },
-  decorators: [() => ({ template: '<div style="max-width: 400px; padding: 80px 12px;"><story/></div>' })],
+  decorators: [
+    () => ({ template: '<div style="max-width: 400px; padding: 80px 12px;"><story/></div>' })
+  ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
@@ -1425,7 +1435,11 @@ export const CalendarFlipsAboveWhenAtBottom: Story = {
     `
   }),
   args: {},
-  decorators: [() => ({ template: '<div style="max-width: 400px; height: 100vh; overflow: hidden;"><story/></div>' })],
+  decorators: [
+    () => ({
+      template: '<div style="max-width: 400px; height: 100vh; overflow: hidden;"><story/></div>'
+    })
+  ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
@@ -1521,12 +1535,12 @@ export const Clearable: Story = {
     const canvas = within(canvasElement)
 
     await step('Verify clear icon is visible when date is selected', async () => {
-      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+      const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')
       await expect(clearButton).toBeInTheDocument()
     })
 
     await step('Click clear icon and verify date is cleared', async () => {
-      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')!
+      const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')!
       await userEvent.click(clearButton)
 
       await waitFor(
@@ -1541,7 +1555,7 @@ export const Clearable: Story = {
     await step('Verify clear icon disappears after clearing', async () => {
       await waitFor(
         () => {
-          const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+          const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')
           expect(clearButton).not.toBeInTheDocument()
         },
         { timeout: 1000 }
@@ -1585,7 +1599,7 @@ export const ClearableWithRightIcon: Story = {
     const canvas = within(canvasElement)
 
     await step('Verify both clear icon and right icon are visible', async () => {
-      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+      const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')
       await expect(clearButton).toBeInTheDocument()
 
       const rightIcon = canvasElement.querySelector('.fa-circle-info')
@@ -1593,7 +1607,7 @@ export const ClearableWithRightIcon: Story = {
     })
 
     await step('Click clear icon and verify date is cleared', async () => {
-      const clearButton = canvasElement.querySelector('[aria-label="Clear"]')!
+      const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')!
       await userEvent.click(clearButton)
 
       await waitFor(
@@ -1608,7 +1622,7 @@ export const ClearableWithRightIcon: Story = {
     await step('Verify clear icon disappears but right icon remains', async () => {
       await waitFor(
         () => {
-          const clearButton = canvasElement.querySelector('[aria-label="Clear"]')
+          const clearButton = canvasElement.querySelector('[aria-label="Cancella"]')
           expect(clearButton).not.toBeInTheDocument()
         },
         { timeout: 1000 }

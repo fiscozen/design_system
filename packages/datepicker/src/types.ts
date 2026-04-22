@@ -27,6 +27,12 @@ interface FzDatepickerProps
    * @default false
    */
   clearable?: boolean;
+  /**
+   * Accessible label for the clear button.
+   * Forwarded to the inner FzInput component.
+   * @default 'Cancella'
+   */
+  clearAriaLabel?: string;
 
   /**
    * Floating-UI placement for the datepicker menu.
