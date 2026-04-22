@@ -23,7 +23,7 @@ export default defineConfig({
       name: 'FzInput',
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', '@fiscozen/alert', '@fiscozen/button', '@fiscozen/icons'],
       output: {
         globals: {
           vue: 'Vue',
