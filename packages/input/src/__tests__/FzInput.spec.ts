@@ -1918,6 +1918,23 @@ describe("FzInput", () => {
       expect(wrapper.emitted("fzinput:clear")).toBeTruthy();
     });
 
+    it("returns focus to input after clearing", async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Label",
+          clearable: true,
+          modelValue: "some value",
+        },
+        attachTo: document.body,
+      });
+
+      await wrapper.find('[aria-label="Cancella"]').trigger("click");
+      await wrapper.vm.$nextTick();
+
+      expect(document.activeElement).toBe(wrapper.find("input").element);
+      wrapper.unmount();
+    });
+
     it("shows clear icon when right-icon slot is overridden", () => {
       const wrapper = mount(FzInput, {
         props: {
