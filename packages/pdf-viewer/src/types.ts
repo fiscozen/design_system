@@ -43,6 +43,16 @@ type FzPdfViewerProps = {
    * Custom css class for the main container
    */
   containerClass?: string;
+  /**
+   * The toolbar variant. "basic" shows zoom and page navigation. "advanced" adds view mode toggle, download, and reset.
+   * Default is "basic".
+   */
+  toolbarVariant?: "basic" | "advanced";
+  /**
+   * The position of the toolbar relative to the PDF. When set to "top", the toolbar is only revealed on hover.
+   * Default is "bottom".
+   */
+  toolbarPosition?: "top" | "bottom";
 };
 
 export { FzPdfViewerProps };

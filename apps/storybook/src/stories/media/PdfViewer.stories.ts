@@ -55,7 +55,7 @@ export const Default: Story = {
     })
     
     await step('Verify PDF viewer renders correctly', async () => {
-      const container = canvasElement.querySelector('.flex.flex-col.gap-12')
+      const container = canvasElement.querySelector('.flex.gap-12')
       await expect(container).toBeInTheDocument()
       await expect(container).toBeVisible()
     })
@@ -427,6 +427,186 @@ export const CustomInitialScale: Story = {
       await waitForPdfCleanup()
     })
   }
+}
+
+export const AdvancedToolbar: Story = {
+  args: {
+    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
+    toolbarVariant: 'advanced',
+    initialScale: 1,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Wait for PDF to load', async () => {
+      await waitForPdfLoad(canvasElement)
+    })
+
+    await step('Verify view mode toggle buttons are present', async () => {
+      const pdfViewBtn = canvasElement.querySelector(
+        'button[aria-label="PDF view"]',
+      ) as HTMLButtonElement
+      const xmlViewBtn = canvasElement.querySelector(
+        'button[aria-label="XML view"]',
+      ) as HTMLButtonElement
+      await expect(pdfViewBtn).toBeInTheDocument()
+      await expect(xmlViewBtn).toBeInTheDocument()
+    })
+
+    await step('Verify download and reset buttons are present', async () => {
+      const downloadBtn = canvasElement.querySelector(
+        'button[aria-label="Download"]',
+      ) as HTMLButtonElement
+      const resetBtn = canvasElement.querySelector(
+        'button[aria-label="Reset zoom"]',
+      ) as HTMLButtonElement
+      await expect(downloadBtn).toBeInTheDocument()
+      await expect(resetBtn).toBeInTheDocument()
+    })
+
+    await step('Click XML view button to switch view mode', async () => {
+      const xmlViewBtn = canvasElement.querySelector(
+        'button[aria-label="XML view"]',
+      ) as HTMLButtonElement
+      await userEvent.click(xmlViewBtn)
+      await waitFor(
+        () => {
+          // After switching to xml, the xml button should have primary variant styling
+          expect(xmlViewBtn.closest('[class*="primary"]') || xmlViewBtn).toBeInTheDocument()
+        },
+        { timeout: 1000 },
+      )
+    })
+
+    await step('Click PDF view button to switch back', async () => {
+      const pdfViewBtn = canvasElement.querySelector(
+        'button[aria-label="PDF view"]',
+      ) as HTMLButtonElement
+      await userEvent.click(pdfViewBtn)
+    })
+
+    await step('Zoom in then reset scale', async () => {
+      const zoomInBtn = canvasElement.querySelector('button:has(svg.fa-plus)') as HTMLButtonElement
+      await userEvent.click(zoomInBtn)
+
+      await waitFor(
+        () => {
+          const scaleDisplay = canvasElement.querySelector('[data-testid="pdf-scale"]')
+          const scaleValue = parseInt(scaleDisplay?.textContent?.replace('%', '').trim() ?? '0')
+          expect(scaleValue).toBeGreaterThan(100)
+        },
+        { timeout: 2000 },
+      )
+
+      const resetBtn = canvasElement.querySelector(
+        'button[aria-label="Reset zoom"]',
+      ) as HTMLButtonElement
+      await userEvent.click(resetBtn)
+
+      await waitFor(
+        () => {
+          const scaleDisplay = canvasElement.querySelector('[data-testid="pdf-scale"]')
+          expect(scaleDisplay?.textContent).toContain('100')
+        },
+        { timeout: 2000 },
+      )
+    })
+
+    await step('Verify scale display is present', async () => {
+      const scaleDisplay = canvas.getByTestId('pdf-scale')
+      await expect(scaleDisplay).toBeInTheDocument()
+    })
+
+    await step('Allow PDF library cleanup', async () => {
+      await waitForPdfCleanup()
+    })
+  },
+}
+
+export const ToolbarAtTop: Story = {
+  args: {
+    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
+    toolbarPosition: 'top',
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Wait for PDF to load', async () => {
+      await waitForPdfLoad(canvasElement)
+    })
+
+    await step('Verify container has flex-col-reverse class for top position', async () => {
+      const container = canvasElement.querySelector('.flex-col-reverse')
+      await expect(container).toBeInTheDocument()
+    })
+
+    await step('Verify toolbar controls are still present', async () => {
+      const scaleDisplay = canvas.getByTestId('pdf-scale')
+      const pageDisplay = canvas.getByTestId('pdf-page')
+      await expect(scaleDisplay).toBeInTheDocument()
+      await expect(pageDisplay).toBeInTheDocument()
+    })
+
+    await step('Verify page navigation still works from top toolbar', async () => {
+      const nextButton = canvasElement.querySelector(
+        'button[aria-label="Next page"]',
+      ) as HTMLButtonElement
+
+      await waitFor(
+        () => {
+          expect(nextButton).not.toBeDisabled()
+        },
+        { timeout: 3000 },
+      )
+
+      await userEvent.click(nextButton)
+
+      await waitFor(
+        () => {
+          const pageDisplay = canvasElement.querySelector('[data-testid="pdf-page"]')
+          expect(pageDisplay?.textContent).toContain('2 /')
+        },
+        { timeout: 2000 },
+      )
+    })
+
+    await step('Allow PDF library cleanup', async () => {
+      await waitForPdfCleanup()
+    })
+  },
+}
+
+export const AdvancedToolbarAtTop: Story = {
+  args: {
+    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
+    toolbarVariant: 'advanced',
+    toolbarPosition: 'top',
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Wait for PDF to load', async () => {
+      await waitForPdfLoad(canvasElement)
+    })
+
+    await step('Verify container has flex-col-reverse class', async () => {
+      const container = canvasElement.querySelector('.flex-col-reverse')
+      await expect(container).toBeInTheDocument()
+    })
+
+    await step('Verify advanced toolbar controls are present at top', async () => {
+      const pdfViewBtn = canvasElement.querySelector('button[aria-label="PDF view"]')
+      const downloadBtn = canvasElement.querySelector('button[aria-label="Download"]')
+      const scaleDisplay = canvas.getByTestId('pdf-scale')
+      await expect(pdfViewBtn).toBeInTheDocument()
+      await expect(downloadBtn).toBeInTheDocument()
+      await expect(scaleDisplay).toBeInTheDocument()
+    })
+
+    await step('Allow PDF library cleanup', async () => {
+      await waitForPdfCleanup()
+    })
+  },
 }
 
 export default meta

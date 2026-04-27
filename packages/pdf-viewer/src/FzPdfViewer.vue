@@ -1,6 +1,10 @@
 <template>
   <div
-    :class="[staticContainerClass, containerClass]"
+    :class="[
+      'flex gap-12',
+      toolbarPosition === 'top' ? 'flex-col-reverse' : 'flex-col',
+      containerClass,
+    ]"
     :style="{ height, width }"
   >
     <div :class="[staticPdfContainerClass, pdfContainerClass]">
@@ -8,38 +12,43 @@
         <VuePDF :pdf :page :scale :class="['shadow-md', computedCursorClass]" />
       </div>
     </div>
-    <div class="flex justify-between">
+
+    <!-- Basic toolbar -->
+    <div v-if="toolbarVariant === 'basic'" class="flex justify-between">
       <div class="flex items-center gap-8">
         <FzIconButton
           iconName="minus"
           iconVariant="fas"
           :size
           variant="secondary"
-          :disabled="scale <= 0.25"
-          @click="handleSizeChange(-0.25)"
+          :disabled="scale <= minScale"
+          aria-label="Zoom out"
+          @click="handleScaleChange(-scaleStep)"
         />
         <span
           :class="[staticTextClass, computedTextClass]"
           data-testid="pdf-scale"
-          >{{ scale * 100 }} %</span
+          >{{ Math.round(scale * 100) }} %</span
         >
         <FzIconButton
           iconName="plus"
           iconVariant="fas"
           :size
           variant="secondary"
-          :disabled="scale >= 2"
-          @click.prevent="handleSizeChange(0.25)"
+          :disabled="scale >= maxScale"
+          aria-label="Zoom in"
+          @click="handleScaleChange(scaleStep)"
         />
       </div>
-      <div class="flex items-center gap-8">
+      <div v-if="pages > 1" class="flex items-center gap-8">
         <FzIconButton
           iconName="arrow-left"
           iconVariant="fas"
           :size
           variant="secondary"
           :disabled="page <= 1"
-          @click.prevent="handlePageChange(page - 1)"
+          aria-label="Previous page"
+          @click="handlePageChange(page - 1)"
         />
         <span
           :class="[staticTextClass, computedTextClass]"
@@ -52,7 +61,96 @@
           :size
           variant="secondary"
           :disabled="page >= pages"
-          @click.prevent="handlePageChange(page + 1)"
+          aria-label="Next page"
+          @click="handlePageChange(page + 1)"
+        />
+      </div>
+    </div>
+
+    <!-- Advanced toolbar -->
+    <div v-else class="flex justify-between items-center">
+      <div class="flex items-center gap-8">
+        <FzIconButton
+          iconName="file-pdf"
+          iconVariant="fas"
+          :size
+          :variant="viewMode === 'pdf' ? 'primary' : 'secondary'"
+          aria-label="PDF view"
+          @click="viewMode = 'pdf'"
+        />
+        <FzIconButton
+          iconName="code"
+          iconVariant="fas"
+          :size
+          :variant="viewMode === 'xml' ? 'primary' : 'secondary'"
+          aria-label="XML view"
+          @click="viewMode = 'xml'"
+        />
+      </div>
+      <div v-if="pages > 1" class="flex items-center gap-8">
+        <FzIconButton
+          iconName="arrow-left"
+          iconVariant="fas"
+          :size
+          variant="secondary"
+          :disabled="page <= 1"
+          aria-label="Previous page"
+          @click="handlePageChange(page - 1)"
+        />
+        <span
+          :class="[staticTextClass, computedTextClass]"
+          data-testid="pdf-page"
+          >{{ page }} / {{ pages }}</span
+        >
+        <FzIconButton
+          iconName="arrow-right"
+          iconVariant="fas"
+          :size
+          variant="secondary"
+          :disabled="page >= pages"
+          aria-label="Next page"
+          @click="handlePageChange(page + 1)"
+        />
+      </div>
+      <div class="flex items-center gap-8">
+        <FzIconButton
+          iconName="minus"
+          iconVariant="fas"
+          :size
+          variant="secondary"
+          :disabled="scale <= minScale"
+          aria-label="Zoom out"
+          @click="handleScaleChange(-scaleStep)"
+        />
+        <span
+          :class="[staticTextClass, computedTextClass]"
+          data-testid="pdf-scale"
+          >{{ Math.round(scale * 100) }} %</span
+        >
+        <FzIconButton
+          iconName="plus"
+          iconVariant="fas"
+          :size
+          variant="secondary"
+          :disabled="scale >= maxScale"
+          aria-label="Zoom in"
+          @click="handleScaleChange(scaleStep)"
+        />
+        <FzIconButton
+          iconName="download"
+          iconVariant="fas"
+          :size
+          variant="secondary"
+          aria-label="Download"
+          @click="emit('download')"
+        />
+        <FzIconButton
+          iconName="rotate-left"
+          iconVariant="fas"
+          :size
+          variant="secondary"
+          aria-label="Reset zoom"
+          @click="resetScale"
         />
       </div>
     </div>
@@ -60,7 +158,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { FzPdfViewerProps } from "./types";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
 import { FzIconButton } from "@fiscozen/button";
@@ -71,14 +169,25 @@ const props = withDefaults(defineProps<FzPdfViewerProps>(), {
   width: "512px",
   initialPage: 1,
   initialScale: 1,
+  minScale: 0.25,
+  maxScale: 2,
+  scaleStep: 0.25,
+  toolbarVariant: "basic",
+  toolbarPosition: "bottom",
 });
+
+const emit = defineEmits<{
+  download: [];
+}>();
+
+const viewMode = defineModel<"pdf" | "xml">("viewMode", { default: "pdf" });
+
 const { pdf, pages } = usePDF(props.src);
 
-const staticContainerClass = "flex flex-col gap-12";
 const staticPdfContainerClass =
   "bg-grey-100 p-24 flex overflow-hidden h-full w-full rounded justify-center items-center";
 const staticTextClass = "text-grey-500 font-medium";
-const staticVuePDFClass = "overflow-auto h-full ";
+const staticVuePDFClass = "overflow-auto h-full";
 
 const mapSizeToText = {
   sm: "text-sm",
@@ -89,7 +198,6 @@ const page = ref(props.initialPage);
 const scale = ref(props.initialScale);
 const mouseDown = ref(false);
 const overflowContainer = ref<HTMLElement>();
-
 const isOverflowing = ref(false);
 
 const computedCursorClass = computed(() => {
@@ -105,11 +213,15 @@ function handlePageChange(newPage: number) {
   }
 }
 
-function handleSizeChange(value: number) {
-  const newScale = scale.value + value;
-  if (newScale >= 0.25 && newScale <= 2) {
+function handleScaleChange(delta: number) {
+  const newScale = Math.round((scale.value + delta) * 100) / 100;
+  if (newScale >= props.minScale && newScale <= props.maxScale) {
     scale.value = newScale;
   }
+}
+
+function resetScale() {
+  scale.value = props.initialScale;
 }
 
 const checkOverflow = () => {
@@ -137,7 +249,7 @@ function handleOverflowDrag() {
     scrollTop = slider.scrollTop;
   };
 
-  const stopDragging = (e: MouseEvent) => {
+  const stopDragging = (_e: MouseEvent) => {
     mouseDown.value = false;
   };
 
@@ -152,7 +264,6 @@ function handleOverflowDrag() {
     slider.scrollTop = scrollTop - scrollY;
   };
 
-  // Add the event listeners
   slider.addEventListener("mousemove", move, false);
   slider.addEventListener("mousedown", startDragging, false);
   slider.addEventListener("mouseup", stopDragging, false);
