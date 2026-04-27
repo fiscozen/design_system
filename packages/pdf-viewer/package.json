@@ -39,6 +39,6 @@
   "license": "MIT",
   "dependencies": {
     "@fiscozen/button": "workspace:*",
-    "@tato30/vue-pdf": "^1.11.4"
+    "@tato30/vue-pdf": "^2.0.2"
   }
 }

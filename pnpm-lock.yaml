@@ -1011,7 +1011,7 @@ importers:
         version: 4.6.2(vite@5.4.21(@types/node@18.19.130)(lightningcss@1.32.0))(vue@3.5.26(typescript@5.3.3))
       '@vitest/coverage-v8':
         specifier: ^1.2.1
-        version: 1.6.1(vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0))
+        version: 1.6.1(vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0))
       '@vue/test-utils':
         specifier: ^2.4.3
         version: 2.4.6
@@ -1038,7 +1038,7 @@ importers:
         version: 3.9.1(@types/node@18.19.130)(rollup@4.55.1)(typescript@5.3.3)(vite@5.4.21(@types/node@18.19.130)(lightningcss@1.32.0))
       vitest:
         specifier: ^1.2.0
-        version: 1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0)
+        version: 1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0)
       vue-tsc:
         specifier: ^1.8.25
         version: 1.8.27(typescript@5.3.3)
@@ -2448,8 +2448,8 @@ importers:
         specifier: workspace:*
         version: link:../button
       '@tato30/vue-pdf':
-        specifier: ^1.11.4
-        version: 1.11.5(vue@3.5.26(typescript@5.7.3))
+        specifier: ^2.0.2
+        version: 2.0.2(vue@3.5.26(typescript@5.7.3))
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.19(yaml@2.8.2)
@@ -4817,8 +4817,8 @@ packages:
       storybook: ^10.3.3
       vue: ^3.0.0
 
-  '@tato30/vue-pdf@1.11.5':
-    resolution: {integrity: sha512-SV6GQx9sD0C0uO/bnAdG1k5D8OtM3lHtYKIgodCq2MbhOaHHpQoyhlSaec9Mo5JifSG4zYDFVNvbcZiMOBkyeQ==}
+  '@tato30/vue-pdf@2.0.2':
+    resolution: {integrity: sha512-HxzQVBaLn8ibFQOu1izyb7NCug1PT2WqdIzUcauh33X6EZNCUkAAT1I9tweHeSaXtUQhaM62KYMbEuH8hToirQ==}
     peerDependencies:
       vue: ^3.2.33
 
@@ -7367,6 +7367,9 @@ packages:
     resolution: {integrity: sha512-tn+OxutdqhvoByKJ7p84FZBSUDfUB76bcvj0ugLBvgE9V52LFcnz8cauCDKi6otnctvFCqa9XkrU35pBY5Baig==}
     engines: {node: '>=18'}
 
+  node-readable-to-web-readable-stream@0.4.2:
+    resolution: {integrity: sha512-/cMZNI34v//jUTrI+UIo4ieHAB5EZRY/+7OmXZgBxaWBMcW2tGdceIw06RFxWxrKZ5Jp3sI2i5TsRo+CBhtVLQ==}
+
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
@@ -7596,8 +7599,8 @@ packages:
     resolution: {integrity: sha512-//nshmD55c46FuFw26xV/xFAaB5HF9Xdap7HJBBnrKdAd6/GxDBaNA1870O79+9ueg61cZLSVc+OaFlfmObYVQ==}
     engines: {node: '>= 14.16'}
 
-  pdfjs-dist@5.4.296:
-    resolution: {integrity: sha512-DlOzet0HO7OEnmUmB6wWGJrrdvbyJKftI1bhMitK7O2N8W2gc757yyYBbINy9IDafXAV9wmKr9t7xsTaNKRG5Q==}
+  pdfjs-dist@5.4.624:
+    resolution: {integrity: sha512-sm6TxKTtWv1Oh6n3C6J6a8odejb5uO4A4zo/2dgkHuC0iu8ZMAXOezEODkVaoVp8nX1Xzr+0WxFJJmUr45hQzg==}
     engines: {node: '>=20.16.0 || >=22.3.0'}
 
   pend@1.2.0:
@@ -10040,9 +10043,9 @@ snapshots:
       vue: 3.5.26(typescript@5.7.3)
       vue-component-type-helpers: 3.2.7
 
-  '@tato30/vue-pdf@1.11.5(vue@3.5.26(typescript@5.7.3))':
+  '@tato30/vue-pdf@2.0.2(vue@3.5.26(typescript@5.7.3))':
     dependencies:
-      pdfjs-dist: 5.4.296
+      pdfjs-dist: 5.4.624
       vue: 3.5.26(typescript@5.7.3)
 
   '@testing-library/dom@10.4.1':
@@ -10362,7 +10365,7 @@ snapshots:
       - vite
     optional: true
 
-  '@vitest/coverage-v8@1.6.1(vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0))':
+  '@vitest/coverage-v8@1.6.1(vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -10377,7 +10380,7 @@ snapshots:
       std-env: 3.10.0
       strip-literal: 2.1.1
       test-exclude: 6.0.0
-      vitest: 1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0)
+      vitest: 1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -13110,6 +13113,9 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
+  node-readable-to-web-readable-stream@0.4.2:
+    optional: true
+
   node-releases@2.0.27: {}
 
   nopt@7.2.1:
@@ -13379,9 +13385,10 @@ snapshots:
 
   pathval@2.0.1: {}
 
-  pdfjs-dist@5.4.296:
+  pdfjs-dist@5.4.624:
     optionalDependencies:
       '@napi-rs/canvas': 0.1.88
+      node-readable-to-web-readable-stream: 0.4.2
 
   pend@1.2.0: {}
 
@@ -14413,7 +14420,7 @@ snapshots:
       jiti: 1.21.7
       yaml: 2.8.2
 
-  vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0):
+  vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0):
     dependencies:
       '@vitest/expect': 1.6.1
       '@vitest/runner': 1.6.1
