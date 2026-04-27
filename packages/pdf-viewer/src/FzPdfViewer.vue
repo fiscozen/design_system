@@ -9,7 +9,7 @@
   >
     <div :class="[staticPdfContainerClass, pdfContainerClass]">
       <div :class="[staticVuePDFClass]" ref="overflowContainer">
-        <VuePDF :pdf :page :scale :class="['shadow-md', computedCursorClass]" />
+        <VuePDF :pdf :page :scale :class="['shadow-md', cursorClass]" />
       </div>
     </div>
 
@@ -194,11 +194,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { FzPdfViewerProps } from "./types";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
 import { FzIconButton } from "@fiscozen/button";
 import { FzTabs, FzTab } from "@fiscozen/tab";
+import { useOverflowDrag } from "./composables/useOverflowDrag";
 
 const props = withDefaults(defineProps<FzPdfViewerProps>(), {
   environment: "frontoffice",
@@ -233,14 +234,9 @@ const mapEnvironmentToText = {
 
 const page = ref(props.initialPage);
 const scale = ref(props.initialScale);
-const mouseDown = ref(false);
 const overflowContainer = ref<HTMLElement>();
-const isOverflowing = ref(false);
 
-const computedCursorClass = computed(() => {
-  if (!isOverflowing.value) return "";
-  return mouseDown.value ? "cursor-grabbing" : "cursor-grab";
-});
+const { cursorClass } = useOverflowDrag(overflowContainer);
 
 const computedTextClass = computed(
   () => mapEnvironmentToText[props.environment],
@@ -266,68 +262,6 @@ function resetScale() {
 function handleViewModeChange(title: string) {
   viewMode.value = title as "pdf" | "xml";
 }
-
-const checkOverflow = () => {
-  if (overflowContainer.value) {
-    isOverflowing.value =
-      overflowContainer.value.scrollHeight >
-        overflowContainer.value.clientHeight ||
-      overflowContainer.value.scrollWidth > overflowContainer.value.clientWidth;
-  }
-};
-
-function handleOverflowDrag() {
-  let startX = 0,
-    scrollLeft = 0,
-    startY = 0,
-    scrollTop = 0;
-  const slider = overflowContainer.value;
-  if (!slider) return;
-
-  const startDragging = (e: MouseEvent) => {
-    mouseDown.value = true;
-    startX = e.pageX - slider.offsetLeft;
-    scrollLeft = slider.scrollLeft;
-    startY = e.pageY - slider.offsetTop;
-    scrollTop = slider.scrollTop;
-  };
-
-  const stopDragging = (_e: MouseEvent) => {
-    mouseDown.value = false;
-  };
-
-  const move = (e: MouseEvent) => {
-    e.preventDefault();
-    if (!mouseDown.value) return;
-    const x = e.pageX - slider.offsetLeft;
-    const scroll = x - startX;
-    const y = e.pageY - slider.offsetTop;
-    const scrollY = y - startY;
-    slider.scrollLeft = scrollLeft - scroll;
-    slider.scrollTop = scrollTop - scrollY;
-  };
-
-  slider.addEventListener("mousemove", move, false);
-  slider.addEventListener("mousedown", startDragging, false);
-  slider.addEventListener("mouseup", stopDragging, false);
-  slider.addEventListener("mouseleave", stopDragging, false);
-}
-
-let resizeObserver: ResizeObserver | null;
-
-onMounted(() => {
-  handleOverflowDrag();
-  resizeObserver = new ResizeObserver(checkOverflow);
-  if (overflowContainer.value) {
-    resizeObserver.observe(overflowContainer.value);
-  }
-});
-
-onBeforeUnmount(() => {
-  if (resizeObserver && overflowContainer.value) {
-    resizeObserver.unobserve(overflowContainer.value);
-  }
-});
 </script>
 
 <style scoped>
