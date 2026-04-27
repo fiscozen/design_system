@@ -34,6 +34,21 @@ vi.mock("@tato30/vue-pdf", async () => {
   };
 });
 
+// Mock FzTabs / FzTab
+const mockFzTabs = {
+  name: "FzTabs",
+  template: '<div data-testid="fz-tabs"><slot /></div>',
+  emits: ["change"],
+  props: ["environment", "tabStyle"],
+};
+
+const mockFzTab = {
+  name: "FzTab",
+  template:
+    '<div :data-title="title" :data-initial-selected="initialSelected"></div>',
+  props: ["title", "icon", "initialSelected", "disabled"],
+};
+
 // Mock FzIconButton
 const mockFzIconButton = {
   name: "FzIconButton",
@@ -981,31 +996,37 @@ describe("FzPdfViewer", () => {
     });
 
     describe("advanced toolbar", () => {
-      it("should render 8 buttons (view toggle + nav + zoom + download + reset)", () => {
+      const advancedStubs = {
+        FzIconButton: mockFzIconButton,
+        FzTabs: mockFzTabs,
+        FzTab: mockFzTab,
+      };
+
+      it("should render FzTabs and 6 icon buttons (nav + zoom + download + reset)", () => {
         wrapper = mount(FzPdfViewer, {
           props: {
             src: "https://example.com/test.pdf",
             toolbarVariant: "advanced",
           },
-          global: { stubs: { FzIconButton: mockFzIconButton } },
+          global: { stubs: advancedStubs },
         });
-        const buttons = wrapper.findAllComponents({ name: "FzIconButton" });
-        expect(buttons).toHaveLength(8);
+        expect(wrapper.findComponent({ name: "FzTabs" }).exists()).toBe(true);
+        expect(
+          wrapper.findAllComponents({ name: "FzIconButton" }),
+        ).toHaveLength(6);
       });
 
-      it("should render view mode toggle buttons", () => {
+      it("should render FzTab children with pdf and xml titles", () => {
         wrapper = mount(FzPdfViewer, {
           props: {
             src: "https://example.com/test.pdf",
             toolbarVariant: "advanced",
           },
-          global: { stubs: { FzIconButton: mockFzIconButton } },
+          global: { stubs: advancedStubs },
         });
-        const buttons = wrapper.findAllComponents({ name: "FzIconButton" });
-        const pdfBtn = buttons.find((b) => b.props("iconName") === "file-pdf");
-        const codeBtn = buttons.find((b) => b.props("iconName") === "code");
-        expect(pdfBtn).toBeDefined();
-        expect(codeBtn).toBeDefined();
+        const tabs = wrapper.findAllComponents({ name: "FzTab" });
+        expect(tabs.find((t) => t.props("title") === "pdf")).toBeDefined();
+        expect(tabs.find((t) => t.props("title") === "xml")).toBeDefined();
       });
 
       it("should render download and reset buttons", () => {
@@ -1014,67 +1035,61 @@ describe("FzPdfViewer", () => {
             src: "https://example.com/test.pdf",
             toolbarVariant: "advanced",
           },
-          global: { stubs: { FzIconButton: mockFzIconButton } },
+          global: { stubs: advancedStubs },
         });
         const buttons = wrapper.findAllComponents({ name: "FzIconButton" });
-        const downloadBtn = buttons.find(
-          (b) => b.props("iconName") === "download",
-        );
-        const resetBtn = buttons.find(
-          (b) => b.props("iconName") === "rotate-left",
-        );
-        expect(downloadBtn).toBeDefined();
-        expect(resetBtn).toBeDefined();
+        expect(
+          buttons.find((b) => b.props("iconName") === "arrow-down-to-line"),
+        ).toBeDefined();
+        expect(
+          buttons.find((b) => b.props("iconName") === "clock-rotate-left"),
+        ).toBeDefined();
       });
 
-      it("should default viewMode to pdf (pdf button is primary)", () => {
+      it("should default viewMode to pdf (pdf FzTab has initialSelected)", () => {
         wrapper = mount(FzPdfViewer, {
           props: {
             src: "https://example.com/test.pdf",
             toolbarVariant: "advanced",
           },
-          global: { stubs: { FzIconButton: mockFzIconButton } },
+          global: { stubs: advancedStubs },
         });
-        const buttons = wrapper.findAllComponents({ name: "FzIconButton" });
-        const pdfBtn = buttons.find((b) => b.props("iconName") === "file-pdf");
-        const codeBtn = buttons.find((b) => b.props("iconName") === "code");
-        expect(pdfBtn?.props("variant")).toBe("primary");
-        expect(codeBtn?.props("variant")).toBe("secondary");
+        const tabs = wrapper.findAllComponents({ name: "FzTab" });
+        const pdfTab = tabs.find((t) => t.props("title") === "pdf");
+        const xmlTab = tabs.find((t) => t.props("title") === "xml");
+        expect(pdfTab?.props("initialSelected")).toBe(true);
+        expect(xmlTab?.props("initialSelected")).toBe(false);
       });
 
-      it("should switch viewMode to xml when code button is clicked", async () => {
+      it("should emit update:viewMode when FzTabs emits change with xml", async () => {
         wrapper = mount(FzPdfViewer, {
           props: {
             src: "https://example.com/test.pdf",
             toolbarVariant: "advanced",
           },
-          global: { stubs: { FzIconButton: mockFzIconButton } },
+          global: { stubs: advancedStubs },
         });
-        const buttons = wrapper.findAllComponents({ name: "FzIconButton" });
-        const codeBtn = buttons.find((b) => b.props("iconName") === "code");
-        await codeBtn!.trigger("click");
+        const tabs = wrapper.findComponent({ name: "FzTabs" });
+        await tabs.vm.$emit("change", "xml");
         await nextTick();
-        expect(codeBtn?.props("variant")).toBe("primary");
-        const pdfBtn = wrapper
-          .findAllComponents({ name: "FzIconButton" })
-          .find((b) => b.props("iconName") === "file-pdf");
-        expect(pdfBtn?.props("variant")).toBe("secondary");
-      });
-
-      it("should emit update:viewMode when view toggle is clicked", async () => {
-        wrapper = mount(FzPdfViewer, {
-          props: {
-            src: "https://example.com/test.pdf",
-            toolbarVariant: "advanced",
-          },
-          global: { stubs: { FzIconButton: mockFzIconButton } },
-        });
-        const codeBtn = wrapper
-          .findAllComponents({ name: "FzIconButton" })
-          .find((b) => b.props("iconName") === "code");
-        await codeBtn!.trigger("click");
         expect(wrapper.emitted("update:viewMode")).toBeDefined();
         expect(wrapper.emitted("update:viewMode")![0]).toEqual(["xml"]);
+      });
+
+      it("should emit update:viewMode with pdf when switching back", async () => {
+        wrapper = mount(FzPdfViewer, {
+          props: {
+            src: "https://example.com/test.pdf",
+            toolbarVariant: "advanced",
+          },
+          global: { stubs: advancedStubs },
+        });
+        const tabs = wrapper.findComponent({ name: "FzTabs" });
+        await tabs.vm.$emit("change", "xml");
+        await tabs.vm.$emit("change", "pdf");
+        await nextTick();
+        const emitted = wrapper.emitted("update:viewMode")!;
+        expect(emitted[emitted.length - 1]).toEqual(["pdf"]);
       });
 
       it("should emit download event when download button is clicked", async () => {
@@ -1083,11 +1098,11 @@ describe("FzPdfViewer", () => {
             src: "https://example.com/test.pdf",
             toolbarVariant: "advanced",
           },
-          global: { stubs: { FzIconButton: mockFzIconButton } },
+          global: { stubs: advancedStubs },
         });
         const downloadBtn = wrapper
           .findAllComponents({ name: "FzIconButton" })
-          .find((b) => b.props("iconName") === "download");
+          .find((b) => b.props("iconName") === "arrow-down-to-line");
         await downloadBtn!.trigger("click");
         expect(wrapper.emitted("download")).toHaveLength(1);
       });
@@ -1099,7 +1114,7 @@ describe("FzPdfViewer", () => {
             toolbarVariant: "advanced",
             initialScale: 1.5,
           },
-          global: { stubs: { FzIconButton: mockFzIconButton } },
+          global: { stubs: advancedStubs },
         });
         const plusBtn = wrapper
           .findAllComponents({ name: "FzIconButton" })
@@ -1112,7 +1127,7 @@ describe("FzPdfViewer", () => {
 
         const resetBtn = wrapper
           .findAllComponents({ name: "FzIconButton" })
-          .find((b) => b.props("iconName") === "rotate-left");
+          .find((b) => b.props("iconName") === "clock-rotate-left");
         await resetBtn!.trigger("click");
         await nextTick();
         expect(wrapper.find('[data-testid="pdf-scale"]').text()).toContain(
@@ -1130,11 +1145,12 @@ describe("FzPdfViewer", () => {
             src: "https://example.com/single.pdf",
             toolbarVariant: "advanced",
           },
-          global: { stubs: { FzIconButton: mockFzIconButton } },
+          global: { stubs: advancedStubs },
         });
-        // file-pdf, code, minus, plus, download, rotate-left = 6 (no nav buttons)
-        const buttons = wrapper.findAllComponents({ name: "FzIconButton" });
-        expect(buttons).toHaveLength(6);
+        // minus, plus, arrow-down-to-line, clock-rotate-left = 4 (no nav buttons)
+        expect(
+          wrapper.findAllComponents({ name: "FzIconButton" }),
+        ).toHaveLength(4);
         expect(wrapper.find('[data-testid="pdf-page"]').exists()).toBe(false);
       });
     });
@@ -1272,6 +1288,8 @@ describe("FzPdfViewer", () => {
         global: {
           stubs: {
             FzIconButton: mockFzIconButton,
+            FzTabs: mockFzTabs,
+            FzTab: mockFzTab,
           },
         },
       });

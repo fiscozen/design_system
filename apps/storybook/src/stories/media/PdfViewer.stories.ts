@@ -442,15 +442,10 @@ export const AdvancedToolbar: Story = {
       await waitForPdfLoad(canvasElement)
     })
 
-    await step('Verify view mode toggle buttons are present', async () => {
-      const pdfViewBtn = canvasElement.querySelector(
-        'button[aria-label="PDF view"]',
-      ) as HTMLButtonElement
-      const xmlViewBtn = canvasElement.querySelector(
-        'button[aria-label="XML view"]',
-      ) as HTMLButtonElement
-      await expect(pdfViewBtn).toBeInTheDocument()
-      await expect(xmlViewBtn).toBeInTheDocument()
+    await step('Verify view mode tab container is present', async () => {
+      const tabContainer = canvasElement.querySelector('.tab-container')
+      await expect(tabContainer).toBeInTheDocument()
+      await expect(tabContainer).toBeVisible()
     })
 
     await step('Verify download and reset buttons are present', async () => {
@@ -464,25 +459,21 @@ export const AdvancedToolbar: Story = {
       await expect(resetBtn).toBeInTheDocument()
     })
 
-    await step('Click XML view button to switch view mode', async () => {
-      const xmlViewBtn = canvasElement.querySelector(
-        'button[aria-label="XML view"]',
+    await step('Click XML tab to switch view mode', async () => {
+      const tabs = canvasElement.querySelectorAll('.tab-container button')
+      const xmlTab = Array.from(tabs).find(
+        (btn) => btn.getAttribute('title')?.toLowerCase() === 'xml',
       ) as HTMLButtonElement
-      await userEvent.click(xmlViewBtn)
-      await waitFor(
-        () => {
-          // After switching to xml, the xml button should have primary variant styling
-          expect(xmlViewBtn.closest('[class*="primary"]') || xmlViewBtn).toBeInTheDocument()
-        },
-        { timeout: 1000 },
-      )
+      await expect(xmlTab).toBeInTheDocument()
+      await userEvent.click(xmlTab)
     })
 
-    await step('Click PDF view button to switch back', async () => {
-      const pdfViewBtn = canvasElement.querySelector(
-        'button[aria-label="PDF view"]',
+    await step('Click PDF tab to switch back', async () => {
+      const tabs = canvasElement.querySelectorAll('.tab-container button')
+      const pdfTab = Array.from(tabs).find(
+        (btn) => btn.getAttribute('title')?.toLowerCase() === 'pdf',
       ) as HTMLButtonElement
-      await userEvent.click(pdfViewBtn)
+      await userEvent.click(pdfTab)
     })
 
     await step('Zoom in then reset scale', async () => {
@@ -595,10 +586,10 @@ export const AdvancedToolbarAtTop: Story = {
     })
 
     await step('Verify advanced toolbar controls are present at top', async () => {
-      const pdfViewBtn = canvasElement.querySelector('button[aria-label="PDF view"]')
+      const tabContainer = canvasElement.querySelector('.tab-container')
       const downloadBtn = canvasElement.querySelector('button[aria-label="Download"]')
       const scaleDisplay = canvas.getByTestId('pdf-scale')
-      await expect(pdfViewBtn).toBeInTheDocument()
+      await expect(tabContainer).toBeInTheDocument()
       await expect(downloadBtn).toBeInTheDocument()
       await expect(scaleDisplay).toBeInTheDocument()
     })
