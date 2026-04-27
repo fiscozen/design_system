@@ -69,24 +69,14 @@
 
     <!-- Advanced toolbar -->
     <div v-else class="flex justify-between items-center">
-      <div class="flex items-center gap-8">
-        <FzIconButton
-          iconName="file-pdf"
-          iconVariant="fas"
-          :size
-          :variant="viewMode === 'pdf' ? 'primary' : 'secondary'"
-          aria-label="PDF view"
-          @click="viewMode = 'pdf'"
+      <FzTabs class="view-mode-tabs" @change="handleViewModeChange">
+        <FzTab
+          title="pdf"
+          icon="file"
+          :initialSelected="viewMode === 'pdf'"
         />
-        <FzIconButton
-          iconName="code"
-          iconVariant="fas"
-          :size
-          :variant="viewMode === 'xml' ? 'primary' : 'secondary'"
-          aria-label="XML view"
-          @click="viewMode = 'xml'"
-        />
-      </div>
+        <FzTab title="xml" icon="code" :initialSelected="viewMode === 'xml'" />
+      </FzTabs>
       <div v-if="pages > 1" class="flex items-center gap-8">
         <FzIconButton
           iconName="arrow-left"
@@ -137,18 +127,18 @@
           @click="handleScaleChange(scaleStep)"
         />
         <FzIconButton
-          iconName="download"
+          iconName="arrow-down-to-line"
           iconVariant="fas"
           :size
-          variant="secondary"
+          variant="invisible"
           aria-label="Download"
           @click="emit('download')"
         />
         <FzIconButton
-          iconName="rotate-left"
+          iconName="clock-rotate-left"
           iconVariant="fas"
           :size
-          variant="secondary"
+          variant="invisible"
           aria-label="Reset zoom"
           @click="resetScale"
         />
@@ -162,6 +152,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { FzPdfViewerProps } from "./types";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
 import { FzIconButton } from "@fiscozen/button";
+import { FzTabs, FzTab } from "@fiscozen/tab";
 
 const props = withDefaults(defineProps<FzPdfViewerProps>(), {
   size: "md",
@@ -222,6 +213,10 @@ function handleScaleChange(delta: number) {
 
 function resetScale() {
   scale.value = props.initialScale;
+}
+
+function handleViewModeChange(title: string) {
+  viewMode.value = title as "pdf" | "xml";
 }
 
 const checkOverflow = () => {
@@ -287,4 +282,10 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+/* Hide the text label inside FzTab buttons — icon-only appearance */
+/* FzIcon renders as <span role="presentation">, so exclude it */
+.view-mode-tabs :deep(.tab-container button span:not([role="presentation"])) {
+  display: none;
+}
+</style>

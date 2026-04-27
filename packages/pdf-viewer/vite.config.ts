@@ -23,7 +23,7 @@ export default defineConfig({
       name: 'FzPdfViewer',
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', '@fiscozen/button', '@fiscozen/tab'],
       output: {
         globals: {
           vue: 'Vue',

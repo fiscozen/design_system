@@ -2447,6 +2447,9 @@ importers:
       '@fiscozen/button':
         specifier: workspace:*
         version: link:../button
+      '@fiscozen/tab':
+        specifier: workspace:*
+        version: link:../tab
       '@tato30/vue-pdf':
         specifier: ^2.0.2
         version: 2.0.2(vue@3.5.26(typescript@5.7.3))
