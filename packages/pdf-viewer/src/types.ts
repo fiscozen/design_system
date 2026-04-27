@@ -4,9 +4,10 @@ type FzPdfViewerProps = {
    */
   src: string;
   /**
-   * The size of the pdf-viewer. Possible values are "sm" or "md"
+   * The environment variant for sizing. "frontoffice" is smaller, "backoffice" is larger.
+   * Default is "frontoffice".
    */
-  size?: "sm" | "md";
+  environment?: "frontoffice" | "backoffice";
   /**
    * The height of the PDF container.
    */

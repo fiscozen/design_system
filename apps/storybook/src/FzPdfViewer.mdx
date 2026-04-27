@@ -1,0 +1,259 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Media/FzPdfViewer" />
+
+# FzPdfViewer
+
+PDF viewer component with toolbar controls for zoom and page navigation. Supports two toolbar variants, configurable positioning, drag-to-pan, and an environment prop for frontoffice/backoffice sizing.
+
+## Features
+
+- **Two Toolbar Variants**: `basic` (zoom + page navigation) and `advanced` (adds view mode toggle, download, and reset zoom)
+- **Toolbar Positioning**: Toolbar can be placed at the bottom (default) or top; when at top, it is hidden and revealed on hover
+- **Environment Sizing**: `frontoffice` (smaller text) and `backoffice` (larger text) variants
+- **Drag to Pan**: Click and drag to pan when the PDF overflows its container
+- **View Mode Toggle**: Switch between PDF and XML views (advanced toolbar only)
+- **Keyboard Accessible**: All controls are keyboard navigable
+
+## Installation
+
+```bash
+npm install @fiscozen/pdf-viewer
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { FzPdfViewer } from '@fiscozen/pdf-viewer'
+</script>
+
+<template>
+  <FzPdfViewer src="https://example.com/document.pdf" />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>src</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>URL of the PDF file to display. Required.</td>
+    </tr>
+    <tr>
+      <td><code>environment</code></td>
+      <td><code>'frontoffice' | 'backoffice'</code></td>
+      <td><code>'frontoffice'</code></td>
+      <td>Controls text size of toolbar labels. <code>frontoffice</code> uses smaller text; <code>backoffice</code> uses larger text.</td>
+    </tr>
+    <tr>
+      <td><code>height</code></td>
+      <td><code>string</code></td>
+      <td><code>'768px'</code></td>
+      <td>Height of the PDF viewer container. Any valid CSS value.</td>
+    </tr>
+    <tr>
+      <td><code>width</code></td>
+      <td><code>string</code></td>
+      <td><code>'512px'</code></td>
+      <td>Width of the PDF viewer container. Any valid CSS value.</td>
+    </tr>
+    <tr>
+      <td><code>initialPage</code></td>
+      <td><code>number</code></td>
+      <td><code>1</code></td>
+      <td>Page number to display when the viewer first mounts.</td>
+    </tr>
+    <tr>
+      <td><code>initialScale</code></td>
+      <td><code>number</code></td>
+      <td><code>1</code></td>
+      <td>Zoom level when the viewer first mounts. <code>1</code> = 100%, <code>2</code> = 200%, etc.</td>
+    </tr>
+    <tr>
+      <td><code>minScale</code></td>
+      <td><code>number</code></td>
+      <td><code>0.25</code></td>
+      <td>Minimum allowed zoom level. Zoom out button is disabled at this value.</td>
+    </tr>
+    <tr>
+      <td><code>maxScale</code></td>
+      <td><code>number</code></td>
+      <td><code>2</code></td>
+      <td>Maximum allowed zoom level. Zoom in button is disabled at this value.</td>
+    </tr>
+    <tr>
+      <td><code>scaleStep</code></td>
+      <td><code>number</code></td>
+      <td><code>0.25</code></td>
+      <td>Amount to increment or decrement zoom per click (e.g. <code>0.25</code> steps through 25%, 50%, 75%, 100%, …).</td>
+    </tr>
+    <tr>
+      <td><code>toolbarVariant</code></td>
+      <td><code>'basic' | 'advanced'</code></td>
+      <td><code>'basic'</code></td>
+      <td><code>basic</code> shows zoom and page navigation controls only. <code>advanced</code> adds a PDF/XML view mode toggle, a download button, and a reset zoom button.</td>
+    </tr>
+    <tr>
+      <td><code>toolbarPosition</code></td>
+      <td><code>'bottom' | 'top'</code></td>
+      <td><code>'bottom'</code></td>
+      <td>Position of the toolbar relative to the PDF. When <code>top</code>, the toolbar is hidden by default and revealed on hover.</td>
+    </tr>
+    <tr>
+      <td><code>pdfContainerClass</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>Additional CSS classes applied to the inner PDF container.</td>
+    </tr>
+    <tr>
+      <td><code>containerClass</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>Additional CSS classes applied to the outermost wrapper element.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Events
+
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Payload</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>download</code></td>
+      <td>—</td>
+      <td>Emitted when the download button is clicked (advanced toolbar only). The parent is responsible for handling the actual file download.</td>
+    </tr>
+  </tbody>
+</table>
+
+## V-Model
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>v-model:viewMode</code></td>
+      <td><code>'pdf' | 'xml'</code></td>
+      <td><code>'pdf'</code></td>
+      <td>Controls which view is active in the advanced toolbar. Bind to track or programmatically switch between PDF and XML views.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Variants
+
+### Basic Toolbar (Default)
+
+Shows zoom controls and page navigation side by side.
+
+```vue
+<FzPdfViewer
+  src="https://example.com/document.pdf"
+  toolbarVariant="basic"
+/>
+```
+
+### Advanced Toolbar
+
+Adds a PDF/XML view mode toggle on the left, page navigation and zoom controls in the center, and download + reset zoom buttons on the right.
+
+```vue
+<FzPdfViewer
+  src="https://example.com/document.pdf"
+  toolbarVariant="advanced"
+  @download="handleDownload"
+/>
+```
+
+### Toolbar at Top
+
+When `toolbarPosition="top"`, the toolbar is rendered above the PDF and is only visible on hover. The background transitions from grey (matching the PDF area) to white on hover.
+
+```vue
+<FzPdfViewer
+  src="https://example.com/document.pdf"
+  toolbarPosition="top"
+/>
+```
+
+### Backoffice Environment
+
+```vue
+<FzPdfViewer
+  src="https://example.com/document.pdf"
+  environment="backoffice"
+/>
+```
+
+### Custom Dimensions
+
+```vue
+<FzPdfViewer
+  src="https://example.com/document.pdf"
+  height="600px"
+  width="800px"
+/>
+```
+
+### Starting at a Specific Page and Scale
+
+```vue
+<FzPdfViewer
+  src="https://example.com/document.pdf"
+  :initialPage="3"
+  :initialScale="1.5"
+/>
+```
+
+### Tracking View Mode
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzPdfViewer } from '@fiscozen/pdf-viewer'
+
+const viewMode = ref<'pdf' | 'xml'>('pdf')
+</script>
+
+<template>
+  <FzPdfViewer
+    src="https://example.com/document.pdf"
+    toolbarVariant="advanced"
+    v-model:viewMode="viewMode"
+  />
+  <p>Current view: {{ viewMode }}</p>
+</template>
+```
+
+## Accessibility
+
+- All toolbar buttons have descriptive `aria-label` attributes (`"Zoom in"`, `"Zoom out"`, `"Next page"`, `"Previous page"`, `"Download"`, `"Reset zoom"`)
+- Buttons are disabled at scale/page boundaries and convey their state via the native `disabled` attribute
+- All controls are reachable and activatable via keyboard (Tab, Enter, Space)
+- The page counter and scale display use `data-testid` attributes for automated testing

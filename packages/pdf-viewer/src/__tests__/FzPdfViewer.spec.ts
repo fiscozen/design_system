@@ -54,7 +54,7 @@ const mockFzIconButton = {
   name: "FzIconButton",
   template:
     '<button :disabled="disabled" @click="handleClick"><slot /></button>',
-  props: ["iconName", "iconVariant", "size", "variant", "disabled"],
+  props: ["iconName", "iconVariant", "environment", "variant", "disabled"],
   emits: ["click"],
   setup(props: any, { emit }: any) {
     const handleClick = (event: Event) => {
@@ -222,8 +222,8 @@ describe("FzPdfViewer", () => {
       });
     });
 
-    describe("size prop", () => {
-      it("should default to md size", () => {
+    describe("environment prop", () => {
+      it("should default to frontoffice environment", () => {
         wrapper = mount(FzPdfViewer, {
           props: {
             src: "https://example.com/test.pdf",
@@ -234,19 +234,19 @@ describe("FzPdfViewer", () => {
             },
           },
         });
-        expect(wrapper.props("size")).toBe("md");
+        expect(wrapper.props("environment")).toBe("frontoffice");
       });
 
       it.each([
-        ["sm", "text-sm"],
-        ["md", "text-base"],
+        ["frontoffice", "text-sm"],
+        ["backoffice", "text-base"],
       ])(
-        "should apply correct text class for %s size",
-        async (size, expectedClass) => {
+        "should apply correct text class for %s environment",
+        async (environment, expectedClass) => {
           wrapper = mount(FzPdfViewer, {
             props: {
               src: "https://example.com/test.pdf",
-              size: size as "sm" | "md",
+              environment: environment as "frontoffice" | "backoffice",
             },
             global: {
               stubs: {
@@ -1206,7 +1206,7 @@ describe("FzPdfViewer", () => {
       wrapper = mount(FzPdfViewer, {
         props: {
           src: "https://example.com/test.pdf",
-          size: "sm",
+          environment: "frontoffice",
         },
         global: {
           stubs: {

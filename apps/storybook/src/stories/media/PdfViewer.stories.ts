@@ -2,438 +2,101 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, userEvent, within, waitFor } from 'storybook/test'
 import { FzPdfViewer } from '@fiscozen/pdf-viewer'
 
-const meta: Meta<typeof FzPdfViewer> = {
-  title: 'Media/FzPdfViewer',
-  component: FzPdfViewer,
-  tags: ['autodocs'],
-  argTypes: {},
-  args: {},
-  decorators: []
-}
-
-type Story = StoryObj<typeof meta>
-
-// Constants for consistent timeout values
+const PDF_URL = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf'
+const SINGLE_PAGE_PDF_URL = '/single-page.pdf'
 const PDF_LOAD_TIMEOUT = 5000
-const PDF_CLEANUP_DELAY = 300 // Delay to allow PDF library cleanup
+const PDF_CLEANUP_DELAY = 300
 
-/**
- * Waits for PDF rendering to complete before running assertions.
- * Required because PDF.js renders asynchronously and we need to avoid
- * flaky tests caused by asserting before the page element exists.
- */
 const waitForPdfLoad = async (canvasElement: HTMLElement): Promise<void> => {
   await waitFor(
     () => {
-      const pageDisplay = canvasElement.querySelector('[data-testid="pdf-page"]')
-      expect(pageDisplay).toBeInTheDocument()
-      return true
+      expect(canvasElement.querySelector('[data-testid="pdf-page"]')).toBeInTheDocument()
     },
     { timeout: PDF_LOAD_TIMEOUT }
   )
 }
 
-/**
- * Helper function to wait for PDF library cleanup
- * This prevents unhandled promise rejections from the PDF library
- * when components are unmounted between tests
- */
 const waitForPdfCleanup = async (): Promise<void> => {
-  // Small delay to allow PDF library to complete cleanup operations
   await new Promise(resolve => setTimeout(resolve, PDF_CLEANUP_DELAY))
 }
 
-export const Default: Story = {
-  args: {
-    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Wait for PDF to load', async () => {
-      await waitForPdfLoad(canvasElement)
-    })
-    
-    await step('Verify PDF viewer renders correctly', async () => {
-      const container = canvasElement.querySelector('.flex.gap-12')
-      await expect(container).toBeInTheDocument()
-      await expect(container).toBeVisible()
-    })
-    
-    await step('Verify PDF container is present', async () => {
-      const pdfContainer = canvasElement.querySelector('.bg-grey-100')
-      await expect(pdfContainer).toBeInTheDocument()
-      await expect(pdfContainer).toBeVisible()
-    })
-    
-    await step('Verify page display shows initial page', async () => {
-      const pageDisplay = canvas.getByTestId('pdf-page')
-      await expect(pageDisplay).toBeInTheDocument()
-      await expect(pageDisplay).toBeVisible()
-      // Should show "1 / X" format
-      await expect(pageDisplay.textContent).toMatch(/\d+\s*\/\s*\d+/)
-    })
-    
-    await step('Verify scale display shows initial scale', async () => {
-      const scaleDisplay = canvas.getByTestId('pdf-scale')
-      await expect(scaleDisplay).toBeInTheDocument()
-      await expect(scaleDisplay).toBeVisible()
-      // Should show percentage (e.g., "100 %")
-      await expect(scaleDisplay.textContent).toMatch(/\d+\s*%/)
-    })
-    
-    await step('Verify navigation buttons are present', async () => {
-      // Previous page button
-      const prevButton = canvasElement.querySelector('button[aria-label*="arrow-left"], button:has(svg.fa-arrow-left)')
-      await expect(prevButton).toBeInTheDocument()
-      
-      // Next page button
-      const nextButton = canvasElement.querySelector('button[aria-label*="arrow-right"], button:has(svg.fa-arrow-right)')
-      await expect(nextButton).toBeInTheDocument()
-    })
-    
-    await step('Verify scale control buttons are present', async () => {
-      // Zoom out button
-      const zoomOutButton = canvasElement.querySelector('button:has(svg.fa-minus)')
-      await expect(zoomOutButton).toBeInTheDocument()
-      
-      // Zoom in button
-      const zoomInButton = canvasElement.querySelector('button:has(svg.fa-plus)')
-      await expect(zoomInButton).toBeInTheDocument()
-    })
-    
-    await step('Allow PDF library cleanup', async () => {
-      await waitForPdfCleanup()
-    })
-  }
+const waitForSinglePagePdfLoad = async (canvasElement: HTMLElement): Promise<void> => {
+  await waitFor(
+    () => {
+      expect(canvasElement.querySelector('canvas')).toBeInTheDocument()
+    },
+    { timeout: PDF_LOAD_TIMEOUT }
+  )
 }
 
-export const PageNavigation: Story = {
-  args: {
-    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
-    initialPage: 1
+const meta: Meta<typeof FzPdfViewer> = {
+  title: 'Media/FzPdfViewer',
+  component: FzPdfViewer,
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'fullscreen',
   },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Wait for PDF to load', async () => {
-      await waitForPdfLoad(canvasElement)
-    })
-    
-    await step('Verify initial page is 1', async () => {
-      const pageDisplay = canvas.getByTestId('pdf-page')
-      await expect(pageDisplay.textContent).toContain('1 /')
-    })
-    
-    await step('Verify previous button is disabled on first page', async () => {
-      const prevButton = canvasElement.querySelector('button:has(svg.fa-arrow-left)') as HTMLButtonElement
-      await expect(prevButton).toBeInTheDocument()
-      // Wait a bit for PDF to fully load before checking disabled state
-      await waitFor(() => {
-        expect(prevButton).toBeDisabled()
-      }, { timeout: 2000 })
-    })
-    
-    await step('Click next page button to navigate to page 2', async () => {
-      const nextButton = canvasElement.querySelector('button:has(svg.fa-arrow-right)') as HTMLButtonElement
-      await expect(nextButton).toBeInTheDocument()
-      
-      // Wait for PDF to load and button to be enabled
-      await waitFor(() => {
-        expect(nextButton).not.toBeDisabled()
-      }, { timeout: 3000 })
-      
-      await userEvent.click(nextButton)
-      
-      // Wait for page to change
-      await waitFor(() => {
-        const pageDisplay = canvasElement.querySelector('[data-testid="pdf-page"]')
-        expect(pageDisplay?.textContent).toContain('2 /')
-      }, { timeout: 2000 })
-    })
-    
-    await step('Verify previous button is enabled after navigating forward', async () => {
-      const prevButton = canvasElement.querySelector('button:has(svg.fa-arrow-left)') as HTMLButtonElement
-      await expect(prevButton).not.toBeDisabled()
-    })
-    
-    await step('Click previous page button to navigate back to page 1', async () => {
-      const prevButton = canvasElement.querySelector('button:has(svg.fa-arrow-left)') as HTMLButtonElement
-      await userEvent.click(prevButton)
-      
-      // Wait for page to change back
-      await waitFor(() => {
-        const pageDisplay = canvasElement.querySelector('[data-testid="pdf-page"]')
-        expect(pageDisplay?.textContent).toContain('1 /')
-      }, { timeout: 2000 })
-    })
-    
-    await step('Verify previous button is disabled again on first page', async () => {
-      const prevButton = canvasElement.querySelector('button:has(svg.fa-arrow-left)') as HTMLButtonElement
-      await expect(prevButton).toBeDisabled()
-    })
-    
-    await step('Allow PDF library cleanup', async () => {
-      await waitForPdfCleanup()
-    })
-  }
-}
-
-export const ScaleControls: Story = {
-  args: {
-    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
-    initialScale: 1
+  argTypes: {
+    environment: {
+      control: 'select',
+      options: ['frontoffice', 'backoffice'],
+    },
+    toolbarVariant: {
+      control: 'select',
+      options: ['basic', 'advanced'],
+    },
+    toolbarPosition: {
+      control: 'select',
+      options: ['bottom', 'top'],
+    },
+    initialScale: {
+      control: { type: 'range', min: 0.25, max: 2, step: 0.25 },
+    },
+    minScale: {
+      control: { type: 'range', min: 0.25, max: 1, step: 0.25 },
+    },
+    maxScale: {
+      control: { type: 'range', min: 1, max: 4, step: 0.25 },
+    },
+    scaleStep: {
+      control: { type: 'range', min: 0.25, max: 1, step: 0.25 },
+    },
+    initialPage: {
+      control: 'number',
+    },
+    height: {
+      control: 'text',
+    },
+    width: {
+      control: 'text',
+    },
+    pdfContainerClass: {
+      control: false,
+    },
+    containerClass: {
+      control: false,
+    },
   },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Wait for PDF to load', async () => {
-      await waitForPdfLoad(canvasElement)
-    })
-    
-    await step('Verify initial scale is 100%', async () => {
-      const scaleDisplay = canvas.getByTestId('pdf-scale')
-      await expect(scaleDisplay.textContent).toContain('100')
-    })
-    
-    await step('Verify zoom out button is enabled at 100%', async () => {
-      const zoomOutButton = canvasElement.querySelector('button:has(svg.fa-minus)') as HTMLButtonElement
-      await expect(zoomOutButton).toBeInTheDocument()
-      await expect(zoomOutButton).not.toBeDisabled()
-    })
-    
-    await step('Click zoom in button to increase scale', async () => {
-      const zoomInButton = canvasElement.querySelector('button:has(svg.fa-plus)') as HTMLButtonElement
-      await expect(zoomInButton).toBeInTheDocument()
-      await expect(zoomInButton).not.toBeDisabled()
-      
-      await userEvent.click(zoomInButton)
-      
-      // Wait for scale to update
-      await waitFor(() => {
-        const scaleDisplay = canvasElement.querySelector('[data-testid="pdf-scale"]')
-        const scaleText = scaleDisplay?.textContent || ''
-        const scaleValue = parseInt(scaleText.replace('%', '').trim())
-        expect(scaleValue).toBeGreaterThan(100)
-      }, { timeout: 2000 })
-    })
-    
-    await step('Verify scale increased to 125%', async () => {
-      const scaleDisplay = canvas.getByTestId('pdf-scale')
-      await expect(scaleDisplay.textContent).toContain('125')
-    })
-    
-    await step('Click zoom out button to decrease scale', async () => {
-      const zoomOutButton = canvasElement.querySelector('button:has(svg.fa-minus)') as HTMLButtonElement
-      await userEvent.click(zoomOutButton)
-      
-      // Wait for scale to update back
-      await waitFor(() => {
-        const scaleDisplay = canvasElement.querySelector('[data-testid="pdf-scale"]')
-        expect(scaleDisplay?.textContent).toContain('100')
-      }, { timeout: 2000 })
-    })
-    
-    await step('Verify scale decreased back to 100%', async () => {
-      const scaleDisplay = canvas.getByTestId('pdf-scale')
-      await expect(scaleDisplay.textContent).toContain('100')
-    })
-    
-    await step('Allow PDF library cleanup', async () => {
-      await waitForPdfCleanup()
-    })
-  }
-}
-
-export const ScaleLimits: Story = {
   args: {
-    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
-    initialScale: 0.25
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Wait for PDF to load', async () => {
-      await waitForPdfLoad(canvasElement)
-    })
-    
-    await step('Verify zoom out button is disabled at minimum scale (25%)', async () => {
-      const zoomOutButton = canvasElement.querySelector('button:has(svg.fa-minus)') as HTMLButtonElement
-      await expect(zoomOutButton).toBeDisabled()
-    })
-    
-    await step('Click zoom in multiple times to reach maximum scale', async () => {
-      const zoomInButton = canvasElement.querySelector('button:has(svg.fa-plus)') as HTMLButtonElement
-      
-      // Click multiple times to reach max scale (200%)
-      for (let i = 0; i < 7; i++) {
-        if (!zoomInButton.disabled) {
-          await userEvent.click(zoomInButton)
-          await new Promise(resolve => setTimeout(resolve, 200))
-        }
-      }
-      
-      // Wait for scale to reach maximum
-      await waitFor(() => {
-        const scaleDisplay = canvasElement.querySelector('[data-testid="pdf-scale"]')
-        const scaleText = scaleDisplay?.textContent || ''
-        const scaleValue = parseInt(scaleText.replace('%', '').trim())
-        expect(scaleValue).toBeGreaterThanOrEqual(200)
-      }, { timeout: 3000 })
-    })
-    
-    await step('Verify zoom in button is disabled at maximum scale (200%)', async () => {
-      const zoomInButton = canvasElement.querySelector('button:has(svg.fa-plus)') as HTMLButtonElement
-      await expect(zoomInButton).toBeDisabled()
-    })
-    
-    await step('Allow PDF library cleanup', async () => {
-      await waitForPdfCleanup()
-    })
-  }
-}
-
-export const KeyboardNavigation: Story = {
-  args: {
-    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
-    initialPage: 2
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Wait for PDF to load', async () => {
-      await waitForPdfLoad(canvasElement)
-    })
-    
-    await step('Tab to next page button and verify focus', async () => {
-      const nextButton = canvasElement.querySelector('button:has(svg.fa-arrow-right)') as HTMLButtonElement
-      await expect(nextButton).toBeInTheDocument()
-      
-      // Wait for PDF to load before focusing
-      await waitFor(() => {
-        expect(nextButton).not.toBeDisabled()
-      }, { timeout: 3000 })
-      
-      nextButton.focus()
-      // Wait a bit for focus to be set
-      await waitFor(() => {
-        expect(document.activeElement).toBe(nextButton)
-      }, { timeout: 500 })
-    })
-    
-    await step('Activate next page button with Enter key', async () => {
-      const nextButton = canvasElement.querySelector('button:has(svg.fa-arrow-right)') as HTMLButtonElement
-      nextButton.focus()
-      
-      await userEvent.keyboard('{Enter}')
-      
-      // Wait for page to change
-      await waitFor(() => {
-        const pageDisplay = canvasElement.querySelector('[data-testid="pdf-page"]')
-        expect(pageDisplay?.textContent).toContain('3 /')
-      }, { timeout: 2000 })
-    })
-    
-    await step('Tab to previous page button and activate with Space key', async () => {
-      const prevButton = canvasElement.querySelector('button:has(svg.fa-arrow-left)') as HTMLButtonElement
-      prevButton.focus()
-      await expect(document.activeElement).toBe(prevButton)
-      
-      await userEvent.keyboard(' ')
-      
-      // Wait for page to change back
-      await waitFor(() => {
-        const pageDisplay = canvasElement.querySelector('[data-testid="pdf-page"]')
-        expect(pageDisplay?.textContent).toContain('2 /')
-      }, { timeout: 2000 })
-    })
-    
-    await step('Tab to zoom in button and activate with Enter', async () => {
-      const zoomInButton = canvasElement.querySelector('button:has(svg.fa-plus)') as HTMLButtonElement
-      zoomInButton.focus()
-      await expect(document.activeElement).toBe(zoomInButton)
-      
-      await userEvent.keyboard('{Enter}')
-      
-      // Wait for scale to update
-      await waitFor(() => {
-        const scaleDisplay = canvasElement.querySelector('[data-testid="pdf-scale"]')
-        const scaleText = scaleDisplay?.textContent || ''
-        const scaleValue = parseInt(scaleText.replace('%', '').trim())
-        expect(scaleValue).toBeGreaterThan(100)
-      }, { timeout: 2000 })
-    })
-    
-    await step('Allow PDF library cleanup', async () => {
-      await waitForPdfCleanup()
-    })
-  }
-}
-
-export const CustomInitialPage: Story = {
-  args: {
-    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
-    initialPage: 3
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Wait for PDF to load', async () => {
-      await waitForPdfLoad(canvasElement)
-    })
-    
-    await step('Verify PDF starts on page 3', async () => {
-      const pageDisplay = canvas.getByTestId('pdf-page')
-      await expect(pageDisplay.textContent).toContain('3 /')
-    })
-    
-    await step('Verify previous button is enabled when not on first page', async () => {
-      const prevButton = canvasElement.querySelector('button:has(svg.fa-arrow-left)') as HTMLButtonElement
-      await expect(prevButton).not.toBeDisabled()
-    })
-    
-    await step('Allow PDF library cleanup', async () => {
-      await waitForPdfCleanup()
-    })
-  }
-}
-
-export const CustomInitialScale: Story = {
-  args: {
-    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
-    initialScale: 1.5
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    
-    await step('Wait for PDF to load', async () => {
-      await waitForPdfLoad(canvasElement)
-    })
-    
-    await step('Verify PDF starts at 150% scale', async () => {
-      const scaleDisplay = canvas.getByTestId('pdf-scale')
-      await expect(scaleDisplay.textContent).toContain('150')
-    })
-    
-    await step('Verify both zoom buttons are enabled at 150%', async () => {
-      const zoomOutButton = canvasElement.querySelector('button:has(svg.fa-minus)') as HTMLButtonElement
-      const zoomInButton = canvasElement.querySelector('button:has(svg.fa-plus)') as HTMLButtonElement
-      
-      await expect(zoomOutButton).not.toBeDisabled()
-      await expect(zoomInButton).not.toBeDisabled()
-    })
-    
-    await step('Allow PDF library cleanup', async () => {
-      await waitForPdfCleanup()
-    })
-  }
-}
-
-export const AdvancedToolbar: Story = {
-  args: {
-    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
-    toolbarVariant: 'advanced',
+    src: PDF_URL,
+    environment: 'frontoffice',
+    toolbarVariant: 'basic',
+    toolbarPosition: 'bottom',
     initialScale: 1,
+    initialPage: 1,
+    minScale: 0.25,
+    maxScale: 2,
+    scaleStep: 0.25,
+    height: '100vh',
+    width: '100%',
+  },
+}
+
+type Story = StoryObj<typeof meta>
+
+export const Basic: Story = {
+  args: {
+    toolbarVariant: 'basic',
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -442,70 +105,99 @@ export const AdvancedToolbar: Story = {
       await waitForPdfLoad(canvasElement)
     })
 
-    await step('Verify view mode tab container is present', async () => {
-      const tabContainer = canvasElement.querySelector('.tab-container')
-      await expect(tabContainer).toBeInTheDocument()
-      await expect(tabContainer).toBeVisible()
+    await step('Verify scale display shows 100%', async () => {
+      const scaleDisplay = canvas.getByTestId('pdf-scale')
+      await expect(scaleDisplay).toBeVisible()
+      await expect(scaleDisplay.textContent).toMatch(/100\s*%/)
+    })
+
+    await step('Verify page navigation is present', async () => {
+      const pageDisplay = canvas.getByTestId('pdf-page')
+      await expect(pageDisplay).toBeVisible()
+      await expect(pageDisplay.textContent).toMatch(/1\s*\/\s*\d+/)
+    })
+
+    await step('Zoom in and verify scale increases', async () => {
+      const zoomIn = canvas.getByRole('button', { name: 'Zoom in' }) as HTMLButtonElement
+      await userEvent.click(zoomIn)
+      await waitFor(() => {
+        expect(canvas.getByTestId('pdf-scale').textContent).toContain('125')
+      }, { timeout: 2000 })
+    })
+
+    await step('Navigate to next page', async () => {
+      const next = canvas.getByRole('button', { name: 'Next page' }) as HTMLButtonElement
+      await waitFor(() => expect(next).not.toBeDisabled(), { timeout: 3000 })
+      await userEvent.click(next)
+      await waitFor(() => {
+        expect(canvas.getByTestId('pdf-page').textContent).toContain('2 /')
+      }, { timeout: 2000 })
+    })
+
+    await step('Allow PDF library cleanup', async () => {
+      await waitForPdfCleanup()
+    })
+  },
+}
+
+export const Advanced: Story = {
+  args: {
+    toolbarVariant: 'advanced',
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Wait for PDF to load', async () => {
+      await waitForPdfLoad(canvasElement)
+    })
+
+    await step('Verify view mode tabs are present', async () => {
+      await expect(canvasElement.querySelector('.tab-container')).toBeInTheDocument()
     })
 
     await step('Verify download and reset buttons are present', async () => {
-      const downloadBtn = canvasElement.querySelector(
-        'button[aria-label="Download"]',
-      ) as HTMLButtonElement
-      const resetBtn = canvasElement.querySelector(
-        'button[aria-label="Reset zoom"]',
-      ) as HTMLButtonElement
-      await expect(downloadBtn).toBeInTheDocument()
-      await expect(resetBtn).toBeInTheDocument()
+      await expect(canvas.getByRole('button', { name: 'Download' })).toBeInTheDocument()
+      await expect(canvas.getByRole('button', { name: 'Reset zoom' })).toBeInTheDocument()
     })
 
-    await step('Click XML tab to switch view mode', async () => {
+    await step('Switch to XML view and back to PDF', async () => {
       const tabs = canvasElement.querySelectorAll('.tab-container button')
       const xmlTab = Array.from(tabs).find(
-        (btn) => btn.getAttribute('title')?.toLowerCase() === 'xml',
+        btn => btn.getAttribute('title')?.toLowerCase() === 'xml',
       ) as HTMLButtonElement
-      await expect(xmlTab).toBeInTheDocument()
       await userEvent.click(xmlTab)
-    })
-
-    await step('Click PDF tab to switch back', async () => {
-      const tabs = canvasElement.querySelectorAll('.tab-container button')
-      const pdfTab = Array.from(tabs).find(
-        (btn) => btn.getAttribute('title')?.toLowerCase() === 'pdf',
+      const pdfTab = Array.from(canvasElement.querySelectorAll('.tab-container button')).find(
+        btn => btn.getAttribute('title')?.toLowerCase() === 'pdf',
       ) as HTMLButtonElement
       await userEvent.click(pdfTab)
     })
 
     await step('Zoom in then reset scale', async () => {
-      const zoomInBtn = canvasElement.querySelector('button:has(svg.fa-plus)') as HTMLButtonElement
-      await userEvent.click(zoomInBtn)
+      await userEvent.click(canvas.getByRole('button', { name: 'Zoom in' }))
+      await waitFor(() => {
+        const value = parseInt(canvas.getByTestId('pdf-scale').textContent?.replace('%', '').trim() ?? '0')
+        expect(value).toBeGreaterThan(100)
+      }, { timeout: 2000 })
 
-      await waitFor(
-        () => {
-          const scaleDisplay = canvasElement.querySelector('[data-testid="pdf-scale"]')
-          const scaleValue = parseInt(scaleDisplay?.textContent?.replace('%', '').trim() ?? '0')
-          expect(scaleValue).toBeGreaterThan(100)
-        },
-        { timeout: 2000 },
-      )
-
-      const resetBtn = canvasElement.querySelector(
-        'button[aria-label="Reset zoom"]',
-      ) as HTMLButtonElement
-      await userEvent.click(resetBtn)
-
-      await waitFor(
-        () => {
-          const scaleDisplay = canvasElement.querySelector('[data-testid="pdf-scale"]')
-          expect(scaleDisplay?.textContent).toContain('100')
-        },
-        { timeout: 2000 },
-      )
+      await userEvent.click(canvas.getByRole('button', { name: 'Reset zoom' }))
+      await waitFor(() => {
+        expect(canvas.getByTestId('pdf-scale').textContent).toContain('100')
+      }, { timeout: 2000 })
     })
 
-    await step('Verify scale display is present', async () => {
-      const scaleDisplay = canvas.getByTestId('pdf-scale')
-      await expect(scaleDisplay).toBeInTheDocument()
+    await step('Allow PDF library cleanup', async () => {
+      await waitForPdfCleanup()
+    })
+  },
+}
+
+export const Backoffice: Story = {
+  args: {
+    environment: 'backoffice',
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Wait for PDF to load', async () => {
+      await waitForPdfLoad(canvasElement)
     })
 
     await step('Allow PDF library cleanup', async () => {
@@ -516,7 +208,6 @@ export const AdvancedToolbar: Story = {
 
 export const ToolbarAtTop: Story = {
   args: {
-    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
     toolbarPosition: 'top',
   },
   play: async ({ canvasElement, step }) => {
@@ -526,39 +217,17 @@ export const ToolbarAtTop: Story = {
       await waitForPdfLoad(canvasElement)
     })
 
-    await step('Verify container has flex-col-reverse class for top position', async () => {
-      const container = canvasElement.querySelector('.flex-col-reverse')
-      await expect(container).toBeInTheDocument()
+    await step('Verify container uses flex-col-reverse for top position', async () => {
+      await expect(canvasElement.querySelector('.flex-col-reverse')).toBeInTheDocument()
     })
 
-    await step('Verify toolbar controls are still present', async () => {
-      const scaleDisplay = canvas.getByTestId('pdf-scale')
-      const pageDisplay = canvas.getByTestId('pdf-page')
-      await expect(scaleDisplay).toBeInTheDocument()
-      await expect(pageDisplay).toBeInTheDocument()
-    })
-
-    await step('Verify page navigation still works from top toolbar', async () => {
-      const nextButton = canvasElement.querySelector(
-        'button[aria-label="Next page"]',
-      ) as HTMLButtonElement
-
-      await waitFor(
-        () => {
-          expect(nextButton).not.toBeDisabled()
-        },
-        { timeout: 3000 },
-      )
-
-      await userEvent.click(nextButton)
-
-      await waitFor(
-        () => {
-          const pageDisplay = canvasElement.querySelector('[data-testid="pdf-page"]')
-          expect(pageDisplay?.textContent).toContain('2 /')
-        },
-        { timeout: 2000 },
-      )
+    await step('Navigate to next page from top toolbar', async () => {
+      const next = canvas.getByRole('button', { name: 'Next page' }) as HTMLButtonElement
+      await waitFor(() => expect(next).not.toBeDisabled(), { timeout: 3000 })
+      await userEvent.click(next)
+      await waitFor(() => {
+        expect(canvas.getByTestId('pdf-page').textContent).toContain('2 /')
+      }, { timeout: 2000 })
     })
 
     await step('Allow PDF library cleanup', async () => {
@@ -569,7 +238,6 @@ export const ToolbarAtTop: Story = {
 
 export const AdvancedToolbarAtTop: Story = {
   args: {
-    src: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf',
     toolbarVariant: 'advanced',
     toolbarPosition: 'top',
   },
@@ -580,18 +248,90 @@ export const AdvancedToolbarAtTop: Story = {
       await waitForPdfLoad(canvasElement)
     })
 
-    await step('Verify container has flex-col-reverse class', async () => {
-      const container = canvasElement.querySelector('.flex-col-reverse')
-      await expect(container).toBeInTheDocument()
+    await step('Verify container uses flex-col-reverse', async () => {
+      await expect(canvasElement.querySelector('.flex-col-reverse')).toBeInTheDocument()
     })
 
-    await step('Verify advanced toolbar controls are present at top', async () => {
-      const tabContainer = canvasElement.querySelector('.tab-container')
-      const downloadBtn = canvasElement.querySelector('button[aria-label="Download"]')
-      const scaleDisplay = canvas.getByTestId('pdf-scale')
-      await expect(tabContainer).toBeInTheDocument()
-      await expect(downloadBtn).toBeInTheDocument()
-      await expect(scaleDisplay).toBeInTheDocument()
+    await step('Verify advanced toolbar controls are present', async () => {
+      await expect(canvasElement.querySelector('.tab-container')).toBeInTheDocument()
+      await expect(canvas.getByRole('button', { name: 'Download' })).toBeInTheDocument()
+    })
+
+    await step('Allow PDF library cleanup', async () => {
+      await waitForPdfCleanup()
+    })
+  },
+}
+
+export const Accessibility: Story = {
+  args: {
+    initialPage: 2,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Wait for PDF to load', async () => {
+      await waitForPdfLoad(canvasElement)
+    })
+
+    await step('Activate next page button with Enter key', async () => {
+      const next = canvas.getByRole('button', { name: 'Next page' }) as HTMLButtonElement
+      await waitFor(() => expect(next).not.toBeDisabled(), { timeout: 3000 })
+      next.focus()
+      await waitFor(() => expect(document.activeElement).toBe(next), { timeout: 500 })
+      await userEvent.keyboard('{Enter}')
+      await waitFor(() => {
+        expect(canvas.getByTestId('pdf-page').textContent).toContain('3 /')
+      }, { timeout: 2000 })
+    })
+
+    await step('Activate previous page button with Space key', async () => {
+      const prev = canvas.getByRole('button', { name: 'Previous page' }) as HTMLButtonElement
+      prev.focus()
+      await expect(document.activeElement).toBe(prev)
+      await userEvent.keyboard(' ')
+      await waitFor(() => {
+        expect(canvas.getByTestId('pdf-page').textContent).toContain('2 /')
+      }, { timeout: 2000 })
+    })
+
+    await step('Activate zoom in button with Enter key', async () => {
+      const zoomIn = canvas.getByRole('button', { name: 'Zoom in' }) as HTMLButtonElement
+      zoomIn.focus()
+      await expect(document.activeElement).toBe(zoomIn)
+      await userEvent.keyboard('{Enter}')
+      await waitFor(() => {
+        const value = parseInt(canvas.getByTestId('pdf-scale').textContent?.replace('%', '').trim() ?? '0')
+        expect(value).toBeGreaterThan(100)
+      }, { timeout: 2000 })
+    })
+
+    await step('Allow PDF library cleanup', async () => {
+      await waitForPdfCleanup()
+    })
+  },
+}
+
+export const SinglePage: Story = {
+  args: {
+    src: SINGLE_PAGE_PDF_URL,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Wait for PDF to load', async () => {
+      await waitForSinglePagePdfLoad(canvasElement)
+    })
+
+    await step('Verify page navigation is not shown for single-page PDF', async () => {
+      await expect(canvas.queryByTestId('pdf-page')).not.toBeInTheDocument()
+      await expect(canvas.queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument()
+      await expect(canvas.queryByRole('button', { name: 'Next page' })).not.toBeInTheDocument()
+    })
+
+    await step('Verify zoom controls are still present', async () => {
+      await expect(canvas.getByRole('button', { name: 'Zoom in' })).toBeInTheDocument()
+      await expect(canvas.getByRole('button', { name: 'Zoom out' })).toBeInTheDocument()
     })
 
     await step('Allow PDF library cleanup', async () => {

@@ -1,8 +1,8 @@
 <template>
   <div
     :class="[
-      'flex gap-12',
-      toolbarPosition === 'top' ? 'flex-col-reverse' : 'flex-col',
+      'flex group',
+      toolbarPosition === 'top' ? 'flex-col-reverse gap-0' : 'flex-col gap-12',
       containerClass,
     ]"
     :style="{ height, width }"
@@ -14,12 +14,23 @@
     </div>
 
     <!-- Basic toolbar -->
-    <div v-if="toolbarVariant === 'basic'" class="flex justify-between">
-      <div class="flex items-center gap-8">
+    <div
+      v-if="toolbarVariant === 'basic'"
+      :class="[
+        'flex justify-between',
+        toolbarPosition === 'top' && 'bg-grey-100 group-hover:bg-white transition-colors px-16 py-12',
+      ]"
+    >
+      <div
+        :class="[
+          'flex items-center gap-8',
+          toolbarPosition === 'top' && 'opacity-0 group-hover:opacity-100 transition-opacity',
+        ]"
+      >
         <FzIconButton
           iconName="minus"
           iconVariant="fas"
-          :size
+          :environment="props.environment"
           variant="secondary"
           :disabled="scale <= minScale"
           aria-label="Zoom out"
@@ -33,18 +44,24 @@
         <FzIconButton
           iconName="plus"
           iconVariant="fas"
-          :size
+          :environment="props.environment"
           variant="secondary"
           :disabled="scale >= maxScale"
           aria-label="Zoom in"
           @click="handleScaleChange(scaleStep)"
         />
       </div>
-      <div v-if="pages > 1" class="flex items-center gap-8">
+      <div
+        v-if="pages > 1"
+        :class="[
+          'flex items-center gap-8',
+          toolbarPosition === 'top' && 'opacity-0 group-hover:opacity-100 transition-opacity',
+        ]"
+      >
         <FzIconButton
           iconName="arrow-left"
           iconVariant="fas"
-          :size
+          :environment="props.environment"
           variant="secondary"
           :disabled="page <= 1"
           aria-label="Previous page"
@@ -58,7 +75,7 @@
         <FzIconButton
           iconName="arrow-right"
           iconVariant="fas"
-          :size
+          :environment="props.environment"
           variant="secondary"
           :disabled="page >= pages"
           aria-label="Next page"
@@ -68,68 +85,97 @@
     </div>
 
     <!-- Advanced toolbar -->
-    <div v-else class="flex justify-between items-center">
-      <FzTabs class="view-mode-tabs" @change="handleViewModeChange">
-        <FzTab
-          title="pdf"
-          icon="file"
-          :initialSelected="viewMode === 'pdf'"
-        />
-        <FzTab title="xml" icon="code" :initialSelected="viewMode === 'xml'" />
-      </FzTabs>
-      <div v-if="pages > 1" class="flex items-center gap-8">
-        <FzIconButton
-          iconName="arrow-left"
-          iconVariant="fas"
-          :size
-          variant="secondary"
-          :disabled="page <= 1"
-          aria-label="Previous page"
-          @click="handlePageChange(page - 1)"
-        />
-        <span
-          :class="[staticTextClass, computedTextClass]"
-          data-testid="pdf-page"
-          >{{ page }} / {{ pages }}</span
+    <div
+      v-else
+      :class="[
+        'flex items-center',
+        toolbarPosition === 'top' && 'bg-grey-100 group-hover:bg-white transition-colors px-16 py-12',
+      ]"
+    >
+      <div
+        :class="[
+          'flex flex-1 justify-start',
+          toolbarPosition === 'top' && 'opacity-0 group-hover:opacity-100 transition-opacity',
+        ]"
+      >
+        <FzTabs
+          class="view-mode-tabs"
+          :environment="props.environment"
+          @change="handleViewModeChange"
         >
-        <FzIconButton
-          iconName="arrow-right"
-          iconVariant="fas"
-          :size
-          variant="secondary"
-          :disabled="page >= pages"
-          aria-label="Next page"
-          @click="handlePageChange(page + 1)"
-        />
+          <FzTab title="pdf" icon="file" :initialSelected="viewMode === 'pdf'" />
+          <FzTab title="xml" icon="code" :initialSelected="viewMode === 'xml'" />
+        </FzTabs>
       </div>
-      <div class="flex items-center gap-8">
-        <FzIconButton
-          iconName="minus"
-          iconVariant="fas"
-          :size
-          variant="secondary"
-          :disabled="scale <= minScale"
-          aria-label="Zoom out"
-          @click="handleScaleChange(-scaleStep)"
-        />
-        <span
-          :class="[staticTextClass, computedTextClass]"
-          data-testid="pdf-scale"
-          >{{ Math.round(scale * 100) }} %</span
-        >
-        <FzIconButton
-          iconName="plus"
-          iconVariant="fas"
-          :size
-          variant="secondary"
-          :disabled="scale >= maxScale"
-          aria-label="Zoom in"
-          @click="handleScaleChange(scaleStep)"
-        />
+      <!-- Center: page nav + zoom together -->
+      <div
+        :class="[
+          'flex items-center gap-24',
+          toolbarPosition === 'top' && 'opacity-0 group-hover:opacity-100 transition-opacity',
+        ]"
+      >
+        <div v-if="pages > 1" class="flex items-center gap-8">
+          <FzIconButton
+            iconName="arrow-left"
+            iconVariant="fas"
+            :environment="props.environment"
+            variant="secondary"
+            :disabled="page <= 1"
+            aria-label="Previous page"
+            @click="handlePageChange(page - 1)"
+          />
+          <span
+            :class="[staticTextClass, computedTextClass]"
+            data-testid="pdf-page"
+            >{{ page }} / {{ pages }}</span
+          >
+          <FzIconButton
+            iconName="arrow-right"
+            iconVariant="fas"
+            :environment="props.environment"
+            variant="secondary"
+            :disabled="page >= pages"
+            aria-label="Next page"
+            @click="handlePageChange(page + 1)"
+          />
+        </div>
+        <div class="flex items-center gap-8">
+          <FzIconButton
+            iconName="minus"
+            iconVariant="fas"
+            :environment="props.environment"
+            variant="secondary"
+            :disabled="scale <= minScale"
+            aria-label="Zoom out"
+            @click="handleScaleChange(-scaleStep)"
+          />
+          <span
+            :class="[staticTextClass, computedTextClass]"
+            data-testid="pdf-scale"
+            >{{ Math.round(scale * 100) }} %</span
+          >
+          <FzIconButton
+            iconName="plus"
+            iconVariant="fas"
+            :environment="props.environment"
+            variant="secondary"
+            :disabled="scale >= maxScale"
+            aria-label="Zoom in"
+            @click="handleScaleChange(scaleStep)"
+          />
+        </div>
+      </div>
+      <!-- Right: download + reset -->
+      <div
+        :class="[
+          'flex flex-1 justify-end items-center gap-8',
+          toolbarPosition === 'top' && 'opacity-0 group-hover:opacity-100 transition-opacity',
+        ]"
+      >
         <FzIconButton
           iconName="arrow-down-to-line"
           iconVariant="fas"
-          :size
+          :environment="props.environment"
           variant="invisible"
           aria-label="Download"
           @click="emit('download')"
@@ -137,7 +183,7 @@
         <FzIconButton
           iconName="clock-rotate-left"
           iconVariant="fas"
-          :size
+          :environment="props.environment"
           variant="invisible"
           aria-label="Reset zoom"
           @click="resetScale"
@@ -155,7 +201,7 @@ import { FzIconButton } from "@fiscozen/button";
 import { FzTabs, FzTab } from "@fiscozen/tab";
 
 const props = withDefaults(defineProps<FzPdfViewerProps>(), {
-  size: "md",
+  environment: "frontoffice",
   height: "768px",
   width: "512px",
   initialPage: 1,
@@ -180,10 +226,10 @@ const staticPdfContainerClass =
 const staticTextClass = "text-grey-500 font-medium";
 const staticVuePDFClass = "overflow-auto h-full";
 
-const mapSizeToText = {
-  sm: "text-sm",
-  md: "text-base",
-};
+const mapEnvironmentToText = {
+  frontoffice: "text-sm",
+  backoffice: "text-base",
+} as const;
 
 const page = ref(props.initialPage);
 const scale = ref(props.initialScale);
@@ -196,7 +242,9 @@ const computedCursorClass = computed(() => {
   return mouseDown.value ? "cursor-grabbing" : "cursor-grab";
 });
 
-const computedTextClass = computed(() => mapSizeToText[props.size]);
+const computedTextClass = computed(
+  () => mapEnvironmentToText[props.environment],
+);
 
 function handlePageChange(newPage: number) {
   if (newPage > 0 && newPage <= pages.value) {
