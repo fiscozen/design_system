@@ -63,10 +63,16 @@ import { FzProgressBar } from '@fiscozen/progress'
       <td>Minimum value for progress calculation</td>
     </tr>
     <tr>
-      <td><code>name</code></td>
+      <td><code>label</code></td>
       <td><code>string</code></td>
-      <td><code>'progress-bar'</code></td>
-      <td>Accessible label for screen readers</td>
+      <td><code>'Avanzamento'</code></td>
+      <td>Accessible label announced via <code>aria-label</code>. Provide a meaningful, contextual value (e.g. <code>'Caricamento file'</code>).</td>
+    </tr>
+    <tr>
+      <td><code>valueText</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>Optional human-readable text passed to <code>aria-valuetext</code>. When provided, screen readers announce this string instead of the raw percentage. Useful for contextual progress (e.g. <code>'Caricamento file 3 di 10'</code>).</td>
     </tr>
     <tr>
       <td><code>size</code></td>
@@ -78,7 +84,7 @@ import { FzProgressBar } from '@fiscozen/progress'
       <td><code>color</code></td>
       <td><code>'purple' | 'blue' | 'orange' | 'pink' | 'yellow' | 'grey' | 'red'</code></td>
       <td><code>'purple'</code></td>
-      <td>Color variant of the progress indicator</td>
+      <td>Color variant. Most values map to literal Tailwind tokens; <code>'yellow'</code> and <code>'red'</code> use the <code>semantic-warning</code> and <code>semantic-error</code> token families.</td>
     </tr>
   </tbody>
 </table>
@@ -116,9 +122,24 @@ import { FzProgressBar } from '@fiscozen/progress'
 
 ```vue
 <template>
-  <FzProgressBar 
-    :current="75" 
-    name="upload-progress" 
+  <FzProgressBar
+    :current="75"
+    label="Caricamento file"
+  />
+</template>
+```
+
+### Contextual progress with valueText
+
+When the raw percentage is not informative on its own, pass `valueText` to give screen readers a human-readable description.
+
+```vue
+<template>
+  <FzProgressBar
+    :current="3"
+    :max="10"
+    label="Caricamento file"
+    valueText="Caricamento file 3 di 10"
   />
 </template>
 ```
@@ -166,13 +187,15 @@ import { FzProgressBar } from '@fiscozen/progress'
 
 FzProgressBar follows WCAG 2.1 AA standards and includes:
 
-- **ARIA Attributes**: 
+- **ARIA Attributes**:
   - `role="progressbar"` for semantic meaning
-  - `aria-valuenow` with current value
+  - `aria-valuenow` with current value (sanitized for NaN/Infinity)
   - `aria-valuemin` with minimum value
   - `aria-valuemax` with maximum value
-  - `aria-label` for screen reader description
-- **Screen Reader Support**: Progress values are accessible when navigating to the progress bar
+  - `aria-label` from the `label` prop for screen reader description
+  - `aria-valuetext` from the optional `valueText` prop for human-readable progress
+- **Reduced motion**: the width transition uses `motion-safe:` utilities, so it is automatically disabled for users with `prefers-reduced-motion: reduce` (WCAG 2.3.3)
+- **Screen Reader Support**: Progress values and contextual descriptions are accessible when navigating to the progress bar
 - **Keyboard Navigation**: Progress bar is accessible via keyboard (though not interactive)
 
 ## Notes
