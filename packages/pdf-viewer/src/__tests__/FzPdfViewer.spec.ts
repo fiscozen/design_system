@@ -427,6 +427,76 @@ describe("FzPdfViewer", () => {
         expect(pdfContainer.classes()).toContain("custom-pdf-container");
       });
     });
+
+    describe("label props", () => {
+      it("should use Italian defaults for zoom aria-labels", () => {
+        wrapper = mount(FzPdfViewer, {
+          props: { src: "https://example.com/test.pdf" },
+          global: { stubs: { FzIconButton: mockFzIconButton } },
+        });
+        const buttons = wrapper.findAll("button");
+        const zoomOut = buttons.find(
+          (b) => b.attributes("aria-label") === "Riduci zoom",
+        );
+        const zoomIn = buttons.find(
+          (b) => b.attributes("aria-label") === "Aumenta zoom",
+        );
+        expect(zoomOut).toBeDefined();
+        expect(zoomIn).toBeDefined();
+      });
+
+      it("should use Italian defaults for page navigation aria-labels", () => {
+        wrapper = mount(FzPdfViewer, {
+          props: { src: "https://example.com/test.pdf" },
+          global: { stubs: { FzIconButton: mockFzIconButton } },
+        });
+        const buttons = wrapper.findAll("button");
+        const prev = buttons.find(
+          (b) => b.attributes("aria-label") === "Pagina precedente",
+        );
+        const next = buttons.find(
+          (b) => b.attributes("aria-label") === "Pagina successiva",
+        );
+        expect(prev).toBeDefined();
+        expect(next).toBeDefined();
+      });
+
+      it("should override zoom labels via props", () => {
+        wrapper = mount(FzPdfViewer, {
+          props: {
+            src: "https://example.com/test.pdf",
+            zoomInLabel: "Zoom in",
+            zoomOutLabel: "Zoom out",
+          },
+          global: { stubs: { FzIconButton: mockFzIconButton } },
+        });
+        const buttons = wrapper.findAll("button");
+        expect(
+          buttons.find((b) => b.attributes("aria-label") === "Zoom in"),
+        ).toBeDefined();
+        expect(
+          buttons.find((b) => b.attributes("aria-label") === "Zoom out"),
+        ).toBeDefined();
+      });
+
+      it("should override page nav labels via props", () => {
+        wrapper = mount(FzPdfViewer, {
+          props: {
+            src: "https://example.com/test.pdf",
+            prevPageLabel: "Previous page",
+            nextPageLabel: "Next page",
+          },
+          global: { stubs: { FzIconButton: mockFzIconButton } },
+        });
+        const buttons = wrapper.findAll("button");
+        expect(
+          buttons.find((b) => b.attributes("aria-label") === "Previous page"),
+        ).toBeDefined();
+        expect(
+          buttons.find((b) => b.attributes("aria-label") === "Next page"),
+        ).toBeDefined();
+      });
+    });
   });
 
   // ============================================
@@ -1243,7 +1313,9 @@ describe("FzPdfViewer", () => {
             global: { stubs: advancedStubs },
           });
           await nextTick();
-          expect(wrapper.find('[data-testid="pdf-scale"]').exists()).toBe(false);
+          expect(wrapper.find('[data-testid="pdf-scale"]').exists()).toBe(
+            false,
+          );
           expect(wrapper.find('[data-testid="pdf-page"]').exists()).toBe(false);
           const buttons = wrapper.findAllComponents({ name: "FzIconButton" });
           // Only download button remains
@@ -1605,6 +1677,40 @@ describe("FzPdfViewer", () => {
       );
 
       expect(wasScrolled).toBe(true);
+    });
+
+    it("should remove event listeners on unmount", () => {
+      wrapper = mount(FzPdfViewer, {
+        props: { src: "https://example.com/test.pdf" },
+        global: { stubs: { FzIconButton: mockFzIconButton } },
+        attachTo: document.body,
+      });
+
+      const overflowEl = wrapper.find(".overflow-auto").element;
+      const removeSpy = vi.spyOn(overflowEl, "removeEventListener");
+
+      wrapper.unmount();
+
+      expect(removeSpy).toHaveBeenCalledWith(
+        "mousemove",
+        expect.any(Function),
+        false,
+      );
+      expect(removeSpy).toHaveBeenCalledWith(
+        "mousedown",
+        expect.any(Function),
+        false,
+      );
+      expect(removeSpy).toHaveBeenCalledWith(
+        "mouseup",
+        expect.any(Function),
+        false,
+      );
+      expect(removeSpy).toHaveBeenCalledWith(
+        "mouseleave",
+        expect.any(Function),
+        false,
+      );
     });
   });
 });
