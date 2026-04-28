@@ -56,17 +56,9 @@ import { FzProgressBar } from '@fiscozen/progress'
 
 ```vue
 <template>
-  <FzProgress size="lg" />
   <FzProgress size="sm" />
+  <FzProgress size="lg" />
   <FzProgress size="xl" />
-</template>
-```
-
-### With Custom Icon
-
-```vue
-<template>
-  <FzProgress name="spinner" />
 </template>
 ```
 
@@ -153,13 +145,10 @@ import { FzProgressBar } from '@fiscozen/progress'
 
 ### FzProgress Props
 
-FzProgress inherits all props from `FzIcon` (from `@fiscozen/icons`):
-
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `name` | `string` | `'spinner-third'` | FontAwesome icon name |
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | `'lg'` | Icon size |
-| `variant` | `IconVariant` | `'far'` | FontAwesome icon variant (fas, far, fal, etc.) |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | `'lg'` | Spinner size |
+| `label` | `string` | `'Caricamento…'` | Accessible label announced via `role="status"` and rendered as visually-hidden text |
 
 ### FzProgressBar Props
 
@@ -210,7 +199,22 @@ The component supports custom ranges including negative values:
 
 ## Accessibility
 
-FzProgressBar follows WCAG 2.1 AA standards and includes:
+### FzProgress
+
+- Wrapper has `role="status"` (implicit `aria-live="polite"`), so screen readers announce the loading state when the spinner enters the DOM
+- `aria-label` defaults to `'Caricamento…'`, overridable via the `label` prop, and is mirrored as visually-hidden text for screen readers that prefer text content
+- The animation is disabled under `@media (prefers-reduced-motion: reduce)` to comply with WCAG 2.3.3
+- **Consumer guidance**: the container that toggles the spinner should set `aria-busy="true"` while loading, so the surrounding content is marked as not yet ready. Example:
+  ```vue
+  <div :aria-busy="loading">
+    <FzProgress v-if="loading" />
+    <slot v-else />
+  </div>
+  ```
+
+### FzProgressBar
+
+Follows WCAG 2.1 AA and includes:
 
 - **ARIA Attributes**: 
   - `role="progressbar"` for semantic meaning
@@ -220,8 +224,6 @@ FzProgressBar follows WCAG 2.1 AA standards and includes:
   - `aria-label` for screen reader description
 - **Screen Reader Support**: Progress values are accessible when navigating to the progress bar
 - **Keyboard Navigation**: Progress bar is accessible via keyboard (though not interactive)
-
-FzProgress uses FontAwesome icons which handle ARIA attributes automatically for decorative icons.
 
 ## Notes
 

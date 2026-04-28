@@ -555,7 +555,7 @@ onUnmounted(() => {
           class="fz__table__loading h-full w-full flex justify-center items-center min-h-[200px] absolute z-20 bg-gray-100/60"
         >
           <slot name="loading">
-            <FzProgress name="spinner-third" />
+            <FzProgress />
           </slot>
         </div>
       </template>
