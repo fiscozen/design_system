@@ -67,6 +67,11 @@ type FzPdfViewerProps = {
    * Note: "rotatable" is a valid English word (capable of being rotated), not a typo.
    */
   rotatable?: boolean;
+  /**
+   * The source of the XML file. When provided alongside toolbarVariant="advanced", enables the PDF/XML
+   * view mode toggle. In XML mode, the XML is rendered in an iframe and zoom/page controls are hidden.
+   */
+  xmlSrc?: string;
 };
 
 export { FzPdfViewerProps };

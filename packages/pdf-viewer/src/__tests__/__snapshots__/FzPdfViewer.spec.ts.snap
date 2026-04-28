@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FzPdfViewer > Snapshots > should match snapshot - advanced toolbar 1`] = `
+exports[`FzPdfViewer > Snapshots > should match snapshot - advanced toolbar with xmlSrc in pdf mode 1`] = `
 "<div data-v-3934d69a="" class="flex group flex-col" style="height: 768px; width: 512px;">
   <div data-v-3934d69a="" class="bg-grey-100 p-24 flex overflow-hidden h-full w-full rounded justify-center items-center">
     <div data-v-3934d69a="" class="overflow-auto h-full">
@@ -14,6 +14,50 @@ exports[`FzPdfViewer > Snapshots > should match snapshot - advanced toolbar 1`] 
         <div data-v-3934d69a="" data-title="pdf" data-initial-selected="true"></div>
         <div data-v-3934d69a="" data-title="xml" data-initial-selected="false"></div>
       </div>
+    </div><!-- Center: page nav + zoom together -->
+    <div data-v-3934d69a="" class="flex items-center gap-24">
+      <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" disabled="" aria-label="Previous page"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-page">1 / 5</span><button data-v-3934d69a="" aria-label="Next page"></button></div>
+      <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" aria-label="Zoom out"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-scale">100 %</span><button data-v-3934d69a="" aria-label="Zoom in"></button></div>
+    </div><!-- Right: download + reset -->
+    <div data-v-3934d69a="" class="flex flex-1 justify-end items-center gap-8"><button data-v-3934d69a="" aria-label="Download"></button>
+      <!--v-if-->
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`FzPdfViewer > Snapshots > should match snapshot - advanced toolbar with xmlSrc in xml mode 1`] = `
+"<div data-v-3934d69a="" class="flex group flex-col" style="height: 768px; width: 512px;">
+  <div data-v-3934d69a="" class="bg-grey-100 p-24 flex overflow-hidden h-full w-full rounded justify-center items-center"><iframe data-v-3934d69a="" src="https://example.com/test.xml" class="w-full h-full border-none"></iframe></div><!-- Basic toolbar -->
+  <!-- Advanced toolbar -->
+  <div data-v-3934d69a="" class="flex items-center px-16 py-12">
+    <div data-v-3934d69a="" class="flex flex-1 justify-start">
+      <div data-v-3934d69a="" data-testid="fz-tabs" class="view-mode-tabs">
+        <div data-v-3934d69a="" data-title="pdf" data-initial-selected="false"></div>
+        <div data-v-3934d69a="" data-title="xml" data-initial-selected="true"></div>
+      </div>
+    </div><!-- Center: page nav + zoom together -->
+    <div data-v-3934d69a="" class="flex items-center gap-24">
+      <!--v-if-->
+    </div><!-- Right: download + reset -->
+    <div data-v-3934d69a="" class="flex flex-1 justify-end items-center gap-8"><button data-v-3934d69a="" aria-label="Download"></button>
+      <!--v-if-->
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`FzPdfViewer > Snapshots > should match snapshot - advanced toolbar without xmlSrc 1`] = `
+"<div data-v-3934d69a="" class="flex group flex-col" style="height: 768px; width: 512px;">
+  <div data-v-3934d69a="" class="bg-grey-100 p-24 flex overflow-hidden h-full w-full rounded justify-center items-center">
+    <div data-v-3934d69a="" class="overflow-auto h-full">
+      <div data-v-3934d69a="" data-testid="vue-pdf" class="shadow-md"></div>
+    </div>
+  </div><!-- Basic toolbar -->
+  <!-- Advanced toolbar -->
+  <div data-v-3934d69a="" class="flex items-center px-16 py-12">
+    <div data-v-3934d69a="" class="flex flex-1 justify-start">
+      <!--v-if-->
     </div><!-- Center: page nav + zoom together -->
     <div data-v-3934d69a="" class="flex items-center gap-24">
       <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" disabled="" aria-label="Previous page"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-page">1 / 5</span><button data-v-3934d69a="" aria-label="Next page"></button></div>

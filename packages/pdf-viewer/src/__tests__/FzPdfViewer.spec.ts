@@ -1004,8 +1004,9 @@ describe("FzPdfViewer", () => {
         FzTabs: mockFzTabs,
         FzTab: mockFzTab,
       };
+      const XML_SRC = "https://example.com/test.xml";
 
-      it("should render FzTabs and 5 icon buttons (nav + zoom + download) without rotatable", () => {
+      it("should render 5 icon buttons (nav + zoom + download) without rotatable", () => {
         wrapper = mount(FzPdfViewer, {
           props: {
             src: "https://example.com/test.pdf",
@@ -1013,7 +1014,6 @@ describe("FzPdfViewer", () => {
           },
           global: { stubs: advancedStubs },
         });
-        expect(wrapper.findComponent({ name: "FzTabs" }).exists()).toBe(true);
         expect(
           wrapper.findAllComponents({ name: "FzIconButton" }),
         ).toHaveLength(5);
@@ -1033,11 +1033,35 @@ describe("FzPdfViewer", () => {
         ).toHaveLength(6);
       });
 
-      it("should render FzTab children with pdf and xml titles", () => {
+      it("should not render FzTabs without xmlSrc", () => {
         wrapper = mount(FzPdfViewer, {
           props: {
             src: "https://example.com/test.pdf",
             toolbarVariant: "advanced",
+          },
+          global: { stubs: advancedStubs },
+        });
+        expect(wrapper.findComponent({ name: "FzTabs" }).exists()).toBe(false);
+      });
+
+      it("should render FzTabs when xmlSrc is provided", () => {
+        wrapper = mount(FzPdfViewer, {
+          props: {
+            src: "https://example.com/test.pdf",
+            toolbarVariant: "advanced",
+            xmlSrc: XML_SRC,
+          },
+          global: { stubs: advancedStubs },
+        });
+        expect(wrapper.findComponent({ name: "FzTabs" }).exists()).toBe(true);
+      });
+
+      it("should render FzTab children with pdf and xml titles when xmlSrc is provided", () => {
+        wrapper = mount(FzPdfViewer, {
+          props: {
+            src: "https://example.com/test.pdf",
+            toolbarVariant: "advanced",
+            xmlSrc: XML_SRC,
           },
           global: { stubs: advancedStubs },
         });
@@ -1094,6 +1118,7 @@ describe("FzPdfViewer", () => {
           props: {
             src: "https://example.com/test.pdf",
             toolbarVariant: "advanced",
+            xmlSrc: XML_SRC,
           },
           global: { stubs: advancedStubs },
         });
@@ -1109,6 +1134,7 @@ describe("FzPdfViewer", () => {
           props: {
             src: "https://example.com/test.pdf",
             toolbarVariant: "advanced",
+            xmlSrc: XML_SRC,
           },
           global: { stubs: advancedStubs },
         });
@@ -1124,6 +1150,7 @@ describe("FzPdfViewer", () => {
           props: {
             src: "https://example.com/test.pdf",
             toolbarVariant: "advanced",
+            xmlSrc: XML_SRC,
           },
           global: { stubs: advancedStubs },
         });
@@ -1156,6 +1183,7 @@ describe("FzPdfViewer", () => {
             src: "https://example.com/test.pdf",
             toolbarVariant: "advanced",
             rotatable: true,
+            xmlSrc: XML_SRC,
           },
           global: { stubs: advancedStubs },
         });
@@ -1172,6 +1200,92 @@ describe("FzPdfViewer", () => {
         await rotateBtn!.trigger("click");
         await nextTick();
         expect(vuePdf.props("rotation")).toBe(180);
+      });
+
+      describe("XML mode (viewMode = xml)", () => {
+        it("should render iframe with xmlSrc when viewMode is xml", async () => {
+          wrapper = mount(FzPdfViewer, {
+            props: {
+              src: "https://example.com/test.pdf",
+              toolbarVariant: "advanced",
+              xmlSrc: XML_SRC,
+              viewMode: "xml",
+            },
+            global: { stubs: advancedStubs },
+          });
+          await nextTick();
+          const iframe = wrapper.find("iframe");
+          expect(iframe.exists()).toBe(true);
+          expect(iframe.attributes("src")).toBe(XML_SRC);
+        });
+
+        it("should hide VuePDF when viewMode is xml", async () => {
+          wrapper = mount(FzPdfViewer, {
+            props: {
+              src: "https://example.com/test.pdf",
+              toolbarVariant: "advanced",
+              xmlSrc: XML_SRC,
+              viewMode: "xml",
+            },
+            global: { stubs: advancedStubs },
+          });
+          await nextTick();
+          expect(wrapper.find('[data-testid="vue-pdf"]').exists()).toBe(false);
+        });
+
+        it("should hide zoom and page controls when viewMode is xml", async () => {
+          wrapper = mount(FzPdfViewer, {
+            props: {
+              src: "https://example.com/test.pdf",
+              toolbarVariant: "advanced",
+              xmlSrc: XML_SRC,
+              viewMode: "xml",
+            },
+            global: { stubs: advancedStubs },
+          });
+          await nextTick();
+          expect(wrapper.find('[data-testid="pdf-scale"]').exists()).toBe(false);
+          expect(wrapper.find('[data-testid="pdf-page"]').exists()).toBe(false);
+          const buttons = wrapper.findAllComponents({ name: "FzIconButton" });
+          // Only download button remains
+          expect(buttons).toHaveLength(1);
+          expect(buttons[0].attributes("aria-label")).toBe("Download");
+        });
+
+        it("should keep download button visible when viewMode is xml", async () => {
+          wrapper = mount(FzPdfViewer, {
+            props: {
+              src: "https://example.com/test.pdf",
+              toolbarVariant: "advanced",
+              xmlSrc: XML_SRC,
+              viewMode: "xml",
+            },
+            global: { stubs: advancedStubs },
+          });
+          await nextTick();
+          const downloadBtn = wrapper
+            .findAllComponents({ name: "FzIconButton" })
+            .find((b) => b.attributes("aria-label") === "Download");
+          expect(downloadBtn).toBeDefined();
+        });
+
+        it("should show VuePDF and controls when switching back to pdf", async () => {
+          wrapper = mount(FzPdfViewer, {
+            props: {
+              src: "https://example.com/test.pdf",
+              toolbarVariant: "advanced",
+              xmlSrc: XML_SRC,
+              viewMode: "xml",
+            },
+            global: { stubs: advancedStubs },
+          });
+          await nextTick();
+          await wrapper.setProps({ viewMode: "pdf" });
+          await nextTick();
+          expect(wrapper.find('[data-testid="vue-pdf"]').exists()).toBe(true);
+          expect(wrapper.find("iframe").exists()).toBe(false);
+          expect(wrapper.find('[data-testid="pdf-scale"]').exists()).toBe(true);
+        });
       });
 
       it("should hide navigation in advanced toolbar for single-page PDFs", () => {
@@ -1318,11 +1432,48 @@ describe("FzPdfViewer", () => {
       expect(wrapper.html()).toMatchSnapshot();
     });
 
-    it("should match snapshot - advanced toolbar", () => {
+    it("should match snapshot - advanced toolbar without xmlSrc", () => {
       wrapper = mount(FzPdfViewer, {
         props: {
           src: "https://example.com/test.pdf",
           toolbarVariant: "advanced",
+        },
+        global: {
+          stubs: {
+            FzIconButton: mockFzIconButton,
+            FzTabs: mockFzTabs,
+            FzTab: mockFzTab,
+          },
+        },
+      });
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - advanced toolbar with xmlSrc in pdf mode", () => {
+      wrapper = mount(FzPdfViewer, {
+        props: {
+          src: "https://example.com/test.pdf",
+          toolbarVariant: "advanced",
+          xmlSrc: "https://example.com/test.xml",
+        },
+        global: {
+          stubs: {
+            FzIconButton: mockFzIconButton,
+            FzTabs: mockFzTabs,
+            FzTab: mockFzTab,
+          },
+        },
+      });
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - advanced toolbar with xmlSrc in xml mode", () => {
+      wrapper = mount(FzPdfViewer, {
+        props: {
+          src: "https://example.com/test.pdf",
+          toolbarVariant: "advanced",
+          xmlSrc: "https://example.com/test.xml",
+          viewMode: "xml",
         },
         global: {
           stubs: {

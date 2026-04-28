@@ -1,5 +1,16 @@
 # @fiscozen/pdf-viewer
 
+## 1.0.0
+
+### Minor Changes
+
+#### PDF/XML view mode toggle
+
+- Added `xmlSrc` prop: when provided alongside `toolbarVariant="advanced"`, enables a PDF/XML tab switcher in the toolbar
+- In XML mode, the XML file is rendered in an iframe; zoom and page navigation controls are hidden while the download button remains visible
+- The PDF/XML tabs are only shown when `xmlSrc` is provided — existing usages with `toolbarVariant="advanced"` but no `xmlSrc` are unaffected
+- `v-model:viewMode` (`"pdf" | "xml"`) exposes the current mode to the parent; the parent is responsible for handling downloads per mode via the `download` event
+
 ## 0.1.5
 
 ### Patch Changes

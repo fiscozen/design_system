@@ -8,7 +8,12 @@
     :style="{ height, width }"
   >
     <div :class="[staticPdfContainerClass, pdfContainerClass]">
-      <div :class="[staticVuePDFClass]" ref="overflowContainer">
+      <iframe
+        v-if="viewMode === 'xml' && props.xmlSrc"
+        :src="props.xmlSrc"
+        class="w-full h-full border-none"
+      />
+      <div v-else :class="[staticVuePDFClass]" ref="overflowContainer">
         <VuePDF
           :pdf
           :page
@@ -108,6 +113,7 @@
         ]"
       >
         <FzTabs
+          v-if="props.xmlSrc"
           class="view-mode-tabs"
           :environment="props.environment"
           @change="handleViewModeChange"
@@ -132,52 +138,54 @@
             'opacity-0 group-hover:opacity-100 transition-opacity',
         ]"
       >
-        <div v-if="pages > 1" class="flex items-center gap-8">
-          <FzIconButton
-            iconName="arrow-left"
-            iconVariant="fas"
-            :environment="props.environment"
-            variant="secondary"
-            :disabled="page <= 1"
-            aria-label="Previous page"
-            @click="handlePageChange(page - 1)"
-          />
-          <span :class="staticTextClass" data-testid="pdf-page"
-            >{{ page }} / {{ pages }}</span
-          >
-          <FzIconButton
-            iconName="arrow-right"
-            iconVariant="fas"
-            :environment="props.environment"
-            variant="secondary"
-            :disabled="page >= pages"
-            aria-label="Next page"
-            @click="handlePageChange(page + 1)"
-          />
-        </div>
-        <div class="flex items-center gap-8">
-          <FzIconButton
-            iconName="minus"
-            iconVariant="fas"
-            :environment="props.environment"
-            variant="secondary"
-            :disabled="scale <= minScale"
-            aria-label="Zoom out"
-            @click="handleScaleChange(-scaleStep)"
-          />
-          <span :class="staticTextClass" data-testid="pdf-scale"
-            >{{ Math.round(scale * 100) }} %</span
-          >
-          <FzIconButton
-            iconName="plus"
-            iconVariant="fas"
-            :environment="props.environment"
-            variant="secondary"
-            :disabled="scale >= maxScale"
-            aria-label="Zoom in"
-            @click="handleScaleChange(scaleStep)"
-          />
-        </div>
+        <template v-if="viewMode === 'pdf'">
+          <div v-if="pages > 1" class="flex items-center gap-8">
+            <FzIconButton
+              iconName="arrow-left"
+              iconVariant="fas"
+              :environment="props.environment"
+              variant="secondary"
+              :disabled="page <= 1"
+              aria-label="Previous page"
+              @click="handlePageChange(page - 1)"
+            />
+            <span :class="staticTextClass" data-testid="pdf-page"
+              >{{ page }} / {{ pages }}</span
+            >
+            <FzIconButton
+              iconName="arrow-right"
+              iconVariant="fas"
+              :environment="props.environment"
+              variant="secondary"
+              :disabled="page >= pages"
+              aria-label="Next page"
+              @click="handlePageChange(page + 1)"
+            />
+          </div>
+          <div class="flex items-center gap-8">
+            <FzIconButton
+              iconName="minus"
+              iconVariant="fas"
+              :environment="props.environment"
+              variant="secondary"
+              :disabled="scale <= minScale"
+              aria-label="Zoom out"
+              @click="handleScaleChange(-scaleStep)"
+            />
+            <span :class="staticTextClass" data-testid="pdf-scale"
+              >{{ Math.round(scale * 100) }} %</span
+            >
+            <FzIconButton
+              iconName="plus"
+              iconVariant="fas"
+              :environment="props.environment"
+              variant="secondary"
+              :disabled="scale >= maxScale"
+              aria-label="Zoom in"
+              @click="handleScaleChange(scaleStep)"
+            />
+          </div>
+        </template>
       </div>
       <!-- Right: download + reset -->
       <div
