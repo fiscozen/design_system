@@ -28,7 +28,7 @@ vi.mock("@tato30/vue-pdf", async () => {
     VuePDF: {
       name: "VuePDF",
       template: '<div data-testid="vue-pdf" :class="$attrs.class" />',
-      props: ["pdf", "page", "scale"],
+      props: ["pdf", "page", "scale", "textLayer"],
     },
     usePDF: mockUsePDF,
   };
@@ -1309,6 +1309,113 @@ describe("FzPdfViewer", () => {
         },
       });
       expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it("should match snapshot - selectable enabled", () => {
+      wrapper = mount(FzPdfViewer, {
+        props: {
+          src: "https://example.com/test.pdf",
+          selectable: true,
+        },
+        global: {
+          stubs: {
+            FzIconButton: mockFzIconButton,
+          },
+        },
+      });
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+  });
+
+  describe("selectable prop", () => {
+    it("should default selectable to false", () => {
+      wrapper = mount(FzPdfViewer, {
+        props: { src: "https://example.com/test.pdf" },
+        global: { stubs: { FzIconButton: mockFzIconButton } },
+      });
+      expect(wrapper.props("selectable")).toBe(false);
+    });
+
+    it("should pass selectable=true to VuePDF", () => {
+      wrapper = mount(FzPdfViewer, {
+        props: { src: "https://example.com/test.pdf", selectable: true },
+        global: { stubs: { FzIconButton: mockFzIconButton } },
+      });
+      const vuePdf = wrapper.findComponent({ name: "VuePDF" });
+      expect(vuePdf.props("textLayer")).toBe(true);
+    });
+
+    it("should pass selectable=false to VuePDF by default", () => {
+      wrapper = mount(FzPdfViewer, {
+        props: { src: "https://example.com/test.pdf" },
+        global: { stubs: { FzIconButton: mockFzIconButton } },
+      });
+      const vuePdf = wrapper.findComponent({ name: "VuePDF" });
+      expect(vuePdf.props("textLayer")).toBe(false);
+    });
+  });
+
+  describe("drag vs text selection interaction", () => {
+    it("should not initiate drag when clicking inside a .textLayer element", async () => {
+      wrapper = mount(FzPdfViewer, {
+        props: { src: "https://example.com/test.pdf", selectable: true },
+        global: { stubs: { FzIconButton: mockFzIconButton } },
+        attachTo: document.body,
+      });
+
+      const overflowEl = wrapper.find(".overflow-auto").element;
+
+      const selectableEl = document.createElement("div");
+      selectableEl.className = "textLayer";
+      overflowEl.appendChild(selectableEl);
+
+      let wasScrolled = false;
+      Object.defineProperty(overflowEl, "scrollLeft", {
+        set() {
+          wasScrolled = true;
+        },
+        get() {
+          return 0;
+        },
+        configurable: true,
+      });
+
+      selectableEl.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true }),
+      );
+      overflowEl.dispatchEvent(new MouseEvent("mousemove", { bubbles: true }));
+
+      expect(wasScrolled).toBe(false);
+    });
+
+    it("should initiate drag when clicking directly on the container", async () => {
+      wrapper = mount(FzPdfViewer, {
+        props: { src: "https://example.com/test.pdf", selectable: true },
+        global: { stubs: { FzIconButton: mockFzIconButton } },
+        attachTo: document.body,
+      });
+
+      const overflowEl = wrapper.find(".overflow-auto").element;
+
+      let wasScrolled = false;
+      Object.defineProperty(overflowEl, "scrollLeft", {
+        set() {
+          wasScrolled = true;
+        },
+        get() {
+          return 0;
+        },
+        configurable: true,
+      });
+
+      overflowEl.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true, target: overflowEl }),
+      );
+      overflowEl.dispatchEvent(
+        new MouseEvent("mousemove", { bubbles: true, clientX: 50 }),
+      );
+
+      expect(wasScrolled).toBe(true);
     });
   });
 });

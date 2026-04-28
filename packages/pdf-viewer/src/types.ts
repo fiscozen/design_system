@@ -54,6 +54,13 @@ type FzPdfViewerProps = {
    * Default is "bottom".
    */
   toolbarPosition?: "top" | "bottom";
+  /**
+   * When true, renders an invisible text layer over the PDF canvas that allows users to select and copy text.
+   * Drag-to-pan remains active when clicking on the canvas background; clicking on text initiates native
+   * browser selection instead.
+   * Default is false.
+   */
+  selectable?: boolean;
 };
 
 export { FzPdfViewerProps };

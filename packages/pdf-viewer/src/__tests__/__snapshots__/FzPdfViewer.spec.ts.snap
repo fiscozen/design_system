@@ -80,6 +80,20 @@ exports[`FzPdfViewer > Snapshots > should match snapshot - scale 150% 1`] = `
 </div>"
 `;
 
+exports[`FzPdfViewer > Snapshots > should match snapshot - selectable enabled 1`] = `
+"<div data-v-3934d69a="" class="flex group flex-col gap-12" style="height: 768px; width: 512px;">
+  <div data-v-3934d69a="" class="bg-grey-100 p-24 flex overflow-hidden h-full w-full rounded justify-center items-center">
+    <div data-v-3934d69a="" class="overflow-auto h-full">
+      <div data-v-3934d69a="" data-testid="vue-pdf" class="shadow-md"></div>
+    </div>
+  </div><!-- Basic toolbar -->
+  <div data-v-3934d69a="" class="flex justify-between">
+    <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" aria-label="Zoom out"></button><span data-v-3934d69a="" class="text-grey-500 font-medium text-sm" data-testid="pdf-scale">100 %</span><button data-v-3934d69a="" aria-label="Zoom in"></button></div>
+    <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" disabled="" aria-label="Previous page"></button><span data-v-3934d69a="" class="text-grey-500 font-medium text-sm" data-testid="pdf-page">1 / 5</span><button data-v-3934d69a="" aria-label="Next page"></button></div>
+  </div>
+</div>"
+`;
+
 exports[`FzPdfViewer > Snapshots > should match snapshot - small size 1`] = `
 "<div data-v-3934d69a="" class="flex group flex-col gap-12" style="height: 768px; width: 512px;">
   <div data-v-3934d69a="" class="bg-grey-100 p-24 flex overflow-hidden h-full w-full rounded justify-center items-center">

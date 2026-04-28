@@ -1,7 +1,10 @@
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Ref } from "vue";
 
-export function useOverflowDrag(container: Ref<HTMLElement | undefined>) {
+export function useOverflowDrag(
+  container: Ref<HTMLElement | undefined>,
+  options?: { textLayerAware?: Ref<boolean> },
+) {
   const mouseDown = ref(false);
   const isOverflowing = ref(false);
 
@@ -28,6 +31,12 @@ export function useOverflowDrag(container: Ref<HTMLElement | undefined>) {
       scrollTop = 0;
 
     const startDragging = (e: MouseEvent) => {
+      if (
+        options?.textLayerAware?.value &&
+        (e.target as Element).closest?.(".textLayer")
+      ) {
+        return;
+      }
       mouseDown.value = true;
       startX = e.pageX - slider.offsetLeft;
       scrollLeft = slider.scrollLeft;
@@ -40,8 +49,8 @@ export function useOverflowDrag(container: Ref<HTMLElement | undefined>) {
     };
 
     const move = (e: MouseEvent) => {
-      e.preventDefault();
       if (!mouseDown.value) return;
+      e.preventDefault();
       const x = e.pageX - slider.offsetLeft;
       const scroll = x - startX;
       const y = e.pageY - slider.offsetTop;

@@ -70,6 +70,9 @@ const meta: Meta<typeof FzPdfViewer> = {
     width: {
       control: 'text',
     },
+    selectable: {
+      control: 'boolean',
+    },
     pdfContainerClass: {
       control: false,
     },
@@ -89,6 +92,7 @@ const meta: Meta<typeof FzPdfViewer> = {
     scaleStep: 0.25,
     height: '100vh',
     width: '100%',
+    selectable: false,
   },
 }
 
@@ -332,6 +336,29 @@ export const SinglePage: Story = {
     await step('Verify zoom controls are still present', async () => {
       await expect(canvas.getByRole('button', { name: 'Zoom in' })).toBeInTheDocument()
       await expect(canvas.getByRole('button', { name: 'Zoom out' })).toBeInTheDocument()
+    })
+
+    await step('Allow PDF library cleanup', async () => {
+      await waitForPdfCleanup()
+    })
+  },
+}
+
+export const TextSelection: Story = {
+  args: {
+    selectable: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Wait for PDF to load', async () => {
+      await waitForPdfLoad(canvasElement)
+    })
+
+    await step('Verify zoom and page controls are present', async () => {
+      await expect(canvas.getByRole('button', { name: 'Zoom in' })).toBeInTheDocument()
+      await expect(canvas.getByRole('button', { name: 'Zoom out' })).toBeInTheDocument()
+      await expect(canvas.getByTestId('pdf-page')).toBeInTheDocument()
     })
 
     await step('Allow PDF library cleanup', async () => {

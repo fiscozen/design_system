@@ -9,7 +9,13 @@
   >
     <div :class="[staticPdfContainerClass, pdfContainerClass]">
       <div :class="[staticVuePDFClass]" ref="overflowContainer">
-        <VuePDF :pdf :page :scale :class="['shadow-md', cursorClass]" />
+        <VuePDF
+          :pdf
+          :page
+          :scale
+          :textLayer="props.selectable"
+          :class="['shadow-md', cursorClass]"
+        />
       </div>
     </div>
 
@@ -18,13 +24,15 @@
       v-if="toolbarVariant === 'basic'"
       :class="[
         'flex justify-between',
-        toolbarPosition === 'top' && 'bg-grey-100 group-hover:bg-white transition-colors px-16 py-12',
+        toolbarPosition === 'top' &&
+          'bg-grey-100 group-hover:bg-white transition-colors px-16 py-12',
       ]"
     >
       <div
         :class="[
           'flex items-center gap-8',
-          toolbarPosition === 'top' && 'opacity-0 group-hover:opacity-100 transition-opacity',
+          toolbarPosition === 'top' &&
+            'opacity-0 group-hover:opacity-100 transition-opacity',
         ]"
       >
         <FzIconButton
@@ -55,7 +63,8 @@
         v-if="pages > 1"
         :class="[
           'flex items-center gap-8',
-          toolbarPosition === 'top' && 'opacity-0 group-hover:opacity-100 transition-opacity',
+          toolbarPosition === 'top' &&
+            'opacity-0 group-hover:opacity-100 transition-opacity',
         ]"
       >
         <FzIconButton
@@ -89,13 +98,15 @@
       v-else
       :class="[
         'flex items-center',
-        toolbarPosition === 'top' && 'bg-grey-100 group-hover:bg-white transition-colors px-16 py-12',
+        toolbarPosition === 'top' &&
+          'bg-grey-100 group-hover:bg-white transition-colors px-16 py-12',
       ]"
     >
       <div
         :class="[
           'flex flex-1 justify-start',
-          toolbarPosition === 'top' && 'opacity-0 group-hover:opacity-100 transition-opacity',
+          toolbarPosition === 'top' &&
+            'opacity-0 group-hover:opacity-100 transition-opacity',
         ]"
       >
         <FzTabs
@@ -103,15 +114,24 @@
           :environment="props.environment"
           @change="handleViewModeChange"
         >
-          <FzTab title="pdf" icon="file" :initialSelected="viewMode === 'pdf'" />
-          <FzTab title="xml" icon="code" :initialSelected="viewMode === 'xml'" />
+          <FzTab
+            title="pdf"
+            icon="file"
+            :initialSelected="viewMode === 'pdf'"
+          />
+          <FzTab
+            title="xml"
+            icon="code"
+            :initialSelected="viewMode === 'xml'"
+          />
         </FzTabs>
       </div>
       <!-- Center: page nav + zoom together -->
       <div
         :class="[
           'flex items-center gap-24',
-          toolbarPosition === 'top' && 'opacity-0 group-hover:opacity-100 transition-opacity',
+          toolbarPosition === 'top' &&
+            'opacity-0 group-hover:opacity-100 transition-opacity',
         ]"
       >
         <div v-if="pages > 1" class="flex items-center gap-8">
@@ -169,7 +189,8 @@
       <div
         :class="[
           'flex flex-1 justify-end items-center gap-8',
-          toolbarPosition === 'top' && 'opacity-0 group-hover:opacity-100 transition-opacity',
+          toolbarPosition === 'top' &&
+            'opacity-0 group-hover:opacity-100 transition-opacity',
         ]"
       >
         <FzIconButton
@@ -197,6 +218,7 @@
 import { computed, ref } from "vue";
 import { FzPdfViewerProps } from "./types";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
+import "@tato30/vue-pdf/style.css";
 import { FzIconButton } from "@fiscozen/button";
 import { FzTabs, FzTab } from "@fiscozen/tab";
 import { useOverflowDrag } from "./composables/useOverflowDrag";
@@ -212,6 +234,7 @@ const props = withDefaults(defineProps<FzPdfViewerProps>(), {
   scaleStep: 0.25,
   toolbarVariant: "basic",
   toolbarPosition: "bottom",
+  selectable: false,
 });
 
 const emit = defineEmits<{
@@ -236,7 +259,10 @@ const page = ref(props.initialPage);
 const scale = ref(props.initialScale);
 const overflowContainer = ref<HTMLElement>();
 
-const { cursorClass } = useOverflowDrag(overflowContainer);
+const textLayerEnabled = computed(() => !!props.selectable);
+const { cursorClass } = useOverflowDrag(overflowContainer, {
+  textLayerAware: textLayerEnabled,
+});
 
 const computedTextClass = computed(
   () => mapEnvironmentToText[props.environment],
