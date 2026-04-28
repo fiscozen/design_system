@@ -72,6 +72,22 @@ type FzPdfViewerProps = {
    * view mode toggle. In XML mode, the XML is rendered in an iframe and zoom/page controls are hidden.
    */
   xmlSrc?: string;
+  /**
+   * Accessible label for the "previous page" button. Default: "Pagina precedente".
+   */
+  prevPageLabel?: string;
+  /**
+   * Accessible label for the "next page" button. Default: "Pagina successiva".
+   */
+  nextPageLabel?: string;
+  /**
+   * Accessible label for the "zoom in" button. Default: "Aumenta zoom".
+   */
+  zoomInLabel?: string;
+  /**
+   * Accessible label for the "zoom out" button. Default: "Riduci zoom".
+   */
+  zoomOutLabel?: string;
 };
 
 export { FzPdfViewerProps };

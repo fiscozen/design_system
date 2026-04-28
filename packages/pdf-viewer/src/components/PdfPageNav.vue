@@ -6,7 +6,7 @@
       :environment="environment"
       variant="secondary"
       :disabled="page <= 1"
-      aria-label="Previous page"
+      :aria-label="prevPageLabel"
       @click="emit('change', page - 1)"
     />
     <span :class="staticTextClass" data-testid="pdf-page"
@@ -18,7 +18,7 @@
       :environment="environment"
       variant="secondary"
       :disabled="page >= pages"
-      aria-label="Next page"
+      :aria-label="nextPageLabel"
       @click="emit('change', page + 1)"
     />
   </div>
@@ -27,11 +27,19 @@
 <script setup lang="ts">
 import { FzIconButton } from "@fiscozen/button";
 
-defineProps<{
-  environment: "frontoffice" | "backoffice";
-  page: number;
-  pages: number;
-}>();
+withDefaults(
+  defineProps<{
+    environment: "frontoffice" | "backoffice";
+    page: number;
+    pages: number;
+    prevPageLabel?: string;
+    nextPageLabel?: string;
+  }>(),
+  {
+    prevPageLabel: "Pagina precedente",
+    nextPageLabel: "Pagina successiva",
+  },
+);
 
 const emit = defineEmits<{
   change: [page: number];

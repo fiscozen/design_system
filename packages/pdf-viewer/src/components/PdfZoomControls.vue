@@ -6,7 +6,7 @@
       :environment="environment"
       variant="secondary"
       :disabled="scale <= minScale"
-      aria-label="Zoom out"
+      :aria-label="zoomOutLabel"
       @click="emit('change', -scaleStep)"
     />
     <span :class="staticTextClass" data-testid="pdf-scale"
@@ -18,7 +18,7 @@
       :environment="environment"
       variant="secondary"
       :disabled="scale >= maxScale"
-      aria-label="Zoom in"
+      :aria-label="zoomInLabel"
       @click="emit('change', scaleStep)"
     />
   </div>
@@ -27,13 +27,21 @@
 <script setup lang="ts">
 import { FzIconButton } from "@fiscozen/button";
 
-defineProps<{
-  environment: "frontoffice" | "backoffice";
-  scale: number;
-  minScale: number;
-  maxScale: number;
-  scaleStep: number;
-}>();
+withDefaults(
+  defineProps<{
+    environment: "frontoffice" | "backoffice";
+    scale: number;
+    minScale: number;
+    maxScale: number;
+    scaleStep: number;
+    zoomInLabel?: string;
+    zoomOutLabel?: string;
+  }>(),
+  {
+    zoomInLabel: "Aumenta zoom",
+    zoomOutLabel: "Riduci zoom",
+  },
+);
 
 const emit = defineEmits<{
   change: [delta: number];

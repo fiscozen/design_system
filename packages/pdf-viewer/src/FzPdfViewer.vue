@@ -42,6 +42,8 @@
           :minScale="props.minScale"
           :maxScale="props.maxScale"
           :scaleStep="props.scaleStep"
+          :zoomInLabel="props.zoomInLabel"
+          :zoomOutLabel="props.zoomOutLabel"
           @change="handleScaleChange"
         />
       </div>
@@ -50,6 +52,8 @@
           :environment="props.environment"
           :page="page"
           :pages="pages"
+          :prevPageLabel="props.prevPageLabel"
+          :nextPageLabel="props.nextPageLabel"
           @change="handlePageChange"
         />
       </div>
@@ -90,6 +94,8 @@
             :environment="props.environment"
             :page="page"
             :pages="pages"
+            :prevPageLabel="props.prevPageLabel"
+            :nextPageLabel="props.nextPageLabel"
             @change="handlePageChange"
           />
           <PdfZoomControls
@@ -98,12 +104,19 @@
             :minScale="props.minScale"
             :maxScale="props.maxScale"
             :scaleStep="props.scaleStep"
+            :zoomInLabel="props.zoomInLabel"
+            :zoomOutLabel="props.zoomOutLabel"
             @change="handleScaleChange"
           />
         </template>
       </div>
       <!-- Right: download + rotate -->
-      <div :class="['flex flex-1 justify-end items-center gap-8', toolbarInnerClass]">
+      <div
+        :class="[
+          'flex flex-1 justify-end items-center gap-8',
+          toolbarInnerClass,
+        ]"
+      >
         <FzIconButton
           iconName="arrow-down-to-bracket"
           iconVariant="far"

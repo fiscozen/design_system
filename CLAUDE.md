@@ -66,8 +66,6 @@ Icons are rendered via `FzIcon` / `FzIconButton` using the Font Awesome kit `@aw
 **Only use icon names that exist in this kit.** The full list of available icon names can be inspected at:
 `node_modules/.pnpm/@awesome.me+kit-8137893ad3@*/node_modules/@awesome.me/kit-8137893ad3/icons/modules/classic/{solid|regular}.js`
 
-Common pitfalls: `download`, `rotate-left`, `arrows-rotate` are **not** in the kit. Use `arrow-down-to-line`, `clock-rotate-left` instead.
-
 ## Code Style
 
 - Vue 3 Composition API with `<script setup lang="ts">`

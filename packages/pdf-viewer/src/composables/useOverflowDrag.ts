@@ -14,11 +14,10 @@ export function useOverflowDrag(
   });
 
   const checkOverflow = () => {
-    if (container.value) {
-      isOverflowing.value =
-        container.value.scrollHeight > container.value.clientHeight ||
-        container.value.scrollWidth > container.value.clientWidth;
-    }
+    if (!container.value) return;
+    isOverflowing.value =
+      container.value.scrollHeight > container.value.clientHeight ||
+      container.value.scrollWidth > container.value.clientWidth;
   };
 
   const setupDrag = () => {
@@ -63,12 +62,20 @@ export function useOverflowDrag(
     slider.addEventListener("mousedown", startDragging, false);
     slider.addEventListener("mouseup", stopDragging, false);
     slider.addEventListener("mouseleave", stopDragging, false);
+
+    return () => {
+      slider.removeEventListener("mousemove", move, false);
+      slider.removeEventListener("mousedown", startDragging, false);
+      slider.removeEventListener("mouseup", stopDragging, false);
+      slider.removeEventListener("mouseleave", stopDragging, false);
+    };
   };
 
   let resizeObserver: ResizeObserver | null = null;
+  let cleanupDrag: (() => void) | undefined;
 
   onMounted(() => {
-    setupDrag();
+    cleanupDrag = setupDrag();
     resizeObserver = new ResizeObserver(checkOverflow);
     if (container.value) {
       resizeObserver.observe(container.value);
@@ -76,6 +83,7 @@ export function useOverflowDrag(
   });
 
   onBeforeUnmount(() => {
+    cleanupDrag?.();
     if (resizeObserver && container.value) {
       resizeObserver.unobserve(container.value);
     }
