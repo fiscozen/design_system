@@ -95,6 +95,23 @@ const Default: Story = {
       await expect(progressBar?.getAttribute('aria-valuemin')).toBe('0')
       await expect(progressBar?.getAttribute('aria-valuemax')).toBe('100')
     })
+
+    await step('Verify width transition honors prefers-reduced-motion', async () => {
+      const indicator = canvasElement.querySelector(
+        '.fz-progress-bar__progress-indicator'
+      ) as HTMLElement | null
+      await expect(indicator).toBeTruthy()
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const transitionDuration = window.getComputedStyle(indicator!).transitionDuration
+      // motion-safe:duration-300 only applies when reduced motion is NOT requested.
+      // When the user has reduced motion ON, the transition utility is omitted → duration is '0s'.
+      // To verify the OFF branch in DevTools: Rendering → "Emulate CSS media feature prefers-reduced-motion: reduce".
+      if (reducedMotion) {
+        await expect(transitionDuration).toBe('0s')
+      } else {
+        await expect(transitionDuration).toBe('0.3s')
+      }
+    })
   }
 }
 

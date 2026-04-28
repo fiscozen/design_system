@@ -548,6 +548,18 @@ describe("FzProgressBar", () => {
       expect(container.attributes("aria-valuetext")).toBeUndefined();
     });
 
+    it("omits aria-valuetext when valueText is an empty string", () => {
+      const wrapper = mount(FzProgressBar, {
+        props: {
+          current: 50,
+          valueText: "",
+        },
+      });
+
+      const container = wrapper.find(".fz-progress-bar");
+      expect(container.attributes("aria-valuetext")).toBeUndefined();
+    });
+
     it("renders aria-valuetext when valueText prop is provided", () => {
       const wrapper = mount(FzProgressBar, {
         props: {
