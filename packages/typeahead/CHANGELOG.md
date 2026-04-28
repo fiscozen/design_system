@@ -1,5 +1,12 @@
 # @fiscozen/typeahead
 
+## 3.0.8
+
+### Patch Changes
+
+- Updated dependencies [7a81fcd]
+  - @fiscozen/progress@4.0.0
+
 ## 3.0.7
 
 ### Patch Changes
