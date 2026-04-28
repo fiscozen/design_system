@@ -62,10 +62,20 @@ export interface FzProgressBarProps {
   min?: number;
 
   /**
-   * Accessible label for screen readers
-   * @default 'progress-bar'
+   * Accessible label announced by screen readers via `aria-label`.
+   * Consumers should provide a meaningful, contextual label
+   * (e.g. 'Caricamento file', 'Importazione clienti').
+   * @default 'Avanzamento'
    */
-  name?: string;
+  label?: string;
+
+  /**
+   * Optional human-readable text passed to `aria-valuetext`.
+   * When provided, screen readers announce this string instead of the
+   * raw `aria-valuenow` percentage. Useful for contextual progress
+   * (e.g. 'Caricamento file 3 di 10', 'Passo 2 di 5').
+   */
+  valueText?: string;
 
   /**
    * Size of the progress bar
@@ -74,7 +84,14 @@ export interface FzProgressBarProps {
   size?: "sm" | "md";
 
   /**
-   * Color variant of the progress indicator
+   * Color variant of the progress indicator.
+   *
+   * Most colors map to literal Tailwind tokens (`bg-{color}-500`/`bg-{color}-100`).
+   * Two values use semantic tokens to share the same palette as the rest of the
+   * design system:
+   * - `'yellow'` → `semantic-warning-*`
+   * - `'red'`    → `semantic-error-*`
+   *
    * @default 'purple'
    */
   color?: "purple" | "blue" | "orange" | "pink" | "yellow" | "grey" | "red";
