@@ -118,9 +118,9 @@ describe("FzPdfViewer", () => {
         },
       });
       expect(wrapper.exists()).toBe(true);
-      expect(mockUsePDF).toHaveBeenCalledWith(
-        "https://example.com/document.pdf",
-      );
+      // usePDF is called with a reactive Ref wrapping the src prop
+      const call = mockUsePDF.mock.calls[0][0] as { value: string };
+      expect(call.value).toBe("https://example.com/document.pdf");
     });
 
     it("should render PDF container", () => {
@@ -205,7 +205,7 @@ describe("FzPdfViewer", () => {
         expect(wrapper.props("src")).toBe("https://example.com/test.pdf");
       });
 
-      it("should call usePDF with src", () => {
+      it("should call usePDF with a reactive ref wrapping src", () => {
         wrapper = mount(FzPdfViewer, {
           props: {
             src: "https://example.com/document.pdf",
@@ -216,9 +216,8 @@ describe("FzPdfViewer", () => {
             },
           },
         });
-        expect(mockUsePDF).toHaveBeenCalledWith(
-          "https://example.com/document.pdf",
-        );
+        const call = mockUsePDF.mock.calls[0][0];
+        expect(call.value).toBe("https://example.com/document.pdf");
       });
     });
 

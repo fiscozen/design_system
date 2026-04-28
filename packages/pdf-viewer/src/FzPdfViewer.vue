@@ -35,63 +35,22 @@
           'bg-grey-100 group-hover:bg-white transition-colors',
       ]"
     >
-      <div
-        :class="[
-          'flex items-center gap-8',
-          toolbarPosition === 'top' &&
-            'opacity-0 group-hover:opacity-100 transition-opacity',
-        ]"
-      >
-        <FzIconButton
-          iconName="minus"
-          iconVariant="fas"
+      <div :class="['flex items-center gap-8', toolbarInnerClass]">
+        <PdfZoomControls
           :environment="props.environment"
-          variant="secondary"
-          :disabled="scale <= minScale"
-          aria-label="Zoom out"
-          @click="handleScaleChange(-scaleStep)"
-        />
-        <span :class="staticTextClass" data-testid="pdf-scale"
-          >{{ Math.round(scale * 100) }} %</span
-        >
-        <FzIconButton
-          iconName="plus"
-          iconVariant="fas"
-          :environment="props.environment"
-          variant="secondary"
-          :disabled="scale >= maxScale"
-          aria-label="Zoom in"
-          @click="handleScaleChange(scaleStep)"
+          :scale="scale"
+          :minScale="props.minScale"
+          :maxScale="props.maxScale"
+          :scaleStep="props.scaleStep"
+          @change="handleScaleChange"
         />
       </div>
-      <div
-        v-if="pages > 1"
-        :class="[
-          'flex items-center gap-8',
-          toolbarPosition === 'top' &&
-            'opacity-0 group-hover:opacity-100 transition-opacity',
-        ]"
-      >
-        <FzIconButton
-          iconName="arrow-left"
-          iconVariant="fas"
+      <div :class="['flex items-center gap-8', toolbarInnerClass]">
+        <PdfPageNav
           :environment="props.environment"
-          variant="secondary"
-          :disabled="page <= 1"
-          aria-label="Previous page"
-          @click="handlePageChange(page - 1)"
-        />
-        <span :class="staticTextClass" data-testid="pdf-page"
-          >{{ page }} / {{ pages }}</span
-        >
-        <FzIconButton
-          iconName="arrow-right"
-          iconVariant="fas"
-          :environment="props.environment"
-          variant="secondary"
-          :disabled="page >= pages"
-          aria-label="Next page"
-          @click="handlePageChange(page + 1)"
+          :page="page"
+          :pages="pages"
+          @change="handlePageChange"
         />
       </div>
     </div>
@@ -105,13 +64,7 @@
           'bg-grey-100 group-hover:bg-white transition-colors',
       ]"
     >
-      <div
-        :class="[
-          'flex flex-1 justify-start',
-          toolbarPosition === 'top' &&
-            'opacity-0 group-hover:opacity-100 transition-opacity',
-        ]"
-      >
+      <div :class="['flex flex-1 justify-start', toolbarInnerClass]">
         <FzTabs
           v-if="props.xmlSrc"
           class="view-mode-tabs"
@@ -131,70 +84,26 @@
         </FzTabs>
       </div>
       <!-- Center: page nav + zoom together -->
-      <div
-        :class="[
-          'flex items-center gap-24',
-          toolbarPosition === 'top' &&
-            'opacity-0 group-hover:opacity-100 transition-opacity',
-        ]"
-      >
+      <div :class="['flex items-center gap-24', toolbarInnerClass]">
         <template v-if="viewMode === 'pdf'">
-          <div v-if="pages > 1" class="flex items-center gap-8">
-            <FzIconButton
-              iconName="arrow-left"
-              iconVariant="fas"
-              :environment="props.environment"
-              variant="secondary"
-              :disabled="page <= 1"
-              aria-label="Previous page"
-              @click="handlePageChange(page - 1)"
-            />
-            <span :class="staticTextClass" data-testid="pdf-page"
-              >{{ page }} / {{ pages }}</span
-            >
-            <FzIconButton
-              iconName="arrow-right"
-              iconVariant="fas"
-              :environment="props.environment"
-              variant="secondary"
-              :disabled="page >= pages"
-              aria-label="Next page"
-              @click="handlePageChange(page + 1)"
-            />
-          </div>
-          <div class="flex items-center gap-8">
-            <FzIconButton
-              iconName="minus"
-              iconVariant="fas"
-              :environment="props.environment"
-              variant="secondary"
-              :disabled="scale <= minScale"
-              aria-label="Zoom out"
-              @click="handleScaleChange(-scaleStep)"
-            />
-            <span :class="staticTextClass" data-testid="pdf-scale"
-              >{{ Math.round(scale * 100) }} %</span
-            >
-            <FzIconButton
-              iconName="plus"
-              iconVariant="fas"
-              :environment="props.environment"
-              variant="secondary"
-              :disabled="scale >= maxScale"
-              aria-label="Zoom in"
-              @click="handleScaleChange(scaleStep)"
-            />
-          </div>
+          <PdfPageNav
+            :environment="props.environment"
+            :page="page"
+            :pages="pages"
+            @change="handlePageChange"
+          />
+          <PdfZoomControls
+            :environment="props.environment"
+            :scale="scale"
+            :minScale="props.minScale"
+            :maxScale="props.maxScale"
+            :scaleStep="props.scaleStep"
+            @change="handleScaleChange"
+          />
         </template>
       </div>
-      <!-- Right: download + reset -->
-      <div
-        :class="[
-          'flex flex-1 justify-end items-center gap-8',
-          toolbarPosition === 'top' &&
-            'opacity-0 group-hover:opacity-100 transition-opacity',
-        ]"
-      >
+      <!-- Right: download + rotate -->
+      <div :class="['flex flex-1 justify-end items-center gap-8', toolbarInnerClass]">
         <FzIconButton
           iconName="arrow-down-to-bracket"
           iconVariant="far"
@@ -218,7 +127,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, toRef } from "vue";
 import { FzPdfViewerProps } from "./types";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
 // @ts-ignore — CSS side-effect import, no type declarations needed
@@ -226,6 +135,8 @@ import "@tato30/vue-pdf/style.css";
 import { FzIconButton } from "@fiscozen/button";
 import { FzTabs, FzTab } from "@fiscozen/tab";
 import { useOverflowDrag } from "./composables/useOverflowDrag";
+import PdfZoomControls from "./components/PdfZoomControls.vue";
+import PdfPageNav from "./components/PdfPageNav.vue";
 
 const props = withDefaults(defineProps<FzPdfViewerProps>(), {
   environment: "frontoffice",
@@ -248,12 +159,10 @@ const emit = defineEmits<{
 
 const viewMode = defineModel<"pdf" | "xml">("viewMode", { default: "pdf" });
 
-const { pdf, pages } = usePDF(props.src);
+const { pdf, pages } = usePDF(toRef(props, "src"));
 
 const staticPdfContainerClass =
   "bg-grey-100 p-24 flex overflow-hidden h-full w-full rounded justify-center items-center";
-const staticTextClass =
-  "text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums";
 const staticVuePDFClass = "overflow-auto h-full";
 
 const page = ref(props.initialPage);
@@ -261,9 +170,14 @@ const scale = ref(props.initialScale);
 const rotation = ref<0 | 90 | 180 | 270>(0);
 const overflowContainer = ref<HTMLElement>();
 
-const textLayerEnabled = computed(() => !!props.selectable);
+const toolbarInnerClass = computed(() =>
+  props.toolbarPosition === "top"
+    ? "opacity-0 group-hover:opacity-100 transition-opacity"
+    : "",
+);
+
 const { cursorClass } = useOverflowDrag(overflowContainer, {
-  textLayerAware: textLayerEnabled,
+  textLayerAware: toRef(props, "selectable"),
 });
 
 function handlePageChange(newPage: number) {
@@ -284,7 +198,9 @@ function handleRotate() {
 }
 
 function handleViewModeChange(title: string) {
-  viewMode.value = title as "pdf" | "xml";
+  if (title === "pdf" || title === "xml") {
+    viewMode.value = title;
+  }
 }
 </script>
 
