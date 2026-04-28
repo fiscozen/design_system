@@ -24,7 +24,8 @@
     <div
       v-if="toolbarVariant === 'basic'"
       :class="[
-        'flex justify-between px-16 py-12',
+        'flex px-16 py-12',
+        pages > 1 ? 'justify-between' : 'justify-center',
         toolbarPosition === 'top' &&
           'bg-grey-100 group-hover:bg-white transition-colors',
       ]"
@@ -212,6 +213,7 @@
 import { computed, ref } from "vue";
 import { FzPdfViewerProps } from "./types";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
+// @ts-ignore — CSS side-effect import, no type declarations needed
 import "@tato30/vue-pdf/style.css";
 import { FzIconButton } from "@fiscozen/button";
 import { FzTabs, FzTab } from "@fiscozen/tab";

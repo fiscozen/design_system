@@ -33,7 +33,7 @@ exports[`FzPdfViewer > Snapshots > should match snapshot - custom dimensions 1`]
       <div data-v-3934d69a="" data-testid="vue-pdf" class="shadow-md"></div>
     </div>
   </div><!-- Basic toolbar -->
-  <div data-v-3934d69a="" class="flex justify-between px-16 py-12">
+  <div data-v-3934d69a="" class="flex px-16 py-12 justify-between">
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" aria-label="Zoom out"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-scale">100 %</span><button data-v-3934d69a="" aria-label="Zoom in"></button></div>
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" disabled="" aria-label="Previous page"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-page">1 / 5</span><button data-v-3934d69a="" aria-label="Next page"></button></div>
   </div>
@@ -47,7 +47,7 @@ exports[`FzPdfViewer > Snapshots > should match snapshot - default state 1`] = `
       <div data-v-3934d69a="" data-testid="vue-pdf" class="shadow-md"></div>
     </div>
   </div><!-- Basic toolbar -->
-  <div data-v-3934d69a="" class="flex justify-between px-16 py-12">
+  <div data-v-3934d69a="" class="flex px-16 py-12 justify-between">
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" aria-label="Zoom out"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-scale">100 %</span><button data-v-3934d69a="" aria-label="Zoom in"></button></div>
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" disabled="" aria-label="Previous page"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-page">1 / 5</span><button data-v-3934d69a="" aria-label="Next page"></button></div>
   </div>
@@ -61,7 +61,7 @@ exports[`FzPdfViewer > Snapshots > should match snapshot - page 3 1`] = `
       <div data-v-3934d69a="" data-testid="vue-pdf" class="shadow-md"></div>
     </div>
   </div><!-- Basic toolbar -->
-  <div data-v-3934d69a="" class="flex justify-between px-16 py-12">
+  <div data-v-3934d69a="" class="flex px-16 py-12 justify-between">
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" aria-label="Zoom out"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-scale">100 %</span><button data-v-3934d69a="" aria-label="Zoom in"></button></div>
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" aria-label="Previous page"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-page">3 / 5</span><button data-v-3934d69a="" aria-label="Next page"></button></div>
   </div>
@@ -75,7 +75,7 @@ exports[`FzPdfViewer > Snapshots > should match snapshot - scale 150% 1`] = `
       <div data-v-3934d69a="" data-testid="vue-pdf" class="shadow-md"></div>
     </div>
   </div><!-- Basic toolbar -->
-  <div data-v-3934d69a="" class="flex justify-between px-16 py-12">
+  <div data-v-3934d69a="" class="flex px-16 py-12 justify-between">
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" aria-label="Zoom out"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-scale">150 %</span><button data-v-3934d69a="" aria-label="Zoom in"></button></div>
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" disabled="" aria-label="Previous page"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-page">1 / 5</span><button data-v-3934d69a="" aria-label="Next page"></button></div>
   </div>
@@ -89,7 +89,7 @@ exports[`FzPdfViewer > Snapshots > should match snapshot - selectable enabled 1`
       <div data-v-3934d69a="" data-testid="vue-pdf" class="shadow-md"></div>
     </div>
   </div><!-- Basic toolbar -->
-  <div data-v-3934d69a="" class="flex justify-between px-16 py-12">
+  <div data-v-3934d69a="" class="flex px-16 py-12 justify-between">
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" aria-label="Zoom out"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-scale">100 %</span><button data-v-3934d69a="" aria-label="Zoom in"></button></div>
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" disabled="" aria-label="Previous page"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-page">1 / 5</span><button data-v-3934d69a="" aria-label="Next page"></button></div>
   </div>
@@ -103,7 +103,7 @@ exports[`FzPdfViewer > Snapshots > should match snapshot - small size 1`] = `
       <div data-v-3934d69a="" data-testid="vue-pdf" class="shadow-md"></div>
     </div>
   </div><!-- Basic toolbar -->
-  <div data-v-3934d69a="" class="flex justify-between px-16 py-12">
+  <div data-v-3934d69a="" class="flex px-16 py-12 justify-between">
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" aria-label="Zoom out"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-scale">100 %</span><button data-v-3934d69a="" aria-label="Zoom in"></button></div>
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" disabled="" aria-label="Previous page"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-page">1 / 5</span><button data-v-3934d69a="" aria-label="Next page"></button></div>
   </div>
@@ -117,7 +117,7 @@ exports[`FzPdfViewer > Snapshots > should match snapshot - toolbar at top 1`] = 
       <div data-v-3934d69a="" data-testid="vue-pdf" class="shadow-md"></div>
     </div>
   </div><!-- Basic toolbar -->
-  <div data-v-3934d69a="" class="flex justify-between px-16 py-12 bg-grey-100 group-hover:bg-white transition-colors">
+  <div data-v-3934d69a="" class="flex px-16 py-12 justify-between bg-grey-100 group-hover:bg-white transition-colors">
     <div data-v-3934d69a="" class="flex items-center gap-8 opacity-0 group-hover:opacity-100 transition-opacity"><button data-v-3934d69a="" aria-label="Zoom out"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-scale">100 %</span><button data-v-3934d69a="" aria-label="Zoom in"></button></div>
     <div data-v-3934d69a="" class="flex items-center gap-8 opacity-0 group-hover:opacity-100 transition-opacity"><button data-v-3934d69a="" disabled="" aria-label="Previous page"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-page">1 / 5</span><button data-v-3934d69a="" aria-label="Next page"></button></div>
   </div>
@@ -131,7 +131,7 @@ exports[`FzPdfViewer > Snapshots > should match snapshot - with custom classes 1
       <div data-v-3934d69a="" data-testid="vue-pdf" class="shadow-md"></div>
     </div>
   </div><!-- Basic toolbar -->
-  <div data-v-3934d69a="" class="flex justify-between px-16 py-12">
+  <div data-v-3934d69a="" class="flex px-16 py-12 justify-between">
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" aria-label="Zoom out"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-scale">100 %</span><button data-v-3934d69a="" aria-label="Zoom in"></button></div>
     <div data-v-3934d69a="" class="flex items-center gap-8"><button data-v-3934d69a="" disabled="" aria-label="Previous page"></button><span data-v-3934d69a="" class="text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums" data-testid="pdf-page">1 / 5</span><button data-v-3934d69a="" aria-label="Next page"></button></div>
   </div>
