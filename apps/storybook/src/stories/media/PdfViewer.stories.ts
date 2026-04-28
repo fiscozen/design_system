@@ -186,7 +186,7 @@ export const Basic: Story = {
     })
 
     await step('Zoom in and verify scale increases', async () => {
-      const zoomIn = canvas.getByRole('button', { name: 'Zoom in' }) as HTMLButtonElement
+      const zoomIn = canvas.getByRole('button', { name: 'Aumenta zoom' }) as HTMLButtonElement
       await userEvent.click(zoomIn)
       await waitFor(
         () => {
@@ -197,7 +197,7 @@ export const Basic: Story = {
     })
 
     await step('Navigate to next page', async () => {
-      const next = canvas.getByRole('button', { name: 'Next page' }) as HTMLButtonElement
+      const next = canvas.getByRole('button', { name: 'Pagina successiva' }) as HTMLButtonElement
       await waitFor(() => expect(next).not.toBeDisabled(), { timeout: 3000 })
       await userEvent.click(next)
       await waitFor(
@@ -234,7 +234,7 @@ export const Advanced: Story = {
     })
 
     await step('Zoom in and verify scale increases', async () => {
-      await userEvent.click(canvas.getByRole('button', { name: 'Zoom in' }))
+      await userEvent.click(canvas.getByRole('button', { name: 'Aumenta zoom' }))
       await waitFor(
         () => {
           const value = parseInt(
@@ -354,7 +354,7 @@ export const ToolbarAtTop: Story = {
     })
 
     await step('Navigate to next page from top toolbar', async () => {
-      const next = canvas.getByRole('button', { name: 'Next page' }) as HTMLButtonElement
+      const next = canvas.getByRole('button', { name: 'Pagina successiva' }) as HTMLButtonElement
       await waitFor(() => expect(next).not.toBeDisabled(), { timeout: 3000 })
       await userEvent.click(next)
       await waitFor(
@@ -411,7 +411,7 @@ export const Accessibility: Story = {
     })
 
     await step('Activate next page button with Enter key', async () => {
-      const next = canvas.getByRole('button', { name: 'Next page' }) as HTMLButtonElement
+      const next = canvas.getByRole('button', { name: 'Pagina successiva' }) as HTMLButtonElement
       await waitFor(() => expect(next).not.toBeDisabled(), { timeout: 3000 })
       next.focus()
       await waitFor(() => expect(document.activeElement).toBe(next), { timeout: 500 })
@@ -425,7 +425,7 @@ export const Accessibility: Story = {
     })
 
     await step('Activate previous page button with Space key', async () => {
-      const prev = canvas.getByRole('button', { name: 'Previous page' }) as HTMLButtonElement
+      const prev = canvas.getByRole('button', { name: 'Pagina precedente' }) as HTMLButtonElement
       prev.focus()
       await expect(document.activeElement).toBe(prev)
       await userEvent.keyboard(' ')
@@ -438,7 +438,7 @@ export const Accessibility: Story = {
     })
 
     await step('Activate zoom in button with Enter key', async () => {
-      const zoomIn = canvas.getByRole('button', { name: 'Zoom in' }) as HTMLButtonElement
+      const zoomIn = canvas.getByRole('button', { name: 'Aumenta zoom' }) as HTMLButtonElement
       zoomIn.focus()
       await expect(document.activeElement).toBe(zoomIn)
       await userEvent.keyboard('{Enter}')
@@ -472,13 +472,13 @@ export const SinglePage: Story = {
 
     await step('Verify page navigation is not shown for single-page PDF', async () => {
       await expect(canvas.queryByTestId('pdf-page')).not.toBeInTheDocument()
-      await expect(canvas.queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument()
-      await expect(canvas.queryByRole('button', { name: 'Next page' })).not.toBeInTheDocument()
+      await expect(canvas.queryByRole('button', { name: 'Pagina precedente' })).not.toBeInTheDocument()
+      await expect(canvas.queryByRole('button', { name: 'Pagina successiva' })).not.toBeInTheDocument()
     })
 
     await step('Verify zoom controls are still present', async () => {
-      await expect(canvas.getByRole('button', { name: 'Zoom in' })).toBeInTheDocument()
-      await expect(canvas.getByRole('button', { name: 'Zoom out' })).toBeInTheDocument()
+      await expect(canvas.getByRole('button', { name: 'Aumenta zoom' })).toBeInTheDocument()
+      await expect(canvas.getByRole('button', { name: 'Riduci zoom' })).toBeInTheDocument()
     })
 
     await step('Allow PDF library cleanup', async () => {
@@ -499,8 +499,8 @@ export const TextSelection: Story = {
     })
 
     await step('Verify zoom and page controls are present', async () => {
-      await expect(canvas.getByRole('button', { name: 'Zoom in' })).toBeInTheDocument()
-      await expect(canvas.getByRole('button', { name: 'Zoom out' })).toBeInTheDocument()
+      await expect(canvas.getByRole('button', { name: 'Aumenta zoom' })).toBeInTheDocument()
+      await expect(canvas.getByRole('button', { name: 'Riduci zoom' })).toBeInTheDocument()
       await expect(canvas.getByTestId('pdf-page')).toBeInTheDocument()
     })
 
