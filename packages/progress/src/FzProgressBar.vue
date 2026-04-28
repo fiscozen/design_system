@@ -31,7 +31,7 @@ defineOptions({
 const props = withDefaults(defineProps<FzProgressBarProps>(), {
   max: 100,
   min: 0,
-  name: "progress-bar",
+  label: "Avanzamento",
   size: "md",
   color: "purple",
 });
@@ -180,10 +180,11 @@ const ariaValuemax = computed(() => sanitizeAriaValue(props.max));
     :aria-valuenow="ariaValuenow"
     :aria-valuemin="ariaValuemin"
     :aria-valuemax="ariaValuemax"
-    :aria-label="props.name"
+    :aria-valuetext="props.valueText"
+    :aria-label="props.label"
   >
     <div
-      class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300"
+      class="fz-progress-bar__progress-indicator h-full rounded-[4px] motion-safe:transition-all motion-safe:duration-300"
       :class="progressBarColor"
       :style="{ width: `${percentageProgress}%` }"
     ></div>
