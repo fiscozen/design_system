@@ -4,19 +4,34 @@
  * @module @fiscozen/progress/types
  */
 
-import type { IconProps } from "@fiscozen/icons";
+import type { IconSize } from "@fiscozen/icons";
 
 /**
  * Props for the FzProgress component.
  *
- * Loading spinner component that wraps FzIcon with spinning animation.
- * Inherits all IconProps for size, color, and icon customization.
+ * Loading spinner component with a fixed icon and spinning animation.
+ * Exposes `role="status"` and an accessible label so the loading state is
+ * announced by screen readers. Honors `prefers-reduced-motion`.
  *
  * @example
  * <FzProgress />
- * <FzProgress size="lg" variant="far" />
+ * <FzProgress size="xl" label="Caricamento risultati…" />
  */
-export type FzProgressProps = Omit<IconProps, 'name'> & { name?: IconProps['name'] };
+export interface FzProgressProps {
+  /**
+   * Size of the spinner
+   * @default 'lg'
+   */
+  size?: IconSize;
+
+  /**
+   * Accessible label announced by screen readers via `role="status"`
+   * (implicit `aria-live="polite"`). Also rendered as visually-hidden
+   * text inside the component.
+   * @default 'Caricamento…'
+   */
+  label?: string;
+}
 
 /**
  * Props for the FzProgressBar component.
@@ -56,11 +71,11 @@ export interface FzProgressBarProps {
    * Size of the progress bar
    * @default 'md'
    */
-  size?: 'sm' | 'md';
+  size?: "sm" | "md";
 
   /**
    * Color variant of the progress indicator
    * @default 'purple'
    */
-  color?: 'purple' | 'blue' | 'orange' | 'pink' | 'yellow' | 'grey' | 'red';
+  color?: "purple" | "blue" | "orange" | "pink" | "yellow" | "grey" | "red";
 }

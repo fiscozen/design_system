@@ -34,8 +34,6 @@ import { FzProgress } from '@fiscozen/progress'
 
 ## Props
 
-FzProgress inherits all props from `FzIcon` (from `@fiscozen/icons`):
-
 <table>
   <thead>
     <tr>
@@ -47,22 +45,16 @@ FzProgress inherits all props from `FzIcon` (from `@fiscozen/icons`):
   </thead>
   <tbody>
     <tr>
-      <td><code>name</code></td>
-      <td><code>string</code></td>
-      <td><code>'spinner-third'</code></td>
-      <td>FontAwesome icon name</td>
-    </tr>
-    <tr>
       <td><code>size</code></td>
       <td><code>'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'</code></td>
       <td><code>'lg'</code></td>
-      <td>Icon size</td>
+      <td>Spinner size</td>
     </tr>
     <tr>
-      <td><code>variant</code></td>
-      <td><code>IconVariant</code></td>
-      <td><code>'far'</code></td>
-      <td>FontAwesome icon variant (fas, far, fal, etc.)</td>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td><code>'Caricamento…'</code></td>
+      <td>Accessible label announced via <code>role="status"</code> and rendered as visually-hidden text</td>
     </tr>
   </tbody>
 </table>
@@ -90,7 +82,13 @@ FzProgress inherits all props from `FzIcon` (from `@fiscozen/icons`):
 
 ## Accessibility
 
-FzProgress uses FontAwesome icons which handle ARIA attributes automatically for decorative icons. The spinner is typically decorative and should be paired with text or other indicators to provide context about what is loading.
+FzProgress is a polite status indicator:
+
+- The wrapper has `role="status"` (implicit `aria-live="polite"`), so screen readers announce the loading state when the spinner enters the DOM
+- `aria-label` defaults to `'Caricamento…'`, overridable via the `label` prop, and is mirrored as visually-hidden text
+- The spin animation is disabled under `prefers-reduced-motion: reduce`
+
+The container that toggles the spinner should set `aria-busy="true"` while loading, so the surrounding content is marked as not yet ready.
 
 ## Related Components
 
