@@ -1,5 +1,12 @@
 # @fiscozen/select
 
+## 3.1.2
+
+### Patch Changes
+
+- Updated dependencies [7a81fcd]
+  - @fiscozen/progress@4.0.0
+
 ## 3.1.1
 
 ### Patch Changes
