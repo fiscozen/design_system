@@ -28,7 +28,7 @@ vi.mock("@tato30/vue-pdf", async () => {
     VuePDF: {
       name: "VuePDF",
       template: '<div data-testid="vue-pdf" :class="$attrs.class" />',
-      props: ["pdf", "page", "scale", "textLayer"],
+      props: ["pdf", "page", "scale", "rotation", "textLayer"],
     },
     usePDF: mockUsePDF,
   };
@@ -237,12 +237,9 @@ describe("FzPdfViewer", () => {
         expect(wrapper.props("environment")).toBe("frontoffice");
       });
 
-      it.each([
-        ["frontoffice", "text-sm"],
-        ["backoffice", "text-base"],
-      ])(
-        "should apply correct text class for %s environment",
-        async (environment, expectedClass) => {
+      it.each(["frontoffice", "backoffice"])(
+        "should apply consistent text classes for %s environment",
+        async (environment) => {
           wrapper = mount(FzPdfViewer, {
             props: {
               src: "https://example.com/test.pdf",
@@ -256,7 +253,10 @@ describe("FzPdfViewer", () => {
           });
           await nextTick();
           const scaleIndicator = wrapper.find('[data-testid="pdf-scale"]');
-          expect(scaleIndicator.classes()).toContain(expectedClass);
+          expect(scaleIndicator.classes()).toContain("text-base");
+          expect(scaleIndicator.classes()).toContain("font-normal");
+          expect(scaleIndicator.classes()).toContain("lining-nums");
+          expect(scaleIndicator.classes()).toContain("tabular-nums");
         },
       );
     });
@@ -713,7 +713,7 @@ describe("FzPdfViewer", () => {
       const container = wrapper.find("div");
       expect(container.classes()).toContain("flex");
       expect(container.classes()).toContain("flex-col");
-      expect(container.classes()).toContain("gap-12");
+      expect(container.classes()).not.toContain("gap-12");
     });
 
     it("should apply static PDF container classes", () => {
@@ -748,7 +748,10 @@ describe("FzPdfViewer", () => {
       });
       const scaleIndicator = wrapper.find('[data-testid="pdf-scale"]');
       expect(scaleIndicator.classes()).toContain("text-grey-500");
-      expect(scaleIndicator.classes()).toContain("font-medium");
+      expect(scaleIndicator.classes()).toContain("font-normal");
+      expect(scaleIndicator.classes()).toContain("text-base");
+      expect(scaleIndicator.classes()).toContain("lining-nums");
+      expect(scaleIndicator.classes()).toContain("tabular-nums");
     });
   });
 
@@ -1002,7 +1005,7 @@ describe("FzPdfViewer", () => {
         FzTab: mockFzTab,
       };
 
-      it("should render FzTabs and 6 icon buttons (nav + zoom + download + reset)", () => {
+      it("should render FzTabs and 5 icon buttons (nav + zoom + download) without rotatable", () => {
         wrapper = mount(FzPdfViewer, {
           props: {
             src: "https://example.com/test.pdf",
@@ -1011,6 +1014,20 @@ describe("FzPdfViewer", () => {
           global: { stubs: advancedStubs },
         });
         expect(wrapper.findComponent({ name: "FzTabs" }).exists()).toBe(true);
+        expect(
+          wrapper.findAllComponents({ name: "FzIconButton" }),
+        ).toHaveLength(5);
+      });
+
+      it("should render 6 icon buttons (nav + zoom + download + rotate) when rotatable", () => {
+        wrapper = mount(FzPdfViewer, {
+          props: {
+            src: "https://example.com/test.pdf",
+            toolbarVariant: "advanced",
+            rotatable: true,
+          },
+          global: { stubs: advancedStubs },
+        });
         expect(
           wrapper.findAllComponents({ name: "FzIconButton" }),
         ).toHaveLength(6);
@@ -1029,7 +1046,7 @@ describe("FzPdfViewer", () => {
         expect(tabs.find((t) => t.props("title") === "xml")).toBeDefined();
       });
 
-      it("should render download and reset buttons", () => {
+      it("should render download button", () => {
         wrapper = mount(FzPdfViewer, {
           props: {
             src: "https://example.com/test.pdf",
@@ -1039,10 +1056,36 @@ describe("FzPdfViewer", () => {
         });
         const buttons = wrapper.findAllComponents({ name: "FzIconButton" });
         expect(
-          buttons.find((b) => b.props("iconName") === "arrow-down-to-line"),
+          buttons.find((b) => b.attributes("aria-label") === "Download"),
         ).toBeDefined();
+      });
+
+      it("should not render rotate button when rotatable is false", () => {
+        wrapper = mount(FzPdfViewer, {
+          props: {
+            src: "https://example.com/test.pdf",
+            toolbarVariant: "advanced",
+          },
+          global: { stubs: advancedStubs },
+        });
+        const buttons = wrapper.findAllComponents({ name: "FzIconButton" });
         expect(
-          buttons.find((b) => b.props("iconName") === "clock-rotate-left"),
+          buttons.find((b) => b.attributes("aria-label") === "Rotate"),
+        ).toBeUndefined();
+      });
+
+      it("should render rotate button when rotatable is true", () => {
+        wrapper = mount(FzPdfViewer, {
+          props: {
+            src: "https://example.com/test.pdf",
+            toolbarVariant: "advanced",
+            rotatable: true,
+          },
+          global: { stubs: advancedStubs },
+        });
+        const buttons = wrapper.findAllComponents({ name: "FzIconButton" });
+        expect(
+          buttons.find((b) => b.attributes("aria-label") === "Rotate"),
         ).toBeDefined();
       });
 
@@ -1102,37 +1145,33 @@ describe("FzPdfViewer", () => {
         });
         const downloadBtn = wrapper
           .findAllComponents({ name: "FzIconButton" })
-          .find((b) => b.props("iconName") === "arrow-down-to-line");
+          .find((b) => b.attributes("aria-label") === "Download");
         await downloadBtn!.trigger("click");
         expect(wrapper.emitted("download")).toHaveLength(1);
       });
 
-      it("should reset scale to initialScale when reset button is clicked", async () => {
+      it("should rotate PDF when rotate button is clicked", async () => {
         wrapper = mount(FzPdfViewer, {
           props: {
             src: "https://example.com/test.pdf",
             toolbarVariant: "advanced",
-            initialScale: 1.5,
+            rotatable: true,
           },
           global: { stubs: advancedStubs },
         });
-        const plusBtn = wrapper
-          .findAllComponents({ name: "FzIconButton" })
-          .find((b) => b.props("iconName") === "plus");
-        await plusBtn!.trigger("click");
-        await nextTick();
-        expect(wrapper.find('[data-testid="pdf-scale"]').text()).toContain(
-          "175 %",
-        );
+        const vuePdf = wrapper.findComponent({ name: "VuePDF" });
+        expect(vuePdf.props("rotation")).toBe(0);
 
-        const resetBtn = wrapper
+        const rotateBtn = wrapper
           .findAllComponents({ name: "FzIconButton" })
-          .find((b) => b.props("iconName") === "clock-rotate-left");
-        await resetBtn!.trigger("click");
+          .find((b) => b.attributes("aria-label") === "Rotate");
+        await rotateBtn!.trigger("click");
         await nextTick();
-        expect(wrapper.find('[data-testid="pdf-scale"]').text()).toContain(
-          "150 %",
-        );
+        expect(vuePdf.props("rotation")).toBe(90);
+
+        await rotateBtn!.trigger("click");
+        await nextTick();
+        expect(vuePdf.props("rotation")).toBe(180);
       });
 
       it("should hide navigation in advanced toolbar for single-page PDFs", () => {
@@ -1147,10 +1186,10 @@ describe("FzPdfViewer", () => {
           },
           global: { stubs: advancedStubs },
         });
-        // minus, plus, arrow-down-to-line, clock-rotate-left = 4 (no nav buttons)
+        // minus, plus, download = 3 (no nav buttons, no rotate)
         expect(
           wrapper.findAllComponents({ name: "FzIconButton" }),
-        ).toHaveLength(4);
+        ).toHaveLength(3);
         expect(wrapper.find('[data-testid="pdf-page"]').exists()).toBe(false);
       });
     });

@@ -61,6 +61,12 @@ type FzPdfViewerProps = {
    * Default is false.
    */
   selectable?: boolean;
+  /**
+   * When true, shows a rotate button in the advanced toolbar that lets the user rotate the PDF by 90° steps.
+   * Only applies when toolbarVariant is "advanced". Default is false.
+   * Note: "rotatable" is a valid English word (capable of being rotated), not a typo.
+   */
+  rotatable?: boolean;
 };
 
 export { FzPdfViewerProps };

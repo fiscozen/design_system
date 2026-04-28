@@ -2,7 +2,7 @@
   <div
     :class="[
       'flex group',
-      toolbarPosition === 'top' ? 'flex-col-reverse gap-0' : 'flex-col gap-12',
+      toolbarPosition === 'top' ? 'flex-col-reverse' : 'flex-col',
       containerClass,
     ]"
     :style="{ height, width }"
@@ -13,6 +13,7 @@
           :pdf
           :page
           :scale
+          :rotation
           :textLayer="props.selectable"
           :class="['shadow-md', cursorClass]"
         />
@@ -23,9 +24,9 @@
     <div
       v-if="toolbarVariant === 'basic'"
       :class="[
-        'flex justify-between',
+        'flex justify-between px-16 py-12',
         toolbarPosition === 'top' &&
-          'bg-grey-100 group-hover:bg-white transition-colors px-16 py-12',
+          'bg-grey-100 group-hover:bg-white transition-colors',
       ]"
     >
       <div
@@ -44,9 +45,7 @@
           aria-label="Zoom out"
           @click="handleScaleChange(-scaleStep)"
         />
-        <span
-          :class="[staticTextClass, computedTextClass]"
-          data-testid="pdf-scale"
+        <span :class="staticTextClass" data-testid="pdf-scale"
           >{{ Math.round(scale * 100) }} %</span
         >
         <FzIconButton
@@ -76,9 +75,7 @@
           aria-label="Previous page"
           @click="handlePageChange(page - 1)"
         />
-        <span
-          :class="[staticTextClass, computedTextClass]"
-          data-testid="pdf-page"
+        <span :class="staticTextClass" data-testid="pdf-page"
           >{{ page }} / {{ pages }}</span
         >
         <FzIconButton
@@ -97,9 +94,9 @@
     <div
       v-else
       :class="[
-        'flex items-center',
+        'flex items-center px-16 py-12',
         toolbarPosition === 'top' &&
-          'bg-grey-100 group-hover:bg-white transition-colors px-16 py-12',
+          'bg-grey-100 group-hover:bg-white transition-colors',
       ]"
     >
       <div
@@ -144,9 +141,7 @@
             aria-label="Previous page"
             @click="handlePageChange(page - 1)"
           />
-          <span
-            :class="[staticTextClass, computedTextClass]"
-            data-testid="pdf-page"
+          <span :class="staticTextClass" data-testid="pdf-page"
             >{{ page }} / {{ pages }}</span
           >
           <FzIconButton
@@ -169,9 +164,7 @@
             aria-label="Zoom out"
             @click="handleScaleChange(-scaleStep)"
           />
-          <span
-            :class="[staticTextClass, computedTextClass]"
-            data-testid="pdf-scale"
+          <span :class="staticTextClass" data-testid="pdf-scale"
             >{{ Math.round(scale * 100) }} %</span
           >
           <FzIconButton
@@ -194,20 +187,21 @@
         ]"
       >
         <FzIconButton
-          iconName="arrow-down-to-line"
-          iconVariant="fas"
+          iconName="arrow-down-to-bracket"
+          iconVariant="far"
           :environment="props.environment"
           variant="invisible"
           aria-label="Download"
           @click="emit('download')"
         />
         <FzIconButton
-          iconName="clock-rotate-left"
-          iconVariant="fas"
+          v-if="props.rotatable"
+          iconName="arrow-rotate-left"
+          iconVariant="far"
           :environment="props.environment"
           variant="invisible"
-          aria-label="Reset zoom"
-          @click="resetScale"
+          aria-label="Rotate"
+          @click="handleRotate"
         />
       </div>
     </div>
@@ -235,6 +229,7 @@ const props = withDefaults(defineProps<FzPdfViewerProps>(), {
   toolbarVariant: "basic",
   toolbarPosition: "bottom",
   selectable: false,
+  rotatable: false,
 });
 
 const emit = defineEmits<{
@@ -247,26 +242,19 @@ const { pdf, pages } = usePDF(props.src);
 
 const staticPdfContainerClass =
   "bg-grey-100 p-24 flex overflow-hidden h-full w-full rounded justify-center items-center";
-const staticTextClass = "text-grey-500 font-medium";
+const staticTextClass =
+  "text-grey-500 font-normal text-base leading-5 lining-nums tabular-nums";
 const staticVuePDFClass = "overflow-auto h-full";
-
-const mapEnvironmentToText = {
-  frontoffice: "text-sm",
-  backoffice: "text-base",
-} as const;
 
 const page = ref(props.initialPage);
 const scale = ref(props.initialScale);
+const rotation = ref<0 | 90 | 180 | 270>(0);
 const overflowContainer = ref<HTMLElement>();
 
 const textLayerEnabled = computed(() => !!props.selectable);
 const { cursorClass } = useOverflowDrag(overflowContainer, {
   textLayerAware: textLayerEnabled,
 });
-
-const computedTextClass = computed(
-  () => mapEnvironmentToText[props.environment],
-);
 
 function handlePageChange(newPage: number) {
   if (newPage > 0 && newPage <= pages.value) {
@@ -281,8 +269,8 @@ function handleScaleChange(delta: number) {
   }
 }
 
-function resetScale() {
-  scale.value = props.initialScale;
+function handleRotate() {
+  rotation.value = ((rotation.value + 90) % 360) as 0 | 90 | 180 | 270;
 }
 
 function handleViewModeChange(title: string) {
