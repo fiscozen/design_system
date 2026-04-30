@@ -5,7 +5,8 @@
  * passed to FzButton via v-bind="$attrs" instead.
  */
 defineOptions({
-  inheritAttrs: false
+  inheritAttrs: false,
+  __fzKind: '@fiscozen/button/FzIconButton'
 })
 
 /**

@@ -9,6 +9,8 @@ import { FzRadio } from "@fiscozen/radio";
 import { useMediaQuery } from "@fiscozen/composables";
 import { breakpoints } from "@fiscozen/style";
 
+defineOptions({ __fzKind: "@fiscozen/table/FzRow" });
+
 const props = defineProps<FzRowProps<T>>();
 const emit = defineEmits<{
   "fztable:rowactionclick": [actionIndex: number, action: FzActionProps, rowData: T | undefined];
