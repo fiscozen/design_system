@@ -1,6 +1,7 @@
 import type { VNode } from 'vue'
 import type { SizeToEnvironmentMap, ButtonSize, ButtonEnvironment } from './types'
-import FzButton from './FzButton.vue'
+
+const FZ_BUTTON_KIND = '@fiscozen/button/FzButton'
 
 /**
  * Minimum number of FzButton components required in FzButtonGroup slot.
@@ -33,12 +34,16 @@ export const sizeToEnvironmentMapping: SizeToEnvironmentMap = {
 
 /**
  * Checks if a VNode represents a FzButton component.
- * 
+ *
+ * Uses the `__fzKind` marker (a primitive string) instead of reference identity
+ * so the check survives module-instance duplication in Vite dev mode when the
+ * package is excluded from optimizeDeps in consuming apps.
+ *
  * @param vnode - The VNode to check
  * @returns true if the VNode is a FzButton component
  */
 export function isButtonComponent(vnode: VNode): boolean {
-  return vnode.type === FzButton
+  return (vnode.type as { __fzKind?: string } | null)?.__fzKind === FZ_BUTTON_KIND
 }
 
 /**

@@ -31,6 +31,8 @@ import { FzIcon } from '@fiscozen/icons'
 import type { FzButtonProps, ButtonEnvironment } from './types'
 import { sizeToEnvironmentMapping } from './utils'
 
+defineOptions({ __fzKind: '@fiscozen/button/FzButton' })
+
 const props = withDefaults(
   defineProps<FzButtonProps>(),
   {

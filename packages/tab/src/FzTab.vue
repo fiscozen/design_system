@@ -6,7 +6,7 @@
 import { inject, onMounted, Ref, computed, onBeforeUnmount } from "vue";
 import { FzTabProps } from "./types";
 
-defineOptions({ _isFzTab: true });
+defineOptions({ __fzKind: "@fiscozen/tab/FzTab" });
 
 const props = defineProps<FzTabProps>();
 

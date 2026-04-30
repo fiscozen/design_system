@@ -41,9 +41,7 @@
 
   import { FzFloating } from '@fiscozen/composables'
   import { FzIcon } from '@fiscozen/icons'
-  import { FzButton, FzIconButton } from '@fiscozen/button'
-  import { FzLink } from '@fiscozen/link'
-  
+
   import { FzTooltipProps, FzTooltipStatus } from './types'
 
   const props = withDefaults(defineProps<FzTooltipProps>(), {
@@ -60,32 +58,37 @@
    * AUTO-DETECTION OF INTERACTIVE ELEMENTS
    * Automatically detects interactive components to prevent double tab stops
    * without requiring manual interactive prop.
-   * 
-   * To extend auto-detection for new components:
-   * 1. Import the component: import { FzNewComponent } from '@fiscozen/...'
-   * 2. Add to INTERACTIVE_COMPONENTS array
-   * 3. Add to peerDependencies in package.json
+   *
+   * Detection uses the `__fzKind` marker (a primitive string set via
+   * defineOptions on each component). This is value-equal across module
+   * instances, so it survives Vite dev-mode module duplication that occurs
+   * when consuming apps exclude these packages from optimizeDeps.
+   *
+   * To extend auto-detection for a new component:
+   * 1. Add `defineOptions({ __fzKind: '@fiscozen/<pkg>/<Component>' })` to it.
+   * 2. Add the kind string to INTERACTIVE_KINDS below.
    * ======================================================================== */
 
   /**
-   * List of interactive components for auto-detection.
-   * Components in this array are recognized as interactive and won't receive
-   * an additional tabindex="0" on the tooltip wrapper.
+   * Set of `__fzKind` markers recognized as interactive.
+   * Components matching one of these kinds will not receive an additional
+   * tabindex="0" on the tooltip wrapper.
    */
-  const INTERACTIVE_COMPONENTS = [FzButton, FzIconButton, FzLink] as const;
+  const INTERACTIVE_KINDS = new Set<string>([
+    '@fiscozen/button/FzButton',
+    '@fiscozen/button/FzIconButton',
+    '@fiscozen/link/FzLink',
+  ])
 
   /**
    * Checks if a VNode represents an interactive component.
-   * 
-   * Compares the VNode type against the INTERACTIVE_COMPONENTS array
-   * using direct component reference comparison.
-   * 
+   *
    * @param vnode - The VNode to check
-   * @returns true if the VNode is in INTERACTIVE_COMPONENTS
+   * @returns true if the VNode's component carries an interactive `__fzKind`
    */
   function isInteractiveComponent(vnode: VNode): boolean {
-    const componentType = vnode.type;
-    return INTERACTIVE_COMPONENTS.includes(componentType as any);
+    const kind = (vnode.type as { __fzKind?: string } | null)?.__fzKind
+    return typeof kind === 'string' && INTERACTIVE_KINDS.has(kind)
   }
 
   /**
