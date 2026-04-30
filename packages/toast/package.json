@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/toast",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Design System Toast component",
   "scripts": {
     "coverage": "vitest run --coverage",
