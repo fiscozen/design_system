@@ -33,13 +33,17 @@
 
 <script setup lang="ts">
 import { useSlots } from "vue";
+import type { VNode } from "vue";
 import {
   FzColumnProps,
   FzColumnSlots,
   FzSimpleTableProps,
   FzSimpleTableSlots,
 } from "./types";
-import FzColumn from "./FzColumn.vue";
+
+const FZ_COLUMN_KIND = "@fiscozen/simple-table/FzColumn";
+const isFzColumn = (vnode: VNode): boolean =>
+  (vnode.type as { __fzKind?: string } | null)?.__fzKind === FZ_COLUMN_KIND;
 
 const props = withDefaults(defineProps<FzSimpleTableProps>(), {});
 
@@ -51,7 +55,7 @@ const slots = useSlots();
 const defaultSlot = slots.default?.();
 const columns =
   defaultSlot
-    ?.filter((elem) => elem.type === FzColumn)
+    ?.filter(isFzColumn)
     .map((column) => ({
       props: column.props as FzColumnProps,
       children: column.children as FzColumnSlots,

@@ -10,7 +10,7 @@ import {
 } from "./";
 import { getBodyClasses, bodyStaticClasses } from "./utils";
 import { FzButton, FzIconButton } from "@fiscozen/button";
-import { FzColumn, FzColumnSlots, FzColumnProps } from "@fiscozen/simple-table";
+import type { FzColumnSlots, FzColumnProps } from "@fiscozen/simple-table";
 import { FzIcon } from "@fiscozen/icons";
 import { FzInput } from "@fiscozen/input";
 import { useMediaQuery } from "@fiscozen/composables";
@@ -20,6 +20,13 @@ import { FzCheckbox } from "@fiscozen/checkbox";
 import { FzConfirmDialog } from "@fiscozen/dialog";
 import { FzActionProps } from "@fiscozen/action";
 import { FzProgress } from "@fiscozen/progress";
+
+const FZ_COLUMN_KIND = "@fiscozen/simple-table/FzColumn";
+const FZ_ROW_KIND = "@fiscozen/table/FzRow";
+const isFzColumn = (vnode: VNode): boolean =>
+  (vnode.type as { __fzKind?: string } | null)?.__fzKind === FZ_COLUMN_KIND;
+const isFzRow = (vnode: VNode): boolean =>
+  (vnode.type as { __fzKind?: string } | null)?.__fzKind === FZ_ROW_KIND;
 
 FzCheckbox.compatConfig = {
   MODE: 3,
@@ -91,11 +98,11 @@ const columns = computed(() => {
     defaultSlot.value
       ?.filter(
         (elem) =>
-          elem.type === FzColumn ||
+          isFzColumn(elem) ||
           (typeof elem.type === "symbol" && Array.isArray(elem.children)),
       )
       .flatMap((slot) => {
-        if (slot.type === FzColumn) {
+        if (isFzColumn(slot)) {
           return getColumn(slot);
         } else {
           return (slot.children as VNode[])?.map(getColumn);
@@ -108,7 +115,7 @@ const rows = computed(() => {
   if (!slots.default) return [];
   return (
     defaultSlot.value
-      ?.filter((elem) => elem.type === FzRow)
+      ?.filter(isFzRow)
       .map((row) => ({
         props: row.props as FzRowProps<T>,
         children: row.children as FzRowSlots,

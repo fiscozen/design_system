@@ -38,6 +38,11 @@ export interface CheckedSetProvision {
  * Provided by FzCheckboxGroup so child cards/checkboxes can do O(1) membership
  * checks instead of O(N) Array.includes scans — but only when the group's
  * model and the child's model reference the same array.
+ *
+ * Uses a namespaced primitive string rather than `Symbol(...)` so the key
+ * stays value-equal across module instances. This matters in Vite dev mode
+ * when consuming apps exclude `@fiscozen/*` packages from optimizeDeps and
+ * the same `.ts` file may be loaded as multiple module instances. The cast
+ * preserves the typed `InjectionKey<T>` API at provide/inject call sites.
  */
-export const CHECKED_SET_KEY: InjectionKey<CheckedSetProvision> =
-  Symbol("FzCheckboxCheckedSet");
+export const CHECKED_SET_KEY = "@fiscozen/checkbox/CheckedSet" as unknown as InjectionKey<CheckedSetProvision>;
