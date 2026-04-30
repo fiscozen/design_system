@@ -694,5 +694,11 @@ describe('FzIconButton', () => {
       expect(badge.classes()).toContain('h-8')
     })
   })
+
+  describe('Component identification (marker-based)', () => {
+    it('should expose __fzKind marker for slot-filter parents', () => {
+      expect((FzIconButton as any).__fzKind).toBe('@fiscozen/button/FzIconButton')
+    })
+  })
 })
 

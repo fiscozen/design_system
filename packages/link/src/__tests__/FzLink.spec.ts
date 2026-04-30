@@ -1356,5 +1356,11 @@ describe('FzLink', () => {
       expect(wrapper.html()).toMatchSnapshot()
     })
   })
+
+  describe('Component identification (marker-based)', () => {
+    it('should expose __fzKind marker for slot-filter parents', () => {
+      expect((FzLink as any).__fzKind).toBe('@fiscozen/link/FzLink')
+    })
+  })
 })
 

@@ -560,4 +560,10 @@ describe('FzButton', () => {
       expect(wrapper.html()).toMatchSnapshot()
     })
   })
+
+  describe('Component identification (marker-based)', () => {
+    it('should expose __fzKind marker for slot-filter parents', () => {
+      expect((FzButton as any).__fzKind).toBe('@fiscozen/button/FzButton')
+    })
+  })
 })
