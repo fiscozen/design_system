@@ -1,5 +1,12 @@
 # @fiscozen/navlink
 
+## 2.0.2
+
+### Patch Changes
+
+- Updated dependencies [a9c33b8]
+  - @fiscozen/collapse@3.0.1
+
 ## 2.0.1
 
 ### Patch Changes

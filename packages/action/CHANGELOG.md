@@ -1,5 +1,12 @@
 # @fiscozen/action
 
+## 3.0.1
+
+### Patch Changes
+
+- Updated dependencies [a9c33b8]
+  - @fiscozen/link@1.0.1
+
 ## 3.0.0
 
 ### Patch Changes
