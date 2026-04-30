@@ -3300,18 +3300,12 @@ importers:
 
   packages/tooltip:
     dependencies:
-      '@fiscozen/button':
-        specifier: workspace:*
-        version: link:../button
       '@fiscozen/composables':
         specifier: workspace:*
         version: link:../composables
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
-      '@fiscozen/link':
-        specifier: workspace:*
-        version: link:../link
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.19(yaml@2.8.2)
@@ -3319,9 +3313,15 @@ importers:
         specifier: ^3.4.13
         version: 3.5.26(typescript@5.7.3)
     devDependencies:
+      '@fiscozen/button':
+        specifier: workspace:*
+        version: link:../button
       '@fiscozen/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
+      '@fiscozen/link':
+        specifier: workspace:*
+        version: link:../link
       '@fiscozen/prettier-config':
         specifier: workspace:^
         version: link:../prettier-config
