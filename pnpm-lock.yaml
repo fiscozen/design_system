@@ -36,8 +36,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.416
-        version: 1.0.416
+        specifier: ^1.0.417
+        version: 1.0.417
       '@fiscozen/action':
         specifier: workspace:^
         version: link:../../packages/action
@@ -1864,8 +1864,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.416
-        version: 1.0.416
+        specifier: ^1.0.417
+        version: 1.0.417
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.7.2
         version: 6.7.2
@@ -3630,8 +3630,8 @@ packages:
   '@asamuzakjp/dom-selector@2.0.2':
     resolution: {integrity: sha512-x1KXOatwofR6ZAYzXRBL5wrdV0vwNxlTCK9NCuLqAzQYARqGcvFwiJA6A1ERuh+dgeA4Dxm3JBYictIes+SqUQ==}
 
-  '@awesome.me/kit-8137893ad3@1.0.416':
-    resolution: {integrity: sha512-DgZSOpABqrFXW2zGjqzfcrfjwB5NMh7+XYz0+SfPweAd8enViyj7sunmpesIoHF30Q5cBHwV3mW2trL7zJQMFw==}
+  '@awesome.me/kit-8137893ad3@1.0.417':
+    resolution: {integrity: sha512-43jzdhjcsuu6sMUu2axWLehIEFIbQPIHOEVBY0CewVq8TI9mvd0W4oE2S3UAbZjapo0OAxCgGSkXf/FLHuYnfA==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.29.0':
@@ -8767,8 +8767,8 @@ packages:
   vue-component-type-helpers@2.2.12:
     resolution: {integrity: sha512-YbGqHZ5/eW4SnkPNR44mKVc6ZKQoRs/Rux1sxC6rdwXb4qpbOSYfDr9DsTHolOTGmIKgM9j141mZbBeg05R1pw==}
 
-  vue-component-type-helpers@3.2.7:
-    resolution: {integrity: sha512-+gPp5YGmhfsj1IN+xUo7y0fb4clfnOiiUA39y07yW1VzCRjzVgwLbtmdWlghh7mXrPsEaYc7rrIir/HT6C8vYQ==}
+  vue-component-type-helpers@3.2.8:
+    resolution: {integrity: sha512-9689efAXhN/EV86plgkL/XFiJSXhGtWPG6JDboZ+QnjlUWUUQrQ0ILKQtw4iQsuwIwu5k6Aw+JnehDe7161e7A==}
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -8992,7 +8992,7 @@ snapshots:
       css-tree: 2.3.1
       is-potential-custom-element-name: 1.0.1
 
-  '@awesome.me/kit-8137893ad3@1.0.416':
+  '@awesome.me/kit-8137893ad3@1.0.417':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
@@ -10044,7 +10044,7 @@ snapshots:
       storybook: 10.3.3(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       type-fest: 2.19.0
       vue: 3.5.26(typescript@5.7.3)
-      vue-component-type-helpers: 3.2.7
+      vue-component-type-helpers: 3.2.8
 
   '@tato30/vue-pdf@2.0.2(vue@3.5.26(typescript@5.7.3))':
     dependencies:
@@ -14533,7 +14533,7 @@ snapshots:
 
   vue-component-type-helpers@2.2.12: {}
 
-  vue-component-type-helpers@3.2.7: {}
+  vue-component-type-helpers@3.2.8: {}
 
   vue-demi@0.14.10(vue@3.5.26(typescript@5.7.3)):
     dependencies:
