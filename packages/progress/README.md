@@ -56,17 +56,9 @@ import { FzProgressBar } from '@fiscozen/progress'
 
 ```vue
 <template>
-  <FzProgress size="lg" />
   <FzProgress size="sm" />
+  <FzProgress size="lg" />
   <FzProgress size="xl" />
-</template>
-```
-
-### With Custom Icon
-
-```vue
-<template>
-  <FzProgress name="spinner" />
 </template>
 ```
 
@@ -103,9 +95,22 @@ import { FzProgressBar } from '@fiscozen/progress'
 
 ```vue
 <template>
-  <FzProgressBar 
-    :current="75" 
-    name="upload-progress" 
+  <FzProgressBar
+    :current="75"
+    label="Caricamento file"
+  />
+</template>
+```
+
+### Contextual progress with valueText
+
+```vue
+<template>
+  <FzProgressBar
+    :current="3"
+    :max="10"
+    label="Caricamento file"
+    valueText="Caricamento file 3 di 10"
   />
 </template>
 ```
@@ -153,13 +158,10 @@ import { FzProgressBar } from '@fiscozen/progress'
 
 ### FzProgress Props
 
-FzProgress inherits all props from `FzIcon` (from `@fiscozen/icons`):
-
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `name` | `string` | `'spinner-third'` | FontAwesome icon name |
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | `'lg'` | Icon size |
-| `variant` | `IconVariant` | `'far'` | FontAwesome icon variant (fas, far, fal, etc.) |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | `'lg'` | Spinner size |
+| `label` | `string` | `'Caricamento…'` | Accessible label announced via `role="status"` and rendered as visually-hidden text |
 
 ### FzProgressBar Props
 
@@ -168,9 +170,10 @@ FzProgress inherits all props from `FzIcon` (from `@fiscozen/icons`):
 | `current` | `number` | **required** | Current progress value within the min-max range |
 | `max` | `number` | `100` | Maximum value for progress calculation |
 | `min` | `number` | `0` | Minimum value for progress calculation |
-| `name` | `string` | `'progress-bar'` | Accessible label for screen readers |
+| `label` | `string` | `'Avanzamento'` | Accessible label announced via `aria-label` |
+| `valueText` | `string` | — | Optional human-readable text passed to `aria-valuetext` (e.g. `'Caricamento file 3 di 10'`) |
 | `size` | `'sm' \| 'md'` | `'md'` | Height of the progress bar |
-| `color` | `'purple' \| 'blue' \| 'orange' \| 'pink' \| 'yellow' \| 'grey' \| 'red'` | `'purple'` | Color variant |
+| `color` | `'purple' \| 'blue' \| 'orange' \| 'pink' \| 'yellow' \| 'grey' \| 'red'` | `'purple'` | Color variant. `yellow` and `red` map to `semantic-warning-*` and `semantic-error-*` tokens |
 
 ## Behavior & Concepts
 
@@ -198,11 +201,11 @@ The component supports custom ranges including negative values:
 ```vue
 <template>
   <!-- Temperature range: -25°C to 75°C, current 0°C -->
-  <FzProgressBar 
-    :current="0" 
-    :min="-25" 
-    :max="75" 
-    name="temperature"
+  <FzProgressBar
+    :current="0"
+    :min="-25"
+    :max="75"
+    label="Temperatura"
   />
   <!-- Result: (0 - (-25)) / (75 - (-25)) * 100 = 25% -->
 </template>
@@ -210,18 +213,39 @@ The component supports custom ranges including negative values:
 
 ## Accessibility
 
-FzProgressBar follows WCAG 2.1 AA standards and includes:
+### FzProgress
 
-- **ARIA Attributes**: 
+- Wrapper has `role="status"` (implicit `aria-live="polite"`), so screen readers announce the loading state when the spinner enters the DOM
+- `aria-label` defaults to `'Caricamento…'`, overridable via the `label` prop, and is mirrored as visually-hidden text for screen readers that prefer text content
+- The animation is disabled under `@media (prefers-reduced-motion: reduce)` to comply with WCAG 2.3.3
+- **Consumer guidance**: the container that toggles the spinner should set `aria-busy="true"` while loading, so the surrounding content is marked as not yet ready. Example:
+  ```vue
+  <div :aria-busy="loading">
+    <FzProgress v-if="loading" />
+    <slot v-else />
+  </div>
+  ```
+
+### FzProgressBar
+
+Follows WCAG 2.1 AA and includes:
+
+- **ARIA Attributes**:
   - `role="progressbar"` for semantic meaning
-  - `aria-valuenow` with current value
+  - `aria-valuenow` with current value (sanitized for NaN/Infinity)
   - `aria-valuemin` with minimum value
   - `aria-valuemax` with maximum value
-  - `aria-label` for screen reader description
-- **Screen Reader Support**: Progress values are accessible when navigating to the progress bar
+  - `aria-label` from the `label` prop for screen reader description
+  - `aria-valuetext` from the optional `valueText` prop for human-readable contextual progress
+- **Reduced motion**: the width transition uses `motion-safe:` Tailwind utilities, so it is automatically disabled under `prefers-reduced-motion: reduce` (WCAG 2.3.3)
+- **Screen Reader Support**: Progress values and contextual descriptions are accessible when navigating to the progress bar
 - **Keyboard Navigation**: Progress bar is accessible via keyboard (though not interactive)
 
-FzProgress uses FontAwesome icons which handle ARIA attributes automatically for decorative icons.
+## Future enhancements (nice to have)
+
+These are intentionally left out of the current API and tracked for future minor releases when a real consumer requires them:
+
+- **Indeterminate state for `FzProgressBar`** — a way to express "progress unknown" via animated stripes, travelling fill, or pulse, with `aria-valuenow` omitted (per ARIA APG). Will be added as an additive `indeterminate?: boolean` prop when needed.
 
 ## Notes
 

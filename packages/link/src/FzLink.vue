@@ -23,6 +23,8 @@
 import { computed, watch } from 'vue'
 import { FzLinkProps } from './types'
 
+defineOptions({ __fzKind: '@fiscozen/link/FzLink' })
+
 const props = withDefaults(defineProps<FzLinkProps>(), {
   type: 'default',
   linkStyle: 'default',

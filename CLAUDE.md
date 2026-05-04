@@ -66,6 +66,20 @@ Icons are rendered via `FzIcon` / `FzIconButton` using the Font Awesome kit `@aw
 **Only use icon names that exist in this kit.** The full list of available icon names can be inspected at:
 `node_modules/.pnpm/@awesome.me+kit-8137893ad3@*/node_modules/@awesome.me/kit-8137893ad3/icons/modules/classic/{solid|regular}.js`
 
+## Container component slot identification
+
+When a parent component inspects its slot children to filter them by type (e.g. `FzTabs` looking for `FzTab` children, `FzTable` looking for `FzColumn`/`FzRow`), DO NOT compare `vnode.type` against an imported component reference. In Vite dev mode, when a consuming app excludes `@fiscozen/*` from `optimizeDeps`, the same SFC can be loaded as multiple module instances and the reference equality silently fails — the parent renders an empty container.
+
+Use the `__fzKind` marker convention instead:
+
+- **Child** (the filtered component): expose a primitive string identifier via `defineOptions({ __fzKind: '@fiscozen/<package>/<Component>' })` right after the imports.
+- **Parent** (the filter call site): define a `FZ_<KIND>_KIND` constant with the expected string and a small `isFz<Kind>` helper that reads `vnode.type.__fzKind`. Replace each `vnode.type === ImportedComponent` with the helper.
+- **Test**: every component exposing `__fzKind` should have a one-line lock-in assertion in its spec (`expect((Cmp as any).__fzKind).toBe('@fiscozen/<pkg>/<Cmp>')`) so a typo in either side is caught.
+
+The same naming applies to `provide`/`inject` keys: prefer a namespaced string (`'@fiscozen/<package>/<Key>'` cast as `InjectionKey<T>`) over `Symbol(...)`. Symbols created at module scope have the same module-duplication fragility as component references; primitive strings are value-equal across module instances.
+
+See `@fiscozen/tab/FzTab.vue` + `@fiscozen/tab/FzTabs.vue` for the canonical example.
+
 ## Code Style
 
 - Vue 3 Composition API with `<script setup lang="ts">`

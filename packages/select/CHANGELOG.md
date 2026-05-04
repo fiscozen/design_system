@@ -1,5 +1,22 @@
 # @fiscozen/select
 
+## 3.1.3
+
+### Patch Changes
+
+- Updated dependencies [a9c33b8]
+  - @fiscozen/button@3.0.1
+  - @fiscozen/alert@3.0.1
+  - @fiscozen/input@3.3.1
+  - @fiscozen/action@3.0.1
+
+## 3.1.2
+
+### Patch Changes
+
+- Updated dependencies [7a81fcd]
+  - @fiscozen/progress@4.0.0
+
 ## 3.1.1
 
 ### Patch Changes

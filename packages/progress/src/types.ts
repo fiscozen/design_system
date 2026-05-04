@@ -4,19 +4,34 @@
  * @module @fiscozen/progress/types
  */
 
-import type { IconProps } from "@fiscozen/icons";
+import type { IconSize } from "@fiscozen/icons";
 
 /**
  * Props for the FzProgress component.
  *
- * Loading spinner component that wraps FzIcon with spinning animation.
- * Inherits all IconProps for size, color, and icon customization.
+ * Loading spinner component with a fixed icon and spinning animation.
+ * Exposes `role="status"` and an accessible label so the loading state is
+ * announced by screen readers. Honors `prefers-reduced-motion`.
  *
  * @example
  * <FzProgress />
- * <FzProgress size="lg" variant="far" />
+ * <FzProgress size="xl" label="Caricamento risultati…" />
  */
-export type FzProgressProps = Omit<IconProps, 'name'> & { name?: IconProps['name'] };
+export interface FzProgressProps {
+  /**
+   * Size of the spinner
+   * @default 'lg'
+   */
+  size?: IconSize;
+
+  /**
+   * Accessible label announced by screen readers via `role="status"`
+   * (implicit `aria-live="polite"`). Also rendered as visually-hidden
+   * text inside the component.
+   * @default 'Caricamento…'
+   */
+  label?: string;
+}
 
 /**
  * Props for the FzProgressBar component.
@@ -47,20 +62,37 @@ export interface FzProgressBarProps {
   min?: number;
 
   /**
-   * Accessible label for screen readers
-   * @default 'progress-bar'
+   * Accessible label announced by screen readers via `aria-label`.
+   * Consumers should provide a meaningful, contextual label
+   * (e.g. 'Caricamento file', 'Importazione clienti').
+   * @default 'Avanzamento'
    */
-  name?: string;
+  label?: string;
+
+  /**
+   * Optional human-readable text passed to `aria-valuetext`.
+   * When provided, screen readers announce this string instead of the
+   * raw `aria-valuenow` percentage. Useful for contextual progress
+   * (e.g. 'Caricamento file 3 di 10', 'Passo 2 di 5').
+   */
+  valueText?: string;
 
   /**
    * Size of the progress bar
    * @default 'md'
    */
-  size?: 'sm' | 'md';
+  size?: "sm" | "md";
 
   /**
-   * Color variant of the progress indicator
+   * Color variant of the progress indicator.
+   *
+   * Most colors map to literal Tailwind tokens (`bg-{color}-500`/`bg-{color}-100`).
+   * Two values use semantic tokens to share the same palette as the rest of the
+   * design system:
+   * - `'yellow'` → `semantic-warning-*`
+   * - `'red'`    → `semantic-error-*`
+   *
    * @default 'purple'
    */
-  color?: 'purple' | 'blue' | 'orange' | 'pink' | 'yellow' | 'grey' | 'red';
+  color?: "purple" | "blue" | "orange" | "pink" | "yellow" | "grey" | "red";
 }

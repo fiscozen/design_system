@@ -43,11 +43,13 @@ import FzTabButton from "./components/FzTabButton.vue";
 import { debugWarn, mapSizeToEnvironment } from "./common";
 
 /**
- * Identifies FzTab vnodes via marker instead of reference identity.
- * Avoids module deduplication issues when the package is excluded from Vite's optimizeDeps.
+ * Identifies FzTab vnodes via a string marker instead of reference identity.
+ * Avoids module-instance duplication issues when the package is excluded
+ * from Vite's optimizeDeps in consuming apps.
  */
+const FZ_TAB_KIND = "@fiscozen/tab/FzTab";
 const isFzTab = (vnode: VNode): boolean =>
-  (vnode.type as any)?._isFzTab === true;
+  (vnode.type as { __fzKind?: string } | null)?.__fzKind === FZ_TAB_KIND;
 
 const props = withDefaults(defineProps<FzTabsProps>(), {
   vertical: false,

@@ -24,4 +24,14 @@ export interface AccordionContext {
   notifyOpen: (id: string) => void
 }
 
-export const ACCORDION_KEY: InjectionKey<AccordionContext> = Symbol('FzAccordion')
+/**
+ * Injection key for the accordion context provided by FzAccordion to its
+ * FzCollapse children.
+ *
+ * Uses a namespaced primitive string rather than `Symbol(...)` so the key
+ * stays value-equal across module instances. This matters in Vite dev mode
+ * when consuming apps exclude `@fiscozen/*` packages from optimizeDeps and
+ * the same `.ts` file may be loaded as multiple module instances. The cast
+ * preserves the typed `InjectionKey<T>` API at provide/inject call sites.
+ */
+export const ACCORDION_KEY = '@fiscozen/collapse/Accordion' as unknown as InjectionKey<AccordionContext>

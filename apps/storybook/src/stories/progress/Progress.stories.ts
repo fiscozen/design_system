@@ -10,7 +10,7 @@ const meta: Meta<typeof FzProgress> = {
     size: {
       control: 'select',
       options: ['xs', 'sm', 'md', 'lg', 'xl', '2xl']
-    },
+    }
   },
   args: {},
   decorators: []
@@ -48,10 +48,13 @@ const Default: Story = {
     })
 
     await step('Verify custom animation styles are applied', async () => {
-      const container = canvasElement.querySelector('[style*="--fa-animation-duration"]')
+      const container = canvasElement.querySelector('.fz-progress') as HTMLElement | null
       await expect(container).toBeTruthy()
-      await expect(container?.getAttribute('style')).toContain('--fa-animation-duration: 0.86s')
-      await expect(container?.getAttribute('style')).toContain('--fa-animation-timing: cubic-bezier(0.4, 0.15, 0.6, 0.85)')
+      const styles = window.getComputedStyle(container!)
+      await expect(styles.getPropertyValue('--fa-animation-duration').trim()).toBe('0.86s')
+      await expect(styles.getPropertyValue('--fa-animation-timing').trim()).toBe(
+        'cubic-bezier(0.4, 0.15, 0.6, 0.85)'
+      )
     })
 
     await step('Verify default spinner icon is used', async () => {

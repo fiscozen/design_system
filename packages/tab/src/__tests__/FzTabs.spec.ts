@@ -936,8 +936,8 @@ describe("FzTabs", () => {
   // TAB IDENTIFICATION (marker-based)
   // ============================================
   describe("Tab identification", () => {
-    it("should have _isFzTab marker on FzTab component", () => {
-      expect((FzTab as any)._isFzTab).toBe(true);
+    it("should have __fzKind marker on FzTab component", () => {
+      expect((FzTab as any).__fzKind).toBe("@fiscozen/tab/FzTab");
     });
 
     it("should not render non-FzTab components as tabs", async () => {

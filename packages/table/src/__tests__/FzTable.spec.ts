@@ -1032,4 +1032,14 @@ describe("FzTable", () => {
       expect(wrapper.html()).toMatchSnapshot();
     });
   });
+
+  describe("Component identification (marker-based)", () => {
+    it("should expose __fzKind marker on FzRow for slot-filter parents", () => {
+      expect((FzRow as any).__fzKind).toBe("@fiscozen/table/FzRow");
+    });
+
+    it("should expose __fzKind marker on FzColumn for slot-filter parents", () => {
+      expect((FzColumn as any).__fzKind).toBe("@fiscozen/simple-table/FzColumn");
+    });
+  });
 });

@@ -1,5 +1,70 @@
 # @fiscozen/table
 
+## 2.1.6
+
+### Patch Changes
+
+- a9c33b8: Replace fragile reference-identity slot filtering and provide/inject keys with namespaced primitive strings.
+
+  Two related Vite dev-mode regressions are fixed at the same time, both rooted in module-instance duplication that occurs when consuming apps exclude `@fiscozen/*` packages from `optimizeDeps` (needed to preserve nested npm resolution for version-conflicting transitives). When the same `.vue` or `.ts` file is loaded as multiple distinct module instances, reference-identity comparisons (`vnode.type === Component` for slot filtering, `Symbol(...)` for provide/inject keys) silently fail.
+
+  **Slot filtering** — child components now expose a `__fzKind` marker via `defineOptions({ __fzKind: "@fiscozen/<package>/<Component>" })`, and parents filter by reading that string instead of comparing references. Affected:
+  - `FzTabs` filtering `FzTab` children
+  - `FzSimpleTable` filtering `FzColumn` children
+  - `FzTable` filtering `FzColumn`/`FzRow` children
+  - `FzButtonGroup` validating `FzButton` children
+  - `FzTooltip` auto-detecting `FzButton`/`FzIconButton`/`FzLink` for interactive-element handling
+
+  **Provide/inject keys** — the two module-scoped `Symbol(...)` injection keys are now namespaced primitive strings, applying the same value-equality property to provide/inject. Affected:
+  - `@fiscozen/checkbox` `CHECKED_SET_KEY`
+  - `@fiscozen/collapse` `ACCORDION_KEY`
+
+  No public API changes; consumers do not need to update their templates or call sites.
+
+- Updated dependencies [a9c33b8]
+  - @fiscozen/simple-table@0.1.6
+  - @fiscozen/button@3.0.1
+  - @fiscozen/checkbox@3.0.3
+  - @fiscozen/dialog@0.1.31
+  - @fiscozen/dropdown@1.0.7
+  - @fiscozen/input@3.3.1
+  - @fiscozen/action@3.0.1
+  - @fiscozen/radio@3.0.2
+  - @fiscozen/actionlist@0.1.14
+
+## 2.1.5
+
+### Patch Changes
+
+- 7a81fcd: `FzProgress` and `FzProgressBar` API alignment + accessibility improvements.
+
+  ## FzProgress
+
+  **API changes**
+  - Only `size` (default `'lg'`) and the new `label` prop (default `'Caricamento…'`) are exposed.
+  - The previously inherited `name`, `variant`, and `spin` props were either ignored by the template or implementation details and have been removed.
+
+  **Accessibility improvements**
+  - The component now renders a `role="status"` wrapper with an `aria-label` (mirrored as visually-hidden text), so screen readers announce the loading state when the spinner appears.
+  - The spin animation is disabled under `@media (prefers-reduced-motion: reduce)` (handled by FontAwesome's stylesheet, WCAG 2.3.3).
+
+  **Migration**: drop `name`, `variant`, and `spin` from any `<FzProgress />` usage. The icon (`spinner-third`), variant (`fas`), and spin behavior are now fixed internally. If your container already had a screen-reader announcement for the loading state, consider whether it now duplicates the one provided by `FzProgress`.
+
+  ## FzProgressBar
+
+  **API changes**
+  - Renamed prop `name` → `label` (default `'Avanzamento'`) for alignment with `FzProgress`.
+  - New optional prop `valueText?: string`, passed to `aria-valuetext` for human-readable contextual progress (e.g. `'Caricamento file 3 di 10'`).
+
+  **Accessibility improvements**
+  - Width transition now uses `motion-safe:` Tailwind utilities, so it is automatically disabled under `prefers-reduced-motion: reduce` (WCAG 2.3.3).
+  - `aria-valuetext` support for screen readers (ARIA Authoring Practices).
+
+  **Migration**: rename the `name` prop to `label` on any `<FzProgressBar />` usage. The default value also changes from `'progress-bar'` to `'Avanzamento'`.
+
+- Updated dependencies [7a81fcd]
+  - @fiscozen/progress@4.0.0
+
 ## 2.1.4
 
 ### Patch Changes

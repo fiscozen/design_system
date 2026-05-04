@@ -8,33 +8,36 @@ const meta: Meta<typeof FzProgressBar> = {
   tags: ['autodocs'],
   argTypes: {
     current: {
-      control: 'number',
+      control: 'number'
     },
     min: {
-      control: 'number',
+      control: 'number'
     },
     max: {
-      control: 'number',
+      control: 'number'
     },
-    name: {
-      control: 'text',
+    label: {
+      control: 'text'
+    },
+    valueText: {
+      control: 'text'
     },
     size: {
       control: 'select',
-      options: ['sm', 'md'],
+      options: ['sm', 'md']
     },
     color: {
       control: 'select',
-      options: ['purple', 'blue', 'orange', 'pink', 'yellow', 'grey', 'red'],
-    },
+      options: ['purple', 'blue', 'orange', 'pink', 'yellow', 'grey', 'red']
+    }
   },
   args: {
     min: 0,
     max: 100,
     current: 50,
-    name: 'progress-bar',
+    label: 'Avanzamento',
     size: 'md',
-    color: 'purple',
+    color: 'purple'
   },
   decorators: []
 }
@@ -92,13 +95,30 @@ const Default: Story = {
       await expect(progressBar?.getAttribute('aria-valuemin')).toBe('0')
       await expect(progressBar?.getAttribute('aria-valuemax')).toBe('100')
     })
+
+    await step('Verify width transition honors prefers-reduced-motion', async () => {
+      const indicator = canvasElement.querySelector(
+        '.fz-progress-bar__progress-indicator'
+      ) as HTMLElement | null
+      await expect(indicator).toBeTruthy()
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const transitionDuration = window.getComputedStyle(indicator!).transitionDuration
+      // motion-safe:duration-300 only applies when reduced motion is NOT requested.
+      // When the user has reduced motion ON, the transition utility is omitted → duration is '0s'.
+      // To verify the OFF branch in DevTools: Rendering → "Emulate CSS media feature prefers-reduced-motion: reduce".
+      if (reducedMotion) {
+        await expect(transitionDuration).toBe('0s')
+      } else {
+        await expect(transitionDuration).toBe('0.3s')
+      }
+    })
   }
 }
 
 const Zero: Story = {
   ...Template,
   args: {
-    current: 0,
+    current: 0
   },
   play: async ({ canvasElement, step }: any) => {
     await step('Verify progress indicator shows 0%', async () => {
@@ -120,7 +140,7 @@ const Zero: Story = {
 const Half: Story = {
   ...Template,
   args: {
-    current: 50,
+    current: 50
   },
   play: async ({ canvasElement, step }: any) => {
     await step('Verify progress indicator shows 50%', async () => {
@@ -142,7 +162,7 @@ const Half: Story = {
 const Full: Story = {
   ...Template,
   args: {
-    current: 100,
+    current: 100
   },
   play: async ({ canvasElement, step }: any) => {
     await step('Verify progress indicator shows 100%', async () => {
@@ -192,7 +212,7 @@ const SizeSm: Story = {
     current: 50,
     min: 0,
     max: 100,
-    size: 'sm',
+    size: 'sm'
   },
   play: async ({ canvasElement, step }: any) => {
     await step('Verify small size renders with 8px height', async () => {
@@ -221,7 +241,7 @@ const SizeMd: Story = {
     current: 50,
     min: 0,
     max: 100,
-    size: 'md',
+    size: 'md'
   },
   play: async ({ canvasElement, step }: any) => {
     await step('Verify medium size renders with 20px height', async () => {
@@ -248,7 +268,7 @@ const ColorPurple: Story = {
   ...Template,
   args: {
     current: 50,
-    color: 'purple',
+    color: 'purple'
   },
   play: async ({ canvasElement, step }: any) => {
     await step('Verify purple fill and container background', async () => {
@@ -264,7 +284,7 @@ const ColorBlue: Story = {
   ...Template,
   args: {
     current: 50,
-    color: 'blue',
+    color: 'blue'
   },
   play: async ({ canvasElement, step }: any) => {
     await step('Verify blue fill and container background', async () => {
@@ -280,7 +300,7 @@ const ColorOrange: Story = {
   ...Template,
   args: {
     current: 50,
-    color: 'orange',
+    color: 'orange'
   },
   play: async ({ canvasElement, step }: any) => {
     await step('Verify orange fill and container background', async () => {
@@ -296,7 +316,7 @@ const ColorPink: Story = {
   ...Template,
   args: {
     current: 50,
-    color: 'pink',
+    color: 'pink'
   },
   play: async ({ canvasElement, step }: any) => {
     await step('Verify pink fill and container background', async () => {
@@ -312,7 +332,7 @@ const ColorYellow: Story = {
   ...Template,
   args: {
     current: 50,
-    color: 'yellow',
+    color: 'yellow'
   },
   play: async ({ canvasElement, step }: any) => {
     await step('Verify yellow fill and container background', async () => {
@@ -328,7 +348,7 @@ const ColorGrey: Story = {
   ...Template,
   args: {
     current: 50,
-    color: 'grey',
+    color: 'grey'
   },
   play: async ({ canvasElement, step }: any) => {
     await step('Verify grey fill and container background', async () => {
@@ -344,7 +364,7 @@ const ColorRed: Story = {
   ...Template,
   args: {
     current: 50,
-    color: 'red',
+    color: 'red'
   },
   play: async ({ canvasElement, step }: any) => {
     await step('Verify red fill and container background', async () => {
@@ -356,6 +376,44 @@ const ColorRed: Story = {
   }
 }
 
-export { Default, Full, Half, Zero, CustomRange, SizeSm, SizeMd, ColorPurple, ColorBlue, ColorOrange, ColorPink, ColorYellow, ColorGrey, ColorRed }
+const WithValueText: Story = {
+  ...Template,
+  args: {
+    current: 3,
+    min: 0,
+    max: 10,
+    label: 'Caricamento file',
+    valueText: 'Caricamento file 3 di 10'
+  },
+  play: async ({ canvasElement, step }: any) => {
+    await step('Verify aria-valuetext is rendered', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
+      await expect(progressBar?.getAttribute('aria-valuetext')).toBe('Caricamento file 3 di 10')
+    })
+
+    await step('Verify aria-label is rendered alongside aria-valuetext', async () => {
+      const progressBar = canvasElement.querySelector('.fz-progress-bar')
+      await expect(progressBar?.getAttribute('aria-label')).toBe('Caricamento file')
+    })
+  }
+}
+
+export {
+  Default,
+  Full,
+  Half,
+  Zero,
+  CustomRange,
+  SizeSm,
+  SizeMd,
+  ColorPurple,
+  ColorBlue,
+  ColorOrange,
+  ColorPink,
+  ColorYellow,
+  ColorGrey,
+  ColorRed,
+  WithValueText
+}
 
 export default meta

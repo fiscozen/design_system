@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/select",
-  "version": "3.1.1",
+  "version": "3.1.3",
   "description": "Design System Select component",
   "scripts": {
     "coverage": "vitest run --coverage",

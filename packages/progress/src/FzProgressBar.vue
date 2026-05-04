@@ -31,7 +31,7 @@ defineOptions({
 const props = withDefaults(defineProps<FzProgressBarProps>(), {
   max: 100,
   min: 0,
-  name: "progress-bar",
+  label: "Avanzamento",
   size: "md",
   color: "purple",
 });
@@ -138,10 +138,12 @@ const backgroundProgressBarColor = computed(() => {
 });
 
 /**
- * Sanitizes value for ARIA attributes
+ * Sanitizes value for numeric ARIA attributes (aria-valuenow/min/max).
  *
- * Converts NaN and Infinity to 0 to ensure valid ARIA attribute values.
- * ARIA attributes must be valid numbers per WCAG 2.1 AA standards.
+ * Converts NaN and Infinity to 0 to ensure valid ARIA attribute values per
+ * WCAG 2.1 AA. String ARIA attributes (aria-label, aria-valuetext) are bound
+ * directly in the template because they don't have NaN/Infinity concerns;
+ * `aria-valuetext` uses `|| undefined` to omit the attribute on empty strings.
  */
 const sanitizeAriaValue = (value: number): number => {
   if (!Number.isFinite(value)) {
@@ -180,10 +182,11 @@ const ariaValuemax = computed(() => sanitizeAriaValue(props.max));
     :aria-valuenow="ariaValuenow"
     :aria-valuemin="ariaValuemin"
     :aria-valuemax="ariaValuemax"
-    :aria-label="props.name"
+    :aria-valuetext="props.valueText || undefined"
+    :aria-label="props.label"
   >
     <div
-      class="fz-progress-bar__progress-indicator h-full rounded-[4px] transition-all duration-300"
+      class="fz-progress-bar__progress-indicator h-full rounded-[4px] motion-safe:transition-all motion-safe:duration-300"
       :class="progressBarColor"
       :style="{ width: `${percentageProgress}%` }"
     ></div>

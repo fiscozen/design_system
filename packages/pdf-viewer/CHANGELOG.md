@@ -11,6 +11,13 @@
 - The PDF/XML tabs are only shown when `xmlSrc` is provided — existing usages with `toolbarVariant="advanced"` but no `xmlSrc` are unaffected
 - `v-model:viewMode` (`"pdf" | "xml"`) exposes the current mode to the parent; the parent is responsible for handling downloads per mode via the `download` event
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [a9c33b8]
+  - @fiscozen/button@3.0.1
+
 ## 0.1.5
 
 ### Patch Changes
