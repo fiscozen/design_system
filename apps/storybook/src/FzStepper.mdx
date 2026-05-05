@@ -1,0 +1,190 @@
+import { Meta, Controls, Markdown } from '@storybook/addon-docs/blocks'
+import { FzStepper } from '@fiscozen/stepper'
+
+<Meta title="Documentation/Navigation/FzStepper" component={FzStepper} />
+
+# FzStepper
+
+A multi-step progress indicator that guides users through a sequential workflow. Supports desktop and mobile layouts, two color environments, and per-step status indicators.
+
+## Overview
+
+FzStepper renders a horizontal step list on desktop and collapses into an expandable dropdown on mobile. Each step can carry a status (completed, error, disabled) and optional text truncation.
+
+### Key Features
+
+- **Dual layout**: Horizontal row on desktop, collapsible dropdown on mobile
+- **Environment theming**: Blue accent for `frontoffice`, dark accent for `backoffice`
+- **Step statuses**: `completed`, `error`, `disabled` with distinct icons and colors
+- **Error styling**: Dashed red progress bar and red title text for error steps
+- **Mobile navigation**: Optional step-list dropdown (`hasStepperList`)
+- **Text truncation**: Per-step single-line truncation via `isTextTruncated`
+- **Description control**: Per-step visibility toggle via `hasStepDescription`
+- **v-model binding**: Two-way binding for `activeStep`
+
+## Properties
+
+### Stepper Props
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`steps\` | \`FzStepProps[]\` | — | Array of step objects. Recommended max: 8 steps. |
+| \`environment\` | \`'frontoffice' \\| 'backoffice'\` | \`'frontoffice'\` | Accent color theme for the active step. |
+| \`hasStepbar\` | \`boolean\` | \`true\` | Show or hide the progress bar above each step. |
+| \`hasStepperList\` | \`boolean\` | \`true\` | Mobile only. When \`false\`, hides the step navigation dropdown and shows only the active step. |
+| \`forceMobile\` | \`boolean\` | \`false\` | **Deprecated.** Forces the mobile layout on all screen sizes. |
+| \`v-model:activeStep\` | \`number\` | \`0\` | Index of the currently active step. |
+`}
+</Markdown>
+
+### Step Props (`FzStepProps`)
+
+<Markdown>
+  {`
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| \`title\` | \`string\` | — | Step title (required). |
+| \`description\` | \`string\` | — | Optional step description. |
+| \`status\` | \`'completed' \\| 'error' \\| 'disabled'\` | — | Step status. \`current\` is computed internally from \`activeStep\` and must not be passed. |
+| \`isTextTruncated\` | \`boolean\` | \`false\` | Truncates title and description to a single line with ellipsis. |
+| \`hasStepDescription\` | \`boolean\` | \`true\` | Hides the description even if a description string is provided when set to \`false\`. |
+`}
+</Markdown>
+
+## Visual behaviour by status
+
+<Markdown>
+  {`
+| Status | Icon | Progress bar | Title color |
+|--------|------|-------------|-------------|
+| current | numbered badge | blue (frontoffice) / dark (backoffice) | black |
+| default | numbered badge (grey) | grey-200 | black |
+| completed | ✓ circle-check | grey-500 | black |
+| error | ⚠ circle-exclamation | dashed red | red |
+| disabled | numbered badge (faded) | grey-200, 20% opacity | grey (faded) |
+`}
+</Markdown>
+
+## Usage Examples
+
+### Basic stepper
+
+```vue
+<template>
+  <FzStepper v-model:activeStep="activeStep" :steps="steps" />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzStepper } from '@fiscozen/stepper'
+import type { FzStepProps } from '@fiscozen/stepper'
+
+const activeStep = ref(0)
+
+const steps: FzStepProps[] = [
+  { title: 'Informazioni', description: 'Inserisci i dati personali' },
+  { title: 'Documenti', description: 'Carica i documenti richiesti' },
+  { title: 'Riepilogo', description: 'Verifica e conferma' },
+]
+</script>
+```
+
+### Backoffice environment
+
+```vue
+<FzStepper
+  environment="backoffice"
+  v-model:activeStep="activeStep"
+  :steps="steps"
+/>
+```
+
+### Without progress bar
+
+```vue
+<FzStepper :hasStepbar="false" v-model:activeStep="activeStep" :steps="steps" />
+```
+
+### Mobile without step navigation
+
+```vue
+<!-- User sees only the active step, no dropdown to jump between steps -->
+<FzStepper
+  :hasStepperList="false"
+  v-model:activeStep="activeStep"
+  :steps="steps"
+/>
+```
+
+### With truncated text (useful in narrow layouts)
+
+```vue
+<script setup lang="ts">
+const steps = [
+  { title: 'Very long step title that should be clipped', isTextTruncated: true },
+  { title: 'Another step', isTextTruncated: true },
+]
+</script>
+```
+
+### Hiding description per step
+
+```vue
+<script setup lang="ts">
+const steps = [
+  { title: 'Step 1', description: 'Shown', hasStepDescription: true },
+  { title: 'Step 2', description: 'Hidden', hasStepDescription: false },
+]
+</script>
+```
+
+### Marking steps as completed programmatically
+
+```vue
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import type { FzStepProps } from '@fiscozen/stepper'
+
+const currentStep = ref(0)
+
+const steps = computed<FzStepProps[]>(() => [
+  {
+    title: 'Seleziona cliente',
+    description: 'Scegli il cliente',
+    status: currentStep.value > 0 ? 'completed' : undefined,
+  },
+  {
+    title: 'Verifica dati',
+    description: 'Controlla le informazioni',
+    status: currentStep.value > 1 ? 'completed' : undefined,
+  },
+  {
+    title: 'Conferma',
+    description: 'Completa il processo',
+  },
+])
+</script>
+```
+
+## Best Practices
+
+- Keep step titles short and action-oriented (e.g. "Inserisci dati", not "Step 1").
+- Use at most 8 steps — beyond that, consider splitting the workflow.
+- Mark preceding steps as `completed` when the user advances, so progress is clear.
+- Use `environment="backoffice"` in admin contexts to stay consistent with the rest of the UI.
+- Set `hasStepperList="false"` when the user cannot navigate backward (e.g. a linear wizard).
+- Use `isTextTruncated` only in space-constrained layouts; prefer full text when space allows.
+
+## Accessibility
+
+- Step icons (check, exclamation) are visual only — provide meaningful `title` and `description` text for screen readers.
+- Disabled steps are visually de-emphasised (20% opacity, no-pointer cursor) and block interaction.
+
+## Import
+
+```typescript
+import { FzStepper } from '@fiscozen/stepper'
+import type { FzStepProps, FzStepperProps, FzStepStatus } from '@fiscozen/stepper'
+```
