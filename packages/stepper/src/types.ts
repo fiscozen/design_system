@@ -1,4 +1,15 @@
+import type { FzBadgeTone } from "@fiscozen/badge";
+
 type FzStepperEnvironment = "frontoffice" | "backoffice";
+
+type FzInternalStepStatus = "current" | "completed" | "error" | "default";
+
+type StepMeta = {
+  status: FzInternalStepStatus;
+  barClass: (string | Record<string, boolean>)[];
+  tone: FzBadgeTone;
+  icon?: string;
+};
 
 type FzStepperProps = {
   /**
@@ -57,4 +68,11 @@ type FzStepProps = {
   hasStepDescription?: boolean;
 };
 
-export { FzStepperProps, FzStepperEnvironment, FzStepStatus, FzStepProps };
+export {
+  FzStepperProps,
+  FzStepperEnvironment,
+  FzStepStatus,
+  FzStepProps,
+  FzInternalStepStatus,
+  StepMeta,
+};
