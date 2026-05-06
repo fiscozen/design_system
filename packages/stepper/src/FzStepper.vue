@@ -61,12 +61,14 @@ const stepMeta = computed<StepMeta[]>(() =>
       tone = "light";
     }
 
-    const icon =
-      status === "completed"
-        ? "check"
-        : status === "error"
-          ? "exclamation"
-          : undefined;
+    let icon: string | undefined;
+    if (status === "completed") {
+      icon = "check";
+    } else if (status === "error") {
+      icon = "exclamation";
+    } else {
+      icon = undefined;
+    }
 
     return {
       status,
