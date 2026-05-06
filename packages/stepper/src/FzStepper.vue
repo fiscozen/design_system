@@ -4,8 +4,18 @@ import { FzStepperProps, FzStepProps } from "./types";
 import { useMediaQuery } from "@fiscozen/composables";
 import { breakpoints } from "@fiscozen/style";
 import { FzBadge } from "@fiscozen/badge";
+import type { FzBadgeTone } from "@fiscozen/badge";
 import { FzIcon } from "@fiscozen/icons";
 import { FzDropdown } from "@fiscozen/dropdown";
+
+type FzInternalStepStatus = "current" | "completed" | "error" | "default";
+
+type StepMeta = {
+  status: FzInternalStepStatus;
+  barClass: (string | Record<string, boolean>)[];
+  tone: FzBadgeTone;
+  icon?: string;
+};
 
 const props = withDefaults(defineProps<FzStepperProps>(), {
   hasStepbar: true,
@@ -23,67 +33,57 @@ const activeStep = defineModel<number>("activeStep", {
 const isMobile = computed(() => smOrSmaller.value || props.forceMobile);
 
 const dropdownContainer = ref<HTMLElement | null>(null);
-const dropdownRect = computed(() => {
-  return dropdownContainer.value?.getBoundingClientRect();
-});
+const dropdownRect = computed(() =>
+  dropdownContainer.value?.getBoundingClientRect(),
+);
 
-const stepStatus = computed(() => {
-  return props.steps.map((step, index) => {
-    if (index === activeStep.value) {
-      return "current";
-    } else if (step.status === "error") {
-      return "error";
-    } else if (step.status === "completed") {
-      return "completed";
-    } else {
-      return "default";
-    }
-  });
-});
+const stepMeta = computed<StepMeta[]>(() =>
+  props.steps.map((step, index) => {
+    const status: FzInternalStepStatus =
+      index === activeStep.value
+        ? "current"
+        : step.status === "error"
+          ? "error"
+          : step.status === "completed"
+            ? "completed"
+            : "default";
 
-const barClass = (step: FzStepProps, index: number) => {
-  const status = stepStatus.value[index];
-  return [
-    "h-[4px] rounded-[4px] w-full mb-8",
-    {
-      "bg-blue-500": status === "current",
-      "bg-grey-500": status === "completed",
-      "bg-grey-200": status === "default",
-      "bg-semantic-error": status === "error",
-    },
-  ];
-};
+    return {
+      status,
+      barClass: [
+        "h-[4px] rounded-[4px] w-full mb-8",
+        {
+          "bg-blue-500": status === "current",
+          "bg-grey-500": status === "completed",
+          "bg-grey-200": status === "default",
+          "bg-semantic-error": status === "error",
+        },
+      ],
+      tone:
+        status === "current"
+          ? "blue"
+          : status === "error"
+            ? "error"
+            : status === "completed"
+              ? "dark"
+              : "light",
+      icon:
+        status === "completed"
+          ? "check"
+          : status === "error"
+            ? "exclamation"
+            : undefined,
+    };
+  }),
+);
 
-const badgeTone = computed(() => {
-  return stepStatus.value.map((status) => {
-    if (status === "current") {
-      return "blue";
-    } else if (status === "error") {
-      return "error";
-    } else if (status === "completed") {
-      return "dark";
-    } else {
-      return "light";
-    }
-  });
-});
-
-/** Icon name for completed/error states; undefined means show the step number instead. */
-const badgeIcon = computed(() => {
-  return stepStatus.value.map((status) => {
-    if (status === "completed") return "check";
-    if (status === "error") return "exclamation";
-    return undefined;
-  });
-});
+const dropdownActions = computed(() =>
+  props.steps.map((step) => ({ label: step.title, type: "action" as const })),
+);
 
 const handleActionClick = (index: number) => {
-  if (props.steps[index].status === "disabled") {
-    return;
-  }
-  if (index === activeStep.value) {
-    return;
-  }
+  if (props.steps[index].status === "disabled") return;
+  if (index === activeStep.value) return;
   activeStep.value = index;
 };
 
@@ -104,26 +104,24 @@ const showDescription = (step: FzStepProps) =>
       :key="index"
     >
       <div
-        :class="['fz-stepper__progress', barClass(step, index)]"
+        :class="['fz-stepper__progress', stepMeta[index].barClass]"
         v-if="hasStepbar"
       ></div>
       <div class="flex flex-row gap-8 items-start">
-        <div>
-          <FzBadge :tone="badgeTone[index]" variant="number">
-            <FzIcon
-              v-if="badgeIcon[index]"
-              :name="badgeIcon[index]!"
-              variant="fas"
-              size="sm"
-            />
-            <template v-else>{{ index + 1 }}</template>
-          </FzBadge>
-        </div>
+        <FzBadge :tone="stepMeta[index].tone" variant="number">
+          <FzIcon
+            v-if="stepMeta[index].icon"
+            :name="stepMeta[index].icon!"
+            variant="fas"
+            size="sm"
+          />
+          <template v-else>{{ index + 1 }}</template>
+        </FzBadge>
         <div class="min-w-0 flex flex-col gap-[4px]">
           <span
             :class="[
               'fz-stepper__title font-semibold block leading-[20px]',
-              stepStatus[index] === 'error'
+              stepMeta[index].status === 'error'
                 ? 'text-semantic-error'
                 : 'text-core-black',
               { truncate: step.isTextTruncated },
@@ -153,7 +151,7 @@ const showDescription = (step: FzStepProps) =>
       <div
         v-for="(step, index) in props.steps"
         :key="index"
-        :class="['fz-stepper__progress', barClass(step, index)]"
+        :class="['fz-stepper__progress', stepMeta[index].barClass]"
       ></div>
     </div>
 
@@ -163,24 +161,17 @@ const showDescription = (step: FzStepProps) =>
       ref="dropdownContainer"
       v-if="hasStepperList"
     >
-      <div>
-        <FzBadge :tone="badgeTone[activeStep]" variant="number">
-          <FzIcon
-            v-if="badgeIcon[activeStep]"
-            :name="badgeIcon[activeStep]!"
-            variant="fas"
-            size="sm"
-          />
-          <template v-else>{{ activeStep + 1 }}</template>
-        </FzBadge>
-      </div>
+      <FzBadge :tone="stepMeta[activeStep].tone" variant="number">
+        <FzIcon
+          v-if="stepMeta[activeStep].icon"
+          :name="stepMeta[activeStep].icon!"
+          variant="fas"
+          size="sm"
+        />
+        <template v-else>{{ activeStep + 1 }}</template>
+      </FzBadge>
       <FzDropdown
-        :actions="
-          props.steps.map((step, index) => ({
-            label: step.title,
-            type: 'action' as const,
-          }))
-        "
+        :actions="dropdownActions"
         align="right"
         listClass="gap-8 !p-0 w-full"
         class="fz-stepper__dropdown grow flex"
@@ -194,7 +185,7 @@ const showDescription = (step: FzStepProps) =>
               <span
                 :class="[
                   'font-medium grow',
-                  stepStatus[activeStep] === 'error'
+                  stepMeta[activeStep].status === 'error'
                     ? 'text-semantic-error'
                     : 'text-core-black',
                   { truncate: props.steps[activeStep].isTextTruncated },
@@ -205,7 +196,7 @@ const showDescription = (step: FzStepProps) =>
                 :name="isOpen ? 'angle-up' : 'angle-down'"
                 size="lg"
                 class="ml-4"
-              ></FzIcon>
+              />
             </div>
             <span
               v-if="showDescription(props.steps[activeStep])"
@@ -262,22 +253,20 @@ const showDescription = (step: FzStepProps) =>
 
     <!-- Without step navigation (hasStepperList = false) -->
     <div class="flex flex-row gap-8 items-center" v-else>
-      <div>
-        <FzBadge :tone="badgeTone[activeStep]" variant="number">
-          <FzIcon
-            v-if="badgeIcon[activeStep]"
-            :name="badgeIcon[activeStep]!"
-            variant="fas"
-            size="sm"
-          />
-          <template v-else>{{ activeStep + 1 }}</template>
-        </FzBadge>
-      </div>
+      <FzBadge :tone="stepMeta[activeStep].tone" variant="number">
+        <FzIcon
+          v-if="stepMeta[activeStep].icon"
+          :name="stepMeta[activeStep].icon!"
+          variant="fas"
+          size="sm"
+        />
+        <template v-else>{{ activeStep + 1 }}</template>
+      </FzBadge>
       <div class="flex flex-col grow min-w-0">
         <span
           :class="[
             'font-medium',
-            stepStatus[activeStep] === 'error'
+            stepMeta[activeStep].status === 'error'
               ? 'text-semantic-error'
               : 'text-core-black',
             { truncate: props.steps[activeStep].isTextTruncated },

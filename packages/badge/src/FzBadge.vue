@@ -6,7 +6,7 @@
       :variant="leftIconVariant"
       size="sm"
     />
-    <p :class="['text-[inherit] text-sm', { 'truncate': truncate }]">
+    <p :class="['text-[inherit] text-sm', { truncate: truncate }]">
       <slot></slot>
     </p>
     <FzIcon
@@ -80,6 +80,7 @@ const classes = computed(() => {
   if (effectiveVariant.value === "number") {
     baseClasses.push(
       "size-24", // Fixed 24x24px for number variant
+      "min-w-24", // Prevent flex shrink from collapsing width
       "rounded-full",
     );
   } else {
@@ -97,6 +98,6 @@ const classes = computed(() => {
 });
 
 const textClasses = computed(() => {
-  return ['text-[inherit] text-sm', { 'truncate': props.truncate }];
+  return ["text-[inherit] text-sm", { truncate: props.truncate }];
 });
 </script>

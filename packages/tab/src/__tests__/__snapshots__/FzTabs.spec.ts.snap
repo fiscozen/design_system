@@ -191,7 +191,7 @@ exports[`FzTabs > Snapshots > should match snapshot - with badgeContent 1`] = `
   <div class="flex flex-row">
     <div class="tab-container flex rounded-lg p-2 bg-grey-100 w-fit max-w-full w-full sm:w-auto flex-row overflow-x-auto"><button class="flex items-center rounded-md focus:z-10 w-auto text-md h-40 gap-8 py-8 px-12 bg-white text-blue-500 cursor-pointer" title="tab1" badgecontent="1">
         <!--v-if--><span class="text-ellipsis whitespace-nowrap overflow-hidden">tab1</span>
-        <div class="flex items-center justify-center truncate max-w-full gap-4 size-24 rounded-full bg-blue-500 text-core-white" title="1" environment="backoffice">
+        <div class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-blue-500 text-core-white" title="1" environment="backoffice">
           <!--v-if-->
           <p class="text-[inherit] text-sm">1</p>
           <!--v-if-->
