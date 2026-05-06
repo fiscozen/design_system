@@ -39,14 +39,34 @@ const dropdownRect = computed(() =>
 
 const stepMeta = computed<StepMeta[]>(() =>
   props.steps.map((step, index) => {
-    const status: FzInternalStepStatus =
-      index === activeStep.value
-        ? "current"
-        : step.status === "error"
-          ? "error"
-          : step.status === "completed"
-            ? "completed"
-            : "default";
+    let status: FzInternalStepStatus;
+    if (index === activeStep.value) {
+      status = "current";
+    } else if (step.status === "error") {
+      status = "error";
+    } else if (step.status === "completed") {
+      status = "completed";
+    } else {
+      status = "default";
+    }
+
+    let tone: FzBadgeTone;
+    if (status === "current") {
+      tone = "blue";
+    } else if (status === "error") {
+      tone = "error";
+    } else if (status === "completed") {
+      tone = "dark";
+    } else {
+      tone = "light";
+    }
+
+    const icon =
+      status === "completed"
+        ? "check"
+        : status === "error"
+          ? "exclamation"
+          : undefined;
 
     return {
       status,
@@ -59,20 +79,8 @@ const stepMeta = computed<StepMeta[]>(() =>
           "bg-semantic-error": status === "error",
         },
       ],
-      tone:
-        status === "current"
-          ? "blue"
-          : status === "error"
-            ? "error"
-            : status === "completed"
-              ? "dark"
-              : "light",
-      icon:
-        status === "completed"
-          ? "check"
-          : status === "error"
-            ? "exclamation"
-            : undefined,
+      tone,
+      icon,
     };
   }),
 );
