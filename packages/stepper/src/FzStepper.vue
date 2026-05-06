@@ -1,21 +1,17 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { FzStepperProps, FzStepProps } from "./types";
+import {
+  FzStepperProps,
+  FzStepProps,
+  FzInternalStepStatus,
+  StepMeta,
+} from "./types";
+import type { FzBadgeTone } from "@fiscozen/badge";
 import { useMediaQuery } from "@fiscozen/composables";
 import { breakpoints } from "@fiscozen/style";
 import { FzBadge } from "@fiscozen/badge";
-import type { FzBadgeTone } from "@fiscozen/badge";
 import { FzIcon } from "@fiscozen/icons";
 import { FzDropdown } from "@fiscozen/dropdown";
-
-type FzInternalStepStatus = "current" | "completed" | "error" | "default";
-
-type StepMeta = {
-  status: FzInternalStepStatus;
-  barClass: (string | Record<string, boolean>)[];
-  tone: FzBadgeTone;
-  icon?: string;
-};
 
 const props = withDefaults(defineProps<FzStepperProps>(), {
   hasStepbar: true,
