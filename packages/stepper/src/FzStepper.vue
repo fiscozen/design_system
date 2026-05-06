@@ -108,10 +108,13 @@ const showDescription = (step: FzStepProps) =>
       ]"
       v-for="(step, index) in props.steps"
       :key="index"
+      :aria-current="index === activeStep ? 'step' : undefined"
+      :aria-disabled="step.status === 'disabled' ? 'true' : undefined"
     >
       <div
         :class="['fz-stepper__progress', stepMeta[index].barClass]"
         v-if="hasStepbar"
+        aria-hidden="true"
       ></div>
       <div class="flex flex-row gap-8 items-start">
         <FzBadge :tone="stepMeta[index].tone" variant="number">
@@ -153,7 +156,7 @@ const showDescription = (step: FzStepProps) =>
 
   <!-- Mobile layout -->
   <div class="fz-stepper flex flex-col w-full gap-8" v-if="isMobile">
-    <div class="flex flex-row gap-8" v-if="hasStepbar">
+    <div class="flex flex-row gap-8" v-if="hasStepbar" aria-hidden="true">
       <div
         v-for="(step, index) in props.steps"
         :key="index"
@@ -230,6 +233,8 @@ const showDescription = (step: FzStepProps) =>
             :style="{
               width: `${dropdownRect?.width}px`,
             }"
+            :aria-current="index === activeStep ? 'step' : undefined"
+            :aria-disabled="step.status === 'disabled' ? 'true' : undefined"
             @click="
               handleActionClick(index);
               close();
