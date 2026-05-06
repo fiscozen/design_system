@@ -252,7 +252,7 @@ export const NoDescription: Story = {
 // ============================================
 
 export const MobileWithList: Story = {
-  args: { steps },
+  args: { steps, forceMobile: true },
   decorators: defaultDecorator,
   render: makeRender(1),
   parameters: {
@@ -291,7 +291,7 @@ export const MobileWithList: Story = {
 }
 
 export const MobileWithoutList: Story = {
-  args: { steps, hasStepperList: false },
+  args: { steps, hasStepperList: false, forceMobile: true },
   decorators: defaultDecorator,
   render: makeRender(1),
   parameters: {
