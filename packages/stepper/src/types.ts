@@ -17,7 +17,7 @@ type FzStepperProps = {
    */
   hasStepperList?: boolean;
   /**
-   * Color environment. Controls the accent color for the active step.
+   * Visual environment. Reserved for future environment-specific styling.
    * @default 'frontoffice'
    */
   environment?: FzStepperEnvironment;
