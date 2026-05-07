@@ -1,5 +1,11 @@
 # @fiscozen/badge
 
+## 3.0.1
+
+### Patch Changes
+
+- 351b6b7: Fix number variant badge not rendering as a circle in flex containers
+
 ## 3.0.0
 
 ### Patch Changes

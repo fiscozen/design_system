@@ -1,5 +1,16 @@
 # @fiscozen/stepper
 
+## 2.1.0
+
+### Minor Changes
+
+- 351b6b7: Align FzStepper with Figma design: new props, visual improvements and refactoring
+
+### Patch Changes
+
+- Updated dependencies [351b6b7]
+  - @fiscozen/badge@3.0.1
+
 ## 2.0.2
 
 ### Patch Changes

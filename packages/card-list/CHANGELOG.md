@@ -1,5 +1,12 @@
 # @fiscozen/card-list
 
+## 1.0.3
+
+### Patch Changes
+
+- Updated dependencies [351b6b7]
+  - @fiscozen/badge@3.0.1
+
 ## 1.0.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @fiscozen/pdf-viewer
 
+## 1.0.1
+
+### Patch Changes
+
+- @fiscozen/tab@3.0.4
+
 ## 1.0.0
 
 ### Major Changes

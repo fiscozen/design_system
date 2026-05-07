@@ -1,5 +1,11 @@
 # @fiscozen/appointments
 
+## 1.1.9
+
+### Patch Changes
+
+- @fiscozen/radio@3.0.3
+
 ## 1.1.8
 
 ### Patch Changes

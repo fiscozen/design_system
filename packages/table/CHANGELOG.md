@@ -1,5 +1,12 @@
 # @fiscozen/table
 
+## 2.1.7
+
+### Patch Changes
+
+- @fiscozen/checkbox@3.0.4
+- @fiscozen/radio@3.0.3
+
 ## 2.1.6
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @fiscozen/checkbox
 
+## 3.0.4
+
+### Patch Changes
+
+- Updated dependencies [351b6b7]
+  - @fiscozen/badge@3.0.1
+
 ## 3.0.3
 
 ### Patch Changes
