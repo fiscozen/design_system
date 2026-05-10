@@ -51,9 +51,12 @@ const Default: Story = {
       const container = canvasElement.querySelector('.fz-progress') as HTMLElement | null
       await expect(container).toBeTruthy()
       const styles = window.getComputedStyle(container!)
-      await expect(styles.getPropertyValue('--fa-animation-duration').trim()).toBe('0.86s')
-      await expect(styles.getPropertyValue('--fa-animation-timing').trim()).toBe(
-        'cubic-bezier(0.4, 0.15, 0.6, 0.85)'
+      // CSS minification strips leading zeros (0.86s → .86s), so compare numerically
+      await expect(
+        parseFloat(styles.getPropertyValue('--fa-animation-duration').trim())
+      ).toBeCloseTo(0.86)
+      await expect(styles.getPropertyValue('--fa-animation-timing').trim()).toMatch(
+        /cubic-bezier\(0?\.4,\s*0?\.15,\s*0?\.6,\s*0?\.85\)/
       )
     })
 
