@@ -1,184 +1,148 @@
 # @fiscozen/breadcrumbs
 
-Breadcrumb navigation components for Vue 3 applications. The package provides two components: a framework-agnostic presentational component and a Vue Router–aware wrapper that can automatically generate breadcrumbs from the current route hierarchy.
+Breadcrumb navigation components for Vue 3 applications.
 
-## Installation
+> For usage documentation and interactive examples, see the [Storybook stories](../../apps/storybook/src/stories/navigation/).
+
+## Development
+
+### Setup
 
 ```bash
-npm install @fiscozen/breadcrumbs
+pnpm install
+pnpm --filter @fiscozen/breadcrumbs build
 ```
 
-`FzRouterBreadcrumbs` requires `vue-router` as a peer dependency.
+### Architecture
 
-## Components
+The package exports two components with distinct responsibilities:
 
-This package exports two components:
+- **`FzBreadcrumbs`** — Presentational, framework-agnostic, generic (`<script setup generic="T">`). Receives `Breadcrumb<T>[]` and renders it. Has no knowledge of Vue Router. All navigation behavior is delegated to the consumer via the `bread-label` slot.
+- **`FzRouterBreadcrumbs`** — Vue Router layer. Calls `useRoute()`, builds `Breadcrumb<CustomRouteLocation>[]` either from `route.matched` (automatic) or from the `breadcrumbs` prop (manual), and passes it to `FzBreadcrumbs` via the `bread-label` slot.
 
-- `FzBreadcrumbs` — Presentational component. Renders any list of breadcrumbs; navigation behavior is left to the consumer via slots.
-- `FzRouterBreadcrumbs` — Vue Router wrapper around `FzBreadcrumbs`. Renders each breadcrumb as a `<router-link>` and can auto-generate the list from the matched route hierarchy.
-
-## Basic Usage
-
-### FzBreadcrumbs
-
-```vue
-<script setup lang="ts">
-import { FzBreadcrumbs } from '@fiscozen/breadcrumbs'
-
-const breadcrumbs = [
-  { id: 'home', label: 'Home' },
-  { id: 'products', label: 'Products' },
-  { id: 'current', label: 'Current Page' },
-]
-</script>
-
-<template>
-  <FzBreadcrumbs :breadcrumbs="breadcrumbs" />
-</template>
+```
+FzRouterBreadcrumbs
+  └── FzBreadcrumbs  ← actual rendering
 ```
 
-### FzRouterBreadcrumbs — automatic (default)
+Keeping the two components separate allows `FzBreadcrumbs` to be used in apps without Vue Router, with custom link components, or in any context where the navigation behavior needs to differ.
 
-No props required. Breadcrumbs are generated automatically from `route.matched`.
+### Code Organization
 
-```vue
-<template>
-  <FzRouterBreadcrumbs />
-</template>
+```
+src/
+  index.ts                    Public exports (components + types)
+  types.ts                    FzBreadcrumbsBaseProps, FzBreadcrumbsProps, FzRouterBreadcrumbsProps,
+                              Breadcrumb, CustomRouteLocation, BreadcrumbEnvironment, DisplayItem
+  FzBreadcrumbs.vue           Presentational component
+  FzRouterBreadcrumbs.vue     Router-aware wrapper
+  __tests__/
+    FzBreadcrumbs.spec.ts     Unit tests for both components
+    __snapshots__/            Auto-generated snapshot files
 ```
 
-### FzRouterBreadcrumbs — manual breadcrumbs
+### Key Concepts
 
-Pass a `breadcrumbs` prop to control the list explicitly while still rendering each item as a `<router-link>`.
+#### Shared base props
 
-```vue
-<script setup lang="ts">
-import { FzRouterBreadcrumbs, Breadcrumb, CustomRouteLocation } from '@fiscozen/breadcrumbs'
+`separator` and `ariaLabel` live in `FzBreadcrumbsBaseProps` (not exported) and are inherited by both prop interfaces via `extends`. When adding a prop shared by both components, add it there.
 
-const breadcrumbs: Breadcrumb<CustomRouteLocation>[] = [
-  { id: 'home', label: 'Home', metadata: { path: '/', name: 'home' } },
-  { id: 'products', label: 'Products', metadata: { path: '/products', name: 'products' } },
-  { id: 'current', label: 'Current Page', metadata: { path: '/products/1', name: 'product-detail' } },
-]
-</script>
+#### Active item detection
 
-<template>
-  <FzRouterBreadcrumbs :breadcrumbs="breadcrumbs" />
-</template>
-```
+The active item is always the **last in the array**, determined by `index === breadcrumbs.length - 1` in `FzBreadcrumbs`. This is positional — it has no relationship to the current route. `FzRouterBreadcrumbs` uses this same mechanism: `isActive` from the scoped slot is `true` only for the last item, regardless of which route is active.
 
-### Custom separator
+#### Last item: `<span>` not a link
 
-```vue
-<template>
-  <FzBreadcrumbs :breadcrumbs="breadcrumbs" separator=">" />
-</template>
-```
+In `FzRouterBreadcrumbs`, the last breadcrumb renders as `<span aria-current="page">` rather than a `<RouterLink>`. This follows WAI-ARIA Authoring Practices 3.17 (Breadcrumb), which explicitly requires the current page item not to be a link. The preceding items render as `<RouterLink>`.
 
-### Custom label rendering (FzBreadcrumbs)
+#### `bread-separator` slot and `aria-hidden`
 
-Use the `bread-label` scoped slot to replace the default label element with custom markup (e.g. a `<router-link>`, a styled `<a>`, or any component).
+The `bread-separator` slot in `FzBreadcrumbs` is always wrapped in `<span aria-hidden="true">`. This wrapper is rendered by the component itself, not the consumer — so any content passed via the slot is guaranteed to be hidden from assistive technology without the consumer needing to add `aria-hidden` manually.
 
-```vue
-<template>
-  <FzBreadcrumbs :breadcrumbs="breadcrumbs">
-    <template #bread-label="{ bread, isActive }">
-      <a :href="bread.metadata.href" :class="isActive ? 'text-grey-500' : 'text-blue-500'">
-        {{ bread.label }}
-      </a>
-    </template>
-  </FzBreadcrumbs>
-</template>
-```
+#### Automatic breadcrumb generation
 
-### Custom separator element
-
-```vue
-<template>
-  <FzBreadcrumbs :breadcrumbs="breadcrumbs">
-    <template #bread-separator>
-      <span class="mx-2 text-grey-300">›</span>
-    </template>
-  </FzBreadcrumbs>
-</template>
-```
-
-## Props
-
-### FzBreadcrumbs Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `breadcrumbs` | `Breadcrumb<T>[]` | _required_ | List of breadcrumb items to render |
-| `separator` | `string` | `'/'` | Character or string rendered between breadcrumb items |
-
-### FzRouterBreadcrumbs Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `breadcrumbs` | `Breadcrumb<CustomRouteLocation>[]` | `undefined` | List of breadcrumb items. When omitted (or empty), the component auto-generates breadcrumbs from `route.matched` |
-| `separator` | `string` | `'/'` | Character or string rendered between breadcrumb items |
-
-## Slots
-
-### FzBreadcrumbs Slots
-
-| Slot | Scope | Description |
-|------|-------|-------------|
-| `bread-label` | `{ bread: Breadcrumb<T>, isActive: boolean }` | Replaces the default label element. `isActive` is `true` for the last item |
-| `bread-separator` | — | Replaces the default separator element |
-
-### FzRouterBreadcrumbs Slots
-
-| Slot | Scope | Description |
-|------|-------|-------------|
-| `bread-separator` | — | Passed through to the inner `FzBreadcrumbs`. Replaces the default separator element |
-
-## Types
+When `FzRouterBreadcrumbs` receives no `breadcrumbs` prop (or an empty array), it reads `route.matched` and maps each `RouteRecord` to:
 
 ```ts
-interface Breadcrumb<T = void> {
-  id: string
-  label: string
-  metadata: T extends {} ? T : undefined
+{
+  id:       match.name?.toString() || match.path,
+  label:    match.name?.toString() || match.path,
+  metadata: match  // full RouteRecord, passed directly to :to on RouterLink
 }
-
-// Requires at least `path` or `name`; all other RouteLocation fields are optional
-type CustomRouteLocation = PartialExcept<RouteLocation, 'path' | 'name'>
 ```
 
-## Behavior & Concepts
+Labels are route **names**, not human-readable strings. If the app uses path-only routes or needs custom labels, the `breadcrumbs` prop must be passed manually.
 
-### Three usage modes
+#### `environment` prop and rendering rules
 
-| Mode | Component | When to use |
-|------|-----------|-------------|
-| Fully custom | `FzBreadcrumbs` | You control navigation yourself (non-router apps, custom link components) |
-| Manual router links | `FzRouterBreadcrumbs` + `breadcrumbs` prop | Vue Router app where you build the list yourself |
-| Automatic router links | `FzRouterBreadcrumbs` (no props) | Vue Router app — breadcrumbs mirror the matched route hierarchy |
+The `environment` prop (`'frontoffice' | 'backoffice'`, default `'frontoffice'`) controls two behaviours, both handled entirely inside `FzBreadcrumbs` — the consumer always passes the full array:
 
-### Active item
+- **≤ 1 item**: the component renders nothing (`v-if` on the `<nav>` root). The consumer does not need to guard against this.
+- **`frontoffice` + more than 3 items**: `displayedItems` collapses the list to four entries — first item, an ellipsis (`...` styled `text-blue-500`), the penultimate item, and the last (active) item. Intermediate items are dropped.
+- **`backoffice`**: all items are always shown regardless of count.
 
-The last breadcrumb in the list is considered active. It receives the `text-grey-500` class by default; all preceding items receive `text-blue-500`. The separator is not rendered after the last item.
+#### `DisplayItem<T>` — the computed display structure
 
-### Automatic breadcrumbs from route
+`displayedItems` is a `ComputedRef<DisplayItem<T>[]>` where `DisplayItem<T>` is defined in `types.ts`:
 
-When `FzRouterBreadcrumbs` has no `breadcrumbs` prop (or receives an empty array), it reads `route.matched` and maps each record to a `Breadcrumb<CustomRouteLocation>`. The `id` and `label` are derived from the route `name` (falling back to `path`), and `metadata` is the full matched route record.
-
-## Accessibility
-
-`FzBreadcrumbs` is a presentational component. The current implementation uses a `<div>` container. For full WCAG 2.1 compliance consider wrapping the component in a `<nav aria-label="Breadcrumb">` element and using the `bread-label` slot to add `aria-current="page"` to the last item:
-
-```vue
-<template>
-  <nav aria-label="Breadcrumb">
-    <FzBreadcrumbs :breadcrumbs="breadcrumbs">
-      <template #bread-label="{ bread, isActive }">
-        <span :aria-current="isActive ? 'page' : undefined">{{ bread.label }}</span>
-      </template>
-    </FzBreadcrumbs>
-  </nav>
-</template>
+```ts
+type DisplayItem<T> =
+  | { kind: 'breadcrumb'; item: Breadcrumb<T>; isActive: boolean }
+  | { kind: 'ellipsis' }
 ```
 
-`FzRouterBreadcrumbs` renders each item as a `<router-link>`, which produces a native `<a>` element — keyboard navigation and focus management are handled by the browser.
+The template iterates `displayedItems` (not `breadcrumbs` directly), keying on `item.id` for breadcrumbs and `'__ellipsis__'` for the ellipsis entry.
+
+#### `FzRouterBreadcrumbs` does not re-expose `bread-label`
+
+`FzRouterBreadcrumbs` uses the `bread-label` slot internally and does not forward it to consumers. Consumers who need custom label rendering must use `FzBreadcrumbs` directly. The `bread-separator` slot is technically forwarded but `FzRouterBreadcrumbs` does not use it internally — a consumer wrapping `FzRouterBreadcrumbs` cannot inject a custom separator through it.
+
+### Accessibility
+
+Implements WAI-ARIA Authoring Practices 3.17 (Breadcrumb):
+
+| Requirement | Implementation |
+|---|---|
+| `<nav>` landmark | Root element of `FzBreadcrumbs`, bound to `:aria-label="ariaLabel"` |
+| `aria-label` on `<nav>` | Default `'Breadcrumb'`, overridable via `ariaLabel` prop (needed when multiple nav landmarks coexist on a page — WCAG 2.4.1) |
+| Ordered list `<ol>/<li>` | Template structure of `FzBreadcrumbs` |
+| `aria-current="page"` on current item | Default `bread-label` slot fallback (div) and `FzRouterBreadcrumbs` active span |
+| Decorative separators hidden from AT | `<span aria-hidden="true">` wrapper always rendered around `bread-separator` slot |
+| Current item not a link | `FzRouterBreadcrumbs` renders active item as `<span>`, not `<RouterLink>` |
+
+### Testing
+
+```bash
+pnpm --filter @fiscozen/breadcrumbs test
+pnpm --filter @fiscozen/breadcrumbs test:coverage
+```
+
+Tests cover both components in a single spec file (`FzBreadcrumbs.spec.ts`) with `describe` blocks for: Rendering, Props (including `environment`), Events, CSS Classes, Accessibility (ARIA), Edge Cases, Snapshots.
+
+`FzRouterBreadcrumbs` tests mount with a real `createRouter` instance (not mocked) using `createWebHistory` and `flushPromises` for async route resolution. Tests that exercise the `environment` collapse behaviour use `global.stubs: { RouterLink: true }` to avoid route resolution errors from arbitrary metadata paths.
+
+Snapshot tests render the full HTML. After any structural template change, delete the snapshot file and re-run to regenerate:
+
+```bash
+rm src/__tests__/__snapshots__/FzBreadcrumbs.spec.ts.snap
+pnpm --filter @fiscozen/breadcrumbs test
+```
+
+### Adding Features
+
+1. **Update types** in `src/types.ts` — shared props go in `FzBreadcrumbsBaseProps`, component-specific props in their own interface
+2. **Update components** — `FzBreadcrumbs.vue` for rendering changes, `FzRouterBreadcrumbs.vue` for router layer changes
+3. **Add tests** in `src/__tests__/FzBreadcrumbs.spec.ts`
+4. **Update Storybook stories** in `apps/storybook/src/stories/navigation/` (`Breadcrumbs.stories.ts` for `FzBreadcrumbs`, `RouterBreadcrumbs.stories.ts` for `FzRouterBreadcrumbs`)
+
+### Dependencies
+
+- `vue-router` — peer dependency, required only by `FzRouterBreadcrumbs`; `FzBreadcrumbs` has no router dependency
+
+### Build
+
+```bash
+pnpm --filter @fiscozen/breadcrumbs build
+```
+
+Runs `vue-tsc` for type checking followed by Vite library build. Output goes to `dist/`.
