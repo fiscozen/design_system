@@ -4,7 +4,7 @@ import { FzLayout, FzLayoutProps } from '@fiscozen/layout'
 import { FzBadge } from '@fiscozen/badge'
 import { useBreakpoints } from '@fiscozen/composables'
 import { breakpoints } from '@fiscozen/style'
-import { FzButton } from '@fiscozen/button';
+import { FzButton } from '@fiscozen/button'
 
 const meta: Meta<typeof FzLayout> = {
   title: 'Panel/FzLayout',
@@ -48,25 +48,25 @@ export const OneColumn: StoryObj<typeof meta> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify layout renders correctly', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       await expect(layout).toBeInTheDocument()
       await expect(layout).toBeVisible()
     })
-    
+
     await step('Verify oneColumn layout structure', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       await expect(layout).toHaveClass('grid-rows-1')
       await expect(layout).toHaveClass('grid-cols-1')
     })
-    
+
     await step('Verify main content area is rendered', async () => {
       const mainArea = canvasElement.querySelector('.fz-layout__main')
       await expect(mainArea).toBeInTheDocument()
       await expect(mainArea).toBeVisible()
     })
-    
+
     await step('Verify slot content is displayed', async () => {
       const badge = canvas.getByText('main')
       await expect(badge).toBeInTheDocument()
@@ -101,37 +101,37 @@ export const OneColumnHeader: StoryObj<typeof meta> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify layout renders correctly', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       await expect(layout).toBeInTheDocument()
       await expect(layout).toBeVisible()
     })
-    
+
     await step('Verify oneColumnHeader layout structure', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       await expect(layout).toHaveClass('grid-rows-[56px_1fr]')
       await expect(layout).toHaveClass('grid-cols-1')
     })
-    
+
     await step('Verify header area is rendered', async () => {
       const headerArea = canvasElement.querySelector('.fz-layout__header')
       await expect(headerArea).toBeInTheDocument()
       await expect(headerArea).toBeVisible()
     })
-    
+
     await step('Verify main content area is rendered', async () => {
       const mainArea = canvasElement.querySelector('.fz-layout__main')
       await expect(mainArea).toBeInTheDocument()
       await expect(mainArea).toBeVisible()
     })
-    
+
     await step('Verify header slot content is displayed', async () => {
       const headerBadge = canvas.getByText('header')
       await expect(headerBadge).toBeInTheDocument()
       await expect(headerBadge).toBeVisible()
     })
-    
+
     await step('Verify main slot content is displayed', async () => {
       const mainBadge = canvas.getByText('main')
       await expect(mainBadge).toBeInTheDocument()
@@ -166,37 +166,37 @@ export const LeftShoulder: StoryObj<typeof meta> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify layout renders correctly', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       await expect(layout).toBeInTheDocument()
       await expect(layout).toBeVisible()
     })
-    
+
     await step('Verify leftShoulder layout structure', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       // Layout classes depend on breakpoint, but should have grid classes
       await expect(layout).toHaveClass('grid')
     })
-    
+
     await step('Verify sidebar area is rendered', async () => {
       const sidebarArea = canvasElement.querySelector('.fz-layout__sidebar')
       await expect(sidebarArea).toBeInTheDocument()
       await expect(sidebarArea).toBeVisible()
     })
-    
+
     await step('Verify main content area is rendered', async () => {
       const mainArea = canvasElement.querySelector('.fz-layout__main')
       await expect(mainArea).toBeInTheDocument()
       await expect(mainArea).toBeVisible()
     })
-    
+
     await step('Verify sidebar slot content is displayed', async () => {
       const sidebarBadge = canvas.getByText('Sidebar')
       await expect(sidebarBadge).toBeInTheDocument()
       await expect(sidebarBadge).toBeVisible()
     })
-    
+
     await step('Verify main slot content is displayed', async () => {
       const mainBadge = canvas.getByText('main')
       await expect(mainBadge).toBeInTheDocument()
@@ -231,37 +231,37 @@ export const RightShoulder: StoryObj<typeof meta> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify layout renders correctly', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       await expect(layout).toBeInTheDocument()
       await expect(layout).toBeVisible()
     })
-    
+
     await step('Verify rightShoulder layout structure', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       // Layout classes depend on breakpoint, but should have grid classes
       await expect(layout).toHaveClass('grid')
     })
-    
+
     await step('Verify sidebar area is rendered', async () => {
       const sidebarArea = canvasElement.querySelector('.fz-layout__sidebar')
       await expect(sidebarArea).toBeInTheDocument()
       await expect(sidebarArea).toBeVisible()
     })
-    
+
     await step('Verify main content area is rendered', async () => {
       const mainArea = canvasElement.querySelector('.fz-layout__main')
       await expect(mainArea).toBeInTheDocument()
       await expect(mainArea).toBeVisible()
     })
-    
+
     await step('Verify sidebar slot content is displayed', async () => {
       const sidebarBadge = canvas.getByText('Sidebar')
       await expect(sidebarBadge).toBeInTheDocument()
       await expect(sidebarBadge).toBeVisible()
     })
-    
+
     await step('Verify main slot content is displayed', async () => {
       const mainBadge = canvas.getByText('main')
       await expect(mainBadge).toBeInTheDocument()
@@ -303,49 +303,49 @@ export const TwoColumns: StoryObj<typeof meta> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify layout renders correctly', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       await expect(layout).toBeInTheDocument()
       await expect(layout).toBeVisible()
     })
-    
+
     await step('Verify twoColumns layout structure', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       // Layout classes depend on breakpoint, but should have grid classes
       await expect(layout).toHaveClass('grid')
     })
-    
+
     await step('Verify header area is rendered', async () => {
       const headerArea = canvasElement.querySelector('.fz-layout__header')
       await expect(headerArea).toBeInTheDocument()
       await expect(headerArea).toBeVisible()
     })
-    
+
     await step('Verify left column area is rendered', async () => {
       const leftArea = canvasElement.querySelector('.fz-layout__left')
       await expect(leftArea).toBeInTheDocument()
       await expect(leftArea).toBeVisible()
     })
-    
+
     await step('Verify right column area is rendered', async () => {
       const rightArea = canvasElement.querySelector('.fz-layout__right')
       await expect(rightArea).toBeInTheDocument()
       await expect(rightArea).toBeVisible()
     })
-    
+
     await step('Verify header slot content is displayed', async () => {
       const headerBadge = canvas.getByText('header')
       await expect(headerBadge).toBeInTheDocument()
       await expect(headerBadge).toBeVisible()
     })
-    
+
     await step('Verify left slot content is displayed', async () => {
       const leftBadge = canvas.getByText('left')
       await expect(leftBadge).toBeInTheDocument()
       await expect(leftBadge).toBeVisible()
     })
-    
+
     await step('Verify right slot content is displayed', async () => {
       const rightBadge = canvas.getByText('right')
       await expect(rightBadge).toBeInTheDocument()
@@ -356,7 +356,7 @@ export const TwoColumns: StoryObj<typeof meta> = {
 
 const multipleAreas = (args: FzLayoutProps) => ({
   setup() {
-    const { isGreater, isSmaller } = useBreakpoints(breakpoints);
+    const { isGreater, isSmaller } = useBreakpoints(breakpoints)
     return { args, isGreater, isSmaller }
   },
   components: { FzLayout, FzBadge, FzButton },
@@ -392,25 +392,25 @@ export const MultipleAreas: StoryObj<typeof meta> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify layout renders correctly', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       await expect(layout).toBeInTheDocument()
       await expect(layout).toBeVisible()
     })
-    
+
     await step('Verify multipleAreas layout structure', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       // Layout classes depend on breakpoint, but should have grid classes
       await expect(layout).toHaveClass('grid')
     })
-    
+
     await step('Verify header area is rendered', async () => {
       const headerArea = canvasElement.querySelector('.fz-layout__header')
       await expect(headerArea).toBeInTheDocument()
       await expect(headerArea).toBeVisible()
     })
-    
+
     await step('Verify sidebar trigger is rendered (on mobile)', async () => {
       // Sidebar trigger may or may not be visible depending on breakpoint
       const sidebarTrigger = canvasElement.querySelector('.fz-layout__sidebarTrigger')
@@ -419,7 +419,7 @@ export const MultipleAreas: StoryObj<typeof meta> = {
         await expect(sidebarTrigger).toBeInTheDocument()
       }
     })
-    
+
     await step('Verify sidebar area is rendered', async () => {
       // Sidebar visibility depends on breakpoint and toggle state
       const sidebarArea = canvasElement.querySelector('.fz-layout__sidebar')
@@ -428,25 +428,25 @@ export const MultipleAreas: StoryObj<typeof meta> = {
         await expect(sidebarArea).toBeInTheDocument()
       }
     })
-    
+
     await step('Verify main content area is rendered', async () => {
       const mainArea = canvasElement.querySelector('.fz-layout__main')
       await expect(mainArea).toBeInTheDocument()
       await expect(mainArea).toBeVisible()
     })
-    
+
     await step('Verify header slot content is displayed', async () => {
       const headerBadge = canvas.getByText('Header')
       await expect(headerBadge).toBeInTheDocument()
       await expect(headerBadge).toBeVisible()
     })
-    
+
     await step('Verify main slot content is displayed', async () => {
       const mainBadge = canvas.getByText('Main')
       await expect(mainBadge).toBeInTheDocument()
       await expect(mainBadge).toBeVisible()
     })
-    
+
     await step('Verify sidebar toggle functionality', async () => {
       // Find sidebar trigger if it exists (mobile view)
       const sidebarTrigger = canvasElement.querySelector('.fz-layout__sidebarTrigger')
@@ -455,13 +455,16 @@ export const MultipleAreas: StoryObj<typeof meta> = {
         if (clickableArea) {
           // Click to toggle sidebar
           await userEvent.click(clickableArea)
-          
+
           // Wait for layout state to update
-          await waitFor(() => {
-            const layout = canvasElement.querySelector('.fz-layout')
-            // Layout should have fz-layout--open class when sidebar is open
-            expect(layout).toBeInTheDocument()
-          }, { timeout: 500 })
+          await waitFor(
+            () => {
+              const layout = canvasElement.querySelector('.fz-layout')
+              // Layout should have fz-layout--open class when sidebar is open
+              expect(layout).toBeInTheDocument()
+            },
+            { timeout: 500 }
+          )
         }
       }
     })
@@ -481,35 +484,35 @@ export const ResponsiveBehaviorMobile: StoryObj<typeof meta> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify layout renders correctly on mobile', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       await expect(layout).toBeInTheDocument()
       await expect(layout).toBeVisible()
     })
-    
+
     await step('Verify sidebar trigger is visible on mobile (xs)', async () => {
       // On mobile (xs), sidebar trigger should be visible
       const sidebarTrigger = canvasElement.querySelector('.fz-layout__sidebarTrigger')
       await expect(sidebarTrigger).toBeInTheDocument()
       await expect(sidebarTrigger).toBeVisible()
     })
-    
+
     await step('Verify layout structure on mobile', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       const computedStyles = window.getComputedStyle(layout as Element)
       await expect(computedStyles.display).toBe('grid')
-      
+
       // Verify mobile-specific grid areas are applied
       await expect(layout).toHaveClass('grid')
     })
-    
+
     await step('Verify header is visible on mobile', async () => {
       const headerArea = canvasElement.querySelector('.fz-layout__header')
       await expect(headerArea).toBeInTheDocument()
       await expect(headerArea).toBeVisible()
     })
-    
+
     await step('Verify main content is visible on mobile', async () => {
       const mainArea = canvasElement.querySelector('.fz-layout__main')
       await expect(mainArea).toBeInTheDocument()
@@ -531,20 +534,20 @@ export const ResponsiveBehaviorTablet: StoryObj<typeof meta> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify layout renders correctly on tablet', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       await expect(layout).toBeInTheDocument()
       await expect(layout).toBeVisible()
     })
-    
+
     await step('Verify sidebar trigger is visible on tablet (md)', async () => {
       // On tablet (md), sidebar trigger should still be visible
       const sidebarTrigger = canvasElement.querySelector('.fz-layout__sidebarTrigger')
       await expect(sidebarTrigger).toBeInTheDocument()
       await expect(sidebarTrigger).toBeVisible()
     })
-    
+
     await step('Verify layout structure on tablet', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       const computedStyles = window.getComputedStyle(layout as Element)
@@ -566,45 +569,245 @@ export const ResponsiveBehaviorDesktop: StoryObj<typeof meta> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify layout renders correctly on desktop', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       await expect(layout).toBeInTheDocument()
       await expect(layout).toBeVisible()
     })
-    
+
     await step('Verify sidebar trigger is hidden on desktop (lg+)', async () => {
       // On desktop (lg+), sidebar trigger should NOT be visible
       const sidebarTrigger = canvasElement.querySelector('.fz-layout__sidebarTrigger')
       await expect(sidebarTrigger).toBeNull()
     })
-    
+
     await step('Verify sidebar is visible on desktop', async () => {
       // Sidebar should be visible on large screens
       const sidebarArea = canvasElement.querySelector('.fz-layout__sidebar')
       await expect(sidebarArea).toBeInTheDocument()
       await expect(sidebarArea).toBeVisible()
     })
-    
+
     await step('Verify layout structure on desktop', async () => {
       const layout = canvasElement.querySelector('.fz-layout')
       const computedStyles = window.getComputedStyle(layout as Element)
       await expect(computedStyles.display).toBe('grid')
-      
+
       // Verify desktop layout has proper grid structure
       await expect(layout).toHaveClass('grid')
     })
-    
+
     await step('Verify header is visible on desktop', async () => {
       const headerArea = canvasElement.querySelector('.fz-layout__header')
       await expect(headerArea).toBeInTheDocument()
       await expect(headerArea).toBeVisible()
     })
-    
+
     await step('Verify main content is visible on desktop', async () => {
       const mainArea = canvasElement.querySelector('.fz-layout__main')
       await expect(mainArea).toBeInTheDocument()
       await expect(mainArea).toBeVisible()
+    })
+  }
+}
+
+const threeColumns = (args: FzLayoutProps) => ({
+  setup() {
+    return { args }
+  },
+  components: { FzLayout, FzBadge },
+  template: `
+    <FzLayout v-bind="args" class="bg-blue-100">
+      <template #menuBar>
+        <div class="bg-blue-50 size-full flex justify-center items-center">
+          <FzBadge color="info">menuBar</FzBadge>
+        </div>
+      </template>
+      <template #header>
+        <div class="bg-blue-50 size-full flex justify-center items-center">
+          <FzBadge color="info">header</FzBadge>
+        </div>
+      </template>
+      <template #chat>
+        <div class="bg-blue-50 size-full flex justify-center items-center">
+          <FzBadge color="info">chat</FzBadge>
+        </div>
+      </template>
+      <template #footer>
+        <div class="bg-blue-50 size-full flex justify-center items-center">
+          <FzBadge color="info">footer</FzBadge>
+        </div>
+      </template>
+      <div class="bg-blue-50 h-full flex justify-center items-center">
+        <FzBadge color="info">main</FzBadge>
+      </div>
+    </FzLayout>
+  `
+})
+
+export const ThreeColumns: StoryObj<typeof meta> = {
+  render: threeColumns,
+  args: {
+    layout: 'threeColumns',
+    hasBottomBar: false
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify layout renders correctly', async () => {
+      const layout = canvasElement.querySelector('.fz-layout')
+      await expect(layout).toBeInTheDocument()
+      await expect(layout).toBeVisible()
+    })
+
+    await step('Verify menuBar is rendered', async () => {
+      const menuBar = canvasElement.querySelector('.fz-layout__menuBar')
+      await expect(menuBar).toBeInTheDocument()
+      await expect(menuBar).toBeVisible()
+    })
+
+    await step('Verify header is rendered', async () => {
+      const header = canvasElement.querySelector('.fz-layout__header')
+      await expect(header).toBeInTheDocument()
+      await expect(header).toBeVisible()
+    })
+
+    await step('Verify main is rendered', async () => {
+      const main = canvasElement.querySelector('.fz-layout__main')
+      await expect(main).toBeInTheDocument()
+      await expect(main).toBeVisible()
+    })
+
+    await step('Verify footer is not rendered when hasBottomBar is false', async () => {
+      const footer = canvasElement.querySelector('.fz-layout__footer')
+      await expect(footer).toBeNull()
+    })
+
+    await step('Verify slot content is displayed', async () => {
+      await expect(canvas.getByText('menuBar')).toBeVisible()
+      await expect(canvas.getByText('header')).toBeVisible()
+      await expect(canvas.getByText('main')).toBeVisible()
+    })
+  }
+}
+
+export const ThreeColumnsWithFooter: StoryObj<typeof meta> = {
+  render: threeColumns,
+  args: {
+    layout: 'threeColumns',
+    hasBottomBar: true
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify layout renders correctly', async () => {
+      const layout = canvasElement.querySelector('.fz-layout')
+      await expect(layout).toBeInTheDocument()
+      await expect(layout).toBeVisible()
+    })
+
+    await step('Verify footer is rendered when hasBottomBar is true', async () => {
+      const footer = canvasElement.querySelector('.fz-layout__footer')
+      await expect(footer).toBeInTheDocument()
+      await expect(footer).toBeVisible()
+    })
+
+    await step('Verify fz-layout--hasFooter modifier class is applied', async () => {
+      const layout = canvasElement.querySelector('.fz-layout')
+      await expect(layout).toHaveClass('fz-layout--hasFooter')
+    })
+
+    await step('Verify footer slot content is displayed', async () => {
+      await expect(canvas.getByText('footer')).toBeVisible()
+    })
+  }
+}
+
+export const ThreeColumnsMobile: StoryObj<typeof meta> = {
+  render: threeColumns,
+  args: {
+    layout: 'threeColumns',
+    hasBottomBar: false
+  },
+  globals: {
+    viewport: {
+      value: 'xs',
+      isRotated: false
+    }
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify layout renders correctly on mobile', async () => {
+      const layout = canvasElement.querySelector('.fz-layout')
+      await expect(layout).toBeInTheDocument()
+      await expect(layout).toBeVisible()
+    })
+
+    await step('Verify menuBar is rendered as top bar on mobile', async () => {
+      const menuBar = canvasElement.querySelector('.fz-layout__menuBar')
+      await expect(menuBar).toBeInTheDocument()
+      await expect(menuBar).toBeVisible()
+    })
+
+    await step('Verify chat is hidden on mobile', async () => {
+      const chat = canvasElement.querySelector('.fz-layout__chat')
+      await expect(chat).toBeNull()
+    })
+
+    await step('Verify header and main are visible on mobile', async () => {
+      const header = canvasElement.querySelector('.fz-layout__header')
+      const main = canvasElement.querySelector('.fz-layout__main')
+      await expect(header).toBeInTheDocument()
+      await expect(header).toBeVisible()
+      await expect(main).toBeInTheDocument()
+      await expect(main).toBeVisible()
+    })
+  }
+}
+
+export const ThreeColumnsDesktop: StoryObj<typeof meta> = {
+  render: threeColumns,
+  args: {
+    layout: 'threeColumns',
+    hasBottomBar: false
+  },
+  globals: {
+    viewport: {
+      value: 'lg',
+      isRotated: false
+    }
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify layout renders correctly on desktop', async () => {
+      const layout = canvasElement.querySelector('.fz-layout')
+      await expect(layout).toBeInTheDocument()
+      await expect(layout).toBeVisible()
+    })
+
+    await step('Verify all areas are visible on desktop', async () => {
+      const menuBar = canvasElement.querySelector('.fz-layout__menuBar')
+      const header = canvasElement.querySelector('.fz-layout__header')
+      const chat = canvasElement.querySelector('.fz-layout__chat')
+      const main = canvasElement.querySelector('.fz-layout__main')
+      await expect(menuBar).toBeInTheDocument()
+      await expect(menuBar).toBeVisible()
+      await expect(header).toBeInTheDocument()
+      await expect(header).toBeVisible()
+      await expect(chat).toBeInTheDocument()
+      await expect(chat).toBeVisible()
+      await expect(main).toBeInTheDocument()
+      await expect(main).toBeVisible()
+    })
+
+    await step('Verify all slot content is displayed', async () => {
+      await expect(canvas.getByText('menuBar')).toBeVisible()
+      await expect(canvas.getByText('header')).toBeVisible()
+      await expect(canvas.getByText('chat')).toBeVisible()
+      await expect(canvas.getByText('main')).toBeVisible()
     })
   }
 }

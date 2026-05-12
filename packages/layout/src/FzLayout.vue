@@ -8,20 +8,22 @@ const props = withDefaults(defineProps<FzLayoutProps>(), {});
 
 const emit = defineEmits([]);
 
-const currentBreakpoint = ref('');
+const currentBreakpoint = ref("");
 const getCurrentBreakpoint = () => {
-  const activeBreakpoints = Object.entries(breakpoints).filter(([key, value]) => window.innerWidth >= parseInt(value));
+  const activeBreakpoints = Object.entries(breakpoints).filter(
+    ([key, value]) => window.innerWidth >= parseInt(value),
+  );
   currentBreakpoint.value = activeBreakpoints[activeBreakpoints.length - 1][0];
-}
-const {isGreater} = useBreakpoints(breakpoints);
+};
+const { isGreater } = useBreakpoints(breakpoints);
 
 onMounted(() => {
   getCurrentBreakpoint();
-  window.addEventListener('resize', getCurrentBreakpoint)
-})
+  window.addEventListener("resize", getCurrentBreakpoint);
+});
 onUnmounted(() => {
-  window.removeEventListener('resize', getCurrentBreakpoint)
-})
+  window.removeEventListener("resize", getCurrentBreakpoint);
+});
 
 const visibleTrigger = ref(true);
 
@@ -29,12 +31,10 @@ const layoutClass = computed(() => {
   let res = undefined;
   switch (props.layout) {
     case "oneColumn":
-      res =
-        "grid-rows-1 grid-cols-1";
+      res = "grid-rows-1 grid-cols-1";
       break;
     case "oneColumnHeader":
-      res =
-        "grid-rows-[56px_1fr] grid-cols-1";
+      res = "grid-rows-[56px_1fr] grid-cols-1";
       break;
     case "twoColumns":
       res =
@@ -49,22 +49,31 @@ const layoutClass = computed(() => {
         "grid-cols-1 lg:grid-cols-[340px_1fr] grid-rows-[100vh_100vh] lg:grid-rows-1 fz-layout__overflow";
       break;
     case "multipleAreas":
-      res = visibleTrigger.value ?
-        "grid-cols-1 sm:grid-cols-[64px_1fr] lg:grid-cols-[280px_1fr] grid-rows-[56px_80px_1fr] sm:grid-rows-[56px_1fr]" :
-        "fz-layout--open grid-cols-1 sm:grid-cols-[280px_1fr] grid-rows-1 sm:grid-rows-[56px_1fr]"
+      res = visibleTrigger.value
+        ? "grid-cols-1 sm:grid-cols-[64px_1fr] lg:grid-cols-[280px_1fr] grid-rows-[56px_80px_1fr] sm:grid-rows-[56px_1fr]"
+        : "fz-layout--open grid-cols-1 sm:grid-cols-[280px_1fr] grid-rows-1 sm:grid-rows-[56px_1fr]";
       break;
+    case "threeColumns": {
+      const footerRow = props.hasBottomBar ? "_auto" : "";
+      res = `grid-cols-1 lg:grid-cols-[256px_1fr_320px] grid-rows-[76px_56px_1fr${footerRow}] lg:grid-rows-[56px_1fr${footerRow}]${props.hasBottomBar ? " fz-layout--hasFooter" : ""}`;
+      break;
+    }
     default:
       break;
   }
-  let widthClass = props.isViewport ? 'w-dvw' : 'w-full';
-  let heightClass = props.isViewport ? 'h-dvh' : 'h-full';
-  return [res, `fz-layout__${props.layout}--${currentBreakpoint.value}`, widthClass, heightClass];
+  let widthClass = props.isViewport ? "w-dvw" : "w-full";
+  let heightClass = props.isViewport ? "h-dvh" : "h-full";
+  return [
+    res,
+    `fz-layout__${props.layout}--${currentBreakpoint.value}`,
+    widthClass,
+    heightClass,
+  ];
 });
 
 const sidebarToggle = () => {
   visibleTrigger.value = !visibleTrigger.value;
-}
-
+};
 </script>
 
 <template>
@@ -102,17 +111,52 @@ const sidebarToggle = () => {
       </div>
     </template>
     <template v-if="props.layout === 'multipleAreas'">
-      <div v-if="visibleTrigger || isGreater('sm').value" class="fz-layout__header p-12">
+      <div
+        v-if="visibleTrigger || isGreater('sm').value"
+        class="fz-layout__header p-12"
+      >
         <slot name="header" :sidebarToggle></slot>
       </div>
-      <div v-if="visibleTrigger && ['xs', 'sm', 'md'].includes(currentBreakpoint)" class="fz-layout__sidebarTrigger p-12">
+      <div
+        v-if="visibleTrigger && ['xs', 'sm', 'md'].includes(currentBreakpoint)"
+        class="fz-layout__sidebarTrigger p-12"
+      >
         <slot name="sidebarTrigger" :sidebarToggle></slot>
       </div>
-      <div v-if="!visibleTrigger || ['lg', 'xl', '2xl', '3xl'].includes(currentBreakpoint)" class="fz-layout__sidebar p-12">
+      <div
+        v-if="
+          !visibleTrigger ||
+          ['lg', 'xl', '2xl', '3xl'].includes(currentBreakpoint)
+        "
+        class="fz-layout__sidebar p-12"
+      >
         <slot name="sidebar" :sidebarToggle></slot>
       </div>
-      <div v-if="visibleTrigger || isGreater('sm').value" class="fz-layout__main p-12 fz-layout__overflow">
+      <div
+        v-if="visibleTrigger || isGreater('sm').value"
+        class="fz-layout__main p-12 fz-layout__overflow"
+      >
         <slot></slot>
+      </div>
+    </template>
+    <template v-if="props.layout === 'threeColumns'">
+      <div class="fz-layout__menuBar p-12">
+        <slot name="menuBar"></slot>
+      </div>
+      <div class="fz-layout__header p-12">
+        <slot name="header"></slot>
+      </div>
+      <div
+        v-if="['lg', 'xl', '2xl', '3xl'].includes(currentBreakpoint)"
+        class="fz-layout__chat p-12"
+      >
+        <slot name="chat"></slot>
+      </div>
+      <div class="fz-layout__main p-12 fz-layout__overflow">
+        <slot></slot>
+      </div>
+      <div v-if="props.hasBottomBar" class="fz-layout__footer p-12">
+        <slot name="footer"></slot>
       </div>
     </template>
   </div>
@@ -138,46 +182,43 @@ const sidebarToggle = () => {
 .fz-layout__rightShoulder--md {
   grid-template-areas:
     "sidebar"
-    "main"
+    "main";
 }
 
 .fz-layout__leftShoulder--lg,
 .fz-layout__leftShoulder--xl,
 .fz-layout__leftShoulder--2xl,
 .fz-layout__leftShoulder--3xl {
-  grid-template-areas:
-    "sidebar main"
+  grid-template-areas: "sidebar main";
 }
 
 .fz-layout__rightShoulder--lg,
 .fz-layout__rightShoulder--xl,
 .fz-layout__rightShoulder--2xl,
 .fz-layout__rightShoulder--3xl {
-  grid-template-areas:
-    "main sidebar"
+  grid-template-areas: "main sidebar";
 }
 
 .fz-layout__multipleAreas--xs {
   grid-template-areas:
     "header"
     "sidebarTrigger"
-    "main"
+    "main";
 }
 .fz-layout__multipleAreas--xs.fz-layout--open {
-  grid-template-areas:
-    "sidebar"
+  grid-template-areas: "sidebar";
 }
 .fz-layout__multipleAreas--md.fz-layout--open,
 .fz-layout__multipleAreas--sm.fz-layout--open {
   grid-template-areas:
     "header header"
-    "sidebar main"
+    "sidebar main";
 }
 .fz-layout__multipleAreas--sm,
 .fz-layout__multipleAreas--md {
   grid-template-areas:
     "header header"
-    "sidebarTrigger main"
+    "sidebarTrigger main";
 }
 .fz-layout__multipleAreas--lg,
 .fz-layout__multipleAreas--xl,
@@ -185,7 +226,7 @@ const sidebarToggle = () => {
 .fz-layout__multipleAreas--3xl {
   grid-template-areas:
     "header header"
-    "sidebar main"
+    "sidebar main";
 }
 
 .fz-layout__oneColumn--xs,
@@ -195,8 +236,7 @@ const sidebarToggle = () => {
 .fz-layout__oneColumn--xl,
 .fz-layout__oneColumn--2xl,
 .fz-layout__oneColumn--3xl {
-  grid-template-areas:
-    "main"
+  grid-template-areas: "main";
 }
 
 .fz-layout__oneColumnHeader--xs,
@@ -208,7 +248,7 @@ const sidebarToggle = () => {
 .fz-layout__oneColumnHeader--3xl {
   grid-template-areas:
     "header"
-    "main"
+    "main";
 }
 .fz-layout__oneColumnHeader--xs,
 .fz-layout__oneColumnHeader--sm,
@@ -219,7 +259,7 @@ const sidebarToggle = () => {
 .fz-layout__oneColumnHeader--3xl {
   grid-template-areas:
     "header"
-    "main"
+    "main";
 }
 .fz-layout__twoColumns--lg,
 .fz-layout__twoColumns--xl,
@@ -227,7 +267,7 @@ const sidebarToggle = () => {
 .fz-layout__twoColumns--3xl {
   grid-template-areas:
     "header header"
-    "left right"
+    "left right";
 }
 .fz-layout__twoColumns--xs {
   grid-template-areas:
@@ -260,6 +300,50 @@ const sidebarToggle = () => {
 }
 .fz-layout__right {
   grid-area: right;
+}
+.fz-layout__menuBar {
+  grid-area: menuBar;
+}
+.fz-layout__chat {
+  grid-area: chat;
+}
+.fz-layout__footer {
+  grid-area: footer;
+}
+
+.fz-layout__threeColumns--xs,
+.fz-layout__threeColumns--sm,
+.fz-layout__threeColumns--md {
+  grid-template-areas:
+    "menuBar"
+    "header"
+    "main";
+}
+.fz-layout__threeColumns--xs.fz-layout--hasFooter,
+.fz-layout__threeColumns--sm.fz-layout--hasFooter,
+.fz-layout__threeColumns--md.fz-layout--hasFooter {
+  grid-template-areas:
+    "menuBar"
+    "header"
+    "main"
+    "footer";
+}
+.fz-layout__threeColumns--lg,
+.fz-layout__threeColumns--xl,
+.fz-layout__threeColumns--2xl,
+.fz-layout__threeColumns--3xl {
+  grid-template-areas:
+    "menuBar header chat"
+    "menuBar main   chat";
+}
+.fz-layout__threeColumns--lg.fz-layout--hasFooter,
+.fz-layout__threeColumns--xl.fz-layout--hasFooter,
+.fz-layout__threeColumns--2xl.fz-layout--hasFooter,
+.fz-layout__threeColumns--3xl.fz-layout--hasFooter {
+  grid-template-areas:
+    "menuBar header chat"
+    "menuBar main   chat"
+    "footer  footer footer";
 }
 .fz-layout__overflow {
   @apply overflow-auto pr-0;
