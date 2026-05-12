@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { computed, ComputedRef } from 'vue'
 import FzBreadcrumbs from './FzBreadcrumbs.vue'
-import { Breadcrumb, CustomRouteLocation, FzRouterBreadcrumbsProps } from './types'
+import type { Breadcrumb, CustomRouteLocation, FzRouterBreadcrumbsProps } from './types'
 import { useRoute } from 'vue-router'
 
-const props = withDefaults(
-  defineProps<FzRouterBreadcrumbsProps>(),
-  {
-    separator: '/'
-  }
-)
+const props = withDefaults(defineProps<FzRouterBreadcrumbsProps>(), {
+  separator: '/',
+  ariaLabel: 'Breadcrumb',
+  environment: 'frontoffice'
+})
 
 const route = useRoute()
 
@@ -33,17 +32,17 @@ const breads: ComputedRef<Breadcrumb<CustomRouteLocation>[]> = computed(() => {
 </script>
 
 <template>
-  <div class="fz__breadcrumbs">
-    <fz-breadcrumbs :breadcrumbs="breads" :separator="separator">
-      <template #bread-label="{ bread, isActive }">
-        <router-link
-          :to="bread.metadata"
-          class="text-blue-500"
-          :class="{ 'text-grey-500': isActive }"
-          >{{ bread.label }}</router-link
-        >
-      </template>
-      <template><slot name="bread-separator"></slot></template>
-    </fz-breadcrumbs>
-  </div>
+  <FzBreadcrumbs
+    :breadcrumbs="breads"
+    :separator="separator"
+    :ariaLabel="ariaLabel"
+    :environment="environment"
+  >
+    <template #bread-label="{ bread, isActive }">
+      <RouterLink v-if="!isActive" :to="bread.metadata" class="text-blue-500">{{
+        bread.label
+      }}</RouterLink>
+      <span v-else class="text-grey-500" aria-current="page">{{ bread.label }}</span>
+    </template>
+  </FzBreadcrumbs>
 </template>

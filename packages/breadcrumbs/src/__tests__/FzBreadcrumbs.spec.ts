@@ -182,31 +182,19 @@ describe('FzBreadcrumbs', () => {
         expect(wrapper.text()).toContain('Current Page')
       })
 
-      it('should handle single breadcrumb', () => {
-        const singleBreadcrumb: Breadcrumb[] = [
-          {
-            id: 'single',
-            label: 'Single'
-          }
-        ]
+      it('should render nothing with a single breadcrumb', () => {
+        const singleBreadcrumb: Breadcrumb[] = [{ id: 'single', label: 'Single' }]
         const wrapper = mount(FzBreadcrumbs, {
-          props: {
-            breadcrumbs: singleBreadcrumb
-          }
+          props: { breadcrumbs: singleBreadcrumb }
         })
-        expect(wrapper.text()).toContain('Single')
-        // No separator for single breadcrumb
-        const separators = wrapper.findAll('.text-grey-300')
-        expect(separators.length).toBe(0)
+        expect(wrapper.find('nav').exists()).toBe(false)
       })
 
-      it('should handle empty breadcrumbs array', () => {
+      it('should render nothing with an empty breadcrumbs array', () => {
         const wrapper = mount(FzBreadcrumbs, {
-          props: {
-            breadcrumbs: []
-          }
+          props: { breadcrumbs: [] }
         })
-        expect(wrapper.text().trim()).toBe('')
+        expect(wrapper.find('nav').exists()).toBe(false)
       })
     })
 
@@ -240,6 +228,62 @@ describe('FzBreadcrumbs', () => {
         expect(wrapper.text()).toContain(' >> ')
       })
     })
+
+    describe('environment prop', () => {
+      it('should default to frontoffice', () => {
+        const wrapper = mount(FzBreadcrumbs, { props: { breadcrumbs: simpleBreadcrumbs } })
+        // frontoffice default: 3 items → 3 <li>, no overflow
+        expect(wrapper.findAll('li').length).toBe(simpleBreadcrumbs.length)
+      })
+
+      it('should not collapse in frontoffice with exactly 3 items', () => {
+        const wrapper = mount(FzBreadcrumbs, {
+          props: { breadcrumbs: simpleBreadcrumbs, environment: 'frontoffice' }
+        })
+        expect(wrapper.findAll('li').length).toBe(3)
+        expect(wrapper.find('span.text-blue-500').exists()).toBe(false)
+      })
+
+      it('should collapse in frontoffice with 4 or more items', () => {
+        const four: Breadcrumb[] = Array.from({ length: 4 }, (_, i) => ({
+          id: `p${i}`,
+          label: `P${i}`
+        }))
+        const wrapper = mount(FzBreadcrumbs, {
+          props: { breadcrumbs: four, environment: 'frontoffice' }
+        })
+        expect(wrapper.findAll('li').length).toBe(4)
+        expect(wrapper.find('span.text-blue-500').text()).toBe('...')
+      })
+
+      it('should show first, ellipsis, penultimate and last item on frontoffice overflow', () => {
+        const items: Breadcrumb[] = Array.from({ length: 5 }, (_, i) => ({
+          id: `p${i}`,
+          label: `Page${i}`
+        }))
+        const wrapper = mount(FzBreadcrumbs, {
+          props: { breadcrumbs: items, environment: 'frontoffice' }
+        })
+        expect(wrapper.text()).toContain('Page0') // first
+        expect(wrapper.text()).toContain('...') // ellipsis
+        expect(wrapper.text()).toContain('Page3') // penultimate (index n-2)
+        expect(wrapper.text()).toContain('Page4') // last (active)
+        expect(wrapper.text()).not.toContain('Page1')
+        expect(wrapper.text()).not.toContain('Page2')
+      })
+
+      it('should show all items in backoffice regardless of count', () => {
+        const many: Breadcrumb[] = Array.from({ length: 8 }, (_, i) => ({
+          id: `p${i}`,
+          label: `Page${i}`
+        }))
+        const wrapper = mount(FzBreadcrumbs, {
+          props: { breadcrumbs: many, environment: 'backoffice' }
+        })
+        expect(wrapper.findAll('li').length).toBe(8)
+        expect(wrapper.find('span.text-blue-500').exists()).toBe(false)
+      })
+    })
   })
 
   // ============================================
@@ -267,10 +311,12 @@ describe('FzBreadcrumbs', () => {
           breadcrumbs: simpleBreadcrumbs
         }
       })
-      const container = wrapper.find('.flex')
-      expect(container.exists()).toBe(true)
-      expect(container.classes()).toContain('flex')
-      expect(container.classes()).toContain('text-sm')
+      const nav = wrapper.find('nav')
+      expect(nav.exists()).toBe(true)
+      expect(nav.classes()).toContain('text-sm')
+      const ol = nav.find('ol')
+      expect(ol.exists()).toBe(true)
+      expect(ol.classes()).toContain('flex')
     })
 
     it('should apply text-blue-500 to non-active links', () => {
@@ -304,7 +350,14 @@ describe('FzBreadcrumbs', () => {
       const separators = wrapper.findAll('.text-grey-300')
       separators.forEach((separator) => {
         expect(separator.classes()).toContain('text-grey-300')
-        expect(separator.classes()).toContain('mx-4')
+      })
+    })
+
+    it('should apply gap-1 on <ol> and each <li>', () => {
+      const wrapper = mount(FzBreadcrumbs, { props: { breadcrumbs: simpleBreadcrumbs } })
+      expect(wrapper.find('ol').classes()).toContain('gap-1')
+      wrapper.findAll('li').forEach((li) => {
+        expect(li.classes()).toContain('gap-1')
       })
     })
   })
@@ -320,10 +373,10 @@ describe('FzBreadcrumbs', () => {
             breadcrumbs: simpleBreadcrumbs
           }
         })
-        // Note: Current implementation uses div, but should ideally use nav element
-        // This test documents current behavior
-        const container = wrapper.find('.flex')
-        expect(container.exists()).toBe(true)
+        const nav = wrapper.find('nav')
+        expect(nav.exists()).toBe(true)
+        expect(nav.find('ol').exists()).toBe(true)
+        expect(nav.findAll('li').length).toBe(simpleBreadcrumbs.length)
       })
 
       it('should have accessible text content', () => {
@@ -339,29 +392,44 @@ describe('FzBreadcrumbs', () => {
     })
 
     describe('ARIA attributes', () => {
-      it('should support aria-current="page" on last breadcrumb (expected behavior)', () => {
+      it('should set aria-current="page" on last breadcrumb', () => {
         const wrapper = mount(FzBreadcrumbs, {
           props: {
             breadcrumbs: simpleBreadcrumbs
           }
         })
-        // Note: Current implementation doesn't add aria-current
-        // This test documents expected accessibility behavior
-        // The last breadcrumb should ideally have aria-current="page"
-        const lastBreadcrumb = wrapper.findAll('.text-grey-500')
-        expect(lastBreadcrumb.length).toBeGreaterThanOrEqual(1)
+        const items = wrapper.findAll('li')
+        expect(items[items.length - 1].find('[aria-current="page"]').exists()).toBe(true)
+        expect(items[0].find('[aria-current]').exists()).toBe(false)
       })
 
-      it('should support nav role with aria-label (expected behavior)', () => {
+      it('should render a <nav> landmark with aria-label="Breadcrumb" by default', () => {
         const wrapper = mount(FzBreadcrumbs, {
           props: {
             breadcrumbs: simpleBreadcrumbs
           }
         })
-        // Note: Current implementation uses div, but should ideally use nav with aria-label="Breadcrumb"
-        // This test documents expected accessibility behavior
-        const container = wrapper.find('.flex')
-        expect(container.exists()).toBe(true)
+        expect(wrapper.find('nav').attributes('aria-label')).toBe('Breadcrumb')
+      })
+
+      it('should use custom ariaLabel when provided', () => {
+        const wrapper = mount(FzBreadcrumbs, {
+          props: {
+            breadcrumbs: simpleBreadcrumbs,
+            ariaLabel: 'You are here'
+          }
+        })
+        expect(wrapper.find('nav').attributes('aria-label')).toBe('You are here')
+      })
+
+      it('should hide separators from assistive technology', () => {
+        const wrapper = mount(FzBreadcrumbs, {
+          props: {
+            breadcrumbs: simpleBreadcrumbs
+          }
+        })
+        // 3 breadcrumbs → 2 separators hidden with aria-hidden
+        expect(wrapper.findAll('[aria-hidden="true"]').length).toBe(simpleBreadcrumbs.length - 1)
       })
     })
 
@@ -396,30 +464,25 @@ describe('FzBreadcrumbs', () => {
 
     it('should handle breadcrumbs with very long labels', () => {
       const longBreadcrumbs: Breadcrumb[] = [
+        { id: 'home', label: 'Home' },
         {
           id: 'long',
           label: 'This is a very long breadcrumb label that might wrap or overflow'
         }
       ]
       const wrapper = mount(FzBreadcrumbs, {
-        props: {
-          breadcrumbs: longBreadcrumbs
-        }
+        props: { breadcrumbs: longBreadcrumbs }
       })
       expect(wrapper.text()).toContain('This is a very long breadcrumb label')
     })
 
     it('should handle breadcrumbs with special characters', () => {
       const specialBreadcrumbs: Breadcrumb[] = [
-        {
-          id: 'special',
-          label: 'Special & Characters < > " \''
-        }
+        { id: 'home', label: 'Home' },
+        { id: 'special', label: 'Special & Characters < > " \'' }
       ]
       const wrapper = mount(FzBreadcrumbs, {
-        props: {
-          breadcrumbs: specialBreadcrumbs
-        }
+        props: { breadcrumbs: specialBreadcrumbs }
       })
       expect(wrapper.text()).toContain('Special & Characters')
     })
@@ -439,21 +502,49 @@ describe('FzBreadcrumbs', () => {
       expect(wrapper.exists()).toBe(true)
     })
 
-    it('should handle many breadcrumbs', () => {
+    it('should collapse to 4 displayed items in frontoffice when breadcrumbs > 3', () => {
       const manyBreadcrumbs: Breadcrumb[] = Array.from({ length: 10 }, (_, i) => ({
         id: `item-${i}`,
         label: `Item ${i}`
       }))
       const wrapper = mount(FzBreadcrumbs, {
-        props: {
-          breadcrumbs: manyBreadcrumbs
-        }
+        props: { breadcrumbs: manyBreadcrumbs, environment: 'frontoffice' }
+      })
+      // shows first, ellipsis, penultimate (item-8), last (item-9)
+      expect(wrapper.text()).toContain('Item 0')
+      expect(wrapper.text()).toContain('...')
+      expect(wrapper.text()).toContain('Item 8')
+      expect(wrapper.text()).toContain('Item 9')
+      // 4 displayed items → 3 separators
+      expect(wrapper.findAll('.text-grey-300').length).toBe(3)
+    })
+
+    it('should show all breadcrumbs in backoffice regardless of count', () => {
+      const manyBreadcrumbs: Breadcrumb[] = Array.from({ length: 10 }, (_, i) => ({
+        id: `item-${i}`,
+        label: `Item ${i}`
+      }))
+      const wrapper = mount(FzBreadcrumbs, {
+        props: { breadcrumbs: manyBreadcrumbs, environment: 'backoffice' }
       })
       expect(wrapper.text()).toContain('Item 0')
       expect(wrapper.text()).toContain('Item 9')
-      // Should have 9 separators for 10 breadcrumbs
-      const separators = wrapper.findAll('.text-grey-300')
-      expect(separators.length).toBe(9)
+      // 10 items → 9 separators
+      expect(wrapper.findAll('.text-grey-300').length).toBe(9)
+    })
+
+    it('ellipsis should have text-blue-500 class in frontoffice overflow', () => {
+      const manyBreadcrumbs: Breadcrumb[] = Array.from({ length: 5 }, (_, i) => ({
+        id: `item-${i}`,
+        label: `Item ${i}`
+      }))
+      const wrapper = mount(FzBreadcrumbs, {
+        props: { breadcrumbs: manyBreadcrumbs, environment: 'frontoffice' }
+      })
+      // ellipsis renders as <span>, default labels as <div>
+      const ellipsis = wrapper.find('span.text-blue-500')
+      expect(ellipsis.exists()).toBe(true)
+      expect(ellipsis.text()).toBe('...')
     })
 
     it('should correctly identify last breadcrumb as active', () => {
@@ -564,7 +655,8 @@ describe('FzRouterBreadcrumbs', () => {
 
       await flushPromises()
       const links = wrapper.findAllComponents({ name: 'router-link' })
-      expect(links.length).toBe(3)
+      // last item renders as <span>, so n-1 links for n breadcrumbs
+      expect(links.length).toBe(breadcrumbs.length - 1)
     })
 
     it('should render custom separator', async () => {
@@ -684,6 +776,52 @@ describe('FzRouterBreadcrumbs', () => {
         expect(wrapper.text()).toContain('→')
       })
     })
+
+    describe('environment prop', () => {
+      // RouterLink is stubbed because these tests focus on collapse behaviour,
+      // not route resolution — the metadata paths are intentionally arbitrary.
+      const manyBreadcrumbs: Breadcrumb<CustomRouteLocation>[] = Array.from(
+        { length: 5 },
+        (_, i) => ({ id: `p${i}`, label: `Page${i}`, metadata: { path: `/${i}`, name: `p${i}` } })
+      )
+      const mountOpts = (env: 'frontoffice' | 'backoffice') => ({
+        props: { breadcrumbs: manyBreadcrumbs, environment: env },
+        global: { plugins: [router], stubs: { RouterLink: true } }
+      })
+
+      it('should pass environment to FzBreadcrumbs and not collapse in backoffice', async () => {
+        router.push('/')
+        await router.isReady()
+        const wrapper = mount(FzRouterBreadcrumbs, mountOpts('backoffice'))
+        await flushPromises()
+        expect(wrapper.findAll('li').length).toBe(5)
+        expect(wrapper.find('span.text-blue-500').exists()).toBe(false)
+      })
+
+      it('should collapse to 4 items in frontoffice with more than 3 breadcrumbs', async () => {
+        router.push('/')
+        await router.isReady()
+        const wrapper = mount(FzRouterBreadcrumbs, mountOpts('frontoffice'))
+        await flushPromises()
+        expect(wrapper.findAll('li').length).toBe(4)
+        expect(wrapper.find('span.text-blue-500').text()).toBe('...')
+      })
+
+      it('should render nothing when a single breadcrumb is passed', async () => {
+        router.push('/')
+        await router.isReady()
+
+        const wrapper = mount(FzRouterBreadcrumbs, {
+          props: {
+            breadcrumbs: [{ id: 'home', label: 'Home', metadata: { path: '/', name: 'home' } }]
+          },
+          global: { plugins: [router] }
+        })
+
+        await flushPromises()
+        expect(wrapper.find('nav').exists()).toBe(false)
+      })
+    })
   })
 
   // ============================================
@@ -705,7 +843,7 @@ describe('FzRouterBreadcrumbs', () => {
 
       await flushPromises()
       const links = wrapper.findAllComponents({ name: 'router-link' })
-      
+
       if (links.length > 0) {
         // Router-link handles navigation internally
         expect(links[0].exists()).toBe(true)
@@ -717,7 +855,7 @@ describe('FzRouterBreadcrumbs', () => {
   // CSS CLASSES TESTS
   // ============================================
   describe('CSS Classes', () => {
-    it('should apply fz__breadcrumbs container class', async () => {
+    it('should render a <nav> landmark with aria-label', async () => {
       router.push('/')
       await router.isReady()
 
@@ -731,8 +869,9 @@ describe('FzRouterBreadcrumbs', () => {
       })
 
       await flushPromises()
-      const container = wrapper.find('.fz__breadcrumbs')
-      expect(container.exists()).toBe(true)
+      const nav = wrapper.find('nav')
+      expect(nav.exists()).toBe(true)
+      expect(nav.attributes('aria-label')).toBe('Breadcrumb')
     })
 
     it('should apply text-blue-500 to non-active links', async () => {
@@ -764,7 +903,7 @@ describe('FzRouterBreadcrumbs', () => {
         },
         global: {
           plugins: [router]
-      }
+        }
       })
 
       await flushPromises()
@@ -793,10 +932,9 @@ describe('FzRouterBreadcrumbs', () => {
         })
 
         await flushPromises()
-        // Note: Current implementation uses div, but should ideally use nav element
-        // This test documents current behavior
-        const container = wrapper.find('.fz__breadcrumbs')
-        expect(container.exists()).toBe(true)
+        const nav = wrapper.find('nav')
+        expect(nav.exists()).toBe(true)
+        expect(nav.find('ol').exists()).toBe(true)
       })
 
       it('should have accessible text content', async () => {
@@ -820,7 +958,7 @@ describe('FzRouterBreadcrumbs', () => {
     })
 
     describe('ARIA attributes', () => {
-      it('should support aria-current="page" on last breadcrumb (expected behavior)', async () => {
+      it('should set aria-current="page" on the last item rendered as <span>', async () => {
         router.push('/')
         await router.isReady()
 
@@ -834,14 +972,16 @@ describe('FzRouterBreadcrumbs', () => {
         })
 
         await flushPromises()
+        // last item renders as a non-interactive <span>, not a router-link
+        const activeSpan = wrapper.find('span[aria-current="page"]')
+        expect(activeSpan.exists()).toBe(true)
+        expect(activeSpan.text()).toBe('bar')
+        // last item must not be a router-link
         const links = wrapper.findAllComponents({ name: 'router-link' })
-        // Note: Current implementation doesn't add aria-current
-        // This test documents expected accessibility behavior
-        // The last router-link should ideally have aria-current="page"
-        expect(links.length).toBeGreaterThan(0)
+        expect(links.length).toBe(breadcrumbs.length - 1)
       })
 
-      it('should support nav role with aria-label="Breadcrumb" (expected behavior)', async () => {
+      it('should render a <nav> landmark with aria-label="Breadcrumb"', async () => {
         router.push('/')
         await router.isReady()
 
@@ -855,10 +995,7 @@ describe('FzRouterBreadcrumbs', () => {
         })
 
         await flushPromises()
-        // Note: Current implementation uses div, but should ideally use nav with aria-label="Breadcrumb"
-        // This test documents expected accessibility behavior
-        const container = wrapper.find('.fz__breadcrumbs')
-        expect(container.exists()).toBe(true)
+        expect(wrapper.find('nav').attributes('aria-label')).toBe('Breadcrumb')
       })
     })
 
@@ -969,7 +1106,7 @@ describe('FzRouterBreadcrumbs', () => {
       expect(wrapper.html()).toMatchSnapshot()
       expect(
         wrapper.findComponent({ name: 'fz-breadcrumbs' }).findAllComponents({ name: 'router-link' })
-      ).toHaveLength(3)
+      ).toHaveLength(breadcrumbs.length - 1)
     })
 
     it('should match snapshot for automatic breadcrumbs', async () => {
@@ -999,7 +1136,7 @@ describe('FzRouterBreadcrumbs', () => {
           .findComponent({ name: 'fz-router-breadcrumbs' })
           .findComponent({ name: 'fz-breadcrumbs' })
           .findAllComponents({ name: 'router-link' })
-      ).toHaveLength(3)
+      ).toHaveLength(breadcrumbs.length - 1)
     })
   })
 })
