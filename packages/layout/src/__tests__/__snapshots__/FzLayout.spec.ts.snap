@@ -9,6 +9,7 @@ exports[`FzLayout > Snapshots > should match snapshot - isViewport false 1`] = `
   <!--v-if-->
   <!--v-if-->
   <!--v-if-->
+  <!--v-if-->
 </div>"
 `;
 
@@ -23,6 +24,7 @@ exports[`FzLayout > Snapshots > should match snapshot - leftShoulder layout 1`] 
   <div data-v-c8fca887="" class="fz-layout__main p-12">
     <div class="bg-blue-50 size-full flex justify-center items-center">main</div>
   </div>
+  <!--v-if-->
   <!--v-if-->
 </div>"
 `;
@@ -43,6 +45,7 @@ exports[`FzLayout > Snapshots > should match snapshot - multipleAreas layout 1`]
   <div data-v-c8fca887="" class="fz-layout__main p-12 fz-layout__overflow">
     <div>Main</div>
   </div>
+  <!--v-if-->
 </div>"
 `;
 
@@ -51,6 +54,7 @@ exports[`FzLayout > Snapshots > should match snapshot - oneColumn layout 1`] = `
   <div data-v-c8fca887="" class="fz-layout__main p-12 fz-layout__overflow">
     <div class="w-full h-full bg-red-100">main</div>
   </div>
+  <!--v-if-->
   <!--v-if-->
   <!--v-if-->
   <!--v-if-->
@@ -70,6 +74,7 @@ exports[`FzLayout > Snapshots > should match snapshot - oneColumnHeader layout 1
   <!--v-if-->
   <!--v-if-->
   <!--v-if-->
+  <!--v-if-->
 </div>"
 `;
 
@@ -85,6 +90,55 @@ exports[`FzLayout > Snapshots > should match snapshot - rightShoulder layout 1`]
     <div>Main</div>
   </div>
   <!--v-if-->
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzLayout > Snapshots > should match snapshot - threeColumns layout 1`] = `
+"<div data-v-c8fca887="" class="fz-layout grid grid-cols-1 lg:grid-cols-[256px_1fr_320px] grid-rows-[76px_56px_1fr] lg:grid-rows-[56px_1fr] fz-layout__threeColumns--3xl w-full h-full">
+  <!--v-if-->
+  <!--v-if-->
+  <!--v-if-->
+  <!--v-if-->
+  <!--v-if-->
+  <div data-v-c8fca887="" class="fz-layout__menuBar p-12">
+    <div>MenuBar</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__header p-12">
+    <div>Header</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__chat p-12">
+    <div>Chat</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__main p-12 fz-layout__overflow">
+    <div>Main</div>
+  </div>
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzLayout > Snapshots > should match snapshot - threeColumns layout with hasBottomBar 1`] = `
+"<div data-v-c8fca887="" class="fz-layout grid grid-cols-1 lg:grid-cols-[256px_1fr_320px] grid-rows-[76px_56px_1fr_auto] lg:grid-rows-[56px_1fr_auto] fz-layout--hasFooter fz-layout__threeColumns--3xl w-full h-full">
+  <!--v-if-->
+  <!--v-if-->
+  <!--v-if-->
+  <!--v-if-->
+  <!--v-if-->
+  <div data-v-c8fca887="" class="fz-layout__menuBar p-12">
+    <div>MenuBar</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__header p-12">
+    <div>Header</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__chat p-12">
+    <div>Chat</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__main p-12 fz-layout__overflow">
+    <div>Main</div>
+  </div>
+  <div data-v-c8fca887="" class="fz-layout__footer p-12">
+    <div>Footer</div>
+  </div>
 </div>"
 `;
 
@@ -101,6 +155,7 @@ exports[`FzLayout > Snapshots > should match snapshot - twoColumns layout 1`] = 
   <div data-v-c8fca887="" class="fz-layout__right p-12">
     <div class="bg-blue-50 size-full flex justify-center items-center">right</div>
   </div>
+  <!--v-if-->
   <!--v-if-->
   <!--v-if-->
 </div>"
