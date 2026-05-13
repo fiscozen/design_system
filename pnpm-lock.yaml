@@ -2824,6 +2824,9 @@ importers:
 
   packages/stepper:
     dependencies:
+      '@fiscozen/action':
+        specifier: workspace:*
+        version: link:../action
       '@fiscozen/badge':
         specifier: workspace:*
         version: link:../badge

@@ -12,6 +12,7 @@ import { breakpoints } from "@fiscozen/style";
 import { FzBadge } from "@fiscozen/badge";
 import { FzIcon } from "@fiscozen/icons";
 import { FzDropdown } from "@fiscozen/dropdown";
+import { FzAction, FzActionList } from "@fiscozen/action";
 
 const props = withDefaults(defineProps<FzStepperProps>(), {
   hasStepbar: true,
@@ -83,11 +84,10 @@ const stepMeta = computed<StepMeta[]>(() =>
   }),
 );
 
-const dropdownActions = computed(() =>
-  props.steps.map((step) => ({ label: step.title, type: "action" as const })),
-);
+const isDropdownOpen = ref(false);
 
 const handleActionClick = (index: number) => {
+  isDropdownOpen.value = false;
   if (props.steps[index].status === "disabled") return;
   if (index === activeStep.value) return;
   activeStep.value = index;
@@ -165,35 +165,33 @@ const showDescription = (step: FzStepProps) =>
     </div>
 
     <!-- With step navigation dropdown -->
-    <div
-      class="flex flex-row gap-8 items-center"
-      ref="dropdownContainer"
+    <FzDropdown
       v-if="hasStepperList"
+      v-model:isOpen="isDropdownOpen"
+      :actions="[]"
+      align="left"
+      class="fz-stepper__dropdown flex w-full"
     >
-      <FzBadge :tone="stepMeta[activeStep].tone" variant="number">
-        <FzIcon
-          v-if="stepMeta[activeStep].icon"
-          :name="stepMeta[activeStep].icon!"
-          variant="fas"
-          size="sm"
-        />
-        <template v-else>{{ activeStep + 1 }}</template>
-      </FzBadge>
-      <FzDropdown
-        :actions="dropdownActions"
-        align="right"
-        listClass="gap-8 !p-0 w-full"
-        class="fz-stepper__dropdown grow flex"
-        @fzaction:click="handleActionClick"
-      >
-        <template #opener="{ isOpen, open }">
-          <div class="flex flex-col grow cursor-pointer" @click="open">
-            <div
-              class="flex flex-row size-full justify-between items-center cursor-pointer"
-            >
+      <template #opener="{ isOpen, open }">
+        <div
+          ref="dropdownContainer"
+          class="flex flex-row gap-8 items-start w-full min-w-0 cursor-pointer"
+          @click="open"
+        >
+          <FzBadge :tone="stepMeta[activeStep].tone" variant="number">
+            <FzIcon
+              v-if="stepMeta[activeStep].icon"
+              :name="stepMeta[activeStep].icon!"
+              variant="fas"
+              size="sm"
+            />
+            <template v-else>{{ activeStep + 1 }}</template>
+          </FzBadge>
+          <div class="flex flex-col grow min-w-0">
+            <div class="flex flex-row justify-between items-center min-w-0">
               <span
                 :class="[
-                  'font-medium grow',
+                  'font-medium grow min-w-0',
                   stepMeta[activeStep].status === 'error'
                     ? 'text-semantic-error'
                     : 'text-core-black',
@@ -204,7 +202,7 @@ const showDescription = (step: FzStepProps) =>
               <FzIcon
                 :name="isOpen ? 'angle-up' : 'angle-down'"
                 size="lg"
-                class="ml-4"
+                class="ml-4 shrink-0"
               />
             </div>
             <span
@@ -216,51 +214,34 @@ const showDescription = (step: FzStepProps) =>
               >{{ props.steps[activeStep].description }}</span
             >
           </div>
-        </template>
-        <template
-          v-for="(step, index) in props.steps"
-          #[`fzaction-item-${index}`]="{ close }"
+        </div>
+      </template>
+      <template #actionList>
+        <FzActionList
+          listClass="gap-8 !p-0 w-full"
+          :style="{ width: `${dropdownRect?.width}px` }"
         >
-          <div
+          <FzAction
+            v-for="(step, index) in props.steps"
+            :key="index"
+            type="action"
+            :label="step.title"
+            :sub-label="showDescription(step) ? step.description : undefined"
+            :disabled="step.status === 'disabled'"
+            :is-text-truncated="step.isTextTruncated"
             :class="[
-              'flex flex-col grow cursor-pointer hover:bg-background-alice-blue px-16 py-6 min-w-sm',
+              'fz-stepper__dropdown-item',
               {
                 'rounded border-2 border-solid border-blue-200':
                   activeStep === index,
-                '!cursor-not-allowed': step.status === 'disabled',
               },
             ]"
-            :style="{
-              width: `${dropdownRect?.width}px`,
-            }"
             :aria-current="index === activeStep ? 'step' : undefined"
-            :aria-disabled="step.status === 'disabled' ? 'true' : undefined"
-            @click="
-              handleActionClick(index);
-              close();
-            "
-          >
-            <span
-              :class="[
-                'font-medium grow',
-                { 'text-grey-200': step.status === 'disabled' },
-                { truncate: step.isTextTruncated },
-              ]"
-              >{{ step.title }}</span
-            >
-            <span
-              v-if="showDescription(step)"
-              :class="[
-                'text-sm',
-                { 'text-grey-200': step.status === 'disabled' },
-                { truncate: step.isTextTruncated },
-              ]"
-              >{{ step.description }}</span
-            >
-          </div>
-        </template>
-      </FzDropdown>
-    </div>
+            @click="handleActionClick(index)"
+          />
+        </FzActionList>
+      </template>
+    </FzDropdown>
 
     <!-- Without step navigation (hasStepperList = false) -->
     <div class="flex flex-row gap-8 items-center" v-else>
