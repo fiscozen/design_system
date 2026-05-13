@@ -1,5 +1,11 @@
 # @fiscozen/view-flag
 
+## 1.0.1
+
+### Patch Changes
+
+- 3944b2f: Move FzViewFlag bottom banner from bottom-center to bottom-left.
+
 ## 1.0.0
 
 ### Major Changes
