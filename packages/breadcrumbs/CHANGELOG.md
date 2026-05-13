@@ -1,5 +1,11 @@
 # @fiscozen/breadcrumbs
 
+## 1.0.0
+
+### Major Changes
+
+- No changes, just version bumping
+
 ## 0.2.0
 
 ### Minor Changes
