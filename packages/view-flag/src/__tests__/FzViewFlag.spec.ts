@@ -137,9 +137,7 @@ describe("FzViewFlag", () => {
       expect(html).toContain("p-8");
       expect(html).toContain("bottom-0");
       expect(html).toContain("left-0");
-      expect(html).toContain("right-0");
       expect(html).toContain("fixed");
-      expect(html).toContain("m-auto");
       expect(html).toContain("empty:hidden");
       expect(html).toContain("w-full");
       expect(html).toContain("pointer-events-auto");

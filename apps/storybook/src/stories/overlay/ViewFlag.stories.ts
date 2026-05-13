@@ -84,16 +84,11 @@ export const Primary: Story = {
       await expect(distanceFromBottom).toBeLessThan(100)
     })
 
-    await step('Verify banner is centered horizontally', async () => {
+    await step('Verify banner is left-aligned', async () => {
       const banner = getBanner(canvasElement)
       const rect = banner!.getBoundingClientRect()
-      const viewportWidth = window.innerWidth
 
-      const centerX = viewportWidth / 2
-      const bannerCenterX = rect.left + rect.width / 2
-
-      const centerDistance = Math.abs(bannerCenterX - centerX)
-      await expect(centerDistance).toBeLessThan(50)
+      await expect(rect.left).toBeLessThan(50)
     })
   }
 }
