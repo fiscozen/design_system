@@ -2,7 +2,7 @@
 
 exports[`FzViewFlag > Snapshots > should match snapshot - closed with banner slot 1`] = `
 "<div class="border-8 border-semantic-warning fixed inset-0 pointer-events-none z-50">
-  <div class="bg-semantic-warning rounded-t-base text-sm p-8 bottom-0 left-0 right-0 fixed m-auto empty:hidden w-full sm:w-fit pointer-events-auto">Main content
+  <div class="bg-semantic-warning rounded-t-base text-sm p-8 bottom-0 left-0 fixed empty:hidden w-full sm:w-fit pointer-events-auto">Main content
     <!--v-if-->
   </div>
 </div>"
@@ -10,7 +10,7 @@ exports[`FzViewFlag > Snapshots > should match snapshot - closed with banner slo
 
 exports[`FzViewFlag > Snapshots > should match snapshot - default state 1`] = `
 "<div class="border-8 border-semantic-warning fixed inset-0 pointer-events-none z-50">
-  <div class="bg-semantic-warning rounded-t-base text-sm p-8 bottom-0 left-0 right-0 fixed m-auto empty:hidden w-full sm:w-fit pointer-events-auto">
+  <div class="bg-semantic-warning rounded-t-base text-sm p-8 bottom-0 left-0 fixed empty:hidden w-full sm:w-fit pointer-events-auto">
     <!--v-if-->
   </div>
 </div>"
@@ -18,8 +18,8 @@ exports[`FzViewFlag > Snapshots > should match snapshot - default state 1`] = `
 
 exports[`FzViewFlag > Snapshots > should match snapshot - open with banner slot 1`] = `
 "<div class="border-8 border-semantic-warning fixed inset-0 pointer-events-none z-50">
-  <div class="bg-semantic-warning rounded-t-base text-sm p-8 bottom-0 left-0 right-0 fixed m-auto empty:hidden w-full sm:w-fit pointer-events-auto">Main content<div class="w-full relative">
-      <div class="bg-semantic-warning w-dvw -translate-x-1/2 left-1/2 top-0 bottom-0 absolute"></div>
+  <div class="bg-semantic-warning rounded-t-base text-sm p-8 bottom-0 left-0 fixed empty:hidden w-full sm:w-fit pointer-events-auto">Main content<div class="w-full relative">
+      <div class="bg-semantic-warning w-dvw left-0 top-0 bottom-0 absolute"></div>
       <div class="isolate">Banner content</div>
     </div>
   </div>
@@ -28,7 +28,7 @@ exports[`FzViewFlag > Snapshots > should match snapshot - open with banner slot 
 
 exports[`FzViewFlag > Snapshots > should match snapshot - with default slot content 1`] = `
 "<div class="border-8 border-semantic-warning fixed inset-0 pointer-events-none z-50">
-  <div class="bg-semantic-warning rounded-t-base text-sm p-8 bottom-0 left-0 right-0 fixed m-auto empty:hidden w-full sm:w-fit pointer-events-auto">Custom slot content
+  <div class="bg-semantic-warning rounded-t-base text-sm p-8 bottom-0 left-0 fixed empty:hidden w-full sm:w-fit pointer-events-auto">Custom slot content
     <!--v-if-->
   </div>
 </div>"
