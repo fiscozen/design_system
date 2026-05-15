@@ -5,7 +5,7 @@ exports[`FzStepper > Snapshots > should match snapshot - activeStep 2 1`] = `
 <div data-v-6183ce6d="" class="fz-stepper flex flex-row gap-16">
   <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]">
     <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-grey-200" aria-hidden="true"></div>
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
       <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-grey-100 text-core-black" title="[object Object]">
         <!--v-if-->
         <p class="text-[inherit] text-sm">1</p>
@@ -16,7 +16,7 @@ exports[`FzStepper > Snapshots > should match snapshot - activeStep 2 1`] = `
   </div>
   <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]">
     <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-grey-500" aria-hidden="true"></div>
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
       <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-grey-500 text-core-white">
         <!--v-if-->
         <p class="text-[inherit] text-sm"><span data-v-6183ce6d="" role="presentation" class="flex items-center justify-center shrink-0 w-[15px] h-[15px]"><svg class="svg-inline--fa fa-check fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"></path></svg></span></p>
@@ -27,7 +27,7 @@ exports[`FzStepper > Snapshots > should match snapshot - activeStep 2 1`] = `
   </div>
   <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]" aria-current="step">
     <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-blue-500" aria-hidden="true"></div>
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
       <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-blue-500 text-core-white" title="[object Object]">
         <!--v-if-->
         <p class="text-[inherit] text-sm">3</p>
@@ -38,59 +38,7 @@ exports[`FzStepper > Snapshots > should match snapshot - activeStep 2 1`] = `
   </div>
   <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px] opacity-[.2] !cursor-not-allowed" aria-disabled="true">
     <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-grey-200" aria-hidden="true"></div>
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
-      <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-grey-100 text-core-black" title="[object Object]">
-        <!--v-if-->
-        <p class="text-[inherit] text-sm">4</p>
-        <!--v-if-->
-      </div>
-      <div data-v-6183ce6d="" class="min-w-0 flex flex-col gap-[4px]"><span data-v-6183ce6d="" class="fz-stepper__title font-semibold block leading-[20px] text-core-black">Step 4</span><span data-v-6183ce6d="" class="fz-stepper__description leading-[20px]">Fourth step description</span></div>
-    </div>
-  </div>
-</div>
-<!-- Mobile layout -->
-<!--v-if-->"
-`;
-
-exports[`FzStepper > Snapshots > should match snapshot - backoffice environment 1`] = `
-"<!-- Desktop layout -->
-<div data-v-6183ce6d="" class="fz-stepper flex flex-row gap-16">
-  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]" aria-current="step">
-    <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-blue-500" aria-hidden="true"></div>
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
-      <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-blue-500 text-core-white" title="[object Object]">
-        <!--v-if-->
-        <p class="text-[inherit] text-sm">1</p>
-        <!--v-if-->
-      </div>
-      <div data-v-6183ce6d="" class="min-w-0 flex flex-col gap-[4px]"><span data-v-6183ce6d="" class="fz-stepper__title font-semibold block leading-[20px] text-core-black">Step 1</span><span data-v-6183ce6d="" class="fz-stepper__description leading-[20px]">First step description</span></div>
-    </div>
-  </div>
-  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]">
-    <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-grey-500" aria-hidden="true"></div>
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
-      <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-grey-500 text-core-white">
-        <!--v-if-->
-        <p class="text-[inherit] text-sm"><span data-v-6183ce6d="" role="presentation" class="flex items-center justify-center shrink-0 w-[15px] h-[15px]"><svg class="svg-inline--fa fa-check fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"></path></svg></span></p>
-        <!--v-if-->
-      </div>
-      <div data-v-6183ce6d="" class="min-w-0 flex flex-col gap-[4px]"><span data-v-6183ce6d="" class="fz-stepper__title font-semibold block leading-[20px] text-core-black">Step 2</span><span data-v-6183ce6d="" class="fz-stepper__description leading-[20px]">Second step description</span></div>
-    </div>
-  </div>
-  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]">
-    <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-semantic-error" aria-hidden="true"></div>
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
-      <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-semantic-error-200 text-core-white">
-        <!--v-if-->
-        <p class="text-[inherit] text-sm"><span data-v-6183ce6d="" role="presentation" class="flex items-center justify-center shrink-0 w-[15px] h-[15px]"><svg class="svg-inline--fa fa-exclamation fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="exclamation" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512"><path class="" fill="currentColor" d="M96 64c0-17.7-14.3-32-32-32S32 46.3 32 64l0 256c0 17.7 14.3 32 32 32s32-14.3 32-32L96 64zM64 480a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"></path></svg></span></p>
-        <!--v-if-->
-      </div>
-      <div data-v-6183ce6d="" class="min-w-0 flex flex-col gap-[4px]"><span data-v-6183ce6d="" class="fz-stepper__title font-semibold block leading-[20px] text-semantic-error">Step 3</span><span data-v-6183ce6d="" class="fz-stepper__description leading-[20px]">Third step description</span></div>
-    </div>
-  </div>
-  <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px] opacity-[.2] !cursor-not-allowed" aria-disabled="true">
-    <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-grey-200" aria-hidden="true"></div>
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
       <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-grey-100 text-core-black" title="[object Object]">
         <!--v-if-->
         <p class="text-[inherit] text-sm">4</p>
@@ -109,7 +57,7 @@ exports[`FzStepper > Snapshots > should match snapshot - default state 1`] = `
 <div data-v-6183ce6d="" class="fz-stepper flex flex-row gap-16">
   <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]" aria-current="step">
     <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-blue-500" aria-hidden="true"></div>
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
       <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-blue-500 text-core-white" title="[object Object]">
         <!--v-if-->
         <p class="text-[inherit] text-sm">1</p>
@@ -120,7 +68,7 @@ exports[`FzStepper > Snapshots > should match snapshot - default state 1`] = `
   </div>
   <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]">
     <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-grey-500" aria-hidden="true"></div>
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
       <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-grey-500 text-core-white">
         <!--v-if-->
         <p class="text-[inherit] text-sm"><span data-v-6183ce6d="" role="presentation" class="flex items-center justify-center shrink-0 w-[15px] h-[15px]"><svg class="svg-inline--fa fa-check fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"></path></svg></span></p>
@@ -131,7 +79,7 @@ exports[`FzStepper > Snapshots > should match snapshot - default state 1`] = `
   </div>
   <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]">
     <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-semantic-error" aria-hidden="true"></div>
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
       <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-semantic-error-200 text-core-white">
         <!--v-if-->
         <p class="text-[inherit] text-sm"><span data-v-6183ce6d="" role="presentation" class="flex items-center justify-center shrink-0 w-[15px] h-[15px]"><svg class="svg-inline--fa fa-exclamation fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="exclamation" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512"><path class="" fill="currentColor" d="M96 64c0-17.7-14.3-32-32-32S32 46.3 32 64l0 256c0 17.7 14.3 32 32 32s32-14.3 32-32L96 64zM64 480a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"></path></svg></span></p>
@@ -142,7 +90,7 @@ exports[`FzStepper > Snapshots > should match snapshot - default state 1`] = `
   </div>
   <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px] opacity-[.2] !cursor-not-allowed" aria-disabled="true">
     <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-grey-200" aria-hidden="true"></div>
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
       <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-grey-100 text-core-black" title="[object Object]">
         <!--v-if-->
         <p class="text-[inherit] text-sm">4</p>
@@ -169,7 +117,7 @@ exports[`FzStepper > Snapshots > should match snapshot - forceMobile 1`] = `
   </div><!-- With step navigation dropdown -->
   <div data-v-6183ce6d="" class="fz-stepper__dropdown flex w-full">
     <div class="inline-flex w-full sm:w-auto">
-      <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start w-full min-w-0 cursor-pointer">
+      <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline w-full min-w-0 cursor-pointer">
         <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-blue-500 text-core-white" title="[object Object]">
           <!--v-if-->
           <p class="text-[inherit] text-sm">1</p>
@@ -192,7 +140,7 @@ exports[`FzStepper > Snapshots > should match snapshot - hasStepbar false 1`] = 
 <div data-v-6183ce6d="" class="fz-stepper flex flex-row gap-16">
   <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]" aria-current="step">
     <!--v-if-->
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
       <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-blue-500 text-core-white" title="[object Object]">
         <!--v-if-->
         <p class="text-[inherit] text-sm">1</p>
@@ -203,7 +151,7 @@ exports[`FzStepper > Snapshots > should match snapshot - hasStepbar false 1`] = 
   </div>
   <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]">
     <!--v-if-->
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
       <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-grey-500 text-core-white">
         <!--v-if-->
         <p class="text-[inherit] text-sm"><span data-v-6183ce6d="" role="presentation" class="flex items-center justify-center shrink-0 w-[15px] h-[15px]"><svg class="svg-inline--fa fa-check fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"></path></svg></span></p>
@@ -214,7 +162,7 @@ exports[`FzStepper > Snapshots > should match snapshot - hasStepbar false 1`] = 
   </div>
   <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]">
     <!--v-if-->
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
       <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-semantic-error-200 text-core-white">
         <!--v-if-->
         <p class="text-[inherit] text-sm"><span data-v-6183ce6d="" role="presentation" class="flex items-center justify-center shrink-0 w-[15px] h-[15px]"><svg class="svg-inline--fa fa-exclamation fa-sm h-[12px]" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="exclamation" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512"><path class="" fill="currentColor" d="M96 64c0-17.7-14.3-32-32-32S32 46.3 32 64l0 256c0 17.7 14.3 32 32 32s32-14.3 32-32L96 64zM64 480a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"></path></svg></span></p>
@@ -225,7 +173,7 @@ exports[`FzStepper > Snapshots > should match snapshot - hasStepbar false 1`] = 
   </div>
   <div data-v-6183ce6d="" class="fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px] opacity-[.2] !cursor-not-allowed" aria-disabled="true">
     <!--v-if-->
-    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-start">
+    <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
       <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-grey-100 text-core-black" title="[object Object]">
         <!--v-if-->
         <p class="text-[inherit] text-sm">4</p>
@@ -251,7 +199,7 @@ exports[`FzStepper > Snapshots > should match snapshot - mobile without stepper 
     <div data-v-6183ce6d="" class="fz-stepper__progress h-[4px] rounded-[4px] w-full mb-8 bg-grey-200"></div>
   </div><!-- With step navigation dropdown -->
   <!-- Without step navigation (hasStepperList = false) -->
-  <div data-v-6183ce6d="" class="flex flex-row gap-8 items-center">
+  <div data-v-6183ce6d="" class="flex flex-row gap-8 items-baseline">
     <div data-v-6183ce6d="" class="flex items-center justify-center truncate max-w-full gap-4 size-24 min-w-24 rounded-full bg-blue-500 text-core-white" title="[object Object]">
       <!--v-if-->
       <p class="text-[inherit] text-sm">1</p>

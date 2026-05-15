@@ -17,7 +17,6 @@ import { FzAction, FzActionList } from "@fiscozen/action";
 const props = withDefaults(defineProps<FzStepperProps>(), {
   hasStepbar: true,
   hasStepperList: true,
-  environment: "frontoffice",
   forceMobile: false,
 });
 
@@ -116,7 +115,7 @@ const showDescription = (step: FzStepProps) =>
         v-if="hasStepbar"
         aria-hidden="true"
       ></div>
-      <div class="flex flex-row gap-8 items-start">
+      <div class="flex flex-row gap-8 items-baseline">
         <FzBadge :tone="stepMeta[index].tone" variant="number">
           <FzIcon
             v-if="stepMeta[index].icon"
@@ -175,7 +174,7 @@ const showDescription = (step: FzStepProps) =>
       <template #opener="{ isOpen, open }">
         <div
           ref="dropdownContainer"
-          class="flex flex-row gap-8 items-start w-full min-w-0 cursor-pointer"
+          class="flex flex-row gap-8 items-baseline w-full min-w-0 cursor-pointer"
           @click="open"
         >
           <FzBadge :tone="stepMeta[activeStep].tone" variant="number">
@@ -244,7 +243,7 @@ const showDescription = (step: FzStepProps) =>
     </FzDropdown>
 
     <!-- Without step navigation (hasStepperList = false) -->
-    <div class="flex flex-row gap-8 items-center" v-else>
+    <div class="flex flex-row gap-8 items-baseline" v-else>
       <FzBadge :tone="stepMeta[activeStep].tone" variant="number">
         <FzIcon
           v-if="stepMeta[activeStep].icon"

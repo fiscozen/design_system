@@ -153,24 +153,6 @@ describe("FzStepper", () => {
       });
     });
 
-    describe("environment", () => {
-      it("should default to frontoffice (blue active bar)", () => {
-        wrapper = mount(FzStepper, { props: { steps: mockSteps } });
-        const progressBars = wrapper.findAll(".fz-stepper__progress");
-        // First step is current (activeStep = 0)
-        expect(progressBars[0].classes()).toContain("bg-blue-500");
-      });
-
-      it("should use blue bar for current step when environment is backoffice", () => {
-        wrapper = mount(FzStepper, {
-          props: { steps: mockSteps, environment: "backoffice" },
-        });
-        const progressBars = wrapper.findAll(".fz-stepper__progress");
-        // Bar is always blue regardless of environment
-        expect(progressBars[0].classes()).toContain("bg-blue-500");
-      });
-    });
-
     describe("hasStepperList", () => {
       it("should show the dropdown by default in mobile", () => {
         wrapper = mount(FzStepper, {
@@ -355,16 +337,8 @@ describe("FzStepper", () => {
       expect(disabledStep.classes()).toContain("!cursor-not-allowed");
     });
 
-    it("should apply blue progress bar for current step in frontoffice", () => {
+    it("should apply blue progress bar for current step", () => {
       wrapper = mount(FzStepper, { props: { steps: mockSteps } });
-      const progressBars = wrapper.findAll(".fz-stepper__progress");
-      expect(progressBars[0].classes()).toContain("bg-blue-500");
-    });
-
-    it("should apply blue progress bar for current step in backoffice", () => {
-      wrapper = mount(FzStepper, {
-        props: { steps: mockSteps, environment: "backoffice" },
-      });
       const progressBars = wrapper.findAll(".fz-stepper__progress");
       expect(progressBars[0].classes()).toContain("bg-blue-500");
     });
@@ -502,13 +476,6 @@ describe("FzStepper", () => {
     it("should match snapshot - hasStepbar false", () => {
       wrapper = mount(FzStepper, {
         props: { steps: mockSteps, hasStepbar: false },
-      });
-      expect(wrapper.html()).toMatchSnapshot();
-    });
-
-    it("should match snapshot - backoffice environment", () => {
-      wrapper = mount(FzStepper, {
-        props: { steps: mockSteps, environment: "backoffice" },
       });
       expect(wrapper.html()).toMatchSnapshot();
     });

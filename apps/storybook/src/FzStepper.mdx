@@ -5,7 +5,7 @@ import { FzStepper } from '@fiscozen/stepper'
 
 # FzStepper
 
-A multi-step progress indicator that guides users through a sequential workflow. Supports desktop and mobile layouts, two color environments, and per-step status indicators.
+A multi-step progress indicator that guides users through a sequential workflow. Supports desktop and mobile layouts and per-step status indicators.
 
 ## Overview
 
@@ -14,7 +14,6 @@ FzStepper renders a horizontal step list on desktop and collapses into an expand
 ### Key Features
 
 - **Dual layout**: Horizontal row on desktop, collapsible dropdown on mobile
-- **Environment theming**: Blue accent for `frontoffice`, dark accent for `backoffice`
 - **Step statuses**: `completed`, `error`, `disabled` with distinct icons and colors
 - **Error styling**: Dashed red progress bar and red title text for error steps
 - **Mobile navigation**: Optional step-list dropdown (`hasStepperList`)
@@ -31,7 +30,6 @@ FzStepper renders a horizontal step list on desktop and collapses into an expand
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
 | \`steps\` | \`FzStepProps[]\` | — | Array of step objects. Recommended max: 8 steps. |
-| \`environment\` | \`'frontoffice' \\| 'backoffice'\` | \`'frontoffice'\` | Accent color theme for the active step. |
 | \`hasStepbar\` | \`boolean\` | \`true\` | Show or hide the progress bar above each step. |
 | \`hasStepperList\` | \`boolean\` | \`true\` | Mobile only. When \`false\`, hides the step navigation dropdown and shows only the active step. |
 | \`forceMobile\` | \`boolean\` | \`false\` | **Deprecated.** Forces the mobile layout on all screen sizes. |
@@ -59,7 +57,7 @@ FzStepper renders a horizontal step list on desktop and collapses into an expand
   {`
 | Status | Icon | Progress bar | Title color |
 |--------|------|-------------|-------------|
-| current | numbered badge | blue (frontoffice) / dark (backoffice) | black |
+| current | numbered badge | blue | black |
 | default | numbered badge (grey) | grey-200 | black |
 | completed | ✓ circle-check | grey-500 | black |
 | error | ⚠ circle-exclamation | dashed red | red |
@@ -89,16 +87,6 @@ const steps: FzStepProps[] = [
   { title: 'Riepilogo', description: 'Verifica e conferma' },
 ]
 </script>
-```
-
-### Backoffice environment
-
-```vue
-<FzStepper
-  environment="backoffice"
-  v-model:activeStep="activeStep"
-  :steps="steps"
-/>
 ```
 
 ### Without progress bar
@@ -173,7 +161,6 @@ const steps = computed<FzStepProps[]>(() => [
 - Keep step titles short and action-oriented (e.g. "Inserisci dati", not "Step 1").
 - Use at most 8 steps — beyond that, consider splitting the workflow.
 - Mark preceding steps as `completed` when the user advances, so progress is clear.
-- Use `environment="backoffice"` in admin contexts to stay consistent with the rest of the UI.
 - Set `hasStepperList="false"` when the user cannot navigate backward (e.g. a linear wizard).
 - Use `isTextTruncated` only in space-constrained layouts; prefer full text when space allows.
 
