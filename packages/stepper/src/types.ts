@@ -1,7 +1,5 @@
 import type { FzBadgeTone } from "@fiscozen/badge";
 
-type FzStepperEnvironment = "frontoffice" | "backoffice";
-
 type FzInternalStepStatus = "current" | "completed" | "error" | "default";
 
 type StepMeta = {
@@ -27,11 +25,6 @@ type FzStepperProps = {
    * @default true
    */
   hasStepperList?: boolean;
-  /**
-   * Visual environment. Reserved for future environment-specific styling.
-   * @default 'frontoffice'
-   */
-  environment?: FzStepperEnvironment;
   /**
    * @deprecated Use the responsive breakpoint behaviour instead.
    * Forces the mobile layout regardless of screen size.
@@ -70,7 +63,6 @@ type FzStepProps = {
 
 export {
   FzStepperProps,
-  FzStepperEnvironment,
   FzStepStatus,
   FzStepProps,
   FzInternalStepStatus,

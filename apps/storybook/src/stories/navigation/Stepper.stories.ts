@@ -8,16 +8,11 @@ const meta: Meta<typeof FzStepper> = {
   component: FzStepper,
   tags: ['autodocs'],
   argTypes: {
-    environment: {
-      control: 'select',
-      options: ['frontoffice', 'backoffice']
-    },
     hasStepbar: { control: 'boolean' },
     hasStepperList: { control: 'boolean' },
     forceMobile: { table: { disable: true } }
   },
   args: {
-    environment: 'frontoffice',
     hasStepbar: true,
     hasStepperList: true
   },
@@ -144,36 +139,6 @@ export const Default: Story = {
     await step('Verify progress bars are visible', async () => {
       const bars = canvasElement.querySelectorAll('.fz-stepper__progress')
       await expect(bars.length).toBeGreaterThan(0)
-    })
-  }
-}
-
-// ============================================
-// ENVIRONMENT
-// ============================================
-
-export const Frontoffice: Story = {
-  args: { steps, environment: 'frontoffice' },
-  decorators: defaultDecorator,
-  render: makeRender(1),
-  play: async ({ canvasElement, step }) => {
-    await step('Verify current step bar is blue', async () => {
-      const bars = canvasElement.querySelectorAll('.fz-stepper__progress')
-      const currentBar = Array.from(bars).find((b) => b.classList.contains('bg-blue-500'))
-      await expect(currentBar).toBeInTheDocument()
-    })
-  }
-}
-
-export const Backoffice: Story = {
-  args: { steps, environment: 'backoffice' },
-  decorators: defaultDecorator,
-  render: makeRender(1),
-  play: async ({ canvasElement, step }) => {
-    await step('Verify current step bar is blue (bar is always blue)', async () => {
-      const bars = canvasElement.querySelectorAll('.fz-stepper__progress')
-      const currentBar = Array.from(bars).find((b) => b.classList.contains('bg-blue-500'))
-      await expect(currentBar).toBeInTheDocument()
     })
   }
 }
