@@ -1208,6 +1208,7 @@ describe('FzDatepicker', () => {
       const wrapper = mount(FzDatepicker, {
         props: {
           modelValue: new Date(),
+          inputProps: {},
           inputAttrs: { name: 'business_start' }
         }
       })
@@ -1221,6 +1222,7 @@ describe('FzDatepicker', () => {
         props: {
           modelValue: new Date(),
           name: 'top',
+          inputProps: {},
           inputAttrs: { name: 'attrs' }
         }
       })
