@@ -63,6 +63,12 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
       <td>Props forwarded to the inner <code>FzInput</code> component (label, placeholder, environment, error, etc.)</td>
     </tr>
     <tr>
+      <td><code>inputAttrs</code></td>
+      <td><code>InputAttributesConfig</code></td>
+      <td>&mdash;</td>
+      <td>HTML attributes forwarded to the visible <code>&lt;input&gt;</code>. Use <code>inputAttrs.name</code> to set the <code>name</code> attribute for form submissions — this is the recommended path (the top-level <code>name</code> prop is <code>@deprecated</code>). See "Form with name attribute" example below.</td>
+    </tr>
+    <tr>
       <td><code>clearable</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
@@ -427,6 +433,25 @@ const range = ref()
 </template>
 ```
 
+### Form with name attribute (recommended)
+
+Use `inputAttrs.name` to set the input's `name` attribute so form helpers (e.g. `FormData`, jQuery `$(form).find("[name]")`, native form submission) can pick the field up:
+
+```vue
+<template>
+  <form @submit.prevent="onSubmit">
+    <FzDatepicker
+      v-model="businessStart"
+      :inputAttrs="{ name: 'business_start' }"
+      :inputProps="{ label: 'Inizio attività' }"
+    />
+    <button type="submit">Salva</button>
+  </form>
+</template>
+```
+
+> **Why `inputAttrs.name` and not the top-level `name` prop?** The legacy top-level `name` prop is `@deprecated` since LIB-1892 in favour of `inputAttrs.name`, which is the official VueDatePicker v12 API. The DS wrapper renders `<FzInput>` in VueDatePicker's `#dp-input` slot and propagates `inputAttrs.name` to it. Routing `name` through `inputAttrs` is the path that will keep working in future major releases.
+
 ## Accessibility
 
 - Full keyboard navigation support via `arrowNavigation` (enabled by default)
@@ -446,7 +471,7 @@ const range = ref()
 - Use `modelType` when you need the emitted value in a specific string format (e.g. `'yyyy-MM-dd'`)
 - Use `valueFormat` when you want to format the emitted value with date-fns before emission
 - Set `autoApply: false` when using time picker or multi-date selection to give users a confirm/cancel step
-- For forms, pass `name` via props or `inputProps` so the datepicker value is included in form submissions
+- For forms, set the `name` attribute via `:inputAttrs="{ name: '...' }"` so the datepicker value is included in form submissions. The top-level `name` prop is `@deprecated` — see "Form with name attribute" example.
 
 ## Related Components
 

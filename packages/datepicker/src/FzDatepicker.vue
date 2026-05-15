@@ -257,9 +257,12 @@ const calendarClassName = computed(() => {
 })
 
 const safeInputProps = computed<FzInputProps>(() => {
+  const inputAttrsName = (props.inputAttrs as Record<string, unknown> | undefined)?.name as
+    | string
+    | undefined
   return {
     leftIcon: 'calendar-lines',
-    name: props.name,
+    name: props.name ?? inputAttrsName,
     ...props.inputProps,
     clearable: props.clearable,
     clearAriaLabel: props.clearAriaLabel,
@@ -784,5 +787,13 @@ button.dp__overlay_action.dp__button_bottom {
 
 .dp__clear_icon {
   @apply absolute right-0 top-1/2 transform-none cursor-pointer;
+}
+
+.fz-datepicker .dp__input_wrap .rounded {
+  border-style: solid;
+}
+
+button.dp__btn {
+  border: 0;
 }
 </style>

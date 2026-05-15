@@ -1198,6 +1198,62 @@ describe('FzDatepicker', () => {
       expect(inputComponent.props('readonly')).toBe(false)
       expect(inputComponent.props('disabled')).toBe(false)
     })
+
+    // ----------------------------------------------------------------------
+    // `name` propagation to the visible <input>
+    // ----------------------------------------------------------------------
+    // `inputAttrs.name` is the recommended way to set the name attribute;
+    // the legacy top-level `name` prop is deprecated and kept as a fallback.
+    it('input receives name attribute when passed via inputAttrs', () => {
+      const wrapper = mount(FzDatepicker, {
+        props: {
+          modelValue: new Date(),
+          inputAttrs: { name: 'business_start' }
+        }
+      })
+
+      const input = wrapper.find('input')
+      expect(input.attributes('name')).toBe('business_start')
+    })
+
+    it('legacy top-level name prop takes precedence over inputAttrs.name', () => {
+      const wrapper = mount(FzDatepicker, {
+        props: {
+          modelValue: new Date(),
+          name: 'top',
+          inputAttrs: { name: 'attrs' }
+        }
+      })
+
+      const input = wrapper.find('input')
+      expect(input.attributes('name')).toBe('top')
+    })
+
+    it('inputProps.name takes precedence over both top-level name and inputAttrs.name', () => {
+      const wrapper = mount(FzDatepicker, {
+        props: {
+          modelValue: new Date(),
+          name: 'top',
+          inputProps: { name: 'props' },
+          inputAttrs: { name: 'attrs' }
+        }
+      })
+
+      const input = wrapper.find('input')
+      expect(input.attributes('name')).toBe('props')
+    })
+
+    it('input has no name attribute when no name source is provided', () => {
+      const wrapper = mount(FzDatepicker, {
+        props: {
+          modelValue: new Date(),
+          inputProps: {}
+        }
+      })
+
+      const input = wrapper.find('input')
+      expect(input.attributes('name')).toBeUndefined()
+    })
   })
 
   // ============================================
