@@ -58,7 +58,7 @@ const showNormalPlaceholder = computed(() => {
 });
 
 const staticPickerClass =
-  "flex justify-between items-center px-10 bg-core-white rounded border-1 border-grey-200 w-full gap-8 text-left relative outline-none focus:outline-none";
+  "flex justify-between items-center px-10 bg-core-white rounded border-1 border-solid border-grey-200 w-full gap-8 text-left relative outline-none focus:outline-none";
 
 const environmentPickerClasses = {
   backoffice: "h-32 text-base",
