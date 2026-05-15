@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mount, VueWrapper } from '@vue/test-utils'
 import FzNavbar from '../FzNavbar.vue'
 import { FzIconButton } from '@fiscozen/button'
+import { breakpoints } from '@fiscozen/style'
 
 const navigation = `
   <div class="link">one</div>
@@ -845,6 +846,279 @@ describe('FzNavbar', () => {
       })
 
       expect(wrapper.html()).toMatchSnapshot()
+    })
+  })
+
+  // ============================================
+  // v0.2.0 — ADDITIVE API
+  // ============================================
+  describe('mobileBreakpoint prop', () => {
+    it('should accept a numeric value', () => {
+      wrapper = mount(FzNavbar, {
+        props: {
+          variant: 'horizontal',
+          mobileBreakpoint: 1200
+        }
+      })
+      expect(wrapper.exists()).toBe(true)
+    })
+
+    it('should accept a pixel-string value', () => {
+      wrapper = mount(FzNavbar, {
+        props: {
+          variant: 'horizontal',
+          mobileBreakpoint: '1200px'
+        }
+      })
+      expect(wrapper.exists()).toBe(true)
+    })
+
+    it('should not mutate the imported @fiscozen/style breakpoints object', () => {
+      const before = { ...breakpoints }
+      mount(FzNavbar, {
+        props: {
+          variant: 'horizontal',
+          mobileBreakpoint: 1400
+        }
+      })
+      expect(breakpoints).toEqual(before)
+    })
+
+    it('should take precedence over the legacy `breakpoints` prop when both are provided', () => {
+      wrapper = mount(FzNavbar, {
+        props: {
+          variant: 'horizontal',
+          breakpoints: { lg: '900px' },
+          mobileBreakpoint: 1500
+        }
+      })
+      expect(wrapper.exists()).toBe(true)
+    })
+  })
+
+  describe('position prop', () => {
+    it('should not add positioning classes by default', () => {
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal' }
+      })
+      const header = wrapper.find('header')
+      expect(header.classes()).not.toContain('fz-navbar--fixed')
+      expect(header.classes()).not.toContain('fz-navbar--sticky')
+    })
+
+    it('should add the fixed-position class when position="fixed"', () => {
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal', position: 'fixed' }
+      })
+      expect(wrapper.find('header').classes()).toContain('fz-navbar--fixed')
+    })
+
+    it('should add the sticky-position class when position="sticky"', () => {
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal', position: 'sticky' }
+      })
+      expect(wrapper.find('header').classes()).toContain('fz-navbar--sticky')
+    })
+  })
+
+  describe('respectSafeArea prop', () => {
+    it('should not add the safe-area class by default', () => {
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal' }
+      })
+      expect(wrapper.find('header').classes()).not.toContain('fz-navbar--safe-area')
+    })
+
+    it('should add the safe-area class when respectSafeArea is true', () => {
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal', respectSafeArea: true }
+      })
+      expect(wrapper.find('header').classes()).toContain('fz-navbar--safe-area')
+    })
+  })
+
+  describe('v-model:isMenuOpen', () => {
+    it('should emit update:isMenuOpen when the default menu button is clicked', async () => {
+      window.innerWidth = 1023
+      vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1023)
+
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal', isMenuOpen: false }
+      })
+      await wrapper.vm.$nextTick()
+      const menuButton = wrapper.findComponent(FzIconButton)
+      const buttonElement = menuButton.find('button')
+      await (buttonElement.exists() ? buttonElement : menuButton).trigger('click')
+
+      const updates = wrapper.emitted('update:isMenuOpen')
+      expect(updates).toBeTruthy()
+      expect(updates![0]).toEqual([true])
+    })
+
+    it('should emit `false` when toggling from an open state', async () => {
+      window.innerWidth = 1023
+      vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1023)
+
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal', isMenuOpen: true }
+      })
+      await wrapper.vm.$nextTick()
+      const menuButton = wrapper.findComponent(FzIconButton)
+      const buttonElement = menuButton.find('button')
+      await (buttonElement.exists() ? buttonElement : menuButton).trigger('click')
+
+      const updates = wrapper.emitted('update:isMenuOpen')
+      expect(updates).toBeTruthy()
+      expect(updates![0]).toEqual([false])
+    })
+
+    it('should still emit fznavbar:menuButtonClick alongside update:isMenuOpen', async () => {
+      window.innerWidth = 1023
+      vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1023)
+
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal', isMenuOpen: false }
+      })
+      await wrapper.vm.$nextTick()
+      const menuButton = wrapper.findComponent(FzIconButton)
+      const buttonElement = menuButton.find('button')
+      await (buttonElement.exists() ? buttonElement : menuButton).trigger('click')
+
+      expect(wrapper.emitted('fznavbar:menuButtonClick')).toHaveLength(1)
+      expect(wrapper.emitted('update:isMenuOpen')).toHaveLength(1)
+    })
+  })
+
+  describe('menu-button slot', () => {
+    it('should render the default FzIconButton when the slot is not provided', async () => {
+      window.innerWidth = 1023
+      vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1023)
+
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal' }
+      })
+      await wrapper.vm.$nextTick()
+      expect(wrapper.findComponent(FzIconButton).exists()).toBe(true)
+    })
+
+    it('should replace the default button when the menu-button slot is provided', async () => {
+      window.innerWidth = 1023
+      vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1023)
+
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal', isMenuOpen: false },
+        slots: {
+          'menu-button': `
+            <template #menu-button="{ isOpen, toggle }">
+              <button id="custom-menu" :data-is-open="isOpen" @click="toggle">menu</button>
+            </template>
+          `
+        }
+      })
+      await wrapper.vm.$nextTick()
+      expect(wrapper.find('#custom-menu').exists()).toBe(true)
+      expect(wrapper.findComponent(FzIconButton).exists()).toBe(false)
+    })
+
+    it('should expose isOpen and toggle in the slot scope', async () => {
+      window.innerWidth = 1023
+      vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1023)
+
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal', isMenuOpen: true },
+        slots: {
+          'menu-button': `
+            <template #menu-button="{ isOpen, toggle }">
+              <button id="custom-menu" :data-is-open="isOpen" @click="toggle">menu</button>
+            </template>
+          `
+        }
+      })
+      await wrapper.vm.$nextTick()
+      const customButton = wrapper.find('#custom-menu')
+      expect(customButton.attributes('data-is-open')).toBe('true')
+
+      await customButton.trigger('click')
+      const updates = wrapper.emitted('update:isMenuOpen')
+      expect(updates).toBeTruthy()
+      expect(updates![0]).toEqual([false])
+    })
+  })
+
+  describe('mobile slot rendering (no XOR)', () => {
+    it('should render both notifications and user-menu slots on mobile when both are filled', async () => {
+      window.innerWidth = 1023
+      vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1023)
+
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal' },
+        slots: {
+          notifications: '<div id="notification"></div>',
+          'user-menu': '<div id="avatar"></div>'
+        }
+      })
+      await wrapper.vm.$nextTick()
+      expect(wrapper.find('#notification').exists()).toBe(true)
+      expect(wrapper.find('#avatar').exists()).toBe(true)
+    })
+
+    it('should render only notifications on mobile when user-menu is empty', async () => {
+      window.innerWidth = 1023
+      vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1023)
+
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'horizontal' },
+        slots: {
+          notifications: '<div id="notification"></div>'
+        }
+      })
+      await wrapper.vm.$nextTick()
+      expect(wrapper.find('#notification').exists()).toBe(true)
+      expect(wrapper.find('#avatar').exists()).toBe(false)
+    })
+
+    it('should render only user-menu on mobile when notifications is empty', async () => {
+      window.innerWidth = 1023
+      vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1023)
+
+      wrapper = mount(FzNavbar, {
+        props: { variant: 'vertical' },
+        slots: {
+          'user-menu': '<div id="avatar"></div>'
+        }
+      })
+      await wrapper.vm.$nextTick()
+      expect(wrapper.find('#avatar').exists()).toBe(true)
+      expect(wrapper.find('#notification').exists()).toBe(false)
+    })
+  })
+
+  describe('breakpoints prop deprecation warning', () => {
+    it('should emit a console.warn in dev when the deprecated `breakpoints` prop is used', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+      mount(FzNavbar, {
+        props: {
+          variant: 'horizontal',
+          breakpoints: { lg: '1200px' }
+        }
+      })
+
+      expect(warnSpy).toHaveBeenCalled()
+      expect(warnSpy.mock.calls[0][0]).toMatch(/breakpoints.*deprecated/i)
+
+      warnSpy.mockRestore()
+    })
+
+    it('should not warn when the deprecated prop is not used', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+      mount(FzNavbar, {
+        props: { variant: 'horizontal' }
+      })
+
+      expect(warnSpy).not.toHaveBeenCalled()
+      warnSpy.mockRestore()
     })
   })
 })
