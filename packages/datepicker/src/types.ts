@@ -19,6 +19,18 @@ interface FzDatepickerProps
   extends Omit<RootProps, "flow" | "locale"> {
   /** Custom FzInput props forwarded to the inner input element */
   inputProps: FzInputProps;
+  /**
+   * HTML attributes forwarded to the visible `<input>`.
+   *
+   * `inputAttrs.name` is the recommended way to set the input's `name`
+   * attribute (the legacy top-level `name` prop is deprecated). The DS
+   * wrapper renders `<FzInput>` in VueDatePicker's `#dp-input` slot and
+   * propagates `inputAttrs.name` to it.
+   *
+   * @example
+   * <FzDatepicker :inputAttrs="{ name: 'business_start' }" v-model="..." />
+   */
+  inputAttrs?: Partial<InputAttributesConfig>;
   /** Optional date-fns format string to format the emitted value */
   valueFormat?: string;
   /**
