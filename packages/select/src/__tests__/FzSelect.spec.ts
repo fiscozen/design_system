@@ -3096,4 +3096,156 @@ describe("FzSelect", () => {
       });
     });
   });
+
+  describe("HD-23713: Space in filterable mode", () => {
+    it("does not preventDefault Space when filterable input is focused with no option focused", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          filterable: true,
+          options: [
+            { value: "1", label: "foo bar" },
+            { value: "2", label: "foo baz" },
+          ],
+        },
+        attachTo: document.body,
+      });
+
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      // In filterable mode, focusedIndex is -1 when input is focused
+      expect(wrapper.vm.focusedIndex).toBe(-1);
+
+      const input = wrapper.find('input[type="text"]')
+        .element as HTMLInputElement;
+      const spaceEvent = new KeyboardEvent("keydown", {
+        key: " ",
+        bubbles: true,
+        cancelable: true,
+      });
+      input.dispatchEvent(spaceEvent);
+      await wrapper.vm.$nextTick();
+
+      // The fix: preventDefault must NOT be called when focusedIndex < 0,
+      // so the browser is free to insert the space into the input.
+      expect(spaceEvent.defaultPrevented).toBe(false);
+      // Dropdown remains open, no selection emitted
+      expect(wrapper.vm.isOpen).toBe(true);
+      expect(wrapper.emitted("update:modelValue")).toBeFalsy();
+
+      wrapper.unmount();
+    });
+
+    it("still selects focused option on Space in filterable mode after ArrowDown", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          filterable: true,
+          options: [
+            { value: "1", label: "foo bar" },
+            { value: "2", label: "foo baz" },
+          ],
+        },
+        attachTo: document.body,
+      });
+
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      await button.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const input = wrapper.find('input[type="text"]');
+      await input.trigger("keydown", { key: "ArrowDown" });
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.focusedIndex).toBe(0);
+
+      const spaceEvent = new KeyboardEvent("keydown", {
+        key: " ",
+        bubbles: true,
+        cancelable: true,
+      });
+      (input.element as HTMLInputElement).dispatchEvent(spaceEvent);
+      await wrapper.vm.$nextTick();
+
+      // With an option focused, preventDefault fires and selection happens
+      expect(spaceEvent.defaultPrevented).toBe(true);
+      expect(wrapper.emitted("update:modelValue")).toBeTruthy();
+      expect(wrapper.emitted("update:modelValue")![0]).toEqual(["1"]);
+
+      wrapper.unmount();
+    });
+  });
+
+  describe("DS-GAP baselines", () => {
+    it("applies text-core-black on the floating container", () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          options: [
+            { value: "1", label: "Option 1" },
+            { value: "2", label: "Option 2" },
+          ],
+        },
+      });
+      expect(wrapper.html()).toContain("text-core-black");
+      wrapper.unmount();
+    });
+
+    it("applies font-normal text-base mb-0 on the label, identical in both environments", () => {
+      const fo = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          label: "My label",
+          environment: "frontoffice",
+          options: [
+            { value: "1", label: "Option 1" },
+            { value: "2", label: "Option 2" },
+          ],
+        },
+      });
+      const foLabel = fo.find("label");
+      expect(foLabel.exists()).toBe(true);
+      expect(foLabel.classes()).toEqual(
+        expect.arrayContaining([
+          "font-normal",
+          "text-base",
+          "mb-0",
+          "text-grey-500",
+        ]),
+      );
+      fo.unmount();
+
+      const bo = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          label: "My label",
+          environment: "backoffice",
+          options: [
+            { value: "1", label: "Option 1" },
+            { value: "2", label: "Option 2" },
+          ],
+        },
+      });
+      const boLabel = bo.find("label");
+      expect(boLabel.classes()).toEqual(foLabel.classes());
+      bo.unmount();
+    });
+
+    it("pairs border-1 with border-solid on the opener", () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: "",
+          options: [
+            { value: "1", label: "Option 1" },
+            { value: "2", label: "Option 2" },
+          ],
+        },
+      });
+      const button = wrapper.find('button[test-id="fzselect-opener"]');
+      expect(button.classes()).toContain("border-1");
+      expect(button.classes()).toContain("border-solid");
+      wrapper.unmount();
+    });
+  });
 });

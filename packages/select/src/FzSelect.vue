@@ -702,8 +702,8 @@ const handleOptionsKeydown = (event: KeyboardEvent) => {
 
     case "Enter":
     case " ":
-      event.preventDefault();
       if (focusedIndex.value >= 0 && focusedIndex.value < selectable.length) {
+        event.preventDefault();
         handleSelect(selectable[focusedIndex.value]);
       }
       break;
@@ -1126,7 +1126,7 @@ defineExpose({
     :position="position ?? 'auto-vertical-start'"
     :teleport="teleport"
     :useViewport="true"
-    class="flex flex-col gap-8 overflow-visible"
+    class="flex flex-col gap-8 overflow-visible text-core-black"
     contentClass="z-70"
     @fzfloating:setPosition="calculateMaxHeight"
   >

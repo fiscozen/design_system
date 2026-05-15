@@ -12,10 +12,10 @@ import type { FzSelectLabelProps } from "./types";
 
 const props = defineProps<FzSelectLabelProps>();
 
-const baseTextClasses = "text-base leading-5";
+const baseTextClasses = "font-normal text-base";
 
 const labelClass = computed(() => {
-  const baseClasses = [baseTextClasses];
+  const baseClasses = [baseTextClasses, "mb-0"];
 
   switch (true) {
     case props.disabled:

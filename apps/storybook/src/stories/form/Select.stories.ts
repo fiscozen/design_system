@@ -708,6 +708,71 @@ export const FilterableSelect: SelectStory = {
   }
 }
 
+export const HD23713SpaceInFilter: SelectStory = {
+  render: (args) => ({
+    components: { FzSelect },
+    setup() {
+      const model = ref<string>()
+      return { args, model }
+    },
+    template: `<div class="p-8 relative" style='width:300px'>
+                  <FzSelect v-bind="args" v-model="model" />
+                </div>`
+  }),
+  args: {
+    label: 'Search',
+    placeholder: 'Type to search...',
+    filterable: true,
+    options: [
+      { value: '1', label: 'foo' },
+      { value: '2', label: 'bar' },
+      { value: '3', label: 'baz' }
+    ]
+  },
+  decorators: [
+    () => ({
+      template: `<div style="width:100vw;height:100vh;"><story/></div>`
+    })
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step(
+      "HD-23713: Space keydown is not preventDefault'ed when no option is focused",
+      async () => {
+        const opener = canvas.getByRole('button', { name: /search/i })
+        await userEvent.click(opener)
+
+        await waitFor(
+          () => {
+            const input = document.querySelector('input[type="text"]') as HTMLInputElement
+            expect(input).toBeInTheDocument()
+            expect(input).toBeVisible()
+          },
+          { timeout: 1000 }
+        )
+
+        const input = document.querySelector('input[type="text"]') as HTMLInputElement
+        input.focus()
+
+        // Pre-fix: handleOptionsKeydown called event.preventDefault() unconditionally
+        // on Space, so the browser never inserted the space into the input.
+        // Post-fix: the preventDefault is guarded by focusedIndex >= 0, so with
+        // no option focused the event flows through to the browser untouched.
+        const spaceEvent = new KeyboardEvent('keydown', {
+          key: ' ',
+          bubbles: true,
+          cancelable: true
+        })
+        input.dispatchEvent(spaceEvent)
+
+        await expect(spaceEvent.defaultPrevented).toBe(false)
+        await expect(opener).toHaveAttribute('aria-expanded', 'true')
+      }
+    )
+  }
+}
+
 export const RemoteLoading: SelectStory = {
   render: (args) => ({
     components: { FzSelect },
