@@ -48,10 +48,10 @@
    * so that consumers can control layout/positioning of the component.
    */
   const inputAttrs = computed(() => {
-    return {
-      ...attrs,
-      class: undefined,
-    };
+    // Drop class (applied to the root wrapper) and id (controlled by the
+    // dedicated `id` prop) so the visible input stays in sync with the label.
+    const { class: _class, id: _id, ...rest } = attrs as Record<string, unknown>;
+    return rest;
   });
 
   const rootClass = computed(() => attrs.class);
@@ -122,6 +122,7 @@
   const containerRef: Ref<HTMLElement | null> = ref(null);
   const inputRef: Ref<HTMLInputElement | null> = ref(null);
   const uniqueId = generateInputId();
+  const effectiveId = computed(() => props.id || uniqueId);
   const isFocused = ref(false);
 
   /**
@@ -172,7 +173,6 @@
     staticInputClass,
     computedInputClass,
     computedHelpClass,
-    containerWidth,
     showNormalPlaceholder,
   } = useInputStyle(
     {
@@ -207,7 +207,7 @@
     const hasCustomLabelSlot = !!runtimeSlots.label;
 
     if (hasLabelProp && !hasCustomLabelSlot) {
-      return `${uniqueId}-label`;
+      return `${effectiveId.value}-label`;
     }
     return undefined;
   });
@@ -220,10 +220,10 @@
   const ariaDescribedBy = computed(() => {
     const ids: string[] = [];
     if (props.error && runtimeSlots.errorMessage) {
-      ids.push(`${uniqueId}-error`);
+      ids.push(`${effectiveId.value}-error`);
     }
     if (!props.error && runtimeSlots.helpText) {
-      ids.push(`${uniqueId}-help`);
+      ids.push(`${effectiveId.value}-help`);
     }
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
@@ -425,9 +425,9 @@
 </script>
 
 <template>
-  <div class="fz-input w-full flex flex-col gap-8" :class="rootClass">
+  <div class="fz-input text-core-black w-full flex flex-col gap-8" :class="rootClass">
     <slot name="label">
-      <label v-if="label" :id="`${uniqueId}-label`" :class="computedLabelClass" :for="uniqueId">
+      <label v-if="label" :id="`${effectiveId}-label`" :class="computedLabelClass" :for="effectiveId">
         {{ label }}{{ required ? " *" : "" }}
       </label>
     </slot>
@@ -452,12 +452,12 @@
         <span v-if="!showNormalPlaceholder"
           class="text-xs text-grey-300 grow-0 overflow-hidden text-ellipsis whitespace-nowrap">{{ placeholder }}</span>
         <input :type="type" :required="required" :disabled="disabled" :readonly="readonly"
-          :placeholder="showNormalPlaceholder ? placeholder : ''" v-model="model" :id="uniqueId" ref="inputRef"
+          :placeholder="showNormalPlaceholder ? placeholder : ''" v-model="model" ref="inputRef"
           :class="[staticInputClass, computedInputClass]" :pattern="pattern" :name :maxlength
           :autocomplete="autocomplete ? 'on' : 'off'" :aria-required="required ? 'true' : 'false'"
           :aria-invalid="error ? 'true' : 'false'" :aria-disabled="isReadonlyOrDisabled ? 'true' : 'false'"
           :aria-labelledby="ariaLabelledBy" :aria-describedby="ariaDescribedBy" :aria-description="emphasisDescription"
-          v-bind="inputAttrs" @input="handleUserInput" @blur="
+          v-bind="inputAttrs" :id="effectiveId" @input="handleUserInput" @blur="
             (e) => {
               isFocused = false;
               $emit('blur', e);
@@ -513,12 +513,10 @@
         </slot>
       </div>
     </div>
-    <FzAlert v-if="error && $slots.errorMessage" :id="`${uniqueId}-error`" role="alert" tone="error" variant="text"
-      :style="{ width: containerWidth }">
+    <FzAlert v-if="error && $slots.errorMessage" :id="`${effectiveId}-error`" role="alert" tone="error" variant="text">
       <slot name="errorMessage"></slot>
     </FzAlert>
-    <span v-else-if="$slots.helpText" :id="`${uniqueId}-help`" :class="[computedHelpClass]"
-      :style="{ width: containerWidth }">
+    <span v-else-if="$slots.helpText" :id="`${effectiveId}-help`" :class="[computedHelpClass]">
       <slot name="helpText"></slot>
     </span>
   </div>

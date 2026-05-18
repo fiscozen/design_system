@@ -21,17 +21,13 @@ export default function useInputStyle(
   effectiveEnvironment: ComputedRef<InputEnvironment>,
   isFocused: Ref<boolean>,
 ) {
-  const containerWidth = computed(() =>
-    container.value ? `${container.value.clientWidth}px` : "auto",
-  );
-
   const mapContainerClass: Record<InputEnvironment, string> = {
     backoffice: "h-32",
     frontoffice: "h-44",
   };
 
   // Common styles: padding 10px, border-radius 4px, border 1px solid grey-300, background white, color black
-  const staticContainerClass = `flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 gap-8 text-left relative outline-none`;
+  const staticContainerClass = `flex justify-between w-full items-center pl-[10px] pr-[10px] rounded border-1 border-solid gap-8 text-left relative outline-none`;
 
   const computedContainerClass = computed(() => {
     const env = effectiveEnvironment.value;
@@ -44,14 +40,14 @@ export default function useInputStyle(
   });
 
   const computedLabelClass = computed(() => [
-    "font-normal text-base",
+    "font-normal text-base mb-0",
     props.disabled?.value || props.readonly?.value
       ? "text-grey-300"
       : "text-grey-500",
   ]);
 
   // Input styles: transparent background (inherits from container), no border, placeholder color grey-300
-  const staticInputClass = `peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 font-normal text-base`;
+  const staticInputClass = `peer w-full bg-transparent border-0 outline-none focus:outline-none cursor-[inherit] focus:ring-0 truncate placeholder:text-grey-300 disabled:text-grey-300 read-only:text-grey-300 font-normal text-base`;
 
   // Input text size: 16px for both environments (as per design specs)
   const textSizeMap: Record<InputEnvironment, string> = {
@@ -154,7 +150,6 @@ export default function useInputStyle(
     computedInputClass,
     computedHelpClass,
     computedErrorClass,
-    containerWidth,
     showNormalPlaceholder,
   };
 }

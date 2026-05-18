@@ -5,6 +5,12 @@ export type InputEnvironment = "backoffice" | "frontoffice";
 
 type FzInputProps = {
   /**
+   * Custom DOM id for the underlying `<input>`. When provided, the same value is
+   * used for the `<label>`'s `for` attribute so the label-input binding stays
+   * intact. When omitted, the component generates a stable unique id.
+   */
+  id?: string;
+  /**
    * Text label displayed above the input field. Overridden by label slot if provided.
    */
   label?: string;
