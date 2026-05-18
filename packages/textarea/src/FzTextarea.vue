@@ -180,8 +180,8 @@ if (props.autoHeight) {
 }
 
 const labelClasses = computed(() => [
-  'font-normal text-base',
-  props.disabled || props.readonly ? 'text-grey-300' : 'text-core-black'
+  'font-normal text-base mb-0',
+  props.disabled || props.readonly ? 'text-grey-300' : 'text-grey-500'
 ])
 
 const mapResizeToClass = {
