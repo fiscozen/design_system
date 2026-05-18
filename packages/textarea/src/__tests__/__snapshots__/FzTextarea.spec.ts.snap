@@ -32,11 +32,11 @@ exports[`FzTextarea > Snapshots > should match snapshot - error state 1`] = `
   <div class="relative w-full"><textarea id="snapshot-error" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-semantic-error-200 focus:border-semantic-error-300 bg-core-white text-core-black cursor-text resize" rows="2" aria-required="false" aria-invalid="true" aria-disabled="false" aria-labelledby="snapshot-error-label" aria-describedby="snapshot-error-error"></textarea>
     <!--v-if-->
   </div>
-  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between bg-transparent" id="snapshot-error-error" role="alert">
+  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between text-core-black bg-transparent" id="snapshot-error-error" role="alert">
     <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-start layout-default flex-1"><span data-v-9bf2fc2e="" role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px] text-semantic-error" aria-hidden="true"><svg class="svg-inline--fa fa-circle-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path></svg></span>
       <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
         <!--v-if-->
-        <p data-v-9bf2fc2e="" class="font-normal !leading-[20px]">This field is required</p>
+        <p data-v-9bf2fc2e="" class="font-normal mb-0 !leading-[20px]">This field is required</p>
         <!--v-if-->
       </div>
     </div>
@@ -50,11 +50,11 @@ exports[`FzTextarea > Snapshots > should match snapshot - error with disabled 1`
   <div class="relative w-full"><textarea id="snapshot-error-disabled" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-semantic-error-200 focus:border-semantic-error-300 bg-core-white text-core-black cursor-text resize" disabled="" rows="2" aria-required="false" aria-invalid="true" aria-disabled="true" aria-labelledby="snapshot-error-disabled-label" aria-describedby="snapshot-error-disabled-error"></textarea>
     <!--v-if-->
   </div>
-  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between bg-transparent" id="snapshot-error-disabled-error" role="alert">
+  <div data-v-9bf2fc2e="" class="flex select-none gap-12 rounded justify-between text-core-black bg-transparent" id="snapshot-error-disabled-error" role="alert">
     <div data-v-da7f5873="" data-v-9bf2fc2e="" class="fz-container fz-container--horizontal gap-section-content-xs align-items-start layout-default flex-1"><span data-v-9bf2fc2e="" role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px] text-semantic-error" aria-hidden="true"><svg class="svg-inline--fa fa-circle-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"></path></svg></span>
       <div data-v-9bf2fc2e="" class="flex flex-col flex-1">
         <!--v-if-->
-        <p data-v-9bf2fc2e="" class="font-normal !leading-[20px]">Error on disabled</p>
+        <p data-v-9bf2fc2e="" class="font-normal mb-0 !leading-[20px]">Error on disabled</p>
         <!--v-if-->
       </div>
     </div>

@@ -1415,4 +1415,29 @@ describe('FzAlert', () => {
       expect(wrapper.html()).toMatchSnapshot()
     })
   })
+
+  describe('DS-GAP baselines', () => {
+    it('applies text-core-black on the alert container', () => {
+      const wrapper = mount(FzAlert, {
+        props: { title: 'Title' },
+        slots: { default: 'Body' },
+      })
+      const root = wrapper.find('.flex.select-none')
+      expect(root.exists()).toBe(true)
+      expect(root.classes()).toContain('text-core-black')
+    })
+
+    it('applies mb-0 to the internal <p> elements (title + description)', () => {
+      const wrapper = mount(FzAlert, {
+        props: { title: 'Title' },
+        slots: { default: 'Body text' },
+      })
+      const paragraphs = wrapper.findAll('p')
+      expect(paragraphs.length).toBeGreaterThanOrEqual(2)
+      for (const p of paragraphs) {
+        expect(p.classes()).toContain('mb-0')
+      }
+    })
+  })
+
 })

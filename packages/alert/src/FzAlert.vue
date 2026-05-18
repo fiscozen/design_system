@@ -46,7 +46,7 @@ const sizeToEnvironmentMapping = {
 const isTextVariant = computed(() => safeVariant.value === 'text')
 
 const containerClass = computed(() => [
-  'flex select-none gap-12 rounded justify-between',
+  'flex select-none gap-12 rounded justify-between text-core-black',
   ...(isTextVariant.value ? ['bg-transparent'] : [mapToneToContainerClass[props.tone]]),
   ...(!isTextVariant.value && safeEnvironment.value === 'backoffice' ? ['p-6'] : []),
   ...(safeVariant.value === 'accordion' ? ['cursor-pointer'] : [])
@@ -96,7 +96,7 @@ const showAction = computed(() => {
 })
 
 const descriptionClass = computed(() => [
-  'font-normal',
+  'font-normal mb-0',
   '!leading-[20px]',
   {
     'mt-8': props.title && !isTextVariant.value,
@@ -161,7 +161,7 @@ const handleClick = () => {
     <FzContainer horizontal :gap="innerContainerGap" :class="['flex-1', innerContainerPaddingClass]" alignItems="start">
       <FzIcon :name="iconName" :size="iconSize" :class="iconClass" aria-hidden="true" />
       <div class="flex flex-col flex-1">
-        <p v-if="title && !isTextVariant" v-bold class="leading-[20px]">
+        <p v-if="title && !isTextVariant" v-bold class="leading-[20px] mb-0">
           {{ title }}
         </p>
 
