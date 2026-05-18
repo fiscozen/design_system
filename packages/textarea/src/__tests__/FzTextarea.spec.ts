@@ -839,7 +839,7 @@ describe('FzTextarea', () => {
       expect(wrapper.find('textarea').classes()).toContain('pr-[38px]')
     })
 
-    it('should apply font-normal text-base to label', () => {
+    it('should apply font-normal text-base mb-0 to label (aligned with FzInput/FzSelect)', () => {
       const wrapper = mount(FzTextarea, {
         props: {
           label: 'Test Label',
@@ -848,7 +848,8 @@ describe('FzTextarea', () => {
       const label = wrapper.find('label')
       expect(label.classes()).toContain('font-normal')
       expect(label.classes()).toContain('text-base')
-      expect(label.classes()).toContain('text-core-black')
+      expect(label.classes()).toContain('mb-0')
+      expect(label.classes()).toContain('text-grey-500')
     })
 
     it('should apply grey label when disabled or readonly', () => {
@@ -856,13 +857,13 @@ describe('FzTextarea', () => {
         props: { label: 'Test Label', disabled: true },
       })
       expect(disabledWrapper.find('label').classes()).toContain('text-grey-300')
-      expect(disabledWrapper.find('label').classes()).not.toContain('text-core-black')
+      expect(disabledWrapper.find('label').classes()).not.toContain('text-grey-500')
 
       const readonlyWrapper = mount(FzTextarea, {
         props: { label: 'Test Label', readonly: true },
       })
       expect(readonlyWrapper.find('label').classes()).toContain('text-grey-300')
-      expect(readonlyWrapper.find('label').classes()).not.toContain('text-core-black')
+      expect(readonlyWrapper.find('label').classes()).not.toContain('text-grey-500')
     })
 
     it('should apply font-normal text-base to help text', () => {
@@ -1356,4 +1357,5 @@ describe('FzTextarea', () => {
       })
     })
   })
+
 })
