@@ -566,4 +566,35 @@ describe('FzButton', () => {
       expect((FzButton as any).__fzKind).toBe('@fiscozen/button/FzButton')
     })
   })
+
+  describe('DS-GAP baselines', () => {
+    it('emits the fz-button class on the root <button>', () => {
+      const wrapper = mount(FzButton, { props: { label: 'Click' } })
+      expect(wrapper.find('button').classes()).toContain('fz-button')
+    })
+
+    it('pairs border-1 with border-solid on the root <button>', () => {
+      const wrapper = mount(FzButton, { props: { label: 'Click' } })
+      const classes = wrapper.find('button').classes()
+      expect(classes).toContain('border-1')
+      expect(classes).toContain('border-solid')
+    })
+
+    it('applies appearance-none on the root <button>', () => {
+      const wrapper = mount(FzButton, { props: { label: 'Click' } })
+      expect(wrapper.find('button').classes()).toContain('appearance-none')
+    })
+
+    it('keeps the baselines on every variant', () => {
+      const variants = ['primary', 'secondary', 'invisible', 'danger', 'success'] as const
+      for (const variant of variants) {
+        const wrapper = mount(FzButton, { props: { label: 'Click', variant } })
+        const classes = wrapper.find('button').classes()
+        expect(classes).toContain('fz-button')
+        expect(classes).toContain('border-solid')
+        expect(classes).toContain('appearance-none')
+      }
+    })
+  })
+
 })
