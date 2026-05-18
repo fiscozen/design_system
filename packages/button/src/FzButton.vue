@@ -194,6 +194,7 @@ const iconAndLabel = computed(() => {
 })
 
 const staticClasses = [
+  'fz-button',
   'relative',
   'rounded',
   'flex',
@@ -204,7 +205,9 @@ const staticClasses = [
   '!text-[16px]',
   '!leading-[20px]',
   'border-1',
+  'border-solid',
   'border-transparent',
+  'appearance-none',
   'gap-8'
 ]
 
