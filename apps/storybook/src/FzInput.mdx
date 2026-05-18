@@ -45,6 +45,12 @@ import { FzInput } from '@fiscozen/input'
   </thead>
   <tbody>
     <tr>
+      <td><code>id</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Custom DOM <code>id</code> for the underlying <code>&lt;input&gt;</code>. When provided, the same value is used for the <code>&lt;label&gt;</code>'s <code>for</code> attribute so the label-input binding stays intact. When omitted, the component generates a stable unique id.</td>
+    </tr>
+    <tr>
       <td><code>label</code></td>
       <td><code>string</code></td>
       <td>-</td>
@@ -323,6 +329,18 @@ import { FzInput } from '@fiscozen/input'
     </tr>
   </tbody>
 </table>
+
+## Form with id (label-input binding)
+
+Use the `id` prop to control both the underlying `<input>`'s `id` and the `<label>`'s `for` so the label-input pair stays linked. Clicking the label focuses the input, and tooling like `page.getByLabel('Email')` works as expected.
+
+```vue
+<template>
+  <FzInput id="email" label="Email" type="email" v-model="email" />
+</template>
+```
+
+If you omit the prop, the component generates a stable internal id and binds it on both ends automatically.
 
 ## Variants
 

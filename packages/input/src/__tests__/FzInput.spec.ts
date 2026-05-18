@@ -1088,21 +1088,6 @@ describe("FzInput", () => {
       expect(rootDiv.getAttribute("data-cy")).toBeNull();
     });
 
-    it("forwards consumer id to native input element (overriding internal id)", async () => {
-      const wrapper = mount(FzInput, {
-        props: { label: "Label" },
-        attrs: { id: "custom-id" },
-      });
-
-      await wrapper.vm.$nextTick();
-
-      const input = wrapper.find("input").element as HTMLInputElement;
-      expect(input.getAttribute("id")).toBe("custom-id");
-
-      const rootDiv = wrapper.element as HTMLElement;
-      expect(rootDiv.getAttribute("id")).toBeNull();
-    });
-
     it("forwards consumer aria-* attributes to native input element", async () => {
       const wrapper = mount(FzInput, {
         props: { label: "Label" },
@@ -1963,6 +1948,100 @@ describe("FzInput", () => {
 
       expect(wrapper.find('[aria-label="Svuota campo"]').exists()).toBe(true);
       expect(wrapper.find('[aria-label="Cancella"]').exists()).toBe(false);
+    });
+  });
+
+  describe("id prop and label-input binding", () => {
+    it("generates a stable internal id when no `id` prop is provided", async () => {
+      const wrapper = mount(FzInput, { props: { label: "Email" } });
+      await wrapper.vm.$nextTick();
+
+      const labelFor = wrapper.find("label").attributes("for");
+      const inputId = wrapper.find("input").attributes("id");
+
+      expect(labelFor).toBeDefined();
+      expect(inputId).toBeDefined();
+      expect(labelFor).toBe(inputId);
+      expect(inputId).toMatch(/^fz-input-/);
+    });
+
+    it('uses the `id` prop on both <label for=""> and <input id=""> when provided', async () => {
+      const wrapper = mount(FzInput, {
+        props: { id: "email", label: "Email" },
+      });
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.find("label").attributes("for")).toBe("email");
+      expect(wrapper.find("input").attributes("id")).toBe("email");
+    });
+  });
+
+  describe("DS-GAP baselines", () => {
+    it("applies text-core-black on the root wrapper", async () => {
+      const wrapper = mount(FzInput, { props: { label: "L" } });
+      await wrapper.vm.$nextTick();
+
+      const root = wrapper.element as HTMLElement;
+      expect(root.classList.contains("text-core-black")).toBe(true);
+    });
+
+    it("pairs border-1 with border-solid on the input container", async () => {
+      const wrapper = mount(FzInput, { props: { label: "L" } });
+      await wrapper.vm.$nextTick();
+
+      const container = wrapper.find('[ref="containerRef"], .border-1').exists()
+        ? wrapper.find(".border-1")
+        : wrapper.find("input").element.parentElement;
+      const containerEl =
+        container instanceof Element ? container : (container as any).element;
+      const classes =
+        containerEl instanceof Element
+          ? containerEl.classList
+          : containerEl?.classList;
+      expect(classes?.contains("border-1")).toBe(true);
+      expect(classes?.contains("border-solid")).toBe(true);
+    });
+
+    it("applies mb-0 on the label", async () => {
+      const wrapper = mount(FzInput, { props: { label: "L" } });
+      await wrapper.vm.$nextTick();
+
+      const labelClasses = wrapper.find("label").classes();
+      expect(labelClasses).toContain("mb-0");
+    });
+
+    it("applies grey-300 to value text on disabled and readonly states via Tailwind variants", async () => {
+      const w1 = mount(FzInput, { props: { label: "L", disabled: true } });
+      await w1.vm.$nextTick();
+      const c1 = w1.find("input").classes();
+      expect(c1).toContain("disabled:text-grey-300");
+      expect(c1).toContain("read-only:text-grey-300");
+
+      const w2 = mount(FzInput, { props: { label: "L", readonly: true } });
+      await w2.vm.$nextTick();
+      const c2 = w2.find("input").classes();
+      expect(c2).toContain("disabled:text-grey-300");
+      expect(c2).toContain("read-only:text-grey-300");
+    });
+
+    it("does not bind an inline style width on the helper text or error alert", async () => {
+      const wrapperHelp = mount(FzInput, {
+        props: { label: "L" },
+        slots: { helpText: "Some help" },
+      });
+      await wrapperHelp.vm.$nextTick();
+      const helpSpan = wrapperHelp.find('[id$="-help"]');
+      expect(helpSpan.exists()).toBe(true);
+      expect(helpSpan.attributes("style") || "").not.toMatch(/width:/);
+
+      const wrapperErr = mount(FzInput, {
+        props: { label: "L", error: true },
+        slots: { errorMessage: "Boom" },
+      });
+      await wrapperErr.vm.$nextTick();
+      const errAlert = wrapperErr.find('[id$="-error"]');
+      expect(errAlert.exists()).toBe(true);
+      expect(errAlert.attributes("style") || "").not.toMatch(/width:/);
     });
   });
 });
