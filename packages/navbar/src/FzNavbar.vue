@@ -105,15 +105,21 @@ function handleMenuButtonClick() {
 
 <style>
 /*
- * CSS custom properties — defaults match the previous Tailwind utility values
- * (p-12 = 3rem, shadow, z-10, h-56/w-56 = 14rem, mr-32/mb-32 = 8rem, gap-16 = 4rem).
- * Consumers can override per-instance via inline style or scoped CSS to slim
- * the navbar without having to rely on `!important` resets.
+ * CSS custom properties — defaults are pinned to the `@fiscozen/style` pixel
+ * spacing tokens that match the Tailwind utility classes used in the template
+ * (p-12 = 12px, h-56/w-56 = 56px, mr-32/mb-32 = 32px, gap-16 = 16px). The
+ * package's CSS rule `.fz-navbar.{w-56,h-56,...}` has higher specificity than
+ * the consumer's generated Tailwind class on its own, so the fallback values
+ * must match the design-system pixel scale — otherwise stock-Tailwind rem
+ * defaults (14rem/3rem/8rem/4rem) leak through and the navbar renders ~4×
+ * larger than intended.
+ *
+ * Consumers can still override per-instance via inline style or scoped CSS.
  */
 
 .fz-navbar {
   z-index: var(--fz-navbar-z-index, 10);
-  padding: var(--fz-navbar-padding, 3rem);
+  padding: var(--fz-navbar-padding, 12px);
   box-shadow: var(
     --fz-navbar-shadow,
     0 1px 3px 0 rgb(0 0 0 / 0.1),
@@ -123,23 +129,23 @@ function handleMenuButtonClick() {
 }
 
 .fz-navbar.h-56 {
-  height: var(--fz-navbar-height, 14rem);
+  height: var(--fz-navbar-height, 56px);
 }
 
 .fz-navbar.w-56 {
-  width: var(--fz-navbar-width, 14rem);
+  width: var(--fz-navbar-width, 56px);
 }
 
 .fz-navbar > .mr-32 {
-  margin-right: var(--fz-navbar-brand-gap, 8rem);
+  margin-right: var(--fz-navbar-brand-gap, 32px);
 }
 
 .fz-navbar > .mb-32 {
-  margin-bottom: var(--fz-navbar-brand-gap, 8rem);
+  margin-bottom: var(--fz-navbar-brand-gap, 32px);
 }
 
 .fz-navbar > .gap-16 {
-  gap: var(--fz-navbar-actions-gap, 4rem);
+  gap: var(--fz-navbar-actions-gap, 16px);
 }
 
 .fz-navbar--fixed {
@@ -155,15 +161,15 @@ function handleMenuButtonClick() {
 
 .fz-navbar--safe-area {
   padding-top: calc(
-    var(--fz-navbar-padding, 3rem) +
+    var(--fz-navbar-padding, 12px) +
       max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px))
   );
   padding-left: calc(
-    var(--fz-navbar-padding, 3rem) +
+    var(--fz-navbar-padding, 12px) +
       max(env(safe-area-inset-left, 0px), var(--safe-area-inset-left, 0px))
   );
   padding-right: calc(
-    var(--fz-navbar-padding, 3rem) +
+    var(--fz-navbar-padding, 12px) +
       max(env(safe-area-inset-right, 0px), var(--safe-area-inset-right, 0px))
   );
 }
