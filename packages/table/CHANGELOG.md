@@ -1,5 +1,12 @@
 # @fiscozen/table
 
+## 2.1.8
+
+### Patch Changes
+
+- Updated dependencies [c77895b]
+  - @fiscozen/input@3.4.0
+
 ## 2.1.7
 
 ### Patch Changes
