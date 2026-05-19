@@ -1,5 +1,12 @@
 # @fiscozen/typeahead
 
+## 3.0.10
+
+### Patch Changes
+
+- Updated dependencies [c77895b]
+  - @fiscozen/input@3.4.0
+
 ## 3.0.9
 
 ### Patch Changes
