@@ -702,6 +702,15 @@ Use `inputAttrs.name` to set the input's `name` attribute so form helpers (e.g. 
 - ARIA attributes are managed by the underlying `FzInput` component (`aria-invalid`, `aria-disabled`, `aria-required`, `aria-labelledby`, `aria-describedby`)
 - Error messages are rendered with `role="alert"` and linked to the input via `aria-describedby`
 - Help text is linked to the input via `aria-describedby` when no error is active
+- **Italian aria-labels** are provided on calendar/time-picker controls (`"Mese precedente"`, `"Apri selezione ora"`, `"Incrementa ore"`, `"Cambia AM/PM"`, etc.) so screen-reader announcements match the visible Italian UI. Consumers can override individual keys — or localise into another language — by passing their own `ariaLabels` prop:
+
+```vue
+<FzDatepicker
+  v-model="date"
+  :ariaLabels="{ prevMonth: 'Previous month', nextMonth: 'Next month' }"
+  :inputProps="{ label: 'Date' }"
+/>
+```
 
 ## Best Practices
 

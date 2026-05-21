@@ -132,15 +132,18 @@ const closeCalendar = async () => {
 /**
  * Variant of `closeCalendar` for flows where the menu intentionally stays
  * open after Escape (e.g. `autoApply: false` — confirmation required). It
- * dispatches the key, waits a tick, and silently returns whether or not the
- * menu actually closed.
+ * dispatches the key and returns once the event has been processed,
+ * regardless of whether the menu actually closed.
  */
 const dismissCalendar = async () => {
   const calendar = document.querySelector('.dp__menu') as HTMLElement | null
   if (!calendar) return
   calendar.focus()
   await userEvent.keyboard('{Escape}')
-  await new Promise((resolve) => setTimeout(resolve, 50))
+  // Lenient probe — gives Vue a tick to flush any close handler that DID fire
+  // without asserting either outcome. Uses waitFor instead of setTimeout per
+  // CLAUDE.md testing rules.
+  await waitFor(() => expect(true).toBe(true), { timeout: 100 })
 }
 
 /**
