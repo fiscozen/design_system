@@ -1,450 +1,380 @@
 <script setup lang="ts">
-/**
- * FzDatepicker – Date/date-range picker built on VueDatePicker v12.
- *
- * Wraps `@vuepic/vue-datepicker` with Fiscozen-branded styling, FzInput
- * integration, legacy v8-prop mapping, and a custom time-picker overlay.
- * The calendar menu is teleported to `<body>` by default so it renders
- * correctly inside modals, dialogs, and other overflow-hidden containers.
- *
- * @component
- * @example
- * <FzDatepicker
- *   v-model="date"
- *   :inputProps="{ label: 'Data', placeholder: 'gg/mm/aaaa' }"
- * />
- */
-import { computed, nextTick, ref } from 'vue'
-import { FzDatepickerProps } from './types'
-import { VueDatePicker, type TimeInternalModel } from '@vuepic/vue-datepicker'
-import { useBreakpoints } from '@fiscozen/composables'
-import { breakpoints } from '@fiscozen/style'
-import { FzIconButton, FzButton } from '@fiscozen/button'
-import { FzInput, FzInputProps } from '@fiscozen/input'
-import { FzDivider } from '@fiscozen/divider'
-import { it } from 'date-fns/locale'
-import { format } from 'date-fns'
-import '@vuepic/vue-datepicker/dist/main.css'
+  /**
+   * FzDatepicker – Date/date-range picker built on VueDatePicker v12.
+   *
+   * Wraps `@vuepic/vue-datepicker` with Fiscozen-branded styling, FzInput
+   * integration, and legacy v8-prop mapping. The calendar menu is teleported
+   * to `<body>` by default so it renders correctly inside modals, dialogs,
+   * and other overflow-hidden containers.
+   *
+   * Branded extension points provided to the wrapped picker:
+   *  - Calendar/overlay navigation arrows: `arrow-left`, `arrow-right`,
+   *    `arrow-up`, `arrow-down` (FzIconButton).
+   *  - Inline time-picker chevrons: `tp-inline-arrow-up`,
+   *    `tp-inline-arrow-down` (FzIcon, rendered inside VueDatePicker's own
+   *    button — do NOT swap for FzIconButton, would nest two buttons).
+   *  - Time-picker mode toggles (overlay mode only): `clock-icon`,
+   *    `calendar-icon` (FzIcon).
+   *  - Confirm/cancel action row (visible only with `autoApply: false`):
+   *    `action-buttons` (FzButton, inherits `inputProps.environment`).
+   *
+   * @component
+   * @example
+   * <FzDatepicker
+   *   v-model="date"
+   *   :inputProps="{ label: 'Data', placeholder: 'gg/mm/aaaa' }"
+   * />
+   */
+  import { computed, ref } from 'vue'
+  import { FzDatepickerProps } from './types'
+  import { VueDatePicker } from '@vuepic/vue-datepicker'
+  import { useBreakpoints } from '@fiscozen/composables'
+  import { breakpoints } from '@fiscozen/style'
+  import { FzIconButton, FzButton } from '@fiscozen/button'
+  import { FzIcon } from '@fiscozen/icons'
+  import { FzInput, FzInputProps } from '@fiscozen/input'
+  import { it } from 'date-fns/locale'
+  import { format } from 'date-fns'
+  import '@vuepic/vue-datepicker/dist/main.css'
 
-const props = withDefaults(defineProps<FzDatepickerProps>(), {
-  /** @default true */
-  autoApply: true,
-  /** @default 'dd/MM/yyyy' */
-  format: 'dd/MM/yyyy',
-  /** @default it (Italian locale from date-fns) */
-  formatLocale: () => it,
-  state: undefined,
-  /** @default true */
-  autoPosition: true,
-  /** @default true – enables keyboard date entry */
-  textInput: true,
-  /** @default true */
-  arrowNavigation: true,
-  /** @default 'body' – teleports the calendar menu to body */
-  teleport: 'body',
-  clearable: false,
-  clearAriaLabel: 'Cancella'
-})
+  const props = withDefaults(defineProps<FzDatepickerProps>(), {
+    /** @default true */
+    autoApply: true,
+    /** @default 'dd/MM/yyyy' */
+    format: 'dd/MM/yyyy',
+    /** @default it (Italian locale from date-fns) */
+    formatLocale: () => it,
+    /** @default true */
+    autoPosition: true,
+    /** @default true – enables keyboard date entry */
+    textInput: true,
+    /** @default true */
+    arrowNavigation: true,
+    /** @default 'body' – teleports the calendar menu to body */
+    teleport: 'body',
+    clearable: false,
+    clearAriaLabel: 'Cancella'
+  })
 
-defineSlots<{
-  errorMessage?: () => unknown
-  helpText?: () => unknown
-}>()
+  defineSlots<{
+    errorMessage?: () => unknown
+    helpText?: () => unknown
+  }>()
 
-const dp = ref()
+  const dp = ref()
 
-const selectDate = () => {
-  dp.value.selectDate()
-}
-
-const closeMenu = () => {
-  dp.value.closeMenu()
-}
-
-const handleMenuClosed = () => {
-  activeOverlay.value = null
-  emit('closed')
-}
-
-/**
- * Stable sub-objects for mappedProps – kept outside the computed so that
- * VueDatePicker receives the **same reference** across re-evaluations when
- * only unrelated props (e.g. modelValue) change.  This prevents v12's
- * internal `watch([placement, y])` / `shouldRender` toggle from firing
- * unnecessary DOM cycles that manifest as a visual flicker.
- */
-const stableFormats = computed(() => {
-  const fmt = props.format
-  return fmt && !props.formats ? { input: fmt } : props.formats
-})
-
-const stableLocale = computed(() => {
-  const loc = props.locale ?? props.formatLocale
-  return typeof loc === 'string' ? it : loc
-})
-
-const stableInputAttrs = computed(() => {
-  const base = props.inputAttrs ?? {}
-  const attrs: Record<string, unknown> = { ...base }
-  if (props.state !== undefined && attrs.state === undefined) attrs.state = props.state
-  if (props.name !== undefined && attrs.name === undefined) attrs.name = props.name
-  return attrs
-})
-
-const stableTextInput = computed<
-  boolean | Partial<import('@vuepic/vue-datepicker').TextInputConfig>
->(() => {
-  if (!props.textInput) return false
-  const fmt = typeof props.format === 'string' ? props.format : 'dd/MM/yyyy'
-  return { format: fmt }
-})
-
-const stableFloating = computed(() => {
-  const base = props.floating
-  if (props.placement) {
-    return { ...(base ?? {}), placement: props.placement }
-  }
-  return base
-})
-
-const stableTimeConfig = computed(() => {
-  const timeKeys = [
-    'enableTimePicker',
-    'enableMinutes',
-    'is24',
-    'timePickerInline',
-    'enableSeconds',
-    'noHoursOverlay',
-    'noMinutesOverlay',
-    'noSecondsOverlay'
-  ] as const
-
-  const hasLegacy = timeKeys.some((k) => (props as any)[k] !== undefined)
-  if (!hasLegacy) return props.timeConfig
-
-  const cfg: Record<string, unknown> = { ...(props.timeConfig ?? {}) }
-  for (const key of timeKeys) {
-    const val = (props as any)[key]
-    if (val !== undefined && cfg[key] === undefined) cfg[key] = val
-  }
-  return cfg
-})
-
-const stableFlow = computed(() => {
-  const f = props.flow
-  return Array.isArray(f) ? { steps: f } : f
-})
-
-/**
- * Compute the props to pass to VueDatePicker v12,
- * remapping legacy v8 props to their new v12 equivalents.
- *
- * Sub-objects are individually memoised (computed) so that VueDatePicker
- * only sees a new reference when the relevant inputs actually change.
- * Props already bound explicitly in the template (modelValue, textInput)
- * are excluded to avoid redundant merge work.
- */
-const mappedProps = computed(() => {
-  const p = { ...props } as Record<string, any>
-
-  // ── Replace legacy scalars with stable sub-objects ────────
-  delete p.format
-  delete p.formatLocale
-  p.formats = stableFormats.value
-  p.locale = stableLocale.value
-
-  delete p.autoPosition
-  delete p.placement
-  p.floating = stableFloating.value
-
-  delete p.state
-  delete p.name
-  p.inputAttrs = stableInputAttrs.value
-
-  const timeKeys = [
-    'enableTimePicker',
-    'enableMinutes',
-    'is24',
-    'timePickerInline',
-    'enableSeconds',
-    'noHoursOverlay',
-    'noMinutesOverlay',
-    'noSecondsOverlay'
-  ]
-  for (const key of timeKeys) delete p[key]
-  p.timeConfig = stableTimeConfig.value
-
-  p.flow = stableFlow.value
-
-  // ── Normalize teleport: true/"" → "body", falsy → remove ─
-  if (p.teleport === true || p.teleport === '') {
-    p.teleport = 'body'
-  } else if (!p.teleport) {
-    delete p.teleport
+  /**
+   * Imperatively commits the current selection (same as clicking "Seleziona").
+   * Useful from a parent via `ref`, e.g. for custom keyboard shortcuts.
+   */
+  const selectDate = () => {
+    dp.value.selectDate()
   }
 
-  // ── Remove custom props that VueDatePicker doesn't need ───
-  delete p.inputProps
-  delete p.valueFormat
-  delete p.clearable
-  delete p.clearAriaLabel
-
-  // ── Remove props already bound explicitly in the template ─
-  delete p.modelValue
-  delete p.textInput
-
-  return p
-})
-
-/**
- * VueDatePicker reads `floating.placement` once during setup (it passes a
- * plain value, not a ref, to `useFloating`). To make placement changes
- * reactive we force a remount via `:key` whenever the floating config changes.
- */
-const floatingKey = computed(() => {
-  const f = mappedProps.value.floating
-  return f ? JSON.stringify(f) : 'default'
-})
-
-const emit = defineEmits<{
-  'update:model-value': [value: unknown]
-  'text-submit': [value: string]
-  closed: []
-  /** @deprecated Use `fzdatepicker:clear` instead. Will be removed in next major. */
-  cleared: [value: string]
-  'fzdatepicker:clear': []
-  open: []
-  focus: []
-  blur: []
-  'internal-model-change': [...args: any[]]
-  'flow-step': [...args: any[]]
-  'update-month-year': [...args: any[]]
-  'invalid-select': [...args: any[]]
-  'tooltip-open': [...args: any[]]
-  'tooltip-close': [...args: any[]]
-  'invalid-fixed-range': [...args: any[]]
-  'text-input': [value: string]
-  'am-pm-change': [...args: any[]]
-  'range-start': [...args: any[]]
-  'range-end': [...args: any[]]
-  'invalid-date': [...args: any[]]
-  'overlay-toggle': [...args: any[]]
-}>()
-
-/**
- * Formats and emits the selected date value.
- * When `valueFormat` is set and the value is a Date, applies date-fns
- * formatting so consumers receive a string instead of a Date object.
- */
-const handleModelValueUpdate = (e: any) => {
-  emit(
-    'update:model-value',
-    props.valueFormat && e instanceof Date ? format(e, props.valueFormat) : e
-  )
-}
-
-const breakpointsMatch = useBreakpoints(breakpoints)
-const isMobile = breakpointsMatch.isSmaller('sm')
-
-const calendarClassName = computed(() => {
-  const classString: string[] = []
-
-  if (isMobile.value) {
-    classString.push('is-mobile')
-  }
-
-  return classString
-})
-
-const safeInputProps = computed<FzInputProps>(() => {
-  const inputAttrsName = (props.inputAttrs as Record<string, unknown> | undefined)?.name as
-    | string
-    | undefined
-  return {
-    leftIcon: 'calendar-lines',
-    name: props.name ?? inputAttrsName,
-    ...props.inputProps,
-    clearable: props.clearable,
-    clearAriaLabel: props.clearAriaLabel,
-    readonly: !props.textInput || props.disabled,
-    disabled: !props.textInput || props.disabled
-  }
-})
-
-const handleFlowStep = (step: number) => {
-  const flowProp = props.flow
-  const steps = Array.isArray(flowProp)
-    ? flowProp
-    : flowProp && typeof flowProp === 'object' && 'steps' in flowProp
-      ? flowProp.steps
-      : undefined
-  if (steps?.length === step) {
+  /**
+   * Imperatively closes the calendar menu without committing the selection
+   * (same as clicking "Cancella"). Useful from a parent via `ref`.
+   */
+  const closeMenu = () => {
     dp.value.closeMenu()
   }
-}
 
-const handlePaste = (
-  onPaste: (() => void) | ((e: ClipboardEvent) => any),
-  closeMenu: () => void,
-  e: ClipboardEvent,
-  value: string
-) => {
-  onPaste(e)
-  nextTick(() => {
-    closeMenu()
+  const handleMenuClosed = () => {
+    emit('closed')
+  }
+
+  /**
+   * Re-emits VueDatePicker's `flow-step` event to consumers of FzDatepicker.
+   * Intentionally a plain forward: an earlier `handleFlowStep` also force-closed
+   * the menu on the last step, which broke the `autoApply: false` flow (the
+   * "Seleziona" button was bypassed). With this no-op forward, menu close is
+   * driven by VueDatePicker's own logic (auto-apply when enabled; otherwise
+   * the user explicitly confirms).
+   */
+  const forwardFlowStep = (step: number) => {
+    emit('flow-step', step)
+  }
+
+  /**
+   * Stable sub-objects for mappedProps – kept outside the computed so that
+   * VueDatePicker receives the **same reference** across re-evaluations when
+   * only unrelated props (e.g. modelValue) change.  This prevents v12's
+   * internal `watch([placement, y])` / `shouldRender` toggle from firing
+   * unnecessary DOM cycles that manifest as a visual flicker.
+   */
+  const stableFormats = computed(() => {
+    const fmt = props.format
+    return fmt && !props.formats ? { input: fmt } : props.formats
   })
-}
 
-const handleInputModelUpdate = (
-  onInput: (val: string) => void,
-  onClear: () => void,
-  value: string
-) => {
-  onInput(value)
-  emit('text-input', value)
-  if (!value) {
-    onClear()
-    emit('cleared', value)
+  /**
+   * VueDatePicker v12 expects a `date-fns` Locale object. We accept also a
+   * v8-style string for backward compatibility, but **any string is treated
+   * as Italian** (fallback to `it`) — VueDatePicker won't load arbitrary
+   * locales by name. Consumers who need a different language must pass the
+   * Locale object directly.
+   */
+  const stableLocale = computed(() => {
+    const loc = props.locale ?? props.formatLocale
+    return typeof loc === 'string' ? it : loc
+  })
+
+  const stableInputAttrs = computed(() => {
+    const base = props.inputAttrs ?? {}
+    const attrs: Record<string, unknown> = { ...base }
+    if (props.state !== undefined && attrs.state === undefined) attrs.state = props.state
+    if (props.name !== undefined && attrs.name === undefined) attrs.name = props.name
+    return attrs
+  })
+
+  const stableTextInput = computed<
+    boolean | Partial<import('@vuepic/vue-datepicker').TextInputConfig>
+  >(() => {
+    if (!props.textInput) return false
+    const fmt = typeof props.format === 'string' ? props.format : 'dd/MM/yyyy'
+    return { format: fmt }
+  })
+
+  const stableFloating = computed(() => {
+    const base = props.floating
+    if (props.placement) {
+      return { ...(base ?? {}), placement: props.placement }
+    }
+    return base
+  })
+
+  const stableTimeConfig = computed(() => {
+    const timeKeys = [
+      'enableTimePicker',
+      'enableMinutes',
+      'is24',
+      'timePickerInline',
+      'enableSeconds',
+      'noHoursOverlay',
+      'noMinutesOverlay',
+      'noSecondsOverlay'
+    ] as const
+
+    const hasLegacy = timeKeys.some((k) => (props as any)[k] !== undefined)
+    if (!hasLegacy) return props.timeConfig
+
+    const cfg: Record<string, unknown> = { ...(props.timeConfig ?? {}) }
+    for (const key of timeKeys) {
+      const val = (props as any)[key]
+      if (val !== undefined && cfg[key] === undefined) cfg[key] = val
+    }
+    return cfg
+  })
+
+  const stableFlow = computed(() => {
+    const f = props.flow
+    return Array.isArray(f) ? { steps: f } : f
+  })
+
+  /**
+   * Compute the props to pass to VueDatePicker v12,
+   * remapping legacy v8 props to their new v12 equivalents.
+   *
+   * Sub-objects are individually memoised (computed) so that VueDatePicker
+   * only sees a new reference when the relevant inputs actually change.
+   * Props already bound explicitly in the template (modelValue, textInput)
+   * are excluded to avoid redundant merge work.
+   */
+  const mappedProps = computed(() => {
+    const p = { ...props } as Record<string, any>
+
+    // ── Replace legacy scalars with stable sub-objects ────────
+    delete p.format
+    delete p.formatLocale
+    p.formats = stableFormats.value
+    p.locale = stableLocale.value
+
+    delete p.autoPosition
+    delete p.placement
+    p.floating = stableFloating.value
+
+    delete p.state
+    delete p.name
+    p.inputAttrs = stableInputAttrs.value
+
+    const timeKeys = [
+      'enableTimePicker',
+      'enableMinutes',
+      'is24',
+      'timePickerInline',
+      'enableSeconds',
+      'noHoursOverlay',
+      'noMinutesOverlay',
+      'noSecondsOverlay'
+    ]
+    for (const key of timeKeys) delete p[key]
+    p.timeConfig = stableTimeConfig.value
+
+    p.flow = stableFlow.value
+
+    // ── Normalize teleport: true/"" → "body", falsy → remove ─
+    if (p.teleport === true || p.teleport === '') {
+      p.teleport = 'body'
+    } else if (!p.teleport) {
+      delete p.teleport
+    }
+
+    // ── Remove custom props that VueDatePicker doesn't need ───
+    delete p.inputProps
+    delete p.valueFormat
+    delete p.clearable
+    delete p.clearAriaLabel
+
+    // ── Remove props already bound explicitly in the template ─
+    delete p.modelValue
+    delete p.textInput
+
+    return p
+  })
+
+  /**
+   * VueDatePicker reads `floating.placement` once during setup (it passes a
+   * plain value, not a ref, to `useFloating`). To make placement changes
+   * reactive we force a remount via `:key` whenever the floating config changes.
+   */
+  const floatingKey = computed(() => {
+    const f = mappedProps.value.floating
+    return f ? JSON.stringify(f) : 'default'
+  })
+
+  /**
+   * Emits declared by FzDatepicker.
+   *
+   * Two categories live here:
+   *
+   *  1. **Owned emits** — directly emitted by this component:
+   *     `update:model-value`, `text-input`, `closed`, `cleared` (deprecated),
+   *     `fzdatepicker:clear`, `flow-step`.
+   *
+   *  2. **Pass-through emits** — declared here so that parents can listen with
+   *     `@event-name` on `<FzDatepicker>` while Vue's attribute fallthrough
+   *     forwards them from the inner `<VueDatePicker>` (we render it as the
+   *     single root). These are NOT routed via this component's `emit()`, so
+   *     `wrapper.emitted('name')` in isolated VTU tests will not capture them.
+   *     To verify them, listen on the parent or assert through VueDatePicker.
+   *     Includes: `text-submit`, `open`, `focus`, `blur`,
+   *     `internal-model-change`, `update-month-year`, `invalid-select`,
+   *     `tooltip-open/close`, `invalid-fixed-range`, `am-pm-change`,
+   *     `range-start/end`, `invalid-date`, `overlay-toggle`.
+   */
+  const emit = defineEmits<{
+    'update:model-value': [value: unknown]
+    'text-submit': [value: string]
+    closed: []
+    /** @deprecated Use `fzdatepicker:clear` instead. Will be removed in v4.0.0. */
+    cleared: [value: string]
+    'fzdatepicker:clear': []
+    open: []
+    focus: []
+    blur: []
+    'internal-model-change': [...args: any[]]
+    'flow-step': [step: number]
+    'update-month-year': [...args: any[]]
+    'invalid-select': [...args: any[]]
+    'tooltip-open': [...args: any[]]
+    'tooltip-close': [...args: any[]]
+    'invalid-fixed-range': [...args: any[]]
+    'text-input': [value: string]
+    'am-pm-change': [...args: any[]]
+    'range-start': [...args: any[]]
+    'range-end': [...args: any[]]
+    'invalid-date': [...args: any[]]
+    'overlay-toggle': [...args: any[]]
+  }>()
+
+  /**
+   * Formats and emits the selected date value.
+   * When `valueFormat` is set and the value is a Date, applies date-fns
+   * formatting so consumers receive a string instead of a Date object.
+   */
+  const handleModelValueUpdate = (e: any) => {
+    emit(
+      'update:model-value',
+      props.valueFormat && e instanceof Date ? format(e, props.valueFormat) : e
+    )
   }
-}
 
-// ── Time-picker slot helpers ─────────────────────────────────
+  const breakpointsMatch = useBreakpoints(breakpoints)
+  const isMobile = breakpointsMatch.isSmaller('sm')
 
-type OverlayField = keyof TimeInternalModel
+  const calendarClassName = computed(() => (isMobile.value ? ['is-mobile'] : []))
 
-const activeOverlay = ref<OverlayField | null>(null)
+  /**
+   * Composes the props passed to the inner <FzInput>. `clearable` /
+   * `clearAriaLabel` flow through after the consumer's `inputProps` spread so
+   * the dedicated DS-level props always win over an attempt to set them via
+   * `inputProps`. The same holds for `readonly`/`disabled` which derive from
+   * `textInput` + `disabled` and intentionally override user input.
+   *
+   * `name` precedence (kept for backward compatibility — see types.ts):
+   *   inputProps.name > top-level `name` prop > inputAttrs.name
+   */
+  const safeInputProps = computed<FzInputProps>(() => {
+    const inputAttrsName = (props.inputAttrs as Record<string, unknown> | undefined)?.name as
+      | string
+      | undefined
+    return {
+      leftIcon: 'calendar-lines',
+      name: props.name ?? inputAttrsName,
+      ...props.inputProps,
+      clearable: props.clearable,
+      clearAriaLabel: props.clearAriaLabel,
+      readonly: !props.textInput || props.disabled,
+      disabled: !props.textInput || props.disabled
+    }
+  })
 
-const showMinutes = computed(() => {
-  return (
-    props.enableMinutes ??
-    (props.timeConfig as Record<string, unknown> | undefined)?.enableMinutes ??
-    true
-  )
-})
-
-const showSeconds = computed(() => {
-  return (
-    props.enableSeconds ??
-    (props.timeConfig as Record<string, unknown> | undefined)?.enableSeconds ??
-    false
-  )
-})
-
-const formatTimeValue = (val: number | number[]) => {
-  const v = Array.isArray(val) ? val[0] : val
-  return String(v).padStart(2, '0')
-}
-
-const wrapTimeValue = (val: number, min: number, max: number) => {
-  if (val > max) return min
-  if (val < min) return max
-  return val
-}
-
-const handleTimeIncrement = (
-  time: TimeInternalModel,
-  updateTime: (time: TimeInternalModel) => void,
-  field: keyof TimeInternalModel,
-  delta: number
-) => {
-  const max = field === 'hours' ? 23 : 59
-  const currentVal = time[field]
-
-  if (Array.isArray(currentVal)) {
-    const newArr = [...currentVal]
-    newArr[0] = wrapTimeValue(newArr[0] + delta, 0, max)
-    updateTime({ ...time, [field]: newArr })
-  } else {
-    updateTime({ ...time, [field]: wrapTimeValue(currentVal + delta, 0, max) })
+  const handlePaste = (
+    onPaste: (() => void) | ((e: ClipboardEvent) => any),
+    closeMenu: () => void,
+    e: ClipboardEvent,
+    value: string
+  ) => {
+    onPaste(e)
+    closeMenu()
   }
-}
 
-// ── Overlay helpers ──────────────────────────────────────────
-
-const openOverlay = (field: OverlayField) => {
-  activeOverlay.value = field
-}
-
-const overlayItems = computed<number[]>(() => {
-  if (!activeOverlay.value) return []
-  if (activeOverlay.value === 'hours') {
-    // 0–23
-    return Array.from({ length: 24 }, (_, i) => i)
+  const handleInputModelUpdate = (
+    onInput: (val: string) => void,
+    onClear: () => void,
+    value: string
+  ) => {
+    onInput(value)
+    emit('text-input', value)
+    if (!value) {
+      onClear()
+      emit('cleared', value)
+    }
   }
-  // minutes/seconds: 5-minute intervals (00, 05, 10, ... 55)
-  return Array.from({ length: 12 }, (_, i) => i * 5)
-})
-
-const isOverlayItemSelected = (time: TimeInternalModel, value: number) => {
-  const field = activeOverlay.value
-  if (!field) return false
-  const current = time[field]
-  const currentVal = Array.isArray(current) ? current[0] : current
-  return currentVal === value
-}
-
-const selectOverlayItem = (
-  time: TimeInternalModel,
-  updateTime: (time: TimeInternalModel) => void,
-  value: number
-) => {
-  const field = activeOverlay.value
-  if (!field) return
-  const current = time[field]
-
-  if (Array.isArray(current)) {
-    const newArr = [...current]
-    newArr[0] = value
-    updateTime({ ...time, [field]: newArr })
-  } else {
-    updateTime({ ...time, [field]: value })
-  }
-  activeOverlay.value = null
-}
 </script>
 
 <template>
-  <VueDatePicker
-    class="fz-datepicker"
-    ref="dp"
-    :key="floatingKey"
-    v-bind="mappedProps"
-    :text-input="stableTextInput"
-    :ui="{ menu: calendarClassName }"
-    @update:model-value="handleModelValueUpdate"
-    @closed="handleMenuClosed"
-    @flow-step="handleFlowStep"
-    :model-value="modelValue"
-  >
-    <template
-      #dp-input="{
-        value,
-        onBlur,
-        onFocus,
-        onInput,
-        onEnter,
-        onTab,
-        onKeypress,
-        onPaste,
-        closeMenu,
-        onClear
-      }"
-    >
-      <FzInput
-        @focus="onFocus"
-        @blur="onBlur"
-        @update:modelValue="
-          (e: string | number | undefined) =>
-            handleInputModelUpdate(onInput, onClear, String(e ?? ''))
-        "
-        @keyup.enter="onEnter"
-        @keydown.tab="onTab"
-        @keypress="onKeypress"
+  <VueDatePicker class="fz-datepicker" ref="dp" :key="floatingKey" v-bind="mappedProps" :text-input="stableTextInput"
+    :ui="{ menu: calendarClassName }" @update:model-value="handleModelValueUpdate" @closed="handleMenuClosed"
+    @flow-step="forwardFlowStep" :model-value="modelValue">
+    <template #dp-input="{
+      value,
+      onBlur,
+      onFocus,
+      onInput,
+      onEnter,
+      onTab,
+      onKeypress,
+      onPaste,
+      closeMenu,
+      onClear
+    }">
+      <FzInput @focus="onFocus" @blur="onBlur" @update:modelValue="
+        (e: string | number | undefined) =>
+          handleInputModelUpdate(onInput, onClear, String(e ?? ''))
+      " @keyup.enter="onEnter" @keydown.tab="onTab" @keypress="onKeypress"
         @paste="(e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)"
-        @fzinput:clear="emit('fzdatepicker:clear')"
-        v-bind="safeInputProps"
-        :modelValue="value"
-      >
+        @fzinput:clear="emit('fzdatepicker:clear')" v-bind="safeInputProps" :modelValue="value">
         <template v-if="$slots.errorMessage" #errorMessage>
           <slot name="errorMessage"></slot>
         </template>
@@ -459,341 +389,192 @@ const selectOverlayItem = (
     <template #arrow-right>
       <FzIconButton iconName="angle-right" size="md" variant="secondary"></FzIconButton>
     </template>
-    <template #time-picker="{ time, updateTime }">
-      <!-- Overlay grid for hours/minutes/seconds — positioned over calendar -->
-      <div v-if="activeOverlay" class="fz-time-picker__overlay">
-        <div class="fz-time-picker__overlay-header">
-          <span class="fz-time-picker__overlay-title">
-            {{
-              activeOverlay === 'hours' ? 'Ora' : activeOverlay === 'minutes' ? 'Minuti' : 'Secondi'
-            }}
-          </span>
-        </div>
-        <FzDivider margin="none" />
-        <div class="fz-time-picker__overlay-grid">
-          <button
-            v-for="item in overlayItems"
-            :key="item"
-            :class="[
-              'fz-time-picker__overlay-cell',
-              { 'fz-time-picker__overlay-cell--selected': isOverlayItemSelected(time, item) }
-            ]"
-            @click="selectOverlayItem(time, updateTime, item)"
-          >
-            {{ String(item).padStart(2, '0') }}
-          </button>
-        </div>
-      </div>
-      <div v-else class="fz-time-picker">
-        <FzDivider margin="none" />
-        <!-- Time controls row -->
-        <div class="fz-time-picker__row mt-8">
-          <!-- Hours column -->
-          <div class="fz-time-picker__col">
-            <span class="fz-time-picker__label">Ora</span>
-            <div class="fz-time-picker__controls">
-              <FzIconButton
-                iconName="angle-up"
-                size="sm"
-                variant="secondary"
-                ariaLabel="Increment hours"
-                @click="handleTimeIncrement(time, updateTime, 'hours', 1)"
-              />
-              <FzButton
-                variant="invisible"
-                environment="backoffice"
-                :label="formatTimeValue(time.hours)"
-                containerClass="fz-time-picker__btn-label"
-                overrideContainerClass
-                class="fz-time-picker__display-btn"
-                @click="openOverlay('hours')"
-              />
-              <FzIconButton
-                iconName="angle-down"
-                size="sm"
-                variant="secondary"
-                ariaLabel="Decrement hours"
-                @click="handleTimeIncrement(time, updateTime, 'hours', -1)"
-              />
-            </div>
-          </div>
-          <!-- Separator -->
-          <template v-if="showMinutes">
-            <span class="fz-time-picker__separator">:</span>
-            <!-- Minutes column -->
-            <div class="fz-time-picker__col">
-              <span class="fz-time-picker__label">Minuti</span>
-              <div class="fz-time-picker__controls">
-                <FzIconButton
-                  iconName="angle-up"
-                  size="sm"
-                  variant="secondary"
-                  ariaLabel="Increment minutes"
-                  @click="handleTimeIncrement(time, updateTime, 'minutes', 1)"
-                />
-                <FzButton
-                  variant="invisible"
-                  environment="backoffice"
-                  :label="formatTimeValue(time.minutes)"
-                  containerClass="fz-time-picker__btn-label"
-                  overrideContainerClass
-                  class="fz-time-picker__display-btn"
-                  @click="openOverlay('minutes')"
-                />
-                <FzIconButton
-                  iconName="angle-down"
-                  size="sm"
-                  variant="secondary"
-                  ariaLabel="Decrement minutes"
-                  @click="handleTimeIncrement(time, updateTime, 'minutes', -1)"
-                />
-              </div>
-            </div>
-          </template>
-          <!-- Seconds -->
-          <template v-if="showSeconds">
-            <span class="fz-time-picker__separator">:</span>
-            <div class="fz-time-picker__col">
-              <span class="fz-time-picker__label">Secondi</span>
-              <div class="fz-time-picker__controls">
-                <FzIconButton
-                  iconName="angle-up"
-                  size="sm"
-                  variant="secondary"
-                  ariaLabel="Increment seconds"
-                  @click="handleTimeIncrement(time, updateTime, 'seconds', 1)"
-                />
-                <FzButton
-                  variant="invisible"
-                  environment="backoffice"
-                  :label="formatTimeValue(time.seconds)"
-                  containerClass="fz-time-picker__btn-label"
-                  overrideContainerClass
-                  class="fz-time-picker__display-btn"
-                  @click="openOverlay('seconds')"
-                />
-                <FzIconButton
-                  iconName="angle-down"
-                  size="sm"
-                  variant="secondary"
-                  ariaLabel="Decrement seconds"
-                  @click="handleTimeIncrement(time, updateTime, 'seconds', -1)"
-                />
-              </div>
-            </div>
-          </template>
-        </div>
-      </div>
+    <template #arrow-up>
+      <FzIconButton iconName="angle-up" size="md" variant="secondary"></FzIconButton>
+    </template>
+    <template #arrow-down>
+      <FzIconButton iconName="angle-down" size="md" variant="secondary"></FzIconButton>
+    </template>
+    <!--
+      Inline time-picker chevrons. Slots are active only when
+      timePickerInline: true and are rendered INSIDE VueDatePicker's own
+      <button>, so we use FzIcon (not FzIconButton) to avoid nested buttons.
+    -->
+    <template #tp-inline-arrow-up>
+      <FzIcon name="angle-up" size="md" />
+    </template>
+    <template #tp-inline-arrow-down>
+      <FzIcon name="angle-down" size="md" />
+    </template>
+    <template #clock-icon>
+      <FzIcon name="clock" size="sm" />
+    </template>
+    <template #calendar-icon>
+      <FzIcon name="calendar" size="sm" />
     </template>
     <template #action-buttons>
-      <FzButton size="xs" variant="invisible" @click="closeMenu">Cancella</FzButton>
-      <FzButton size="xs" @click="selectDate" class="ml-4">Seleziona</FzButton>
+      <FzButton :environment="props.inputProps?.environment" variant="invisible" @click="closeMenu">Cancella</FzButton>
+      <FzButton :environment="props.inputProps?.environment" @click="selectDate" class="ml-4">Seleziona</FzButton>
     </template>
     <template #clear-icon></template>
   </VueDatePicker>
 </template>
 
 <style>
-/**
+  /**
  * Global (unscoped) styles – required because VueDatePicker's calendar menu
  * is teleported to <body> by default.  Scoped styles would not reach the
- * teleported DOM, so all `.dp__*` overrides and custom `.fz-time-picker*`
- * classes must be global.
+ * teleported DOM, so all `.dp__*` overrides must be global.
  */
 
-/* ── Design tokens: Fiscozen brand colours applied to VueDatePicker ── */
-:root {
-  --dp-menu-min-width: 320px;
-  --dp-font-family: var(--font-sans-inter, 'Inter', sans-serif);
-}
-.dp__theme_light {
-  --dp-range-between-dates-background-color: var(--blue-100, #dee2ff);
-  --dp-range-between-dates-text-color: var(--blue-600, #4858cc);
-  --dp-primary-color: var(--blue-500, #5a6eff);
-  --dp-primary-text-color: var(--core-white, #fff);
-  --dp-hover-color: var(--blue-500, #5a6eff);
-  --dp-hover-text-color: var(--core-white, #fff);
-  --dp-secondary-color: var(--grey-400, #6e777e);
-}
-.dp__menu {
-  border: none;
-  box-shadow:
-    0px 1px 2px 0px rgba(0, 0, 0, 0.06),
-    0px 1px 3px 0px rgba(0, 0, 0, 0.1);
-}
+  /* ── Design tokens: Fiscozen brand colours applied to VueDatePicker ── */
+  :root {
+    --dp-menu-min-width: 320px;
+    --dp-font-family: var(--font-sans-inter, 'Inter', sans-serif);
+  }
 
-.dp__range_start,
-.dp__range_end,
-.dp__range_between,
-.dp__date_hover_start:hover,
-.dp__date_hover_end:hover {
-  @apply rounded;
-}
+  .dp__theme_light {
+    --dp-range-between-dates-background-color: var(--blue-100, #dee2ff);
+    --dp-range-between-dates-text-color: var(--blue-600, #4858cc);
+    --dp-primary-color: var(--blue-500, #5a6eff);
+    --dp-primary-text-color: var(--core-white, #fff);
+    --dp-hover-color: var(--blue-500, #5a6eff);
+    --dp-hover-text-color: var(--core-white, #fff);
+    --dp-secondary-color: var(--grey-400, #6e777e);
+  }
 
-.dp__today {
-  @apply border-2 border-blue-500;
-}
+  .dp__menu {
+    border: none;
+    box-shadow:
+      0px 1px 2px 0px rgba(0, 0, 0, 0.06),
+      0px 1px 3px 0px rgba(0, 0, 0, 0.1);
+  }
 
-.dp__cell_auto_range,
-.dp__cell_auto_range_start,
-.dp__cell_auto_range_end {
-  @apply rounded border-2 border-dashed border-blue-400;
-}
+  .dp__range_start,
+  .dp__range_end,
+  .dp__range_between,
+  .dp__date_hover_start:hover,
+  .dp__date_hover_end:hover {
+    @apply rounded;
+  }
 
-.dp__cell_inner:hover {
-  transition: none;
-}
+  .dp__today {
+    @apply border-2 border-blue-500;
+  }
 
-.dp__range_between {
-  @apply border-none;
-}
+  .dp__cell_auto_range,
+  .dp__cell_auto_range_start,
+  .dp__cell_auto_range_end {
+    @apply rounded border-2 border-dashed border-blue-400;
+  }
 
-.is-mobile .dp__flex_display {
-  @apply flex-col;
-}
+  .dp__cell_inner:hover {
+    transition: none;
+  }
 
-.dp__overlay_container {
-  @apply h-full;
-}
+  .dp__range_between {
+    @apply border-none;
+  }
 
-.dp__overlay {
-  @apply !w-[320px];
-}
+  .is-mobile .dp__flex_display {
+    @apply flex-col;
+  }
 
-.dp__time_col {
-  @apply flex-row;
-}
+  .dp__overlay {
+    @apply w-full;
+  }
 
-.dp__time_display_inline {
-  @apply mx-8;
-}
+  .dp__time_picker_inline_container {
+    padding: var(--dp-menu-padding);
+    padding-top: 0;
 
-/* ── Custom time-picker controls (replaces VueDatePicker's default) ── */
-.fz-time-picker {
-  @apply flex flex-col items-center;
-}
+    .dp__time_col {
+      @apply flex-row;
+    }
+  }
 
-.fz-time-picker__row {
-  @apply flex items-center justify-center gap-16 pb-16;
-}
+  .dp__time_display_inline {
+    @apply mx-8;
+    @apply w-[30px];
+  }
 
-.fz-time-picker__col {
-  @apply flex flex-col items-center gap-4;
-}
+  /* ── Inline time-picker increment/decrement buttons ──────────────
+   * Style the chevron buttons (`tp-inline-arrow-up` / `-down`) to match
+   * FzIconButton variant="secondary" size="sm". The slot content itself
+   * (FzIcon) is rendered INSIDE this <button>; here we style the button.
+   * Using `button.` prefix to win specificity against VueDatePicker's
+   * default `.dp__inc_dec_button_inline { width:100%; height:8px; ... }`.
+   */
+  button.dp__inc_dec_button_inline {
+    @apply border-1 border-grey-200 bg-core-white rounded border-solid;
+    @apply flex items-center justify-center;
+    @apply hover:bg-grey-100;
+    @apply focus:border-blue-600 focus:outline-none;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+  }
 
-.fz-time-picker__label {
-  @apply text-core-black text-sm font-medium;
-}
+  button.dp__inc_dec_button_inline.dp__inc_dec_button_disabled,
+  button.dp__inc_dec_button_inline.dp__inc_dec_button_disabled:hover {
+    @apply bg-grey-100 border-grey-200 text-grey-200 cursor-not-allowed;
+  }
 
-.fz-time-picker__controls {
-  @apply flex items-center gap-4;
-}
+  .dp--header-wrap,
+  .dp--header-wrap button {
+    @apply h-32;
+  }
 
-.fz-time-picker__display-btn {
-  @apply !min-w-0 !px-8;
-  width: 40px;
-}
+  .dp__month_year_wrap .dp__inner_nav:hover {
+    @apply text-core-white;
+  }
 
-.fz-time-picker__btn-label {
-  @apply text-core-black text-center text-base font-normal;
-}
+  .dp__month_year_wrap {
+    @apply h-32;
+    @apply gap-[4px]
+  }
 
-.fz-time-picker__separator {
-  @apply text-core-black self-end pb-8 text-base font-medium;
-}
+  /* ── Hidden VueDatePicker elements not needed in Fiscozen design ── */
+  .dp__calendar_header_separator,
+  .dp__arrow_top {
+    @apply hidden;
+  }
 
-/* ── Time-picker overlay: covers the calendar grid when selecting h/m/s ── */
-.dp__menu_inner:has(.fz-time-picker__overlay) {
-  @apply relative;
-}
+  .dp__calendar_item {
+    @apply flex justify-center;
+  }
 
-.fz-time-picker__overlay {
-  @apply bg-core-white absolute inset-0 z-10 flex flex-col rounded;
-}
+  .dp--menu--inner-stretched {
+    @apply p-0;
+  }
 
-.fz-time-picker__overlay-header {
-  @apply flex justify-center py-8;
-}
+  /* z-index override: ensures the teleported calendar floats above modals/dialogs */
+  .dp--menu-wrapper {
+    z-index: unset;
+    @apply z-70;
+  }
 
-.fz-time-picker__overlay-title {
-  @apply text-core-black text-base font-semibold;
-}
+  .dp__menu:focus {
+    border: none;
+  }
 
-.fz-time-picker__overlay-grid {
-  @apply grid grid-cols-3 gap-4 overflow-y-auto p-8;
-}
+  .dp__inner_nav {
+    width: unset;
+  }
 
-.fz-time-picker__overlay-cell {
-  @apply text-core-black bg-core-white flex cursor-pointer items-center justify-center rounded text-base font-normal;
-  @apply hover:text-core-white hover:bg-blue-500;
-  padding: 8px;
-}
+  button.dp__overlay_action.dp__button_bottom {
+    @apply hidden;
+  }
 
-.fz-time-picker__overlay-cell--selected {
-  @apply text-core-white bg-blue-500;
-}
+  .dp__cell_offset.dp__active_date {
+    @apply text-core-white;
+  }
 
-.dp--header-wrap,
-.dp--header-wrap button {
-  @apply h-32;
-}
+  .dp__action_row {
+    @apply justify-between;
+  }
 
-.dp__month_year_wrap .dp__inner_nav:hover {
-  @apply text-core-white;
-}
-
-.dp__month_year_wrap {
-  @apply h-32;
-}
-
-/* ── Hidden VueDatePicker elements not needed in Fiscozen design ── */
-.dp__calendar_header_separator,
-.dp__arrow_top {
-  @apply hidden;
-}
-
-.dp__calendar_item {
-  @apply flex justify-center;
-}
-
-.dp--menu--inner-stretched {
-  @apply p-0;
-}
-/* z-index override: ensures the teleported calendar floats above modals/dialogs */
-.dp--menu-wrapper {
-  z-index: unset;
-  @apply z-70;
-}
-
-.dp__menu:focus {
-  border: none;
-}
-
-.dp__inner_nav {
-  width: unset;
-}
-
-button.dp__overlay_action.dp__button_bottom {
-  @apply hidden;
-}
-
-.dp__cell_offset.dp__active_date {
-  @apply text-core-white;
-}
-
-.dp__action_row {
-  @apply justify-between;
-}
-
-.dp__clear_icon {
-  @apply absolute right-0 top-1/2 transform-none cursor-pointer;
-}
-
-.fz-datepicker .dp__input_wrap .rounded {
-  border-style: solid;
-}
-
-button.dp__btn {
-  border: 0;
-}
+  .dp__clear_icon {
+    @apply absolute right-0 top-1/2 transform-none cursor-pointer;
+  }
 </style>

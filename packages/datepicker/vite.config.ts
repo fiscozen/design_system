@@ -23,7 +23,17 @@ export default defineConfig({
       name: 'FzDatepicker',
     },
     rollupOptions: {
-      external: ['vue'],
+      external: [
+        'vue',
+        '@fiscozen/button',
+        '@fiscozen/composables',
+        '@fiscozen/icons',
+        '@fiscozen/input',
+        '@fiscozen/style',
+        '@vuepic/vue-datepicker',
+        'date-fns',
+        'date-fns/locale'
+      ],
       output: {
         globals: {
           vue: 'Vue',

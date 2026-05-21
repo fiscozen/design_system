@@ -3,14 +3,43 @@ import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
 import { FzDatepicker } from '..'
 
-// Mock must be hoisted to module level
+// ============================================
+// MOCKS
+// ============================================
+
+// `@fiscozen/composables` is mocked to expose mutable refs per test so that
+// `isSmaller`/`isGreater`/`isInBetween` results can be overridden in individual
+// tests (e.g. simulating the mobile breakpoint). The default values are false
+// so the component renders as desktop.
+const mockIsSmaller = ref(false)
+const mockIsGreater = ref(false)
+const mockIsInBetween = ref(false)
+
 vi.mock('@fiscozen/composables', () => ({
   useBreakpoints: () => ({
-    isGreater: () => ref(false),
-    isSmaller: () => ref(false),
-    isInBetween: () => ref(false)
+    isGreater: () => mockIsGreater,
+    isSmaller: () => mockIsSmaller,
+    isInBetween: () => mockIsInBetween
   })
 }))
+
+// ============================================
+// SNAPSHOT SERIALIZER — stabilise auto-generated FzInput IDs
+// ============================================
+// `@fiscozen/input` generates IDs via a module-scoped counter that is never
+// reset between tests; adding/removing tests shifts every snapshot's ID.
+// Normalise `fz-input-{timestamp}-{counter}` → `fz-input-[id]` in any string
+// output so snapshots stay stable regardless of test ordering.
+const ID_PATTERN = /fz-input-\d+-\d+/g
+expect.addSnapshotSerializer({
+  serialize(value, _config, indentation, depth, refs, printer) {
+    const normalised = (value as string).replace(ID_PATTERN, 'fz-input-[id]')
+    return printer(normalised, _config, indentation, depth, refs)
+  },
+  test(value) {
+    return typeof value === 'string' && ID_PATTERN.test(value)
+  }
+})
 
 describe('FzDatepicker', () => {
   beforeEach(() => {
@@ -90,38 +119,24 @@ describe('FzDatepicker', () => {
   // ============================================
   describe('Props', () => {
     describe('modelValue prop', () => {
-      it('should accept Date object', () => {
-        const date = new Date('2024-01-15')
+      it.each([
+        ['Date object', new Date('2024-01-15')],
+        ['string date', '2024-01-15'],
+        ['null', null],
+        ['undefined', undefined]
+      ])('accepts %s without error and renders the calendar wrapper', (_label, value) => {
         const wrapper = mount(FzDatepicker, {
           props: {
-            modelValue: date,
+            modelValue: value as Date | string | null | undefined,
             inputProps: {}
           }
         })
-
-        expect(wrapper.exists()).toBe(true)
-      })
-
-      it('should accept string date', () => {
-        const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: '2024-01-15',
-            inputProps: {}
-          }
-        })
-
-        expect(wrapper.exists()).toBe(true)
-      })
-
-      it('should accept null value', () => {
-        const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: null,
-            inputProps: {}
-          }
-        })
-
-        expect(wrapper.exists()).toBe(true)
+        // VueDatePicker exposes `modelValue` through defineModel rather than a
+        // classic prop, so VTU's `dp.props('modelValue')` returns undefined.
+        // We assert that the wrapper renders and the inner FzInput is present —
+        // forwarding correctness is exercised end-to-end via the Events tests.
+        expect(wrapper.find('.fz-datepicker').exists()).toBe(true)
+        expect(wrapper.findComponent({ name: 'FzInput' }).exists()).toBe(true)
       })
     })
 
@@ -218,139 +233,164 @@ describe('FzDatepicker', () => {
       })
     })
 
-    describe('format prop', () => {
-      it('should use default format dd/MM/yyyy', () => {
-        const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: new Date(),
-            inputProps: {}
-          }
-        })
+    /**
+     * Many child-prop assertions below introspect `mappedProps` (a setup-state
+     * computed) rather than VueDatePicker's resolved `props()`. This is because
+     * VueDatePicker uses defineModel + `v-bind` spreads internally, which makes
+     * `dp.props(name)` unreliable in Vue Test Utils. `mappedProps` is what we
+     * actually pass through `v-bind="mappedProps"` in the template, so testing
+     * it is equivalent.
+     */
+    const getMappedProps = (wrapper: ReturnType<typeof mount>) =>
+      (wrapper.vm as any).$.setupState.mappedProps as Record<string, any>
 
-        expect(wrapper.exists()).toBe(true)
+    describe('format prop', () => {
+      it("maps the default 'dd/MM/yyyy' to formats.input", () => {
+        const wrapper = mount(FzDatepicker, {
+          props: { modelValue: new Date(), inputProps: {} }
+        })
+        expect(getMappedProps(wrapper).formats).toEqual({ input: 'dd/MM/yyyy' })
       })
 
-      it('should accept custom format', () => {
+      it('maps a custom format to formats.input', () => {
+        const wrapper = mount(FzDatepicker, {
+          props: { modelValue: new Date(), format: 'MM/dd/yyyy', inputProps: {} }
+        })
+        expect(getMappedProps(wrapper).formats).toEqual({ input: 'MM/dd/yyyy' })
+      })
+
+      it('lets an explicit `formats` prop override the legacy `format` shorthand', () => {
         const wrapper = mount(FzDatepicker, {
           props: {
             modelValue: new Date(),
             format: 'MM/dd/yyyy',
+            formats: { input: 'dd.MM.yyyy' },
             inputProps: {}
           }
         })
-
-        expect(wrapper.exists()).toBe(true)
+        expect(getMappedProps(wrapper).formats).toEqual({ input: 'dd.MM.yyyy' })
       })
     })
 
     describe('range prop', () => {
-      it('should enable range selection when true', () => {
+      it('forwards range=true to VueDatePicker', () => {
         const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: new Date(),
-            range: true,
-            inputProps: {}
-          }
+          props: { modelValue: new Date(), range: true, inputProps: {} }
         })
+        expect(getMappedProps(wrapper).range).toBe(true)
+      })
 
-        expect(wrapper.exists()).toBe(true)
+      it('forwards an auto-range object to VueDatePicker', () => {
+        const wrapper = mount(FzDatepicker, {
+          props: { modelValue: new Date(), range: { autoRange: 5 }, inputProps: {} }
+        })
+        expect(getMappedProps(wrapper).range).toEqual({ autoRange: 5 })
       })
     })
   })
 
   // ============================================
-  // EVENTS TESTS
+  // EVENTS TESTS — only the directly-emitted events are covered here.
+  // Passthrough events (open, focus, blur, internal-model-change, etc.) are
+  // forwarded by Vue's attribute fallthrough from VueDatePicker; they are
+  // declared in defineEmits for typing only and cannot be intercepted by
+  // FzDatepicker's `emit()`.
   // ============================================
   describe('Events', () => {
-    it('should emit update:modelValue when date changes', async () => {
+    // `dp.vm.$emit(...)` on the inner VueDatePicker does not route through the
+    // parent's template listener in Vue Test Utils, so to verify the
+    // transformation logic in `handleModelValueUpdate` we drive it directly via
+    // setupState. The template wiring itself is exercised by the integration
+    // run-through of the Storybook play functions.
+    const callHandleModelValueUpdate = (
+      wrapper: ReturnType<typeof mount>,
+      value: unknown
+    ) => {
+      const setupState = (wrapper.vm as any).$.setupState
+      setupState.handleModelValueUpdate(value)
+    }
+
+    it('forwards a Date update:model-value as-is when valueFormat is not set', async () => {
       const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          inputProps: {}
-        }
+        props: { modelValue: null, inputProps: {} }
       })
-
-      const input = wrapper.find('input')
-      await input.setValue('15/01/2024')
-
-      // The event is emitted through VueDatePicker's internal handling
-      // We verify the component is set up correctly
-      expect(wrapper.exists()).toBe(true)
-    })
-
-    it('should emit text-input event when typing in input', async () => {
-      const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          textInput: true,
-          inputProps: {}
-        }
-      })
-
-      const input = wrapper.find('input')
-      await input.setValue('15/01/2024')
-
-      // The text-input event is emitted through handleInputModelUpdate
-      expect(wrapper.exists()).toBe(true)
-    })
-
-    it('should emit cleared event when input is cleared', async () => {
-      const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          textInput: true,
-          inputProps: {}
-        }
-      })
-
-      const input = wrapper.find('input')
-      await input.setValue('')
+      const date = new Date(2025, 0, 15)
+      callHandleModelValueUpdate(wrapper, date)
       await wrapper.vm.$nextTick()
 
-      // The cleared event should be emitted when value is empty
-      expect(wrapper.exists()).toBe(true)
+      const emitted = wrapper.emitted('update:model-value')
+      expect(emitted).toBeTruthy()
+      expect(emitted![0][0]).toBe(date)
     })
 
-    it('should emit open event when calendar opens', async () => {
+    it('formats a Date update:model-value through valueFormat (date-fns)', async () => {
       const wrapper = mount(FzDatepicker, {
         props: {
-          modelValue: new Date(),
+          modelValue: null,
+          valueFormat: 'yyyy-MM-dd',
           inputProps: {}
         }
       })
+      callHandleModelValueUpdate(wrapper, new Date(2025, 0, 15))
+      await wrapper.vm.$nextTick()
 
-      const input = wrapper.find('input')
-      await input.trigger('click')
-
-      // The open event is handled by VueDatePicker
-      expect(wrapper.exists()).toBe(true)
+      const emitted = wrapper.emitted('update:model-value')
+      expect(emitted![0][0]).toBe('2025-01-15')
     })
 
-    it('should emit closed event when calendar closes', async () => {
+    it('does NOT format a non-Date update:model-value through valueFormat', async () => {
       const wrapper = mount(FzDatepicker, {
         props: {
-          modelValue: new Date(),
+          modelValue: null,
+          valueFormat: 'yyyy-MM-dd',
           inputProps: {}
         }
       })
+      // VueDatePicker may emit a range as an array — must pass through untouched.
+      const range = [new Date(2025, 0, 15), new Date(2025, 0, 20)]
+      callHandleModelValueUpdate(wrapper, range)
+      await wrapper.vm.$nextTick()
 
-      // Calendar close is handled by VueDatePicker
-      expect(wrapper.exists()).toBe(true)
+      expect(wrapper.emitted('update:model-value')![0][0]).toBe(range)
     })
 
-    it('should emit blur event when input loses focus', async () => {
+    it('emits text-input when the inner FzInput updates its value', async () => {
       const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          inputProps: {}
-        }
+        props: { modelValue: null, textInput: true, inputProps: {} }
       })
+      const fzInput = wrapper.findComponent({ name: 'FzInput' })
+      fzInput.vm.$emit('update:modelValue', '15/01/2025')
+      await wrapper.vm.$nextTick()
 
-      const input = wrapper.find('input')
-      await input.trigger('blur')
+      expect(wrapper.emitted('text-input')).toBeTruthy()
+      expect(wrapper.emitted('text-input')![0]).toEqual(['15/01/2025'])
+    })
 
-      // Blur event is passed through from FzInput
-      expect(wrapper.exists()).toBe(true)
+    it('emits BOTH text-input and cleared when the inner FzInput is emptied', async () => {
+      const wrapper = mount(FzDatepicker, {
+        props: { modelValue: '15/01/2025', textInput: true, inputProps: {} }
+      })
+      const fzInput = wrapper.findComponent({ name: 'FzInput' })
+      fzInput.vm.$emit('update:modelValue', '')
+      await wrapper.vm.$nextTick()
+
+      // text-input always fires (even with empty value)…
+      expect(wrapper.emitted('text-input')).toBeTruthy()
+      expect(wrapper.emitted('text-input')![0]).toEqual([''])
+      // …cleared fires only on empty payload (legacy event, deprecated).
+      expect(wrapper.emitted('cleared')).toBeTruthy()
+      expect(wrapper.emitted('cleared')![0]).toEqual([''])
+    })
+
+    it('emits fzdatepicker:clear when the inner FzInput emits fzinput:clear', async () => {
+      const wrapper = mount(FzDatepicker, {
+        props: { modelValue: new Date(), clearable: true, inputProps: {} }
+      })
+      const fzInput = wrapper.findComponent({ name: 'FzInput' })
+      fzInput.vm.$emit('fzinput:clear')
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.emitted('fzdatepicker:clear')).toBeTruthy()
     })
   })
 
@@ -619,47 +659,25 @@ describe('FzDatepicker', () => {
     describe('Keyboard navigation', () => {
       it('should be focusable when not disabled', () => {
         const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: new Date(),
-            inputProps: {}
-          }
+          props: { modelValue: new Date(), inputProps: {} }
         })
-
         const input = wrapper.find('input')
         expect(input.attributes('tabindex')).not.toBe('-1')
       })
 
-      it('should support Enter key to open calendar', async () => {
+      it('should NOT be in the keyboard tab order when disabled', () => {
         const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: new Date(),
-            textInput: true,
-            inputProps: {}
-          }
+          props: { modelValue: new Date(), disabled: true, inputProps: {} }
         })
-
         const input = wrapper.find('input')
-        await input.trigger('keyup.enter')
-
-        // Enter key handling is passed through to VueDatePicker
-        expect(wrapper.exists()).toBe(true)
+        // disabled inputs are skipped by the tab order natively
+        expect(input.attributes('disabled')).toBeDefined()
       })
 
-      it('should support Tab key navigation', async () => {
-        const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: new Date(),
-            textInput: true,
-            inputProps: {}
-          }
-        })
-
-        const input = wrapper.find('input')
-        await input.trigger('keydown.tab')
-
-        // Tab key handling is passed through to VueDatePicker
-        expect(wrapper.exists()).toBe(true)
-      })
+      // Enter/Tab handling lives inside VueDatePicker — exercising the keydown
+      // here without asserting on a routed effect would just verify Vue's event
+      // wiring. The Storybook KeyboardNavigation play function covers the
+      // end-to-end behaviour.
     })
 
     describe('Decorative elements', () => {
@@ -704,23 +722,10 @@ describe('FzDatepicker', () => {
       })
     })
 
-    describe('Calendar popup accessibility', () => {
-      it('should have accessible calendar structure when opened', async () => {
-        const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: new Date(),
-            inputProps: {}
-          }
-        })
-
-        const input = wrapper.find('input')
-        await input.trigger('click')
-        await wrapper.vm.$nextTick()
-
-        // Calendar should be accessible (handled by VueDatePicker)
-        expect(wrapper.exists()).toBe(true)
-      })
-    })
+    // Calendar popup ARIA structure is owned by VueDatePicker and exercised
+    // end-to-end in the Storybook Default play function ("Verify ARIA
+    // attributes for accessibility"). Asserting it in jsdom requires the
+    // teleported menu, which isn't reliably present in this environment.
   })
 
   // ============================================
@@ -738,44 +743,57 @@ describe('FzDatepicker', () => {
       expect(wrapper.find('.fz-datepicker').exists()).toBe(true)
     })
 
-    it('should apply mobile class when isMobile is true', () => {
-      vi.doMock('@fiscozen/composables', () => ({
-        useBreakpoints: vi.fn().mockReturnValue({
-          isSmaller: vi.fn().mockReturnValue(true)
+    it('should apply mobile class when isMobile is true', async () => {
+      // Override the shared mock for this test only.
+      mockIsSmaller.value = true
+      try {
+        const wrapper = mount(FzDatepicker, {
+          props: {
+            modelValue: new Date(),
+            inputProps: {}
+          }
         })
-      }))
+        await wrapper.vm.$nextTick()
+        // `calendarClassName` is a computed forwarded to VueDatePicker's
+        // `ui.menu`. We assert against setupState because VueDatePicker's
+        // declared default for `ui` is a no-op function which makes
+        // `dp.props('ui')` unreliable in VTU.
+        const setupState = (wrapper.vm as any).$.setupState
+        expect(setupState.calendarClassName).toContain('is-mobile')
+      } finally {
+        mockIsSmaller.value = false
+      }
+    })
 
+    it('should NOT apply mobile class when isMobile is false', () => {
       const wrapper = mount(FzDatepicker, {
         props: {
           modelValue: new Date(),
           inputProps: {}
         }
       })
-
-      // The is-mobile class is applied to the calendar menu via calendarClassName
-      expect(wrapper.exists()).toBe(true)
+      const setupState = (wrapper.vm as any).$.setupState
+      expect(setupState.calendarClassName).not.toContain('is-mobile')
     })
   })
 
   // ============================================
   // LEGACY PROP MAPPING TESTS
+  // All legacy v8 props are remapped to the v12 API via the `mappedProps`
+  // computed; assertions go against that computed.
   // ============================================
   describe('Legacy prop mapping (mappedProps)', () => {
-    it('should render correctly when legacy format prop is provided', () => {
-      const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          format: 'yyyy-MM-dd',
-          inputProps: {}
-        }
-      })
+    const getMapped = (wrapper: ReturnType<typeof mount>) =>
+      (wrapper.vm as any).$.setupState.mappedProps as Record<string, any>
 
-      // VueDatePicker should render without errors when format is mapped to formats.input
-      const dp = wrapper.findComponent({ name: 'VueDatePicker' })
-      expect(dp.exists()).toBe(true)
+    it('maps legacy `format` to `formats.input`', () => {
+      const wrapper = mount(FzDatepicker, {
+        props: { modelValue: new Date(), format: 'yyyy-MM-dd', inputProps: {} }
+      })
+      expect(getMapped(wrapper).formats).toEqual({ input: 'yyyy-MM-dd' })
     })
 
-    it('should render correctly when explicit formats prop is provided alongside legacy format', () => {
+    it('explicit `formats` prop wins over the legacy `format` shorthand', () => {
       const wrapper = mount(FzDatepicker, {
         props: {
           modelValue: new Date(),
@@ -784,90 +802,69 @@ describe('FzDatepicker', () => {
           inputProps: {}
         }
       })
-
-      const dp = wrapper.findComponent({ name: 'VueDatePicker' })
-      expect(dp.exists()).toBe(true)
+      expect(getMapped(wrapper).formats).toEqual({ input: 'dd.MM.yyyy' })
     })
 
-    it('should render correctly with default Italian locale (formatLocale mapping)', () => {
+    it('default locale resolves to the italian date-fns Locale object', () => {
       const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          inputProps: {}
-        }
+        props: { modelValue: new Date(), inputProps: {} }
       })
-
-      // Component should render without errors with default locale mapping
-      expect(wrapper.exists()).toBe(true)
+      // The italian locale object has a `code` property of 'it'.
+      expect(getMapped(wrapper).locale?.code).toBe('it')
     })
 
-    it("should render correctly when locale is a string (falls back to 'it')", () => {
+    it("coerces a string locale to italian (vue-datepicker doesn't load by name)", () => {
       const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          locale: 'en',
-          inputProps: {}
-        }
+        props: { modelValue: new Date(), locale: 'en', inputProps: {} }
       })
-
-      // Should not throw - string locale is replaced with date-fns `it` locale
-      expect(wrapper.exists()).toBe(true)
+      expect(getMapped(wrapper).locale?.code).toBe('it')
     })
 
-    it('should render correctly when autoPosition is set (removed for v12)', () => {
+    it('strips deprecated `autoPosition` (replaced by v12 `floating`)', () => {
       const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          autoPosition: false,
-          inputProps: {}
-        }
+        props: { modelValue: new Date(), autoPosition: false, inputProps: {} }
       })
-
-      expect(wrapper.exists()).toBe(true)
+      // The legacy boolean must not leak through to VueDatePicker.
+      expect(getMapped(wrapper).autoPosition).toBeUndefined()
     })
 
-    it('should render with legacy state prop mapped correctly', () => {
+    it('maps the deprecated `state` prop into `inputAttrs.state`', () => {
       const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          state: true,
-          inputProps: {}
-        }
+        props: { modelValue: new Date(), state: true, inputProps: {} }
       })
-
-      expect(wrapper.exists()).toBe(true)
+      expect(getMapped(wrapper).inputAttrs?.state).toBe(true)
     })
 
-    it('should set input name attribute when legacy name prop is used', () => {
+    it('sets the visible <input>.name when the legacy top-level `name` prop is used', () => {
       const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          name: 'my-date',
-          inputProps: {}
-        }
+        props: { modelValue: new Date(), name: 'my-date', inputProps: {} }
       })
-
-      const input = wrapper.find('input')
-      expect(input.attributes('name')).toBe('my-date')
+      expect(wrapper.find('input').attributes('name')).toBe('my-date')
     })
 
-    it('should render correctly when legacy time-related props are provided', () => {
+    it('folds legacy time props into `timeConfig`', () => {
       const wrapper = mount(FzDatepicker, {
         props: {
           modelValue: new Date(),
           enableTimePicker: true,
-          enableMinutes: true,
-          is24: true,
+          enableMinutes: false,
+          is24: false,
           enableSeconds: true,
           inputProps: {}
         }
       })
-
-      // Should render without errors - props are mapped to timeConfig
-      expect(wrapper.exists()).toBe(true)
+      // Vue auto-defaults boolean props to false even when not passed, so the
+      // mapped timeConfig may contain extra keys (timePickerInline, no*Overlay)
+      // — we assert only on the ones we actually set.
+      expect(getMapped(wrapper).timeConfig).toMatchObject({
+        enableTimePicker: true,
+        enableMinutes: false,
+        is24: false,
+        enableSeconds: true
+      })
     })
 
-    it('should render correctly when explicit timeConfig overrides legacy time props', () => {
+    it('explicit `timeConfig` keys win over legacy time props', () => {
       const wrapper = mount(FzDatepicker, {
         props: {
           modelValue: new Date(),
@@ -876,11 +873,10 @@ describe('FzDatepicker', () => {
           inputProps: {}
         }
       })
-
-      expect(wrapper.exists()).toBe(true)
+      expect(getMapped(wrapper).timeConfig?.enableTimePicker).toBe(false)
     })
 
-    it('should render correctly when legacy flow array is provided', () => {
+    it('normalises a legacy flow array into `{ steps }`', () => {
       const wrapper = mount(FzDatepicker, {
         props: {
           modelValue: new Date(),
@@ -888,24 +884,21 @@ describe('FzDatepicker', () => {
           inputProps: {}
         }
       })
-
-      // Array flow is mapped to { steps: [...] }
-      expect(wrapper.exists()).toBe(true)
+      expect(getMapped(wrapper).flow).toEqual({ steps: ['calendar', 'hours', 'minutes'] })
     })
 
-    it('should render correctly when flow object is provided', () => {
+    it('passes a v12 flow object through untouched', () => {
       const wrapper = mount(FzDatepicker, {
         props: {
           modelValue: new Date(),
-          flow: { steps: ['calendar', 'hours'] },
+          flow: { steps: ['calendar', 'hours'], partial: true },
           inputProps: {}
         }
       })
-
-      expect(wrapper.exists()).toBe(true)
+      expect(getMapped(wrapper).flow).toEqual({ steps: ['calendar', 'hours'], partial: true })
     })
 
-    it('should render correctly with valueFormat prop (custom prop not passed to VueDatePicker)', () => {
+    it('strips DS-only `valueFormat` and `inputProps` before forwarding', () => {
       const wrapper = mount(FzDatepicker, {
         props: {
           modelValue: new Date(),
@@ -913,73 +906,47 @@ describe('FzDatepicker', () => {
           inputProps: { label: 'Test' }
         }
       })
-
-      // valueFormat and inputProps are our custom props, not VueDatePicker's
-      expect(wrapper.exists()).toBe(true)
+      const mapped = getMapped(wrapper)
+      expect(mapped.valueFormat).toBeUndefined()
+      expect(mapped.inputProps).toBeUndefined()
     })
 
     describe('teleport prop normalization', () => {
-      const getMappedTeleport = (wrapper: ReturnType<typeof mount>) => {
-        const mapped = (wrapper.vm as any).$.setupState.mappedProps
-        return mapped.teleport
-      }
+      const getMappedTeleport = (wrapper: ReturnType<typeof mount>) =>
+        getMapped(wrapper).teleport
 
       it("should default teleport to 'body' when not provided", () => {
         const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: new Date(),
-            inputProps: {}
-          }
+          props: { modelValue: new Date(), inputProps: {} }
         })
-
         expect(getMappedTeleport(wrapper)).toBe('body')
       })
 
       it("should normalize teleport boolean true to 'body'", () => {
         const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: new Date(),
-            teleport: true,
-            inputProps: {}
-          }
+          props: { modelValue: new Date(), teleport: true, inputProps: {} }
         })
-
         expect(getMappedTeleport(wrapper)).toBe('body')
       })
 
       it("should normalize teleport empty string to 'body'", () => {
         const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: new Date(),
-            teleport: '',
-            inputProps: {}
-          }
+          props: { modelValue: new Date(), teleport: '', inputProps: {} }
         })
-
         expect(getMappedTeleport(wrapper)).toBe('body')
       })
 
       it('should pass through explicit teleport string value', () => {
         const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: new Date(),
-            teleport: '#my-container',
-            inputProps: {}
-          }
+          props: { modelValue: new Date(), teleport: '#my-container', inputProps: {} }
         })
-
         expect(getMappedTeleport(wrapper)).toBe('#my-container')
       })
 
       it('should not pass teleport to VueDatePicker when set to false', () => {
         const wrapper = mount(FzDatepicker, {
-          props: {
-            modelValue: new Date(),
-            teleport: false,
-            inputProps: {}
-          }
+          props: { modelValue: new Date(), teleport: false, inputProps: {} }
         })
-
         expect(getMappedTeleport(wrapper)).toBeUndefined()
       })
     })
@@ -1069,50 +1036,28 @@ describe('FzDatepicker', () => {
   // PASTE HANDLER TESTS
   // ============================================
   describe('handlePaste', () => {
-    it('should delegate to VueDatePicker onPaste when pasting a date string', async () => {
+    it('invokes the VueDatePicker onPaste callback and then closeMenu()', () => {
       const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: null,
-          format: 'dd/MM/yyyy',
-          inputProps: {}
-        }
+        props: { modelValue: null, format: 'dd/MM/yyyy', inputProps: {} }
       })
+      const onPaste = vi.fn()
+      const closeMenu = vi.fn()
+      const event = new Event('paste') as ClipboardEvent
 
-      const fzInput = wrapper.findComponent({ name: 'FzInput' })
+      const setupState = (wrapper.vm as any).$.setupState
+      setupState.handlePaste(onPaste, closeMenu, event, '15/01/2024')
 
-      const clipboardData = {
-        getData: vi.fn().mockReturnValue('15/01/2024')
-      }
-      const pasteEvent = new Event('paste') as ClipboardEvent
-      Object.defineProperty(pasteEvent, 'clipboardData', { value: clipboardData })
-
-      fzInput.vm.$emit('paste', pasteEvent)
-      await wrapper.vm.$nextTick()
-
-      // Paste is delegated to VueDatePicker's onPaste slot callback;
-      // the component itself should not crash.
-      expect(wrapper.exists()).toBe(true)
+      expect(onPaste).toHaveBeenCalledTimes(1)
+      expect(onPaste).toHaveBeenCalledWith(event)
+      expect(closeMenu).toHaveBeenCalledTimes(1)
     })
   })
 
   // ============================================
-  // FLOW STEP HANDLER TESTS
+  // FLOW STEP EVENT FORWARDING
   // ============================================
-  describe('handleFlowStep', () => {
-    it('should not throw when flow prop is not set', async () => {
-      const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          inputProps: {}
-        }
-      })
-
-      const dp = wrapper.findComponent({ name: 'VueDatePicker' })
-      // Should not throw when flow-step emits and flow is undefined
-      expect(() => dp.vm.$emit('flow-step', 0)).not.toThrow()
-    })
-
-    it('should handle flow as object with steps', async () => {
+  describe('flow-step event forwarding', () => {
+    it('should re-emit flow-step to parent for each step received from VueDatePicker', async () => {
       const wrapper = mount(FzDatepicker, {
         props: {
           modelValue: new Date(),
@@ -1121,10 +1066,28 @@ describe('FzDatepicker', () => {
         }
       })
 
-      const dp = wrapper.findComponent({ name: 'VueDatePicker' })
-      // Should not throw for any step
-      expect(() => dp.vm.$emit('flow-step', 0)).not.toThrow()
-      expect(() => dp.vm.$emit('flow-step', 1)).not.toThrow()
+      const setupState = (wrapper.vm as any).$.setupState
+      setupState.forwardFlowStep(0)
+      setupState.forwardFlowStep(1)
+      await wrapper.vm.$nextTick()
+
+      const emitted = wrapper.emitted('flow-step')
+      expect(emitted).toBeTruthy()
+      expect(emitted!.length).toBe(2)
+      expect(emitted![0]).toEqual([0])
+      expect(emitted![1]).toEqual([1])
+    })
+
+    it('should not throw when flow prop is not set', async () => {
+      const wrapper = mount(FzDatepicker, {
+        props: {
+          modelValue: new Date(),
+          inputProps: {}
+        }
+      })
+
+      const setupState = (wrapper.vm as any).$.setupState
+      expect(() => setupState.forwardFlowStep(0)).not.toThrow()
     })
   })
 
@@ -1258,150 +1221,36 @@ describe('FzDatepicker', () => {
     })
   })
 
-  // ============================================
-  // TIME PICKER COMPUTED PROPS TESTS
-  // ============================================
-  describe('Time picker computed props', () => {
-    it('should render time picker when enableTimePicker and timePickerInline are set', async () => {
-      const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          enableTimePicker: true,
-          timePickerInline: true,
-          inputProps: {}
-        }
-      })
-
-      expect(wrapper.exists()).toBe(true)
-    })
-
-    it('should render with enableSeconds prop', async () => {
-      const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          enableTimePicker: true,
-          enableSeconds: true,
-          timePickerInline: true,
-          inputProps: {}
-        }
-      })
-
-      expect(wrapper.exists()).toBe(true)
-    })
-
-    it('should render with enableMinutes set to false', async () => {
-      const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          enableTimePicker: true,
-          enableMinutes: false,
-          timePickerInline: true,
-          inputProps: {}
-        }
-      })
-
-      expect(wrapper.exists()).toBe(true)
-    })
-  })
+  // Time picker config mapping is covered by the Legacy prop mapping block
+  // above ("folds legacy time props into `timeConfig`", "explicit `timeConfig`
+  // keys win over legacy time props"). The original "Time picker computed
+  // props" block was 3 mount-and-`exists()` tests with no behavioural assert
+  // and has been removed.
 
   // ============================================
-  // EDGE CASES
+  // EDGE CASES — every mount-and-`exists()` case has been collapsed into a
+  // single parametric test that asserts each unusual modelValue is forwarded
+  // without crashing. The IDs uniqueness check is preserved.
   // ============================================
   describe('Edge Cases', () => {
-    it('should handle undefined modelValue gracefully', () => {
+    it.each<[string, unknown]>([
+      ['undefined modelValue', undefined],
+      ['null modelValue', null],
+      ['invalid date string', 'invalid-date'],
+      ['very old date', new Date('1900-01-01')],
+      ['far-future date', new Date('2100-12-31')]
+    ])('mounts cleanly with %s', (_label, modelValue) => {
       const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: undefined,
-          inputProps: {}
-        }
+        props: { modelValue: modelValue as Date | string | null, inputProps: {} }
       })
-
-      expect(wrapper.exists()).toBe(true)
+      // Wrapper renders and the inner FzInput is present.
+      expect(wrapper.find('.fz-datepicker').exists()).toBe(true)
+      expect(wrapper.findComponent({ name: 'FzInput' }).exists()).toBe(true)
     })
 
-    it('should handle null modelValue gracefully', () => {
-      const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: null,
-          inputProps: {}
-        }
-      })
-
-      expect(wrapper.exists()).toBe(true)
-    })
-
-    it('should handle empty inputProps', () => {
-      const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          inputProps: {}
-        }
-      })
-
-      expect(wrapper.exists()).toBe(true)
-      const inputComponent = wrapper.findComponent({ name: 'FzInput' })
-      expect(inputComponent.exists()).toBe(true)
-    })
-
-    it('should generate unique IDs for multiple instances', async () => {
-      const wrappers = Array.from({ length: 10 }).map(() =>
-        mount(FzDatepicker, {
-          props: {
-            modelValue: new Date(),
-            inputProps: {
-              label: 'Date'
-            }
-          }
-        })
-      )
-
-      await Promise.all(wrappers.map((w) => w.vm.$nextTick()))
-
-      const ids = wrappers.map((w) => w.find('input').element.getAttribute('aria-labelledby'))
-      const uniqueIds = new Set(ids.filter(Boolean))
-      expect(uniqueIds.size).toBe(10)
-    })
-
-    it('should handle invalid date strings', () => {
-      const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: 'invalid-date',
-          inputProps: {}
-        }
-      })
-
-      expect(wrapper.exists()).toBe(true)
-    })
-
-    it('should handle very old dates', () => {
-      const oldDate = new Date('1900-01-01')
-      const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: oldDate,
-          inputProps: {}
-        }
-      })
-
-      expect(wrapper.exists()).toBe(true)
-    })
-
-    it('should handle future dates', () => {
-      const futureDate = new Date('2100-12-31')
-      const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: futureDate,
-          inputProps: {}
-        }
-      })
-
-      expect(wrapper.exists()).toBe(true)
-    })
-
-    it('should handle disabled dates prop', () => {
-      const today = new Date()
-      const tomorrow = new Date(today)
+    it('forwards `disabledDates` as an array to VueDatePicker', () => {
+      const tomorrow = new Date()
       tomorrow.setDate(tomorrow.getDate() + 1)
-
       const wrapper = mount(FzDatepicker, {
         props: {
           modelValue: new Date(),
@@ -1409,88 +1258,93 @@ describe('FzDatepicker', () => {
           inputProps: {}
         }
       })
-
-      expect(wrapper.exists()).toBe(true)
+      const mapped = (wrapper.vm as any).$.setupState.mappedProps
+      expect(mapped.disabledDates).toEqual([tomorrow])
     })
 
-    it('should handle empty disabledDates array', () => {
+    it('forwards `disabledDates` as a predicate function to VueDatePicker', () => {
+      const predicate = (d: Date) => d.getFullYear() === 2022
       const wrapper = mount(FzDatepicker, {
         props: {
           modelValue: new Date(),
-          disabledDates: [],
+          disabledDates: predicate,
           inputProps: {}
         }
       })
+      const mapped = (wrapper.vm as any).$.setupState.mappedProps
+      expect(mapped.disabledDates).toBe(predicate)
+    })
 
-      expect(wrapper.exists()).toBe(true)
+    it('generates unique input IDs for 10 simultaneous instances', async () => {
+      const wrappers = Array.from({ length: 10 }).map(() =>
+        mount(FzDatepicker, {
+          props: { modelValue: new Date(), inputProps: { label: 'Date' } }
+        })
+      )
+      await Promise.all(wrappers.map((w) => w.vm.$nextTick()))
+
+      const ids = wrappers.map((w) => w.find('input').element.getAttribute('aria-labelledby'))
+      const uniqueIds = new Set(ids.filter(Boolean))
+      expect(uniqueIds.size).toBe(10)
     })
   })
 
   // ============================================
-  // ACTIVE OVERLAY RESET ON MENU CLOSE
+  // FLOATING KEY (forces VueDatePicker remount when placement changes)
   // ============================================
-  describe('activeOverlay reset on menu close', () => {
-    it('should reset activeOverlay to null when handleMenuClosed is called', async () => {
+  describe('floatingKey reactivity', () => {
+    const readKey = (wrapper: ReturnType<typeof mount>) =>
+      (wrapper.vm as any).$.setupState.floatingKey
+
+    it('returns "default" when no floating/placement is set', () => {
       const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          enableTimePicker: true,
-          timePickerInline: true,
-          inputProps: {}
-        }
+        props: { modelValue: new Date(), inputProps: {} }
       })
-
-      const setupState = (wrapper.vm as any).$.setupState
-
-      expect(setupState.activeOverlay).toBe(null)
-
-      setupState.activeOverlay = 'hours'
-      await wrapper.vm.$nextTick()
-      expect(setupState.activeOverlay).toBe('hours')
-
-      setupState.handleMenuClosed()
-      await wrapper.vm.$nextTick()
-
-      expect(setupState.activeOverlay).toBe(null)
+      expect(readKey(wrapper)).toBe('default')
     })
 
-    it('should reset activeOverlay for any overlay type (hours, minutes, seconds)', async () => {
+    it('changes when `placement` changes (forces remount)', async () => {
       const wrapper = mount(FzDatepicker, {
-        props: {
-          modelValue: new Date(),
-          enableTimePicker: true,
-          enableSeconds: true,
-          timePickerInline: true,
-          inputProps: {}
-        }
+        props: { modelValue: new Date(), placement: 'top', inputProps: {} }
       })
-
-      const setupState = (wrapper.vm as any).$.setupState
-
-      for (const field of ['hours', 'minutes', 'seconds'] as const) {
-        setupState.activeOverlay = field
-        await wrapper.vm.$nextTick()
-        expect(setupState.activeOverlay).toBe(field)
-
-        setupState.handleMenuClosed()
-        await wrapper.vm.$nextTick()
-        expect(setupState.activeOverlay).toBe(null)
-      }
+      const before = readKey(wrapper)
+      await wrapper.setProps({ placement: 'bottom-end' })
+      const after = readKey(wrapper)
+      expect(before).not.toBe(after)
+      expect(after).toContain('bottom-end')
     })
+  })
 
-    it("should emit 'closed' event to parent when menu closes", async () => {
+  // ============================================
+  // CLEARABLE CLICK → fzdatepicker:clear emission
+  // ============================================
+  describe('clearable click → fzdatepicker:clear', () => {
+    it('emits fzdatepicker:clear when the inner FzInput emits fzinput:clear', async () => {
+      const wrapper = mount(FzDatepicker, {
+        props: { modelValue: new Date(), clearable: true, inputProps: {} }
+      })
+      const fzInput = wrapper.findComponent({ name: 'FzInput' })
+      fzInput.vm.$emit('fzinput:clear')
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.emitted('fzdatepicker:clear')).toBeTruthy()
+      expect(wrapper.emitted('fzdatepicker:clear')!.length).toBe(1)
+    })
+  })
+
+  // ============================================
+  // MENU CLOSE EVENT FORWARDING
+  // ============================================
+  describe('menu close event forwarding', () => {
+    it("should emit 'closed' event to parent when the menu closes", async () => {
       const wrapper = mount(FzDatepicker, {
         props: {
           modelValue: new Date(),
-          enableTimePicker: true,
-          timePickerInline: true,
           inputProps: {}
         }
       })
 
       const setupState = (wrapper.vm as any).$.setupState
-
-      setupState.activeOverlay = 'hours'
       setupState.handleMenuClosed()
       await wrapper.vm.$nextTick()
 

@@ -18,6 +18,10 @@ pnpm --filter @fiscozen/datepicker test:unit
 pnpm --filter @fiscozen/datepicker coverage
 ```
 
+Coverage thresholds enforced by `vitest.config.ts`: **80% statements, 75% branches, 80% functions, 80% lines**. Snapshot IDs are normalised via a custom serializer in `src/__tests__/FzDatepicker.spec.ts` so that adding/removing tests does not drift unrelated snapshots.
+
+When asserting against the inner `<VueDatePicker>` prefer `(wrapper.vm as any).$.setupState.mappedProps` over `dp.props(...)`: VueDatePicker uses `defineModel` + `v-bind` spread which makes Vue Test Utils' prop introspection unreliable.
+
 ### Running Storybook
 
 ```bash
@@ -31,13 +35,14 @@ FzDatepicker is a shallow wrapper around [`@vuepic/vue-datepicker` v12](https://
 1. **Fiscozen-branded styling** via global (unscoped) CSS overrides of `.dp__*` classes
 2. **FzInput integration** by replacing the default input slot with `FzInput`
 3. **Slot forwarding** (`errorMessage`, `helpText`) from FzDatepicker through to the inner FzInput
-4. **Custom time-picker overlay** (hours/minutes/seconds grid) instead of VueDatePicker's default
-5. **Legacy v8 prop mapping** so consumers don't need to update their code after the v8 → v12 migration
-6. **Teleport normalization** to ensure the calendar menu renders correctly inside modals/dialogs
+4. **Legacy v8 prop mapping** so consumers don't need to update their code after the v8 → v12 migration
+5. **Teleport normalization** to ensure the calendar menu renders correctly inside modals/dialogs
+
+The time picker UI uses VueDatePicker's default rendering, so props like `hoursIncrement`, `minutesIncrement`, `minTime`, `maxTime`, `disabledTimes`, `startTime`, and `is24: false` (AM/PM) work as documented upstream.
 
 ### Why Global CSS
 
-The `<style>` block is intentionally **not scoped**. VueDatePicker teleports its calendar menu to `<body>` by default, so scoped styles would not reach the teleported DOM. All `.dp__*` overrides and custom `.fz-time-picker*` classes must be global.
+The `<style>` block is intentionally **not scoped**. VueDatePicker teleports its calendar menu to `<body>` by default, so scoped styles would not reach the teleported DOM. All `.dp__*` overrides must be global.
 
 ## Code Organization
 
@@ -53,11 +58,11 @@ src/
 
 ## Key Concepts
 
-### Stable Sub-Objects (Flicker Prevention)
+### Stable Sub-Objects (Reference Stability)
 
-VueDatePicker v12 internally watches certain sub-object props (e.g. `floating`, `formats`, `timeConfig`). If a new object reference is passed on every render — even with the same content — it triggers unnecessary DOM cycles that manifest as visual flicker.
+VueDatePicker v12 internally watches certain sub-object props (e.g. `floating`, `formats`, `timeConfig`). If a new object reference is passed on every render — even with the same content — it triggers unnecessary re-calculations that can manifest as stuttering or layout shifts.
 
-To prevent this, the component uses individually memoised `computed` properties (`stableFormats`, `stableLocale`, `stableFloating`, `stableTextInput`, `stableInputAttrs`, `stableTimeConfig`, `stableFlow`) that return the **same reference** when only unrelated props change. These are then assembled into `mappedProps`.
+To prevent this, the component uses individually memoised `computed` properties (`stableFormats`, `stableLocale`, `stableFloating`, `stableTextInput`, `stableInputAttrs`, `stableTimeConfig`, `stableFlow`) that return the **same reference** when only unrelated props (e.g. `modelValue`) change. These are then assembled into `mappedProps`.
 
 ### Legacy Prop Mapping (v8 → v12)
 
@@ -74,7 +79,7 @@ The `mappedProps` computed property transparently remaps deprecated v8-style sca
 | `enableTimePicker`, `enableMinutes`, `is24`, etc. | `timeConfig.*` |
 | `flow` (array) | `flow.steps` |
 
-All legacy props are marked `@deprecated` in `types.ts` with migration guidance.
+All legacy props are marked `@deprecated` in `types.ts` and will be removed in **v4.0.0**.
 
 ### Teleport Normalization
 
@@ -96,14 +101,6 @@ This pattern follows the same approach used by `FzCurrencyInput`.
 
 VueDatePicker reads `floating.placement` once during setup and passes a plain value (not a ref) to `useFloating`. To make placement changes reactive, the component forces a remount via `:key="floatingKey"` whenever the floating config changes.
 
-### Custom Time Picker
-
-The component replaces VueDatePicker's default time picker with a custom implementation using the `#time-picker` slot. Features:
-
-- **Inline controls**: Increment/decrement buttons (`FzIconButton`) for hours, minutes, and optional seconds
-- **Overlay grid**: Clicking the current value opens a grid overlay positioned over the calendar for quick selection (e.g. 24 hour buttons, or 12 five-minute-interval buttons)
-- **Wrapping**: Values wrap around (23 → 0, 59 → 0) via `wrapTimeValue`
-
 ## Adding Features
 
 ### Step 1: Update Types
@@ -120,7 +117,9 @@ Add template bindings if the new prop affects the UI directly.
 
 ### Step 4: Add Tests
 
-Write unit tests in `src/__tests__/FzDatepicker.spec.ts`. Aim for >90% coverage.
+Write unit tests in `src/__tests__/FzDatepicker.spec.ts`. Coverage thresholds enforced by `vitest.config.ts`: **80% statements, 75% branches, 80% functions, 80% lines**. Aim higher for new code, especially around event emissions and prop mapping.
+
+When asserting on the inner VueDatePicker, prefer `setupState.mappedProps` over `dp.props(...)`: VueDatePicker's `defineModel` + `v-bind` spread make Vue Test Utils' prop introspection unreliable. The `mappedProps` computed is what we actually pass via `v-bind="mappedProps"`, so testing it is equivalent.
 
 ### Step 5: Update Stories
 
@@ -157,3 +156,30 @@ Check that you are not creating new object references on every render for props 
 ### Placement Not Updating
 
 VueDatePicker reads `floating.placement` once during setup. The component works around this by remounting via `:key`. If placement still doesn't update, check that the `placement` prop is reactive (a ref or computed, not a plain string that doesn't change).
+
+## Dependencies
+
+**Peer Dependencies:**
+
+- `vue`: ^3.4.13
+- `@fiscozen/icons`: workspace:^
+- `tailwindcss`: ^3.4.1
+
+**Runtime Dependencies:**
+
+- `@vuepic/vue-datepicker`: ^12.1.0 — underlying date-picker engine
+- `date-fns`: ^4.1.0 — `Locale` object + `format()` used by `valueFormat`
+- `@fiscozen/button`: workspace — `FzIconButton` (calendar nav arrows) and `FzButton` (action buttons)
+- `@fiscozen/input`: workspace — `FzInput` rendered inside VueDatePicker's `#dp-input` slot
+- `@fiscozen/composables`: workspace — `useBreakpoints` (mobile detection)
+- `@fiscozen/style`: workspace — breakpoint tokens and CSS variables
+
+All `@fiscozen/*` packages are declared as `external` in `vite.config.ts`, so they are not bundled and consumers receive a single copy at install time.
+
+## Known Limitations
+
+- **Locale string coercion**: passing `locale: 'en'` (or any other locale string) is silently coerced to the Italian `date-fns` Locale object. VueDatePicker v12 expects a Locale object; the legacy string form is kept only for backward compatibility. For non-Italian use cases, pass a real `date-fns` Locale (e.g. `import { enGB } from 'date-fns/locale'`).
+- **`name` prop precedence is inverted vs. JSDoc intent**: the legacy top-level `name` prop wins over `inputAttrs.name` (the v12-style API). Documented in `types.ts` JSDoc; the precedence will be flipped in v4.0.0.
+- **Custom emits via fallthrough only**: several events declared in `defineEmits` (`internal-model-change`, `am-pm-change`, `range-start/end`, `tooltip-*`, etc.) are not emitted by FzDatepicker directly — they bubble from `<VueDatePicker>` through Vue's attribute fallthrough. They work for consumers but are not testable in isolation with `wrapper.emitted()`.
+- **Italian-only action buttons**: the default `#action-buttons` slot renders hard-coded "Cancella" / "Seleziona". Consumers needing other languages must override the slot.
+- **Snapshot tests do not cover the teleported menu**: VueDatePicker teleports its calendar to `<body>`; `wrapper.html()` captures only the input wrapper. Calendar internals are exercised end-to-end via Storybook play functions.

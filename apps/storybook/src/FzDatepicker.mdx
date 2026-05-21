@@ -197,6 +197,38 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
       <td><code>undefined</code></td>
       <td>Maximum selectable date</td>
     </tr>
+    <tr>
+      <td><code>flow</code></td>
+      <td><code>PickerSection[] | Partial&lt;FlowConfig&gt;</code></td>
+      <td><code>undefined</code></td>
+      <td>
+        Step-by-step picking workflow. Each completed step emits <code>flow-step</code> and advances to the next one; with <code>autoApply: true</code> the menu closes when the final step is reached. Accepts either the v8 array shorthand (e.g. <code>['calendar', 'hours', 'minutes']</code>) or the v12 object form (<code>&#123; steps, partial &#125;</code>). Valid <code>PickerSection</code> values: <code>'month' | 'year' | 'calendar' | 'time' | 'hours' | 'minutes' | 'seconds'</code>. See the "Flow Mode" example below.
+      </td>
+    </tr>
+    <tr>
+      <td><code>startDate</code></td>
+      <td><code>Date | string</code></td>
+      <td><code>undefined</code></td>
+      <td>Initial month/year shown when the menu opens with no value set.</td>
+    </tr>
+    <tr>
+      <td><code>partialRange</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>When <code>range: true</code>, controls whether a single-date selection is considered a valid range (only the start date set). Set <code>false</code> to require both endpoints before <code>update:model-value</code> fires.</td>
+    </tr>
+    <tr>
+      <td><code>monthChangeOnScroll</code></td>
+      <td><code>boolean | 'inverse'</code></td>
+      <td><code>true</code></td>
+      <td>Mouse-wheel navigation of months on the calendar grid.</td>
+    </tr>
+    <tr>
+      <td><code>monthChangeOnArrows</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Left/right keyboard arrows change month when the focus is on a day cell at the row edge.</td>
+    </tr>
   </tbody>
 </table>
 
@@ -240,10 +272,42 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
       <td><code>timePickerInline</code></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
-      <td>Show time picker inline below the calendar</td>
+      <td>Show the time picker inline below the calendar. When <code>false</code>, the time picker is opened as an overlay via the clock-icon toggle.</td>
+    </tr>
+    <tr>
+      <td><code>minTime</code> / <code>maxTime</code></td>
+      <td><code>&#123; hours, minutes, seconds? &#125;</code></td>
+      <td><code>undefined</code></td>
+      <td>Lower / upper bound for the picked time. Hours/minutes/seconds buttons outside this range are rendered disabled.</td>
+    </tr>
+    <tr>
+      <td><code>disabledTimes</code></td>
+      <td><code>TimeModel[] | DisabledTimesFn</code></td>
+      <td><code>undefined</code></td>
+      <td>Specific times to disable (e.g. lunch break). Accepts an array of <code>&#123; hours, minutes &#125;</code> entries or a predicate.</td>
+    </tr>
+    <tr>
+      <td><code>startTime</code></td>
+      <td><code>TimeModel | TimeModel[]</code></td>
+      <td><code>undefined</code></td>
+      <td>Default time used when the model value is empty.</td>
+    </tr>
+    <tr>
+      <td><code>hoursIncrement</code> / <code>minutesIncrement</code> / <code>secondsIncrement</code></td>
+      <td><code>number | string</code></td>
+      <td><code>1</code></td>
+      <td>Step applied by the ± buttons in the time picker.</td>
+    </tr>
+    <tr>
+      <td><code>hoursGridIncrement</code> / <code>minutesGridIncrement</code> / <code>secondsGridIncrement</code></td>
+      <td><code>number | string</code></td>
+      <td><code>1</code> / <code>5</code> / <code>5</code></td>
+      <td>Step applied inside the hours/minutes/seconds picker overlay grid.</td>
     </tr>
   </tbody>
 </table>
+
+> **Note** — the props above are forwarded as-is to VueDatePicker v12 (also accepted via the <code>timeConfig</code> object). They became effective in v3.x when the custom time-picker UI was removed; with the previous custom implementation they were silently ignored. AM/PM mode (<code>is24: false</code>) and <code>timeArrowHoldThreshold</code> also become available again.
 
 ## Events
 
@@ -269,7 +333,7 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
     <tr>
       <td><code>cleared</code> <em>(deprecated)</em></td>
       <td><code>string</code></td>
-      <td><strong>Deprecated:</strong> use <code>fzdatepicker:clear</code> instead. Emitted when the input value is cleared (e.g. via the clear icon when <code>clearable</code> is <code>true</code>, or when the user manually empties the field). Will be removed in next major.</td>
+      <td><strong>Deprecated since v3.1.0; will be removed in v4.0.0.</strong> Use <code>fzdatepicker:clear</code> instead. Emitted when the input value is cleared (e.g. via the clear icon when <code>clearable</code> is <code>true</code>, or when the user manually empties the field).</td>
     </tr>
     <tr>
       <td><code>fzdatepicker:clear</code></td>
@@ -296,6 +360,8 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
 
 ## Slots
 
+### DS-owned slots
+
 <table>
   <thead>
     <tr>
@@ -306,14 +372,124 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
   <tbody>
     <tr>
       <td><code>errorMessage</code></td>
-      <td>Content displayed below the input when <code>inputProps.error</code> is <code>true</code>. Rendered as an alert with <code>role="alert"</code> and linked to the input via <code>aria-describedby</code></td>
+      <td>Content displayed below the input when <code>inputProps.error</code> is <code>true</code>. Rendered as an alert with <code>role="alert"</code> and linked to the input via <code>aria-describedby</code>.</td>
     </tr>
     <tr>
       <td><code>helpText</code></td>
-      <td>Help text displayed below the input when no error is active. Linked to the input via <code>aria-describedby</code></td>
+      <td>Help text displayed below the input when no error is active. Linked to the input via <code>aria-describedby</code>.</td>
     </tr>
   </tbody>
 </table>
+
+### VueDatePicker slots already filled with branded defaults
+
+FzDatepicker pre-fills the following VueDatePicker slots with Fiscozen-branded content. Override them only if you need a different look — the defaults already align with the DS.
+
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Default content</th>
+      <th>When is it rendered?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>arrow-left</code> / <code>arrow-right</code></td>
+      <td><code>&lt;FzIconButton iconName="angle-left|right" size="md" variant="secondary"/&gt;</code></td>
+      <td>Calendar month-navigation arrows.</td>
+    </tr>
+    <tr>
+      <td><code>arrow-up</code> / <code>arrow-down</code></td>
+      <td><code>&lt;FzIconButton iconName="angle-up|down" size="md" variant="secondary"/&gt;</code></td>
+      <td>Scroll arrows inside year/time overlays.</td>
+    </tr>
+    <tr>
+      <td><code>tp-inline-arrow-up</code> / <code>tp-inline-arrow-down</code></td>
+      <td><code>&lt;FzIcon name="angle-up|down" size="md"/&gt;</code></td>
+      <td>Inline time-picker increment/decrement chevrons (when <code>timePickerInline: true</code>). Rendered <em>inside</em> VueDatePicker's own <code>&lt;button&gt;</code> — if you override, use <code>FzIcon</code>, NOT <code>FzIconButton</code> (would nest two buttons).</td>
+    </tr>
+    <tr>
+      <td><code>clock-icon</code> / <code>calendar-icon</code></td>
+      <td><code>&lt;FzIcon name="clock|calendar" size="sm"/&gt;</code></td>
+      <td>Toggle buttons that switch between calendar and time picker (overlay mode, i.e. <code>enableTimePicker: true</code> + <code>timePickerInline: false</code>).</td>
+    </tr>
+    <tr>
+      <td><code>action-buttons</code></td>
+      <td>Two <code>&lt;FzButton&gt;</code> — "Cancella" (invisible variant) and "Seleziona" (primary) that close/commit the menu respectively. Both inherit <code>inputProps.environment</code>.</td>
+      <td>Rendered <strong>only</strong> when <code>autoApply: false</code> (or <code>actionRow.keepActionRow: true</code>).</td>
+    </tr>
+    <tr>
+      <td><code>clear-icon</code></td>
+      <td>Empty (the clear ✕ is provided by the inner <code>FzInput</code> when <code>clearable: true</code>).</td>
+      <td>Always overridden to empty to avoid duplicating the FzInput clear icon.</td>
+    </tr>
+  </tbody>
+</table>
+
+## States
+
+### Required
+
+Required datepickers show an asterisk (\*) next to the label and set `aria-required` on the visible `<input>`.
+
+```vue
+<FzDatepicker
+  v-model="date"
+  :inputProps="{ label: 'Birth date', required: true }"
+/>
+```
+
+### Disabled
+
+A disabled datepicker is non-interactive (calendar won't open, input is read-only). Useful in conditional forms.
+
+```vue
+<FzDatepicker
+  v-model="date"
+  disabled
+  :inputProps="{ label: 'Disabled date' }"
+/>
+```
+
+### Error
+
+Pass `error: true` via `inputProps` to enable the error styling and the `errorMessage` slot. The slot content is rendered with `role="alert"` and linked to the input via `aria-describedby`.
+
+```vue
+<FzDatepicker
+  v-model="date"
+  :inputProps="{ label: 'Date', error: hasError }"
+>
+  <template #errorMessage>Please choose a valid date</template>
+</FzDatepicker>
+```
+
+### Help text
+
+The `helpText` slot is shown only when there is no active error. It is linked to the input via `aria-describedby`.
+
+```vue
+<FzDatepicker
+  v-model="date"
+  :inputProps="{ label: 'Birth date' }"
+>
+  <template #helpText>Format: dd/mm/yyyy</template>
+</FzDatepicker>
+```
+
+### Clearable
+
+Adding `clearable` shows a ✕ button when the input has a value. The ✕ icon comes from the inner `FzInput` (the DS overrides VueDatePicker's own `#clear-icon` to empty to avoid duplicates).
+
+```vue
+<FzDatepicker
+  v-model="date"
+  clearable
+  :inputProps="{ label: 'Booking date' }"
+  @fzdatepicker:clear="onCleared"
+/>
+```
 
 ## Examples
 
@@ -433,9 +609,75 @@ const range = ref()
 </template>
 ```
 
-### Form with name attribute (recommended)
+### AM/PM Mode (12-hour clock)
 
-Use `inputAttrs.name` to set the input's `name` attribute so form helpers (e.g. `FormData`, jQuery `$(form).find("[name]")`, native form submission) can pick the field up:
+```vue
+<template>
+  <FzDatepicker
+    v-model="date"
+    :enableTimePicker="true"
+    :timePickerInline="true"
+    :enableMinutes="true"
+    :is24="false"
+    format="dd/MM/yyyy hh:mm a"
+    :inputProps="{ label: 'Appointment' }"
+  />
+</template>
+```
+
+### Time Constraints (`minTime` / `maxTime` / `disabledTimes`)
+
+```vue
+<template>
+  <FzDatepicker
+    v-model="date"
+    :enableTimePicker="true"
+    :timePickerInline="true"
+    :enableMinutes="true"
+    :is24="true"
+    :minTime="{ hours: 9, minutes: 0 }"
+    :maxTime="{ hours: 17, minutes: 0 }"
+    :disabledTimes="[{ hours: 12, minutes: 0 }]"
+    format="dd/MM/yyyy HH:mm"
+    :inputProps="{ label: 'Working hours only' }"
+  />
+</template>
+```
+
+### Time Picker in Overlay Mode (with branded clock/calendar toggles)
+
+When `timePickerInline: false` the time picker opens as an overlay, with a clock-icon button to enter it and a calendar-icon button to return. Both icons are pre-filled with `FzIcon` (slot `clock-icon` / `calendar-icon`).
+
+```vue
+<template>
+  <FzDatepicker
+    v-model="date"
+    :enableTimePicker="true"
+    :timePickerInline="false"
+    :enableMinutes="true"
+    :autoApply="false"
+    :inputProps="{ label: 'Date + time' }"
+  />
+</template>
+```
+
+### Confirm / Cancel buttons (`autoApply: false`)
+
+Setting `autoApply: false` unlocks the DS-provided action row (Cancella / Seleziona). The buttons inherit `inputProps.environment`.
+
+```vue
+<template>
+  <FzDatepicker
+    v-model="date"
+    :autoApply="false"
+    :inputProps="{ label: 'Choose date', environment: 'backoffice' }"
+  />
+</template>
+```
+
+### Form with name attribute (recommended for new code)
+
+Use `inputAttrs.name` to set the input's `name` attribute so form helpers (e.g. `FormData`, jQuery `$(form).find("[name]")`, native form submission) can pick the field up. Note: if you already pass a top-level `name` prop, that wins — see Best Practices below.
 
 ```vue
 <template>
@@ -468,11 +710,12 @@ Use `inputAttrs.name` to set the input's `name` attribute so form helpers (e.g. 
 - The `teleport` prop defaults to `"body"` which is the recommended setting, especially inside modals or dialogs
 - Use `modelType` when you need the emitted value in a specific string format (e.g. `'yyyy-MM-dd'`)
 - Use `valueFormat` when you want to format the emitted value with date-fns before emission
-- Set `autoApply: false` when using time picker or multi-date selection to give users a confirm/cancel step
-- For forms, set the `name` attribute via `:inputAttrs="{ name: '...' }"` so the datepicker value is included in form submissions. The top-level `name` prop is `@deprecated` — see "Form with name attribute" example.
+- Set `autoApply: false` when using time picker or multi-date selection to give users a confirm/cancel step (also unlocks the Cancella/Seleziona buttons through the `#action-buttons` slot)
+- For forms, set the `name` attribute via `:inputAttrs="{ name: '...' }"` so the datepicker value is included in form submissions. The top-level `name` prop is `@deprecated` (will be removed in v4.0.0) — see "Form with name attribute" example
+- **`name` precedence**: if more than one source is set, `inputProps.name` wins, then the top-level `name` prop, then `inputAttrs.name`. Prefer `inputAttrs.name` in new code unless you have a reason to override
 
 ## Related Components
 
 - **FzInput**: The inner input element used by the datepicker
 - **FzButton / FzIconButton**: Used for calendar navigation arrows and action buttons
-- **FzDivider**: Used as a visual separator in the time picker
+- **FzIcon**: Used for the inline time-picker chevrons and the clock/calendar toggle icons
