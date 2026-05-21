@@ -1,12 +1,19 @@
-import type { RootProps, FlowConfig, TimeConfig, FormatsConfig, InputAttributesConfig, FloatingConfig } from "@vuepic/vue-datepicker";
-import type { FzInputProps } from "@fiscozen/input";
-import type { Locale } from "date-fns";
+import type {
+  RootProps,
+  FlowConfig,
+  TimeConfig,
+  FormatsConfig,
+  InputAttributesConfig,
+  FloatingConfig
+} from '@vuepic/vue-datepicker'
+import type { FzInputProps } from '@fiscozen/input'
+import type { Locale } from 'date-fns'
 
 /**
  * Floating-UI placement strings derived from the VueDatePicker FloatingConfig.
  * @see https://floating-ui.com/docs/tutorial#placements
  */
-type FloatingPlacement = NonNullable<FloatingConfig['placement']>;
+type FloatingPlacement = NonNullable<FloatingConfig['placement']>
 
 /**
  * FzDatepickerProps extends the new v12 RootProps and adds:
@@ -15,47 +22,44 @@ type FloatingPlacement = NonNullable<FloatingConfig['placement']>;
  *    against @vuepic/vue-datepicker v8. These are transparently remapped
  *    to the v12 API inside FzDatepicker.vue.
  */
-interface FzDatepickerProps
-  extends Omit<RootProps, "flow" | "locale"> {
+interface FzDatepickerProps extends Omit<RootProps, 'flow' | 'locale'> {
   /** Custom FzInput props forwarded to the inner input element */
-  inputProps: FzInputProps;
+  inputProps: FzInputProps
   /**
-   * HTML attributes forwarded to the visible `<input>` (rendered by the
-   * inner `<FzInput>` in VueDatePicker's `#dp-input` slot).
+   * HTML attributes forwarded to the visible `<input>`.
    *
-   * **Precedence for the `name` attribute**:
-   *   `inputProps.name` > top-level `name` prop > `inputAttrs.name`.
-   *
-   * The top-level `name` prop is kept for backward compatibility (will be
-   * removed in v4.0.0). For new code prefer `inputAttrs.name` if you don't
-   * already pass `name` at the top level, so form helpers (`FormData`,
-   * native form submission, jQuery `[name]` selectors) pick the field up.
+   * `inputAttrs.name` is the recommended way to set the input's `name`
+   * attribute (the legacy top-level `name` prop is deprecated and will be
+   * removed in v4.0.0). The DS wrapper renders `<FzInput>` in VueDatePicker's
+   * `#dp-input` slot and propagates `inputAttrs.name` to it, so form helpers
+   * (`FormData`, native form submission, jQuery `[name]` selectors) pick the
+   * field up.
    *
    * @example
    * <FzDatepicker :inputAttrs="{ name: 'business_start' }" v-model="..." />
    */
-  inputAttrs?: Partial<InputAttributesConfig>;
+  inputAttrs?: Partial<InputAttributesConfig>
   /** Optional date-fns format string to format the emitted value */
-  valueFormat?: string;
+  valueFormat?: string
   /**
    * Shows a clear (×) button when the input has a value.
    * Forwarded to the inner FzInput component.
    * @default false
    */
-  clearable?: boolean;
+  clearable?: boolean
   /**
    * Accessible label for the clear button.
    * Forwarded to the inner FzInput component.
    * @default 'Cancella'
    */
-  clearAriaLabel?: string;
+  clearAriaLabel?: string
 
   /**
    * Floating-UI placement for the datepicker menu.
    * Convenience shorthand for `floating.placement`.
    * @see https://floating-ui.com/docs/tutorial#placements
    */
-  placement?: FloatingPlacement;
+  placement?: FloatingPlacement
 
   // ──────────────────────────────────────────────────
   //  Legacy / backward-compat props (from v8)
@@ -64,31 +68,31 @@ interface FzDatepickerProps
   // ──────────────────────────────────────────────────
 
   /** @deprecated Use `formats.input` instead */
-  format?: string | ((date: Date) => string) | ((dates: Date[]) => string);
+  format?: string | ((date: Date) => string) | ((dates: Date[]) => string)
   /** @deprecated Use `locale` instead */
-  formatLocale?: Locale;
+  formatLocale?: Locale
   /** @deprecated Use `floating` prop instead */
-  autoPosition?: boolean;
+  autoPosition?: boolean
   /** @deprecated Use `inputAttrs.state` instead */
-  state?: boolean;
+  state?: boolean
   /** @deprecated Use `inputAttrs.name` instead */
-  name?: string;
+  name?: string
   /** @deprecated Use `timeConfig.enableTimePicker` instead */
-  enableTimePicker?: boolean;
+  enableTimePicker?: boolean
   /** @deprecated Use `timeConfig.enableMinutes` instead */
-  enableMinutes?: boolean;
+  enableMinutes?: boolean
   /** @deprecated Use `timeConfig.is24` instead */
-  is24?: boolean;
+  is24?: boolean
   /** @deprecated Use `timeConfig.timePickerInline` instead */
-  timePickerInline?: boolean;
+  timePickerInline?: boolean
   /** @deprecated Use `timeConfig.enableSeconds` instead */
-  enableSeconds?: boolean;
+  enableSeconds?: boolean
   /** @deprecated Use `timeConfig.noHoursOverlay` instead */
-  noHoursOverlay?: boolean;
+  noHoursOverlay?: boolean
   /** @deprecated Use `timeConfig.noMinutesOverlay` instead */
-  noMinutesOverlay?: boolean;
+  noMinutesOverlay?: boolean
   /** @deprecated Use `timeConfig.noSecondsOverlay` instead */
-  noSecondsOverlay?: boolean;
+  noSecondsOverlay?: boolean
 
   /**
    * Controls the step-by-step workflow when picking a date (and optionally a
@@ -118,7 +122,7 @@ interface FzDatepickerProps
    *   :autoApply="false"
    * />
    */
-  flow?: string[] | Partial<FlowConfig>;
+  flow?: string[] | Partial<FlowConfig>
 
   /**
    * Calendar locale. Accepts both forms:
@@ -128,7 +132,7 @@ interface FzDatepickerProps
    *    load locales by name. Consumers needing a different language must pass
    *    the Locale object directly.
    */
-  locale?: string | Locale;
+  locale?: string | Locale
 }
 
 export type {
@@ -137,5 +141,5 @@ export type {
   FlowConfig,
   TimeConfig,
   FormatsConfig,
-  InputAttributesConfig,
-};
+  InputAttributesConfig
+}

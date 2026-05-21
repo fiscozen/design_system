@@ -712,7 +712,6 @@ Use `inputAttrs.name` to set the input's `name` attribute so form helpers (e.g. 
 - Use `valueFormat` when you want to format the emitted value with date-fns before emission
 - Set `autoApply: false` when using time picker or multi-date selection to give users a confirm/cancel step (also unlocks the Cancella/Seleziona buttons through the `#action-buttons` slot)
 - For forms, set the `name` attribute via `:inputAttrs="{ name: '...' }"` so the datepicker value is included in form submissions. The top-level `name` prop is `@deprecated` (will be removed in v4.0.0) — see "Form with name attribute" example
-- **`name` precedence**: if more than one source is set, `inputProps.name` wins, then the top-level `name` prop, then `inputAttrs.name`. Prefer `inputAttrs.name` in new code unless you have a reason to override
 
 ## Related Components
 
