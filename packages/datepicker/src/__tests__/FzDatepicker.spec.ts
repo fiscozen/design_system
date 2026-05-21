@@ -778,6 +778,59 @@ describe('FzDatepicker', () => {
   })
 
   // ============================================
+  // ARIA-LABELS DEFAULT (Italian) + consumer override
+  // ============================================
+  describe('aria-labels Italian defaults', () => {
+    const getMapped = (wrapper: ReturnType<typeof mount>) =>
+      (wrapper.vm as any).$.setupState.mappedProps as Record<string, any>
+
+    it('forwards Italian ariaLabels by default', () => {
+      const wrapper = mount(FzDatepicker, {
+        props: { modelValue: new Date(), inputProps: {} }
+      })
+      const labels = getMapped(wrapper).ariaLabels
+      expect(labels.prevMonth).toBe('Mese precedente')
+      expect(labels.nextMonth).toBe('Mese successivo')
+      expect(labels.prevYear).toBe('Anno precedente')
+      expect(labels.nextYear).toBe('Anno successivo')
+      expect(labels.openTimePicker).toBe('Apri selezione ora')
+      expect(labels.closeTimePicker).toBe('Chiudi selezione ora')
+      expect(labels.amPmButton).toBe('Cambia AM/PM')
+      expect(labels.menu).toBe('Calendario')
+    })
+
+    it('translates TimeKey for the function-form aria-labels', () => {
+      const wrapper = mount(FzDatepicker, {
+        props: { modelValue: new Date(), inputProps: {} }
+      })
+      const labels = getMapped(wrapper).ariaLabels
+      expect(labels.incrementValue('hours')).toBe('Incrementa ore')
+      expect(labels.decrementValue('minutes')).toBe('Decrementa minuti')
+      expect(labels.openTpOverlay('seconds')).toBe('Apri elenco secondi')
+    })
+
+    it('lets consumer-supplied ariaLabels override individual keys', () => {
+      const wrapper = mount(FzDatepicker, {
+        props: {
+          modelValue: new Date(),
+          inputProps: {},
+          ariaLabels: {
+            prevMonth: 'Previous month',
+            nextMonth: 'Next month'
+          }
+        }
+      })
+      const labels = getMapped(wrapper).ariaLabels
+      // consumer keys win
+      expect(labels.prevMonth).toBe('Previous month')
+      expect(labels.nextMonth).toBe('Next month')
+      // unsupplied keys fall back to the Italian default
+      expect(labels.prevYear).toBe('Anno precedente')
+      expect(labels.openTimePicker).toBe('Apri selezione ora')
+    })
+  })
+
+  // ============================================
   // LEGACY PROP MAPPING TESTS
   // All legacy v8 props are remapped to the v12 API via the `mappedProps`
   // computed; assertions go against that computed.
