@@ -41,7 +41,6 @@
   "dependencies": {
     "@fiscozen/button": "workspace:*",
     "@fiscozen/composables": "workspace:*",
-    "@fiscozen/divider": "workspace:*",
     "@fiscozen/input": "workspace:*",
     "@fiscozen/style": "workspace:*",
     "@vuepic/vue-datepicker": "^12.1.0",

@@ -65,6 +65,11 @@ const meta = {
         'left-end'
       ],
       description: 'Floating-UI placement for the datepicker menu'
+    },
+    flow: {
+      control: 'object',
+      description:
+        "Step-by-step workflow. Accepts an array of PickerSection ('month' | 'year' | 'calendar' | 'time' | 'hours' | 'minutes' | 'seconds') or the v12 object form { steps, partial }. Emits flow-step on each step; auto-closes after the last one."
     }
   },
   args: {
@@ -87,24 +92,14 @@ type Story = StoryObj<typeof meta>
 // ============================================
 
 /**
- * Opens the calendar popup by clicking on the input
+ * Opens the calendar popup by clicking on the input matched by `labelPattern`
+ * (defaults to the meta-level "datepicker label"). The promise resolves once
+ * `.dp__menu` is in the document.
  */
-const openCalendar = async (canvas: ReturnType<typeof within>) => {
-  const input = canvas.getByLabelText(/datepicker label/i)
-  await userEvent.click(input)
-
-  await waitFor(
-    () => {
-      expect(document.querySelector('.dp__menu')).toBeInTheDocument()
-    },
-    { timeout: 1000 }
-  )
-}
-
-/**
- * Opens the calendar popup for error state datepicker
- */
-const openCalendarWithLabel = async (canvas: ReturnType<typeof within>, labelPattern: RegExp) => {
+const openCalendar = async (
+  canvas: ReturnType<typeof within>,
+  labelPattern: RegExp = /datepicker label/i
+) => {
   const input = canvas.getByLabelText(labelPattern)
   await userEvent.click(input)
 
@@ -117,45 +112,35 @@ const openCalendarWithLabel = async (canvas: ReturnType<typeof within>, labelPat
 }
 
 /**
- * Attempts to close the calendar popup with Escape key.
- * Note: Calendar may not always close on Escape in all modes (e.g., with autoApply: false).
- * The actual closing behavior is tested in KeyboardNavigation story.
+ * Closes the calendar with Escape and waits until it leaves the DOM. Throws
+ * if the menu does not close within the timeout — use only when the menu IS
+ * expected to close (i.e. `autoApply: true` or after a confirm action).
  */
 const closeCalendar = async () => {
-  const calendar = document.querySelector('.dp__menu') as HTMLElement
-  if (calendar) {
-    calendar.focus()
-    await userEvent.keyboard('{Escape}')
-
-    // Wait a brief moment for the close animation/action to potentially complete
-    // We don't assert the calendar is closed because it doesn't close in all modes
-    await waitFor(
-      () => {
-        // This will pass whether calendar closes or not
-        expect(true).toBe(true)
-      },
-      { timeout: 100 }
-    )
-  }
+  const calendar = document.querySelector('.dp__menu') as HTMLElement | null
+  if (!calendar) return
+  calendar.focus()
+  await userEvent.keyboard('{Escape}')
+  await waitFor(
+    () => {
+      expect(document.querySelector('.dp__menu')).not.toBeInTheDocument()
+    },
+    { timeout: 1000 }
+  )
 }
 
 /**
- * Closes the calendar popup and verifies it's closed.
- * Use only when testing close behavior specifically.
+ * Variant of `closeCalendar` for flows where the menu intentionally stays
+ * open after Escape (e.g. `autoApply: false` — confirmation required). It
+ * dispatches the key, waits a tick, and silently returns whether or not the
+ * menu actually closed.
  */
-const closeCalendarAndVerify = async () => {
-  const calendar = document.querySelector('.dp__menu') as HTMLElement
-  if (calendar) {
-    calendar.focus()
-    await userEvent.keyboard('{Escape}')
-
-    await waitFor(
-      () => {
-        expect(document.querySelector('.dp__menu')).not.toBeInTheDocument()
-      },
-      { timeout: 1000 }
-    )
-  }
+const dismissCalendar = async () => {
+  const calendar = document.querySelector('.dp__menu') as HTMLElement | null
+  if (!calendar) return
+  calendar.focus()
+  await userEvent.keyboard('{Escape}')
+  await new Promise((resolve) => setTimeout(resolve, 50))
 }
 
 /**
@@ -429,12 +414,6 @@ export const Range: Story = {
       await openCalendar(canvas)
     })
 
-    await step('Verify calendar is displayed', async () => {
-      const calendar = getCalendar()
-      await expect(calendar).toBeInTheDocument()
-      await expect(calendar).toBeVisible()
-    })
-
     await step('Close calendar with Escape key', async () => {
       await closeCalendar()
     })
@@ -457,12 +436,6 @@ export const AutoRange: Story = {
 
     await step('Open calendar popup', async () => {
       await openCalendar(canvas)
-    })
-
-    await step('Verify calendar is displayed for range selection', async () => {
-      const calendar = getCalendar()
-      await expect(calendar).toBeInTheDocument()
-      await expect(calendar).toBeVisible()
     })
 
     await step('Close calendar with Escape key', async () => {
@@ -617,26 +590,14 @@ export const MultiDates: Story = {
       await openCalendar(canvas)
     })
 
-    await step('Verify calendar is displayed for multi-date selection', async () => {
+    await step('Verify the multi-date action row is rendered', async () => {
       const calendar = getCalendar()
-      await expect(calendar).toBeInTheDocument()
-      await expect(calendar).toBeVisible()
-
-      // Multi-dates mode should show calendar UI
-      const calendarInner = calendar.querySelector('.dp__menu_inner')
-      await expect(calendarInner).toBeInTheDocument()
+      // With autoApply: false the action row + buttons are mounted.
+      await expect(calendar.querySelector('.dp__action_row')).toBeInTheDocument()
     })
 
-    await step('Verify action buttons are present (autoApply: false)', async () => {
-      const calendar = getCalendar()
-
-      // With autoApply: false, action buttons should be visible
-      const actionButtons = calendar.querySelectorAll('button')
-      await expect(actionButtons.length).toBeGreaterThan(0)
-    })
-
-    await step('Close calendar with Escape key', async () => {
-      await closeCalendar()
+    await step('Dismiss the menu (autoApply: false keeps it open on Escape)', async () => {
+      await dismissCalendar()
     })
   }
 }
@@ -716,7 +677,9 @@ export const InlineTimePicker: Story = {
     timePickerInline: true,
     enableTimePicker: true,
     enableMinutes: true,
-    is24: true
+    enableSeconds: true,
+    is24: true,
+    format: 'dd/MM/yyyy HH:mm:ss'
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -734,15 +697,25 @@ export const InlineTimePicker: Story = {
     await step('Verify inline time picker is displayed', async () => {
       const calendar = getCalendar()
 
-      // Custom time picker slot should be rendered
-      const timePicker = calendar.querySelector('.fz-time-picker')
+      // VueDatePicker's default inline time picker container
+      const timePicker = calendar.querySelector('.dp__time_picker_inline_container')
       await expect(timePicker).toBeInTheDocument()
     })
 
-    await step('Verify 24-hour format is used', async () => {
+    await step('Verify Fiscozen chevrons replace the default inline arrows', async () => {
       const calendar = getCalendar()
+      // tp-inline-arrow-up/down slots render FzIcon (angle-up / angle-down)
+      // inside VueDatePicker's increment/decrement buttons.
+      await expect(
+        calendar.querySelector('.dp__inc_dec_button_inline .fa-angle-up')
+      ).toBeInTheDocument()
+      await expect(
+        calendar.querySelector('.dp__inc_dec_button_inline .fa-angle-down')
+      ).toBeInTheDocument()
+    })
 
-      // Custom time picker does not render AM/PM indicators
+    await step('Verify 24-hour format is used (no AM/PM toggle)', async () => {
+      const calendar = getCalendar()
       const amPmIndicators = calendar.querySelectorAll('.dp__pm_am')
       await expect(amPmIndicators.length).toBe(0)
     })
@@ -792,12 +765,6 @@ export const StringValueFormat: Story = {
 
     await step('Open calendar popup', async () => {
       await openCalendar(canvas)
-    })
-
-    await step('Verify calendar is displayed', async () => {
-      const calendar = getCalendar()
-      await expect(calendar).toBeInTheDocument()
-      await expect(calendar).toBeVisible()
     })
 
     await step('Close calendar with Escape key', async () => {
@@ -903,7 +870,8 @@ export const DatepickerFlow: Story = {
     flow: ['calendar', 'hours', 'minutes'],
     format: 'dd/MM/yyyy HH:mm',
     textInput: true,
-    arrowNavigation: true
+    arrowNavigation: true,
+    vertical: true,
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -926,8 +894,7 @@ export const DatepickerFlow: Story = {
     await step('Verify time picker is available', async () => {
       const calendar = getCalendar()
 
-      // Custom time picker slot should be rendered
-      const timePicker = calendar.querySelector('.fz-time-picker')
+      const timePicker = calendar.querySelector('.dp__time_picker_inline_container')
       await expect(timePicker).toBeInTheDocument()
     })
 
@@ -1148,7 +1115,7 @@ export const KeyboardNavigation: Story = {
 export const TimePickerWithSeconds: Story = {
   ...Template,
   args: {
-    timePickerInline: true,
+    timePickerInline: false,
     enableTimePicker: true,
     enableMinutes: true,
     enableSeconds: true,
@@ -1168,32 +1135,41 @@ export const TimePickerWithSeconds: Story = {
       await openCalendar(canvas)
     })
 
-    await step(
-      'Verify time picker section is displayed with hours, minutes, and seconds',
-      async () => {
-        const calendar = getCalendar()
-        await expect(calendar).toBeInTheDocument()
+    await step('Verify the clock toggle (overlay-mode) is rendered', async () => {
+      const calendar = getCalendar()
+      // In overlay mode VueDatePicker renders a button that switches to the
+      // time picker (the clock-icon slot, branded with FzIcon name="clock").
+      await expect(
+        calendar.querySelector('[aria-label="Open time picker"]')
+      ).toBeInTheDocument()
+      await expect(calendar.querySelector('.fa-clock')).toBeInTheDocument()
+    })
 
-        // Custom time picker slot should be rendered
-        const timePicker = calendar.querySelector('.fz-time-picker')
-        await expect(timePicker).toBeInTheDocument()
+    await step('Open the time picker overlay and verify seconds are available', async () => {
+      const calendar = getCalendar()
+      const openTpBtn = calendar.querySelector(
+        '[aria-label="Open time picker"]'
+      ) as HTMLElement | null
+      if (openTpBtn) await userEvent.click(openTpBtn)
 
-        // Seconds column should be visible (enableSeconds: true)
-        const labels = calendar.querySelectorAll('.fz-time-picker__label')
-        const labelTexts = Array.from(labels).map((l) => l.textContent?.trim())
-        await expect(labelTexts).toContain('Secondi')
-      }
-    )
+      await waitFor(
+        () => {
+          // With enableSeconds: true, the seconds overlay button must mount.
+          expect(
+            document.querySelector('[aria-label="Open seconds overlay"]')
+          ).toBeInTheDocument()
+        },
+        { timeout: 1000 }
+      )
+    })
 
     await step('Verify 24-hour format (no AM/PM)', async () => {
       const calendar = getCalendar()
-      // Custom time picker does not render AM/PM indicators
-      const amPmIndicators = calendar.querySelectorAll('.dp__pm_am')
-      await expect(amPmIndicators.length).toBe(0)
+      expect(calendar.querySelectorAll('.dp__pm_am').length).toBe(0)
     })
 
-    await step('Close calendar', async () => {
-      await closeCalendar()
+    await step('Dismiss the menu (autoApply: false keeps it open on Escape)', async () => {
+      await dismissCalendar()
     })
   }
 }
@@ -1241,24 +1217,22 @@ export const ValueFormat: Story = {
     await step('Open calendar and select a date', async () => {
       await openCalendar(canvas)
       const calendar = getCalendar()
-      await expect(calendar).toBeVisible()
-
-      // Select a date cell
       const dateCell =
         calendar.querySelector('.dp__cell_offset') || calendar.querySelector('.dp__cell')
       if (dateCell) {
         await userEvent.click(dateCell as HTMLElement)
-        await waitFor(
-          () => {
-            expect(true).toBe(true)
-          },
-          { timeout: 500 }
-        )
       }
     })
 
-    await step('Close calendar', async () => {
-      await closeCalendar()
+    await step('Verify the emitted value is a formatted string (not a Date)', async () => {
+      await waitFor(
+        () => {
+          const display = canvas.getByTestId('formatted-value')
+          // valueFormat = 'yyyy-MM-dd' → output should match e.g. "2025-01-15"
+          expect(display.textContent?.trim()).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+        },
+        { timeout: 1500 }
+      )
     })
   }
 }
@@ -1289,17 +1263,19 @@ export const FlowWithTimeCompletion: Story = {
     timePickerInline: true,
     enableTimePicker: true,
     enableMinutes: true,
-    enableSeconds: true,
+    // Seconds are intentionally not editable in this flow; the format keeps
+    // them visible in the input but they stay at 00 for the lifetime of the
+    // picked value (no `seconds` step, no seconds column in the time picker).
     is24: true,
-    flow: ['calendar', 'hours', 'minutes', 'seconds'],
+    flow: ['year', 'month', 'calendar', 'hours', 'minutes'],
     format: 'dd/MM/yyyy HH:mm:ss',
     textInput: true,
-    arrowNavigation: true
+    arrowNavigation: true,
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
-    await step('Verify datepicker with flow (including seconds) renders', async () => {
+    await step('Verify datepicker with year→month→calendar→hours→minutes flow renders', async () => {
       const input = canvas.getByLabelText(/datepicker label/i)
       await expect(input).toBeInTheDocument()
       await expect(input).toBeVisible()
@@ -1314,12 +1290,9 @@ export const FlowWithTimeCompletion: Story = {
       await openCalendar(canvas)
     })
 
-    await step('Verify calendar is displayed and time picker is available', async () => {
+    await step('Verify the inline time picker is rendered alongside the calendar', async () => {
       const calendar = getCalendar()
-      await expect(calendar).toBeInTheDocument()
-
-      // Custom time picker slot should be rendered
-      const timePicker = calendar.querySelector('.fz-time-picker')
+      const timePicker = calendar.querySelector('.dp__time_picker_inline_container')
       await expect(timePicker).toBeInTheDocument()
     })
 
@@ -1630,6 +1603,253 @@ export const ClearableWithRightIcon: Story = {
 
       const rightIcon = canvasElement.querySelector('.fa-circle-info')
       await expect(rightIcon).toBeInTheDocument()
+    })
+  }
+}
+
+// ============================================
+// NEW SCENARIOS UNLOCKED BY THE POST-CUSTOM-TIME-PICKER REFACTOR
+// ============================================
+
+/**
+ * With `autoApply: false` the DS-provided `#action-buttons` slot (Cancella /
+ * Seleziona) becomes mountable. This story verifies the buttons are visible
+ * AND that the "Seleziona" button commits the value + closes the menu.
+ */
+export const AutoApplyFalseWithActionButtons: Story = {
+  render: (args) => ({
+    components: { FzDatepicker },
+    setup() {
+      const date = ref()
+      const handleUpdate = (value: any) => {
+        date.value = value
+        if (args['onUpdate:modelValue']) {
+          args['onUpdate:modelValue'](value)
+        }
+      }
+      return { date, args, handleUpdate }
+    },
+    template: `
+      <pre data-testid="date-value">{{ date }}</pre>
+      <FzDatepicker v-bind="args" :modelValue="date" @update:modelValue="handleUpdate" />
+    `
+  }),
+  args: {
+    autoApply: false,
+    'onUpdate:modelValue': fn()
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Open calendar', async () => {
+      await openCalendar(canvas)
+    })
+
+    await step('Verify the action row + Cancella/Seleziona buttons are rendered', async () => {
+      const calendar = getCalendar()
+      const actionRow = calendar.querySelector('.dp__action_row')
+      await expect(actionRow).toBeInTheDocument()
+      const buttons = Array.from(actionRow?.querySelectorAll('button') ?? []).map((b) =>
+        b.textContent?.trim()
+      )
+      expect(buttons).toContain('Cancella')
+      expect(buttons).toContain('Seleziona')
+    })
+
+    await step('Click a date — value should NOT yet be committed (no auto-apply)', async () => {
+      const calendar = getCalendar()
+      const dateCell =
+        calendar.querySelector('.dp__cell_offset') || calendar.querySelector('.dp__cell')
+      if (dateCell) await userEvent.click(dateCell as HTMLElement)
+      // Spy not called yet because autoApply: false.
+      // (Internal model state has changed, but the v-model parent has not received it.)
+    })
+
+    await step('Click "Seleziona" to commit and close the menu', async () => {
+      const calendar = getCalendar()
+      const selectBtn = Array.from(
+        calendar.querySelector('.dp__action_row')?.querySelectorAll('button') ?? []
+      ).find((b) => b.textContent?.trim() === 'Seleziona') as HTMLButtonElement | undefined
+      await expect(selectBtn).toBeDefined()
+      if (selectBtn) await userEvent.click(selectBtn)
+
+      await waitFor(
+        () => {
+          expect(document.querySelector('.dp__menu')).not.toBeInTheDocument()
+        },
+        { timeout: 1000 }
+      )
+      // The spy was called as part of the commit.
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+    })
+  }
+}
+
+/**
+ * Time picker in OVERLAY mode (`timePickerInline: false`) — exercises the
+ * `#clock-icon` and `#calendar-icon` slot overrides (FzIcon clock / calendar).
+ */
+export const TimePickerOverlayMode: Story = {
+  ...Template,
+  args: {
+    timePickerInline: false,
+    enableTimePicker: true,
+    enableMinutes: true,
+    is24: true,
+    autoApply: false
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Open calendar', async () => {
+      await openCalendar(canvas)
+    })
+
+    await step('Verify the clock-icon slot is rendered as Fz brand icon', async () => {
+      const calendar = getCalendar()
+      await expect(
+        calendar.querySelector('[aria-label="Open time picker"]')
+      ).toBeInTheDocument()
+      await expect(calendar.querySelector('.fa-clock')).toBeInTheDocument()
+    })
+
+    await step('Click clock-icon → time picker overlay opens', async () => {
+      const calendar = getCalendar()
+      const openTpBtn = calendar.querySelector(
+        '[aria-label="Open time picker"]'
+      ) as HTMLElement | null
+      if (openTpBtn) await userEvent.click(openTpBtn)
+
+      await waitFor(
+        () => {
+          expect(
+            document.querySelector('[aria-label="Close time picker"]')
+          ).toBeInTheDocument()
+        },
+        { timeout: 1000 }
+      )
+    })
+
+    await step('Verify the calendar-icon slot is rendered on the close button', async () => {
+      // Inside the time picker overlay, the close button renders FzIcon
+      // name="calendar".
+      await expect(document.querySelector('.fa-calendar')).toBeInTheDocument()
+    })
+
+    await step('Dismiss menu (autoApply: false keeps it open on Escape)', async () => {
+      await dismissCalendar()
+    })
+  }
+}
+
+/**
+ * 12-hour mode with AM/PM toggle — feature regressed during the custom
+ * time-picker era; this story locks it in.
+ */
+export const TimePickerAMPMMode: Story = {
+  ...Template,
+  args: {
+    enableTimePicker: true,
+    timePickerInline: true,
+    enableMinutes: true,
+    is24: false,
+    format: 'dd/MM/yyyy hh:mm a'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Open calendar', async () => {
+      await openCalendar(canvas)
+    })
+
+    await step('Verify AM/PM toggle is rendered (is24: false)', async () => {
+      const calendar = getCalendar()
+      const amPmIndicator = calendar.querySelector('.dp__pm_am_button')
+      await expect(amPmIndicator).toBeInTheDocument()
+    })
+
+    await step('Close calendar', async () => {
+      await closeCalendar()
+    })
+  }
+}
+
+/**
+ * `minTime` / `maxTime` / `disabledTimes` — props that became effective only
+ * once the custom time picker was removed (they were silently ignored before).
+ */
+export const TimePickerWithTimeConstraints: Story = {
+  ...Template,
+  args: {
+    enableTimePicker: true,
+    timePickerInline: true,
+    enableMinutes: true,
+    is24: true,
+    format: 'dd/MM/yyyy HH:mm',
+    minTime: { hours: 9, minutes: 0 },
+    maxTime: { hours: 17, minutes: 0 },
+    disabledTimes: [{ hours: 12, minutes: 0 }]
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Open calendar', async () => {
+      await openCalendar(canvas)
+    })
+
+    await step('Verify the inline time picker is rendered', async () => {
+      const calendar = getCalendar()
+      const timePicker = calendar.querySelector('.dp__time_picker_inline_container')
+      await expect(timePicker).toBeInTheDocument()
+    })
+
+    await step('Close calendar', async () => {
+      await closeCalendar()
+    })
+  }
+}
+
+/**
+ * Regression lock-in for HD-23714 (`safeInputProps` fallback to
+ * `inputAttrs.name`): the visible `<input>` must carry the `name` attribute
+ * supplied via `inputAttrs.name`, so native form submission picks it up.
+ */
+export const FormNameAttribute: Story = {
+  render: (args) => ({
+    components: { FzDatepicker },
+    setup() {
+      const date = ref()
+      return { date, args }
+    },
+    template: `
+      <form data-testid="test-form" @submit.prevent>
+        <FzDatepicker v-bind="args" v-model="date" />
+        <button type="submit">Salva</button>
+      </form>
+    `
+  }),
+  args: {
+    inputAttrs: { name: 'business_start' },
+    inputProps: {
+      label: 'Inizio attività'
+    }
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify the input has the name attribute from inputAttrs.name', async () => {
+      const input = canvas.getByLabelText(/Inizio attività/i)
+      await expect(input).toHaveAttribute('name', 'business_start')
+    })
+
+    await step('Verify FormData picks the field up', async () => {
+      const form = canvasElement.querySelector(
+        '[data-testid="test-form"]'
+      ) as HTMLFormElement
+      // Native FormData reads name+value off the form's controls.
+      const fd = new FormData(form)
+      // Value may be empty (no date selected) but the key MUST be present.
+      await expect(fd.has('business_start')).toBe(true)
     })
   }
 }

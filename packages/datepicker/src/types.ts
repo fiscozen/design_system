@@ -20,12 +20,16 @@ interface FzDatepickerProps
   /** Custom FzInput props forwarded to the inner input element */
   inputProps: FzInputProps;
   /**
-   * HTML attributes forwarded to the visible `<input>`.
+   * HTML attributes forwarded to the visible `<input>` (rendered by the
+   * inner `<FzInput>` in VueDatePicker's `#dp-input` slot).
    *
-   * `inputAttrs.name` is the recommended way to set the input's `name`
-   * attribute (the legacy top-level `name` prop is deprecated). The DS
-   * wrapper renders `<FzInput>` in VueDatePicker's `#dp-input` slot and
-   * propagates `inputAttrs.name` to it.
+   * **Precedence for the `name` attribute**:
+   *   `inputProps.name` > top-level `name` prop > `inputAttrs.name`.
+   *
+   * The top-level `name` prop is kept for backward compatibility (will be
+   * removed in v4.0.0). For new code prefer `inputAttrs.name` if you don't
+   * already pass `name` at the top level, so form helpers (`FormData`,
+   * native form submission, jQuery `[name]` selectors) pick the field up.
    *
    * @example
    * <FzDatepicker :inputAttrs="{ name: 'business_start' }" v-model="..." />
@@ -86,10 +90,44 @@ interface FzDatepickerProps
   /** @deprecated Use `timeConfig.noSecondsOverlay` instead */
   noSecondsOverlay?: boolean;
 
-  /** Accepts both old array form (v8) and new object form (v12) */
+  /**
+   * Controls the step-by-step workflow when picking a date (and optionally a
+   * time). On each completed step the picker emits `flow-step` and advances
+   * to the next one; once the last step is reached the menu auto-closes.
+   *
+   * Accepts both forms:
+   *  - **v8 array shorthand**: `['calendar', 'hours', 'minutes']` — mapped
+   *    internally to `{ steps: [...] }`.
+   *  - **v12 object form**: `{ steps: PickerSection[], partial?: boolean }`.
+   *
+   * Valid step values (`PickerSection`):
+   * `'month' | 'year' | 'calendar' | 'time' | 'hours' | 'minutes' | 'seconds'`.
+   *
+   * Typical pairing: set `enableTimePicker: true`, `timePickerInline: true`
+   * and `autoApply: false` so the user can move calendar → hours → minutes
+   * without an early commit.
+   *
+   * @see https://vue3datepicker.com/props/flow/
+   *
+   * @example
+   * <FzDatepicker
+   *   v-model="value"
+   *   :flow="['calendar', 'hours', 'minutes']"
+   *   enableTimePicker
+   *   timePickerInline
+   *   :autoApply="false"
+   * />
+   */
   flow?: string[] | Partial<FlowConfig>;
 
-  /** Accepts both old string form (v8) and new Locale object form (v12) */
+  /**
+   * Calendar locale. Accepts both forms:
+   *  - **`date-fns` Locale object** (v12, recommended) — e.g. `import { it } from 'date-fns/locale'`.
+   *  - **Legacy string** (v8) — kept for backward compatibility, but **any string
+   *    is silently coerced to the Italian locale** because VueDatePicker won't
+   *    load locales by name. Consumers needing a different language must pass
+   *    the Locale object directly.
+   */
   locale?: string | Locale;
 }
 
