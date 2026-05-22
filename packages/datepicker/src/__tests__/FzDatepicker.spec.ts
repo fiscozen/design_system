@@ -302,10 +302,7 @@ describe('FzDatepicker', () => {
     // transformation logic in `handleModelValueUpdate` we drive it directly via
     // setupState. The template wiring itself is exercised by the integration
     // run-through of the Storybook play functions.
-    const callHandleModelValueUpdate = (
-      wrapper: ReturnType<typeof mount>,
-      value: unknown
-    ) => {
+    const callHandleModelValueUpdate = (wrapper: ReturnType<typeof mount>, value: unknown) => {
       const setupState = (wrapper.vm as any).$.setupState
       setupState.handleModelValueUpdate(value)
     }
@@ -809,6 +806,33 @@ describe('FzDatepicker', () => {
       expect(labels.openTpOverlay('seconds')).toBe('Apri elenco secondi')
     })
 
+    it('provides Italian function-form aria-labels for day/weekDay/monthPicker/yearPicker/timeOverlay', () => {
+      const wrapper = mount(FzDatepicker, {
+        props: { modelValue: new Date(), inputProps: {} }
+      })
+      const labels = getMapped(wrapper).ariaLabels
+
+      // day: full date in Italian (e.g. "lunedì 15 gennaio 2024")
+      const dayLabel = labels.day({ value: new Date(2024, 0, 15) })
+      expect(dayLabel).toMatch(/lunedì 15 gennaio 2024/i)
+
+      // weekDay: 0=Sunday … 6=Saturday by VueDatePicker's JS-native convention
+      expect(labels.weekDay(0)).toMatch(/domenica/i)
+      expect(labels.weekDay(1)).toMatch(/lunedì/i)
+      expect(labels.weekDay(6)).toMatch(/sabato/i)
+
+      // monthPicker / yearPicker: overlay vs. inline form
+      expect(labels.monthPicker(true)).toBe('Elenco mesi')
+      expect(labels.monthPicker(false)).toBe('Selettore mese')
+      expect(labels.yearPicker(true)).toBe('Elenco anni')
+      expect(labels.yearPicker(false)).toBe('Selettore anno')
+
+      // timeOverlay
+      expect(labels.timeOverlay('hours')).toBe('Elenco ore')
+      expect(labels.timeOverlay('minutes')).toBe('Elenco minuti')
+      expect(labels.timeOverlay('seconds')).toBe('Elenco secondi')
+    })
+
     it('lets consumer-supplied ariaLabels override individual keys', () => {
       const wrapper = mount(FzDatepicker, {
         props: {
@@ -965,8 +989,7 @@ describe('FzDatepicker', () => {
     })
 
     describe('teleport prop normalization', () => {
-      const getMappedTeleport = (wrapper: ReturnType<typeof mount>) =>
-        getMapped(wrapper).teleport
+      const getMappedTeleport = (wrapper: ReturnType<typeof mount>) => getMapped(wrapper).teleport
 
       it("should default teleport to 'body' when not provided", () => {
         const wrapper = mount(FzDatepicker, {
@@ -1098,7 +1121,7 @@ describe('FzDatepicker', () => {
       const event = new Event('paste') as ClipboardEvent
 
       const setupState = (wrapper.vm as any).$.setupState
-      setupState.handlePaste(onPaste, closeMenu, event, '15/01/2024')
+      setupState.handlePaste(onPaste, closeMenu, event)
 
       expect(onPaste).toHaveBeenCalledTimes(1)
       expect(onPaste).toHaveBeenCalledWith(event)
@@ -1129,6 +1152,24 @@ describe('FzDatepicker', () => {
       expect(emitted!.length).toBe(2)
       expect(emitted![0]).toEqual([0])
       expect(emitted![1]).toEqual([1])
+    })
+
+    it('should accept and forward additional positional arguments without throwing', async () => {
+      const wrapper = mount(FzDatepicker, {
+        props: {
+          modelValue: new Date(),
+          flow: { steps: ['calendar', 'hours'] },
+          inputProps: {}
+        }
+      })
+
+      const setupState = (wrapper.vm as any).$.setupState
+      expect(() => setupState.forwardFlowStep(0, 'extra', 42)).not.toThrow()
+      await wrapper.vm.$nextTick()
+
+      const emitted = wrapper.emitted('flow-step')
+      expect(emitted).toBeTruthy()
+      expect(emitted![0]).toEqual([0, 'extra', 42])
     })
 
     it('should not throw when flow prop is not set', async () => {

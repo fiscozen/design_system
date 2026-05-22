@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # FzDatepicker
 
-Date and date-range picker for the Fiscozen design system, built on top of [VueDatePicker v12](https://vue3datepicker.com/). Provides Fiscozen-branded styling, `FzInput` integration, and a custom time-picker overlay.
+Date and date-range picker for the Fiscozen design system, built on top of [VueDatePicker v12](https://vue3datepicker.com/). Provides Fiscozen-branded styling and `FzInput` integration; the time-picker UI uses VueDatePicker's default rendering with branded slot overrides (chevrons, clock/calendar icons, action buttons).
 
 ## Features
 
@@ -87,10 +87,10 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
       <td>Optional date-fns format string. When set, the emitted <code>update:model-value</code> value is formatted as a string instead of a Date object</td>
     </tr>
     <tr>
-      <td><code>placement</code></td>
+      <td><code>placement</code> <em>(deprecated)</em></td>
       <td><code>FloatingPlacement</code></td>
       <td><code>undefined</code></td>
-      <td>Shorthand for <code>floating.placement</code>. Controls where the calendar popup appears relative to the input</td>
+      <td>Legacy v8 shorthand for <code>floating.placement</code>. Controls where the calendar popup appears relative to the input. <strong>Will be removed in a future version</strong> — pass <code>:floating="&#123; placement: '...' &#125;"</code> instead.</td>
     </tr>
     <tr>
       <td><code>teleport</code></td>
@@ -132,10 +132,10 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
       <td>Automatically apply selection without confirmation buttons</td>
     </tr>
     <tr>
-      <td><code>format</code></td>
+      <td><code>format</code> <em>(deprecated)</em></td>
       <td><code>string</code></td>
       <td><code>'dd/MM/yyyy'</code></td>
-      <td>Display format for the date in the input field</td>
+      <td>Legacy v8 shorthand mapped to <code>formats.input</code>. Display format for the date in the input field. <strong>Will be removed in a future version</strong> — pass <code>:formats="&#123; input: '...' &#125;"</code> instead.</td>
     </tr>
     <tr>
       <td><code>textInput</code></td>
@@ -245,34 +245,34 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
   </thead>
   <tbody>
     <tr>
-      <td><code>enableTimePicker</code></td>
+      <td><code>enableTimePicker</code> <em>(deprecated)</em></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
-      <td>Show time selection controls</td>
+      <td>Show time selection controls. <strong>Will be removed in a future version</strong> — pass <code>:timeConfig="&#123; enableTimePicker: true &#125;"</code> instead.</td>
     </tr>
     <tr>
-      <td><code>enableMinutes</code></td>
+      <td><code>enableMinutes</code> <em>(deprecated)</em></td>
       <td><code>boolean</code></td>
       <td><code>true</code></td>
-      <td>Show minutes in time picker</td>
+      <td>Show minutes in time picker. <strong>Will be removed in a future version</strong> — pass <code>:timeConfig="&#123; enableMinutes: ... &#125;"</code> instead.</td>
     </tr>
     <tr>
-      <td><code>enableSeconds</code></td>
+      <td><code>enableSeconds</code> <em>(deprecated)</em></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
-      <td>Show seconds in time picker</td>
+      <td>Show seconds in time picker. <strong>Will be removed in a future version</strong> — pass <code>:timeConfig="&#123; enableSeconds: true &#125;"</code> instead.</td>
     </tr>
     <tr>
-      <td><code>is24</code></td>
+      <td><code>is24</code> <em>(deprecated)</em></td>
       <td><code>boolean</code></td>
       <td><code>true</code></td>
-      <td>Use 24-hour format</td>
+      <td>Use 24-hour format. <strong>Will be removed in a future version</strong> — pass <code>:timeConfig="&#123; is24: ... &#125;"</code> instead.</td>
     </tr>
     <tr>
-      <td><code>timePickerInline</code></td>
+      <td><code>timePickerInline</code> <em>(deprecated)</em></td>
       <td><code>boolean</code></td>
       <td><code>false</code></td>
-      <td>Show the time picker inline below the calendar. When <code>false</code>, the time picker is opened as an overlay via the clock-icon toggle.</td>
+      <td>Show the time picker inline below the calendar. When <code>false</code>, the time picker is opened as an overlay via the clock-icon toggle. <strong>Will be removed in a future version</strong> — pass <code>:timeConfig="&#123; timePickerInline: ... &#125;"</code> instead.</td>
     </tr>
     <tr>
       <td><code>minTime</code> / <code>maxTime</code></td>
@@ -333,7 +333,7 @@ The component extends all [VueDatePicker v12 props](https://vue3datepicker.com/p
     <tr>
       <td><code>cleared</code> <em>(deprecated)</em></td>
       <td><code>string</code></td>
-      <td><strong>Deprecated since v3.1.0; will be removed in v4.0.0.</strong> Use <code>fzdatepicker:clear</code> instead. Emitted when the input value is cleared (e.g. via the clear icon when <code>clearable</code> is <code>true</code>, or when the user manually empties the field).</td>
+      <td><strong>Deprecated since v3.1.0; will be removed in a future version.</strong> Use <code>fzdatepicker:clear</code> instead. Emitted when the input value is cleared (e.g. via the clear icon when <code>clearable</code> is <code>true</code>, or when the user manually empties the field).</td>
     </tr>
     <tr>
       <td><code>fzdatepicker:clear</code></td>
@@ -396,13 +396,13 @@ FzDatepicker pre-fills the following VueDatePicker slots with Fiscozen-branded c
   <tbody>
     <tr>
       <td><code>arrow-left</code> / <code>arrow-right</code></td>
-      <td><code>&lt;FzIconButton iconName="angle-left|right" size="md" variant="secondary"/&gt;</code></td>
-      <td>Calendar month-navigation arrows.</td>
+      <td><code>&lt;FzIcon name="angle-left|right" size="md"/&gt;</code></td>
+      <td>Calendar month-navigation arrows. Rendered <em>inside</em> VueDatePicker's own <code>&lt;button&gt;</code> — if you override, use <code>FzIcon</code>, NOT <code>FzIconButton</code> (would nest two buttons and leak an unlabeled inner button to assistive tech).</td>
     </tr>
     <tr>
       <td><code>arrow-up</code> / <code>arrow-down</code></td>
-      <td><code>&lt;FzIconButton iconName="angle-up|down" size="md" variant="secondary"/&gt;</code></td>
-      <td>Scroll arrows inside year/time overlays.</td>
+      <td><code>&lt;FzIcon name="angle-up|down" size="md"/&gt;</code></td>
+      <td>Scroll arrows inside year/time overlays. Same rationale as above — keep the content as <code>FzIcon</code> to avoid a nested-button bug.</td>
     </tr>
     <tr>
       <td><code>tp-inline-arrow-up</code> / <code>tp-inline-arrow-down</code></td>
@@ -720,10 +720,10 @@ Use `inputAttrs.name` to set the input's `name` attribute so form helpers (e.g. 
 - Use `modelType` when you need the emitted value in a specific string format (e.g. `'yyyy-MM-dd'`)
 - Use `valueFormat` when you want to format the emitted value with date-fns before emission
 - Set `autoApply: false` when using time picker or multi-date selection to give users a confirm/cancel step (also unlocks the Cancella/Seleziona buttons through the `#action-buttons` slot)
-- For forms, set the `name` attribute via `:inputAttrs="{ name: '...' }"` so the datepicker value is included in form submissions. The top-level `name` prop is `@deprecated` (will be removed in v4.0.0) — see "Form with name attribute" example
+- For forms, set the `name` attribute via `:inputAttrs="{ name: '...' }"` so the datepicker value is included in form submissions. The top-level `name` prop is `@deprecated` (will be removed in a future version) — see "Form with name attribute" example
 
 ## Related Components
 
 - **FzInput**: The inner input element used by the datepicker
-- **FzButton / FzIconButton**: Used for calendar navigation arrows and action buttons
-- **FzIcon**: Used for the inline time-picker chevrons and the clock/calendar toggle icons
+- **FzButton**: Renders the "Cancella" / "Seleziona" action buttons in the `#action-buttons` slot
+- **FzIcon**: Renders the calendar/overlay nav arrows, the inline time-picker chevrons, and the clock/calendar toggle icons

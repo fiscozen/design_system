@@ -92,8 +92,8 @@ const handleMenuClosed = () => {
  * driven by VueDatePicker's own logic (auto-apply when enabled; otherwise
  * the user explicitly confirms).
  */
-const forwardFlowStep = (step: number) => {
-  emit('flow-step', step)
+const forwardFlowStep = (step: number, ...rest: unknown[]) => {
+  emit('flow-step', step, ...rest)
 }
 
 /**
@@ -196,12 +196,9 @@ const stableAriaLabels = computed(() => {
     openTimePicker: 'Apri selezione ora',
     closeTimePicker: 'Chiudi selezione ora',
     timePicker: 'Selezione ora',
-    incrementValue: (t: 'hours' | 'minutes' | 'seconds') =>
-      `Incrementa ${TIME_UNIT_IT[t]}`,
-    decrementValue: (t: 'hours' | 'minutes' | 'seconds') =>
-      `Decrementa ${TIME_UNIT_IT[t]}`,
-    openTpOverlay: (t: 'hours' | 'minutes' | 'seconds') =>
-      `Apri elenco ${TIME_UNIT_IT[t]}`,
+    incrementValue: (t: 'hours' | 'minutes' | 'seconds') => `Incrementa ${TIME_UNIT_IT[t]}`,
+    decrementValue: (t: 'hours' | 'minutes' | 'seconds') => `Decrementa ${TIME_UNIT_IT[t]}`,
+    openTpOverlay: (t: 'hours' | 'minutes' | 'seconds') => `Apri elenco ${TIME_UNIT_IT[t]}`,
     amPmButton: 'Cambia AM/PM',
     openYearsOverlay: 'Apri elenco anni',
     openMonthsOverlay: 'Apri elenco mesi',
@@ -209,7 +206,14 @@ const stableAriaLabels = computed(() => {
     prevMonth: 'Mese precedente',
     nextYear: 'Anno successivo',
     prevYear: 'Anno precedente',
-    clearInput: 'Cancella valore'
+    clearInput: 'Cancella valore',
+    day: (d: { value: Date }) => format(d.value, 'EEEE d MMMM yyyy', { locale: it }),
+    // VueDatePicker passes the JS-native weekday number (0=Sunday … 6=Saturday).
+    // Jan 7 2024 is a Sunday, so the offset reproduces the full week in order.
+    weekDay: (d: number) => format(new Date(2024, 0, 7 + d), 'EEEE', { locale: it }),
+    monthPicker: (isOverlay: boolean) => (isOverlay ? 'Elenco mesi' : 'Selettore mese'),
+    yearPicker: (isOverlay: boolean) => (isOverlay ? 'Elenco anni' : 'Selettore anno'),
+    timeOverlay: (t: 'hours' | 'minutes' | 'seconds') => `Elenco ${TIME_UNIT_IT[t]}`
   }
   return { ...italianDefaults, ...(props.ariaLabels ?? {}) }
 })
@@ -312,14 +316,14 @@ const emit = defineEmits<{
   'update:model-value': [value: unknown]
   'text-submit': [value: string]
   closed: []
-  /** @deprecated Use `fzdatepicker:clear` instead. Will be removed in v4.0.0. */
+  /** @deprecated Use `fzdatepicker:clear` instead. Will be removed in a future version. */
   cleared: [value: string]
   'fzdatepicker:clear': []
   open: []
   focus: []
   blur: []
   'internal-model-change': [...args: any[]]
-  'flow-step': [step: number]
+  'flow-step': [step: number, ...rest: unknown[]]
   'update-month-year': [...args: any[]]
   'invalid-select': [...args: any[]]
   'tooltip-open': [...args: any[]]
@@ -378,8 +382,7 @@ const safeInputProps = computed<FzInputProps>(() => {
 const handlePaste = (
   onPaste: (() => void) | ((e: ClipboardEvent) => any),
   closeMenu: () => void,
-  e: ClipboardEvent,
-  value: string
+  e: ClipboardEvent
 ) => {
   onPaste(e)
   closeMenu()
@@ -436,7 +439,7 @@ const handleInputModelUpdate = (
         @keyup.enter="onEnter"
         @keydown.tab="onTab"
         @keypress="onKeypress"
-        @paste="(e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e, value)"
+        @paste="(e: ClipboardEvent) => handlePaste(onPaste, closeMenu, e)"
         @fzinput:clear="emit('fzdatepicker:clear')"
         v-bind="safeInputProps"
         :modelValue="value"
