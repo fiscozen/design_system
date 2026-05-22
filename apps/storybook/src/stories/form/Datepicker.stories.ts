@@ -866,7 +866,7 @@ export const DatepickerFlow: Story = {
     format: 'dd/MM/yyyy HH:mm',
     textInput: true,
     arrowNavigation: true,
-    vertical: true,
+    vertical: true
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -1115,7 +1115,8 @@ export const TimePickerWithSeconds: Story = {
     enableMinutes: true,
     enableSeconds: true,
     is24: true,
-    autoApply: false
+    autoApply: false,
+    format: 'dd/MM/yyyy HH:mm:ss'
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -1247,16 +1248,19 @@ export const FlowWithTimeCompletion: Story = {
     flow: ['year', 'month', 'calendar', 'hours', 'minutes'],
     format: 'dd/MM/yyyy HH:mm:ss',
     textInput: true,
-    arrowNavigation: true,
+    arrowNavigation: true
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
-    await step('Verify datepicker with year→month→calendar→hours→minutes flow renders', async () => {
-      const input = canvas.getByLabelText(/datepicker label/i)
-      await expect(input).toBeInTheDocument()
-      await expect(input).toBeVisible()
-    })
+    await step(
+      'Verify datepicker with year→month→calendar→hours→minutes flow renders',
+      async () => {
+        const input = canvas.getByLabelText(/datepicker label/i)
+        await expect(input).toBeInTheDocument()
+        await expect(input).toBeVisible()
+      }
+    )
 
     await step('Verify date value display exists', async () => {
       const dateValue = canvas.getByTestId('date-value')
@@ -1809,9 +1813,7 @@ export const FormNameAttribute: Story = {
     })
 
     await step('Verify FormData picks the field up', async () => {
-      const form = canvasElement.querySelector(
-        '[data-testid="test-form"]'
-      ) as HTMLFormElement
+      const form = canvasElement.querySelector('[data-testid="test-form"]') as HTMLFormElement
       // Native FormData reads name+value off the form's controls.
       const fd = new FormData(form)
       // Value may be empty (no date selected) but the key MUST be present.
