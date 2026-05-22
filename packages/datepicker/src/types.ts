@@ -30,7 +30,7 @@ interface FzDatepickerProps extends Omit<RootProps, 'flow' | 'locale'> {
    *
    * `inputAttrs.name` is the recommended way to set the input's `name`
    * attribute (the legacy top-level `name` prop is deprecated and will be
-   * removed in v4.0.0). The DS wrapper renders `<FzInput>` in VueDatePicker's
+   * removed in a future version). The DS wrapper renders `<FzInput>` in VueDatePicker's
    * `#dp-input` slot and propagates `inputAttrs.name` to it, so form helpers
    * (`FormData`, native form submission, jQuery `[name]` selectors) pick the
    * field up.

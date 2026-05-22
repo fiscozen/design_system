@@ -79,7 +79,7 @@ The `mappedProps` computed property transparently remaps deprecated v8-style sca
 | `enableTimePicker`, `enableMinutes`, `is24`, etc. | `timeConfig.*` |
 | `flow` (array) | `flow.steps` |
 
-All legacy props are marked `@deprecated` in `types.ts` and will be removed in **v4.0.0**.
+All legacy props are marked `@deprecated` in `types.ts` and will be removed in a future version.
 
 ### Teleport Normalization
 
@@ -169,7 +169,8 @@ VueDatePicker reads `floating.placement` once during setup. The component works 
 
 - `@vuepic/vue-datepicker`: ^12.1.0 — underlying date-picker engine
 - `date-fns`: ^4.1.0 — `Locale` object + `format()` used by `valueFormat`
-- `@fiscozen/button`: workspace — `FzIconButton` (calendar nav arrows) and `FzButton` (action buttons)
+- `@fiscozen/button`: workspace — `FzButton` (action buttons "Cancella" / "Seleziona", inherit `inputProps.environment`)
+- `@fiscozen/icons`: workspace — `FzIcon` (calendar/overlay nav arrows, inline time-picker chevrons, clock/calendar icons)
 - `@fiscozen/input`: workspace — `FzInput` rendered inside VueDatePicker's `#dp-input` slot
 - `@fiscozen/composables`: workspace — `useBreakpoints` (mobile detection)
 - `@fiscozen/style`: workspace — breakpoint tokens and CSS variables
