@@ -205,6 +205,39 @@ describe("FzCardListItem", () => {
       expect(dropdown.props("actions")).toEqual([actionA, actionB]);
     });
 
+    it("should ignore section markers when deciding actions mode", async () => {
+      // Only a section header + one link action → still arrow (link) mode,
+      // not dropdown — markers don't count as interactive actions.
+      const sectionOnly = mount(FzCardListItem, {
+        props: { title: "Item", actions: [{ type: "section", label: "Group" }] },
+      });
+      const sectionPlusOneLink = mount(FzCardListItem, {
+        props: {
+          title: "Item",
+          actions: [{ type: "section", label: "Group" }, linkAction],
+        },
+      });
+      await Promise.all([sectionOnly.vm.$nextTick(), sectionPlusOneLink.vm.$nextTick()]);
+      expect(sectionOnly.findComponent({ name: "FzIconButton" }).exists()).toBe(false);
+      expect(sectionOnly.findComponent({ name: "FzIconDropdown" }).exists()).toBe(false);
+      expect(
+        sectionPlusOneLink
+          .findAllComponents({ name: "FzIcon" })
+          .some((w) => w.props("name") === "chevron-right"),
+      ).toBe(true);
+    });
+
+    it("should pass section markers through to the dropdown", async () => {
+      const section = { type: "section" as const, label: "Scarica" };
+      const wrapper = mount(FzCardListItem, {
+        props: { title: "Item", actions: [actionA, section, actionB] },
+      });
+      await wrapper.vm.$nextTick();
+      const dropdown = wrapper.findComponent({ name: "FzIconDropdown" });
+      expect(dropdown.exists()).toBe(true);
+      expect(dropdown.props("actions")).toEqual([actionA, section, actionB]);
+    });
+
     it("should render badge in the top row when badge is provided", async () => {
       const wrapper = mount(FzCardListItem, {
         props: { title: "Item", badge: { text: "Tag", tone: "info" } },
