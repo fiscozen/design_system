@@ -15,10 +15,7 @@ const emit = defineEmits<FzCardMultiActionsEmits>();
 
 const hasTitleOnly = computed(() => !props.badge && !props.value);
 
-function emitActionClick(
-  actionIndex: number = 0,
-  action: FzActionProps = props.actions![0],
-) {
+function emitActionClick(actionIndex: number, action: FzActionProps) {
   emit("fzaction:click", actionIndex, action);
 }
 </script>

@@ -19,6 +19,7 @@
 import { computed } from "vue";
 import type {
   ActionsMode,
+  FzCardListItemAction,
   FzCardListItemProps,
   FzCardListItemEmits,
 } from "./types";
@@ -31,9 +32,15 @@ const props = defineProps<FzCardListItemProps>();
 
 const emit = defineEmits<FzCardListItemEmits>();
 
+// Section markers render as group headers in the dropdown but don't count
+// toward the action-count routing (none / link / actions).
+const interactiveActions = computed<FzActionProps[]>(
+  () => (props.actions?.filter((a) => a.type !== "section") ?? []) as FzActionProps[],
+);
+
 const actionsMode = computed<ActionsMode>(() => {
-  if (!props.actions?.length) return "none";
-  if (props.actions.length === 1 && props.actions[0].type === "link") return "link";
+  if (!interactiveActions.value.length) return "none";
+  if (interactiveActions.value.length === 1 && interactiveActions.value[0].type === "link") return "link";
   return "actions";
 });
 
@@ -55,7 +62,7 @@ const actionsMode = computed<ActionsMode>(() => {
     :show-indicator="showIndicator"
     :value="value"
     :descriptions="descriptions"
-    :action="actions?.[0] as FzActionLinkProps"
+    :action="interactiveActions[0] as FzActionLinkProps"
     @fzaction:click="(action) => emit('fzaction:click', 0, action as FzActionProps)"
   />
   <FzCardMultiActions
@@ -65,7 +72,7 @@ const actionsMode = computed<ActionsMode>(() => {
     :show-indicator="showIndicator"
     :value="value"
     :descriptions="descriptions"
-    :actions="actions as FzActionProps[]"
+    :actions="actions as FzCardListItemAction[]"
     @fzaction:click="(index, action) => emit('fzaction:click', index, action)"
   />
 </template>

@@ -1,5 +1,6 @@
 import { FzActionLinkProps, FzActionProps } from "@fiscozen/action";
 import { FzBadgeTone } from "@fiscozen/badge";
+import type { FzCardListItemAction } from "../types";
 
 export type FzCardBadge = {
   text: string;
@@ -37,7 +38,7 @@ export interface FzCardSingleActionEmits {
 
 export interface FzCardMultiActionsProps
   extends FzCardHeaderProps, FzCardListFooterProps, FzCardNoActionProps {
-  actions: FzActionProps[];
+  actions: FzCardListItemAction[];
 }
 
 export interface FzCardMultiActionsEmits {
