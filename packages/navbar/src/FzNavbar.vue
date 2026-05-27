@@ -10,7 +10,8 @@ const props = withDefaults(defineProps<FzNavbarProps>(), {
   breakpoints: undefined,
   mobileBreakpoint: undefined,
   position: 'static',
-  respectSafeArea: false
+  respectSafeArea: false,
+  environment: 'frontoffice'
 })
 
 const emit = defineEmits<FzNavbarEmits>()
@@ -70,7 +71,7 @@ function handleMenuButtonClick() {
         <slot name="brand-logo" :isMobile :isHorizontal :isVertical></slot>
       </div>
       <div
-        class="flex items-center gap-4"
+        class="flex items-center gap-8"
         :class="{ 'flex-row': isHorizontal, 'flex-col': isVertical }"
       >
         <slot name="navigation" :isVertical :isHorizontal :isMobile></slot>
@@ -88,6 +89,7 @@ function handleMenuButtonClick() {
         <FzIconButton
           :iconName="localMenuOpen ? 'xmark' : 'bars'"
           variant="secondary"
+          :environment="environment"
           tooltip="menu"
           @click="handleMenuButtonClick"
         />

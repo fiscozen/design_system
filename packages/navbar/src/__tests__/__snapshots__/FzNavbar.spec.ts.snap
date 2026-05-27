@@ -3,7 +3,7 @@
 exports[`FzNavbar > Snapshots > should match snapshot - default state 1`] = `
 "<header class="fz-navbar z-10 m-0 box-border flex items-center border-0 p-12 shadow h-56 w-full">
   <div class="mr-32"></div>
-  <div class="flex items-center gap-4 flex-row"></div>
+  <div class="flex items-center gap-8 flex-row"></div>
   <div class="flex items-center gap-16 ml-auto flex-row"></div>
 </header>"
 `;
@@ -13,7 +13,7 @@ exports[`FzNavbar > Snapshots > should match snapshot - horizontal layout large 
   <div class="mr-32">
     <div id="brandlogo" class="desktop"></div>
   </div>
-  <div class="flex items-center gap-4 flex-row">
+  <div class="flex items-center gap-8 flex-row">
     <div class="link">one</div>
     <div class="link">two</div>
     <div class="link">three</div>
@@ -30,7 +30,7 @@ exports[`FzNavbar > Snapshots > should match snapshot - horizontal layout small 
   <div class="mr-32">
     <div id="brandlogo" class="desktop"></div>
   </div>
-  <div class="flex items-center gap-4 flex-row">
+  <div class="flex items-center gap-8 flex-row">
     <div class="link">one</div>
     <div class="link">two</div>
     <div class="link">three</div>
@@ -47,7 +47,7 @@ exports[`FzNavbar > Snapshots > should match snapshot - vertical layout large sc
   <div class="mb-32">
     <div id="brandlogo" class="desktop"></div>
   </div>
-  <div class="flex items-center gap-4 flex-col">
+  <div class="flex items-center gap-8 flex-col">
     <div class="link">one</div>
     <div class="link">two</div>
     <div class="link">three</div>
@@ -64,7 +64,7 @@ exports[`FzNavbar > Snapshots > should match snapshot - vertical layout small sc
   <div class="mb-32">
     <div id="brandlogo" class="desktop"></div>
   </div>
-  <div class="flex items-center gap-4 flex-col">
+  <div class="flex items-center gap-8 flex-col">
     <div class="link">one</div>
     <div class="link">two</div>
     <div class="link">three</div>
@@ -81,7 +81,7 @@ exports[`FzNavbar > Snapshots > should match snapshot - with menu open 1`] = `
   <div class="mr-32">
     <div id="brandlogo" class="desktop"></div>
   </div>
-  <div class="flex items-center gap-4 flex-row">
+  <div class="flex items-center gap-8 flex-row">
     <div class="link">one</div>
     <div class="link">two</div>
     <div class="link">three</div>

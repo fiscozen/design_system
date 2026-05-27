@@ -111,7 +111,8 @@ export const Horizontal: Story = {
 
 export const Vertical: Story = {
   args: {
-    variant: 'vertical'
+    variant: 'vertical',
+    environment: 'backoffice'
   },
   decorators: [() => ({ template: '<div class="h-screen m-0"><story /></div>' })],
   render: (args) => ({
@@ -134,7 +135,7 @@ export const Vertical: Story = {
           <FzNavlink iconName="gear" />
         </template>
         <template #user-menu>
-          <FzAvatar firstName="Consultant" lastName="User" />
+          <FzAvatar firstName="Consultant" lastName="User" environment="backoffice" />
         </template>
       </FzNavbar>
     `
