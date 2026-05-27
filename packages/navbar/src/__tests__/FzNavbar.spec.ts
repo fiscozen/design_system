@@ -570,14 +570,14 @@ describe('FzNavbar', () => {
         })
         const navContainer = wrapper.find('header > div:nth-child(2)')
         expect(navContainer.classes()).toContain('flex')
-        expect(navContainer.classes()).toContain('gap-4')
+        expect(navContainer.classes()).toContain('gap-8')
         expect(navContainer.classes()).toContain('flex-row')
       })
 
       it('should apply flex-col classes for vertical navigation', async () => {
         window.innerWidth = 1280
         vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1280)
-        
+
         wrapper = mount(FzNavbar, {
           props: {
             variant: 'vertical'
@@ -586,11 +586,11 @@ describe('FzNavbar', () => {
             navigation
           }
         })
-        
+
         await wrapper.vm.$nextTick()
         const navContainer = wrapper.find('header > div:nth-child(2)')
         expect(navContainer.classes()).toContain('flex')
-        expect(navContainer.classes()).toContain('gap-4')
+        expect(navContainer.classes()).toContain('gap-8')
         expect(navContainer.classes()).toContain('flex-col')
       })
     })
