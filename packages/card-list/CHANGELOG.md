@@ -1,5 +1,14 @@
 # @fiscozen/card-list
 
+## 1.1.0
+
+### Minor Changes
+
+- b19e9df: Allow grouping a row's kebab actions into labeled sections by passing
+  `{ type: 'section', label }` markers inside the `actions` array, mirroring
+  the `FzActionSection` pattern already supported by `FzDropdown`. Existing
+  flat-array usages are unaffected.
+
 ## 1.0.3
 
 ### Patch Changes
