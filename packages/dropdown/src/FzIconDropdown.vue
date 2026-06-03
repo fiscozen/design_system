@@ -5,10 +5,10 @@
     @fzaction:click="(...args) => emit('fzaction:click', ...args)"
     :environment="mappedSizeToEnvironment"
   >
-    <template #opener="{ open }">
+    <template #opener="{ isOpen, open, close }">
       <FzIconButton
         :iconName="iconName"
-        @click.stop="open()"
+        @click.stop="isOpen ? close() : open()"
         :variant="buttonVariant"
         :disabled="disabled"
         :environment="mappedSizeToEnvironment"
