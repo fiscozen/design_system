@@ -1011,7 +1011,7 @@ importers:
         version: 4.6.2(vite@5.4.21(@types/node@18.19.130)(lightningcss@1.32.0))(vue@3.5.26(typescript@5.3.3))
       '@vitest/coverage-v8':
         specifier: ^1.2.1
-        version: 1.6.1(vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0))
+        version: 1.6.1(vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0))
       '@vue/test-utils':
         specifier: ^2.4.3
         version: 2.4.6
@@ -1038,7 +1038,7 @@ importers:
         version: 3.9.1(@types/node@18.19.130)(rollup@4.55.1)(typescript@5.3.3)(vite@5.4.21(@types/node@18.19.130)(lightningcss@1.32.0))
       vitest:
         specifier: ^1.2.0
-        version: 1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0)
+        version: 1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0)
       vue-tsc:
         specifier: ^1.8.25
         version: 1.8.27(typescript@5.3.3)
@@ -1861,8 +1861,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.417
-        version: 1.0.417
+        specifier: ^1.0.418
+        version: 1.0.418
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.7.2
         version: 6.7.2
@@ -3632,6 +3632,10 @@ packages:
 
   '@awesome.me/kit-8137893ad3@1.0.417':
     resolution: {integrity: sha512-43jzdhjcsuu6sMUu2axWLehIEFIbQPIHOEVBY0CewVq8TI9mvd0W4oE2S3UAbZjapo0OAxCgGSkXf/FLHuYnfA==}
+    engines: {node: '>=16'}
+
+  '@awesome.me/kit-8137893ad3@1.0.418':
+    resolution: {integrity: sha512-AFzhEnP9LntpXCYlFzk/FrIYroqQRL1UJsXygXF9q+LiF+gJwfqoFMruQIRaolzRlHVOV6v+vYhpHvGyhpxzLA==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.29.0':
@@ -8767,8 +8771,8 @@ packages:
   vue-component-type-helpers@2.2.12:
     resolution: {integrity: sha512-YbGqHZ5/eW4SnkPNR44mKVc6ZKQoRs/Rux1sxC6rdwXb4qpbOSYfDr9DsTHolOTGmIKgM9j141mZbBeg05R1pw==}
 
-  vue-component-type-helpers@3.3.1:
-    resolution: {integrity: sha512-pu58kqxmVyEH6VfNYW1UyEfR3XAnJ27ZXT3yzXxxpjLxVzAbyC35Zk/nm/RMs7ijWnJNSd9fWkeex2OhUsx3MA==}
+  vue-component-type-helpers@3.3.3:
+    resolution: {integrity: sha512-x4nsFpy5Pe8fqPzp/5vkTPeTTDBpAx4WVtV47Ejt0+2FQrq4pRRsJs7JmYRqMFzTu/LW+pCWEjQ3YVCkPV7f9g==}
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -8993,6 +8997,10 @@ snapshots:
       is-potential-custom-element-name: 1.0.1
 
   '@awesome.me/kit-8137893ad3@1.0.417':
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.7.2
+
+  '@awesome.me/kit-8137893ad3@1.0.418':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
@@ -10044,7 +10052,7 @@ snapshots:
       storybook: 10.3.3(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       type-fest: 2.19.0
       vue: 3.5.26(typescript@5.7.3)
-      vue-component-type-helpers: 3.3.1
+      vue-component-type-helpers: 3.3.3
 
   '@tato30/vue-pdf@2.0.2(vue@3.5.26(typescript@5.7.3))':
     dependencies:
@@ -10368,7 +10376,7 @@ snapshots:
       - vite
     optional: true
 
-  '@vitest/coverage-v8@1.6.1(vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0))':
+  '@vitest/coverage-v8@1.6.1(vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -10383,7 +10391,7 @@ snapshots:
       std-env: 3.10.0
       strip-literal: 2.1.1
       test-exclude: 6.0.0
-      vitest: 1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0)
+      vitest: 1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -14423,7 +14431,7 @@ snapshots:
       jiti: 1.21.7
       yaml: 2.8.2
 
-  vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1)(jsdom@23.2.0)(lightningcss@1.32.0):
+  vitest@1.6.1(@types/node@18.19.130)(@vitest/ui@4.1.1(vitest@4.1.1))(jsdom@23.2.0)(lightningcss@1.32.0):
     dependencies:
       '@vitest/expect': 1.6.1
       '@vitest/runner': 1.6.1
@@ -14533,7 +14541,7 @@ snapshots:
 
   vue-component-type-helpers@2.2.12: {}
 
-  vue-component-type-helpers@3.3.1: {}
+  vue-component-type-helpers@3.3.3: {}
 
   vue-demi@0.14.10(vue@3.5.26(typescript@5.7.3)):
     dependencies:
