@@ -1,5 +1,11 @@
 # @fiscozen/icons
 
+## 1.0.5
+
+### Patch Changes
+
+- fa1bbae: Add lock and lock-open icons
+
 ## 1.0.4
 
 ### Patch Changes
