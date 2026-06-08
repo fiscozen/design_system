@@ -5,10 +5,12 @@ A flexible layout component for organizing content with controlled spacing. Supp
 ## Features
 
 - Vertical and horizontal layout orientations
-- Layout variants for horizontal containers (expand-first, with more coming)
-- Customizable gap sizes (sm, base, lg)
+- Layout variants for horizontal containers (`expand-first`, `expand-all`, `expand-equal`, `space-between`, `expand-last`)
+- Cross-axis alignment via `alignItems` (start / center / end / stretch / baseline)
+- Customizable gap sizes (`none` / `xs` / `sm` / `base` / `lg`) with separate main vs section scales
 - Main and section container variants with different spacing scales
-- Flexible HTML tag rendering
+- Special spacing between consecutive paragraphs in vertical mode
+- Flexible HTML tag rendering for semantic markup
 
 ## Installation
 
@@ -61,7 +63,7 @@ import { FzContainer } from '@fiscozen/container'
 | `main` | `boolean` | `false` | If `true`, uses main container spacing (larger gaps for page-level sections) |
 | `gap` | `'sm' \| 'base' \| 'lg'` (when `main={true}`)<br>`'none' \| 'xs' \| 'sm' \| 'base' \| 'lg'` (when `main={false}`) | `'base'` | Gap size between elements. Available values depend on container type |
 | `horizontal` | `boolean` | `false` | If `true`, elements align horizontally. Otherwise, vertically (default) |
-| `layout` | `'default' \| 'expand-first' \| 'expand-all' \| 'space-between'` | `'default'` | Layout behavior for horizontal containers (controls how child elements expand). Only applies when `horizontal` is `true` |
+| `layout` | `'default' \| 'expand-first' \| 'expand-all' \| 'expand-equal' \| 'space-between' \| 'expand-last'` | `'default'` | Layout behavior for horizontal containers (controls how child elements expand). Only applies when `horizontal` is `true` |
 | `alignItems` | `'start' \| 'center' \| 'end' \| 'stretch' \| 'baseline'` | `'stretch'` for vertical, `'center'` for horizontal | Alignment of child elements on the cross-axis. In vertical containers: horizontal alignment (left/center/right). In horizontal containers: vertical alignment (top/center/bottom) |
 | `tag` | `string` | `'div'` | HTML tag to use for the container element |
 
@@ -104,7 +106,7 @@ The component uses CSS custom properties for consistent spacing across the desig
 
 - Elements align horizontally in a single row
 - Gap is applied between elements horizontally
-- No wrapping (`flex-wrap: nowrap`) - elements will shrink to fit
+- No wrapping — elements stay on a single line
 - Ideal for action buttons, inline controls, or horizontal navigation
 - Supports layout variants via the `layout` prop (see Layout Behavior section below)
 - Default alignment: `alignItems="center"` (vertically centered)
@@ -115,23 +117,28 @@ The `layout` prop controls how child elements expand to fill available space in 
 
 ### Available Layouts
 
-| Layout | Status | Description |
-|--------|--------|-------------|
-| `default` | Implemented | All elements maintain their natural size (`flex-grow: 0`). This is the default behavior. |
-| `expand-first` | Implemented | The first element expands to fill available space (`flex-grow: 1`), while other elements maintain their natural size. |
-| `expand-all` | Implemented | All elements expand equally to fill available space (`flex-grow: 1` on all children). |
-| `space-between` | Implemented | Elements are distributed with space between them (`justify-content: space-between`). Elements maintain their natural size. |
-| `expand-last` | Future | The last element will expand to fill available space, while other elements maintain their natural size. |
+| Layout | Description |
+|--------|-------------|
+| `default` | All elements maintain their natural size (`flex-grow: 0`). This is the default behavior. |
+| `expand-first` | The first element expands to fill available space (`flex-grow: 1`), while other elements maintain their natural size. |
+| `expand-all` | All elements expand (`flex-grow: 1`) sharing the extra space equally. Final widths still depend on each child's intrinsic content size — use `expand-equal` when columns must have identical width regardless of content. |
+| `expand-equal` | All children get identical width (CSS Grid with `grid-auto-columns: minmax(0, 1fr)`), ignoring intrinsic content size. Use for grid-like layouts where columns must align across rows. |
+| `space-between` | Elements are distributed with space between them (`justify-content: space-between`). Elements maintain their natural size. |
+| `expand-last` | The last element expands to fill available space (`flex-grow: 1`), while other elements maintain their natural size. |
 
 ### When to Use Each Layout
 
 **`default`**: Use when all elements should maintain their natural size. Good for button groups, navigation items, or any horizontal list where elements should not grow.
 
-**`expand-first`**: Use when you want the first element to take up all remaining space.
+**`expand-first`**: Use when you want the first element to take up all remaining space. Useful for `[content | actions]` toolbars.
 
-**`expand-all`**: Use when you want all elements to have equal width.
+**`expand-all`**: Use when you want all elements to grow and absorb the extra horizontal space (good for button groups with comparable label lengths). Note that final widths still depend on each child's content — for truly identical widths, use `expand-equal`.
+
+**`expand-equal`**: Use when columns must have identical widths regardless of content (cards in a matrix, equal toolbar sections, dashboard tiles). Trade-off: a child with very long non-breakable content may visually overflow its slot.
 
 **`space-between`**: Use when you want elements to maintain their natural size but be distributed across the available space.
+
+**`expand-last`**: Use when you want the last element to take up all remaining space. Useful for `[actions | content]` patterns where the right-side area should expand.
 
 ## AlignItems Behavior
 
@@ -281,6 +288,53 @@ Controls **vertical alignment** of elements:
 </template>
 ```
 
+### Layout: Expand Equal
+
+```vue
+<template>
+  <!-- All three buttons end up with identical widths even with asymmetric labels -->
+  <FzContainer horizontal layout="expand-equal" gap="base">
+    <button>OK</button>
+    <button>Salva e continua</button>
+    <button>Annulla</button>
+  </FzContainer>
+</template>
+```
+
+```vue
+<template>
+  <!-- Grid-like rows where columns must align across rows -->
+  <FzContainer gap="sm">
+    <FzContainer horizontal layout="expand-equal" gap="base">
+      <div class="tile">Tile A</div>
+      <div class="tile">Tile B with a much longer title</div>
+      <div class="tile">C</div>
+    </FzContainer>
+    <FzContainer horizontal layout="expand-equal" gap="base">
+      <div class="tile">Tile D</div>
+      <div class="tile">Tile E</div>
+      <div class="tile">Tile F</div>
+    </FzContainer>
+  </FzContainer>
+</template>
+```
+
+#### Identical widths AND identical heights
+
+Combine `layout="expand-equal"` with `alignItems="stretch"` to align both the width and the height of children across a horizontal row, even when their content has different intrinsic heights. This is the canonical "grid row" recipe in FzContainer.
+
+```vue
+<template>
+  <FzContainer horizontal layout="expand-equal" alignItems="stretch" gap="base">
+    <div class="tile">Short tile</div>
+    <div class="tile">Medium tile<br/>with two lines</div>
+    <div class="tile">Tall tile<br/>with three<br/>lines of content</div>
+  </FzContainer>
+</template>
+```
+
+All three tiles end up with the same width (from `expand-equal`) and the same height (from `alignItems="stretch"`, matched to the tallest child).
+
 ### Layout: Space Between
 
 ```vue
@@ -310,6 +364,50 @@ Controls **vertical alignment** of elements:
     <FzContainer horizontal gap="sm">
       <button>Cancel</button>
       <button>Save</button>
+    </FzContainer>
+  </FzContainer>
+</template>
+```
+
+### Layout: Expand Last (Task List)
+
+```vue
+<template>
+  <FzContainer gap="sm">
+    <FzContainer horizontal layout="expand-last" gap="base">
+      <button>Complete</button>
+      <FzContainer gap="sm">
+        <p>Task name that can be very long</p>
+        <p>Task description that will expand to fill available space</p>
+      </FzContainer>
+    </FzContainer>
+
+    <FzContainer horizontal layout="expand-last" gap="base">
+      <button>Complete</button>
+      <FzContainer gap="sm">
+        <p>Another task</p>
+        <p>With another description</p>
+      </FzContainer>
+    </FzContainer>
+  </FzContainer>
+</template>
+```
+
+### Layout: Expand Last (Form Actions)
+
+```vue
+<template>
+  <FzContainer gap="base">
+    <input type="text" placeholder="Form field..." />
+    <input type="text" placeholder="Another field..." />
+
+    <!-- Actions aligned to the left -->
+    <FzContainer horizontal layout="expand-last" gap="base">
+      <FzContainer horizontal gap="sm">
+        <button>Cancel</button>
+        <button>Save</button>
+      </FzContainer>
+      <FzContainer></FzContainer>
     </FzContainer>
   </FzContainer>
 </template>
