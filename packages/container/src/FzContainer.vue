@@ -40,7 +40,7 @@ if (!props.horizontal && "layout" in props) {
   if (layout && layout !== "default") {
     console.error(
       '[FzContainer] The "layout" prop only works when horizontal is true. ' +
-        `Current horizontal: ${props.horizontal}, layout: "${layout}".`
+        `Current horizontal: ${props.horizontal}, layout: "${layout}".`,
     );
   }
 }
@@ -143,19 +143,20 @@ const containerClass = computed(() => {
 
 /**
  * Layout variants for horizontal orientation
- * 
+ *
  * Control how child elements expand to fill available space.
- * 
+ *
  * Available layouts:
  * - layout-expand-first: First element expands to fill available space
- * - layout-expand-all: All elements expand equally to fill available space
+ * - layout-expand-all: All elements share the extra space equally; final widths still depend on content
+ * - layout-expand-equal: All elements get identical width regardless of content
  * - layout-space-between: Elements distributed with space between them
  * - layout-expand-last: Last element expands to fill available space
  */
 
 /**
  * Expand first element
- * 
+ *
  * The first child element expands to fill all available horizontal space,
  * while other elements maintain their natural size.
  * Useful for layouts like: [expanding content | action buttons]
@@ -166,13 +167,39 @@ const containerClass = computed(() => {
 
 /**
  * Expand all elements
- * 
- * All child elements expand equally to fill available horizontal space.
- * Each element gets the same amount of space (flex-grow: 1).
- * Useful for layouts like: [button | button | button] with equal widths
+ *
+ * All child elements grow to absorb extra horizontal space (flex-grow: 1), but each one
+ * keeps its intrinsic flex-basis (auto). So the *extra* space is shared equally, while
+ * the final widths still differ when children have different content sizes.
+ * Useful for layouts like: [button | button | button] when label lengths are similar.
+ * For truly uniform column widths regardless of content, use layout-expand-equal.
  */
 .fz-container--horizontal.layout-expand-all :deep(> *) {
   flex-grow: 1;
+}
+
+/**
+ * Expand all elements to equal width
+ *
+ * Sole layout backed by CSS Grid instead of Flex: `grid-auto-columns: minmax(0, 1fr)`
+ * is the idiomatic way to declare "every column is an equal fraction", whereas the
+ * flex equivalent (`flex: 1 1 0` + `min-width: 0` on each child) is a well-known trick.
+ * The `minmax(0, 1fr)` lower bound overrides the default `min-content` track size, so
+ * a child with very long unbreakable content can overflow its slot — that is the
+ * expected trade-off for guaranteed column alignment.
+ * `grid-auto-flow: column` lays children out along a single row, matching the
+ * horizontal orientation of the container.
+ *
+ * The other layout-* rules continue to use flex; only this variant switches to grid
+ * because grid is semantically the right tool here. The base `.fz-container--horizontal`
+ * `display: flex` is overridden by the more specific selector below.
+ *
+ * Useful for grid-like layouts: [card | card | card] where columns must align across rows.
+ */
+.fz-container--horizontal.layout-expand-equal {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
 }
 
 /**
