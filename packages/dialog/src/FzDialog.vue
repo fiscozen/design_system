@@ -121,7 +121,16 @@ const handleKeyUp = (e: KeyboardEvent) => {
 
 useKeyUp(handleKeyUp);
 
-const staticClasses = "flex flex-col bg-core-white";
+// Pad the dialog content by the iOS/Android safe-area insets. On notched
+// devices the dialog is full-screen (h-dvh, top-0) inside an edge-to-edge
+// WebView, so without this the header (title + close button) renders under
+// the status bar / Dynamic Island and the close button is untappable
+// (HD-24264). env(safe-area-inset-*) is 0px on every non-notched surface
+// (desktop, Storybook, browsers without viewport-fit=cover), so this is inert
+// off-device. The white background fills the padding, so the inset zones stay
+// the dialog colour rather than showing the backdrop through them.
+const staticClasses =
+  "flex flex-col bg-core-white pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]";
 const dialogStaticClasses = "border-1 rounded border-grey-100 p-0 z-[42] top-0 bottom-0";
 
 const dialogClasses = computed(() => {
