@@ -550,6 +550,13 @@ export const LayoutExpandEqual: Story = {
     `
   }),
   play: async ({ canvasElement }: any) => {
+    const canvas = within(canvasElement)
+
+    // Accessibility tree sanity: the 3 FzButton children of the first container
+    // must be reachable via role — the grid display switch must not affect a11y semantics.
+    const buttons = canvas.getAllByRole('button')
+    await expect(buttons.length).toBe(3)
+
     const expandEqualContainers = canvasElement.querySelectorAll(
       '.fz-container--horizontal.layout-expand-equal'
     )
@@ -628,10 +635,10 @@ export const LayoutComparison: Story = {
     const allChildren = Array.from(expandAll.children) as HTMLElement[]
     const equalChildren = Array.from(expandEqual.children) as HTMLElement[]
 
-    // expand-all: children widths differ (the middle button "Salva e continua" is wider)
+    // expand-all does NOT equalise widths — at least two children must differ.
+    // Semantic check avoids depending on font/viewport-specific pixel margins.
     const allWidths = allChildren.map((c) => c.offsetWidth)
-    const allSpread = Math.max(...allWidths) - Math.min(...allWidths)
-    await expect(allSpread).toBeGreaterThan(10)
+    await expect(new Set(allWidths).size).toBeGreaterThan(1)
 
     // expand-equal: children widths are identical
     const equalWidths = equalChildren.map((c) => c.offsetWidth)
