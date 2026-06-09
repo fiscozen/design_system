@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/upload",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Design System Upload component",
   "scripts": {
     "coverage": "vitest run --coverage",

@@ -1,5 +1,12 @@
 # @fiscozen/card
 
+## 3.0.4
+
+### Patch Changes
+
+- Updated dependencies [d835f37]
+  - @fiscozen/button@3.1.0
+
 ## 3.0.3
 
 ### Patch Changes

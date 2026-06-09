@@ -1,5 +1,12 @@
 # @fiscozen/navbar
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [d835f37]
+  - @fiscozen/button@3.1.0
+
 ## 0.3.1
 
 ### Patch Changes

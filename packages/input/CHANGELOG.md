@@ -1,5 +1,13 @@
 # @fiscozen/input
 
+## 3.4.2
+
+### Patch Changes
+
+- Updated dependencies [d835f37]
+  - @fiscozen/button@3.1.0
+  - @fiscozen/alert@3.0.2
+
 ## 3.4.1
 
 ### Patch Changes

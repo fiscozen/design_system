@@ -1,5 +1,11 @@
 # @fiscozen/stepper
 
+## 3.0.2
+
+### Patch Changes
+
+- @fiscozen/dropdown@1.0.9
+
 ## 3.0.1
 
 ### Patch Changes

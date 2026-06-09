@@ -1,5 +1,12 @@
 # @fiscozen/pdf-viewer
 
+## 1.0.3
+
+### Patch Changes
+
+- Updated dependencies [d835f37]
+  - @fiscozen/button@3.1.0
+
 ## 1.0.2
 
 ### Patch Changes
