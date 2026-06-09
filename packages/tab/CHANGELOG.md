@@ -1,5 +1,12 @@
 # @fiscozen/tab
 
+## 3.0.5
+
+### Patch Changes
+
+- Updated dependencies [a243ebb]
+  - @fiscozen/composables@1.0.4
+
 ## 3.0.4
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @fiscozen/card-list
 
+## 1.1.1
+
+### Patch Changes
+
+- Updated dependencies [a243ebb]
+  - @fiscozen/dropdown@1.0.8
+
 ## 1.1.0
 
 ### Minor Changes

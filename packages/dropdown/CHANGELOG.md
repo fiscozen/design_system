@@ -1,5 +1,13 @@
 # @fiscozen/dropdown
 
+## 1.0.8
+
+### Patch Changes
+
+- a243ebb: Fix mobile dropdown menu issues: tapping the icon dropdown trigger again now closes the menu (it previously only ever re-opened it), and the floating menu no longer jumps to the top-left corner when its opener becomes hidden (e.g. an accordion collapses while the menu is still open).
+- Updated dependencies [a243ebb]
+  - @fiscozen/composables@1.0.4
+
 ## 1.0.7
 
 ### Patch Changes
