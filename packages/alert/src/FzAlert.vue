@@ -95,14 +95,18 @@ const showAction = computed(() => {
   return isOpen.value
 })
 
-const descriptionClass = computed(() => [
-  'font-normal mb-0',
-  '!leading-[20px]',
-  {
-    'mt-8': props.title && !isTextVariant.value,
-    'mb-16': showAction.value && !isTextVariant.value
-  }
-])
+const descriptionClass = computed(() => {
+  const hasBottomAction = showAction.value && !isTextVariant.value
+  return [
+    'font-normal',
+    '!leading-[20px]',
+    {
+      'mt-8': props.title && !isTextVariant.value,
+      'mb-16': hasBottomAction,
+      'mb-0': !hasBottomAction
+    }
+  ]
+})
 const collapseIcon = computed(() => (isOpen.value ? 'angle-up' : 'angle-down'))
 const rightIconName = computed(() => {
   if (safeVariant.value === 'accordion') return collapseIcon.value
@@ -158,10 +162,15 @@ const handleClick = () => {
 
 <template>
   <div :class="containerClass" @click="handleClick">
-    <FzContainer horizontal :gap="innerContainerGap" :class="['flex-1', innerContainerPaddingClass]" alignItems="start">
+    <FzContainer
+      horizontal
+      :gap="innerContainerGap"
+      :class="['flex-1', innerContainerPaddingClass]"
+      alignItems="start"
+    >
       <FzIcon :name="iconName" :size="iconSize" :class="iconClass" aria-hidden="true" />
-      <div class="flex flex-col flex-1">
-        <p v-if="title && !isTextVariant" v-bold class="leading-[20px] mb-0">
+      <div class="flex flex-1 flex-col">
+        <p v-if="title && !isTextVariant" v-bold class="mb-0 leading-[20px]">
           {{ title }}
         </p>
 
@@ -192,14 +201,15 @@ const handleClick = () => {
         </slot>
       </div>
     </FzContainer>
-    <FzIconButton v-if="hasRightIcon"
+    <FzIconButton
+      v-if="hasRightIcon"
       :iconName="rightIconName!"
       :environment="safeEnvironment"
       variant="invisible"
-      @click.stop="handleRightIconClick" />
+      @click.stop="handleRightIconClick"
+    />
   </div>
 </template>
-
 
 <style scoped>
 .bg-semantic-info-50 {

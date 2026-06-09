@@ -137,16 +137,19 @@ describe('FzAlert', () => {
         ['danger', 'triangle-exclamation', 'text-semantic-error'],
         ['warning', 'triangle-exclamation', 'text-semantic-warning'],
         ['success', 'circle-check', 'text-semantic-success']
-      ])('should apply correct icon and classes for %s tone', (tone, expectedIcon, expectedClass) => {
-        wrapper = mount(FzAlert, {
-          props: {
-            tone: tone as any
-          }
-        })
-        const icon = wrapper.findComponent({ name: 'FzIcon' })
-        expect(icon.props('name')).toBe(expectedIcon)
-        expect(icon.classes()).toContain(expectedClass)
-      })
+      ])(
+        'should apply correct icon and classes for %s tone',
+        (tone, expectedIcon, expectedClass) => {
+          wrapper = mount(FzAlert, {
+            props: {
+              tone: tone as any
+            }
+          })
+          const icon = wrapper.findComponent({ name: 'FzIcon' })
+          expect(icon.props('name')).toBe(expectedIcon)
+          expect(icon.classes()).toContain(expectedClass)
+        }
+      )
 
       it.each([
         ['info', 'bg-semantic-info-50', 'border-semantic-info'],
@@ -746,7 +749,7 @@ describe('FzAlert', () => {
       expect(iconButtons.length).toBe(1)
       const dismissButton = iconButtons[0]
       expect(dismissButton.exists()).toBe(true)
-      
+
       // Trigger click event on the button element
       const buttonElement = dismissButton.find('button')
       if (buttonElement.exists()) {
@@ -755,7 +758,7 @@ describe('FzAlert', () => {
         // Fallback: trigger directly on component
         await dismissButton.trigger('click')
       }
-      
+
       expect(wrapper.emitted('fzAlert:dismiss')).toHaveLength(1)
     })
 
@@ -771,11 +774,11 @@ describe('FzAlert', () => {
         }
       })
       expect(wrapper.text()).toContain('Description')
-      
+
       const container = wrapper.find('div')
       await container.trigger('click')
       await nextTick()
-      
+
       expect(wrapper.text()).not.toContain('Description')
     })
 
@@ -791,11 +794,11 @@ describe('FzAlert', () => {
         }
       })
       expect(wrapper.text()).not.toContain('Description')
-      
+
       const toggleButton = wrapper.findAllComponents({ name: 'FzIconButton' })[0]
       await toggleButton.trigger('click')
       await nextTick()
-      
+
       expect(wrapper.text()).toContain('Description')
     })
 
@@ -813,9 +816,9 @@ describe('FzAlert', () => {
       const button = wrapper.findComponent({ name: 'FzButton' })
       const clickEvent = new MouseEvent('click', { bubbles: true })
       const stopPropagationSpy = vi.spyOn(clickEvent, 'stopPropagation')
-      
+
       await button.trigger('click', { event: clickEvent })
-      
+
       // The event handler calls stopPropagation, so accordion should not toggle
       expect(wrapper.text()).toContain('Description')
     })
@@ -974,10 +977,10 @@ describe('FzAlert', () => {
           }
         })
         const container = wrapper.find('div')
-        
+
         await container.trigger('click')
         await nextTick()
-        
+
         const ariaExpanded = container.attributes('aria-expanded')
         if (ariaExpanded) {
           expect(ariaExpanded).toBe('false')
@@ -1050,10 +1053,10 @@ describe('FzAlert', () => {
           }
         })
         const container = wrapper.find('div')
-        
+
         await container.trigger('keydown', { key: 'Enter' })
         await nextTick()
-        
+
         // Note: Component may need keyboard handler implementation
         // This test documents expected behavior
       })
@@ -1070,10 +1073,10 @@ describe('FzAlert', () => {
           }
         })
         const container = wrapper.find('div')
-        
+
         await container.trigger('keydown', { key: ' ' })
         await nextTick()
-        
+
         // Note: Component may need keyboard handler implementation
         // This test documents expected behavior
       })
@@ -1183,18 +1186,18 @@ describe('FzAlert', () => {
           default: 'Description'
         }
       })
-      
+
       const container = wrapper.find('div')
-      
+
       // Toggle multiple times rapidly
       await container.trigger('click')
       await nextTick()
       expect(wrapper.text()).not.toContain('Description') // Closed after 1 click
-      
+
       await container.trigger('click')
       await nextTick()
       expect(wrapper.text()).toContain('Description') // Open after 2 clicks
-      
+
       await container.trigger('click')
       await nextTick()
       expect(wrapper.text()).not.toContain('Description') // Closed after 3 clicks
@@ -1242,7 +1245,8 @@ describe('FzAlert', () => {
           buttonActionLabel: 'Button action here'
         },
         slots: {
-          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+          default:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         }
       })
       expect(wrapper.html()).toMatchSnapshot()
@@ -1256,7 +1260,8 @@ describe('FzAlert', () => {
           buttonActionLabel: 'Button action here'
         },
         slots: {
-          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+          default:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         }
       })
       expect(wrapper.html()).toMatchSnapshot()
@@ -1270,7 +1275,8 @@ describe('FzAlert', () => {
           buttonActionLabel: 'Button action here'
         },
         slots: {
-          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+          default:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         }
       })
       expect(wrapper.html()).toMatchSnapshot()
@@ -1284,7 +1290,8 @@ describe('FzAlert', () => {
           buttonActionLabel: 'Button action here'
         },
         slots: {
-          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+          default:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         }
       })
       expect(wrapper.html()).toMatchSnapshot()
@@ -1298,7 +1305,8 @@ describe('FzAlert', () => {
           buttonActionLabel: 'Button action here'
         },
         slots: {
-          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+          default:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         }
       })
       expect(wrapper.html()).toMatchSnapshot()
@@ -1313,7 +1321,8 @@ describe('FzAlert', () => {
           buttonActionLabel: 'Button action here'
         },
         slots: {
-          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+          default:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         }
       })
       expect(wrapper.html()).toMatchSnapshot()
@@ -1327,7 +1336,8 @@ describe('FzAlert', () => {
           isDismissible: true
         },
         slots: {
-          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+          default:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         }
       })
       expect(wrapper.html()).toMatchSnapshot()
@@ -1344,7 +1354,8 @@ describe('FzAlert', () => {
           linkActionLocation: '/example'
         },
         slots: {
-          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+          default:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         },
         global: {
           plugins: [router]
@@ -1365,7 +1376,8 @@ describe('FzAlert', () => {
           linkActionTarget: '_blank'
         },
         slots: {
-          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+          default:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         },
         global: {
           plugins: [router]
@@ -1382,7 +1394,8 @@ describe('FzAlert', () => {
           environment: 'backoffice'
         },
         slots: {
-          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+          default:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         }
       })
       expect(wrapper.html()).toMatchSnapshot()
@@ -1395,7 +1408,8 @@ describe('FzAlert', () => {
           variant: 'text'
         },
         slots: {
-          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+          default:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         }
       })
       expect(wrapper.html()).toMatchSnapshot()
@@ -1409,7 +1423,8 @@ describe('FzAlert', () => {
           environment: 'backoffice'
         },
         slots: {
-          default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+          default:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         }
       })
       expect(wrapper.html()).toMatchSnapshot()
@@ -1420,17 +1435,17 @@ describe('FzAlert', () => {
     it('applies text-core-black on the alert container', () => {
       const wrapper = mount(FzAlert, {
         props: { title: 'Title' },
-        slots: { default: 'Body' },
+        slots: { default: 'Body' }
       })
       const root = wrapper.find('.flex.select-none')
       expect(root.exists()).toBe(true)
       expect(root.classes()).toContain('text-core-black')
     })
 
-    it('applies mb-0 to the internal <p> elements (title + description)', () => {
+    it('applies mb-0 to the internal <p> elements when no action is rendered', () => {
       const wrapper = mount(FzAlert, {
-        props: { title: 'Title' },
-        slots: { default: 'Body text' },
+        props: { title: 'Title', showButtonAction: false },
+        slots: { default: 'Body text' }
       })
       const paragraphs = wrapper.findAll('p')
       expect(paragraphs.length).toBeGreaterThanOrEqual(2)
@@ -1438,6 +1453,15 @@ describe('FzAlert', () => {
         expect(p.classes()).toContain('mb-0')
       }
     })
-  })
 
+    it('preserves mb-16 on the description when an action is rendered', () => {
+      const wrapper = mount(FzAlert, {
+        props: { title: 'Title', buttonActionLabel: 'OK' },
+        slots: { default: 'Body' }
+      })
+      const description = wrapper.findAll('p')[1]
+      expect(description.classes()).toContain('mb-16')
+      expect(description.classes()).not.toContain('mb-0')
+    })
+  })
 })
