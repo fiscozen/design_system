@@ -1037,6 +1037,34 @@ describe("FzDialog", () => {
   });
 
   // ============================================
+  // SAFE AREA (mobile notch / status bar)
+  // ============================================
+  describe("Safe area insets", () => {
+    it("should pad the inner container by the safe-area insets so the header clears the status bar", async () => {
+      // On notched iOS devices the dialog is full-screen (h-dvh, top-0) inside
+      // an edge-to-edge WebView, so without safe-area padding the header (title
+      // + close button) renders under the status bar / Dynamic Island and the
+      // close button becomes untappable (HD-24264). env(safe-area-inset-*)
+      // resolves to 0px everywhere else, so this is inert off-device.
+      wrapper = mount(FzDialog, {
+        props: {
+          shouldAlwaysRender: true,
+        },
+      });
+
+      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      const innerDialog = wrapper.find(".flex.flex-col.bg-core-white");
+      const classes = innerDialog.classes();
+      expect(classes).toContain("pt-[env(safe-area-inset-top)]");
+      expect(classes).toContain("pb-[env(safe-area-inset-bottom)]");
+      expect(classes).toContain("pl-[env(safe-area-inset-left)]");
+      expect(classes).toContain("pr-[env(safe-area-inset-right)]");
+    });
+  });
+
+  // ============================================
   // EDGE CASES
   // ============================================
   describe("Edge Cases", () => {
