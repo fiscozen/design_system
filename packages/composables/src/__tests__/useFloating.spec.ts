@@ -343,4 +343,36 @@ describe('useFloating', () => {
       expect(mockIntersectionObserver).toHaveBeenCalled()
     })
   })
+
+  describe('collapsed opener', () => {
+    it('should hide the element when the opener has a zero-size rect', async () => {
+      // Simulate the opener living inside a collapsed accordion: a hidden element
+      // reports an all-zero bounding rect.
+      mockOpener.getBoundingClientRect = vi.fn(() => ({
+        width: 0,
+        height: 0,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        x: 0,
+        y: 0,
+        toJSON: () => {}
+      })) as any
+
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('bottom'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) },
+        container: { domRef: ref(mockContainer) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      // Must NOT jump to the top-left corner; the floating content is hidden instead.
+      expect(mockElement.style.display).toBe('none')
+    })
+  })
 })

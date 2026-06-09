@@ -414,4 +414,85 @@ export const WithCustomActionListSlot: Story = {
   }
 }
 
+/**
+ * Regression: re-tapping the trigger must close the menu.
+ * The icon opener used to only ever call open(), so a second tap could not close it.
+ */
+export const ClosesOnTriggerRetap: Story = {
+  args: {
+    iconName: 'ellipsis-vertical',
+    'onUpdate:isOpen': fn()
+  },
+  render: (args) => ({
+    components: { FzIconDropdown },
+    setup: () => ({ args }),
+    template: `<FzIconDropdown v-bind="args" @update:isOpen="args['onUpdate:isOpen']" />`
+  }),
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const parentCanvas = within(canvasElement.parentElement!)
+    const trigger = canvas.getByRole('button')
+
+    await step('First tap opens the menu', async () => {
+      await userEvent.click(trigger)
+      await expect(args['onUpdate:isOpen']).toHaveBeenLastCalledWith(true)
+      await waitFor(async () => {
+        await expect(parentCanvas.getByText('This is a action')).toBeVisible()
+      })
+    })
+
+    await step('Second tap on the trigger closes the menu', async () => {
+      await userEvent.click(trigger)
+      await expect(args['onUpdate:isOpen']).toHaveBeenLastCalledWith(false)
+      await waitFor(async () => {
+        await expect(parentCanvas.queryByText('This is a action')).not.toBeVisible()
+      })
+    })
+  }
+}
+
+/**
+ * Regression: when the opener becomes hidden while the menu is open (e.g. an accordion
+ * section collapses), the floating menu must hide — not jump to the viewport's top-left
+ * corner. On a desktop browser an outside-click would normally close the menu first, so
+ * here we collapse the opener's container directly (the iOS case where that click does
+ * not fire) and trigger a reposition.
+ */
+export const HiddenWhenOpenerCollapses: Story = {
+  args: {
+    iconName: 'ellipsis-vertical'
+  },
+  render: (args) => ({
+    components: { FzIconDropdown },
+    setup: () => ({ args }),
+    template: `
+      <div data-testid="accordion-content" class="border border-grey-200 rounded p-4">
+        <FzIconDropdown v-bind="args" />
+      </div>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const parentCanvas = within(canvasElement.parentElement!)
+    const trigger = canvas.getByRole('button')
+
+    await step('Open the menu inside the accordion section', async () => {
+      await userEvent.click(trigger)
+      await waitFor(async () => {
+        await expect(parentCanvas.getByText('This is a action')).toBeVisible()
+      })
+    })
+
+    await step('Collapsing the section hides the menu instead of parking it top-left', async () => {
+      const accordion = canvas.getByTestId('accordion-content')
+      accordion.style.display = 'none'
+      window.dispatchEvent(new Event('resize'))
+
+      await waitFor(async () => {
+        await expect(parentCanvas.queryByText('This is a action')).not.toBeVisible()
+      })
+    })
+  }
+}
+
 export default meta

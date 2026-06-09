@@ -1282,6 +1282,25 @@ describe('FzIconDropdown', () => {
       // The dropdown should now be open (isOpen will be true after click)
       expect(updatedDropdown.exists()).toBe(true)
     })
+
+    it('should close when the icon button is clicked a second time', async () => {
+      const wrapper = mount(FzIconDropdown, {
+        props: {
+          actions: []
+        }
+      })
+
+      const floating = wrapper.findComponent({ name: 'FzFloating' })
+      const button = wrapper.find('button')
+
+      await button.trigger('click')
+      await wrapper.vm.$nextTick()
+      expect(floating.props('isOpen')).toBe(true)
+
+      await button.trigger('click')
+      await wrapper.vm.$nextTick()
+      expect(floating.props('isOpen')).toBe(false)
+    })
   })
 
   // ============================================

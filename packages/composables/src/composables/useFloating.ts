@@ -115,6 +115,12 @@ const getMargins = (style: CSSStyleDeclaration): Margins => ({
   bottom: parseFloat(style.marginBottom)
 })
 
+// An element hidden via display:none (e.g. an opener inside a collapsed accordion)
+// reports an all-zero bounding rect. Anchoring to it would place the floating content
+// at the viewport's top-left corner, so a zero-size opener is treated as not positionable.
+const isRectPositionable = (rect: DOMRect | null): boolean =>
+  rect !== null && (rect.width > 0 || rect.height > 0)
+
 // ============================================================================
 // Position Calculators WITH Opener - Lookup Table
 // Each calculator receives opener rect and element margins for consistent spacing
@@ -516,6 +522,14 @@ export const useFloating = (
       rect.value = rects.element
       openerRect.value = rects.opener ?? undefined
       containerRect.value = rects.container
+
+      // Step 4b: If an opener is expected but currently hidden (zero-size rect, e.g. its
+      // accordion collapsed while the floating was still open), don't anchor to (0,0) and
+      // jump to the top-left corner — hide the floating content instead.
+      if (refs.opener && !isRectPositionable(rects.opener)) {
+        refs.element.style.display = 'none'
+        return
+      }
 
       // Step 5: Setup observers
       floatObserver.value.observe(refs.element)
