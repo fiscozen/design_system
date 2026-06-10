@@ -31,7 +31,7 @@ const meta = {
         'Deprecated: Use environment prop instead. Size values map to environments: sm/md → backoffice, lg → frontoffice'
     },
     type: {
-      options: ['text', 'password', 'email', 'number', 'tel', 'url', 'currency'],
+      options: ['text', 'password', 'email', 'number', 'tel', 'url', 'search', 'file', 'currency'],
       control: {
         type: 'select'
       }
