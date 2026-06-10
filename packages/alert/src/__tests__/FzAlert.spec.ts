@@ -1434,7 +1434,7 @@ describe('FzAlert', () => {
   describe('DS-GAP baselines', () => {
     it('applies text-core-black on the alert container', () => {
       const wrapper = mount(FzAlert, {
-        props: { title: 'Title' },
+        props: { tone: 'info', title: 'Title' },
         slots: { default: 'Body' }
       })
       const root = wrapper.find('.flex.select-none')
@@ -1444,7 +1444,7 @@ describe('FzAlert', () => {
 
     it('applies mb-0 to the internal <p> elements when no action is rendered', () => {
       const wrapper = mount(FzAlert, {
-        props: { title: 'Title', showButtonAction: false },
+        props: { tone: 'info', title: 'Title', showButtonAction: false },
         slots: { default: 'Body text' }
       })
       const paragraphs = wrapper.findAll('p')
@@ -1456,7 +1456,7 @@ describe('FzAlert', () => {
 
     it('preserves mb-16 on the description when an action is rendered', () => {
       const wrapper = mount(FzAlert, {
-        props: { title: 'Title', buttonActionLabel: 'OK' },
+        props: { tone: 'info', title: 'Title', buttonActionLabel: 'OK' },
         slots: { default: 'Body' }
       })
       const description = wrapper.findAll('p')[1]

@@ -96,7 +96,7 @@ const showAction = computed(() => {
 })
 
 const descriptionClass = computed(() => {
-  const hasBottomAction = showAction.value && !isTextVariant.value
+  const hasBottomAction = showAction.value
   return [
     'font-normal',
     '!leading-[20px]',
