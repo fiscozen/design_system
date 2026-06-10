@@ -71,6 +71,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - backoffice environmen
         <div class="flex items-center gap-4">
           <!--v-if-->
           <!--v-if--><span role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path></svg></span>
+          <!--v-if-->
         </div>
       </div>
       <!--v-if-->
@@ -153,6 +154,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - default state 1`] = `
         <div class="flex items-center gap-4">
           <!--v-if-->
           <!--v-if--><span role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path></svg></span>
+          <!--v-if-->
         </div>
       </div>
       <!--v-if-->
@@ -235,6 +237,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - disabled state 1`] = 
         <div class="flex items-center gap-4">
           <!--v-if-->
           <!--v-if--><span role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path></svg></span>
+          <!--v-if-->
         </div>
       </div>
       <!--v-if-->
@@ -317,6 +320,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - error state 1`] = `
         <div class="flex items-center gap-4">
           <!--v-if-->
           <!--v-if--><span role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path></svg></span>
+          <!--v-if-->
         </div>
       </div>
       <!--v-if-->
@@ -411,6 +415,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - readonly state 1`] = 
         <div class="flex items-center gap-4">
           <!--v-if-->
           <!--v-if--><span role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path></svg></span>
+          <!--v-if-->
         </div>
       </div>
       <!--v-if-->
@@ -489,6 +494,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - with icons 1`] = `
         </div>
         <div class="flex items-center gap-4">
           <!--v-if--><span role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px]"><svg class="svg-inline--fa fa-xmark h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path class="" fill="currentColor" d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path></svg></span><span role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path></svg></span>
+          <!--v-if-->
         </div>
       </div>
       <!--v-if-->
@@ -571,6 +577,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - with label 1`] = `
         <div class="flex items-center gap-4">
           <!--v-if-->
           <!--v-if--><span role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path></svg></span>
+          <!--v-if-->
         </div>
       </div>
       <!--v-if-->
@@ -653,6 +660,7 @@ exports[`FzTypeahead > Snapshots > should match snapshot - with selected value 1
         <div class="flex items-center gap-4">
           <!--v-if-->
           <!--v-if--><span role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px]"><svg class="svg-inline--fa fa-chevron-down h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M239 401c9.4 9.4 24.6 9.4 33.9 0L465 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-175 175L81 175c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9L239 401z"></path></svg></span>
+          <!--v-if-->
         </div>
       </div>
       <!--v-if-->

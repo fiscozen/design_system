@@ -4,6 +4,11 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # FzCurrencyInput
 
+> **⚠️ Deprecated** — use [`FzInput`](?path=/docs/documentation-form-fzinput--docs) with
+> `type="currency"` instead: the currency behavior now lives directly in FzInput.
+> FzCurrencyInput is kept as a thin backwards-compatible wrapper around
+> `<FzInput type="currency">` until the migration of all consumers is complete.
+
 Specialized currency input component built on FzInput with number formatting, validation, and step controls. Formats values using Intl.NumberFormat with locale-aware separators. Supports min/max constraints, step quantization, and intelligent paste parsing.
 
 ## Features

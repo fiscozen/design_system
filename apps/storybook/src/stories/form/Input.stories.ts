@@ -31,7 +31,7 @@ const meta = {
         'Deprecated: Use environment prop instead. Size values map to environments: sm/md → backoffice, lg → frontoffice'
     },
     type: {
-      options: ['text', 'password', 'email', 'number', 'tel', 'url'],
+      options: ['text', 'password', 'email', 'number', 'tel', 'url', 'currency'],
       control: {
         type: 'select'
       }
@@ -1022,6 +1022,91 @@ export const ClearableWithRightIcon: Story = {
 
       const rightIcon = canvasElement.querySelector('.fa-magnifying-glass')
       await expect(rightIcon).toBeInTheDocument()
+    })
+  }
+}
+
+export const Currency: Story = {
+  render: (args) => ({
+    components: { FzInput },
+    setup() {
+      const modelValue = ref<number | undefined>(1234.56)
+      return { args, modelValue }
+    },
+    template: `
+      <div>
+        <FzInput v-bind="args" type="currency" v-model="modelValue" />
+        <p style="margin-top: 60px; font-size: 14px;" data-testid="raw-value">
+          Raw value (v-model): {{ modelValue === undefined ? 'undefined' : modelValue }}
+        </p>
+      </div>
+    `
+  }),
+  args: {
+    label: 'Amount',
+    placeholder: '1.234,56'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify currency input renders as text input with formatted value', async () => {
+      const input = canvas.getByRole('textbox', { name: /Amount/i })
+      await expect(input).toBeInTheDocument()
+      await expect(input).toHaveValue('1.234,56')
+    })
+
+    await step('Verify step controls are visible', async () => {
+      const arrowUp = canvasElement.querySelector('.fz__input__arrowup')
+      const arrowDown = canvasElement.querySelector('.fz__input__arrowdown')
+      await expect(arrowUp).toBeInTheDocument()
+      await expect(arrowDown).toBeInTheDocument()
+    })
+
+    await step('Verify step up increments the numeric v-model', async () => {
+      const arrowUp = canvasElement.querySelector('.fz__input__arrowup') as HTMLElement
+      await userEvent.click(arrowUp)
+      const raw = canvasElement.querySelector('[data-testid="raw-value"]') as HTMLElement
+      await expect(raw.textContent).toContain('1235.56')
+    })
+  }
+}
+
+export const NumberWithStepControls: Story = {
+  render: (args) => ({
+    components: { FzInput },
+    setup() {
+      const modelValue = ref('4')
+      return { args, modelValue }
+    },
+    template: `<FzInput v-bind="args" type="number" v-model="modelValue" />`
+  }),
+  args: {
+    label: 'Quantity',
+    placeholder: '0',
+    step: 2,
+    min: 0,
+    max: 10
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Verify step controls replace the native spinners', async () => {
+      const arrowUp = canvasElement.querySelector('.fz__input__arrowup')
+      const arrowDown = canvasElement.querySelector('.fz__input__arrowdown')
+      await expect(arrowUp).toBeInTheDocument()
+      await expect(arrowDown).toBeInTheDocument()
+    })
+
+    await step('Verify step up uses the native stepping algorithm', async () => {
+      const input = canvasElement.querySelector('input') as HTMLInputElement
+      const arrowUp = canvasElement.querySelector('.fz__input__arrowup') as HTMLElement
+      await userEvent.click(arrowUp)
+      await expect(input).toHaveValue(6)
+    })
+
+    await step('Verify step down decrements the value', async () => {
+      const input = canvasElement.querySelector('input') as HTMLInputElement
+      const arrowDown = canvasElement.querySelector('.fz__input__arrowdown') as HTMLElement
+      await userEvent.click(arrowDown)
+      await expect(input).toHaveValue(4)
     })
   }
 }

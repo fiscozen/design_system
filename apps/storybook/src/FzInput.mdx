@@ -8,7 +8,9 @@ Flexible input component with icon support, validation states, and multiple vari
 
 ## Features
 
-- **Multiple Input Types**: text, password, email, number, tel, url
+- **Multiple Input Types**: text, password, email, number, tel, url, currency
+- **Currency Mode**: `type="currency"` formats values with locale-aware separators, supports min/max clamping, step quantization and a numeric v-model (`number | null | undefined`)
+- **Step Controls**: up/down arrow buttons for `type="currency"` and `type="number"` (native number spinners are hidden)
 - **Icon Support**: Left and right icons (static or clickable buttons)
 - **Validation States**: Error and valid states with visual feedback
 - **Full Accessibility**: ARIA attributes, keyboard navigation, screen reader support
@@ -106,9 +108,9 @@ import { FzInput } from '@fiscozen/input'
     </tr>
     <tr>
       <td><code>type</code></td>
-      <td><code>'text' | 'password' | 'email' | 'number' | 'tel' | 'url'</code></td>
+      <td><code>'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'currency'</code></td>
       <td><code>'text'</code></td>
-      <td>Native HTML input type. Determines keyboard layout and validation behavior</td>
+      <td>Input type. Native HTML types determine keyboard layout and validation behavior; <code>currency</code> enables locale-aware currency formatting with step controls and a numeric v-model</td>
     </tr>
     <tr>
       <td><code>leftIcon</code></td>
@@ -260,6 +262,66 @@ import { FzInput } from '@fiscozen/input'
       <td>-</td>
       <td>Additional CSS classes applied to left icon container</td>
     </tr>
+    <tr>
+      <td><code>min</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Minimum allowed value. Clamps the value for <code>type="currency"</code>; forwarded to the native <code>min</code> attribute for <code>type="number"</code></td>
+    </tr>
+    <tr>
+      <td><code>max</code></td>
+      <td><code>number</code></td>
+      <td>-</td>
+      <td>Maximum allowed value. Clamps the value for <code>type="currency"</code>; forwarded to the native <code>max</code> attribute for <code>type="number"</code></td>
+    </tr>
+    <tr>
+      <td><code>step</code></td>
+      <td><code>number</code></td>
+      <td><code>1</code></td>
+      <td>Step increment for the arrow controls (<code>type="currency"</code> and <code>type="number"</code>); forwarded to the native <code>step</code> attribute for <code>type="number"</code></td>
+    </tr>
+    <tr>
+      <td><code>forceStep</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Currency only: automatically rounds values to the nearest step multiple</td>
+    </tr>
+    <tr>
+      <td><code>minimumFractionDigits</code></td>
+      <td><code>number</code></td>
+      <td><code>2</code></td>
+      <td>Currency only: minimum decimal places in formatted output</td>
+    </tr>
+    <tr>
+      <td><code>maximumFractionDigits</code></td>
+      <td><code>number</code></td>
+      <td><code>2</code></td>
+      <td>Currency only: maximum decimal places in formatted output</td>
+    </tr>
+    <tr>
+      <td><code>nullOnEmpty</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Currency only: empty input emits <code>null</code> instead of <code>undefined</code></td>
+    </tr>
+    <tr>
+      <td><code>zeroOnEmpty</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Currency only: empty input emits <code>0</code> instead of <code>undefined</code></td>
+    </tr>
+    <tr>
+      <td><code>stepUpAriaLabel</code></td>
+      <td><code>string</code></td>
+      <td><code>'Incrementa di {step}'</code></td>
+      <td>Accessible label for the step up arrow</td>
+    </tr>
+    <tr>
+      <td><code>stepDownAriaLabel</code></td>
+      <td><code>string</code></td>
+      <td><code>'Decrementa di {step}'</code></td>
+      <td>Accessible label for the step down arrow</td>
+    </tr>
   </tbody>
 </table>
 
@@ -387,9 +449,37 @@ Floating label variant moves placeholder above input when focused or when input 
 
 ### Number
 
+Number inputs show up/down arrow step controls in place of the native browser
+spinners. The arrows step the value using the native stepping algorithm,
+respecting `min`, `max` and `step`.
+
 ```vue
-<FzInput label="Age" type="number" v-model="age" />
+<FzInput label="Age" type="number" :min="0" :max="120" v-model="age" />
 ```
+
+### Currency
+
+`type="currency"` renders a currency input with Italian-locale formatting
+(comma decimal separator, point thousand separator), min/max clamping, step
+quantization and step controls. The v-model is numeric
+(`number | null | undefined`) instead of `string`: formatting happens on blur,
+while typing shows the raw value.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FzInput } from '@fiscozen/input'
+
+const amount = ref<number | undefined>(1234.56)
+</script>
+
+<template>
+  <FzInput label="Amount" type="currency" v-model="amount" :min="0" :step="0.5" />
+</template>
+```
+
+> Replaces the deprecated `FzCurrencyInput` component, which is now a thin
+> wrapper around `<FzInput type="currency">`.
 
 ### Telephone
 
