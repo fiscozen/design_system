@@ -15,6 +15,8 @@ export type FzInputType =
   | "number"
   | "tel"
   | "url"
+  | "search"
+  | "file"
   | "currency";
 
 /**
