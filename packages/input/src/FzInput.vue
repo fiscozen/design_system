@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="TType extends FzInputType = 'text'">
   /**
    * FzInput Component
    *
@@ -6,22 +6,32 @@
    * Supports left/right icons (static or clickable buttons), floating label variant,
    * error/valid states, and full accessibility features.
    *
+   * With `type="currency"` the v-model is numeric (`number | null | undefined`) and the
+   * input applies locale-aware currency formatting, min/max clamping and step controls.
+   * With `type="number"` the native spinners are replaced by the same step controls.
+   *
    * @component
    * @example
    * <FzInput label="Email" type="email" v-model="email" />
    * <FzInput label="Password" type="password" rightIcon="eye" @fzinput:right-icon-click="toggleVisibility" />
+   * <FzInput label="Amount" type="currency" v-model="amount" :min="0" />
    */
   import { computed, toRefs, Ref, ref, watch, useSlots, useAttrs } from "vue";
-  import { FzInputProps, type InputEnvironment } from "./types";
+  import {
+    FzInputProps,
+    type FzInputModelValue,
+    type FzInputType,
+    type InputEnvironment,
+  } from "./types";
   import { FzAlert } from "@fiscozen/alert";
   import { FzIcon } from "@fiscozen/icons";
   import { FzIconButton } from "@fiscozen/button";
   import useInputStyle from "./useInputStyle";
+  import useCurrencyInput from "./useCurrencyInput";
   import { generateInputId, sizeToEnvironmentMapping } from "./utils";
 
-  const props = withDefaults(defineProps<FzInputProps>(), {
+  const props = withDefaults(defineProps<FzInputProps<TType>>(), {
     error: false,
-    type: "text",
     rightIconButtonVariant: "invisible",
     secondRightIconButtonVariant: "invisible",
     variant: "normal",
@@ -34,6 +44,9 @@
     disableEmphasisReset: false,
     clearable: false,
     clearAriaLabel: "Cancella",
+    step: 1,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   });
 
   defineOptions({
@@ -118,12 +131,58 @@
     return "frontoffice";
   });
 
-  const model = defineModel<string>();
+  const model = defineModel<FzInputModelValue<TType>>();
   const containerRef: Ref<HTMLElement | null> = ref(null);
   const inputRef: Ref<HTMLInputElement | null> = ref(null);
   const uniqueId = generateInputId();
   const effectiveId = computed(() => props.id || uniqueId);
   const isFocused = ref(false);
+
+  /**
+   * The model widened to the full runtime range: the TType-conditional typing only
+   * narrows the public API, internally all value kinds must be handled (currency mode
+   * also tolerates deprecated string values at runtime).
+   */
+  const anyModel = model as unknown as Ref<string | number | null | undefined>;
+
+  /**
+   * The effective input type. The "text" fallback lives here instead of in
+   * withDefaults because generic-typed prop defaults cannot be inferred.
+   */
+  const effectiveType = computed<FzInputType>(() => props.type ?? "text");
+
+  const isCurrencyType = computed(() => effectiveType.value === "currency");
+  const isNumberType = computed(() => effectiveType.value === "number");
+
+  /** `type="currency"` renders a plain text input; formatting is handled in JS */
+  const nativeType = computed(() =>
+    isCurrencyType.value ? "text" : effectiveType.value,
+  );
+
+  const currency = useCurrencyInput({
+    props,
+    model: anyModel,
+    enabled: isCurrencyType,
+  });
+
+  /**
+   * The string bound to the native input element. In currency mode this is the
+   * formatted display value managed by useCurrencyInput (the v-model stays numeric);
+   * for every other type it proxies the v-model directly.
+   */
+  const inputModel = computed<string | undefined>({
+    get: () =>
+      isCurrencyType.value
+        ? currency.displayValue.value
+        : (anyModel.value as string | undefined),
+    set: (value) => {
+      if (isCurrencyType.value) {
+        currency.handleDisplayUpdate(value);
+      } else {
+        anyModel.value = value;
+      }
+    },
+  });
 
   /**
    * Internal visual state for emphasis props.
@@ -181,7 +240,7 @@
       aiReasoning: effectiveAiReasoning,
     },
     containerRef,
-    model,
+    inputModel,
     effectiveEnvironment,
     isFocused,
   );
@@ -409,14 +468,108 @@
   );
 
   const shouldShowClearIcon = computed(() => {
-    return props.clearable && !!model.value && !isReadonlyOrDisabled.value;
+    return props.clearable && !!inputModel.value && !isReadonlyOrDisabled.value;
   });
 
   const handleClear = () => {
-    model.value = "";
+    inputModel.value = "";
     emit("fzinput:clear");
     inputRef.value?.focus();
   };
+
+  const handleFocusEvent = (e: FocusEvent) => {
+    isFocused.value = true;
+    if (isCurrencyType.value) {
+      currency.handleFocus();
+    }
+    emit("focus", e);
+  };
+
+  const handleBlurEvent = (e: FocusEvent) => {
+    isFocused.value = false;
+    if (isCurrencyType.value) {
+      currency.handleBlur();
+    }
+    emit("blur", e);
+  };
+
+  /**
+   * Currency-mode character filtering. For other types this is a no-op and
+   * consumer keydown listeners (forwarded via attrs) keep working unchanged.
+   */
+  const handleNativeKeydown = (e: KeyboardEvent) => {
+    if (isCurrencyType.value) {
+      currency.handleKeydown(e);
+    }
+  };
+
+  /** Currency-mode paste normalization (Italian format parsing); no-op otherwise */
+  const handleNativePaste = (e: ClipboardEvent) => {
+    if (isCurrencyType.value) {
+      currency.handlePaste(e);
+    }
+  };
+
+  /**
+   * Step controls (up/down arrows) are shown for currency and number inputs.
+   * For `type="number"` the native browser spinners are hidden in favor of these.
+   */
+  const showStepControls = computed(
+    () => isCurrencyType.value || isNumberType.value,
+  );
+
+  const stepUpAriaLabel = computed(() => {
+    return props.stepUpAriaLabel || `Incrementa di ${props.step}`;
+  });
+
+  const stepDownAriaLabel = computed(() => {
+    return props.stepDownAriaLabel || `Decrementa di ${props.step}`;
+  });
+
+  /**
+   * Steps a `type="number"` input via the native stepUp()/stepDown() algorithm
+   * (respects the min/max/step attributes). Native stepping does not fire events,
+   * so an input event is dispatched to sync the v-model and notify listeners.
+   */
+  const numberStep = (direction: 1 | -1) => {
+    const el = inputRef.value;
+    if (!el) {
+      return;
+    }
+    try {
+      if (direction === 1) {
+        el.stepUp();
+      } else {
+        el.stepDown();
+      }
+    } catch {
+      // InvalidStateError: stepping not applicable (e.g. step="any" via attrs)
+      return;
+    }
+    el.dispatchEvent(new Event("input", { bubbles: true }));
+  };
+
+  const handleStep = (direction: 1 | -1) => {
+    if (isReadonlyOrDisabled.value) {
+      return;
+    }
+    if (isCurrencyType.value) {
+      currency.stepBy(direction);
+    } else if (isNumberType.value) {
+      numberStep(direction);
+    }
+  };
+
+  const handleStepKeydown = (e: KeyboardEvent, direction: 1 | -1) => {
+    if ((e.key === "Enter" || e.key === " ") && !isReadonlyOrDisabled.value) {
+      e.preventDefault();
+      handleStep(direction);
+    }
+  };
+
+  /** Hides the native number spinners, replaced by the step controls */
+  const numberSpinnerClass =
+    "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none";
 
   defineExpose({
     inputRef,
@@ -451,23 +604,16 @@
       <div class="flex flex-col justify-around min-w-0 grow">
         <span v-if="!showNormalPlaceholder"
           class="text-xs text-grey-300 grow-0 overflow-hidden text-ellipsis whitespace-nowrap">{{ placeholder }}</span>
-        <input :type="type" :required="required" :disabled="disabled" :readonly="readonly"
-          :placeholder="showNormalPlaceholder ? placeholder : ''" v-model="model" ref="inputRef"
-          :class="[staticInputClass, computedInputClass]" :pattern="pattern" :name :maxlength
-          :autocomplete="autocomplete ? 'on' : 'off'" :aria-required="required ? 'true' : 'false'"
-          :aria-invalid="error ? 'true' : 'false'" :aria-disabled="isReadonlyOrDisabled ? 'true' : 'false'"
-          :aria-labelledby="ariaLabelledBy" :aria-describedby="ariaDescribedBy" :aria-description="emphasisDescription"
-          v-bind="inputAttrs" :id="effectiveId" @input="handleUserInput" @blur="
-            (e) => {
-              isFocused = false;
-              $emit('blur', e);
-            }
-          " @focus="
-            (e) => {
-              isFocused = true;
-              $emit('focus', e);
-            }
-          " />
+        <input :type="nativeType" :required="required" :disabled="disabled" :readonly="readonly"
+          :placeholder="showNormalPlaceholder ? placeholder : ''" v-model="inputModel" ref="inputRef"
+          :class="[staticInputClass, computedInputClass, isNumberType ? numberSpinnerClass : '']" :pattern="pattern"
+          :name :maxlength :min="isNumberType ? min : undefined" :max="isNumberType ? max : undefined"
+          :step="isNumberType ? step : undefined" :autocomplete="autocomplete ? 'on' : 'off'"
+          :aria-required="required ? 'true' : 'false'" :aria-invalid="error ? 'true' : 'false'"
+          :aria-disabled="isReadonlyOrDisabled ? 'true' : 'false'" :aria-labelledby="ariaLabelledBy"
+          :aria-describedby="ariaDescribedBy" :aria-description="emphasisDescription" v-bind="inputAttrs"
+          :id="effectiveId" @input="handleUserInput" @keydown="handleNativeKeydown" @paste="handleNativePaste"
+          @blur="handleBlurEvent" @focus="handleFocusEvent" />
       </div>
       <div class="flex items-center gap-4">
         <FzIconButton v-if="shouldShowClearIcon" iconName="xmark" size="md" variant="invisible"
@@ -511,6 +657,18 @@
               ]" />
           <FzIcon v-if="valid" name="check" size="md" class="text-semantic-success" aria-hidden="true" />
         </slot>
+        <div v-if="showStepControls" class="flex flex-col justify-between items-center">
+          <FzIcon name="angle-up" size="xs" role="button" :aria-label="stepUpAriaLabel"
+            :aria-disabled="isReadonlyOrDisabled ? 'true' : undefined"
+            :tabindex="isReadonlyOrDisabled ? undefined : '0'"
+            class="fz__input__arrowup fz__currencyinput__arrowup cursor-pointer" @click="handleStep(1)"
+            @keydown="(e: KeyboardEvent) => handleStepKeydown(e, 1)"></FzIcon>
+          <FzIcon name="angle-down" size="xs" role="button" :aria-label="stepDownAriaLabel"
+            :aria-disabled="isReadonlyOrDisabled ? 'true' : undefined"
+            :tabindex="isReadonlyOrDisabled ? undefined : '0'"
+            class="fz__input__arrowdown fz__currencyinput__arrowdown cursor-pointer" @click="handleStep(-1)"
+            @keydown="(e: KeyboardEvent) => handleStepKeydown(e, -1)"></FzIcon>
+        </div>
       </div>
     </div>
     <FzAlert v-if="error && $slots.errorMessage" :id="`${effectiveId}-error`" role="alert" tone="error" variant="text">

@@ -2044,4 +2044,231 @@ describe("FzInput", () => {
       expect(errAlert.attributes("style") || "").not.toMatch(/width:/);
     });
   });
+
+  describe('type="currency"', () => {
+    it("renders a text input with step controls", async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Amount",
+          type: "currency",
+        },
+        slots: {},
+      });
+
+      expect(wrapper.find("input").attributes("type")).toBe("text");
+      expect(wrapper.find(".fz__input__arrowup").exists()).toBe(true);
+      expect(wrapper.find(".fz__input__arrowdown").exists()).toBe(true);
+      // Retro-compatible class names kept for FzCurrencyInput consumers
+      expect(wrapper.find(".fz__currencyinput__arrowup").exists()).toBe(true);
+      expect(wrapper.find(".fz__currencyinput__arrowdown").exists()).toBe(true);
+    });
+
+    it("formats the initial numeric v-model for display", async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Amount",
+          type: "currency",
+          modelValue: 1234.56,
+        },
+        slots: {},
+      });
+
+      await wrapper.vm.$nextTick();
+      expect(wrapper.find("input").element.value).toBe("1.234,56");
+    });
+
+    it("emits numbers while typing and formats on blur", async () => {
+      let modelValue: number | undefined = undefined;
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Amount",
+          type: "currency",
+          modelValue,
+          "onUpdate:modelValue": (value: number | null | undefined) => {
+            modelValue = value as number | undefined;
+            wrapper.setProps({ modelValue });
+          },
+        },
+        slots: {},
+      });
+
+      const inputElement = wrapper.find("input");
+      await inputElement.trigger("focus");
+      await inputElement.setValue("123,4");
+      expect(modelValue).toBe(123.4);
+
+      await inputElement.trigger("blur");
+      await wrapper.vm.$nextTick();
+      expect(inputElement.element.value).toBe("123,40");
+    });
+
+    it("steps the value with the arrow controls clamping to min/max", async () => {
+      let modelValue: number | undefined = 9.5;
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Amount",
+          type: "currency",
+          modelValue,
+          step: 1,
+          max: 10,
+          "onUpdate:modelValue": (value: number | null | undefined) => {
+            modelValue = value as number | undefined;
+            wrapper.setProps({ modelValue });
+          },
+        },
+        slots: {},
+      });
+
+      await wrapper.find(".fz__input__arrowup").trigger("click");
+      expect(modelValue).toBe(10);
+
+      await wrapper.find(".fz__input__arrowdown").trigger("click");
+      await wrapper.find(".fz__input__arrowdown").trigger("click");
+      expect(modelValue).toBe(8);
+    });
+
+    it("clears to the configured empty value and emits fzinput:clear", async () => {
+      let modelValue: number | null | undefined = 42;
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Amount",
+          type: "currency",
+          clearable: true,
+          nullOnEmpty: true,
+          modelValue,
+          "onUpdate:modelValue": (value: number | null | undefined) => {
+            modelValue = value;
+            wrapper.setProps({ modelValue });
+          },
+        },
+        slots: {},
+      });
+
+      await wrapper.vm.$nextTick();
+      await wrapper.find('[aria-label="Cancella"]').trigger("click");
+
+      expect(modelValue).toBe(null);
+      expect(wrapper.emitted("fzinput:clear")).toBeTruthy();
+      expect(wrapper.find("input").element.value).toBe("");
+    });
+
+    it("applies custom aria-labels to the step controls", async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Amount",
+          type: "currency",
+          stepUpAriaLabel: "Su",
+          stepDownAriaLabel: "Giù",
+        },
+        slots: {},
+      });
+
+      expect(wrapper.find(".fz__input__arrowup").attributes("aria-label")).toBe(
+        "Su",
+      );
+      expect(
+        wrapper.find(".fz__input__arrowdown").attributes("aria-label"),
+      ).toBe("Giù");
+    });
+  });
+
+  describe('type="number" step controls', () => {
+    it("renders step controls and hides the native spinners", async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Quantity",
+          type: "number",
+        },
+        slots: {},
+      });
+
+      expect(wrapper.find("input").attributes("type")).toBe("number");
+      expect(wrapper.find(".fz__input__arrowup").exists()).toBe(true);
+      expect(wrapper.find(".fz__input__arrowdown").exists()).toBe(true);
+      expect(wrapper.find("input").classes().join(" ")).toContain("appearance");
+    });
+
+    it("does not render step controls for text inputs", async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Label",
+        },
+        slots: {},
+      });
+
+      expect(wrapper.find(".fz__input__arrowup").exists()).toBe(false);
+      expect(wrapper.find(".fz__input__arrowdown").exists()).toBe(false);
+    });
+
+    it("steps the value with the arrow controls respecting min/max/step", async () => {
+      // Note: Vue's v-model on native number inputs casts values to number at
+      // runtime, so the emitted values are numbers (pre-existing FzInput behavior).
+      let modelValue: string | number = "4";
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Quantity",
+          type: "number",
+          step: 2,
+          min: 0,
+          max: 6,
+          modelValue,
+          "onUpdate:modelValue": (value: string | number | undefined) => {
+            modelValue = value ?? "";
+            wrapper.setProps({ modelValue });
+          },
+        },
+        slots: {},
+      });
+
+      await wrapper.find(".fz__input__arrowup").trigger("click");
+      expect(modelValue).toBe(6);
+
+      // Already at max: stays at 6
+      await wrapper.find(".fz__input__arrowup").trigger("click");
+      expect(modelValue).toBe(6);
+
+      await wrapper.find(".fz__input__arrowdown").trigger("click");
+      expect(modelValue).toBe(4);
+    });
+
+    it("emits default aria-labels based on the step value", async () => {
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Quantity",
+          type: "number",
+          step: 5,
+        },
+        slots: {},
+      });
+
+      expect(wrapper.find(".fz__input__arrowup").attributes("aria-label")).toBe(
+        "Incrementa di 5",
+      );
+      expect(
+        wrapper.find(".fz__input__arrowdown").attributes("aria-label"),
+      ).toBe("Decrementa di 5");
+    });
+
+    it("does not step when disabled or readonly", async () => {
+      let modelValue = "4";
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Quantity",
+          type: "number",
+          disabled: true,
+          modelValue,
+          "onUpdate:modelValue": (value: string | undefined) => {
+            modelValue = value ?? "";
+            wrapper.setProps({ modelValue });
+          },
+        },
+        slots: {},
+      });
+
+      const arrowUp = wrapper.find(".fz__input__arrowup");
+      expect(arrowUp.attributes("aria-disabled")).toBe("true");
+      await arrowUp.trigger("click");
+      expect(modelValue).toBe("4");
+    });
+  });
 });
