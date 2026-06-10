@@ -1,5 +1,12 @@
 # @fiscozen/textarea
 
+## 3.1.2
+
+### Patch Changes
+
+- Updated dependencies [2893adb]
+  - @fiscozen/alert@3.0.3
+
 ## 3.1.1
 
 ### Patch Changes

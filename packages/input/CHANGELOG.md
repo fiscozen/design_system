@@ -1,5 +1,12 @@
 # @fiscozen/input
 
+## 3.4.3
+
+### Patch Changes
+
+- Updated dependencies [2893adb]
+  - @fiscozen/alert@3.0.3
+
 ## 3.4.2
 
 ### Patch Changes
