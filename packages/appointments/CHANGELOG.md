@@ -1,5 +1,13 @@
 # @fiscozen/appointments
 
+## 1.1.12
+
+### Patch Changes
+
+- Updated dependencies [2893adb]
+  - @fiscozen/alert@3.0.3
+  - @fiscozen/radio@3.0.6
+
 ## 1.1.11
 
 ### Patch Changes
