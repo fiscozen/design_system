@@ -453,6 +453,12 @@ Number inputs show up/down arrow step controls in place of the native browser
 spinners. The arrows step the value using the native stepping algorithm,
 respecting `min`, `max` and `step`.
 
+Pasted content the native input would reject or blank out (e.g. the
+Italian-formatted `1.234,56`, or padded copies from spreadsheets) is rescued:
+it is normalized to a plain decimal and replaces the whole value. Natively
+valid clipboard text keeps the default browser behavior (insertion at the
+cursor), and unparseable text is ignored, keeping the previous value.
+
 ```vue
 <FzInput label="Age" type="number" :min="0" :max="120" v-model="age" />
 ```

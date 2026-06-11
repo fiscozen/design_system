@@ -2414,7 +2414,7 @@ describe("FzInput", () => {
           expect(onPaste.mock.calls[0][0].defaultPrevented).toBe(true);
         });
 
-        it("does not intercept paste for non-currency types", async () => {
+        it('does not intercept paste for type="text"', async () => {
           const onPaste = vi.fn();
           let modelValue: string | undefined = "hello";
           const wrapper = mount(FzInput, {
@@ -2584,6 +2584,206 @@ describe("FzInput", () => {
       expect(arrowUp.attributes("aria-disabled")).toBe("true");
       await arrowUp.trigger("click");
       expect(modelValue).toBe("4");
+    });
+  });
+
+  describe('type="number" paste rescue', () => {
+    /** Mounts a number-mode FzInput wired with the usual v-model harness */
+    const mountNumber = (
+      props: Record<string, unknown> = {},
+      attrs: Record<string, unknown> = {},
+    ) => {
+      let modelValue = props.modelValue as string | undefined;
+      const wrapper = mount(FzInput, {
+        props: {
+          label: "Quantity",
+          type: "number",
+          ...props,
+          "onUpdate:modelValue": (value: string | undefined) => {
+            modelValue = value;
+            wrapper.setProps({ modelValue });
+          },
+        },
+        attrs,
+        slots: {},
+      });
+      return { wrapper, model: () => modelValue };
+    };
+
+    /**
+     * Dispatches a paste event carrying `text` as the plain-text clipboard
+     * payload. Returns the event so tests can inspect defaultPrevented
+     * (manual dispatch: test-utils' trigger() skips disabled elements).
+     */
+    const paste = async (
+      wrapper: ReturnType<typeof mountNumber>["wrapper"],
+      text: string,
+    ) => {
+      const event = new Event("paste", { bubbles: true, cancelable: true });
+      Object.defineProperty(event, "clipboardData", {
+        value: { getData: () => text },
+      });
+      wrapper.find("input").element.dispatchEvent(event);
+      await wrapper.vm.$nextTick();
+      return event;
+    };
+
+    describe("natively-valid content is left to the browser", () => {
+      it.each([
+        { label: "dot decimal", text: "1234.56" },
+        { label: "negative integer", text: "-12" },
+        { label: "scientific notation", text: "1e3" },
+        { label: "digit fragment (cursor insertion)", text: "34" },
+      ])("$label: $text is not intercepted", async ({ text }) => {
+        const { wrapper, model } = mountNumber({ modelValue: "7" });
+
+        const event = await paste(wrapper, text);
+
+        // Default not prevented: the browser performs its normal insertion
+        // (jsdom has no default paste action, so the model stays as-is here)
+        expect(event.defaultPrevented).toBe(false);
+        expect(model()).toBe("7");
+      });
+
+      it("ignores an empty clipboard without preventing default", async () => {
+        const { wrapper, model } = mountNumber({ modelValue: "7" });
+
+        const event = await paste(wrapper, "");
+
+        expect(event.defaultPrevented).toBe(false);
+        expect(model()).toBe("7");
+      });
+    });
+
+    describe("rescued content (native input would reject it)", () => {
+      it.each([
+        {
+          label: "Italian format with grouping",
+          text: "1.234,56",
+          expected: "1234.56",
+        },
+        {
+          label: "comma decimal without grouping",
+          text: "1234,56",
+          expected: "1234.56",
+        },
+        {
+          label: "multiple thousand groups",
+          text: "1.234.567,89",
+          expected: "1234567.89",
+        },
+        {
+          label: "negative Italian format",
+          text: "-1.234,56",
+          expected: "-1234.56",
+        },
+        {
+          label: "padded spreadsheet copy",
+          text: "  1234.56  \n",
+          expected: "1234.56",
+        },
+        {
+          label: "bare leading dot (outside native grammar)",
+          text: ".5",
+          expected: "0.5",
+        },
+        {
+          label: "explicit plus sign (outside native grammar)",
+          text: "+5",
+          expected: "5",
+        },
+      ])(
+        "$label: $text is normalized to $expected",
+        async ({ text, expected }) => {
+          const { wrapper, model } = mountNumber();
+
+          const event = await paste(wrapper, text);
+
+          expect(event.defaultPrevented).toBe(true);
+          expect(model()).toBe(expected);
+        },
+      );
+
+      it("replaces the previous value entirely when rescuing", async () => {
+        const { wrapper, model } = mountNumber({ modelValue: "100" });
+
+        await paste(wrapper, "1.234,56");
+
+        expect(model()).toBe("1234.56");
+        expect(wrapper.find("input").element.value).toBe("1234.56");
+      });
+
+      it("does not truncate decimals (unlike currency mode)", async () => {
+        const { wrapper, model } = mountNumber();
+
+        await paste(wrapper, "1234,5699");
+
+        expect(model()).toBe("1234.5699");
+      });
+
+      it("does not clamp to min/max (validation stays native)", async () => {
+        const { wrapper, model } = mountNumber({ min: 0, max: 100 });
+
+        await paste(wrapper, "1.234,56");
+        expect(model()).toBe("1234.56");
+
+        await wrapper.find("input").trigger("blur");
+        await wrapper.vm.$nextTick();
+        expect(model()).toBe("1234.56");
+      });
+
+      it("keeps notifying consumer @paste listeners", async () => {
+        const onPaste = vi.fn();
+        const { wrapper, model } = mountNumber({}, { onPaste });
+
+        await paste(wrapper, "1234,56");
+
+        expect(model()).toBe("1234.56");
+        expect(onPaste).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe("ignored clipboard content", () => {
+      it.each([
+        { label: "non-numeric text", text: "abc" },
+        { label: "currency symbol prefix", text: "€ 1.234,56" },
+        { label: "Infinity (non-finite)", text: "Infinity" },
+      ])("ignores $label: previous value is kept", async ({ text }) => {
+        const { wrapper, model } = mountNumber({ modelValue: "99" });
+
+        const event = await paste(wrapper, text);
+
+        // Default is prevented (content is not natively valid either) but
+        // the model keeps its previous value instead of being blanked out
+        expect(event.defaultPrevented).toBe(true);
+        expect(model()).toBe("99");
+      });
+    });
+
+    describe("readonly and disabled guards", () => {
+      it("ignores paste when readonly and leaves the native event untouched", async () => {
+        const { wrapper, model } = mountNumber({
+          modelValue: "10",
+          readonly: true,
+        });
+
+        const event = await paste(wrapper, "1.234,56");
+
+        expect(event.defaultPrevented).toBe(false);
+        expect(model()).toBe("10");
+      });
+
+      it("ignores paste when disabled", async () => {
+        const { wrapper, model } = mountNumber({
+          modelValue: "10",
+          disabled: true,
+        });
+
+        const event = await paste(wrapper, "1.234,56");
+
+        expect(event.defaultPrevented).toBe(false);
+        expect(model()).toBe("10");
+      });
     });
   });
 });
