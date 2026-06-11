@@ -358,42 +358,82 @@ const calculatePositionWithoutOpener = (
 // Boundary Correction - Pure Function
 // ============================================================================
 
+// Gap (px) kept between the floating element and the boundary edge when it has
+// to be shifted to stay on screen, so the menu never sits flush against (or
+// bleeds past) the viewport edge on narrow/mobile screens.
+const VIEWPORT_MARGIN = 8
+
+interface Bounds {
+  left: number
+  right: number
+  top: number
+  bottom: number
+}
+
+// The visible viewport as a rect. Mirrors the `windowDOMrect` used by the
+// auto-positioning util so collision handling and auto-positioning agree on
+// what "on screen" means.
+const getViewportBounds = (): Bounds => ({
+  left: 0,
+  top: 0,
+  right: window.innerWidth,
+  bottom: window.innerHeight
+})
+
+// Effective collision boundary: the intersection of the container and the
+// viewport. Clamping to the container alone is not enough — for openerless
+// dropdowns the container resolves to document.body, whose rect can be wider
+// than the viewport (or extend under it) on narrow screens, letting the menu
+// overflow the right edge. Intersecting with the viewport guarantees the
+// element stays on screen while still honouring a real (narrower) container.
+const getCollisionBounds = (container: DOMRect, viewport: Bounds): Bounds => ({
+  left: Math.max(container.left, viewport.left),
+  right: Math.min(container.right, viewport.right),
+  top: Math.max(container.top, viewport.top),
+  bottom: Math.min(container.bottom, viewport.bottom)
+})
+
 const applyBoundaryCorrections = (
   realPosition: FzAbsolutePosition,
   element: DOMRect,
   container: DOMRect,
-  transform: Transform
+  transform: Transform,
+  viewport: Bounds = getViewportBounds(),
+  margin: number = VIEWPORT_MARGIN
 ): { position: FzAbsolutePosition; transform: Transform } => {
   const correctedPosition = { ...realPosition }
   const correctedTransform = { ...transform }
 
-  // Left boundary
-  if (realPosition.x < container.left) {
-    correctedPosition.x = container.left
+  const bounds = getCollisionBounds(container, viewport)
+
+  // --- Horizontal ---
+  // Inset the usable area by the margin, but never produce an inverted range
+  // when the element is wider than the available space (keep the left edge
+  // anchored so the element starts on screen rather than vanishing).
+  const minLeft = bounds.left + margin
+  const maxLeft = Math.max(minLeft, bounds.right - margin - element.width)
+
+  // Right overflow: shift the element left so its right edge stays on screen.
+  if (correctedPosition.x > maxLeft) {
+    correctedPosition.x = maxLeft
+    correctedTransform.x = 0
+  }
+  // Left overflow / clamp: never let the left edge cross the margin.
+  if (correctedPosition.x < minLeft) {
+    correctedPosition.x = minLeft
     correctedTransform.x = 0
   }
 
-  // Right boundary
-  if (realPosition.x + element.width > container.right) {
-    const fixedX = container.right - element.width
-    if (fixedX > 0) {
-      correctedPosition.x = fixedX
-    }
-    correctedTransform.x = 0
-  }
+  // --- Vertical ---
+  const minTop = bounds.top + margin
+  const maxTop = Math.max(minTop, bounds.bottom - margin - element.height)
 
-  // Top boundary
-  if (realPosition.y < container.top) {
-    correctedPosition.y = container.top
+  if (correctedPosition.y > maxTop) {
+    correctedPosition.y = maxTop
     correctedTransform.y = 0
   }
-
-  // Bottom boundary
-  if (realPosition.y + element.height > container.bottom) {
-    const fixedY = container.bottom - element.height
-    if (fixedY > 0) {
-      correctedPosition.y = fixedY
-    }
+  if (correctedPosition.y < minTop) {
+    correctedPosition.y = minTop
     correctedTransform.y = 0
   }
 

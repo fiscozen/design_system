@@ -224,6 +224,175 @@ describe('useFloating', () => {
     })
   })
 
+  describe('viewport collision (mobile)', () => {
+    const VIEWPORT_MARGIN = 8
+    const ELEMENT_WIDTH = 200
+    const ELEMENT_HEIGHT = 100
+
+    let originalInnerWidth: number
+    let originalInnerHeight: number
+
+    const setViewport = (width: number, height: number) => {
+      Object.defineProperty(window, 'innerWidth', { value: width, configurable: true })
+      Object.defineProperty(window, 'innerHeight', { value: height, configurable: true })
+    }
+
+    beforeEach(() => {
+      originalInnerWidth = window.innerWidth
+      originalInnerHeight = window.innerHeight
+    })
+
+    afterEach(() => {
+      setViewport(originalInnerWidth, originalInnerHeight)
+    })
+
+    it('leaves the position untouched when there is enough room (wide viewport)', async () => {
+      setViewport(1440, 900)
+
+      // Opener comfortably inside the viewport, plenty of room to the right.
+      mockOpener.getBoundingClientRect = vi.fn(() => ({
+        width: 100,
+        height: 40,
+        top: 200,
+        left: 300,
+        right: 400,
+        bottom: 240,
+        x: 300,
+        y: 200,
+        toJSON: () => {}
+      })) as any
+
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('bottom-start'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      // bottom-start anchors the element's left edge at opener.left (300) and the
+      // top at opener.bottom (240). There's room, so nothing is shifted.
+      expect(floating.float.position.x).toBe(300)
+      expect(floating.float.position.y).toBe(240)
+    })
+
+    it('shifts a near-right-edge menu left so it stays on screen (narrow viewport)', async () => {
+      // Narrow mobile viewport. NOTE: the container (document.body by default here)
+      // reports a rect WIDER than the viewport, reproducing the real bug — clamping
+      // to the container alone would not keep the menu on screen.
+      setViewport(390, 844)
+      mockContainer.getBoundingClientRect = vi.fn(() => ({
+        width: 800,
+        height: 844,
+        top: 0,
+        left: 0,
+        right: 800,
+        bottom: 844,
+        x: 0,
+        y: 0,
+        toJSON: () => {}
+      })) as any
+
+      // Kebab opener pinned to the right edge of the narrow screen.
+      mockOpener.getBoundingClientRect = vi.fn(() => ({
+        width: 32,
+        height: 32,
+        top: 120,
+        left: 350,
+        right: 382,
+        bottom: 152,
+        x: 350,
+        y: 120,
+        toJSON: () => {}
+      })) as any
+
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('bottom-start'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) },
+        container: { domRef: ref(mockContainer) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      const left = floating.float.position.x
+      // Right edge must stay within the viewport (minus the safety margin)…
+      expect(left + ELEMENT_WIDTH).toBeLessThanOrEqual(390 - VIEWPORT_MARGIN)
+      // …and the left edge must not be pushed off the left side either.
+      expect(left).toBeGreaterThanOrEqual(VIEWPORT_MARGIN)
+      // Concretely: clamped to viewportWidth - margin - elementWidth = 390 - 8 - 200.
+      expect(left).toBe(390 - VIEWPORT_MARGIN - ELEMENT_WIDTH)
+    })
+
+    it('clamps the left edge to the margin when the element is wider than the viewport', async () => {
+      // Pathological narrow viewport where the menu cannot fully fit; it should
+      // still start on screen (left edge at the margin) rather than disappear.
+      setViewport(180, 844)
+
+      mockOpener.getBoundingClientRect = vi.fn(() => ({
+        width: 32,
+        height: 32,
+        top: 120,
+        left: 150,
+        right: 182,
+        bottom: 152,
+        x: 150,
+        y: 120,
+        toJSON: () => {}
+      })) as any
+
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('bottom-end'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      // element width (200) > viewport width (180): left edge clamps to the margin.
+      expect(floating.float.position.x).toBe(VIEWPORT_MARGIN)
+      expect(Number.isNaN(floating.float.position.y)).toBe(false)
+    })
+
+    it('shifts a menu up so its bottom edge stays on screen (vertical clamp)', async () => {
+      setViewport(390, 600)
+
+      // Opener near the bottom of the viewport; a bottom-anchored menu would
+      // overflow below the fold and must be lifted up.
+      mockOpener.getBoundingClientRect = vi.fn(() => ({
+        width: 100,
+        height: 40,
+        top: 540,
+        left: 100,
+        right: 200,
+        bottom: 580,
+        x: 100,
+        y: 540,
+        toJSON: () => {}
+      })) as any
+
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('bottom-start'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      expect(floating.float.position.y + ELEMENT_HEIGHT).toBeLessThanOrEqual(600 - VIEWPORT_MARGIN)
+      // Clamped to viewportHeight - margin - elementHeight = 600 - 8 - 100.
+      expect(floating.float.position.y).toBe(600 - VIEWPORT_MARGIN - ELEMENT_HEIGHT)
+    })
+  })
+
   describe('element styling', () => {
     it('should apply position fixed immediately', async () => {
       const args = toRefs({
