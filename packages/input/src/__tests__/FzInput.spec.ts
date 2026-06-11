@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import { FzInput } from "..";
 
@@ -2169,6 +2169,321 @@ describe("FzInput", () => {
       expect(
         wrapper.find(".fz__input__arrowdown").attributes("aria-label"),
       ).toBe("Giù");
+    });
+
+    describe("Paste handling", () => {
+      /**
+       * Mounts a currency-mode FzInput wired with the usual v-model harness.
+       * Returns the wrapper and an accessor for the latest model value.
+       */
+      const mountCurrency = (
+        props: Record<string, unknown> = {},
+        attrs: Record<string, unknown> = {},
+      ) => {
+        let modelValue = props.modelValue as number | null | undefined;
+        const wrapper = mount(FzInput, {
+          props: {
+            label: "Amount",
+            type: "currency",
+            ...props,
+            "onUpdate:modelValue": (value: number | null | undefined) => {
+              modelValue = value;
+              wrapper.setProps({ modelValue });
+            },
+          },
+          attrs,
+          slots: {},
+        });
+        return { wrapper, model: () => modelValue };
+      };
+
+      /** Dispatches a paste event carrying `text` as the plain-text clipboard payload */
+      const paste = async (
+        wrapper: ReturnType<typeof mountCurrency>["wrapper"],
+        text: string,
+      ) => {
+        await wrapper.find("input").trigger("paste", {
+          clipboardData: { getData: () => text },
+        });
+        await wrapper.vm.$nextTick();
+      };
+
+      describe("accepted clipboard formats", () => {
+        it.each([
+          {
+            label: "Italian format with grouping",
+            text: "1.234,56",
+            expected: 1234.56,
+          },
+          {
+            label: "comma decimal without grouping",
+            text: "1234,56",
+            expected: 1234.56,
+          },
+          {
+            label: "multiple thousand groups",
+            text: "1.234.567,89",
+            expected: 1234567.89,
+          },
+          { label: "plain integer", text: "1234", expected: 1234 },
+          {
+            label: "dot as decimal separator (no comma)",
+            text: "1234.56",
+            expected: 1234.56,
+          },
+          {
+            label: "negative Italian format",
+            text: "-1.234,56",
+            expected: -1234.56,
+          },
+          { label: "zero", text: "0", expected: 0 },
+          {
+            label: "surrounding whitespace and newline",
+            text: "  1234,56\n",
+            expected: 1234.56,
+          },
+          {
+            label: "scientific notation (parseFloat)",
+            text: "1e3",
+            expected: 1000,
+          },
+          {
+            label: "numeric prefix of mixed text (parseFloat)",
+            text: "123abc",
+            expected: 123,
+          },
+        ])("parses $label: $text", async ({ text, expected }) => {
+          const { wrapper, model } = mountCurrency();
+
+          await paste(wrapper, text);
+
+          expect(model()).toBe(expected);
+        });
+      });
+
+      describe("ignored clipboard content", () => {
+        it.each([
+          { label: "non-numeric text", text: "abc" },
+          { label: "currency symbol prefix", text: "€ 1.234,56" },
+          { label: "lone minus sign", text: "-" },
+          { label: "whitespace only", text: "   " },
+          { label: "empty string", text: "" },
+          { label: "Infinity (non-finite)", text: "Infinity" },
+        ])(
+          "ignores $label: model and display stay unchanged",
+          async ({ text }) => {
+            const { wrapper, model } = mountCurrency({ modelValue: 99 });
+            const input = wrapper.find("input");
+            await input.trigger("focus");
+            const displayBefore = input.element.value;
+
+            await paste(wrapper, text);
+
+            expect(model()).toBe(99);
+            expect(input.element.value).toBe(displayBefore);
+          },
+        );
+
+        it("ignores paste when clipboardData is unavailable", async () => {
+          const { wrapper, model } = mountCurrency({ modelValue: 42 });
+
+          await wrapper.find("input").trigger("paste");
+          await wrapper.vm.$nextTick();
+
+          expect(model()).toBe(42);
+        });
+
+        it("does not treat an invalid paste as empty input (zeroOnEmpty untouched)", async () => {
+          const { wrapper, model } = mountCurrency({
+            modelValue: 5,
+            zeroOnEmpty: true,
+          });
+
+          await paste(wrapper, "abc");
+
+          expect(model()).toBe(5);
+        });
+      });
+
+      describe("display value and v-model interplay", () => {
+        it("shows the normalized raw value while focused and formats on blur", async () => {
+          const { wrapper, model } = mountCurrency();
+          const input = wrapper.find("input");
+          await input.trigger("focus");
+
+          await paste(wrapper, "1.234,56");
+
+          expect(model()).toBe(1234.56);
+          // While focused the pasted value is shown raw (no grouping), ready for editing
+          expect(input.element.value).toBe("1234,56");
+
+          await input.trigger("blur");
+          await wrapper.vm.$nextTick();
+          expect(input.element.value).toBe("1.234,56");
+        });
+
+        it("replaces the previous value entirely", async () => {
+          const { wrapper, model } = mountCurrency({ modelValue: 99 });
+          const input = wrapper.find("input");
+          await input.trigger("focus");
+
+          await paste(wrapper, "55,5");
+
+          expect(model()).toBe(55.5);
+          expect(input.element.value).toBe("55,5");
+        });
+
+        it("truncates (not rounds) decimals to maximumFractionDigits", async () => {
+          const { wrapper, model } = mountCurrency();
+
+          await paste(wrapper, "1234,5699");
+
+          expect(model()).toBe(1234.56);
+        });
+
+        it("honors a custom maximumFractionDigits", async () => {
+          const { wrapper, model } = mountCurrency({
+            maximumFractionDigits: 4,
+          });
+
+          await paste(wrapper, "1,23456");
+
+          expect(model()).toBe(1.2345);
+        });
+
+        it("does not clamp to min/max on paste; clamping happens on blur", async () => {
+          const { wrapper, model } = mountCurrency({ min: 0, max: 100 });
+          const input = wrapper.find("input");
+          await input.trigger("focus");
+
+          await paste(wrapper, "200");
+          expect(model()).toBe(200);
+
+          await input.trigger("blur");
+          await wrapper.vm.$nextTick();
+          expect(model()).toBe(100);
+          expect(input.element.value).toBe("100,00");
+        });
+      });
+
+      describe("readonly and disabled guards", () => {
+        it("ignores paste when readonly and leaves the native event untouched", async () => {
+          const onPaste = vi.fn();
+          const { wrapper, model } = mountCurrency(
+            { modelValue: 10, readonly: true },
+            { onPaste },
+          );
+
+          await paste(wrapper, "1234,56");
+
+          expect(model()).toBe(10);
+          // The guard returns before preventDefault: native flow is left alone
+          expect(onPaste.mock.calls[0][0].defaultPrevented).toBe(false);
+        });
+
+        it("ignores paste when disabled", async () => {
+          const { wrapper, model } = mountCurrency({
+            modelValue: 10,
+            disabled: true,
+          });
+
+          // Manual dispatch: test-utils' trigger() skips events on disabled
+          // elements, which would leave the component guard unexercised
+          const event = new Event("paste", { bubbles: true, cancelable: true });
+          Object.defineProperty(event, "clipboardData", {
+            value: { getData: () => "1234,56" },
+          });
+          wrapper.find("input").element.dispatchEvent(event);
+          await wrapper.vm.$nextTick();
+
+          expect(model()).toBe(10);
+          expect(event.defaultPrevented).toBe(false);
+        });
+      });
+
+      describe("event forwarding", () => {
+        it("keeps notifying consumer @paste listeners in currency mode", async () => {
+          const onPaste = vi.fn();
+          const { wrapper, model } = mountCurrency({}, { onPaste });
+
+          await paste(wrapper, "1234,56");
+
+          expect(model()).toBe(1234.56);
+          expect(onPaste).toHaveBeenCalledTimes(1);
+          // Currency mode takes over the paste: default is prevented
+          expect(onPaste.mock.calls[0][0].defaultPrevented).toBe(true);
+        });
+
+        it("does not intercept paste for non-currency types", async () => {
+          const onPaste = vi.fn();
+          let modelValue: string | undefined = "hello";
+          const wrapper = mount(FzInput, {
+            props: {
+              label: "Label",
+              type: "text",
+              modelValue,
+              "onUpdate:modelValue": (value: string | undefined) => {
+                modelValue = value;
+                wrapper.setProps({ modelValue });
+              },
+            },
+            attrs: { onPaste },
+            slots: {},
+          });
+
+          await wrapper.find("input").trigger("paste", {
+            clipboardData: { getData: () => "1.234,56" },
+          });
+          await wrapper.vm.$nextTick();
+
+          // The internal paste handler is a no-op for text inputs: the model is
+          // not rewritten and the event reaches consumer listeners unprevented
+          expect(modelValue).toBe("hello");
+          expect(onPaste).toHaveBeenCalledTimes(1);
+          expect(onPaste.mock.calls[0][0].defaultPrevented).toBe(false);
+        });
+      });
+
+      describe("known parse() limitations (documents current behavior)", () => {
+        // These pin down how the shared parse() currently interprets ambiguous
+        // clipboard content. They are NOT desired-behavior specs: if parse()
+        // gets smarter about these formats, update the assertions deliberately.
+
+        it('reads English-grouped "1,234.56" with comma as the decimal separator', async () => {
+          const { wrapper, model } = mountCurrency();
+
+          await paste(wrapper, "1,234.56");
+
+          // Dots stripped as grouping, first comma is the decimal: 1.23456 -> truncated
+          expect(model()).toBe(1.23);
+        });
+
+        it('reads Italian-grouped "1.234.567" (no decimals) as a dot-decimal number', async () => {
+          const { wrapper, model } = mountCurrency();
+
+          await paste(wrapper, "1.234.567");
+
+          // No comma -> parseFloat stops at the second dot: 1.234 -> truncated
+          expect(model()).toBe(1.23);
+        });
+
+        it('reads ambiguous "1.234" as a decimal, not as Italian thousands', async () => {
+          const { wrapper, model } = mountCurrency();
+
+          await paste(wrapper, "1.234");
+
+          expect(model()).toBe(1.23);
+        });
+
+        it('reads space-grouped "12 000" as the leading number only', async () => {
+          const { wrapper, model } = mountCurrency();
+
+          await paste(wrapper, "12 000");
+
+          // parseFloat stops at the space
+          expect(model()).toBe(12);
+        });
+      });
     });
   });
 
