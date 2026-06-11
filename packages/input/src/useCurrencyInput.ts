@@ -6,6 +6,7 @@ import {
   roundTo,
   truncateDecimals,
 } from "@fiscozen/composables";
+import { parseClipboardNumber } from "./utils";
 
 /**
  * Subset of FzInput props the currency behavior depends on.
@@ -284,10 +285,10 @@ export default function useCurrencyInput(options: UseCurrencyInputOptions) {
       return;
     }
 
-    // Use parse() to convert Italian format to number
-    const parsed = parse(pastedText);
+    // Shared clipboard parser (handles Italian format, returns null if invalid)
+    const parsed = parseClipboardNumber(pastedText);
 
-    if (!isNaN(parsed) && isFinite(parsed)) {
+    if (parsed !== null) {
       // Truncate decimals to maximumFractionDigits
       const processed = truncateDecimals(parsed, maxFractionDigits());
 

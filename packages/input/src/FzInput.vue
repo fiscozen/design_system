@@ -8,7 +8,9 @@
    *
    * With `type="currency"` the v-model is numeric (`number | null | undefined`) and the
    * input applies locale-aware currency formatting, min/max clamping and step controls.
-   * With `type="number"` the native spinners are replaced by the same step controls.
+   * With `type="number"` the native spinners are replaced by the same step controls,
+   * and pasted content the native input would reject (e.g. Italian-formatted
+   * "1.234,56") is normalized to a plain decimal instead of being lost.
    *
    * @component
    * @example
@@ -28,7 +30,12 @@
   import { FzIconButton } from "@fiscozen/button";
   import useInputStyle from "./useInputStyle";
   import useCurrencyInput from "./useCurrencyInput";
-  import { generateInputId, sizeToEnvironmentMapping } from "./utils";
+  import {
+    generateInputId,
+    isNativeFloatString,
+    parseClipboardNumber,
+    sizeToEnvironmentMapping,
+  } from "./utils";
 
   const props = withDefaults(defineProps<FzInputProps<TType>>(), {
     error: false,
@@ -503,10 +510,44 @@
     }
   };
 
-  /** Currency-mode paste normalization (Italian format parsing); no-op otherwise */
+  /**
+   * Rescue paste for `type="number"`. Clipboard text the native input accepts
+   * wholesale (HTML floating-point grammar) is left to the browser, preserving
+   * cursor-position insertion. Content the native input would reject or blank
+   * out (e.g. Italian-formatted "1.234,56", padded copies from spreadsheets)
+   * is normalized via the shared clipboard parser and replaces the whole
+   * value; unparseable text is ignored, keeping the previous value intact.
+   * Unlike currency mode, no decimal truncation or min/max clamping is
+   * applied: validation semantics stay native.
+   */
+  const handleNumberPaste = (e: ClipboardEvent) => {
+    if (props.readonly || props.disabled) {
+      return;
+    }
+
+    const pastedText = e.clipboardData?.getData("text") || "";
+    if (!pastedText || isNativeFloatString(pastedText)) {
+      return;
+    }
+
+    e.preventDefault();
+
+    const parsed = parseClipboardNumber(pastedText);
+    if (parsed !== null) {
+      anyModel.value = String(parsed);
+    }
+  };
+
+  /**
+   * Paste interception: currency mode normalizes every paste (Italian format
+   * parsing), number mode rescues non-native clipboard content; no-op for all
+   * other types.
+   */
   const handleNativePaste = (e: ClipboardEvent) => {
     if (isCurrencyType.value) {
       currency.handlePaste(e);
+    } else if (isNumberType.value) {
+      handleNumberPaste(e);
     }
   };
 
