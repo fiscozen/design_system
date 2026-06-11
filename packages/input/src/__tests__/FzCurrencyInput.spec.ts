@@ -1794,4 +1794,85 @@ describe("FzCurrencyInput", () => {
       expect(wrapper.find(".fz__currencyinput__arrowdown").exists()).toBe(true);
     });
   });
+
+  describe("Paste handling (forwarded to FzInput currency mode)", () => {
+    it("parses Italian-formatted clipboard text into the numeric model", async () => {
+      let modelValue: number | undefined = undefined;
+      let wrapper: ReturnType<typeof mount> | null = null;
+      wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: "Label",
+          modelValue,
+          "onUpdate:modelValue": (e) => {
+            modelValue = e as number;
+            if (wrapper) wrapper.setProps({ modelValue });
+          },
+        },
+      });
+
+      const inputElement = wrapper.find("input");
+      await inputElement.trigger("focus");
+      await inputElement.trigger("paste", {
+        clipboardData: { getData: () => "1.234,56" },
+      });
+      await wrapper.vm.$nextTick();
+
+      expect(modelValue).toBe(1234.56);
+      // While focused the pasted value is shown raw (no grouping)
+      expect(inputElement.element.value).toBe("1234,56");
+
+      await inputElement.trigger("blur");
+      await new Promise((resolve) => window.setTimeout(resolve, 100));
+      expect(inputElement.element.value).toBe("1.234,56");
+    });
+
+    it("ignores clipboard text that cannot be parsed", async () => {
+      let modelValue: number | undefined = 99;
+      let wrapper: ReturnType<typeof mount> | null = null;
+      wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: "Label",
+          modelValue,
+          "onUpdate:modelValue": (e) => {
+            modelValue = e as number;
+            if (wrapper) wrapper.setProps({ modelValue });
+          },
+        },
+      });
+
+      const inputElement = wrapper.find("input");
+      await inputElement.trigger("focus");
+      const displayBefore = inputElement.element.value;
+      await inputElement.trigger("paste", {
+        clipboardData: { getData: () => "abc" },
+      });
+      await wrapper.vm.$nextTick();
+
+      expect(modelValue).toBe(99);
+      expect(inputElement.element.value).toBe(displayBefore);
+    });
+
+    it("does not react to paste when readonly", async () => {
+      let modelValue: number | undefined = 10;
+      let wrapper: ReturnType<typeof mount> | null = null;
+      wrapper = mount(FzCurrencyInput, {
+        props: {
+          label: "Label",
+          readonly: true,
+          modelValue,
+          "onUpdate:modelValue": (e) => {
+            modelValue = e as number;
+            if (wrapper) wrapper.setProps({ modelValue });
+          },
+        },
+      });
+
+      await wrapper.find("input").trigger("paste", {
+        clipboardData: { getData: () => "1234,56" },
+      });
+      await wrapper.vm.$nextTick();
+
+      expect(modelValue).toBe(10);
+    });
+  });
 });
