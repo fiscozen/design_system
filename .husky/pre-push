@@ -45,6 +45,31 @@ if [ "$SKIP_CHANGESET" = "0" ]; then
   fi
 fi
 
+# ── Production dependency audit ────────────────────────────────────────────────
+# Blocks pushes that introduce HIGH/CRITICAL vulnerabilities in PRODUCTION
+# dependencies — the published surface that ships to consuming apps. Dev/build-
+# tool advisories are intentionally NOT gated here (they do not propagate).
+# Skip with: SKIP_AUDIT_CHECK=1 git push
+# ─────────────────────────────────────────────────────────────────────────────
+
+if [ "$SKIP_AUDIT_CHECK" = "1" ]; then
+  echo "⏭  Prod audit check skipped (SKIP_AUDIT_CHECK=1)"
+else
+  echo "🔒 Auditing production dependencies..."
+  pnpm audit --prod --audit-level high
+  AUDIT_EXIT=$?
+  if [ $AUDIT_EXIT -ne 0 ]; then
+    echo ""
+    echo "🚨 High/critical vulnerabilities in PRODUCTION dependencies!"
+    echo "   These ship to consumers — fix before pushing."
+    echo ""
+    echo "   To skip this check (only if you know what you're doing):"
+    echo "     SKIP_AUDIT_CHECK=1 git push"
+    echo ""
+    exit 1
+  fi
+fi
+
 # ── Build check ──────────────────────────────────────────────────────────────
 # Builds all packages to catch transitive breakage.
 # Skip with: SKIP_BUILD_CHECK=1 git push
