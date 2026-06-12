@@ -9,7 +9,7 @@ A flexible layout component for organizing content with controlled spacing. Supp
 ## Features
 
 - Vertical and horizontal layout orientations
-- Layout variants for horizontal containers (expand-first, with more coming)
+- Layout variants for horizontal containers: `default`, `expand-first`, `expand-all`, `expand-equal`, `space-between`, `expand-last`
 - Customizable gap sizes (sm, base, lg)
 - Main and section container variants with different spacing scales
 - Special paragraph spacing for improved typography
@@ -95,7 +95,7 @@ Elements align horizontally in a single row with vertical centering.
     </tr>
     <tr>
       <td><code>layout</code></td>
-      <td><code>'default' | 'expand-first' | 'expand-all' | 'space-between' | 'expand-last'</code></td>
+      <td><code>'default' | 'expand-first' | 'expand-all' | 'expand-equal' | 'space-between' | 'expand-last'</code></td>
       <td><code>'default'</code></td>
       <td>Layout behavior for horizontal containers (controls how child elements expand). Only applies when <code>horizontal</code> is <code>true</code></td>
     </tr>
@@ -233,7 +233,11 @@ The `layout` prop controls how child elements expand to fill available space in 
     </tr>
     <tr>
       <td><code>expand-all</code></td>
-      <td>All elements expand equally to fill available space (<code>flex-grow: 1</code> on all children).</td>
+      <td>All elements expand (<code>flex-grow: 1</code>) sharing the extra space equally. Final widths still depend on each child's intrinsic content size — use <code>expand-equal</code> when columns must have identical width regardless of content.</td>
+    </tr>
+    <tr>
+      <td><code>expand-equal</code></td>
+      <td>All children get identical width (CSS Grid with <code>grid-auto-columns: minmax(0, 1fr)</code>), ignoring intrinsic content size. Use for grid-like layouts where columns must align across rows.</td>
     </tr>
     <tr>
       <td><code>space-between</code></td>
@@ -252,7 +256,9 @@ The `layout` prop controls how child elements expand to fill available space in 
 
 **`expand-first`**: Use when you want the first element to take up all remaining space.
 
-**`expand-all`**: Use when you want all elements to have equal width.
+**`expand-all`**: Use when you want all elements to grow and absorb the extra horizontal space (good for button groups with comparable label lengths). Note that final widths still depend on each child's content — for truly identical widths, use `expand-equal`.
+
+**`expand-equal`**: Use when columns must have identical widths regardless of content (cards in a matrix, equal toolbar sections, dashboard tiles). Trade-off: a child with very long non-breakable content may visually overflow its slot.
 
 **`space-between`**: Use when you want elements to maintain their natural size but be distributed across the available space.
 
@@ -407,6 +413,56 @@ Controls **vertical alignment** of elements:
   </FzContainer>
 </template>
 ```
+
+### Layout: Expand Equal
+
+```vue
+<template>
+  <!-- All three buttons end up with identical widths even with asymmetric labels -->
+  <FzContainer horizontal layout="expand-equal" gap="base">
+    <button>OK</button>
+    <button>Salva e continua</button>
+    <button>Annulla</button>
+  </FzContainer>
+</template>
+```
+
+```vue
+<template>
+  <!-- Grid-like rows where columns must align across rows -->
+  <FzContainer gap="sm">
+    <FzContainer horizontal layout="expand-equal" gap="base">
+      <div class="tile">Tile A</div>
+      <div class="tile">Tile B with a much longer title</div>
+      <div class="tile">C</div>
+    </FzContainer>
+    <FzContainer horizontal layout="expand-equal" gap="base">
+      <div class="tile">Tile D</div>
+      <div class="tile">Tile E</div>
+      <div class="tile">Tile F</div>
+    </FzContainer>
+  </FzContainer>
+</template>
+```
+
+#### Identical widths AND identical heights
+
+Combine `layout="expand-equal"` with `alignItems="stretch"` to align both the width and the
+height of children across a horizontal row, even when their content has different intrinsic
+heights. This is the canonical "grid row" recipe in FzContainer.
+
+```vue
+<template>
+  <FzContainer horizontal layout="expand-equal" alignItems="stretch" gap="base">
+    <div class="tile">Short tile</div>
+    <div class="tile">Medium tile<br/>with two lines</div>
+    <div class="tile">Tall tile<br/>with three<br/>lines of content</div>
+  </FzContainer>
+</template>
+```
+
+All three tiles end up with the same width (from `expand-equal`) and the same height (from
+`alignItems="stretch"`, matched to the tallest child).
 
 ### Layout: Space Between
 
