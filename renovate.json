@@ -1,0 +1,35 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":semanticCommits"
+  ],
+  "timezone": "Europe/Rome",
+  "schedule": ["before 7am on monday"],
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 8,
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "description": "Font Awesome Pro kit (@awesome.me) is on a private registry with short-lived auth — managed manually, not by Renovate.",
+      "matchPackagePrefixes": ["@awesome.me/"],
+      "enabled": false
+    },
+    {
+      "description": "This repo is almost entirely build/test tooling — group non-major updates to keep PR volume sane.",
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "tooling (non-major)"
+    },
+    {
+      "description": "Majors require explicit approval via the dependency dashboard.",
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security", "dependencies"],
+    "schedule": ["at any time"]
+  },
+  "osvVulnerabilityAlerts": true
+}
