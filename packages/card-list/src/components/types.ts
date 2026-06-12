@@ -5,6 +5,11 @@ import type { FzCardListItemAction } from "../types";
 export type FzCardBadge = {
   text: string;
   tone: FzBadgeTone;
+  /**
+   * Optional Font Awesome icon name rendered to the left of the badge text.
+   * Forwarded to `FzBadge.leftIcon`.
+   */
+  icon?: string;
 };
 
 export interface FzCardTitleProps {

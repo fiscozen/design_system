@@ -13,7 +13,7 @@ const props = defineProps<FzCardNoActionProps>();
   <FzContainer gap="xs" class="p-8">
     <FzContainer v-if="badge" horizontal alignItems="center">
       <!-- Badge -->
-      <FzBadge :tone="badge.tone" variant="text">
+      <FzBadge :left-icon="badge.icon" :tone="badge.tone" variant="text">
         {{ badge.text }}
       </FzBadge>
     </FzContainer>

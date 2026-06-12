@@ -108,14 +108,16 @@ Each object follows <code>FzCardListItem</code> props (same as using <code>FzCar
         <code>badge</code>
       </td>
       <td>
-        <code>&#123; text: string; tone: FzBadgeTone &#125; | undefined</code>
+        <code>&#123; text: string; tone: FzBadgeTone; icon?: string &#125; | undefined</code>
       </td>
       <td>
         <code>undefined</code>
       </td>
       <td>
-        Optional text badge and tone (see <code>FzBadge</code>). When only <code>title</code> is
-        set, the layout uses a compact title row without a second line for value.
+        Optional text badge and tone (see <code>FzBadge</code>). Pass an optional <code>icon</code> to
+        render a Font Awesome icon on the left of the badge text (forwarded to{' '}
+        <code>FzBadge.leftIcon</code>). When only <code>title</code> is set, the layout uses a
+        compact title row without a second line for value.
       </td>
     </tr>
     <tr>

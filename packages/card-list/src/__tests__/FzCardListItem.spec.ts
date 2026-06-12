@@ -326,6 +326,57 @@ describe("FzCardListItem", () => {
         expect(badge.props("tone")).toBe("success");
         expect(badge.props("variant")).toBe("text");
       });
+
+      it("should forward badge.icon to FzBadge.leftIcon when provided", async () => {
+        const wrapper = mount(FzCardListItem, {
+          props: {
+            title: "Item",
+            badge: { text: "In revisione", tone: "warning", icon: "clock" },
+          },
+        });
+        await wrapper.vm.$nextTick();
+        const badge = wrapper.findComponent({ name: "FzBadge" });
+        expect(badge.exists()).toBe(true);
+        expect(badge.props("leftIcon")).toBe("clock");
+      });
+
+      it("should omit leftIcon when badge.icon is not provided", async () => {
+        const wrapper = mount(FzCardListItem, {
+          props: {
+            title: "Item",
+            badge: { text: "Tag", tone: "success" },
+          },
+        });
+        await wrapper.vm.$nextTick();
+        const badge = wrapper.findComponent({ name: "FzBadge" });
+        expect(badge.props("leftIcon")).toBeUndefined();
+      });
+
+      it("should forward badge.icon through the link-action variant", async () => {
+        const wrapper = mount(FzCardListItem, {
+          props: {
+            title: "Item",
+            actions: [linkAction],
+            badge: { text: "In revisione", tone: "warning", icon: "clock" },
+          },
+        });
+        await wrapper.vm.$nextTick();
+        const badge = wrapper.findComponent({ name: "FzBadge" });
+        expect(badge.props("leftIcon")).toBe("clock");
+      });
+
+      it("should forward badge.icon through the multi-actions variant", async () => {
+        const wrapper = mount(FzCardListItem, {
+          props: {
+            title: "Item",
+            actions: [linkAction, linkAction],
+            badge: { text: "In revisione", tone: "warning", icon: "clock" },
+          },
+        });
+        await wrapper.vm.$nextTick();
+        const badge = wrapper.findComponent({ name: "FzBadge" });
+        expect(badge.props("leftIcon")).toBe("clock");
+      });
     });
   });
 

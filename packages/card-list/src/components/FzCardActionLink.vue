@@ -46,7 +46,7 @@ function handleRowInteraction(e: MouseEvent | KeyboardEvent) {
     -->
     <FzContainer horizontal alignItems="center">
       <!-- Badge -->
-      <FzBadge v-if="badge" :tone="badge.tone" variant="text">
+      <FzBadge v-if="badge" :left-icon="badge.icon" :tone="badge.tone" variant="text">
         {{ badge.text }}
       </FzBadge>
       <!-- Title only (inline with action) -->
