@@ -10,7 +10,8 @@ const meta = {
   argTypes: {
     badge: {
       control: 'object',
-      description: 'Badge at the top-left: `{ text: string, tone: FzBadgeTone }` when set'
+      description:
+        'Badge at the top-left: `{ text: string, tone: FzBadgeTone, icon?: string }`. When `icon` is set it is forwarded to `FzBadge.leftIcon`.'
     },
     title: {
       control: 'text',
@@ -297,5 +298,45 @@ export const CardWithLongTitle: CardListItemStory = {
       )
     ).toBeInTheDocument()
     await expect(canvas.getByText('1.200,00 €')).toBeInTheDocument()
+  }
+}
+
+export const CardWithBadgeIcon: CardListItemStory = {
+  render: (args) => ({
+    components: { FzCardListItem },
+    setup() {
+      return { args }
+    },
+    template: `
+    <div class="min-w-[355px]">
+      <FzCardListItem
+        v-bind="args"
+        @fzaction:click="args['onFzaction:click']"
+      />
+    </div>`
+  }),
+  args: {
+    title: 'Nota di credito #001',
+    value: '120,00 €',
+    badge: {
+      text: 'In revisione',
+      tone: 'warning',
+      icon: 'clock'
+    },
+    descriptions: ['Data: 31/03/2024'],
+    actions: [
+      {
+        type: 'link',
+        to: '/'
+      }
+    ] as FzActionProps[],
+    'onFzaction:click': fn()
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.getByText('In revisione')).toBeInTheDocument()
+    // FzBadge.leftIcon renders an additional presentation icon next to the label.
+    await expect(presentationIconCount(canvasElement)).toBeGreaterThanOrEqual(1)
   }
 }

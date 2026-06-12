@@ -27,6 +27,11 @@ export interface FzCardListItemProps {
      * Tone of the badge.
      */
     tone: FzBadgeTone;
+    /**
+     * Optional Font Awesome icon name rendered to the left of the badge text.
+     * Forwarded to `FzBadge.leftIcon`.
+     */
+    icon?: string;
   };
   /**
    * Main title of the item, displayed in bold.
