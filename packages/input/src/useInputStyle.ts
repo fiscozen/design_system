@@ -15,7 +15,8 @@ import { FzInputProps, type InputEnvironment } from "./types";
  * @returns Object containing computed classes and style-related properties
  */
 export default function useInputStyle(
-  props: ToRefs<FzInputProps>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  props: ToRefs<FzInputProps<any>>,
   container: Ref<HTMLElement | null>,
   model: Ref<string | undefined>,
   effectiveEnvironment: ComputedRef<InputEnvironment>,

@@ -32,7 +32,9 @@ FzCheckbox.compatConfig = {
   MODE: 3,
 };
 
-FzInput.compatConfig = {
+// FzInput is a generic component, so its type is a call signature without
+// static fields: the compat assignment needs a structural cast.
+(FzInput as unknown as { compatConfig?: { MODE: number } }).compatConfig = {
   MODE: 3,
 };
 

@@ -11,7 +11,11 @@
 import { ref, computed } from "vue";
 import { FzIcon } from "@fiscozen/icons";
 import { FzIconButton } from "@fiscozen/button";
-import { FzInput, type FzInputProps } from "@fiscozen/input";
+import {
+  FzInput,
+  type FzInputInstance,
+  type FzInputProps,
+} from "@fiscozen/input";
 import type { FzTypeaheadButtonProps } from "./types";
 
 const props = withDefaults(defineProps<FzTypeaheadButtonProps>(), {
@@ -155,7 +159,7 @@ const inputProps = computed<FzInputProps>(() => ({
   // rightIcon is handled via right-icon slot (chevron is always last)
 }));
 
-const inputRef = ref<InstanceType<typeof FzInput>>();
+const inputRef = ref<FzInputInstance>();
 
 const handleInputUpdate = (value: string | undefined) => {
   inputModel.value = value ?? "";

@@ -4,9 +4,38 @@
  * @module @fiscozen/input/utils
  */
 
+import { parse } from "@fiscozen/composables";
 import type { InputEnvironment } from "./types";
 
 type InputSize = "sm" | "md" | "lg";
+
+/**
+ * HTML "valid floating-point number" grammar: the only content a native
+ * `<input type="number">` is guaranteed to accept wholesale across browsers.
+ *
+ * @see https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-floating-point-number
+ */
+const NATIVE_FLOAT_RE = /^-?\d+(\.\d+)?([eE][-+]?\d+)?$/;
+
+/**
+ * Whether `text` matches the native floating-point grammar exactly (no
+ * trimming: padded or grouped content is rejected by some browsers and
+ * blanked out by others, so it cannot be considered natively safe).
+ */
+export const isNativeFloatString = (text: string): boolean =>
+  NATIVE_FLOAT_RE.test(text);
+
+/**
+ * Parses clipboard text into a finite number, accepting the same formats as
+ * currency-mode paste (Italian "1.234,56", comma decimals, padded whitespace).
+ *
+ * @returns The parsed number, or null when the text cannot be interpreted as
+ * a finite number
+ */
+export const parseClipboardNumber = (text: string): number | null => {
+  const parsed = parse(text);
+  return isNaN(parsed) || !isFinite(parsed) ? null : parsed;
+};
 
 /**
  * Maps deprecated InputSize to InputEnvironment

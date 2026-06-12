@@ -3,7 +3,51 @@ import { IconSize, IconVariant } from "@fiscozen/icons";
 
 export type InputEnvironment = "backoffice" | "frontoffice";
 
-type FzInputProps = {
+/**
+ * Input type. Native HTML types render the corresponding `<input type>`;
+ * `currency` renders a text input with locale-aware currency formatting,
+ * validation and step controls (see FzInput docs).
+ */
+export type FzInputType =
+  | "text"
+  | "password"
+  | "email"
+  | "number"
+  | "tel"
+  | "url"
+  | "search"
+  | "file"
+  | "currency";
+
+/**
+ * Exposed instance shape of FzInput (template ref type).
+ * Use this instead of `InstanceType<typeof FzInput>`: FzInput is a generic
+ * component, so its type is a call signature and InstanceType does not apply.
+ */
+export interface FzInputInstance {
+  inputRef: HTMLInputElement | null;
+  containerRef: HTMLElement | null;
+}
+
+/**
+ * Maps the input `type` to the v-model value type.
+ *
+ * - `type="currency"` → `number | null | undefined` (numbers in, numbers out)
+ * - any other type → `string | undefined`
+ *
+ * The conditional is deliberately non-distributive (`[TType] extends ["currency"]`):
+ * when `type` is bound dynamically the inferred type parameter is the whole
+ * `FzInputType` union and the model falls back to `string` — only a literal
+ * `type="currency"` switches the v-model to numbers. At runtime a dynamic
+ * "currency" type still behaves numerically.
+ */
+export type FzInputModelValue<TType extends FzInputType = FzInputType> = [
+  TType,
+] extends ["currency"]
+  ? number | null | undefined
+  : string | undefined;
+
+type FzInputProps<TType extends FzInputType = FzInputType> = {
   /**
    * Custom DOM id for the underlying `<input>`. When provided, the same value is
    * used for the `<label>`'s `for` attribute so the label-input binding stays
@@ -121,10 +165,12 @@ type FzInputProps = {
    */
   secondRightIconAriaLabel?: string;
   /**
-   * Native HTML input type. Determines keyboard layout and validation behavior
+   * Input type. Native HTML types determine keyboard layout and validation behavior.
+   * `currency` enables locale-aware currency formatting with step controls;
+   * with `type="currency"` the v-model is `number | null | undefined` instead of `string`.
    * @default 'text'
    */
-  type?: "text" | "password" | "email" | "number" | "tel" | "url";
+  type?: TType;
   /**
    * Shows success checkmark icon on the right when true. Takes precedence over rightIcon
    * @default false
@@ -206,10 +252,71 @@ type FzInputProps = {
    * Additional CSS classes applied to left icon container
    */
   leftIconClass?: string;
+  /**
+   * Minimum allowed value. For `type="currency"` values below this are clamped to min;
+   * for `type="number"` it is forwarded to the native `min` attribute.
+   */
+  min?: number;
+  /**
+   * Maximum allowed value. For `type="currency"` values above this are clamped to max;
+   * for `type="number"` it is forwarded to the native `max` attribute.
+   */
+  max?: number;
+  /**
+   * Step increment for the up/down arrow controls shown with `type="currency"` and
+   * `type="number"`. For `type="number"` it is also forwarded to the native `step` attribute.
+   * When forceStep is true (currency only), values are rounded to the nearest step multiple.
+   * @default 1
+   */
+  step?: number;
+  /**
+   * Enforces quantization for `type="currency"`: values are automatically rounded
+   * to the nearest step multiple
+   * @default false
+   */
+  forceStep?: boolean;
+  /**
+   * Minimum decimal places in formatted output (`type="currency"` only)
+   * @default 2
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#digit_options
+   */
+  minimumFractionDigits?: number;
+  /**
+   * Maximum decimal places in formatted output (`type="currency"` only)
+   * @default 2
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#digit_options
+   */
+  maximumFractionDigits?: number;
+  /**
+   * Converts empty input to null instead of undefined (`type="currency"` only).
+   * When true, empty input will emit null instead of undefined.
+   * @default false
+   */
+  nullOnEmpty?: boolean;
+  /**
+   * Converts empty input to 0 instead of undefined (`type="currency"` only).
+   * When true, empty input will emit 0 instead of undefined.
+   * @default false
+   */
+  zeroOnEmpty?: boolean;
+  /**
+   * Custom accessible label for the step up button shown with `type="currency"`
+   * and `type="number"`. If not provided, uses a default label based on step.
+   */
+  stepUpAriaLabel?: string;
+  /**
+   * Custom accessible label for the step down button shown with `type="currency"`
+   * and `type="number"`. If not provided, uses a default label based on step.
+   */
+  stepDownAriaLabel?: string;
 };
 
+/**
+ * @deprecated FzCurrencyInput is deprecated: use `FzInput` with `type="currency"` instead.
+ * This interface is kept for backwards compatibility until the migration is complete.
+ */
 interface FzCurrencyInputProps extends Omit<
-  FzInputProps,
+  FzInputProps<"currency">,
   | "type"
   | "modelValue"
   | "rightIcon"
@@ -268,56 +375,6 @@ interface FzCurrencyInputProps extends Omit<
    * ```
    */
   modelValue?: number | string | undefined | null;
-  /**
-   * Converts empty input to null instead of undefined.
-   * When true, empty input (v-model undefined) will emit null instead of undefined.
-   * @default false
-   */
-  nullOnEmpty?: boolean;
-  /**
-   * Converts empty input to 0 instead of undefined.
-   * When true, empty input (v-model undefined) will emit 0 instead of undefined.
-   * @default false
-   */
-  zeroOnEmpty?: boolean;
-  /**
-   * Minimum decimal places in formatted output
-   * @default 2
-   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#digit_options
-   */
-  minimumFractionDigits?: number;
-  /**
-   * Maximum decimal places in formatted output
-   * @default 2
-   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#digit_options
-   */
-  maximumFractionDigits?: number;
-  /**
-   * Minimum allowed value. Values below this are clamped to min
-   */
-  min?: number;
-  /**
-   * Maximum allowed value. Values above this are clamped to max
-   */
-  max?: number;
-  /**
-   * Step increment for arrow buttons. When forceStep is true, values are rounded to nearest step multiple
-   * @default 1
-   */
-  step?: number;
-  /**
-   * Enforces quantization: values are automatically rounded to nearest step multiple
-   * @default false
-   */
-  forceStep?: boolean;
-  /**
-   * Custom accessible label for step up button. If not provided, uses default label.
-   */
-  stepUpAriaLabel?: string;
-  /**
-   * Custom accessible label for step down button. If not provided, uses default label.
-   */
-  stepDownAriaLabel?: string;
 }
 
 export { FzInputProps, FzCurrencyInputProps };
