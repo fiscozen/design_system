@@ -24,7 +24,7 @@ export default defineConfig({
       name: 'FzCollapse',
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', '@fiscozen/container'],
       output: {
         globals: {
           vue: 'Vue',

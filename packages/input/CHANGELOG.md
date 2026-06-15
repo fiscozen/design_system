@@ -1,5 +1,12 @@
 # @fiscozen/input
 
+## 3.4.4
+
+### Patch Changes
+
+- @fiscozen/alert@3.0.4
+- @fiscozen/button@3.1.1
+
 ## 3.4.3
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @fiscozen/typeahead
 
+## 3.0.14
+
+### Patch Changes
+
+- @fiscozen/alert@3.0.4
+- @fiscozen/button@3.1.1
+- @fiscozen/input@3.4.4
+
 ## 3.0.13
 
 ### Patch Changes

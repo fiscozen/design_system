@@ -1,5 +1,12 @@
 # @fiscozen/datepicker
 
+## 3.2.4
+
+### Patch Changes
+
+- @fiscozen/button@3.1.1
+- @fiscozen/input@3.4.4
+
 ## 3.2.3
 
 ### Patch Changes

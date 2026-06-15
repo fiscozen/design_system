@@ -1,5 +1,14 @@
 # @fiscozen/card-list
 
+## 1.2.1
+
+### Patch Changes
+
+- Updated dependencies [5be1040]
+  - @fiscozen/container@0.5.0
+  - @fiscozen/button@3.1.1
+  - @fiscozen/dropdown@1.0.10
+
 ## 1.2.0
 
 ### Minor Changes

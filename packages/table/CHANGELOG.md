@@ -1,5 +1,17 @@
 # @fiscozen/table
 
+## 2.1.12
+
+### Patch Changes
+
+- @fiscozen/button@3.1.1
+- @fiscozen/checkbox@3.0.8
+- @fiscozen/input@3.4.4
+- @fiscozen/radio@3.0.7
+- @fiscozen/dialog@0.1.34
+- @fiscozen/dropdown@1.0.10
+- @fiscozen/actionlist@0.1.15
+
 ## 2.1.11
 
 ### Patch Changes

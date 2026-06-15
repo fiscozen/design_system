@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.4
+
+### Patch Changes
+
+- Updated dependencies [5be1040]
+  - @fiscozen/container@0.5.0
+  - @fiscozen/button@3.1.1
+
 ## 3.0.3
 
 ### Patch Changes

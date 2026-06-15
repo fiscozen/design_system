@@ -1,5 +1,12 @@
 # @fiscozen/radio
 
+## 3.0.7
+
+### Patch Changes
+
+- @fiscozen/alert@3.0.4
+- @fiscozen/tooltip@3.0.3
+
 ## 3.0.6
 
 ### Patch Changes

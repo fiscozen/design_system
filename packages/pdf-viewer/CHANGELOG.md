@@ -1,5 +1,11 @@
 # @fiscozen/pdf-viewer
 
+## 1.0.4
+
+### Patch Changes
+
+- @fiscozen/button@3.1.1
+
 ## 1.0.3
 
 ### Patch Changes
