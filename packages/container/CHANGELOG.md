@@ -1,5 +1,11 @@
 # @fiscozen/container
 
+## 0.5.0
+
+### Minor Changes
+
+- 5be1040: Add `expand-equal` horizontal layout that sizes children to identical widths regardless of content; clarify `expand-all` docs to distinguish the two.
+
 ## 0.4.2
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @fiscozen/collapse
 
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies [5be1040]
+  - @fiscozen/container@0.5.0
+
 ## 3.0.1
 
 ### Patch Changes

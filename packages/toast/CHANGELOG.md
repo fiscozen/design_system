@@ -1,5 +1,11 @@
 # @fiscozen/toast
 
+## 3.0.3
+
+### Patch Changes
+
+- @fiscozen/button@3.1.1
+
 ## 3.0.2
 
 ### Patch Changes

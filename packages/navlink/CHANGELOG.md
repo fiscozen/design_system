@@ -1,5 +1,11 @@
 # @fiscozen/navlink
 
+## 2.0.3
+
+### Patch Changes
+
+- @fiscozen/collapse@3.0.2
+
 ## 2.0.2
 
 ### Patch Changes
