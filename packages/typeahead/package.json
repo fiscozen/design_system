@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/typeahead",
-  "version": "3.0.14",
+  "version": "3.0.15",
   "description": "Design System Typeahead component",
   "scripts": {
     "coverage": "vitest run --coverage",
