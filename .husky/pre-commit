@@ -1,13 +1,18 @@
 #!/bin/sh
 
+# --exclude='tag:deprecated' skips any Nx project tagged "deprecated" in its
+# project.json. These packages are frozen at their last published version, so
+# we don't want their tests/builds to slow down every commit when an upstream
+# dependency (e.g. FzInput) changes.
+
 echo "🧪 Running affected tests..."
-npx nx affected -t test:unit
+npx nx affected -t test:unit --exclude='tag:deprecated'
 TEST_EXIT=$?
 if [ $TEST_EXIT -ne 0 ]; then
   exit $TEST_EXIT
 fi
 
 echo "🔨 Building affected packages..."
-npx nx affected -t build
+npx nx affected -t build --exclude='tag:deprecated'
 exit $?
 

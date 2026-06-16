@@ -7,8 +7,18 @@ import { vueRouter } from 'storybook-vue3-router'
 const meta = {
   title: 'Navigation/FzNavlist',
   component: FzNavlist,
-  // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
-  tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '⚠️ **Deprecated for external use.** New code must use `FzActionList` + `FzActionSection` + `FzAction` from `@fiscozen/action` instead. Collapsible submenus have no built-in equivalent in `@fiscozen/action`: wrap a nested `FzActionSection` in a `FzCollapse` from `@fiscozen/collapse` in the consumer. No `@fiscozen/*` package depends on this one, but it remains published for backward compatibility. See the `@fiscozen/navlist` README for the migration guide.'
+      }
+    }
+  },
+  // '!test' tells @storybook/addon-vitest to skip the play functions of every
+  // story in this file. FzNavlist is deprecated and we no longer maintain its
+  // interaction tests; the stories themselves stay visible in Storybook.
+  tags: ['autodocs', '!test'],
   argTypes: {},
   args: {},
   decorators: [
@@ -52,10 +62,7 @@ const verifySectionLabels = async (canvas: ReturnType<typeof within>, labels: st
 /**
  * Verifies that links with given names are present and accessible
  */
-const verifyLinksAreAccessible = async (
-  canvas: ReturnType<typeof within>,
-  linkNames: RegExp[]
-) => {
+const verifyLinksAreAccessible = async (canvas: ReturnType<typeof within>, linkNames: RegExp[]) => {
   for (const name of linkNames) {
     const link = canvas.getByRole('link', { name })
     await expect(link).toBeInTheDocument()
@@ -189,17 +196,11 @@ export const Default: Story = {
     })
 
     await step('Verify links are rendered and accessible', async () => {
-      await verifyLinksAreAccessible(canvas, [
-        /item #1/i,
-        /item #2/i
-      ])
+      await verifyLinksAreAccessible(canvas, [/item #1/i, /item #2/i])
     })
 
     await step('Verify buttons are rendered and accessible', async () => {
-      await verifyButtonsAreAccessible(canvas, [
-        /item #1/i,
-        /item #2/i
-      ])
+      await verifyButtonsAreAccessible(canvas, [/item #1/i, /item #2/i])
     })
 
     await step('Verify disabled link is rendered as span', async () => {
@@ -218,7 +219,7 @@ export const Default: Story = {
       // Get all buttons with name "Item #1" - there might be multiple (from collapse summary)
       const allButtons = canvas.getAllByRole('button', { name: /^item #1$/i })
       // Find the disabled one (should have disabled attribute)
-      const disabledButton = allButtons.find(btn => btn.hasAttribute('disabled'))
+      const disabledButton = allButtons.find((btn) => btn.hasAttribute('disabled'))
       if (disabledButton) {
         await verifyDisabledButton(disabledButton as HTMLElement)
       } else {
@@ -226,7 +227,9 @@ export const Default: Story = {
         const label3Section = canvas.getByText('Label 3').closest('.fz__navlist__section')
         if (label3Section) {
           const buttons = label3Section.querySelectorAll('button')
-          const disabledBtn = Array.from(buttons).find(btn => btn.textContent?.trim() === 'Item #1' && btn.hasAttribute('disabled'))
+          const disabledBtn = Array.from(buttons).find(
+            (btn) => btn.textContent?.trim() === 'Item #1' && btn.hasAttribute('disabled')
+          )
           if (disabledBtn) {
             await verifyDisabledButton(disabledBtn as HTMLElement)
           }
@@ -293,11 +296,7 @@ export const Navigation: Story = {
     })
 
     await step('Verify all navigation links are accessible', async () => {
-      await verifyLinksAreAccessible(canvas, [
-        /dashboard/i,
-        /profile/i,
-        /settings/i
-      ])
+      await verifyLinksAreAccessible(canvas, [/dashboard/i, /profile/i, /settings/i])
     })
 
     await step('Verify links have correct href attributes', async () => {
@@ -422,10 +421,7 @@ export const WithSubitems: Story = {
     })
 
     await step('Verify subitems are visible after expansion', async () => {
-      await verifyLinksAreAccessible(canvas, [
-        /all products/i,
-        /new product/i
-      ])
+      await verifyLinksAreAccessible(canvas, [/all products/i, /new product/i])
     })
 
     await step('Expand Orders submenu', async () => {
@@ -446,10 +442,7 @@ export const WithSubitems: Story = {
     })
 
     await step('Verify Orders subitems are visible', async () => {
-      await verifyLinksAreAccessible(canvas, [
-        /pending orders/i,
-        /completed orders/i
-      ])
+      await verifyLinksAreAccessible(canvas, [/pending orders/i, /completed orders/i])
     })
 
     await step('Verify subitem links are clickable and call fznavlink:click handler', async () => {

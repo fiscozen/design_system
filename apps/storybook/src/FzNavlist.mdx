@@ -1,0 +1,122 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Navigation/FzNavlist" />
+
+# FzNavlist
+
+> ⚠️ **Deprecated for external use — no internal consumers.** New code must use [`FzActionList`](./?path=/docs/navigation-fzactionlist-documentation--docs) (with `FzActionSection` and `FzAction`) from `@fiscozen/action` instead. No other `@fiscozen/*` package depends on `@fiscozen/navlist`, but the package stays published on npm to preserve backward compatibility for downstream consumers. No new features will be developed and no bug fixes will be backported.
+
+`FzNavlist` renders multiple sections, each containing a flat list of navigation items or **collapsible submenus**. In `@fiscozen/action` the equivalent is the composition `FzActionList` + `FzActionSection` + `FzAction`. Collapsible submenus are **not** built in: wrap a nested section in `FzCollapse` from `@fiscozen/collapse` yourself.
+
+## Migration to @fiscozen/action
+
+### Flat sections
+
+```vue
+<!-- Before -->
+<FzNavlist
+  :sections="[
+    {
+      label: 'Account',
+      items: [
+        { type: 'button', label: 'Profile', iconName: 'user' },
+        { type: 'link',   label: 'Logout',  meta: { name: 'logout' } }
+      ]
+    }
+  ]"
+  @fznavlink:click="onClick"
+/>
+
+<!-- After -->
+<FzActionList>
+  <FzActionSection label="Account">
+    <FzAction
+      type="action"
+      variant="textLeft"
+      label="Profile"
+      iconLeftName="user"
+      @click="onClick(0, { type: 'button', label: 'Profile', iconName: 'user' })"
+    />
+    <FzAction
+      type="link"
+      variant="textLeft"
+      label="Logout"
+      :to="{ name: 'logout' }"
+      @click="onClick(1, { type: 'link', label: 'Logout', meta: { name: 'logout' } })"
+    />
+  </FzActionSection>
+</FzActionList>
+```
+
+### Sections with collapsible submenus
+
+`FzNavlist` accepts `FzNavlistSub` entries (objects with a `subitems` array, passed through to `FzCollapse`). `FzAction` does not provide collapsible submenus, so wrap the nested list explicitly:
+
+```vue
+<!-- Before -->
+<FzNavlist
+  :sections="[
+    {
+      label: 'Documents',
+      items: [
+        {
+          title: 'Invoices',
+          subitems: [
+            { type: 'link', label: 'Sent',     meta: { name: 'sent' } },
+            { type: 'link', label: 'Received', meta: { name: 'received' } }
+          ]
+        }
+      ]
+    }
+  ]"
+/>
+
+<!-- After: wrap a nested FzActionSection in FzCollapse from @fiscozen/collapse -->
+<FzActionList>
+  <FzActionSection label="Documents">
+    <FzCollapse>
+      <template #header><span>Invoices</span></template>
+      <template #content>
+        <FzActionSection>
+          <FzAction type="link" variant="textLeft" label="Sent"     :to="{ name: 'sent' }" />
+          <FzAction type="link" variant="textLeft" label="Received" :to="{ name: 'received' }" />
+        </FzActionSection>
+      </template>
+    </FzCollapse>
+  </FzActionSection>
+</FzActionList>
+```
+
+### Mapping
+
+<table>
+  <thead>
+    <tr>
+      <th><code>@fiscozen/navlist</code></th>
+      <th><code>@fiscozen/action</code></th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>sections: FzNavlistSection[]</code></td>
+      <td>One <code>FzActionSection</code> per section</td>
+      <td>The <code>section.label</code> becomes the <code>label</code> prop on <code>FzActionSection</code>.</td>
+    </tr>
+    <tr>
+      <td><code>FzNavlistItem</code> (<code>type: 'button' | 'link'</code>)</td>
+      <td><code>FzAction</code> (<code>type: 'action' | 'link'</code>, <code>variant="textLeft"</code>)</td>
+      <td>Discriminator renamed: <code>'button'</code> → <code>'action'</code>. Icon props change to <code>iconLeftName</code> / <code>iconLeftVariant</code>.</td>
+    </tr>
+    <tr>
+      <td><code>FzNavlistSub</code> (collapsible submenu)</td>
+      <td><code>FzCollapse</code> wrapping a nested <code>FzActionSection</code></td>
+      <td>No built-in equivalent — wire it up in the consumer.</td>
+    </tr>
+    <tr>
+      <td><code>fznavlink:click</code> (<code>index, item</code>)</td>
+      <td>native <code>click</code> on each <code>FzAction</code></td>
+      <td>The aggregate index is no longer emitted; track it in the consumer if needed.</td>
+    </tr>
+  </tbody>
+</table>

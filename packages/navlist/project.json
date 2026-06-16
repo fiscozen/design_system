@@ -1,0 +1,5 @@
+{
+  "name": "@fiscozen/navlist",
+  "//tags": "The 'deprecated' tag opts this package out of root build/test scripts and pre-commit/pre-push hooks (via --exclude='tag:deprecated') and out of changeset version bumps (see .changeset/config.json:ignore). The code stays in the repo and the last published version remains on npm, but the pipelines no longer maintain it. Safe to apply because @fiscozen/navlist has zero internal workspace consumers.",
+  "tags": ["deprecated"]
+}

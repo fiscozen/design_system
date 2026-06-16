@@ -14,6 +14,12 @@ export interface FzNavlistSection {
   items: (FzNavlistItem | FzNavlistSub)[]
 }
 
+/**
+ * @deprecated Use `@fiscozen/action` (`FzActionList` + `FzActionSection` +
+ * `FzAction`) instead. Collapsible submenus must be implemented with
+ * `FzCollapse` from `@fiscozen/collapse` in the consumer code.
+ * See the @fiscozen/navlist README for the migration guide.
+ */
 export interface FzNavlistProps {
   sections: FzNavlistSection[]
 }

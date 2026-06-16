@@ -20,7 +20,19 @@ fi
 
 if [ "$SKIP_CHANGESET" = "0" ]; then
   MERGE_BASE=$(git merge-base origin/main HEAD 2>/dev/null || echo "origin/main")
-  CHANGED_PACKAGE_FILES=$(git diff --name-only "$MERGE_BASE"...HEAD -- 'packages/*/src/' 2>/dev/null)
+
+  # Build pathspec exclusions from every Nx project tagged "deprecated"
+  # (see packages/<name>/project.json). Deprecated packages don't require a
+  # changeset because they are also ignored by `.changeset/config.json:ignore`
+  # and excluded from `nx run-many` via --exclude='tag:deprecated'.
+  # Convention: `@fiscozen/<name>` lives in `packages/<name>/` (see CLAUDE.md).
+  CHANGESET_EXCLUDES=""
+  for pkg in $(npx nx show projects --projects='tag:deprecated' 2>/dev/null); do
+    dirname="${pkg#@*/}"
+    [ -d "packages/$dirname/src" ] && CHANGESET_EXCLUDES="$CHANGESET_EXCLUDES :!packages/$dirname/src/**"
+  done
+
+  CHANGED_PACKAGE_FILES=$(git diff --name-only "$MERGE_BASE"...HEAD -- 'packages/*/src/' $CHANGESET_EXCLUDES 2>/dev/null)
 
   if [ -n "$CHANGED_PACKAGE_FILES" ]; then
     CHANGESET_FILES=$(git diff --name-only "$MERGE_BASE"...HEAD -- '.changeset/*.md' 2>/dev/null | grep -v README.md)
@@ -54,7 +66,9 @@ if [ "$SKIP_BUILD_CHECK" = "1" ]; then
   echo "⏭  Build check skipped (SKIP_BUILD_CHECK=1)"
 else
   echo "🔨 Building all packages..."
-  pnpm nx run-many -t build
+  # Skip Nx projects tagged "deprecated" — they are frozen at their last
+  # published version and don't need to rebuild on every push.
+  pnpm nx run-many -t build --exclude='tag:deprecated'
   BUILD_EXIT=$?
   if [ $BUILD_EXIT -ne 0 ]; then
     echo ""

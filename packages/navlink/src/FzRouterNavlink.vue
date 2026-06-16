@@ -1,4 +1,14 @@
 <script lang="ts" setup>
+/**
+ * FzRouterNavlink
+ *
+ * @deprecated Deprecated for external use — internal-only until consumers migrate.
+ * New code must use `@fiscozen/action` `FzAction` with `type="link"` and
+ * `variant="textLeft"` instead. Pass the vue-router target via the `to` prop.
+ * This package stays published because `@fiscozen/actionlist` and
+ * `@fiscozen/navlist` still depend on it.
+ * See the @fiscozen/navlink README for the full migration guide.
+ */
 import { FzIcon } from '@fiscozen/icons'
 import { computed, useSlots } from 'vue'
 import { FzRouterNavlinkProps } from './types'

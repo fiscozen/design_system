@@ -7,7 +7,19 @@ import { FzButton } from '@fiscozen/button'
 const meta = {
   title: 'Form/FzTypeahead',
   component: FzTypeahead,
-  tags: ['autodocs'],
+  // '!test' tells @storybook/addon-vitest to skip the play functions of every
+  // story in this file. FzTypeahead is deprecated (use FzSelect with
+  // filterable: true instead) and we no longer maintain its interaction tests.
+  // The stories themselves stay visible in Storybook for legacy reference.
+  tags: ['autodocs', '!test'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '⚠️ **Deprecated.** Use `FzSelect` from `@fiscozen/select` with `filterable: true` (and optionally `filterFn`) instead. The package remains published for backward compatibility, but no new features will be developed. See the FzTypeahead documentation page for the full migration guide.'
+      }
+    }
+  },
   argTypes: {
     environment: {
       options: ['backoffice', 'frontoffice'],
@@ -119,17 +131,17 @@ export const Frontoffice: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify opener button renders', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toBeInTheDocument()
     })
-    
+
     await step('Verify frontoffice height (44px = h-44)', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toHaveClass('h-44')
     })
-    
+
     await step('Verify ARIA attributes', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toHaveAttribute('aria-haspopup', 'listbox')
@@ -155,12 +167,12 @@ export const Backoffice: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify opener button renders', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toBeInTheDocument()
     })
-    
+
     await step('Verify backoffice height (32px = h-32)', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toHaveClass('h-32')
@@ -185,17 +197,17 @@ export const Error: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify opener button has error styling', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toHaveAttribute('aria-invalid', 'true')
     })
-    
+
     await step('Verify error border color', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toHaveClass('border-semantic-error-200')
     })
-    
+
     await step('Verify error message is displayed', async () => {
       const errorMessage = canvas.getByText('Custom error message')
       await expect(errorMessage).toBeInTheDocument()
@@ -222,46 +234,52 @@ export const Disabled: TypeaheadStory = {
   ],
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify opener button is disabled', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       // Use aria-disabled check since button might not have disabled attribute
       await expect(opener).toHaveAttribute('aria-disabled', 'true')
     })
-    
+
     await step('Verify disabled styling', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toHaveClass('bg-grey-100')
       await expect(opener).toHaveClass('border-grey-100')
     })
-    
+
     await step('Verify dropdown does not open when disabled', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await userEvent.click(opener)
       await expect(opener).toHaveAttribute('aria-expanded', 'false')
     })
-    
-    await step('Verify update:modelValue is NOT called when clicking disabled typeahead', async () => {
-      const opener = canvas.getByRole('button', { name: /typeahead/i })
-      
-      // Attempt to click the disabled button
-      await userEvent.click(opener)
-      
-      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
-      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
-    })
-    
-    await step('Verify update:modelValue is NOT called on keyboard activation attempt', async () => {
-      const opener = canvas.getByRole('button', { name: /typeahead/i })
-      
-      // Try to focus and activate with keyboard (should not work on disabled element)
-      opener.focus()
-      await userEvent.keyboard('{Enter}')
-      await userEvent.keyboard(' ')
-      
-      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
-      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
-    })
+
+    await step(
+      'Verify update:modelValue is NOT called when clicking disabled typeahead',
+      async () => {
+        const opener = canvas.getByRole('button', { name: /typeahead/i })
+
+        // Attempt to click the disabled button
+        await userEvent.click(opener)
+
+        // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+        await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+      }
+    )
+
+    await step(
+      'Verify update:modelValue is NOT called on keyboard activation attempt',
+      async () => {
+        const opener = canvas.getByRole('button', { name: /typeahead/i })
+
+        // Try to focus and activate with keyboard (should not work on disabled element)
+        opener.focus()
+        await userEvent.keyboard('{Enter}')
+        await userEvent.keyboard(' ')
+
+        // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+        await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+      }
+    )
   }
 }
 
@@ -282,12 +300,12 @@ export const Readonly: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify opener button is readonly (same styling as disabled)', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toHaveAttribute('aria-disabled', 'true')
     })
-    
+
     await step('Verify readonly styling (same as disabled)', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toHaveClass('bg-grey-100')
@@ -313,12 +331,12 @@ export const Required: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify required indicator is displayed', async () => {
       const label = canvas.getByText(/Typeahead/i)
       await expect(label.textContent).toContain('*')
     })
-    
+
     await step('Verify ARIA required attribute', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toHaveAttribute('aria-required', 'true')
@@ -346,7 +364,9 @@ export const WithIcons: TypeaheadStory = {
     const canvas = within(canvasElement)
     await step('Verify icons are displayed', async () => {
       // Icons might be in different locations, check for icon elements
-      const leftIcon = canvasElement.querySelector('[class*="magnifying-glass"], [data-icon="magnifying-glass"]')
+      const leftIcon = canvasElement.querySelector(
+        '[class*="magnifying-glass"], [data-icon="magnifying-glass"]'
+      )
       const rightIcon = canvasElement.querySelector('[class*="filter"], [data-icon="filter"]')
       // At least verify the opener has icons (check for icon containers)
       const opener = canvas.getByRole('button', { name: /typeahead/i })
@@ -366,14 +386,14 @@ export const CustomFilterFn: TypeaheadStory = {
         { value: '3', label: 'Python' },
         { value: '4', label: 'Java' }
       ]
-      
+
       const customFilter = async (text?: string): Promise<FzTypeaheadOptionsProps[]> => {
         return new Promise((resolve) => {
           setTimeout(() => {
             if (!text || text.trim() === '') {
               resolve(allOptions)
             } else {
-              const filtered = allOptions.filter(opt => 
+              const filtered = allOptions.filter((opt) =>
                 opt.label.toLowerCase().includes(text.toLowerCase())
               )
               resolve(filtered)
@@ -381,7 +401,7 @@ export const CustomFilterFn: TypeaheadStory = {
           }, 300)
         })
       }
-      
+
       return {
         args,
         model,
@@ -414,21 +434,21 @@ export const CustomFilterFn: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Open dropdown and type to filter', async () => {
       const opener = canvas.getByRole('button', { name: /programming language/i })
       await userEvent.click(opener)
-      
+
       // Wait for dropdown to open
-      await new Promise(resolve => setTimeout(resolve, 300))
-      
+      await new Promise((resolve) => setTimeout(resolve, 300))
+
       const input = canvasElement.querySelector('input[type="text"]') as HTMLInputElement
       if (input) {
         await userEvent.type(input, 'script', { delay: 50 })
-        
+
         // Wait for async filter (delayTime is 500ms + filter time)
-        await new Promise(resolve => setTimeout(resolve, 800))
-        
+        await new Promise((resolve) => setTimeout(resolve, 800))
+
         // Verify filtered results (options might be in teleport)
         const options = document.querySelectorAll('[role="option"]')
         await expect(options.length).toBeGreaterThan(0)
@@ -481,7 +501,7 @@ export const SimpleSearch: TypeaheadStory = {
   ],
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Open dropdown and type search query', async () => {
       // When filtrable is true, component shows input field directly (or button that switches to input)
       // Try to get input field first, if not found, click button to open
@@ -493,115 +513,132 @@ export const SimpleSearch: TypeaheadStory = {
         await userEvent.click(button)
         input = canvas.getByRole('textbox', { name: /programming languages/i })
       }
-      
+
       await expect(input).toBeVisible()
-      
+
       // Type "java" - should find both "JavaScript" and "Java"
       await userEvent.type(input, 'java')
-      
+
       // Wait for debounce
-      await new Promise(resolve => setTimeout(resolve, 600))
+      await new Promise((resolve) => setTimeout(resolve, 600))
     })
-    
+
     await step('Verify simple search finds exact substring matches', async () => {
       // Options might be in teleport, so search in document
-      await waitFor(() => {
-        const options = document.querySelectorAll('[role="option"]')
-        expect(options.length).toBeGreaterThan(0)
-      }, { timeout: 1000 })
-      
+      await waitFor(
+        () => {
+          const options = document.querySelectorAll('[role="option"]')
+          expect(options.length).toBeGreaterThan(0)
+        },
+        { timeout: 1000 }
+      )
+
       const options = document.querySelectorAll('[role="option"]')
       await expect(options.length).toBeGreaterThan(0)
-      
-      const optionTexts = Array.from(options).map(opt => opt.textContent)
+
+      const optionTexts = Array.from(options).map((opt) => opt.textContent)
       // Should find both "JavaScript" and "Java" since both contain "java"
-      expect(optionTexts.some(text => text?.includes('JavaScript'))).toBe(true)
-      expect(optionTexts.some(text => text?.includes('Java'))).toBe(true)
+      expect(optionTexts.some((text) => text?.includes('JavaScript'))).toBe(true)
+      expect(optionTexts.some((text) => text?.includes('Java'))).toBe(true)
     })
-    
+
     await step('Verify update:modelValue IS called when selecting an option', async () => {
       // Options might be in teleport, so search in document
-      await waitFor(() => {
-        const options = document.querySelectorAll('[role="option"]')
-        expect(options.length).toBeGreaterThan(0)
-      }, { timeout: 1000 })
-      
+      await waitFor(
+        () => {
+          const options = document.querySelectorAll('[role="option"]')
+          expect(options.length).toBeGreaterThan(0)
+        },
+        { timeout: 1000 }
+      )
+
       const options = document.querySelectorAll('[role="option"]')
-      const javaScriptOption = Array.from(options).find(opt => opt.textContent?.includes('JavaScript'))
-      
+      const javaScriptOption = Array.from(options).find((opt) =>
+        opt.textContent?.includes('JavaScript')
+      )
+
       if (javaScriptOption) {
         await userEvent.click(javaScriptOption as HTMLElement)
-        
+
         // Wait for selection to complete
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
+        await new Promise((resolve) => setTimeout(resolve, 100))
+
         // ROBUST CHECK: Verify the update:modelValue spy WAS called with expected value
         // Note: May be called multiple times due to v-model and explicit listener
         await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
         await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith('1')
       }
     })
-    
+
     await step('Verify simple search does not handle typos', async () => {
       // After selecting an option, component shows button instead of input
       // Need to re-open dropdown to get input field again
       const button = canvas.getByRole('button', { name: /programming languages/i })
       await userEvent.click(button)
-      
+
       // Wait for dropdown to open and input to appear
-      await waitFor(() => {
-        const textbox = canvasElement.querySelector('input[type="text"]') as HTMLElement
-        expect(textbox).toBeVisible()
-      }, { timeout: 1000 })
-      
+      await waitFor(
+        () => {
+          const textbox = canvasElement.querySelector('input[type="text"]') as HTMLElement
+          expect(textbox).toBeVisible()
+        },
+        { timeout: 1000 }
+      )
+
       // Small delay for component to settle after opening
-      await new Promise(resolve => setTimeout(resolve, 150))
-      
+      await new Promise((resolve) => setTimeout(resolve, 150))
+
       // Get a fresh reference to the native input element
       const nativeInput = canvasElement.querySelector('input[type="text"]') as HTMLInputElement
-      
+
       // Type using fireEvent.input which directly triggers Vue's v-model binding
       // This is more reliable than userEvent.type for complex component hierarchies
       const typoText = 'javascrpt' // missing 'i' - typo
       nativeInput.focus()
       fireEvent.input(nativeInput, { target: { value: typoText } })
-      
+
       // Verify the input received the value
-      await waitFor(() => {
-        expect(nativeInput.value).toBe(typoText)
-      }, { timeout: 1000 })
-      
+      await waitFor(
+        () => {
+          expect(nativeInput.value).toBe(typoText)
+        },
+        { timeout: 1000 }
+      )
+
       // Wait for debounce (delayTime is 500ms) and filtering to complete
-      await new Promise(resolve => setTimeout(resolve, 700))
-      
-      // Verify dropdown is still open - button is hidden when input is shown, 
+      await new Promise((resolve) => setTimeout(resolve, 700))
+
+      // Verify dropdown is still open - button is hidden when input is shown,
       // so we check for aria-expanded on the input instead
       const inputElement = canvas.getByRole('textbox')
       await expect(inputElement).toHaveAttribute('aria-expanded', 'true')
     })
-    
+
     await step('Verify simple search is case-insensitive', async () => {
       // Get native input element directly (more reliable)
       const nativeInput = canvasElement.querySelector('input[type="text"]') as HTMLInputElement
-      
+
       // Use fireEvent.input to set the value directly (more reliable for Vue v-model)
       nativeInput.focus()
       fireEvent.input(nativeInput, { target: { value: 'JAVASCRIPT' } })
-      
+
       // Wait for debounce (delayTime is 500ms)
-      await new Promise(resolve => setTimeout(resolve, 600))
-      
+      await new Promise((resolve) => setTimeout(resolve, 600))
+
       // Options might be in teleport, so search in document
-      await waitFor(() => {
-        const options = document.querySelectorAll('[role="option"]')
-        expect(options.length).toBeGreaterThan(0)
-      }, { timeout: 1000 })
-      
+      await waitFor(
+        () => {
+          const options = document.querySelectorAll('[role="option"]')
+          expect(options.length).toBeGreaterThan(0)
+        },
+        { timeout: 1000 }
+      )
+
       const options = document.querySelectorAll('[role="option"]')
       await expect(options.length).toBeGreaterThan(0)
-      const optionTexts = Array.from(options).map(opt => opt.textContent)
+      const optionTexts = Array.from(options).map((opt) => opt.textContent)
       // Should find "JavaScript" regardless of case
-      expect(optionTexts.some(text => text?.includes('JavaScript'))).toBe(true)
+      expect(optionTexts.some((text) => text?.includes('JavaScript'))).toBe(true)
     })
   }
 }
@@ -612,7 +649,7 @@ export const RemoteLoading: TypeaheadStory = {
     setup() {
       const model = ref<string>()
       const options = ref<FzTypeaheadOptionsProps[] | undefined>(undefined)
-      
+
       const loadOptions = async (text?: string): Promise<FzTypeaheadOptionsProps[]> => {
         return new Promise((resolve) => {
           setTimeout(() => {
@@ -621,11 +658,11 @@ export const RemoteLoading: TypeaheadStory = {
               { value: '2', label: 'User Two' },
               { value: '3', label: 'User Three' }
             ]
-            
+
             if (!text || text.trim() === '') {
               resolve(allOptions)
             } else {
-              const filtered = allOptions.filter(opt =>
+              const filtered = allOptions.filter((opt) =>
                 opt.label.toLowerCase().includes(text.toLowerCase())
               )
               resolve(filtered)
@@ -633,12 +670,12 @@ export const RemoteLoading: TypeaheadStory = {
           }, 500)
         })
       }
-      
+
       onMounted(async () => {
         const initialOptions = await loadOptions('')
         options.value = initialOptions
       })
-      
+
       return {
         args,
         model,
@@ -671,7 +708,7 @@ export const RemoteLoading: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify loading state initially', async () => {
       // Component should show loading indicator when options is undefined
       const progress = canvasElement.querySelector('.fz-progress, [role="progressbar"]')
@@ -679,17 +716,17 @@ export const RemoteLoading: TypeaheadStory = {
       const opener = canvas.getByRole('button', { name: /search users/i })
       await expect(opener).toBeInTheDocument()
     })
-    
+
     await step('Wait for options to load and verify they appear', async () => {
       // Wait for initial load (500ms delay in loadOptions)
-      await new Promise(resolve => setTimeout(resolve, 700))
-      
+      await new Promise((resolve) => setTimeout(resolve, 700))
+
       const opener = canvas.getByRole('button', { name: /search users/i })
       await userEvent.click(opener)
-      
+
       // Wait for dropdown to open and options to render
-      await new Promise(resolve => setTimeout(resolve, 300))
-      
+      await new Promise((resolve) => setTimeout(resolve, 300))
+
       // Options might be in teleport, so search in document
       const options = document.querySelectorAll('[role="option"]')
       await expect(options.length).toBeGreaterThan(0)
@@ -721,14 +758,14 @@ export const GroupedOptions: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Open dropdown and verify grouped options', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await userEvent.click(opener)
-      
+
       // Wait for dropdown to open and options to render
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
+      await new Promise((resolve) => setTimeout(resolve, 500))
+
       // When filtrable is true, options should be visible even with empty input
       // Options might be in teleport, so search in document
       const options = document.querySelectorAll('[role="option"]')
@@ -737,7 +774,7 @@ export const GroupedOptions: TypeaheadStory = {
         // Check if dropdown is open
         await expect(opener).toHaveAttribute('aria-expanded', 'true')
         // Wait a bit more for lazy loading
-        await new Promise(resolve => setTimeout(resolve, 300))
+        await new Promise((resolve) => setTimeout(resolve, 300))
         const optionsAfterWait = document.querySelectorAll('[role="option"]')
         await expect(optionsAfterWait.length).toBeGreaterThan(0)
       } else {
@@ -775,26 +812,28 @@ export const DisabledOptions: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Open dropdown and verify options are present', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await userEvent.click(opener)
-      
+
       // Wait for dropdown to open and options to render
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
+      await new Promise((resolve) => setTimeout(resolve, 500))
+
       // Verify options are present (including disabled ones)
       // Options might be in teleport, so search in document
       let options = document.querySelectorAll('[role="option"]')
       // If no options, wait more
       if (options.length === 0) {
-        await new Promise(resolve => setTimeout(resolve, 300))
+        await new Promise((resolve) => setTimeout(resolve, 300))
         options = document.querySelectorAll('[role="option"]')
       }
       await expect(options.length).toBeGreaterThan(0)
-      
+
       // Verify disabled option is present
-      const disabledOption = Array.from(options).find(opt => opt.getAttribute('aria-disabled') === 'true')
+      const disabledOption = Array.from(options).find(
+        (opt) => opt.getAttribute('aria-disabled') === 'true'
+      )
       await expect(disabledOption).toBeTruthy()
     })
   }
@@ -820,20 +859,20 @@ export const LazyLoading: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Open dropdown and verify initial options load', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await userEvent.click(opener)
-      
+
       // Wait for dropdown to open and lazy loading to render
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
+      await new Promise((resolve) => setTimeout(resolve, 500))
+
       // Should load first 25 options initially
       // Options might be in teleport, so search in document
       const options = document.querySelectorAll('[role="option"]')
       // If no options, wait more for lazy loading
       if (options.length === 0) {
-        await new Promise(resolve => setTimeout(resolve, 300))
+        await new Promise((resolve) => setTimeout(resolve, 300))
         const optionsAfterWait = document.querySelectorAll('[role="option"]')
         await expect(optionsAfterWait.length).toBeGreaterThan(0)
         await expect(optionsAfterWait.length).toBeLessThanOrEqual(25)
@@ -880,7 +919,7 @@ export const PreSelected: TypeaheadStory = {
   ],
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify selected value is displayed', async () => {
       // When there's a pre-selected value, component shows button with title attribute
       // When filtrable is true and no value, it shows input field
@@ -894,7 +933,7 @@ export const PreSelected: TypeaheadStory = {
         await expect(input).toHaveValue('One')
       }
     })
-    
+
     await step('Open dropdown and verify selected option is highlighted', async () => {
       // Click on opener (button or input)
       try {
@@ -904,38 +943,41 @@ export const PreSelected: TypeaheadStory = {
         const input = canvas.getByRole('textbox', { name: /typeahead/i })
         await userEvent.click(input)
       }
-      
+
       // Wait for dropdown to open and options to render
-      await waitFor(() => {
-        const options = document.querySelectorAll('[role="option"]')
-        expect(options.length).toBeGreaterThan(0)
-      }, { timeout: 1000 })
-      
+      await waitFor(
+        () => {
+          const options = document.querySelectorAll('[role="option"]')
+          expect(options.length).toBeGreaterThan(0)
+        },
+        { timeout: 1000 }
+      )
+
       // Try to find selected option, but if not found, at least verify options are present
       // Options might be in teleport, so search in document
       const selectedOption = document.querySelector('[role="option"][aria-selected="true"]')
       const allOptions = document.querySelectorAll('[role="option"]')
-      
+
       // Verify options are present
       await expect(allOptions.length).toBeGreaterThan(0)
-      
+
       // If selected option is found, verify it contains 'One'
       if (selectedOption) {
         await expect(selectedOption.textContent).toContain('One')
       }
     })
-    
+
     await step('Verify update:modelValue IS called when selecting a different option', async () => {
       // Find and click a different option (Two)
       const options = document.querySelectorAll('[role="option"]')
-      const optionTwo = Array.from(options).find(opt => opt.textContent?.includes('Two'))
-      
+      const optionTwo = Array.from(options).find((opt) => opt.textContent?.includes('Two'))
+
       if (optionTwo) {
         await userEvent.click(optionTwo as HTMLElement)
-        
+
         // Wait for selection to complete
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
+        await new Promise((resolve) => setTimeout(resolve, 100))
+
         // ROBUST CHECK: Verify the update:modelValue spy WAS called with expected value
         // Note: May be called multiple times due to v-model and explicit listener
         await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
@@ -953,20 +995,20 @@ export const Unclearable: TypeaheadStory = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify selected value cannot be cleared', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await userEvent.click(opener)
-      
-      await new Promise(resolve => setTimeout(resolve, 100))
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       // Click on selected option - should not clear it
       const selectedOption = canvasElement.querySelector('[role="option"][aria-selected="true"]')
       if (selectedOption) {
         await userEvent.click(selectedOption)
-        
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
+
+        await new Promise((resolve) => setTimeout(resolve, 100))
+
         // Verify value is still selected (not cleared)
         const openerAfter = canvas.getByRole('button', { name: /typeahead/i })
         await expect(openerAfter.textContent).toContain('One')
@@ -993,13 +1035,13 @@ export const NotFiltrable: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Open dropdown and verify input does not appear', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await userEvent.click(opener)
-      
-      await new Promise(resolve => setTimeout(resolve, 100))
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       // When not filtrable, button should remain visible (not switch to input)
       const input = canvasElement.querySelector('input[type="text"]')
       // Input might be present but hidden, so we verify button is still the opener
@@ -1025,13 +1067,13 @@ export const OpenOnTop: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Open dropdown and verify it opens on top', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await userEvent.click(opener)
-      
-      await new Promise(resolve => setTimeout(resolve, 100))
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       await expect(opener).toHaveAttribute('aria-expanded', 'true')
     })
   }
@@ -1053,13 +1095,13 @@ export const AutoVertical: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Open dropdown near bottom and verify auto positioning', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await userEvent.click(opener)
-      
-      await new Promise(resolve => setTimeout(resolve, 100))
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       await expect(opener).toHaveAttribute('aria-expanded', 'true')
     })
   }
@@ -1086,13 +1128,13 @@ export const WithMaxHeight: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Open dropdown and verify max height constraint', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await userEvent.click(opener)
-      
-      await new Promise(resolve => setTimeout(resolve, 100))
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       const optionsList = canvasElement.querySelector('[role="listbox"]')
       if (optionsList) {
         const maxHeight = (optionsList as HTMLElement).style.maxHeight
@@ -1138,18 +1180,18 @@ export const NotFiltrableAndUnclearable: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify placeholder is displayed (no initial value)', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener.textContent).toContain('Seleziona un valore')
     })
-    
+
     await step('Open dropdown and verify button remains (no input)', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await userEvent.click(opener)
-      
-      await new Promise(resolve => setTimeout(resolve, 100))
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       // When filtrable is false, button should remain visible (not switch to input)
       // Input exists in DOM but is hidden with v-show
       const input = canvasElement.querySelector('input[type="text"]')
@@ -1159,55 +1201,55 @@ export const NotFiltrableAndUnclearable: TypeaheadStory = {
       await expect(opener).toHaveAttribute('aria-expanded', 'true')
       await expect(opener).toBeVisible()
     })
-    
+
     await step('Select an option and verify it cannot be cleared', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
-      
+
       // Find and click first option
       const options = document.querySelectorAll('[role="option"]')
-      const optionOne = Array.from(options).find(opt => opt.textContent?.includes('One'))
-      
+      const optionOne = Array.from(options).find((opt) => opt.textContent?.includes('One'))
+
       if (optionOne) {
         await userEvent.click(optionOne as HTMLElement)
-        
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
+
+        await new Promise((resolve) => setTimeout(resolve, 100))
+
         // Verify value is selected
         const openerAfter = canvas.getByRole('button', { name: /typeahead/i })
         await expect(openerAfter.textContent).toContain('One')
-        
+
         // Re-open dropdown and click on selected option - should not clear it
         await userEvent.click(openerAfter)
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
+        await new Promise((resolve) => setTimeout(resolve, 100))
+
         const selectedOption = canvasElement.querySelector('[role="option"][aria-selected="true"]')
         if (selectedOption) {
           await userEvent.click(selectedOption)
-          
-          await new Promise(resolve => setTimeout(resolve, 100))
-          
+
+          await new Promise((resolve) => setTimeout(resolve, 100))
+
           // Verify value is still selected (not cleared)
           const openerStillSelected = canvas.getByRole('button', { name: /typeahead/i })
           await expect(openerStillSelected.textContent).toContain('One')
         }
       }
     })
-    
+
     await step('Verify can select different option', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await userEvent.click(opener)
-      
-      await new Promise(resolve => setTimeout(resolve, 100))
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       // Find and click a different option
       const options = document.querySelectorAll('[role="option"]')
-      const optionTwo = Array.from(options).find(opt => opt.textContent?.includes('Two'))
-      
+      const optionTwo = Array.from(options).find((opt) => opt.textContent?.includes('Two'))
+
       if (optionTwo) {
         await userEvent.click(optionTwo as HTMLElement)
-        
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
+
+        await new Promise((resolve) => setTimeout(resolve, 100))
+
         // Verify new value is selected
         const openerAfter = canvas.getByRole('button', { name: /typeahead/i })
         await expect(openerAfter.textContent).toContain('Two')
@@ -1238,7 +1280,7 @@ export const SelectWithHundredsOfOptions: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify opener button renders', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toBeInTheDocument()
@@ -1268,7 +1310,7 @@ export const SelectWithHundredsOfOptionsAndMaxHeight: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify opener button renders', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toBeInTheDocument()
@@ -1316,11 +1358,27 @@ export const SelectWithOptionLabelAndSubtitle: TypeaheadStory = {
     disableTruncate: true,
     options: [
       { label: 'Consigliate', kind: 'label' },
-      { value: '1', label: 'Reverse Charge - Cessione di rottami e altri materiali di recupero', subtitle: 'Per vendite di materiali di recupero come rottami metallici o carta da macero.' },
-      { value: '2', label: 'Escluso - Art. 1, Art. 2, Art. 3, Art. 5, Art. 26', subtitle: 'Per rimborsi spese sostenuti in nome e per conto del cliente.' },
+      {
+        value: '1',
+        label: 'Reverse Charge - Cessione di rottami e altri materiali di recupero',
+        subtitle: 'Per vendite di materiali di recupero come rottami metallici o carta da macero.'
+      },
+      {
+        value: '2',
+        label: 'Escluso - Art. 1, Art. 2, Art. 3, Art. 5, Art. 26',
+        subtitle: 'Per rimborsi spese sostenuti in nome e per conto del cliente.'
+      },
       { label: 'Tutte le normative', kind: 'label' },
-      { value: '3', label: 'Fuori campo - Art. 3, comma 4a', subtitle: 'Per operazioni di cessione di diritti d\'autore.' },
-      { value: '4', label: 'Fuori campo - Art. 3, comma 4b', subtitle: 'Per cessione di beni verso San Marino e Vaticano.' }
+      {
+        value: '3',
+        label: 'Fuori campo - Art. 3, comma 4a',
+        subtitle: "Per operazioni di cessione di diritti d'autore."
+      },
+      {
+        value: '4',
+        label: 'Fuori campo - Art. 3, comma 4b',
+        subtitle: 'Per cessione di beni verso San Marino e Vaticano.'
+      }
     ]
   }
 }
@@ -1346,32 +1404,32 @@ export const FloatingLabel: TypeaheadStory = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify floating-label variant is applied', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await expect(opener).toHaveClass('h-44')
       await expect(opener).toHaveClass('text-sm')
     })
-    
+
     await step('Select an option and verify floating label behavior', async () => {
       const opener = canvas.getByRole('button', { name: /typeahead/i })
       await userEvent.click(opener)
-      
-      await new Promise(resolve => setTimeout(resolve, 100))
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       // Find and click first option
       const options = document.querySelectorAll('[role="option"]')
-      const optionOne = Array.from(options).find(opt => opt.textContent?.includes('One'))
-      
+      const optionOne = Array.from(options).find((opt) => opt.textContent?.includes('One'))
+
       if (optionOne) {
         await userEvent.click(optionOne as HTMLElement)
-        
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
+
+        await new Promise((resolve) => setTimeout(resolve, 100))
+
         // Verify value is selected and floating label shows placeholder above
         const openerAfter = canvas.getByRole('button', { name: /typeahead/i })
         await expect(openerAfter.textContent).toContain('One')
-        
+
         // Verify floating label structure (two spans)
         const floatingLabelContainer = openerAfter.querySelector('.flex.flex-col')
         await expect(floatingLabelContainer).toBeTruthy()
@@ -1379,4 +1437,3 @@ export const FloatingLabel: TypeaheadStory = {
     })
   }
 }
-

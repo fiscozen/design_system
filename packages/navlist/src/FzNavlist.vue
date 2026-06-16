@@ -1,4 +1,15 @@
 <script lang="ts" setup>
+/**
+ * FzNavlist
+ *
+ * @deprecated Deprecated for external use. New code must use `@fiscozen/action`
+ * (`FzActionList` + `FzActionSection` + `FzAction`) instead. Collapsible
+ * submenus have no built-in equivalent in `@fiscozen/action`: wrap a nested
+ * `FzActionSection` in a `FzCollapse` from `@fiscozen/collapse` in the consumer.
+ * No `@fiscozen/*` package depends on this one, but it remains published for
+ * backward compatibility.
+ * See the @fiscozen/navlist README for the full migration guide.
+ */
 import { FzNavlink, FzNavlinkProps, FzRouterNavlink, FzRouterNavlinkProps } from '@fiscozen/navlink'
 import { FzCollapse } from '@fiscozen/collapse'
 import { FzNavlistItem, FzNavlistProps, isSubMenu } from './types'

@@ -1,0 +1,96 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Navigation/FzActionlist" />
+
+# FzActionlist
+
+> ⚠️ **Deprecated for external use — internal-only until consumers migrate.** New code must use [`FzActionList`](./?path=/docs/navigation-fzactionlist-documentation--docs) (with `FzActionSection` and `FzAction`) from `@fiscozen/action` instead. This package stays published on npm and remains buildable because it is still consumed internally by **`@fiscozen/table`**. It cannot be removed until that consumer migrates. No new features will be developed and no bug fixes will be backported.
+
+A vertical list of interactive actions or options, composed of items presented in a consistent, single-column format.
+
+## Migration to @fiscozen/action
+
+`FzActionlist` (from `@fiscozen/actionlist`, lowercase `l`) maps to a composition of three components from `@fiscozen/action`: `FzActionList` + `FzActionSection` + multiple `FzAction` children.
+
+```vue
+<!-- Before: @fiscozen/actionlist -->
+<FzActionlist
+  :label="label"
+  :items="items"
+  @fzaction:click="onClick"
+/>
+
+<!-- After: @fiscozen/action -->
+<FzActionList :listClass="listClass">
+  <FzActionSection :label="label">
+    <FzAction
+      v-for="(item, index) in items"
+      :key="index"
+      :type="item.type === 'link' ? 'link' : 'action'"
+      variant="textLeft"
+      :label="item.label"
+      v-bind="item"
+      @click="onClick(index, item)"
+    />
+  </FzActionSection>
+</FzActionList>
+```
+
+### Mapping
+
+<table>
+  <thead>
+    <tr>
+      <th>Concept</th>
+      <th><code>@fiscozen/actionlist</code></th>
+      <th><code>@fiscozen/action</code></th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Container</td>
+      <td><code>FzActionlist</code> (single component)</td>
+      <td><code>FzActionList</code> + <code>FzActionSection</code> (composition)</td>
+      <td>The new API splits the container from its section.</td>
+    </tr>
+    <tr>
+      <td>Section label</td>
+      <td><code>label</code> on <code>FzActionlist</code></td>
+      <td><code>label</code> on <code>FzActionSection</code></td>
+      <td>Relocated, semantics identical.</td>
+    </tr>
+    <tr>
+      <td>Item discriminator</td>
+      <td><code>item.type: 'button' | 'link'</code></td>
+      <td><code>FzAction</code> <code>type: 'action' | 'link'</code></td>
+      <td>The value <code>'button'</code> becomes <code>'action'</code>.</td>
+    </tr>
+    <tr>
+      <td>Icon API</td>
+      <td>single <code>iconName</code> / <code>iconVariant</code> (inherited from <code>FzNavlink</code>)</td>
+      <td><code>iconLeftName</code> / <code>iconLeftVariant</code> / <code>iconRightName</code> / <code>iconRightVariant</code> (or <code>iconName</code> for <code>variant="onlyIcon"</code>)</td>
+      <td>Richer placement API.</td>
+    </tr>
+    <tr>
+      <td>Click event</td>
+      <td><code>fzaction:click</code> with <code>(index, item)</code></td>
+      <td>native <code>click</code> on each <code>FzAction</code></td>
+      <td>Track the index in the consumer if needed.</td>
+    </tr>
+    <tr>
+      <td>Per-item slot</td>
+      <td><code>{'#fzaction-item-${index}'}</code></td>
+      <td>default slot of each <code>FzAction</code></td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>Extra features</td>
+      <td>—</td>
+      <td><code>subLabel</code>, text truncation, <code>readonly</code>, <code>environment</code>, <code>role</code>, <code>ariaSelected</code>, multiple variants</td>
+      <td>Net additions.</td>
+    </tr>
+  </tbody>
+</table>
+
+The replacement components are showcased in the [`Navigation/FzActionList`](./?path=/docs/navigation-fzactionlist--docs) story page.

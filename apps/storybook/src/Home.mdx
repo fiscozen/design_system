@@ -15,12 +15,12 @@ Fiscozen Design System is a set of components for Vue.js. The primary goal is to
 e.g.
 
 ```tsx
-<template>
-    <FzButton ... />
-</template>
 <script setup>
     import { FzButton } from '@fiscozen/button';
 </script>
+<template>
+    <FzButton ... />
+</template>
 ```
 ## Installation
 
@@ -32,36 +32,50 @@ Each package is scoped under **@fiscozen** followed by the specific component na
 
 Here is the current list of available packages with their corresponding components:
 
-- **@fiscozen/action**: `FzAction`, `FzActionList`, `FzActionSection`. <Markdown>{`<span style="color: green;">New</span>`}</Markdown>
-- <Markdown>{`~~**@fiscozen/actionlist**: FzActionList.~~   <span style="color: gold;">Deprecated</span> use @fiscozen/action instead`}</Markdown>
-- **@fiscozen/alert**: `FzAlert`.
-- **@fiscozen/avatar**: `FzAvatar`.
-- **@fiscozen/badge**: `FzBadge`.
-- **@fiscozen/breadcrumbs**: `FzBreadcrumbs`.
-- **@fiscozen/button**: `FzButton`, `FzIconButton`.
-- **@fiscozen/card**: `FzCard`.
-- **@fiscozen/checkbox**: `FzCheckbox`, `FzCheckboxGroup`.
-- **@fiscozen/container**: `FzContainer`. [Documentation](./?path=/docs/documentation-layout-fzcontainer--docs)
-- **@fiscozen/datepicker**: `FzDatepicker`.
-- **@fiscozen/dialog**: `FzDialog`, `FzConfirmDialog`.
-- **@fiscozen/dropdown**: `FzDropdown`, `FzIconDropdown`.
-- **@fiscozen/icons**: `FzIcon`.
-- **@fiscozen/input**: `FzInput`, `FzCurrencyInput`.
-- **@fiscozen/link**: `FzLink`.
-- **@fiscozen/navbar**: `FzNavbar`.
-- <Markdown>{`~~**@fiscozen/navlink**: FzNavLink.~~   <span style="color: gold;">Deprecated</span> use @fiscozen/action instead`}</Markdown>
-- <Markdown>{`~~**@fiscozen/navlist**: FzNavList.~~   <span style="color: gold;">Deprecated</span> use @fiscozen/action instead`}</Markdown>
-- **@fiscozen/pdf-viewer**: `FzPdfViewer`. [Documentation](./?path=/docs/documentation-media-fzpdfviewer--docs)
-- **@fiscozen/radio**: `FzRadio`, `FzRadioGroup`.
-- **@fiscozen/select**: `FzSelect`.
-- **@fiscozen/simple-table**: `FzSimpleTable`.
-- **@fiscozen/typeahead**: `FzTypeahead`.
-- **@fiscozen/tab**: `FzTab`, `FzTabs`.
-- **@fiscozen/textarea**: `FzTextarea`.
-- **@fiscozen/toast**: `FzToast`, `FzToastQueue`.
-- **@fiscozen/tooltip**: `FzTooltip`. [Documentation](./?path=/docs/documentation-overlay-fztooltip--docs)
-- **@fiscozen/upload**: `FzUpload`.
-- **@fiscozen/view-flag**: `FzViewFlag`.
+- **@fiscozen/action**: `FzAction`, `FzActionList`, `FzActionSection`. [Documentation](./?path=/docs/navigation-fzaction-documentation--docs) | [Stories](./?path=/docs/navigation-fzaction--docs)
+- <Markdown>{`~~**@fiscozen/actionlist**: FzActionList.~~   <span style="color: gold;">Deprecated</span> use @fiscozen/action instead. [Documentation](./?path=/docs/documentation-navigation-fzactionlist--docs) | Stories`}</Markdown>
+- **@fiscozen/alert**: `FzAlert`. [Documentation](./?path=/docs/documentation-messages-fzalert--docs) | [Stories](./?path=/docs/messages-fzalert--docs)
+- **@fiscozen/appointments**: `FzAppointments`. [Documentation](./?path=/docs/documentation-form-fzappointments--docs) | [Stories](./?path=/docs/form-fzappointments--docs)
+- **@fiscozen/avatar**: `FzAvatar`. [Documentation](./?path=/docs/documentation-media-fzavatar--docs) | [Stories](./?path=/docs/media-fzavatar--docs)
+- **@fiscozen/badge**: `FzBadge`. [Documentation](./?path=/docs/documentation-misc-fzbadge--docs) | [Stories](./?path=/docs/misc-fzbadge--docs)
+- **@fiscozen/breadcrumbs**: `FzBreadcrumbs`. [Documentation](./?path=/docs/documentation-navigation-breadcrumbs--docs) | [Stories](./?path=/docs/navigation-fzbreadcrumbs-fzbreadcrumbs--docs)
+- **@fiscozen/button**: `FzButton`, `FzIconButton`. [Documentation](./?path=/docs/documentation-button-fzbutton--docs) | [Stories](./?path=/docs/button-fzbutton--docs)
+- **@fiscozen/card**: `FzCard`. [Documentation](./?path=/docs/documentation-panel-fzcard--docs) | [Stories](./?path=/docs/panel-fzcard--docs)
+- **@fiscozen/card-list**: `FzCardList`, `FzCardListItem`. [Documentation](./?path=/docs/documentation-panel-fzcardlist--docs) | [Stories](./?path=/docs/panel-fzcardlist--docs)
+- **@fiscozen/chat-container**: `FzChatContainer`. Documentation | [Stories](./?path=/docs/layout-fzchatcontainer--docs)
+- **@fiscozen/checkbox**: `FzCheckbox`, `FzCheckboxGroup`. [Documentation](./?path=/docs/documentation-form-checkbox--docs) | [Stories](./?path=/docs/form-fzcheckbox--docs)
+- **@fiscozen/collapse**: `FzCollapse`, `FzAccordion`. [Documentation](./?path=/docs/documentation-panel-fzcollapse--docs) | [Stories](./?path=/docs/panel-fzcollapse--docs)
+- **@fiscozen/composables**: `FzFloating` and composition utilities. [Documentation](./?path=/docs/documentation-composables-overview--docs) | [Stories](./?path=/docs/composables-fzfloating--docs)
+- **@fiscozen/container**: `FzContainer`. [Documentation](./?path=/docs/documentation-layout-fzcontainer--docs) | [Stories](./?path=/docs/layout-fzcontainer--docs)
+- **@fiscozen/data**: REST helpers (`useActions`, `useFzFetch`, …). [Documentation](./?path=/docs/documentation-datalayer--docs) | Stories
+- **@fiscozen/datepicker**: `FzDatepicker`. [Documentation](./?path=/docs/documentation-form-fzdatepicker--docs) | [Stories](./?path=/docs/form-fzdatepicker--docs)
+- **@fiscozen/dialog**: `FzDialog`, `FzConfirmDialog`. Documentation | [Stories](./?path=/docs/overlay-fzdialog--docs)
+- **@fiscozen/displayfield**: `FzDisplayField`. [Documentation](./?path=/docs/documentation-form-fzdisplayfield--docs) | [Stories](./?path=/docs/form-fzdisplayfield--docs)
+- **@fiscozen/divider**: `FzDivider`. Documentation | [Stories](./?path=/docs/panel-fzdivider--docs)
+- **@fiscozen/dropdown**: `FzDropdown`, `FzIconDropdown`. [Documentation](./?path=/docs/navigation-fzdropdown-documentation--docs) | [Stories](./?path=/docs/navigation-fzdropdown--docs)
+- **@fiscozen/icons**: `FzIcon`. [Documentation](./?path=/docs/documentation-media-fzicon--docs) | [Stories](./?path=/docs/media-fzicon--docs)
+- **@fiscozen/input**: `FzInput`, `FzCurrencyInput`. [Documentation](./?path=/docs/documentation-form-fzinput--docs) | [Stories](./?path=/docs/form-fzinput--docs)
+- **@fiscozen/layout**: `FzLayout`. Documentation | [Stories](./?path=/docs/panel-fzlayout--docs)
+- **@fiscozen/link**: `FzLink`. [Documentation](./?path=/docs/documentation-navigation-fzlink--docs) | [Stories](./?path=/docs/navigation-fzlink--docs)
+- **@fiscozen/navbar**: `FzNavbar`. Documentation | [Stories](./?path=/docs/navigation-fznavbar--docs)
+- <Markdown>{`~~**@fiscozen/navlink**: FzNavlink, FzRouterNavlink.~~   <span style="color: gold;">Deprecated</span> use @fiscozen/action instead. [Documentation](./?path=/docs/documentation-navigation-fznavlink--docs) | [Stories](./?path=/docs/navigation-fznavlink--docs)`}</Markdown>
+- <Markdown>{`~~**@fiscozen/navlist**: FzNavlist.~~   <span style="color: gold;">Deprecated</span> use @fiscozen/action instead. [Documentation](./?path=/docs/documentation-navigation-fznavlist--docs) | [Stories](./?path=/docs/navigation-fznavlist--docs)`}</Markdown>
+- **@fiscozen/pagination**: `FzPagination`, `usePagination`. [Documentation](./?path=/docs/documentation-navigation-fzpagination--docs) | [Stories](./?path=/docs/navigation-fzpagination--docs)
+- **@fiscozen/pdf-viewer**: `FzPdfViewer`. [Documentation](./?path=/docs/documentation-media-fzpdfviewer--docs) | [Stories](./?path=/docs/media-fzpdfviewer--docs)
+- **@fiscozen/progress**: `FzProgress`, `FzProgressBar`. [Documentation](./?path=/docs/documentation-progress-fzprogress--docs) | [Stories](./?path=/docs/progress-fzprogress--docs)
+- **@fiscozen/radio**: `FzRadio`, `FzRadioGroup`. [Documentation](./?path=/docs/documentation-form-fzradio--docs) | [Stories](./?path=/docs/form-fzradio--docs)
+- **@fiscozen/select**: `FzSelect`. [Documentation](./?path=/docs/documentation-form-fzselect--docs) | [Stories](./?path=/docs/form-fzselect--docs)
+- **@fiscozen/simple-table**: `FzSimpleTable`. Documentation | [Stories](./?path=/docs/data-fzsimpletable--docs)
+- **@fiscozen/stepper**: `FzStepper`. [Documentation](./?path=/docs/documentation-navigation-fzstepper--docs) | [Stories](./?path=/docs/navigation-fzstepper--docs)
+- **@fiscozen/style**: design tokens, directives, `setupFzStyle()`. Documentation | Stories
+- **@fiscozen/tab**: `FzTab`, `FzTabs`. [Documentation](./?path=/docs/documentation-panel-fztabs--docs) | [Stories](./?path=/docs/panel-fztabs--docs)
+- **@fiscozen/table**: `FzTable`, `FzRow`. [Documentation](./?path=/docs/documentation-data-fztable--docs) | [Stories](./?path=/docs/data-fztable--docs)
+- **@fiscozen/textarea**: `FzTextarea`. [Documentation](./?path=/docs/documentation-form-fztextarea--docs) | [Stories](./?path=/docs/form-fztextarea--docs)
+- **@fiscozen/toast**: `FzToast`, `FzToastQueue`. Documentation | [Stories](./?path=/docs/messages-fztoast--docs)
+- **@fiscozen/tooltip**: `FzTooltip`. [Documentation](./?path=/docs/documentation-overlay-fztooltip--docs) | [Stories](./?path=/docs/overlay-fztooltip--docs)
+- <Markdown>{`~~**@fiscozen/typeahead**: FzTypeahead.~~   <span style="color: gold;">Deprecated</span> use @fiscozen/select instead. [Documentation](./?path=/docs/documentation-form-fztypeahead--docs) | [Stories](./?path=/docs/form-fztypeahead--docs)`}</Markdown>
+- **@fiscozen/upload**: `FzUpload`. Documentation | [Stories](./?path=/docs/form-fzupload--docs)
+- **@fiscozen/view-flag**: `FzViewFlag`. Documentation | [Stories](./?path=/docs/overlay-fzviewflag--docs)
 
 ### Installation Command
 
