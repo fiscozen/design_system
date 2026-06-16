@@ -2,12 +2,22 @@ import { computed, ToRefs, Ref, ComputedRef } from "vue";
 import { FzInputProps, type InputEnvironment } from "./types";
 
 /**
+ * The subset of FzInput props that drive styling. Styling is independent of the
+ * input `type`, so this is intentionally decoupled from `FzInputProps<TType>`'s
+ * generic parameter — only these visual-state props are read here.
+ */
+type FzInputStyleProps = Pick<
+  FzInputProps,
+  "variant" | "disabled" | "readonly" | "error" | "highlighted" | "aiReasoning"
+>;
+
+/**
  * Composable for managing FzInput component styles and computed classes
  *
  * Handles dynamic styling based on props, environment, variant, and state.
  * Returns computed classes for container, label, input, help text, and error messages.
  *
- * @param props - Reactive props from FzInput component
+ * @param props - Reactive styling props from FzInput component
  * @param container - Reference to container DOM element
  * @param model - Reactive model value (string | undefined)
  * @param effectiveEnvironment - Computed effective environment (backoffice | frontoffice)
@@ -15,8 +25,7 @@ import { FzInputProps, type InputEnvironment } from "./types";
  * @returns Object containing computed classes and style-related properties
  */
 export default function useInputStyle(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  props: ToRefs<FzInputProps<any>>,
+  props: ToRefs<FzInputStyleProps>,
   container: Ref<HTMLElement | null>,
   model: Ref<string | undefined>,
   effectiveEnvironment: ComputedRef<InputEnvironment>,
