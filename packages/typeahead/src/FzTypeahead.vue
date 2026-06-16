@@ -2,6 +2,17 @@
 /**
  * FzTypeahead Component
  *
+ * @deprecated Use `FzSelect` from `@fiscozen/select` with `filterable: true`
+ * (and optionally `filterFn`) instead. `FzSelect` is a superset of `FzTypeahead`
+ * and supersedes it. Note the API differences when migrating:
+ * - Prop `filtrable` becomes `filterable` and its default flips from `true` to `false`;
+ *   pass `:filterable="true"` explicitly to keep typeahead behavior.
+ * - The `fztypeahead:select` event becomes `fzselect:select` and its payload now
+ *   includes the full option object as a second argument.
+ * - The option `value` type is widened from `string` to `string | number`.
+ * The package remains published for backward compatibility but receives no new features.
+ * See the package README for the full migration guide.
+ *
  * A dropdown typeahead component with floating panel positioning, lazy loading, and keyboard navigation.
  * Supports grouped options, custom icons, error/help states, and environment-based styling.
  *
@@ -97,7 +108,7 @@ const isScrollingToFocus = ref(false);
 const searchValue = ref<string>("");
 const debouncedSearchValue = ref<string>("");
 const internalFilteredOptions = ref<FzTypeaheadOptionsProps[] | undefined>(
-  undefined
+  undefined,
 );
 
 const fuseOptions = {
@@ -112,11 +123,11 @@ const fuseOptions = {
  */
 const reconstructGroupedOptions = (
   allOptions: FzTypeaheadOptionsProps[],
-  filteredSelectableOptions: FzTypeaheadOptionProps[]
+  filteredSelectableOptions: FzTypeaheadOptionProps[],
 ): FzTypeaheadOptionsProps[] => {
   const result: FzTypeaheadOptionsProps[] = [];
   const filteredValues = new Set(
-    filteredSelectableOptions.map((opt) => opt.value)
+    filteredSelectableOptions.map((opt) => opt.value),
   );
 
   let currentGroupLabel: FzTypeaheadOptionsProps | null = null;
@@ -184,7 +195,7 @@ const updateFilteredOptions = async () => {
       } else {
         const lowerCaseSearchValue = debouncedSearchValue.value.toLowerCase();
         filteredSelectable = selectableOptions.filter((option) =>
-          option.label.toLowerCase().includes(lowerCaseSearchValue)
+          option.label.toLowerCase().includes(lowerCaseSearchValue),
         );
       }
 
@@ -193,7 +204,7 @@ const updateFilteredOptions = async () => {
       if (hasGroups) {
         internalFilteredOptions.value = reconstructGroupedOptions(
           props.options,
-          filteredSelectable
+          filteredSelectable,
         );
       } else {
         internalFilteredOptions.value = filteredSelectable;
@@ -216,7 +227,7 @@ const debouncedUpdateSearchValue = debounce(
   (value: unknown) => {
     debouncedSearchValue.value = value as string;
   },
-  (props as any).delayTime ?? 500
+  (props as any).delayTime ?? 500,
 );
 
 watch(
@@ -228,7 +239,7 @@ watch(
       debouncedUpdateSearchValue(newValue);
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 watch(
@@ -236,7 +247,7 @@ watch(
   () => {
     updateFilteredOptions();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 watch(
@@ -247,18 +258,18 @@ watch(
     if (!props.filtrable) {
       loadedOptionsCount.value = Math.min(
         props.optionsToShow,
-        props.options?.length || 0
+        props.options?.length || 0,
       );
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const containerElement = computed(
   () =>
     optionsListRef.value?.containerElement?.containerElement as
       | HTMLElement
-      | undefined
+      | undefined,
 );
 
 const instanceId = Math.random().toString(36).substring(2, 9);
@@ -278,14 +289,14 @@ const isInteractive = computed(() => !isDisabled.value && !isReadonly.value);
 // ============================================================================
 
 const isSelectableOption = (
-  option: FzTypeaheadOptionsProps
+  option: FzTypeaheadOptionsProps,
 ): option is FzTypeaheadOptionProps => option.kind !== "label";
 
 const selectedOption = computed(() => {
   if (!props.options || !model.value) return undefined;
   return props.options.find(
     (option): option is FzTypeaheadOptionProps =>
-      isSelectableOption(option) && option.value === model.value
+      isSelectableOption(option) && option.value === model.value,
   );
 });
 
@@ -308,7 +319,7 @@ const selectableOptions = computed(() => {
 const selectedOptionIndex = computed(() => {
   if (!selectedOption.value) return -1;
   return selectableOptions.value.findIndex(
-    (option) => option.value === selectedOption.value?.value
+    (option) => option.value === selectedOption.value?.value,
   );
 });
 
@@ -357,7 +368,7 @@ const calculateMaxHeight = (
   openerRect: Ref<DOMRect | undefined>,
   _containerRect: Ref<DOMRect | undefined>,
   position: Ref<FzFloatingPosition>,
-  actualPosition: Ref<FzFloatingPosition | undefined>
+  actualPosition: Ref<FzFloatingPosition | undefined>,
 ): void => {
   nextTick(() => {
     if (props.floatingPanelMaxHeight) {
@@ -706,7 +717,7 @@ function updateVisibleOptions() {
     // Increment count to load next batch
     loadedOptionsCount.value = Math.min(
       loadedOptionsCount.value + props.optionsToShow,
-      props.options.length
+      props.options.length,
     );
     return;
   }
@@ -722,7 +733,7 @@ function updateVisibleOptions() {
   // Increment count to load next batch
   loadedOptionsCount.value = Math.min(
     loadedOptionsCount.value + props.optionsToShow,
-    internalFilteredOptions.value.length
+    internalFilteredOptions.value.length,
   );
 }
 
@@ -735,7 +746,7 @@ function ensureSelectedOptionVisible() {
     // Find the index of the selected option in props.options (including labels)
     const optionIndexInFullArray = props.options.findIndex(
       (opt) =>
-        isSelectableOption(opt) && opt.value === selectedOption.value?.value
+        isSelectableOption(opt) && opt.value === selectedOption.value?.value,
     );
 
     if (optionIndexInFullArray < 0) return; // Should not happen, but safety check
@@ -756,7 +767,7 @@ function ensureSelectedOptionVisible() {
   // Find the index of the selected option in internalFilteredOptions (including labels)
   const optionIndexInFullArray = internalFilteredOptions.value.findIndex(
     (opt) =>
-      isSelectableOption(opt) && opt.value === selectedOption.value?.value
+      isSelectableOption(opt) && opt.value === selectedOption.value?.value,
   );
 
   if (optionIndexInFullArray < 0) return; // Should not happen, but safety check
@@ -792,7 +803,7 @@ watch(
       loadedOptionsCount.value = Math.min(props.optionsToShow, newValue.length);
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 watch(isInteractive, (newIsInteractive) => {
@@ -836,7 +847,7 @@ watch(isOpen, (newValue) => {
                 } catch (error) {
                   console.warn(
                     "[FzTypeahead] Failed to scroll to selected option:",
-                    error
+                    error,
                   );
                   resetScrollPosition();
                 }
@@ -889,42 +900,42 @@ onMounted(() => {
   if (props.size !== undefined) {
     console.warn(
       `[FzTypeahead] The 'size' prop is deprecated and will be removed in a future version. ` +
-        `The component now uses a fixed 'lg' size. Please remove the size prop from your usage.`
+        `The component now uses a fixed 'lg' size. Please remove the size prop from your usage.`,
     );
   }
 
   if (props.selectProps !== undefined) {
     console.warn(
       `[FzTypeahead] The 'selectProps' prop is deprecated and will be removed in a future version. ` +
-        `Please use the 'options' prop instead.`
+        `Please use the 'options' prop instead.`,
     );
   }
 
   if (props.inputProps !== undefined) {
     console.warn(
       `[FzTypeahead] The 'inputProps' prop is deprecated and will be removed in a future version. ` +
-        `Please use the 'options' prop instead.`
+        `Please use the 'options' prop instead.`,
     );
   }
 
   if (props.filteredOptions !== undefined) {
     console.warn(
       `[FzTypeahead] The 'filteredOptions' prop is deprecated and will be removed in a future version. ` +
-        `Please use the 'options' prop instead.`
+        `Please use the 'options' prop instead.`,
     );
   }
 
   if (props.disableEmitOnFocus !== undefined) {
     console.warn(
       `[FzTypeahead] The 'disableEmitOnFocus' prop is deprecated and will be removed in a future version. ` +
-        `The component no longer emits input events on focus, so this prop has no effect. Please remove it from your usage.`
+        `The component no longer emits input events on focus, so this prop has no effect. Please remove it from your usage.`,
     );
   }
 
   if (props.emptySearchNoFilter !== undefined) {
     console.warn(
       `[FzTypeahead] The 'emptySearchNoFilter' prop is deprecated and will be removed in a future version. ` +
-        `The component now always shows all options when the input is empty, so this prop has no effect. Please remove it from your usage.`
+        `The component now always shows all options when the input is empty, so this prop has no effect. Please remove it from your usage.`,
     );
   }
 
@@ -934,7 +945,7 @@ onMounted(() => {
   ) {
     console.warn(
       `[FzTypeahead] The 'rightIconLast' prop is deprecated and will be removed in a future version. ` +
-        `The right icon is now always positioned before the chevron. Please remove the rightIconLast prop from your usage.`
+        `The right icon is now always positioned before the chevron. Please remove the rightIconLast prop from your usage.`,
     );
   }
 

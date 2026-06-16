@@ -1,0 +1,119 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Navigation/FzNavlink" />
+
+# FzNavlink / FzRouterNavlink
+
+> ⚠️ **Deprecated for external use — internal-only until consumers migrate.** New code must use [`FzAction`](./?path=/docs/navigation-fzaction-documentation--docs) from `@fiscozen/action` (with `variant="textLeft"`) instead. This package stays published on npm and remains buildable because it is still consumed internally by **`@fiscozen/actionlist`** and **`@fiscozen/navlist`** (both themselves deprecated). It cannot be removed until those consumers migrate. No new features will be developed and no bug fixes will be backported.
+
+This package exports two components:
+- `FzNavlink` — a button-like navigation item with optional icon and label.
+- `FzRouterNavlink` — the same, wrapped around `vue-router`'s `<router-link>`.
+
+Both map to `FzAction` with `variant="textLeft"`, distinguished by the `type` prop.
+
+## Migration to @fiscozen/action
+
+### Button variant (`FzNavlink`)
+
+```vue
+<!-- Before -->
+<FzNavlink
+  :iconName="iconName"
+  :iconVariant="iconVariant"
+  :disabled="disabled"
+  @click="onClick"
+>
+  {{ label }}
+</FzNavlink>
+
+<!-- After -->
+<FzAction
+  type="action"
+  variant="textLeft"
+  :label="label"
+  :iconLeftName="iconName"
+  :iconLeftVariant="iconVariant"
+  :disabled="disabled"
+  @click="onClick"
+/>
+```
+
+### Router-link variant (`FzRouterNavlink`)
+
+```vue
+<!-- Before -->
+<FzRouterNavlink
+  :meta="{ name: 'home' }"
+  :iconName="iconName"
+  :disabled="disabled"
+>
+  {{ label }}
+</FzRouterNavlink>
+
+<!-- After -->
+<FzAction
+  type="link"
+  variant="textLeft"
+  :label="label"
+  :iconLeftName="iconName"
+  :to="{ name: 'home' }"
+  :disabled="disabled"
+/>
+```
+
+### Prop mapping
+
+<table>
+  <thead>
+    <tr>
+      <th><code>@fiscozen/navlink</code></th>
+      <th><code>@fiscozen/action</code></th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>iconName</code></td>
+      <td><code>iconLeftName</code></td>
+      <td>Default rendering places the icon left of the label. For an icon-only layout pass <code>variant="onlyIcon"</code> and use <code>iconName</code> instead.</td>
+    </tr>
+    <tr>
+      <td><code>iconVariant</code></td>
+      <td><code>iconLeftVariant</code></td>
+      <td>Same caveat as above for <code>onlyIcon</code>.</td>
+    </tr>
+    <tr>
+      <td><code>iconSize</code></td>
+      <td>—</td>
+      <td><code>FzAction</code> derives icon size from <code>environment</code> and <code>variant</code>; no direct equivalent.</td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>label</code></td>
+      <td>Identical.</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>disabled</code></td>
+      <td>Identical. <code>FzAction</code> also supports <code>readonly</code> (new).</td>
+    </tr>
+    <tr>
+      <td><code>meta</code> (on <code>FzRouterNavlink</code>)</td>
+      <td><code>to</code></td>
+      <td>Pass the same vue-router location object.</td>
+    </tr>
+    <tr>
+      <td>Default slot</td>
+      <td>Default slot (or <code>label</code> prop)</td>
+      <td>Identical.</td>
+    </tr>
+    <tr>
+      <td>Native <code>click</code></td>
+      <td><code>click</code>, plus <code>keydown</code></td>
+      <td><code>FzAction</code> emits a dedicated keydown for keyboard activation too.</td>
+    </tr>
+  </tbody>
+</table>
+
+`FzAction` adds props not available here: `subLabel`, text truncation, `environment` (backoffice/frontoffice), `role`, `ariaSelected`, and the `textCenter` / `onlyIcon` variants.

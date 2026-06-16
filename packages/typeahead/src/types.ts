@@ -205,6 +205,11 @@ interface FzTypeaheadDeprecatedProps {
 /**
  * FzTypeahead component props
  *
+ * @deprecated Migrate to `FzSelectProps` from `@fiscozen/select`. The shape is
+ * nearly identical, but rename `filtrable` → `filterable` (default flips from
+ * `true` to `false`) and update event names (`fztypeahead:*` → `fzselect:*`).
+ * See the @fiscozen/typeahead README for the full migration guide.
+ *
  * Discriminated union type that ensures type safety based on filtrable value:
  * - When filtrable={true}: variant is not available
  * - When filtrable={false} or undefined: variant is available
@@ -215,10 +220,8 @@ interface FzTypeaheadDeprecatedProps {
  * This provides compile-time type checking to guide developers on which props
  * can be used in each mode.
  */
-export type FzTypeaheadProps = FzTypeaheadDeprecatedProps & (
-  FzTypeaheadFilterableProps
-  | FzTypeaheadNonFilterableProps
-);
+export type FzTypeaheadProps = FzTypeaheadDeprecatedProps &
+  (FzTypeaheadFilterableProps | FzTypeaheadNonFilterableProps);
 
 export type FzTypeaheadOptionsProps =
   | FzTypeaheadOptionProps

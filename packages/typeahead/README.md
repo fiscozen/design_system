@@ -1,6 +1,69 @@
 # @fiscozen/typeahead
 
+> ⚠️ **Deprecated.** This package is deprecated. Use [`@fiscozen/select`](../select/README.md) with `filterable: true` (optionally paired with `filterFn`) instead. The package and its npm releases remain in place for backward compatibility, but no new features will be developed and existing call sites should migrate to `FzSelect`. See [Migration to FzSelect](#migration-to-fzselect) below.
+
 > For usage documentation, see [Storybook Documentation](https://storybook-url/FzTypeahead)
+
+## Migration to FzSelect
+
+`FzSelect` is a superset of `FzTypeahead`: the same floating panel, lazy-loading, Fuse.js-powered filtering, and keyboard navigation, exposed through a corrected prop name and a wider option-value type. Replace `FzTypeahead` with `FzSelect` and apply the following changes.
+
+### Props
+
+| FzTypeahead | FzSelect | Notes |
+| --- | --- | --- |
+| `filtrable` (default `true`) | `filterable` (default `false`) | Spelling fix **and** default flipped. To keep typeahead behavior you must explicitly pass `:filterable="true"`. |
+| `filterFn` | `filterFn` | Same signature: `(text?: string) => FzSelectOptionsProps[] \| Promise<FzSelectOptionsProps[]>`. Available only when `filterable` is `true`. |
+| `delayTime` | `delayTime` | Identical, default 500ms. |
+| `fuzzySearch` | `fuzzySearch` | Identical, default `true`. |
+| `options: FzTypeaheadOptionsProps[]` | `options: FzSelectOptionsProps[]` | Same shape; option `value` is now `string \| number` (was `string` only). |
+| `label`, `placeholder`, `required`, `disabled`, `readonly`, `error`, `clearable`, `noResultsMessage`, `leftIcon`/`leftIconVariant`, `rightIcon`/`rightIconVariant`, `rightIconButton`/`rightIconButtonVariant`, `pickerClass`, `extOpener`, `floatingPanelMaxHeight`, `optionsToShow`, `disableTruncate`, `environment`, `variant`, `position`, `teleport` | Same names, same defaults | No changes required. |
+
+`FzSelect` also adds props absent from `FzTypeahead`: `highlighted` / `highlightedDescription` (warning state, two-way via `v-model:highlighted`) and `aiReasoning` / `aiReasoningDescription` (AI-suggestion state, two-way via `v-model:aiReasoning`).
+
+### Events
+
+| FzTypeahead | FzSelect | Notes |
+| --- | --- | --- |
+| `fztypeahead:select` (payload: `value`) | `fzselect:select` (payload: `value, option`) | Now also receives the full option object as the second argument. |
+| — | `fzselect:clear` | Emitted when the selection is cleared. |
+| — | `fzselect:right-icon-click` | Emitted when the right icon button is clicked. |
+| `update:modelValue` (`string \| undefined`) | `update:modelValue` (`string \| number \| undefined`) | Wider type to match the option `value`. |
+
+### `filterable` + `filterFn` in practice
+
+- Setting `filterable: true` makes the opener switch to an input when the dropdown is open; typing filters the list.
+- When you also pass `filterFn`, `FzSelect` calls it with the debounced search text (`delayTime` ms after the user stops typing) and uses its return value as the options list, bypassing the built-in Fuse.js / substring matcher entirely.
+- `filterFn` may be synchronous (`(text?) => FzSelectOptionsProps[]`) or asynchronous (`(text?) => Promise<FzSelectOptionsProps[]>`); use the async form for server-side searches.
+- Without `filterFn`, filtering happens client-side over the `options` prop using Fuse.js (or a case-insensitive `includes` when `fuzzySearch: false`).
+- There is no automatic cancellation: if multiple async `filterFn` calls race, the last resolved promise wins. Cancel stale requests in the caller if order matters.
+
+### Before / after
+
+```vue
+<!-- Before -->
+<FzTypeahead
+  v-model="selected"
+  :options="options"
+  :filterFn="loadOptions"
+  label="Search users"
+  @fztypeahead:select="onSelect"
+/>
+
+<!-- After -->
+<FzSelect
+  v-model="selected"
+  :options="options"
+  :filterable="true"
+  :filterFn="loadOptions"
+  label="Search users"
+  @fzselect:select="onSelect"
+/>
+```
+
+If you were using `FzTypeahead` without filtering (`:filtrable="false"`), drop the prop entirely — `FzSelect`'s default is already non-filterable.
+
+---
 
 ## Development
 

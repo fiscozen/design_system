@@ -1,20 +1,46 @@
 <template>
-  <div :class="['fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4', props.listClass]">
+  <div
+    :class="[
+      'fz__actionlist bg-core-white inline-flex grow-0 flex-col rounded p-4',
+      props.listClass
+    ]"
+  >
     <div v-if="label" class="text-grey-400 flex h-32 items-center px-12 text-xs">
       <span>{{ label }}</span>
     </div>
     <div class="flex flex-col" v-for="(item, itemIndex) in items" :key="itemIndex">
       <slot :name="`fzaction-item-${itemIndex}`" :item="item">
-        <FzNavlink v-if="item.type === 'button'" class="grow-1 flex justify-start" v-bind="item"
-          :disabled="item.disabled" @click="emit('fzaction:click', itemIndex, item)">{{ item.label }}</FzNavlink>
-        <FzRouterNavlink v-else class="grow-1 flex justify-start" v-bind="item" :disabled="item.disabled"
-          @click="emit('fzaction:click', itemIndex, item)">{{ item.label }}</FzRouterNavlink>
+        <FzNavlink
+          v-if="item.type === 'button'"
+          class="grow-1 flex justify-start"
+          v-bind="item"
+          :disabled="item.disabled"
+          @click="emit('fzaction:click', itemIndex, item)"
+          >{{ item.label }}</FzNavlink
+        >
+        <FzRouterNavlink
+          v-else
+          class="grow-1 flex justify-start"
+          v-bind="item"
+          :disabled="item.disabled"
+          @click="emit('fzaction:click', itemIndex, item)"
+          >{{ item.label }}</FzRouterNavlink
+        >
       </slot>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+/**
+ * FzActionlist
+ *
+ * @deprecated Deprecated for external use — internal-only until consumers migrate.
+ * New code must use `@fiscozen/action` instead: `FzActionList` + `FzActionSection`
+ * + `FzAction` (with `type: 'action' | 'link'` and `variant="textLeft"`).
+ * This package stays published because `@fiscozen/table` still depends on it.
+ * See the @fiscozen/actionlist README for the full migration guide.
+ */
 import { FzNavlink, FzRouterNavlink } from '@fiscozen/navlink'
 import { FzActionlistProps, ActionlistItem } from './types'
 

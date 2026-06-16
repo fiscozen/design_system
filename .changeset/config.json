@@ -7,7 +7,8 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["@fiscozen/storybook"],
+  "//ignore": "Keep `ignore` in sync with every Nx project tagged 'deprecated' (see packages/<name>/project.json). Changesets does not support tags or globs in this field, so entries must be listed explicitly by package name.",
+  "ignore": ["@fiscozen/storybook", "@fiscozen/typeahead", "@fiscozen/navlist"],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true
   }

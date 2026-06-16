@@ -4,7 +4,114 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # FzTypeahead
 
+> ⚠️ **Deprecated.** Use [`FzSelect`](./?path=/docs/documentation-form-fzselect--docs) from `@fiscozen/select` with `filterable: true` (and optionally `filterFn`) instead. The package and its npm releases stay in place for backward compatibility, but no new features will be developed. See [Migration to FzSelect](#migration-to-fzselect) below.
+
 A dropdown typeahead component that combines text input with dropdown selection. Supports real-time filtering of options as the user types, custom filter functions, lazy loading, and full keyboard navigation.
+
+## Migration to FzSelect
+
+`FzSelect` is a superset of `FzTypeahead`: same floating panel, lazy loading, Fuse.js-powered filtering, and keyboard navigation, exposed through a corrected prop name and a wider option-value type.
+
+### Prop and event mapping
+
+<table>
+  <thead>
+    <tr>
+      <th>FzTypeahead</th>
+      <th>FzSelect</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>filtrable</code> (default <code>true</code>)</td>
+      <td><code>filterable</code> (default <code>false</code>)</td>
+      <td>Spelling fix <strong>and</strong> default flipped. To keep typeahead behavior you must explicitly pass <code>:filterable="true"</code>.</td>
+    </tr>
+    <tr>
+      <td><code>filterFn</code></td>
+      <td><code>filterFn</code></td>
+      <td>Same signature. Available only when <code>filterable</code> is <code>true</code>.</td>
+    </tr>
+    <tr>
+      <td><code>delayTime</code>, <code>fuzzySearch</code></td>
+      <td><code>delayTime</code>, <code>fuzzySearch</code></td>
+      <td>Identical defaults (500ms / true).</td>
+    </tr>
+    <tr>
+      <td><code>options: FzTypeaheadOptionsProps[]</code></td>
+      <td><code>options: FzSelectOptionsProps[]</code></td>
+      <td>Same shape; option <code>value</code> is now <code>string | number</code> (was <code>string</code> only).</td>
+    </tr>
+    <tr>
+      <td><code>fztypeahead:select</code> (payload <code>value</code>)</td>
+      <td><code>fzselect:select</code> (payload <code>value, option</code>)</td>
+      <td>Now also receives the full option object as the second argument.</td>
+    </tr>
+    <tr>
+      <td>—</td>
+      <td><code>fzselect:clear</code></td>
+      <td>New explicit clear event.</td>
+    </tr>
+    <tr>
+      <td><code>update:modelValue</code> (<code>string | undefined</code>)</td>
+      <td><code>update:modelValue</code> (<code>string | number | undefined</code>)</td>
+      <td>Wider type to match the option <code>value</code>.</td>
+    </tr>
+    <tr>
+      <td>All other props (<code>label</code>, <code>placeholder</code>, <code>required</code>, <code>disabled</code>, <code>readonly</code>, <code>error</code>, <code>clearable</code>, <code>leftIcon</code>/<code>rightIcon</code>, <code>rightIconButton</code>, <code>variant</code>, <code>environment</code>, <code>optionsToShow</code>, <code>floatingPanelMaxHeight</code>, <code>position</code>, <code>teleport</code>, …)</td>
+      <td>Same names, same defaults</td>
+      <td>No changes required.</td>
+    </tr>
+  </tbody>
+</table>
+
+`FzSelect` also adds props absent from `FzTypeahead`: `highlighted` / `highlightedDescription` (warning state, supports `v-model:highlighted`) and `aiReasoning` / `aiReasoningDescription` (AI-suggestion state, supports `v-model:aiReasoning`).
+
+### Understanding `filterable` + `filterFn`
+
+- Setting `filterable: true` makes the opener swap to an input when the dropdown is open; typing then filters the list.
+- When you also pass `filterFn`, `FzSelect` calls it with the debounced search text (debounced by `delayTime`, default 500ms) and uses its return value as the options list, bypassing the built-in Fuse.js / substring matcher entirely.
+- `filterFn` may be synchronous (`(text?) => FzSelectOptionsProps[]`) or asynchronous (`(text?) => Promise<FzSelectOptionsProps[]>`); use the async form for server-side searches.
+- Without `filterFn`, filtering happens client-side over the `options` prop using Fuse.js (or a case-insensitive `includes` when `fuzzySearch: false`).
+- There is no automatic cancellation: if multiple async `filterFn` calls race, the last resolved promise wins. Cancel stale requests in the caller if order matters.
+
+### Before / after
+
+**Filterable typeahead with custom (remote) filter:**
+
+```vue
+<!-- Before: @fiscozen/typeahead -->
+<FzTypeahead
+  v-model="selected"
+  :options="options"
+  :filterFn="loadOptions"
+  label="Search users"
+  @fztypeahead:select="onSelect"
+/>
+
+<!-- After: @fiscozen/select -->
+<FzSelect
+  v-model="selected"
+  :options="options"
+  :filterable="true"
+  :filterFn="loadOptions"
+  label="Search users"
+  @fzselect:select="onSelect"
+/>
+```
+
+**Typeahead used as a plain select (`filtrable: false`):**
+
+```vue
+<!-- Before -->
+<FzTypeahead v-model="selected" :options="options" :filtrable="false" />
+
+<!-- After: drop the prop entirely — FzSelect is non-filterable by default -->
+<FzSelect v-model="selected" :options="options" />
+```
+
+---
 
 ## Features
 
@@ -602,6 +709,8 @@ FzTypeahead is built with accessibility in mind and follows WCAG 2.1 AA standard
 
 ### When to Use
 
+> ⚠️ `FzTypeahead` is deprecated. For **all new code**, use `FzSelect` from `@fiscozen/select` with `filterable: true` (and optionally `filterFn`). The guidance below describes scenarios where `FzTypeahead` was historically used — apply it to `FzSelect` going forward.
+
 - **Search/Filter Scenarios**: When users need to search through a large list of options
 - **Autocomplete**: When you want to provide suggestions as the user types
 - **Remote Data**: When options need to be loaded from an API based on user input
@@ -609,9 +718,9 @@ FzTypeahead is built with accessibility in mind and follows WCAG 2.1 AA standard
 
 ### When NOT to Use
 
-- **Small Fixed Lists**: For small, fixed lists (less than 10 items), consider using FzSelect instead
-- **Simple Text Input**: If you don't need filtering or selection, use FzInput instead
-- **Multi-select**: This component supports single selection only
+- **New code**: Do not introduce new `FzTypeahead` usages; use `FzSelect` instead.
+- **Simple Text Input**: If you don't need filtering or selection, use `FzInput` instead.
+- **Multi-select**: This component supports single selection only.
 
 ### Performance Tips
 

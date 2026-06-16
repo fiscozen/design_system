@@ -55,7 +55,19 @@ const meta = {
   title: 'Navigation/FzNavlink',
   // little hack to avoid ts error because navlink has props with generic type
   component: FzNavlink as Record<keyof typeof FzNavlink, unknown>,
-  // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '⚠️ **Deprecated for external use — internal-only until consumers migrate.** New code must use `FzAction` from `@fiscozen/action` (with `variant="textLeft"`; `type="action"` for `FzNavlink`, `type="link"` for `FzRouterNavlink`). This package stays published because `@fiscozen/actionlist` and `@fiscozen/navlist` still depend on it; no new features will be developed. See the `@fiscozen/navlink` README for the migration guide.'
+      }
+    }
+  },
+  // FzNavlink is deprecated for external use BUT it is still consumed
+  // internally by @fiscozen/actionlist and @fiscozen/navlist (both deprecated
+  // themselves but still published). The play functions form part of the
+  // safety net for those consumers, so we keep them in the test runner — do
+  // NOT add '!test' here until navlink has no internal consumers left.
   tags: ['autodocs'],
   argTypes: {},
   args: { disabled: false, meta: { some: '' } } // default value
@@ -91,29 +103,29 @@ export const SimpleNavlink: Story = {
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify navlink renders correctly', async () => {
       const button = canvas.getByRole('button', { name: /lorem ipsum/i })
       await expect(button).toBeInTheDocument()
       await expect(button).toBeVisible()
     })
-    
+
     await step('Verify navlink has correct label', async () => {
       const button = canvas.getByRole('button', { name: /lorem ipsum/i })
       await expect(button.textContent).toContain('Lorem ipsum')
     })
-    
+
     await step('Verify navlink is not disabled by default', async () => {
       const button = canvas.getByRole('button', { name: /lorem ipsum/i })
       await expect(button).not.toBeDisabled()
       // Component uses native disabled attribute, not aria-disabled
       await expect(button).not.toHaveAttribute('disabled')
     })
-    
+
     await step('Verify click handler IS called when navlink is clicked', async () => {
       const button = canvas.getByRole('button', { name: /lorem ipsum/i })
       await userEvent.click(button)
-      
+
       // ROBUST CHECK: Verify the click spy WAS called
       await expect(args.onClick).toHaveBeenCalledTimes(1)
     })
@@ -127,20 +139,20 @@ export const IconNavlink: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify icon navlink renders correctly', async () => {
       const button = canvas.getByRole('button')
       await expect(button).toBeInTheDocument()
       await expect(button).toBeVisible()
     })
-    
+
     await step('Verify icon is present', async () => {
       // Icon should be rendered within the button
       const button = canvas.getByRole('button')
       const icon = button.querySelector('svg')
       await expect(icon).toBeInTheDocument()
     })
-    
+
     await step('Verify icon-only navlink has correct classes', async () => {
       const button = canvas.getByRole('button')
       // Icon-only navlink should have flex w-32 classes
@@ -183,26 +195,29 @@ export const RouterNavlink: Story = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Wait for router to be ready', async () => {
-      await waitFor(() => {
-        const pageContent = canvasElement.querySelector('h2')
-        expect(pageContent?.textContent).toContain('Page')
-      }, { timeout: 2000 })
+      await waitFor(
+        () => {
+          const pageContent = canvasElement.querySelector('h2')
+          expect(pageContent?.textContent).toContain('Page')
+        },
+        { timeout: 2000 }
+      )
     })
-    
+
     await step('Verify router navlink renders correctly', async () => {
       const link = canvas.getByRole('link', { name: /router navlink/i })
       await expect(link).toBeInTheDocument()
       await expect(link).toBeVisible()
     })
-    
+
     await step('Verify router navlink has correct href', async () => {
       const link = canvas.getByRole('link', { name: /router navlink/i })
       // vue-router uses hash mode in Storybook
       await expect(link).toHaveAttribute('href', '#/foo/bar')
     })
-    
+
     await step('Verify router navlink is not disabled', async () => {
       const link = canvas.getByRole('link', { name: /router navlink/i })
       // Router navlink should not have disabled attribute when not disabled
@@ -227,21 +242,24 @@ export const DisabledRouterNavlink: Story = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Wait for router to be ready', async () => {
-      await waitFor(() => {
-        const pageContent = canvasElement.querySelector('h2')
-        expect(pageContent?.textContent).toContain('Page')
-      }, { timeout: 2000 })
+      await waitFor(
+        () => {
+          const pageContent = canvasElement.querySelector('h2')
+          expect(pageContent?.textContent).toContain('Page')
+        },
+        { timeout: 2000 }
+      )
     })
-    
+
     await step('Verify disabled router navlink renders as span', async () => {
       // When disabled, FzRouterNavlink renders as <span> instead of <router-link>
       const span = canvasElement.querySelector('span')
       await expect(span).toBeInTheDocument()
       await expect(span?.textContent).toContain('router navlink')
     })
-    
+
     await step('Verify disabled navlink has disabled classes', async () => {
       const span = canvasElement.querySelector('span')
       if (span) {
@@ -249,7 +267,7 @@ export const DisabledRouterNavlink: Story = {
         await expect(span).toBeInTheDocument()
       }
     })
-    
+
     await step('Verify disabled navlink does not navigate', async () => {
       // Disabled navlink should not be clickable
       const span = canvasElement.querySelector('span')
@@ -293,35 +311,38 @@ RouterNavlinkIcon.decorators = [
 
 RouterNavlinkIcon.play = async ({ canvasElement, step }) => {
   const canvas = within(canvasElement)
-  
+
   await step('Wait for router to be ready', async () => {
-    await waitFor(() => {
-      const pageContent = canvasElement.querySelector('h2')
-      expect(pageContent?.textContent).toContain('Page')
-    }, { timeout: 2000 })
+    await waitFor(
+      () => {
+        const pageContent = canvasElement.querySelector('h2')
+        expect(pageContent?.textContent).toContain('Page')
+      },
+      { timeout: 2000 }
+    )
   })
-  
+
   await step('Verify icon-only router navlink renders correctly', async () => {
     const link = canvasElement.querySelector('a[href="#/foo/bar"]')
     await expect(link).toBeInTheDocument()
     await expect(link).toBeVisible()
   })
-  
-    await step('Verify icon is present in router navlink', async () => {
-      const link = canvasElement.querySelector('a[href="#/foo/bar"]')
-      // Early return pattern: fail fast if link not found
-      if (!link) {
-        throw new Error('Router navlink anchor not found')
-      }
-      
-      await expect(link).toBeInTheDocument()
-      await expect(link).toBeVisible()
-      
-      // Icon may be rendered as SVG or as a component
-      const icon = link.querySelector('svg') || link.querySelector('[class*="icon"]')
-      // Icon may not be directly queryable as SVG if rendered via FzIcon component
-      // The link's presence and visibility is the primary assertion
-    })
+
+  await step('Verify icon is present in router navlink', async () => {
+    const link = canvasElement.querySelector('a[href="#/foo/bar"]')
+    // Early return pattern: fail fast if link not found
+    if (!link) {
+      throw new Error('Router navlink anchor not found')
+    }
+
+    await expect(link).toBeInTheDocument()
+    await expect(link).toBeVisible()
+
+    // Icon may be rendered as SVG or as a component
+    const icon = link.querySelector('svg') || link.querySelector('[class*="icon"]')
+    // Icon may not be directly queryable as SVG if rendered via FzIcon component
+    // The link's presence and visibility is the primary assertion
+  })
 }
 
 // ============================================
@@ -338,29 +359,29 @@ export const ClickInteraction: Story = {
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify navlink is clickable', async () => {
       const button = canvas.getByRole('button', { name: /click me/i })
       await expect(button).toBeInTheDocument()
       await expect(button).toBeVisible()
     })
-    
+
     await step('Verify click handler IS called when navlink is clicked', async () => {
       const button = canvas.getByRole('button', { name: /click me/i })
-      
+
       await userEvent.click(button)
-      
+
       // ROBUST CHECK: Verify the click spy WAS called (contrast with disabled state)
       await expect(args.onClick).toHaveBeenCalledTimes(1)
     })
-    
+
     await step('Verify click handler IS called on keyboard activation', async () => {
       const button = canvas.getByRole('button', { name: /click me/i })
-      
+
       // Focus and activate with Enter key
       button.focus()
       await userEvent.keyboard('{Enter}')
-      
+
       // ROBUST CHECK: Verify the click spy WAS called (twice total: click + Enter)
       await expect(args.onClick).toHaveBeenCalledTimes(2)
     })
@@ -382,25 +403,31 @@ export const RouterNavlinkClick: Story = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Wait for router to be ready', async () => {
-      await waitFor(() => {
-        const pageContent = canvasElement.querySelector('h2')
-        expect(pageContent?.textContent).toContain('Page')
-      }, { timeout: 2000 })
+      await waitFor(
+        () => {
+          const pageContent = canvasElement.querySelector('h2')
+          expect(pageContent?.textContent).toContain('Page')
+        },
+        { timeout: 2000 }
+      )
     })
-    
+
     await step('Click router navlink to navigate', async () => {
       const link = canvas.getByRole('link', { name: /navigate to bar/i })
       await expect(link).toBeInTheDocument()
-      
+
       await userEvent.click(link)
-      
+
       // Wait for navigation - check for page content update
-      await waitFor(() => {
-        const pageContent = canvasElement.querySelector('h2')
-        expect(pageContent?.textContent).toBeTruthy()
-      }, { timeout: 2000 })
+      await waitFor(
+        () => {
+          const pageContent = canvasElement.querySelector('h2')
+          expect(pageContent?.textContent).toBeTruthy()
+        },
+        { timeout: 2000 }
+      )
     })
   }
 }
@@ -420,22 +447,25 @@ export const ActiveState: Story = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Wait for router to be ready', async () => {
-      await waitFor(() => {
-        const pageContent = canvasElement.querySelector('h2')
-        expect(pageContent?.textContent).toContain('Page')
-      }, { timeout: 2000 })
+      await waitFor(
+        () => {
+          const pageContent = canvasElement.querySelector('h2')
+          expect(pageContent?.textContent).toContain('Page')
+        },
+        { timeout: 2000 }
+      )
     })
-    
+
     await step('Verify active router navlink has router-link-active class', async () => {
       const link = canvas.getByRole('link', { name: /current page/i })
       await expect(link).toBeInTheDocument()
-      
+
       // The active link should have router-link-active class (added by vue-router)
       await expect(link).toHaveClass('router-link-active')
     })
-    
+
     await step('Verify active navlink styling', async () => {
       const link = canvas.getByRole('link', { name: /current page/i })
       // Active navlink should be styled differently (router-link-active class)
@@ -453,29 +483,29 @@ export const KeyboardNavigation: Story = {
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Tab to focus navlink button', async () => {
       await userEvent.tab()
       const button = canvas.getByRole('button', { name: /keyboard nav/i })
       // Focus should be on the button
       await expect(document.activeElement).toBe(button)
     })
-    
+
     await step('Activate navlink with Enter key', async () => {
       const button = canvas.getByRole('button', { name: /keyboard nav/i })
       button.focus()
       await expect(document.activeElement).toBe(button)
-      
+
       await userEvent.keyboard('{Enter}')
       // ROBUST CHECK: Verify the click spy WAS called
       await expect(args.onClick).toHaveBeenCalledTimes(1)
     })
-    
+
     await step('Activate navlink with Space key', async () => {
       const button = canvas.getByRole('button', { name: /keyboard nav/i })
       button.focus()
       await expect(document.activeElement).toBe(button)
-      
+
       await userEvent.keyboard(' ')
       // ROBUST CHECK: Verify the click spy WAS called (twice total: Enter + Space)
       await expect(args.onClick).toHaveBeenCalledTimes(2)
@@ -498,48 +528,57 @@ export const RouterNavlinkKeyboardNavigation: Story = {
   ],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Wait for router to be ready', async () => {
-      await waitFor(() => {
-        const pageContent = canvasElement.querySelector('h2')
-        expect(pageContent?.textContent).toContain('Page')
-      }, { timeout: 2000 })
+      await waitFor(
+        () => {
+          const pageContent = canvasElement.querySelector('h2')
+          expect(pageContent?.textContent).toContain('Page')
+        },
+        { timeout: 2000 }
+      )
     })
-    
+
     await step('Tab to focus router navlink', async () => {
       await userEvent.tab()
       const link = canvas.getByRole('link', { name: /keyboard nav link/i })
       // Focus should be on the link
       await expect(document.activeElement).toBe(link)
     })
-    
+
     await step('Activate router navlink with Enter key', async () => {
       const link = canvas.getByRole('link', { name: /keyboard nav link/i })
       link.focus()
       await expect(document.activeElement).toBe(link)
-      
+
       await userEvent.keyboard('{Enter}')
-      
+
       // Wait for navigation - check for page content update
-      await waitFor(() => {
-        const pageContent = canvasElement.querySelector('h2')
-        expect(pageContent?.textContent).toBeTruthy()
-      }, { timeout: 2000 })
+      await waitFor(
+        () => {
+          const pageContent = canvasElement.querySelector('h2')
+          expect(pageContent?.textContent).toBeTruthy()
+        },
+        { timeout: 2000 }
+      )
     })
-    
+
     await step('Activate router navlink with Space key', async () => {
       // Navigate back to /foo first
       const link = canvas.getByRole('link', { name: /keyboard nav link/i })
       link.focus()
       await expect(document.activeElement).toBe(link)
-      
+
       await userEvent.keyboard(' ')
-      
+
       // Wait for navigation - check for page content update
-      await waitFor(() => {
-        const pageContent = canvasElement.querySelector('h2')
-        expect(pageContent).toBeTruthy()
-      }, { timeout: 2000 })
+      await waitFor(
+        () => {
+          const pageContent = canvasElement.querySelector('h2')
+          expect(pageContent).toBeTruthy()
+        },
+        { timeout: 2000 }
+      )
     })
   }
 }
@@ -555,42 +594,42 @@ export const DisabledNavlink: Story = {
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify disabled navlink renders correctly', async () => {
       const button = canvas.getByRole('button', { name: /disabled navlink/i })
       await expect(button).toBeInTheDocument()
       await expect(button).toBeVisible()
     })
-    
+
     await step('Verify disabled navlink has disabled attribute', async () => {
       const button = canvas.getByRole('button', { name: /disabled navlink/i })
       await expect(button).toBeDisabled()
       // Component uses native disabled attribute, not aria-disabled
       await expect(button).toHaveAttribute('disabled')
     })
-    
+
     await step('Verify click handler is NOT called when clicking disabled navlink', async () => {
       const button = canvas.getByRole('button', { name: /disabled navlink/i })
-      
+
       // Attempt to click the disabled button
       await userEvent.click(button)
-      
+
       // ROBUST CHECK: Verify the click spy was NOT called
       await expect(args.onClick).not.toHaveBeenCalled()
     })
-    
+
     await step('Verify click handler is NOT called on keyboard activation attempt', async () => {
       const button = canvas.getByRole('button', { name: /disabled navlink/i })
-      
+
       // Try to focus and activate with keyboard (should not work on disabled element)
       button.focus()
       await userEvent.keyboard('{Enter}')
       await userEvent.keyboard(' ')
-      
+
       // ROBUST CHECK: Verify the click spy was NOT called
       await expect(args.onClick).not.toHaveBeenCalled()
     })
-    
+
     await step('Verify disabled navlink is not keyboard focusable', async () => {
       const button = canvas.getByRole('button', { name: /disabled navlink/i })
       // Disabled buttons should not be in tab order
