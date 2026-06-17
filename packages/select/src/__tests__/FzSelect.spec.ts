@@ -120,6 +120,137 @@ describe("FzSelect", () => {
     });
   });
 
+  describe("Falsy model values", () => {
+    it("displays selected option label when modelValue is 0 (number)", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: undefined,
+          placeholder: "Choose a number",
+          options: [
+            { value: 0, label: "Zero" },
+            { value: 1, label: "One" },
+          ],
+        },
+      });
+
+      await wrapper.setProps({ modelValue: 0 });
+
+      const opener = wrapper.find('button[test-id="fzselect-opener"]');
+      expect(opener.text()).toContain("Zero");
+      expect(opener.text()).not.toContain("Choose a number");
+    });
+
+    it("displays selected option label when modelValue is '' (empty string)", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: undefined,
+          placeholder: "Pick one",
+          options: [
+            { value: "", label: "None selected explicitly" },
+            { value: "a", label: "Alpha" },
+          ],
+        },
+      });
+
+      await wrapper.setProps({ modelValue: "" });
+
+      const opener = wrapper.find('button[test-id="fzselect-opener"]');
+      expect(opener.text()).toContain("None selected explicitly");
+      expect(opener.text()).not.toContain("Pick one");
+    });
+
+    it("displays selected option label when modelValue is '0' (string) — regression guard", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: undefined,
+          options: [
+            { value: "0", label: "Zero string" },
+            { value: "1", label: "One string" },
+          ],
+        },
+      });
+
+      await wrapper.setProps({ modelValue: "0" });
+
+      const opener = wrapper.find('button[test-id="fzselect-opener"]');
+      expect(opener.text()).toContain("Zero string");
+    });
+
+    it("shows placeholder when modelValue is undefined", () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: undefined,
+          placeholder: "Choose a number",
+          options: [
+            { value: 0, label: "Zero" },
+            { value: 1, label: "One" },
+          ],
+        },
+      });
+
+      const opener = wrapper.find('button[test-id="fzselect-opener"]');
+      expect(opener.text()).toContain("Choose a number");
+      expect(opener.text()).not.toContain("Zero");
+    });
+
+    it("emits the falsy value when an option with value 0 is selected", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: undefined,
+          options: [
+            { value: 0, label: "Zero" },
+            { value: 1, label: "One" },
+          ],
+        },
+      });
+
+      await wrapper.find('button[test-id="fzselect-opener"]').trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const zeroOption = Array.from(
+        document.querySelectorAll('button[role="option"]'),
+      ).find((el) => el.textContent?.includes("Zero")) as
+        | HTMLElement
+        | undefined;
+      expect(zeroOption).toBeDefined();
+      zeroOption!.click();
+      await wrapper.vm.$nextTick();
+
+      const updates = wrapper.emitted("update:modelValue");
+      expect(updates).toBeTruthy();
+      expect(updates![updates!.length - 1]).toEqual([0]);
+    });
+
+    it("clears the selection (back to undefined) when re-selecting the option with value 0", async () => {
+      const wrapper = mount(FzSelect, {
+        props: {
+          modelValue: 0,
+          clearable: true,
+          options: [
+            { value: 0, label: "Zero" },
+            { value: 1, label: "One" },
+          ],
+        },
+      });
+
+      await wrapper.find('button[test-id="fzselect-opener"]').trigger("click");
+      await wrapper.vm.$nextTick();
+
+      const zeroOption = Array.from(
+        document.querySelectorAll('button[role="option"]'),
+      ).find((el) => el.textContent?.includes("Zero")) as
+        | HTMLElement
+        | undefined;
+      expect(zeroOption).toBeDefined();
+      zeroOption!.click();
+      await wrapper.vm.$nextTick();
+
+      const updates = wrapper.emitted("update:modelValue");
+      expect(updates).toBeTruthy();
+      expect(updates![updates!.length - 1]).toEqual([undefined]);
+    });
+  });
+
   describe("Environment Styling", () => {
     it("applies backoffice styling classes", () => {
       const wrapper = mount(FzSelect, {

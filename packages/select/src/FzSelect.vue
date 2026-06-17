@@ -361,7 +361,8 @@ const isInteractive = computed(() => !isDisabled.value && !isReadonly.value);
 // ============================================================================
 
 const selectedOption = computed(() => {
-  if (!props.options || !model.value) return undefined;
+  if (!props.options || model.value === undefined || model.value === null)
+    return undefined;
   return props.options.find(
     (option): option is FzSelectOptionProps =>
       isSelectableOption(option) && option.value === model.value,
