@@ -9,6 +9,76 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > FzCurrencyInput is kept as a thin backwards-compatible wrapper around
 > `<FzInput type="currency">` until the migration of all consumers is complete.
 
+## Migration to FzInput
+
+`FzCurrencyInput` is now a 1:1 wrapper that forwards every prop to `<FzInput type="currency">` and re-emits the clear event under its legacy name. The migration is a near-mechanical rename:
+
+```vue
+<!-- Before: @fiscozen/input — FzCurrencyInput -->
+<FzCurrencyInput
+  v-model="amount"
+  label="Amount"
+  :min="0"
+  :max="1000"
+  :step="0.5"
+  @fzcurrencyinput:clear="onClear"
+/>
+
+<!-- After: @fiscozen/input — FzInput with type="currency" -->
+<FzInput
+  v-model="amount"
+  type="currency"
+  label="Amount"
+  :min="0"
+  :max="1000"
+  :step="0.5"
+  @fzinput:clear="onClear"
+/>
+```
+
+### What changes
+
+<table>
+  <thead>
+    <tr>
+      <th><code>FzCurrencyInput</code></th>
+      <th><code>FzInput type="currency"</code></th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>component name</td>
+      <td><code>FzInput</code> + <code>type="currency"</code></td>
+      <td>Same package <code>@fiscozen/input</code>; just change the import and add the <code>type</code> prop.</td>
+    </tr>
+    <tr>
+      <td>all props (<code>label</code>, <code>min</code>, <code>max</code>, <code>step</code>, <code>forceStep</code>, <code>minimumFractionDigits</code>, <code>maximumFractionDigits</code>, <code>emitEmptyAsNull</code>, <code>emitEmptyAsZero</code>, …)</td>
+      <td>same names, same defaults, same semantics</td>
+      <td>Forwarded 1:1.</td>
+    </tr>
+    <tr>
+      <td>all slots (<code>label</code>, <code>left-icon</code>, <code>helpText</code>, <code>errorMessage</code>)</td>
+      <td>same names</td>
+      <td>Forwarded 1:1.</td>
+    </tr>
+    <tr>
+      <td><code>v-model</code>: <code>number | null | undefined</code></td>
+      <td><code>v-model</code>: <code>number | null | undefined</code></td>
+      <td>Same numeric model in currency mode (the discriminated union activates with literal <code>type="currency"</code>).</td>
+    </tr>
+    <tr>
+      <td>event <code>fzcurrencyinput:clear</code></td>
+      <td>event <code>fzinput:clear</code></td>
+      <td>Renamed. The only event that needs a rename.</td>
+    </tr>
+  </tbody>
+</table>
+
+The behaviors documented below (step controls, paste handling, locale formatting, quantization, min/max clamping, accessibility) apply identically to `<FzInput type="currency">`.
+
+---
+
 Specialized currency input component built on FzInput with number formatting, validation, and step controls. Formats values using Intl.NumberFormat with locale-aware separators. Supports min/max constraints, step quantization, and intelligent paste parsing.
 
 ## Features

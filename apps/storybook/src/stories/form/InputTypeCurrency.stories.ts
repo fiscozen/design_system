@@ -1,33 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, userEvent, within, waitFor, fireEvent } from 'storybook/test'
 import { ref } from 'vue'
-import { FzCurrencyInput } from '@fiscozen/input'
+import { FzInput } from '@fiscozen/input'
 
 const meta = {
-  title: 'Form/FzCurrencyInput',
-  component: FzCurrencyInput,
-  parameters: {
-    docs: {
-      description: {
-        component:
-          '⚠️ **Deprecated.** Use `FzInput` with `type="currency"` instead — the currency behavior now lives directly in `FzInput`. `FzCurrencyInput` is kept as a thin backwards-compatible wrapper around `<FzInput type="currency">` until the migration of all consumers is complete. The canonical play coverage of the currency behavior lives in `Form/FzInput/Currency`; this file is preserved as a historical reference of the deprecated wrapper.'
-      }
-    }
-  },
-  // '!test' tells @storybook/addon-vitest to skip the play functions of every
-  // story in this file. FzCurrencyInput is a deprecated wrapper around
-  // `<FzInput type="currency">`; the canonical play coverage of currency
-  // behavior lives in the cloned file `InputTypeCurrency.stories.ts` (title
-  // `Form/FzInput/Currency`). Keeping the stories visible in Storybook gives
-  // a historical reference of the deprecated API; running them again here
-  // would only duplicate the canonical coverage.
-  tags: ['autodocs', '!test'],
+  title: 'Form/FzInput/Currency',
+  component: FzInput,
+  tags: ['autodocs'],
   args: {
+    type: 'currency',
     label: 'Amount',
     placeholder: '1.234,56'
   },
   decorators: [() => ({ template: '<div style="max-width: 300px; padding:10px;"><story/></div>' })]
-} satisfies Meta<typeof FzCurrencyInput>
+} satisfies Meta<typeof FzInput>
 
 export default meta
 
@@ -35,7 +21,7 @@ type Story = StoryObj<typeof meta>
 
 const Template: Story = {
   render: (args) => ({
-    components: { FzCurrencyInput },
+    components: { FzInput },
     setup() {
       const initialValue = typeof args.modelValue === 'number' ? args.modelValue : undefined
       const modelValue = ref<number | undefined>(initialValue)
@@ -43,7 +29,7 @@ const Template: Story = {
     },
     template: `
       <div>
-        <FzCurrencyInput 
+        <FzInput 
           v-bind="args" 
           v-model="modelValue"
           @update:modelValue="args['onUpdate:modelValue']" />
@@ -69,8 +55,8 @@ export const Default: Story = {
     await expect(input).toBeInTheDocument()
 
     // Verify step controls are visible
-    const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
-    const arrowDown = canvasElement.querySelector('.fz__currencyinput__arrowdown')
+    const arrowUp = canvasElement.querySelector('.fz__input__arrowup')
+    const arrowDown = canvasElement.querySelector('.fz__input__arrowdown')
     await expect(arrowUp).toBeInTheDocument()
     await expect(arrowDown).toBeInTheDocument()
 
@@ -108,8 +94,8 @@ export const WithStep: Story = {
     const canvas = within(canvasElement)
 
     await step('Verify custom step aria-labels', async () => {
-      const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup') as HTMLElement
-      const arrowDown = canvasElement.querySelector('.fz__currencyinput__arrowdown') as HTMLElement
+      const arrowUp = canvasElement.querySelector('.fz__input__arrowup') as HTMLElement
+      const arrowDown = canvasElement.querySelector('.fz__input__arrowdown') as HTMLElement
       await expect(arrowUp).toHaveAttribute('aria-label', 'Incrementa di 5')
       await expect(arrowDown).toHaveAttribute('aria-label', 'Decrementa di 5')
     })
@@ -121,7 +107,7 @@ export const WithStep: Story = {
 
     await step('Click arrowUp and verify update:modelValue IS called', async () => {
       const input = canvas.getByRole('textbox', { name: /Amount/i })
-      const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup') as HTMLElement
+      const arrowUp = canvasElement.querySelector('.fz__input__arrowup') as HTMLElement
 
       // Initial value is undefined, so clicking arrowUp should set it to 5 (0 + 5)
       await userEvent.click(arrowUp)
@@ -144,7 +130,7 @@ export const WithStep: Story = {
       await expect(input).toHaveValue('5,00')
 
       // Re-query the arrowDown element to ensure we have a fresh reference
-      const arrowDown = canvasElement.querySelector('.fz__currencyinput__arrowdown') as HTMLElement
+      const arrowDown = canvasElement.querySelector('.fz__input__arrowdown') as HTMLElement
 
       // Clicking arrowDown should decrease by 5, so 5 - 5 = 0
       expect(arrowDown).toBeInTheDocument()
@@ -178,7 +164,7 @@ export const WithDecimalStep: Story = {
     const canvas = within(canvasElement)
 
     const input = canvas.getByRole('textbox', { name: /Amount/i })
-    const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
+    const arrowUp = canvasElement.querySelector('.fz__input__arrowup')
 
     // Verify initial value is formatted correctly
     await waitFor(
@@ -207,8 +193,8 @@ export const WithCustomAriaLabels: Story = {
     stepDownAriaLabel: 'Decrease by 2'
   },
   play: async ({ canvasElement }) => {
-    const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
-    const arrowDown = canvasElement.querySelector('.fz__currencyinput__arrowdown')
+    const arrowUp = canvasElement.querySelector('.fz__input__arrowup')
+    const arrowDown = canvasElement.querySelector('.fz__input__arrowdown')
 
     await expect(arrowUp).toHaveAttribute('aria-label', 'Increase by 2')
     await expect(arrowDown).toHaveAttribute('aria-label', 'Decrease by 2')
@@ -322,7 +308,7 @@ export const WithValid: Story = {
     await expect(validIcon).toHaveAttribute('aria-hidden', 'true')
 
     // Verify step controls are still visible
-    const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
+    const arrowUp = canvasElement.querySelector('.fz__input__arrowup')
     await expect(arrowUp).toBeInTheDocument()
   }
 }
@@ -335,7 +321,7 @@ export const WithError: Story = {
     modelValue: 50
   },
   render: (args) => ({
-    components: { FzCurrencyInput },
+    components: { FzInput },
     setup() {
       const initialValue = typeof args.modelValue === 'number' ? args.modelValue : undefined
       const modelValue = ref<number | undefined>(initialValue)
@@ -343,9 +329,9 @@ export const WithError: Story = {
     },
     template: `
       <div>
-        <FzCurrencyInput v-bind="args" v-model="modelValue">
+        <FzInput v-bind="args" v-model="modelValue">
           <template #errorMessage>Please enter a valid amount</template>
-        </FzCurrencyInput>
+        </FzInput>
         <p style="margin-top: 60px; font-size: 14px;">
           Raw value (v-model): {{ modelValue === undefined ? 'undefined' : modelValue }}
         </p>
@@ -368,7 +354,7 @@ export const WithError: Story = {
 export const WithHelpText: Story = {
   ...Template,
   render: (args) => ({
-    components: { FzCurrencyInput },
+    components: { FzInput },
     setup() {
       const initialValue = typeof args.modelValue === 'number' ? args.modelValue : undefined
       const modelValue = ref<number | undefined>(initialValue)
@@ -376,9 +362,9 @@ export const WithHelpText: Story = {
     },
     template: `
       <div>
-        <FzCurrencyInput v-bind="args" v-model="modelValue">
+        <FzInput v-bind="args" v-model="modelValue">
           <template #helpText>Enter amount in euros</template>
-        </FzCurrencyInput>
+        </FzInput>
         <p style="margin-top: 60px; font-size: 14px;">
           Raw value (v-model): {{ modelValue === undefined ? 'undefined' : modelValue }}
         </p>
@@ -413,8 +399,8 @@ export const Readonly: Story = {
     })
 
     await step('Verify step controls are disabled', async () => {
-      const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
-      const arrowDown = canvasElement.querySelector('.fz__currencyinput__arrowdown')
+      const arrowUp = canvasElement.querySelector('.fz__input__arrowup')
+      const arrowDown = canvasElement.querySelector('.fz__input__arrowdown')
       await expect(arrowUp).toHaveAttribute('aria-disabled', 'true')
       await expect(arrowDown).toHaveAttribute('aria-disabled', 'true')
       await expect(arrowUp).not.toHaveAttribute('tabindex')
@@ -437,7 +423,7 @@ export const Readonly: Story = {
     await step(
       'Verify update:modelValue is NOT called when clicking readonly step controls',
       async () => {
-        const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup') as HTMLElement
+        const arrowUp = canvasElement.querySelector('.fz__input__arrowup') as HTMLElement
 
         // Attempt to click readonly step control
         if (arrowUp) {
@@ -470,8 +456,8 @@ export const Disabled: Story = {
     })
 
     await step('Verify step controls are disabled', async () => {
-      const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
-      const arrowDown = canvasElement.querySelector('.fz__currencyinput__arrowdown')
+      const arrowUp = canvasElement.querySelector('.fz__input__arrowup')
+      const arrowDown = canvasElement.querySelector('.fz__input__arrowdown')
       await expect(arrowUp).toHaveAttribute('aria-disabled', 'true')
       await expect(arrowDown).toHaveAttribute('aria-disabled', 'true')
     })
@@ -479,10 +465,8 @@ export const Disabled: Story = {
     await step(
       'Verify update:modelValue is NOT called when clicking disabled step controls',
       async () => {
-        const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup') as HTMLElement
-        const arrowDown = canvasElement.querySelector(
-          '.fz__currencyinput__arrowdown'
-        ) as HTMLElement
+        const arrowUp = canvasElement.querySelector('.fz__input__arrowup') as HTMLElement
+        const arrowDown = canvasElement.querySelector('.fz__input__arrowdown') as HTMLElement
 
         // Attempt to click disabled step controls
         if (arrowUp) {
@@ -561,7 +545,7 @@ export const KeyboardNavigation: Story = {
     const canvas = within(canvasElement)
 
     const input = canvas.getByRole('textbox', { name: /Amount/i })
-    const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
+    const arrowUp = canvasElement.querySelector('.fz__input__arrowup')
 
     if (!arrowUp) {
       throw new Error('Arrow up element not found')
@@ -638,8 +622,8 @@ export const WithLeftIcon: Story = {
     await expect(euroIcon).toBeInTheDocument()
 
     // Verify step controls are still visible on the right
-    const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
-    const arrowDown = canvasElement.querySelector('.fz__currencyinput__arrowdown')
+    const arrowUp = canvasElement.querySelector('.fz__input__arrowup')
+    const arrowDown = canvasElement.querySelector('.fz__input__arrowdown')
     await expect(arrowUp).toBeInTheDocument()
     await expect(arrowDown).toBeInTheDocument()
   }
@@ -669,7 +653,7 @@ export const Clearable: Story = {
     )
 
     // Verify step controls coexist with clear icon
-    const arrowUp = canvasElement.querySelector('.fz__currencyinput__arrowup')
+    const arrowUp = canvasElement.querySelector('.fz__input__arrowup')
     await expect(arrowUp).toBeInTheDocument()
 
     // Click clear and verify input is emptied
