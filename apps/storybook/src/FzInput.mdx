@@ -313,13 +313,13 @@ import { FzInput } from '@fiscozen/input'
     <tr>
       <td><code>stepUpAriaLabel</code></td>
       <td><code>string</code></td>
-      <td><code>'Incrementa di {step}'</code></td>
+      <td><code>{"'Incrementa di {step}'"}</code></td>
       <td>Accessible label for the step up arrow</td>
     </tr>
     <tr>
       <td><code>stepDownAriaLabel</code></td>
       <td><code>string</code></td>
-      <td><code>'Decrementa di {step}'</code></td>
+      <td><code>{"'Decrementa di {step}'"}</code></td>
       <td>Accessible label for the step down arrow</td>
     </tr>
   </tbody>
@@ -486,6 +486,51 @@ const amount = ref<number | undefined>(1234.56)
 
 > Replaces the deprecated `FzCurrencyInput` component, which is now a thin
 > wrapper around `<FzInput type="currency">`.
+
+#### Step Controls
+
+In currency mode the native number spinners are replaced by always-visible up/down arrow buttons. They use `step` as the increment (default `1`) and are fully keyboard-accessible.
+
+> `rightIcon` and `secondRightIcon` are not rendered in currency mode — only the `valid` checkmark icon can be displayed alongside the step controls.
+
+#### Paste Handling
+
+Currency mode applies a small set of heuristics to parse pasted values so that strings copied from spreadsheets, web pages or locale-formatted text can be interpreted correctly:
+
+- **Multiple different separators** — the rightmost wins as the decimal separator (e.g. `"1.234,56"` → `1234.56`).
+- **Multiple same separators** — treated as thousands separator (e.g. `"1.234.567"` → `1234567`).
+- **Single separator with less than 3 digits after** — treated as a decimal separator (e.g. `"1,23"` → `1.23`).
+- **Single separator with 3 or more digits after** — ambiguous, falls back to the default locale formatting.
+
+#### Formatting
+
+Values are formatted with `Intl.NumberFormat` honoring the locale (`it-IT` by default), `minimumFractionDigits`, `maximumFractionDigits` and the locale's decimal/thousand separators. Formatting happens on blur; while the user is typing the raw editable value is shown.
+
+#### Step Quantization
+
+When `forceStep` is `true` values are automatically rounded to the nearest multiple of `step`. For instance with `step="4"` and `forceStep="true"`:
+
+- input `5` → emitted `4`
+- input `7` → emitted `8`
+- input `6` → emitted `4` (equidistant; the lower step wins)
+
+#### Min/Max Clamping
+
+On blur, values are clamped into `[min, max]`:
+
+- values below `min` are set to `min`
+- values above `max` are set to `max`
+
+The native `min`/`max` HTML attributes are not used (currency renders a plain `type="text"` input); clamping is enforced in JS.
+
+#### Step Controls Accessibility
+
+The arrow step controls are fully keyboard accessible:
+
+- **Tab** focuses each step control
+- **Enter** / **Space** triggers the increment/decrement
+- **aria-label** describes the action (e.g. `"Incrementa di 1"`)
+- **aria-disabled** mirrors the disabled state
 
 ### Telephone
 
@@ -822,130 +867,3 @@ Error messages are rendered with `role="alert"` to ensure screen readers announc
 ### Clickable Icons Accessibility
 
 When icons are clickable (have click handlers), they should include `leftIconAriaLabel` or `rightIconAriaLabel` props for keyboard accessibility. Without these labels, icons remain clickable via mouse but are not accessible via keyboard navigation.
-
-## FzCurrencyInput
-
-Specialized currency input component built on FzInput with number formatting, validation, and step controls.
-
-### Features
-
-- Locale-aware number formatting (decimal and thousand separators)
-- Min/max value constraints
-- Step quantization with arrow buttons
-- Intelligent paste parsing (detects decimal/thousand separators automatically)
-- Configurable decimal places
-- Keyboard-accessible step controls
-
-### Basic Usage
-
-```vue
-<script setup lang="ts">
-import { FzCurrencyInput } from '@fiscozen/input'
-import { ref } from 'vue'
-
-const amount = ref<number | undefined>(undefined)
-</script>
-
-<template>
-  <FzCurrencyInput 
-    label="Amount" 
-    v-model="amount" 
-    :min="0" 
-    :max="1000" 
-  />
-</template>
-```
-
-### With Step Controls
-
-When `step` prop is provided, arrow buttons appear on the right to increment/decrement the value. The buttons are fully keyboard-accessible.
-
-```vue
-<FzCurrencyInput 
-  label="Quantity" 
-  v-model="quantity" 
-  :step="5"
-  :forceStep="true"
-/>
-```
-
-### Props
-
-FzCurrencyInput extends FzInput props (except `type` and `modelValue`) and adds:
-
-<table>
-  <thead>
-    <tr>
-      <th>Prop</th>
-      <th>Type</th>
-      <th>Default</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>nullOnEmpty</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
-      <td>When true, empty input values are converted to null instead of 0</td>
-    </tr>
-    <tr>
-      <td><code>minimumFractionDigits</code></td>
-      <td><code>number</code></td>
-      <td><code>2</code></td>
-      <td>Minimum decimal places in formatted output. Used by Intl.NumberFormat.</td>
-    </tr>
-    <tr>
-      <td><code>maximumFractionDigits</code></td>
-      <td><code>number</code></td>
-      <td><code>2</code></td>
-      <td>Maximum decimal places in formatted output. Used by Intl.NumberFormat.</td>
-    </tr>
-    <tr>
-      <td><code>min</code></td>
-      <td><code>number</code></td>
-      <td>-</td>
-      <td>Minimum allowed numeric value. Values below this are clamped to min</td>
-    </tr>
-    <tr>
-      <td><code>max</code></td>
-      <td><code>number</code></td>
-      <td>-</td>
-      <td>Maximum allowed numeric value. Values above this are clamped to max</td>
-    </tr>
-    <tr>
-      <td><code>step</code></td>
-      <td><code>number</code></td>
-      <td>-</td>
-      <td>Step increment for arrow buttons and quantization. When forceStep is true, values are rounded to nearest step</td>
-    </tr>
-    <tr>
-      <td><code>forceStep</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
-      <td>When true, enforces quantization: values are automatically rounded to nearest step multiple</td>
-    </tr>
-  </tbody>
-</table>
-
-### V-Model Type
-
-FzCurrencyInput accepts `number | string | undefined` in v-model for retrocompatibility, but always emits `number | undefined`. String values will show a deprecation warning in the console.
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-
-// Recommended: use number
-const amount = ref<number | undefined>(undefined)
-
-// Also works (deprecated): string values
-const amountString = ref<string | undefined>(undefined)
-</script>
-
-<template>
-  <FzCurrencyInput v-model="amount" />
-  <!-- String values will show deprecation warning -->
-  <FzCurrencyInput v-model="amountString" />
-</template>
-```
