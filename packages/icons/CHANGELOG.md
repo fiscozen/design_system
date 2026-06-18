@@ -1,5 +1,11 @@
 # @fiscozen/icons
 
+## 1.0.6
+
+### Patch Changes
+
+- 7bd8eae: Update Font Awesome kit `@awesome.me/kit-8137893ad3` from `^1.0.418` to `^1.0.419`.
+
 ## 1.0.5
 
 ### Patch Changes
