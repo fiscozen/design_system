@@ -36,8 +36,8 @@ importers:
   apps/storybook:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.418
-        version: 1.0.418
+        specifier: ^1.0.419
+        version: 1.0.419
       '@fiscozen/action':
         specifier: workspace:^
         version: link:../../packages/action
@@ -1861,8 +1861,8 @@ importers:
   packages/icons:
     dependencies:
       '@awesome.me/kit-8137893ad3':
-        specifier: ^1.0.418
-        version: 1.0.418
+        specifier: ^1.0.419
+        version: 1.0.419
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.7.2
         version: 6.7.2
@@ -3630,8 +3630,8 @@ packages:
   '@asamuzakjp/dom-selector@2.0.2':
     resolution: {integrity: sha512-x1KXOatwofR6ZAYzXRBL5wrdV0vwNxlTCK9NCuLqAzQYARqGcvFwiJA6A1ERuh+dgeA4Dxm3JBYictIes+SqUQ==}
 
-  '@awesome.me/kit-8137893ad3@1.0.418':
-    resolution: {integrity: sha512-AFzhEnP9LntpXCYlFzk/FrIYroqQRL1UJsXygXF9q+LiF+gJwfqoFMruQIRaolzRlHVOV6v+vYhpHvGyhpxzLA==}
+  '@awesome.me/kit-8137893ad3@1.0.419':
+    resolution: {integrity: sha512-dQybbTB/QW26NaCe3G2N8iwdtc63ZnUR3jsr7e+DzK6ebpAMqHm2WWJT+R1kp9Y94kjnlWKBWCYXkEJEZT0OsA==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.29.0':
@@ -8992,7 +8992,7 @@ snapshots:
       css-tree: 2.3.1
       is-potential-custom-element-name: 1.0.1
 
-  '@awesome.me/kit-8137893ad3@1.0.418':
+  '@awesome.me/kit-8137893ad3@1.0.419':
     dependencies:
       '@fortawesome/fontawesome-common-types': 6.7.2
 
