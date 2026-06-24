@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<FzRadioCardProps>(), {
   tone: "emphasis",
   emphasis: true, // deprecated, kept for backward compatibility
   radioIcon: (props: FzRadioCardProps) => props.orientation === "horizontal",
-  hasRadio: undefined
+  hasRadio: undefined,
 });
 const emits = defineEmits(["update:modelValue"]);
 const computedValue = computed(() => {
@@ -36,18 +36,13 @@ const labelClass = computed(() => ({
   "flex-col": props.orientation === "vertical",
   "flex-row": props.orientation === "horizontal",
   "pb-20": props.orientation === "vertical" && !isChecked.value,
-  "pb-12":
-    props.orientation === "horizontal" && !isChecked.value,
-  "pb-[19px]":
-    props.orientation === "vertical" && isChecked.value,
-  "pb-[11px]":
-    props.orientation === "horizontal" && isChecked.value,
+  "pb-12": props.orientation === "horizontal" && !isChecked.value,
+  "pb-[19px]": props.orientation === "vertical" && isChecked.value,
+  "pb-[11px]": props.orientation === "horizontal" && isChecked.value,
   "pt-[11px]": isChecked.value,
   "gap-12": props.orientation === "horizontal",
-  "border-2 px-[11px] border-blue-500 ":
-    isChecked.value && !props.disabled,
-  "border-1 border-grey-300":
-    !isChecked.value || props.disabled,
+  "border-2 px-[11px] border-blue-500 ": isChecked.value && !props.disabled,
+  "border-1 border-grey-300": !isChecked.value || props.disabled,
   "before:absolute": props.orientation === "vertical",
   "before:top-24": props.orientation === "vertical",
   "before:left-24": props.orientation === "vertical",
@@ -77,7 +72,7 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
     />
     <label
       :class="[
-        'relative flex fz-radio__label block rounded-lg border-solid pt-12 px-12 cursor-pointer w-full',
+        'relative flex fz-radio__label block m-0 rounded-lg border-solid pt-12 px-12 cursor-pointer w-full',
         labelClass,
         computedLabelClass,
       ]"
@@ -120,7 +115,7 @@ const { computedLabelClass, computedId } = useRadio(toRefs(props));
           <p
             v-if="subtitle"
             :class="[
-              'font-normal text-sm mt-4 break-words !m-0 !leading-[16px]',
+              'font-normal text-sm break-words !m-0 !leading-[16px]',
               {
                 'text-grey-300': props.disabled,
                 'text-grey-500': !props.disabled,
