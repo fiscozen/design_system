@@ -1,5 +1,12 @@
 # @fiscozen/table
 
+## 2.1.14
+
+### Patch Changes
+
+- Updated dependencies [55dff5c]
+  - @fiscozen/radio@3.0.8
+
 ## 2.1.13
 
 ### Patch Changes
