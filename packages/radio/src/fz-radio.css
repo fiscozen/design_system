@@ -1,3 +1,24 @@
 .fz-radio__label {
   @apply before:content-[''] before:inline-block before:border-solid before:border-1 before:rounded-full before:m-2 peer-checked:before:bg-transparent peer-focus:before:outline peer-focus:before:outline-offset-1 peer-focus:before:outline-1 peer-focus:before:outline-blue-600;
 }
+
+/*
+ * Hide the native radio input robustly, even inside a host application that
+ * ships a global stylesheet (e.g. Bootstrap) whose `input[type="radio"]` rules
+ * — specificity (0,1,1) — would otherwise outrank the Tailwind sizing utilities
+ * (`h-0 w-0`, specificity (0,1,0)) and make the native control reappear.
+ * `!important` guarantees the input stays collapsed regardless of the host CSS
+ * load order or specificity. Shared by FzRadio and FzRadioCard via the
+ * `fz-hidden-input` class.
+ */
+.fz-hidden-input {
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 none !important;
+  opacity: 0 !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}

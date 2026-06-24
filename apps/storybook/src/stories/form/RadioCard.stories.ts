@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FzRadioCard } from '@fiscozen/radio'
-import { ref } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 import { expect, fn, within, userEvent } from 'storybook/test'
 
 const checkrimg = 'consultant.jpg'
@@ -36,7 +36,7 @@ const meta = {
     },
     radioIcon: {
       control: {
-        type: 'boolean',
+        type: 'boolean'
       },
       description: 'Deprecated prop, use hasRadio instead'
     }
@@ -51,7 +51,11 @@ const Template: RadioCardStory = {
   render: (args) => ({
     components: { FzRadioCard },
     setup() {
-      const { modelValue: initialValue, 'onUpdate:modelValue': onUpdateModelValue, ...restArgs } = args
+      const {
+        modelValue: initialValue,
+        'onUpdate:modelValue': onUpdateModelValue,
+        ...restArgs
+      } = args
       const modelValue = ref(initialValue)
       const handleUpdate = (value: string) => {
         modelValue.value = value
@@ -94,7 +98,7 @@ export const Vertical: RadioCardStory = {
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify radio card renders correctly', async () => {
       const radio = canvas.getByRole('radio')
       await expect(radio).toBeInTheDocument()
@@ -105,13 +109,13 @@ export const Vertical: RadioCardStory = {
       const label = canvas.getByText('RadioCard').closest('label')
       await expect(label).toHaveClass('flex-col')
     })
-    
+
     await step('Click label and verify update:modelValue IS called', async () => {
       const radio = canvas.getByRole('radio')
       const label = canvas.getByText('RadioCard').closest('label')
-      
+
       await userEvent.click(label!)
-      
+
       // ROBUST CHECK: Verify the update:modelValue spy WAS called with the value
       await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(1)
       await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith('test1')
@@ -136,7 +140,7 @@ export const Horizontal: RadioCardStory = {
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify radio card renders correctly', async () => {
       const radio = canvas.getByRole('radio')
       await expect(radio).toBeInTheDocument()
@@ -145,13 +149,13 @@ export const Horizontal: RadioCardStory = {
       const label = canvas.getByText('RadioCard').closest('label')
       await expect(label).toHaveClass('flex-row')
     })
-    
+
     await step('Click label and verify update:modelValue IS called', async () => {
       const radio = canvas.getByRole('radio')
       const label = canvas.getByText('RadioCard').closest('label')
-      
+
       await userEvent.click(label!)
-      
+
       // ROBUST CHECK: Verify the update:modelValue spy WAS called with the value
       await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(1)
       await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith('test2')
@@ -366,24 +370,27 @@ export const Disabled: RadioCardStory = {
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Verify disabled state attributes', async () => {
       const radio = canvas.getByRole('radio')
       await expect(radio).toBeDisabled()
       await expect(radio).not.toBeChecked()
       // Note: RadioCard uses native disabled attribute (no aria-disabled)
     })
-    
-    await step('Verify update:modelValue is NOT called when clicking disabled radio card', async () => {
-      const radio = canvas.getByRole('radio')
-      
-      // Click directly on the radio input (not the label) to match Radio.stories.ts behavior
-      await userEvent.click(radio)
-      
-      // ROBUST CHECK: Verify the update:modelValue spy was NOT called
-      // Note: If this fails, it may indicate that RadioCard emits events even when disabled
-      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
-    })
+
+    await step(
+      'Verify update:modelValue is NOT called when clicking disabled radio card',
+      async () => {
+        const radio = canvas.getByRole('radio')
+
+        // Click directly on the radio input (not the label) to match Radio.stories.ts behavior
+        await userEvent.click(radio)
+
+        // ROBUST CHECK: Verify the update:modelValue spy was NOT called
+        // Note: If this fails, it may indicate that RadioCard emits events even when disabled
+        await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+      }
+    )
   }
 }
 
@@ -401,11 +408,11 @@ export const Focused: RadioCardStory = {
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Tab to focus radio card', async () => {
       const radio = canvas.getByRole('radio')
       await expect(radio).toBeInTheDocument()
-      
+
       await userEvent.tab()
       await expect(document.activeElement).toBe(radio)
     })
@@ -426,24 +433,74 @@ export const KeyboardNavigation: RadioCardStory = {
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
-    
+
     await step('Tab to focus radio card', async () => {
       const radio = canvas.getByRole('radio')
       await expect(radio).toBeInTheDocument()
-      
+
       await userEvent.tab()
       await expect(document.activeElement).toBe(radio)
     })
-    
+
     await step('Activate with Space key and verify handler IS called', async () => {
       const radio = canvas.getByRole('radio')
-      
+
       await userEvent.keyboard(' ')
-      
+
       // ROBUST CHECK: Verify the update:modelValue spy WAS called with the value
       await expect(args['onUpdate:modelValue']).toHaveBeenCalledTimes(1)
       await expect(args['onUpdate:modelValue']).toHaveBeenCalledWith('test22')
       await expect(radio).toBeChecked()
+    })
+  }
+}
+
+/**
+ * Resilience against a hostile global stylesheet.
+ *
+ * A host application may ship a global stylesheet (e.g. Bootstrap) that defines
+ * rules on `input[type="radio"]` whose specificity (0,1,1) outranks the Tailwind
+ * sizing utilities `h-0 w-0` (0,1,0) used to collapse the native radio, making
+ * the control reappear and break the card. This story injects such a global rule
+ * and asserts the native radio stays visually hidden — which only holds because
+ * `.fz-hidden-input` is hardened with `!important` in fz-radio.css.
+ */
+export const HostileGlobalCssIsolation: RadioCardStory = {
+  ...Template,
+  args: {
+    size: 'md',
+    label: 'Radio',
+    orientation: 'horizontal',
+    title: 'RadioCard',
+    subtitle: 'This is a Radioccard label',
+    value: 'test-bootstrap',
+    modelValue: radioModel.value
+  },
+  decorators: [
+    () => ({
+      setup() {
+        const styleEl = document.createElement('style')
+        styleEl.id = 'bootstrap-global-css'
+        // Mimics a global stylesheet (e.g. Bootstrap) shipped by the host app
+        styleEl.textContent =
+          'input[type="radio"]{box-sizing:border-box;width:1rem;height:1rem;opacity:1;appearance:auto;-webkit-appearance:auto;}'
+        document.head.appendChild(styleEl)
+        onBeforeUnmount(() => styleEl.remove())
+        return {}
+      },
+      template: '<div style="padding:10px; width: 360px;"><story/></div>'
+    })
+  ],
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Native radio stays collapsed despite the hostile global CSS', async () => {
+      const radio = canvas.getByRole('radio') as HTMLInputElement
+      await expect(radio).toBeInTheDocument()
+      // Without the hardened .fz-hidden-input rule the native control would
+      // render at 16x16 (h-0 w-0 loses on specificity); it must stay collapsed.
+      await expect(radio.offsetWidth).toBe(0)
+      await expect(radio.offsetHeight).toBe(0)
     })
   }
 }
