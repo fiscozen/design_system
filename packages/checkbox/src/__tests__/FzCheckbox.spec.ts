@@ -520,6 +520,23 @@ describe("FzCheckbox", () => {
       expect(label.classes()).toContain("items-start");
     });
 
+    it("should be environment-agnostic: text-core-black on root and mb-0 on label", async () => {
+      const wrapper = mount(FzCheckbox, {
+        props: {
+          label: "Test Checkbox",
+          value: "test",
+          modelValue: false,
+        },
+      });
+      await wrapper.vm.$nextTick();
+      // text-core-black on the root container so descendant text does not
+      // inherit a host body color (e.g. Bootstrap `body { color: #212529 }`).
+      expect(wrapper.find("div").classes()).toContain("text-core-black");
+      // mb-0 on the label so it does not pick up Bootstrap reboot's
+      // `label { margin-bottom: 0.5rem }` in hosts without Tailwind preflight.
+      expect(wrapper.find("label").classes()).toContain("mb-0");
+    });
+
     it("should apply emphasis classes when emphasis prop is true", async () => {
       const wrapper = mount(FzCheckbox, {
         props: {
