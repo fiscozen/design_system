@@ -2,6 +2,6 @@
 '@fiscozen/card': patch
 ---
 
-`FzCard` ora applica `border-0` esplicito su header e footer di default.
-Risolve i casi in cui consumer che mescolano Tailwind senza preflight + Bootstrap reboot vedevano un bordo non voluto perché il template applicava `border-solid` solitario (border-style senza width → fallback UA `border-width: medium`).
-Le variant con bordo continuano a funzionare invariate.
+`FzCard` now applies an explicit `border-0` on the header and footer by default.
+Fixes cases where consumers mixing Tailwind without preflight + Bootstrap reboot saw an unwanted border because the template applied a lone `border-solid` (border-style without width → UA fallback `border-width: medium`).
+Variants with a border keep working unchanged.
