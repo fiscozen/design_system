@@ -527,6 +527,23 @@ describe("FzCheckboxGroup", () => {
       expect(container.classes()).toContain("self-stretch");
     });
 
+    it("should be environment-agnostic: text-core-black on root and mb-0 on group label", async () => {
+      const wrapper = mount(FzCheckboxGroup, {
+        props: {
+          label: "Test Checkbox Group",
+          modelValue: [],
+          options: [{ label: "Option 1", value: "option1" }],
+        },
+      });
+      await wrapper.vm.$nextTick();
+      // text-core-black on the root container so descendant text does not
+      // inherit a host body color (e.g. Bootstrap `body { color: #212529 }`).
+      expect(wrapper.find("div").classes()).toContain("text-core-black");
+      // mb-0 on the group label so it does not pick up Bootstrap reboot's
+      // `label { margin-bottom: 0.5rem }` in hosts without Tailwind preflight.
+      expect(wrapper.find("label").classes()).toContain("mb-0");
+    });
+
     it("should apply horizontal layout classes when horizontal is true", async () => {
       const wrapper = mount(FzCheckboxGroup, {
         props: {

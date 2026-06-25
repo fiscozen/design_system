@@ -135,7 +135,7 @@ const staticInputClass: string = "w-0 h-0 peer fz-hidden-input";
  * Items aligned to start (top) for proper alignment with long multi-line labels.
  */
 const staticLabelClass: string = `
-  flex gap-6 items-start hover:cursor-pointer text-core-black
+  flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&_div]:after:border-1
   peer-focus:[&_div]:after:border-solid
   peer-focus:[&_div]:after:rounded-[2px]
@@ -297,7 +297,7 @@ onMounted(() => {
 
 <template>
   <!-- Root container: vertical layout with consistent spacing -->
-  <div class="flex justify-center flex-col w-fit gap-4">
+  <div class="flex justify-center flex-col w-fit gap-4 text-core-black">
     <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
     <!-- Hover effects are handled in CSS using data attributes -->
     <div

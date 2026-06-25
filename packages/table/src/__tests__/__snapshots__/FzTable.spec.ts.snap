@@ -169,7 +169,7 @@ exports[`FzTable > Snapshots > should match snapshot - selectable variant 1`] = 
       <!--v-if-->
       <div class="fz__header__cell sticky top-0 z-[2] bg-grey-100 p-16 min-h-[52px] text-base flex items-center cursor-pointer text-grey-500 sticky left-0 z-[3] w-[36px] justify-center items-center">
         <!-- Root container: vertical layout with consistent spacing -->
-        <div data-v-2b014a17="" class="flex justify-center flex-col w-fit gap-4 fz__table__header--checkbox">
+        <div data-v-2b014a17="" class="flex justify-center flex-col w-fit gap-4 text-core-black fz__table__header--checkbox">
           <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
           <!-- Hover effects are handled in CSS using data attributes -->
           <div data-v-2b014a17="" class="flex items-start group" data-emphasis="true">
@@ -182,7 +182,7 @@ exports[`FzTable > Snapshots > should match snapshot - selectable variant 1`] = 
             <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-2b014a17="" id="fz-checkbox-100000000001-2a84k-label" for="fz-checkbox-100000000001-2a84k" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-2b014a17="" id="fz-checkbox-100000000001-2a84k-label" for="fz-checkbox-100000000001-2a84k" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -223,7 +223,7 @@ exports[`FzTable > Snapshots > should match snapshot - selectable variant 1`] = 
         <!--v-if-->
         <div role="cell" class="w-[36px] fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 sticky left-0 z-[2] justify-center !min-w-[36px] bg-core-white">
           <!-- Root container: vertical layout with consistent spacing -->
-          <div data-v-2b014a17="" class="flex justify-center flex-col w-fit gap-4">
+          <div data-v-2b014a17="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
             <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
             <!-- Hover effects are handled in CSS using data attributes -->
             <div data-v-2b014a17="" class="flex items-start group" data-emphasis="true">
@@ -236,7 +236,7 @@ exports[`FzTable > Snapshots > should match snapshot - selectable variant 1`] = 
               <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-2b014a17="" id="fz-checkbox-100000000003-22ql0-label" for="fz-checkbox-100000000003-22ql0" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-2b014a17="" id="fz-checkbox-100000000003-22ql0-label" for="fz-checkbox-100000000003-22ql0" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -275,7 +275,7 @@ exports[`FzTable > Snapshots > should match snapshot - selectable variant 1`] = 
         <!--v-if-->
         <div role="cell" class="w-[36px] fz__body z-[1] p-16 min-h-[52px] text-base flex items-start min-w-min text-grey-500 sticky left-0 z-[2] justify-center !min-w-[36px] bg-core-white">
           <!-- Root container: vertical layout with consistent spacing -->
-          <div data-v-2b014a17="" class="flex justify-center flex-col w-fit gap-4">
+          <div data-v-2b014a17="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
             <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
             <!-- Hover effects are handled in CSS using data attributes -->
             <div data-v-2b014a17="" class="flex items-start group" data-emphasis="true">
@@ -288,7 +288,7 @@ exports[`FzTable > Snapshots > should match snapshot - selectable variant 1`] = 
               <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-2b014a17="" id="fz-checkbox-100000000004-2kdwy-label" for="fz-checkbox-100000000004-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-2b014a17="" id="fz-checkbox-100000000004-2kdwy-label" for="fz-checkbox-100000000004-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]

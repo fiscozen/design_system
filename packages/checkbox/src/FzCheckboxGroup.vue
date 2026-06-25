@@ -85,10 +85,10 @@ const checkedSet = computed(() => new Set(model.value));
 provide(CHECKED_SET_KEY, { source: model, set: checkedSet });
 
 /** Base layout for the label element */
-const staticLabeldClass: string = "flex flex-col";
+const staticLabeldClass: string = "flex flex-col mb-0";
 
 /** Base layout for the root container */
-const staticContainerClass: string = "flex flex-col gap-10";
+const staticContainerClass: string = "flex flex-col gap-10 text-core-black";
 
 /** Base layout for the checkboxes container */
 const staticSlotContainerClass: string = "flex self-stretch";
