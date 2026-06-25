@@ -88,7 +88,7 @@ const controlledProps = computed<Omit<FzRadioGroupProps, "label" | "variant">>(
   }),
 );
 
-const staticLabelClass = "flex flex-col";
+const staticLabelClass = "flex flex-col mb-0";
 const staticContainerClass = "flex flex-col";
 const staticSlotContainerClass = computed(() => [
   "flex self-stretch",
@@ -98,6 +98,7 @@ const staticSlotContainerClass = computed(() => [
 const computedHelpTextClass = computed(() => [
   "text-base",
   props.disabled ? "text-grey-400" : "text-grey-500",
+  "mb-0",
 ]);
 
 const computedLabelClass = computed(() => [
