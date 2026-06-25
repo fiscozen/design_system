@@ -160,7 +160,9 @@ describe("FzCard", () => {
       });
 
       it("should map deprecated aliceblue to blue and show warning", async () => {
-        const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const consoleSpy = vi
+          .spyOn(console, "warn")
+          .mockImplementation(() => {});
 
         const wrapper = mount(FzCard, {
           props: {
@@ -373,7 +375,9 @@ describe("FzCard", () => {
           },
         });
         await wrapper.vm.$nextTick();
-        expect(wrapper.find("article").classes()).toContain("custom-content-class");
+        expect(wrapper.find("article").classes()).toContain(
+          "custom-content-class",
+        );
       });
     });
   });
@@ -642,7 +646,9 @@ describe("FzCard", () => {
         },
       });
       await wrapper.vm.$nextTick();
-      expect(wrapper.find("section").classes()).toContain("bg-background-alice-blue");
+      expect(wrapper.find("section").classes()).toContain(
+        "bg-background-alice-blue",
+      );
     });
 
     it.each([
@@ -696,6 +702,21 @@ describe("FzCard", () => {
       });
       await wrapper.vm.$nextTick();
       expect(wrapper.find("article").classes()).toContain("custom-class");
+    });
+
+    it("should apply explicit border-0 to header and footer so no border renders without preflight", async () => {
+      const wrapper = mount(FzCard, {
+        props: {
+          title: "Test Card",
+          primaryAction: { label: "Save" },
+        },
+      });
+      await wrapper.vm.$nextTick();
+      // header inner div and footer pair border-solid with an explicit
+      // border-0 baseline; without it, hosts lacking Tailwind preflight
+      // (e.g. Bootstrap reboot) render an unwanted ~medium border.
+      expect(wrapper.find("header > div").classes()).toContain("border-0");
+      expect(wrapper.find("footer").classes()).toContain("border-0");
     });
   });
 
@@ -896,4 +917,3 @@ describe("FzCard", () => {
     });
   });
 });
-

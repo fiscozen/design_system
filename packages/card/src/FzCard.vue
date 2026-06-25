@@ -78,9 +78,9 @@ const normalizedColor = computed(() => {
 
 const sectionStaticClass = "border-1 border-solid rounded flex flex-col";
 const headerStaticClass =
-  "border-solid pt-16 px-16 flex flex-row justify-between";
+  "border-0 border-solid pt-16 px-16 flex flex-row justify-between";
 const footerStaticClass =
-  "border-solid pt-0 px-16 pb-16 flex gap-12 items-center";
+  "border-0 border-solid pt-0 px-16 pb-16 flex gap-12 items-center";
 
 const showContent = computed(() => isOpen.value || !props.collapsible);
 const isAlive = computed(() => props.alwaysAlive || showContent.value);

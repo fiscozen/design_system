@@ -3,7 +3,7 @@
 exports[`FzCard > Snapshots > should match snapshot - backoffice environment 1`] = `
 "<section class="border-1 border-solid rounded flex flex-col bg-core-white text-core-black border-grey-100">
   <header class="">
-    <div class="border-solid pt-16 px-16 flex flex-row justify-between">
+    <div class="border-0 border-solid pt-16 px-16 flex flex-row justify-between">
       <div class="flex flex-row gap-12 items-start py-2">
         <h2 class="text-core-black font-medium text-xl m-0 p-0 break-words overflow-wrap-anywhere min-w-0 flex-shrink" title="Test Card">Test Card</h2>
       </div>
@@ -14,7 +14,7 @@ exports[`FzCard > Snapshots > should match snapshot - backoffice environment 1`]
     </div>
   </header>
   <article class="p-16"></article>
-  <footer class="border-solid pt-0 px-16 pb-16 flex gap-12 items-center justify-end">
+  <footer class="border-0 border-solid pt-0 px-16 pb-16 flex gap-12 items-center justify-end">
     <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default">
       <!--v-if-->
       <!--v-if--><button type="button" aria-disabled="false" class="fz-button relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-solid border-transparent appearance-none gap-8 h-32 px-12 min-w-96 bg-blue-500 text-core-white hover:bg-blue-600 focus:bg-blue-500 focus:!border-blue-600 disabled:bg-blue-200">
@@ -30,7 +30,7 @@ exports[`FzCard > Snapshots > should match snapshot - backoffice environment 1`]
 exports[`FzCard > Snapshots > should match snapshot - collapsible 1`] = `
 "<section class="border-1 border-solid rounded flex flex-col bg-core-white text-core-black border-grey-100">
   <header class="cursor-pointer">
-    <div class="border-solid pt-16 px-16 flex flex-row justify-between">
+    <div class="border-0 border-solid pt-16 px-16 flex flex-row justify-between">
       <div class="flex flex-row gap-12 items-start py-8">
         <h2 class="text-core-black font-medium text-xl m-0 p-0 break-words overflow-wrap-anywhere min-w-0 flex-shrink" title="Test Card">Test Card</h2>
       </div>
@@ -51,7 +51,7 @@ exports[`FzCard > Snapshots > should match snapshot - collapsible 1`] = `
 exports[`FzCard > Snapshots > should match snapshot - default state 1`] = `
 "<section class="border-1 border-solid rounded flex flex-col bg-core-white text-core-black border-grey-100">
   <header class="">
-    <div class="border-solid pt-16 px-16 flex flex-row justify-between">
+    <div class="border-0 border-solid pt-16 px-16 flex flex-row justify-between">
       <div class="flex flex-row gap-12 items-start py-8">
         <h2 class="text-core-black font-medium text-xl m-0 p-0 break-words overflow-wrap-anywhere min-w-0 flex-shrink" title="Test Card">Test Card</h2>
       </div>
@@ -69,7 +69,7 @@ exports[`FzCard > Snapshots > should match snapshot - default state 1`] = `
 exports[`FzCard > Snapshots > should match snapshot - with all actions 1`] = `
 "<section class="border-1 border-solid rounded flex flex-col bg-core-white text-core-black border-grey-100">
   <header class="">
-    <div class="border-solid pt-16 px-16 flex flex-row justify-between">
+    <div class="border-0 border-solid pt-16 px-16 flex flex-row justify-between">
       <div class="flex flex-row gap-12 items-start py-8">
         <h2 class="text-core-black font-medium text-xl m-0 p-0 break-words overflow-wrap-anywhere min-w-0 flex-shrink" title="Test Card">Test Card</h2>
       </div>
@@ -80,7 +80,7 @@ exports[`FzCard > Snapshots > should match snapshot - with all actions 1`] = `
     </div>
   </header>
   <article class="p-16"></article>
-  <footer class="border-solid pt-0 px-16 pb-16 flex gap-12 items-center justify-end">
+  <footer class="border-0 border-solid pt-0 px-16 pb-16 flex gap-12 items-center justify-end">
     <div data-v-da7f5873="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default"><span data-v-8090b1b6="" class="fz-icon-button-wrapper relative fz-icon-button-wrapper--frontoffice"><button data-v-8090b1b6="" type="button" aria-disabled="false" class="fz-button relative rounded flex flex-shrink items-center justify-center font-normal !text-[16px] !leading-[20px] border-1 border-solid border-transparent appearance-none gap-8 h-44 px-12 min-w-96 bg-transparent text-grey-500 !border-transparent hover:bg-grey-100 hover:!border-grey-100 focus:bg-transparent focus:!border-blue-600 disabled:bg-grey-50 disabled:text-grey-200 disabled:!border-grey-200" aria-label=""><div class="flex items-center justify-items-center"><span role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px]"><svg class="svg-inline--fa fa-bell h-[16px]" aria-hidden="true" focusable="false" data-prefix="far" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="" fill="currentColor" d="M224 0c-17.7 0-32 14.3-32 32l0 19.2C119 66 64 130.6 64 208l0 25.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416l400 0c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4l0-25.4c0-77.4-55-142-128-156.8L256 32c0-17.7-14.3-32-32-32zm0 96c61.9 0 112 50.1 112 112l0 25.4c0 47.9 13.9 94.6 39.7 134.6L72.3 368C98.1 328 112 281.3 112 233.4l0-25.4c0-61.9 50.1-112 112-112zm64 352l-64 0-64 0c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"></path></svg></span></div>
     <!--v-if-->
     <!--v-if--></button>
@@ -100,7 +100,7 @@ exports[`FzCard > Snapshots > should match snapshot - with all actions 1`] = `
 exports[`FzCard > Snapshots > should match snapshot - with all color variants 1`] = `
 "<section class="border-1 border-solid rounded flex flex-col bg-background-alice-blue text-core-black border-background-alice-blue">
   <header class="">
-    <div class="border-solid pt-16 px-16 flex flex-row justify-between">
+    <div class="border-0 border-solid pt-16 px-16 flex flex-row justify-between">
       <div class="flex flex-row gap-12 items-start py-8">
         <h2 class="text-core-black font-medium text-xl m-0 p-0 break-words overflow-wrap-anywhere min-w-0 flex-shrink" title="Test Card">Test Card</h2>
       </div>
@@ -118,7 +118,7 @@ exports[`FzCard > Snapshots > should match snapshot - with all color variants 1`
 exports[`FzCard > Snapshots > should match snapshot - with info icon 1`] = `
 "<section class="border-1 border-solid rounded flex flex-col bg-core-white text-core-black border-grey-100">
   <header class="">
-    <div class="border-solid pt-16 px-16 flex flex-row justify-between">
+    <div class="border-0 border-solid pt-16 px-16 flex flex-row justify-between">
       <div class="flex flex-row gap-12 items-start py-8">
         <h2 class="text-core-black font-medium text-xl m-0 p-0 break-words overflow-wrap-anywhere min-w-0 flex-shrink" title="Test Card">Test Card</h2>
       </div>
