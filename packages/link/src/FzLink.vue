@@ -22,6 +22,7 @@
  */
 import { computed, watch } from 'vue'
 import { FzLinkProps } from './types'
+import './fz-link.css'
 
 defineOptions({ __fzKind: '@fiscozen/link/FzLink' })
 
@@ -101,11 +102,15 @@ const normalizedSize = computed(() => {
  * Border classes provide consistent spacing for focus indicators.
  */
 const commonClass = computed(() => [
-  'border-1 border-transparent inline-block',
+  'fz-link border-1 border-transparent inline-block',
   {
     'text-sm leading-xs': normalizedSize.value === 'sm',
     'text-base leading-base': normalizedSize.value === 'md',
-    underline: props.linkStyle === 'underline'
+    underline: props.linkStyle === 'underline',
+    'fz-link--underline': props.linkStyle === 'underline',
+    'fz-link--no-underline': props.linkStyle !== 'underline',
+    'fz-link--default': props.type === 'default',
+    'fz-link--danger': props.type === 'danger'
   }
 ])
 
@@ -156,7 +161,7 @@ const linkClass = computed(() => {
  * Each case represents a distinct visual representation of the disabled link.
  */
 const spanClass = computed(() => {
-  const baseClasses = [...commonClass.value, 'cursor-not-allowed']
+  const baseClasses = [...commonClass.value, 'cursor-not-allowed', 'fz-link--disabled']
   
   switch (true) {
     case isDefaultDisabled(props):
