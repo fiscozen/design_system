@@ -106,7 +106,7 @@ exports[`FzAlert > Snapshots > should match snapshot - external link with target
       <p data-v-9babd5cc="" class="mb-0 leading-[20px]">Title here</p>
       <p data-v-9babd5cc="" class="font-normal !leading-[20px] mt-8 mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
       <div data-v-da7f5873="" data-v-9babd5cc="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default">
-        <!--v-if--><a data-v-9babd5cc="" href="/example" class="border-1 border-transparent inline-block text-base leading-base focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600" target="_blank">This is a link</a>
+        <!--v-if--><a data-v-9babd5cc="" href="/example" class="fz-link border-1 border-transparent inline-block text-base leading-base fz-link--no-underline fz-link--default focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600" target="_blank">This is a link</a>
       </div>
     </div>
   </div>
@@ -204,7 +204,7 @@ exports[`FzAlert > Snapshots > should match snapshot - with link action 1`] = `
       <p data-v-9babd5cc="" class="mb-0 leading-[20px]">Title here</p>
       <p data-v-9babd5cc="" class="font-normal !leading-[20px] mt-8 mb-16">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
       <div data-v-da7f5873="" data-v-9babd5cc="" class="fz-container fz-container--horizontal gap-section-content-sm align-items-center layout-default">
-        <!--v-if--><a data-v-9babd5cc="" href="/example" class="border-1 border-transparent inline-block text-base leading-base focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600">This is a link</a>
+        <!--v-if--><a data-v-9babd5cc="" href="/example" class="fz-link border-1 border-transparent inline-block text-base leading-base fz-link--no-underline fz-link--default focus:outline-none focus:border-solid focus:no-underline text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600 focus:border-blue-600">This is a link</a>
       </div>
     </div>
   </div>
