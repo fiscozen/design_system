@@ -60,9 +60,9 @@ app.mount('#app')
 
 See the `@fiscozen/style` package for the full list of tokens and directives.
 
-## Hosts with a global CSS framework (e.g. Bootstrap)
+## Environment independence
 
-The DS expects a Tailwind-first environment. If your app also loads a global CSS framework (or lacks Tailwind's preflight), watch for **base-style collisions**: things like `<label>`/`<p>` default margins, anchor colors, or `border-width` may be set by the other framework and leak into DS components. DS components are progressively made self-contained against these cases, but make sure the design-system styles are loaded so they win the cascade where it matters.
+Design system components are self-contained: their appearance does not depend on the host application's CSS reset or on Tailwind's preflight. Once the configuration above is in place, components render consistently wherever the DS is installed, regardless of any other global styles in the consuming app.
 
 ## Package-specific configuration
 
