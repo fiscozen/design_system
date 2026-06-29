@@ -1,0 +1,69 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Tailwind Setup" />
+
+## Tailwind Setup
+
+The Fiscozen Design System is **utility-first by design**: components style themselves with Tailwind utility classes written directly in their source. Tailwind is therefore a **required peer** of any app that consumes the DS.
+
+The practical consequence — and the most common integration mistake — is this:
+
+> Your app's Tailwind build must **scan the DS sources** so the utility classes used inside `@fiscozen/*` components are actually generated. If it doesn't, those classes exist on the elements but no CSS rule is emitted for them, and the components render with the host's default styling instead of the design system's.
+
+## Required: Tailwind configuration
+
+Extend your `tailwind.config.js` with the DS preset and, crucially, add `@fiscozen/*` to `content`:
+
+```js
+// tailwind.config.js
+import tailwindConfig from '@fiscozen/style/tailwind.config'
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  // 1. DS theme/tokens (colors, spacing, typography, …)
+  ...tailwindConfig,
+
+  // 2. Tell Tailwind to scan the DS sources, so the utility classes used
+  //    inside @fiscozen/* components get generated in your build.
+  content: [
+    './node_modules/@fiscozen/*/src/**/*.{html,js,ts,vue}',
+    './src/**/*.{html,js,ts,vue}'
+  ],
+
+  // 3. DS plugins
+  plugins: [...tailwindConfig.plugins]
+}
+```
+
+### ⚠️ Use a single `*` after `@fiscozen`, not `**`
+
+```diff
+- './node_modules/@fiscozen/**/*.{html,js,ts,vue}'
++ './node_modules/@fiscozen/*/src/**/*.{html,js,ts,vue}'
+```
+
+A `**` right after `@fiscozen` makes the glob descend into the **nested `node_modules`** inside individual DS packages. DS packages pin varying versions of shared deps (e.g. `@fiscozen/composables`) that npm can't always dedupe, so the same files get scanned many times over — inflating Tailwind's content set several-fold and potentially triggering an `ENOMEM` in PostCSS. Scanning the top-level `@fiscozen/<pkg>/src/` is enough for class detection.
+
+## Global styles & directives
+
+Tailwind covers the utility classes, but the DS also ships CSS variables (design tokens) and a few Vue directives. Register them once at app startup:
+
+```ts
+// main.ts
+import { setupFzStyle } from '@fiscozen/style'
+import '@fiscozen/style/output/global.css'
+
+const app = createApp(App)
+setupFzStyle(app)
+app.mount('#app')
+```
+
+See the `@fiscozen/style` package for the full list of tokens and directives.
+
+## Hosts with a global CSS framework (e.g. Bootstrap)
+
+The DS expects a Tailwind-first environment. If your app also loads a global CSS framework (or lacks Tailwind's preflight), watch for **base-style collisions**: things like `<label>`/`<p>` default margins, anchor colors, or `border-width` may be set by the other framework and leak into DS components. DS components are progressively made self-contained against these cases, but make sure the design-system styles are loaded so they win the cascade where it matters.
+
+## Package-specific configuration
+
+This page covers the **cross-cutting** setup that every consumer needs. Anything specific to a single component (extra config, a dedicated CSS import, peer requirements) lives in **that component's own documentation page** — check the component docs in the sidebar before integrating it.
