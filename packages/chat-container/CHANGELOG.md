@@ -1,5 +1,12 @@
 # @fiscozen/chat-container
 
+## 2.0.8
+
+### Patch Changes
+
+- Updated dependencies [ec39750]
+  - @fiscozen/card@3.0.6
+
 ## 2.0.7
 
 ### Patch Changes

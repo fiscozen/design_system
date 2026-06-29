@@ -1,5 +1,14 @@
 # @fiscozen/table
 
+## 2.1.15
+
+### Patch Changes
+
+- Updated dependencies [63ad153]
+- Updated dependencies [6305a78]
+  - @fiscozen/checkbox@3.0.9
+  - @fiscozen/radio@3.0.9
+
 ## 2.1.14
 
 ### Patch Changes
