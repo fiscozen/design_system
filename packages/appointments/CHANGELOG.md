@@ -1,5 +1,12 @@
 # @fiscozen/appointments
 
+## 1.1.15
+
+### Patch Changes
+
+- Updated dependencies [6305a78]
+  - @fiscozen/radio@3.0.9
+
 ## 1.1.14
 
 ### Patch Changes
