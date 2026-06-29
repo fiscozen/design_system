@@ -51,6 +51,16 @@ describe("FzRadio", () => {
       expect(wrapper.find("label").exists()).toBe(true);
     });
 
+    it("should apply self-contained label baseline (flex, text-core-black, mb-0)", async () => {
+      const wrapper = await createWrapper({ label: "Radio", size: "md" });
+      const label = wrapper.find("label");
+      // baseline so the component renders correctly in hosts without
+      // Tailwind preflight (e.g. Bootstrap reboot sets label margin-bottom).
+      expect(label.classes()).toContain("flex");
+      expect(label.classes()).toContain("text-core-black");
+      expect(label.classes()).toContain("mb-0");
+    });
+
     it("should render label text", async () => {
       const wrapper = await createWrapper({
         label: "Radio Option",

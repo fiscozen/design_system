@@ -2,11 +2,11 @@
 
 exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`] = `
 "<!-- Root container for the entire checkbox group -->
-<div class="flex flex-col gap-10 text-base">
+<div class="flex flex-col gap-10 text-core-black text-base">
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-core-black">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col mb-0 text-base gap-6 text-core-black">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<!--v-if--></span><!-- Optional help text slot for additional context -->
     <!--v-if-->
   </label>
@@ -31,7 +31,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`]
     - Change event cascades selection to all children
   -->
     <!-- Root container: vertical layout with consistent spacing -->
-    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
       <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
       <!-- Hover effects are handled in CSS using data attributes -->
       <div data-v-79ecb611="" class="flex items-start group">
@@ -44,7 +44,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`]
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -80,7 +80,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`]
     - Change event cascades selection to all children
   -->
     <!-- Root container: vertical layout with consistent spacing -->
-    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
       <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
       <!-- Hover effects are handled in CSS using data attributes -->
       <div data-v-79ecb611="" class="flex items-start group">
@@ -93,7 +93,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`]
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-100000000006-8d7ea-label" for="fz-checkbox-100000000006-8d7ea" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000006-8d7ea-label" for="fz-checkbox-100000000006-8d7ea" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -129,11 +129,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - default state 1`]
 
 exports[`FzCheckboxGroup > Snapshots > should match snapshot - disabled 1`] = `
 "<!-- Root container for the entire checkbox group -->
-<div class="flex flex-col gap-10 text-base">
+<div class="flex flex-col gap-10 text-core-black text-base">
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-grey-400">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col mb-0 text-base gap-6 text-grey-400">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<!--v-if--></span><!-- Optional help text slot for additional context -->
     <!--v-if-->
   </label>
@@ -158,7 +158,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - disabled 1`] = `
     - Change event cascades selection to all children
   -->
     <!-- Root container: vertical layout with consistent spacing -->
-    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
       <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
       <!-- Hover effects are handled in CSS using data attributes -->
       <div data-v-79ecb611="" class="flex items-start group" data-disabled="true">
@@ -171,7 +171,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - disabled 1`] = `
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -207,11 +207,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - disabled 1`] = `
 
 exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical structure 1`] = `
 "<!-- Root container for the entire checkbox group -->
-<div class="flex flex-col gap-10 text-base">
+<div class="flex flex-col gap-10 text-core-black text-base">
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-core-black">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col mb-0 text-base gap-6 text-core-black">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<!--v-if--></span><!-- Optional help text slot for additional context -->
     <!--v-if-->
   </label>
@@ -236,7 +236,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
     - Change event cascades selection to all children
   -->
     <!-- Root container: vertical layout with consistent spacing -->
-    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
       <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
       <!-- Hover effects are handled in CSS using data attributes -->
       <div data-v-79ecb611="" class="flex items-start group">
@@ -249,7 +249,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -286,7 +286,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
           - Share same v-model array with parent and siblings
         -->
         <!-- Root container: vertical layout with consistent spacing -->
-        <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+        <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
           <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
           <!-- Hover effects are handled in CSS using data attributes -->
           <div data-v-79ecb611="" class="flex items-start group">
@@ -299,7 +299,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
             <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-100000000002-22ql0-child-0-label" for="fz-checkbox-100000000002-22ql0-child-0" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000002-22ql0-child-0-label" for="fz-checkbox-100000000002-22ql0-child-0" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -328,7 +328,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
       Used by FzCheckboxGroupOption to render child checkboxes
     -->
         </div><!-- Root container: vertical layout with consistent spacing -->
-        <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+        <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
           <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
           <!-- Hover effects are handled in CSS using data attributes -->
           <div data-v-79ecb611="" class="flex items-start group">
@@ -341,7 +341,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
             <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-100000000002-22ql0-child-1-label" for="fz-checkbox-100000000002-22ql0-child-1" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000002-22ql0-child-1-label" for="fz-checkbox-100000000002-22ql0-child-1" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -379,11 +379,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - hierarchical stru
 
 exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout 1`] = `
 "<!-- Root container for the entire checkbox group -->
-<div class="flex flex-col gap-10 text-base">
+<div class="flex flex-col gap-10 text-core-black text-base">
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-core-black">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col mb-0 text-base gap-6 text-core-black">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<!--v-if--></span><!-- Optional help text slot for additional context -->
     <!--v-if-->
   </label>
@@ -408,7 +408,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout
     - Change event cascades selection to all children
   -->
     <!-- Root container: vertical layout with consistent spacing -->
-    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
       <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
       <!-- Hover effects are handled in CSS using data attributes -->
       <div data-v-79ecb611="" class="flex items-start group">
@@ -421,7 +421,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -457,7 +457,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout
     - Change event cascades selection to all children
   -->
     <!-- Root container: vertical layout with consistent spacing -->
-    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
       <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
       <!-- Hover effects are handled in CSS using data attributes -->
       <div data-v-79ecb611="" class="flex items-start group">
@@ -470,7 +470,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-100000000006-8d7ea-label" for="fz-checkbox-100000000006-8d7ea" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000006-8d7ea-label" for="fz-checkbox-100000000006-8d7ea" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -506,11 +506,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - horizontal layout
 
 exports[`FzCheckboxGroup > Snapshots > should match snapshot - required 1`] = `
 "<!-- Root container for the entire checkbox group -->
-<div class="flex flex-col gap-10 text-base">
+<div class="flex flex-col gap-10 text-core-black text-base">
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-core-black">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col mb-0 text-base gap-6 text-core-black">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<span> *</span></span><!-- Optional help text slot for additional context -->
     <!--v-if-->
   </label>
@@ -535,7 +535,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - required 1`] = `
     - Change event cascades selection to all children
   -->
     <!-- Root container: vertical layout with consistent spacing -->
-    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
       <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
       <!-- Hover effects are handled in CSS using data attributes -->
       <div data-v-79ecb611="" class="flex items-start group">
@@ -548,7 +548,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - required 1`] = `
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -584,11 +584,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - required 1`] = `
 
 exports[`FzCheckboxGroup > Snapshots > should match snapshot - with error 1`] = `
 "<!-- Root container for the entire checkbox group -->
-<div class="flex flex-col gap-10 text-base">
+<div class="flex flex-col gap-10 text-core-black text-base">
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-core-black">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col mb-0 text-base gap-6 text-core-black">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<!--v-if--></span><!-- Optional help text slot for additional context -->
     <!--v-if-->
   </label>
@@ -613,7 +613,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with error 1`] = 
     - Change event cascades selection to all children
   -->
     <!-- Root container: vertical layout with consistent spacing -->
-    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
       <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
       <!-- Hover effects are handled in CSS using data attributes -->
       <div data-v-79ecb611="" class="flex items-start group" data-error="true">
@@ -626,7 +626,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with error 1`] = 
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]
@@ -686,11 +686,11 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with error 1`] = 
 
 exports[`FzCheckboxGroup > Snapshots > should match snapshot - with help text 1`] = `
 "<!-- Root container for the entire checkbox group -->
-<div class="flex flex-col gap-10 text-base">
+<div class="flex flex-col gap-10 text-core-black text-base">
   <!-- 
       Group label with optional required indicator and help text
       Connected to checkbox group via aria-labelledby
-    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col text-base gap-6 text-core-black">
+    --><label id="fz-checkbox-group-100000000001-2a84k-label" class="flex flex-col mb-0 text-base gap-6 text-core-black">
     <!-- Main label text with required asterisk if applicable --><span>Test Checkbox Group<!--v-if--></span><!-- Optional help text slot for additional context -->
     <p id="fz-checkbox-group-100000000001-2a84k-help" class="text-sm text-grey-500">This is help text</p>
   </label>
@@ -715,7 +715,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with help text 1`
     - Change event cascades selection to all children
   -->
     <!-- Root container: vertical layout with consistent spacing -->
-    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4">
+    <div data-v-79ecb611="" class="flex justify-center flex-col w-fit gap-4 text-core-black">
       <!-- Checkbox row: input + label + optional tooltip, aligned to top for long labels -->
       <!-- Hover effects are handled in CSS using data attributes -->
       <div data-v-79ecb611="" class="flex items-start group">
@@ -728,7 +728,7 @@ exports[`FzCheckboxGroup > Snapshots > should match snapshot - with help text 1`
         <!-- 
         Label element: provides click target and visual representation
         Connected to hidden input via "for" attribute
-      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black
+      --><label data-v-79ecb611="" id="fz-checkbox-100000000003-2kdwy-label" for="fz-checkbox-100000000003-2kdwy" class="flex gap-6 items-start hover:cursor-pointer text-core-black mb-0
   peer-focus:[&amp;_div]:after:border-1
   peer-focus:[&amp;_div]:after:border-solid
   peer-focus:[&amp;_div]:after:rounded-[2px]

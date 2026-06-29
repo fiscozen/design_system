@@ -59,6 +59,18 @@ describe("FzRadioGroup", () => {
       const inputs = wrapper.findAll("input[type='radio']");
       expect(inputs.length).toBeGreaterThan(0);
     });
+
+    it("should apply mb-0 baseline to the group label and the help text", async () => {
+      const wrapper = mount(FzRadioGroup, {
+        props: { label: "Radio Group", size: "md", name: "radio" },
+        slots: { help: () => "Some help text" },
+      });
+      await wrapper.vm.$nextTick();
+      // group <label> and help <p> must not pick up Bootstrap reboot's
+      // `label`/`p` bottom margin in hosts without Tailwind preflight.
+      expect(wrapper.find("label").classes()).toContain("mb-0");
+      expect(wrapper.find("p").classes()).toContain("mb-0");
+    });
   });
 
   // ============================================
