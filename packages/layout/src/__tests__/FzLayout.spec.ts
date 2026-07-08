@@ -407,6 +407,49 @@ describe("FzLayout", () => {
         expect(wrapper.classes()).not.toContain("fz-layout--hasFooter");
       });
     });
+
+    describe("disablePadding prop", () => {
+      it("should apply p-12 to regions by default (padding is opt-out)", async () => {
+        const wrapper = mount(FzLayout, {
+          props: {
+            layout: "oneColumnHeader",
+          },
+          slots: {
+            header: "<div>Header</div>",
+            default: "<div>Main</div>",
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+        expect(wrapper.find(".fz-layout__header").classes()).toContain("p-12");
+        expect(wrapper.find(".fz-layout__main").classes()).toContain("p-12");
+      });
+
+      it("should omit p-12 from regions when disablePadding is true", async () => {
+        const wrapper = mount(FzLayout, {
+          props: {
+            layout: "oneColumnHeader",
+            disablePadding: true,
+          },
+          slots: {
+            header: "<div>Header</div>",
+            default: "<div>Main</div>",
+          },
+        });
+
+        await wrapper.vm.$nextTick();
+        expect(wrapper.find(".fz-layout__header").classes()).not.toContain(
+          "p-12",
+        );
+        expect(wrapper.find(".fz-layout__main").classes()).not.toContain(
+          "p-12",
+        );
+        // Region markers and scroll behaviour are unaffected by padding opt-out.
+        expect(wrapper.find(".fz-layout__main").classes()).toContain(
+          "fz-layout__overflow",
+        );
+      });
+    });
   });
 
   // ============================================
@@ -838,9 +881,9 @@ describe("FzLayout", () => {
       expect(wrapper.find(".fz-layout__main").exists()).toBe(true);
     });
 
-    it("should handle window resize events", async () => {
-      const resizeSpy = vi.spyOn(window, "addEventListener");
-      const removeSpy = vi.spyOn(window, "removeEventListener");
+    it("should track the viewport via matchMedia, not a window resize handler", async () => {
+      const addSpy = vi.spyOn(window, "addEventListener");
+      const matchMediaSpy = vi.spyOn(window, "matchMedia");
 
       const wrapper = mount(FzLayout, {
         props: {
@@ -852,14 +895,18 @@ describe("FzLayout", () => {
       });
 
       await wrapper.vm.$nextTick();
-      expect(resizeSpy).toHaveBeenCalledWith("resize", expect.any(Function));
+      // Breakpoint resolution now flows through useBreakpoints/matchMedia; the
+      // component no longer owns a bespoke window "resize" listener.
+      expect(matchMediaSpy).toHaveBeenCalled();
+      expect(addSpy.mock.calls.some(([event]) => event === "resize")).toBe(
+        false,
+      );
 
-      wrapper.unmount();
-      await wrapper.vm.$nextTick();
-      expect(removeSpy).toHaveBeenCalledWith("resize", expect.any(Function));
+      // Unmounts without throwing.
+      expect(() => wrapper.unmount()).not.toThrow();
 
-      resizeSpy.mockRestore();
-      removeSpy.mockRestore();
+      addSpy.mockRestore();
+      matchMediaSpy.mockRestore();
     });
 
     it("should handle different breakpoint values", async () => {
@@ -934,6 +981,48 @@ describe("FzLayout", () => {
       await toggleBtn.trigger("click");
       await wrapper.vm.$nextTick();
       expect(wrapper.exists()).toBe(true);
+    });
+
+    it("should ignore breakpoint tokens outside its own scale (e.g. `desktop`)", async () => {
+      // Simulate a ~1200px viewport: every breakpoint up to and including
+      // 1200px matches, xl (1280px) does not. The shared scale carries a
+      // `desktop` (1200px) token, but FzLayout must resolve to `lg` — the
+      // largest breakpoint name its scoped CSS actually defines a grid for.
+      Object.defineProperty(window, "matchMedia", {
+        writable: true,
+        configurable: true,
+        value: vi.fn((query: string) => {
+          const min = /min-width:\s*(\d+)px/.exec(query);
+          const matches = min ? 1200 >= parseInt(min[1], 10) : false;
+          return {
+            matches,
+            media: query,
+            onchange: null,
+            addListener: vi.fn(),
+            removeListener: vi.fn(),
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            dispatchEvent: vi.fn(),
+          };
+        }),
+      });
+
+      const wrapper = mount(FzLayout, {
+        props: {
+          layout: "oneColumn",
+        },
+        slots: {
+          default: "<div>Content</div>",
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+      expect(wrapper.classes()).toContain("fz-layout__oneColumn--lg");
+      expect(
+        wrapper
+          .classes()
+          .some((cls) => cls === "fz-layout__oneColumn--desktop"),
+      ).toBe(false);
     });
 
     it("should handle all layout variants without errors", async () => {

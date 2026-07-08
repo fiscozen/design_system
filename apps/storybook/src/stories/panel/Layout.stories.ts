@@ -812,4 +812,35 @@ export const ThreeColumnsDesktop: StoryObj<typeof meta> = {
   }
 }
 
+export const DisablePadding: StoryObj<typeof meta> = {
+  render: oneColumnHeader,
+  args: {
+    layout: 'oneColumnHeader',
+    disablePadding: true
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify layout renders correctly', async () => {
+      const layout = canvasElement.querySelector('.fz-layout')
+      await expect(layout).toBeInTheDocument()
+      await expect(layout).toBeVisible()
+    })
+
+    await step('Verify regions omit the default p-12 padding', async () => {
+      const header = canvasElement.querySelector('.fz-layout__header')
+      const main = canvasElement.querySelector('.fz-layout__main')
+      await expect(header).toBeInTheDocument()
+      await expect(main).toBeInTheDocument()
+      await expect(header).not.toHaveClass('p-12')
+      await expect(main).not.toHaveClass('p-12')
+    })
+
+    await step('Verify slot content is still displayed', async () => {
+      await expect(canvas.getByText('header')).toBeVisible()
+      await expect(canvas.getByText('main')).toBeVisible()
+    })
+  }
+}
+
 export default meta

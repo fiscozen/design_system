@@ -1310,6 +1310,10 @@
       "value": "1024px",
       "type": "sizing"
     },
+    "desktop": {
+      "value": "1200px",
+      "type": "sizing"
+    },
     "xl": {
       "value": "1280px",
       "type": "sizing"

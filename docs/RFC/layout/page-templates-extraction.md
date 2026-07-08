@@ -4,7 +4,8 @@
 **Start Date:** 2026-07-08
 **Author:** Riccardo Agnoletto
 **Related components/issues:** `@fiscozen/layout` (`FzLayout`), `@fiscozen/container` (`FzContainer`); frontoffice `layouts/*` + backoffice `AppContent/Page`. Jira ticket TBD (placeholder branch).
-**Status:** Draft — under review. Reviewed once by independent architecture + senior-engineer passes; decisions in §10 are locked.
+**Status:** **Accepted** (2026-07-08). Reviewed by independent architecture + senior-engineer passes; decisions in §10 are locked. Implementation underway — **Phase 0 (DS unblock) complete**.
+**Operational log:** execution progress, per-phase decisions, and verification evidence are tracked in [`page-templates-extraction-oplog.md`](./page-templates-extraction-oplog.md).
 
 ## Summary
 
@@ -147,6 +148,8 @@ Reconciling `disableViewport`→`isViewport` must map **`disableViewport:true` �
 ---
 
 ## 8. Migration phases (staged, cross-repo) — **[R] reordered**
+
+> **Execution status is tracked in the [operational log](./page-templates-extraction-oplog.md).** As of 2026-07-08: Phase 0 ✅ complete (DS repo); Phases A + 2–5 require the separate `fiscozen-app` repo.
 
 Cross-repo sequencing: `@fiscozen/layout` is separately published. Each DS-touching phase = DS PR → changeset (minor) → merge/publish → app PR bumps dep + migrates. Fewest cleanly-cleaving stacked PRs per repo.
 

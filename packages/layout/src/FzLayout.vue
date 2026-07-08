@@ -1,31 +1,38 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { FzLayoutProps } from "./types";
 import { breakpoints } from "@fiscozen/style";
 import { useBreakpoints } from "@fiscozen/composables";
 
 const props = withDefaults(defineProps<FzLayoutProps>(), {});
 
-const emit = defineEmits([]);
+// FzLayout's responsive grid is defined against a fixed set of breakpoint names
+// (its scoped CSS enumerates `--xs` … `--3xl`). It intentionally resolves only
+// over these, ignoring any additional tokens in the shared scale (e.g.
+// `desktop`), so that adding a breakpoint to `@fiscozen/style` cannot silently
+// shift the grid or produce a `--<name>` class the stylesheet has no rule for.
+const LAYOUT_BREAKPOINT_NAMES = [
+  "xs",
+  "sm",
+  "md",
+  "lg",
+  "xl",
+  "2xl",
+  "3xl",
+] as const;
+const layoutBreakpoints = Object.fromEntries(
+  LAYOUT_BREAKPOINT_NAMES.filter((name) => name in breakpoints).map((name) => [
+    name,
+    breakpoints[name as keyof typeof breakpoints],
+  ]),
+) as Record<(typeof LAYOUT_BREAKPOINT_NAMES)[number], `${number}px`>;
 
-const currentBreakpoint = ref("");
-const getCurrentBreakpoint = () => {
-  const activeBreakpoints = Object.entries(breakpoints).filter(
-    ([key, value]) => window.innerWidth >= parseInt(value),
-  );
-  currentBreakpoint.value = activeBreakpoints[activeBreakpoints.length - 1][0];
-};
-const { isGreater } = useBreakpoints(breakpoints);
-
-onMounted(() => {
-  getCurrentBreakpoint();
-  window.addEventListener("resize", getCurrentBreakpoint);
-});
-onUnmounted(() => {
-  window.removeEventListener("resize", getCurrentBreakpoint);
-});
+const { isGreater, current } = useBreakpoints(layoutBreakpoints);
+const currentBreakpoint = current();
 
 const visibleTrigger = ref(true);
+
+const paddingClass = computed(() => (props.disablePadding ? "" : "p-12"));
 
 const layoutClass = computed(() => {
   let res = undefined;
@@ -79,47 +86,47 @@ const sidebarToggle = () => {
 <template>
   <div class="fz-layout grid" :class="layoutClass">
     <template v-if="props.layout === 'oneColumn'">
-      <div class="fz-layout__main p-12 fz-layout__overflow">
+      <div :class="['fz-layout__main', paddingClass, 'fz-layout__overflow']">
         <slot></slot>
       </div>
     </template>
     <template v-if="props.layout === 'oneColumnHeader'">
-      <div class="fz-layout__header p-12">
+      <div :class="['fz-layout__header', paddingClass]">
         <slot name="header"></slot>
       </div>
-      <div class="fz-layout__main p-12 fz-layout__overflow">
+      <div :class="['fz-layout__main', paddingClass, 'fz-layout__overflow']">
         <slot></slot>
       </div>
     </template>
     <template v-if="props.layout === 'twoColumns'">
-      <div class="fz-layout__header p-12">
+      <div :class="['fz-layout__header', paddingClass]">
         <slot name="header"></slot>
       </div>
-      <div class="fz-layout__left p-12">
+      <div :class="['fz-layout__left', paddingClass]">
         <slot name="left"></slot>
       </div>
-      <div class="fz-layout__right p-12">
+      <div :class="['fz-layout__right', paddingClass]">
         <slot name="right"></slot>
       </div>
     </template>
     <template v-if="['leftShoulder', 'rightShoulder'].includes(props.layout)">
-      <div class="fz-layout__sidebar p-12">
+      <div :class="['fz-layout__sidebar', paddingClass]">
         <slot name="sidebar" :sidebarToggle></slot>
       </div>
-      <div class="fz-layout__main p-12">
+      <div :class="['fz-layout__main', paddingClass]">
         <slot :sidebarToggle></slot>
       </div>
     </template>
     <template v-if="props.layout === 'multipleAreas'">
       <div
         v-if="visibleTrigger || isGreater('sm').value"
-        class="fz-layout__header p-12"
+        :class="['fz-layout__header', paddingClass]"
       >
         <slot name="header" :sidebarToggle></slot>
       </div>
       <div
         v-if="visibleTrigger && ['xs', 'sm', 'md'].includes(currentBreakpoint)"
-        class="fz-layout__sidebarTrigger p-12"
+        :class="['fz-layout__sidebarTrigger', paddingClass]"
       >
         <slot name="sidebarTrigger" :sidebarToggle></slot>
       </div>
@@ -128,34 +135,37 @@ const sidebarToggle = () => {
           !visibleTrigger ||
           ['lg', 'xl', '2xl', '3xl'].includes(currentBreakpoint)
         "
-        class="fz-layout__sidebar p-12"
+        :class="['fz-layout__sidebar', paddingClass]"
       >
         <slot name="sidebar" :sidebarToggle></slot>
       </div>
       <div
         v-if="visibleTrigger || isGreater('sm').value"
-        class="fz-layout__main p-12 fz-layout__overflow"
+        :class="['fz-layout__main', paddingClass, 'fz-layout__overflow']"
       >
         <slot></slot>
       </div>
     </template>
     <template v-if="props.layout === 'threeColumns'">
-      <div class="fz-layout__menuBar p-12">
+      <div :class="['fz-layout__menuBar', paddingClass]">
         <slot name="menuBar"></slot>
       </div>
-      <div class="fz-layout__header p-12">
+      <div :class="['fz-layout__header', paddingClass]">
         <slot name="header"></slot>
       </div>
       <div
         v-if="['lg', 'xl', '2xl', '3xl'].includes(currentBreakpoint)"
-        class="fz-layout__chat p-12"
+        :class="['fz-layout__chat', paddingClass]"
       >
         <slot name="chat"></slot>
       </div>
-      <div class="fz-layout__main p-12 fz-layout__overflow">
+      <div :class="['fz-layout__main', paddingClass, 'fz-layout__overflow']">
         <slot></slot>
       </div>
-      <div v-if="props.hasBottomBar" class="fz-layout__footer p-12">
+      <div
+        v-if="props.hasBottomBar"
+        :class="['fz-layout__footer', paddingClass]"
+      >
         <slot name="footer"></slot>
       </div>
     </template>
