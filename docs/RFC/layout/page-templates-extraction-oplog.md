@@ -75,7 +75,123 @@ packages/eslint-config/index.js
 
 ---
 
+## 2026-07-08 — Phase 1 (DS: `FzBlankTemplate` + first region) — ✅ COMPLETE
+
+Branch: `docs/layout-page-templates-plan`.
+
+### Decisions taken during implementation
+- **Just-in-time really means one region, not five.** Only `FzLayoutMain` was built — the sole region `FzBlankTemplate` consumes. `FzLayoutHeader`/`Aside`/`Footer`/`BottomBar` are deferred to their first template consumers (Phases 2–3), honouring §3's "built just-in-time … not as a speculative library."
+- **`FzLayoutMain` API scoped to the blank template's needs only:** `as` (semantic `<main>` landmark by default, overridable so a page never exposes two `main`s), `align` (`stretch`/`top`/`center`), `safeArea` (`env(safe-area-inset-*)` insets). Padding / internal scroll / max-width / sticky are intentionally **not** added yet — they arrive JIT when the focus/app-shell templates need them (Phases 2–3). Because `FzLayoutMain` is brand-new with **zero consumers**, padding polarity was chosen as explicit **opt-in** (added later, default off), rather than `FzLayout`'s legacy opt-out — no back-compat constraint applies.
+- **`FzBlankTemplate` owns a full-height root (`min-h-dvh`)** to make §6.2's host contract *explicit* instead of silently depending on app-global `#app{height:100%}` / `overflow-y:auto`. Used `min-h` (not fixed `h`) so content taller than the viewport stays reachable when centered — avoids the classic flexbox "centered overflow clips the top" bug. Safe-area is **always on** for this template (it is the outermost full-screen shell and covers auth/login on notched/Capacitor devices).
+- **File layout:** new components kept **flat in `src/`** (`FzLayoutMain.vue`, `FzBlankTemplate.vue`), matching the package's existing `FzLayout.vue` and the DS `FzTab.vue`/`FzTabs.vue` multi-component convention — no subfolder.
+- **No `__fzKind` markers:** neither the template nor the region filters slot children by type, so the CLAUDE.md container-slot-identification convention does not apply here.
+
+### Slice 1 — `FzLayoutMain` region molecule — ✅
+- `packages/layout/src/FzLayoutMain.vue`: **new.** Renders `<component :is="as">` (default `main`), flex-column with `align`-driven cross/main-axis classes and an `env()`-based `--safe-area` class. Plain scoped CSS + `env()` only (no `@apply`), so it is fully processed at package build time.
+- `packages/layout/src/types.ts`: added `FzLayoutAlign`, `FzLayoutMainProps`, `FzLayoutMainSlots` (JSDoc per convention).
+- `packages/layout/src/__tests__/FzLayoutMain.spec.ts`: **new.** Semantic `<main>` landmark, `as` override, slot rendering, align variants, safe-area toggle, aria-forwarding, no-events.
+
+### Slice 2 — `FzBlankTemplate` page template — ✅
+- `packages/layout/src/FzBlankTemplate.vue`: **new.** Composes `FzLayoutMain` as its full-height root (`min-h-dvh`), maps `align` (`center`|`top`) onto the region, safe-area always on.
+- `packages/layout/src/types.ts`: added `FzBlankTemplateProps`, `FzBlankTemplateSlots`.
+- `packages/layout/src/__tests__/FzBlankTemplate.spec.ts`: **new.** Slot rendering, single-`main`/no-chrome composition, full-height root, safe-area, align mapping, no-events.
+- `packages/layout/src/index.ts`: export `FzLayoutMain`, `FzBlankTemplate`.
+
+### Slice 3 — Stories (play + a11y + Chromatic source) — ✅
+- `apps/storybook/src/stories/templates/FzLayoutMain.stories.ts`: **new.** `Stretch`/`Centered`/`TopAligned`/`SafeArea`/`AsDiv`; play functions assert the `main` landmark via `getByRole('main')` and align/safe-area/tag behaviour.
+- `apps/storybook/src/stories/templates/FzBlankTemplate.stories.ts`: **new.** `Centered`/`TopAligned` with a sample login card; play functions assert single `main`, full-height root, centering, and absence of nav/header/aside/footer chrome. `layout: 'fullscreen'` so Chromatic captures the true full-bleed shape.
+
+### Verification
+- `pnpm --filter @fiscozen/layout test:unit` → **84/84 pass** (64 pre-existing `FzLayout`, unchanged, + 20 new). No `FzLayout` snapshot churn → the additive change did not perturb the existing grid primitive.
+- Storybook play tests (real Chromium): `vitest --project=storybook src/stories/templates` → **7/7 pass** across the 2 new story files.
+- `pnpm --filter @fiscozen/layout build` → `dist/` emitted (`layout.js` 32.33 kB). The `[lightningcss] Unknown at rule: @apply` warnings are **pre-existing** (from `FzLayout.vue`, processed by the consuming app's Tailwind); the new components emit none.
+
+### Changesets
+- `.changeset/layout-phase1-blank-template.md` — `@fiscozen/layout` minor (additive).
+
+### Files touched
+```
+packages/layout/src/FzLayoutMain.vue                         (new)
+packages/layout/src/FzBlankTemplate.vue                      (new)
+packages/layout/src/types.ts
+packages/layout/src/index.ts
+packages/layout/src/__tests__/FzLayoutMain.spec.ts           (new)
+packages/layout/src/__tests__/FzBlankTemplate.spec.ts        (new)
+packages/layout/README.md
+apps/storybook/src/stories/templates/FzLayoutMain.stories.ts     (new)
+apps/storybook/src/stories/templates/FzBlankTemplate.stories.ts  (new)
+.changeset/layout-phase1-blank-template.md                   (new)
+docs/RFC/layout/page-templates-extraction.md                 (status)
+docs/RFC/layout/page-templates-extraction-oplog.md
+```
+
+### Not done in Phase 1 (deliberately)
+- Other region molecules (`FzLayoutHeader/Aside/Footer/BottomBar`) and the `FzFocusTemplate`/`FzAppTemplate`/`FzMasterDetailTemplate` templates — deferred to Phases 2–5, built just-in-time with their first consumer.
+- App-side migrations (Phases A, 2–5) — blocked on the separate `fiscozen-app` repo.
+
+---
+
+## 2026-07-08 — Phase 2 (DS side: `FzFocusTemplate` + flow regions) — ✅ COMPLETE
+
+Branch: `docs/layout-page-templates-plan`. **DS deliverable only** — the FO `FocusLayout.vue` → adapter migration is app-side (⛔ separate `fiscozen-app` repo).
+
+### Decisions taken during implementation
+- **Three regions built JIT, `FzLayoutMain` reused, bottom-bar deferred.** `FzFocusTemplate`'s slots map to `FzLayoutHeader` (topbar), the existing `FzLayoutMain` (centered content), `FzLayoutAside` (aside) and `FzLayoutFooter` (footer). `FzLayoutBottomBar` is **not** built — it has no consumer until the app-shell (Phase 3).
+- **Regions kept deliberately thin (`as` only).** Each renders its landmark element (`<header>`/`<aside>`/`<footer>`) + a stable class hook; sizing/padding is applied by the composing template via fall-through attributes. No `safeArea`/padding/sticky props yet — those are added JIT when a template needs them.
+- **Safe-area handled once at the template root, not per region.** `FzFocusTemplate`'s root carries all-4 `env(safe-area-inset-*)` insets. Per-region *directional* safe-area (e.g. a sticky topbar whose background must bleed under the notch while its content is inset) is a genuinely different requirement and is deferred JIT to Phase 3 (app-shell). This is why the new regions carry no `safeArea` prop while `FzLayoutMain` (built for the full-screen blank template) does.
+- **`chrome` default = `card`.** Onboarding — the primary `FocusLayout` consumer — presents its flow in a contained card; auth is the explicit `chrome="flat"` variant (matches §4's framing of auth as the special-cased branch). Card styling is applied via **bound Tailwind utilities** (`bg-core-white rounded-lg shadow p-24 max-w-[640px]`) plus a BEM marker class (`fz-focus-template__content--card`) for test stability — avoids relying on `@apply` that is left unprocessed in the package's own `dist` CSS.
+- **Aside is responsive but not an overlay.** It stacks below the content on narrow viewports and sits beside it (`lg:w-[360px]`) from `lg` up. The mobile slide-in **overlay** with focus-trap + `aria-modal`/Escape (§4/§6.1) is `FzAppTemplate`'s concern and is deferred to Phase 3 — the focus flow's aside is a plain complementary region.
+- **Full-height root `min-h-dvh`** (not fixed `h`), same reasoning as `FzBlankTemplate` (overflowing content stays reachable when centered).
+
+### Slice 1 — flow region molecules — ✅
+- `packages/layout/src/FzLayoutHeader.vue`, `FzLayoutAside.vue`, `FzLayoutFooter.vue`: **new.** Thin `<component :is="as">` wrappers (default `header`/`aside`/`footer`) with base classes `fz-layout-header`/`-aside`/`-footer`.
+- `packages/layout/src/types.ts`: added `FzLayoutRegionProps`/`Slots` (shared) and the six per-region type aliases.
+- `packages/layout/src/__tests__/FzLayoutRegions.spec.ts`: **new**, `describe.each` over the three — landmark element, slot, `as` override, attr-forwarding, no-events.
+
+### Slice 2 — `FzFocusTemplate` — ✅
+- `packages/layout/src/FzFocusTemplate.vue`: **new.** `min-h-dvh` flex-column root (topbar / body / footer); body is `flex-col lg:flex-row` (main + optional aside); optional regions render only when their slot is provided (`slots.topbar`/`aside`/`footer`); `chrome` drives the content frame; root scoped style applies safe-area insets.
+- `packages/layout/src/types.ts`: added `FzFocusChrome`, `FzFocusTemplateProps`, `FzFocusTemplateSlots`.
+- `packages/layout/src/__tests__/FzFocusTemplate.spec.ts`: **new** — centered main, full-height root, conditional topbar/aside/footer landmarks, `chrome` card/flat mapping (+ default), no-events.
+- `packages/layout/src/index.ts`: export the 3 regions + `FzFocusTemplate`.
+
+### Slice 3 — Stories (play + a11y + Chromatic source) — ✅
+- `apps/storybook/src/stories/templates/FzFocusTemplate.stories.ts`: **new.** `Card`/`Flat`/`WithTopbarAsideFooter`; play functions assert the centered `main`, the card/flat frame, the full-height root, and — with all slots filled — the `banner`/`main`/`complementary`/`contentinfo` landmarks via `getByRole`. `layout: 'fullscreen'`.
+- `apps/storybook/src/stories/templates/FzLayoutRegions.stories.ts`: **new.** `Header`/`Aside`/`Footer` isolated, each asserting its landmark role + class + content.
+
+### Verification
+- `pnpm --filter @fiscozen/layout test:unit` → **109/109 pass** (84 from Phases 0/1, unchanged, + 25 new). No `FzLayout` snapshot churn.
+- Storybook play tests (real Chromium): `vitest --project=storybook src/stories/templates` → **13/13 pass** across the 4 template story files. `getByRole('banner'|'complementary'|'contentinfo')` resolve, confirming the landmark semantics render as intended.
+- `pnpm --filter @fiscozen/layout build` → `vue-tsc` clean (declaration files built, no type errors), `dist/` emitted (`layout.js` 34.51 kB). New components emit **no** `@apply` warnings (only the pre-existing `FzLayout.vue` ones remain).
+
+### Changesets
+- `.changeset/layout-phase2-focus-template.md` — `@fiscozen/layout` minor (additive).
+
+### Files touched
+```
+packages/layout/src/FzLayoutHeader.vue                          (new)
+packages/layout/src/FzLayoutAside.vue                           (new)
+packages/layout/src/FzLayoutFooter.vue                          (new)
+packages/layout/src/FzFocusTemplate.vue                         (new)
+packages/layout/src/types.ts
+packages/layout/src/index.ts
+packages/layout/src/__tests__/FzLayoutRegions.spec.ts          (new)
+packages/layout/src/__tests__/FzFocusTemplate.spec.ts          (new)
+packages/layout/README.md
+apps/storybook/src/stories/templates/FzFocusTemplate.stories.ts  (new)
+apps/storybook/src/stories/templates/FzLayoutRegions.stories.ts  (new)
+.changeset/layout-phase2-focus-template.md                     (new)
+docs/RFC/layout/page-templates-extraction.md                   (status)
+docs/RFC/layout/page-templates-extraction-oplog.md
+```
+
+### Not done in Phase 2 (deliberately)
+- `FzLayoutBottomBar` region and the mobile aside **overlay** (focus-trap/`aria-modal`/Escape) — deferred to Phase 3 (`FzAppTemplate`), built JIT.
+- The FO `FocusLayout.vue` → thin-adapter migration (auth → explicit `chrome="flat"`), and WebKit/onboarding verification — **app-side**, blocked on the separate `fiscozen-app` repo.
+
+---
+
 ## Next
 
-- 🔜 **Phase 1 (DS):** build region molecules (`FzLayoutHeader/Main/Aside/Footer/BottomBar`) **just-in-time** for their first consumer + `FzBlankTemplate`; unit + Storybook play + a11y + Chromatic; publish minor (§8, §3, §9).
-- ⛔ **Phases A, 2–5 (apps):** require the `fiscozen-app` repo. Hand off with: the DS `desktop` token is available; the ESLint guard will flag legacy `breakpoints.*=` mutations once the app bumps `@fiscozen/eslint-config`.
+The DS side of Phases 0–2 is complete (above). **Phase 3 onward is tracked in a second log:** [`page-templates-extraction-oplog-2.md`](./page-templates-extraction-oplog-2.md) — it opens the `FzAppTemplate` stream, which is **gated on the §4 bottom-bar ADR** (teleport ownership + geometry) and introduces `FzLayoutBottomBar`, the mobile-aside overlay a11y, and sticky chrome + per-region directional safe-area.
+
+Hand-off state for the `fiscozen-app` repo: DS `desktop` token available; the ESLint guard flags legacy `breakpoints.*=` once the app bumps `@fiscozen/eslint-config`; `FzBlankTemplate` (login/tools) and `FzFocusTemplate` (onboarding/auth) are published-ready.

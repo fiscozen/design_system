@@ -4,8 +4,8 @@
 **Start Date:** 2026-07-08
 **Author:** Riccardo Agnoletto
 **Related components/issues:** `@fiscozen/layout` (`FzLayout`), `@fiscozen/container` (`FzContainer`); frontoffice `layouts/*` + backoffice `AppContent/Page`. Jira ticket TBD (placeholder branch).
-**Status:** **Accepted** (2026-07-08). Reviewed by independent architecture + senior-engineer passes; decisions in §10 are locked. Implementation underway — **Phase 0 (DS unblock) complete**.
-**Operational log:** execution progress, per-phase decisions, and verification evidence are tracked in [`page-templates-extraction-oplog.md`](./page-templates-extraction-oplog.md).
+**Status:** **Accepted** (2026-07-08). Reviewed by independent architecture + senior-engineer passes; decisions in §10 are locked. Implementation underway — **DS-side of Phases 0–2 complete** (Phase 0 unblock; Phase 1 `FzBlankTemplate` + `FzLayoutMain`; Phase 2 `FzFocusTemplate` + `FzLayoutHeader`/`Aside`/`Footer`). App migrations (Phase A, and the app halves of 2–5) remain, in the separate `fiscozen-app` repo.
+**Operational log:** execution progress, per-phase decisions, and verification evidence are tracked in [`page-templates-extraction-oplog.md`](./page-templates-extraction-oplog.md) (Phases 0–2, DS side ✅) and its continuation [`page-templates-extraction-oplog-2.md`](./page-templates-extraction-oplog-2.md) (Phase 3 `FzAppTemplate` stream — gated on the §4 bottom-bar ADR).
 
 ## Summary
 
@@ -149,7 +149,7 @@ Reconciling `disableViewport`→`isViewport` must map **`disableViewport:true` �
 
 ## 8. Migration phases (staged, cross-repo) — **[R] reordered**
 
-> **Execution status is tracked in the [operational log](./page-templates-extraction-oplog.md).** As of 2026-07-08: Phase 0 ✅ complete (DS repo); Phases A + 2–5 require the separate `fiscozen-app` repo.
+> **Execution status is tracked in the [operational log](./page-templates-extraction-oplog.md).** As of 2026-07-08: DS side of Phase 0 ✅, Phase 1 ✅ (`FzLayoutMain` + `FzBlankTemplate`) and Phase 2 ✅ (`FzLayoutHeader`/`Aside`/`Footer` + `FzFocusTemplate`) complete in the DS repo. The DS side of Phase 3 (`FzAppTemplate`) is gated on the §4 bottom-bar ADR; all app migrations (Phase A + the app halves of Phases 2–5) require the separate `fiscozen-app` repo.
 
 Cross-repo sequencing: `@fiscozen/layout` is separately published. Each DS-touching phase = DS PR → changeset (minor) → merge/publish → app PR bumps dep + migrates. Fewest cleanly-cleaving stacked PRs per repo.
 
