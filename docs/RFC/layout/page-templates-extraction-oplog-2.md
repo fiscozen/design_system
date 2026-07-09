@@ -19,13 +19,26 @@ This second log opens the **Phase 3 (`FzAppTemplate`) stream**, which the RFC ga
 
 ---
 
-## 2026-07-08 — Phase 3 (`FzAppTemplate`) — 🧭 GATED (ADR pending) · not started
+## 2026-07-09 — Bottom-bar mini-ADR — ✅ RESOLVED (Phase 3 ungated)
 
-### Why it is gated
-§4 requires the **bottom-bar mini-ADR resolved before Phase 3**. Two facets must both be decided:
+The §4 gate is cleared. Full decision record: [`bottom-bar-adr.md`](./bottom-bar-adr.md). Both facets confirmed with the author, grounded in the actual FO source (`it_fiscozen_app/frontoffice`: `BottomBar.vue`, `usePageTitle.ts`, `useBottomBarState.ts`, `StandardLayout.vue`).
 
-- 🧭 **(a) Teleport ownership.** Today `TELEPORT_BOTTOM_BAR_ID = 'fz-layout-bottom-bar'` is **app-owned** (`usePageTitle.ts`), and `BottomBar.vue` teleports into it via a CSS selector that **soft-fails silently** if unmatched. Decide: DS guarantees a stable documented ID forever, **or** `FzAppTemplate` exposes the target via a `defineExpose`d ref the app threads into its own `<Teleport :to>`. RFC **prefers the exposed-ref form** (keeps the package from owning a magic string).
-- 🧭 **(b) Geometry.** With nav/aside as opaque app slots, the template cannot know rail widths. Either rail widths become **explicit props**, or the bar is **full-width and the app pads it**.
+- ✅ **(a) Teleport ownership → provide/inject.** `FzLayoutBottomBar` owns the target element and `provide()`s its ref under the namespaced string key `FZ_BOTTOM_BAR_TARGET = '@fiscozen/layout/bottomBarTarget'` (matching the repo's provide/inject anti-fragility convention). The app injects + owns its own `<Teleport>` + `<BottomBar>` content; the app-owned `TELEPORT_BOTTOM_BAR_ID` magic string is deleted. No hardcoded DOM id as public API; silent soft-fail becomes an explicit inject-miss.
+- ✅ **(b) Geometry → sticky region in the main column.** `FzAppTemplate` places `FzLayoutBottomBar` as `position: sticky; bottom: 0` inside the main track, so the layout engine computes alignment — **no rail-width knowledge, no `clamp()` duplication**. Dissolves both the `pb-[80px]`/`useBottomBarState` reservation hack and the latent `320→380` rail-mismatch bug found in the current target (documented in the ADR §1). Must preserve `overflow-x: clip` + the full-height host contract (§6.2) and verify sticky on WebKit.
+
+### ADR consequences for Phase 3
+- **DS:** add `keys.ts` (`FZ_BOTTOM_BAR_TARGET`, re-exported from `index.ts`); build `FzLayoutBottomBar` (JIT) provided by/placed in `FzAppTemplate`; `hasBottomBar` becomes optional/advisory (region self-collapses when empty). Playwright/WebKit sticky coverage + injection-key lock-in test.
+- **App (⛔ `fiscozen-app`):** `BottomBar.vue` injects the key + null-guards `<Teleport>`; `StandardLayout.vue` adapter drops the `fixed` target, its `clamp()` insets, the `pb-[80px]` toggle; delete `TELEPORT_BOTTOM_BAR_ID` from `usePageTitle.ts` and retire `useBottomBarState.ts`.
+
+---
+
+## 2026-07-08 — Phase 3 (`FzAppTemplate`) — 🔜 UNGATED (ADR resolved 2026-07-09) · not started
+
+### Gate history (resolved)
+§4 required the **bottom-bar mini-ADR resolved before Phase 3**. Both facets are now decided in [`bottom-bar-adr.md`](./bottom-bar-adr.md) — see the 2026-07-09 entry above. Original framing, for reference:
+
+- 🧭→✅ **(a) Teleport ownership.** Today `TELEPORT_BOTTOM_BAR_ID = 'fz-layout-bottom-bar'` is **app-owned** (`usePageTitle.ts`), and `BottomBar.vue` teleports into it via a CSS selector that **soft-fails silently** if unmatched. **Decided: provide/inject the target ref** (the §4 "exposed-ref" form, keeps the package from owning a magic string).
+- 🧭→✅ **(b) Geometry.** With nav/aside as opaque app slots, the template cannot know rail widths. **Decided: sticky region in the main column** — geometry computed by the layout engine, no rail-width props, no app padding.
 
 ### Phase 3 scope (once ungated)
 - **`FzLayoutBottomBar`** region — built JIT; `FzAppTemplate` is its first consumer.
@@ -48,5 +61,6 @@ This second log opens the **Phase 3 (`FzAppTemplate`) stream**, which the RFC ga
 
 ## Next
 
-- 🧭 **Draft the bottom-bar ADR** — both facets (teleport ownership + geometry), each with options + a recommendation. This is the immediate gate before any Phase 3 code. Working recommendation: exposed-ref teleport form; geometry TBD in the ADR.
-- 🔜 **After the ADR:** build `FzLayoutBottomBar` + `FzAppTemplate` (DS side) here; hand the app halves (FO `StandardLayout` adapter, Phase A chat extraction, Phase 4 BO refactor) to the `fiscozen-app` repo.
+- ✅ **Bottom-bar ADR** — done (2026-07-09), [`bottom-bar-adr.md`](./bottom-bar-adr.md). Phase 3 is ungated.
+- 🔜 **Build the DS side of Phase 3 (LIB-2692):** `keys.ts` (`FZ_BOTTOM_BAR_TARGET`) → `FzLayoutBottomBar` region → `FzAppTemplate` (sticky bar in main column, provide/inject target, mobile-aside overlay a11y, sticky chrome + per-region directional safe-area). Unit + Storybook play + a11y + Chromatic + Playwright/WebKit sticky. Changeset: `@fiscozen/layout` minor (additive).
+- ⛔ **App halves (`fiscozen-app` repo):** FO `StandardLayout` → adapter (inject the target, drop the `fixed`/`clamp()` target + `pb-[80px]` + `useBottomBarState`); Phase A `SupportChatPanel` extraction; Phase 4 BO refactor.
