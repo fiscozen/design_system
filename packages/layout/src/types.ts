@@ -221,16 +221,17 @@ type FzAppContentWidth = 'standard' | 'wide' | 'full'
 
 /**
  * Toggle state + actions the template exposes to its `nav`, `header` and `aside`
- * slots, so the app's injected chrome (a hamburger, a chat button, …) can drive
- * the responsive nav/aside without owning the responsive state itself (RFC §4).
+ * slots, so the app's injected chrome (a chat/support button, an aside close
+ * control, …) can drive the collapsible `aside` without owning the responsive
+ * state itself (RFC §4).
+ *
+ * Only the `aside` is here: the nav owns its own responsive/menu state (the
+ * frontoffice nav is `FzNavbar`, which renders its own rail / mobile bar +
+ * hamburger), so the template exposes no `navOpen`/`toggleNav`.
  */
 type FzAppTemplateToggles = {
   /** `true` from the `desktop` breakpoint (1200px) up. */
   isDesktop: boolean
-  /** Whether the nav is open. Always effectively open on desktop (the rail). */
-  navOpen: boolean
-  /** Open/close the nav. Pass a boolean to force a state; omit to toggle. */
-  toggleNav: (force?: boolean) => void
   /** Whether the aside is open. */
   asideOpen: boolean
   /** Open/close the aside. Pass a boolean to force a state; omit to toggle. */
@@ -242,15 +243,16 @@ type FzAppTemplateToggles = {
  *
  * The full-chrome page template: a persistent navigation region, an optional
  * sticky header, the primary content, an optional complementary aside, an
- * optional sticky bottom action bar, and an optional footer. Regions are placed
- * responsively — on desktop the nav is a left rail and the aside a right panel;
- * below the `desktop` breakpoint both collapse into modal drawers. Owns a
- * full-height root, so it does not depend on app-global `height`/`overflow` CSS
- * (RFC §6.2).
+ * optional sticky bottom action bar, and an optional footer. The nav is placed
+ * responsively (a left rail on desktop, a top region on mobile) but the injected
+ * nav owns its own collapse/menu — the template renders no nav drawer. Only the
+ * aside collapses: a right panel on desktop, a modal drawer below the `desktop`
+ * breakpoint. Owns a full-height root, so it does not depend on app-global
+ * `height`/`overflow` CSS (RFC §6.2).
  *
- * Presentation-only: it holds responsive/toggle state and safe-area/sticky CSS
- * but imports no store/router/API. The rail widths are a function of the
- * *injected* nav/aside content, never the template (RFC §4/§10).
+ * Presentation-only: it holds the aside's responsive/toggle state and
+ * safe-area/sticky CSS but imports no store/router/API. Rail widths are a
+ * function of the *injected* nav/aside content, never the template (RFC §4/§10).
  */
 type FzAppTemplateProps = {
   /**
@@ -280,11 +282,6 @@ type FzAppTemplateProps = {
    */
   contentWidth?: FzAppContentWidth
   /**
-   * Accessible name for the nav when it is a modal drawer (mobile). Ignored for
-   * the desktop rail (the injected nav owns its own labelling there).
-   */
-  navLabel?: string
-  /**
    * Accessible name for the aside when it is a modal drawer (mobile). Ignored
    * for the desktop panel.
    */
@@ -296,9 +293,9 @@ type FzAppTemplateProps = {
  * props (`FzAppTemplateToggles`).
  */
 type FzAppTemplateSlots = {
-  /** Persistent navigation (left rail on desktop, modal drawer on mobile). */
+  /** Persistent navigation (left rail on desktop, top region on mobile); the injected nav owns its own collapse/menu. */
   nav?(props: FzAppTemplateToggles): any
-  /** Optional sticky top bar (page title, actions, mobile hamburger/chat toggles). */
+  /** Optional sticky top bar (page title, actions, a chat/support toggle). */
   header?(props: FzAppTemplateToggles): any
   /** The page's primary content. */
   default(props: {}): any

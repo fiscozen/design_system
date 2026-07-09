@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { defineComponent, h, inject } from 'vue'
 import { expect, within } from 'storybook/test'
 import { FzAppTemplate, FzAppTemplateProps, FZ_BOTTOM_BAR_TARGET } from '@fiscozen/layout'
-import { FzButton, FzIconButton } from '@fiscozen/button'
+import { FzButton } from '@fiscozen/button'
 import { FzIcon } from '@fiscozen/icons'
 
 /**
@@ -13,9 +13,11 @@ import { FzIcon } from '@fiscozen/icons'
  *
  * From the `desktop` breakpoint (1200px) up, the nav is a sticky **left rail**
  * and the aside a sticky **right panel** — their widths follow the *injected*
- * content, never the template. Below it, nav and aside collapse into **modal
- * drawers** (one at a time) opened via the `toggleNav`/`toggleAside` slot props;
- * each drawer is a `role="dialog"` with `aria-modal`, a focus trap and
+ * content, never the template. The **nav is persistent** (a top region on
+ * mobile); the injected nav — e.g. `FzNavbar` — owns its own responsive collapse
+ * and hamburger, so the template renders no nav drawer. Only the **aside**
+ * collapses below the breakpoint, into a **modal drawer** opened via the
+ * `toggleAside` slot prop — `role="dialog"` + `aria-modal` + focus trap +
  * Escape-to-close.
  *
  * The bottom bar sits inside the main content column so it aligns to that column
@@ -70,23 +72,22 @@ const pageBody = `
 `
 
 /**
- * The default desktop shell: nav rail, a sticky header with page chrome, a
- * carded content column, and a bottom action bar (filled via the `#bottomBar`
- * slot). The header shows how the toggle slot props drive the responsive nav /
- * aside — the buttons only do something below 1200px.
+ * The default desktop shell: persistent nav rail, a sticky header with page
+ * chrome, a carded content column, and a bottom action bar (filled via the
+ * `#bottomBar` slot). The header's "Assistenza" button uses the `toggleAside`
+ * slot prop — it opens the aside drawer below 1200px.
  */
 export const Default: Story = {
   render: (args: FzAppTemplateProps) => ({
     setup() {
       return { args }
     },
-    components: { FzAppTemplate, FzButton, FzIconButton },
+    components: { FzAppTemplate, FzButton },
     template: `
       <FzAppTemplate v-bind="args" class="bg-[#f7f6f3]">
         <template #nav>${navMenu}</template>
-        <template #header="{ toggleNav, toggleAside, isDesktop }">
+        <template #header="{ toggleAside }">
           <div class="flex items-center justify-between gap-16 bg-core-white px-24 py-12">
-            <FzIconButton v-if="!isDesktop" aria-label="Apri menu" iconName="bars" variant="invisible" @click="toggleNav(true)" />
             <span class="font-medium text-core-black">Dashboard</span>
             <FzButton variant="secondary" @click="toggleAside(true)">Assistenza</FzButton>
           </div>

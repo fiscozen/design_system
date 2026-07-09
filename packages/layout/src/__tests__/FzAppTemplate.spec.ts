@@ -30,8 +30,7 @@ beforeEach(() => {
       matches: isDesktop,
       media: query,
       onchange: null,
-      addEventListener: (_: string, cb: (e: MediaQueryListEvent) => void) =>
-        changeListeners.add(cb),
+      addEventListener: (_: string, cb: (e: MediaQueryListEvent) => void) => changeListeners.add(cb),
       removeEventListener: (_: string, cb: (e: MediaQueryListEvent) => void) =>
         changeListeners.delete(cb),
       addListener: vi.fn(),
@@ -54,11 +53,11 @@ function fullSlots() {
   return {
     nav: (p: any) =>
       h('nav', { 'aria-label': 'Principale' }, [
-        h('button', { class: 'nav-toggle-aside', onClick: () => p.toggleAside() }, 'chat')
+        // The injected nav's chat control opens the aside via the toggle prop.
+        h('button', { class: 'nav-open-aside', onClick: () => p.toggleAside(true) }, 'chat')
       ]),
     header: (p: any) =>
       h('div', [
-        h('button', { class: 'open-nav', onClick: () => p.toggleNav(true) }, 'menu'),
         h('button', { class: 'open-aside', onClick: () => p.toggleAside(true) }, 'chat'),
         h('span', { class: 'is-desktop' }, String(p.isDesktop))
       ]),
@@ -93,6 +92,36 @@ describe('FzAppTemplate', () => {
       expect(wrapper.find('aside.fz-layout-aside').exists()).toBe(true)
       expect(wrapper.find('footer.fz-layout-footer').exists()).toBe(true)
       expect(wrapper.find('.fz-app-template__nav nav[aria-label="Principale"]').exists()).toBe(true)
+    })
+  })
+
+  // ============================================
+  // NAV (persistent — defers to the injected nav)
+  // ============================================
+  describe('Persistent nav', () => {
+    it('renders the nav as a sticky rail on desktop (never a dialog)', () => {
+      const wrapper = mount(FzAppTemplate, { slots: fullSlots() })
+      const nav = wrapper.find('.fz-app-template__nav')
+      expect(nav.exists()).toBe(true)
+      expect(nav.classes()).toContain('fz-app-template__nav--rail')
+      expect(nav.attributes('role')).toBeUndefined()
+    })
+
+    it('keeps the nav persistent (a top region, not a hidden drawer) on mobile', () => {
+      setViewport(false)
+      const wrapper = mount(FzAppTemplate, { slots: fullSlots() })
+      const nav = wrapper.find('.fz-app-template__nav')
+      expect(nav.exists()).toBe(true)
+      expect(nav.classes()).toContain('fz-app-template__nav--bar')
+      expect(nav.classes()).toContain('w-full')
+      // The template never turns the nav into a modal — the injected nav owns that.
+      expect(nav.attributes('role')).toBeUndefined()
+      expect(wrapper.find('nav[aria-label="Principale"]').exists()).toBe(true)
+    })
+
+    it('does not render a nav region when no nav slot is provided', () => {
+      const wrapper = mount(FzAppTemplate, { slots: { default: 'x' } })
+      expect(wrapper.find('.fz-app-template__nav').exists()).toBe(false)
     })
   })
 
@@ -172,51 +201,42 @@ describe('FzAppTemplate', () => {
       expect(wrapper.find('aside.fz-layout-aside').exists()).toBe(true)
       // The nav slot's control invokes toggleAside without error; on desktop the
       // aside is a persistent panel (the toggle drives only the mobile drawer).
-      await wrapper.find('.nav-toggle-aside').trigger('click')
+      await wrapper.find('.nav-open-aside').trigger('click')
       expect(wrapper.find('aside.fz-layout-aside').exists()).toBe(true)
     })
   })
 
   // ============================================
-  // MOBILE OVERLAYS + A11Y
+  // MOBILE ASIDE OVERLAY + A11Y
   // ============================================
-  describe('Mobile overlays', () => {
+  describe('Mobile aside overlay', () => {
     beforeEach(() => setViewport(false))
 
-    it('starts with nav and aside closed on mobile', () => {
+    it('starts with the aside closed on mobile (nav stays persistent)', () => {
       const wrapper = mount(FzAppTemplate, { props: { hasAside: true }, slots: fullSlots() })
-      expect(wrapper.find('.fz-app-template__nav').exists()).toBe(false)
       expect(wrapper.find('.fz-app-template__aside').exists()).toBe(false)
+      // Nav remains rendered as the top bar even while the aside is closed.
+      expect(wrapper.find('.fz-app-template__nav--bar').exists()).toBe(true)
     })
 
-    it('opens the nav as a modal drawer with dialog semantics + backdrop', async () => {
+    it('opens the aside as a modal drawer with dialog semantics + backdrop', async () => {
       const wrapper = mount(FzAppTemplate, {
-        props: { navLabel: 'Menu' },
+        props: { hasAside: true, asideLabel: 'Assistenza' },
         slots: fullSlots()
       })
-      await wrapper.find('.open-nav').trigger('click')
-      const nav = wrapper.find('.fz-app-template__nav')
-      expect(nav.exists()).toBe(true)
-      expect(nav.classes()).toContain('fz-app-template__nav--drawer')
-      expect(nav.attributes('role')).toBe('dialog')
-      expect(nav.attributes('aria-modal')).toBe('true')
-      expect(nav.attributes('aria-label')).toBe('Menu')
+      await wrapper.find('.open-aside').trigger('click')
+      const aside = wrapper.find('aside.fz-app-template__aside--drawer')
+      expect(aside.exists()).toBe(true)
+      expect(aside.attributes('role')).toBe('dialog')
+      expect(aside.attributes('aria-modal')).toBe('true')
+      expect(aside.attributes('aria-label')).toBe('Assistenza')
       expect(wrapper.find('.fz-app-template__backdrop').exists()).toBe(true)
     })
 
-    it('opening the aside closes the nav (mutually exclusive drawers)', async () => {
-      const wrapper = mount(FzAppTemplate, { props: { hasAside: true }, slots: fullSlots() })
-      await wrapper.find('.open-nav').trigger('click')
-      expect(wrapper.find('.fz-app-template__nav').exists()).toBe(true)
-      await wrapper.find('.open-aside').trigger('click')
-      expect(wrapper.find('.fz-app-template__nav').exists()).toBe(false)
-      expect(wrapper.find('aside.fz-app-template__aside--drawer').exists()).toBe(true)
-    })
-
-    it('closes an open drawer on Escape', async () => {
+    it('closes the drawer on Escape', async () => {
       const wrapper = mount(FzAppTemplate, {
         attachTo: document.body,
-        props: { hasAside: true, asideLabel: 'Chat' },
+        props: { hasAside: true, asideLabel: 'Assistenza' },
         slots: fullSlots()
       })
       await wrapper.find('.open-aside').trigger('click')
@@ -227,11 +247,11 @@ describe('FzAppTemplate', () => {
       wrapper.unmount()
     })
 
-    it('clicking the backdrop closes the drawers', async () => {
-      const wrapper = mount(FzAppTemplate, { slots: fullSlots() })
-      await wrapper.find('.open-nav').trigger('click')
+    it('clicking the backdrop closes the drawer', async () => {
+      const wrapper = mount(FzAppTemplate, { props: { hasAside: true }, slots: fullSlots() })
+      await wrapper.find('.open-aside').trigger('click')
       await wrapper.find('.fz-app-template__backdrop').trigger('click')
-      expect(wrapper.find('.fz-app-template__nav').exists()).toBe(false)
+      expect(wrapper.find('.fz-app-template__aside').exists()).toBe(false)
     })
   })
 
@@ -239,13 +259,12 @@ describe('FzAppTemplate', () => {
   // RESPONSIVE RESET
   // ============================================
   describe('Responsive reset', () => {
-    it('reopens nav/aside when the viewport crosses up to desktop', async () => {
+    it('reopens the aside panel when the viewport crosses up to desktop', async () => {
       setViewport(false)
       const wrapper = mount(FzAppTemplate, { props: { hasAside: true }, slots: fullSlots() })
       expect(wrapper.find('aside.fz-layout-aside').exists()).toBe(false)
       fireViewportChange(true)
       await nextTick()
-      // Back on desktop the aside panel is shown again.
       expect(wrapper.find('aside.fz-app-template__aside--panel').exists()).toBe(true)
     })
   })

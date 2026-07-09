@@ -108,10 +108,12 @@ persistent `nav`, an optional sticky `header`, the primary content, an optional
 complementary `aside`, an optional sticky bottom action bar and an optional
 `footer`. From the `desktop` breakpoint (1200px) up, the nav is a sticky left
 rail and the aside a sticky right panel — their widths follow the **injected**
-content, never the template. Below it, both collapse into modal drawers (opened
-one at a time via the toggle slot props), each a `role="dialog"` with
-`aria-modal`, a focus trap and Escape-to-close. Owns a full-height root and
-applies directional safe-area insets to its sticky chrome.
+content, never the template. The **nav is persistent** (a top region on mobile);
+the injected nav — e.g. [`FzNavbar`](../navbar) — owns its own responsive
+collapse and hamburger, so the template renders no nav drawer. Only the
+**aside** collapses below the breakpoint, into a modal drawer (`role="dialog"` +
+`aria-modal` + focus trap + Escape-to-close). Owns a full-height root and applies
+directional safe-area insets to its sticky chrome.
 
 | Prop           | Type                                | Default      | Description                                                         |
 | -------------- | ----------------------------------- | ------------ | ------------------------------------------------------------------- |
@@ -119,19 +121,19 @@ applies directional safe-area insets to its sticky chrome.
 | `hasBottomBar` | `boolean`                           | `true`       | Render the sticky bottom-bar region and provide its teleport target. |
 | `chrome`       | `'card' \| 'flat'`                  | `'card'`     | Content frame. `card` = contained white card; `flat` = full-bleed.  |
 | `contentWidth` | `'standard' \| 'wide' \| 'full'`    | `'standard'` | Main content column width (replaces the app's old `wideLayout`).    |
-| `navLabel`     | `string`                            | —            | Accessible name for the nav when it is a modal drawer (mobile).     |
 | `asideLabel`   | `string`                            | —            | Accessible name for the aside when it is a modal drawer (mobile).   |
 
 Slots: `nav`, `header`, default (content), `aside`, `bottomBar`, `footer`. The
 `nav`, `header` and `aside` slots receive the responsive toggle props
-`{ isDesktop, navOpen, toggleNav, asideOpen, toggleAside }`.
+`{ isDesktop, asideOpen, toggleAside }`.
 
 ```vue
 <template>
   <FzAppTemplate has-aside class="bg-[#f7f6f3]">
+    <!-- FzNavbar renders its own rail (desktop) / bar + hamburger (mobile) -->
     <template #nav><AppNavigation /></template>
-    <template #header="{ isDesktop, toggleNav, toggleAside }">
-      <PageTitleBar :is-desktop="isDesktop" @menu="toggleNav(true)" @help="toggleAside(true)" />
+    <template #header="{ toggleAside }">
+      <PageTitleBar @help="toggleAside(true)" />
     </template>
     <RouterView />
     <template #aside><SupportChatPanel /></template>

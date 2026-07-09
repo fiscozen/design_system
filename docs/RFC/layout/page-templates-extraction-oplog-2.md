@@ -64,8 +64,8 @@ The §4 gate is cleared. Full decision record: [`bottom-bar-adr.md`](./bottom-ba
 Branch: `feat/LIB-2692-app-template` (stacked on `feat/LIB-2693-page-templates-extraction`). **DS deliverable only** — the FO `StandardLayout` → adapter migration is app-side (⛔ separate `fiscozen-app` repo).
 
 ### Decisions taken during implementation
-- **Symmetric responsive frame, nav + aside.** Desktop → nav sticky **left rail** + aside sticky **right panel** (both `shrink-0`, widths follow the *injected* content — no rail widths in the template, per §4/§10). Below the `desktop` (1200px) breakpoint → both collapse into **modal drawers**, opened one at a time (mutually exclusive, so a single focus trap is ever active). This is the coherent general app-shell; the FO top-strip-vs-drawer mapping is an app-adapter concern (separate repo). Nav is a plain positioning wrapper (not a landmark) — the injected nav owns its own `<nav>` (no `FzLayoutNav` region needed; §3's region list has none).
-- **Desktop aside is persistent** (matches FO: chat always shown on desktop). `toggleNav`/`toggleAside` drive the **mobile drawer** only; on desktop the rail/panel stay. Toggle slot-props `{ isDesktop, navOpen, toggleNav, asideOpen, toggleAside }` are still exposed on `nav`/`header`/`aside` per §4.
+- **Nav is persistent and defers to the injected nav; only the aside collapses. [revised 2026-07-09 after investigating the FO nav — see the correction note below.]** Desktop → nav sticky **left rail** + aside sticky **right panel** (both `shrink-0`, widths follow the *injected* content — no rail widths in the template, per §4/§10). On mobile → the nav stays rendered as a full-width **top region** (the injected nav owns its own responsive collapse/menu), and **only the aside** collapses into a **modal drawer** with `role="dialog"`/`aria-modal`/focus-trap/Escape. Nav is a plain positioning wrapper (not a landmark) — the injected nav owns its own `<nav>` (no `FzLayoutNav` region needed; §3's region list has none).
+- **Desktop aside is persistent** (matches FO: chat always shown on desktop). `toggleAside` drives the **mobile aside drawer** only. Toggle slot-props exposed on `nav`/`header`/`aside` are `{ isDesktop, asideOpen, toggleAside }` — no `navOpen`/`toggleNav` (the nav's open/menu state is the injected nav's concern, not the template's).
 - **provide lives on `FzAppTemplate`, not on `FzLayoutBottomBar`.** provide/inject only reaches descendants, and the page components that teleport a bar are descendants of the *template*, not of the region. So the region (`FzLayoutBottomBar`) exposes its root `el` via `defineExpose`, and the template `provide()`s that element under `FZ_BOTTOM_BAR_TARGET` — a refinement of the ADR sketch (which drew `provide` inside the region) that preserves the exact contract (namespaced key + exposed target element).
 - **`background` prop dropped** in favour of a fall-through `class` on the root (matches the `FzFocusTemplate` story pattern — `class="bg-…"`); avoids a loose arbitrary-CSS string prop. Single content-width API shipped as `contentWidth: 'standard' | 'wide' | 'full'` (no second width prop), replacing the dead `wideLayout` flag (§7). `hasBottomBar` defaults `true` (region self-collapses when empty; ADR D2).
 - **Focus trap** implemented in-template (no repo utility exists): on drawer open, save `document.activeElement`, move focus in, trap Tab/Shift+Tab within the overlay, Escape closes, restore focus on close. Applied to whichever single drawer is open.
@@ -76,18 +76,29 @@ Branch: `feat/LIB-2692-app-template` (stacked on `feat/LIB-2693-page-templates-e
 - `packages/layout/src/FzLayoutBottomBar.vue` — **new.** Sticky bottom-0 region, `pointer-events:none` container / interactive children, bottom safe-area, `max-height:480px` hide, exposes root `el`.
 - `packages/layout/src/FzAppTemplate.vue` — **new.** The shell (frame + regions + overlay a11y + sticky CSS + provide).
 - `packages/layout/src/types.ts`, `index.ts` — bottom-bar + app-template types; export the two components + `FZ_BOTTOM_BAR_TARGET`.
-- `packages/layout/src/__tests__/FzLayoutBottomBar.spec.ts` + `FzAppTemplate.spec.ts` — **new** (matchMedia mocked per-file). Cover structure/regions, aside/bottom-bar gating, chrome + contentWidth, toggle slot-props, mobile drawers (dialog/aria-modal/backdrop/mutual-exclusivity/Escape), responsive reset, the provide/teleport integration, and the injection-key string lock-in.
+- `packages/layout/src/__tests__/FzLayoutBottomBar.spec.ts` + `FzAppTemplate.spec.ts` — **new** (matchMedia mocked per-file). Cover structure/regions, persistent nav (rail desktop / top-bar mobile, never a dialog), aside/bottom-bar gating, chrome + contentWidth, toggle slot-props, the mobile aside drawer (dialog/aria-modal/backdrop/Escape), responsive reset, the provide/teleport integration, and the injection-key string lock-in.
 - `apps/storybook/src/stories/templates/FzAppTemplate.stories.ts` — **new.** `Default` / `WithAside` / `WideFlat` / `BottomBarViaTeleport` (the last demonstrates the real inject+`<Teleport>` pattern), play functions assert landmarks + card/flat + sticky header + the teleported bar.
 - `packages/layout/README.md`, `.changeset/layout-phase3-app-template.md` (minor, additive).
 
-### Verification
-- `pnpm --filter @fiscozen/layout test:unit` → **138/138** (109 from Phases 0–2 unchanged + 29 new).
+### Verification (after the nav-defers-to-FzNavbar revision)
+- `pnpm --filter @fiscozen/layout test:unit` → **140/140** (109 from Phases 0–2 unchanged + 31 new).
 - Storybook play (real Chromium, 1280px → `isDesktop` true): `vitest --project=storybook src/stories/templates` → **20/20** across 5 files (4 new `FzAppTemplate`); no icon/deprecation warnings.
-- `pnpm --filter @fiscozen/layout build` → **exit 0**, `dist/layout.js` 40.29 kB + declaration files. Only pre-existing diagnostics remain (`FzLayout.vue` `@apply`, `@fiscozen/composables` `FzFloating.vue` TS2774 — both documented in oplog-1); **zero** in the new files.
+- `pnpm --filter @fiscozen/layout build` → **exit 0**, `dist/layout.js` 39.50 kB + declaration files. Only pre-existing diagnostics remain (`FzLayout.vue` `@apply`, `@fiscozen/composables` `FzFloating.vue` TS2774 — both documented in oplog-1); **zero** in the new files.
 
 ### Not done here (deliberately)
 - **Playwright/WebKit** sticky + safe-area verification and **Chromatic** diffs — the DS PR triggers Chromatic in CI; WebKit/iOS device verification of sticky/notch-bleed happens with the app migration (§9).
 - All app halves (FO `StandardLayout` adapter, Phase A chat, Phase 4 BO) — ⛔ separate `fiscozen-app` repo.
+
+### Correction — nav defers to `FzNavbar` (2026-07-09, post-investigation)
+
+Investigated how the FO mobile nav (the top bar: ☰ · logo · 💬) is actually built (`fiscozen-app/it_fiscozen_app/frontoffice/src/navigation/FzNavigation.vue`). Finding: it is **already a DS component — `FzNavbar` (`@fiscozen/navbar`)** in its `isMobile` state. `FzNavbar.vue:87-104` renders the mobile bar (`#menu-button` hamburger owning `isMenuOpen`, centered `#brand-logo`, `#notifications` = the chat button); `FzNavigation` fills those slots and renders its **own** RBAC menu drawer. Decisively, **`FzNavbar`'s `horizontal` variant is `@deprecated` "in favor of the frontoffice three-column layout"** (`navbar/src/types.ts:12-17`) — i.e. this work.
+
+So my first cut of `FzAppTemplate` (symmetric nav+aside **drawers** with `navOpen`/`toggleNav` + a nav focus trap) **duplicated and conflicted** with `FzNavbar`, which already owns the mobile bar + hamburger + menu. Revised the component **within this PR** (nothing merged/published yet):
+- Nav is now **persistent** — a rail on desktop, a full-width top region on mobile — and the template renders **no** nav drawer/overlay/focus-trap/backdrop-for-nav. The injected nav (`FzNavbar`) transforms itself.
+- Dropped `navOpen`/`toggleNav`/`navLabel`; toggle slot-props are now `{ isDesktop, asideOpen, toggleAside }`.
+- The **aside** stays the template's one collapsible region (desktop panel / mobile modal drawer with the full a11y) — that overlay genuinely is app-shell-owned today (`StandardLayout`, not `FzNavbar`).
+
+**Tracking outcome:** the mobile nav needs **no new DS extraction** (it's already `FzNavbar`). The FO consumption (adopt `FzAppTemplate`, migrate `FzNavbar` off the deprecated `horizontal` → `vertical`) is the app half — a new FO card under RT-2054 (created), a `fiscozen-app` PR. So all DS work stays tracked under LIB-2692.
 
 ---
 

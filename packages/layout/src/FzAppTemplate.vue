@@ -11,19 +11,23 @@
  * and owns all logic.
  *
  * Responsive frame:
- * - From the `desktop` breakpoint (1200px) up, the nav is a sticky **left rail**
- *   and the aside a sticky **right panel** — their widths are a function of the
- *   *injected* content, never the template (RFC §4/§10).
- * - Below it, nav and aside collapse into **modal drawers** (one at a time),
- *   opened via the `toggleNav`/`toggleAside` slot props (e.g. a hamburger / chat
- *   button in the `header`). Each drawer is a `role="dialog"` with `aria-modal`,
- *   a focus trap and Escape-to-close.
+ * - **Nav is persistent** and the *injected* nav owns its own responsiveness.
+ *   The template only places it — a sticky **left rail** from the `desktop`
+ *   breakpoint (1200px) up, a full-width **top region** below it — and does not
+ *   render a nav drawer or hamburger. The frontoffice nav is `FzNavbar`
+ *   (`@fiscozen/layout` sibling `@fiscozen/navbar`), which already renders its
+ *   own responsive rail / mobile bar (hamburger + brand + notifications) and
+ *   owns its menu open state; the template must not duplicate that. Rail width
+ *   is a function of the injected content, never the template (RFC §4/§10).
+ * - **The `aside` is the only region the template collapses.** On desktop it is
+ *   a sticky right panel; below the breakpoint it becomes a **modal drawer** —
+ *   `role="dialog"` + `aria-modal` + focus trap + Escape-to-close (the frontoffice
+ *   support-chat overlay, which the app shell owns today, RFC §4/§6.1).
  *
  * The bottom bar is placed inside the main content column so it aligns to that
- * column automatically and reserves its own space (no rail-width knowledge, no
- * manual padding). The template `provide()`s the region's element as the
- * teleport target `FZ_BOTTOM_BAR_TARGET` so deep page components can render bar
- * content at the shell level (RFC §4 bottom-bar ADR).
+ * column automatically and reserves its own space. The template `provide()`s the
+ * region's element as the teleport target `FZ_BOTTOM_BAR_TARGET` so deep page
+ * components can render bar content at the shell level (RFC §4 bottom-bar ADR).
  *
  * Owns a full-height root (`min-h-dvh`), so it does not depend on app-global
  * `#app { height: 100% }` / `overflow-y: auto` CSS (RFC §6.2). Set the page
@@ -52,49 +56,30 @@ const slots = defineSlots<FzAppTemplateSlots>()
 // -- Responsive + toggle state -------------------------------------------------
 const isDesktop = useMediaQuery(`(min-width: ${breakpoints.desktop})`)
 
-const navOpen = ref(isDesktop.value)
+// Only the aside is collapsible by the template; the nav owns its own responsive
+// state (see the component doc). Open on desktop, closed on mobile — the app's
+// behaviour today.
 const asideOpen = ref(isDesktop.value)
 
-function toggleNav(force?: boolean) {
-  const next = typeof force === 'boolean' ? force : !navOpen.value
-  navOpen.value = next
-  // On mobile the two drawers are mutually exclusive, so at most one modal
-  // (and one focus trap) is ever active.
-  if (next && !isDesktop.value) asideOpen.value = false
-}
-
 function toggleAside(force?: boolean) {
-  const next = typeof force === 'boolean' ? force : !asideOpen.value
-  asideOpen.value = next
-  if (next && !isDesktop.value) navOpen.value = false
+  asideOpen.value = typeof force === 'boolean' ? force : !asideOpen.value
 }
 
-// Crossing the breakpoint resets both regions to their default for that
-// viewport (open on desktop, closed on mobile) — mirrors the app's behaviour.
+// Crossing the breakpoint resets the aside to its default for that viewport.
 watch(isDesktop, (desktop) => {
-  navOpen.value = desktop
   asideOpen.value = desktop
 })
 
 const toggleProps = computed<FzAppTemplateToggles>(() => ({
   isDesktop: isDesktop.value,
-  navOpen: navOpen.value,
-  toggleNav,
   asideOpen: asideOpen.value,
   toggleAside
 }))
 
-const navIsOverlay = computed(() => !isDesktop.value && navOpen.value)
 const asideIsOverlay = computed(() => !isDesktop.value && asideOpen.value)
-const showBackdrop = computed(() => !isDesktop.value && (navOpen.value || asideOpen.value))
-
-function closeOverlays() {
-  navOpen.value = false
-  asideOpen.value = false
-}
+const showBackdrop = computed(() => asideIsOverlay.value)
 
 // -- Region visibility + classes ----------------------------------------------
-const showNav = computed(() => !!slots.nav && (isDesktop.value || navOpen.value))
 const showAside = computed(
   () => props.hasAside && !!slots.aside && (isDesktop.value || asideOpen.value)
 )
@@ -102,7 +87,7 @@ const showAside = computed(
 const navClass = computed(() =>
   isDesktop.value
     ? 'fz-app-template__nav--rail sticky top-0 h-dvh shrink-0 overflow-y-auto'
-    : 'fz-app-template__nav--drawer fixed inset-y-0 left-0 z-30 w-[280px] max-w-[85vw] overflow-y-auto bg-core-white shadow-xl'
+    : 'fz-app-template__nav--bar w-full shrink-0'
 )
 
 const asideClass = computed(() =>
@@ -147,16 +132,12 @@ watch(
   { flush: 'post' }
 )
 
-// -- Mobile overlay focus trap ------------------------------------------------
-const navEl = ref<HTMLElement | null>(null)
+// -- Mobile aside overlay focus trap ------------------------------------------
 const asideRef = ref<{ $el?: HTMLElement } | null>(null)
 
-const activeOverlayEl = computed<HTMLElement | null>(() => {
-  if (isDesktop.value) return null
-  if (navOpen.value) return navEl.value
-  if (asideOpen.value) return asideRef.value?.$el ?? null
-  return null
-})
+const activeOverlayEl = computed<HTMLElement | null>(() =>
+  asideIsOverlay.value ? (asideRef.value?.$el ?? null) : null
+)
 
 let restoreFocusEl: HTMLElement | null = null
 
@@ -174,7 +155,7 @@ function onOverlayKeydown(event: KeyboardEvent) {
 
   if (event.key === 'Escape') {
     event.preventDefault()
-    closeOverlays()
+    toggleAside(false)
     return
   }
 
@@ -216,24 +197,15 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="fz-app-template flex min-h-dvh" :class="isDesktop ? 'flex-row' : 'flex-col'">
-    <!-- Backdrop behind the mobile drawers -->
+    <!-- Backdrop behind the mobile aside drawer -->
     <div
       v-if="showBackdrop"
-      class="fz-app-template__backdrop bg-core-black/40 fixed inset-0 z-20"
-      @click="closeOverlays"
-    />
+      class="fz-app-template__backdrop fixed inset-0 z-20 bg-core-black/40"
+      @click="toggleAside(false)" />
 
-    <!-- Navigation: left rail (desktop) / modal drawer (mobile) -->
-    <div
-      v-if="showNav"
-      ref="navEl"
-      class="fz-app-template__nav"
-      :class="navClass"
-      :role="navIsOverlay ? 'dialog' : undefined"
-      :aria-modal="navIsOverlay ? 'true' : undefined"
-      :aria-label="navIsOverlay ? navLabel : undefined"
-      :tabindex="navIsOverlay ? -1 : undefined"
-    >
+    <!-- Navigation: persistent left rail (desktop) / top region (mobile). The
+         injected nav (e.g. FzNavbar) owns its own responsive collapse + menu. -->
+    <div v-if="slots.nav" class="fz-app-template__nav" :class="navClass">
       <slot name="nav" v-bind="toggleProps" />
     </div>
 
@@ -241,8 +213,7 @@ onBeforeUnmount(() => {
     <div class="fz-app-template__col flex min-w-0 flex-1 flex-col">
       <FzLayoutHeader
         v-if="slots.header"
-        class="fz-app-template__header sticky top-0 z-10 shrink-0"
-      >
+        class="fz-app-template__header sticky top-0 z-10 shrink-0">
         <slot name="header" v-bind="toggleProps" />
       </FzLayoutHeader>
 
@@ -258,8 +229,7 @@ onBeforeUnmount(() => {
       <FzLayoutBottomBar
         v-if="hasBottomBar"
         ref="bottomBarRegion"
-        class="fz-app-template__bottom-bar"
-      >
+        class="fz-app-template__bottom-bar">
         <slot name="bottomBar" />
       </FzLayoutBottomBar>
     </div>
@@ -273,8 +243,7 @@ onBeforeUnmount(() => {
       :role="asideIsOverlay ? 'dialog' : undefined"
       :aria-modal="asideIsOverlay ? 'true' : undefined"
       :aria-label="asideIsOverlay ? asideLabel : undefined"
-      :tabindex="asideIsOverlay ? -1 : undefined"
-    >
+      :tabindex="asideIsOverlay ? -1 : undefined">
       <slot name="aside" v-bind="toggleProps" />
     </FzLayoutAside>
   </div>
@@ -285,18 +254,13 @@ onBeforeUnmount(() => {
    can bleed under, so a region's background reaches the device edge while its
    content stays clear of notches / rounded corners / home indicators. Insets
    resolve to 0 where the platform does not report them. The bottom bar owns its
-   own bottom inset (see FzLayoutBottomBar). */
+   own bottom inset (see FzLayoutBottomBar); the nav owns its own insets on
+   mobile (the injected nav, e.g. FzNavbar `respectSafeArea`). */
 .fz-app-template__header {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
 .fz-app-template__nav--rail {
-  padding-left: env(safe-area-inset-left, 0px);
-}
-
-.fz-app-template__nav--drawer {
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
   padding-left: env(safe-area-inset-left, 0px);
 }
 
