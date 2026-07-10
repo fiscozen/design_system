@@ -30,7 +30,8 @@ beforeEach(() => {
       matches: isDesktop,
       media: query,
       onchange: null,
-      addEventListener: (_: string, cb: (e: MediaQueryListEvent) => void) => changeListeners.add(cb),
+      addEventListener: (_: string, cb: (e: MediaQueryListEvent) => void) =>
+        changeListeners.add(cb),
       removeEventListener: (_: string, cb: (e: MediaQueryListEvent) => void) =>
         changeListeners.delete(cb),
       addListener: vi.fn(),
@@ -123,6 +124,16 @@ describe('FzAppTemplate', () => {
       const wrapper = mount(FzAppTemplate, { slots: { default: 'x' } })
       expect(wrapper.find('.fz-app-template__nav').exists()).toBe(false)
     })
+
+    it('wraps the nav slot in a <nav> landmark named via navLabel', () => {
+      const wrapper = mount(FzAppTemplate, {
+        props: { navLabel: 'Navigazione' },
+        slots: fullSlots()
+      })
+      const nav = wrapper.find('nav.fz-app-template__nav')
+      expect(nav.exists()).toBe(true)
+      expect(nav.attributes('aria-label')).toBe('Navigazione')
+    })
   })
 
   // ============================================
@@ -173,6 +184,27 @@ describe('FzAppTemplate', () => {
       })
       expect(wrapper.find('.fz-app-template__content--flat').exists()).toBe(true)
       expect(wrapper.find('.fz-app-template__content--card').exists()).toBe(false)
+    })
+
+    it('gutters the main region and matches it on the bottom bar in card chrome', () => {
+      const wrapper = mount(FzAppTemplate, { slots: { default: 'x' } })
+      const main = wrapper.find('.fz-app-template__main')
+      expect(main.classes()).toContain('fz-app-template__main--card')
+      expect(main.classes()).toContain('p-16')
+      // The bottom bar mirrors main's horizontal inset so the content card and the
+      // bar card share left/right edges at every width (bottom-bar ADR D2).
+      expect(wrapper.find('.fz-layout-bottom-bar').classes()).toContain('px-16')
+    })
+
+    it('drops the gutter from main and the bottom bar in flat chrome', () => {
+      const wrapper = mount(FzAppTemplate, {
+        props: { chrome: 'flat' },
+        slots: { default: 'x' }
+      })
+      const main = wrapper.find('.fz-app-template__main')
+      expect(main.classes()).toContain('fz-app-template__main--flat')
+      expect(main.classes()).not.toContain('p-16')
+      expect(wrapper.find('.fz-layout-bottom-bar').classes()).not.toContain('px-16')
     })
   })
 

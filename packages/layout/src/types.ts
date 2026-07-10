@@ -203,8 +203,11 @@ type FzLayoutBottomBarSlots = {
  * Content frame for `FzAppTemplate`'s main region.
  *
  * - `card`: the primary content sits in a contained, max-width white card (the
- *   frontoffice standard-layout shape).
- * - `flat`: full-bleed content with no card frame.
+ *   frontoffice standard-layout shape). The main region also carries a uniform
+ *   16px grey gutter around the card, and the bottom bar mirrors the gutter's
+ *   horizontal inset, so the content card and the bottom-bar card share the same
+ *   left/right edges at every viewport width.
+ * - `flat`: full-bleed content with no card frame and no gutter.
  */
 type FzAppChrome = 'card' | 'flat'
 
@@ -282,6 +285,14 @@ type FzAppTemplateProps = {
    */
   contentWidth?: FzAppContentWidth
   /**
+   * Accessible name for the navigation landmark. The template wraps the `nav`
+   * slot in a `<nav>` region so there is always a navigation landmark regardless
+   * of what the injected nav renders as its own root; pass a label to
+   * distinguish it for assistive tech (recommended when a page exposes more than
+   * one navigation landmark). Omit for an unnamed — but still valid — landmark.
+   */
+  navLabel?: string
+  /**
    * Accessible name for the aside when it is a modal drawer (mobile). Ignored
    * for the desktop panel.
    */
@@ -293,7 +304,7 @@ type FzAppTemplateProps = {
  * props (`FzAppTemplateToggles`).
  */
 type FzAppTemplateSlots = {
-  /** Persistent navigation (left rail on desktop, top region on mobile); the injected nav owns its own collapse/menu. */
+  /** Persistent navigation (left rail on desktop, top region on mobile), wrapped in a `<nav>` landmark; the injected nav owns its own collapse/menu. */
   nav?(props: FzAppTemplateToggles): any
   /** Optional sticky top bar (page title, actions, a chat/support toggle). */
   header?(props: FzAppTemplateToggles): any

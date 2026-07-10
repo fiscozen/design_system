@@ -108,12 +108,39 @@ const contentWidthClass = computed(() => {
   }
 })
 
+// The main region carries the detached-card gutter. In `card` chrome the content
+// is a floating surface with a uniform grey gutter on every side; that gutter is
+// `p-16` on the main region — NOT a margin on the card — so it holds even when the
+// card cannot reach its max-width. With the aside present between `desktop` and
+// `2xl`, the nav + max-width content + aside fill the row, leaving `mx-auto` no
+// room to center: a margin-based gutter would collapse to zero and no background
+// would show beside the content. Padding guarantees the gutter; `mx-auto` + the
+// max-width still widen it once the row is wide enough. `flat` is full-bleed.
+const mainClass = computed(() => [
+  'fz-app-template__main flex-1 overflow-x-clip',
+  props.chrome === 'card' ? 'fz-app-template__main--card p-16' : 'fz-app-template__main--flat'
+])
+
 const contentClass = computed(() => [
   'fz-app-template__content mx-auto flex w-full flex-1 flex-col',
   contentWidthClass.value,
+  // `flex-1` fills the (padded) main region, so a short page shows a full card,
+  // not a stub floating in grey.
   props.chrome === 'card'
     ? 'fz-app-template__content--card rounded-lg bg-core-white p-24'
     : 'fz-app-template__content--flat'
+])
+
+// The bottom-bar region mirrors the main region's *horizontal* gutter in `card`
+// chrome. Its inner card (like the content card) is `mx-auto max-w-[…]`; matching
+// the 16px left/right inset keeps the two cards edge-aligned at every column
+// width. Without it they diverge by up to 16px per side below the ~1056px column
+// width where the content card stops reaching its max-width — the bottom-bar ADR
+// D2 alignment invariant. No vertical padding: the bar stays pinned to the
+// bottom (main's `pb-16` already provides the gap above it).
+const bottomBarClass = computed(() => [
+  'fz-app-template__bottom-bar',
+  props.chrome === 'card' ? 'px-16' : ''
 ])
 
 // -- Bottom-bar teleport target (provide) -------------------------------------
@@ -200,24 +227,28 @@ onBeforeUnmount(() => {
     <!-- Backdrop behind the mobile aside drawer -->
     <div
       v-if="showBackdrop"
-      class="fz-app-template__backdrop fixed inset-0 z-20 bg-core-black/40"
-      @click="toggleAside(false)" />
+      class="fz-app-template__backdrop bg-core-black/40 fixed inset-0 z-20"
+      @click="toggleAside(false)"
+    />
 
-    <!-- Navigation: persistent left rail (desktop) / top region (mobile). The
-         injected nav (e.g. FzNavbar) owns its own responsive collapse + menu. -->
-    <div v-if="slots.nav" class="fz-app-template__nav" :class="navClass">
+    <!-- Navigation: persistent left rail (desktop) / top region (mobile). A
+         `<nav>` landmark so there is always a navigation region regardless of the
+         injected nav's own root element; the injected nav (e.g. FzNavbar) owns
+         its own responsive collapse + menu. -->
+    <nav v-if="slots.nav" class="fz-app-template__nav" :class="navClass" :aria-label="navLabel">
       <slot name="nav" v-bind="toggleProps" />
-    </div>
+    </nav>
 
     <!-- Main content column: header (sticky) / main / bottom bar (sticky) -->
     <div class="fz-app-template__col flex min-w-0 flex-1 flex-col">
       <FzLayoutHeader
         v-if="slots.header"
-        class="fz-app-template__header sticky top-0 z-10 shrink-0">
+        class="fz-app-template__header sticky top-0 z-10 shrink-0"
+      >
         <slot name="header" v-bind="toggleProps" />
       </FzLayoutHeader>
 
-      <FzLayoutMain class="fz-app-template__main flex-1 overflow-x-clip">
+      <FzLayoutMain :class="mainClass">
         <div :class="contentClass">
           <slot />
           <FzLayoutFooter v-if="slots.footer" class="fz-app-template__footer mt-auto">
@@ -226,10 +257,7 @@ onBeforeUnmount(() => {
         </div>
       </FzLayoutMain>
 
-      <FzLayoutBottomBar
-        v-if="hasBottomBar"
-        ref="bottomBarRegion"
-        class="fz-app-template__bottom-bar">
+      <FzLayoutBottomBar v-if="hasBottomBar" ref="bottomBarRegion" :class="bottomBarClass">
         <slot name="bottomBar" />
       </FzLayoutBottomBar>
     </div>
@@ -243,7 +271,8 @@ onBeforeUnmount(() => {
       :role="asideIsOverlay ? 'dialog' : undefined"
       :aria-modal="asideIsOverlay ? 'true' : undefined"
       :aria-label="asideIsOverlay ? asideLabel : undefined"
-      :tabindex="asideIsOverlay ? -1 : undefined">
+      :tabindex="asideIsOverlay ? -1 : undefined"
+    >
       <slot name="aside" v-bind="toggleProps" />
     </FzLayoutAside>
   </div>
