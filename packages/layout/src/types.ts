@@ -187,6 +187,65 @@ type FzFocusTemplateSlots = {
   footer?(props: {}): any
 }
 
+/**
+ * Where the `filters` rail sits relative to the list content.
+ *
+ * - `left` (default): a fixed-width rail beside the content from `md` up,
+ *   stacking above it on narrow viewports — the dominant backoffice list shape.
+ * - `top`: a full-width filter row above the content at every width — for pages
+ *   whose filters read as a horizontal bar rather than a rail.
+ */
+type FzListFiltersPosition = 'left' | 'top'
+
+/**
+ * Props for `FzListTemplate` — the backoffice list-page layout.
+ *
+ * A presentation-only page-content layout for list pages: an optional `banner`,
+ * an optional `filters` rail, an optional `header` toolbar and the list content
+ * (typically an `FzTable`). Designed to render inside a shell's main region, so
+ * it does not force a viewport height or apply root safe-area insets (the shell
+ * owns those). RFC §4 / Jira LIB-2694.
+ */
+type FzListTemplateProps = {
+  /**
+   * Where the `filters` rail sits relative to the content.
+   * @default 'left'
+   * @see FzListFiltersPosition
+   */
+  filtersPosition?: FzListFiltersPosition
+  /**
+   * Accessible name for the `filters` rail's `complementary` landmark (applied
+   * as `aria-label` on the `<aside>`). Set it when the page exposes more than
+   * one complementary region — e.g. when this template is nested inside a shell
+   * that renders its own `aside` — so screen-reader users can distinguish the
+   * filter rail from other complementary landmarks. Omit for a single,
+   * unambiguous rail.
+   */
+  filtersLabel?: string
+  /**
+   * The element the main content region renders as. Defaults to `main` so the
+   * list — the page's primary content — is a `main` landmark. Set to `div` when
+   * the template is composed inside a shell that already renders a `<main>`
+   * (e.g. `FzAppTemplate`'s default slot), to avoid nested `main` landmarks.
+   * @default 'main'
+   */
+  mainAs?: 'main' | 'div'
+}
+
+/**
+ * Slots for `FzListTemplate`.
+ */
+type FzListTemplateSlots = {
+  /** Optional full-width region above the content (alerts, action cards, notices). */
+  banner?(props: {}): any
+  /** Optional filter rail (selects, filter widgets, a create action). */
+  filters?(props: {}): any
+  /** Optional toolbar above the list (title, search, actions). Not a landmark. */
+  header?(props: {}): any
+  /** The list content (typically an `FzTable` and its trailing modals). */
+  default(props: {}): any
+}
+
 export type {
   FzLayoutProps,
   FzLayoutAlign,
@@ -204,5 +263,8 @@ export type {
   FzLayoutFooterSlots,
   FzFocusChrome,
   FzFocusTemplateProps,
-  FzFocusTemplateSlots
+  FzFocusTemplateSlots,
+  FzListFiltersPosition,
+  FzListTemplateProps,
+  FzListTemplateSlots
 }

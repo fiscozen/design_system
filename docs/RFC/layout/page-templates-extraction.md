@@ -88,8 +88,12 @@ Covers **FO `FocusLayout`** (onboarding).
 ### `FzBlankTemplate` — full-bleed, no chrome
 Covers **FO/BO auth (login)** + standalone tools (BO `MidaSync`, `CustomerInvoices`). **Slots:** default. **Props:** `align?: 'center' | 'top'`.
 
-### `FzMasterDetailTemplate` (optional, later)
-Thin semantic wrapper over `FzLayout leftShoulder` for BO `leftShoulder` pages + `Users` list. `FzLayout leftShoulder` keeps working meanwhile.
+### `FzListTemplate` — backoffice list-page layout (**Jira LIB-2694**)
+Covers the recurring **BO list page** shape (e.g. *Dichiarazioni IVA*): an optional full-width `banner`, an optional `filters` rail, an optional `header` toolbar (title/search/actions) and the list content (typically an `FzTable`). Only 6 of the ~34 BO `*List.vue` pages use `FzLayout leftShoulder` today; the other 28 hand-roll the same rail/table shape three ways (`grid-cols-4`, `flex w-[300px]`, single card) — this template converges them.
+- **Slots:** `banner`, `filters`, `header`, default (list content). **Props:** `filtersPosition?: 'left' | 'top'`, `mainAs?: 'main' | 'div'`.
+- **[R] Composes the region molecules, not `FzLayout leftShoulder`.** The BO reconnaissance (2026-07-13) found `leftShoulder` forces `100vh` mobile tracks + independent per-region `overflow-auto` scroll — exactly what the hand-rolled pages avoid by scrolling the document. So `FzListTemplate` follows the `FzFocusTemplate` idiom (region molecules + document-scroll flex). This **supersedes the provisional name `FzMasterDetailTemplate`**: the BO `leftShoulder` shoulder holds *filters*, not a detail pane, so "list layout" is the accurate framing (matches the Jira wording).
+- **[R] Page-content template, not a shell.** It renders *inside* the app shell (`FzAppTemplate`, LIB-2692 / Phase 4), so — unlike the top-level templates — it does **not** own a viewport height or root safe-area (the shell does). `mainAs` defaults to `main` (the list is the page's primary content; a net a11y gain for BO, which has no `<main>` today) with a documented `'div'` escape for shell nesting. **Guardrail:** the who-owns-`<main>` reconciliation between `FzAppTemplate` and `FzListTemplate` is a follow-up for the BO shell-migration card.
+- A true master-detail (list + detail pane) wrapper over `FzLayout leftShoulder` remains a possible *later* addition for the genuine split-view BO pages; `FzLayout leftShoulder` keeps working meanwhile.
 
 *Out of package (stay app-side):* `WizardShell`, `FormPreviewLayout`, `InvoiceShell`.
 
