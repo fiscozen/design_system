@@ -166,9 +166,11 @@ export const Default: Story = {
  * With `hasAside`, a complementary panel sits beside the content on desktop (and
  * becomes a modal drawer on mobile). Here it stands in for a support-chat panel.
  *
- * This story also fills the optional `#header` slot — a sticky page-title/action
- * bar over the content — to demonstrate the `toggleAside` slot prop: its
- * "Assistenza" button opens the aside drawer below the `desktop` breakpoint.
+ * This story also fills the optional `#header` slot — a sticky **action bar**
+ * over the content — to demonstrate the `toggleAside` slot prop: its
+ * "Assistenza" button opens the aside drawer below the `desktop` breakpoint. The
+ * page title still lives once in the content (the `<h1>`), so the bar carries the
+ * action only, not a duplicate title.
  */
 export const WithAside: Story = {
   args: { hasAside: true, asideLabel: 'Assistenza' },
@@ -181,8 +183,7 @@ export const WithAside: Story = {
       <FzAppTemplate v-bind="args" class="bg-[#f7f6f3]">
         <template #nav>${navSlot}</template>
         <template #header="{ toggleAside }">
-          <div class="flex items-center justify-between gap-16 bg-core-white px-24 py-12">
-            <span class="font-medium text-core-black">Dashboard</span>
+          <div class="flex items-center justify-end gap-16 bg-core-white px-24 py-12">
             <FzButton variant="secondary" @click="toggleAside(true)">Assistenza</FzButton>
           </div>
         </template>
