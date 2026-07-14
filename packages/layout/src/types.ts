@@ -192,7 +192,7 @@ type FzFocusTemplateSlots = {
  *
  * A presentation-only page-content layout for record-detail pages: a persistent
  * `sidebar` summary/actions rail beside the detail body, plus an optional
- * full-width `banner` and an optional `header` toolbar. It is the list template's
+ * full-width `banner` and an optional `toolbar` (title/actions). It is the list template's
  * sibling — where a list page pairs a *filter* rail with a table, a detail page
  * pairs a *summary/context* rail with the record's content (tabs, cards, forms).
  * Like `FzListTemplate` (LIB-2694) it is designed to render inside a shell's main
@@ -228,8 +228,11 @@ type FzDetailTemplateSlots = {
   banner?(props: {}): any
   /** The record summary/context rail (identity, status, meta, actions). */
   sidebar?(props: {}): any
-  /** Optional toolbar above the body (title, actions). Not a landmark. */
-  header?(props: {}): any
+  /**
+   * Optional toolbar above the body (title, actions). A plain container, **not**
+   * a `<header>`/banner landmark — the shell owns the page banner.
+   */
+  toolbar?(props: {}): any
   /** The detail body (typically `FzTabs`/`FzCard`s and its trailing modals). */
   default(props: {}): any
 }

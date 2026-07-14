@@ -91,7 +91,7 @@ Backoffice detail-page layout — the sibling of `FzListTemplate` (LIB-2694). Wh
 a list page pairs a _filter_ rail with a table, a detail page pairs a persistent
 `sidebar` summary/context rail (the record's identity, status, meta and actions)
 with the record's content (typically `FzTabs`/`FzCard`s). It also exposes an
-optional full-width `banner` (page-level alerts) and an optional `header` toolbar.
+optional full-width `banner` (page-level alerts) and an optional `toolbar` (title/actions).
 Each region renders only when its slot is provided; the summary rail stacks above
 the body on narrow viewports and sits beside it from `md` up.
 
@@ -107,14 +107,16 @@ independent per-region scroll.
 | `sidebarLabel` | `string`          | —        | Accessible name (`aria-label`) for the `sidebar`'s `complementary` landmark. Set it when the page exposes more than one complementary region (e.g. nested in a shell with its own aside) so screen readers tell them apart. |
 | `mainAs`       | `'main' \| 'div'` | `'main'` | Element the content region renders as. Set to `'div'` when nesting inside a shell that already owns `<main>`.                                                                                                               |
 
-Slots: `banner`, `sidebar`, `header`, default (the detail body).
+Slots: `banner`, `sidebar`, `toolbar`, default (the detail body). The `toolbar`
+region is a plain container, **not** a `<header>`/banner landmark — the shell
+owns the page banner.
 
 ```vue
 <template>
   <FzDetailTemplate sidebar-label="Riepilogo dichiarazione">
     <template #banner><NotYetSentAlert /></template>
     <template #sidebar><VatDeclarationSummary /></template>
-    <template #header><DetailTitleAndActions /></template>
+    <template #toolbar><DetailTitleAndActions /></template>
     <FzTabs>
       <FzTab title="Dichiarazione">…</FzTab>
       <FzTab title="F24">…</FzTab>

@@ -48,24 +48,24 @@ Verified against the real BO source (`fiscozen-app/it_fiscozen_app/backoffice/sr
 - **`sidebar` is slot-presence driven** (`sidebar` slot absent → single-column, full-width body). The rail is a fixed `md:w-[340px]` (matching the BO `343px` summary rail, distinct from the list template's `300px` filter rail); stacks above the body on narrow viewports, sits beside it (`md:flex-row md:items-start`, natural height) from `md` up. No rail-width prop (§10 spirit).
 - **No `sidebarPosition` prop (yet).** Every real BO detail sidebar is a left rail, so a `left`/`right` variant would be speculative (§10 guardrail: avoid props no consumer needs). It is trivially additive later if a page needs a right-hand contextual panel.
 - **`sidebar` is a `complementary` landmark** (`FzLayoutAside` → `<aside>`), with an optional `sidebarLabel` → `aria-label` (mirrors the list template's `filtersLabel`) so screen-reader users can name the summary rail when the page has more than one complementary region.
-- **`header` slot is a plain `<div>`, not a `<header>` banner** — the shell already owns the page banner/breadcrumb; a second banner landmark would be an a11y regression. (Same as the list template.)
+- **`toolbar` slot is a plain `<div>`, not a `<header>` banner** — the shell already owns the page banner/breadcrumb; a second banner landmark would be an a11y regression. (Same intent as the list template.) **Renamed from `header` → `toolbar` during code review** (PR #417): the word "header" carries banner-landmark connotations elsewhere in the package (`FzLayoutHeader` renders the `<header>` banner; `FzFocusTemplate`'s top toolbar uses the `topbar` slot), so a `header` slot on a deliberately non-banner region was a naming trap. Done pre-release, so free (no published consumer to break).
 - **`mainAs` defaults to `'main'`** (the detail body is the page's primary content; BO has no `<main>` today → net a11y gain) with a documented `'div'` escape for nesting inside a shell that already renders `<main>`. **Follow-up:** reconcile who owns `<main>` between `FzAppTemplate` and `FzDetailTemplate`/`FzListTemplate` in the BO shell-migration card.
 
 ### Built
 
-- `packages/layout/src/FzDetailTemplate.vue` — **new.** The layout (banner + summary sidebar + header toolbar + main body), slot-driven, `sidebarLabel` + `mainAs` props. No scoped CSS (all Tailwind); no new package dependency (imports only the region molecules + Vue).
+- `packages/layout/src/FzDetailTemplate.vue` — **new.** The layout (banner + summary sidebar + `toolbar` + main body), slot-driven, `sidebarLabel` + `mainAs` props. No scoped CSS (all Tailwind); no new package dependency (imports only the region molecules + Vue).
 - `packages/layout/src/types.ts` — `FzDetailTemplateProps`, `FzDetailTemplateSlots` added + exported.
 - `packages/layout/src/index.ts` — exports `FzDetailTemplate`.
-- `packages/layout/src/__tests__/FzDetailTemplate.spec.ts` — **new.** Rendering/structure, no forced viewport height, optional regions (banner / sidebar-as-complementary / header-not-banner), `sidebarLabel`, `mainAs` main/div, attribute forwarding onto the root, no events.
-- `apps/storybook/src/stories/templates/FzDetailTemplate.stories.ts` — **new.** `Default` / `WithoutSidebar` / `NestedInShell`; play functions assert landmarks (main + named complementary), banner/header, and the shell-nesting landmark de-duplication. Example content is DS components only (`FzAlert` / `FzCard` / `FzBadge` / `FzDivider` / `FzButton` / `FzTabs`/`FzTab`).
+- `packages/layout/src/__tests__/FzDetailTemplate.spec.ts` — **new.** Rendering/structure, no forced viewport height, optional regions (banner / sidebar-as-complementary / toolbar-not-banner), `sidebarLabel`, `mainAs` main/div (incl. `mainAs=div` **with a sidebar** — named complementary kept while no `<main>` is emitted), attribute forwarding onto the root, no events.
+- `apps/storybook/src/stories/templates/FzDetailTemplate.stories.ts` — **new.** `Default` / `WithoutSidebar` / `NestedInShell` / `NestedInShellWithSidebar`; play functions assert landmarks (main + named complementary), banner/toolbar, and the shell-nesting landmark de-duplication (incl. the rail-present nested case). Example content is DS components only (`FzAlert` / `FzCard` / `FzBadge` / `FzDivider` / `FzButton` / `FzTabs`/`FzTab`).
 - `packages/layout/README.md` — `FzDetailTemplate` section + attribute-forwarding note updated.
 - `.changeset/layout-bo-detail-template.md` — `@fiscozen/layout` minor (additive).
 - RFC §4 entry + taxonomy row added (this file's sibling doc edit).
 
 ### Verification ✅ (2026-07-14)
 
-- `pnpm --filter @fiscozen/layout test:unit` → **125 passed** (6 files; 14 new in `FzDetailTemplate.spec.ts`).
-- `npx vitest run --project=storybook FzDetailTemplate` (browser/Playwright play) → **3 passed** (`Default` / `WithoutSidebar` / `NestedInShell`).
+- `pnpm --filter @fiscozen/layout test:unit` → **126 passed** (6 files; 15 in `FzDetailTemplate.spec.ts` — +1 code-review add: `mainAs=div` with a sidebar).
+- `npx vitest run --project=storybook FzDetailTemplate` (browser/Playwright play) → **4 passed** (`Default` / `WithoutSidebar` / `NestedInShell` / `NestedInShellWithSidebar` — the last added in code review).
 - `pnpm --filter @fiscozen/layout build` (`vue-tsc` + vite) → **OK**; dts emitted (`dist/src/FzDetailTemplate.vue.d.ts`); bundle 35.46 kB / gzip 5.92 kB. (The `@apply` lightningcss warnings originate in `FzLayout.vue`'s scoped CSS, not `FzDetailTemplate`, which ships none.)
 - Prettier clean on all touched code + README + changeset. (The RFC markdown was already non-conformant at HEAD and prettier is not in the pre-push hook; RFC additions match the surrounding prose style.)
 

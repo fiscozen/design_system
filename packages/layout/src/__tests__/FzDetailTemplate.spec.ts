@@ -34,7 +34,7 @@ describe('FzDetailTemplate', () => {
       expect(wrapper.find('main').exists()).toBe(true)
       expect(wrapper.find('.fz-detail-template__banner').exists()).toBe(false)
       expect(wrapper.find('aside').exists()).toBe(false)
-      expect(wrapper.find('.fz-detail-template__header').exists()).toBe(false)
+      expect(wrapper.find('.fz-detail-template__toolbar').exists()).toBe(false)
     })
   })
 
@@ -67,17 +67,17 @@ describe('FzDetailTemplate', () => {
       expect(aside.find('.summary').text()).toBe('Mario Rossi')
     })
 
-    it('renders the header toolbar as a plain (non-banner) region when the slot is provided', () => {
+    it('renders the toolbar as a plain (non-banner) region when the slot is provided', () => {
       const wrapper = mount(FzDetailTemplate, {
         slots: {
-          header: '<div class="toolbar">Dichiarazione IVA 2026</div>',
+          toolbar: '<div class="title">Dichiarazione IVA 2026</div>',
           default: 'content'
         }
       })
-      const header = wrapper.find('.fz-detail-template__header')
-      expect(header.exists()).toBe(true)
-      expect(header.find('.toolbar').text()).toBe('Dichiarazione IVA 2026')
-      // Must not introduce a second banner landmark — the shell owns the page banner.
+      const toolbar = wrapper.find('.fz-detail-template__toolbar')
+      expect(toolbar.exists()).toBe(true)
+      expect(toolbar.find('.title').text()).toBe('Dichiarazione IVA 2026')
+      // Must not introduce a banner landmark — the shell owns the page banner.
       expect(wrapper.find('header').exists()).toBe(false)
     })
 
@@ -133,6 +133,24 @@ describe('FzDetailTemplate', () => {
       const region = wrapper.find('div.fz-layout-main')
       expect(region.exists()).toBe(true)
       expect(region.find('.body').text()).toBe('tabs')
+    })
+
+    it('keeps the named complementary rail while emitting no <main> when mainAs=div with a sidebar', () => {
+      // The shell-nesting case that also has a summary rail: the content region
+      // must NOT be a <main> (the shell owns it), yet the sidebar must remain a
+      // named complementary landmark. Guards the landmark path exercised when a
+      // detail page is composed inside a shell that already renders <main>.
+      const wrapper = mount(FzDetailTemplate, {
+        props: { mainAs: 'div', sidebarLabel: 'Riepilogo dichiarazione' },
+        slots: { sidebar: '<div class="summary">Mario Rossi</div>', default: 'x' }
+      })
+      // No <main> emitted by the template.
+      expect(wrapper.find('main').exists()).toBe(false)
+      expect(wrapper.find('div.fz-layout-main').exists()).toBe(true)
+      // The summary rail is still a named complementary landmark.
+      const aside = wrapper.find('aside.fz-detail-template__sidebar')
+      expect(aside.exists()).toBe(true)
+      expect(aside.attributes('aria-label')).toBe('Riepilogo dichiarazione')
     })
   })
 

@@ -12,7 +12,7 @@ import { FzTab, FzTabs } from '@fiscozen/tab'
  * `FzDetailTemplate` is the presentation-only backoffice detail-page layout: a
  * persistent `sidebar` summary/context rail (the record's identity, status, meta
  * and actions) beside the detail body, plus an optional full-width `banner` and
- * an optional `header` toolbar. It extracts the shape the backoffice detail pages
+ * an optional `toolbar` (title/actions). It extracts the shape the backoffice detail pages
  * hand-roll today so they converge on one responsive layout (RFC §4, LIB-2695).
  *
  * It is the sibling of `FzListTemplate` (LIB-2694): a list page pairs a *filter*
@@ -88,7 +88,7 @@ const detailPage = (args: FzDetailTemplateProps) => ({
         </FzCard>
       </template>
 
-      <template #header>
+      <template #toolbar>
         <div class="flex items-center justify-between gap-16">
           <h1 class="text-lg font-medium">Dichiarazione IVA 2026</h1>
           <FzButton variant="primary">Genera output</FzButton>
@@ -133,7 +133,7 @@ export const Default: Story = {
       ).toBeVisible()
     })
 
-    await step('Renders the banner and the header toolbar', async () => {
+    await step('Renders the banner and the toolbar', async () => {
       await expect(canvas.getByText(/non è ancora stata inviata/)).toBeVisible()
       await expect(canvas.getByText('Dichiarazione IVA 2026')).toBeVisible()
     })
@@ -186,6 +186,49 @@ export const NestedInShell: Story = {
       await expect(canvas.queryByRole('main')).toBeNull()
       await expect(canvasElement.querySelector('div.fz-layout-main')).toBeInTheDocument()
       await expect(canvas.getByText(/senza barra laterale/)).toBeVisible()
+    })
+  }
+}
+
+const nestedWithSidebar = (args: FzDetailTemplateProps) => ({
+  setup() {
+    return { args }
+  },
+  components: { FzDetailTemplate, FzCard },
+  template: `
+    <FzDetailTemplate v-bind="args" class="bg-background-alice-blue p-16">
+      <template #sidebar>
+        <FzCard title="Riepilogo">
+          <p>Mario Rossi</p>
+        </FzCard>
+      </template>
+      <FzCard title="Dettaglio">
+        <p>Contenuto del dettaglio con barra laterale.</p>
+      </FzCard>
+    </FzDetailTemplate>
+  `
+})
+
+/**
+ * The real shell-nesting case: composed with `mainAs="div"` (the shell owns
+ * `<main>`) **and** a summary rail. The content region is a plain `<div>` — so the
+ * page exposes no nested `main` landmark — while the summary rail is still a named
+ * `complementary` landmark. This is the landmark path the standalone
+ * `NestedInShell` (no rail) and `Default` (owns `<main>`) stories don't cover.
+ */
+export const NestedInShellWithSidebar: Story = {
+  render: nestedWithSidebar,
+  args: { mainAs: 'div', sidebarLabel: 'Riepilogo dichiarazione' },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Exposes the named complementary rail but no nested main landmark', async () => {
+      await expect(canvas.queryByRole('main')).toBeNull()
+      await expect(canvasElement.querySelector('div.fz-layout-main')).toBeInTheDocument()
+      await expect(
+        canvas.getByRole('complementary', { name: 'Riepilogo dichiarazione' })
+      ).toBeInTheDocument()
+      await expect(canvas.getByText(/con barra laterale/)).toBeVisible()
     })
   }
 }

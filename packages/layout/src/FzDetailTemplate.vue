@@ -6,7 +6,8 @@
  * declaration): a persistent `sidebar` summary/context rail — the record's
  * identity, status, meta and actions — beside the detail body (typically
  * `FzTabs`/`FzCard`s and its trailing modals), plus an optional full-width
- * `banner` (page-level alerts) and an optional `header` toolbar. Extracted so the
+ * `banner` (page-level alerts) and an optional `toolbar` (title/actions).
+ * Extracted so the
  * backoffice detail pages — which today hand-roll the same rail/body split two
  * ways (`FzLayout leftShoulder` and a raw `flex` row) — converge on one
  * responsive layout (RFC §4, Jira LIB-2695).
@@ -67,11 +68,12 @@ const slots = defineSlots<FzDetailTemplateSlots>()
       </FzLayoutAside>
 
       <FzLayoutMain :as="mainAs" class="fz-detail-template__main flex-1 gap-16">
-        <!-- Content toolbar (title/actions). Deliberately a plain <div>, not a
-             <header> banner: this template is nested inside a shell that already
-             owns the page banner/breadcrumb. -->
-        <div v-if="slots.header" class="fz-detail-template__header">
-          <slot name="header" />
+        <!-- The `toolbar` region (title/actions). Deliberately a plain <div>, not
+             a <header> banner landmark: this template is nested inside a shell
+             that already owns the page banner/breadcrumb. Named `toolbar` (not
+             `header`) so it does not read as a banner-landmark region. -->
+        <div v-if="slots.toolbar" class="fz-detail-template__toolbar">
+          <slot name="toolbar" />
         </div>
         <slot />
       </FzLayoutMain>
