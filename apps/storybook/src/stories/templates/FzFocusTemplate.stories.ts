@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, within } from 'storybook/test'
 import { FzFocusTemplate, FzFocusTemplateProps } from '@fiscozen/layout'
 import { FzButton } from '@fiscozen/button'
+import { FzCard } from '@fiscozen/card'
+import { FzIcon } from '@fiscozen/icons'
 
 /**
  * `FzFocusTemplate` is the distraction-reduced flow template: a centered,
@@ -94,12 +96,12 @@ const withChrome = (args: FzFocusTemplateProps) => ({
   setup() {
     return { args }
   },
-  components: { FzFocusTemplate, FzButton },
+  components: { FzFocusTemplate, FzButton, FzCard, FzIcon },
   template: `
     <FzFocusTemplate v-bind="args" class="bg-background-alice-blue">
       <template #topbar>
         <div class="flex items-center justify-between p-16 bg-core-white">
-          <span class="font-medium">Fiscozen</span>
+          <FzIcon name="fiscozen" variant="fak" size="lg" class="text-core-black !w-[32px]" />
           <FzButton variant="invisible">Esci</FzButton>
         </div>
       </template>
@@ -109,9 +111,9 @@ const withChrome = (args: FzFocusTemplateProps) => ({
         <FzButton>Continua</FzButton>
       </div>
       <template #aside>
-        <div class="p-16 bg-core-white h-full">
+        <FzCard class="h-full">
           <p class="text-sm">Serve aiuto? Scrivici.</p>
-        </div>
+        </FzCard>
       </template>
       <template #footer>
         <div class="p-16 text-sm text-grey-500 text-center">© Fiscozen</div>

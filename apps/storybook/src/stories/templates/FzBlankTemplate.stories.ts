@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, within } from 'storybook/test'
 import { FzBlankTemplate, FzBlankTemplateProps } from '@fiscozen/layout'
 import { FzButton } from '@fiscozen/button'
+import { FzCard } from '@fiscozen/card'
 
 /**
  * `FzBlankTemplate` is the full-bleed, no-chrome page template: a single
@@ -33,14 +34,16 @@ const render = (args: FzBlankTemplateProps) => ({
   setup() {
     return { args }
   },
-  components: { FzBlankTemplate, FzButton },
+  components: { FzBlankTemplate, FzButton, FzCard },
   template: `
     <FzBlankTemplate v-bind="args" class="bg-background-alice-blue">
-      <div class="w-[320px] max-w-full bg-core-white rounded-lg shadow p-24 flex flex-col gap-16">
-        <h1 class="text-xl font-medium">Accedi</h1>
-        <p class="text-sm text-grey-500">Entra nel tuo spazio Fiscozen.</p>
-        <FzButton>Continua</FzButton>
-      </div>
+      <FzCard class="w-[320px] max-w-full">
+        <div class="flex flex-col gap-16">
+          <h1 class="text-xl font-medium">Accedi</h1>
+          <p class="text-sm text-grey-500">Entra nel tuo spazio Fiscozen.</p>
+          <FzButton>Continua</FzButton>
+        </div>
+      </FzCard>
     </FzBlankTemplate>
   `
 })

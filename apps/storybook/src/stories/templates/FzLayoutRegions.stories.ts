@@ -3,6 +3,8 @@ import { defineComponent } from 'vue'
 import { expect, within } from 'storybook/test'
 import { FzLayoutHeader, FzLayoutMain, FzLayoutAside, FzLayoutFooter } from '@fiscozen/layout'
 import { FzIcon } from '@fiscozen/icons'
+import { FzLink } from '@fiscozen/link'
+import { FzAvatar } from '@fiscozen/avatar'
 
 /**
  * The thin semantic region wrappers — `FzLayoutHeader`, `FzLayoutMain`,
@@ -158,7 +160,7 @@ export const Anatomy: Story = {
  */
 export const Header: Story = {
   render: () => ({
-    components: { FzLayoutHeader, FzIcon, Placeholder },
+    components: { FzLayoutHeader, FzIcon, FzAvatar, Placeholder },
     template: `
       <div class="mx-auto w-full max-w-[760px]">
         <div class="overflow-hidden rounded-lg border border-grey-200 shadow-sm">
@@ -170,11 +172,7 @@ export const Header: Story = {
             <div class="flex items-center gap-16 text-grey-400">
               <FzIcon name="magnifying-glass" size="md" />
               <FzIcon name="bell" size="md" />
-              <div
-                class="flex h-32 w-32 items-center justify-center rounded-full bg-blue-500 text-sm font-semibold text-core-white"
-              >
-                RA
-              </div>
+              <FzAvatar firstName="Riccardo" lastName="Agnoletto" />
             </div>
           </FzLayoutHeader>
           <div class="bg-core-white p-16">
@@ -206,7 +204,7 @@ export const Header: Story = {
  */
 export const Aside: Story = {
   render: () => ({
-    components: { FzLayoutAside, Placeholder },
+    components: { FzLayoutAside, FzLink, Placeholder },
     template: `
       <div class="mx-auto w-full max-w-[760px]">
         <div class="flex flex-col gap-16 rounded-lg border border-grey-200 bg-core-white p-16 shadow-sm sm:flex-row">
@@ -217,7 +215,7 @@ export const Aside: Story = {
           >
             <span class="text-base font-semibold text-core-black">Serve aiuto?</span>
             <p class="text-sm text-grey-500">Il nostro team ti risponde in giornata.</p>
-            <a href="#" class="text-sm font-medium text-blue-600 hover:underline">Contatta il supporto</a>
+            <FzLink to="#" external>Contatta il supporto</FzLink>
           </FzLayoutAside>
         </div>
         <p class="mt-12 text-sm text-grey-500">
@@ -245,7 +243,7 @@ export const Aside: Story = {
  */
 export const Footer: Story = {
   render: () => ({
-    components: { FzLayoutFooter, Placeholder },
+    components: { FzLayoutFooter, FzLink, Placeholder },
     template: `
       <div class="mx-auto w-full max-w-[760px]">
         <div class="overflow-hidden rounded-lg border border-grey-200 bg-core-white shadow-sm">
@@ -258,9 +256,9 @@ export const Footer: Story = {
           >
             <span class="text-sm text-grey-500">© 2026 Fiscozen S.r.l.</span>
             <div class="flex gap-16 text-sm">
-              <a href="#" class="text-blue-600 hover:underline">Privacy</a>
-              <a href="#" class="text-blue-600 hover:underline">Termini</a>
-              <a href="#" class="text-blue-600 hover:underline">Cookie</a>
+              <FzLink to="#" external>Privacy</FzLink>
+              <FzLink to="#" external>Termini</FzLink>
+              <FzLink to="#" external>Cookie</FzLink>
             </div>
           </FzLayoutFooter>
         </div>
