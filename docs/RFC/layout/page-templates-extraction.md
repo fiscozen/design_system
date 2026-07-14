@@ -63,7 +63,7 @@ Turn the design-system layout layer into a standardized, presentation-only **pag
 |---|---|---|---|
 | **Region (molecule)** | `FzLayoutHeader`, `FzLayoutMain`, `FzLayoutAside`, `FzLayoutFooter`, `FzLayoutBottomBar` | Region wrappers owning padding, scroll (`overflow`/`scrollbar-gutter`), sticky, `max-width`, **safe-area insets** (centralizing today's ≥5 ad-hoc copies). Built **just-in-time with their first template consumer**, not as a speculative library. **[R]** | Yes |
 | **Grid primitive (organism)** | `FzLayout` (existing) | Low-level responsive grid arranger. Kept for in-page master-detail (BO `leftShoulder`). API stable for 17 consumers. | Yes |
-| **Page template (templates)** | `FzAppTemplate`, `FzFocusTemplate`, `FzBlankTemplate` (+ optional `FzMasterDetailTemplate`) | Full-page shells composed from regions + grid primitive. Selected at router-view level. | Yes |
+| **Page template (templates)** | `FzAppTemplate`, `FzFocusTemplate`, `FzBlankTemplate`, `FzDetailTemplate` (+ optional `FzMasterDetailTemplate`) | Full-page shells composed from regions + grid primitive. Selected at router-view level. | Yes |
 | **Page (app-side)** | route components | Fill template slots with app organisms (nav, chat, title, actions, modals). Own all logic. | No (in apps) |
 
 **Naming:** `*Template` suffix (aligns with the "templates" layer and the goal wording).
@@ -88,8 +88,14 @@ Covers **FO `FocusLayout`** (onboarding).
 ### `FzBlankTemplate` — full-bleed, no chrome
 Covers **FO/BO auth (login)** + standalone tools (BO `MidaSync`, `CustomerInvoices`). **Slots:** default. **Props:** `align?: 'center' | 'top'`.
 
+### `FzDetailTemplate` — backoffice detail-page layout (**Jira LIB-2695**)
+Covers the recurring **BO record-detail page** shape (e.g. *dettaglio dichiarazione IVA*): a persistent **summary/context sidebar** (the record's identity, status, meta and actions) beside the **detail body** (tabs/cards/forms), with an optional full-width `banner` and an optional `header` toolbar. It is the **sibling of `FzListTemplate`** (LIB-2694): a list page pairs a *filter* rail with a table; a detail page pairs a *summary* rail with the record's content.
+- **Slots:** `banner`, `sidebar`, `header`, default (the detail body). **Props:** `sidebarLabel?` (accessible name for the sidebar `complementary` landmark), `mainAs?: 'main' | 'div'`.
+- **[R] Composes the region molecules, not `FzLayout leftShoulder`** — same reconnaissance finding as the list template. The BO detail pages that use `leftShoulder` (CU, Intrastat, LIPE, Welfare) inherit its `100vh` mobile tracks + independent per-region scroll, whereas the hand-rolled ones (VAT declaration, Model770) scroll the document. So `FzDetailTemplate` follows the `FzFocusTemplate`/`FzListTemplate` idiom (region molecules + document-scroll flex): the summary rail (`FzLayoutAside`, `md:w-[340px]`) beside `FzLayoutMain`, stacking above on mobile.
+- **[R] Page-content template, not a shell.** It renders *inside* the app shell (`FzAppTemplate`, LIB-2692 / Phase 4), so — like `FzListTemplate` — it does **not** own a viewport height or root safe-area (the shell does). `mainAs` defaults to `main` with a documented `'div'` escape for shell nesting; the who-owns-`<main>` reconciliation between `FzAppTemplate` and `FzDetailTemplate` is a follow-up for the BO shell-migration card.
+
 ### `FzMasterDetailTemplate` (optional, later)
-Thin semantic wrapper over `FzLayout leftShoulder` for BO `leftShoulder` pages + `Users` list. `FzLayout leftShoulder` keeps working meanwhile.
+Thin semantic wrapper over `FzLayout leftShoulder` for a genuine **split-view** master-detail (list + navigable detail pane in one view). Note the BO `leftShoulder` *detail* pages hold a **summary sidebar**, not a second navigable pane — so `FzDetailTemplate` (summary rail + body) covers them, just as `FzListTemplate` covers the *filter*-rail lists; this template remains a possible *later* addition only for the true split-view case. `FzLayout leftShoulder` keeps working meanwhile.
 
 *Out of package (stay app-side):* `WizardShell`, `FormPreviewLayout`, `InvoiceShell`.
 

@@ -187,6 +187,53 @@ type FzFocusTemplateSlots = {
   footer?(props: {}): any
 }
 
+/**
+ * Props for `FzDetailTemplate` — the backoffice detail-page layout.
+ *
+ * A presentation-only page-content layout for record-detail pages: a persistent
+ * `sidebar` summary/actions rail beside the detail body, plus an optional
+ * full-width `banner` and an optional `header` toolbar. It is the list template's
+ * sibling — where a list page pairs a *filter* rail with a table, a detail page
+ * pairs a *summary/context* rail with the record's content (tabs, cards, forms).
+ * Like `FzListTemplate` (LIB-2694) it is designed to render inside a shell's main
+ * region, so it does not force a viewport height or apply root safe-area insets
+ * (the shell owns those). RFC §4 / Jira LIB-2695.
+ */
+type FzDetailTemplateProps = {
+  /**
+   * Accessible name for the `sidebar`'s `complementary` landmark (applied as
+   * `aria-label` on the `<aside>`). Set it when the page exposes more than one
+   * complementary region — e.g. when this template is nested inside a shell that
+   * renders its own `aside` — so screen-reader users can distinguish the record
+   * summary from other complementary landmarks. Omit for a single, unambiguous
+   * rail.
+   */
+  sidebarLabel?: string
+  /**
+   * The element the main content region renders as. Defaults to `main` so the
+   * detail body — the page's primary content — is a `main` landmark. Set to
+   * `div` when the template is composed inside a shell that already renders a
+   * `<main>` (e.g. `FzAppTemplate`'s default slot), to avoid nested `main`
+   * landmarks.
+   * @default 'main'
+   */
+  mainAs?: 'main' | 'div'
+}
+
+/**
+ * Slots for `FzDetailTemplate`.
+ */
+type FzDetailTemplateSlots = {
+  /** Optional full-width region above the content (page-level alerts, notices). */
+  banner?(props: {}): any
+  /** The record summary/context rail (identity, status, meta, actions). */
+  sidebar?(props: {}): any
+  /** Optional toolbar above the body (title, actions). Not a landmark. */
+  header?(props: {}): any
+  /** The detail body (typically `FzTabs`/`FzCard`s and its trailing modals). */
+  default(props: {}): any
+}
+
 export type {
   FzLayoutProps,
   FzLayoutAlign,
@@ -204,5 +251,7 @@ export type {
   FzLayoutFooterSlots,
   FzFocusChrome,
   FzFocusTemplateProps,
-  FzFocusTemplateSlots
+  FzFocusTemplateSlots,
+  FzDetailTemplateProps,
+  FzDetailTemplateSlots
 }
