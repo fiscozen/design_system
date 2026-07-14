@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, within } from 'storybook/test'
 import { FzListTemplate, FzListTemplateProps } from '@fiscozen/layout'
 import { FzButton } from '@fiscozen/button'
+import { FzAlert } from '@fiscozen/alert'
+import { FzCard } from '@fiscozen/card'
+import { FzSelect } from '@fiscozen/select'
+import { FzInput } from '@fiscozen/input'
+import { FzSimpleTable, FzColumn } from '@fiscozen/simple-table'
 
 /**
  * `FzListTemplate` is the presentation-only backoffice list-page layout: an
@@ -15,6 +20,11 @@ import { FzButton } from '@fiscozen/button'
  * not force a viewport height or apply root safe-area insets. Set `mainAs="div"`
  * when composing it inside a shell that already renders a `<main>` (e.g.
  * `FzAppTemplate`) to avoid nested `main` landmarks.
+ *
+ * The example content is composed entirely from design-system components
+ * (`FzAlert` banner, `FzCard` + `FzSelect` filters, `FzInput` search,
+ * `FzSimpleTable` + `FzColumn` list) rather than hand-rolled `<div>`/`<table>`/
+ * `<select>`/`<input>` markup.
  */
 const meta: Meta<typeof FzListTemplate> = {
   title: 'Templates/FzListTemplate',
@@ -38,54 +48,66 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-const card = 'bg-core-white rounded-lg shadow p-16'
+const anni = [
+  { value: '2026', label: '2026' },
+  { value: '2025', label: '2025' }
+]
+const stati = [
+  { value: 'all', label: 'Tutti' },
+  { value: 'sent', label: 'Inviata' },
+  { value: 'draft', label: 'In bozza' }
+]
+const dichiarazioni = [
+  { utente: 'Mario Rossi', anno: '2026', stato: 'Inviata' },
+  { utente: 'Luigi Verdi', anno: '2026', stato: 'In bozza' }
+]
 
 const fullPage = (args: FzListTemplateProps) => ({
   setup() {
-    return { args, card }
+    return { args, anni, stati, dichiarazioni }
   },
-  components: { FzListTemplate, FzButton },
+  components: {
+    FzListTemplate,
+    FzButton,
+    FzAlert,
+    FzCard,
+    FzSelect,
+    FzInput,
+    FzSimpleTable,
+    FzColumn
+  },
   template: `
     <FzListTemplate v-bind="args" class="bg-background-alice-blue p-16">
       <template #banner>
-        <div class="rounded-lg bg-semantic-warning-100 text-semantic-warning-700 p-16 text-sm">
+        <FzAlert tone="warning" variant="background" :showButtonAction="false">
           Il periodo di elaborazione delle dichiarazioni non è ancora aperto.
-        </div>
+        </FzAlert>
       </template>
 
       <template #filters>
-        <div :class="card">
+        <FzCard title="Filtri">
           <div class="flex flex-col gap-12">
-            <span class="text-sm font-medium text-grey-500">Filtri</span>
-            <label class="flex flex-col gap-4 text-sm">Anno
-              <select class="rounded border border-grey-200 p-8"><option>2026</option></select>
-            </label>
-            <label class="flex flex-col gap-4 text-sm">Stato
-              <select class="rounded border border-grey-200 p-8"><option>Tutti</option></select>
-            </label>
+            <FzSelect label="Anno" placeholder="Seleziona" :options="anni" />
+            <FzSelect label="Stato" placeholder="Tutti" :options="stati" />
             <FzButton class="mt-8">Nuova dichiarazione</FzButton>
           </div>
-        </div>
+        </FzCard>
       </template>
 
       <template #header>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-16">
           <h1 class="text-lg font-medium">Dichiarazioni IVA</h1>
-          <input class="rounded border border-grey-200 p-8 text-sm max-w-[300px]" placeholder="Ricerca utente" />
+          <FzInput type="search" placeholder="Ricerca utente" class="max-w-[300px]" />
         </div>
       </template>
 
-      <div :class="card">
-        <table class="w-full text-left text-sm">
-          <thead class="text-grey-500">
-            <tr><th class="p-8">Utente</th><th class="p-8">Anno</th><th class="p-8">Stato</th></tr>
-          </thead>
-          <tbody>
-            <tr class="border-t border-grey-100"><td class="p-8">Mario Rossi</td><td class="p-8">2026</td><td class="p-8">Inviata</td></tr>
-            <tr class="border-t border-grey-100"><td class="p-8">Luigi Verdi</td><td class="p-8">2026</td><td class="p-8">In bozza</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <FzCard>
+        <FzSimpleTable :value="dichiarazioni">
+          <FzColumn field="utente" header="Utente" />
+          <FzColumn field="anno" header="Anno" />
+          <FzColumn field="stato" header="Stato" />
+        </FzSimpleTable>
+      </FzCard>
     </FzListTemplate>
   `
 })
@@ -139,21 +161,21 @@ export const FiltersTop: Story = {
   }
 }
 
+const utenti = [{ nome: 'Anna Bianchi', ruolo: 'Operatore' }]
+
 const listOnly = (args: FzListTemplateProps) => ({
   setup() {
-    return { args, card }
+    return { args, utenti }
   },
-  components: { FzListTemplate },
+  components: { FzListTemplate, FzCard, FzSimpleTable, FzColumn },
   template: `
     <FzListTemplate v-bind="args" class="bg-background-alice-blue p-16">
-      <div :class="card">
-        <table class="w-full text-left text-sm">
-          <thead class="text-grey-500"><tr><th class="p-8">Nome</th><th class="p-8">Ruolo</th></tr></thead>
-          <tbody>
-            <tr class="border-t border-grey-100"><td class="p-8">Anna Bianchi</td><td class="p-8">Operatore</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <FzCard>
+        <FzSimpleTable :value="utenti">
+          <FzColumn field="nome" header="Nome" />
+          <FzColumn field="ruolo" header="Ruolo" />
+        </FzSimpleTable>
+      </FzCard>
     </FzListTemplate>
   `
 })
