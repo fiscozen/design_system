@@ -1,2 +1,8 @@
 export { default as FzLayout } from './FzLayout.vue'
+export { default as FzLayoutMain } from './FzLayoutMain.vue'
+export { default as FzLayoutHeader } from './FzLayoutHeader.vue'
+export { default as FzLayoutAside } from './FzLayoutAside.vue'
+export { default as FzLayoutFooter } from './FzLayoutFooter.vue'
+export { default as FzBlankTemplate } from './FzBlankTemplate.vue'
+export { default as FzFocusTemplate } from './FzFocusTemplate.vue'
 export type * from './types'
