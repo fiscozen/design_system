@@ -95,11 +95,45 @@ Slots: `topbar`, default (centered content), `aside`, `footer`.
 </template>
 ```
 
+### `FzListTemplate`
+
+Backoffice list-page layout — the recurring shape of a list page: an optional
+full-width `banner` (alerts, action cards), an optional `filters` rail, an
+optional `header` toolbar (title/search/actions) and the list content itself
+(typically an `FzTable`). Each region renders only when its slot is provided.
+
+Unlike the templates above, this is a **page-content** template designed to
+render inside a shell's main region, so it does **not** force a viewport height
+or apply root safe-area insets — the shell owns the scroll container and device
+safe-area. It composes the region molecules (`FzLayoutAside` + `FzLayoutMain`)
+with document scroll rather than `FzLayout leftShoulder`, which forces `100vh`
+mobile tracks and independent per-region scroll.
+
+| Prop              | Type              | Default  | Description                                                                                                     |
+| ----------------- | ----------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
+| `filtersPosition` | `'left' \| 'top'` | `'left'` | `left` = a fixed-width rail beside the content from `md` up (stacking above on mobile); `top` = full-width row.  |
+| `filtersLabel`    | `string`          | —        | Accessible name (`aria-label`) for the `filters` rail's `complementary` landmark. Set it when the page exposes more than one complementary region (e.g. nested in a shell with its own aside) so screen-reader users can tell them apart. |
+| `mainAs`          | `'main' \| 'div'` | `'main'` | Element the content region renders as. Set to `'div'` when nesting inside a shell that already owns `<main>`.    |
+
+Slots: `banner`, `filters`, `header`, default (the list content).
+
+```vue
+<template>
+  <FzListTemplate filters-position="left">
+    <template #banner><OutOfPeriodAlert /></template>
+    <template #filters><VatDeclarationFilters /></template>
+    <template #header><ListTitleAndSearch /></template>
+    <FzTable v-bind="tableProps" />
+  </FzListTemplate>
+</template>
+```
+
 **Attribute forwarding.** `FzBlankTemplate`'s single root _is_ its `<main>`
 region, so fall-through attributes (`aria-label`, `id`, `data-*`) land on that
-`<main>`. `FzFocusTemplate`'s root is a non-landmark container `<div>`, so its
-fall-through attributes land on that container, **not** on the inner `<main>` —
-label the flow content directly if a `main` accessible name is required.
+`<main>`. `FzFocusTemplate` and `FzListTemplate` have a non-landmark container
+`<div>` as their root, so fall-through attributes land on that container,
+**not** on the inner `<main>` — label the content directly if a `main`
+accessible name is required.
 
 ### `FzAppTemplate`
 
