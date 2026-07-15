@@ -187,6 +187,137 @@ type FzFocusTemplateSlots = {
   footer?(props: {}): any
 }
 
+/**
+ * Slots for `FzLayoutBottomBar` — the sticky bottom action-bar region.
+ */
+type FzLayoutBottomBarSlots = {
+  /**
+   * The bar content (e.g. primary/secondary actions). Content should set its
+   * own `pointer-events` — the region container is `pointer-events: none` so
+   * taps pass through the empty gutters; direct children are re-enabled.
+   */
+  default(props: {}): any
+}
+
+/**
+ * Content frame for `FzAppTemplate`'s main region.
+ *
+ * - `card`: the primary content sits in a contained, max-width white card (the
+ *   frontoffice standard-layout shape). The main region also carries a uniform
+ *   16px grey gutter around the card, and the bottom bar mirrors the gutter's
+ *   horizontal inset, so the content card and the bottom-bar card share the same
+ *   left/right edges at every viewport width.
+ * - `flat`: full-bleed content with no card frame and no gutter.
+ */
+type FzAppChrome = 'card' | 'flat'
+
+/**
+ * Width of `FzAppTemplate`'s main content column.
+ *
+ * - `standard` (default): a readable, centered max-width column.
+ * - `wide`: the standard max-width up to the largest breakpoint, then unbounded
+ *   — the single content-width API that replaces the app's dead `wideLayout`
+ *   flag (RFC §4/§7). Do not add a second parallel width prop.
+ * - `full`: full-bleed, no max-width.
+ */
+type FzAppContentWidth = 'standard' | 'wide' | 'full'
+
+/**
+ * Toggle state + actions the template exposes to its `nav`, `header` and `aside`
+ * slots, so the app's injected chrome (a chat/support button, an aside close
+ * control, …) can drive the collapsible `aside` without owning the responsive
+ * state itself (RFC §4).
+ *
+ * Only the `aside` is here: the nav owns its own responsive/menu state (the
+ * frontoffice nav is `FzNavbar`, which renders its own rail / mobile bar +
+ * hamburger), so the template exposes no `navOpen`/`toggleNav`.
+ */
+type FzAppTemplateToggles = {
+  /** `true` from the `desktop` breakpoint (1200px) up. */
+  isDesktop: boolean
+  /** Whether the aside is open. */
+  asideOpen: boolean
+  /** Open/close the aside. Pass a boolean to force a state; omit to toggle. */
+  toggleAside: (force?: boolean) => void
+}
+
+/**
+ * Props for `FzAppTemplate` — the persistent-nav application shell.
+ *
+ * The full-chrome page template: a persistent navigation region, an optional
+ * sticky header, the primary content, an optional complementary aside, an
+ * optional sticky bottom action bar, and an optional footer. The nav is placed
+ * responsively (a left rail on desktop, a top region on mobile) but the injected
+ * nav owns its own collapse/menu — the template renders no nav drawer. Only the
+ * aside collapses: a right panel on desktop, a modal drawer below the `desktop`
+ * breakpoint. Owns a full-height root, so it does not depend on app-global
+ * `height`/`overflow` CSS (RFC §6.2).
+ *
+ * Presentation-only: it holds the aside's responsive/toggle state and
+ * safe-area/sticky CSS but imports no store/router/API. Rail widths are a
+ * function of the *injected* nav/aside content, never the template (RFC §4/§10).
+ */
+type FzAppTemplateProps = {
+  /**
+   * Render the complementary `aside` region (a side panel on desktop, a modal
+   * drawer on mobile). Off by default so a shell without an aside stays lean.
+   * @default false
+   */
+  hasAside?: boolean
+  /**
+   * Render the sticky bottom-bar region and `provide()` its teleport target
+   * (`FZ_BOTTOM_BAR_TARGET`). The region self-collapses to zero height when it
+   * has no content, so this can stay on even for pages that rarely show a bar;
+   * set it to `false` to omit the region (and the provide) entirely.
+   * @default true
+   */
+  hasBottomBar?: boolean
+  /**
+   * How the main content is framed.
+   * @default 'card'
+   * @see FzAppChrome
+   */
+  chrome?: FzAppChrome
+  /**
+   * Width of the main content column.
+   * @default 'standard'
+   * @see FzAppContentWidth
+   */
+  contentWidth?: FzAppContentWidth
+  /**
+   * Accessible name for the navigation landmark. The template wraps the `nav`
+   * slot in a `<nav>` region so there is always a navigation landmark regardless
+   * of what the injected nav renders as its own root; pass a label to
+   * distinguish it for assistive tech (recommended when a page exposes more than
+   * one navigation landmark). Omit for an unnamed — but still valid — landmark.
+   */
+  navLabel?: string
+  /**
+   * Accessible name for the aside when it is a modal drawer (mobile). Ignored
+   * for the desktop panel.
+   */
+  asideLabel?: string
+}
+
+/**
+ * Slots for `FzAppTemplate`. The chrome slots receive the responsive toggle
+ * props (`FzAppTemplateToggles`).
+ */
+type FzAppTemplateSlots = {
+  /** Persistent navigation (left rail on desktop, top region on mobile), wrapped in a `<nav>` landmark; the injected nav owns its own collapse/menu. */
+  nav?(props: FzAppTemplateToggles): any
+  /** Optional sticky top bar (page title, actions, a chat/support toggle). */
+  header?(props: FzAppTemplateToggles): any
+  /** The page's primary content. */
+  default(props: {}): any
+  /** Optional complementary panel (right panel on desktop, modal drawer on mobile). */
+  aside?(props: FzAppTemplateToggles): any
+  /** Optional sticky bottom action bar. */
+  bottomBar?(props: {}): any
+  /** Optional footer below the content. */
+  footer?(props: {}): any
+}
+
 export type {
   FzLayoutProps,
   FzLayoutAlign,
@@ -204,5 +335,11 @@ export type {
   FzLayoutFooterSlots,
   FzFocusChrome,
   FzFocusTemplateProps,
-  FzFocusTemplateSlots
+  FzFocusTemplateSlots,
+  FzLayoutBottomBarSlots,
+  FzAppChrome,
+  FzAppContentWidth,
+  FzAppTemplateToggles,
+  FzAppTemplateProps,
+  FzAppTemplateSlots
 }
