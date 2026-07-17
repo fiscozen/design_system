@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.5
+
+### Patch Changes
+
+- @fiscozen/button@3.1.2
+- @fiscozen/container@0.5.1
+
 ## 3.0.4
 
 ### Patch Changes

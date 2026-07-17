@@ -1,5 +1,11 @@
 # @fiscozen/textarea
 
+## 3.1.4
+
+### Patch Changes
+
+- @fiscozen/alert@3.0.5
+
 ## 3.1.3
 
 ### Patch Changes

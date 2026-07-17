@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/pdf-viewer",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Design System PdfViewer component",
   "scripts": {
     "coverage": "vitest run --coverage",

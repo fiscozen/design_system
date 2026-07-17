@@ -1,5 +1,11 @@
 # @fiscozen/collapse
 
+## 3.0.3
+
+### Patch Changes
+
+- @fiscozen/container@0.5.1
+
 ## 3.0.2
 
 ### Patch Changes

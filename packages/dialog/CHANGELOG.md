@@ -1,5 +1,15 @@
 # @fiscozen/dialog
 
+## 0.1.35
+
+### Patch Changes
+
+- Updated dependencies [1c2baef]
+- Updated dependencies [1c2baef]
+  - @fiscozen/composables@1.1.0
+  - @fiscozen/style@0.4.0
+  - @fiscozen/button@3.1.2
+
 ## 0.1.34
 
 ### Patch Changes

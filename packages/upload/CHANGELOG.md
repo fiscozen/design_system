@@ -1,5 +1,11 @@
 # @fiscozen/upload
 
+## 1.0.7
+
+### Patch Changes
+
+- @fiscozen/button@3.1.2
+
 ## 1.0.6
 
 ### Patch Changes

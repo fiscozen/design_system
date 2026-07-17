@@ -1,5 +1,12 @@
 # @fiscozen/progress
 
+## 4.0.1
+
+### Patch Changes
+
+- Updated dependencies [1c2baef]
+  - @fiscozen/style@0.4.0
+
 ## 4.0.0
 
 ### Major Changes
