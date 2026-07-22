@@ -427,6 +427,70 @@ type FzDetailTemplateSlots = {
   default(props: {}): any
 }
 
+/**
+ * The collapse state + toggle action `FzThreeColumnsTemplate` exposes to its
+ * `sidebar-header` slot, so injected chrome (a title row, a collapse button) can
+ * drive the collapsible sidebar without owning the collapse state. Mirrors
+ * `FzAppTemplateToggles` (the aside toggle on `FzAppTemplate`).
+ */
+type FzThreeColumnsSidebarToggle = {
+  /** Whether the sidebar is currently collapsed. */
+  collapsed: boolean
+  /** Collapse/expand the sidebar. Pass a boolean to force a state; omit to toggle. */
+  toggle: (force?: boolean) => void
+}
+
+/**
+ * Props for `FzThreeColumnsTemplate` — the backoffice three-column workspace
+ * layout. The full narrative (structure, height contract, landmarks) lives on the
+ * component. `sidebarCollapsed` is a `v-model` (declared on the component via
+ * `defineModel`), not a plain prop, so it is not listed here.
+ */
+type FzThreeColumnsTemplateProps = {
+  /**
+   * The element the content-columns region renders as. Defaults to `main` so the
+   * two columns — the page's primary content — are a `main` landmark. Set to
+   * `div` when composed inside a shell that already renders a `<main>`, to avoid
+   * nested `main` landmarks.
+   * @default 'main'
+   */
+  mainAs?: 'main' | 'div'
+  /**
+   * Accessible name for the `sidebar`'s `complementary` landmark (applied as
+   * `aria-label` on the `<aside>`). Set it when the page exposes more than one
+   * complementary region so screen-reader users can tell them apart.
+   */
+  sidebarLabel?: string
+}
+
+/**
+ * Slots for `FzThreeColumnsTemplate`. The `sidebar-header` slot receives the
+ * collapse toggle props (`FzThreeColumnsSidebarToggle`); the template is
+ * otherwise chrome-free — back button, title, badge, filter widgets and the
+ * toggle control are all injected through these slots.
+ */
+type FzThreeColumnsTemplateSlots = {
+  /** Left side of the header bar (e.g. back button + title + badge). */
+  'header-left'?(props: {}): any
+  /** Right side of the header bar (e.g. action buttons). */
+  'header-right'?(props: {}): any
+  /**
+   * The sidebar's top row (e.g. a title + the collapse/expand control). Receives
+   * `{ collapsed, toggle }`. Stays visible when the sidebar is collapsed.
+   */
+  'sidebar-header'?(props: FzThreeColumnsSidebarToggle): any
+  /** Filter controls below the sidebar title row. Hidden (via `v-show`) when collapsed. */
+  'sidebar-filter'?(props: {}): any
+  /** Scrollable sidebar body (e.g. the list). Hidden (via `v-show`) when collapsed. */
+  'sidebar-content'?(props: {}): any
+  /** Left content column (e.g. a document preview). */
+  'column-left'?(props: {}): any
+  /** Header row of the right content column. */
+  'column-right-header'?(props: {}): any
+  /** Scrollable body of the right content column (the primary working area). */
+  'column-right-content'?(props: {}): any
+}
+
 export type {
   FzLayoutProps,
   FzLayoutAlign,
@@ -455,5 +519,8 @@ export type {
   FzListTemplateProps,
   FzListTemplateSlots,
   FzDetailTemplateProps,
-  FzDetailTemplateSlots
+  FzDetailTemplateSlots,
+  FzThreeColumnsSidebarToggle,
+  FzThreeColumnsTemplateProps,
+  FzThreeColumnsTemplateSlots
 }
