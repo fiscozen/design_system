@@ -102,7 +102,7 @@ const showDescription = (step: FzStepProps) =>
     <div
       @click="handleActionClick(index)"
       :class="[
-        'fz-stepper__step flex flex-col w-[156px] shrink-0 cursor-pointer py-[10px]',
+        'fz-stepper__step flex flex-col flex-1 min-w-0 cursor-pointer py-[10px]',
         { 'opacity-[.2] !cursor-not-allowed': step.status === 'disabled' },
       ]"
       v-for="(step, index) in props.steps"
