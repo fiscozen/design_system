@@ -76,6 +76,10 @@ describe('FzThreeColumnsTemplate', () => {
       const body = wrapper.find('.fz-three-columns-template__sidebar-content')
       expect(body.classes()).toContain('overflow-y-auto')
       expect(body.classes()).toContain('min-h-0')
+      // tabindex=0 keeps the scroll region keyboard-reachable/scrollable even when
+      // the slotted content has no focusable element (WCAG 2.1.1 / axe
+      // scrollable-region-focusable). A markup refactor must not drop it.
+      expect(body.attributes('tabindex')).toBe('0')
     })
 
     it('renders the right-column body inside an overflow-y-auto / min-h-0 scroll container', () => {
@@ -85,6 +89,25 @@ describe('FzThreeColumnsTemplate', () => {
       const body = wrapper.find('.fz-three-columns-template__column-right-content')
       expect(body.classes()).toContain('overflow-y-auto')
       expect(body.classes()).toContain('min-h-0')
+      // Same keyboard-scroll contract as the sidebar body.
+      expect(body.attributes('tabindex')).toBe('0')
+    })
+  })
+
+  // ============================================
+  // HEADER BAR (regression guard for the overflow bleed)
+  // ============================================
+  describe('Header bar', () => {
+    it('floors the header at 64px without hard-capping it, so oversized header content cannot bleed into the body', () => {
+      // Regression guard: the header used a hard `max-h-[64px]`, which caps the
+      // box size but does NOT clip — default-sized header chrome (e.g. an h-44
+      // FzButton) painted past the header into the body region below. A `min-h`
+      // floor lets the bar grow to fit instead. jsdom cannot measure layout, so
+      // lock the class contract, mirroring the Height-contract lock-ins above.
+      const wrapper = mount(FzThreeColumnsTemplate)
+      const header = wrapper.find('.fz-three-columns-template__header')
+      expect(header.classes()).toContain('min-h-[64px]')
+      expect(header.classes()).not.toContain('max-h-[64px]')
     })
   })
 
@@ -172,9 +195,9 @@ describe('FzThreeColumnsTemplate', () => {
         props: { sidebarLabel: 'Lista documenti' },
         slots: { 'sidebar-content': 'x' }
       })
-      expect(wrapper.find('aside.fz-three-columns-template__sidebar').attributes('aria-label')).toBe(
-        'Lista documenti'
-      )
+      expect(
+        wrapper.find('aside.fz-three-columns-template__sidebar').attributes('aria-label')
+      ).toBe('Lista documenti')
     })
 
     it('leaves the sidebar landmark unnamed when sidebarLabel is omitted', () => {
