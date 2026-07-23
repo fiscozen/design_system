@@ -491,6 +491,67 @@ type FzThreeColumnsTemplateSlots = {
   'column-right-content'?(props: {}): any
 }
 
+/**
+ * Toggle state + action `FzSidebarTemplate` exposes to its sidebar/top-bar slots
+ * (`brand`, `nav`, `footer`, `topbar`), so injected chrome can drive the
+ * collapsible drawer — a nav link closing it on click, a top-bar affordance —
+ * without owning the responsive state. Mirrors `FzAppTemplateToggles` (the aside
+ * toggle on `FzAppTemplate`).
+ */
+type FzSidebarTemplateToggles = {
+  /** `true` from the `desktop` breakpoint (1200px) up (the persistent rail). */
+  isDesktop: boolean
+  /** Whether the sidebar drawer is open (only meaningful below the breakpoint). */
+  sidebarOpen: boolean
+  /** Open/close the drawer. Pass a boolean to force a state; omit to toggle. */
+  toggleSidebar: (force?: boolean) => void
+}
+
+/**
+ * Props for `FzSidebarTemplate` — the collapsible-sidebar application shell.
+ *
+ * The full narrative (responsive frame, theming via `--fz-sidebar-*`, the
+ * presentation/logic split) lives on the component. Presentation-only: it holds
+ * the drawer's responsive/collapse state and safe-area/sticky CSS but imports no
+ * store/router/API.
+ */
+type FzSidebarTemplateProps = {
+  /**
+   * Accessible name for the sidebar's `<nav>` landmark (the middle zone wrapping
+   * the `nav` slot). Recommended when the page exposes more than one navigation
+   * landmark. Omit for an unnamed — but still valid — landmark.
+   */
+  navLabel?: string
+  /**
+   * Accessible name for the sidebar when it is a modal drawer (mobile). Ignored
+   * for the desktop rail, which is not a dialog.
+   */
+  sidebarLabel?: string
+  /**
+   * Accessible name for the mobile hamburger button that opens the drawer.
+   * @default 'Menu'
+   */
+  menuLabel?: string
+}
+
+/**
+ * Slots for `FzSidebarTemplate`. The sidebar/top-bar chrome slots receive the
+ * responsive toggle props (`FzSidebarTemplateToggles`); the default slot is the
+ * page's primary content.
+ */
+type FzSidebarTemplateSlots = {
+  /** Sidebar top zone — the brand (logo + app name). */
+  brand?(props: FzSidebarTemplateToggles): any
+  /** Sidebar middle zone — the navigation, wrapped in a `<nav>` landmark and scrollable. */
+  nav?(props: FzSidebarTemplateToggles): any
+  /** Sidebar bottom zone, pinned to the bottom — e.g. the signed-in user + logout. */
+  footer?(props: FzSidebarTemplateToggles): any
+  /** Mobile top-bar content beside the hamburger (e.g. the app name). Desktop shows the rail instead. */
+  topbar?(props: FzSidebarTemplateToggles): any
+  /** The page's primary content. */
+  default(props: {}): any
+}
+
 export type {
   FzLayoutProps,
   FzLayoutAlign,
@@ -522,5 +583,8 @@ export type {
   FzDetailTemplateSlots,
   FzThreeColumnsSidebarToggle,
   FzThreeColumnsTemplateProps,
-  FzThreeColumnsTemplateSlots
+  FzThreeColumnsTemplateSlots,
+  FzSidebarTemplateToggles,
+  FzSidebarTemplateProps,
+  FzSidebarTemplateSlots
 }

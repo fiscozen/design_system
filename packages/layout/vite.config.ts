@@ -23,7 +23,7 @@ export default defineConfig({
       name: 'FzLayout',
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', '@fiscozen/button'],
       output: {
         globals: {
           vue: 'Vue',
