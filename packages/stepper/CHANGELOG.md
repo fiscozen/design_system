@@ -1,5 +1,16 @@
 # @fiscozen/stepper
 
+## 3.0.5
+
+### Patch Changes
+
+- c96ae9c: FzStepper: desktop steps now fill the container width equally (`flex: 1 0 0`) to match the Figma design, instead of being pinned to a fixed `156px` width and left-aligned.
+- Updated dependencies [404ccde]
+- Updated dependencies [ea5c15c]
+  - @fiscozen/icons@1.0.7
+  - @fiscozen/composables@1.1.1
+  - @fiscozen/dropdown@1.0.12
+
 ## 3.0.4
 
 ### Patch Changes

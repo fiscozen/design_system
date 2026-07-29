@@ -1,5 +1,13 @@
 # @fiscozen/chat-container
 
+## 2.0.10
+
+### Patch Changes
+
+- Updated dependencies [404ccde]
+  - @fiscozen/icons@1.0.7
+  - @fiscozen/card@3.0.8
+
 ## 2.0.9
 
 ### Patch Changes

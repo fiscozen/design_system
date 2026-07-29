@@ -1,5 +1,13 @@
 # @fiscozen/card-list
 
+## 1.2.3
+
+### Patch Changes
+
+- Updated dependencies [404ccde]
+  - @fiscozen/icons@1.0.7
+  - @fiscozen/dropdown@1.0.12
+
 ## 1.2.2
 
 ### Patch Changes

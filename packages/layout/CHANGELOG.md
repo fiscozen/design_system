@@ -1,5 +1,26 @@
 # @fiscozen/layout
 
+## 1.2.0
+
+### Minor Changes
+
+- b3e69b8: Add `FzThreeColumnsTemplate` — the backoffice three-column workspace layout (header bar + collapsible list `sidebar` + two equal-width content columns, the left one a preview and the right one an independently scrollable body). Extracted from the app-internal `@fzp/shared` `FzLayoutThreeColumns` so the shape lives in the design system (LIB-2696 / epic RT-2054).
+
+  Presentation-only and chrome-free: it owns the structural scaffold (flex regions, the collapsible sidebar's width animation + `v-model:sidebarCollapsed`, the independent-scroll regions, borders and the `aside`/`main` landmarks) and injects the back button, title, badge, filters and toggle control through slots (`sidebar-header` receives `{ collapsed, toggle }`). Fills the height of its bounded-height parent (documented height contract). The collapsible sidebar body uses `v-show` (not `v-if`) so scroll position and consumer-wired observers survive a collapse/expand cycle.
+
+- d7cb02e: Add `FzSidebarTemplate` — the collapsible-sidebar application shell
+
+  A new presentation-only page template (RFC §4, Jira LIB-2697 / epic RT-2054), extracted from the `it.fiscozen.people` app shell (`MainLayout` + `AppSidebar`) so the shape lives in the design system.
+
+  It frames a template-owned colored sidebar in three vertical zones — `brand` (top), `nav` (scrollable middle, wrapped in a `<nav>` landmark) and `footer` (pinned bottom, e.g. the signed-in user + logout) — beside the page content (`FzLayoutMain`). From the `desktop` breakpoint (1200px) up the sidebar is a persistent sticky rail; below it, it collapses to an off-canvas drawer the template opens from a hamburger in a sticky mobile top bar — a focus-trapped `role="dialog"` with `aria-modal`, a click-to-dismiss backdrop and Escape-to-close. This is the mirror of `FzAppTemplate` (where the _aside_ collapses and the nav stays persistent); here the nav rail itself is what collapses.
+
+  Presentation-only: it owns the responsive/collapse state and safe-area/sticky CSS but imports no store/router/API — only the `FzLayoutHeader`/`FzLayoutMain` region molecules and `FzIconButton` (the mobile hamburger; adds `@fiscozen/button` as a dependency). Colors are app-themed via `--fz-sidebar-bg` / `--fz-sidebar-text` (and `--fz-sidebar-width`, default 280px) — never baked in — and the nav items, their RBAC, routing, the brand, the user identity and logout all stay app-side, injected through the slots. Owns a full-height root (`min-h-dvh`).
+
+### Patch Changes
+
+- Updated dependencies [ea5c15c]
+  - @fiscozen/composables@1.1.1
+
 ## 1.1.0
 
 ### Minor Changes

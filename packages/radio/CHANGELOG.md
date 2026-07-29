@@ -1,5 +1,15 @@
 # @fiscozen/radio
 
+## 3.0.11
+
+### Patch Changes
+
+- Updated dependencies [404ccde]
+- Updated dependencies [ea5c15c]
+  - @fiscozen/icons@1.0.7
+  - @fiscozen/composables@1.1.1
+  - @fiscozen/tooltip@3.0.5
+
 ## 3.0.10
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @fiscozen/input
 
+## 3.5.2
+
+### Patch Changes
+
+- Updated dependencies [404ccde]
+- Updated dependencies [ea5c15c]
+  - @fiscozen/icons@1.0.7
+  - @fiscozen/composables@1.1.1
+
 ## 3.5.1
 
 ### Patch Changes
