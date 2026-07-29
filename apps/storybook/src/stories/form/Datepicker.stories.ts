@@ -1311,13 +1311,17 @@ export const PlacementBottomStart: Story = {
     await step('Verify calendar is positioned below the input (bottom-start)', async () => {
       const input = canvas.getByLabelText(/datepicker label/i)
       const calendar = getCalendar()
-      const inputRect = input.getBoundingClientRect()
-      const calendarRect = calendar.getBoundingClientRect()
+      // Rects are re-read on every retry: FzFloating applies its viewport-collision
+      // correction asynchronously, so the first frame can still hold the uncorrected position.
+      await waitFor(() => {
+        const inputRect = input.getBoundingClientRect()
+        const calendarRect = calendar.getBoundingClientRect()
 
-      // Calendar should be below the input
-      await expect(calendarRect.top).toBeGreaterThanOrEqual(inputRect.bottom - 1)
-      // Calendar left edge should align with input left edge (start alignment)
-      await expect(Math.abs(calendarRect.left - inputRect.left)).toBeLessThan(50)
+        // Calendar should be below the input
+        expect(calendarRect.top).toBeGreaterThanOrEqual(inputRect.bottom - 1)
+        // Calendar left edge should align with input left edge (start alignment)
+        expect(Math.abs(calendarRect.left - inputRect.left)).toBeLessThan(50)
+      })
     })
 
     await step('Close calendar', async () => {
@@ -1352,13 +1356,17 @@ export const PlacementBottomEnd: Story = {
     await step('Verify calendar is positioned below the input (bottom-end)', async () => {
       const input = canvas.getByLabelText(/datepicker label/i)
       const calendar = getCalendar()
-      const inputRect = input.getBoundingClientRect()
-      const calendarRect = calendar.getBoundingClientRect()
+      // Rects are re-read on every retry: FzFloating applies its viewport-collision
+      // correction asynchronously, so the first frame can still hold the uncorrected position.
+      await waitFor(() => {
+        const inputRect = input.getBoundingClientRect()
+        const calendarRect = calendar.getBoundingClientRect()
 
-      // Calendar should be below the input
-      await expect(calendarRect.top).toBeGreaterThanOrEqual(inputRect.bottom - 1)
-      // Calendar right edge should align with input right edge (end alignment)
-      await expect(Math.abs(calendarRect.right - inputRect.right)).toBeLessThan(50)
+        // Calendar should be below the input
+        expect(calendarRect.top).toBeGreaterThanOrEqual(inputRect.bottom - 1)
+        // Calendar right edge should align with input right edge (end alignment)
+        expect(Math.abs(calendarRect.right - inputRect.right)).toBeLessThan(50)
+      })
     })
 
     await step('Close calendar', async () => {
@@ -1418,12 +1426,16 @@ export const CalendarFlipsAboveWhenAtBottom: Story = {
       const calendar = getCalendar()
       await expect(calendar).toBeVisible()
 
-      const inputRect = input.getBoundingClientRect()
-      const calendarRect = calendar.getBoundingClientRect()
+      // Rects are re-read on every retry: FzFloating applies its viewport-collision
+      // correction asynchronously, so the first frame can still hold the uncorrected position.
+      await waitFor(() => {
+        const inputRect = input.getBoundingClientRect()
+        const calendarRect = calendar.getBoundingClientRect()
 
-      // The calendar's bottom edge should be at or above the input's top edge,
-      // meaning it flipped above instead of rendering below where there's no space
-      await expect(calendarRect.bottom).toBeLessThanOrEqual(inputRect.top + 2)
+        // The calendar's bottom edge should be at or above the input's top edge,
+        // meaning it flipped above instead of rendering below where there's no space
+        expect(calendarRect.bottom).toBeLessThanOrEqual(inputRect.top + 2)
+      })
     })
 
     await step('Close calendar', async () => {
