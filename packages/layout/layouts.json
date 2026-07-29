@@ -1,0 +1,208 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fiscozen/claude-plugin-agentic-design/main/docs/ds-layouts.schema.json",
+  "package": "@fiscozen/layout",
+  "indexPath": "src/index.ts",
+  "exportPattern": "Template$",
+  "layouts": [
+    {
+      "name": "FzAppTemplate",
+      "kind": "shell",
+      "heightContract": "owns-viewport",
+      "surfaces": ["FO", "BO"],
+      "since": "1.1.0",
+      "whenToUse": "The standard application page: a persistent navigation rail (or top bar on mobile) beside the content, with optional sticky header, complementary aside panel, sticky bottom action bar and footer. The default choice for any signed-in page.",
+      "notWhenToUse": "Not for a page whose nav rail itself collapses into a drawer — that is FzSidebarTemplate. Not for auth/login (FzBlankTemplate) or guided flows (FzFocusTemplate).",
+      "slots": ["nav", "header", "default", "aside", "bottomBar", "footer"],
+      "keyProps": ["hasAside", "hasBottomBar", "chrome", "contentWidth", "navLabel", "asideLabel"],
+      "composeOnly": {
+        "safe": false,
+        "gaps": [
+          "the page background is reachable only through a fall-through `class` on the template root (the README example uses class=\"bg-[#f7f6f3]\"); RFC §4 planned a `background` prop that was not shipped — shipped props are hasAside/hasBottomBar/chrome/contentWidth/navLabel/asideLabel"
+        ]
+      },
+      "docs": "packages/layout/README.md#fzapptemplate"
+    },
+    {
+      "name": "FzSidebarTemplate",
+      "kind": "shell",
+      "heightContract": "owns-viewport",
+      "surfaces": ["BO"],
+      "since": "1.2.0",
+      "whenToUse": "Internal-tool / console app whose entire chrome is one persistent coloured side rail in three zones: brand at the top, scrollable navigation in the middle, the signed-in user pinned to the bottom. Below the desktop breakpoint the rail itself becomes an off-canvas drawer opened from a hamburger in a mobile top bar.",
+      "notWhenToUse": "Not when the navigation stays persistent and an aside panel is what collapses — that is FzAppTemplate. The two are mirrors of each other; pick by asking which region disappears on mobile.",
+      "slots": ["brand", "nav", "footer", "topbar", "default"],
+      "keyProps": ["navLabel", "sidebarLabel", "menuLabel"],
+      "composeOnly": {
+        "safe": false,
+        "gaps": [
+          "sidebar colours and width are reachable only through the `--fz-sidebar-bg` / `--fz-sidebar-text` / `--fz-sidebar-width` custom properties set on the template root, which needs `style` or `class`; the fallbacks are #fff / inherit / 280px, so under compose-only the rail renders unthemed and a design with a coloured sidebar cannot be implemented",
+          "the page background is reachable only through a fall-through `class` on the template root"
+        ]
+      }
+    },
+    {
+      "name": "FzFocusTemplate",
+      "kind": "shell",
+      "heightContract": "owns-viewport",
+      "surfaces": ["FO"],
+      "since": "1.1.0",
+      "whenToUse": "A distraction-reduced flow: onboarding steps, guided wizards and auth screens. Centred content optionally framed by a top bar, a complementary aside (stacking below the content on narrow viewports) and a footer.",
+      "notWhenToUse": "Not for an ordinary application page with navigation — that is FzAppTemplate. Use FzBlankTemplate instead when the screen needs no chrome at all.",
+      "slots": ["topbar", "default", "aside", "footer"],
+      "keyProps": ["chrome"],
+      "composeOnly": { "safe": true },
+      "docs": "packages/layout/README.md#fzfocustemplate"
+    },
+    {
+      "name": "FzBlankTemplate",
+      "kind": "shell",
+      "heightContract": "owns-viewport",
+      "surfaces": ["FO", "BO"],
+      "since": "1.1.0",
+      "whenToUse": "A full-bleed page with no chrome whatsoever — one full-height content region and nothing else. For login/auth screens and standalone tools that render their own self-contained UI.",
+      "notWhenToUse": "Not a way to opt out of navigation on a page that belongs inside the app shell.",
+      "slots": ["default"],
+      "keyProps": ["align"],
+      "composeOnly": { "safe": true },
+      "docs": "packages/layout/README.md#fzblanktemplate"
+    },
+    {
+      "name": "FzListTemplate",
+      "kind": "page-content",
+      "heightContract": "document-scroll",
+      "surfaces": ["BO"],
+      "since": "1.1.0",
+      "whenToUse": "A list page: an optional full-width banner (alerts, action cards), an optional filter rail, an optional toolbar (title/search/actions) and the list itself, typically an FzTable. Each region renders only when its slot is filled.",
+      "notWhenToUse": "Not a split-view master-detail (list beside a navigable detail pane) — that shape still uses the FzLayout leftShoulder grid variant. Not a page shell: it must render inside one.",
+      "slots": ["banner", "filters", "header", "default"],
+      "keyProps": ["filtersPosition", "filtersLabel", "mainAs"],
+      "nestWithin": ["FzAppTemplate", "FzSidebarTemplate"],
+      "whenNested": {
+        "props": { "mainAs": "div" },
+        "note": "the shell already owns the <main> landmark; also set filtersLabel when the shell renders its own aside, so the filter rail and the shell's panel are distinguishable complementary landmarks"
+      },
+      "composeOnly": { "safe": true },
+      "docs": "packages/layout/README.md#fzlisttemplate"
+    },
+    {
+      "name": "FzDetailTemplate",
+      "kind": "page-content",
+      "heightContract": "document-scroll",
+      "surfaces": ["BO"],
+      "since": "1.1.0",
+      "whenToUse": "A record-detail page: a persistent summary/context rail (the record's identity, status, meta and actions) beside the record's content (typically FzTabs or FzCards), with an optional full-width banner and an optional toolbar. The sibling of FzListTemplate — a list pairs a filter rail with a table, a detail page pairs a summary rail with the record.",
+      "notWhenToUse": "Not a page shell: it must render inside one. If the rail holds filters rather than a record summary, the page is a list — use FzListTemplate.",
+      "slots": ["banner", "sidebar", "toolbar", "default"],
+      "keyProps": ["sidebarLabel", "mainAs"],
+      "nestWithin": ["FzAppTemplate", "FzSidebarTemplate"],
+      "whenNested": {
+        "props": { "mainAs": "div" },
+        "note": "the shell already owns the <main> landmark; also set sidebarLabel when the shell renders its own aside. The toolbar region is deliberately a plain container, not a banner landmark — the shell owns the page banner"
+      },
+      "composeOnly": { "safe": true },
+      "docs": "packages/layout/README.md#fzdetailtemplate"
+    },
+    {
+      "name": "FzThreeColumnsTemplate",
+      "kind": "bounded",
+      "heightContract": "fills-parent",
+      "surfaces": ["BO"],
+      "since": "1.2.0",
+      "whenToUse": "A review workspace page (e.g. accounting document approval): a full-width header bar, a collapsible list/navigation sidebar, and two equal-width content columns — a left preview column and a right column with its own header and an independently scrollable body.",
+      "notWhenToUse": "Not the same thing as FzLayout's layout=\"threeColumns\" variant, which is a CSS-grid primitive with menu/header/chat/main/footer regions. Not for a page that should scroll as one document — that is FzListTemplate or FzDetailTemplate.",
+      "slots": [
+        "header-left",
+        "header-right",
+        "sidebar-header",
+        "sidebar-filter",
+        "sidebar-content",
+        "column-left",
+        "column-right-header",
+        "column-right-content"
+      ],
+      "keyProps": ["sidebarCollapsed", "mainAs", "sidebarLabel"],
+      "composeOnly": {
+        "safe": false,
+        "gaps": [
+          "it fills its parent's height and requires a bounded-height ancestor, which a compose-only consumer cannot create: FzContainer exposes no height/viewport prop (tag, alignItems, main, gap, horizontal, layout). Mounted in a box with an indefinite height it collapses to zero and its regions never scroll — and no host is verified yet, so nestWithin is deliberately empty"
+        ]
+      }
+    },
+    {
+      "name": "FzLayout",
+      "kind": "grid",
+      "heightContract": "fills-parent",
+      "since": "1.0.0",
+      "whenToUse": "The low-level responsive grid primitive (oneColumn, oneColumnHeader, twoColumns, leftShoulder, rightShoulder, multipleAreas, threeColumns). Retained for in-page arrangement and for the split-view master-detail shape no page layout covers yet.",
+      "notWhenToUse": "Not a page layout — do not build a page shell out of it. Its leftShoulder variant forces 100vh mobile tracks and independent per-region scroll, which is why the list/detail layouts compose region molecules with document scroll instead.",
+      "keyProps": ["layout", "isViewport", "hasBottomBar", "disablePadding"],
+      "composeOnly": { "safe": true },
+      "docs": "packages/layout/README.md#fzlayout--grid-primitive-organism"
+    },
+    {
+      "name": "FzLayoutMain",
+      "kind": "region",
+      "heightContract": "document-scroll",
+      "since": "1.1.0",
+      "whenToUse": "Internal region wrapper for a page's primary content, rendering the <main> landmark. Composed by the page layouts.",
+      "notWhenToUse": "Not for app code. The composing layout applies its sizing and padding via fall-through attributes, so using it directly means re-implementing a page layout by hand.",
+      "keyProps": ["as", "align", "safeArea"],
+      "composeOnly": {
+        "safe": false,
+        "gaps": ["sizing and padding are applied by the composing layout via a fall-through class — by design, which is why this is layout-internal"]
+      }
+    },
+    {
+      "name": "FzLayoutHeader",
+      "kind": "region",
+      "heightContract": "document-scroll",
+      "since": "1.1.0",
+      "whenToUse": "Internal region wrapper for the top-bar region, rendering the <header> banner landmark. Composed by the page layouts.",
+      "notWhenToUse": "Not for app code — see FzLayoutMain.",
+      "keyProps": ["as"],
+      "composeOnly": {
+        "safe": false,
+        "gaps": ["sizing and padding are applied by the composing layout via a fall-through class — by design"]
+      }
+    },
+    {
+      "name": "FzLayoutAside",
+      "kind": "region",
+      "heightContract": "document-scroll",
+      "since": "1.1.0",
+      "whenToUse": "Internal region wrapper for a complementary region, rendering the <aside> landmark. Composed by the page layouts.",
+      "notWhenToUse": "Not for app code — see FzLayoutMain.",
+      "keyProps": ["as"],
+      "composeOnly": {
+        "safe": false,
+        "gaps": ["sizing and padding are applied by the composing layout via a fall-through class — by design"]
+      }
+    },
+    {
+      "name": "FzLayoutFooter",
+      "kind": "region",
+      "heightContract": "document-scroll",
+      "since": "1.1.0",
+      "whenToUse": "Internal region wrapper for the footer region, rendering the <footer> contentinfo landmark. Composed by the page layouts.",
+      "notWhenToUse": "Not for app code — see FzLayoutMain.",
+      "keyProps": ["as"],
+      "composeOnly": {
+        "safe": false,
+        "gaps": ["sizing and padding are applied by the composing layout via a fall-through class — by design"]
+      }
+    },
+    {
+      "name": "FzLayoutBottomBar",
+      "kind": "region",
+      "heightContract": "document-scroll",
+      "since": "1.1.0",
+      "whenToUse": "Internal region wrapper for the sticky bottom action bar, composed by FzAppTemplate, which provides its element as a teleport target under FZ_BOTTOM_BAR_TARGET.",
+      "notWhenToUse": "Not for app code. To put content in the bar, inject FZ_BOTTOM_BAR_TARGET and teleport into it, or fill the shell's bottomBar slot.",
+      "composeOnly": {
+        "safe": false,
+        "gaps": ["placement and geometry are owned by the composing layout — by design"]
+      },
+      "docs": "packages/layout/README.md#bottom-bar-teleport-contract-fz_bottom_bar_target"
+    }
+  ]
+}
