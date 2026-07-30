@@ -170,7 +170,15 @@ watch(
     content.value.style.top = '0px'
     content.value.style.left = '0px'
     content.value.style.transform = 'none'
-    content.value.style.width = xs.value ? openerRect?.width + 'px' : 'auto'
+    // On the smallest screens the panel should cover its opener (e.g. the FzTab picker or
+    // a select input). Pinning the width to the opener does that, but it breaks narrow
+    // openers: a 44px icon button collapses the panel box while its content keeps painting
+    // at its intrinsic width — outside the box, and therefore invisible to the viewport
+    // clamp in useFloating, which only ever sees a small box that is already on screen.
+    // A minimum keeps the cover-the-opener behaviour and lets a narrow opener's panel grow
+    // to its content, which the clamp can then keep inside the viewport.
+    content.value.style.width = 'auto'
+    content.value.style.minWidth = xs.value && openerRect ? `${openerRect.width}px` : ''
     floating.setPosition()
   }
 )
