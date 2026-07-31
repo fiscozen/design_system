@@ -398,6 +398,7 @@ const applyBoundaryCorrections = (
   element: DOMRect,
   container: DOMRect,
   transform: Transform,
+  opener: DOMRect | null = null,
   viewport: Bounds = getViewportBounds(),
   margin: number = VIEWPORT_MARGIN
 ): { position: FzAbsolutePosition; transform: Transform } => {
@@ -425,16 +426,36 @@ const applyBoundaryCorrections = (
   }
 
   // --- Vertical ---
-  const minTop = bounds.top + margin
-  const maxTop = Math.max(minTop, bounds.bottom - margin - element.height)
+  // Only correct when the element can actually fit between the margins. A taller element
+  // is cropped by the same amount wherever it sits, so shifting it reveals nothing — it
+  // only detaches the panel from its opener, landing it at the top margin however far
+  // that is from the control that opened it. That is what surfaced as "the menu opens at
+  // the top of the page instead of next to the button" (HD-25736), and it bites hardest
+  // on placements that never flip: FzDropdown resolves `align` to an explicit `bottom*`
+  // position, so this correction is the only vertical adjustment it ever gets.
+  //
+  // Deliberately asymmetric with the horizontal case above: a panel shifted sideways stays
+  // on the opener's row and reads as belonging to it, and clamping a too-wide panel to the
+  // left margin at least brings its content on screen. Neither holds vertically.
+  const availableHeight = bounds.bottom - bounds.top - margin * 2
 
-  if (correctedPosition.y > maxTop) {
-    correctedPosition.y = maxTop
-    correctedTransform.y = 0
-  }
-  if (correctedPosition.y < minTop) {
-    correctedPosition.y = minTop
-    correctedTransform.y = 0
+  if (element.height <= availableHeight) {
+    const minTop = bounds.top + margin
+    const maxTop = bounds.bottom - margin - element.height
+    // Where the element would sit on the opposite side of the opener.
+    const aboveOpener = opener ? opener.top - margin - element.height : null
+    const belowOpener = opener ? opener.bottom + margin : null
+
+    if (correctedPosition.y > maxTop) {
+      // Overflows the bottom. Prefer the other side of the opener: sliding the panel up
+      // within the viewport would drag it across the control that opened it.
+      correctedPosition.y = aboveOpener !== null && aboveOpener >= minTop ? aboveOpener : maxTop
+      correctedTransform.y = 0
+    } else if (correctedPosition.y < minTop) {
+      // Mirror case for `top*` placements near the top edge.
+      correctedPosition.y = belowOpener !== null && belowOpener <= maxTop ? belowOpener : minTop
+      correctedTransform.y = 0
+    }
   }
 
   return { position: correctedPosition, transform: correctedTransform }
@@ -606,7 +627,8 @@ export const useFloating = (
         realPosition,
         rects.element,
         rects.container,
-        positionResult.transform
+        positionResult.transform,
+        rects.opener
       )
 
       // Step 10: Update float state
