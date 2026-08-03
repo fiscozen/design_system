@@ -1692,3 +1692,157 @@ describe('FzDatepicker fzdatepicker:clear event', () => {
     expect(fzInput.props('clearable')).toBe(true)
   })
 })
+
+// ============================================
+// LIB-2814 — autoPosition forwarding + calendar height budget
+// ============================================
+describe('autoPosition → floating flip/shift (LIB-2814)', () => {
+  const mapped = (wrapper: ReturnType<typeof mount>) =>
+    (wrapper.vm as any).$.setupState.mappedProps as Record<string, any>
+
+  it('leaves collision handling on by default', () => {
+    const wrapper = mount(FzDatepicker, { props: { modelValue: new Date(), inputProps: {} } })
+    // v12 defaults flip/shift to true, so the default must not switch them off.
+    expect(mapped(wrapper).floating?.flip).toBeUndefined()
+    expect(mapped(wrapper).floating?.shift).toBeUndefined()
+  })
+
+  it('translates autoPosition: false into flip/shift: false', () => {
+    // Before LIB-2814 the prop was deleted on the way through, so it did nothing at all.
+    const wrapper = mount(FzDatepicker, {
+      props: { modelValue: new Date(), autoPosition: false, inputProps: {} }
+    })
+    expect(mapped(wrapper).floating).toMatchObject({ flip: false, shift: false })
+  })
+
+  it('keeps an explicit floating.flip authoritative over autoPosition', () => {
+    const wrapper = mount(FzDatepicker, {
+      props: {
+        modelValue: new Date(),
+        autoPosition: false,
+        floating: { flip: true },
+        inputProps: {}
+      }
+    })
+    expect(mapped(wrapper).floating).toMatchObject({ flip: true, shift: false })
+  })
+
+  it('still forwards placement alongside the translated options', () => {
+    const wrapper = mount(FzDatepicker, {
+      props: {
+        modelValue: new Date(),
+        autoPosition: false,
+        placement: 'bottom-start',
+        inputProps: {}
+      }
+    })
+    expect(mapped(wrapper).floating).toMatchObject({
+      placement: 'bottom-start',
+      flip: false,
+      shift: false
+    })
+  })
+})
+
+describe('calendar height budget (LIB-2814)', () => {
+  const MARGIN = 8
+  const VAR = '--fz-datepicker-menu-max-height'
+
+  // Every mounted picker keeps window listeners while its menu is open, so a wrapper left
+  // mounted would keep recomputing the shared budget during later tests.
+  const mounted: ReturnType<typeof mount>[] = []
+  const mountPicker = () => {
+    const wrapper = mount(FzDatepicker, {
+      props: { modelValue: new Date(), inputProps: {} },
+      attachTo: document.body
+    })
+    mounted.push(wrapper)
+    return wrapper
+  }
+
+  const openMenu = (wrapper: ReturnType<typeof mount>) =>
+    (wrapper.vm as any).$.setupState.handleMenuOpen()
+  const closeMenu = (wrapper: ReturnType<typeof mount>) =>
+    (wrapper.vm as any).$.setupState.handleMenuClosed()
+
+  const stubField = (wrapper: ReturnType<typeof mount>, top: number, bottom: number) => {
+    const input = wrapper.find('input').element
+    input.getBoundingClientRect = () =>
+      ({ top, bottom, left: 0, right: 300, width: 300, height: bottom - top }) as DOMRect
+  }
+
+  const setViewportHeight = (h: number) => {
+    Object.defineProperty(window, 'innerHeight', { value: h, configurable: true })
+  }
+
+  beforeEach(() => {
+    setViewportHeight(800)
+    document.documentElement.style.removeProperty(VAR)
+  })
+
+  afterEach(() => {
+    while (mounted.length) mounted.pop()!.unmount()
+    document.documentElement.style.removeProperty(VAR)
+  })
+
+  it('budgets the space below the field when the calendar opens there', () => {
+    const wrapper = mountPicker()
+    // Field high on the page: below (800-200-8=592) is roomier than above (100-8=92).
+    stubField(wrapper, 100, 200)
+    openMenu(wrapper)
+    expect(document.documentElement.style.getPropertyValue(VAR)).toBe(`${800 - 200 - MARGIN}px`)
+  })
+
+  it('budgets the space above the field when that is the roomier side', () => {
+    const wrapper = mountPicker()
+    // This is the HD-25540 geometry: a large system font scale pushes the field low, so
+    // there is not enough room underneath it for the calendar.
+    stubField(wrapper, 450, 473)
+    openMenu(wrapper)
+    expect(document.documentElement.style.getPropertyValue(VAR)).toBe(`${450 - MARGIN}px`)
+  })
+
+  it('never budgets more than the visible area', () => {
+    const wrapper = mountPicker()
+    setViewportHeight(300)
+    stubField(wrapper, 140, 160)
+    openMenu(wrapper)
+    const budget = parseInt(document.documentElement.style.getPropertyValue(VAR), 10)
+    expect(budget).toBeLessThanOrEqual(300 - MARGIN * 2)
+  })
+
+  it('never budgets a negative height', () => {
+    const wrapper = mountPicker()
+    // Field entirely below the fold — both sides are negative.
+    stubField(wrapper, 900, 950)
+    openMenu(wrapper)
+    expect(parseInt(document.documentElement.style.getPropertyValue(VAR), 10)).toBeGreaterThanOrEqual(0)
+  })
+
+  it('clears the budget when the menu closes', () => {
+    const wrapper = mountPicker()
+    stubField(wrapper, 100, 200)
+    openMenu(wrapper)
+    expect(document.documentElement.style.getPropertyValue(VAR)).not.toBe('')
+    closeMenu(wrapper)
+    expect(document.documentElement.style.getPropertyValue(VAR)).toBe('')
+  })
+
+  it('detaches its listeners and clears the budget on unmount', () => {
+    const wrapper = mountPicker()
+    stubField(wrapper, 100, 200)
+    openMenu(wrapper)
+
+    // Asserted through removeEventListener rather than by dispatching a late resize: the
+    // budget lives on document.documentElement, and any other test in this file that opens
+    // a calendar and stays mounted would recompute it.
+    const removed = vi.spyOn(window, 'removeEventListener')
+    wrapper.unmount()
+
+    const events = removed.mock.calls.map((c) => c[0])
+    expect(events).toContain('resize')
+    expect(events).toContain('scroll')
+    expect(document.documentElement.style.getPropertyValue(VAR)).toBe('')
+    removed.mockRestore()
+  })
+})

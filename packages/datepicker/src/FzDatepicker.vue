@@ -26,7 +26,7 @@
  *   :inputProps="{ label: 'Data', placeholder: 'gg/mm/aaaa' }"
  * />
  */
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import { FzDatepickerProps } from './types'
 import { VueDatePicker } from '@vuepic/vue-datepicker'
 import { useBreakpoints } from '@fiscozen/composables'
@@ -80,9 +80,76 @@ const closeMenu = () => {
   dp.value.closeMenu()
 }
 
+/**
+ * Space (px) kept between the calendar and the edge of the visible area, matching the
+ * safety margin `useFloating` uses in `@fiscozen/composables`.
+ */
+const MENU_VIEWPORT_MARGIN = 8
+
+/**
+ * Caps the calendar to the space actually available and lets it scroll inside itself.
+ *
+ * Without this the menu is laid out at its intrinsic height wherever VueDatePicker put it,
+ * so it can hang below the visible area with no way to reach it: the menu does not scroll,
+ * and the page behind it (often a dialog body) does not scroll it into view either. Android
+ * makes this reachable in practice, because the WebView honours the *system* font scale —
+ * larger text grows the surrounding form, pushes the field down, and the calendar no longer
+ * fits underneath it (HD-25540). At the largest accessibility font scales no placement fits
+ * at all, so an internal scroll is the only thing that keeps the calendar usable.
+ *
+ * The budget is written to a custom property on the document element rather than inline on
+ * the menu: the menu is teleported (to `body` by default) and only one calendar can be open
+ * at a time, since opening another closes the first.
+ */
+const applyMenuHeightBudget = () => {
+  const root = dp.value?.$el as HTMLElement | undefined
+  const input = root?.querySelector?.('input') ?? null
+  const visible = window.visualViewport
+  const visibleTop = visible?.offsetTop ?? 0
+  const visibleHeight = visible?.height ?? window.innerHeight
+
+  // Without a field to measure against, fall back to the whole visible area.
+  let budget = visibleHeight - MENU_VIEWPORT_MARGIN * 2
+  if (input) {
+    const field = input.getBoundingClientRect()
+    const below = visibleTop + visibleHeight - field.bottom - MENU_VIEWPORT_MARGIN
+    const above = field.top - visibleTop - MENU_VIEWPORT_MARGIN
+    // The calendar renders on whichever side VueDatePicker chose; budget for the roomier
+    // one so a correct placement is never capped more than it needs to be, and an
+    // incorrect one is still bounded by the visible area.
+    budget = Math.min(budget, Math.max(below, above))
+  }
+
+  document.documentElement.style.setProperty(
+    '--fz-datepicker-menu-max-height',
+    `${Math.max(0, Math.round(budget))}px`
+  )
+}
+
+const clearMenuHeightBudget = () => {
+  document.documentElement.style.removeProperty('--fz-datepicker-menu-max-height')
+}
+
+const handleMenuOpen = () => {
+  applyMenuHeightBudget()
+  window.addEventListener('resize', applyMenuHeightBudget)
+  window.addEventListener('scroll', applyMenuHeightBudget, true)
+  window.visualViewport?.addEventListener('resize', applyMenuHeightBudget)
+}
+
+const stopTrackingMenuHeight = () => {
+  window.removeEventListener('resize', applyMenuHeightBudget)
+  window.removeEventListener('scroll', applyMenuHeightBudget, true)
+  window.visualViewport?.removeEventListener('resize', applyMenuHeightBudget)
+  clearMenuHeightBudget()
+}
+
 const handleMenuClosed = () => {
+  stopTrackingMenuHeight()
   emit('closed')
 }
+
+onBeforeUnmount(stopTrackingMenuHeight)
 
 /**
  * Re-emits VueDatePicker's `flow-step` event to consumers of FzDatepicker.
@@ -138,10 +205,22 @@ const stableTextInput = computed<
 
 const stableFloating = computed(() => {
   const base = props.floating
+  const merged: Record<string, unknown> = { ...(base ?? {}) }
+
   if (props.placement) {
-    return { ...(base ?? {}), placement: props.placement }
+    merged.placement = props.placement
   }
-  return base
+
+  // `autoPosition` is our own prop and predates VueDatePicker v12, which dropped it in favour
+  // of the Floating UI middlewares `floating.flip` / `floating.shift`. It used to be deleted
+  // on the way through, so setting it had no effect at all. Translate it, and let an explicit
+  // `floating.flip` / `floating.shift` win so the finer-grained option stays authoritative.
+  if (props.autoPosition === false) {
+    if (merged.flip === undefined) merged.flip = false
+    if (merged.shift === undefined) merged.shift = false
+  }
+
+  return Object.keys(merged).length > 0 ? merged : undefined
 })
 
 const stableTimeConfig = computed(() => {
@@ -411,6 +490,7 @@ const handleInputModelUpdate = (
     :text-input="stableTextInput"
     :ui="{ menu: calendarClassName }"
     @update:model-value="handleModelValueUpdate"
+    @open="handleMenuOpen"
     @closed="handleMenuClosed"
     @flow-step="forwardFlowStep"
     :model-value="modelValue"
@@ -521,6 +601,10 @@ const handleInputModelUpdate = (
   box-shadow:
     0px 1px 2px 0px rgba(0, 0, 0, 0.06),
     0px 1px 3px 0px rgba(0, 0, 0, 0.1);
+  /* Budget set by `applyMenuHeightBudget` while the menu is open; the fallback keeps the
+     calendar inside the visible area even if that never runs. */
+  max-height: var(--fz-datepicker-menu-max-height, calc(100dvh - 16px));
+  overflow-y: auto;
 }
 
 .dp__range_start,
