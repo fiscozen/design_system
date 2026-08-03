@@ -108,7 +108,9 @@ const applyMenuHeightBudget = () => {
   const visibleTop = visible?.offsetTop ?? 0
   const visibleHeight = visible?.height ?? window.innerHeight
 
-  // Without a field to measure against, fall back to the whole visible area.
+  // The visible area is the widest defensible budget: it bounds the menu even when the
+  // field cannot be measured (not yet rendered, or already gone), which is better than
+  // leaving the menu unbounded.
   let budget = visibleHeight - MENU_VIEWPORT_MARGIN * 2
   if (input) {
     const field = input.getBoundingClientRect()
@@ -130,17 +132,43 @@ const clearMenuHeightBudget = () => {
   document.documentElement.style.removeProperty('--fz-datepicker-menu-max-height')
 }
 
+/**
+ * Coalesces recomputes into one per animation frame.
+ *
+ * The budget is recomputed from scroll and resize, and the scroll listener is a capturing
+ * one so it also sees scrolling inside any container between the field and the document.
+ * Measuring on every one of those events would interleave a forced layout read
+ * (`getBoundingClientRect`) with a style write on each event and thrash layout on exactly
+ * the low-end mobile devices this cap exists for. `FzFloating` schedules its own
+ * repositioning the same way.
+ */
+let scheduledFrame = 0
+
+const scheduleMenuHeightBudget = () => {
+  if (scheduledFrame) return
+  scheduledFrame = requestAnimationFrame(() => {
+    scheduledFrame = 0
+    applyMenuHeightBudget()
+  })
+}
+
 const handleMenuOpen = () => {
+  // Applied synchronously on open: the menu is about to be shown, so it must not render
+  // once unbounded and settle a frame later.
   applyMenuHeightBudget()
-  window.addEventListener('resize', applyMenuHeightBudget)
-  window.addEventListener('scroll', applyMenuHeightBudget, true)
-  window.visualViewport?.addEventListener('resize', applyMenuHeightBudget)
+  window.addEventListener('resize', scheduleMenuHeightBudget)
+  window.addEventListener('scroll', scheduleMenuHeightBudget, true)
+  window.visualViewport?.addEventListener('resize', scheduleMenuHeightBudget)
 }
 
 const stopTrackingMenuHeight = () => {
-  window.removeEventListener('resize', applyMenuHeightBudget)
-  window.removeEventListener('scroll', applyMenuHeightBudget, true)
-  window.visualViewport?.removeEventListener('resize', applyMenuHeightBudget)
+  window.removeEventListener('resize', scheduleMenuHeightBudget)
+  window.removeEventListener('scroll', scheduleMenuHeightBudget, true)
+  window.visualViewport?.removeEventListener('resize', scheduleMenuHeightBudget)
+  if (scheduledFrame) {
+    cancelAnimationFrame(scheduledFrame)
+    scheduledFrame = 0
+  }
   clearMenuHeightBudget()
 }
 

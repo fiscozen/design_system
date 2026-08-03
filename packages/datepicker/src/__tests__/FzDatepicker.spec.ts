@@ -1828,6 +1828,40 @@ describe('calendar height budget (LIB-2814)', () => {
     expect(document.documentElement.style.getPropertyValue(VAR)).toBe('')
   })
 
+  it('coalesces a burst of scroll events into a single recompute', () => {
+    const wrapper = mountPicker()
+    stubField(wrapper, 100, 200)
+    openMenu(wrapper)
+
+    // Count layout reads on this picker's own field: the scroll listener is a capturing one,
+    // so it sees scrolling in any container and measuring per event would thrash layout
+    // (Aikido review on #426).
+    const input = wrapper.find('input').element
+    let reads = 0
+    const rect = { top: 100, bottom: 200, left: 0, right: 300, width: 300, height: 100 } as DOMRect
+    input.getBoundingClientRect = () => {
+      reads++
+      return rect
+    }
+
+    // Frames are captured and flushed by hand rather than awaiting a real one: the snapshot
+    // block earlier in this file installs fake timers and leaves its pickers mounted, so
+    // real rAF timing here is not dependable. Counting reads on our own field keeps the
+    // assertion unaffected by those other instances.
+    const frames: FrameRequestCallback[] = []
+    const raf = vi
+      .spyOn(window, 'requestAnimationFrame')
+      .mockImplementation((cb: FrameRequestCallback) => frames.push(cb))
+
+    for (let i = 0; i < 20; i++) window.dispatchEvent(new Event('scroll'))
+    expect(reads).toBe(0) // nothing measured synchronously on the events themselves
+
+    frames.forEach((frame) => frame(0))
+    expect(reads).toBe(1) // 20 events collapsed into a single measurement
+
+    raf.mockRestore()
+  })
+
   it('detaches its listeners and clears the budget on unmount', () => {
     const wrapper = mountPicker()
     stubField(wrapper, 100, 200)
