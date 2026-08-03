@@ -360,7 +360,7 @@ describe('useFloating', () => {
       expect(Number.isNaN(floating.float.position.y)).toBe(false)
     })
 
-    it('shifts a menu up so its bottom edge stays on screen (vertical clamp)', async () => {
+    it('flips a menu above its opener when it would overflow the bottom', async () => {
       setViewport(390, 600)
 
       // Opener near the bottom of the viewport; a bottom-anchored menu would
@@ -387,9 +387,138 @@ describe('useFloating', () => {
       await floating.setPosition()
       await nextTick()
 
+      // The invariant is unchanged: the whole menu stays on screen.
+      expect(floating.float.position.y).toBeGreaterThanOrEqual(VIEWPORT_MARGIN)
       expect(floating.float.position.y + ELEMENT_HEIGHT).toBeLessThanOrEqual(600 - VIEWPORT_MARGIN)
-      // Clamped to viewportHeight - margin - elementHeight = 600 - 8 - 100.
-      expect(floating.float.position.y).toBe(600 - VIEWPORT_MARGIN - ELEMENT_HEIGHT)
+      // It gets there by flipping to the other side of the opener (bottom edge one margin
+      // above opener.top = 540 - 8 - 100) rather than sliding up across it, which would
+      // have left the menu covering the control that opened it.
+      expect(floating.float.position.y).toBe(540 - VIEWPORT_MARGIN - ELEMENT_HEIGHT)
+      expect(floating.float.position.y + ELEMENT_HEIGHT).toBeLessThanOrEqual(540)
+    })
+
+    it('flips a menu below its opener when it would overflow the top', async () => {
+      setViewport(390, 600)
+
+      // Opener near the top; a top-anchored menu would overflow above the fold.
+      mockOpener.getBoundingClientRect = vi.fn(() => ({
+        width: 100,
+        height: 40,
+        top: 20,
+        left: 100,
+        right: 200,
+        bottom: 60,
+        x: 100,
+        y: 20,
+        toJSON: () => {}
+      })) as any
+
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('top-start'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      // One margin below opener.bottom, so the menu clears its opener instead of
+      // covering it.
+      expect(floating.float.position.y).toBe(60 + VIEWPORT_MARGIN)
+      expect(floating.float.position.y + ELEMENT_HEIGHT).toBeLessThanOrEqual(600 - VIEWPORT_MARGIN)
+    })
+
+    it('stays anchored to the opener when the element is taller than the viewport', async () => {
+      // A long action list (e.g. the tax page menus) on a phone-height viewport. No
+      // vertical position can show all of it, and clamping to the top margin does not
+      // reveal more of it — it just detaches the panel from the button that opened it,
+      // which is what users reported as "the menu opens at the top of the page" (HD-25736).
+      setViewport(412, 792)
+
+      const TALL_HEIGHT = 900
+      mockElement.getBoundingClientRect = vi.fn(() => ({
+        width: ELEMENT_WIDTH,
+        height: TALL_HEIGHT,
+        top: 0,
+        left: 0,
+        right: ELEMENT_WIDTH,
+        bottom: TALL_HEIGHT,
+        x: 0,
+        y: 0,
+        toJSON: () => {}
+      })) as any
+
+      // Opener low on the screen, as a per-row menu far down a list would be.
+      mockOpener.getBoundingClientRect = vi.fn(() => ({
+        width: 44,
+        height: 44,
+        top: 728,
+        left: 100,
+        right: 144,
+        bottom: 772,
+        x: 100,
+        y: 728,
+        toJSON: () => {}
+      })) as any
+
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('bottom-start'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      // bottom-start anchors the top edge at opener.bottom. The panel must keep that
+      // anchor rather than being pinned to the margin at the top of the screen.
+      expect(floating.float.position.y).toBe(772)
+      expect(floating.float.position.y).not.toBe(VIEWPORT_MARGIN)
+    })
+
+    it('still clamps vertically when the element fits exactly in the available space', async () => {
+      // Boundary case for the fits-check: height equals the space between the margins,
+      // so the correction must still apply (and land the element flush at the margin).
+      setViewport(390, 600)
+
+      const EXACT_HEIGHT = 600 - VIEWPORT_MARGIN * 2
+      mockElement.getBoundingClientRect = vi.fn(() => ({
+        width: ELEMENT_WIDTH,
+        height: EXACT_HEIGHT,
+        top: 0,
+        left: 0,
+        right: ELEMENT_WIDTH,
+        bottom: EXACT_HEIGHT,
+        x: 0,
+        y: 0,
+        toJSON: () => {}
+      })) as any
+
+      mockOpener.getBoundingClientRect = vi.fn(() => ({
+        width: 100,
+        height: 40,
+        top: 540,
+        left: 100,
+        right: 200,
+        bottom: 580,
+        x: 100,
+        y: 540,
+        toJSON: () => {}
+      })) as any
+
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('bottom-start'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      expect(floating.float.position.y).toBe(VIEWPORT_MARGIN)
     })
   })
 
