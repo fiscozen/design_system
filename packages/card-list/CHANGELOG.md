@@ -1,5 +1,11 @@
 # @fiscozen/card-list
 
+## 1.2.4
+
+### Patch Changes
+
+- @fiscozen/dropdown@1.0.13
+
 ## 1.2.3
 
 ### Patch Changes
