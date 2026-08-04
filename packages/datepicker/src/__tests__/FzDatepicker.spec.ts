@@ -1862,6 +1862,56 @@ describe('calendar height budget (LIB-2814)', () => {
     raf.mockRestore()
   })
 
+  // The menu is teleported to body, so tests stand one in for it and stub its rect.
+  const stubMenu = (top: number, height: number) => {
+    let el = document.querySelector('.dp__menu') as HTMLElement | null
+    if (!el) {
+      el = document.createElement('div')
+      el.className = 'dp__menu'
+      document.body.appendChild(el)
+    }
+    el.getBoundingClientRect = () =>
+      ({ top, bottom: top + height, height, left: 0, right: 240, width: 240 }) as DOMRect
+    // jsdom reports 0 for real layout, so the stub is what makes this menu "rendered"
+    return el
+  }
+  const removeMenu = () => document.querySelector('.dp__menu')?.remove()
+
+  it('budgets the side the menu is actually on, not the roomier one', () => {
+    const wrapper = mountPicker()
+    // HD-25540 geometry measured on the ephemeral env: field low, 96px below it, 504 above,
+    // and VueDatePicker places the calendar BELOW anyway. Budgeting the roomier side left
+    // the cap at 496px against 88px of real space, so it never bound and the calendar was
+    // cut off by 250px with no row reachable (LIB-2827).
+    setViewportHeight(620)
+    stubField(wrapper, 504, 524)
+    stubMenu(546, 324) // below the field
+    openMenu(wrapper)
+    expect(document.documentElement.style.getPropertyValue(VAR)).toBe(`${620 - 524 - MARGIN}px`)
+    removeMenu()
+  })
+
+  it('budgets the space above when the menu is placed above the field', () => {
+    const wrapper = mountPicker()
+    setViewportHeight(620)
+    stubField(wrapper, 504, 524)
+    stubMenu(180, 324) // above the field
+    openMenu(wrapper)
+    expect(document.documentElement.style.getPropertyValue(VAR)).toBe(`${504 - MARGIN}px`)
+    removeMenu()
+  })
+
+  it('falls back to the roomier side until the menu exists in the DOM', () => {
+    const wrapper = mountPicker()
+    // First run happens before VueDatePicker has rendered the menu, so no side is known yet;
+    // a later recompute refines it once the menu is there.
+    setViewportHeight(620)
+    stubField(wrapper, 504, 524)
+    removeMenu()
+    openMenu(wrapper)
+    expect(document.documentElement.style.getPropertyValue(VAR)).toBe(`${504 - MARGIN}px`)
+  })
+
   it('detaches its listeners and clears the budget on unmount', () => {
     const wrapper = mountPicker()
     stubField(wrapper, 100, 200)
