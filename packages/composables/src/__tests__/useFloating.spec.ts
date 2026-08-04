@@ -429,6 +429,72 @@ describe('useFloating', () => {
       expect(floating.float.position.y + ELEMENT_HEIGHT).toBeLessThanOrEqual(600 - VIEWPORT_MARGIN)
     })
 
+    it('ignores document.body\'s box when it is the implicit container', async () => {
+      // Measured on the ephemeral env (/app/fatture-emesse): the frontoffice shell gives
+      // body a fixed height equal to the viewport and scrolls an inner element, so once the
+      // page is scrolled body's rect leaves the viewport. Intersecting with it collapsed the
+      // usable area to 151px of a 411px viewport, and a 348px menu was left anchored to its
+      // opener and cut off 293px below the fold (LIB-2825). Before LIB-2813's guard the same
+      // bounds pinned it to the top margin instead — the HD-25736 symptom.
+      setViewport(360, 411)
+
+      mockContainer.getBoundingClientRect = vi.fn(() => ({
+        width: 360,
+        height: 411,
+        top: -260,
+        left: 0,
+        right: 360,
+        bottom: 151,
+        x: 0,
+        y: -260,
+        toJSON: () => {}
+      })) as any
+
+      const MENU_HEIGHT = 348
+      mockElement.getBoundingClientRect = vi.fn(() => ({
+        width: ELEMENT_WIDTH,
+        height: MENU_HEIGHT,
+        top: 0,
+        left: 0,
+        right: ELEMENT_WIDTH,
+        bottom: MENU_HEIGHT,
+        x: 0,
+        y: 0,
+        toJSON: () => {}
+      })) as any
+
+      mockOpener.getBoundingClientRect = vi.fn(() => ({
+        width: 44,
+        height: 44,
+        top: 308,
+        left: 100,
+        right: 144,
+        bottom: 352,
+        x: 100,
+        y: 308,
+        toJSON: () => {}
+      })) as any
+
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('bottom-start'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      // The whole viewport is available, so the menu flips above the opener and stays on
+      // screen instead of hanging off the bottom.
+      expect(floating.float.position.y + MENU_HEIGHT).toBeLessThanOrEqual(411 - VIEWPORT_MARGIN)
+      expect(floating.float.position.y).toBeGreaterThanOrEqual(VIEWPORT_MARGIN)
+      // Flipping above would need 348 + 8 px and only 308 are free above the opener, so the
+      // menu is clamped inside the viewport instead: 411 - 8 - 348. The point is that it is
+      // fully visible — with body's collapsed box it ended up at 352, i.e. 293px off screen.
+      expect(floating.float.position.y).toBe(411 - VIEWPORT_MARGIN - MENU_HEIGHT)
+    })
+
     it('stays anchored to the opener when the element is taller than the viewport', async () => {
       // A long action list (e.g. the tax page menus) on a phone-height viewport. No
       // vertical position can show all of it, and clamping to the top margin does not

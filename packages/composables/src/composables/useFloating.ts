@@ -380,23 +380,31 @@ const getViewportBounds = (): Bounds => ({
   bottom: window.innerHeight
 })
 
-// Effective collision boundary: the intersection of the container and the
-// viewport. Clamping to the container alone is not enough — for openerless
-// dropdowns the container resolves to document.body, whose rect can be wider
-// than the viewport (or extend under it) on narrow screens, letting the menu
-// overflow the right edge. Intersecting with the viewport guarantees the
-// element stays on screen while still honouring a real (narrower) container.
-const getCollisionBounds = (container: DOMRect, viewport: Bounds): Bounds => ({
-  left: Math.max(container.left, viewport.left),
-  right: Math.min(container.right, viewport.right),
-  top: Math.max(container.top, viewport.top),
-  bottom: Math.min(container.bottom, viewport.bottom)
-})
+// Effective collision boundary: the intersection of a real container and the viewport, so a
+// narrower container is still honoured while the element is always kept on screen.
+//
+// `null` means there is no meaningful container and the viewport alone applies. That is the
+// case when the container resolved to `document.body`: body is the "no container" default,
+// and its box describes how the page happens to lay itself out rather than anything the
+// floating element should be clipped to. On an app shell that gives body a fixed height and
+// scrolls an inner element, body's rect leaves the viewport as soon as the page is scrolled,
+// and intersecting with it collapses the usable area — measured at 151px of a 411px viewport,
+// which left menus anchored off the bottom of the screen or pinned to the top margin
+// (LIB-2825, and the first cause of HD-25736).
+const getCollisionBounds = (container: DOMRect | null, viewport: Bounds): Bounds =>
+  container
+    ? {
+        left: Math.max(container.left, viewport.left),
+        right: Math.min(container.right, viewport.right),
+        top: Math.max(container.top, viewport.top),
+        bottom: Math.min(container.bottom, viewport.bottom)
+      }
+    : { ...viewport }
 
 const applyBoundaryCorrections = (
   realPosition: FzAbsolutePosition,
   element: DOMRect,
-  container: DOMRect,
+  container: DOMRect | null,
   transform: Transform,
   opener: DOMRect | null = null,
   viewport: Bounds = getViewportBounds(),
@@ -626,7 +634,8 @@ export const useFloating = (
       const corrected = applyBoundaryCorrections(
         realPosition,
         rects.element,
-        rects.container,
+        // body is the "no container" default; its box must not constrain collision handling.
+        refs.container === document.body ? null : rects.container,
         positionResult.transform,
         rects.opener
       )
