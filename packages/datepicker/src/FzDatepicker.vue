@@ -116,10 +116,27 @@ const applyMenuHeightBudget = () => {
     const field = input.getBoundingClientRect()
     const below = visibleTop + visibleHeight - field.bottom - MENU_VIEWPORT_MARGIN
     const above = field.top - visibleTop - MENU_VIEWPORT_MARGIN
-    // The calendar renders on whichever side VueDatePicker chose; budget for the roomier
-    // one so a correct placement is never capped more than it needs to be, and an
-    // incorrect one is still bounded by the visible area.
-    budget = Math.min(budget, Math.max(below, above))
+
+    // Budget the side the menu is *actually* on. An earlier version budgeted the roomier
+    // side, assuming VueDatePicker would place the calendar there — it does not always, and
+    // when it picks the tighter side the cap is far too generous to ever bind. Measured on a
+    // 320x620 viewport with the field at 504..524: 504px above, 96px below, calendar placed
+    // below, budget 496px against 88px of real space, so the calendar was cut off by 250px
+    // with no row reachable (LIB-2827).
+    // Only a menu with a real box counts: a zero-size one is either mid-transition or a
+    // leftover from another picker, and trusting its rect would pick the wrong side.
+    const menu = [...document.querySelectorAll('.dp__menu')].find(
+      (el) => el.getBoundingClientRect().height > 0
+    )
+    if (menu) {
+      const placedBelow = menu.getBoundingClientRect().top >= field.bottom - 1
+      budget = Math.min(budget, placedBelow ? below : above)
+    } else {
+      // First run happens before VueDatePicker has rendered the menu, so the side is not
+      // known yet. Stay generous rather than flash a needlessly short calendar; the
+      // post-render recompute below refines it.
+      budget = Math.min(budget, Math.max(below, above))
+    }
   }
 
   document.documentElement.style.setProperty(
@@ -152,10 +169,31 @@ const scheduleMenuHeightBudget = () => {
   })
 }
 
+/**
+ * Watches the menu so the budget follows its real height: the calendar is not in the DOM on
+ * the first pass, and it changes height when the user switches to the month or year view.
+ */
+let menuResizeObserver: ResizeObserver | null = null
+
+const observeMenu = () => {
+  const menu = [...document.querySelectorAll('.dp__menu')].find(
+    (el) => el.getBoundingClientRect().height > 0
+  )
+  if (!menu || menuResizeObserver) return
+  menuResizeObserver = new ResizeObserver(scheduleMenuHeightBudget)
+  menuResizeObserver.observe(menu)
+}
+
 const handleMenuOpen = () => {
   // Applied synchronously on open: the menu is about to be shown, so it must not render
   // once unbounded and settle a frame later.
   applyMenuHeightBudget()
+  // ...then again once VueDatePicker has rendered the menu, which is when the side it was
+  // placed on becomes knowable.
+  requestAnimationFrame(() => {
+    observeMenu()
+    applyMenuHeightBudget()
+  })
   window.addEventListener('resize', scheduleMenuHeightBudget)
   window.addEventListener('scroll', scheduleMenuHeightBudget, true)
   window.visualViewport?.addEventListener('resize', scheduleMenuHeightBudget)
@@ -169,6 +207,8 @@ const stopTrackingMenuHeight = () => {
     cancelAnimationFrame(scheduledFrame)
     scheduledFrame = 0
   }
+  menuResizeObserver?.disconnect()
+  menuResizeObserver = null
   clearMenuHeightBudget()
 }
 
