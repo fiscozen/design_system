@@ -1390,11 +1390,13 @@ describe('FzDatepicker', () => {
     const readKey = (wrapper: ReturnType<typeof mount>) =>
       (wrapper.vm as any).$.setupState.floatingKey
 
-    it('returns "default" when no floating/placement is set', () => {
+    it('reflects the resolved config, which always carries the arrow default', () => {
+      // There is no longer a "no floating config" state: LIB-2829 always resolves
+      // `arrow: false`, so the key is derived rather than the `'default'` sentinel.
       const wrapper = mount(FzDatepicker, {
         props: { modelValue: new Date(), inputProps: {} }
       })
-      expect(readKey(wrapper)).toBe('default')
+      expect(readKey(wrapper)).toBe('{"arrow":false}')
     })
 
     it('changes when `placement` changes (forces remount)', async () => {
@@ -1744,6 +1746,52 @@ describe('autoPosition → floating flip/shift (LIB-2814)', () => {
   })
 })
 
+// ============================================
+// LIB-2829 — the arrow silently disables flip, so it is off by default
+// ============================================
+describe('floating.arrow default (LIB-2829)', () => {
+  const mapped = (wrapper: ReturnType<typeof mount>) =>
+    (wrapper.vm as any).$.setupState.mappedProps as Record<string, any>
+
+  it('disables the arrow by default', () => {
+    // With an arrow, VueDatePicker's `[offset, arrow, flip, shift]` order lets `arrow`'s
+    // `alignmentOffset` trip flip's early return, and the menu can never change side.
+    const wrapper = mount(FzDatepicker, { props: { modelValue: new Date(), inputProps: {} } })
+    expect(mapped(wrapper).floating).toMatchObject({ arrow: false })
+  })
+
+  it('keeps an explicit floating.arrow authoritative', () => {
+    const wrapper = mount(FzDatepicker, {
+      props: { modelValue: new Date(), floating: { arrow: true }, inputProps: {} }
+    })
+    expect(mapped(wrapper).floating).toMatchObject({ arrow: true })
+  })
+
+  it('disables the arrow alongside a forwarded placement', () => {
+    // The aligned placements are exactly the ones the arrow bug bites, so this pairing
+    // is the one the app actually uses.
+    const wrapper = mount(FzDatepicker, {
+      props: { modelValue: new Date(), placement: 'bottom-start', inputProps: {} }
+    })
+    expect(mapped(wrapper).floating).toMatchObject({ placement: 'bottom-start', arrow: false })
+  })
+
+  it('leaves flip and shift on their v12 defaults', () => {
+    const wrapper = mount(FzDatepicker, {
+      props: { modelValue: new Date(), placement: 'bottom-start', inputProps: {} }
+    })
+    expect(mapped(wrapper).floating.flip).toBeUndefined()
+    expect(mapped(wrapper).floating.shift).toBeUndefined()
+  })
+
+  it('still switches everything off when autoPosition is false', () => {
+    const wrapper = mount(FzDatepicker, {
+      props: { modelValue: new Date(), autoPosition: false, inputProps: {} }
+    })
+    expect(mapped(wrapper).floating).toMatchObject({ flip: false, shift: false, arrow: false })
+  })
+})
+
 describe('calendar height budget (LIB-2814)', () => {
   const MARGIN = 8
   const VAR = '--fz-datepicker-menu-max-height'
@@ -1816,7 +1864,9 @@ describe('calendar height budget (LIB-2814)', () => {
     // Field entirely below the fold — both sides are negative.
     stubField(wrapper, 900, 950)
     openMenu(wrapper)
-    expect(parseInt(document.documentElement.style.getPropertyValue(VAR), 10)).toBeGreaterThanOrEqual(0)
+    expect(
+      parseInt(document.documentElement.style.getPropertyValue(VAR), 10)
+    ).toBeGreaterThanOrEqual(0)
   })
 
   it('clears the budget when the menu closes', () => {
