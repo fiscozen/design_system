@@ -288,6 +288,27 @@ const stableFloating = computed(() => {
     if (merged.shift === undefined) merged.shift = false
   }
 
+  // The arrow is off by default because it silently disables auto-positioning.
+  //
+  // VueDatePicker builds its middleware as `[offset, arrow, flip, shift]` — arrow *before*
+  // flip, the reverse of Floating UI's documented order — and on an aligned placement it
+  // renders the arrow with neither `dp__arrow_top` nor `dp__arrow_bottom`, because the class
+  // binding compares the whole placement against `"bottom"` / `"top"` instead of just the
+  // side. An unstyled arrow is a full-width, zero-height block, so `arrow()` sees an arrow
+  // wider than the reference, decides it points at nothing, and returns an `alignmentOffset`
+  // with a reset. `flip` opens with `if (middlewareData.arrow?.alignmentOffset) return {}`,
+  // so from the first render onwards it bails on every recompute and the menu can never
+  // leave the side it started on.
+  //
+  // Measured in production at a 320x640 viewport with the field at 465..537: flip was handed
+  // `overflow.bottom: 231` and did nothing, leaving a 324px calendar hanging to 871 with
+  // 497px free above it. Disabling the arrow restores the chain — bottom-start, bottom-end,
+  // then top-start with no overflow.
+  //
+  // We hide the arrow in CSS anyway, so this costs nothing visually. A consumer that really
+  // wants one can pass `floating.arrow` explicitly and gets the old behaviour, arrow included.
+  if (merged.arrow === undefined) merged.arrow = false
+
   return Object.keys(merged).length > 0 ? merged : undefined
 })
 
