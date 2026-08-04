@@ -1,5 +1,11 @@
 # @fiscozen/chat-container
 
+## 2.0.12
+
+### Patch Changes
+
+- @fiscozen/card@3.0.10
+
 ## 2.0.11
 
 ### Patch Changes

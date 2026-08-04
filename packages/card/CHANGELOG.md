@@ -1,5 +1,12 @@
 # @fiscozen/card
 
+## 3.0.10
+
+### Patch Changes
+
+- Updated dependencies [9a55c03]
+  - @fiscozen/composables@1.1.3
+
 ## 3.0.9
 
 ### Patch Changes
