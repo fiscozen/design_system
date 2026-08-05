@@ -390,11 +390,14 @@ describe('useFloating', () => {
       // The invariant is unchanged: the whole menu stays on screen.
       expect(floating.float.position.y).toBeGreaterThanOrEqual(VIEWPORT_MARGIN)
       expect(floating.float.position.y + ELEMENT_HEIGHT).toBeLessThanOrEqual(600 - VIEWPORT_MARGIN)
-      // It gets there by flipping to the other side of the opener (bottom edge one margin
-      // above opener.top = 540 - 8 - 100) rather than sliding up across it, which would
-      // have left the menu covering the control that opened it.
-      expect(floating.float.position.y).toBe(540 - VIEWPORT_MARGIN - ELEMENT_HEIGHT)
+      // It gets there by flipping to the other side of the opener rather than sliding up
+      // across it, which would have left the menu covering the control that opened it.
+      // The gap comes from the element's own margin (zero here, since the harness mounts a
+      // bare element with no gap class), so the menu's bottom lands on opener.top = 540.
+      expect(floating.float.position.y).toBe(540 - ELEMENT_HEIGHT)
       expect(floating.float.position.y + ELEMENT_HEIGHT).toBeLessThanOrEqual(540)
+      // The resolved position follows the flip, so the consumer's gap class does too.
+      expect(floating.actualPosition?.value).toBe('top-start')
     })
 
     it('flips a menu below its opener when it would overflow the top', async () => {
@@ -423,13 +426,84 @@ describe('useFloating', () => {
       await floating.setPosition()
       await nextTick()
 
-      // One margin below opener.bottom, so the menu clears its opener instead of
-      // covering it.
-      expect(floating.float.position.y).toBe(60 + VIEWPORT_MARGIN)
+      // Sits on opener.bottom, exactly where the `bottom*` calculator would put it: the
+      // flipped side's `margin-top` is what produces the gap, and it is zero in this
+      // harness. The menu clears its opener instead of covering it.
+      expect(floating.float.position.y).toBe(60)
+      expect(floating.float.position.y + ELEMENT_HEIGHT).toBeLessThanOrEqual(600 - VIEWPORT_MARGIN)
+      expect(floating.actualPosition?.value).toBe('bottom-start')
+    })
+
+    it('spaces a flipped menu by the gap class, not by the viewport margin', async () => {
+      // Regression for LIB-2831: the flip used to fall back to VIEWPORT_MARGIN, so a panel
+      // that flipped ended up 8px from its opener while an unflipped one on that side got
+      // the 16px the gap class provides — and it kept the class of the requested side, so
+      // the margin sat on the wrong edge.
+      setViewport(390, 600)
+      mockElement.style.marginTop = '16px'
+
+      mockOpener.getBoundingClientRect = vi.fn(() => ({
+        width: 100,
+        height: 40,
+        top: 540,
+        left: 100,
+        right: 200,
+        bottom: 580,
+        x: 100,
+        y: 540,
+        toJSON: () => {}
+      })) as any
+
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('bottom-start'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      // Flipped above: the 16px gap is in the arithmetic, because a `margin-bottom` cannot
+      // move a fixed element positioned by `top`.
+      expect(floating.float.position.y).toBe(540 - 16 - ELEMENT_HEIGHT)
+      expect(floating.actualPosition?.value).toBe('top-start')
+
+      mockElement.style.marginTop = ''
+    })
+
+    it('leaves a left placement styled as horizontal when it is corrected vertically', async () => {
+      // `left*` / `right*` sit beside the opener and keep their horizontal gap, so a
+      // vertical correction must not restyle them onto a vertical side.
+      setViewport(390, 600)
+
+      mockOpener.getBoundingClientRect = vi.fn(() => ({
+        width: 100,
+        height: 40,
+        top: 560,
+        left: 250,
+        right: 350,
+        bottom: 600,
+        x: 250,
+        y: 560,
+        toJSON: () => {}
+      })) as any
+
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('left-start'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      expect(floating.actualPosition?.value).toBe('left-start')
       expect(floating.float.position.y + ELEMENT_HEIGHT).toBeLessThanOrEqual(600 - VIEWPORT_MARGIN)
     })
 
-    it('ignores document.body\'s box when it is the implicit container', async () => {
+    it("ignores document.body's box when it is the implicit container", async () => {
       // Measured on the ephemeral env (/app/fatture-emesse): the frontoffice shell gives
       // body a fixed height equal to the viewport and scrolls an inner element, so once the
       // page is scrolled body's rect leaves the viewport. Intersecting with it collapsed the
@@ -685,7 +759,7 @@ describe('useFloating', () => {
       // Should not throw, just return early when element is missing
       await floating.setPosition()
       await nextTick()
-      
+
       // Position should remain at initial values (0, 0)
       expect(floating.float.position.x).toBe(0)
       expect(floating.float.position.y).toBe(0)
