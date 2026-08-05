@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useId } from "vue";
+import { computed, getCurrentInstance, ref } from "vue";
 import { FzBadge } from "@fiscozen/badge";
 import { FzContainer } from "@fiscozen/container";
 import { FzDivider } from "@fiscozen/divider";
@@ -31,8 +31,15 @@ const anchoredPopover = supportsAnchoredPopover();
  * with no JS, and (b) makes that button the popover's *implicit anchor* for CSS
  * anchor positioning — so `.fz-card-actions__popover` can position itself with
  * `anchor()` without a per-instance `anchor-name`.
+ *
+ * The suffix is the instance's `uid` and NOT `useId()`: `useId()` is scoped to
+ * the Vue *app*, so two apps in the same document (Storybook docs mode, or a page
+ * with several mount points) both hand out `v-0`. `popovertarget` resolves by id
+ * and takes the first match, so every opener would toggle the first card's menu,
+ * anchored to a button the user never clicked. `uid` is a counter inside the Vue
+ * runtime, shared across apps, so it is unique document-wide.
  */
-const popoverId = `fz-card-actions-${useId()}`;
+const popoverId = `fz-card-actions-${getCurrentInstance()!.uid}`;
 const popover = ref<HTMLElement>();
 
 /**
@@ -85,7 +92,12 @@ function emitActionClick(actionIndex: number, action: FzActionProps) {
     -->
     <FzContainer horizontal alignItems="center">
       <!-- Badge -->
-      <FzBadge v-if="badge" :left-icon="badge.icon" :tone="badge.tone" variant="text">
+      <FzBadge
+        v-if="badge"
+        :left-icon="badge.icon"
+        :tone="badge.tone"
+        variant="text"
+      >
         {{ badge.text }}
       </FzBadge>
       <!-- Title only (inline with actions) -->
@@ -115,7 +127,12 @@ function emitActionClick(actionIndex: number, action: FzActionProps) {
             aria-label="Mostra azioni"
             :popovertarget="popoverId"
           />
-          <div :id="popoverId" ref="popover" popover class="fz-card-actions__popover">
+          <div
+            :id="popoverId"
+            ref="popover"
+            popover
+            class="fz-card-actions__popover"
+          >
             <FzActionList>
               <FzActionSection
                 v-for="(section, label) in groupedActions"
