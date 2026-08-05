@@ -223,7 +223,10 @@ describe("FzCardListItem", () => {
       // Only a section header + one link action → still arrow (link) mode,
       // not dropdown — markers don't count as interactive actions.
       const sectionOnly = mount(FzCardListItem, {
-        props: { title: "Item", actions: [{ type: "section", label: "Group" }] },
+        props: {
+          title: "Item",
+          actions: [{ type: "section", label: "Group" }],
+        },
       });
       const sectionPlusOneLink = mount(FzCardListItem, {
         props: {
@@ -231,8 +234,13 @@ describe("FzCardListItem", () => {
           actions: [{ type: "section", label: "Group" }, linkAction],
         },
       });
-      await Promise.all([sectionOnly.vm.$nextTick(), sectionPlusOneLink.vm.$nextTick()]);
-      expect(sectionOnly.findComponent({ name: "FzIconButton" }).exists()).toBe(false);
+      await Promise.all([
+        sectionOnly.vm.$nextTick(),
+        sectionPlusOneLink.vm.$nextTick(),
+      ]);
+      expect(sectionOnly.findComponent({ name: "FzIconButton" }).exists()).toBe(
+        false,
+      );
       expect(
         sectionPlusOneLink
           .findAllComponents({ name: "FzIcon" })
@@ -439,7 +447,6 @@ describe("FzCardListItem", () => {
         expect(payload).toEqual([0, linkAction]);
       }
     });
-
   });
 
   /**
@@ -478,6 +485,30 @@ describe("FzCardListItem", () => {
         "Action A",
         "Action B",
       ]);
+    });
+
+    it("should give each instance a document-unique popover id", async () => {
+      // Every mount() is its own Vue app, so an app-scoped id (useId()) would
+      // hand out the same value twice: `popovertarget` resolves by id and takes
+      // the first match, and every opener ends up toggling the first card's menu.
+      const first = mount(FzCardListItem, {
+        props: { title: "First", actions: [actionA, actionB] },
+      });
+      const second = mount(FzCardListItem, {
+        props: { title: "Second", actions: [actionA, actionB] },
+      });
+      await Promise.all([first.vm.$nextTick(), second.vm.$nextTick()]);
+
+      const menuId = (w: typeof first) =>
+        w.get(".fz-card-actions__popover").attributes("id");
+      expect(menuId(first)).not.toBe(menuId(second));
+      // …and each opener still points at its own menu.
+      expect(first.get("button").attributes("popovertarget")).toBe(
+        menuId(first),
+      );
+      expect(second.get("button").attributes("popovertarget")).toBe(
+        menuId(second),
+      );
     });
 
     it("should render section markers as group headers in the menu", async () => {
