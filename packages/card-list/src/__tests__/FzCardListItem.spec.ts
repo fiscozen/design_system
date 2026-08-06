@@ -1,27 +1,7 @@
 import { mount, config } from "@vue/test-utils";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { FzActionProps } from "@fiscozen/action";
 import FzCardListItem from "../FzCardListItem.vue";
-
-/**
- * jsdom ships neither the Popover API nor `window.CSS`, so FzCardMultiActions
- * feature-detects its way to the FzIconDropdown fallback in unit tests. These
- * helpers fake the two capabilities so the native-popover path is covered too
- * (the real thing runs in Chromium via the Storybook play functions).
- */
-function enableAnchoredPopoverSupport() {
-  Object.defineProperty(HTMLElement.prototype, "popover", {
-    value: null,
-    writable: true,
-    configurable: true,
-  });
-  vi.stubGlobal("CSS", { supports: () => true });
-}
-
-function restoreAnchoredPopoverSupport() {
-  delete (HTMLElement.prototype as unknown as Record<string, unknown>).popover;
-  vi.unstubAllGlobals();
-}
 
 const actionA: FzActionProps = {
   type: "action",
@@ -454,61 +434,31 @@ describe("FzCardListItem", () => {
    * feature detection: the native popover (preferred) and the FzIconDropdown
    * fallback. Both must render the same actions and emit the same payload.
    */
-  describe("Actions menu — native popover path", () => {
-    beforeEach(enableAnchoredPopoverSupport);
-    afterEach(restoreAnchoredPopoverSupport);
-
-    it("should render the actions inside a native popover instead of the dropdown", async () => {
+  /**
+   * The multi-action menu is an FzPopover now, so which engine renders it — native
+   * popover in CSS, or FzFloating — is the popover package's business and is tested
+   * there. What matters here is that the card wires it up: the ellipsis opens it, the
+   * actions and their sections land inside, and picking one reports its index.
+   */
+  describe("Actions menu", () => {
+    it("should render the actions inside an FzPopover hanging off the ellipsis", async () => {
       const wrapper = mount(FzCardListItem, {
         props: { title: "Item", actions: [actionA, actionB] },
       });
       await wrapper.vm.$nextTick();
 
+      const popover = wrapper.findComponent({ name: "FzPopover" });
+      expect(popover.exists()).toBe(true);
+      expect(popover.props("position")).toBe("bottom-end");
+
       const opener = wrapper.findComponent({ name: "FzIconButton" });
       expect(opener.props("iconName")).toBe("ellipsis-vertical");
-      expect(wrapper.findComponent({ name: "FzIconDropdown" }).exists()).toBe(
-        false,
-      );
-
-      // Matched by class, not `[popover]`: once the stub puts `popover` on
-      // HTMLElement.prototype, Vue writes it as a DOM property, and jsdom's fake
-      // property doesn't reflect back to an attribute the way a browser does.
-      const menu = wrapper.find(".fz-card-actions__popover");
-      expect(menu.exists()).toBe(true);
-      // The opener toggles that very popover — no JS wiring in between.
-      expect(wrapper.get("button").attributes("popovertarget")).toBe(
-        menu.attributes("id"),
-      );
 
       const actions = wrapper.findAllComponents({ name: "FzAction" });
       expect(actions.map((a) => a.props("label"))).toEqual([
         "Action A",
         "Action B",
       ]);
-    });
-
-    it("should give each instance a document-unique popover id", async () => {
-      // Every mount() is its own Vue app, so an app-scoped id (useId()) would
-      // hand out the same value twice: `popovertarget` resolves by id and takes
-      // the first match, and every opener ends up toggling the first card's menu.
-      const first = mount(FzCardListItem, {
-        props: { title: "First", actions: [actionA, actionB] },
-      });
-      const second = mount(FzCardListItem, {
-        props: { title: "Second", actions: [actionA, actionB] },
-      });
-      await Promise.all([first.vm.$nextTick(), second.vm.$nextTick()]);
-
-      const menuId = (w: typeof first) =>
-        w.get(".fz-card-actions__popover").attributes("id");
-      expect(menuId(first)).not.toBe(menuId(second));
-      // …and each opener still points at its own menu.
-      expect(first.get("button").attributes("popovertarget")).toBe(
-        menuId(first),
-      );
-      expect(second.get("button").attributes("popovertarget")).toBe(
-        menuId(second),
-      );
     });
 
     it("should render section markers as group headers in the menu", async () => {
@@ -518,28 +468,40 @@ describe("FzCardListItem", () => {
       });
       await wrapper.vm.$nextTick();
 
-      // The marker opens a labelled group; its following action lands under it.
       const sectionLabels = wrapper
         .findAllComponents({ name: "FzActionSection" })
         .map((s) => s.props("label"));
       expect(sectionLabels).toContain("Scarica");
-      const actionLabels = wrapper
-        .findAllComponents({ name: "FzAction" })
-        .map((a) => a.props("label"));
-      expect(actionLabels).toEqual(["Action A", "Action B"]);
+      expect(
+        wrapper.findAllComponents({ name: "FzAction" }).map((a) => a.props("label")),
+      ).toEqual(["Action A", "Action B"]);
     });
 
-    it("should emit fzaction:click with the action index when a menu action is clicked", async () => {
+    it("should report the menu state on the opener", async () => {
       const wrapper = mount(FzCardListItem, {
         props: { title: "Item", actions: [actionA, actionB] },
       });
       await wrapper.vm.$nextTick();
 
+      const opener = wrapper.get("button");
+      expect(opener.attributes("aria-expanded")).toBe("false");
+      await opener.trigger("click");
+      expect(opener.attributes("aria-expanded")).toBe("true");
+    });
+
+    it("should emit fzaction:click with the action index and close the menu", async () => {
+      const wrapper = mount(FzCardListItem, {
+        props: { title: "Item", actions: [actionA, actionB] },
+      });
+      await wrapper.vm.$nextTick();
+      await wrapper.get("button").trigger("click");
+
       const actions = wrapper.findAllComponents({ name: "FzAction" });
       await actions[1].trigger("click");
 
-      expect(wrapper.emitted("fzaction:click")).toBeTruthy();
       expect(wrapper.emitted("fzaction:click")![0]).toEqual([1, actionB]);
+      // Picking an action closes the menu.
+      expect(wrapper.get("button").attributes("aria-expanded")).toBe("false");
     });
 
     it("should label the opener in Italian", async () => {
@@ -547,82 +509,7 @@ describe("FzCardListItem", () => {
         props: { title: "Item", actions: [actionA, actionB] },
       });
       await wrapper.vm.$nextTick();
-      expect(wrapper.get("button").attributes("aria-label")).toBe(
-        "Mostra azioni",
-      );
-    });
-  });
-
-  describe("Actions menu — FzIconDropdown fallback", () => {
-    it("should fall back to the dropdown when the Popover API is missing", async () => {
-      const wrapper = mount(FzCardListItem, {
-        props: { title: "Item", actions: [actionA, actionB] },
-      });
-      await wrapper.vm.$nextTick();
-
-      const dropdown = wrapper.findComponent({ name: "FzIconDropdown" });
-      expect(dropdown.exists()).toBe(true);
-      expect(dropdown.props("actions")).toEqual([actionA, actionB]);
-      expect(dropdown.props("iconName")).toBe("ellipsis-vertical");
-      expect(wrapper.find(".fz-card-actions__popover").exists()).toBe(false);
-    });
-
-    it("should fall back to the dropdown when CSS anchor positioning is unsupported", async () => {
-      Object.defineProperty(HTMLElement.prototype, "popover", {
-        value: null,
-        writable: true,
-        configurable: true,
-      });
-      vi.stubGlobal("CSS", { supports: () => false });
-
-      const wrapper = mount(FzCardListItem, {
-        props: { title: "Item", actions: [actionA, actionB] },
-      });
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.findComponent({ name: "FzIconDropdown" }).exists()).toBe(
-        true,
-      );
-      restoreAnchoredPopoverSupport();
-    });
-
-    it("should pass section markers through to the dropdown", async () => {
-      const section = { type: "section" as const, label: "Scarica" };
-      const wrapper = mount(FzCardListItem, {
-        props: { title: "Item", actions: [actionA, section, actionB] },
-      });
-      await wrapper.vm.$nextTick();
-
-      const dropdown = wrapper.findComponent({ name: "FzIconDropdown" });
-      expect(dropdown.props("actions")).toEqual([actionA, section, actionB]);
-    });
-
-    it("should forward fzaction:click from the dropdown", async () => {
-      const wrapper = mount(FzCardListItem, {
-        props: { title: "Item", actions: [actionA, actionB] },
-      });
-      await wrapper.vm.$nextTick();
-
-      const dropdown = wrapper.findComponent({ name: "FzIconDropdown" });
-      await dropdown.vm.$emit("fzaction:click", 1, actionB);
-
-      expect(wrapper.emitted("fzaction:click")).toBeTruthy();
-      expect(wrapper.emitted("fzaction:click")![0]).toEqual([1, actionB]);
-    });
-
-    it("should label the dropdown opener in Italian", async () => {
-      const wrapper = mount(FzCardListItem, {
-        props: { title: "Item", actions: [actionA, actionB] },
-      });
-      await wrapper.vm.$nextTick();
-      // `label` is the prop FzIconDropdown forwards to the icon button's
-      // aria-label (an `aria-label` attribute would land on the wrapper).
-      expect(
-        wrapper.findComponent({ name: "FzIconDropdown" }).props("label"),
-      ).toBe("Mostra azioni");
-      expect(wrapper.get("button").attributes("aria-label")).toBe(
-        "Mostra azioni",
-      );
+      expect(wrapper.get("button").attributes("aria-label")).toBe("Mostra azioni");
     });
   });
 
