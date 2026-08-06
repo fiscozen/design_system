@@ -1,0 +1,4 @@
+{
+  "extends": "@fiscozen/tsconfig",
+  "exclude": ["src/__tests__", "vite.config.ts", "vitest.config.ts"]
+}

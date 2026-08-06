@@ -53,6 +53,7 @@
     "@fiscozen/navlist": "workspace:^",
     "@fiscozen/pagination": "workspace:*",
     "@fiscozen/pdf-viewer": "workspace:^",
+    "@fiscozen/popover": "workspace:*",
     "@fiscozen/progress": "workspace:^",
     "@fiscozen/radio": "workspace:^",
     "@fiscozen/select": "workspace:^",
