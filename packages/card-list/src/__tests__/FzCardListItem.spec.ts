@@ -645,6 +645,31 @@ describe("FzCardListItem", () => {
       expect(row.attributes("aria-labelledby")).toBeTruthy();
       expect(wrapper.get("p.truncate").text()).toBe("Pay invoice");
     });
+
+    it("should point aria-labelledby at its own title, with a document-unique id", async () => {
+      // Each mount() is its own Vue app: an app-scoped id (useId()) repeats
+      // across apps, and a screen reader then announces the first card's title
+      // for every row.
+      const first = mount(FzCardListItem, {
+        props: { title: "First invoice", actions: [linkAction] },
+      });
+      const second = mount(FzCardListItem, {
+        props: { title: "Second invoice", actions: [linkAction] },
+      });
+      await Promise.all([first.vm.$nextTick(), second.vm.$nextTick()]);
+
+      const labelId = (w: typeof first) =>
+        w.get('[role="button"]').attributes("aria-labelledby");
+      expect(labelId(first)).not.toBe(labelId(second));
+      // Each row's label id resolves to that row's own title.
+      for (const [wrapper, title] of [
+        [first, "First invoice"],
+        [second, "Second invoice"],
+      ] as const) {
+        const target = wrapper.get(`#${labelId(wrapper)}`);
+        expect(target.text()).toBe(title);
+      }
+    });
   });
 
   describe("Edge Cases", () => {

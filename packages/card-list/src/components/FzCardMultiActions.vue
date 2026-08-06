@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, getCurrentInstance, ref } from "vue";
+import { computed, ref } from "vue";
 import { FzBadge } from "@fiscozen/badge";
 import { FzContainer } from "@fiscozen/container";
 import { FzDivider } from "@fiscozen/divider";
@@ -10,7 +10,7 @@ import type { FzActionProps } from "@fiscozen/action";
 import type { FzCardMultiActionsProps, FzCardMultiActionsEmits } from "./types";
 import FzCardHeader from "./FzCardHeader.vue";
 import FzCardFooter from "./FzCardFooter.vue";
-import { supportsAnchoredPopover } from "../utils";
+import { supportsAnchoredPopover, useUniqueId } from "../utils";
 
 const props = defineProps<FzCardMultiActionsProps>();
 
@@ -32,14 +32,10 @@ const anchoredPopover = supportsAnchoredPopover();
  * anchor positioning — so `.fz-card-actions__popover` can position itself with
  * `anchor()` without a per-instance `anchor-name`.
  *
- * The suffix is the instance's `uid` and NOT `useId()`: `useId()` is scoped to
- * the Vue *app*, so two apps in the same document (Storybook docs mode, or a page
- * with several mount points) both hand out `v-0`. `popovertarget` resolves by id
- * and takes the first match, so every opener would toggle the first card's menu,
- * anchored to a button the user never clicked. `uid` is a counter inside the Vue
- * runtime, shared across apps, so it is unique document-wide.
+ * Because `popovertarget` resolves this id in the DOM, it has to be unique across
+ * the document and not merely within the app — see useUniqueId.
  */
-const popoverId = `fz-card-actions-${getCurrentInstance()!.uid}`;
+const popoverId = useUniqueId("fz-card-actions");
 const popover = ref<HTMLElement>();
 
 /**
