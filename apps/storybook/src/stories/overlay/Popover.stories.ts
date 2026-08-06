@@ -126,6 +126,60 @@ export const AutoPosition: PopoverStory = {
   }
 }
 
+/**
+ * Both engines, open on mount, so a visual snapshot covers them side by side: the
+ * left one is the native popover placed in CSS, the right one is `FzFloating`. They
+ * should look the same — same offset from the opener, same alignment.
+ */
+export const BothEnginesOpen: PopoverStory = {
+  render: (args) => ({
+    components: { FzPopover, FzButton },
+    setup() {
+      return { args }
+    },
+    template: `
+    <div class="flex justify-center gap-[220px] p-32 pb-[220px]">
+      <FzPopover v-bind="args" :open="true">
+        <template #opener="{ toggle }">
+          <FzButton @click="toggle">Motore CSS</FzButton>
+        </template>
+        <div class="rounded border border-grey-200 bg-core-white p-12 shadow-md min-w-[200px]">
+          <p data-engine="css">Stesso contenuto, stesso offset</p>
+        </div>
+      </FzPopover>
+
+      <FzPopover v-bind="args" :open="true" :force-fallback="true">
+        <template #opener="{ toggle }">
+          <FzButton @click="toggle">Motore JS</FzButton>
+        </template>
+        <div class="rounded border border-grey-200 bg-core-white p-12 shadow-md min-w-[200px]">
+          <p data-engine="js">Stesso contenuto, stesso offset</p>
+        </div>
+      </FzPopover>
+    </div>`
+  }),
+  args: {
+    position: 'bottom-start'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Both are open without anyone clicking: `open` was already true at mount.
+    const content = (engine: string) =>
+      canvasElement.querySelector<HTMLElement>(`[data-engine="${engine}"]`)!
+    await waitFor(() => expect(content('css')).toBeVisible())
+    await expect(content('js')).toBeVisible()
+
+    // And they agree on where the content sits relative to its opener.
+    const offsetFromOpener = (openerName: string, engine: string) => {
+      const opener = canvas.getByRole('button', { name: openerName })
+      const box = content(engine).closest('div')!
+      return Math.round(box.getBoundingClientRect().top - opener.getBoundingClientRect().bottom)
+    }
+    await expect(offsetFromOpener('Motore CSS', 'css')).toBe(offsetFromOpener('Motore JS', 'js'))
+  }
+}
+
 export const MatchOpenerWidth: PopoverStory = {
   render,
   args: {
