@@ -17,7 +17,14 @@
  * The fallback is meant to die: when CSS anchor positioning is everywhere, this
  * component drops the second engine and `FzFloating` goes with it.
  */
-import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 import { FzFloating, useClickOutside, useKeyDown } from "@fiscozen/composables";
 import type { FzPopoverEmits, FzPopoverProps, FzPopoverSlots } from "./types";
 import {
@@ -106,8 +113,7 @@ onBeforeUnmount(() => {
   namedAnchor = null;
 });
 
-watch(isOpen, async (value) => {
-  emit("fzpopover:toggle", value);
+async function syncEngineWithModel(value: boolean) {
   if (!cssEngine) {
     // The JS engine only needs the width sync; FzFloating reacts to isOpen itself.
     if (value && props.matchOpenerWidth) await syncFallbackWidth();
@@ -124,6 +130,20 @@ watch(isOpen, async (value) => {
   // Popover API before v24.
   if (value && !nativeShown) element.showPopover?.();
   if (!value && nativeShown) element.hidePopover?.();
+}
+
+watch(isOpen, (value) => {
+  emit("fzpopover:toggle", value);
+  syncEngineWithModel(value);
+});
+
+/**
+ * An `open` that is already true at mount needs the same push: the watcher only
+ * fires on change, so a popover that starts open — a docs example, a visual
+ * snapshot, a menu restored from state — would otherwise render closed.
+ */
+onMounted(() => {
+  if (isOpen.value) syncEngineWithModel(true);
 });
 
 /**
@@ -131,7 +151,7 @@ watch(isOpen, async (value) => {
  * without going through us, so this — and the model — are synced from the platform's
  * own toggle event.
  */
-let nativeShown = false
+let nativeShown = false;
 function onNativeToggle(event: Event) {
   const next = (event as ToggleEvent).newState === "open";
   nativeShown = next;
