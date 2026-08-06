@@ -1,41 +1,41 @@
 /**
  * @module useFloating
  * @description Composable for managing floating/popover element positioning
- * 
+ *
  * ## Why This Refactoring?
- * 
+ *
  * The previous implementation had several issues:
- * 
+ *
  * 1. **Monolithic function**: All positioning logic was in a single function
  *    making it hard to test individual positioning strategies
- * 
+ *
  * 2. **Inconsistent margin handling**: Margins were calculated differently for
  *    different positions, leading to visual inconsistencies
- * 
+ *
  * 3. **No reactive repositioning**: The floating element didn't respond to
  *    opener/content size changes or scroll events
- * 
+ *
  * 4. **Layout shift on open**: The floating element was added to document flow
  *    before positioning, causing visual jumps
- * 
+ *
  * ## Architecture
- * 
+ *
  * The new implementation uses:
- * 
+ *
  * - **Pure position calculators**: Each position (top, bottom, left, right and
  *   their variants) has a dedicated calculator function stored in lookup tables
- * 
- * - **Lookup tables**: `positionCalculators` (with opener) and 
+ *
+ * - **Lookup tables**: `positionCalculators` (with opener) and
  *   `containerPositionCalculators` (without opener) provide O(1) access
- * 
+ *
  * - **Immediate fixed positioning**: Elements are set to `position: fixed`
  *   immediately to prevent layout shift
- * 
+ *
  * - **Reactive repositioning**: ResizeObserver and scroll/resize event listeners
  *   ensure the floating stays positioned correctly during dynamic changes
- * 
+ *
  * ## Usage
- * 
+ *
  * ```typescript
  * const { float, setPosition, actualPosition } = useFloating({
  *   element: toRef(props, 'element'),
@@ -43,22 +43,22 @@
  *   position: toRef(props, 'position'),
  *   container: toRef(props, 'container')
  * })
- * 
+ *
  * // Position is set automatically, or call manually:
  * await setPosition()
- * 
+ *
  * // Access computed position values:
  * console.log(float.position.x, float.position.y)
  * console.log(actualPosition.value) // Resolved position for 'auto' modes
  * ```
- * 
+ *
  * ## Position Types
- * 
+ *
  * - Explicit: top, bottom, left, right and variants (-start, -end)
  * - Auto: auto, auto-vertical, auto-start, auto-end, etc.
- * 
+ *
  * Auto positions are resolved based on available space around the opener
- * 
+ *
  * @see FzFloating.vue - The component that uses this composable
  */
 
@@ -128,7 +128,7 @@ const isRectPositionable = (rect: DOMRect | null): boolean =>
 
 const positionCalculators: Record<string, PositionCalculator> = {
   // Bottom positions - content below opener
-  'bottom': (opener, margins) => ({
+  bottom: (opener, margins) => ({
     position: {
       x: opener.left - margins.left + opener.width / 2,
       y: opener.bottom
@@ -153,7 +153,7 @@ const positionCalculators: Record<string, PositionCalculator> = {
   }),
 
   // Top positions - content above opener
-  'top': (opener, margins) => ({
+  top: (opener, margins) => ({
     position: {
       x: opener.left - margins.left + opener.width / 2,
       y: opener.top - margins.bottom
@@ -178,7 +178,7 @@ const positionCalculators: Record<string, PositionCalculator> = {
   }),
 
   // Left positions - content to left of opener
-  'left': (opener, margins) => ({
+  left: (opener, margins) => ({
     position: {
       x: opener.left - margins.right,
       y: opener.top - margins.top + opener.height / 2
@@ -203,7 +203,7 @@ const positionCalculators: Record<string, PositionCalculator> = {
   }),
 
   // Right positions - content to right of opener
-  'right': (opener, margins) => ({
+  right: (opener, margins) => ({
     position: {
       x: opener.right + margins.left,
       y: opener.top - margins.top + opener.height / 2
@@ -246,98 +246,98 @@ const calculatePositionWithOpener = (
 type ContainerPositionCalculator = (container: DOMRect, element: DOMRect) => PositionResult
 
 const containerPositionCalculators: Record<string, ContainerPositionCalculator> = {
-  'bottom': (container, element) => ({
-    position: { 
-      x: container.left + container.width / 2, 
-      y: container.bottom - element.height 
+  bottom: (container, element) => ({
+    position: {
+      x: container.left + container.width / 2,
+      y: container.bottom - element.height
     },
     transform: { x: -50, y: 0 }
   }),
 
   'bottom-start': (container, element) => ({
-    position: { 
-      x: container.left, 
-      y: container.bottom - element.height 
+    position: {
+      x: container.left,
+      y: container.bottom - element.height
     },
     transform: { x: 0, y: 0 }
   }),
 
   'bottom-end': (container, element) => ({
-    position: { 
-      x: container.right - element.width, 
-      y: container.bottom - element.height 
+    position: {
+      x: container.right - element.width,
+      y: container.bottom - element.height
     },
     transform: { x: 0, y: 0 }
   }),
 
-  'top': (container) => ({
-    position: { 
-      x: container.left + container.width / 2, 
-      y: container.top 
+  top: (container) => ({
+    position: {
+      x: container.left + container.width / 2,
+      y: container.top
     },
     transform: { x: -50, y: 0 }
   }),
 
   'top-start': (container) => ({
-    position: { 
-      x: container.left, 
-      y: container.top 
+    position: {
+      x: container.left,
+      y: container.top
     },
     transform: { x: 0, y: 0 }
   }),
 
   'top-end': (container, element) => ({
-    position: { 
-      x: container.right - element.width, 
-      y: container.top 
+    position: {
+      x: container.right - element.width,
+      y: container.top
     },
     transform: { x: 0, y: 0 }
   }),
 
-  'left': (container, element) => ({
-    position: { 
-      x: container.left, 
-      y: container.top + (container.height - element.height) / 2 
+  left: (container, element) => ({
+    position: {
+      x: container.left,
+      y: container.top + (container.height - element.height) / 2
     },
     transform: { x: 0, y: 0 }
   }),
 
   'left-start': (container) => ({
-    position: { 
-      x: container.left, 
-      y: container.top 
+    position: {
+      x: container.left,
+      y: container.top
     },
     transform: { x: 0, y: 0 }
   }),
 
   'left-end': (container, element) => ({
-    position: { 
-      x: container.left, 
-      y: container.bottom - element.height 
+    position: {
+      x: container.left,
+      y: container.bottom - element.height
     },
     transform: { x: 0, y: 0 }
   }),
 
-  'right': (container, element) => ({
-    position: { 
-      x: container.right - element.width, 
-      y: container.top + (container.height - element.height) / 2 
+  right: (container, element) => ({
+    position: {
+      x: container.right - element.width,
+      y: container.top + (container.height - element.height) / 2
     },
     transform: { x: 0, y: 0 }
   }),
 
   'right-start': (container, element) => ({
-    position: { 
-      x: container.right - element.width, 
-      y: container.top 
+    position: {
+      x: container.right - element.width,
+      y: container.top
     },
     transform: { x: 0, y: 0 }
   }),
 
   'right-end': (container, element) => ({
-    position: { 
-      x: container.right - element.width, 
-      y: container.bottom - element.height 
+    position: {
+      x: container.right - element.width,
+      y: container.bottom - element.height
     },
     transform: { x: 0, y: 0 }
   })
@@ -349,7 +349,7 @@ const calculatePositionWithoutOpener = (
   element: DOMRect
 ): PositionResult => {
   const calculator = containerPositionCalculators[position]
-  return calculator 
+  return calculator
     ? calculator(container, element)
     : { position: { x: 0, y: 0 }, transform: { x: 0, y: 0 } }
 }
@@ -444,7 +444,13 @@ const applyBoundaryCorrections = (
 // Auto Position Resolution - Pure Function
 // ============================================================================
 
-type AutoPositionType = 'auto' | 'auto-vertical' | 'auto-start' | 'auto-vertical-start' | 'auto-end' | 'auto-vertical-end'
+type AutoPositionType =
+  | 'auto'
+  | 'auto-vertical'
+  | 'auto-start'
+  | 'auto-vertical-start'
+  | 'auto-end'
+  | 'auto-vertical-end'
 
 const resolveAutoPosition = (
   autoType: AutoPositionType,
@@ -524,12 +530,10 @@ export const useFloating = (
     }
 
     const container = args.container?.value
-      ? resolveElement(args.container.value.domRef.value) ?? document.body
+      ? (resolveElement(args.container.value.domRef.value) ?? document.body)
       : document.body
 
-    const opener = args.opener?.value
-      ? resolveElement(args.opener.value.domRef.value)
-      : null
+    const opener = args.opener?.value ? resolveElement(args.opener.value.domRef.value) : null
 
     return { element, container, opener }
   }
@@ -588,10 +592,11 @@ export const useFloating = (
 
       // Step 7: Calculate position
       const margins = getMargins(window.getComputedStyle(refs.element))
-      
-      const positionResult = refs.opener && rects.opener
-        ? calculatePositionWithOpener(actualPosition.value!, rects.opener, margins)
-        : calculatePositionWithoutOpener(actualPosition.value!, rects.container, rects.element)
+
+      const positionResult =
+        refs.opener && rects.opener
+          ? calculatePositionWithOpener(actualPosition.value!, rects.opener, margins)
+          : calculatePositionWithoutOpener(actualPosition.value!, rects.container, rects.element)
 
       // Step 8: Apply transform to get real position
       const realPosition = calcRealPos(
@@ -602,10 +607,23 @@ export const useFloating = (
       )
 
       // Step 9: Apply boundary corrections
+      //
+      // The collision boundary is the container ∩ viewport (see getCollisionBounds),
+      // which is right for a real container but wrong for the implicit
+      // `document.body` default: body is not a clipping box for fixed content, and
+      // whenever the page is shorter than the viewport its rect shrinks the usable
+      // area. The clamp then pulls the content up over its own opener — on a 108px
+      // tall page a 48px menu resolves maxTop = 108 - 8 - 48 = 52, above an opener
+      // whose bottom is at 76. Callers that asked for viewport semantics get the
+      // viewport, so the body's height stops deciding where a menu may sit.
+      const collisionContainer = args.useViewport?.value
+        ? new DOMRect(0, 0, window.innerWidth, window.innerHeight)
+        : rects.container
+
       const corrected = applyBoundaryCorrections(
         realPosition,
         rects.element,
-        rects.container,
+        collisionContainer,
         positionResult.transform
       )
 
