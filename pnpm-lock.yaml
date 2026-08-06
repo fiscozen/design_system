@@ -978,12 +978,12 @@ importers:
       '@fiscozen/divider':
         specifier: workspace:*
         version: link:../divider
-      '@fiscozen/dropdown':
-        specifier: workspace:*
-        version: link:../dropdown
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      '@fiscozen/popover':
+        specifier: workspace:*
+        version: link:../popover
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.19(yaml@2.8.2)

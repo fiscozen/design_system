@@ -16,9 +16,9 @@
     "@fiscozen/action": "workspace:*",
     "@fiscozen/badge": "workspace:*",
     "@fiscozen/button": "workspace:*",
+    "@fiscozen/container": "workspace:*",
     "@fiscozen/divider": "workspace:*",
-    "@fiscozen/dropdown": "workspace:*",
-    "@fiscozen/container": "workspace:*"
+    "@fiscozen/popover": "workspace:*"
   },
   "peerDependencies": {
     "@fiscozen/icons": "workspace:^",
