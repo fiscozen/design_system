@@ -1,41 +1,41 @@
 /**
  * @module useFloating
  * @description Composable for managing floating/popover element positioning
- * 
+ *
  * ## Why This Refactoring?
- * 
+ *
  * The previous implementation had several issues:
- * 
+ *
  * 1. **Monolithic function**: All positioning logic was in a single function
  *    making it hard to test individual positioning strategies
- * 
+ *
  * 2. **Inconsistent margin handling**: Margins were calculated differently for
  *    different positions, leading to visual inconsistencies
- * 
+ *
  * 3. **No reactive repositioning**: The floating element didn't respond to
  *    opener/content size changes or scroll events
- * 
+ *
  * 4. **Layout shift on open**: The floating element was added to document flow
  *    before positioning, causing visual jumps
- * 
+ *
  * ## Architecture
- * 
+ *
  * The new implementation uses:
- * 
+ *
  * - **Pure position calculators**: Each position (top, bottom, left, right and
  *   their variants) has a dedicated calculator function stored in lookup tables
- * 
- * - **Lookup tables**: `positionCalculators` (with opener) and 
+ *
+ * - **Lookup tables**: `positionCalculators` (with opener) and
  *   `containerPositionCalculators` (without opener) provide O(1) access
- * 
+ *
  * - **Immediate fixed positioning**: Elements are set to `position: fixed`
  *   immediately to prevent layout shift
- * 
+ *
  * - **Reactive repositioning**: ResizeObserver and scroll/resize event listeners
  *   ensure the floating stays positioned correctly during dynamic changes
- * 
+ *
  * ## Usage
- * 
+ *
  * ```typescript
  * const { float, setPosition, actualPosition } = useFloating({
  *   element: toRef(props, 'element'),
@@ -43,22 +43,22 @@
  *   position: toRef(props, 'position'),
  *   container: toRef(props, 'container')
  * })
- * 
+ *
  * // Position is set automatically, or call manually:
  * await setPosition()
- * 
+ *
  * // Access computed position values:
  * console.log(float.position.x, float.position.y)
  * console.log(actualPosition.value) // Resolved position for 'auto' modes
  * ```
- * 
+ *
  * ## Position Types
- * 
+ *
  * - Explicit: top, bottom, left, right and variants (-start, -end)
  * - Auto: auto, auto-vertical, auto-start, auto-end, etc.
- * 
+ *
  * Auto positions are resolved based on available space around the opener
- * 
+ *
  * @see FzFloating.vue - The component that uses this composable
  */
 
@@ -128,7 +128,7 @@ const isRectPositionable = (rect: DOMRect | null): boolean =>
 
 const positionCalculators: Record<string, PositionCalculator> = {
   // Bottom positions - content below opener
-  'bottom': (opener, margins) => ({
+  bottom: (opener, margins) => ({
     position: {
       x: opener.left - margins.left + opener.width / 2,
       y: opener.bottom
@@ -153,7 +153,7 @@ const positionCalculators: Record<string, PositionCalculator> = {
   }),
 
   // Top positions - content above opener
-  'top': (opener, margins) => ({
+  top: (opener, margins) => ({
     position: {
       x: opener.left - margins.left + opener.width / 2,
       y: opener.top - margins.bottom
@@ -178,7 +178,7 @@ const positionCalculators: Record<string, PositionCalculator> = {
   }),
 
   // Left positions - content to left of opener
-  'left': (opener, margins) => ({
+  left: (opener, margins) => ({
     position: {
       x: opener.left - margins.right,
       y: opener.top - margins.top + opener.height / 2
@@ -203,7 +203,7 @@ const positionCalculators: Record<string, PositionCalculator> = {
   }),
 
   // Right positions - content to right of opener
-  'right': (opener, margins) => ({
+  right: (opener, margins) => ({
     position: {
       x: opener.right + margins.left,
       y: opener.top - margins.top + opener.height / 2
@@ -246,98 +246,98 @@ const calculatePositionWithOpener = (
 type ContainerPositionCalculator = (container: DOMRect, element: DOMRect) => PositionResult
 
 const containerPositionCalculators: Record<string, ContainerPositionCalculator> = {
-  'bottom': (container, element) => ({
-    position: { 
-      x: container.left + container.width / 2, 
-      y: container.bottom - element.height 
+  bottom: (container, element) => ({
+    position: {
+      x: container.left + container.width / 2,
+      y: container.bottom - element.height
     },
     transform: { x: -50, y: 0 }
   }),
 
   'bottom-start': (container, element) => ({
-    position: { 
-      x: container.left, 
-      y: container.bottom - element.height 
+    position: {
+      x: container.left,
+      y: container.bottom - element.height
     },
     transform: { x: 0, y: 0 }
   }),
 
   'bottom-end': (container, element) => ({
-    position: { 
-      x: container.right - element.width, 
-      y: container.bottom - element.height 
+    position: {
+      x: container.right - element.width,
+      y: container.bottom - element.height
     },
     transform: { x: 0, y: 0 }
   }),
 
-  'top': (container) => ({
-    position: { 
-      x: container.left + container.width / 2, 
-      y: container.top 
+  top: (container) => ({
+    position: {
+      x: container.left + container.width / 2,
+      y: container.top
     },
     transform: { x: -50, y: 0 }
   }),
 
   'top-start': (container) => ({
-    position: { 
-      x: container.left, 
-      y: container.top 
+    position: {
+      x: container.left,
+      y: container.top
     },
     transform: { x: 0, y: 0 }
   }),
 
   'top-end': (container, element) => ({
-    position: { 
-      x: container.right - element.width, 
-      y: container.top 
+    position: {
+      x: container.right - element.width,
+      y: container.top
     },
     transform: { x: 0, y: 0 }
   }),
 
-  'left': (container, element) => ({
-    position: { 
-      x: container.left, 
-      y: container.top + (container.height - element.height) / 2 
+  left: (container, element) => ({
+    position: {
+      x: container.left,
+      y: container.top + (container.height - element.height) / 2
     },
     transform: { x: 0, y: 0 }
   }),
 
   'left-start': (container) => ({
-    position: { 
-      x: container.left, 
-      y: container.top 
+    position: {
+      x: container.left,
+      y: container.top
     },
     transform: { x: 0, y: 0 }
   }),
 
   'left-end': (container, element) => ({
-    position: { 
-      x: container.left, 
-      y: container.bottom - element.height 
+    position: {
+      x: container.left,
+      y: container.bottom - element.height
     },
     transform: { x: 0, y: 0 }
   }),
 
-  'right': (container, element) => ({
-    position: { 
-      x: container.right - element.width, 
-      y: container.top + (container.height - element.height) / 2 
+  right: (container, element) => ({
+    position: {
+      x: container.right - element.width,
+      y: container.top + (container.height - element.height) / 2
     },
     transform: { x: 0, y: 0 }
   }),
 
   'right-start': (container, element) => ({
-    position: { 
-      x: container.right - element.width, 
-      y: container.top 
+    position: {
+      x: container.right - element.width,
+      y: container.top
     },
     transform: { x: 0, y: 0 }
   }),
 
   'right-end': (container, element) => ({
-    position: { 
-      x: container.right - element.width, 
-      y: container.bottom - element.height 
+    position: {
+      x: container.right - element.width,
+      y: container.bottom - element.height
     },
     transform: { x: 0, y: 0 }
   })
@@ -349,7 +349,7 @@ const calculatePositionWithoutOpener = (
   element: DOMRect
 ): PositionResult => {
   const calculator = containerPositionCalculators[position]
-  return calculator 
+  return calculator
     ? calculator(container, element)
     : { position: { x: 0, y: 0 }, transform: { x: 0, y: 0 } }
 }
@@ -362,6 +362,11 @@ const calculatePositionWithoutOpener = (
 // to be shifted to stay on screen, so the menu never sits flush against (or
 // bleeds past) the viewport edge on narrow/mobile screens.
 const VIEWPORT_MARGIN = 8
+
+type VerticalSide = 'top' | 'bottom'
+
+const isVerticalPosition = (position: FzFloatingPosition): boolean =>
+  position.startsWith('top') || position.startsWith('bottom')
 
 interface Bounds {
   left: number
@@ -408,8 +413,13 @@ const applyBoundaryCorrections = (
   transform: Transform,
   opener: DOMRect | null = null,
   viewport: Bounds = getViewportBounds(),
-  margin: number = VIEWPORT_MARGIN
-): { position: FzAbsolutePosition; transform: Transform } => {
+  margin: number = VIEWPORT_MARGIN,
+  // The gap the panel keeps from its opener. The position calculators take it from the
+  // element's own margin — `bottom*` leaves `y` on the opener's edge and lets `margin-top`
+  // shift the fixed element down, `top*` subtracts `margin-bottom` outright — so a flip has
+  // to reproduce the same spacing, not fall back to the viewport margin.
+  gap: number = margin
+): { position: FzAbsolutePosition; transform: Transform; flippedTo?: VerticalSide } => {
   const correctedPosition = { ...realPosition }
   const correctedTransform = { ...transform }
 
@@ -447,33 +457,67 @@ const applyBoundaryCorrections = (
   // left margin at least brings its content on screen. Neither holds vertically.
   const availableHeight = bounds.bottom - bounds.top - margin * 2
 
+  let flippedTo: VerticalSide | undefined
+
   if (element.height <= availableHeight) {
     const minTop = bounds.top + margin
     const maxTop = bounds.bottom - margin - element.height
-    // Where the element would sit on the opposite side of the opener.
-    const aboveOpener = opener ? opener.top - margin - element.height : null
-    const belowOpener = opener ? opener.bottom + margin : null
+    // Where the element would sit on the opposite side of the opener, spaced by the same
+    // gap a natively-placed panel gets. Above the opener the gap has to be in the
+    // arithmetic (a `margin-bottom` cannot move a fixed element positioned by `top`);
+    // below it, `y` sits on the opener's edge because the flipped side's `margin-top`
+    // supplies the gap itself — exactly what the `bottom*` calculator does.
+    const aboveOpener = opener ? opener.top - gap - element.height : null
+    const belowOpener = opener ? opener.bottom : null
 
     if (correctedPosition.y > maxTop) {
       // Overflows the bottom. Prefer the other side of the opener: sliding the panel up
       // within the viewport would drag it across the control that opened it.
-      correctedPosition.y = aboveOpener !== null && aboveOpener >= minTop ? aboveOpener : maxTop
+      if (aboveOpener !== null && aboveOpener >= minTop) {
+        correctedPosition.y = aboveOpener
+        flippedTo = 'top'
+      } else {
+        correctedPosition.y = maxTop
+      }
       correctedTransform.y = 0
     } else if (correctedPosition.y < minTop) {
       // Mirror case for `top*` placements near the top edge.
-      correctedPosition.y = belowOpener !== null && belowOpener <= maxTop ? belowOpener : minTop
+      if (belowOpener !== null && belowOpener <= maxTop) {
+        correctedPosition.y = belowOpener
+        flippedTo = 'bottom'
+      } else {
+        correctedPosition.y = minTop
+      }
       correctedTransform.y = 0
     }
   }
 
-  return { position: correctedPosition, transform: correctedTransform }
+  return { position: correctedPosition, transform: correctedTransform, flippedTo }
+}
+
+/**
+ * Mirrors a placement onto the other side of the opener, keeping its alignment.
+ *
+ * A flipped panel is, for every purpose the consumer can observe, a panel on the other
+ * side: `FzFloating` derives its gap class from the resolved position, so reporting the
+ * requested side would leave the spacing on the wrong edge.
+ */
+const mirrorVertically = (position: FzFloatingPosition, side: VerticalSide): FzFloatingPosition => {
+  const alignment = position.includes('-') ? position.slice(position.indexOf('-')) : ''
+  return `${side}${alignment}` as FzFloatingPosition
 }
 
 // ============================================================================
 // Auto Position Resolution - Pure Function
 // ============================================================================
 
-type AutoPositionType = 'auto' | 'auto-vertical' | 'auto-start' | 'auto-vertical-start' | 'auto-end' | 'auto-vertical-end'
+type AutoPositionType =
+  | 'auto'
+  | 'auto-vertical'
+  | 'auto-start'
+  | 'auto-vertical-start'
+  | 'auto-end'
+  | 'auto-vertical-end'
 
 const resolveAutoPosition = (
   autoType: AutoPositionType,
@@ -553,12 +597,10 @@ export const useFloating = (
     }
 
     const container = args.container?.value
-      ? resolveElement(args.container.value.domRef.value) ?? document.body
+      ? (resolveElement(args.container.value.domRef.value) ?? document.body)
       : document.body
 
-    const opener = args.opener?.value
-      ? resolveElement(args.opener.value.domRef.value)
-      : null
+    const opener = args.opener?.value ? resolveElement(args.opener.value.domRef.value) : null
 
     return { element, container, opener }
   }
@@ -617,10 +659,11 @@ export const useFloating = (
 
       // Step 7: Calculate position
       const margins = getMargins(window.getComputedStyle(refs.element))
-      
-      const positionResult = refs.opener && rects.opener
-        ? calculatePositionWithOpener(actualPosition.value!, rects.opener, margins)
-        : calculatePositionWithoutOpener(actualPosition.value!, rects.container, rects.element)
+
+      const positionResult =
+        refs.opener && rects.opener
+          ? calculatePositionWithOpener(actualPosition.value!, rects.opener, margins)
+          : calculatePositionWithoutOpener(actualPosition.value!, rects.container, rects.element)
 
       // Step 8: Apply transform to get real position
       const realPosition = calcRealPos(
@@ -631,14 +674,33 @@ export const useFloating = (
       )
 
       // Step 9: Apply boundary corrections
+      //
+      // Only vertical placements get the flip treatment: `left*` / `right*` sit beside the
+      // opener and keep their horizontal gap, so moving one vertically must not restyle it.
+      const vertical = isVerticalPosition(actualPosition.value!)
+      // The design gap lives in the margin class of the requested side, so read it from
+      // there rather than hard-coding 16px: `top*` carries it as `margin-bottom`,
+      // `bottom*` as `margin-top`.
+      const openerGap = actualPosition.value!.startsWith('top') ? margins.bottom : margins.top
+
       const corrected = applyBoundaryCorrections(
         realPosition,
         rects.element,
         // body is the "no container" default; its box must not constrain collision handling.
         refs.container === document.body ? null : rects.container,
         positionResult.transform,
-        rects.opener
+        rects.opener,
+        getViewportBounds(),
+        VIEWPORT_MARGIN,
+        vertical ? openerGap : VIEWPORT_MARGIN
       )
+
+      // A flipped panel is reported as living on the side it actually landed on, so the
+      // consumer's gap class follows it. `actualPosition` is reset from the prop at the top
+      // of every run, so this never makes a flip sticky.
+      if (vertical && corrected.flippedTo) {
+        actualPosition.value = mirrorVertically(actualPosition.value!, corrected.flippedTo)
+      }
 
       // Step 10: Update float state
       float.position.x = corrected.position.x
