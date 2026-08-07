@@ -416,6 +416,7 @@ export const TooltipStylingRegression: Story = {
   }
 }
 
+
 /**
  * Tests tooltip positioning with bottom position and verifies margin class
  */
@@ -454,13 +455,19 @@ export const TooltipBottomPosition: Story = {
 }
 
 /**
- * Tests tooltip positioning with top position and verifies margin class
+ * Tests tooltip positioning with top position and verifies margin class.
+ *
+ * The generous top padding is load-bearing: the tooltip needs somewhere to go. Without
+ * it the trigger sits ~45px from the top of the page, there is no room above, and the
+ * engine — correctly, since LIB-2813 and LIB-2825 — places the panel where it fits
+ * instead of off-screen. This story is about the placement, so it gives it the room to
+ * happen; TooltipTopWithoutRoom covers the cramped case.
  */
 export const TooltipTopPosition: Story = {
   render: () => ({
     components: { FzTooltip, FzButton },
     template: `
-      <div class="p-40 flex items-center justify-center">
+      <div class="p-40 pt-[300px] flex items-center justify-center">
         <FzTooltip position="top" text="Top tooltip">
           <FzButton data-testid="trigger-top">Top</FzButton>
         </FzTooltip>
@@ -487,6 +494,54 @@ export const TooltipTopPosition: Story = {
       // Verify positioning: tooltip should be above trigger
       expect(tooltipRect.bottom).toBeLessThanOrEqual(triggerRect.top + TOLERANCE)
     }, { timeout: 2000 })
+  }
+}
+
+/**
+ * The counterpart: `position="top"` with no room above. The panel must not be pushed
+ * off-screen to honour the requested side — it goes where it fits and stays visible.
+ * This is what LIB-2825 changed, and what the old assertion in TooltipTopPosition was
+ * accidentally testing against.
+ */
+export const TooltipTopWithoutRoom: Story = {
+  render: () => ({
+    components: { FzTooltip, FzButton },
+    template: `
+      <div class="p-8 flex items-start justify-center">
+        <FzTooltip position="top" text="Top tooltip senza spazio sopra">
+          <FzButton data-testid="trigger-cramped">Top</FzButton>
+        </FzTooltip>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    const TOLERANCE = 8
+    const trigger = canvas.getByTestId('trigger-cramped')
+    await userEvent.hover(trigger)
+
+    await waitFor(
+      () => {
+        const content = document.querySelector('.fz__floating__content')
+        expect(content).toBeVisible()
+
+        const triggerRect = trigger.getBoundingClientRect()
+        const tooltipRect = (content as Element).getBoundingClientRect()
+
+        // Fully on screen: no part of it hidden above the fold.
+        expect(tooltipRect.top).toBeGreaterThanOrEqual(0)
+        expect(tooltipRect.bottom).toBeLessThanOrEqual(window.innerHeight)
+
+        // And still attached to its trigger, on one side or the other. This is the half
+        // that matters: the bug LIB-2825 removed used to pin the panel to the top margin,
+        // which is on screen but detached from the thing it describes.
+        const gapBelow = Math.abs(tooltipRect.top - triggerRect.bottom)
+        const gapAbove = Math.abs(triggerRect.top - tooltipRect.bottom)
+        expect(Math.min(gapBelow, gapAbove)).toBeLessThanOrEqual(TOLERANCE)
+      },
+      { timeout: 2000 }
+    )
   }
 }
 
