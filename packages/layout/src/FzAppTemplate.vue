@@ -20,9 +20,12 @@
  *   owns its menu open state; the template must not duplicate that. Rail width
  *   is a function of the injected content, never the template (RFC §4/§10).
  * - **The `aside` is the only region the template collapses.** On desktop it is
- *   a sticky right panel; below the breakpoint it becomes a **modal drawer** —
- *   `role="dialog"` + `aria-modal` + focus trap + Escape-to-close (the frontoffice
- *   support-chat overlay, which the app shell owns today, RFC §4/§6.1).
+ *   a sticky right panel; below the breakpoint it becomes a **full-screen modal
+ *   drawer** — `role="dialog"` + `aria-modal` + focus trap + Escape-to-close (the
+ *   frontoffice support-chat overlay, which the app shell owns today, RFC §4/§6.1).
+ * - **`card` chrome is a desktop shape.** Below the breakpoint the content card
+ *   collapses to a full-bleed white surface (no gutter, no rounding); see the
+ *   `chrome` prop.
  *
  * The bottom bar is placed inside the main content column so it aligns to that
  * column automatically and reserves its own space. The template `provide()`s the
@@ -90,10 +93,15 @@ const navClass = computed(() =>
     : 'fz-app-template__nav--bar w-full shrink-0'
 )
 
+// Below the breakpoint the aside takes the whole viewport rather than sliding in
+// as a partial sheet: its content (the frontoffice support chat) is a working
+// surface with tabs, a transcript and a composer, and a 360px column leaves the
+// composer unusable on a phone. Full-bleed also means no visible edge, so the
+// drawer needs neither a max-width nor a shadow to separate it from the page.
 const asideClass = computed(() =>
   isDesktop.value
     ? 'fz-app-template__aside--panel sticky top-0 h-dvh shrink-0 overflow-y-auto'
-    : 'fz-app-template__aside--drawer fixed inset-y-0 right-0 z-30 w-[360px] max-w-[85vw] overflow-y-auto bg-core-white shadow-xl'
+    : 'fz-app-template__aside--drawer fixed inset-0 z-30 w-full overflow-y-auto bg-core-white'
 )
 
 const contentWidthClass = computed(() => {
@@ -116,18 +124,28 @@ const contentWidthClass = computed(() => {
 // room to center: a margin-based gutter would collapse to zero and no background
 // would show beside the content. Padding guarantees the gutter; `mx-auto` + the
 // max-width still widen it once the row is wide enough. `flat` is full-bleed.
+//
+// The gutter is desktop-only: below the breakpoint the card collapses to
+// full-bleed (see contentClass), so there is nothing to detach from the edges.
 const mainClass = computed(() => [
   'fz-app-template__main flex-1 overflow-x-clip',
-  props.chrome === 'card' ? 'fz-app-template__main--card p-16' : 'fz-app-template__main--flat'
+  props.chrome === 'card'
+    ? ['fz-app-template__main--card', isDesktop.value ? 'p-16' : '']
+    : 'fz-app-template__main--flat'
 ])
 
+// `card` chrome is a *desktop* shape. On a phone there is no room to spend on a
+// grey gutter, and a rounded surface floating inside one reads as a framed box
+// rather than as the page — so below the `desktop` breakpoint the card keeps its
+// white surface but goes full-bleed: no gutter, no rounding, and a uniform 16px
+// padding in place of the 24px card padding (LIB-2718).
 const contentClass = computed(() => [
   'fz-app-template__content mx-auto flex w-full flex-1 flex-col',
   contentWidthClass.value,
   // `flex-1` fills the (padded) main region, so a short page shows a full card,
   // not a stub floating in grey.
   props.chrome === 'card'
-    ? 'fz-app-template__content--card rounded-lg bg-core-white p-24'
+    ? ['fz-app-template__content--card bg-core-white', isDesktop.value ? 'rounded-lg p-24' : 'p-16']
     : 'fz-app-template__content--flat'
 ])
 
@@ -138,9 +156,13 @@ const contentClass = computed(() => [
 // width where the content card stops reaching its max-width — the bottom-bar ADR
 // D2 alignment invariant. No vertical padding: the bar stays pinned to the
 // bottom (main's `pb-16` already provides the gap above it).
+//
+// Mirrors the gutter's desktop-only scope: below the breakpoint the content card
+// is full-bleed, so an inset here would break the same edge alignment it exists
+// to preserve.
 const bottomBarClass = computed(() => [
   'fz-app-template__bottom-bar',
-  props.chrome === 'card' ? 'px-16' : ''
+  props.chrome === 'card' && isDesktop.value ? 'px-16' : ''
 ])
 
 // -- Bottom-bar teleport target (provide) -------------------------------------
@@ -297,9 +319,12 @@ onBeforeUnmount(() => {
   padding-right: env(safe-area-inset-right, 0px);
 }
 
+/* The drawer covers the whole viewport, so it can bleed under every edge — it
+   pads all four, unlike the desktop panel which only meets the right one. */
 .fz-app-template__aside--drawer {
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
   padding-right: env(safe-area-inset-right, 0px);
 }
 </style>

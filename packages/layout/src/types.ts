@@ -206,8 +206,11 @@ type FzLayoutBottomBarSlots = {
  *   frontoffice standard-layout shape). The main region also carries a uniform
  *   16px grey gutter around the card, and the bottom bar mirrors the gutter's
  *   horizontal inset, so the content card and the bottom-bar card share the same
- *   left/right edges at every viewport width.
- * - `flat`: full-bleed content with no card frame and no gutter.
+ *   left/right edges at every viewport width. **Desktop only** — below the
+ *   `desktop` breakpoint the card keeps its white surface but goes full-bleed
+ *   (no gutter, no rounding, and a uniform 16px padding in place of the 24px),
+ *   because a floating rounded surface framed in grey is not the mobile shape.
+ * - `flat`: full-bleed content with no card frame and no gutter, at every width.
  */
 type FzAppChrome = 'card' | 'flat'
 
