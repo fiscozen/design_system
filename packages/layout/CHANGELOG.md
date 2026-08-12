@@ -1,5 +1,27 @@
 # @fiscozen/layout
 
+## 1.3.3
+
+### Patch Changes
+
+- 51b959d: FzAppTemplate: pin the mobile nav bar, which could not be pinned from the injected nav
+
+  The nav is persistent at both sizes, but only the desktop rail was actually pinned: `nav--rail` carried `sticky top-0`, `nav--bar` carried nothing, so on mobile the bar scrolled away with the page.
+
+  The frontoffice had already tried to fix this from its side, putting `sticky top-0 z-10` on the injected nav's own root — with a comment noting the template's mobile nav region is not sticky by default. That could never work, and the reason is worth recording because it is easy to repeat: `position: sticky` is bounded by its containing block, and the nav region is a `shrink-0` item in a column flex root, so it is exactly as tall as the nav inside it. A sticky child of a box that fits it has zero travel — the declaration applies and does nothing, then scrolls off with its parent. The bar looked correct in every static screenshot and only failed once someone scrolled.
+
+  `nav--bar` now carries `sticky top-0 z-10` itself, where it has the whole root to travel against. `z-10` matches the sticky header and stays below the aside backdrop (`z-20`) and drawer (`z-30`), so the full-screen chat still covers the bar.
+
+  Consumers that added their own sticky positioning to the injected nav to compensate can drop it — it was inert.
+
+- 51b959d: FzAppTemplate: keep the card's vertical padding at 24px below the breakpoint, narrowing only the sides
+
+  Corrects the mobile inset shipped in 1.3.2, which dropped the whole padding to a uniform 16px. Design's spec is narrower than that: the horizontal inset goes 24px → 16px below the `desktop` breakpoint, but the vertical padding stays 24px everywhere.
+
+  The distinction is worth keeping straight, because the two paddings are doing different jobs. The horizontal inset is a width negotiation — on a phone every pixel spent on a margin is a pixel the content cannot use, so it shrinks. The vertical padding is a separation between the content and the chrome above and below it, and that separation is no less necessary on a small screen; shrinking it just crowds the title against the nav bar.
+
+  `card` chrome below the breakpoint is now `px-16 py-24` instead of `p-16`. Desktop is unchanged at `p-24`.
+
 ## 1.3.2
 
 ### Patch Changes
