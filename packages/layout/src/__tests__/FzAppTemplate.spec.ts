@@ -222,12 +222,14 @@ describe('FzAppTemplate', () => {
       const wrapper = mount(FzAppTemplate, { slots: { default: 'x' } })
       const content = wrapper.find('.fz-app-template__content')
       // Still the card surface, but framed as the page rather than as a floating
-      // box: white kept, gutter and rounding dropped, 16px padding instead of 24.
+      // box: white kept, gutter and rounding dropped. Only the horizontal inset
+      // narrows, 24 → 16; the vertical padding stays 24 at every size.
       expect(content.classes()).toContain('fz-app-template__content--card')
       expect(content.classes()).toContain('bg-core-white')
-      expect(content.classes()).toContain('p-16')
+      expect(content.classes()).toContain('px-16')
+      expect(content.classes()).toContain('py-24')
       expect(content.classes()).not.toContain('rounded-lg')
-      expect(content.classes()).not.toContain('p-24')
+      expect(content.classes()).not.toContain('px-24')
       expect(wrapper.find('.fz-app-template__main').classes()).not.toContain('p-16')
       // The bar mirrors the gutter, so it drops its inset too — otherwise it would
       // sit 16px inside the content it is supposed to stay edge-aligned with.

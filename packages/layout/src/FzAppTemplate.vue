@@ -143,15 +143,22 @@ const mainClass = computed(() => [
 // `card` chrome is a *desktop* shape. On a phone there is no room to spend on a
 // grey gutter, and a rounded surface floating inside one reads as a framed box
 // rather than as the page — so below the `desktop` breakpoint the card keeps its
-// white surface but goes full-bleed: no gutter, no rounding, and a uniform 16px
-// padding in place of the 24px card padding (LIB-2718).
+// white surface but goes full-bleed: no gutter and no rounding (LIB-2718).
+//
+// Only the *horizontal* inset narrows with the viewport, 24px down to 16px: it is
+// buying back width the content needs. The vertical padding is 24px at every
+// size, because it separates the content from the chrome above and below it and
+// that separation does not get less necessary on a smaller screen.
 const contentClass = computed(() => [
   'fz-app-template__content mx-auto flex w-full flex-1 flex-col',
   contentWidthClass.value,
   // `flex-1` fills the (padded) main region, so a short page shows a full card,
   // not a stub floating in grey.
   props.chrome === 'card'
-    ? ['fz-app-template__content--card bg-core-white', isDesktop.value ? 'rounded-lg p-24' : 'p-16']
+    ? [
+        'fz-app-template__content--card bg-core-white py-24',
+        isDesktop.value ? 'rounded-lg px-24' : 'px-16'
+      ]
     : 'fz-app-template__content--flat'
 ])
 
