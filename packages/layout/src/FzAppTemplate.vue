@@ -13,8 +13,8 @@
  * Responsive frame:
  * - **Nav is persistent** and the *injected* nav owns its own responsiveness.
  *   The template only places it — a sticky **left rail** from the `desktop`
- *   breakpoint (1200px) up, a full-width **top region** below it — and does not
- *   render a nav drawer or hamburger. The frontoffice nav is `FzNavbar`
+ *   breakpoint (1200px) up, a sticky full-width **top bar** below it — and does
+ *   not render a nav drawer or hamburger. The frontoffice nav is `FzNavbar`
  *   (`@fiscozen/layout` sibling `@fiscozen/navbar`), which already renders its
  *   own responsive rail / mobile bar (hamburger + brand + notifications) and
  *   owns its menu open state; the template must not duplicate that. Rail width
@@ -87,10 +87,16 @@ const showAside = computed(
   () => props.hasAside && !!slots.aside && (isDesktop.value || asideOpen.value)
 )
 
+// The nav is persistent at both sizes, so it stays pinned at both: a sticky rail
+// on the left, a sticky bar on top. The bar's stickiness has to live *here*, on
+// the region, and cannot be delegated to the injected nav — `position: sticky`
+// is bounded by its containing block, and this region is a `shrink-0` column
+// flex item, so it is exactly as tall as the nav inside it. A sticky child would
+// have zero travel and would scroll away with the region, silently doing nothing.
 const navClass = computed(() =>
   isDesktop.value
     ? 'fz-app-template__nav--rail sticky top-0 h-dvh shrink-0 overflow-y-auto'
-    : 'fz-app-template__nav--bar w-full shrink-0'
+    : 'fz-app-template__nav--bar sticky top-0 z-10 w-full shrink-0'
 )
 
 // Below the breakpoint the aside takes the whole viewport rather than sliding in

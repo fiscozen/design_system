@@ -120,6 +120,16 @@ describe('FzAppTemplate', () => {
       expect(wrapper.find('nav[aria-label="Principale"]').exists()).toBe(true)
     })
 
+    it('pins the mobile bar on the region itself, where sticky can actually travel', () => {
+      setViewport(false)
+      const wrapper = mount(FzAppTemplate, { slots: fullSlots() })
+      const nav = wrapper.find('.fz-app-template__nav')
+      // The region is a shrink-0 flex item sized to the nav inside it, so a sticky
+      // *child* would have zero travel and scroll away with it. It has to be here.
+      expect(nav.classes()).toContain('sticky')
+      expect(nav.classes()).toContain('top-0')
+    })
+
     it('does not render a nav region when no nav slot is provided', () => {
       const wrapper = mount(FzAppTemplate, { slots: { default: 'x' } })
       expect(wrapper.find('.fz-app-template__nav').exists()).toBe(false)
