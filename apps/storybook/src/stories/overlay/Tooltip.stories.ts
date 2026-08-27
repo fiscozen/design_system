@@ -459,8 +459,14 @@ export const TooltipBottomPosition: Story = {
 export const TooltipTopPosition: Story = {
   render: () => ({
     components: { FzTooltip, FzButton },
+    // More padding than the sibling stories on purpose. An upward tooltip needs
+    // room above the trigger, and `p-40` is 40px in this design system — less
+    // than the tooltip is tall. With too little room `applyBoundaryCorrections`
+    // relocates the tooltip to keep it on screen, it lands below the trigger,
+    // and the assertion below fails having measured the boundary behaviour
+    // instead of top positioning.
     template: `
-      <div class="p-40 flex items-center justify-center">
+      <div class="p-96 flex items-center justify-center">
         <FzTooltip position="top" text="Top tooltip">
           <FzButton data-testid="trigger-top">Top</FzButton>
         </FzTooltip>
