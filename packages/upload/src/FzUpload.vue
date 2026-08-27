@@ -2,7 +2,7 @@
   <div :class="{ 'text-sm': size === 'sm', 'text-md': size === 'md' }">
     <div
       class="relative flex items-center gap-8 p-12 border-1 border-dashed rounded border-grey-300 bg-background-alice-blue"
-      @drop="handleDrop"
+      @drop="onDrop"
       @dragover="$event.preventDefault()"
     >
       <input
@@ -13,20 +13,22 @@
         :name
         :multiple
         :accept
-        @change="handleInputChange"
+        @change="onChange"
       />
-      <FzButton
-        ref="fzButton"
-        variant="secondary"
-        iconName="cloud-arrow-up"
-        iconPosition="before"
-        iconVariant="fas"
-        class="select-none"
-        :size
-        @click="input?.click()"
-      >
-        {{ buttonLabel }}
-      </FzButton>
+      <slot name="opener" :open>
+        <FzButton
+          ref="fzButton"
+          variant="secondary"
+          iconName="cloud-arrow-up"
+          iconPosition="before"
+          iconVariant="fas"
+          class="select-none"
+          :size
+          @click="open"
+        >
+          {{ buttonLabel }}
+        </FzButton>
+      </slot>
       {{ dragAndDropLabel }}
     </div>
 
@@ -60,7 +62,8 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
-import { FzUploadProps } from "./types";
+import { FzUploadProps, FzUploadSlots } from "./types";
+import { useFileSelect } from "./useFileSelect";
 import { FzButton, FzIconButton } from "@fiscozen/button";
 import { FzLink } from "@fiscozen/link";
 
@@ -76,6 +79,7 @@ const emit = defineEmits<{
   "fzupload:delete": [File];
   "fzupload:file-limit-exceeded": [files: File[]];
 }>();
+defineSlots<FzUploadSlots>();
 
 function modelSetter(value: File[]) {
   if (value.length > 1 && !props.multiple) {
@@ -93,6 +97,27 @@ const model = defineModel<File[]>({
 });
 
 const input = ref<HTMLInputElement | null>(null);
+
+/**
+ * The picker, the drop handling and the change handling all come from the
+ * composable, so the widget and a bare `useFileSelect` call behave identically.
+ * The input is passed in because this component renders its own — a caller that
+ * renders nothing gets one created for it.
+ */
+const { open, onChange, onDrop } = useFileSelect({
+  element: input,
+  multiple: () => props.multiple,
+  accept: () => props.accept,
+  onSelect: (files) => addFiles(files),
+});
+
+/**
+ * Imperative escape hatch, for a caller that holds a ref to this component. The
+ * `opener` slot is the declarative way in, and `useFileSelect` is the way to
+ * drive a picker with no widget at all.
+ */
+defineExpose({ open });
+
 const urlByFileMap = ref(new Map<File, string>());
 
 const computedScrollableContainerClass = computed(() => {
@@ -114,22 +139,6 @@ onUnmounted(() => {
     window.URL.revokeObjectURL(value);
   });
 });
-
-function handleDrop(event: DragEvent) {
-  event.preventDefault();
-  if (!event.dataTransfer) return;
-  const draggedFiles = [...event.dataTransfer?.items]
-    .filter((item) => item.kind === "file")
-    .map((item) => item.getAsFile())
-    .filter(Boolean) as File[];
-  addFiles(draggedFiles);
-}
-
-function handleInputChange(event: Event) {
-  if (!input.value?.files) return;
-  addFiles([...input.value.files]);
-  input.value.value = "";
-}
 
 function addFiles(filesToAdd: File[]) {
   let newFiles = [];

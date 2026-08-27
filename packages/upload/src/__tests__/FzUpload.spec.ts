@@ -791,6 +791,95 @@ describe('FzUpload', () => {
   // ============================================
   // SNAPSHOTS
   // ============================================
+  // ============================================
+  // OPENER SLOT AND EXPOSED API
+  // ============================================
+  describe('Opener slot', () => {
+    it('should pass open to the opener slot', async () => {
+      const wrapper = mount(FzUpload, {
+        slots: {
+          opener: `<template #opener="{ open }">
+            <button class="custom-opener" @click="open">Allega</button>
+          </template>`
+        }
+      })
+      const input = wrapper.find('input[type="file"]').element as HTMLInputElement
+      const clickSpy = vi.spyOn(input, 'click')
+
+      await wrapper.find('.custom-opener').trigger('click')
+
+      expect(clickSpy).toHaveBeenCalled()
+    })
+
+    it('should replace the default button when the slot is used', () => {
+      const wrapper = mount(FzUpload, {
+        slots: {
+          opener: '<button class="custom-opener">Allega</button>'
+        }
+      })
+
+      expect(wrapper.find('.custom-opener').exists()).toBe(true)
+      expect(wrapper.text()).not.toContain('Carica')
+    })
+
+    it('should render the default button when the slot is not used', () => {
+      const wrapper = mount(FzUpload)
+      const button = wrapper.findComponent({ name: 'FzButton' })
+
+      expect(button.exists()).toBe(true)
+      expect(button.text()).toContain('Carica')
+    })
+
+    it('should keep the drop zone working with a custom opener', async () => {
+      const wrapper = mount(FzUpload, {
+        slots: {
+          opener: '<button class="custom-opener">Allega</button>'
+        }
+      })
+      const file = new File(['content'], 'dropped.txt', { type: 'text/plain' })
+      const mockDragEvent = {
+        preventDefault: vi.fn(),
+        dataTransfer: {
+          items: [{ kind: 'file', getAsFile: () => file } as DataTransferItem]
+        }
+      } as unknown as DragEvent
+
+      await wrapper.find('.border-dashed').trigger('drop', mockDragEvent)
+
+      expect(wrapper.emitted('fzupload:add')![0][0]).toEqual([file])
+    })
+  })
+
+  describe('Exposed API', () => {
+    it('should expose open', () => {
+      const wrapper = mount(FzUpload)
+
+      expect(typeof (wrapper.vm as unknown as { open: () => void }).open).toBe('function')
+    })
+
+    it('should open the picker when open is called', () => {
+      const wrapper = mount(FzUpload)
+      const input = wrapper.find('input[type="file"]').element as HTMLInputElement
+      const clickSpy = vi.spyOn(input, 'click')
+
+      ;(wrapper.vm as unknown as { open: () => void }).open()
+
+      expect(clickSpy).toHaveBeenCalled()
+    })
+
+    it('should open the picker while the component is hidden', async () => {
+      const wrapper = mount(FzUpload, {
+        attrs: { style: 'display: none' }
+      })
+      const input = wrapper.find('input[type="file"]').element as HTMLInputElement
+      const clickSpy = vi.spyOn(input, 'click')
+
+      ;(wrapper.vm as unknown as { open: () => void }).open()
+
+      expect(clickSpy).toHaveBeenCalled()
+    })
+  })
+
   describe('Snapshots', () => {
     it('should match snapshot - default state', () => {
       const wrapper = mount(FzUpload)
