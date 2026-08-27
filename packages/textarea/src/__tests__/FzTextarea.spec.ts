@@ -1214,6 +1214,17 @@ describe('FzTextarea', () => {
       })
       expect(wrapper.html()).toMatchSnapshot()
     })
+
+    it('should match snapshot - bare variant', () => {
+      const wrapper = mount(FzTextarea, {
+        props: {
+          id: 'snapshot-bare',
+          variant: 'bare',
+          placeholder: 'Scrivi un messaggio...',
+        },
+      })
+      expect(wrapper.html()).toMatchSnapshot()
+    })
   })
 
   describe('Auto Height', () => {
@@ -1354,6 +1365,181 @@ describe('FzTextarea', () => {
         })
         const textarea = wrapper.find('textarea').element as HTMLTextAreaElement
         expect(textarea.style.height).toBe('')
+      })
+    })
+  })
+
+
+  describe('Bare variant', () => {
+    describe('box removal', () => {
+      it('should default to the boxed variant when variant is not provided', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label' },
+        })
+        const textarea = wrapper.find('textarea')
+        expect(textarea.classes()).toContain('min-h-[77px]')
+        expect(textarea.classes()).toContain('border-1')
+      })
+
+      it('should drop min-height, border, background and padding when variant is bare', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare' },
+        })
+        const textarea = wrapper.find('textarea')
+        expect(textarea.classes()).not.toContain('min-h-[77px]')
+        expect(textarea.classes()).not.toContain('border-1')
+        expect(textarea.classes()).not.toContain('rounded')
+        expect(textarea.classes()).not.toContain('p-10')
+        expect(textarea.classes()).not.toContain('bg-core-white')
+        expect(textarea.classes()).not.toContain('min-w-[96px]')
+        expect(textarea.classes()).toContain('border-0')
+        expect(textarea.classes()).toContain('p-0')
+        expect(textarea.classes()).toContain('bg-transparent')
+        expect(textarea.classes()).toContain('min-w-0')
+      })
+
+      it('should keep the shared field basics when variant is bare', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare' },
+        })
+        const textarea = wrapper.find('textarea')
+        expect(textarea.classes()).toContain('block')
+        expect(textarea.classes()).toContain('w-full')
+        expect(textarea.classes()).toContain('text-base')
+        expect(textarea.classes()).toContain('placeholder:text-grey-300')
+      })
+    })
+
+    describe('focus visibility', () => {
+      it('should replace the border focus cue with a focus-visible outline', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare' },
+        })
+        const textarea = wrapper.find('textarea')
+        expect(textarea.classes()).toContain('focus-visible:outline')
+        expect(textarea.classes()).toContain('focus-visible:outline-2')
+        expect(textarea.classes()).toContain('focus-visible:outline-blue-600')
+        expect(textarea.classes()).not.toContain('focus:outline-none')
+        expect(textarea.classes()).not.toContain('focus:border-blue-600')
+      })
+    })
+
+    describe('variant-dependent defaults', () => {
+      it('should start on a single row when variant is bare', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare' },
+        })
+        expect(wrapper.find('textarea').attributes('rows')).toBe('1')
+      })
+
+      it('should honour an explicit rows value when variant is bare', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare', rows: 3 },
+        })
+        expect(wrapper.find('textarea').attributes('rows')).toBe('3')
+      })
+
+      it('should disable resize by default when variant is bare', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare' },
+        })
+        expect(wrapper.find('textarea').classes()).toContain('resize-none')
+      })
+
+      it('should honour an explicit resize value when variant is bare', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare', resize: 'horizontal' },
+        })
+        expect(wrapper.find('textarea').classes()).toContain('resize-x')
+      })
+
+      it('should not warn about vertical resize when bare defaults are used with autoHeight', () => {
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare', autoHeight: true },
+        })
+        expect(warnSpy).not.toHaveBeenCalled()
+        warnSpy.mockRestore()
+      })
+
+      it('should still warn about vertical resize when bare opts into it with autoHeight', () => {
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare', autoHeight: true, resize: 'vertical' },
+        })
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('Vertical resize is disabled when "autoHeight" is enabled')
+        )
+        warnSpy.mockRestore()
+      })
+    })
+
+    describe('states', () => {
+      it('should grey the text without a background when disabled', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare', disabled: true },
+        })
+        const textarea = wrapper.find('textarea')
+        expect(textarea.classes()).toContain('text-grey-300')
+        expect(textarea.classes()).toContain('cursor-not-allowed')
+        expect(textarea.classes()).not.toContain('bg-grey-100')
+      })
+
+      it('should keep error semantics without an error border', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare', error: true },
+          slots: { errorMessage: 'This is an error' },
+        })
+        const textarea = wrapper.find('textarea')
+        expect(textarea.attributes('aria-invalid')).toBe('true')
+        expect(textarea.classes()).not.toContain('border-semantic-error-200')
+        expect(wrapper.text()).toContain('This is an error')
+      })
+
+      it('should keep label association and help text', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare', id: 'bare-field' },
+          slots: { helpText: 'Some help' },
+        })
+        expect(wrapper.find('label').attributes('for')).toBe('bare-field')
+        expect(wrapper.find('textarea').attributes('aria-describedby')).toBe('bare-field-help')
+        expect(wrapper.text()).toContain('Some help')
+      })
+    })
+
+    describe('auto height with zero padding', () => {
+      it('should cap the height at maxRows when there is no padding or border', async () => {
+        const styleSpy = vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+          lineHeight: '20px',
+          paddingTop: '0px',
+          paddingBottom: '0px',
+          borderTopWidth: '0px',
+          borderBottomWidth: '0px',
+        } as unknown as CSSStyleDeclaration)
+
+        const wrapper = mount(FzTextarea, {
+          props: {
+            label: 'Test Label',
+            variant: 'bare',
+            autoHeight: true,
+            maxRows: 3,
+            modelValue: '',
+          },
+          attachTo: document.body,
+        })
+
+        const textarea = wrapper.find('textarea').element as HTMLTextAreaElement
+        Object.defineProperty(textarea, 'scrollHeight', { configurable: true, value: 200 })
+
+        await wrapper.setProps({ modelValue: 'a\nb\nc\nd\ne' })
+        await wrapper.vm.$nextTick()
+        await wrapper.vm.$nextTick()
+
+        expect(textarea.style.height).toBe('60px')
+        expect(textarea.style.overflowY).toBe('auto')
+
+        styleSpy.mockRestore()
+        wrapper.unmount()
       })
     })
   })

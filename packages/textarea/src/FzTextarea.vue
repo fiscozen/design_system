@@ -11,9 +11,21 @@
  * listeners (blur, focus, paste, keydown, etc.) are forwarded directly
  * to the native textarea element via v-bind="$attrs", not the root div.
  *
+ * Two variants:
+ * - `default` draws the field itself (border, background, padding, 77px minimum height);
+ * - `bare` draws no box at all, so the container around it is the visible field —
+ *   the shape a single-line composer bar needs. It keeps a visible focus indicator
+ *   (a focus-visible outline replaces the default variant's border-colour cue) and
+ *   starts on one row, growing with `autoHeight` up to `maxRows`.
+ *
  * @component
  * @example
  * <FzTextarea label="Description" v-model="text" @blur="onBlur" />
+ * @example
+ * <!-- composer bar: the caller draws the box, the field only carries the text -->
+ * <div class="flex items-end rounded bg-grey-100 px-10 py-8">
+ *   <FzTextarea v-model="draft" variant="bare" auto-height :max-rows="6" aria-label="Message" />
+ * </div>
  */
 import { computed, ref, watch, onMounted, onBeforeUnmount, nextTick, useSlots } from 'vue'
 import { FzTextareaProps } from './types'
@@ -24,9 +36,20 @@ import { generateTextareaId } from './utils'
 defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<FzTextareaProps>(), {
-  resize: 'all',
-  rows: 2
+  variant: 'default'
 })
+
+const isBare = computed(() => props.variant === 'bare')
+
+/**
+ * `resize` and `rows` have variant-dependent defaults, so they are resolved here
+ * instead of in `withDefaults`: the bare field lives inside a box drawn by the
+ * caller, where a resize grabber is out of place and the natural starting height
+ * is a single line.
+ */
+const effectiveResize = computed(() => props.resize ?? (isBare.value ? 'none' : 'all'))
+
+const effectiveRows = computed(() => props.rows ?? (isBare.value ? 1 : 2))
 
 watch(
   () => props.size,
@@ -53,7 +76,7 @@ watch(
 watch(
   () => props.autoHeight,
   (autoHeight) => {
-    if (autoHeight && (props.resize === 'all' || props.resize === 'vertical')) {
+    if (autoHeight && (effectiveResize.value === 'all' || effectiveResize.value === 'vertical')) {
       console.warn(
         `[FzTextarea] Vertical resize is disabled when "autoHeight" is enabled. Only horizontal resize is preserved.`
       )
@@ -123,7 +146,10 @@ let resizeObserver: ResizeObserver | null = null
 
 /**
  * Reads font metrics once from the DOM. These values are stable because
- * font-size (text-base), padding (p-10), and border (border-1) are fixed.
+ * font-size (text-base), padding and border are fixed per variant — p-10 and
+ * border-1 in the default variant, both zero in the bare one, where the
+ * measurement still holds: padding and border simply contribute 0 to the
+ * maxRows ceiling.
  */
 function measureMetrics() {
   const el = textareaRef.value
@@ -220,10 +246,41 @@ const evaluateStateClasses = () => {
   }
 }
 
+/**
+ * The bare variant has no box to recolour, so only the text colour reacts to
+ * state. `error` keeps driving `aria-invalid` and the errorMessage slot; the
+ * visual error affordance belongs to the container the caller draws.
+ */
+const evaluateBareStateClasses = () => {
+  switch (true) {
+    case isReadonlyOrDisabled.value:
+      return 'text-grey-300 cursor-not-allowed'
+
+    default:
+      return 'text-core-black cursor-text'
+  }
+}
+
+/**
+ * Base chrome of the field. The bare variant switches every box-drawing
+ * declaration off — including the browser's own border, padding and background,
+ * which would otherwise show through — and keeps a visible focus indicator by
+ * replacing the default variant's border-colour cue with a focus-visible
+ * outline drawn on the field itself. Removing it entirely would be a WCAG 2.4.7
+ * failure.
+ */
+const baseClasses =
+  'border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px]'
+
+const bareClasses =
+  'border-0 p-0 bg-transparent placeholder:text-grey-300 block w-full text-base min-w-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 focus-visible:rounded'
+
 const classes = computed(() => [
-  'border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px]',
-  evaluateStateClasses(),
-  props.autoHeight ? autoHeightResizeMap[props.resize] : mapResizeToClass[props.resize],
+  isBare.value ? bareClasses : baseClasses,
+  isBare.value ? evaluateBareStateClasses() : evaluateStateClasses(),
+  props.autoHeight
+    ? autoHeightResizeMap[effectiveResize.value]
+    : mapResizeToClass[effectiveResize.value],
   {
     'pr-[38px]': props.valid
   }
@@ -249,7 +306,7 @@ const helpClasses = computed(() => [
         :placeholder
         :disabled
         :required
-        :rows
+        :rows="effectiveRows"
         :cols
         :minlength
         :maxlength

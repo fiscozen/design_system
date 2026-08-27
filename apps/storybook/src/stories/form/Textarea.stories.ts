@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, fn, userEvent, within } from 'storybook/test'
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
+import { FzIconButton } from '@fiscozen/button'
+import { FzContainer } from '@fiscozen/container'
 import { FzTextarea } from '@fiscozen/textarea'
 import { ref } from 'vue'
 
@@ -17,6 +19,10 @@ const meta = {
     resize: {
       control: 'select',
       options: ['none', 'vertical', 'horizontal', 'all']
+    },
+    variant: {
+      control: 'select',
+      options: ['default', 'bare']
     }
   },
   args: {
@@ -647,9 +653,117 @@ const AutoHeightBottomAnchored: TextareaStory = {
   }
 }
 
+
+/**
+ * The bare variant in the shape it was asked for: a single-line composer bar
+ * where the visible field is the box around the textarea, and the character
+ * counter lives inside that same box.
+ *
+ * The box carries Tailwind classes deliberately. In the consuming apps a
+ * composer bar is a molecule — the layer where `class` is allowed — and
+ * FzContainer has no props for background, padding or radius. That is the whole
+ * point of the variant: the field brings no box of its own, so the caller draws
+ * one and the field only carries the text.
+ */
+const BareComposerBar: TextareaStory = {
+  args: {
+    id: 'bare-composer',
+    label: '',
+    variant: 'bare',
+    autoHeight: true,
+    maxRows: 6,
+    maxlength: 200,
+    placeholder: 'Scrivi un messaggio...',
+    'onUpdate:modelValue': fn()
+  },
+  render: (args) => ({
+    components: { FzTextarea, FzContainer, FzIconButton },
+    setup() {
+      const value = ref('')
+      return { args, value }
+    },
+    template: `
+      <FzContainer horizontal gap="xs" align-items="end">
+        <FzIconButton
+          icon-name="paperclip"
+          variant="invisible"
+          environment="frontoffice"
+          aria-label="Allega un documento"
+        />
+        <FzContainer
+          gap="none"
+          align-items="stretch"
+          class="min-h-[44px] w-[420px] justify-end gap-4 rounded bg-grey-100 px-10 py-8"
+        >
+          <FzTextarea
+            v-bind="args"
+            :modelValue="value"
+            aria-label="Scrivi un messaggio"
+            @update:modelValue="args['onUpdate:modelValue']($event); value = $event"
+          />
+          <p class="self-end text-sm text-grey-500">{{ value.length }}/{{ args.maxlength }}</p>
+        </FzContainer>
+        <FzIconButton
+          icon-name="paper-plane"
+          variant="primary"
+          environment="frontoffice"
+          aria-label="Invia il messaggio"
+          :disabled="!value.length"
+        />
+      </FzContainer>
+    `
+  }),
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify the field starts on a single line with no box of its own', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i)
+      await expect(textarea).toBeVisible()
+      await expect(textarea).toHaveAttribute('rows', '1')
+      await expect(textarea).not.toHaveClass('min-h-[77px]')
+      await expect(textarea).not.toHaveClass('border-1')
+      await expect(textarea).toHaveClass('bg-transparent')
+    })
+
+    await step('Verify focus stays visible without a border to recolour', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i)
+      await expect(textarea).toHaveClass('focus-visible:outline')
+      await expect(textarea).toHaveClass('focus-visible:outline-blue-600')
+    })
+
+    await step('Verify no label is rendered inside the composer', async () => {
+      await expect(canvasElement.querySelector('label')).toBeNull()
+    })
+
+    await step('Verify typing updates the model and the counter in the same box', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i) as HTMLTextAreaElement
+      await userEvent.type(textarea, 'Ciao')
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+      await waitFor(async () => {
+        await expect(canvas.getByText('4/200')).toBeVisible()
+      })
+    })
+
+    await step('Verify the field grows with its content up to maxRows', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i) as HTMLTextAreaElement
+      const singleLineHeight = textarea.offsetHeight
+      await userEvent.type(textarea, '{Enter}Seconda riga')
+      await waitFor(async () => {
+        await expect(textarea.offsetHeight).toBeGreaterThan(singleLineHeight)
+      })
+    })
+
+    await step('Verify the send control unlocks once there is a draft', async () => {
+      const send = canvas.getByRole('button', { name: /Invia il messaggio/i })
+      await expect(send).toBeEnabled()
+    })
+  }
+}
+
 export {
   Default, Error, Help, Valid, Required, Disabled, Readonly,
   ErrorWithValue, ValidWithValue, DisabledWithValue,
   HelpDisabled, RequiredWithHelp, ErrorWithHelpOnly,
-  AutoHeight, AutoHeightWithMaxRows, AutoHeightBottomAnchored
+  AutoHeight, AutoHeightWithMaxRows, AutoHeightBottomAnchored,
+  BareComposerBar
 }
