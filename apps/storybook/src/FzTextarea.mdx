@@ -9,6 +9,8 @@ Multi-line text input component with label, validation states, resize control, a
 ## Features
 
 - Resize control (none, vertical, horizontal, all)
+- `bare` variant: no box of its own (no border, background, padding or minimum height), so a
+  container drawn by the caller becomes the visible field — the shape a single-line composer bar needs
 - Auto-height mode: textarea grows/shrinks with content, optional max-row cap
 - Error and valid states with visual feedback
 - Error messages via FzAlert component (circle-xmark icon, consistent with FzInput)
@@ -116,15 +118,21 @@ const notes = ref('')
       <td>Shows success checkmark icon</td>
     </tr>
     <tr>
+      <td><code>variant</code></td>
+      <td><code>'default' | 'bare'</code></td>
+      <td><code>'default'</code></td>
+      <td>Visual variant. <code>default</code> draws the field (border, background, padding, 77px minimum height); <code>bare</code> draws no box at all, leaving it to the surrounding container. See <a href="#bare-variant-composer-bars">Bare Variant</a>.</td>
+    </tr>
+    <tr>
       <td><code>resize</code></td>
       <td><code>'none' | 'vertical' | 'horizontal' | 'all'</code></td>
-      <td><code>'all'</code></td>
+      <td><code>'all'</code> (<code>'none'</code> when <code>variant="bare"</code>)</td>
       <td>Controls resize behavior of the textarea</td>
     </tr>
     <tr>
       <td><code>rows</code></td>
       <td><code>number</code></td>
-      <td><code>2</code></td>
+      <td><code>2</code> (<code>1</code> when <code>variant="bare"</code>)</td>
       <td>Number of visible text rows</td>
     </tr>
     <tr>
@@ -443,11 +451,64 @@ With `flex-col justify-end`, the textarea sits at the bottom of the container. A
 - `autoHeight` must be set at mount time. Changing it at runtime is not supported.
 - When `autoHeight` is enabled and the textarea has pre-filled content (via `v-model`), the height is adjusted on mount.
 
+## Bare Variant (composer bars)
+
+`variant="bare"` turns off everything the component draws around the text: border, background,
+padding, corner radius, minimum height and minimum width. What stays is the field itself — the
+label, the help text, the error ARIA, `autoHeight`, `maxRows` and every native attribute forwarded
+through `$attrs`.
+
+Use it whenever the box is already drawn by something else: a composer bar, a toolbar, a cell, an
+inline editor. Before this variant existed, the only way to get that shape was to re-declare the
+component's own styling from the outside with `!`-important utilities.
+
+```vue
+<script setup>
+import { FzTextarea } from '@fiscozen/textarea'
+import { ref } from 'vue'
+
+const draft = ref('')
+</script>
+
+<template>
+  <!-- The container is the visible field: it owns the background, the padding
+       and the radius. The textarea only carries the text, and the counter can
+       sit inside the same box. -->
+  <div class="flex min-h-[44px] flex-col justify-end gap-4 rounded bg-grey-100 px-10 py-8">
+    <FzTextarea
+      v-model="draft"
+      variant="bare"
+      auto-height
+      :max-rows="6"
+      :maxlength="200"
+      placeholder="Scrivi un messaggio..."
+      aria-label="Scrivi un messaggio"
+    />
+    <p class="self-end text-sm text-grey-500">{{ draft.length }}/200</p>
+  </div>
+</template>
+```
+
+Notes:
+
+- **Defaults shift with the variant.** `rows` defaults to `1` and `resize` to `'none'`, so the field
+  starts on a single line and no resize grabber breaks the container's shape. Both can still be set
+  explicitly.
+- **`autoHeight` + `maxRows` work unchanged.** The ceiling is measured from the live line height and
+  padding, which is simply zero here: with `maxRows="6"` and a 20px line height the field stops at
+  120px and starts scrolling.
+- **The error state has no border to colour.** `error` still drives `aria-invalid` and the
+  `errorMessage` slot, and the text turns grey when disabled or readonly, but any visual error
+  affordance on the box is the caller's to draw (the composer in the chat widget, for instance, puts
+  the message above the bar).
+- **Focus stays visible.** See below.
+
 ## Accessibility
 
 FzTextarea meets WCAG 2.1 AA standards:
 
 - **Focus indicator**: Custom blue border (`blue-600`) on focus replaces browser default outline. Error state maintains error border color on focus (`semantic-error-300`).
+- **Focus indicator in the `bare` variant**: with no border to recolour, the cue is *replaced*, not removed — a 2px `blue-600` `focus-visible` outline is drawn on the field itself. If your container draws its own focus treatment (e.g. `focus-within:` on the box) you can suppress it with `!focus-visible:outline-none`, but only ever in exchange for another visible indicator: dropping it outright fails WCAG 2.4.7.
 - **ARIA attributes**: `aria-required`, `aria-invalid`, `aria-disabled` always present with string values ("true"/"false") for screen reader compatibility
 - **aria-describedby**: Links textarea to error or help message when present
 - **role="alert"**: Error messages are announced immediately by screen readers
@@ -468,6 +529,7 @@ FzTextarea meets WCAG 2.1 AA standards:
 - Use `autoHeight` with `maxRows` when the textarea should grow with content but stay bounded
 - Prefer `autoHeight` over manual resize for a smoother user experience in forms
 - Use `maxlength` to enforce content limits
+- Reach for `variant="bare"` instead of overriding the component's box from the outside; keep the label or an `aria-label` even when the design has no visible label
 - When showing pre-filled disabled fields, ensure the value conveys why the field is locked
 
 ## Related Components

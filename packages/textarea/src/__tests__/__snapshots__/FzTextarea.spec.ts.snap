@@ -9,6 +9,16 @@ exports[`FzTextarea > Snapshots > should match snapshot - autoHeight 1`] = `
 </div>"
 `;
 
+exports[`FzTextarea > Snapshots > should match snapshot - bare variant 1`] = `
+"<div class="fz-textarea flex flex-col gap-8 items-start w-full">
+  <!--v-if-->
+  <div class="relative w-full"><textarea id="snapshot-bare" class="border-0 p-0 bg-transparent placeholder:text-grey-300 block w-full text-base min-w-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 focus-visible:rounded text-core-black cursor-text resize-none" placeholder="Scrivi un messaggio..." rows="1" aria-required="false" aria-invalid="false" aria-disabled="false"></textarea>
+    <!--v-if-->
+  </div>
+  <!--v-if-->
+</div>"
+`;
+
 exports[`FzTextarea > Snapshots > should match snapshot - default state 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full"><label id="snapshot-default-label" class="font-normal text-base mb-0 text-grey-500" for="snapshot-default">Test Label</label>
   <div class="relative w-full"><textarea id="snapshot-default" class="border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px] border-grey-300 focus:border-blue-600 bg-core-white text-core-black cursor-text resize" rows="2" aria-required="false" aria-invalid="false" aria-disabled="false" aria-labelledby="snapshot-default-label"></textarea>

@@ -5,6 +5,14 @@
  */
 
 /**
+ * Visual variants of the FzTextarea field.
+ *
+ * `bare` strips the component's own box (border, background, padding, minimum
+ * height) so that the container around it can be the visible field.
+ */
+type FzTextareaVariant = "default" | "bare";
+
+/**
  * Props for the FzTextarea component.
  *
  * Multi-line text input with label, validation states, resize control,
@@ -56,13 +64,33 @@ type FzTextareaProps = {
    */
   disabled?: boolean;
   /**
+   * Visual variant of the field.
+   *
+   * - `default`: the component draws the field — 1px border, white background,
+   *   10px padding, rounded corners and a 77px minimum height.
+   * - `bare`: the component draws no box of its own — no border, no background,
+   *   no padding, no minimum height and no minimum width. The surrounding
+   *   container becomes the visible field, which is what a single-line
+   *   composer bar needs. Everything else (label, help text, error ARIA,
+   *   `autoHeight`, `maxRows`) is unchanged, and focus stays visible through a
+   *   `focus-visible` outline drawn on the field itself.
+   *
+   *   Because the box belongs to the caller in this variant, the error state has
+   *   no border to colour: `error` still drives `aria-invalid` and the
+   *   `errorMessage` slot, but the caller is responsible for any visual error
+   *   affordance on its own container.
+   * @default 'default'
+   */
+  variant?: FzTextareaVariant;
+  /**
    * Controls resize behavior of the textarea
-   * @default 'all'
+   * @default 'all' — `'none'` when `variant="bare"`, where a resize grabber would
+   * break the container that draws the field
    */
   resize?: "none" | "vertical" | "horizontal" | "all";
   /**
    * Number of visible text rows
-   * @default 2
+   * @default 2 — `1` when `variant="bare"`, so a composer bar starts on a single line
    */
   rows?: number;
   /**
@@ -105,4 +133,4 @@ type FzTextareaProps = {
   maxRows?: number;
 };
 
-export { FzTextareaProps };
+export { FzTextareaProps, FzTextareaVariant };
