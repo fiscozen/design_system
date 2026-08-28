@@ -9,8 +9,9 @@ Multi-line text input component with label, validation states, resize control, a
 ## Features
 
 - Resize control (none, vertical, horizontal, all)
-- `bare` variant: no box of its own (no border, background, padding or minimum height), so a
-  container drawn by the caller becomes the visible field — the shape a single-line composer bar needs
+- `bare` variant: no box of its own (no border, background, padding or minimum height) and no font
+  size, so a container drawn by the caller becomes the visible field and owns the type — the shape a
+  single-line composer bar needs
 - Auto-height mode: textarea grows/shrinks with content, optional max-row cap
 - Error and valid states with visual feedback
 - Error messages via FzAlert component (circle-xmark icon, consistent with FzInput)
@@ -454,9 +455,9 @@ With `flex-col justify-end`, the textarea sits at the bottom of the container. A
 ## Bare Variant (composer bars)
 
 `variant="bare"` turns off everything the component draws around the text: border, background,
-padding, corner radius, minimum height and minimum width. What stays is the field itself — the
-label, the help text, the error ARIA, `autoHeight`, `maxRows` and every native attribute forwarded
-through `$attrs`.
+padding, corner radius, minimum height, minimum width — and the font size. What stays is the field
+itself — the label, the help text, the error ARIA, `autoHeight`, `maxRows` and every native
+attribute forwarded through `$attrs`.
 
 Use it whenever the box is already drawn by something else: a composer bar, a toolbar, a cell, an
 inline editor. Before this variant existed, the only way to get that shape was to re-declare the
@@ -471,10 +472,10 @@ const draft = ref('')
 </script>
 
 <template>
-  <!-- The container is the visible field: it owns the background, the padding
-       and the radius. The textarea only carries the text, and the counter can
-       sit inside the same box. -->
-  <div class="flex min-h-[44px] flex-col justify-end gap-4 rounded bg-grey-100 px-10 py-8">
+  <!-- The container is the visible field: it owns the background, the padding,
+       the radius and the type. The textarea only carries the text, and the
+       counter sits inside the same box on the same scale. -->
+  <div class="flex min-h-[44px] flex-col justify-end gap-4 rounded bg-grey-100 px-10 py-8 text-sm leading-5">
     <FzTextarea
       v-model="draft"
       variant="bare"
@@ -484,7 +485,7 @@ const draft = ref('')
       placeholder="Scrivi un messaggio..."
       aria-label="Scrivi un messaggio"
     />
-    <p class="self-end text-sm text-grey-500">{{ draft.length }}/200</p>
+    <p class="self-end text-grey-500">{{ draft.length }}/200</p>
   </div>
 </template>
 ```
@@ -494,9 +495,14 @@ Notes:
 - **Defaults shift with the variant.** `rows` defaults to `1` and `resize` to `'none'`, so the field
   starts on a single line and no resize grabber breaks the container's shape. Both can still be set
   explicitly.
+- **Type is inherited, not declared.** The bare field sets no font size, so `text-sm leading-5` on
+  the box carries the field and everything else in it on one scale. (Tailwind's preflight gives a
+  `textarea` `font-size: 100%` and `line-height: inherit`, which is what makes this work.) The
+  default variant keeps its fixed `text-base`.
 - **`autoHeight` + `maxRows` work unchanged.** The ceiling is measured from the live line height and
   padding, which is simply zero here: with `maxRows="6"` and a 20px line height the field stops at
-  120px and starts scrolling.
+  120px and starts scrolling. If the inherited line height computes to `normal`, the ceiling falls
+  back to the browser's ~1.2 ratio rather than going unbounded.
 - **The error state has no border to colour.** `error` still drives `aria-invalid` and the
   `errorMessage` slot, and the text turns grey when disabled or readonly, but any visual error
   affordance on the box is the caller's to draw (the composer in the chat widget, for instance, puts
@@ -529,7 +535,7 @@ FzTextarea meets WCAG 2.1 AA standards:
 - Use `autoHeight` with `maxRows` when the textarea should grow with content but stay bounded
 - Prefer `autoHeight` over manual resize for a smoother user experience in forms
 - Use `maxlength` to enforce content limits
-- Reach for `variant="bare"` instead of overriding the component's box from the outside; keep the label or an `aria-label` even when the design has no visible label
+- Reach for `variant="bare"` instead of overriding the component's box from the outside; set the type on the container rather than on the field, and keep the label or an `aria-label` even when the design has no visible label
 - When showing pre-filled disabled fields, ensure the value conveys why the field is locked
 
 ## Related Components

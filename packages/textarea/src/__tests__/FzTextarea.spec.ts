@@ -1405,8 +1405,23 @@ describe('FzTextarea', () => {
         const textarea = wrapper.find('textarea')
         expect(textarea.classes()).toContain('block')
         expect(textarea.classes()).toContain('w-full')
-        expect(textarea.classes()).toContain('text-base')
         expect(textarea.classes()).toContain('placeholder:text-grey-300')
+      })
+
+      it('should set no font size when variant is bare, so type is inherited', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label', variant: 'bare' },
+        })
+        const textarea = wrapper.find('textarea')
+        expect(textarea.classes()).not.toContain('text-base')
+        expect(textarea.classes().some((c) => /^text-(xs|sm|base|lg|xl)$/.test(c))).toBe(false)
+      })
+
+      it('should keep the fixed font size in the default variant', () => {
+        const wrapper = mount(FzTextarea, {
+          props: { label: 'Test Label' },
+        })
+        expect(wrapper.find('textarea').classes()).toContain('text-base')
       })
     })
 
@@ -1536,6 +1551,42 @@ describe('FzTextarea', () => {
         await wrapper.vm.$nextTick()
 
         expect(textarea.style.height).toBe('60px')
+        expect(textarea.style.overflowY).toBe('auto')
+
+        styleSpy.mockRestore()
+        wrapper.unmount()
+      })
+
+      it('should fall back to the browser ratio when the inherited line height is normal', async () => {
+        const styleSpy = vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+          lineHeight: 'normal',
+          fontSize: '20px',
+          paddingTop: '0px',
+          paddingBottom: '0px',
+          borderTopWidth: '0px',
+          borderBottomWidth: '0px',
+        } as unknown as CSSStyleDeclaration)
+
+        const wrapper = mount(FzTextarea, {
+          props: {
+            label: 'Test Label',
+            variant: 'bare',
+            autoHeight: true,
+            maxRows: 3,
+            modelValue: '',
+          },
+          attachTo: document.body,
+        })
+
+        const textarea = wrapper.find('textarea').element as HTMLTextAreaElement
+        Object.defineProperty(textarea, 'scrollHeight', { configurable: true, value: 200 })
+
+        await wrapper.setProps({ modelValue: 'a\nb\nc\nd\ne' })
+        await wrapper.vm.$nextTick()
+        await wrapper.vm.$nextTick()
+
+        // 3 rows * (20px * 1.2)
+        expect(textarea.style.height).toBe('72px')
         expect(textarea.style.overflowY).toBe('auto')
 
         styleSpy.mockRestore()

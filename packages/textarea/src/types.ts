@@ -69,11 +69,12 @@ type FzTextareaProps = {
    * - `default`: the component draws the field — 1px border, white background,
    *   10px padding, rounded corners and a 77px minimum height.
    * - `bare`: the component draws no box of its own — no border, no background,
-   *   no padding, no minimum height and no minimum width. The surrounding
-   *   container becomes the visible field, which is what a single-line
-   *   composer bar needs. Everything else (label, help text, error ARIA,
-   *   `autoHeight`, `maxRows`) is unchanged, and focus stays visible through a
-   *   `focus-visible` outline drawn on the field itself.
+   *   no padding, no minimum height and no minimum width — and sets no font
+   *   size, so type is inherited from the container along with the box. The
+   *   surrounding container becomes the visible field, which is what a
+   *   single-line composer bar needs. Everything else (label, help text, error
+   *   ARIA, `autoHeight`, `maxRows`) is unchanged, and focus stays visible
+   *   through a `focus-visible` outline drawn on the field itself.
    *
    *   Because the box belongs to the caller in this variant, the error state has
    *   no border to colour: `error` still drives `aria-invalid` and the

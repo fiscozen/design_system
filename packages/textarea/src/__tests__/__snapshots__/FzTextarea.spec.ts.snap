@@ -12,7 +12,7 @@ exports[`FzTextarea > Snapshots > should match snapshot - autoHeight 1`] = `
 exports[`FzTextarea > Snapshots > should match snapshot - bare variant 1`] = `
 "<div class="fz-textarea flex flex-col gap-8 items-start w-full">
   <!--v-if-->
-  <div class="relative w-full"><textarea id="snapshot-bare" class="border-0 p-0 bg-transparent placeholder:text-grey-300 block w-full text-base min-w-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 focus-visible:rounded text-core-black cursor-text resize-none" placeholder="Scrivi un messaggio..." rows="1" aria-required="false" aria-invalid="false" aria-disabled="false"></textarea>
+  <div class="relative w-full"><textarea id="snapshot-bare" class="border-0 p-0 bg-transparent placeholder:text-grey-300 block w-full min-w-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 focus-visible:rounded text-core-black cursor-text resize-none" placeholder="Scrivi un messaggio..." rows="1" aria-required="false" aria-invalid="false" aria-disabled="false"></textarea>
     <!--v-if-->
   </div>
   <!--v-if-->
