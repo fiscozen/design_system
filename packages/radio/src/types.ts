@@ -1,4 +1,5 @@
 import { FzTooltipStatus } from "@fiscozen/tooltip";
+import type { IconVariant } from "@fiscozen/icons";
 
 export type FzRadioProps = {
   /**
@@ -129,4 +130,49 @@ export type FzRadioCardProps = FzRadioProps & {
    * Controls whether the radio icon is shown
    */
   hasRadio?: boolean;
+};
+
+/**
+ * Decorative colour family of an icon tile.
+ *
+ * Maps onto the `@fiscozen/style` semantic token families, so a tile's colour
+ * carries the same meaning it carries everywhere else in the DS.
+ *
+ * This is deliberately *not* the radio family's `tone` prop: `tone` describes
+ * the validation state of a control (and `FzRadioGroup` spreads it down to every
+ * child through `radioGroupProps`), while `accent` describes what the tile
+ * stands for. Both can be set at once — an error-state group of coloured tiles.
+ */
+export type FzRadioIconTileAccent = "neutral" | "success" | "warning" | "error";
+
+/**
+ * Props for the FzRadioIconTile component.
+ *
+ * A single-select tile whose whole content is one icon: full height, full column
+ * width, icon centred, colour by accent.
+ *
+ * `label` is inherited from `FzRadioProps` and stays **required**: the tile
+ * renders no visible text, so the label is the only accessible name the option
+ * has. Colour and icon alone do not distinguish the options.
+ */
+export type FzRadioIconTileProps = Omit<
+  FzRadioProps,
+  "hasText" | "standalone" | "tooltip" | "tooltipStatus" | "checked"
+> & {
+  /**
+   * FontAwesome icon name rendered at the centre of the tile.
+   * Must exist in the `@awesome.me/kit-8137893ad3` kit.
+   */
+  iconName: string;
+  /**
+   * FontAwesome icon variant
+   * @default 'far'
+   */
+  iconVariant?: IconVariant;
+  /**
+   * Decorative colour family of the tile: tints the icon, and the border and
+   * background of the selected state.
+   * @default 'neutral'
+   */
+  accent?: FzRadioIconTileAccent;
 };
