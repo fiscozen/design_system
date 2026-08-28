@@ -13,17 +13,19 @@
  *
  * Two variants:
  * - `default` draws the field itself (border, background, padding, 77px minimum height);
- * - `bare` draws no box at all, so the container around it is the visible field —
- *   the shape a single-line composer bar needs. It keeps a visible focus indicator
- *   (a focus-visible outline replaces the default variant's border-colour cue) and
- *   starts on one row, growing with `autoHeight` up to `maxRows`.
+ * - `bare` draws no box at all and sets no font size, so the container around it is
+ *   the visible field and owns the type — the shape a single-line composer bar needs.
+ *   It keeps a visible focus indicator (a focus-visible outline replaces the default
+ *   variant's border-colour cue) and starts on one row, growing with `autoHeight` up
+ *   to `maxRows`.
  *
  * @component
  * @example
  * <FzTextarea label="Description" v-model="text" @blur="onBlur" />
  * @example
- * <!-- composer bar: the caller draws the box, the field only carries the text -->
- * <div class="flex items-end rounded bg-grey-100 px-10 py-8">
+ * <!-- composer bar: the caller draws the box and sets the type, the field
+ *      only carries the text -->
+ * <div class="flex items-end rounded bg-grey-100 px-10 py-8 text-sm">
  *   <FzTextarea v-model="draft" variant="bare" auto-height :max-rows="6" aria-label="Message" />
  * </div>
  */
@@ -155,7 +157,14 @@ function measureMetrics() {
   const el = textareaRef.value
   if (!el) return
   const styles = getComputedStyle(el)
-  cachedLineHeight = parseFloat(styles.lineHeight)
+  const lineHeight = parseFloat(styles.lineHeight)
+  /**
+   * `line-height: normal` computes to the keyword, not to a pixel value, which
+   * would leave the maxRows ceiling unset. It cannot happen with the fixed
+   * text-base of the default variant, but the bare one inherits its type from
+   * the container, so the browser's own ~1.2 ratio is the fallback.
+   */
+  cachedLineHeight = Number.isFinite(lineHeight) ? lineHeight : parseFloat(styles.fontSize) * 1.2
   cachedPaddingY = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom)
   cachedBorderY = parseFloat(styles.borderTopWidth) + parseFloat(styles.borderBottomWidth)
 }
@@ -268,12 +277,18 @@ const evaluateBareStateClasses = () => {
  * replacing the default variant's border-colour cue with a focus-visible
  * outline drawn on the field itself. Removing it entirely would be a WCAG 2.4.7
  * failure.
+ *
+ * It also sets no font size, so type is inherited from the container the same
+ * way the box is: Tailwind's preflight gives a textarea `font-size: 100%` and
+ * `line-height: inherit`, so a `text-sm` on the box carries the field and
+ * anything else in it (a character counter, say) on one scale. The default
+ * variant keeps its fixed `text-base`.
  */
 const baseClasses =
   'border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px]'
 
 const bareClasses =
-  'border-0 p-0 bg-transparent placeholder:text-grey-300 block w-full text-base min-w-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 focus-visible:rounded'
+  'border-0 p-0 bg-transparent placeholder:text-grey-300 block w-full min-w-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 focus-visible:rounded'
 
 const classes = computed(() => [
   isBare.value ? bareClasses : baseClasses,

@@ -664,6 +664,9 @@ const AutoHeightBottomAnchored: TextareaStory = {
  * FzContainer has no props for background, padding or radius. That is the whole
  * point of the variant: the field brings no box of its own, so the caller draws
  * one and the field only carries the text.
+ *
+ * Type is set once, on the box (`text-sm leading-5`), and both the field and the
+ * counter inherit it — the bare variant declares no font size of its own.
  */
 const BareComposerBar: TextareaStory = {
   args: {
@@ -693,7 +696,7 @@ const BareComposerBar: TextareaStory = {
         <FzContainer
           gap="none"
           align-items="stretch"
-          class="min-h-[44px] w-[420px] justify-end gap-4 rounded bg-grey-100 px-10 py-8"
+          class="min-h-[44px] w-[420px] justify-end gap-4 rounded bg-grey-100 px-10 py-8 text-sm leading-5"
         >
           <FzTextarea
             v-bind="args"
@@ -701,7 +704,7 @@ const BareComposerBar: TextareaStory = {
             aria-label="Scrivi un messaggio"
             @update:modelValue="args['onUpdate:modelValue']($event); value = $event"
           />
-          <p class="self-end text-sm text-grey-500">{{ value.length }}/{{ args.maxlength }}</p>
+          <p class="self-end text-grey-500">{{ value.length }}/{{ args.maxlength }}</p>
         </FzContainer>
         <FzIconButton
           icon-name="paper-plane"
@@ -723,6 +726,14 @@ const BareComposerBar: TextareaStory = {
       await expect(textarea).not.toHaveClass('min-h-[77px]')
       await expect(textarea).not.toHaveClass('border-1')
       await expect(textarea).toHaveClass('bg-transparent')
+    })
+
+    await step('Verify the field inherits the type set on the box', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i)
+      await expect(textarea).not.toHaveClass('text-base')
+      const styles = getComputedStyle(textarea)
+      await expect(styles.fontSize).toBe('14px')
+      await expect(styles.lineHeight).toBe('20px')
     })
 
     await step('Verify focus stays visible without a border to recolour', async () => {
