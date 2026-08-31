@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, fn, within } from 'storybook/test'
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 import { FzCardListItem } from '@fiscozen/card-list'
 import { FzActionProps } from '@fiscozen/action'
 
@@ -28,7 +28,7 @@ const meta = {
     actions: {
       control: 'object',
       description:
-        'Row actions: omit or `[]` for none (no trailing control); one `type: "link"` item shows a clickable arrow row; one or more `type: "action"` items show an ellipsis dropdown (`fzaction:click`)'
+        'Row actions: omit or `[]` for none (no trailing control); one `type: "link"` item shows a clickable arrow row; one or more `type: "action"` items show an ellipsis actions menu (`fzaction:click`)'
     },
     showIndicator: {
       control: 'boolean',
@@ -213,6 +213,65 @@ export const CardWithSingleNonLinkAction: CardListItemStory = {
 
     const menuButtons = canvas.getAllByRole('button')
     await expect(menuButtons.length).toBeGreaterThanOrEqual(1)
+  }
+}
+
+/**
+ * Two or more actions collapse into an ellipsis menu. On browsers with the
+ * Popover API + CSS anchor positioning (this test runs in Chromium) the menu is
+ * a native popover placed in the top layer; elsewhere the component falls back
+ * to FzIconDropdown, with the same actions and the same `fzaction:click` payload.
+ */
+export const CardWithActionsMenu: CardListItemStory = {
+  render: (args) => ({
+    components: { FzCardListItem },
+    setup() {
+      return { args }
+    },
+    template: `
+    <div class="min-w-[355px]">
+      <FzCardListItem
+        v-bind="args"
+        @fzaction:click="args['onFzaction:click']"
+      />
+    </div>`
+  }),
+  args: {
+    title: 'Fattura #001',
+    value: '1.200,00 €',
+    descriptions: ['Cliente: Rossi S.r.l.'],
+    actions: [
+      {
+        type: 'action',
+        variant: 'textLeft',
+        label: 'Apri'
+      },
+      {
+        type: 'action',
+        variant: 'textLeft',
+        label: 'Elimina'
+      }
+    ] as FzActionProps[],
+    'onFzaction:click': fn()
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    const opener = canvas.getByRole('button', { name: 'Mostra azioni' })
+    await expect(canvas.getByText('Apri')).not.toBeVisible()
+
+    await userEvent.click(opener)
+    await waitFor(() => expect(canvas.getByText('Apri')).toBeVisible())
+    await expect(canvas.getByText('Elimina')).toBeVisible()
+
+    await userEvent.click(canvas.getByText('Elimina'))
+    await expect(args['onFzaction:click']).toHaveBeenCalledWith(1, {
+      type: 'action',
+      variant: 'textLeft',
+      label: 'Elimina'
+    })
+    // Picking an action closes the menu.
+    await waitFor(() => expect(canvas.getByText('Elimina')).not.toBeVisible())
   }
 }
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useId } from "vue";
+import { computed } from "vue";
 import { FzBadge } from "@fiscozen/badge";
 import { FzContainer } from "@fiscozen/container";
 import { FzDivider } from "@fiscozen/divider";
@@ -7,6 +7,7 @@ import { FzIcon } from "@fiscozen/icons";
 import type { FzCardSingleActionEmits, FzCardSingleActionProps } from "./types";
 import FzCardHeader from "./FzCardHeader.vue";
 import FzCardFooter from "./FzCardFooter.vue";
+import { useUniqueId } from "../utils";
 
 const props = defineProps<FzCardSingleActionProps>();
 
@@ -15,7 +16,9 @@ const emit = defineEmits<FzCardSingleActionEmits>();
 const hasTitleOnly = computed(() => !props.badge && !props.value);
 const noAction = computed(() => !props.action);
 
-const rowTitleId = useId();
+// The row's `aria-labelledby` points at the title, so this id must be unique
+// document-wide, not just per app — see useUniqueId.
+const rowTitleId = useUniqueId("fz-card-title");
 
 function handleRowInteraction(e: MouseEvent | KeyboardEvent) {
   if (noAction.value) return;
@@ -46,7 +49,12 @@ function handleRowInteraction(e: MouseEvent | KeyboardEvent) {
     -->
     <FzContainer horizontal alignItems="center">
       <!-- Badge -->
-      <FzBadge v-if="badge" :left-icon="badge.icon" :tone="badge.tone" variant="text">
+      <FzBadge
+        v-if="badge"
+        :left-icon="badge.icon"
+        :tone="badge.tone"
+        variant="text"
+      >
         {{ badge.text }}
       </FzBadge>
       <!-- Title only (inline with action) -->
