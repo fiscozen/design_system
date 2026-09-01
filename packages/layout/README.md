@@ -234,6 +234,112 @@ const bottomBarTarget = inject(FZ_BOTTOM_BAR_TARGET, null)
 See [`docs/RFC/layout/bottom-bar-adr.md`](../../docs/RFC/layout/bottom-bar-adr.md)
 for the decision record.
 
+### `FzFrameTemplate`
+
+The **backoffice application frame**: a persistent icon `nav` rail, a slim
+app-level `header` toolbar, the page, and an optional 400px `aside` holding tools
+available everywhere. Page layouts nest *inside* the default slot.
+
+**Its reason for existing is the height contract, not the chrome.** Every other
+shell here is `min-h-dvh` + document scroll — an ancestor with an *indefinite*
+height, in which a `fills-parent` layout ([`FzThreeColumnsTemplate`](#page-templates))
+collapses to zero and never scrolls its regions. This shell inverts the model: the
+root is `h-dvh` and **clips**, and `contentHeight` picks which contract the content
+region offers.
+
+| `contentHeight` | The region | For |
+| --- | --- | --- |
+| `scroll` *(default)* | is the app's **single scroll container** — document scroll moves from the window into it | a page that grows and scrolls as one: `FzListTemplate`, `FzDetailTemplate`, any page written against document scroll |
+| `bounded` | has a **definite height and clips** | a page that fills the frame and scrolls its own regions: `FzThreeColumnsTemplate` |
+
+Because the switch is per page, a migration is incremental: a page opts into
+`bounded` when it is ported, and every other page is untouched.
+
+The frame is a column below `lg` (1024px) and a row at and above it, in CSS. `lg`
+rather than the `desktop` (1200px) breakpoint `FzAppTemplate` uses, because the
+*injected nav* switches at `lg`: kept in a left column past that point,
+[`FzNavbar`](../navbar)'s compact bar shrink-wraps to a stub.
+
+| Prop            | Type                          | Default    | Description                                                        |
+| --------------- | ----------------------------- | ---------- | ------------------------------------------------------------------ |
+| `contentHeight` | `'scroll' \| 'bounded'`       | `'scroll'` | Height contract handed to the content region (see above).          |
+| `chrome`        | `'card' \| 'flat'`            | `'card'`   | `card` = the inset white surface; `flat` = full-bleed.             |
+| `background`    | `'page' \| 'transparent'`     | `'page'`   | Page background behind the chrome.                                 |
+| `hasAside`      | `boolean`                     | `false`    | Render the tools panel region.                                     |
+| `navLabel`      | `string`                      | —          | Accessible name for the `<nav>` landmark.                          |
+| `asideLabel`    | `string`                      | —          | Accessible name for the aside's `complementary` landmark.          |
+
+Slots: `nav`, `header`, default (the page), `aside`. The chrome slots receive
+`{ isDesktop, asideOpen, toggleAside }`; the panel's open state is
+`v-model:asideOpen`.
+
+`chrome` is deliberately **orthogonal** to `contentHeight`, not one "is migrated"
+flag: a page ported to `FzListTemplate` still scrolls with the region (`scroll`)
+but should let the frame own its container (`card`). A page that draws its own
+containers stays `flat`, or two white boxes stack with a strip of page background
+between them.
+
+```vue
+<template>
+  <FzFrameTemplate
+    v-model:aside-open="toolsOpen"
+    :content-height="route.meta.contentHeight ?? 'scroll'"
+    :chrome="route.meta.chrome ?? 'flat'"
+    has-aside
+    nav-label="Navigazione principale"
+    aside-label="Strumenti"
+  >
+    <template #nav><AppNavigation /></template>
+    <template #header="{ asideOpen, toggleAside }">
+      <FrameToolbar :aside-open="asideOpen" @toggle-tools="toggleAside()" />
+    </template>
+    <RouterView />
+    <template #aside="{ toggleAside }">
+      <ToolsPanel @close="toggleAside(false)" />
+    </template>
+  </FzFrameTemplate>
+</template>
+```
+
+The tools panel is a **sibling of the page**, not something each page renders, so
+whatever is mounted in it keeps its state across navigation with no global store —
+and it is hidden with `v-show` rather than unmounted, so it keeps that state
+across close/open too.
+
+#### Page scroll contract (`FZ_PAGE_SCROLL_TARGET`)
+
+Under `contentHeight="scroll"` the **window no longer scrolls**: the content
+region does. So `window.scrollTo(0, 0)` becomes a no-op, and browser scroll
+restoration on back/forward — which only ever restores the document scroller —
+stops reaching the page. The shell `provide()`s the region element so the app can
+scroll the page and wire its router's `scrollBehavior` against it. Guard the
+`null` case: it means no shell ancestor owning a scroll container.
+
+```ts
+import { inject } from 'vue'
+import { FZ_PAGE_SCROLL_TARGET } from '@fiscozen/layout'
+
+const pageScroll = inject(FZ_PAGE_SCROLL_TARGET, null)
+// pageScroll?.value?.scrollTo({ top: 0 })
+```
+
+The element is provided under both contracts but only *scrolls* under `scroll`:
+under `bounded` the region clips and the nested layout scrolls its own regions, so
+its `scrollTop` stays 0. `scrollIntoView` call sites are unaffected either way —
+they walk to the nearest scrollable ancestor.
+
+#### A note on Tailwind Preflight
+
+This shell is deliberately **independent of Tailwind's Preflight**, and anything
+added to it must stay that way: it states `border-solid` and `box-border`
+explicitly rather than relying on the reset. The backoffice scopes Preflight to a
+`.twp` class, and putting that class on an ancestor of the page slot would apply
+the reset to hundreds of legacy components at once. The app puts `twp` on its own
+slot content instead.
+
+See [`docs/RFC/layout/frame-shell-promotion.md`](../../docs/RFC/layout/frame-shell-promotion.md)
+for the decision record.
+
 ## Stability & contribution policy
 
 This package intentionally ships the grid primitive, the region molecules, and

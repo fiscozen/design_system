@@ -23,6 +23,19 @@
       "docs": "packages/layout/README.md#fzapptemplate"
     },
     {
+      "name": "FzFrameTemplate",
+      "kind": "shell",
+      "heightContract": "owns-viewport",
+      "surfaces": ["BO"],
+      "since": "1.4.0",
+      "whenToUse": "The backoffice application frame: a persistent icon navigation rail, a slim app-level toolbar (back / breadcrumb / global search), the page, and an optional 400px tools panel that keeps its state across navigation. The only shell whose content region can hand a DEFINITE height to the page inside it — set contentHeight=\"bounded\" for a page that fills the frame and scrolls its own regions (FzThreeColumnsTemplate), and leave it \"scroll\" for a page that grows and scrolls as one. Under \"scroll\" this region, not the window, is the app's scroll container: inject FZ_PAGE_SCROLL_TARGET to scroll the page.",
+      "notWhenToUse": "Not FzAppTemplate: that shell is min-h-dvh with document scroll and a modal-drawer aside below the breakpoint — the model this one inverts. Its own aside is a persistent desktop-only 400px column, never a modal drawer, so do not reach for this shell just to get a mobile drawer.",
+      "slots": ["nav", "header", "default", "aside"],
+      "keyProps": ["contentHeight", "chrome", "background", "hasAside", "navLabel", "asideLabel"],
+      "composeOnly": { "safe": true },
+      "docs": "packages/layout/README.md#fzframetemplate"
+    },
+    {
       "name": "FzSidebarTemplate",
       "kind": "shell",
       "heightContract": "owns-viewport",
@@ -76,7 +89,7 @@
       "notWhenToUse": "Not a split-view master-detail (list beside a navigable detail pane) — that shape still uses the FzLayout leftShoulder grid variant. Not a page shell: it must render inside one.",
       "slots": ["banner", "filters", "header", "default"],
       "keyProps": ["filtersPosition", "filtersLabel", "mainAs"],
-      "nestWithin": ["FzAppTemplate", "FzSidebarTemplate"],
+      "nestWithin": ["FzAppTemplate", "FzSidebarTemplate", "FzFrameTemplate"],
       "whenNested": {
         "props": { "mainAs": "div" },
         "note": "the shell already owns the <main> landmark; also set filtersLabel when the shell renders its own aside, so the filter rail and the shell's panel are distinguishable complementary landmarks"
@@ -94,7 +107,7 @@
       "notWhenToUse": "Not a page shell: it must render inside one. If the rail holds filters rather than a record summary, the page is a list — use FzListTemplate.",
       "slots": ["banner", "sidebar", "toolbar", "default"],
       "keyProps": ["sidebarLabel", "mainAs"],
-      "nestWithin": ["FzAppTemplate", "FzSidebarTemplate"],
+      "nestWithin": ["FzAppTemplate", "FzSidebarTemplate", "FzFrameTemplate"],
       "whenNested": {
         "props": { "mainAs": "div" },
         "note": "the shell already owns the <main> landmark; also set sidebarLabel when the shell renders its own aside. The toolbar region is deliberately a plain container, not a banner landmark — the shell owns the page banner"
@@ -121,12 +134,12 @@
         "column-right-content"
       ],
       "keyProps": ["sidebarCollapsed", "mainAs", "sidebarLabel"],
-      "composeOnly": {
-        "safe": false,
-        "gaps": [
-          "it fills its parent's height and requires a bounded-height ancestor, which a compose-only consumer cannot create: FzContainer exposes no height/viewport prop (tag, alignItems, main, gap, horizontal, layout). Mounted in a box with an indefinite height it collapses to zero and its regions never scroll — and no host is verified yet, so nestWithin is deliberately empty"
-        ]
-      }
+      "nestWithin": ["FzFrameTemplate"],
+      "whenNested": {
+        "props": { "mainAs": "div" },
+        "note": "the host must be FzFrameTemplate with contentHeight=\"bounded\" — that prop is what supplies the definite height this layout requires, and without it the layout collapses to zero even inside the right shell. Inside a min-h-dvh shell (FzAppTemplate, FzSidebarTemplate) there is no way to supply it at all. Also set sidebarLabel when the shell renders its own aside, so the two complementary landmarks are distinguishable"
+      },
+      "composeOnly": { "safe": true }
     },
     {
       "name": "FzLayout",
@@ -149,7 +162,9 @@
       "keyProps": ["as", "align", "safeArea"],
       "composeOnly": {
         "safe": false,
-        "gaps": ["sizing and padding are applied by the composing layout via a fall-through class — by design, which is why this is layout-internal"]
+        "gaps": [
+          "sizing and padding are applied by the composing layout via a fall-through class — by design, which is why this is layout-internal"
+        ]
       }
     },
     {
@@ -162,7 +177,9 @@
       "keyProps": ["as"],
       "composeOnly": {
         "safe": false,
-        "gaps": ["sizing and padding are applied by the composing layout via a fall-through class — by design"]
+        "gaps": [
+          "sizing and padding are applied by the composing layout via a fall-through class — by design"
+        ]
       }
     },
     {
@@ -175,7 +192,9 @@
       "keyProps": ["as"],
       "composeOnly": {
         "safe": false,
-        "gaps": ["sizing and padding are applied by the composing layout via a fall-through class — by design"]
+        "gaps": [
+          "sizing and padding are applied by the composing layout via a fall-through class — by design"
+        ]
       }
     },
     {
@@ -188,7 +207,9 @@
       "keyProps": ["as"],
       "composeOnly": {
         "safe": false,
-        "gaps": ["sizing and padding are applied by the composing layout via a fall-through class — by design"]
+        "gaps": [
+          "sizing and padding are applied by the composing layout via a fall-through class — by design"
+        ]
       }
     },
     {
