@@ -33,6 +33,12 @@ const meta = {
       description:
         'When `true`, the navbar adds `env(safe-area-inset-*)` to top/left/right padding for devices with a notch / dynamic island.'
     },
+    elevation: {
+      control: 'radio',
+      options: ['raised', 'flat'],
+      description:
+        'Whether the navbar casts its elevation shadow. `flat` is for a navbar that sits *on* the page background rather than above it.'
+    },
     isMenuOpen: {
       control: 'boolean',
       description: 'Mobile menu open state. Supports `v-model:isMenuOpen` for two-way binding.'
@@ -43,6 +49,7 @@ const meta = {
     variant: 'horizontal',
     position: 'static',
     respectSafeArea: false,
+    elevation: 'raised',
     isMenuOpen: false,
     onFznavbarMenuButtonClick: fn()
   }
@@ -205,7 +212,7 @@ export const Customized: Story = {
     docs: {
       description: {
         story:
-          'Layout values are exposed as CSS custom properties on the root (`--fz-navbar-padding`, `--fz-navbar-shadow`, `--fz-navbar-height`, `--fz-navbar-bg`, …). Override per-instance via inline `style` to slim the navbar without `!important` resets.'
+          'Layout values are exposed as CSS custom properties on the root (`--fz-navbar-padding`, `--fz-navbar-shadow`, `--fz-navbar-height`, `--fz-navbar-bg`, …). Override per-instance via inline `style` to slim the navbar without `!important` resets. Note that a repo under a compose-only styling policy cannot set these — setting a custom property needs `style` — so anything a consumer must be able to reach belongs behind a prop instead; the shadow now is (`elevation`).'
       }
     }
   },
@@ -341,6 +348,67 @@ export const BootstrapInterop: Story = {
     await step('Verify navbar renders inside a .twp wrapper', async () => {
       const header = canvas.getByRole('banner')
       await expect(header.closest('.twp')).not.toBeNull()
+    })
+  }
+}
+
+/**
+ * `elevation="flat"` — no shadow, for a navbar that sits **on** the page
+ * background rather than above it. The backoffice rail inside `FzFrameTemplate`
+ * is the case it was added for: with nothing behind the rail, a shadow draws a
+ * fake edge along a seamless surface.
+ *
+ * It is a prop rather than something the call site switches off because the
+ * shadow is declared by `@fiscozen/navbar`'s own `.fz-navbar` rule, at the same
+ * specificity as any Tailwind utility — so whether a `shadow-none` added at the
+ * call site wins depends on stylesheet order — and the `--fz-navbar-shadow`
+ * custom property needs `style`, which consuming repos block under their
+ * compose-only policy just as they block `class`.
+ *
+ * The prop also beats that custom property, deliberately: an explicit API should
+ * win over a property a host set further up.
+ */
+export const Flat: Story = {
+  args: { variant: 'vertical', elevation: 'flat' },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: { FzNavbar, FzIcon, FzNavlink, FzIconButton, FzAvatar },
+    template: FULL_NAVBAR_TEMPLATE
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Casts no shadow', async () => {
+      // Measured, not asserted through classes: the point of the prop is that it
+      // wins the cascade, and a class assertion says nothing about who wins.
+      // Only a real browser resolves this — jsdom applies no stylesheet.
+      const navbar = canvas.getByRole('banner')
+      await expect(getComputedStyle(navbar).boxShadow).toBe('none')
+    })
+  }
+}
+
+/**
+ * The default for comparison. Every version before the prop existed rendered
+ * this, and it stays the default so no existing consumer changes.
+ */
+export const Raised: Story = {
+  args: { variant: 'vertical', elevation: 'raised' },
+  render: (args) => ({
+    setup() {
+      return { args }
+    },
+    components: { FzNavbar, FzIcon, FzNavlink, FzIconButton, FzAvatar },
+    template: FULL_NAVBAR_TEMPLATE
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Casts the elevation shadow', async () => {
+      const navbar = canvas.getByRole('banner')
+      await expect(getComputedStyle(navbar).boxShadow).not.toBe('none')
     })
   }
 }
