@@ -557,6 +557,139 @@ type FzSidebarTemplateSlots = {
   default(props: {}): any
 }
 
+/**
+ * Height contract `FzFrameTemplate` hands to its content region — the reason the
+ * shell exists.
+ *
+ * - `scroll` (default): the region is the app's **single scroll container**. The
+ *   page grows and the region scrolls it; document scroll simply moves from the
+ *   window into the region, so a page that just grows behaves as it did before.
+ *   This is the contract a `document-scroll` page-content layout
+ *   (`FzListTemplate`, `FzDetailTemplate`) wants.
+ * - `bounded`: the region has a **definite height and clips**. This is the only
+ *   way the design system can hand a `fills-parent` layout
+ *   (`FzThreeColumnsTemplate`, `kind: bounded`) the bounded ancestor it requires
+ *   — under a `min-h-dvh` shell such a layout collapses to zero and its regions
+ *   never scroll.
+ *
+ * The two are per-page, which is what makes an incremental migration possible: a
+ * page opts into `bounded` when (and only when) it is ported to a layout that
+ * needs it, and every other page is untouched.
+ */
+type FzFrameContentHeight = 'scroll' | 'bounded'
+
+/**
+ * Page background painted behind `FzFrameTemplate`'s chrome.
+ *
+ * - `page` (default): the design's page surface (`background/white-smoke`). The
+ *   nav rail and the toolbar sit *on* it; the content card floats above it.
+ * - `transparent`: paint nothing, for a host that owns the background itself.
+ *
+ * A prop rather than a fall-through `class` on purpose: consuming repos run a
+ * compose-only styling policy, under which a capability reachable only through
+ * `class`/`style` does not exist. `FzAppTemplate` and `FzSidebarTemplate` both
+ * carry exactly that gap in `layouts.json`; this shell does not reproduce it.
+ */
+type FzFrameBackground = 'page' | 'transparent'
+
+/**
+ * How `FzFrameTemplate` frames the page.
+ *
+ * - `card` (default): the inset white surface of the design — a rounded, bordered
+ *   card inside the region's gutter.
+ * - `flat`: full-bleed. For a page that draws its **own** container: a card here
+ *   would stack a second white box inside the first, with a strip of page
+ *   background showing between them.
+ *
+ * Deliberately orthogonal to `contentHeight`, not a single "is migrated" flag: a
+ * page ported to `FzListTemplate` still scrolls with the region (`scroll`) but
+ * should let the frame own its container (`card`).
+ */
+type FzFrameChrome = 'card' | 'flat'
+
+/**
+ * Toggle state + actions `FzFrameTemplate` exposes to its `nav`, `header` and
+ * `aside` slots, so injected chrome (a toolbar button that opens the tools
+ * panel, the panel's own close control) can drive the `aside` without owning the
+ * state. Shape-compatible with `FzAppTemplateToggles` so chrome written for one
+ * shell keeps working in the other.
+ */
+type FzFrameTemplateToggles = {
+  /** `true` from the `lg` breakpoint (1024px) up — see `FzFrameTemplateProps`. */
+  isDesktop: boolean
+  /** Whether the aside is open. */
+  asideOpen: boolean
+  /** Open/close the aside. Pass a boolean to force a state; omit to toggle. */
+  toggleAside: (force?: boolean) => void
+}
+
+/**
+ * Props for `FzFrameTemplate` — the backoffice application frame.
+ *
+ * The full narrative (height contract, structure, the `lg` breakpoint, the
+ * Preflight rule) lives on the component. `asideOpen` is a `v-model` (declared
+ * with `defineModel`), not a plain prop, so it is not listed here.
+ *
+ * Presentation-only: it holds the aside's open state and the responsive flag but
+ * imports no store/router/API. Rail and toolbar contents are injected.
+ */
+type FzFrameTemplateProps = {
+  /**
+   * Height contract handed to the content region. **The prop this shell exists
+   * for** — read `FzFrameContentHeight` before choosing.
+   * @default 'scroll'
+   * @see FzFrameContentHeight
+   */
+  contentHeight?: FzFrameContentHeight
+  /**
+   * How the page is framed.
+   * @default 'card'
+   * @see FzFrameChrome
+   */
+  chrome?: FzFrameChrome
+  /**
+   * Page background behind the chrome.
+   * @default 'page'
+   * @see FzFrameBackground
+   */
+  background?: FzFrameBackground
+  /**
+   * Render the complementary `aside` region — the persistent tools panel. Off by
+   * default so a frame without one stays lean.
+   * @default false
+   */
+  hasAside?: boolean
+  /**
+   * Accessible name for the navigation landmark. The template wraps the `nav`
+   * slot in a `<nav>` region so there is always a navigation landmark regardless
+   * of what the injected nav renders as its own root; pass a label to
+   * distinguish it when the page exposes more than one.
+   */
+  navLabel?: string
+  /**
+   * Accessible name for the aside's `complementary` landmark. Set it when the
+   * page exposes more than one complementary region — e.g. when the nested page
+   * layout contributes its own rail — so the two are distinguishable.
+   */
+  asideLabel?: string
+}
+
+/**
+ * Slots for `FzFrameTemplate`. The chrome slots receive the toggle props
+ * (`FzFrameTemplateToggles`); the frame is otherwise chrome-free — rail,
+ * breadcrumb, search and the tools themselves are all injected.
+ */
+type FzFrameTemplateSlots = {
+  /** Persistent navigation rail (a full-width bar below `lg`), wrapped in a `<nav>` landmark; the injected nav owns its own collapse/menu. */
+  nav?(props: FzFrameTemplateToggles): any
+  /** App-level toolbar — the slim `banner` strip: back, breadcrumb, global search, the aside trigger. */
+  header?(props: FzFrameTemplateToggles): any
+  /** The page. */
+  default(props: {}): any
+  /** Persistent tools panel (AI chat, messages). Desktop-only; kept mounted while closed. */
+  aside?(props: FzFrameTemplateToggles): any
+}
+
 export type {
   FzLayoutProps,
   FzLayoutAlign,
@@ -591,5 +724,11 @@ export type {
   FzThreeColumnsTemplateSlots,
   FzSidebarTemplateToggles,
   FzSidebarTemplateProps,
-  FzSidebarTemplateSlots
+  FzSidebarTemplateSlots,
+  FzFrameContentHeight,
+  FzFrameBackground,
+  FzFrameChrome,
+  FzFrameTemplateToggles,
+  FzFrameTemplateProps,
+  FzFrameTemplateSlots
 }
