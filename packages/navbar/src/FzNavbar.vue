@@ -11,7 +11,8 @@ const props = withDefaults(defineProps<FzNavbarProps>(), {
   mobileBreakpoint: undefined,
   position: 'static',
   respectSafeArea: false,
-  environment: 'frontoffice'
+  environment: 'frontoffice',
+  elevation: 'raised'
 })
 
 const emit = defineEmits<FzNavbarEmits>()
@@ -56,11 +57,12 @@ function handleMenuButtonClick() {
 
 <template>
   <header
-    class="fz-navbar z-10 m-0 box-border flex items-center border-0 p-12 shadow"
+    class="fz-navbar z-10 m-0 box-border flex items-center border-0 p-12"
     :class="{
       'fz-navbar--fixed': position === 'fixed',
       'fz-navbar--sticky': position === 'sticky',
       'fz-navbar--safe-area': respectSafeArea,
+      'fz-navbar--flat': elevation === 'flat',
       'justify-between': isMobile,
       'h-full w-56 flex-col': isVertical && !isMobile,
       'h-56 w-full': isHorizontal || isMobile
@@ -117,6 +119,15 @@ function handleMenuButtonClick() {
  * larger than intended.
  *
  * Consumers can still override per-instance via inline style or scoped CSS.
+ *
+ * THE SHADOW IS DECLARED HERE AND NOWHERE ELSE. The root used to carry
+ * Tailwind's `shadow` utility as well, which was redundant — this rule already
+ * declares the same value — and actively harmful: both are single-class
+ * selectors, so with the utility present whether anything can switch the shadow
+ * off depends on stylesheet order rather than on intent. It was removed together
+ * with the `elevation` prop (LIB-2951); do not add it back. Anything that needs
+ * to change the shadow belongs in this block, keyed to a modifier class, so the
+ * cascade stays inside the package.
  */
 
 .fz-navbar {
@@ -128,6 +139,13 @@ function handleMenuButtonClick() {
     0 1px 2px -1px rgb(0 0 0 / 0.1)
   );
   background: var(--fz-navbar-bg, transparent);
+}
+
+/* `elevation="flat"`. Declared after `.fz-navbar` and at the same specificity,
+   so it wins on order — and it wins over `--fz-navbar-shadow` too, deliberately:
+   an explicit prop should beat a custom property a host set further up. */
+.fz-navbar--flat {
+  box-shadow: none;
 }
 
 .fz-navbar.h-56 {

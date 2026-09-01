@@ -98,7 +98,6 @@ describe('FzNavbar', () => {
       expect(header.classes()).toContain('z-10')
       expect(header.classes()).toContain('flex')
       expect(header.classes()).toContain('p-12')
-      expect(header.classes()).toContain('shadow')
     })
 
     it('should render brand-logo slot', () => {
@@ -471,7 +470,16 @@ describe('FzNavbar', () => {
         expect(header.classes()).toContain('z-10')
         expect(header.classes()).toContain('flex')
         expect(header.classes()).toContain('p-12')
-        expect(header.classes()).toContain('shadow')
+      })
+
+      it('should not carry the Tailwind shadow utility', () => {
+        // Regression guard for LIB-2951. The package's own `.fz-navbar` rule
+        // declares the shadow, so the utility was redundant — and, being a
+        // single-class selector like every other candidate, it made switching
+        // the shadow off a question of stylesheet order rather than of intent.
+        // The shadow now has exactly one source, inside the package.
+        wrapper = mount(FzNavbar, { props: { variant: 'horizontal' } })
+        expect(wrapper.find('header').classes()).not.toContain('shadow')
       })
     })
 
@@ -1119,6 +1127,39 @@ describe('FzNavbar', () => {
 
       expect(warnSpy).not.toHaveBeenCalled()
       warnSpy.mockRestore()
+    })
+  })
+  describe('elevation prop', () => {
+    it('casts the shadow by default', () => {
+      // `raised` is the behaviour every version before the prop had; the default
+      // must not change, or every existing consumer's navbar changes with it.
+      wrapper = mount(FzNavbar, { props: { variant: 'horizontal' } })
+      expect(wrapper.find('header').classes()).not.toContain('fz-navbar--flat')
+    })
+
+    it('adds the flat modifier when elevation is flat', () => {
+      // The modifier is the hook for the `box-shadow: none` rule in the
+      // package's own stylesheet — which is where the decision has to live, since
+      // a consuming repo can reach neither `class` nor `style` (nor, therefore,
+      // `--fz-navbar-shadow`) under its compose-only policy. That the rule
+      // actually wins the cascade is asserted in the Storybook play function,
+      // which runs in a real browser; jsdom applies no stylesheet here.
+      wrapper = mount(FzNavbar, { props: { variant: 'horizontal', elevation: 'flat' } })
+      expect(wrapper.find('header').classes()).toContain('fz-navbar--flat')
+    })
+
+    it('is explicit about raised', () => {
+      wrapper = mount(FzNavbar, { props: { variant: 'horizontal', elevation: 'raised' } })
+      expect(wrapper.find('header').classes()).not.toContain('fz-navbar--flat')
+    })
+
+    it('applies to the vertical rail too', () => {
+      // The flat rail is what the backoffice design needs, but the prop is not
+      // coupled to `variant`: the frontoffice uses a vertical rail *with* a
+      // shadow today, and inferring elevation from the variant would change that
+      // silently.
+      wrapper = mount(FzNavbar, { props: { variant: 'vertical', elevation: 'flat' } })
+      expect(wrapper.find('header').classes()).toContain('fz-navbar--flat')
     })
   })
 })

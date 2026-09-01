@@ -5,6 +5,17 @@ export type FzNavbarVariant = 'horizontal' | 'vertical'
 
 export type FzNavbarPosition = 'static' | 'fixed' | 'sticky'
 
+/**
+ * Whether the navbar casts a shadow.
+ *
+ * - `raised` (default): the elevation shadow — the navbar reads as floating
+ *   above the page. Unchanged from every version before the prop existed.
+ * - `flat`: no shadow. For a navbar that sits *on* the page background rather
+ *   than above it, e.g. the backoffice rail inside `FzFrameTemplate`, where a
+ *   shadow draws a fake edge along a surface that has nothing behind it.
+ */
+export type FzNavbarElevation = 'raised' | 'flat'
+
 interface FzNavbarProps {
   /**
    * The main direction of the navbar.
@@ -48,6 +59,21 @@ interface FzNavbarProps {
    * for consumers to add `class="fixed top-0 left-0"` (or similar) on the call site.
    */
   position?: FzNavbarPosition
+  /**
+   * Whether the navbar casts its elevation shadow.
+   *
+   * A prop rather than something the call site switches off, for the same reason
+   * `position` is one: the shadow is declared by this package's own `.fz-navbar`
+   * rule, which sits at the same specificity as a Tailwind utility, so whether a
+   * `shadow-none` added at the call site wins depends on stylesheet order — and
+   * the `--fz-navbar-shadow` custom property needs `style`, which consuming repos
+   * block under their compose-only policy just as they block `class`. Deciding it
+   * inside the component is the only way the capability actually exists for them.
+   *
+   * @default 'raised'
+   * @see FzNavbarElevation
+   */
+  elevation?: FzNavbarElevation
   /**
    * When `true`, the navbar adds `env(safe-area-inset-*)` to its top, left and right padding
    * so it renders correctly on devices with a notch / dynamic island.
