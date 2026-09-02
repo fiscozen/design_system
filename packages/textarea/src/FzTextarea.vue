@@ -17,7 +17,9 @@
  *   the visible field and owns the type — the shape a single-line composer bar needs.
  *   It keeps a visible focus indicator (a focus-visible outline replaces the default
  *   variant's border-colour cue) and starts on one row, growing with `autoHeight` up
- *   to `maxRows`.
+ *   to `maxRows`. Inside an already-padded box that outline lands within the box, so
+ *   `focusAffordance="container"` hands the indicator to the caller — which must then
+ *   draw one, or the field fails WCAG 2.4.7.
  *
  * @component
  * @example
@@ -70,6 +72,23 @@ watch(
   (maxRows) => {
     if (maxRows !== undefined && !props.autoHeight) {
       console.warn(`[FzTextarea] "maxRows" has no effect without "autoHeight" enabled.`)
+    }
+  },
+  { immediate: true }
+)
+
+/**
+ * `focusAffordance` is deliberately absent from `withDefaults`: leaving it
+ * `undefined` when unset is what lets a value set on the wrong variant be told
+ * apart from no value at all. `undefined` and `'field'` behave identically.
+ */
+watch(
+  () => props.focusAffordance,
+  (focusAffordance) => {
+    if (focusAffordance !== undefined && !isBare.value) {
+      console.warn(
+        `[FzTextarea] "focusAffordance" only applies to variant="bare". The default variant draws its focus cue on its own border.`
+      )
     }
   },
   { immediate: true }
@@ -273,10 +292,9 @@ const evaluateBareStateClasses = () => {
 /**
  * Base chrome of the field. The bare variant switches every box-drawing
  * declaration off — including the browser's own border, padding and background,
- * which would otherwise show through — and keeps a visible focus indicator by
- * replacing the default variant's border-colour cue with a focus-visible
- * outline drawn on the field itself. Removing it entirely would be a WCAG 2.4.7
- * failure.
+ * which would otherwise show through. The focus indicator is not part of this
+ * string for the bare variant: which element carries it is the caller's choice,
+ * resolved in `bareFocusClasses` below.
  *
  * It also sets no font size, so type is inherited from the container the same
  * way the box is: Tailwind's preflight gives a textarea `font-size: 100%` and
@@ -287,11 +305,32 @@ const evaluateBareStateClasses = () => {
 const baseClasses =
   'border-1 rounded p-10 placeholder:text-grey-300 block w-full outline-none focus:ring-0 focus:outline-none text-base min-w-[96px] min-h-[77px]'
 
-const bareClasses =
-  'border-0 p-0 bg-transparent placeholder:text-grey-300 block w-full min-w-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 focus-visible:rounded'
+const bareClasses = 'border-0 p-0 bg-transparent placeholder:text-grey-300 block w-full min-w-0'
+
+/**
+ * The focus indicator of the bare variant — and the one declaration a caller
+ * cannot make from the outside without `!important`.
+ *
+ * `'field'` (the default) draws a focus-visible outline on the textarea itself,
+ * standing in for the border-colour cue the default variant uses. Removing it
+ * with nothing in its place would be a WCAG 2.4.7 failure.
+ *
+ * `'container'` does not merely *omit* that outline: the browser's own
+ * `:focus-visible` ring would take its place, so it has to be suppressed as
+ * actively as the default variant suppresses it. The caller is then obliged to
+ * draw the indicator on the box it owns. That obligation is documented on the
+ * prop; the component has no way to check it was honoured, which is why the
+ * default stays on `'field'`.
+ */
+const bareFocusClasses = computed(() =>
+  props.focusAffordance === 'container'
+    ? 'outline-none focus:ring-0 focus:outline-none'
+    : 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 focus-visible:rounded'
+)
 
 const classes = computed(() => [
   isBare.value ? bareClasses : baseClasses,
+  isBare.value ? bareFocusClasses.value : '',
   isBare.value ? evaluateBareStateClasses() : evaluateStateClasses(),
   props.autoHeight
     ? autoHeightResizeMap[effectiveResize.value]
