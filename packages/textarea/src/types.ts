@@ -10,7 +10,16 @@
  * `bare` strips the component's own box (border, background, padding, minimum
  * height) so that the container around it can be the visible field.
  */
-type FzTextareaVariant = "default" | "bare";
+type FzTextareaVariant = 'default' | 'bare'
+
+/**
+ * Which element is responsible for the focus indicator of the `bare` variant.
+ *
+ * `field` keeps the indicator on the textarea; `container` hands the obligation
+ * to the caller's box. It is a transfer of responsibility, never a removal —
+ * see the `focusAffordance` prop.
+ */
+type FzTextareaFocusAffordance = 'field' | 'container'
 
 /**
  * Props for the FzTextarea component.
@@ -29,40 +38,40 @@ type FzTextareaProps = {
   /**
    * HTML id attribute. Falls back to auto-generated ID for label association.
    */
-  id?: string;
+  id?: string
   /**
    * Form field name for submission and identification
    */
-  name?: string;
+  name?: string
   /**
    * @deprecated Not part of the Figma design. Will be removed in the next major version.
    * The textarea always uses text-base (16px). This prop is accepted but ignored.
    */
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg'
   /**
    * Text label displayed above the textarea. When omitted, no label element is rendered.
    */
-  label?: string;
+  label?: string
   /**
    * Marks field as required. Adds asterisk to label and sets native required attribute.
    * @default false
    */
-  required?: boolean;
+  required?: boolean
   /**
    * Placeholder text shown when textarea is empty
    */
-  placeholder?: string;
+  placeholder?: string
   /**
    * Enables error state with red border. Paired with errorMessage slot
    * to display error via FzAlert. Works with disabled (both states reflected in ARIA).
    * @default false
    */
-  error?: boolean;
+  error?: boolean
   /**
    * Disables interaction and applies muted styling
    * @default false
    */
-  disabled?: boolean;
+  disabled?: boolean
   /**
    * Visual variant of the field.
    *
@@ -82,40 +91,63 @@ type FzTextareaProps = {
    *   affordance on its own container.
    * @default 'default'
    */
-  variant?: FzTextareaVariant;
+  variant?: FzTextareaVariant
+  /**
+   * Which element draws the focus indicator, in the `bare` variant only.
+   *
+   * - `field` — the component draws a 2px `blue-600` `focus-visible` outline on
+   *   the textarea itself, standing in for the border-colour cue the `default`
+   *   variant uses. Nothing is required of the caller.
+   * - `container` — the component draws no focus indicator, and the caller
+   *   **must** draw one on the box it owns (typically `focus-within:` on that
+   *   box). Use this when the field sits inside a padded container, where an
+   *   outline on the field falls *inside* the box and reads as a field within a
+   *   field.
+   *
+   * This prop **moves** the obligation, it does not cancel it: a field with no
+   * visible focus indicator is a WCAG 2.4.7 (Focus Visible) failure. Pass
+   * `container` only together with a focus treatment on your own box — the
+   * component cannot verify that you did, which is why the default stays on
+   * `field`.
+   *
+   * Has no effect in the `default` variant, which recolours its own border; a
+   * runtime warning is emitted if set there.
+   * @default 'field'
+   */
+  focusAffordance?: FzTextareaFocusAffordance
   /**
    * Controls resize behavior of the textarea
    * @default 'all' — `'none'` when `variant="bare"`, where a resize grabber would
    * break the container that draws the field
    */
-  resize?: "none" | "vertical" | "horizontal" | "all";
+  resize?: 'none' | 'vertical' | 'horizontal' | 'all'
   /**
    * Number of visible text rows
    * @default 2 — `1` when `variant="bare"`, so a composer bar starts on a single line
    */
-  rows?: number;
+  rows?: number
   /**
    * Visible width in average character widths
    */
-  cols?: number;
+  cols?: number
   /**
    * Shows success checkmark icon when true
    * @default false
    */
-  valid?: boolean;
+  valid?: boolean
   /**
    * Native minlength constraint
    */
-  minlength?: number;
+  minlength?: number
   /**
    * Native maxlength constraint
    */
-  maxlength?: number;
+  maxlength?: number
   /**
    * Prevents editing while keeping field focusable and selectable
    * @default false
    */
-  readonly?: boolean;
+  readonly?: boolean
   /**
    * Enables automatic height adjustment based on content.
    * The textarea grows as the user types and shrinks when content is removed.
@@ -125,13 +157,13 @@ type FzTextareaProps = {
    * Must be set at mount time — changing at runtime is not supported.
    * @default false
    */
-  autoHeight?: boolean;
+  autoHeight?: boolean
   /**
    * Maximum number of visible rows before scrollbar appears.
    * Only effective when `autoHeight` is true; a runtime warning is
    * emitted if set without `autoHeight`.
    */
-  maxRows?: number;
-};
+  maxRows?: number
+}
 
-export { FzTextareaProps, FzTextareaVariant };
+export { FzTextareaProps, FzTextareaVariant, FzTextareaFocusAffordance }

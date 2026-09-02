@@ -16,6 +16,8 @@ Multi-line text input component with label, validation states, resize control, a
 - Error and valid states with visual feedback
 - Error messages via FzAlert component (circle-xmark icon, consistent with FzInput)
 - Custom focus styling (blue border on focus, error border maintained on error+focus)
+- `focusAffordance`: in the `bare` variant, the focus indicator can be delegated to the container
+  that draws the field, for boxes with padding of their own
 - Help text and error messages with multiline wrapping support
 - Required, disabled, and readonly states with proper visual cues
 - Combined states support (error+disabled, required+help, disabled+compiled)
@@ -123,6 +125,12 @@ const notes = ref('')
       <td><code>'default' | 'bare'</code></td>
       <td><code>'default'</code></td>
       <td>Visual variant. <code>default</code> draws the field (border, background, padding, 77px minimum height); <code>bare</code> draws no box at all, leaving it to the surrounding container. See <a href="#bare-variant-composer-bars">Bare Variant</a>.</td>
+    </tr>
+    <tr>
+      <td><code>focusAffordance</code></td>
+      <td><code>'field' | 'container'</code></td>
+      <td><code>'field'</code></td>
+      <td><code>bare</code> only. Which element draws the focus indicator. <code>field</code> draws a 2px <code>blue-600</code> <code>focus-visible</code> outline on the textarea; <code>container</code> draws none and requires the caller to draw one on its own box — dropping it outright fails WCAG 2.4.7. See <a href="#focus-affordance-who-draws-the-ring">Focus Affordance</a>.</td>
     </tr>
     <tr>
       <td><code>resize</code></td>
@@ -507,14 +515,64 @@ Notes:
   `errorMessage` slot, and the text turns grey when disabled or readonly, but any visual error
   affordance on the box is the caller's to draw (the composer in the chat widget, for instance, puts
   the message above the bar).
-- **Focus stays visible.** See below.
+- **Focus stays visible.** Either on the field or on your box — see below.
+
+## Focus Affordance (who draws the ring)
+
+The bare variant strips the border, so the border-colour focus cue goes with it. What replaces it
+is a `focus-visible` outline on the field, and `focusAffordance` decides whether the component
+keeps drawing it or hands it to you.
+
+| Value | The component draws | You must draw |
+| --- | --- | --- |
+| `'field'` *(default)* | a 2px `blue-600` outline on the textarea, offset by 2px | nothing |
+| `'container'` | nothing — the browser's own ring is suppressed too | a focus indicator on your box |
+
+Reach for `'container'` when the box has padding of its own. An outline on the field is offset from
+the *field*, so inside a `px-10 py-8` container it lands **inside** the grey box and reads as a
+field within a field. Moving it to the box puts it where the visible field actually is:
+
+```vue
+<template>
+  <!-- The box is the visible field, so the box takes the focus ring. -->
+  <div
+    class="flex min-h-[44px] flex-col justify-end gap-4 rounded bg-grey-100 px-10 py-8 text-sm leading-5
+           focus-within:outline focus-within:outline-2 focus-within:outline-blue-600"
+  >
+    <FzTextarea
+      v-model="draft"
+      variant="bare"
+      focus-affordance="container"
+      auto-height
+      :max-rows="6"
+      aria-label="Scrivi un messaggio"
+    />
+  </div>
+</template>
+```
+
+Notes:
+
+- **The prop moves an obligation, it does not cancel one.** `'container'` suppresses every focus
+  ring on the field, the browser's included — otherwise the native ring would simply replace the
+  one the component stopped drawing. A field left with no visible indicator anywhere is a
+  **WCAG 2.4.7 (Focus Visible)** failure. The `focus-within:` treatment on your box is the other
+  half of the prop, not decoration.
+- **The component cannot check that you honoured it**, which is why the default stays on `'field'`:
+  a caller who has never heard of the prop keeps a visible focus indicator.
+- **Use the prop, not `!important`.** Suppressing the outline from the call site takes
+  `!focus-visible:outline-none` — an override of the component's own styling, and the shape the
+  bare variant exists to remove.
+- **`'field'` and unset are identical.** Passing `'field'` explicitly changes nothing.
+- **It only applies to `variant="bare"`.** The default variant recolours its own border; setting
+  `focusAffordance` there emits a runtime warning and has no effect.
 
 ## Accessibility
 
 FzTextarea meets WCAG 2.1 AA standards:
 
 - **Focus indicator**: Custom blue border (`blue-600`) on focus replaces browser default outline. Error state maintains error border color on focus (`semantic-error-300`).
-- **Focus indicator in the `bare` variant**: with no border to recolour, the cue is *replaced*, not removed — a 2px `blue-600` `focus-visible` outline is drawn on the field itself. If your container draws its own focus treatment (e.g. `focus-within:` on the box) you can suppress it with `!focus-visible:outline-none`, but only ever in exchange for another visible indicator: dropping it outright fails WCAG 2.4.7.
+- **Focus indicator in the `bare` variant**: with no border to recolour, the cue is *replaced*, not removed — by default a 2px `blue-600` `focus-visible` outline is drawn on the field itself. If your container draws its own focus treatment, use `focusAffordance="container"` rather than an `!important` override; either way the indicator has to exist somewhere, because dropping it outright fails WCAG 2.4.7. See <a href="#focus-affordance-who-draws-the-ring">Focus Affordance</a>.
 - **ARIA attributes**: `aria-required`, `aria-invalid`, `aria-disabled` always present with string values ("true"/"false") for screen reader compatibility
 - **aria-describedby**: Links textarea to error or help message when present
 - **role="alert"**: Error messages are announced immediately by screen readers
