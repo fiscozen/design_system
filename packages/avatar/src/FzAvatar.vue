@@ -101,8 +101,8 @@ const titleClasses = computed(() => [
   'text-ellipsis',
   'whitespace-nowrap',
   {
-    'text-sm !leading-[16px]': mappedEnvironment.value === 'backoffice',
-    'text-base !leading-[20px]': mappedEnvironment.value === 'frontoffice'
+    'text-sm leading-[16px]': mappedEnvironment.value === 'backoffice',
+    'text-base leading-[20px]': mappedEnvironment.value === 'frontoffice'
   }
 ])
 
@@ -114,6 +114,6 @@ const subtitleClasses = computed(() => [
   'overflow-hidden',
   'text-ellipsis',
   'whitespace-nowrap',
-  'text-sm !leading-[16px]'
+  'text-sm leading-[16px]'
 ])
 </script>
