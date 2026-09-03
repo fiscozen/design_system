@@ -657,7 +657,7 @@ describe('FzAvatar', () => {
       })
       const title = wrapperBO.findAll('p')[0]
       expect(title.classes()).toContain('text-sm')
-      expect(title.classes()).toContain('!leading-[16px]')
+      expect(title.classes()).toContain('leading-[16px]')
 
       const wrapperFO = mount(FzAvatar, {
         props: {
@@ -671,7 +671,7 @@ describe('FzAvatar', () => {
       })
       const titleFO = wrapperFO.findAll('p')[0]
       expect(titleFO.classes()).toContain('text-base')
-      expect(titleFO.classes()).toContain('!leading-[20px]')
+      expect(titleFO.classes()).toContain('leading-[20px]')
     })
   })
 

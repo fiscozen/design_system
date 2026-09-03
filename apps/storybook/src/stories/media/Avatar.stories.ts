@@ -148,7 +148,7 @@ export const BackofficeWithText: Story = {
 
     const title = canvasElement.querySelector('p')
     await expect(title?.classList.contains('text-sm')).toBe(true)
-    await expect(title?.classList.contains('!leading-[16px]')).toBe(true)
+    await expect(title?.classList.contains('leading-[16px]')).toBe(true)
   }
 }
 
@@ -167,7 +167,7 @@ export const FrontofficeWithText: Story = {
 
     const title = canvasElement.querySelector('p')
     await expect(title?.classList.contains('text-base')).toBe(true)
-    await expect(title?.classList.contains('!leading-[20px]')).toBe(true)
+    await expect(title?.classList.contains('leading-[20px]')).toBe(true)
   }
 }
 
