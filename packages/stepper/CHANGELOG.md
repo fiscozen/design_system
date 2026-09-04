@@ -1,5 +1,14 @@
 # @fiscozen/stepper
 
+## 3.0.8
+
+### Patch Changes
+
+- Updated dependencies [f11859d]
+  - @fiscozen/style@0.5.0
+  - @fiscozen/composables@1.1.4
+  - @fiscozen/dropdown@1.0.15
+
 ## 3.0.7
 
 ### Patch Changes

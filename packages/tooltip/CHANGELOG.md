@@ -1,5 +1,11 @@
 # @fiscozen/tooltip
 
+## 3.0.8
+
+### Patch Changes
+
+- @fiscozen/composables@1.1.4
+
 ## 3.0.7
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @fiscozen/card
 
+## 3.0.11
+
+### Patch Changes
+
+- Updated dependencies [f11859d]
+  - @fiscozen/style@0.5.0
+  - @fiscozen/button@3.1.3
+  - @fiscozen/composables@1.1.4
+  - @fiscozen/container@0.5.2
+
 ## 3.0.10
 
 ### Patch Changes
