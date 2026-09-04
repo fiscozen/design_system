@@ -1,5 +1,14 @@
 # @fiscozen/input
 
+## 3.5.5
+
+### Patch Changes
+
+- Updated dependencies [92c1d3a]
+  - @fiscozen/alert@3.0.6
+  - @fiscozen/button@3.1.3
+  - @fiscozen/composables@1.1.4
+
 ## 3.5.4
 
 ### Patch Changes

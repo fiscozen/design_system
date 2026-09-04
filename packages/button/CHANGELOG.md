@@ -1,5 +1,13 @@
 # @fiscozen/button
 
+## 3.1.3
+
+### Patch Changes
+
+- Updated dependencies [f11859d]
+  - @fiscozen/style@0.5.0
+  - @fiscozen/container@0.5.2
+
 ## 3.1.2
 
 ### Patch Changes

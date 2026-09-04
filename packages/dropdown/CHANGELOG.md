@@ -1,5 +1,12 @@
 # @fiscozen/dropdown
 
+## 1.0.15
+
+### Patch Changes
+
+- @fiscozen/button@3.1.3
+- @fiscozen/composables@1.1.4
+
 ## 1.0.14
 
 ### Patch Changes
