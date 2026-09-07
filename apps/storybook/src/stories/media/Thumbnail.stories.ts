@@ -14,6 +14,14 @@ const meta = {
   title: 'Media/FzThumbnail',
   component: FzThumbnail,
   tags: ['autodocs'],
+  parameters: {
+    // `preview.ts` sets `layout: 'fullscreen'` globally, which leaves the canvas
+    // with no padding at all — a thumbnail then sits at 0,0 against two edges
+    // and reads as clipped. Other stories work around it with a `p-32` wrapper
+    // in the template, but a DS story is meant to be class-free, and this is the
+    // parameter that exists for it.
+    layout: 'padded'
+  },
   argTypes: {
     radius: {
       control: 'select',
@@ -48,14 +56,17 @@ type ThumbnailStory = StoryObj<typeof meta>
 
 // Data URIs rather than fixture files: the point of the cropping story is the
 // image's aspect ratio, and four SVGs express that without adding binaries to
-// the repo. `#` has to be escaped, or it terminates the URI.
+// the repo. Write the payload with plain `#` and let `encodeURIComponent` escape
+// it — pre-escaping it to `%23` here would get the `%` escaped in turn, and
+// `url(%2523g)` resolves to nothing, so the rect would render with no fill at
+// all. A perfectly valid, perfectly invisible SVG.
 const svg = (w: number, h: number, from: string, to: string) =>
   'data:image/svg+xml;utf8,' +
   encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">` +
       `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">` +
       `<stop offset="0" stop-color="${from}"/><stop offset="1" stop-color="${to}"/>` +
-      `</linearGradient></defs><rect width="${w}" height="${h}" fill="url(%23g)"/></svg>`
+      `</linearGradient></defs><rect width="${w}" height="${h}" fill="url(#g)"/></svg>`
   )
 
 const LIGHT = svg(400, 300, '#fffbf4', '#ffe7bd')
@@ -114,6 +125,7 @@ export const WithDownloadAction: ThumbnailStory = {
         <template #overlay>
           <FzIconButton
             iconName="arrow-down-to-line"
+            variant="secondary"
             ariaLabel="Scarica allegato"
             @click="args.onDownload"
           />
@@ -237,15 +249,42 @@ export const Cropping: ThumbnailStory = {
       'Immagine molto alta'
     ]
 
+    // Sample a pixel out of the decoded bitmap. Geometry and `object-fit` were
+    // all this story used to assert, and they stayed green while every fixture
+    // rendered as a fully transparent SVG — the gradient reference had been
+    // double-escaped, which is valid markup that paints nothing. A box of the
+    // right size containing no pixels is exactly the bug a cropping story exists
+    // to catch, so measure the paint.
+    const centrePixel = (img: HTMLImageElement) => {
+      const c = document.createElement('canvas')
+      c.width = 8
+      c.height = 8
+      const ctx = c.getContext('2d')!
+      ctx.drawImage(img, 0, 0, 8, 8)
+      return Array.from(ctx.getImageData(4, 4, 1, 1).data)
+    }
+
+    const samples: number[][] = []
+
     for (const name of names) {
-      const img = canvas.getByAltText(name)
+      const img = canvas.getByAltText(name) as HTMLImageElement
       await waitFor(() => expect(img).toBeVisible())
+      await waitFor(() => expect(img.complete && img.naturalWidth > 0).toBe(true))
+
       // Same box for all four, whatever the source's own ratio.
       const { width, height } = img.getBoundingClientRect()
       await expect(Math.round(width)).toBe(158)
       await expect(Math.round(height)).toBe(108)
       await expect(getComputedStyle(img).objectFit).toBe('cover')
+
+      const [, , , alpha] = centrePixel(img)
+      await expect(alpha).toBe(255)
+      samples.push(centrePixel(img))
     }
+
+    // Four visibly different images, not four copies of the same nothing.
+    const distinct = new Set(samples.map((s) => s.join(',')))
+    await expect(distinct.size).toBe(4)
   }
 }
 
@@ -318,6 +357,7 @@ export const KeyboardNavigation: ThumbnailStory = {
         <template #overlay>
           <FzIconButton
             iconName="arrow-down-to-line"
+            variant="secondary"
             ariaLabel="Scarica allegato"
             @click="args.onDownload"
           />
