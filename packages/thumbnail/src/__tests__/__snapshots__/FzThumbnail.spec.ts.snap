@@ -1,0 +1,42 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FzThumbnail > Snapshots > should match the default snapshot 1`] = `
+"<div data-v-40132b1d="" class="fz-thumbnail relative overflow-hidden bg-core-white rounded"><img data-v-40132b1d="" src="https://example.com/receipt.jpg" alt="Scontrino di marzo" loading="lazy" class="block size-full object-cover">
+  <!--v-if-->
+  <!-- Overlay layer. Inert itself so it does not swallow clicks meant for the
+         image, with pointer events handed back to whatever the caller puts in
+         it. A flex box rather than bare \`absolute inset-0\`, so that dropping a
+         button in the slot places it without the call site writing a class —
+         which the organism, template and page layers may not do. -->
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzThumbnail > Snapshots > should match the placeholder snapshot 1`] = `
+"<div data-v-40132b1d="" class="fz-thumbnail relative overflow-hidden bg-core-white rounded">
+  <!-- Placeholder. Fills the same box, so a broken URL leaves the layout alone
+         instead of collapsing the row around it. -->
+  <div data-v-40132b1d="" class="grid size-full place-content-center bg-grey-100" data-testid="fz-thumbnail-placeholder">
+    <fz-icon-stub data-v-40132b1d="" name="file" size="lg" variant="far" spin="false" class="text-grey-300"></fz-icon-stub>
+  </div>
+  <!--v-if-->
+  <!-- Overlay layer. Inert itself so it does not swallow clicks meant for the
+         image, with pointer events handed back to whatever the caller puts in
+         it. A flex box rather than bare \`absolute inset-0\`, so that dropping a
+         button in the slot places it without the call site writing a class —
+         which the organism, template and page layers may not do. -->
+  <!--v-if-->
+</div>"
+`;
+
+exports[`FzThumbnail > Snapshots > should match the scrim + border + overlay snapshot 1`] = `
+"<div data-v-40132b1d="" class="fz-thumbnail relative overflow-hidden bg-core-white rounded border-1 border-solid border-grey-100"><img data-v-40132b1d="" src="https://example.com/receipt.jpg" alt="Scontrino di marzo" loading="lazy" class="block size-full object-cover">
+  <div data-v-40132b1d="" class="fz-thumbnail__scrim absolute inset-0" data-testid="fz-thumbnail-scrim"></div>
+  <!-- Overlay layer. Inert itself so it does not swallow clicks meant for the
+         image, with pointer events handed back to whatever the caller puts in
+         it. A flex box rather than bare \`absolute inset-0\`, so that dropping a
+         button in the slot places it without the call site writing a class —
+         which the organism, template and page layers may not do. -->
+  <div data-v-40132b1d="" class="pointer-events-none absolute inset-0 flex p-8 [&amp;>*]:pointer-events-auto items-end justify-end" data-testid="fz-thumbnail-overlay"><button>Scarica</button></div>
+</div>"
+`;

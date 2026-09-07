@@ -63,6 +63,7 @@
     "@fiscozen/tab": "workspace:^",
     "@fiscozen/table": "workspace:^",
     "@fiscozen/textarea": "workspace:^",
+    "@fiscozen/thumbnail": "workspace:^",
     "@fiscozen/toast": "workspace:^",
     "@fiscozen/tooltip": "workspace:^",
     "@fiscozen/typeahead": "workspace:^",
