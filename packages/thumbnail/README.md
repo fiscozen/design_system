@@ -60,12 +60,23 @@ On a load error the image is replaced by a placeholder — `placeholderIcon` on 
 failing `src` so the caller can fall back to something else entirely. Changing
 `src` clears the failure and retries.
 
+`error` reports a *load failure* and nothing else. An empty `src` shows the same
+placeholder but fires no event — the image never mounted, so there was nothing to
+fail. If you want one signal for "no image is showing", check `!src` alongside
+`@error`.
+
 Note the icon kit has no image, photo or camera glyph, so the default is `file`.
 
 ## `alt` is required
 
 Not an optional prop that gets forgotten. Pass an explicit `alt=""` for a
 decorative image, which makes that a visible decision at the call site.
+
+The name survives a load failure. A native `<img>` whose URL 404s still exposes
+its `alt` to a screen reader — the element is there, only the pixels are missing.
+This component replaces the `<img>` with a placeholder div, so it re-applies the
+name as `role="img"` + `aria-label` rather than letting it vanish. A decorative
+`alt=""` stays silent, and so does an empty `src`: neither named anything.
 
 ## Props
 
@@ -82,6 +93,7 @@ decorative image, which makes that a visible decision at the call site.
 | `overlayPosition` | `'top-start' \| 'top-end' \| 'bottom-start' \| 'bottom-end' \| 'center'` | `'bottom-end'` | Where the `overlay` slot's content sits, 8px in. |
 | `placeholderIcon` | `string` | `'file'` | Icon shown on load error. |
 | `loading` | `'lazy' \| 'eager'` | `'lazy'` | Native loading hint. |
+| `imgProps` | `ImgHTMLAttributes` | — | Extra attributes for the `<img>` (`referrerpolicy`, `crossorigin`, `decoding`, `srcset`…). A fallthrough attribute lands on the root box instead, so this is the way to reach the image. `src`/`alt`/`loading` win over it. |
 
 | Event | Payload | |
 |---|---|---|

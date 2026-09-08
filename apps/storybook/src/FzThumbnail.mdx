@@ -212,6 +212,23 @@ the other, not both.
       </td>
       <td>Native loading hint. A feed of images is the use case.</td>
     </tr>
+    <tr>
+      <td>
+        <code>imgProps</code>
+      </td>
+      <td>
+        <code>ImgHTMLAttributes</code>
+      </td>
+      <td>—</td>
+      <td>
+        Extra attributes for the <code>&lt;img&gt;</code> itself —{' '}
+        <code>referrerpolicy</code>, <code>crossorigin</code>, <code>decoding</code>,{' '}
+        <code>fetchpriority</code>, <code>srcset</code>, <code>sizes</code>. The component has one
+        root element, so a fallthrough attribute lands on the wrapping box, not the image;{' '}
+        <code>src</code>, <code>alt</code> and <code>loading</code> stay the component's own
+        contract and win over anything named here.
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -308,6 +325,11 @@ const broken = ref(false)
 Doing nothing is fine too: the placeholder already occupies the same box, so the
 layout does not move.
 
+`error` means *the image failed to load*, and only that. An empty `src` shows the
+same placeholder without firing anything — the `<img>` never mounted, so there was
+nothing to fail. A caller who wants a single "nothing is showing" signal has to
+check `!attachment.url` alongside `@error`.
+
 ### Only one dimension known
 
 ```vue
@@ -322,10 +344,18 @@ layout does not move.
 - The thumbnail itself is not interactive and is not a tab stop. Anything you put
   in the `overlay` slot is, so give it an accessible name — `ariaLabel` on
   `FzIconButton`.
-- The placeholder invents no `role` and no label of its own: it must not name
-  something the caller did not.
+- **The name survives a load failure.** A native `<img>` whose URL 404s still
+  exposes its `alt` to a screen reader — the element is still there, only the
+  pixels are missing. Because this component swaps the `<img>` for a placeholder
+  div, it re-applies the name as `role="img"` + `aria-label`; otherwise a
+  screen-reader user would end up worse off than a sighted one, who at least sees
+  the placeholder icon.
+- The placeholder still invents nothing. A decorative `alt=""` stays silent when
+  it fails, and so does an empty `src` — neither ever named anything.
 - A control over a photo has no guaranteed contrast against it. Use `scrim` when
   you overlay one, and remember it is drawn over the image only.
+- Pointing `src` at a third-party host lets that host see the request. Pass
+  `:imgProps="{ referrerpolicy: 'no-referrer' }"` when the URL is not yours.
 
 ## Theming
 

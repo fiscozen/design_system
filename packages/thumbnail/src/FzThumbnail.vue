@@ -63,6 +63,17 @@ watch(
 
 const showImage = computed(() => !!props.src && !failed.value);
 
+// The placeholder speaks only when a *named* image failed. Three cases, and they
+// are not the same thing:
+//   - `src` empty      → nothing was ever meant to be here; stay silent.
+//   - failed, alt ""   → the caller called it decorative; stay silent.
+//   - failed, alt set  → the caller named it, and a native <img> whose resource
+//                        404s would still expose that name in the accessibility
+//                        tree. Swapping the element out must not throw it away.
+const placeholderLabel = computed(() =>
+  failed.value && props.alt ? props.alt : undefined,
+);
+
 const radiusClasses: Record<FzThumbnailRadius, string> = {
   none: "rounded-none",
   sm: "rounded-sm",
@@ -104,6 +115,7 @@ const onError = () => {
   >
     <img
       v-if="showImage"
+      v-bind="imgProps"
       :src="src"
       :alt="alt"
       :loading="loading"
@@ -116,6 +128,8 @@ const onError = () => {
     <div
       v-else
       class="grid size-full place-content-center bg-grey-100"
+      :role="placeholderLabel ? 'img' : undefined"
+      :aria-label="placeholderLabel"
       data-testid="fz-thumbnail-placeholder"
     >
       <FzIcon :name="placeholderIcon" size="lg" class="text-grey-300" />
