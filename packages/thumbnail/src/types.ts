@@ -1,33 +1,28 @@
-import type { ImgHTMLAttributes } from "vue";
+import type { ImgHTMLAttributes } from 'vue'
 
 /**
  * Corner radius, named after the design system's radius tokens.
  * `base` is 4px — the value the designs use for an image in a feed.
  */
-type FzThumbnailRadius = "none" | "sm" | "base" | "lg" | "xl";
+type FzThumbnailRadius = 'none' | 'sm' | 'base' | 'lg' | 'xl'
 
 /**
  * Corner the `overlay` slot's content is pinned to.
  */
-type FzThumbnailOverlayPosition =
-  | "top-start"
-  | "top-end"
-  | "bottom-start"
-  | "bottom-end"
-  | "center";
+type FzThumbnailOverlayPosition = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'center'
 
 /**
  * Props for FzThumbnail.
  */
 export interface FzThumbnailProps {
   /** URL of the image to show. */
-  src: string;
+  src: string
   /**
    * The image's accessible name. Required on purpose: pass an explicit empty
    * string for a decorative image, so that the decision is visible at the call
    * site rather than forgotten.
    */
-  alt: string;
+  alt: string
   /**
    * Box width, as any CSS length (`'158px'`, `'100%'`, `'12rem'`).
    *
@@ -40,25 +35,25 @@ export interface FzThumbnailProps {
    * A Tailwind class on the call site still works where the layer permits one,
    * and wins over this prop only if it beats an inline style — so pick one.
    */
-  width?: string;
+  width?: string
   /** Box height, as any CSS length. See `width`. */
-  height?: string;
+  height?: string
   /**
    * Box aspect ratio (`'16 / 9'`, `'1'`), for when only one dimension is known —
    * a thumbnail filling a column of unknown width, say. Ignored if both `width`
    * and `height` are set.
    */
-  aspectRatio?: string;
+  aspectRatio?: string
   /** Corner radius. Defaults to `base` (4px). */
-  radius?: FzThumbnailRadius;
+  radius?: FzThumbnailRadius
   /** Draws a 1px `grey-100` border around the box. */
-  bordered?: boolean;
+  bordered?: boolean
   /**
    * Lays a translucent scrim over the image, so an action rendered in the
    * `overlay` slot stays legible on a light photo. Not drawn over the
    * placeholder, which is already a flat light surface.
    */
-  scrim?: boolean;
+  scrim?: boolean
   /**
    * Where the `overlay` slot's content sits inside the box, 8px in from the
    * chosen corner. `bottom-end` by default — the download button's place in the
@@ -69,14 +64,14 @@ export interface FzThumbnailProps {
    * that needs finer placement can still position itself, from a layer that
    * permits it.
    */
-  overlayPosition?: FzThumbnailOverlayPosition;
+  overlayPosition?: FzThumbnailOverlayPosition
   /**
    * Icon shown in place of the image when it fails to load. Any name in the
    * Font Awesome kit; `file` by default, since the kit has no image glyph.
    */
-  placeholderIcon?: string;
+  placeholderIcon?: string
   /** Native loading hint. `lazy` by default — a feed of images is the use case. */
-  loading?: "lazy" | "eager";
+  loading?: 'lazy' | 'eager'
   /**
    * Extra attributes for the `<img>` itself — `referrerpolicy`, `crossorigin`,
    * `decoding`, `fetchpriority`, `srcset`, `sizes`.
@@ -88,13 +83,16 @@ export interface FzThumbnailProps {
    * the thumbnail wants — but it leaves the image itself out of reach without
    * this.
    *
-   * `src`, `alt`, `loading` and the error handler are the component's own
-   * contract and win over anything named here.
+   * `src`, `alt`, `loading` and `onError` are the component's own contract, so
+   * the type excludes them: naming one is a compile error rather than a silent
+   * no-op. `onError` has to be *excluded* rather than merely documented —
+   * Vue's `mergeProps` chains listeners, so a handler named here would fire
+   * alongside the component's own rather than losing to it.
    *
    * @example Do not send a Referer to a third-party image host.
    * :imgProps="{ referrerpolicy: 'no-referrer' }"
    */
-  imgProps?: ImgHTMLAttributes;
+  imgProps?: Omit<ImgHTMLAttributes, 'src' | 'alt' | 'loading' | 'onError'>
 }
 
-export type { FzThumbnailRadius, FzThumbnailOverlayPosition };
+export type { FzThumbnailRadius, FzThumbnailOverlayPosition }

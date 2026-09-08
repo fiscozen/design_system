@@ -18,7 +18,10 @@ from repeating `FzAvatar`'s mistake. Give it:
 - `width` **and** `height`, or
 - one of them plus `aspectRatio`.
 
-With no dimension at all the box collapses to zero and nothing is visible.
+With no dimension at all the box takes its container's width and the image's
+*natural* aspect ratio. That is visible, not broken — but it is a size neither
+you nor the design chose, and it is the one case where a load failure moves the
+layout (see below). Give it a dimension.
 
 **They are props, not classes, on purpose.** The consuming apps forbid `class`
 outright at the organism, template and page layers, and `style` anywhere above an
@@ -51,14 +54,29 @@ Content that needs finer placement can still position itself, from a layer that
 permits a class.
 
 `scrim` lays `grey-500` at 20% over the image, so an overlaid control stays
-legible on a light photo. Override it with `--fz-thumbnail-scrim`.
+legible on a light photo. Override the colour with `--fz-thumbnail-scrim` and the
+20% with `--fz-thumbnail-scrim-opacity` — the colour goes through `var(--grey-500)`
+rather than a baked `rgba()`, so retheming the token moves the scrim with every
+other grey.
 
-## A broken URL does not leave a hole
+## A broken URL does not leave a hole in a sized box
 
 On a load error the image is replaced by a placeholder — `placeholderIcon` on a
 `grey-100` fill — that occupies the same box, and an `error` event fires with the
 failing `src` so the caller can fall back to something else entirely. Changing
 `src` clears the failure and retries.
+
+**That holds as long as the box has a size of its own.** An unsized box is only
+as tall as its content, and the placeholder — unlike an image — has no natural
+ratio to supply one, so it collapses to the icon:
+
+| unsized box, 600px container, 400×300 image | |
+|---|---|
+| image loads | 600×450 |
+| image fails | 600×20 |
+
+Which is the second reason to pass a dimension. Give the box a `height` or an
+`aspectRatio` and the placeholder fills exactly the space the image did.
 
 `error` reports a *load failure* and nothing else. An empty `src` shows the same
 placeholder but fires no event — the image never mounted, so there was nothing to
@@ -93,7 +111,7 @@ name as `role="img"` + `aria-label` rather than letting it vanish. A decorative
 | `overlayPosition` | `'top-start' \| 'top-end' \| 'bottom-start' \| 'bottom-end' \| 'center'` | `'bottom-end'` | Where the `overlay` slot's content sits, 8px in. |
 | `placeholderIcon` | `string` | `'file'` | Icon shown on load error. |
 | `loading` | `'lazy' \| 'eager'` | `'lazy'` | Native loading hint. |
-| `imgProps` | `ImgHTMLAttributes` | — | Extra attributes for the `<img>` (`referrerpolicy`, `crossorigin`, `decoding`, `srcset`…). A fallthrough attribute lands on the root box instead, so this is the way to reach the image. `src`/`alt`/`loading` win over it. |
+| `imgProps` | `Omit<ImgHTMLAttributes, 'src' \| 'alt' \| 'loading' \| 'onError'>` | — | Extra attributes for the `<img>` (`referrerpolicy`, `crossorigin`, `decoding`, `srcset`…). A fallthrough attribute lands on the root box instead, so this is the way to reach the image. The four keys the component owns are excluded from the type, so naming one is a compile error rather than a silent no-op. |
 
 | Event | Payload | |
 |---|---|---|

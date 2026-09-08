@@ -108,6 +108,7 @@ export const Decorative: ThumbnailStory = {
  * class at the call site.
  */
 export const WithDownloadAction: ThumbnailStory = {
+  argTypes: { onDownload: { table: { disable: true } } },
   args: {
     src: LIGHT,
     alt: '',
@@ -119,15 +120,21 @@ export const WithDownloadAction: ThumbnailStory = {
   } as ThumbnailStory['args'],
   render: (args) => ({
     components: { FzThumbnail, FzIconButton },
-    setup: () => ({ args }),
+    // Split the story's own spy out of the args before binding: `onDownload` is not
+    // a component prop, so riding the `v-bind` it would land on the root box as a
+    // DOM listener and show up in the autodocs table as if it were part of the API.
+    setup: () => {
+      const { onDownload, ...props } = args as Record<string, unknown>
+      return { props, onDownload }
+    },
     template: `
-      <FzThumbnail v-bind="args">
+      <FzThumbnail v-bind="props">
         <template #overlay>
           <FzIconButton
             iconName="arrow-down-to-line"
             variant="secondary"
             ariaLabel="Scarica allegato"
-            @click="args.onDownload"
+            @click="onDownload"
           />
         </template>
       </FzThumbnail>`
@@ -150,14 +157,18 @@ export const WithDownloadAction: ThumbnailStory = {
 
     // And the scrim really is translucent: `bg-grey-500/20` would have generated
     // no rule at all, because the DS colours resolve to `var(--grey-500, …)`.
+    // Colour and opacity are separate declarations so that the colour can stay a
+    // `var(--grey-500)` a consumer can retheme, rather than a frozen `rgba()`.
     const scrim = canvasElement.querySelector('[data-testid="fz-thumbnail-scrim"]')
-    const bg = getComputedStyle(scrim as Element).backgroundColor
-    await expect(bg).toBe('rgba(89, 97, 103, 0.2)')
+    const scrimStyle = getComputedStyle(scrim as Element)
+    await expect(scrimStyle.backgroundColor).toBe('rgb(89, 97, 103)')
+    await expect(scrimStyle.opacity).toBe('0.2')
   }
 }
 
 /** `top-end` is the composer's remove control, on the pre-send preview. */
 export const RemoveAction: ThumbnailStory = {
+  argTypes: { onRemove: { table: { disable: true } } },
   args: {
     src: DARK,
     alt: '',
@@ -168,15 +179,21 @@ export const RemoveAction: ThumbnailStory = {
   } as ThumbnailStory['args'],
   render: (args) => ({
     components: { FzThumbnail, FzIconButton },
-    setup: () => ({ args }),
+    // Split the story's own spy out of the args before binding: `onRemove` is not
+    // a component prop, so riding the `v-bind` it would land on the root box as a
+    // DOM listener and show up in the autodocs table as if it were part of the API.
+    setup: () => {
+      const { onRemove, ...props } = args as Record<string, unknown>
+      return { props, onRemove }
+    },
     template: `
-      <FzThumbnail v-bind="args">
+      <FzThumbnail v-bind="props">
         <template #overlay>
           <FzIconButton
             iconName="xmark"
             variant="secondary"
             ariaLabel="Rimuovi allegato"
-            @click="args.onRemove"
+            @click="onRemove"
           />
         </template>
       </FzThumbnail>`
@@ -250,6 +267,61 @@ export const DecorativeLoadError: ThumbnailStory = {
     await expect(placeholder()).not.toHaveAttribute('role')
     await expect(placeholder()).not.toHaveAttribute('aria-label')
     await expect(within(canvasElement).queryByRole('img')).toBeNull()
+  }
+}
+
+/**
+ * **What an unsized box actually does** — the case worth knowing before you leave
+ * the dimensions off. The image is *not* invisible: `height: 100%` against an
+ * auto-height parent is an indefinite percentage, so it resolves to `auto` and the
+ * box takes the container's width at the image's natural aspect ratio.
+ *
+ * The catch is the failure case below it. The placeholder has no natural ratio to
+ * fill an auto height with, so it collapses to its icon where the image did not —
+ * the one place the "a broken URL leaves no hole" guarantee needs the caller to
+ * have sized the box. Both are measured rather than described.
+ */
+export const Unsized: ThumbnailStory = {
+  render: () => ({
+    components: { FzThumbnail, FzContainer },
+    setup: () => ({ src: LIGHT }),
+    // No `width`, no `height`, no `aspectRatio` — and no class either, so the
+    // measurements below come from the component's own defaults.
+    template: `
+      <FzContainer>
+        <FzThumbnail :src="src" alt="Anteprima non dimensionata" loading="eager" />
+        <FzThumbnail src="does-not-exist.jpg" alt="Allegato non disponibile" />
+      </FzContainer>`
+  }),
+  play: async ({ canvasElement }) => {
+    const boxes = () => canvasElement.querySelectorAll<HTMLElement>('.fz-thumbnail')
+    await waitFor(() => expect(boxes()).toHaveLength(2))
+
+    const [loaded, failed] = Array.from(boxes())
+
+    // Neither box declares a dimension, so both are as wide as their container.
+    // Asserting against the parent rather than a number keeps the story free of
+    // a fixed width — which would be a class, which a DS story does not write.
+    const available = (box: HTMLElement) => (box.parentElement as HTMLElement).clientWidth
+
+    // 1. It loads: full container width, natural 400×300 ratio, fully visible.
+    const img = canvasElement.querySelector('img') as HTMLImageElement
+    await waitFor(() => expect(img.complete && img.naturalWidth > 0).toBe(true))
+
+    const loadedRect = loaded.getBoundingClientRect()
+    await expect(Math.round(loadedRect.width)).toBe(available(loaded))
+    await expect(Math.round(loadedRect.height)).toBe(Math.round(loadedRect.width * (300 / 400)))
+    await expect(loadedRect.height).toBeGreaterThan(0)
+
+    // 2. It fails: same width, and a height that is now only the icon's. This is
+    // the asymmetry — locked in so that giving the placeholder a size of its own
+    // has to be a deliberate change to both this story and the unit test.
+    await waitFor(() =>
+      expect(failed.querySelector('[data-testid="fz-thumbnail-placeholder"]')).toBeInTheDocument()
+    )
+    const failedRect = failed.getBoundingClientRect()
+    await expect(Math.round(failedRect.width)).toBe(available(failed))
+    await expect(failedRect.height).toBeLessThan(loadedRect.height)
   }
 }
 
@@ -394,6 +466,7 @@ export const AllRadii: ThumbnailStory = {
  * about the overlaid action: one Tab stop, activated by Enter.
  */
 export const KeyboardNavigation: ThumbnailStory = {
+  argTypes: { onDownload: { table: { disable: true } } },
   args: {
     src: LIGHT,
     alt: '',
@@ -404,15 +477,21 @@ export const KeyboardNavigation: ThumbnailStory = {
   } as ThumbnailStory['args'],
   render: (args) => ({
     components: { FzThumbnail, FzIconButton },
-    setup: () => ({ args }),
+    // Split the story's own spy out of the args before binding: `onDownload` is not
+    // a component prop, so riding the `v-bind` it would land on the root box as a
+    // DOM listener and show up in the autodocs table as if it were part of the API.
+    setup: () => {
+      const { onDownload, ...props } = args as Record<string, unknown>
+      return { props, onDownload }
+    },
     template: `
-      <FzThumbnail v-bind="args">
+      <FzThumbnail v-bind="props">
         <template #overlay>
           <FzIconButton
             iconName="arrow-down-to-line"
             variant="secondary"
             ariaLabel="Scarica allegato"
-            @click="args.onDownload"
+            @click="onDownload"
           />
         </template>
       </FzThumbnail>`

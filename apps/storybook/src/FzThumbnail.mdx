@@ -49,7 +49,18 @@ import { FzThumbnail } from '@fiscozen/thumbnail'
 - `width` **and** `height`, or
 - one of them plus `aspectRatio`.
 
-With no dimension at all the box collapses to zero and nothing is visible.
+With no dimension at all the box takes its container's width and the image's
+*natural* aspect ratio — visible, but at a size neither you nor the design chose,
+and the one case where a load failure moves the layout. Measured in Chromium, a
+600px container and a 400×300 image:
+
+| unsized box | |
+|---|---|
+| image loads | 600×450 |
+| image fails | 600×20 |
+
+The placeholder, unlike an image, has no natural ratio to supply a height with.
+So: give the box a dimension.
 
 **Why props and not a class.** The consuming apps forbid `class` outright at the
 organism, template and page layers, and `style` anywhere above an atom, so a
@@ -217,7 +228,7 @@ the other, not both.
         <code>imgProps</code>
       </td>
       <td>
-        <code>ImgHTMLAttributes</code>
+        <code>Omit&lt;ImgHTMLAttributes, 'src' | 'alt' | 'loading' | 'onError'&gt;</code>
       </td>
       <td>—</td>
       <td>
@@ -225,8 +236,9 @@ the other, not both.
         <code>referrerpolicy</code>, <code>crossorigin</code>, <code>decoding</code>,{' '}
         <code>fetchpriority</code>, <code>srcset</code>, <code>sizes</code>. The component has one
         root element, so a fallthrough attribute lands on the wrapping box, not the image;{' '}
-        <code>src</code>, <code>alt</code> and <code>loading</code> stay the component's own
-        contract and win over anything named here.
+        <code>src</code>, <code>alt</code>, <code>loading</code> and <code>onError</code> stay
+        the component's own contract and are excluded from the type, so naming one is a compile
+        error rather than a silent no-op.
       </td>
     </tr>
   </tbody>
@@ -323,7 +335,8 @@ const broken = ref(false)
 ```
 
 Doing nothing is fine too: the placeholder already occupies the same box, so the
-layout does not move.
+layout does not move — as long as the box has a size of its own. In an unsized
+box it collapses to the icon, which is the second reason to pass a dimension.
 
 `error` means *the image failed to load*, and only that. An empty `src` shows the
 same placeholder without firing anything — the `<img>` never mounted, so there was
@@ -373,11 +386,18 @@ check `!attachment.url` alongside `@error`.
         <code>--fz-thumbnail-scrim</code>
       </td>
       <td>
-        <code>rgba(89, 97, 103, 0.2)</code>
+        <code>var(--grey-500, #596167)</code>
+      </td>
+      <td>The scrim's colour, through the token rather than a baked value.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--fz-thumbnail-scrim-opacity</code>
       </td>
       <td>
-        <code>grey-500</code> at 20%. The scrim's colour.
+        <code>0.2</code>
       </td>
+      <td>How much of it. Together: <code>grey-500</code> at 20%.</td>
     </tr>
   </tbody>
 </table>
@@ -386,6 +406,11 @@ The scrim lives in this package's stylesheet rather than in a Tailwind utility o
 purpose: the design system's colours resolve to `var(--grey-500, …)`, and Tailwind
 cannot decompose a `var()` into channels — so `bg-grey-500/20` generates **no rule
 at all**, silently. Do not reach for an opacity modifier on a token colour.
+
+The 20% is `opacity` rather than a baked `rgba(89, 97, 103, 0.2)` for the same
+reason: an `rgba()` would freeze `--grey-500`'s *fallback*, leaving a retheming
+consumer with the scrim as the one grey that did not move. The scrim is an empty
+overlay div, so `opacity` has nothing to bleed onto.
 
 ## Related Components
 
