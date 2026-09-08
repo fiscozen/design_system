@@ -1,3 +1,5 @@
+import type { ImgHTMLAttributes } from "vue";
+
 /**
  * Corner radius, named after the design system's radius tokens.
  * `base` is 4px — the value the designs use for an image in a feed.
@@ -75,6 +77,24 @@ export interface FzThumbnailProps {
   placeholderIcon?: string;
   /** Native loading hint. `lazy` by default — a feed of images is the use case. */
   loading?: "lazy" | "eager";
+  /**
+   * Extra attributes for the `<img>` itself — `referrerpolicy`, `crossorigin`,
+   * `decoding`, `fetchpriority`, `srcset`, `sizes`.
+   *
+   * Needed because a fallthrough attribute lands on the root box, not the image:
+   * the component has one root element, so `<FzThumbnail referrerpolicy="...">`
+   * would set it on the wrapping `<div>`, where it means nothing. That keeps
+   * `class` and listeners on the box, which is what a caller sizing or clicking
+   * the thumbnail wants — but it leaves the image itself out of reach without
+   * this.
+   *
+   * `src`, `alt`, `loading` and the error handler are the component's own
+   * contract and win over anything named here.
+   *
+   * @example Do not send a Referer to a third-party image host.
+   * :imgProps="{ referrerpolicy: 'no-referrer' }"
+   */
+  imgProps?: ImgHTMLAttributes;
 }
 
 export type { FzThumbnailRadius, FzThumbnailOverlayPosition };

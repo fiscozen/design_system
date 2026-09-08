@@ -134,6 +134,28 @@ describe("FzThumbnail", () => {
       ).toBe("eager");
     });
 
+    it("should apply imgProps to the image, not the root box", () => {
+      // A fallthrough attribute would land on the wrapping div, where
+      // referrerpolicy means nothing — hence the explicit prop.
+      const wrapper = createWrapper({
+        imgProps: { referrerpolicy: "no-referrer", decoding: "async" },
+      });
+      const img = wrapper.find("img");
+      expect(img.attributes("referrerpolicy")).toBe("no-referrer");
+      expect(img.attributes("decoding")).toBe("async");
+      expect(wrapper.attributes("referrerpolicy")).toBeUndefined();
+    });
+
+    it("should not let imgProps override the component's own contract", () => {
+      const wrapper = createWrapper({
+        imgProps: { src: "/hijacked.jpg", alt: "hijacked", loading: "eager" },
+      });
+      const img = wrapper.find("img");
+      expect(img.attributes("src")).toBe(SRC);
+      expect(img.attributes("alt")).toBe("Scontrino di marzo");
+      expect(img.attributes("loading")).toBe("lazy");
+    });
+
     it("should pass placeholderIcon through to FzIcon", async () => {
       const wrapper = createWrapper({
         src: "",
@@ -265,13 +287,48 @@ describe("FzThumbnail", () => {
       expect(wrapper.find("img").attributes("alt")).toBe("");
     });
 
-    it("should give the placeholder no accessible name of its own", () => {
-      // FzIcon is role="presentation"; the placeholder must not invent a label
-      // the caller did not write.
+    it("should give the empty-src placeholder no accessible name of its own", () => {
+      // FzIcon is role="presentation"; with no src there was never an image to
+      // name, so the placeholder must not invent a label the caller did not write.
       const wrapper = createWrapper({ src: "" });
       const placeholder = wrapper.find(PLACEHOLDER);
       expect(placeholder.attributes("aria-label")).toBeUndefined();
       expect(placeholder.attributes("role")).toBeUndefined();
+    });
+
+    it("should keep the accessible name when a named image fails to load", async () => {
+      // A native <img alt="..."> whose resource 404s still exposes its alt in the
+      // accessibility tree — the element survives, only the pixels are missing.
+      // Because this component swaps the <img> out for a div, it has to carry the
+      // name across itself or the screen-reader user ends up worse off than the
+      // sighted one, who at least sees the placeholder icon.
+      const wrapper = createWrapper();
+      await wrapper.find("img").trigger("error");
+
+      const placeholder = wrapper.find(PLACEHOLDER);
+      expect(placeholder.attributes("role")).toBe("img");
+      expect(placeholder.attributes("aria-label")).toBe("Scontrino di marzo");
+    });
+
+    it("should stay silent when a decorative image fails to load", async () => {
+      // alt="" is the caller saying "this carries no information". A failure does
+      // not turn it into something worth announcing.
+      const wrapper = createWrapper({ alt: "" });
+      await wrapper.find("img").trigger("error");
+
+      const placeholder = wrapper.find(PLACEHOLDER);
+      expect(placeholder.attributes("role")).toBeUndefined();
+      expect(placeholder.attributes("aria-label")).toBeUndefined();
+    });
+
+    it("should drop the accessible name again once a new src retries", async () => {
+      const wrapper = createWrapper();
+      await wrapper.find("img").trigger("error");
+      expect(wrapper.find(PLACEHOLDER).attributes("role")).toBe("img");
+
+      await wrapper.setProps({ src: "/another.jpg" });
+      expect(wrapper.find("img").exists()).toBe(true);
+      expect(wrapper.find(PLACEHOLDER).exists()).toBe(false);
     });
   });
 

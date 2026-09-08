@@ -220,6 +220,59 @@ export const LoadError: ThumbnailStory = {
     const { width, height } = root.getBoundingClientRect()
     await expect(Math.round(width)).toBe(158)
     await expect(Math.round(height)).toBe(108)
+
+    // A sighted user sees the placeholder icon and knows something is missing.
+    // The screen-reader user has to be told the same thing: the name the caller
+    // gave the image outlives the image itself.
+    await expect(placeholder()).toHaveAttribute('role', 'img')
+    await expect(placeholder()).toHaveAttribute('aria-label', 'Allegato non disponibile')
+    await expect(within(canvasElement).getByRole('img')).toBeInTheDocument()
+  }
+}
+
+/**
+ * The same failure for a *decorative* image. `alt=""` was the caller saying the
+ * image carries no information, and it failing does not turn it into something
+ * worth announcing — so the placeholder stays out of the accessibility tree.
+ */
+export const DecorativeLoadError: ThumbnailStory = {
+  args: {
+    src: 'does-not-exist.jpg',
+    alt: '',
+    width: '158px',
+    height: '108px'
+  },
+  play: async ({ canvasElement }) => {
+    const placeholder = () =>
+      canvasElement.querySelector('[data-testid="fz-thumbnail-placeholder"]')
+
+    await waitFor(() => expect(placeholder()).toBeInTheDocument())
+    await expect(placeholder()).not.toHaveAttribute('role')
+    await expect(placeholder()).not.toHaveAttribute('aria-label')
+    await expect(within(canvasElement).queryByRole('img')).toBeNull()
+  }
+}
+
+/**
+ * `imgProps` reaches the `<img>` itself. The component has a single root element,
+ * so an attribute written on the call site would land on the wrapping box, where
+ * `referrerpolicy` does nothing — this is the way past that. Use it to keep a
+ * third-party image host from seeing where the request came from.
+ */
+export const ImageAttributes: ThumbnailStory = {
+  args: {
+    imgProps: { referrerpolicy: 'no-referrer', decoding: 'async' }
+  } as ThumbnailStory['args'],
+  play: async ({ canvasElement }) => {
+    const img = () => canvasElement.querySelector('img')
+    await waitFor(() => expect(img()).toBeInTheDocument())
+
+    await expect(img()).toHaveAttribute('referrerpolicy', 'no-referrer')
+    await expect(img()).toHaveAttribute('decoding', 'async')
+
+    // On the image, not on the box — which is the whole reason the prop exists.
+    const root = canvasElement.querySelector('.fz-thumbnail') as HTMLElement
+    await expect(root).not.toHaveAttribute('referrerpolicy')
   }
 }
 
