@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`FzThumbnail > Snapshots > should match the default snapshot 1`] = `
-"<div data-v-40132b1d="" class="fz-thumbnail relative overflow-hidden bg-core-white rounded"><img data-v-40132b1d="" src="https://example.com/receipt.jpg" alt="Scontrino di marzo" loading="lazy" class="block size-full object-cover">
+"<div data-v-40132b1d="" class="fz-thumbnail bg-core-white relative overflow-hidden rounded"><img data-v-40132b1d="" src="https://example.com/receipt.jpg" alt="Scontrino di marzo" loading="lazy" class="block size-full object-cover">
   <!--v-if-->
   <!-- Overlay layer. Inert itself so it does not swallow clicks meant for the
          image, with pointer events handed back to whatever the caller puts in
@@ -13,10 +13,15 @@ exports[`FzThumbnail > Snapshots > should match the default snapshot 1`] = `
 `;
 
 exports[`FzThumbnail > Snapshots > should match the placeholder snapshot 1`] = `
-"<div data-v-40132b1d="" class="fz-thumbnail relative overflow-hidden bg-core-white rounded">
-  <!-- Placeholder. Fills the same box, so a broken URL leaves the layout alone
-         instead of collapsing the row around it. -->
-  <div data-v-40132b1d="" class="grid size-full place-content-center bg-grey-100" data-testid="fz-thumbnail-placeholder">
+"<div data-v-40132b1d="" class="fz-thumbnail bg-core-white relative overflow-hidden rounded">
+  <!-- Placeholder. Fills the same box, so a broken URL leaves the layout
+         alone instead of collapsing the row around it — as long as the box has
+         a size of its own. An unsized box is only as tall as its content, and
+         a placeholder, unlike an image, has no intrinsic ratio to supply that
+         height with, so it collapses to the icon. Deliberately not given a
+         min-height: that would hand the component a size of its own, which is
+         the thing it refuses. Measured in the \`Unsized\` story. -->
+  <div data-v-40132b1d="" class="bg-grey-100 grid size-full place-content-center" data-testid="fz-thumbnail-placeholder">
     <fz-icon-stub data-v-40132b1d="" name="file" size="lg" variant="far" spin="false" class="text-grey-300"></fz-icon-stub>
   </div>
   <!--v-if-->
@@ -30,7 +35,7 @@ exports[`FzThumbnail > Snapshots > should match the placeholder snapshot 1`] = `
 `;
 
 exports[`FzThumbnail > Snapshots > should match the scrim + border + overlay snapshot 1`] = `
-"<div data-v-40132b1d="" class="fz-thumbnail relative overflow-hidden bg-core-white rounded border-1 border-solid border-grey-100"><img data-v-40132b1d="" src="https://example.com/receipt.jpg" alt="Scontrino di marzo" loading="lazy" class="block size-full object-cover">
+"<div data-v-40132b1d="" class="fz-thumbnail bg-core-white relative overflow-hidden rounded border-1 border-grey-100 border-solid"><img data-v-40132b1d="" src="https://example.com/receipt.jpg" alt="Scontrino di marzo" loading="lazy" class="block size-full object-cover">
   <div data-v-40132b1d="" class="fz-thumbnail__scrim absolute inset-0" data-testid="fz-thumbnail-scrim"></div>
   <!-- Overlay layer. Inert itself so it does not swallow clicks meant for the
          image, with pointer events handed back to whatever the caller puts in
