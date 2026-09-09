@@ -1,0 +1,1926 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,700&display=swap');
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Design system — Versione 2 · «Expressive»
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Lettura di Material 3 Expressive applicata ai componenti Fiscozen. Come la
+   v1, è solo CSS sotto `.tema-v2`: i pacchetti non sono toccati, quindi il
+   comportamento resta identico — cambia come reagisce alla vista, non cosa fa.
+
+   Cosa prende da Material 3, e cosa vuol dire qui:
+
+   · **Ruoli di colore, non colori.** M3 non ha «il blu»: ha primary,
+     on-primary, primary-container, surface e i suoi livelli di contenitore.
+     La palette qui sotto è una rampa tonale costruita sull'indaco Fiscozen,
+     con i neutri leggermente tinti verso il primario — è quello che dà a
+     Material la sua aria, molto più della forma.
+   · **Strati di stato.** Hover, focus e pressed non cambiano il colore del
+     componente: ci appoggiano sopra una velatura del colore del contenuto
+     (8%, 10%, 10%). Un solo meccanismo per tutti i componenti.
+   · **La forma si deforma.** È il gesto che identifica Expressive: premendo,
+     una pillola si squadra e cresce. Tondo e squadrato convergono sulla stessa
+     forma premuta.
+   · **Molla al posto della curva.** Il movimento non è una durata con
+     un'accelerazione: è una molla, con un rimbalzo visibile. In CSS si
+     approssima con `linear()`, che disegna la curva punto per punto.
+   · **Campi pieni con la sottolineatura.** Il text field di Material: fondo
+     pieno, angoli arrotondati solo in alto, e una riga sotto che si ispessisce
+     e si colora quando il campo prende il fuoco.
+
+   Fonti dei numeri: i token ufficiali di **material-web** di Google
+   (github.com/material-components/material-web, cartella `tokens/`) — da lì
+   vengono altezza e forma del bottone (40px, corner-full), la filled card
+   (surface-container-highest, corner-medium, level0 che al passaggio sale a
+   level1), il filled text field (corner-extra-small-top, riga 1px che a fuoco
+   diventa 2px) e il dialogo (surface-container-high, corner-extra-large,
+   level3). E i token di **matraic/m3e** (Material 3 Expressive Web
+   Components, github.com/matraic/m3e) — `ShapeToken`, `MotionToken`,
+   `StateToken` e la tabella `ButtonSizeToken`. Da lì vengono la scala delle
+   forme, le curve delle molle, le opacità degli strati di stato e i due valori
+   del morph del bottone. Prima li avevo scritti a memoria, ed erano sbagliati.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+.tema-v2 {
+  /* ── Ruoli di colore ───────────────────────────────────────────────────
+     Lo schema dei ruoli è quello di Material (kit, nodo 60804-18276): ogni
+     ruolo è un tono di una palette — primary sta a P-40, il suo contenitore a
+     P-90, le superfici a N-98 e N-90, il contorno a NV-50. Il tono è la
+     chiarezza L*, quindi una palette è la stessa tinta letta a chiarezze
+     diverse.
+
+     Le tinte però sono nostre: il blu del design system (#5a6eff), il grigio
+     (#596167), il verde acqua (#0fa88c), il rosso (#f04242), l'ambra
+     (#ffae4f). Non il viola baseline di Material.
+
+     E sono smorzate: il tetto di saturazione del primario è 48 invece degli 83
+     del nostro blu, i grigi stanno a 3 e 7. Il risultato è pastello — chiaro,
+     tenue, senza niente che squilli.
+
+     Costruite e verificate da `scripts/palette.mjs`: quattordici coppie
+     controllate, tutte sopra AA. Bianco su primary 6,5:1 · primary come testo
+     6,2:1 · on-surface 16,3:1 · on-surface-variant 8,9:1 · outline 4,3:1. */
+  --v2-primary: #5456a5;
+  --v2-on-primary: #ffffff;
+  --v2-primary-container: #e3dfff;
+  --v2-on-primary-container: #393f8a;
+  --v2-secondary: #5e5c73;
+  --v2-secondary-container: #e3dffa;
+  --v2-on-secondary-container: #47445a;
+  --v2-tertiary: #246959;
+  --v2-tertiary-container: #aaf0dc;
+  --v2-on-tertiary-container: #035142;
+
+  --v2-surface: #f4faff;
+  --v2-surface-dim: #d5dbdf;
+  --v2-c-lowest: #ffffff;
+  --v2-c-low: #eff4f9;
+  --v2-c: #e9eff3;
+  --v2-c-high: #e3e9ed;
+  --v2-c-highest: #dee3e8;
+
+  --v2-on-surface: #181c1f;
+  --v2-on-surface-variant: #3d4851;
+  --v2-outline: #6c7982;
+  --v2-outline-variant: #bbc8d2;
+
+  --v2-error: #a13d38;
+  --v2-error-container: #ffdad5;
+  --v2-on-error-container: #842322;
+
+  /* Il fondo che card e righe della lista condividono, e il colore che
+     prendono al passaggio: N-97 e S-96, due gradini più tenui di prima. La
+     simmetria è voluta — sono lo stesso oggetto a due densità. */
+  --v2-base: #f1f7fc;
+  --v2-passaggio: #f4f2ff;
+
+  /* Le coppie tonali dei toni semantici: tono 90 per il fondo, tono 30 per il
+     testo, sulle stesse palette di tutto il resto. Nessuna tinta scritta a
+     mano — ogni coppia regge sopra 7:1. */
+  --v2-tono-info-fondo: #e3dfff;
+  --v2-tono-info-testo: #393f8a;
+  --v2-tono-success-fondo: #aaf0dc;
+  --v2-tono-success-testo: #035142;
+  --v2-tono-warning-fondo: #ffdcbc;
+  --v2-tono-warning-testo: #633f13;
+  --v2-tono-error-fondo: #ffdad5;
+  --v2-tono-error-testo: #842322;
+
+  /* I colori del design system che la card tiene apposta: dichiarati qui, così
+     stanno nella tavolozza e l'audit non li segnala come inventati. */
+  --v2-ds-grigio-testo: #596167;
+  --v2-ds-contorno-chiaro: #f0f0f0;
+  --v2-ds-alice: #ecf2fc;
+  --v2-ds-fumo: #f7f6f3;
+  --v2-ds-lilla: #f2e6ff;
+  --v2-ds-grigio-contorno: #d1dde6;
+  --v2-ds-info-50: #f3f7ff;
+  --v2-ds-warning-50: #fff8f3;
+  --v2-ds-error-50: #fef3f3;
+
+  /* Il viola della barra di avanzamento e i fondi delle card di scelta
+     venivano da token che il tema non toccava: rientrano nella tavolozza. */
+  --purple-500: #5456a5;
+  --purple-100: #e3dfff;
+
+  --v2-inverse-surface: #2c3134;
+  --v2-inverse-on-surface: #ecf1f6;
+  --v2-inverse-primary: #c6c0ff;
+
+  /* ── Scala delle forme ─────────────────────────────────────────────────
+     Quella di Material: 4, 8, 12, 16, 28 — più la pillola, che in Expressive
+     è la forma di riposo dei bottoni. */
+  --v2-r-xs: 4px;
+  --v2-r-s: 8px;
+  --v2-r-m: 12px;
+  --v2-r-l: 16px;
+  --v2-r-l-plus: 20px;
+  --v2-r-xl: 28px;
+  --v2-r-xl-plus: 32px;
+  --v2-r-xxl: 48px;
+  --v2-r-full: 9999px;
+
+  /* I due valori del morph, presi dai token del bottone: un bottone piccolo
+     (40px) premuto va a `corner.small`, e da selezionato a `corner.medium`.
+     Non è un accorciamento a occhio: è la tabella delle dimensioni. */
+  --v2-r-premuto: var(--v2-r-s); /* 8px  — shape-pressed-morph, taglia small */
+  --v2-r-selezionato: var(--v2-r-m); /* 12px — selected-shape-round, taglia small */
+
+  /* ── Elevazione ────────────────────────────────────────────────────────
+     I cinque livelli di Material: due ombre sovrapposte, una stretta e una
+     larga. */
+  /* I livelli di Material sono altezze in dp — 0, 1, 3, 6, 8, 12 — rese con la
+     ricetta a due ombre: una stretta e scura, una larga e diffusa. Qui servono
+     i primi tre: level1 per la card al passaggio, level3 per i dialoghi. */
+  /* Le ombre sono quelle del kit, copiate dagli effetti `M3/Elevation Light`. */
+  --v2-e1: 0 1px 3px 1px #00000026, 0 1px 2px 0 #0000004d;
+  --v2-e2: 0 2px 6px 2px #00000026, 0 1px 2px 0 #0000004d;
+  --v2-e3: 0 4px 8px 3px #00000026, 0 1px 3px 0 #0000004d;
+
+  /* ── Molla ─────────────────────────────────────────────────────────────
+     La curva di una molla poco smorzata, campionata: parte veloce, supera il
+     bersaglio e ci si assesta. È la differenza che si sente fra Material 3 e
+     Material 3 Expressive. */
+  /* Le molle di Material, con i valori dei token: le «spatial» muovono forma e
+     posizione e superano il bersaglio (il 1.06 nella curva); le «effects»
+     muovono colore e opacità e non rimbalzano. Prima avevo scritto una curva a
+     mano: questa è quella del sistema. */
+  --v2-molla-spaziale: cubic-bezier(0.27, 1.06, 0.18, 1);
+  --v2-molla-spaziale-t: 350ms; /* fast spatial */
+  --v2-molla-effetti: cubic-bezier(0.34, 0.8, 0.34, 1);
+  --v2-molla-effetti-t: 200ms; /* default effects */
+  --v2-enfasi: cubic-bezier(0.2, 0, 0, 1); /* easing emphasized */
+
+  --core-black: var(--v2-on-surface);
+  --grey-500: #2c3134;
+  --grey-400: #3d4851;
+  --grey-300: #546069;
+  --grey-200: #6c7982;
+  --grey-100: #dee3e8;
+
+  --blue-500: #5456a5;
+  --blue-600: #3f438f;
+  --blue-700: #2e3680;
+  --blue-100: #e3dfff;
+  --blue-50: #f1effe;
+
+  --semantic-error-200: #a13d38;
+  --semantic-error-300: #842322;
+  --semantic-error-50: #ffdad5;
+  --semantic-warning-200: #7e5629;
+  --semantic-warning-300: #633f13;
+  --semantic-warning-50: #ffdcbc;
+  --semantic-success-200: #246959;
+  --semantic-success-300: #035142;
+  --semantic-success-50: #aaf0dc;
+  --semantic-info-200: #5456a5;
+  --semantic-info-300: #393f8a;
+  --semantic-info-50: #e3dfff;
+
+  background-color: var(--v2-surface);
+  color: var(--v2-on-surface);
+  font-family: 'Roboto Flex', Roboto, Inter, sans-serif;
+}
+.tema-v2 :is(p, span, div, button, input, textarea, select, label, h1, h2, h3, h4, li, td, th) {
+  font-family: 'Roboto Flex', Roboto, Inter, sans-serif;
+}
+
+.tema-v2 .cat-main {
+  background-color: var(--v2-surface);
+}
+/* Material impila contenitori tonali invece di disegnare bordi: anche la
+   cornice del catalogo segue la regola, così la pagina intera parla la stessa
+   lingua. */
+.tema-v2 :is(.vt-grid, .cat-demo) {
+  background-color: var(--v2-c-low);
+  border-color: transparent;
+  border-radius: var(--v2-r-m);
+}
+.tema-v2 .vt-cella {
+  background-color: var(--v2-c-lowest);
+  border-color: transparent;
+  border-radius: var(--v2-r-s);
+}
+.tema-v2 .vt-et {
+  color: var(--v2-on-surface-variant);
+}
+.tema-v2 .vt-cella {
+  border-color: transparent;
+}
+
+/* ── Tipografia ─────────────────────────────────────────────────────────────
+   Material distingue lo stile «emphasized»: stesso corpo, peso più alto. Qui
+   i titoli lo usano, il corpo resta normale. */
+.tema-v2 :is(h1, h2, h3, h4) {
+  letter-spacing: 0;
+  font-weight: 700;
+}
+.tema-v2 label {
+  color: var(--v2-on-surface-variant);
+  font-weight: 500;
+}
+
+/* ═══ BOTTONI: la forma che si deforma ══════════════════════════════════════
+   A riposo sono pillole. Premendoli si squadrano e crescono — è il gesto che
+   identifica Expressive, e dice «è stato preso» senza bisogno di un colore
+   nuovo. La molla fa il resto. */
+.tema-v2 button[class*='fz-button'],
+.tema-v2 [class*='fz-icon-button'] {
+  min-width: max-content;
+  border-radius: var(--v2-r-full) !important;
+  border-color: transparent !important;
+  /* label-large: 14px, peso medio, tracking 0.1px — dai token del bottone. */
+  font-size: 14px !important;
+  line-height: 20px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.1px;
+  padding-inline: 24px !important;
+  transition:
+    border-radius var(--v2-molla-spaziale-t) var(--v2-molla-spaziale),
+    padding var(--v2-molla-spaziale-t) var(--v2-molla-spaziale),
+    box-shadow var(--v2-molla-effetti-t) var(--v2-molla-effetti),
+    background-color var(--v2-molla-effetti-t) var(--v2-molla-effetti);
+}
+
+/* Il bersaglio è 48dp anche quando il bottone ne è alto 40: lo dice la pagina
+   sull'accessibilità dei gruppi. Si estende con uno pseudo-elemento, così
+   l'aspetto non cambia di un pixel e il dito ha lo spazio che gli serve.
+
+   Lo pseudo-elemento deve stare **sul bottone**, non sull'involucro: se sta
+   sull'involucro il clic finisce lì e il bottone non lo riceve mai — è quello
+   che rompeva ogni icon button con il menu. */
+.tema-v2 button[class*='fz-button'][class*='h-44']::after,
+.tema-v2 [class*='fz-icon-button'] button::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
+
+/* La forma risponde in due tempi: al passaggio si squadra a metà strada
+   (`corner.large`, 16), premendo arriva fino in fondo (`corner.small`, 8).
+   Material lo prescrive solo per la pressione; il passaggio è una nostra
+   aggiunta, e serve a far capire che il bottone è vivo prima ancora di
+   toccarlo — sulla stessa molla, quindi si legge come un gesto solo. */
+.tema-v2 button[class*='fz-button']:hover:not([disabled]),
+.tema-v2 [class*='fz-icon-button']:hover:not([disabled]) {
+  border-radius: var(--v2-r-l) !important;
+}
+.tema-v2 button[class*='fz-button']:active:not([disabled]),
+.tema-v2 [class*='fz-icon-button']:active:not([disabled]) {
+  border-radius: var(--v2-r-premuto) !important;
+}
+
+/* Selezionato: la forma si inverte. Un bottone tondo diventa squadrato
+   (`corner.medium`), uno squadrato diventa tondo. È così che Expressive fa
+   capire che una cosa è attiva, senza affidarsi al colore. */
+.tema-v2 button[aria-pressed='true'],
+.tema-v2 button[aria-selected='true'],
+.tema-v2 [role='button'][aria-pressed='true'] {
+  border-radius: var(--v2-r-selezionato) !important;
+}
+
+/* ── Il gruppo di bottoni, come il segmented button ─────────────────────────
+   Un contenitore solo, a pillola, con i segmenti divisi da un filo. Da due a
+   cinque segmenti; il selezionato prende il contenitore secondario.
+
+   Una nota dalla pagina: in Material 3 Expressive il segmented button non è
+   più raccomandato — al suo posto va il connected button group. Qui teniamo
+   la forma del segmented e, del connected group, il comportamento alla
+   pressione: il segmento premuto si allarga e i vicini si stringono.
+
+   I selettori portano `[class*='fz-button']` apposta: dentro il gruppo un
+   segmento non è un bottone a sé, quindi deve battere sia la regola del
+   bottone outlined sia quella del morph, che al passaggio gli arrotondava
+   gli angoli e rompeva la fila.
+
+   Il nostro FzButtonGroup non ha il concetto di «selezionato»: qui lo legge
+   da `aria-pressed`. È una lacuna del componente. */
+.tema-v2 [class*='button-group'] {
+  gap: 0 !important;
+  width: fit-content;
+  border: 1px solid var(--v2-outline);
+  border-radius: var(--v2-r-full);
+  overflow: hidden;
+}
+.tema-v2 [class*='button-group'] button[class*='fz-button'] {
+  flex-basis: 0 !important;
+  flex-grow: 1 !important;
+  flex-shrink: 1;
+  height: 40px;
+  border: 0 !important;
+  border-left: 1px solid var(--v2-outline) !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  color: var(--v2-on-surface) !important;
+  box-shadow: none !important;
+  transition:
+    flex-grow var(--v2-molla-spaziale-t) var(--v2-molla-spaziale),
+    background-color var(--v2-molla-effetti-t) var(--v2-molla-effetti);
+}
+.tema-v2 [class*='button-group'] button[class*='fz-button']:first-child {
+  border-left: 0 !important;
+}
+.tema-v2 [class*='button-group'] button[class*='fz-button'] :is(div, span) {
+  color: var(--v2-on-surface) !important;
+}
+/* Gli stati restano dentro la fila: cambia la velatura, non la forma. */
+.tema-v2 [class*='button-group'] button[class*='fz-button']:hover:not([disabled]) {
+  border-radius: 0 !important;
+  background-color: color-mix(in srgb, var(--v2-on-surface) 8%, transparent) !important;
+}
+.tema-v2 [class*='button-group'] button[class*='fz-button']:active:not([disabled]) {
+  border-radius: 0 !important;
+  background-color: color-mix(in srgb, var(--v2-on-surface) 10%, transparent) !important;
+}
+.tema-v2 [class*='button-group'] button[class*='fz-button']:focus-visible {
+  border-radius: 0 !important;
+  outline: 3px solid var(--v2-secondary);
+  outline-offset: -3px;
+}
+/* Il segmento scelto: contenitore secondario, etichetta che gli fa da coppia. */
+.tema-v2 [class*='button-group'] button[class*='fz-button'][aria-pressed='true'] {
+  background-color: var(--v2-secondary-container) !important;
+}
+.tema-v2 [class*='button-group'] button[class*='fz-button'][aria-pressed='true'],
+.tema-v2 [class*='button-group'] button[class*='fz-button'][aria-pressed='true'] :is(div, span) {
+  color: var(--v2-on-secondary-container) !important;
+}
+/* Alla pressione il segmento cresce e i vicini gli fanno posto. */
+.tema-v2 [class*='button-group']:has(button:active) button[class*='fz-button']:active {
+  flex-grow: 1.35 !important;
+}
+.tema-v2 [class*='button-group']:has(button:active) button[class*='fz-button']:not(:active) {
+  flex-grow: 0.8 !important;
+}
+
+/* Material tiene i bottoni a 40: più bassi dei nostri, ma con più respiro ai
+   lati. La pillola compensa. */
+.tema-v2 button[class*='fz-button'][class*='h-44'] {
+  height: 40px !important;
+}
+.tema-v2 button[class*='fz-button'][class*='h-32'] {
+  height: 32px !important;
+}
+
+/* I nostri tre bottoni sui tre stili del kit: primario → filled, secondario →
+   outlined, invisibile → text. L'outlined non ha fondo: ha un contorno di 1
+   in `outline` e l'etichetta in `primary`. È quello che il kit mette come
+   azione secondaria nella card, di fianco al filled. */
+.tema-v2 button[class~='bg-core-white'] {
+  background-color: transparent !important;
+  border: 1px solid var(--v2-outline) !important;
+  color: var(--v2-primary) !important;
+  box-shadow: none !important;
+}
+.tema-v2 button[class~='bg-core-white'] :is(div, span) {
+  color: var(--v2-primary) !important;
+}
+.tema-v2 button[class~='bg-core-white']:hover:not([disabled]) {
+  background-color: color-mix(in srgb, var(--v2-primary) 8%, transparent) !important;
+}
+.tema-v2 button[class~='bg-core-white']:active:not([disabled]) {
+  background-color: color-mix(in srgb, var(--v2-primary) 10%, transparent) !important;
+}
+.tema-v2 [class*='fz-icon-button'] {
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+}
+
+/* Strati di stato: una velatura sopra, non un colore diverso sotto. Un solo
+   meccanismo per tutti i componenti — l'8% al passaggio, il 10% alla
+   pressione, come dice Material. */
+.tema-v2 :is(button, [role='button'], [role='tab'], [role='option'], [role='menuitem'], a):hover:not([disabled]):not([aria-disabled='true']) {
+  box-shadow: inset 0 0 0 999px rgba(28, 28, 34, 0.08);
+  cursor: pointer;
+}
+.tema-v2 :is(button, [role='button'], [role='tab'], [role='option'], [role='menuitem']):active:not([disabled]) {
+  box-shadow: inset 0 0 0 999px rgba(28, 28, 34, 0.1);
+}
+.tema-v2 [class*='bg-blue']:hover:not([disabled]) {
+  box-shadow: inset 0 0 0 999px rgba(255, 255, 255, 0.12);
+}
+
+/* ═══ CAMPI: il filled text field ═══════════════════════════════════════════
+   Il campo di Material: fondo pieno, angoli arrotondati solo in alto, e una
+   riga sotto che si ispessisce e si colora col fuoco. È il pezzo che si
+   riconosce da lontano. */
+/* ── Il campo è **outlined** ────────────────────────────────────────────────
+   Delle due varianti di Material scegliamo il contorno: pesa meno del campo
+   pieno, e in un modulo con molti campi vicini semplifica la pagina invece di
+   riempirla di rettangoli grigi. Il contenitore è trasparente, il contorno è
+   1dp di `outline`, l'angolo è extra-small (4dp), e i lati sono 16dp senza
+   icone. */
+.tema-v2 .fz-input > div[class*='border-1'],
+.tema-v2 [class*='fz-input'] > div[class*='border-1'] {
+  background-color: transparent !important;
+  border: 1px solid var(--v2-outline) !important;
+  border-radius: var(--v2-r-xs) !important;
+  padding-inline: 16px !important;
+  transition:
+    border-color var(--v2-molla-effetti-t) var(--v2-molla-effetti),
+    box-shadow var(--v2-molla-effetti-t) var(--v2-molla-effetti);
+}
+/* Al passaggio il contorno si scurisce: da `outline` a `on-surface`. */
+.tema-v2 .fz-input > div[class*='border-1']:hover {
+  border-color: var(--v2-on-surface) !important;
+}
+/* Altezza di riposo del container: 56dp. È più alto del nostro (44) e si
+   sente: è la misura che Material dà al campo pieno. */
+.tema-v2 .fz-input > div[class*='h-44'] {
+  height: 56px !important;
+}
+.tema-v2 .fz-input > div[class*='h-32'] {
+  height: 44px !important;
+}
+/* A fuoco il contorno diventa 2dp e prende il colore primario: è l'unico
+   momento in cui il campo si colora. */
+.tema-v2 .fz-input:focus-within > div[class*='border-1'] {
+  border: 2px solid var(--v2-primary) !important;
+  background-color: transparent !important;
+}
+/* In errore il contorno è quello dell'errore, e a fuoco raddoppia. Il
+   contenitore resta trasparente: il rosso pieno lo teniamo per il messaggio,
+   che sta sotto e resta finché non è risolto. */
+.tema-v2 .fz-input > div[class*='border-semantic-error'] {
+  border: 1px solid var(--v2-error) !important;
+  background-color: transparent !important;
+}
+.tema-v2 .fz-input:focus-within > div[class*='border-semantic-error'] {
+  border: 2px solid var(--v2-error) !important;
+}
+.tema-v2 .fz-input > div[class*='border-semantic-error'] ~ * {
+  color: var(--v2-error);
+}
+.tema-v2 :is(textarea, select) {
+  background-color: transparent !important;
+  border: 1px solid var(--v2-outline) !important;
+  border-radius: var(--v2-r-xs) !important;
+  padding: 12px 16px !important;
+}
+.tema-v2 :is(textarea, select):hover {
+  border-color: var(--v2-on-surface) !important;
+}
+.tema-v2 :is(textarea, select):focus {
+  border: 2px solid var(--v2-primary) !important;
+}
+.tema-v2 input::placeholder,
+.tema-v2 textarea::placeholder {
+  color: var(--v2-on-surface-variant);
+  opacity: 1;
+}
+
+/* ═══ SUPERFICI ═════════════════════════════════════════════════════════════
+   La card, misurata sul kit (Material 3 Design Kit, pagina Cards).
+
+   Il contenitore ha 12 di raggio e tre stili:
+     Outlined — superficie #FEF7FF con contorno 1dp outline-variant
+     Filled   — surface-container-highest, nessun contorno
+     Elevated — surface-container-low con ombra 1
+   Il nostro default è l'outlined; le varianti a colore diventano filled
+   tonali. Lo stile elevated non ha una prop nel design system: manca.
+
+   Le misure vengono dall'anatomia del kit, card larga 360:
+     intestazione 72 alta, incassata 16 ai lati e 12 sopra e sotto
+     media a filo dei bordi, senza incasso
+     contenuto incassato 16, titolo e supporto separati da 32
+     azioni in fondo a destra, 8 fra loro, 16 dal bordo
+   ═════════════════════════════════════════════════════════════════════════ */
+.tema-v2 section[class*='border-1'][class*='flex-col'] {
+  border-radius: var(--v2-r-l) !important;
+  border-color: transparent !important;
+  box-shadow: none;
+  overflow: hidden;
+
+  /* Dentro la card i colori e il testo restano quelli del design system: i
+     grigi e i fondi semantici tornano ai valori nostri, e il carattere è il
+     nostro. Di Material restano la forma, l'anatomia e gli stati. */
+  --grey-500: #596167;
+  --grey-400: #6e777e;
+  --grey-300: #9da9b2;
+  --grey-200: #d1dde6;
+  --grey-100: #e9edf0;
+  --semantic-error-50: #fef3f3;
+  --semantic-warning-50: #fff8f3;
+  --semantic-success-50: #f2f8f6;
+  --semantic-info-50: #f3f7ff;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  transition:
+    box-shadow var(--v2-molla-effetti-t) var(--v2-molla-effetti),
+    background-color var(--v2-molla-effetti-t) var(--v2-molla-effetti);
+}
+
+/* Al passaggio la card risponde: ombra 1 e la velatura dell'8% del kit. */
+.tema-v2 section[class*='border-1'][class*='flex-col']:hover {
+  box-shadow: var(--v2-e1);
+}
+.tema-v2 section[class*='border-1'][class*='flex-col']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: var(--v2-on-surface);
+  opacity: 0;
+  transition: opacity var(--v2-molla-effetti-t) var(--v2-molla-effetti);
+  z-index: 2;
+}
+.tema-v2 section[class*='border-1'][class*='flex-col'] {
+  position: relative;
+}
+.tema-v2 section[class*='border-1'][class*='flex-col']:hover::before {
+  opacity: 0.08;
+}
+
+/* Elevated: surface-container-low con ombra 1, che al passaggio sale a 2.
+   Il nostro componente non ha una prop per questo stile — è una lacuna, e
+   qui la copre una classe. */
+.tema-v2 section[class*='border-1'][class*='flex-col'].elevata {
+  box-shadow: var(--v2-e1);
+}
+.tema-v2 section[class*='border-1'][class*='flex-col'].elevata:hover {
+  box-shadow: var(--v2-e2);
+}
+
+/* Disabilitata: il contenitore scende al 38%. */
+.tema-v2 section[class*='border-1'][aria-disabled='true'] {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+/* Le varianti a colore non hanno contorno: il fondo basta. Quella chiara sì,
+   altrimenti sparirebbe sulla pagina — un filo di #F0F0F0, spesso 1.
+   Il suo fondo è lo stesso delle righe della card list, e al passaggio cambia
+   colore nello stesso modo: sono lo stesso oggetto, devono comportarsi
+   uguale. */
+.tema-v2 section[class*='border-1'][class*='flex-col'][class~='bg-core-white'] {
+  border-color: var(--v2-ds-contorno-chiaro) !important;
+}
+.tema-v2 section[class*='border-1'][class*='flex-col'][class~='bg-core-white']:hover {
+  background-color: var(--v2-passaggio) !important;
+}
+/* Dove il colore dice già qualcosa non lo cambiamo: lì al passaggio resta la
+   velatura. */
+.tema-v2 section[class*='border-1'][class*='flex-col'][class~='bg-core-white']:hover::before {
+  opacity: 0;
+}
+
+/* Intestazione: 12 sopra e sotto, 16 ai lati. Il titolo è Title Medium — nel
+   kit la card non urla, il titolo pesa 16 e non 20. */
+.tema-v2 section[class*='border-1'] > header > div {
+  padding: 12px 16px !important;
+}
+.tema-v2 section[class*='border-1'] > header > div > div:first-child {
+  padding-block: 0 !important;
+  align-items: center;
+}
+
+/* Contenuto: incassato 16, testo Body Medium on-surface-variant. */
+.tema-v2 section[class*='border-1'] > article {
+  padding: 16px !important;
+}
+.tema-v2 section[class*='border-1'] > header + article {
+  padding-top: 16px !important;
+}
+
+/* Azioni: in fondo a destra, 8 fra loro, 16 dal bordo. Il salto dal testo di
+   supporto è 32 — 16 li mette il contenuto, 16 li mette il piede. */
+.tema-v2 section[class*='border-1'] > footer {
+  padding: 16px !important;
+  gap: 8px !important;
+}
+
+/* ── L'intestazione: media sopra, avatar sotto ──────────────────────────────
+   L'immagine è la prima cosa della card e tocca i bordi: nessuno spazio fra
+   lei, il contorno e il bottone del menu. Ha angoli suoi, sopra e sotto,
+   perché sotto di lei comincia un altro blocco.
+
+   Sotto sta l'avatar da 40 con header e subhead, e in fondo a destra i tre
+   puntini. Il nostro componente mette lo slot `header` di fianco al titolo,
+   quindi l'intestazione diventa una griglia di due righe e la riga del titolo
+   sparisce da contenitore (`display: contents`) per far entrare i suoi figli
+   nella griglia. */
+.tema-v2 section[class*='border-1'] > header > div:has(img) {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'media media'
+    'testa menu';
+  align-items: center;
+  padding: 0 !important;
+  gap: 0;
+}
+.tema-v2 section[class*='border-1'] > header > div:has(img) > div:first-child {
+  display: contents;
+}
+.tema-v2 section[class*='border-1'] > header > div:has(img) img {
+  grid-area: media;
+  display: block;
+  width: 100%;
+  height: 188px;
+  object-fit: cover;
+  border-radius: var(--v2-r-l) var(--v2-r-l) var(--v2-r-s) var(--v2-r-s);
+  background-color: var(--v2-c-high);
+}
+.tema-v2 section[class*='border-1'] > header > div:has(img) > div:first-child > div {
+  grid-area: testa;
+  padding: 12px 0 12px 16px;
+  min-width: 0;
+}
+.tema-v2 section[class*='border-1'] > header > div:has(img) > div:first-child > :is(span, button) {
+  grid-area: menu;
+  margin: 0;
+  padding-right: 16px;
+  width: auto;
+}
+
+/* Senza media l'intestazione resta una riga sola: avatar, testi, menu. */
+.tema-v2 section[class*='border-1'] > header > div:not(:has(img)) > div:first-child {
+  flex: 1;
+  gap: 16px !important;
+  align-items: center;
+  min-width: 0;
+}
+.tema-v2 section[class*='border-1'] > header > div:not(:has(img)) > div:first-child > div:first-child {
+  flex: 1;
+  min-width: 0;
+}
+.tema-v2 section[class*='border-1'] > header > div:not(:has(img)) > div:first-child > :last-child:is(span, button) {
+  margin-left: auto;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+.tema-v2 section[class*='border-1'] > header [class*='size-44'] {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+}
+/* Header: Title Medium. Subhead: Body Medium on-surface-variant, 4 sotto. */
+
+/* Le icone della card: 24 e colore primary, come dice la tabella. */
+.tema-v2 section[class*='border-1'] svg {
+  color: var(--v2-primary);
+}
+
+/* ── Il media, a filo dei bordi, fra intestazione e testo ───────────────────
+   Nel kit il media è alto 188 e non ha incasso: taglia la card da bordo a
+   bordo. Vive dentro il contenuto, quindi qui si annulla l'incasso di 16. */
+.tema-v2 section[class*='border-1'] > article > img:first-child {
+  display: block;
+  width: calc(100% + 32px);
+  height: 188px;
+  margin: -16px -16px 16px;
+  object-fit: cover;
+  background-color: var(--v2-c-high);
+}
+.tema-v2 section[class*='border-1'] > header + article:has(> img:first-child) {
+  padding-top: 16px !important;
+}
+
+/* Una collezione di card: complanari, e al massimo 8 fra una e l'altra. */
+.tema-v2 .m3-collezione {
+  display: grid;
+  gap: 8px;
+}
+
+/* Testo sopra l'immagine: le linee guida lo sconsigliano, e quando serve
+   chiedono una velatura sotto perché il contrasto regga. */
+.tema-v2 section[class*='border-1'] > article > .m3-media-testo:first-child {
+  position: relative;
+  width: calc(100% + 32px);
+  margin: -16px -16px 0;
+}
+.tema-v2 .m3-media-testo > img {
+  display: block;
+  width: 100%;
+  height: 188px;
+  margin: 0 !important;
+  object-fit: cover;
+}
+.tema-v2 section[class*='border-1'] > article:has(> .m3-media-testo:only-child) {
+  padding-bottom: 0 !important;
+}
+.tema-v2 .m3-media-testo > .m3-velo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16px;
+  /* Velatura piena, non sfumata: sopra l'immagine più chiara possibile il
+     testo bianco resta a 8,6:1. Una sfumatura che si spegne non garantisce
+     niente, e il contrasto va garantito. */
+  background-color: rgba(0, 0, 0, 0.72);
+  color: #ffffff;
+}
+.tema-v2 .m3-media-testo > .m3-velo :is(p, span) {
+  color: #ffffff !important;
+}
+
+/* ── La gerarchia dentro il contenuto ───────────────────────────────────────
+   Title, subtitle e testo di supporto sono tre livelli distinti nel kit. Il
+   nostro slot è libero e non li conosce: queste tre classi li ricostruiscono
+   sulla nostra scala tipografica. */
+.tema-v2 .m3-titolo {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+.tema-v2 .m3-sottotitolo {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--grey-500);
+  margin: 0;
+}
+.tema-v2 .m3-supporto {
+  font-size: 16px;
+  line-height: 24px;
+  margin: 32px 0 0;
+}
+
+/* ── La card orizzontale ────────────────────────────────────────────────────
+   Dal kit (nodo 52350-27876): alta 80, avatar da 40 incassato di 16, il testo
+   che parte a 72 — cioè 16 dopo l'avatar — e il media da 80×80 a filo del
+   bordo destro. Anche qui i tre stili: outlined, elevated, filled.
+
+   Il nostro componente non ha un orientamento: l'intestazione diventa una
+   griglia di una riga sola. È una lacuna, come lo slot per il media. */
+.tema-v2 section[class*='border-1'][class*='flex-col'].orizzontale {
+  height: 80px;
+}
+.tema-v2 section[class*='border-1'].orizzontale > header,
+.tema-v2 section[class*='border-1'].orizzontale > header > div:has(img) {
+  height: 80px;
+}
+.tema-v2 section[class*='border-1'].orizzontale > header > div:has(img) {
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  grid-template-areas: 'testa media';
+  align-items: center;
+  padding: 0 !important;
+}
+.tema-v2 section[class*='border-1'].orizzontale > header > div:has(img) > div:first-child > div {
+  grid-area: testa;
+  padding: 0 16px 0 16px;
+}
+.tema-v2 section[class*='border-1'].orizzontale > header > div:has(img) img {
+  grid-area: media;
+  width: 80px;
+  height: 80px;
+  border-radius: 0 !important;
+  align-self: stretch;
+}
+/* Senza media il testo arriva fino in fondo. */
+.tema-v2 section[class*='border-1'].orizzontale > header > div:not(:has(img)) {
+  height: 80px;
+  padding: 0 16px !important;
+}
+
+/* ── La card cliccabile ─────────────────────────────────────────────────────
+   Quando tutta la card è l'azione, prende gli stati del kit: velatura all'8%
+   al passaggio, al 10% a fuoco e alla pressione, e l'ombra 1 che le dà il
+   distacco di una superficie sollevata. */
+.tema-v2 section[class*='border-1'][role='button'],
+.tema-v2 section[class*='border-1'][role='link'] {
+  cursor: pointer;
+  position: relative;
+}
+.tema-v2 section[class*='border-1'][role='button']::before,
+.tema-v2 section[class*='border-1'][role='link']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: var(--v2-on-surface);
+  opacity: 0;
+  transition: opacity var(--v2-molla-effetti-t) var(--v2-molla-effetti);
+}
+.tema-v2 section[class*='border-1'][role='button']:hover::before,
+.tema-v2 section[class*='border-1'][role='link']:hover::before {
+  opacity: 0.08;
+}
+.tema-v2 section[class*='border-1'][role='button']:active::before,
+.tema-v2 section[class*='border-1'][role='link']:active::before {
+  opacity: 0.1;
+}
+.tema-v2 section[class*='border-1'][role='button']:hover,
+.tema-v2 section[class*='border-1'][role='link']:hover {
+  box-shadow: var(--v2-e1);
+}
+.tema-v2 section[class*='border-1'][role='button']:focus-visible,
+.tema-v2 section[class*='border-1'][role='link']:focus-visible {
+  outline: 3px solid var(--v2-secondary);
+  outline-offset: 2px;
+}
+.tema-v2 section[class*='border-1'][role='button']:focus-visible::before,
+.tema-v2 section[class*='border-1'][role='link']:focus-visible::before {
+  opacity: 0.1;
+}
+/* Trascinata: la velatura sale a 16% e la card si stacca. */
+.tema-v2 section[class*='border-1'][aria-grabbed='true']::before {
+  opacity: 0.16;
+}
+.tema-v2 section[class*='border-1'][aria-grabbed='true'] {
+  box-shadow: var(--v2-e3);
+}
+
+/* ── La card che si apre, con il titolo che resta fermo ─────────────────────
+   È la regola del desktop: il contenuto scorre dentro la card e l'intestazione
+   resta visibile. Su mobile no — la card si espande e basta, due barre di
+   scorrimento una dentro l'altra sono un errore. */
+/* Il divisore a tutta larghezza segnala che quel contenuto si può espandere:
+   è la regola dei divisori, e vale per ogni card che si apre — non solo per
+   quella che scorre. */
+.tema-v2 section[class*='border-1']:has(> header[class*='cursor-pointer']) > article {
+  border-top: 1px solid var(--v2-outline-variant);
+  padding-top: 16px !important;
+}
+.tema-v2 section[class*='border-1'].scorre > article {
+  max-height: 220px;
+  overflow-y: auto;
+}
+.tema-v2 section[class*='border-1'].scorre > header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: inherit;
+}
+@media (max-width: 599px) {
+  .tema-v2 section[class*='border-1'].scorre > article {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+/* Il chevron della card che si apre gira, non salta. */
+.tema-v2 section[class*='border-1'] > header svg {
+  transition: transform var(--v2-molla-spaziale-t) var(--v2-molla-spaziale);
+}
+
+.tema-v2 :is([role='dialog'], [role='menu'], [role='listbox'], [class*='popover'], [class*='fz-action-list']) {
+  border-radius: var(--v2-r-xl);
+  background-color: var(--v2-c-high);
+  box-shadow: var(--v2-e3);
+  border-color: transparent;
+}
+
+/* ═══ SELEZIONE: cresce, non cambia solo colore ═════════════════════════════
+   In Expressive la cosa selezionata si prende più spazio: il contenitore si
+   riempie del colore secondario e la forma si allarga. Il colore da solo non
+   basterebbe — e con il daltonismo non arriverebbe. */
+.tema-v2 :is([aria-selected='true'], [aria-current='page'], [aria-current='step'], [data-selected='true']) {
+  background-color: var(--v2-secondary-container) !important;
+  color: var(--v2-on-secondary-container) !important;
+  border-radius: var(--v2-r-selezionato);
+  font-weight: 600;
+  transition:
+    border-radius var(--v2-molla-spaziale-t) var(--v2-molla-spaziale),
+    background-color var(--v2-molla-effetti-t) var(--v2-molla-effetti);
+}
+.tema-v2 [role='tab'][aria-selected='true'] {
+  border-radius: var(--v2-r-full);
+  box-shadow: none;
+}
+.tema-v2 label:has(input:checked) {
+  font-weight: 600;
+}
+
+/* Contorni e fondi rimasti fuori: la card di scelta e il pannello sovrapposto
+   usavano un bianco sporco e un grigio caldo che non appartengono a nessuna
+   delle nostre palette. Li riportiamo sui contenitori del tema. */
+/* La card di scelta è una `label` con il riquadro: il suo bianco sporco torna
+   al contenitore più chiaro. */
+.tema-v2 label[class*='rounded-lg'][class*='border-solid'] {
+  background-color: var(--v2-c-lowest) !important;
+}
+/* Il pannello sovrapposto disegna il contorno con uno stile suo, senza
+   classe: si prende per struttura. */
+.tema-v2 .fz__floating__content > div {
+  border-color: var(--v2-outline-variant) !important;
+}
+
+/* ═══ AVVISI ════════════════════════════════════════════════════════════════
+   L'alert non si lascia rivestire dalle variabili: dentro il componente c'è
+   uno stile con scope (`[data-v-…]`) che scrive i quattro fondi a mano invece
+   di leggere il token. Finché resta lì, l'unico modo è sovrascriverlo.
+   È un difetto del design system: un colore scritto a mano in uno stile con
+   scope rende il componente non ri-tematizzabile. */
+.tema-v2 [class~='bg-semantic-info-50'] {
+  background-color: var(--semantic-info-50) !important;
+}
+.tema-v2 [class~='bg-semantic-warning-50'] {
+  background-color: var(--semantic-warning-50) !important;
+}
+.tema-v2 [class~='bg-semantic-error-50'] {
+  background-color: var(--semantic-error-50) !important;
+}
+.tema-v2 [class~='bg-semantic-success-50'] {
+  background-color: var(--semantic-success-50) !important;
+}
+
+/* ═══ PILLOLE ═══════════════════════════════════════════════════════════════
+   Il badge, da noi, fa il lavoro che in Material fa la chip: dice lo stato di
+   una riga. E in Material lo stato non si urla con un fondo pieno — si dice
+   con una coppia tonale, fondo chiaro e testo scuro dello stesso colore.
+   Il significato dei toni resta il nostro; cambia solo come si presentano.
+
+   Per l'errore usiamo i ruoli del kit; per gli altri toni, che in Material
+   baseline non esistono, la coppia è costruita come il kit costruisce i
+   colori estesi: tono 90 per il contenitore, tono 10-30 per il testo. */
+.tema-v2 [class*='rounded-2xl'][class*='bg-'] {
+  border-radius: var(--v2-r-s) !important;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+  height: 24px;
+  padding-inline: 8px;
+}
+.tema-v2 [class*='rounded-2xl'][class*='bg-'] :is(p, span) {
+  color: inherit !important;
+}
+
+.tema-v2 [class~='bg-grey-500'][class*='rounded-2xl'] {
+  background-color: var(--v2-secondary-container) !important;
+  color: var(--v2-on-secondary-container) !important;
+}
+.tema-v2 [class~='bg-semantic-error-200'][class*='rounded-2xl'] {
+  background-color: var(--v2-error-container) !important;
+  color: var(--v2-on-error-container) !important;
+}
+.tema-v2 [class~='bg-semantic-success-200'][class*='rounded-2xl'] {
+  background-color: var(--v2-tono-success-fondo) !important;
+  color: var(--v2-tono-success-testo) !important;
+}
+.tema-v2 [class~='bg-semantic-warning-200'][class*='rounded-2xl'] {
+  background-color: var(--v2-tono-warning-fondo) !important;
+  color: var(--v2-tono-warning-testo) !important;
+}
+.tema-v2 [class~='bg-semantic-info-200'][class*='rounded-2xl'],
+.tema-v2 [class~='bg-blue-500'][class*='rounded-2xl'] {
+  background-color: var(--v2-tono-info-fondo) !important;
+  color: var(--v2-tono-info-testo) !important;
+}
+
+/* ═══ ACCESSIBILITÀ ═════════════════════════════════════════════════════════
+   Le stesse regole della v1: quello che manca oggi manca a prescindere dalla
+   direzione estetica. */
+.tema-v2 :is(a, button, input, textarea, select, summary, [tabindex], [role='button'], [role='tab'], [role='option'], [role='menuitem'], [role='checkbox'], [role='radio']):focus-visible {
+  outline: 3px solid var(--v2-on-surface);
+  outline-offset: 2px;
+}
+/* Un solo segnale di fuoco per campo. Il contenitore del design system ha
+   `tabindex`, dentro c'è l'input, e attorno il wrapper: se ognuno mette il suo
+   anello se ne vedono tre sovrapposti. Nel campo il fuoco lo dice il contorno
+   che passa a 2dp e diventa primario — è il trattamento di Material per il
+   campo outlined — quindi gli anelli neri qui dentro si spengono. */
+.tema-v2 :is(.fz-input, [class*='fz-input'], [class*='select'], [class*='typeahead'], [class*='datepicker'])
+  :is(input, textarea, select, [tabindex]):focus-visible {
+  outline: none !important;
+}
+.tema-v2 :is(.fz-input, [class*='fz-input']):focus-within {
+  outline: none !important;
+}
+/* Select, typeahead e datepicker non hanno il contorno del campo: glielo diamo
+   qui, così il fuoco si vede anche lì. */
+.tema-v2 :is([class*='fz-select'], [class*='typeahead'], [class*='datepicker']):focus-within > div[class*='border'] {
+  border: 2px solid var(--v2-primary) !important;
+}
+.tema-v2 :focus:not(:focus-visible) {
+  outline: none;
+}
+.tema-v2 :is(button, a)[disabled],
+.tema-v2 :is(button, a)[aria-disabled='true'] {
+  background-color: var(--v2-c-high) !important;
+  color: var(--v2-on-surface-variant) !important;
+  box-shadow: none !important;
+  opacity: 1;
+  cursor: not-allowed;
+}
+.tema-v2 :is(button, a)[disabled] :is(span, div, p),
+.tema-v2 :is(button, a)[aria-disabled='true'] :is(span, div, p) {
+  color: var(--v2-on-surface-variant) !important;
+}
+.tema-v2 [class~='text-grey-100'],
+.tema-v2 [class~='text-grey-200'],
+.tema-v2 [class~='text-blue-100'],
+.tema-v2 [class~='text-blue-200'],
+.tema-v2 [class*='cursor-not-allowed'] {
+  color: var(--v2-on-surface-variant) !important;
+}
+.tema-v2 [class~='bg-semantic-error'],
+.tema-v2 [class~='bg-semantic-error-200'],
+.tema-v2 [class~='bg-semantic-error-300'],
+.tema-v2 [class~='bg-semantic-warning'],
+.tema-v2 [class~='bg-semantic-warning-200'],
+.tema-v2 [class~='bg-semantic-warning-300'],
+.tema-v2 [class~='bg-semantic-success'],
+.tema-v2 [class~='bg-semantic-success-200'],
+.tema-v2 [class~='bg-semantic-success-300'],
+.tema-v2 [class~='bg-semantic-info'],
+.tema-v2 [class~='bg-semantic-info-200'],
+.tema-v2 [class~='bg-semantic-info-300'],
+.tema-v2 :is([class~='bg-semantic-error'], [class~='bg-semantic-error-200'], [class~='bg-semantic-error-300'], [class~='bg-semantic-warning'], [class~='bg-semantic-warning-200'], [class~='bg-semantic-warning-300'], [class~='bg-semantic-success'], [class~='bg-semantic-success-200'], [class~='bg-semantic-success-300'], [class~='bg-semantic-info'], [class~='bg-semantic-info-200'], [class~='bg-semantic-info-300']) :is(span, div, p, b, strong) {
+  color: #ffffff !important;
+}
+.tema-v2 :is([class~='bg-semantic-error-50'], [class~='bg-semantic-warning-50'], [class~='bg-semantic-success-50'], [class~='bg-semantic-info-50']) :is(p, b, strong, span:not([class*='icon']):not([class*='fa-'])) {
+  color: var(--v2-on-surface);
+}
+.tema-v2 [class*='bg-semantic-'][class*='rounded'] {
+  border-radius: var(--v2-r-m);
+}
+
+/* ── Tabelle ────────────────────────────────────────────────────────────────
+   Righe alte e separatori sottili: Material preferisce lo spazio al filo. */
+.tema-v2 thead th {
+  color: var(--v2-on-surface-variant);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.tema-v2 tbody tr:hover {
+  background-color: var(--v2-c-low);
+}
+.tema-v2 :is(td, th) {
+  border-color: var(--v2-outline-variant) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tema-v2 * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+  .tema-v2 button:active {
+    transform: none !important;
+  }
+}
+
+/* ── Briciole ───────────────────────────────────────────────────────────────
+   Nel design system di oggi il separatore è attaccato alle parole
+   («Clienti/Nuvola Studio/Fattura»): si legge male e i link si toccano. Qui
+   respira, e il livello corrente pesa di più. */
+.tema-v2 nav[aria-label='Breadcrumb'] [aria-hidden='true'] {
+  margin-inline: 8px;
+  color: var(--v2-on-surface-variant);
+}
+.tema-v2 nav[aria-label='Breadcrumb'] li:last-child {
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Componente per componente, dalle pagine di Material
+   ═══════════════════════════════════════════════════════════════════════════
+   I nomi restano i nostri: cambia solo la scocca. Sotto, la corrispondenza —
+   dove Material chiama le cose in un altro modo — e i numeri presi dalle tab
+   «specs» e «guidelines» di m3.material.io, lette con `scripts/leggi-m3.mjs`.
+
+     FzButton            ← Buttons
+     FzIconButton        ← Icon buttons (+ FAB menu, per il menu che si apre)
+     FzButtonGroup       ← Button groups / Segmented buttons
+     FzInput & c.        ← Text fields (filled)
+     FzCheckbox & c.     ← Checkbox
+     FzDatepicker        ← Date pickers, Time pickers
+     FzNavlist/Navlink   ← Navigation drawer, Navigation rail
+     FzDialog            ← Dialogs
+     FzCardList & c.     ← Lists
+     FzTabs / FzTab      ← Tabs
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* ── Checkbox ───────────────────────────────────────────────────────────────
+   Container 18dp con angolo 2dp — quasi squadrato, non tondo come il nostro —
+   icona 18, e un bersaglio da 48 anche se il quadratino ne misura 18. */
+.tema-v2 :is(input[type='checkbox'], [role='checkbox']),
+.tema-v2 [class*='checkbox'] :is(svg, span[class*='rounded']) {
+  border-radius: 2px !important;
+}
+.tema-v2 label:has(input[type='checkbox']),
+.tema-v2 label:has(input[type='radio']) {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Tabs ───────────────────────────────────────────────────────────────────
+   Il contenitore è definito da un divisore sul bordo inferiore, che lo separa
+   dal contenuto; sopra ci scorre l'indicatore della linguetta attiva.
+
+   Nota per il design system: i nostri tab non espongono i ruoli ARIA
+   (`tablist`, `tab`, `tabpanel`) — sono div e button — quindi qui li aggancio
+   alla classe `.tab-container`. Da tastiera e con lo screen reader la
+   mancanza dei ruoli si sente: è una cosa da sistemare nel componente, non
+   nel tema. */
+.tema-v2 .tab-container {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid var(--v2-outline-variant);
+  padding: 0 !important;
+  gap: 0;
+}
+.tema-v2 .tab-container > button {
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  color: var(--v2-on-surface-variant) !important;
+  height: 48px !important;
+  padding-inline: 16px !important;
+  font-weight: 500;
+}
+/* L'indicatore delle primarie è largo quanto il contenuto, non quanto la
+   linguetta, ed è alto 3 con la cima arrotondata: il bottone ha 12 di incasso
+   per lato, quindi da 12 a 12 si copre esattamente l'etichetta. */
+.tema-v2 .tab-container > button[class~='bg-white'] {
+  color: var(--v2-primary) !important;
+  position: relative;
+  font-weight: 600;
+}
+.tema-v2 .tab-container > button[class~='bg-white']::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background-color: var(--v2-primary);
+}
+.tema-v2 [role='tablist'] {
+  border-bottom: 1px solid var(--v2-outline-variant);
+  gap: 0;
+}
+.tema-v2 [role='tab'] {
+  border-radius: 0 !important;
+  min-height: 48px;
+  color: var(--v2-on-surface-variant);
+  background-color: transparent !important;
+}
+.tema-v2 [role='tab'][aria-selected='true'] {
+  color: var(--v2-primary) !important;
+  background-color: transparent !important;
+  box-shadow: inset 0 -3px 0 0 var(--v2-primary);
+  border-radius: 3px 3px 0 0 !important;
+  font-weight: 600;
+}
+
+/* ── Navigazione ────────────────────────────────────────────────────────────
+   Dal navigation drawer: la destinazione attiva non è testo colorato, è una
+   **forma di sfondo** — una pillola piena di secondary-container. I gruppi si
+   separano con divisori a piena larghezza, e l'icona sta sempre prima del
+   testo. */
+.tema-v2 :is([class*='navlink'], [class*='navlist'] a, [class*='navlist'] button) {
+  border-radius: var(--v2-r-full) !important;
+  min-height: 48px;
+  padding-inline: 16px !important;
+  color: var(--v2-on-surface-variant);
+}
+/* Nota: FzNavlink non espone un aggancio per lo stato selezionato — né una
+   classe né `aria-current` — quindi l'indicatore attivo qui si accende solo
+   dove il componente mette uno di questi attributi. Per averlo davvero
+   ovunque servirebbe una modifica al componente, non al tema. */
+.tema-v2 :is([class*='navlink'], [class*='navlist'] a, [class*='navlist'] button):is([aria-current], [aria-selected='true'], [class*='selected']) {
+  background-color: var(--v2-secondary-container) !important;
+  color: var(--v2-on-secondary-container) !important;
+  font-weight: 600;
+}
+.tema-v2 [class*='navlist'] hr,
+.tema-v2 [class*='navlist'] [class*='divider'] {
+  border-color: var(--v2-outline-variant) !important;
+  margin-block: 8px;
+}
+
+/* ── Dialoghi ───────────────────────────────────────────────────────────────
+   Il contenitore sta a `surface-container-high` con 28 di raggio e l'ombra 3;
+   dentro, 24 di respiro su ogni lato. L'headline è Headline Small, il testo di
+   supporto Body Medium in on-surface-variant, e le azioni sono bottoni di
+   testo in fondo a destra con 8 fra loro. Lo scrim spegne la pagina dietro.
+
+   Nota: `FzDialog` ha una prop `title` che il suo template non usa — il
+   titolo si passa dallo slot `header`. È un difetto del design system. */
+.tema-v2 dialog {
+  border: 0 !important;
+  border-radius: var(--v2-r-xl) !important;
+  background-color: var(--v2-c-high) !important;
+  box-shadow: var(--v2-e3) !important;
+  overflow: hidden;
+}
+.tema-v2 dialog > div {
+  background-color: transparent !important;
+}
+.tema-v2 .fz-dialog__backdrop {
+  background-color: rgba(0, 0, 0, 0.32);
+}
+/* Intestazione: niente filo sotto, 24 di respiro, headline small. */
+.tema-v2 dialog > div > div:first-child {
+  border: 0 !important;
+  padding: 24px 24px 16px !important;
+}
+.tema-v2 dialog h2 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 400;
+  margin: 0;
+  color: var(--v2-on-surface);
+}
+.tema-v2 dialog > div > div:nth-child(2) {
+  padding: 0 24px !important;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: var(--v2-on-surface-variant);
+}
+/* Azioni: in fondo a destra, 8 fra loro, senza filo sopra. */
+.tema-v2 dialog > div > div:last-child:not(:first-child):not(:nth-child(2)) {
+  border: 0 !important;
+  padding: 24px !important;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* A schermo intero il dialogo non galleggia: occupa la pagina. */
+.tema-v2 dialog.m3-dialog--pieno {
+  border-radius: 0 !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ── Date e time picker ─────────────────────────────────────────────────────
+   Misurati sulla tabella dei token del date picker docked: contenitore
+   `surface-container-high` con 16 di raggio e ombra 3; i giorni sono cerchi da
+   40 con l'etichetta a 16; il bottone del mese e dell'anno ha l'etichetta a
+   14 in on-surface-variant; oggi porta un contorno di 1 in primary e la sua
+   etichetta in primary; il giorno scelto ha il contenitore primary e
+   l'etichetta on-primary. Le velature di stato sono 8% al passaggio e 10%
+   alla pressione.
+
+   Il time picker prende i suoi ruoli: i due riquadri di ore e minuti stanno su
+   `surface-container-highest`, quello attivo passa a `primary-container` con
+   l'etichetta che gli fa da coppia. */
+/* Il calendario di Material non ha la punta che indica il campo: è un foglio
+   che si posa sotto, non un fumetto. */
+.tema-v2 .dp__arrow_top,
+.tema-v2 .dp__arrow_bottom,
+.tema-v2 [class*='dp__arrow'] {
+  display: none !important;
+}
+/* Solo il menu: l'involucro esterno resta nudo. Vestirlo significava lasciare
+   in pagina un fazzoletto grigio con l'ombra sotto ogni campo chiuso. */
+.tema-v2 .dp__menu {
+  background-color: var(--v2-c-high) !important;
+  border: 0 !important;
+  border-radius: var(--v2-r-l) !important;
+  box-shadow: var(--v2-e3) !important;
+  padding: 8px 12px 12px !important;
+}
+.tema-v2 .dp--menu-wrapper {
+  background: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
+/* Testata: i due bottoni di menu e le frecce. */
+.tema-v2 .dp__month_year_wrap {
+  gap: 4px;
+}
+.tema-v2 .dp__month_year_select {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  font-weight: 500;
+  color: var(--v2-on-surface-variant) !important;
+  border-radius: var(--v2-r-full) !important;
+  height: 40px;
+}
+.tema-v2 .dp__month_year_select:hover {
+  background-color: color-mix(in srgb, var(--v2-on-surface) 8%, transparent) !important;
+}
+/* Le frecce e le celle sono bottoni, e senza questo si prendono lo stile del
+   bottone elevated: fondo bianco e ombra, in mezzo al calendario. */
+.tema-v2 .dp__inner_nav,
+.tema-v2 .dp__btn {
+  width: 40px;
+  height: 40px;
+  border: 0 !important;
+  border-radius: var(--v2-r-full) !important;
+  color: var(--v2-on-surface-variant) !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+.tema-v2 .dp__inner_nav:hover {
+  background-color: color-mix(in srgb, var(--v2-on-surface) 8%, transparent) !important;
+}
+
+/* I giorni della settimana: 16, on-surface. */
+.tema-v2 .dp__calendar_header_item {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: var(--v2-on-surface) !important;
+}
+.tema-v2 .dp__calendar_header_separator {
+  display: none;
+}
+
+/* Il giorno: un cerchio da 48 — è la misura della cella nel kit, non 40 come
+   suggerirebbe lo strato di stato. Etichetta a 16. */
+.tema-v2 .dp__cell_inner {
+  width: 48px;
+  height: 48px;
+  font-size: 16px;
+  line-height: 24px;
+  border-radius: var(--v2-r-full) !important;
+  border: 0 !important;
+  color: var(--v2-on-surface) !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  transition: background-color var(--v2-molla-effetti-t) var(--v2-molla-effetti);
+}
+.tema-v2 .dp__cell_offset {
+  color: var(--v2-on-surface-variant) !important;
+  opacity: 0.38;
+}
+.tema-v2 .dp__cell_inner:hover:not(.dp__active_date) {
+  background-color: color-mix(in srgb, var(--v2-on-surface) 8%, transparent) !important;
+}
+.tema-v2 .dp__cell_inner:active:not(.dp__active_date) {
+  background-color: color-mix(in srgb, var(--v2-on-surface) 10%, transparent) !important;
+}
+/* Oggi: contorno di 1 in primary, etichetta in primary. */
+.tema-v2 .dp__today {
+  border: 1px solid var(--v2-primary) !important;
+  color: var(--v2-primary) !important;
+}
+/* Il giorno scelto: contenitore primary, etichetta on-primary. */
+.tema-v2 .dp__active_date,
+.tema-v2 .dp__range_start,
+.tema-v2 .dp__range_end {
+  background-color: var(--v2-primary) !important;
+  color: var(--v2-on-primary) !important;
+  border-color: transparent !important;
+}
+/* Dentro l'intervallo: contenitore secondario, come dice la tabella. */
+.tema-v2 .dp__range_between {
+  background-color: var(--v2-secondary-container) !important;
+  color: var(--v2-on-secondary-container) !important;
+  border-radius: 0 !important;
+}
+.tema-v2 .dp__cell_inner:focus-visible {
+  outline: 3px solid var(--v2-secondary);
+  outline-offset: 2px;
+}
+
+/* Le tendine di mese e anno, e quelle di ore e minuti. */
+.tema-v2 .dp__overlay {
+  background-color: var(--v2-c-high) !important;
+  border-radius: var(--v2-r-l) !important;
+}
+/* Mese e anno nelle tendine sono pastiglie 88×52, come nel kit. */
+.tema-v2 .dp__overlay_cell {
+  border-radius: var(--v2-r-full) !important;
+  color: var(--v2-on-surface) !important;
+  height: 52px;
+  min-width: 88px;
+}
+.tema-v2 .dp__overlay_cell:hover {
+  background-color: color-mix(in srgb, var(--v2-on-surface) 8%, transparent) !important;
+}
+.tema-v2 .dp__overlay_cell_active {
+  background-color: var(--v2-primary) !important;
+  color: var(--v2-on-primary) !important;
+}
+
+/* Il time picker: ore e minuti sono due riquadri, non due numeri nudi. */
+.tema-v2 .dp__time_display {
+  font-size: 45px;
+  line-height: 52px;
+  font-weight: 400;
+  min-width: 96px;
+  height: 80px;
+  border-radius: var(--v2-r-s) !important;
+  background-color: var(--v2-c-highest) !important;
+  color: var(--v2-on-surface) !important;
+}
+.tema-v2 .dp__time_display:hover,
+.tema-v2 .dp__time_display:focus {
+  background-color: var(--v2-primary-container) !important;
+  color: var(--v2-on-primary-container) !important;
+}
+.tema-v2 .dp__time_col_reg_block,
+.tema-v2 .dp__time_col {
+  gap: 8px;
+}
+.tema-v2 .dp__pm_am_button {
+  border-radius: var(--v2-r-s) !important;
+  border: 1px solid var(--v2-outline) !important;
+  background-color: var(--v2-tertiary-container) !important;
+  color: var(--v2-on-tertiary-container) !important;
+}
+
+/* I bottoni di conferma in fondo: bottoni di testo. */
+.tema-v2 .dp__action_buttons .dp__action_button {
+  border-radius: var(--v2-r-full) !important;
+  background-color: transparent !important;
+  color: var(--v2-primary) !important;
+  border: 0 !important;
+  height: 40px;
+  padding-inline: 12px;
+}
+.tema-v2 .dp__action_buttons .dp__action_button:hover {
+  background-color: color-mix(in srgb, var(--v2-primary) 8%, transparent) !important;
+}
+
+/* ── Gruppo di bottoni ──────────────────────────────────────────────────────
+   Dalle guidelines dei segmented button: angoli pieni, e **non deve occupare
+   tutta la larghezza** su schermi larghi — con troppo spazio ai lati
+   dell'etichetta il bottone diventa scomodo. */
+.tema-v2 [class*='button-group'] {
+  max-width: 560px;
+}
+
+/* ── Menu dell'icona, come il FAB menu ──────────────────────────────────────
+   Il FAB menu non è un pannello con dentro delle righe: sono da due a sei
+   azioni che galleggiano, grandi, una sotto l'altra, e arrivano sfalsate.
+   Qui l'icon button con la tendina si comporta così — il contenitore sparisce
+   e restano le azioni, pillole da 56 in contenitore primario con l'ombra 3.
+
+   Nota: il nostro FzIconDropdown non segnala l'apertura sul bottone, quindi
+   il grilletto non può trasformarsi in una chiusura come fa il FAB. Serve una
+   prop nel design system. */
+.tema-v2 .fz__floating__content .fz__actionlist {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+}
+.tema-v2 .fz__floating__content .fz__actionlist > div {
+  gap: 8px !important;
+}
+.tema-v2 .fz__floating__content .fz__actionlist :is(a, button) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0 24px;
+  border: 0 !important;
+  border-radius: var(--v2-r-full) !important;
+  background-color: var(--v2-primary-container) !important;
+  color: var(--v2-on-primary-container) !important;
+  box-shadow: var(--v2-e3);
+  white-space: nowrap;
+  font-size: 16px;
+  line-height: 24px;
+  transform-origin: right center;
+  animation: v2-fab 260ms var(--v2-molla-spaziale) both;
+}
+.tema-v2 .fz__floating__content .fz__actionlist :is(a, button) svg {
+  color: var(--v2-on-primary-container) !important;
+}
+.tema-v2 .fz__floating__content .fz__actionlist :is(a, button):hover {
+  background-color: color-mix(in srgb, var(--v2-on-primary-container) 8%, var(--v2-primary-container)) !important;
+}
+/* Sfalsate: la prima parte subito, le altre a ruota. */
+.tema-v2 .fz__floating__content .fz__actionlist :is(a, button):nth-child(2) { animation-delay: 40ms; }
+.tema-v2 .fz__floating__content .fz__actionlist :is(a, button):nth-child(3) { animation-delay: 80ms; }
+.tema-v2 .fz__floating__content .fz__actionlist :is(a, button):nth-child(4) { animation-delay: 120ms; }
+.tema-v2 .fz__floating__content .fz__actionlist :is(a, button):nth-child(5) { animation-delay: 160ms; }
+.tema-v2 .fz__floating__content .fz__actionlist :is(a, button):nth-child(6) { animation-delay: 200ms; }
+
+@keyframes v2-fab {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Text field: l'anatomia ─────────────────────────────────────────────────
+   Testo di supporto e contatore vivono sotto il campo, a 4dp, in
+   on-surface-variant. Nell'errore il posto è lo stesso: cambia il colore, non
+   la posizione — così il messaggio non sposta niente quando compare. */
+.tema-v2 .m3-campo {
+  display: block;
+  width: 100%;
+}
+.tema-v2 .m3-supporting {
+  margin: 4px 0 0;
+  padding-inline: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--v2-on-surface-variant);
+}
+.tema-v2 .m3-riga-supporto {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.tema-v2 .m3-contatore {
+  margin: 4px 0 0;
+  padding-inline: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--v2-on-surface-variant);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Lista: la voce, che da noi è la card list ──────────────────────────────
+   Material chiama «list item» quello che noi chiamiamo riga della card list.
+   Il nome nostro non si tocca: cambia lo stile.
+
+   Il DOM non offre una classe per la lista, quindi la riconosciamo dalla sua
+   firma — un contenitore verticale che ha come figli diretti una riga `p-8`
+   seguita da un divisore a tutta larghezza. È la forma che solo la card list
+   produce.
+
+   Misure della specifica: riga alta 56 con la sola etichetta, 72 con una riga
+   di supporto, 88 con due; leading 16, trailing 24. */
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) {
+  gap: 4px;
+}
+
+/* Le righe non sono divise da un filo: sono blocchi accostati, e lo spazio fa
+   il lavoro del divisore. */
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) > .w-full.my-0 {
+  display: none;
+}
+
+/* La lista segmentata: angoli tondi fuori, quasi vivi dentro. Al passaggio la
+   riga si stacca dalle vicine arrotondandosi tutta — è così che Material
+   mostra la voce attiva senza cambiare colore al testo. */
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) > .p-8 {
+  min-height: 56px;
+  justify-content: center;
+  padding: 12px 24px 12px 16px;
+  background-color: var(--v2-base);
+  border-radius: var(--v2-r-l) var(--v2-r-l) var(--v2-r-xs) var(--v2-r-xs);
+  transition:
+    border-radius var(--v2-molla-spaziale-t) var(--v2-molla-spaziale),
+    background-color var(--v2-molla-effetti-t) var(--v2-molla-effetti);
+}
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) > .p-8:not(:first-child) {
+  border-start-start-radius: var(--v2-r-xs);
+  border-start-end-radius: var(--v2-r-xs);
+}
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) > .p-8:last-child {
+  border-end-start-radius: var(--v2-r-l);
+  border-end-end-radius: var(--v2-r-l);
+}
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) > .p-8:hover {
+  border-radius: var(--v2-r-l);
+  background-color: var(--v2-passaggio) !important;
+}
+
+/* Etichetta: Body Large. Material non la mette in grassetto — la gerarchia la
+   fanno la misura e il colore, non il peso. */
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) .font-semibold:not(.text-base) {
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  font-weight: 400;
+  color: var(--v2-on-surface);
+}
+
+/* Testo di supporto: Body Medium, on-surface-variant. Si ferma a tre righe. */
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) .text-sm {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: var(--v2-on-surface-variant);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Testo finale — da noi è l'importo, e resta leggibile: Label Large. */
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) .whitespace-nowrap.text-base {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  font-weight: 500;
+  color: var(--v2-on-surface) !important;
+}
+
+/* Icona finale: on-surface-variant, come tutte le icone di servizio. */
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) svg {
+  color: var(--v2-on-surface-variant) !important;
+}
+
+/* Il controllo finale è un'icona sola: in Material è il bottone icona
+   standard, senza fondo né contorno, tondo, e con il bersaglio da 48. */
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) > .p-8 button {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  border-radius: var(--v2-r-full) !important;
+  height: 40px;
+  min-width: 40px;
+  width: 40px;
+  padding: 0;
+  color: var(--v2-on-surface-variant) !important;
+  box-shadow: none !important;
+}
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) > .p-8 button:hover {
+  background-color: color-mix(in srgb, var(--v2-on-surface) 8%, transparent) !important;
+}
+
+/* La riga cliccabile porta con sé il proprio hover e il proprio fuoco: li
+   riportiamo allo strato di stato e all'anello primario. */
+.tema-v2 .fz-container--vertical:has(> .p-8 + .w-full.my-0) > .p-8[role='button']:focus-visible {
+  outline: 3px solid var(--v2-primary);
+  outline-offset: 2px;
+  border-radius: var(--v2-r-l);
+}
+
+/* ── Dialogo: l'anatomia ────────────────────────────────────────────────────
+   Il dialogo di base galleggia sopra uno scrim, con le azioni in fondo a
+   destra; quello a schermo intero occupa la pagina e mette in cima una barra
+   con la chiusura a sinistra. */
+.tema-v2 .m3-dialog {
+  border-radius: var(--v2-r-xl);
+  background-color: var(--v2-c-high);
+}
+.tema-v2 .m3-dialog--pieno {
+  border-radius: 0;
+  margin: 0;
+  max-width: none;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* ── Bottoni: gli stili di colore che non abbiamo ───────────────────────────
+   elevated e tonal non esistono come varianti nel design system: qui sono
+   composti dal tema per far vedere come starebbero. */
+.tema-v2 .m3-elevated {
+  background-color: var(--v2-c-low) !important;
+  box-shadow: var(--v2-e1);
+}
+.tema-v2 .m3-tonal {
+  background-color: var(--v2-secondary-container) !important;
+  box-shadow: none !important;
+}
+.tema-v2 .m3-tonal :is(div, span) {
+  color: var(--v2-on-secondary-container) !important;
+}
+.tema-v2 .m3-outlined {
+  background-color: transparent !important;
+  box-shadow: inset 0 0 0 1px var(--v2-outline) !important;
+}
+.tema-v2 .m3-xs {
+  height: 32px !important;
+  padding-inline: 12px !important;
+}
+.tema-v2 .m3-md {
+  height: 56px !important;
+  padding-inline: 32px !important;
+  font-size: 16px !important;
+}
+.tema-v2 .m3-lg {
+  height: 96px !important;
+  padding-inline: 48px !important;
+  font-size: 24px !important;
+}
+.tema-v2 .m3-quadra {
+  border-radius: var(--v2-r-m) !important;
+}
+.tema-v2 .m3-quadra:active {
+  border-radius: var(--v2-r-premuto) !important;
+}
+
+/* ── Icon button: le tre larghezze ──────────────────────────────────────────
+   Material dà all'icon button una larghezza stretta, una normale e una larga,
+   a parità di altezza. Il bersaglio però resta 48dp anche nella stretta. */
+.tema-v2 .m3-stretto {
+  width: 32px !important;
+}
+.tema-v2 .m3-largo {
+  width: 56px !important;
+}
+
+/* ── Navigazione: rail compresso e drawer ───────────────────────────────────
+   L'indicatore attivo è una forma di sfondo — nel rail una pillola stretta
+   attorno alla sola icona, nel drawer una pillola su tutta la riga. Le
+   etichette si troncano, non vanno a capo. */
+.tema-v2 .m3-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 0;
+  width: 96px;
+  background-color: var(--v2-surface);
+}
+.tema-v2 .m3-rail-voce {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--v2-on-surface-variant);
+  font: inherit;
+  font-size: 12px;
+}
+.tema-v2 .m3-rail-ind {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 32px;
+  border-radius: var(--v2-r-full);
+  transition: background-color var(--v2-molla-effetti-t) var(--v2-molla-effetti);
+}
+.tema-v2 .m3-rail-voce:hover .m3-rail-ind {
+  background-color: var(--v2-c-high);
+}
+.tema-v2 .m3-rail-voce.is-attiva .m3-rail-ind {
+  background-color: var(--v2-secondary-container);
+}
+.tema-v2 .m3-rail-voce.is-attiva {
+  color: var(--v2-on-secondary-container);
+  font-weight: 600;
+}
+.tema-v2 .m3-drawer {
+  width: 280px;
+  padding: 12px;
+  background-color: var(--v2-surface);
+  border-radius: 0 var(--v2-r-l) var(--v2-r-l) 0;
+}
+.tema-v2 .m3-drawer-sez {
+  margin: 8px 16px 4px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--v2-on-surface-variant);
+}
+.tema-v2 .m3-drawer-voce {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding-inline: 16px;
+  border: 0;
+  background: none;
+  border-radius: var(--v2-r-full);
+  cursor: pointer;
+  color: var(--v2-on-surface-variant);
+  font: inherit;
+  text-align: left;
+}
+.tema-v2 .m3-drawer-voce:hover {
+  background-color: var(--v2-c-high);
+}
+.tema-v2 .m3-drawer-voce.is-attiva {
+  background-color: var(--v2-secondary-container);
+  color: var(--v2-on-secondary-container);
+  font-weight: 600;
+}
+.tema-v2 .m3-drawer-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tema-v2 .m3-drawer-hr {
+  border: 0;
+  border-top: 1px solid var(--v2-outline-variant);
+  margin: 8px 0;
+}
+
+/* ── Tabs: i due livelli ────────────────────────────────────────────────────
+   Le primarie stanno in cima e possono portare l'icona; l'indicatore abbraccia
+   il contenuto. Le secondarie vivono dentro una sezione già divisa dalle
+   primarie: indicatore a tutta larghezza e peso minore. */
+.tema-v2 .m3-tabs--primarie .tab-container > button {
+  flex-direction: column;
+  gap: 2px !important;
+  height: 64px !important;
+  font-size: 14px;
+}
+
+.tema-v2 .m3-tabs--secondarie .tab-container > button {
+  flex: 1 1 0;
+  justify-content: center;
+  height: 48px !important;
+  font-size: 14px;
+}
+/* Le secondarie: indicatore a tutta larghezza, 2, senza cima arrotondata. */
+.tema-v2 .m3-tabs--secondarie .tab-container > button[class~='bg-white'] {
+  color: var(--v2-on-surface) !important;
+}
+.tema-v2 .m3-tabs--secondarie .tab-container > button[class~='bg-white']::after {
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 0;
+  background-color: var(--v2-on-surface);
+}
+
+/* ── Text field: la tabella delle misure ────────────────────────────────────
+   Dalla tab «specs», colonna per colonna:
+
+     altezza del contenitore                        56dp
+     padding laterale senza icone                   16dp
+     padding laterale con icone                     12dp
+     spazio fra icona e testo                       16dp
+     allineamento icone                             centrato in verticale
+     testo di supporto e contatore, padding sopra    4dp
+     spazio fra testo di supporto e contatore       16dp
+     allineamento etichetta                         centrato in verticale
+     padding laterale dell'etichetta popolata        4dp
+     bersaglio                                      56dp                       */
+.tema-v2 .fz-input > div[class*='border-1']:has([class*='icon'], svg) {
+  padding-inline: 12px !important;
+  gap: 16px !important;
+}
+.tema-v2 .fz-input > label {
+  padding-inline: 4px;
+}
+
+/* Non a tutta larghezza sugli schermi grandi: dalle guidelines, «text fields
+   should not span the full width of a large screen». Sui piccoli invece sì. */
+@media (min-width: 900px) {
+  .tema-v2 .fz-input,
+  .tema-v2 .m3-campo {
+    max-width: 560px;
+  }
+}
+
+/* Densità: non si applica di default, e comunque non deve portare il bersaglio
+   sotto i 48 pixel. Il campo compatto resta alto 44 alla vista, ma il
+   bersaglio viene esteso. */
+.tema-v2 .fz-input > div[class*='h-32'] {
+  position: relative;
+}
+.tema-v2 .fz-input > div[class*='h-32']::after {
+  content: '';
+  position: absolute;
+  inset: -2px 0;
+}
+
+/* L'altra variante, quella **piena**: stesso comportamento, più enfasi.
+   Material dice di non mescolarle nella stessa regione — una per sezione. */
+.tema-v2 .m3-filled-field > div[class*='border-1'] {
+  background-color: var(--v2-c-highest) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--v2-on-surface-variant) !important;
+  border-radius: var(--v2-r-xs) var(--v2-r-xs) 0 0 !important;
+}
+.tema-v2 .m3-filled-field:focus-within > div[class*='border-1'] {
+  border-bottom: 2px solid var(--v2-primary) !important;
+  background-color: var(--v2-c-high) !important;
+}
+
+/* Prefisso e suffisso: stanno dentro il contenitore, in on-surface-variant, e
+   non si toccano — sono contesto, non contenuto. */
+.tema-v2 .m3-affisso {
+  color: var(--v2-on-surface-variant);
+  font-size: 16px;
+  flex: 0 0 auto;
+  user-select: none;
+}
+
+/* Campo in sola lettura: si legge, non si modifica, e si distingue dal
+   disabilitato — che invece dice «qui non puoi». */
+.tema-v2 .m3-readonly > div[class*='border-1'] {
+  border-style: dashed !important;
+  border-color: var(--v2-outline-variant) !important;
+}
+.tema-v2 .m3-nota-conflitto {
+  border-left: 3px solid var(--v2-tertiary);
+  padding-left: 12px;
+  color: var(--v2-on-surface-variant);
+}
+
+/* Sul body il tema serve solo a raggiungere i pannelli teletrasportati: il
+   colore della pagina lo mette il riquadro del contenuto, non lui. */
+body[class*='tema-'] {
+  background-color: transparent;
+}

@@ -1,0 +1,459 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Design system — Versione 1 · «Carta»
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Cosa non cambia: il comportamento. È tutto CSS applicato dall'esterno, sotto
+   `.tema-v1`; i pacchetti `@fiscozen/*` non sono toccati. Il date picker apre il
+   calendario, l'upload carica, il dropdown si apre. Non è una promessa: è una
+   conseguenza di come è fatta.
+
+   Cosa cambia: tutto il resto. Non è una passata di colore sul sistema di oggi —
+   è un'altra grammatica.
+
+     · la pagina è carta calda, non bianco clinico;
+     · le superfici non hanno bordo: si staccano con un'ombra bassissima e
+       larga, e con angoli grandi (20). Oggi le card sono rettangoli con un filo
+       grigio attorno: la differenza si vede da lontano;
+     · i campi sono pieni, non incorniciati — un rettangolo di carta più scura
+       dentro cui si scrive. Il bordo serve solo a dire dove sei, quindi appare
+       col fuoco e non prima;
+     · i bottoni sono pillole. Il primario è indaco spento, non elettrico;
+     · il colore è tenue ovunque, e forte solo dove porta un significato.
+
+   Le tre cose prese in prestito, nessuna copiata: da Wise la leggibilità
+   dichiarata (niente grigi illeggibili, gerarchia netta); da Revolut la
+   disciplina monocroma, un accento solo e niente decorazione; da Airbnb la
+   superficie morbida senza bordi e l'anello di focus inequivocabile.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+.tema-v1 {
+  /* ── Carta e inchiostro ────────────────────────────────────────────────
+     Niente bianco puro: la pagina è sabbia, la superficie è avorio. Il testo
+     è un nero caldo, non #000 — su carta calda il nero freddo vibra. */
+  --v1-carta: #f2eee6;
+  --v1-superficie: #fffdf9;
+  --v1-superficie-2: #f6f2ea; /* campi, celle spente */
+  --v1-filo: #e7e1d5;
+
+  --core-black: #1c1b18; /* 15,9:1 */
+  --grey-500: #45413a; /* 9,8:1 — testo forte */
+  --grey-400: #57534a; /* 7,4:1 — testo secondario */
+  --grey-300: #6e695a; /* 4,9:1 su carta, 4,9:1 anche dentro un campo pieno */
+  --grey-200: #b3ac9c; /* bordi, mai testo */
+  --grey-100: #ebe6db; /* superfici spente */
+
+  /* ── Accento ───────────────────────────────────────────────────────────
+     L'indaco resta, ma smette di essere elettrico: spento e più profondo,
+     regge 7,3:1 con il bianco sopra — e, essendo il contrasto simmetrico,
+     anche come testo su carta. */
+  --blue-500: #454a94;
+  --blue-600: #383c78;
+  --blue-700: #2b2e5c;
+  --blue-400: #6e73b8;
+  --blue-300: #9a9ecf;
+  --blue-200: #c4c6e3;
+  --blue-100: #e2e3f1;
+  --blue-50: #f0f0f8;
+
+  /* ── Semantici, versione tenue ─────────────────────────────────────────
+     Colori da carta stampata: terra, salvia, ruggine, ardesia. Tutti sopra
+     4,5:1, tutti sotto la soglia del semaforo — un prodotto fiscale non deve
+     sembrare un cruscotto d'allarme. */
+  --semantic-error-200: #a63a34;
+  --semantic-error-300: #7f2b26;
+  --semantic-error-100: #eccfcb;
+  --semantic-error-50: #faf1ef;
+  --semantic-warning-200: #8a5a1a;
+  --semantic-warning-300: #6b4514;
+  --semantic-warning-100: #eeddc2;
+  --semantic-warning-50: #faf4e9;
+  --semantic-success-200: #2c6a53;
+  --semantic-success-300: #21503f;
+  --semantic-success-100: #cadfd5;
+  --semantic-success-50: #f0f5f2;
+  --semantic-info-200: #345d8a;
+  --semantic-info-300: #27466a;
+  --semantic-info-100: #cdd9e6;
+  --semantic-info-50: #f0f4f8;
+
+  /* ── Forma ─────────────────────────────────────────────────────────────
+     Tre raggi e basta: 20 per le superfici, 14 per i campi, pillola per
+     bottoni e badge. Oggi ne convivono quattro senza una regola. */
+  --v1-r-superficie: 20px;
+  --v1-r-campo: 14px;
+  --v1-r-pill: 999px;
+
+  --v1-ombra: 0 1px 2px rgba(28, 27, 24, 0.04), 0 10px 28px -14px rgba(28, 27, 24, 0.22);
+  --v1-ombra-alta: 0 2px 6px rgba(28, 27, 24, 0.06), 0 24px 48px -20px rgba(28, 27, 24, 0.28);
+
+  --v1-hover: rgba(28, 27, 24, 0.05);
+  --v1-focus: #1c1b18;
+  --v1-sel: #454a94;
+
+  background-color: var(--v1-carta);
+  color: var(--core-black);
+}
+
+/* La carta arriva fino ai bordi della vista, non solo dietro le celle. */
+.tema-v1 .cat-main {
+  background-color: var(--v1-carta);
+}
+.tema-v1 :is(.vt-grid, .cat-demo) {
+  background-color: var(--v1-superficie);
+  border-color: var(--v1-filo);
+  border-radius: var(--v1-r-superficie);
+}
+.tema-v1 .vt-cella {
+  border-color: transparent;
+  background-color: transparent;
+}
+
+/* ── Tipografia ─────────────────────────────────────────────────────────────
+   Titoli più stretti di spaziatura e più pesanti, corpo più arioso: la
+   gerarchia la fa il peso, non il colore. */
+.tema-v1 :is(h1, h2, h3, h4) {
+  letter-spacing: -0.018em;
+  font-weight: 650;
+  color: var(--core-black);
+}
+.tema-v1 :is(p, li) {
+  line-height: 1.55;
+}
+
+/* ═══ SUPERFICI ═════════════════════════════════════════════════════════════
+   Le card perdono il bordo e prendono un'ombra bassa e larga più un angolo
+   grande: è il cambio che si nota per primo. Dentro, il respiro cresce da 16 a
+   20/24, e l'intestazione smette di essere una fascia separata. */
+.tema-v1 section[class*='border-1'][class*='flex-col'],
+.tema-v1 [class*='fz-card'] {
+  border-color: transparent !important;
+  border-radius: var(--v1-r-superficie) !important;
+  box-shadow: var(--v1-ombra);
+  overflow: hidden;
+}
+/* Le card colorate tengono la loro tinta: cambia la scocca, non il significato. */
+.tema-v1 section[class*='border-1'][class*='bg-core-white'] {
+  background-color: var(--v1-superficie) !important;
+}
+.tema-v1 section[class*='border-1'] > header > div {
+  padding: 20px 24px 4px !important;
+  border: 0 !important;
+}
+.tema-v1 section[class*='border-1'] > header h2 {
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.014em;
+}
+.tema-v1 section[class*='border-1'] > article {
+  padding: 8px 24px 20px !important;
+  color: var(--grey-400);
+}
+.tema-v1 section[class*='border-1'] > footer,
+.tema-v1 section[class*='border-1'] > div:last-child:not([class*='header']) {
+  padding-inline: 24px !important;
+  padding-bottom: 20px !important;
+}
+
+/* Quello che galleggia davvero — dialoghi, menu, popover — tiene l'ombra alta.
+   Tutto il resto perde le ombre sparse. */
+.tema-v1 :is([role='dialog'], [role='menu'], [role='listbox'], [class*='popover'], [class*='fz-action-list']) {
+  border-radius: var(--v1-r-superficie);
+  border-color: transparent;
+  box-shadow: var(--v1-ombra-alta);
+}
+.tema-v1 [class*='shadow']:not([role='dialog']):not([role='menu']):not([role='listbox']):not([class*='popover']) {
+  box-shadow: var(--v1-ombra);
+}
+
+/* ═══ CAMPI ═════════════════════════════════════════════════════════════════
+   Pieni, non incorniciati: un rettangolo di carta più scura dentro cui si
+   scrive. La cornice non serve a dire «qui c'è un campo» — lo dice il colore —
+   ma a dire «sei qui»: quindi compare col fuoco. */
+.tema-v1 .fz-input > div[class*='border-1'],
+.tema-v1 [class*='fz-input'] > div[class*='border-1'] {
+  background-color: var(--v1-superficie-2) !important;
+  border-color: transparent !important;
+  border-radius: var(--v1-r-campo) !important;
+  padding-inline: 14px !important;
+}
+.tema-v1 :is(.fz-input, [class*='fz-input'])[class*='h-44'] > div,
+.tema-v1 .fz-input > div[class*='h-44'] {
+  height: 52px !important;
+}
+.tema-v1 .fz-input > div[class*='h-32'] {
+  height: 40px !important;
+}
+.tema-v1 .fz-input:focus-within > div[class*='border-1'] {
+  background-color: var(--v1-superficie) !important;
+  border-color: var(--v1-focus) !important;
+}
+
+/* Il campo pieno non ha bordo — tranne quando lo stato è una cosa da sapere.
+   Errore e «da completare» tornano, e più forti di prima: il campo si tinge
+   *e* prende il bordo *e* la barra sul lato. Tre segnali invece di uno, così
+   non dipende dal colore. */
+.tema-v1 .fz-input > div[class*='border-semantic-error'] {
+  background-color: var(--semantic-error-50) !important;
+  border-color: var(--semantic-error-200) !important;
+  box-shadow: inset 4px 0 0 0 var(--semantic-error-200);
+}
+.tema-v1 .fz-input > div[class*='border-semantic-warning'] {
+  background-color: var(--semantic-warning-50) !important;
+  border-color: var(--semantic-warning-200) !important;
+  box-shadow: inset 4px 0 0 0 var(--semantic-warning-200);
+}
+.tema-v1 .fz-input > div[class*='border-semantic-success'] {
+  background-color: var(--semantic-success-50) !important;
+  border-color: var(--semantic-success-200) !important;
+  box-shadow: inset 4px 0 0 0 var(--semantic-success-200);
+}
+.tema-v1 :is(textarea, select) {
+  background-color: var(--v1-superficie-2) !important;
+  border-color: transparent !important;
+  border-radius: var(--v1-r-campo) !important;
+  padding: 12px 14px !important;
+}
+.tema-v1 label {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--grey-400);
+  letter-spacing: -0.004em;
+}
+.tema-v1 input::placeholder,
+.tema-v1 textarea::placeholder {
+  color: var(--grey-300);
+  opacity: 1; /* Firefox lo sbiadisce di suo, e finisce sotto soglia */
+}
+
+/* ═══ BOTTONI ═══════════════════════════════════════════════════════════════
+   Pillole. È la forma che dice «premimi» senza bisogno di un bordo, e in una
+   riga di testo squadrato si riconosce a colpo d'occhio. */
+.tema-v1 button[class*='fz-button'] {
+  min-width: max-content;
+  border-radius: var(--v1-r-pill) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.006em;
+  padding-inline: 22px !important;
+  border-color: transparent !important;
+}
+.tema-v1 button[class*='fz-button'][class*='h-44'] {
+  height: 48px !important;
+}
+.tema-v1 button[class*='fz-button'][class*='h-32'] {
+  height: 38px !important;
+}
+.tema-v1 [class*='fz-icon-button'] {
+  border-radius: var(--v1-r-pill) !important;
+}
+/* La variante secondaria non è un bottone vuoto con un filo attorno: è carta
+   più scura. Il filo lo teniamo solo dove serve a separare due azioni. */
+.tema-v1 button[class*='bg-core-white'] {
+  background-color: var(--v1-superficie-2) !important;
+  box-shadow: inset 0 0 0 1px var(--v1-filo);
+}
+
+/* ═══ PILLOLE DI STATO ══════════════════════════════════════════════════════
+   I badge diventano tinte tenui con testo scuro: leggibili, e non urlano. */
+.tema-v1 [class*='rounded-2xl'][class*='bg-'] {
+  border-radius: var(--v1-r-pill) !important;
+  font-weight: 600;
+  letter-spacing: 0.006em;
+}
+.tema-v1 [class~='bg-grey-500'][class*='rounded-2xl'] {
+  background-color: var(--grey-100) !important;
+  color: var(--core-black) !important;
+}
+.tema-v1 [class~='bg-grey-500'][class*='rounded-2xl'] :is(p, span) {
+  color: var(--core-black) !important;
+}
+
+/* ═══ ACCESSIBILITÀ ═════════════════════════════════════════════════════════
+   Questa parte non è estetica: è la ragione per cui la versione esiste.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* Focus: un anello nero di due pixel staccato di due, su tutto quello che il
+   fuoco lo prende. Nero perché deve reggere sopra l'indaco, sopra il rosso e
+   sopra la carta senza cambiare. `:focus-visible` e non `:focus`: chi usa il
+   mouse non lo vede, chi usa la tastiera non lo perde mai. */
+.tema-v1 :is(a, button, input, textarea, select, summary, [tabindex], [role='button'], [role='tab'], [role='option'], [role='menuitem'], [role='checkbox'], [role='radio']):focus-visible {
+  outline: 2px solid var(--v1-focus);
+  outline-offset: 2px;
+  border-radius: var(--v1-r-campo);
+}
+/* Un solo anello per campo: quello sul contenitore. Dentro c'è un input che
+   prenderebbe il suo, e il wrapper del design system ha `tabindex` — senza
+   questa riga se ne vedono tre sovrapposti. */
+.tema-v1 :is(.fz-input, [class*='fz-input']):focus-within {
+  outline: 2px solid var(--v1-focus);
+  outline-offset: 2px;
+  border-radius: var(--v1-r-campo);
+}
+.tema-v1 :is(.fz-input, [class*='fz-input'], [class*='select'], [class*='typeahead'], [class*='datepicker'])
+  :is(input, textarea, select, [tabindex]):focus-visible {
+  outline: none !important;
+}
+.tema-v1 :focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Hover su tutto quello che si preme: una velatura interna, così funziona
+   sopra qualunque variante senza conoscerne il fondo. Oggi la variante
+   invisibile al passaggio non fa niente; da qui risponde come le altre. */
+.tema-v1 :is(button, [role='button'], [role='option'], [role='menuitem'], [role='tab'], a):hover:not([disabled]):not([aria-disabled='true']) {
+  cursor: pointer;
+}
+.tema-v1 button:hover:not([disabled]):not([aria-disabled='true']) {
+  box-shadow: inset 0 0 0 999px var(--v1-hover);
+}
+.tema-v1 button:active:not([disabled]):not([aria-disabled='true']) {
+  box-shadow: inset 0 0 0 999px rgba(28, 27, 24, 0.12);
+}
+.tema-v1 :is([role='option'], [role='menuitem']):hover {
+  background-color: var(--v1-superficie-2);
+}
+.tema-v1 a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Selezionato: si dichiara con il bordo e con il peso, non solo con il colore —
+   che da solo, con il daltonismo, non arriva. */
+.tema-v1 :is([aria-selected='true'], [aria-current='page'], [aria-current='step'], [data-selected='true']) {
+  box-shadow: inset 0 0 0 2px var(--v1-sel);
+  border-radius: var(--v1-r-campo);
+  font-weight: 650;
+}
+.tema-v1 [role='tab'][aria-selected='true'] {
+  box-shadow: inset 0 -3px 0 0 var(--v1-sel);
+  border-radius: 0;
+}
+.tema-v1 label:has(input:checked) {
+  font-weight: 650;
+}
+
+/* Disabilitato: spento, non invisibile. Oggi scende a 1,38:1 — pallido su
+   pallido. Qui è carta spenta con sopra un testo che si legge (7,4:1). */
+.tema-v1 :is(button, a)[disabled],
+.tema-v1 :is(button, a)[aria-disabled='true'] {
+  background-color: var(--grey-100) !important;
+  color: var(--grey-400) !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+  opacity: 1;
+}
+.tema-v1 :is(button, a)[disabled] :is(span, div, p),
+.tema-v1 :is(button, a)[aria-disabled='true'] :is(span, div, p) {
+  color: var(--grey-400) !important;
+}
+.tema-v1 :is(input, textarea, select)[disabled] {
+  background-color: var(--grey-100) !important;
+  color: var(--grey-400) !important;
+}
+
+/* Due grigi e due indaci non possono fare il testo: 1,2:1 e 1,4:1 su bianco.
+   Dove il design system li usa come colore del testo, qui diventano leggibili.
+   Come bordi e come fondi restano quelli. */
+.tema-v1 [class*='text-grey-100'],
+.tema-v1 [class*='text-grey-200'],
+.tema-v1 [class*='text-blue-100'],
+.tema-v1 [class*='text-blue-200'],
+.tema-v1 [class*='cursor-not-allowed'] {
+  color: var(--grey-400) !important;
+}
+
+/* Colore semantico, due mestieri separati: le tinte chiare sono superfici e
+   portano testo inchiostro; i toni pieni sono scuri e portano il bianco. Oggi
+   il giallo pieno porta testo nero a 3,55:1, cioè «attenzione» diventa
+   illeggibile proprio quando serve. */
+.tema-v1 [class~='bg-semantic-error'],
+.tema-v1 [class~='bg-semantic-error-200'],
+.tema-v1 [class~='bg-semantic-error-300'],
+.tema-v1 [class~='bg-semantic-warning'],
+.tema-v1 [class~='bg-semantic-warning-200'],
+.tema-v1 [class~='bg-semantic-warning-300'],
+.tema-v1 [class~='bg-semantic-success'],
+.tema-v1 [class~='bg-semantic-success-200'],
+.tema-v1 [class~='bg-semantic-success-300'],
+.tema-v1 [class~='bg-semantic-info'],
+.tema-v1 [class~='bg-semantic-info-200'],
+.tema-v1 [class~='bg-semantic-info-300'],
+.tema-v1 :is([class~='bg-semantic-error'], [class~='bg-semantic-error-200'], [class~='bg-semantic-error-300'], [class~='bg-semantic-warning'], [class~='bg-semantic-warning-200'], [class~='bg-semantic-warning-300'], [class~='bg-semantic-success'], [class~='bg-semantic-success-200'], [class~='bg-semantic-success-300'], [class~='bg-semantic-info'], [class~='bg-semantic-info-200'], [class~='bg-semantic-info-300']) :is(span, div, p, b, strong) {
+  color: #ffffff !important;
+}
+.tema-v1 :is([class~='bg-semantic-error-50'], [class~='bg-semantic-warning-50'], [class~='bg-semantic-success-50'], [class~='bg-semantic-info-50']) :is(p, b, strong, span:not([class*='icon']):not([class*='fa-'])) {
+  color: var(--core-black);
+}
+
+/* L'avviso prende una barra piena sul lato: si trova con la coda dell'occhio
+   scorrendo una pagina lunga, e il colore smette di essere l'unico segnale. */
+.tema-v1 [class~='bg-semantic-error-50'] {
+  box-shadow: inset 4px 0 0 0 var(--semantic-error-200);
+}
+.tema-v1 [class~='bg-semantic-warning-50'] {
+  box-shadow: inset 4px 0 0 0 var(--semantic-warning-200);
+}
+.tema-v1 [class~='bg-semantic-success-50'] {
+  box-shadow: inset 4px 0 0 0 var(--semantic-success-200);
+}
+.tema-v1 [class~='bg-semantic-info-50'] {
+  box-shadow: inset 4px 0 0 0 var(--semantic-info-200);
+}
+.tema-v1 [class*='bg-semantic-'][class*='rounded'] {
+  border-radius: var(--v1-r-campo);
+}
+
+/* ── Tabelle ────────────────────────────────────────────────────────────────
+   Si legge per righe: la riga sotto il puntatore si accende, l'intestazione si
+   stacca per peso, i fili si assottigliano. */
+.tema-v1 table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.tema-v1 thead th {
+  color: var(--grey-400);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+.tema-v1 tbody tr:hover {
+  background-color: var(--v1-superficie-2);
+}
+.tema-v1 :is(td, th) {
+  border-color: var(--v1-filo) !important;
+}
+
+/* ── Movimento ──────────────────────────────────────────────────────────────
+   Corto, e solo su colore e ombra: mai sulla posizione, che fa ballare la
+   pagina. Chi ha chiesto meno movimento non lo riceve. */
+.tema-v1 :is(button, a, input, textarea, select, [role='tab'], [role='option'], section) {
+  transition:
+    background-color 0.14s ease,
+    border-color 0.14s ease,
+    color 0.14s ease,
+    box-shadow 0.14s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tema-v1 * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ── Briciole ───────────────────────────────────────────────────────────────
+   Nel design system di oggi il separatore è attaccato alle parole
+   («Clienti/Nuvola Studio/Fattura»): si legge male e i link si toccano. Qui
+   respira, e il livello corrente pesa di più. */
+.tema-v1 nav[aria-label='Breadcrumb'] [aria-hidden='true'] {
+  margin-inline: 8px;
+  color: var(--grey-300);
+}
+.tema-v1 nav[aria-label='Breadcrumb'] li:last-child {
+  font-weight: 600;
+}
+
+/* Sul body il tema serve solo a raggiungere i pannelli teletrasportati: il
+   colore della pagina lo mette il riquadro del contenuto, non lui. */
+body[class*='tema-'] {
+  background-color: transparent;
+}

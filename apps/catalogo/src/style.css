@@ -1,0 +1,363 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Inter, sans-serif;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url('/fonts/Inter-Light.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url('/fonts/Inter-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url('/fonts/Inter-Medium.ttf') format('truetype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url('/fonts/Inter-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url('/fonts/Inter-Bold.ttf') format('truetype');
+  font-weight: 700;
+}
+
+/* ── Cornice del catalogo ─────────────────────────────────────────────────
+   Solo la pagina che contiene i componenti: griglia, colonna di navigazione,
+   riquadri degli esempi. I componenti dentro non sono toccati. */
+body {
+  margin: 0;
+  background: #f7f6f3;
+  color: #1f1f1c;
+}
+.cat {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  min-height: 100vh;
+}
+.cat-nav {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px 16px;
+  background: #ffffff;
+  border-right: 1px solid #e6e5e1;
+}
+.cat-brand {
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0 0 2px;
+}
+.cat-sub {
+  font-size: 12px;
+  color: #78776f;
+  margin: 0 0 18px;
+}
+.cat-nav h3 {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9a9992;
+  margin: 18px 0 6px;
+}
+.cat-nav a {
+  display: block;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #3f3f3a;
+  text-decoration: none;
+}
+.cat-nav a:hover {
+  background: #f2f1ed;
+}
+.cat-main {
+  padding: 24px 28px 80px;
+  max-width: 1100px;
+}
+.cat-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.cat-head h1 {
+  font-size: 22px;
+  margin: 0 0 4px;
+}
+.cat-head p {
+  margin: 0;
+  font-size: 13px;
+  color: #6f6e67;
+  max-width: 62ch;
+}
+.cat-env {
+  display: inline-flex;
+  background: #ffffff;
+  border: 1px solid #e0dfda;
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+  flex: 0 0 auto;
+}
+.cat-env button {
+  border: 0;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  color: #55544e;
+}
+.cat-env button.is-on {
+  background: #1f1f1c;
+  color: #ffffff;
+}
+.cat-sec {
+  margin: 34px 0 0;
+  scroll-margin-top: 16px;
+}
+.cat-sec > h2 {
+  font-size: 15px;
+  margin: 0 0 2px;
+}
+.cat-sec > p {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: #6f6e67;
+}
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+}
+.cat-demo {
+  background: #ffffff;
+  border: 1px solid #e6e5e1;
+  border-radius: 10px;
+  padding: 14px;
+  scroll-margin-top: 16px;
+  min-width: 0;
+}
+.cat-demo-h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.cat-demo-h b {
+  font-size: 13px;
+}
+.cat-demo-h code {
+  font-size: 11px;
+  color: #9a9992;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.cat-demo-n {
+  font-size: 12px;
+  color: #6f6e67;
+  margin: 0 0 10px;
+}
+.cat-demo-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.cat-demo-body.is-col {
+  display: block;
+}
+.cat-demo-body.is-col > * + * {
+  margin-top: 10px;
+}
+
+/* ── Pagina del componente e vetrine ────────────────────────────────────── */
+.cat-brand-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.cat-nav a.is-on {
+  background: #1f1f1c;
+  color: #ffffff;
+}
+.cat-briciole {
+  font-size: 12px;
+  color: #9a9992;
+  margin: 0 0 10px;
+}
+.cat-briciole a {
+  color: #6f6e67;
+}
+.cat-imp {
+  margin-top: 8px !important;
+}
+.cat-imp code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #55544e;
+  background: #f2f1ed;
+  border-radius: 5px;
+  padding: 3px 7px;
+}
+a.cat-demo {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.12s ease;
+}
+a.cat-demo:hover {
+  border-color: #bdbcb5;
+}
+.vt {
+  margin-top: 26px;
+}
+.vt-h h3 {
+  font-size: 13px;
+  margin: 0 0 2px;
+}
+.vt-h p {
+  font-size: 12px;
+  color: #6f6e67;
+  margin: 0 0 10px;
+  max-width: 70ch;
+}
+.vt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid #e6e5e1;
+  border-radius: 10px;
+  padding: 12px;
+}
+.vt-grid.is-col {
+  display: block;
+}
+.vt-grid.is-col > * + * {
+  margin-top: 10px;
+}
+.vt-cella {
+  border: 1px dashed #ececE8;
+  border-radius: 8px;
+  padding: 12px 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+.vt-cella.is-larga {
+  grid-column: 1 / -1;
+}
+.vt-live {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+/* Nelle gallerie a colonna l'esempio prende tutta la larghezza: senza, un
+   componente che si dispone sull'orizzontale (stepper, tabella, paginazione)
+   resta schiacciato sul contenuto. */
+.vt-live > * {
+  max-width: 100%;
+}
+.vt-grid.is-col .vt-live > *:only-child,
+.vt-cella.is-larga .vt-live > *:only-child {
+  width: 100%;
+}
+.vt-et {
+  font-size: 11px;
+  color: #9a9992;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.cat-demo-apri {
+  font-size: 12px;
+  color: #9a9992;
+}
+
+/* ── Le tre versioni ─────────────────────────────────────────────────────── */
+.cat-corpo {
+  min-width: 0;
+}
+.cat-temi {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 28px;
+  background: rgba(247, 246, 243, 0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid #e6e5e1;
+}
+.cat-temi-tabs {
+  display: inline-flex;
+  background: #ffffff;
+  border: 1px solid #e0dfda;
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+  flex: 0 0 auto;
+}
+.cat-temi-tabs button {
+  border: 0;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  color: #55544e;
+}
+.cat-temi-tabs button.is-on {
+  background: #1f1f1c;
+  color: #ffffff;
+}
+.cat-temi-nota {
+  margin: 0;
+  font-size: 12px;
+  color: #6f6e67;
+  min-width: 0;
+}
+
+/* Gallerie con esempi larghi: l'anatomia di una card non sta in 168px. */
+.vt-grid.is-larga {
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+}
+
+/* L'immagine della demo di anatomia sta nello slot `header` della card, che
+   nei temi senza rifacimento la mette di fianco al titolo. Qui vale come
+   miniatura, così nessun tema trabocca; la Versione 2 la porta a tutta
+   larghezza sopra l'intestazione. */
+.vt-live section header img {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
