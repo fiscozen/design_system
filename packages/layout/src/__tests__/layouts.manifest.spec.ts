@@ -1,18 +1,31 @@
 import { describe, it, expect } from 'vitest'
-import { readFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { existsSync, readFileSync } from 'node:fs'
+import { homedir } from 'node:os'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import Ajv2020 from 'ajv/dist/2020'
+import type { ErrorObject } from 'ajv'
 
 /**
  * Guards `packages/layout/layouts.json` — the page-layout manifest consumed by
  * the agentic-design plugin to answer "which layout should this page use?" in
  * every repo built on this design system.
  *
- * The manifest is only useful if it stays in step with what the package actually
- * exports. A layout added without a manifest entry is invisible to the tooling
- * (or, worse, reported as unclassified), so parity is enforced here rather than
- * left to review. This spec runs in the pre-commit `nx affected -t test:unit`
- * gate, which means the manifest cannot drift into a commit.
+ * Three things are checked, in the order they can break:
+ *
+ * 1. The manifest satisfies the contract it declares. The contract is a JSON
+ *    Schema, so an entry with a misspelled or invented field fails here rather
+ *    than reaching a consumer as a field the engine silently ignores.
+ * 2. The manifest stays in step with what the package actually exports. A layout
+ *    added without a manifest entry is invisible to the tooling (or, worse,
+ *    reported as unclassified), so parity is enforced here rather than left to
+ *    review.
+ * 3. The vendored contract stays identical to the plugin's own copy.
+ *
+ * This spec runs in the pre-commit `nx affected -t test:unit` gate — the repo's
+ * only automated gate, since there is no CI workflow — which means the manifest
+ * cannot drift into a commit, and that check 3 runs on a machine where the
+ * plugin is installed.
  *
  * Failure messages are written to be actionable on first read — including the
  * exact JSON skeleton to add — because the thing that most often adds a layout
@@ -23,12 +36,24 @@ import { fileURLToPath } from 'node:url'
 // `fileURLToPath` on the string, not on a `new URL(...)`: under the jsdom test
 // environment the global `URL` is jsdom's, which Node's converter rejects.
 const HERE = dirname(fileURLToPath(import.meta.url))
-const manifest = JSON.parse(readFileSync(join(HERE, '../../layouts.json'), 'utf8'))
+const PACKAGE_ROOT = join(HERE, '../..')
+
+const SCHEMA_FILE = 'ds-layouts.schema.json'
+const PLUGIN_NAME = 'agentic-design'
+const SCHEMA_ENV = 'FZ_AGENTIC_DESIGN_SCHEMA'
+const explicitContract = process.env[SCHEMA_ENV] ?? null
+
+const manifest = JSON.parse(readFileSync(join(PACKAGE_ROOT, 'layouts.json'), 'utf8'))
+const schemaSource = readFileSync(join(PACKAGE_ROOT, SCHEMA_FILE), 'utf8')
+const schema = JSON.parse(schemaSource)
 const indexSource = readFileSync(join(HERE, '../index.ts'), 'utf8')
 const typesSource = readFileSync(join(HERE, '../types.ts'), 'utf8')
 
-const KINDS = ['shell', 'page-content', 'bounded', 'region', 'grid']
-const HEIGHT_CONTRACTS = ['owns-viewport', 'document-scroll', 'fills-parent']
+// Read off the contract rather than restated here, so the skeleton a failure
+// prints cannot advertise a value the contract rejects.
+const entryFields = schema.properties.layouts.items.properties
+const KINDS: string[] = entryFields.kind.enum
+const HEIGHT_CONTRACTS: string[] = entryFields.heightContract.enum
 
 /** Names re-exported from the barrel that look like page layouts. */
 function exportedLayoutNames(): string[] {
@@ -95,7 +120,124 @@ function skeleton(name: string): string {
   )
 }
 
+/** ajv's errors, rendered as lines the reader can act on. */
+function contractFailure(errors: ErrorObject[]): string {
+  return [
+    '',
+    `packages/layout/layouts.json does not satisfy ${SCHEMA_FILE}:`,
+    '',
+    ...errors.map(errorLine),
+    '',
+    `Open packages/layout/${SCHEMA_FILE} for what each field means and which are required.`,
+    "It is a verbatim copy of the agentic-design plugin's docs/ds-layouts.schema.json, which",
+    'owns the contract — so fix the manifest here, not the schema.',
+    ''
+  ].join('\n')
+}
+
+function errorLine(error: ErrorObject): string {
+  return `  ${error.instancePath || '(root)'} ${error.message}${errorDetail(error)}`
+}
+
+function errorDetail(error: ErrorObject): string {
+  const params = error.params as { additionalProperty?: string; allowedValues?: string[] }
+  if (params.additionalProperty) return `: "${params.additionalProperty}"`
+  if (params.allowedValues) return `: one of ${params.allowedValues.join(' | ')}`
+  return ''
+}
+
+/** The plugin's own copy of the contract, or null when the plugin is not installed here. */
+function findPluginContract(): string | null {
+  return pluginContractCandidates().find((candidate) => existsSync(candidate)) ?? null
+}
+
+/** Where the plugin's copy can be, most explicit first. */
+function pluginContractCandidates(): string[] {
+  if (explicitContract) return [explicitContract]
+  const roots = [process.env.CLAUDE_PLUGIN_ROOT, activePluginInstallPath()]
+  return roots
+    .filter((root): root is string => Boolean(root))
+    .map((root) => join(root, 'docs', SCHEMA_FILE))
+}
+
+type PluginInstall = { installPath?: string }
+
+/** installPath of the installed agentic-design plugin, per Claude Code's own registry. */
+function activePluginInstallPath(): string | null {
+  const registry = join(homedir(), '.claude', 'plugins', 'installed_plugins.json')
+  if (!existsSync(registry)) return null
+  const installs: Record<string, PluginInstall[]> =
+    JSON.parse(readFileSync(registry, 'utf8')).plugins ?? {}
+  const key = Object.keys(installs).find((name) => name.startsWith(`${PLUGIN_NAME}@`))
+  return key ? (installs[key][0]?.installPath ?? null) : null
+}
+
+function driftMessage(pluginCopy: string): string {
+  return [
+    '',
+    `packages/layout/${SCHEMA_FILE} has drifted from the plugin's copy at:`,
+    `  ${pluginCopy}`,
+    '',
+    'The plugin owns this contract: it is the engine that reads the manifest and decides what',
+    'conformance means. The copy here exists only because the plugin repo is private, so its',
+    'raw URL 404s and neither an editor nor this spec could resolve it. Re-copy it verbatim:',
+    '',
+    `  cp "${pluginCopy}" packages/layout/${SCHEMA_FILE}`,
+    '',
+    'then re-run this spec. If the contract changed in a way layouts.json violates, the',
+    '"satisfies the contract it declares" test names the field.',
+    ''
+  ].join('\n')
+}
+
+const pluginContract = findPluginContract()
+
+// Nothing to compare against, and nothing was asked for: the alignment check is
+// out of scope on this machine rather than passing. Setting SCHEMA_ENV asks for
+// it explicitly, so a bad path there fails instead of skipping.
+const alignmentOutOfScope = pluginContract === null && explicitContract === null
+
+// Written to stderr, not through `console`: the reporter swallows module-scope
+// console output, and a skip whose reason is invisible reads as a pass.
+if (alignmentOutOfScope) {
+  process.stderr.write(
+    `[layouts.manifest] the ${PLUGIN_NAME} plugin is not installed here, so the contract ` +
+      `alignment check did not run. Point ${SCHEMA_ENV} at the plugin's docs/${SCHEMA_FILE} ` +
+      'to run it.\n'
+  )
+}
+
 describe('layouts.json manifest', () => {
+  // ============================================
+  // THE CONTRACT
+  // ============================================
+  describe('The contract', () => {
+    it('declares a $schema that resolves to a file in this package', () => {
+      const declared: string = manifest.$schema
+
+      expect(
+        /^https?:/.test(declared),
+        `layouts.json points $schema at "${declared}". A remote URL is the wrong pointer here: ` +
+          'the contract lives in a private repo, so its raw URL answers 404 for every reader ' +
+          `and every tool. Point $schema at the vendored sibling copy, ./${SCHEMA_FILE}.`
+      ).toBe(false)
+
+      expect(
+        existsSync(resolve(PACKAGE_ROOT, declared)),
+        `layouts.json declares $schema "${declared}", which resolves to nothing. The vendored ` +
+          `contract is packages/layout/${SCHEMA_FILE}.`
+      ).toBe(true)
+    })
+
+    it('satisfies the contract it declares', () => {
+      const validate = new Ajv2020({ allErrors: true }).compile(schema)
+
+      const valid = validate(manifest)
+
+      expect(valid, valid ? '' : contractFailure(validate.errors ?? [])).toBe(true)
+    })
+  })
+
   // ============================================
   // PARITY WITH THE BARREL
   // ============================================
@@ -119,7 +261,8 @@ describe('layouts.json manifest', () => {
               '',
               missing.map(skeleton).join(',\n'),
               '',
-              'Field meanings — see docs/ds-layouts.schema.json in the agentic-design plugin:',
+              `Field meanings — see packages/layout/${SCHEMA_FILE}, the contract this manifest`,
+              'is validated against:',
               '  kind=shell         a top-level page frame that owns the viewport height (one per page)',
               '  kind=page-content  renders INSIDE a shell; set `nestWithin` + `whenNested`',
               '  kind=bounded       fills its parent and needs a bounded-height ancestor',
@@ -150,47 +293,43 @@ describe('layouts.json manifest', () => {
   })
 
   // ============================================
-  // SHAPE
+  // RULES STRICTER THAN THE CONTRACT
   // ============================================
-  describe('Shape', () => {
-    it('declares the package and a non-empty layouts array', () => {
+  // The contract admits any manifest a consuming design system could publish.
+  // These are the additional promises THIS package makes about its own entries,
+  // which a schema cannot express.
+  describe('Rules stricter than the contract', () => {
+    it('declares the package these layouts ship in', () => {
       expect(manifest.package).toBe('@fiscozen/layout')
-      expect(Array.isArray(manifest.layouts)).toBe(true)
-      expect(manifest.layouts.length).toBeGreaterThan(0)
     })
 
     it.each(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       manifest.layouts.map((l: any) => [l.name, l] as const)
-    )('%s has the required fields with valid values', (name, layout) => {
-      expect(typeof name, 'every entry needs a `name`').toBe('string')
-      expect(KINDS, `${name}.kind must be one of ${KINDS.join(' | ')}`).toContain(layout.kind)
+    )('%s describes the page shape it is for, and versions itself', (name, layout) => {
       expect(
         typeof layout.whenToUse === 'string' && layout.whenToUse.length > 20,
         `${name}.whenToUse must describe the page shape this layout is for — it is the text the ` +
           'layout decision is actually made from'
       ).toBe(true)
-      if (layout.heightContract !== undefined) {
-        expect(HEIGHT_CONTRACTS, `${name}.heightContract is invalid`).toContain(layout.heightContract)
-      }
-      if (layout.since !== undefined) {
-        expect(layout.since, `${name}.since must be a semver version`).toMatch(/^\d+\.\d+\.\d+/)
-      }
-      if (layout.composeOnly !== undefined) {
-        expect(typeof layout.composeOnly.safe, `${name}.composeOnly.safe must be a boolean`).toBe(
-          'boolean'
-        )
-        if (layout.composeOnly.safe === false) {
-          expect(
-            layout.composeOnly.gaps?.length,
-            `${name}.composeOnly.safe is false, so list the gap(s) — consumers under a ` +
-              'compose-only policy are shown this text before they commit to the layout'
-          ).toBeGreaterThan(0)
-        }
-      }
+      expect(layout.since, `${name}.since must be a semver version`).toMatch(/^\d+\.\d+\.\d+/)
     })
 
-    it('gives every nesting layout a host list or none at all, never a host that is not a shell', () => {
+    it.each(
+      manifest.layouts
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .filter((l: any) => l.composeOnly?.safe === false)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((l: any) => [l.name, l.composeOnly] as const)
+    )('%s lists the gaps that make it compose-only unsafe', (name, composeOnly) => {
+      expect(
+        composeOnly.gaps?.length,
+        `${name}.composeOnly.safe is false, so list the gap(s) — consumers under a ` +
+          'compose-only policy are shown this text before they commit to the layout'
+      ).toBeGreaterThan(0)
+    })
+
+    it('never names a nesting host that is not a shell', () => {
       const shells = new Set(
         manifest.layouts
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -228,6 +367,28 @@ describe('layouts.json manifest', () => {
           'Update the manifest (or the type) so the two agree — consumers read the manifest ' +
           'to know which slots exist.'
       ).toEqual([...declared].sort())
+    })
+  })
+
+  // ============================================
+  // ALIGNMENT WITH THE PLUGIN
+  // ============================================
+  // The comparison is byte-for-byte, which is why the vendored copy is verbatim
+  // down to its `$id` — that `$id` names the plugin's private URL and does not
+  // resolve, and per JSON Schema it does not have to: it identifies the schema,
+  // it is not fetched. `$schema` in layouts.json is the pointer tools resolve,
+  // and that one is local.
+  describe('Alignment with the agentic-design plugin', () => {
+    it.skipIf(alignmentOutOfScope)("matches the plugin's own copy", () => {
+      expect(
+        pluginContract,
+        `${SCHEMA_ENV} is set to "${explicitContract}", which does not exist. Point it at the ` +
+          `plugin's docs/${SCHEMA_FILE}, or unset it to skip this check.`
+      ).not.toBeNull()
+
+      const canonical = readFileSync(pluginContract!, 'utf8')
+
+      expect(schemaSource, driftMessage(pluginContract!)).toBe(canonical)
     })
   })
 })

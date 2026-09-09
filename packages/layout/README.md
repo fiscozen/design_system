@@ -340,6 +340,27 @@ slot content instead.
 See [`docs/RFC/layout/frame-shell-promotion.md`](../../docs/RFC/layout/frame-shell-promotion.md)
 for the decision record.
 
+## Layout manifest (`layouts.json`)
+
+Alongside the components, this package publishes
+[`layouts.json`](./layouts.json): a machine-readable description of every layout
+it exports — what page shape each one is for, which it is confused with, how it
+establishes its height, which hosts it is verified to nest inside, and which of
+its capabilities are unreachable under a compose-only styling policy.
+
+Repos governed by the **agentic-design** plugin read it at session start to
+answer the first question of any design implementation — *which layout should
+this page use?* — so a layout added here becomes selectable across the org with
+no change in any consuming repo.
+
+Its contract is the JSON Schema in
+[`ds-layouts.schema.json`](./ds-layouts.schema.json), which `layouts.json`
+references as its `$schema`. `src/__tests__/layouts.manifest.spec.ts` validates
+the manifest against it, and also holds the manifest to parity with `src/index.ts`
+and with the `Fz…Slots` types. The plugin owns the schema; the copy here is
+verbatim so the spec can detect drift. See `CLAUDE.md` in this package before
+changing either file.
+
 ## Stability & contribution policy
 
 This package intentionally ships the grid primitive, the region molecules, and

@@ -29,7 +29,17 @@ Per entry, the fields that carry real weight:
 | `since` | The version the layout ships in. Consumers compare it against the installable version, so an agent doesn't plan a page around something unpublished. For a layout landing with a pending changeset, write the version that changeset will produce. |
 | `slots` | Must match the layout's `Fz…Slots` type in `types.ts` — also asserted by the spec. |
 
-The contract is documented in `docs/ds-layouts.schema.json` in the agentic-design plugin.
+The contract is the JSON Schema vendored at `ds-layouts.schema.json` in this package, which
+`layouts.json` points its `$schema` at. The spec validates the manifest against it, so a
+field outside the contract fails the test rather than reaching a consumer as a field the
+engine ignores.
+
+The **agentic-design plugin owns that contract** — it is the engine that reads the manifest
+and decides what conformance means. The copy here exists because the plugin repo is private,
+so its published URL answers 404. Keep the copy verbatim, `$id` included: the spec compares
+it byte for byte against the installed plugin's copy whenever the plugin is present. When
+the contract changes, re-copy the file rather than editing it here; the failure message
+prints the `cp` command.
 
 ## A layout's API must be complete under `compose-only`
 
