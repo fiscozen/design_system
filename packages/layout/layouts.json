@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/fiscozen/claude-plugin-agentic-design/main/docs/ds-layouts.schema.json",
+  "$schema": "./ds-layouts.schema.json",
   "package": "@fiscozen/layout",
   "indexPath": "src/index.ts",
   "exportPattern": "Template$",
