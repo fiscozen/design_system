@@ -1,5 +1,12 @@
 # @fiscozen/input
 
+## 3.5.6
+
+### Patch Changes
+
+- Updated dependencies [fbf556a]
+  - @fiscozen/composables@1.1.5
+
 ## 3.5.5
 
 ### Patch Changes

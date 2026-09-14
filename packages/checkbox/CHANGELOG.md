@@ -1,5 +1,13 @@
 # @fiscozen/checkbox
 
+## 3.0.15
+
+### Patch Changes
+
+- Updated dependencies [fbf556a]
+  - @fiscozen/composables@1.1.5
+  - @fiscozen/tooltip@3.0.9
+
 ## 3.0.14
 
 ### Patch Changes

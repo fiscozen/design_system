@@ -1,5 +1,12 @@
 # @fiscozen/tooltip
 
+## 3.0.9
+
+### Patch Changes
+
+- Updated dependencies [fbf556a]
+  - @fiscozen/composables@1.1.5
+
 ## 3.0.8
 
 ### Patch Changes

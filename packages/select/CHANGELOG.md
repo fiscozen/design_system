@@ -1,5 +1,13 @@
 # @fiscozen/select
 
+## 3.1.16
+
+### Patch Changes
+
+- Updated dependencies [fbf556a]
+  - @fiscozen/composables@1.1.5
+  - @fiscozen/input@3.5.6
+
 ## 3.1.15
 
 ### Patch Changes
