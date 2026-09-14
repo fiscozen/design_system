@@ -202,10 +202,15 @@ const positionCalculators: Record<string, PositionCalculator> = {
     transform: { x: -100, y: -100 }
   }),
 
-  // Right positions - content to right of opener
+  // Right positions - content to right of opener.
+  // `x` is the opener's edge and nothing more: `left` is written to an element
+  // that keeps its own `margin-left`, and for a positioned box with `left` set
+  // and `right: auto` that margin already moves the border edge past it. Adding
+  // the margin here too spends it twice and doubles the gap. The alignment axis
+  // still subtracts its margin, which is what cancels the layout one.
   'right': (opener, margins) => ({
     position: {
-      x: opener.right + margins.left,
+      x: opener.right,
       y: opener.top - margins.top + opener.height / 2
     },
     transform: { x: 0, y: -50 }
@@ -213,7 +218,7 @@ const positionCalculators: Record<string, PositionCalculator> = {
 
   'right-start': (opener, margins) => ({
     position: {
-      x: opener.right + margins.left,
+      x: opener.right,
       y: opener.top - margins.top
     },
     transform: { x: 0, y: 0 }
@@ -221,7 +226,7 @@ const positionCalculators: Record<string, PositionCalculator> = {
 
   'right-end': (opener, margins) => ({
     position: {
-      x: opener.right + margins.left,
+      x: opener.right,
       y: opener.bottom + margins.bottom
     },
     transform: { x: 0, y: -100 }
