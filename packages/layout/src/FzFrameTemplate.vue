@@ -194,9 +194,8 @@ watch(
     <!-- Tools panel: a fixed 400px column, a sibling of the page slot rather
          than something each page renders, so whatever is mounted in it keeps its
          state across navigation with no global store. Desktop-only: 400px of a
-         stacked narrow viewport is not a panel, it is the page. Its own gutter
-         meets the content region's, which is the 16px gap between the two cards
-         the design has. -->
+         stacked narrow viewport is not a panel, it is the page. The gap between
+         it and the page card is the content region's gutter alone. -->
     <FzLayoutAside
       v-if="hasAsideRegion"
       v-show="asideOpen"
@@ -216,10 +215,20 @@ watch(
 /* The gutter and the device safe-area live together here because they have to be
    one declaration: `env()` cannot be expressed as a Tailwind spacing token, and
    splitting them across a utility class and a scoped override leaves two rules
-   fighting over the same property. The 8px is the `p-8` token — the design puts
-   the page's container at an 8px inset inside the frame, and it is also close to
-   the gutter the legacy backoffice pages had (Bootstrap's `.container-fluid`,
-   15px). Losing it runs a page hard against the rail and the window edge.
+   fighting over the same property. The 8px is the `p-8` token, and it is also
+   close to the gutter the legacy backoffice pages had (Bootstrap's
+   `.container-fluid`, 15px).
+
+   A region carries the gutter only on the edges where it has no neighbour, so
+   the page card reads as aligned with the chrome rather than floating off it:
+   the toolbar is flush above the content region and the rail is flush beside it,
+   and an inset there would set the card off from both by 8px of page background
+   that separates it from nothing.
+
+   The same rule decides the aside's left edge. The content region's right gutter
+   already sits between the two cards; padding the aside as well stacks two
+   gutters there and makes the space between the cards twice the space between
+   the aside and the window.
 
    Directional insets: each region pads only the edge(s) it can bleed under, so a
    region's background still reaches the device edge while its content stays
@@ -227,14 +236,24 @@ watch(
    where the platform does not report them. The root clips at `h-dvh`, so unlike
    the `min-h-dvh` shells there is no scroll past the bottom inset. */
 .fz-frame-template__main {
-  padding: 8px;
+  padding: 0 8px 8px;
   padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Below the breakpoint there is no rail to be flush with: the nav is a bar across
+   the top and the content region's left edge is the window's, so the gutter stays
+   there and only goes away once the rail is beside it. */
+@media (min-width: 1024px) {
+  .fz-frame-template__main {
+    padding-left: 0;
+  }
 }
 
 .fz-frame-template__aside {
   padding: 8px;
   padding-right: calc(8px + env(safe-area-inset-right, 0px));
   padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  padding-left: 0;
 }
 
 /* Below the breakpoint the nav is a full-width bar meeting the top edge; from it
