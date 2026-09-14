@@ -210,6 +210,37 @@ export const Default: Story = {
       )
       await expect(canvas.getByPlaceholderText('Scrivi un messaggio')).toHaveValue('bozza')
     })
+
+    await step('The page card meets the chrome and gutters only its free edges', async () => {
+      // Measured, not read off classes: the gutters are scoped CSS, so a class
+      // assertion would pass with the stylesheet gone. Opening the panel first
+      // also settles the width — the aside is `lg:block`, so a visible panel is
+      // proof the rail is beside the page rather than stacked above it.
+      await userEvent.click(canvas.getByRole('button', { name: 'Apri strumenti' }))
+      const tools = canvasElement.querySelector<HTMLElement>('.fz-frame-template__aside-surface')!
+      await waitFor(() => expect(tools).toBeVisible())
+
+      // The card scrolls inside the region, so its top is only the region's top
+      // while the region is at rest.
+      region.scrollTop = 0
+      await waitFor(() => expect(region.scrollTop).toBe(0))
+
+      const card = canvasElement.querySelector<HTMLElement>('.fz-frame-template__surface')!
+      const regionBox = region.getBoundingClientRect()
+      const cardBox = card.getBoundingClientRect()
+      const toolsBox = tools.getBoundingClientRect()
+
+      // Flush against the toolbar above and the rail beside: 8px of page
+      // background there separates the card from chrome it lines up with.
+      expect(cardBox.top - regionBox.top).toBe(0)
+      expect(cardBox.left - regionBox.left).toBe(0)
+
+      // 8px where the next thing along is the window edge rather than chrome,
+      // and the same 8px between the two cards — the content region's gutter
+      // alone, not its gutter plus the aside's.
+      expect(regionBox.right - cardBox.right).toBe(8)
+      expect(toolsBox.left - cardBox.right).toBe(8)
+    })
   }
 }
 
