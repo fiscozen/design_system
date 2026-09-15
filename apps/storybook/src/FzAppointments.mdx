@@ -429,9 +429,14 @@ These props are available in both Auto and Manual modes:
         <code>string</code>
       </td>
       <td>
-        <code>"Scegli un'altro giorno..."</code>
+        <code>"Scegli un altro giorno..."</code>
       </td>
-      <td>Description text for the alert shown when no slots are available.</td>
+      <td>
+        Description text for the alert shown when the selected day has no slots. When no day at
+        all carries slots, the day navigation is hidden and the default becomes{' '}
+        <code>"Al momento non ci sono orari disponibili."</code>, since there is no other day to
+        pick.
+      </td>
     </tr>
   </tbody>
 </table>
