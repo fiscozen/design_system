@@ -405,8 +405,38 @@ export const NoAvailableSlots: Story = {
     })
 
     await step('Verify alert description is shown', async () => {
-      const description = canvas.getByText(/Scegli un'altro giorno e prenota la tua consulenza/i)
+      const description = canvas.getByText(/Scegli un altro giorno e prenota la tua consulenza/i)
       expect(description).toBeInTheDocument()
+    })
+  }
+}
+
+export const NoAvailabilityAtAll: Story = {
+  ...Template,
+  args: {
+    type: 'manual',
+    slots: []
+  },
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify the alert states there is no availability', async () => {
+      await waitFor(
+        () => {
+          expect(canvas.getByText('Nessuna disponibilità')).toBeInTheDocument()
+          expect(canvas.getByText(/Al momento non ci sono orari disponibili/i)).toBeInTheDocument()
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    await step('Verify the user is not invited to pick another day', async () => {
+      expect(canvas.queryByText(/Scegli un altro giorno/i)).not.toBeInTheDocument()
+    })
+
+    await step('Verify the day navigation is not rendered', async () => {
+      expect(canvas.queryByLabelText('Giorno precedente')).not.toBeInTheDocument()
+      expect(canvas.queryByLabelText('Giorno successivo')).not.toBeInTheDocument()
     })
   }
 }

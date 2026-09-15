@@ -60,6 +60,9 @@ export function useAppointmentsManual({
       .sort((a, b) => a.getTime() - b.getTime());
   });
 
+  // Whether any day at all carries slots
+  const hasAnyAvailability = computed(() => availableDays.value.length > 0);
+
   // Current day index
   const currentDayIndex = ref(0);
 
@@ -83,6 +86,7 @@ export function useAppointmentsManual({
   } = useAppointmentsGeneric({
     props,
     currentDate,
+    hasAnyAvailability,
     emit,
   });
 
@@ -225,6 +229,7 @@ export function useAppointmentsManual({
     formattedDate,
     infoText,
     hasAvailableSlots,
+    hasAnyAvailability,
     selectedSlotValue,
     radioGroupName,
     alertTitle,

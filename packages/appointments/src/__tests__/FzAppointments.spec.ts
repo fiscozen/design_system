@@ -730,6 +730,98 @@ describe("FzAppointments", () => {
     });
   });
 
+  describe("No availability at all", () => {
+    it("should invite the user to pick another day when only the current day is fully booked", () => {
+      const day = addDays(startOfDay(new Date()), 1);
+      const firstSlot = new Date(day);
+      firstSlot.setHours(10, 0, 0, 0);
+      const secondSlot = new Date(day);
+      secondSlot.setHours(10, 30, 0, 0);
+
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "auto",
+          startDate: formatISO(day),
+          slotStartTime: formatISO(firstSlot),
+          slotCount: 2,
+          slotInterval: 30,
+          excludedSlots: [formatISO(firstSlot), formatISO(secondSlot)],
+        },
+      });
+
+      expect(wrapper.text()).toContain(
+        "Scegli un altro giorno e prenota la tua consulenza.",
+      );
+      expect(wrapper.find("h3").exists()).toBe(true);
+    });
+
+    it("should state there is no availability instead of inviting to pick another day when manual slots are empty", () => {
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "manual",
+          slots: [],
+        },
+      });
+
+      expect(wrapper.text()).toContain("Nessuna disponibilità");
+      expect(wrapper.text()).toContain(
+        "Al momento non ci sono orari disponibili.",
+      );
+      expect(wrapper.text()).not.toContain("Scegli un altro giorno");
+    });
+
+    it("should hide the day navigation when manual slots are empty", () => {
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "manual",
+          slots: [],
+        },
+      });
+
+      expect(wrapper.find("h3").exists()).toBe(false);
+      expect(wrapper.find('[aria-label="Giorno precedente"]').exists()).toBe(
+        false,
+      );
+      expect(wrapper.find('[aria-label="Giorno successivo"]').exists()).toBe(
+        false,
+      );
+    });
+
+    it("should state there is no availability when auto mode is given a slot count of zero", () => {
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "auto",
+          slotCount: 0,
+          slotStartTime: formatISO(FIXED_TOMORROW),
+          startDate: formatISO(FIXED_TOMORROW),
+        },
+      });
+
+      expect(wrapper.text()).toContain(
+        "Al momento non ci sono orari disponibili.",
+      );
+      expect(wrapper.find("h3").exists()).toBe(false);
+      expect(wrapper.text()).not.toContain("minuti a partire dalle");
+    });
+
+    it("should keep a custom alert description when there is no availability at all", () => {
+      const wrapper = mount(FzAppointments, {
+        props: {
+          type: "manual",
+          slots: [],
+          alertTitle: "Agenda chiusa",
+          alertDescription: "Contattaci telefonicamente.",
+        },
+      });
+
+      expect(wrapper.text()).toContain("Agenda chiusa");
+      expect(wrapper.text()).toContain("Contattaci telefonicamente.");
+      expect(wrapper.text()).not.toContain(
+        "Al momento non ci sono orari disponibili.",
+      );
+    });
+  });
+
   describe("Edge Cases", () => {
     it("should handle empty slots array in manual mode", () => {
       const wrapper = mount(FzAppointments, {
