@@ -246,6 +246,20 @@ describe('FzAppTemplate', () => {
       const wrapper = mount(FzAppTemplate, { props: { contentWidth }, slots: { default: 'x' } })
       expect(wrapper.find('.fz-app-template__content').classes()).toContain(cls)
     })
+
+    it('drops the cap below the breakpoint, where the card is full-bleed', () => {
+      setViewport(false)
+
+      const wrapper = mount(FzAppTemplate, {
+        props: { contentWidth: 'standard' },
+        slots: { default: 'x' }
+      })
+
+      // Between 1024px and the 1200px breakpoint the cap is narrower than the
+      // viewport, so keeping it would centre a square-cornered card in a grey
+      // gutter while the nav bar beside it runs edge to edge.
+      expect(wrapper.find('.fz-app-template__content').classes()).not.toContain('max-w-[1024px]')
+    })
   })
 
   // ============================================

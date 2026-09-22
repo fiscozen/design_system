@@ -149,9 +149,14 @@ const mainClass = computed(() => [
 // buying back width the content needs. The vertical padding is 24px at every
 // size, because it separates the content from the chrome above and below it and
 // that separation does not get less necessary on a smaller screen.
+//
+// `contentWidth` is the card's reading measure, so it is scoped to the card's own
+// shape: between the cap and the `desktop` breakpoint the mobile shape is in
+// force, and a cap there strands a square-cornered white surface in a grey gutter
+// while the nav bar beside it runs edge to edge.
 const contentClass = computed(() => [
   'fz-app-template__content mx-auto flex w-full flex-1 flex-col',
-  contentWidthClass.value,
+  isDesktop.value ? contentWidthClass.value : '',
   // `flex-1` fills the (padded) main region, so a short page shows a full card,
   // not a stub floating in grey.
   props.chrome === 'card'
@@ -339,5 +344,26 @@ onBeforeUnmount(() => {
   padding-bottom: env(safe-area-inset-bottom, 0px);
   padding-left: env(safe-area-inset-left, 0px);
   padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* The drawer is opaque and full-bleed, so without motion it replaces the page
+   between two frames and the user has to re-read the screen to find out what
+   happened. Entering from the right edge it is docked to says where it came
+   from and that the page is still behind it. Entry only: closing is a tap on a
+   control already under the user's eye, and an exit animation delays the page
+   they asked to get back to. */
+@media (prefers-reduced-motion: no-preference) {
+  .fz-app-template__aside--drawer {
+    animation: fz-app-template-drawer-in 300ms ease-out;
+  }
+}
+
+@keyframes fz-app-template-drawer-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 </style>

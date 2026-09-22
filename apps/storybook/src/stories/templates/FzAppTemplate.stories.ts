@@ -292,6 +292,50 @@ export const WithAside: Story = {
 }
 
 /**
+ * The same shell below the `desktop` breakpoint, at the `lg` viewport (1024px)
+ * where the two mobile shapes are easiest to miss: the nav is a top bar across
+ * the full width, the content card is full-bleed beneath it — the
+ * `contentWidth` cap is a property of the desktop card, so it comes off with
+ * the gutter and the rounding — and "Assistenza" opens the aside as a modal
+ * drawer that enters from the right edge it is docked to.
+ *
+ * No play function: the responsive switch runs off a real `matchMedia` query
+ * and the Vitest runner renders every story at desktop width, so any assertion
+ * here would sit behind a branch that never executes. The cap is covered by
+ * `FzAppTemplate.spec.ts`; the entry animation is CSS and is verified in a
+ * browser.
+ */
+export const MobileDrawer: Story = {
+  args: { hasAside: true, asideLabel: 'Assistenza' },
+  parameters: {
+    viewport: { defaultViewport: 'lg' }
+  },
+  render: (args: FzAppTemplateProps) => ({
+    setup() {
+      return { args }
+    },
+    components: dsComponents,
+    template: `
+      <FzAppTemplate v-bind="args" class="bg-background-white-smoke">
+        <template #nav="{ toggleAside }">
+          <div class="flex items-center justify-between bg-core-white px-16 py-12">
+            <FzIcon name="fiscozen" variant="fak" size="xl" class="text-core-black" />
+            <FzButton variant="invisible" @click="toggleAside(true)">Assistenza</FzButton>
+          </div>
+        </template>
+        ${pageBody}
+        <template #aside="{ toggleAside }">
+          <div class="flex h-full flex-col bg-core-white px-16 py-24">
+            <span class="text-lg font-semibold text-core-black">Chat</span>
+            <FzButton class="mt-auto" variant="invisible" @click="toggleAside(false)">Chiudi</FzButton>
+          </div>
+        </template>
+      </FzAppTemplate>
+    `
+  })
+}
+
+/**
  * `contentWidth="wide"` with `chrome="flat"`: a full-bleed content column that
  * stays capped until the largest breakpoint, then goes edge-to-edge. This is the
  * single content-width API that replaces the app's old `wideLayout` flag.
