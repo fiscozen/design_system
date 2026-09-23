@@ -92,7 +92,7 @@ function modelSetter(value: File[]) {
 }
 
 const model = defineModel<File[]>({
-  default: [],
+  default: () => [],
   set: modelSetter,
 });
 
