@@ -4,14 +4,15 @@
  * Release check & preview for the Fiscozen Design System.
  *
  * Designed around the Changesets workflow:
- *   changeset add → merge PRs → changeset:version → changeset:publish
+ *   changeset add → merge PRs → Version PR (CI) → publish to npm (CI)
  *
  * Sections (all run by default):
  *   1. Unpublished Versions      — compares local package.json versions
  *      against the npm registry, showing packages ready to publish
  *      (the dry-run view of `changeset publish`).
  *   2. Pending Release Preview   — reads .changeset/*.md, simulates version
- *      bumps (including cascade from updateInternalDependencies), shows
+ *      bumps (including cascade from updateInternalDependencies and from
+ *      peers leaving their range), shows
  *      impact summary and aggregated changelogs.
  *   3. Dependency Graph Analysis  — shows the internal dependency graph,
  *      cascade potential for "hub" packages, and minimum coherent update
@@ -140,19 +141,76 @@ function buildReverseDeps(pkgs) {
 }
 
 /**
+ * Whether bumping a peer from `oldVersion` to `newVersion` takes it out of the
+ * `workspace:` range a consumer declares. At publish time `workspace:^` becomes
+ * `^oldVersion`, so on 0.x a minor already leaves the range.
+ * @param {string} range
+ * @param {string} oldVersion
+ * @param {string} newVersion
+ * @returns {boolean|null} null when the range is not a `workspace:` operator
+ */
+function leavesPeerRange(range, oldVersion, newVersion) {
+  const from = parseSemver(oldVersion);
+  const to = parseSemver(newVersion);
+  const sameMajor = from.major === to.major;
+  const sameMinor = sameMajor && from.minor === to.minor;
+  const rangeChecks = {
+    'workspace:*': () => false,
+    'workspace:~': () => !sameMinor,
+    'workspace:^': () => (from.major === 0 ? !sameMinor : !sameMajor),
+  };
+  return rangeChecks[range]?.() ?? null;
+}
+
+/**
+ * Find the consumers changesets bumps because a directly-bumped package leaves
+ * their peer range. With `onlyUpdatePeerDependentsWhenOutOfRange`, a peer that
+ * stays in range bumps nobody; one that leaves it gives the consumer a patch.
+ * @param {Map<string, PkgInfo>} pkgs
+ * @param {Record<string, {newVersion: string}>} directBumps
+ * @returns {{peerBumped: Map<string, string[]>, warnings: string[]}}
+ *   consumer → peers that left its range, plus ranges that could not be read
+ */
+function computePeerBumps(pkgs, directBumps) {
+  /** @type {Map<string, string[]>} */
+  const peerBumped = new Map();
+  const warnings = [];
+
+  for (const [consumer, info] of pkgs) {
+    for (const [peer, range] of Object.entries(info.peerDeps)) {
+      const bump = directBumps[peer];
+      if (!bump || !pkgs.has(peer)) continue;
+
+      const leaves = leavesPeerRange(range, pkgs.get(peer).version, bump.newVersion);
+      if (leaves === null) {
+        warnings.push(`⚠ ${consumer} declares peer ${peer}@${range}, which this preview cannot evaluate`);
+      }
+      if (!leaves) continue;
+
+      if (!peerBumped.has(consumer)) peerBumped.set(consumer, []);
+      peerBumped.get(consumer).push(`${peer} (peer)`);
+    }
+  }
+
+  return { peerBumped, warnings };
+}
+
+/**
  * Compute the transitive cascade: given a set of directly-bumped packages,
  * find all packages that would receive a patch bump via
- * updateInternalDependencies: "patch".
+ * updateInternalDependencies: "patch". Packages already bumped by a peer
+ * leaving its range cascade to their own consumers the same way.
  *
  * @param {Set<string>} directlyBumped
  * @param {Map<string, Set<string>>} reverseDeps
+ * @param {Map<string, string[]>} [peerBumped] consumer → peers that left its range
  * @returns {Map<string, string[]>} cascadedPkg → [reason deps that triggered it]
  */
-function computeCascade(directlyBumped, reverseDeps) {
+function computeCascade(directlyBumped, reverseDeps, peerBumped = new Map()) {
   /** @type {Map<string, string[]>} */
-  const cascaded = new Map();
-  const queue = [...directlyBumped];
-  const visited = new Set(directlyBumped);
+  const cascaded = new Map([...peerBumped].map(([pkg, peers]) => [pkg, [...peers]]));
+  const queue = [...directlyBumped, ...peerBumped.keys()];
+  const visited = new Set(queue);
 
   while (queue.length > 0) {
     const pkg = queue.shift();
@@ -207,6 +265,12 @@ function transitiveConsumers(pkgName, reverseDeps) {
 /**
  * @typedef {{id: string, packages: Record<string, string>, summary: string}} Changeset
  */
+
+/** Packages listed in `ignore` of `.changeset/config.json`, which changesets never bumps. */
+async function readIgnoredPackages() {
+  const config = JSON.parse(await readFile(join(CHANGESETS_DIR, 'config.json'), 'utf-8'));
+  return new Set(config.ignore ?? []);
+}
 
 /** Parse all pending .changeset/*.md files. */
 async function readPendingChangesets() {
@@ -536,7 +600,7 @@ async function sectionUnpublished(pkgs) {
   // Publish hint
   if (result.totalReadyToPublish > 0) {
     console.log(
-      `  ${c.dim}Run ${c.reset}${c.cyan}pnpm changeset:publish${c.reset}${c.dim} to publish these versions to npm.${c.reset}`,
+      `  ${c.dim}CI publishes these once the ${c.reset}${c.cyan}npm${c.reset}${c.dim} environment approves the Release run (see docs/releasing.md).${c.reset}`,
     );
     console.log();
   }
@@ -562,7 +626,7 @@ async function sectionPending(pkgs, reverseDeps) {
       header('📦 Pending Release Preview');
       console.log(
         `  ${c.green}No pending changesets.${c.reset} ` +
-          `${c.dim}If versions were already bumped via ${c.reset}${c.cyan}changeset version${c.reset}${c.dim}, ` +
+          `${c.dim}If a Version PR was just merged, ` +
           `check the "Unpublished Versions" section above (or run with ${c.reset}${c.cyan}--unpublished${c.reset}${c.dim}).${c.reset}`,
       );
       console.log();
@@ -591,11 +655,7 @@ async function sectionPending(pkgs, reverseDeps) {
     }
   }
 
-  // 2. Compute cascade
-  const directlyBumped = new Set(directBumps.keys());
-  const cascaded = computeCascade(directlyBumped, reverseDeps);
-
-  // 3. Compute new versions
+  // 2. Compute new versions
   for (const [pkg, info] of directBumps) {
     const pkgInfo = pkgs.get(pkg);
     const currentVersion = pkgInfo?.version || '0.0.0';
@@ -605,6 +665,16 @@ async function sectionPending(pkgs, reverseDeps) {
       newVersion,
       summaries: info.summaries,
     };
+  }
+
+  // 3. Compute cascade: peers that leave their range, then internal dependencies
+  const directlyBumped = new Set(directBumps.keys());
+  const { peerBumped, warnings: peerWarnings } = computePeerBumps(pkgs, result.directBumps);
+  result.warnings.push(...peerWarnings);
+
+  const cascaded = computeCascade(directlyBumped, reverseDeps, peerBumped);
+  for (const pkg of await readIgnoredPackages()) {
+    cascaded.delete(pkg);
   }
 
   for (const [pkg, triggeredBy] of cascaded) {
@@ -681,7 +751,7 @@ async function sectionPending(pkgs, reverseDeps) {
 
   // Cascade bumps
   if (cascaded.size > 0) {
-    console.log(`  ${c.bold}Cascade bumps ${c.dim}(patch via updateInternalDependencies)${c.reset}:`);
+    console.log(`  ${c.bold}Cascade bumps ${c.dim}(patch via updateInternalDependencies or a peer range)${c.reset}:`);
     const sorted = [...cascaded.entries()].sort((a, b) => a[0].localeCompare(b[0]));
     for (const [pkg, triggeredBy] of sorted) {
       const pkgInfo = pkgs.get(pkg);

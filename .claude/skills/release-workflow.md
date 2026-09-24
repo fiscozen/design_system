@@ -51,7 +51,7 @@ pnpm release:check:pending
 
 Parses all `.changeset/*.md` files and simulates version bumps. Key output:
 - **Direct bumps** — packages named in changesets
-- **Cascade bumps** — packages that depend on bumped packages (automatic patch bumps due to `updateInternalDependencies: "patch"` in changeset config)
+- **Cascade bumps** — automatic patch bumps: packages that depend on bumped packages (`updateInternalDependencies: "patch"` in changeset config), and packages whose peer range the new version leaves (`onlyUpdatePeerDependentsWhenOutOfRange`; changesets v3 bumps them by patch, not major)
 - **Warnings** — pre-1.0 packages with minor bumps, major bumps with high cascade count
 
 ### Dependency Graph
@@ -81,12 +81,12 @@ Detects:
 
 ## Publishing (CI-ONLY)
 
-Publishing is done in CI, never locally. The workflow:
+Publishing is done in CI, never locally. `.github/workflows/release.yml`, on every push to `main`:
 
-1. `pnpm changeset:version` — bumps all package.json versions based on changesets
-2. `pnpm changeset:publish` — publishes to npm
+1. With changesets pending, it runs `changeset version` in the *chore: version packages* PR
+2. With none pending, it publishes whatever npm is missing (via trusted publishing, after a reviewer approves the `npm` environment), then tags and opens GitHub releases
 
-Both commands are blocked by Claude Code's settings and hooks.
+Both commands are blocked by Claude Code's settings and hooks. Details and the new-package procedure are in `docs/releasing.md`.
 
 ## Coordination Checklist
 
