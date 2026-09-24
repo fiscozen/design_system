@@ -2,6 +2,12 @@
   "name": "@fiscozen/navbar",
   "version": "0.4.1",
   "description": "Design System Navbar Component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/navbar"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/navbar",
   "scripts": {
     "coverage": "vitest run --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",

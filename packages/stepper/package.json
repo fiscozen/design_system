@@ -2,6 +2,12 @@
   "name": "@fiscozen/stepper",
   "version": "3.0.9",
   "description": "Design System Stepper component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/stepper"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/stepper",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

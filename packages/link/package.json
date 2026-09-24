@@ -2,6 +2,12 @@
   "name": "@fiscozen/link",
   "version": "1.0.1",
   "description": "Design System Link component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/link"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/link",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

@@ -2,6 +2,12 @@
   "name": "@fiscozen/button",
   "version": "3.1.3",
   "description": "Design System Icon Button Component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/button"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/button",
   "scripts": {
     "coverage": "vitest run --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",

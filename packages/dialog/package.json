@@ -2,6 +2,12 @@
   "name": "@fiscozen/dialog",
   "version": "0.1.40",
   "description": "Design System Dialog component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/dialog"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/dialog",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

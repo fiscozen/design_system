@@ -2,6 +2,12 @@
   "name": "@fiscozen/select",
   "version": "3.1.16",
   "description": "Design System Select component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/select"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/select",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

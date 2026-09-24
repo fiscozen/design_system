@@ -2,6 +2,12 @@
   "name": "@fiscozen/dropdown",
   "version": "1.0.16",
   "description": "Design System Dropdown component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/dropdown"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/dropdown",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

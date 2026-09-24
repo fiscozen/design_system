@@ -2,6 +2,12 @@
   "name": "@fiscozen/tab",
   "version": "3.0.11",
   "description": "Design System Tab component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/tab"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/tab",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

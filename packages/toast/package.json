@@ -2,6 +2,12 @@
   "name": "@fiscozen/toast",
   "version": "3.0.5",
   "description": "Design System Toast component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/toast"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/toast",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

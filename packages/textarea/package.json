@@ -2,6 +2,12 @@
   "name": "@fiscozen/textarea",
   "version": "3.3.0",
   "description": "Design System Textarea component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/textarea"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/textarea",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

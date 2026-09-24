@@ -2,6 +2,12 @@
   "name": "@fiscozen/input",
   "version": "3.5.6",
   "description": "Design System Input component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/input"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/input",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

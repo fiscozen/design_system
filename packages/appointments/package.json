@@ -2,6 +2,12 @@
   "name": "@fiscozen/appointments",
   "version": "1.1.23",
   "description": "Design System Appointments component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/appointments"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/appointments",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

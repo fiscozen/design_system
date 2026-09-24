@@ -38,6 +38,7 @@ pnpm release:check:unpublished     # Local vs npm registry versions
 pnpm release:check:pending         # Changeset impact preview + cascade
 pnpm release:check:graph           # Internal dependency graph + hub packages
 pnpm release:check:health          # Peer dep alignment, 0.x flags, diamond deps
+pnpm check:package-metadata        # repository/homepage on every published package (pre-push)
 
 # Changesets
 pnpm changeset                     # Add a changeset
