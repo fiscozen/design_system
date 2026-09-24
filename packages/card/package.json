@@ -2,6 +2,12 @@
   "name": "@fiscozen/card",
   "version": "3.0.12",
   "description": "Design System Card component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/card"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/card",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

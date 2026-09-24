@@ -2,6 +2,12 @@
   "name": "@fiscozen/datepicker",
   "version": "3.2.14",
   "description": "Design System Datepicker component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/datepicker"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/datepicker",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

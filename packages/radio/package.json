@@ -2,6 +2,12 @@
   "name": "@fiscozen/radio",
   "version": "3.1.2",
   "description": "Design System Radio and Radiogroup component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/radio"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/radio",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

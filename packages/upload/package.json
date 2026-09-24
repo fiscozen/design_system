@@ -2,6 +2,12 @@
   "name": "@fiscozen/upload",
   "version": "1.1.1",
   "description": "Design System Upload component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/upload"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/upload",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

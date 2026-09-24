@@ -2,6 +2,12 @@
   "name": "@fiscozen/layout",
   "version": "1.4.2",
   "description": "Design System Layout component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/layout"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/layout",
   "scripts": {
     "coverage": "vitest run --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",

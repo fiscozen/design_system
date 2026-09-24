@@ -2,6 +2,12 @@
   "name": "@fiscozen/chat-container",
   "version": "2.0.14",
   "description": "Design System ChatContainer component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/chat-container"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/chat-container",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

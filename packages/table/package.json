@@ -2,6 +2,12 @@
   "name": "@fiscozen/table",
   "version": "2.1.22",
   "description": "Design System Table component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/table"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/table",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

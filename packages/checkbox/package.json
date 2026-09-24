@@ -2,6 +2,12 @@
   "name": "@fiscozen/checkbox",
   "version": "3.0.15",
   "description": "Design System Checkbox and Checkbox Group component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/checkbox"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/checkbox",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",
