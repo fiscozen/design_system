@@ -25,10 +25,11 @@
     "release:check:health": "node scripts/release-check.mjs --health",
     "check:package-metadata": "node scripts/check-package-metadata.mjs",
     "changeset": "changeset",
-    "changeset:publish": "changeset publish",
+    "changeset:publish": "changeset publish --no-git-tag",
     "changeset:status": "changeset status",
     "changeset:version": "changeset version"
   },
+  "packageManager": "pnpm@10.30.1",
   "engines": {
     "pnpm": "^10",
     "node": "^22.12.0"

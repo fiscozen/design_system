@@ -4,7 +4,7 @@
  * Release check & preview for the Fiscozen Design System.
  *
  * Designed around the Changesets workflow:
- *   changeset add → merge PRs → changeset:version → changeset:publish
+ *   changeset add → merge PRs → Version PR (CI) → publish to npm (CI)
  *
  * Sections (all run by default):
  *   1. Unpublished Versions      — compares local package.json versions
@@ -600,7 +600,7 @@ async function sectionUnpublished(pkgs) {
   // Publish hint
   if (result.totalReadyToPublish > 0) {
     console.log(
-      `  ${c.dim}Run ${c.reset}${c.cyan}pnpm changeset:publish${c.reset}${c.dim} to publish these versions to npm.${c.reset}`,
+      `  ${c.dim}CI publishes these once the ${c.reset}${c.cyan}npm${c.reset}${c.dim} environment approves the Release run (see docs/releasing.md).${c.reset}`,
     );
     console.log();
   }
@@ -626,7 +626,7 @@ async function sectionPending(pkgs, reverseDeps) {
       header('📦 Pending Release Preview');
       console.log(
         `  ${c.green}No pending changesets.${c.reset} ` +
-          `${c.dim}If versions were already bumped via ${c.reset}${c.cyan}changeset version${c.reset}${c.dim}, ` +
+          `${c.dim}If a Version PR was just merged, ` +
           `check the "Unpublished Versions" section above (or run with ${c.reset}${c.cyan}--unpublished${c.reset}${c.dim}).${c.reset}`,
       );
       console.log();
