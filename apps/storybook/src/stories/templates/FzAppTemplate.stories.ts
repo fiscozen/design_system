@@ -174,7 +174,7 @@ export const Default: Story = {
         ${pageBody}
         ${footerSlot}
         <template #bottomBar>
-          <div class="mx-auto flex w-full max-w-[1024px] items-center justify-end gap-12 bg-core-white px-24 py-16">
+          <div class="mx-auto flex w-full max-w-[1024px] items-center justify-end gap-12 bg-core-white px-24 pt-16 pb-[calc(16px_+_env(safe-area-inset-bottom,0px))]">
             <FzButton variant="invisible">Annulla</FzButton>
             <FzButton>Salva</FzButton>
           </div>
@@ -385,7 +385,7 @@ const DeepPageWithBar = defineComponent({
       </div>
       <p class="text-sm text-grey-500">Compila i campi e salva dalla barra in basso.</p>
       <Teleport v-if="bottomBarTarget" :to="bottomBarTarget" defer>
-        <div class="mx-auto flex w-full max-w-[1024px] items-center justify-end gap-12 bg-core-white px-24 py-16">
+        <div class="mx-auto flex w-full max-w-[1024px] items-center justify-end gap-12 bg-core-white px-24 pt-16 pb-[calc(16px_+_env(safe-area-inset-bottom,0px))]">
           <FzButton variant="invisible">Annulla</FzButton>
           <FzButton class="teleported-save">Salva fattura</FzButton>
         </div>

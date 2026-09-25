@@ -322,9 +322,10 @@ onBeforeUnmount(() => {
 /* Directional safe-area: each sticky/overlay region pads only the edge(s) it
    can bleed under, so a region's background reaches the device edge while its
    content stays clear of notches / rounded corners / home indicators. Insets
-   resolve to 0 where the platform does not report them. The bottom bar owns its
-   own bottom inset (see FzLayoutBottomBar); the nav owns its own insets on
-   mobile (the injected nav, e.g. FzNavbar `respectSafeArea`). */
+   resolve to 0 where the platform does not report them. The bottom-bar and nav
+   regions paint no surface, so their content owns the insets: the bar content
+   pads the bottom one (see FzLayoutBottomBar), the injected nav its own on
+   mobile (e.g. FzNavbar `respectSafeArea`). */
 .fz-app-template__header {
   padding-top: env(safe-area-inset-top, 0px);
 }
