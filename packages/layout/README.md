@@ -186,7 +186,11 @@ complementary `aside`, an optional sticky bottom action bar and an optional
 rail and the aside a sticky right panel — their widths follow the **injected**
 content, never the template. The **nav is persistent** (a top region on mobile);
 the injected nav — e.g. [`FzNavbar`](../navbar) — owns its own responsive
-collapse and hamburger, so the template renders no nav drawer. Only the
+collapse and hamburger, so the template renders no nav drawer. Below the
+breakpoint the nav region is `sticky` at `z-10`, and a sticky box is a stacking
+context whatever its z-index: an overlay the injected nav opens (a full-screen
+menu) cannot rise above the later `z-10` chrome from inside it, so teleport it to
+`body` at the drawer tier (`z-30`). Only the
 **aside** collapses below the breakpoint, into a modal drawer (`role="dialog"` +
 `aria-modal` + focus trap + Escape-to-close). Owns a full-height root and applies
 directional safe-area insets to its sticky chrome.
