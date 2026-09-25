@@ -44,9 +44,10 @@ defineExpose({ el })
   /* Taps pass through the empty gutters to the content behind; the bar content
      itself (a direct child) is interactive again. */
   pointer-events: none;
-  /* Directional safe-area: clear the home indicator / gesture bar. Resolves to
-     0 where the platform does not report an inset. */
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  /* No safe-area padding: the region paints no background, so an inset here is a
+     transparent strip under the bar that the page scrolls through. The bar
+     content paints the surface, so it pads `env(safe-area-inset-bottom)` itself
+     and its background reaches the device edge. */
 }
 
 .fz-layout-bottom-bar > * {
