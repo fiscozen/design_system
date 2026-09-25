@@ -40,7 +40,9 @@ expose that landmark twice.
 The sticky bottom action-bar region. Placed by a template inside the main
 content column, it `position: sticky`s to the viewport bottom while the page
 scrolls, reserves its own height in the flow (so an empty bar collapses and no
-manual bottom-padding is needed), and pads the bottom device safe-area inset.
+manual bottom-padding is needed). It paints no background and pads no
+safe-area inset: the bar content paints the surface, so it pads
+`env(safe-area-inset-bottom)` itself and its background reaches the device edge.
 The container is `pointer-events: none` so taps pass through the empty gutters;
 its direct children are interactive again. It takes no props and exposes its
 root element as `el` so a template can use it as the bottom-bar teleport target.
@@ -184,7 +186,11 @@ complementary `aside`, an optional sticky bottom action bar and an optional
 rail and the aside a sticky right panel — their widths follow the **injected**
 content, never the template. The **nav is persistent** (a top region on mobile);
 the injected nav — e.g. [`FzNavbar`](../navbar) — owns its own responsive
-collapse and hamburger, so the template renders no nav drawer. Only the
+collapse and hamburger, so the template renders no nav drawer. Below the
+breakpoint the nav region is `sticky` at `z-10`, and a sticky box is a stacking
+context whatever its z-index: an overlay the injected nav opens (a full-screen
+menu) cannot rise above the later `z-10` chrome from inside it, so teleport it to
+`body` at the drawer tier (`z-30`). Only the
 **aside** collapses below the breakpoint, into a modal drawer (`role="dialog"` +
 `aria-modal` + focus trap + Escape-to-close). Owns a full-height root and applies
 directional safe-area insets to its sticky chrome.
@@ -221,7 +227,8 @@ Slots: `nav`, `header`, default (content), `aside`, `bottomBar`, `footer`. The
 `FZ_BOTTOM_BAR_TARGET`, so a deep page component can render bar content at the
 shell level without the app owning a magic DOM id. The template owns the bar's
 geometry (it aligns to the content column automatically); the page owns the
-content. Guard the `null` case — it means no `FzAppTemplate` ancestor.
+content, including its bottom safe-area inset (see `FzLayoutBottomBar`). Guard
+the `null` case — it means no `FzAppTemplate` ancestor.
 
 ```ts
 import { inject } from 'vue'

@@ -195,6 +195,8 @@ type FzLayoutBottomBarSlots = {
    * The bar content (e.g. primary/secondary actions). Content should set its
    * own `pointer-events` — the region container is `pointer-events: none` so
    * taps pass through the empty gutters; direct children are re-enabled.
+   * Content that paints a surface pads `env(safe-area-inset-bottom)` itself:
+   * the region has no background and applies no inset.
    */
   default(props: {}): any
 }
