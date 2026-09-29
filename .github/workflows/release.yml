@@ -1,0 +1,148 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+# Two pushes to main must not race over the Version PR, the publish or the tag push.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  plan:
+    name: Version PR or publish plan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      pending: ${{ steps.changesets.outputs.pending }}
+      to-publish: ${{ steps.plan.outputs.to-publish }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      # The root project's dependencies are all public, so changesets runs here without
+      # the Font Awesome kit. The token is set empty only so .npmrc interpolates.
+      - name: Install changesets
+        env:
+          FONTAWESOME_PACKAGE_TOKEN: ""
+        run: pnpm install --filter @fiscozen/design_system --frozen-lockfile --ignore-scripts
+
+      - id: changesets
+        run: |
+          pending=$(find .changeset -maxdepth 1 -name '*.md' ! -name README.md | wc -l | tr -d ' ')
+          echo "pending=$pending" >> "$GITHUB_OUTPUT"
+
+      # Guarded rather than run unconditionally: `changeset version` exits 1 when no
+      # changeset file is left, which is the normal state of a release commit.
+      - name: Open or update the Version PR
+        if: steps.changesets.outputs.pending != '0'
+        uses: changesets/action/version@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          pr-title: "chore: version packages"
+          commit-message: "chore: version packages"
+
+      # Asks the public registry which versions on main are missing, so the publish job
+      # only requests an approval when there is something to approve. A registry error
+      # fails this step instead of reading as "nothing to publish".
+      - id: plan
+        name: Plan the publish
+        if: steps.changesets.outputs.pending == '0'
+        run: |
+          pnpm changeset publish-plan --output "$RUNNER_TEMP/publish-plan.json"
+          jq -r '.plan[][] | select(.kind == "publish") | "- \(.name)@\(.version)"' \
+            "$RUNNER_TEMP/publish-plan.json" > "$RUNNER_TEMP/to-publish.md"
+          count=$(wc -l < "$RUNNER_TEMP/to-publish.md" | tr -d ' ')
+          echo "to-publish=$count" >> "$GITHUB_OUTPUT"
+          {
+            echo "### $count package(s) to publish"
+            cat "$RUNNER_TEMP/to-publish.md"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  publish:
+    name: Publish to npm
+    needs: plan
+    if: needs.plan.outputs.pending == '0' && needs.plan.outputs.to-publish != '0'
+    runs-on: ubuntu-latest
+    # The environment's required reviewer is the release gate: GitHub issues the OIDC
+    # token only after the approval, and npm accepts it only from this workflow file
+    # and this environment.
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+
+      # No dependency cache: a job that can publish does not restore a store another
+      # run wrote.
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+
+      # Trusted publishing needs npm >= 11.5.1; Node 22 ships npm 10. pnpm 10 hands
+      # `pnpm publish` to this npm, which is what performs the OIDC exchange.
+      - name: Install npm with trusted publishing
+        run: npm install --global npm@11.20.0
+
+      - name: Install dependencies
+        env:
+          FONTAWESOME_PACKAGE_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      # Provenance is generated automatically: public repository, public packages, OIDC.
+      # A package with no trusted publisher gets no token and fails the job.
+      - name: Publish
+        run: pnpm changeset:publish
+
+  tag:
+    name: Tag and release on GitHub
+    needs: [plan, publish]
+    # Runs after a successful publish, and also when there was nothing to publish, so a
+    # tag or release that failed on an earlier run is retried.
+    if: >-
+      always() && needs.plan.result == 'success' && needs.plan.outputs.pending == '0' &&
+      (needs.publish.result == 'success' || needs.publish.result == 'skipped')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install changesets
+        env:
+          FONTAWESOME_PACKAGE_TOKEN: ""
+        run: pnpm install --filter @fiscozen/design_system --frozen-lockfile --ignore-scripts
+
+      - name: Tag the published versions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: .github/scripts/tag-release.sh

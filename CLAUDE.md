@@ -106,7 +106,10 @@ See `@fiscozen/tab/FzTab.vue` + `@fiscozen/tab/FzTabs.vue` for the canonical exa
 2. Run `pnpm changeset` to document the change (required by pre-push hook)
 3. Run `pnpm release:check:pending` to preview cascade impact
 4. Push (pre-push runs: changeset check + full build + storybook tests)
-5. `changeset:publish` runs in CI only — never locally
+5. On merge to `main`, `.github/workflows/release.yml` opens or updates the *chore: version packages* PR. Versioning happens only there, never locally
+6. Merging the Version PR is the release: after a reviewer approves the `npm` environment, CI publishes to npm via trusted publishing (OIDC, with provenance), then tags and opens GitHub releases. No npm token exists; packages disallow token publishes
+
+A new package's first version is the exception: it is published by hand once, then gets a trusted publisher. See `docs/releasing.md`.
 
 ## Security (NON-NEGOTIABLE)
 

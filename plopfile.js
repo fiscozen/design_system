@@ -109,6 +109,9 @@ module.exports = function (plop) {
       {
         type: "installPackageInStorybook",
       },
+      () =>
+        "npm only trusts CI with a package that already exists: the first version is " +
+        "published by hand. See docs/releasing.md, 'Adding a new package'.",
     ],
   });
 };
