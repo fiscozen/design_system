@@ -34,7 +34,8 @@ defineOptions({
  * ```
  */
 import { computed, watch } from 'vue'
-import type { FzIconButtonProps, ButtonEnvironment } from './types'
+import { FzIcon } from '@fiscozen/icons'
+import type { FzIconButtonProps, ButtonEnvironment, IconButtonVariant } from './types'
 import FzButton from './FzButton.vue'
 import { sizeToEnvironmentMapping } from './utils'
 
@@ -44,7 +45,8 @@ const props = withDefaults(
     variant: 'primary',
     disabled: false,
     iconVariant: 'far',
-    hasNotification: false
+    hasNotification: false,
+    compact: false
     // Note: environment has no default to allow deprecated size prop to work via effectiveEnvironment computed
   }
 )
@@ -103,6 +105,28 @@ watch(() => props.iconSize, (iconSize) => {
     )
   }
 }, { immediate: true })
+
+watch([() => props.compact, () => props.variant], ([compact, variant]) => {
+  if (compact && variant === 'invisible') {
+    console.warn(
+      '[FzIconButton] The "invisible" variant has no background and is not available in compact mode. ' +
+      'The button renders as "secondary". Please use variant="secondary" instead.'
+    )
+  }
+}, { immediate: true })
+
+/**
+ * Resolves the variant actually drawn
+ *
+ * A compact button sits over images, where a transparent background leaves the glyph
+ * unreadable, so `invisible` falls back to `secondary` in compact mode.
+ */
+const effectiveVariant = computed((): IconButtonVariant => {
+  if (props.compact && props.variant === 'invisible') {
+    return 'secondary'
+  }
+  return props.variant
+})
 
 /**
  * Determines the effective environment based on environment or size prop
@@ -175,6 +199,14 @@ const notificationBadgeClasses = computed(() => {
       'bg-orange-500': true
     }
   }
+
+  // blue-500 is indistinguishable from the red background (1.09:1)
+  if (props.variant === 'danger') {
+    return {
+      ...baseClasses,
+      'bg-blue-800': true
+    }
+  }
   
   // secondary or invisible
   return {
@@ -182,21 +214,50 @@ const notificationBadgeClasses = computed(() => {
     'bg-blue-500': true
   }
 })
+
+/**
+ * Computes the wrapper classes that size the inner button
+ *
+ * Compact mode replaces the environment sizing; the variant class selects the focus ring colour.
+ */
+const wrapperClasses = computed(() => {
+  if (props.compact) {
+    return [
+      'fz-icon-button-wrapper',
+      'relative',
+      'inline-flex',
+      'fz-icon-button-wrapper--compact',
+      { 'fz-icon-button-wrapper--compact-secondary': effectiveVariant.value === 'secondary' }
+    ]
+  }
+  return [
+    'fz-icon-button-wrapper',
+    'relative',
+    {
+      'fz-icon-button-wrapper--backoffice': effectiveEnvironment.value === 'backoffice',
+      'fz-icon-button-wrapper--frontoffice': effectiveEnvironment.value === 'frontoffice'
+    }
+  ]
+})
 </script>
 
 <template>
-  <span :class="['fz-icon-button-wrapper', 'relative', {'fz-icon-button-wrapper--backoffice': effectiveEnvironment === 'backoffice', 'fz-icon-button-wrapper--frontoffice': effectiveEnvironment === 'frontoffice'}]">
+  <span :class="wrapperClasses">
     <FzButton 
       v-bind="$attrs"
       :disabled="props.disabled" 
       :environment="effectiveEnvironment" 
-      :variant="props.variant" 
+      :variant="effectiveVariant" 
       :aria-label="ariaLabel"
       :icon-name="props.iconName"
       :icon-variant="props.iconVariant"
       icon-position="before"
       overrideContainerClass
-    />
+    >
+      <template v-if="props.compact" #before>
+        <FzIcon :name="props.iconName" :variant="props.iconVariant" size="sm" />
+      </template>
+    </FzButton>
     <div 
       v-if="props.hasNotification" 
       :class="notificationBadgeClasses"
@@ -222,5 +283,40 @@ const notificationBadgeClasses = computed(() => {
 .fz-icon-button-wrapper--frontoffice > :deep(button) {
   padding-left: 11px;
   padding-right: 11px;
+}
+
+/**
+ * Compact: 20×20 box whose ::after extends the hit area to 44×44 (the confini.md touch target)
+ * without affecting layout. Pseudo-elements take part in hit testing, so clicks on the
+ * extension reach the button.
+ */
+.fz-icon-button-wrapper--compact > :deep(button) {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+}
+
+/* The inset counts from the padding box, inside FzButton's 1px border */
+.fz-icon-button-wrapper--compact > :deep(button)::after {
+  content: '';
+  position: absolute;
+  inset: -13px;
+}
+
+/**
+ * The border-colour focus of the larger sizes is 1.44:1 on primary, below the 3:1 of
+ * WCAG 1.4.11. The ring is drawn inside the box, against the button's own fill, because the
+ * image around it has no known colour: white on primary (4.11:1) and danger (3.77:1),
+ * blue-600 on secondary (5.93:1). The transparent outline is what forced-colors mode paints,
+ * since it drops box-shadow.
+ */
+.fz-icon-button-wrapper--compact > :deep(button:focus-visible) {
+  box-shadow: inset 0 0 0 2px var(--core-white, #ffffff);
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+}
+
+.fz-icon-button-wrapper--compact-secondary > :deep(button:focus-visible) {
+  box-shadow: inset 0 0 0 2px var(--blue-600, #4858cc);
 }
 </style>

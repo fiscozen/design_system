@@ -7,7 +7,7 @@
 import type { IconVariant, IconSize } from '@fiscozen/icons'
 
 export type CommonButtonVariant = 'primary' | 'secondary' | 'invisible'
-export type IconButtonVariant = CommonButtonVariant
+export type IconButtonVariant = CommonButtonVariant | 'danger'
 export type ButtonVariant = CommonButtonVariant | 'danger' | 'success'
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 export type ButtonEnvironment = 'backoffice' | 'frontoffice'
@@ -149,6 +149,18 @@ export interface FzIconButtonProps {
    * @default false
    */
   hasNotification?: boolean
+  /**
+   * Draws the button as a 20×20 box with a 12px glyph, while the clickable area extends to
+   * 44×44 beyond the visible edge without taking layout space. Overrides the size set by
+   * `environment`. The `invisible` variant has no fill to stay readable over an image, so it
+   * renders as `secondary` in compact mode.
+   *
+   * The touch area overflows the box by 12px on every side: keep the box at least 12px from
+   * the edge of any container that clips its overflow, and at least 24px from another
+   * compact button, so the touch areas are neither cut nor overlapping.
+   * @default false
+   */
+  compact?: boolean
   /**
    * Accessible label for screen readers. Required for icon-only buttons.
    * If hasNotification is true, automatically appends notification status to the label.
