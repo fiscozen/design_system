@@ -582,7 +582,7 @@ FzIconButton follows WCAG 2.1 AA standards and includes:
 - **Keyboard Navigation**: Full support for Enter and Space keys
 - **Disabled State**: Properly prevents click events and visual feedback when disabled
 - **Screen Reader Compatible**: Works with NVDA, JAWS, and VoiceOver
-- **Focus Indicators**: Visible focus states with 3:1 contrast ratio. In compact mode the ring is drawn inside the 20px box, against the button's own fill: white on primary and danger, blue-600 on secondary
+- **Focus Indicators**: In compact mode a 2px ring is drawn inside the 20px box, against the button's own fill: white on primary (4.11:1) and danger (3.77:1), blue-600 on secondary (5.93:1). At the larger sizes focus darkens the border, which stays below 3:1 against the fill on primary (1.44:1) and danger (1.76:1)
 - **Touch Target**: Compact mode keeps a 44×44 clickable area around the 20×20 box
 - **Notification Badge**: Marked as `aria-hidden="true"` to prevent screen reader announcements
 
