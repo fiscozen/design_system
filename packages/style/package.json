@@ -2,6 +2,12 @@
   "name": "@fiscozen/style",
   "version": "0.5.0",
   "description": "Design System package providing design tokens, CSS variables, and Vue.js custom directives",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/style"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/style",
   "main": "src/index.ts",
   "scripts": {
     "coverage": "vitest run --coverage",
