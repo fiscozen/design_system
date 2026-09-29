@@ -1,5 +1,12 @@
 # @fiscozen/card-list
 
+## 1.3.2
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+
 ## 1.3.1
 
 ### Patch Changes

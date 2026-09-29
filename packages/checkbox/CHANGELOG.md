@@ -1,5 +1,12 @@
 # @fiscozen/checkbox
 
+## 3.0.16
+
+### Patch Changes
+
+- @fiscozen/alert@3.0.7
+- @fiscozen/tooltip@3.0.9
+
 ## 3.0.15
 
 ### Patch Changes

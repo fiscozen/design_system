@@ -1,5 +1,12 @@
 # @fiscozen/pagination
 
+## 1.0.12
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+
 ## 1.0.11
 
 ### Patch Changes

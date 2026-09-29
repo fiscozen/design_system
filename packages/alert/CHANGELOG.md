@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.7
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+
 ## 3.0.6
 
 ### Patch Changes

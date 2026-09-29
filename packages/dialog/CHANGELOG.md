@@ -1,5 +1,12 @@
 # @fiscozen/dialog
 
+## 0.1.41
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+
 ## 0.1.40
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @fiscozen/layout
 
+## 1.4.4
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+
 ## 1.4.3
 
 ### Patch Changes

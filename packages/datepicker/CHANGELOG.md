@@ -1,5 +1,13 @@
 # @fiscozen/datepicker
 
+## 3.2.15
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+  - @fiscozen/input@3.5.7
+
 ## 3.2.14
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @fiscozen/table
 
+## 2.1.23
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+  - @fiscozen/dialog@0.1.41
+  - @fiscozen/dropdown@1.0.17
+  - @fiscozen/input@3.5.7
+  - @fiscozen/checkbox@3.0.16
+  - @fiscozen/radio@3.1.3
+
 ## 2.1.22
 
 ### Patch Changes
