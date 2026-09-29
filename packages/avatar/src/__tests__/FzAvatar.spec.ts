@@ -590,6 +590,22 @@ describe('FzAvatar', () => {
         expect(circle.attributes('role')).toBeUndefined()
         expect(circle.attributes('aria-label')).toBeUndefined()
       })
+
+      it('should name an icon avatar that has a subtitle but no title', () => {
+        const wrapper = mount(FzAvatar, {
+          props: {
+            firstName: 'Assistenza',
+            lastName: 'Fiscozen',
+            iconName: 'fiscozen',
+            iconVariant: 'fak',
+            subtitle: 'Ti rispondiamo in chat'
+          }
+        })
+        const circle = wrapper.find('[data-testid="avatar-icon"]')
+        expect(circle.attributes('role')).toBe('img')
+        expect(circle.attributes('aria-label')).toBe('Assistenza Fiscozen')
+        expect(circle.attributes('aria-hidden')).toBeUndefined()
+      })
     })
 
     describe('Text content accessibility', () => {

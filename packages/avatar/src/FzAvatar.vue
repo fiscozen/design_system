@@ -62,7 +62,7 @@ const iconSize = computed<IconSize>(() => (mappedEnvironment.value === 'backoffi
 // An icon has no text of its own to read, unlike the initials, so it is named like the image.
 // Beside a title it is hidden instead: the title already names it, and naming both reads it twice.
 const iconAccessibility = computed<HTMLAttributes>(() =>
-  hasText.value ? { 'aria-hidden': true } : { role: 'img', 'aria-label': fullName.value }
+  props.title ? { 'aria-hidden': true } : { role: 'img', 'aria-label': fullName.value }
 )
 
 // Container classes: flex row with gap based on environment
