@@ -476,3 +476,46 @@ export const CompactOverImage: IconButtonStory = {
     })
   }
 }
+
+/**
+ * Compact `danger` with a notification badge. On the red fill the focus ring is white
+ * (3.77:1), and the badge is blue-800, since blue-500 does not stand out from the red.
+ */
+export const CompactDanger: IconButtonStory = {
+  args: {
+    compact: true,
+    variant: 'danger',
+    iconName: 'xmark',
+    ariaLabel: 'Rimuovi allegato',
+    hasNotification: true,
+    onClick: fn()
+  },
+  parameters: {
+    layout: 'padded'
+  },
+  render: (args) => ({
+    components: { FzIconButton },
+    setup() {
+      return { args }
+    },
+    template: `<FzIconButton v-bind="args" @click="args.onClick" />`
+  }),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+    const button = canvas.getByRole('button')
+
+    // Before any pointer interaction, so the focus counts as keyboard focus (:focus-visible)
+    await step('Keyboard focus draws a white ring inside the 20px box', async () => {
+      await userEvent.tab()
+      await expect(button).toHaveFocus()
+      await expect(getComputedStyle(button).boxShadow).toBe(
+        'rgb(255, 255, 255) 0px 0px 0px 2px inset'
+      )
+    })
+
+    await step('The notification badge is blue-800 on the red box', async () => {
+      const badge = button.parentElement?.querySelector('div[aria-hidden="true"]')
+      await expect(badge?.classList.contains('bg-blue-800')).toBe(true)
+    })
+  }
+}

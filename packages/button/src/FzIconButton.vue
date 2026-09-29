@@ -185,7 +185,7 @@ const notificationBadgeClasses = computed(() => {
         'bg-orange-200': true
       }
     }
-    // secondary or invisible
+    // secondary, invisible or danger
     return {
       ...baseClasses,
       'bg-grey-200': true
