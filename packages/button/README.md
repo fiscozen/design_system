@@ -452,8 +452,9 @@ Icon-only button component with notification badge support. Ideal for compact in
 ### Features
 
 - Icon-only design for compact interfaces
-- Multiple variants (primary, secondary, invisible)
+- Multiple variants (primary, secondary, invisible, danger)
 - Two environments (backoffice, frontoffice)
+- Compact mode: 20×20 control with a 44×44 touch area
 - Notification badge overlay support
 - Customizable icon variant
 - Full accessibility support
@@ -475,6 +476,7 @@ Icon-only button component with notification badge support. Ideal for compact in
     <FzIconButton iconName="bell" variant="primary" ariaLabel="Notifications" />
     <FzIconButton iconName="settings" variant="secondary" ariaLabel="Settings" />
     <FzIconButton iconName="trash" variant="invisible" ariaLabel="Delete" />
+    <FzIconButton iconName="trash" variant="danger" ariaLabel="Delete" />
   </div>
 </template>
 ```
@@ -510,6 +512,37 @@ Icon-only button component with notification badge support. Ideal for compact in
 </template>
 ```
 
+### Compact
+
+`compact` draws a 20×20 box with a 12px glyph, for a control laid over something small, such
+as the remove X on an image preview. The clickable area still extends to 44×44 (the minimum
+touch target) past the visible edge, without taking layout space: the component measures
+20×20.
+
+```vue
+<template>
+  <FzIconButton
+    compact
+    variant="secondary"
+    iconName="xmark"
+    ariaLabel="Rimuovi allegato"
+    @click="remove"
+  />
+</template>
+```
+
+The touch area overflows the box by 12px on every side, so where you place the box decides
+whether it stays whole:
+
+- **Keep the box at least 12px from the edge of any container that clips overflow**: the
+  image it sits on, a horizontally scrolling strip. Closer than that, the clipped part of the
+  touch area stops responding. For a 20px box in the corner of an image, that means 12px from
+  the top and 12px from the right.
+- **Keep two compact buttons at least 24px apart** (edge to edge), or their touch areas
+  overlap and a tap between them hits whichever comes later in the DOM.
+
+Compact mode needs a background to stay readable over an image, so `invisible` renders as
+`secondary` and logs a warning. `environment` has no effect while `compact` is on.
 
 ### With Tooltip (Recommended)
 
@@ -526,11 +559,12 @@ Icon-only button component with notification badge support. Ideal for compact in
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `iconName` | `string` | _required_ | FontAwesome icon name (e.g., 'bell', 'settings') |
-| `variant` | `'primary' \| 'secondary' \| 'invisible'` | `'primary'` | Visual style variant determining colors and interactive states |
+| `variant` | `'primary' \| 'secondary' \| 'invisible' \| 'danger'` | `'primary'` | Visual style variant determining colors and interactive states |
 | `environment` | `'backoffice' \| 'frontoffice'` | `'frontoffice'` | Environment determining button size |
 | `disabled` | `boolean` | `false` | Whether the button is disabled |
 | `iconVariant` | `IconVariant` | `'far'` | FontAwesome icon variant (fas, far, fal, etc.) |
 | `hasNotification` | `boolean` | `false` | Shows a notification badge in the top-right corner of the button |
+| `compact` | `boolean` | `false` | 20×20 box with a 12px glyph and a 44×44 touch area. Overrides `environment`; `invisible` renders as `secondary` |
 | `ariaLabel` | `string` | `undefined` | Accessible label for screen readers. Required for icon-only buttons. If hasNotification is true, automatically appends notification status to the label |
 | `tooltip` | `string` | `undefined` | **Deprecated:** Use FzTooltip component to wrap the button instead |
 
@@ -548,7 +582,8 @@ FzIconButton follows WCAG 2.1 AA standards and includes:
 - **Keyboard Navigation**: Full support for Enter and Space keys
 - **Disabled State**: Properly prevents click events and visual feedback when disabled
 - **Screen Reader Compatible**: Works with NVDA, JAWS, and VoiceOver
-- **Focus Indicators**: Visible focus states with 3:1 contrast ratio
+- **Focus Indicators**: Visible focus states with 3:1 contrast ratio. In compact mode the ring is drawn inside the 20px box, against the button's own fill: white on primary and danger, blue-600 on secondary
+- **Touch Target**: Compact mode keeps a 44×44 clickable area around the 20×20 box
 - **Notification Badge**: Marked as `aria-hidden="true"` to prevent screen reader announcements
 
 ### FzIconButton Examples
