@@ -32,6 +32,13 @@ exports[`FzAvatar > Snapshots > should match snapshot - with custom initials 1`]
 </div>"
 `;
 
+exports[`FzAvatar > Snapshots > should match snapshot - with icon 1`] = `
+"<div class="flex items-center gap-8">
+  <div class="select-none object-cover size-32 min-w-32 min-h-32 rounded-full bg-core-black text-core-white grid place-content-center text-sm" title="Assistenza Fiscozen" role="img" aria-label="Assistenza Fiscozen" data-testid="avatar-icon"><span role="presentation" class="flex items-center justify-center shrink-0 w-[20px] h-[20px]"><svg class="svg-inline--fa fa-fiscozen h-[16px]" style="width: 1.25em;" aria-hidden="true" focusable="false" data-prefix="fak" data-icon="fiscozen" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path class="" fill="currentColor" d="M96 55.1l0 74.7 448 0 0-74.7-448 0zm0 401.8s0 0 0 0s0 0 0 0s0 0 0 0zm224.5-165L96 456.9l133 0L544 217.1l-448 0 0 74.8 224.5 0z"></path></svg></span></div>
+  <!--v-if-->
+</div>"
+`;
+
 exports[`FzAvatar > Snapshots > should match snapshot - with title and subtitle 1`] = `
 "<div class="flex items-center gap-12">
   <div class="select-none object-cover size-44 min-w-44 min-h-44 rounded-full bg-core-black text-core-white grid place-content-center text-sm" title="Mario Rossi" data-testid="avatar-placeholder">MR</div>
