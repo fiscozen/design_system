@@ -12,6 +12,7 @@ Avatar component representing a customer or consultant. Supports image avatars f
 - **2 Variants**: Default (circular), Square (rounded corners)
 - **Image Support**: Profile photos for consultants
 - **Initials Support**: Automatic initials generation for users without profile pictures
+- **Icon Support**: A Font Awesome icon in place of the initials, for a brand or a service
 - **Text Labels**: Optional title and subtitle text
 - **Responsive Sizing**: Environment-based sizing and spacing
 
@@ -92,6 +93,30 @@ import { FzAvatar } from '@fiscozen/avatar'
         <code>undefined</code>
       </td>
       <td>Overrides initials placeholder calculated from firstName and lastName</td>
+    </tr>
+    <tr>
+      <td>
+        <code>iconName</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Font Awesome icon drawn in place of the initials. Ignored when <code>src</code> is set.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>iconVariant</code>
+      </td>
+      <td>
+        <code>IconVariant</code>
+      </td>
+      <td>
+        <code>'far'</code>
+      </td>
+      <td>Font Awesome style of <code>iconName</code>. The Fiscozen mark is a kit icon: <code>'fak'</code>.</td>
     </tr>
     <tr>
       <td>
@@ -218,6 +243,16 @@ Consultants use their profile photo. Provide the `src` prop with the image URL.
 <FzAvatar firstName="Daniele" lastName="Adinolfi" src="https://example.com/photo.jpg" />
 ```
 
+### Brand (Icon)
+
+An avatar that stands for a brand or a service rather than a person draws an icon instead of the initials, on the same dark background. `firstName` and `lastName` still name it.
+
+```vue
+<FzAvatar firstName="Assistenza" lastName="Fiscozen" iconName="fiscozen" iconVariant="fak" />
+```
+
+On its own the icon is exposed as an image named "Assistenza Fiscozen". Next to a `title` it is hidden from assistive technology, because the title already names it.
+
 ## With Title and Subtitle
 
 The component supports optional title and subtitle text displayed next to the avatar.
@@ -280,6 +315,7 @@ Note: The `size` prop still works for backward compatibility but will be removed
 
 - **Initials**: Use for users who don't have profile pictures yet
 - **Images**: Use for consultants who have profile photos available
+- **Icons**: Use for a brand or a service that has no face, such as the Fiscozen mark
 
 ### Environment Selection
 

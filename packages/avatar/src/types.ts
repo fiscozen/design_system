@@ -1,3 +1,5 @@
+import type { IconVariant } from '@fiscozen/icons'
+
 /**
  * Environment context for avatar sizing and spacing
  */
@@ -35,6 +37,16 @@ export interface FzAvatarProps {
    * Image source URL, if available. Avatar will default to initials placeholder if this is not provided.
    */
   src?: string
+  /**
+   * Font Awesome icon drawn in place of the initials, for an avatar that stands for a brand or a
+   * service rather than a person. Ignored when `src` is set.
+   */
+  iconName?: string
+  /**
+   * Font Awesome style of `iconName`. A custom kit icon such as the Fiscozen mark is `fak`.
+   * @default 'far'
+   */
+  iconVariant?: IconVariant
   /**
    * Overrides initials placeholder calculated from firstName and lastName
    */

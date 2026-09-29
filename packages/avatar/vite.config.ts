@@ -24,7 +24,7 @@ export default defineConfig({
       name: 'FzAvatar',
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', '@fiscozen/icons'],
       output: {
         globals: {
           vue: 'Vue',

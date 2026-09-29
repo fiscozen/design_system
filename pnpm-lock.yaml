@@ -616,6 +616,9 @@ importers:
 
   packages/avatar:
     dependencies:
+      '@fiscozen/icons':
+        specifier: workspace:^
+        version: link:../icons
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.19(yaml@2.8.2)

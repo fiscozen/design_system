@@ -7,6 +7,15 @@
       :alt="fullName"
       :title="fullName"
     />
+    <div
+      v-else-if="props.iconName"
+      :class="avatarClasses"
+      :title="fullName"
+      v-bind="iconAccessibility"
+      data-testid="avatar-icon"
+    >
+      <FzIcon :name="props.iconName" :variant="props.iconVariant" :size="iconSize" />
+    </div>
     <div v-else :class="avatarClasses" :title="fullName" data-testid="avatar-placeholder">
       {{ fullNameInitials }}
     </div>
@@ -19,6 +28,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { HTMLAttributes } from 'vue'
+import { FzIcon } from '@fiscozen/icons'
+import type { IconSize } from '@fiscozen/icons'
 import type { FzAvatarProps } from './types'
 
 const props = withDefaults(defineProps<FzAvatarProps>(), {
@@ -44,6 +56,14 @@ const fullNameInitials = computed(
 )
 
 const hasText = computed(() => !!(props.title || props.subtitle))
+
+const iconSize = computed<IconSize>(() => (mappedEnvironment.value === 'backoffice' ? 'md' : 'lg'))
+
+// An icon has no text of its own to read, unlike the initials, so it is named like the image.
+// Beside a title it is hidden instead: the title already names it, and naming both reads it twice.
+const iconAccessibility = computed<HTMLAttributes>(() =>
+  hasText.value ? { 'aria-hidden': true } : { role: 'img', 'aria-label': fullName.value }
+)
 
 // Container classes: flex row with gap based on environment
 const containerClasses = computed(() => [

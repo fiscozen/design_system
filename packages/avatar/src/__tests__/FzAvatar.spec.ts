@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { FzIcon } from '@fiscozen/icons'
 import { FzAvatar } from '..'
 
 describe('FzAvatar', () => {
@@ -147,6 +148,67 @@ describe('FzAvatar', () => {
         })
         expect(wrapper.find('img').exists()).toBe(false)
         expect(wrapper.find('[data-testid="avatar-placeholder"]').exists()).toBe(true)
+      })
+    })
+
+    describe('iconName prop', () => {
+      it('should draw the icon in place of the initials', () => {
+        const wrapper = mount(FzAvatar, {
+          props: {
+            firstName: 'Assistenza',
+            lastName: 'Fiscozen',
+            iconName: 'fiscozen',
+            iconVariant: 'fak'
+          }
+        })
+        const svg = wrapper.find('[data-testid="avatar-icon"] svg')
+        expect(svg.attributes('data-prefix')).toBe('fak')
+        expect(svg.attributes('data-icon')).toBe('fiscozen')
+        expect(wrapper.find('[data-testid="avatar-placeholder"]').exists()).toBe(false)
+        expect(wrapper.text()).not.toContain('AF')
+      })
+
+      it('should prefer the image over the icon', () => {
+        const wrapper = mount(FzAvatar, {
+          props: {
+            firstName: 'Assistenza',
+            lastName: 'Fiscozen',
+            src: 'https://example.com/avatar.jpg',
+            iconName: 'fiscozen',
+            iconVariant: 'fak'
+          }
+        })
+        expect(wrapper.find('img').exists()).toBe(true)
+        expect(wrapper.find('[data-testid="avatar-icon"]').exists()).toBe(false)
+      })
+
+      it('should size the icon to the backoffice avatar', () => {
+        const wrapper = mount(FzAvatar, {
+          props: {
+            firstName: 'Assistenza',
+            lastName: 'Fiscozen',
+            iconName: 'fiscozen',
+            iconVariant: 'fak',
+            environment: 'backoffice'
+          }
+        })
+        const circle = wrapper.find('[data-testid="avatar-icon"]')
+        expect(circle.classes()).toContain('size-32')
+        expect(wrapper.findComponent(FzIcon).props('size')).toBe('md')
+      })
+
+      it('should size the icon to the frontoffice avatar', () => {
+        const wrapper = mount(FzAvatar, {
+          props: {
+            firstName: 'Assistenza',
+            lastName: 'Fiscozen',
+            iconName: 'fiscozen',
+            iconVariant: 'fak'
+          }
+        })
+        const circle = wrapper.find('[data-testid="avatar-icon"]')
+        expect(circle.classes()).toContain('size-44')
+        expect(wrapper.findComponent(FzIcon).props('size')).toBe('lg')
       })
     })
 
@@ -497,6 +559,37 @@ describe('FzAvatar', () => {
         expect(placeholder.text()).toBe('MR')
         expect(placeholder.text().length).toBeGreaterThan(0)
       })
+
+      it('should name a standalone icon avatar as an image', () => {
+        const wrapper = mount(FzAvatar, {
+          props: {
+            firstName: 'Assistenza',
+            lastName: 'Fiscozen',
+            iconName: 'fiscozen',
+            iconVariant: 'fak'
+          }
+        })
+        const circle = wrapper.find('[data-testid="avatar-icon"]')
+        expect(circle.attributes('role')).toBe('img')
+        expect(circle.attributes('aria-label')).toBe('Assistenza Fiscozen')
+        expect(circle.attributes('aria-hidden')).toBeUndefined()
+      })
+
+      it('should hide an icon avatar that sits beside its title', () => {
+        const wrapper = mount(FzAvatar, {
+          props: {
+            firstName: 'Assistenza',
+            lastName: 'Fiscozen',
+            iconName: 'fiscozen',
+            iconVariant: 'fak',
+            title: 'Assistenza Fiscozen'
+          }
+        })
+        const circle = wrapper.find('[data-testid="avatar-icon"]')
+        expect(circle.attributes('aria-hidden')).toBe('true')
+        expect(circle.attributes('role')).toBeUndefined()
+        expect(circle.attributes('aria-label')).toBeUndefined()
+      })
     })
 
     describe('Text content accessibility', () => {
@@ -818,6 +911,19 @@ describe('FzAvatar', () => {
           firstName: 'Mario',
           lastName: 'Rossi',
           src: 'https://example.com/avatar.jpg',
+          environment: 'backoffice'
+        }
+      })
+      expect(wrapper.html()).toMatchSnapshot()
+    })
+
+    it('should match snapshot - with icon', () => {
+      const wrapper = mount(FzAvatar, {
+        props: {
+          firstName: 'Assistenza',
+          lastName: 'Fiscozen',
+          iconName: 'fiscozen',
+          iconVariant: 'fak',
           environment: 'backoffice'
         }
       })

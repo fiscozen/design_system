@@ -26,6 +26,13 @@ const meta: Meta<typeof FzAvatar> = {
     },
     subtitle: {
       control: 'text'
+    },
+    iconName: {
+      control: 'text'
+    },
+    iconVariant: {
+      control: 'select',
+      options: ['fas', 'far', 'fal', 'fat', 'fad', 'fass', 'fasr', 'fasl', 'fast', 'fak']
     }
   },
   args: {
@@ -54,6 +61,43 @@ export const Consultant: Story = {
     const img = canvas.getByAltText('Mario Rossi')
     await expect(img).toBeInTheDocument()
     await expect(img.getAttribute('src')).toBe(avatar)
+  }
+}
+
+export const Brand: Story = {
+  args: {
+    firstName: 'Assistenza',
+    lastName: 'Fiscozen',
+    iconName: 'fiscozen',
+    iconVariant: 'fak'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const mark = canvas.getByRole('img', { name: 'Assistenza Fiscozen' })
+    await expect(mark.classList.contains('bg-core-black')).toBe(true)
+    await expect(mark.querySelector('svg[data-icon="fiscozen"]')).toBeInTheDocument()
+    await expect(mark.textContent).not.toContain('AF')
+  }
+}
+
+export const BrandWithTitle: Story = {
+  args: {
+    firstName: 'Assistenza',
+    lastName: 'Fiscozen',
+    iconName: 'fiscozen',
+    iconVariant: 'fak',
+    environment: 'backoffice',
+    title: 'Assistenza Fiscozen',
+    subtitle: 'Ti rispondiamo in chat'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(canvas.queryByRole('img')).not.toBeInTheDocument()
+    await expect(canvas.getByText('Assistenza Fiscozen')).toBeInTheDocument()
+
+    const mark = canvasElement.querySelector('[data-testid="avatar-icon"]')
+    await expect(mark?.getAttribute('aria-hidden')).toBe('true')
+    await expect(mark?.classList.contains('size-32')).toBe(true)
   }
 }
 
