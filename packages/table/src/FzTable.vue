@@ -57,7 +57,7 @@ type RowData = T & {
 };
 const modelValue = defineModel<RowData[]>();
 const ordering = defineModel<Record<string, FzOrdering>>("ordering", {
-  default: {},
+  default: () => ({}),
 });
 const selectedRowIds = defineModel<Set<string | number>>("selectedRowIds");
 

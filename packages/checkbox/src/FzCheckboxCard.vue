@@ -19,7 +19,7 @@ const id: string = generateCheckboxId();
 
 const model = defineModel<(string | number | boolean)[]>({
   required: true,
-  default: [],
+  default: () => [],
 });
 
 const injected = inject(CHECKED_SET_KEY, null);
