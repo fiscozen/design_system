@@ -1,5 +1,13 @@
 # @fiscozen/table
 
+## 2.1.24
+
+### Patch Changes
+
+- a3f33a0: `FzCheckboxGroup`, `FzCheckboxCard`, `FzUpload` and `FzTable` declare their `defineModel` array and object defaults as factories, so every instance starts from its own empty value instead of one shared across instances, and they type-check against Vue 3.5.39+.
+- Updated dependencies [a3f33a0]
+  - @fiscozen/checkbox@3.0.17
+
 ## 2.1.23
 
 ### Patch Changes
