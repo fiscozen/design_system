@@ -33,7 +33,7 @@ const currentValue = computed<string | number | boolean>(
  */
 const model = defineModel<(string | number | boolean)[]>({
   required: true,
-  default: [],
+  default: () => [],
 });
 
 /**

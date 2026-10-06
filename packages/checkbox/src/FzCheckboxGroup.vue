@@ -78,7 +78,7 @@ const computedHelpTextClass = computed<string[]>(() => [
  */
 const model = defineModel<(string | number | boolean)[]>({
   required: true,
-  default: [],
+  default: () => [],
 });
 
 const checkedSet = computed(() => new Set(model.value));
