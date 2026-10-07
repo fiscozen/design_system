@@ -1800,6 +1800,15 @@ describe("FzPdfViewer", () => {
       expect(layer.classList.contains("selecting")).toBe(true);
     });
 
+    it("keeps the sentinel after the line when selectionchange repeats an unchanged range", async () => {
+      const { invoiceNumber, sentinel } = await mountWithTextLayer();
+      select(invoiceNumber, 0, invoiceNumber, 7);
+
+      document.dispatchEvent(new Event("selectionchange"));
+
+      expect(invoiceNumber.parentElement!.nextSibling).toBe(sentinel);
+    });
+
     it("places the sentinel right before the line a backward selection extends to", async () => {
       const { header, invoiceNumber, sentinel } = await mountWithTextLayer();
 
