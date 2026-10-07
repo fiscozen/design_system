@@ -13,6 +13,7 @@ PDF viewer component with toolbar controls for zoom and page navigation. Support
 - **Environment Sizing**: `frontoffice` (smaller text) and `backoffice` (larger text) variants
 - **Drag to Pan**: Click and drag to pan when the PDF overflows its container
 - **View Mode Toggle**: Switch between PDF and XML views (advanced toolbar only)
+- **Text Selection**: With `selectable`, users select and copy text, with the same selection handling as the pdf.js viewer
 - **Keyboard Accessible**: All controls are keyboard navigable
 
 ## Installation
@@ -110,6 +111,12 @@ import { FzPdfViewer } from '@fiscozen/pdf-viewer'
       <td><code>'bottom' | 'top'</code></td>
       <td><code>'bottom'</code></td>
       <td>Position of the toolbar relative to the PDF. When <code>top</code>, the toolbar is hidden by default and revealed on hover.</td>
+    </tr>
+    <tr>
+      <td><code>selectable</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Renders an invisible text layer over the page so users can select and copy text. Copied text is normalized to Unicode NFKC (ligatures such as <code>ﬁ</code> become <code>fi</code>) and stripped of NUL characters.</td>
     </tr>
     <tr>
       <td><code>pdfContainerClass</code></td>
@@ -250,6 +257,19 @@ const viewMode = ref<'pdf' | 'xml'>('pdf')
   <p>Current view: {{ viewMode }}</p>
 </template>
 ```
+
+### Text Selection
+
+Set `selectable` to let users select and copy text, for example an invoice number or a VAT number.
+
+```vue
+<FzPdfViewer
+  src="https://example.com/invoice.pdf"
+  selectable
+/>
+```
+
+Selection behaves like the pdf.js viewer: a drag that starts on a word and overshoots the end of the line into blank space selects only the text it crossed; dragging backwards, across several lines, and double-clicking a word work as usual. A drag that starts on blank space selects nothing. Dragging on the page selects text instead of panning it.
 
 ## Accessibility
 
