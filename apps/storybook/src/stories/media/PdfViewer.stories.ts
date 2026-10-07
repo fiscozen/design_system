@@ -504,6 +504,50 @@ export const TextSelection: Story = {
       await expect(canvas.getByTestId('pdf-page')).toBeInTheDocument()
     })
 
+    await step('Wait for the text layer to render', async () => {
+      await waitFor(
+        () => expect(canvasElement.querySelector('.textLayer .endOfContent')).toBeInTheDocument(),
+        { timeout: PDF_LOAD_TIMEOUT }
+      )
+    })
+
+    const layer = canvasElement.querySelector('.textLayer') as HTMLElement
+    const sentinel = layer.querySelector('.endOfContent') as HTMLElement
+    const line = Array.from(layer.querySelectorAll('span')).find((span) =>
+      span.textContent?.startsWith('Dynamic languages such as JavaScript are more')
+    ) as HTMLElement
+
+    await step('Selecting a line moves the sentinel right after it, covering the layer', async () => {
+      const text = line.firstChild as Text
+      line.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+      document.getSelection()?.setBaseAndExtent(text, 0, text, text.length)
+
+      await waitFor(() => expect(line.nextElementSibling).toBe(sentinel))
+      await expect(getComputedStyle(sentinel).top).toBe('0px')
+    })
+
+    await step('Copying the selection writes NFKC-normalized text', async () => {
+      const event = new ClipboardEvent('copy', {
+        bubbles: true,
+        cancelable: true,
+        clipboardData: new DataTransfer()
+      })
+      line.dispatchEvent(event)
+
+      await expect(event.defaultPrevented).toBe(true)
+      await expect(event.clipboardData?.getData('text/plain')).toBe(
+        'Dynamic languages such as JavaScript are more difficult to com-'
+      )
+    })
+
+    await step('Releasing the pointer puts the sentinel back at the end of the layer', async () => {
+      document.dispatchEvent(new PointerEvent('pointerup'))
+
+      await expect(layer.lastElementChild).toBe(sentinel)
+      await expect(getComputedStyle(sentinel).top).not.toBe('0px')
+      document.getSelection()?.removeAllRanges()
+    })
+
     await step('Allow PDF library cleanup', async () => {
       await waitForPdfCleanup()
     })

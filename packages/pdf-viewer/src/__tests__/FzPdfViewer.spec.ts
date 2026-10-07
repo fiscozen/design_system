@@ -1713,4 +1713,191 @@ describe("FzPdfViewer", () => {
       );
     });
   });
+
+  describe("text layer selection", () => {
+    const LINES = ["Numero documento", "11347 R", "Uﬃcio\u0000 IVA"];
+
+    async function mountWithTextLayer(selectable = true) {
+      wrapper = mount(FzPdfViewer, {
+        props: { src: "https://example.com/test.pdf", selectable },
+        global: { stubs: { FzIconButton: mockFzIconButton } },
+        attachTo: document.body,
+      });
+      await nextTick();
+      const layer = document.createElement("div");
+      layer.className = "textLayer";
+      layer.style.width = "600px";
+      layer.style.height = "800px";
+      const [header, invoiceNumber, office] = LINES.map((line) =>
+        document.createTextNode(line),
+      );
+      const [headerSpan, invoiceSpan, officeSpan] = [
+        header,
+        invoiceNumber,
+        office,
+      ].map((text) => {
+        const span = document.createElement("span");
+        span.append(text);
+        return span;
+      });
+      const sentinel = document.createElement("div");
+      sentinel.className = "endOfContent";
+      layer.append(
+        headerSpan,
+        document.createElement("br"),
+        invoiceSpan,
+        document.createElement("br"),
+        officeSpan,
+        sentinel,
+      );
+      wrapper.find(".overflow-auto").element.appendChild(layer);
+      return { layer, header, invoiceNumber, office, sentinel };
+    }
+
+    function select(
+      anchor: Node,
+      anchorOffset: number,
+      focus: Node,
+      focusOffset: number,
+    ) {
+      document
+        .getSelection()!
+        .setBaseAndExtent(anchor, anchorOffset, focus, focusOffset);
+      document.dispatchEvent(new Event("selectionchange"));
+    }
+
+    function dispatchCopy(target: EventTarget) {
+      const setData = vi.fn();
+      const event = new Event("copy", { bubbles: true, cancelable: true });
+      Object.defineProperty(event, "clipboardData", { value: { setData } });
+      target.dispatchEvent(event);
+      return { event, setData };
+    }
+
+    afterEach(() => {
+      document.getSelection()?.removeAllRanges();
+    });
+
+    it("enters the selecting state on mousedown inside the text layer", async () => {
+      const { layer, invoiceNumber } = await mountWithTextLayer();
+
+      invoiceNumber.parentElement!.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true }),
+      );
+
+      expect(layer.classList.contains("selecting")).toBe(true);
+    });
+
+    it("places the sentinel right after the line where a forward selection ends", async () => {
+      const { layer, invoiceNumber, sentinel } = await mountWithTextLayer();
+
+      select(invoiceNumber, 0, invoiceNumber, 7);
+
+      expect(invoiceNumber.parentElement!.nextSibling).toBe(sentinel);
+      expect(sentinel.style.width).toBe("600px");
+      expect(sentinel.style.height).toBe("800px");
+      expect(sentinel.style.userSelect).toBe("text");
+      expect(layer.classList.contains("selecting")).toBe(true);
+    });
+
+    it("places the sentinel right before the line a backward selection extends to", async () => {
+      const { header, invoiceNumber, sentinel } = await mountWithTextLayer();
+
+      select(invoiceNumber, 7, invoiceNumber, 3);
+      select(invoiceNumber, 7, header, 2);
+
+      expect(sentinel.nextSibling).toBe(header.parentElement);
+    });
+
+    it("anchors the sentinel to the previous line when the selection ends at the start of the next", async () => {
+      const { header, invoiceNumber, office, sentinel } =
+        await mountWithTextLayer();
+
+      select(header, 0, office, 0);
+
+      expect(invoiceNumber.parentElement!.nextSibling).toBe(sentinel);
+    });
+
+    it("restores the sentinel at the end of the layer on pointerup", async () => {
+      const { layer, invoiceNumber, sentinel } = await mountWithTextLayer();
+      select(invoiceNumber, 0, invoiceNumber, 7);
+
+      document.dispatchEvent(new Event("pointerup"));
+
+      expect(layer.lastElementChild).toBe(sentinel);
+      expect(sentinel.style.width).toBe("");
+      expect(layer.classList.contains("selecting")).toBe(false);
+    });
+
+    it("resets the layer when the selection moves outside it", async () => {
+      const { layer, invoiceNumber, sentinel } = await mountWithTextLayer();
+      const outside = document.body.appendChild(document.createElement("p"));
+      outside.textContent = "Fuori dal PDF";
+      select(invoiceNumber, 0, invoiceNumber, 7);
+
+      select(outside.firstChild!, 0, outside.firstChild!, 5);
+
+      expect(layer.lastElementChild).toBe(sentinel);
+      expect(layer.classList.contains("selecting")).toBe(false);
+      outside.remove();
+    });
+
+    it("leaves the sentinel in place when the browser is Firefox", async () => {
+      const { layer, invoiceNumber, sentinel } = await mountWithTextLayer();
+      vi.spyOn(window, "getComputedStyle").mockReturnValueOnce({
+        getPropertyValue: () => "none",
+      } as unknown as CSSStyleDeclaration);
+
+      select(invoiceNumber, 0, invoiceNumber, 7);
+
+      expect(layer.lastElementChild).toBe(sentinel);
+      expect(layer.classList.contains("selecting")).toBe(true);
+    });
+
+    it("copies the selected layer text normalized to NFKC and without NUL characters", async () => {
+      const { office } = await mountWithTextLayer();
+      select(office, 0, office, office.length);
+
+      const { event, setData } = dispatchCopy(office.parentElement!);
+
+      expect(setData).toHaveBeenCalledWith("text/plain", "Ufficio IVA");
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it("leaves copies of a selection outside the text layer to the browser", async () => {
+      const { layer } = await mountWithTextLayer();
+      const outside = document.body.appendChild(document.createElement("p"));
+      outside.textContent = "Fuori dal PDF";
+      select(outside.firstChild!, 0, outside.firstChild!, 5);
+
+      const { event, setData } = dispatchCopy(layer);
+
+      expect(setData).not.toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(false);
+      outside.remove();
+    });
+
+    it("does not touch the text layer when selectable is false", async () => {
+      const { layer, invoiceNumber, sentinel } =
+        await mountWithTextLayer(false);
+
+      invoiceNumber.parentElement!.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true }),
+      );
+      select(invoiceNumber, 0, invoiceNumber, 7);
+
+      expect(layer.lastElementChild).toBe(sentinel);
+      expect(layer.classList.contains("selecting")).toBe(false);
+    });
+
+    it("stops tracking the selection once selectable is turned off", async () => {
+      const { layer, invoiceNumber, sentinel } = await mountWithTextLayer();
+
+      await wrapper.setProps({ selectable: false });
+      select(invoiceNumber, 0, invoiceNumber, 7);
+
+      expect(layer.lastElementChild).toBe(sentinel);
+      expect(layer.classList.contains("selecting")).toBe(false);
+    });
+  });
 });
