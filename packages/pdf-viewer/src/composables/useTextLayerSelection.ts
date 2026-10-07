@@ -49,6 +49,16 @@ function markSelectingLayers(layers: TextLayers, ranges: Range[]) {
   });
 }
 
+/** Whether `range` has the same start and end as `previous`. */
+function isSameRange(range: Range, previous: Range | undefined): boolean {
+  if (!previous) return false;
+  const startUnchanged =
+    range.compareBoundaryPoints(Range.START_TO_START, previous) === 0;
+  const endUnchanged =
+    range.compareBoundaryPoints(Range.END_TO_END, previous) === 0;
+  return startUnchanged && endUnchanged;
+}
+
 /**
  * Whether the last change moved the start of the selection: the end did not move, or the
  * new end sits where the previous start was (a backward drag crossing its anchor).
@@ -180,6 +190,10 @@ function bindSelectionTracking(container: HTMLElement, signal: AbortSignal) {
     isFirefox ??= hasMozUserSelectNone(firstLayer);
     if (isFirefox) return;
     const range = ranges[0];
+    // Chrome fires selectionchange with an unchanged range; isStartMoving would read it as a
+    // moving start and put the sentinel in front of the word, where the next pointer move
+    // lands and collapses the selection.
+    if (isSameRange(range, previousRange)) return;
     const startMoving = isStartMoving(range, previousRange);
     const boundary = movingBoundaryNode(range, startMoving);
     if (boundary) {
