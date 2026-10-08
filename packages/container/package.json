@@ -2,6 +2,12 @@
   "name": "@fiscozen/container",
   "version": "0.5.2",
   "description": "Design System Container component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/container"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/container",
   "scripts": {
     "test": "pnpm run test:unit",
     "coverage": "vitest run --coverage",

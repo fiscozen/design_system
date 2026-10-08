@@ -23,6 +23,7 @@
     "release:check:pending": "node scripts/release-check.mjs --pending",
     "release:check:graph": "node scripts/release-check.mjs --graph",
     "release:check:health": "node scripts/release-check.mjs --health",
+    "check:package-metadata": "node scripts/check-package-metadata.mjs",
     "changeset": "changeset",
     "changeset:publish": "changeset publish",
     "changeset:status": "changeset status",

@@ -2,6 +2,12 @@
   "name": "@fiscozen/{{kebabCase component}}",
   "version": "0.1.0",
   "description": "Design System {{pascalCase component}} component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/{{kebabCase component}}"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/{{kebabCase component}}",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

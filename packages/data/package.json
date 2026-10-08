@@ -2,6 +2,12 @@
   "name": "@fiscozen/data",
   "version": "0.2.4",
   "description": "Design System Data Layer",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/data"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/data",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

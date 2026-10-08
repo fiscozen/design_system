@@ -2,6 +2,12 @@
   "name": "@fiscozen/collapse",
   "version": "3.0.4",
   "description": "Design System Collapse and Accordion Components",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/collapse"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/collapse",
   "scripts": {
     "coverage": "vitest run --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
