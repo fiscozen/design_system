@@ -142,6 +142,7 @@
 <script setup lang="ts">
 import { computed, ref, toRef } from "vue";
 import { FzPdfViewerProps } from "./types";
+import "./pdfjsCompat";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
 // @ts-ignore — CSS side-effect import, no type declarations needed
 import "@tato30/vue-pdf/style.css";
