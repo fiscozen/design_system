@@ -2,6 +2,12 @@
   "name": "@fiscozen/tooltip",
   "version": "3.0.9",
   "description": "Design System Tooltip Component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/tooltip"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/tooltip",
   "scripts": {
     "coverage": "vitest run --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",

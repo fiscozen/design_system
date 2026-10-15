@@ -2,6 +2,12 @@
   "name": "@fiscozen/popover",
   "version": "0.2.1",
   "description": "Design System Popover component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/popover"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/popover",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",
