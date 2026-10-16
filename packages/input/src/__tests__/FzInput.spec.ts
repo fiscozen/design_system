@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
+import { h } from "vue";
 import { mount } from "@vue/test-utils";
 import { FzInput } from "..";
 
@@ -628,51 +629,68 @@ describe("FzInput", () => {
     });
 
     describe("Container accessibility", () => {
-      it('applies tabindex="0" to container when not disabled', async () => {
+      it("does not make the container a tab stop", () => {
         const wrapper = mount(FzInput, {
           props: {
             label: "Label",
           },
-          slots: {},
         });
 
-        await wrapper.vm.$nextTick();
+        const container = wrapper.find(".fz-input > div").element;
 
-        const container = wrapper.find(".fz-input > div")
-          .element as HTMLElement;
-        expect(container.getAttribute("tabindex")).toBe("0");
+        expect(container.hasAttribute("tabindex")).toBe(false);
       });
 
-      it("removes tabindex from container when disabled", async () => {
+      it("reaches the next input in a single Tab step", () => {
+        const wrapper = mount({
+          render: () =>
+            h("form", [
+              h(FzInput, { label: "Email", name: "email" }),
+              h(FzInput, {
+                label: "Password",
+                name: "password",
+                type: "password",
+              }),
+            ]),
+        });
+
+        const tabStops = wrapper
+          .findAll("input, button, [tabindex]")
+          .map((node) => node.element as HTMLElement)
+          .filter((element) => element.tabIndex >= 0);
+
+        expect(tabStops.map((element) => element.getAttribute("name"))).toEqual(
+          ["email", "password"],
+        );
+      });
+
+      it("focuses the input when the container is clicked", async () => {
         const wrapper = mount(FzInput, {
           props: {
             label: "Label",
-            disabled: true,
           },
-          slots: {},
+          attachTo: document.body,
         });
 
-        await wrapper.vm.$nextTick();
+        await wrapper.find(".fz-input > div").trigger("click");
 
-        const container = wrapper.find(".fz-input > div")
-          .element as HTMLElement;
-        expect(container.getAttribute("tabindex")).toBeNull();
+        expect(document.activeElement).toBe(wrapper.find("input").element);
+        wrapper.unmount();
       });
 
-      it("removes tabindex from container when readonly", async () => {
+      it("does not focus a readonly input when the container is clicked", async () => {
         const wrapper = mount(FzInput, {
           props: {
             label: "Label",
             readonly: true,
           },
-          slots: {},
+          attachTo: document.body,
         });
 
-        await wrapper.vm.$nextTick();
+        await wrapper.find(".fz-input > div").trigger("click");
 
-        const container = wrapper.find(".fz-input > div")
-          .element as HTMLElement;
-        expect(container.getAttribute("tabindex")).toBeNull();
+        expect(document.activeElement).not.toBe(wrapper.find("input").element);
+        wrapper.unmount();
       });
     });
 

@@ -343,7 +343,7 @@ export const Backoffice: Story = {
 
       // Backoffice should have smaller sizing
       if (container) {
-        const inputWrapper = container.querySelector('[tabindex="0"]')
+        const inputWrapper = input.closest('.fz-input > div')
         if (inputWrapper) {
           const rect = inputWrapper.getBoundingClientRect()
           // Backoffice inputs are typically smaller (height around 32-40px)
@@ -383,7 +383,7 @@ export const Frontoffice: Story = {
 
       // Frontoffice should have larger sizing
       if (container) {
-        const inputWrapper = container.querySelector('[tabindex="0"]')
+        const inputWrapper = input.closest('.fz-input > div')
         if (inputWrapper) {
           const rect = inputWrapper.getBoundingClientRect()
           // Frontoffice inputs are typically larger (height around 48-56px)
@@ -950,7 +950,7 @@ export const ErrorState: Story = {
       await expect(container).toBeInTheDocument()
 
       // Test observable behavior: error border should have a red-ish color
-      const inputContainer = container?.querySelector('[tabindex="0"]')
+      const inputContainer = input.closest('.fz-input > div')
       if (inputContainer) {
         const styles = window.getComputedStyle(inputContainer)
         // Border should be visible (not 0)
