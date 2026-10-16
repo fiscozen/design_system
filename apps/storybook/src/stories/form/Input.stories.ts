@@ -156,10 +156,11 @@ export const Default: Story = {
       }
     })
 
-    await step('Verify container is keyboard accessible', async () => {
+    await step('Verify Tab lands directly on the input', async () => {
       const input = canvas.getByRole('textbox', { name: /Input Label/i })
-      const container = input.closest('.fz-input > div')
-      await expect(container).toHaveAttribute('tabindex', '0')
+      input.blur()
+      await userEvent.tab()
+      await expect(input).toHaveFocus()
     })
   }
 }
@@ -755,10 +756,11 @@ export const Highlighted: Story = {
       await expect(input).toHaveAttribute('aria-disabled', 'false')
     })
 
-    await step('Verify container is keyboard accessible', async () => {
+    await step('Verify Tab lands directly on the input', async () => {
       const input = canvas.getByRole('textbox', { name: /Input Label/i })
-      const container = input.closest('.fz-input > div')
-      await expect(container).toHaveAttribute('tabindex', '0')
+      input.blur()
+      await userEvent.tab()
+      await expect(input).toHaveFocus()
     })
   }
 }
@@ -779,10 +781,11 @@ export const HighlightedBackoffice: Story = {
       await expect(input).toHaveAttribute('aria-invalid', 'false')
     })
 
-    await step('Verify container is keyboard accessible', async () => {
+    await step('Verify Tab lands directly on the input', async () => {
       const input = canvas.getByRole('textbox', { name: /Input Label/i })
-      const container = input.closest('.fz-input > div')
-      await expect(container).toHaveAttribute('tabindex', '0')
+      input.blur()
+      await userEvent.tab()
+      await expect(input).toHaveFocus()
     })
   }
 }
