@@ -1,5 +1,12 @@
 # @fiscozen/select
 
+## 3.1.18
+
+### Patch Changes
+
+- Updated dependencies [6efe84a]
+  - @fiscozen/input@3.5.8
+
 ## 3.1.17
 
 ### Patch Changes
