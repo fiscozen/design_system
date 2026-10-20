@@ -1800,7 +1800,8 @@ export const AIReasoningFilterable: SelectStory = {
 
 /**
  * `truncateLabel` keeps each label on one line, so fields side by side stay aligned
- * whatever their labels' length; a cut label shows in full in a tooltip on hover.
+ * whatever their labels' length; a cut label shows in full in a tooltip on hover and
+ * while the select has focus.
  */
 export const TruncateLabel: SelectStory = {
   render: () => ({

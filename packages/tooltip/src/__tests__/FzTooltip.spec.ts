@@ -1,11 +1,15 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { h, nextTick } from 'vue'
 
-import { mount, flushPromises, type VueWrapper } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import FzTooltip from '../FzTooltip.vue'
 import { FzTooltipStatus } from '../types'
 import { FzButton } from '@fiscozen/button'
 import { FzLink } from '@fiscozen/link'
+import { stubTruncationWidths } from './truncationLayout'
+
+const isTooltipShown = () =>
+  document.querySelector('[role="tooltip"]')?.getAttribute('aria-hidden') === 'false'
 
 const statuses: FzTooltipStatus[] = ['neutral', 'informative', 'positive', 'alert', 'error']
 
@@ -968,12 +972,6 @@ describe('FzTooltip', () => {
   })
 
   describe('truncate prop', () => {
-    /** jsdom lays nothing out: stub the trigger's overflow, content wider than box. */
-    const stubOverflow = (scrollWidth: number, clientWidth: number) => {
-      vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(scrollWidth)
-      vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(clientWidth)
-    }
-
     const mountTruncated = () =>
       mount(FzTooltip, {
         props: { text: 'Data di versamento', truncate: true },
@@ -981,42 +979,130 @@ describe('FzTooltip', () => {
         attachTo: document.body
       })
 
-    const isOpen = (wrapper: VueWrapper) =>
-      wrapper.findComponent({ name: 'FzFloating' }).props('isOpen')
+    // Earlier tests leave teleported tooltips in the body: empty it, so the only
+    // `[role="tooltip"]` is this test's.
+    beforeEach(() => {
+      document.body.innerHTML = ''
+    })
 
     afterEach(() => {
       vi.restoreAllMocks()
     })
 
     it('opens on hover when the content is cut', async () => {
-      stubOverflow(200, 100)
+      stubTruncationWidths({ content: 200, box: 100 })
       const wrapper = mountTruncated()
 
       await wrapper.find('span').trigger('mouseover')
 
-      expect(isOpen(wrapper)).toBe(true)
+      expect(isTooltipShown()).toBe(true)
       wrapper.unmount()
     })
 
-    it('stays closed on hover when the content fits', async () => {
-      stubOverflow(100, 100)
+    it('opens on hover when the content is cut by a fraction of a pixel', async () => {
+      stubTruncationWidths({ content: 100.4, box: 100 })
       const wrapper = mountTruncated()
 
       await wrapper.find('span').trigger('mouseover')
 
-      expect(isOpen(wrapper)).toBe(false)
+      expect(isTooltipShown()).toBe(true)
       wrapper.unmount()
     })
 
-    it('adds no tab stop and no description to the content it repeats', async () => {
-      stubOverflow(200, 100)
+    it('stays closed on hover when the content fits exactly', async () => {
+      stubTruncationWidths({ content: 100, box: 100 })
       const wrapper = mountTruncated()
 
+      await wrapper.find('span').trigger('mouseover')
+
+      expect(isTooltipShown()).toBe(false)
+      wrapper.unmount()
+    })
+
+    it('takes no tab stop on a truncated trigger', () => {
+      const wrapper = mountTruncated()
+
+      expect(wrapper.find('span').attributes('tabindex')).toBeUndefined()
+      wrapper.unmount()
+    })
+
+    it('does not make an open truncated tooltip the trigger description', async () => {
+      stubTruncationWidths({ content: 200, box: 100 })
+      const wrapper = mountTruncated()
       const trigger = wrapper.find('span')
+
       await trigger.trigger('mouseover')
 
-      expect(trigger.attributes('tabindex')).toBeUndefined()
+      expect(isTooltipShown()).toBe(true)
       expect(trigger.attributes('aria-describedby')).toBeUndefined()
+      wrapper.unmount()
+    })
+  })
+
+  describe('externalFocus prop', () => {
+    const mountWithExternalFocus = (externalFocus: boolean) =>
+      mount(FzTooltip, {
+        props: { text: 'Tooltip text', externalFocus },
+        slots: { default: 'Trigger' },
+        attachTo: document.body
+      })
+
+    beforeEach(() => {
+      document.body.innerHTML = ''
+    })
+
+    it('opens when external focus arrives', async () => {
+      const wrapper = mountWithExternalFocus(false)
+
+      await wrapper.setProps({ externalFocus: true })
+
+      expect(isTooltipShown()).toBe(true)
+      wrapper.unmount()
+    })
+
+    it('closes when external focus leaves', async () => {
+      const wrapper = mountWithExternalFocus(true)
+
+      await wrapper.setProps({ externalFocus: false })
+
+      expect(isTooltipShown()).toBe(false)
+      wrapper.unmount()
+    })
+
+    it('stays open when the pointer leaves the trigger while external focus holds', async () => {
+      vi.useFakeTimers()
+      const wrapper = mountWithExternalFocus(true)
+      const trigger = wrapper.find('span')
+
+      await trigger.trigger('mouseover')
+      await trigger.trigger('mouseleave')
+      vi.advanceTimersByTime(150)
+      await nextTick()
+
+      expect(isTooltipShown()).toBe(true)
+      wrapper.unmount()
+      vi.useRealTimers()
+    })
+
+    it('closes on Escape pressed outside the trigger while external focus holds', async () => {
+      const wrapper = mountWithExternalFocus(true)
+
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+      await nextTick()
+
+      expect(isTooltipShown()).toBe(false)
+      wrapper.unmount()
+    })
+
+    it('stops listening for Escape once external focus leaves', async () => {
+      const wrapper = mountWithExternalFocus(true)
+      await wrapper.setProps({ externalFocus: false })
+      await wrapper.find('span').trigger('focusin')
+
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+      await nextTick()
+
+      expect(isTooltipShown()).toBe(true)
       wrapper.unmount()
     })
   })

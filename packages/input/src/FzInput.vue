@@ -28,7 +28,7 @@
   import { FzAlert } from "@fiscozen/alert";
   import { FzIcon } from "@fiscozen/icons";
   import { FzIconButton } from "@fiscozen/button";
-  import { FzTooltip } from "@fiscozen/tooltip";
+  import { FzTruncatedLabel } from "@fiscozen/tooltip";
   import useInputStyle from "./useInputStyle";
   import useCurrencyInput from "./useCurrencyInput";
   import {
@@ -278,9 +278,6 @@
     }
     return undefined;
   });
-
-  /** Inline-size containment keeps the uncut label from widening the field. */
-  const truncatedLabelRowClass = "flex w-full min-w-0 [contain:inline-size]";
 
   /**
    * Computes aria-describedby value linking input to help text or error message
@@ -605,12 +602,8 @@
 <template>
   <div class="fz-input text-core-black w-full flex flex-col gap-8" :class="rootClass">
     <slot name="label">
-      <div v-if="label && truncateLabel" :class="truncatedLabelRowClass">
-        <FzTooltip truncate :text="label" :class="computedLabelClass">
-          <label :id="`${effectiveId}-label`" class="inline" :for="effectiveId">{{ label }}</label>
-        </FzTooltip>
-        <span v-if="required" aria-hidden="true" class="shrink-0 whitespace-pre" :class="computedLabelClass"> *</span>
-      </div>
+      <FzTruncatedLabel v-if="label && truncateLabel" :class="computedLabelClass" :label
+        :labelId="`${effectiveId}-label`" :controlId="effectiveId" :required />
       <label v-else-if="label" :id="`${effectiveId}-label`" :class="computedLabelClass" :for="effectiveId">
         {{ label }}{{ required ? " *" : "" }}
       </label>

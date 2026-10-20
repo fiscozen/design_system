@@ -22,7 +22,7 @@ export default defineConfig({
       name: 'FzTypeahead',
     },
     rollupOptions: {
-      external: ['vue', "@fiscozen/icons", "@fiscozen/composables", "@fiscozen/button", "@fiscozen/input"],
+      external: ['vue', "@fiscozen/icons", "@fiscozen/composables", "@fiscozen/button", "@fiscozen/input", "@fiscozen/tooltip"],
       output: {
         globals: {
           vue: 'Vue',

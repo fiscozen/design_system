@@ -225,10 +225,11 @@ export const LONG_FIELD_LABEL = 'Data di versamento dell’imposta sostitutiva'
 /**
  * Verifies a row of fields rendered with `truncateLabel`, one of which carries
  * {@link LONG_FIELD_LABEL}: the controls stay aligned, the long field keeps its
- * full label as accessible name, and hovering the cut label shows it in a tooltip.
+ * full label as accessible name, and the cut label shows in full in a tooltip on
+ * hover and while the field has keyboard focus, until Escape dismisses it.
  *
  * @param controls - the row's controls, in order
- * @param longControl - the control whose label is {@link LONG_FIELD_LABEL}
+ * @param longControl - the control whose label is {@link LONG_FIELD_LABEL}, first tab stop of the canvas
  */
 export async function verifyTruncatedLabelRow(
   { canvasElement, step }: Pick<PlayFunctionContext, 'canvasElement' | 'step'>,
@@ -253,5 +254,24 @@ export async function verifyTruncatedLabelRow(
     await waitFor(() =>
       expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent(LONG_FIELD_LABEL)
     )
+  })
+
+  await step('tabbing into the field shows the cut label in full', async () => {
+    await userEvent.unhover(canvas.getByText(LONG_FIELD_LABEL))
+    await waitFor(() => expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull())
+
+    await userEvent.tab()
+
+    await expect(longControl).toHaveFocus()
+    await waitFor(() =>
+      expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent(LONG_FIELD_LABEL)
+    )
+  })
+
+  await step('Escape hides the label tooltip and keeps focus on the field', async () => {
+    await userEvent.keyboard('{Escape}')
+
+    await waitFor(() => expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull())
+    await expect(longControl).toHaveFocus()
   })
 }

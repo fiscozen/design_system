@@ -23,7 +23,7 @@ export default defineConfig({
       name: 'FzTextarea',
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', '@fiscozen/tooltip'],
       output: {
         globals: {
           vue: 'Vue',

@@ -8,7 +8,7 @@
  * @internal
  */
 import { computed } from "vue";
-import { FzTooltip } from "@fiscozen/tooltip";
+import { FzTruncatedLabel } from "@fiscozen/tooltip";
 import type { FzSelectLabelProps } from "./types";
 
 const props = defineProps<FzSelectLabelProps>();
@@ -31,18 +31,17 @@ const labelClass = computed(() => {
 
   return baseClasses;
 });
-
-/** Inline-size containment keeps the uncut label from widening the field. */
-const truncatedLabelRowClass = "flex w-full min-w-0 [contain:inline-size]";
 </script>
 
 <template>
-  <div v-if="truncate" :class="truncatedLabelRowClass">
-    <FzTooltip truncate :text="label" :class="labelClass">
-      <label :id="labelId" :for="openerId" class="inline">{{ label }}</label>
-    </FzTooltip>
-    <span v-if="required" aria-hidden="true" class="shrink-0 whitespace-pre" :class="labelClass"> *</span>
-  </div>
+  <FzTruncatedLabel
+    v-if="truncate"
+    :class="labelClass"
+    :label
+    :labelId
+    :controlId="openerId"
+    :required
+  />
   <label v-else :id="labelId" :for="openerId" :class="labelClass">
     {{ label }}{{ required ? " *" : "" }}
   </label>
