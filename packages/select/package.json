@@ -19,6 +19,7 @@
     "@fiscozen/composables": "workspace:*",
     "@fiscozen/input": "workspace:*",
     "@fiscozen/progress": "workspace:*",
+    "@fiscozen/tooltip": "workspace:*",
     "fuse.js": "^7.1.0"
   },
   "peerDependencies": {

@@ -593,3 +593,49 @@ export const DesignReview: Story = {
     })
   }
 }
+
+const LONG_TEXT = 'Data di versamento dell’imposta sostitutiva'
+
+/**
+ * `truncate` keeps the content on one line and opens the tooltip only while it is cut.
+ * The columns are flex items, so they carry `min-w-0`: without it a column grows to
+ * fit the uncut text, as with any truncated text.
+ */
+export const Truncate: Story = {
+  render: () => ({
+    components: { FzTooltip },
+    setup: () => ({ LONG_TEXT }),
+    template: `
+      <div class="flex w-[400px] gap-16 p-16">
+        <div class="flex-1 min-w-0" data-testid="long-column">
+          <FzTooltip truncate :text="LONG_TEXT" class="text-grey-500">{{ LONG_TEXT }}</FzTooltip>
+        </div>
+        <div class="flex-1 min-w-0" data-testid="short-column">
+          <FzTooltip truncate text="Regime" class="text-grey-500">Regime</FzTooltip>
+        </div>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const longColumn = canvas.getByTestId('long-column')
+    const shortColumn = canvas.getByTestId('short-column')
+
+    await step('a cut text does not widen its column', async () => {
+      expect(longColumn.getBoundingClientRect().width).toBe(shortColumn.getBoundingClientRect().width)
+    })
+
+    await step('a text that fits opens no tooltip', async () => {
+      await userEvent.hover(canvas.getByText('Regime'))
+      expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull()
+      await userEvent.unhover(canvas.getByText('Regime'))
+    })
+
+    await step('a cut text opens the tooltip with the full text', async () => {
+      await userEvent.hover(canvas.getByText(LONG_TEXT))
+      await waitFor(() => {
+        expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent(LONG_TEXT)
+      })
+    })
+  }
+}

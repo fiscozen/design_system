@@ -59,6 +59,13 @@ type FzInputProps<TType extends FzInputType = FzInputType> = {
    */
   label?: string;
   /**
+   * Keeps the label on one line, cut with an ellipsis when it is wider than the
+   * field; hovering a cut label shows it in full in a tooltip. Fields laid side by
+   * side stay aligned whatever their labels' length. Has no effect on the label slot.
+   * @default false
+   */
+  truncateLabel?: boolean;
+  /**
    * Environment determining input size and styling
    * @default 'frontoffice'
    */

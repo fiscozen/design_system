@@ -128,4 +128,13 @@ describe('FzFloating', () => {
       expect(content.style.minWidth).toBe('')
     })
   })
+
+  it('applies openerClass to the element wrapping the opener', () => {
+    const wrapper = mount(FzFloating, {
+      props: { openerClass: 'min-w-0' },
+      slots: { opener: '<button data-testid="opener">opener</button>' }
+    })
+
+    expect(wrapper.get('[data-testid="opener"]').element.parentElement?.classList).toContain('min-w-0')
+  })
 })

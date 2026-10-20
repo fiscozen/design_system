@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, userEvent, within, waitFor } from 'storybook/test'
 import { FzDatepicker } from '@fiscozen/datepicker'
 import { ref } from 'vue'
+import { LONG_FIELD_LABEL, verifyTruncatedLabelRow } from '../test-utils'
 
 // ============================================
 // FIXED DATES — deterministic across all runs
@@ -1831,5 +1832,27 @@ export const FormNameAttribute: Story = {
       // Value may be empty (no date selected) but the key MUST be present.
       await expect(fd.has('business_start')).toBe(true)
     })
+  }
+}
+
+/**
+ * `truncateLabel` reaches the inner `FzInput` through `inputProps`: datepickers side
+ * by side stay aligned whatever their labels' length.
+ */
+export const TruncateLabel: Story = {
+  render: () => ({
+    components: { FzDatepicker },
+    setup: () => ({ LONG_FIELD_LABEL }),
+    template: `
+      <div class="flex w-[400px] gap-16">
+        <FzDatepicker class="flex-1" :inputProps="{ label: LONG_FIELD_LABEL, truncateLabel: true }" />
+        <FzDatepicker class="flex-1" :inputProps="{ label: 'Scadenza', truncateLabel: true }" />
+      </div>
+    `
+  }),
+  play: async (context) => {
+    const canvas = within(context.canvasElement)
+    const controls = canvas.getAllByRole('textbox')
+    await verifyTruncatedLabelRow(context, controls, controls[0])
   }
 }

@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { h, nextTick } from 'vue'
 
-import { mount, flushPromises } from '@vue/test-utils'
+import { mount, flushPromises, type VueWrapper } from '@vue/test-utils'
 import FzTooltip from '../FzTooltip.vue'
 import { FzTooltipStatus } from '../types'
 import { FzButton } from '@fiscozen/button'
@@ -964,6 +964,60 @@ describe('FzTooltip', () => {
         
         wrapper.unmount()
       })
+    })
+  })
+
+  describe('truncate prop', () => {
+    /** jsdom lays nothing out: stub the trigger's overflow, content wider than box. */
+    const stubOverflow = (scrollWidth: number, clientWidth: number) => {
+      vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(scrollWidth)
+      vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(clientWidth)
+    }
+
+    const mountTruncated = () =>
+      mount(FzTooltip, {
+        props: { text: 'Data di versamento', truncate: true },
+        slots: { default: 'Data di versamento' },
+        attachTo: document.body
+      })
+
+    const isOpen = (wrapper: VueWrapper) =>
+      wrapper.findComponent({ name: 'FzFloating' }).props('isOpen')
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('opens on hover when the content is cut', async () => {
+      stubOverflow(200, 100)
+      const wrapper = mountTruncated()
+
+      await wrapper.find('span').trigger('mouseover')
+
+      expect(isOpen(wrapper)).toBe(true)
+      wrapper.unmount()
+    })
+
+    it('stays closed on hover when the content fits', async () => {
+      stubOverflow(100, 100)
+      const wrapper = mountTruncated()
+
+      await wrapper.find('span').trigger('mouseover')
+
+      expect(isOpen(wrapper)).toBe(false)
+      wrapper.unmount()
+    })
+
+    it('adds no tab stop and no description to the content it repeats', async () => {
+      stubOverflow(200, 100)
+      const wrapper = mountTruncated()
+
+      const trigger = wrapper.find('span')
+      await trigger.trigger('mouseover')
+
+      expect(trigger.attributes('tabindex')).toBeUndefined()
+      expect(trigger.attributes('aria-describedby')).toBeUndefined()
+      wrapper.unmount()
     })
   })
 })

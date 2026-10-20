@@ -4,6 +4,7 @@ import { FzIconButton } from '@fiscozen/button'
 import { FzContainer } from '@fiscozen/container'
 import { FzTextarea } from '@fiscozen/textarea'
 import { ref } from 'vue'
+import { LONG_FIELD_LABEL, verifyTruncatedLabelRow } from '../test-utils'
 
 type PlayFunctionContext = {
   args: any
@@ -905,6 +906,28 @@ const BareComposerBarContainerFocus: TextareaStory = {
   }
 }
 
+/**
+ * `truncateLabel` keeps each label on one line, so fields side by side stay aligned
+ * whatever their labels' length; a cut label shows in full in a tooltip on hover.
+ */
+const TruncateLabel: TextareaStory = {
+  render: () => ({
+    components: { FzTextarea },
+    setup: () => ({ LONG_FIELD_LABEL }),
+    template: `
+      <div class="flex w-[400px] gap-16">
+        <FzTextarea class="flex-1" :label="LONG_FIELD_LABEL" truncateLabel />
+        <FzTextarea class="flex-1" label="Note" truncateLabel />
+      </div>
+    `
+  }),
+  play: async (context: PlayFunctionContext) => {
+    const canvas = within(context.canvasElement)
+    const controls = canvas.getAllByRole('textbox')
+    await verifyTruncatedLabelRow(context, controls, controls[0])
+  }
+}
+
 export {
   Default,
   Error,
@@ -923,5 +946,6 @@ export {
   AutoHeightWithMaxRows,
   AutoHeightBottomAnchored,
   BareComposerBar,
-  BareComposerBarContainerFocus
+  BareComposerBarContainerFocus,
+  TruncateLabel
 }

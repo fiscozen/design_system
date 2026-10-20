@@ -233,7 +233,7 @@ defineExpose({
 <template>
   <div>
     <slot name="opener-start"></slot>
-    <div ref="opener" class="inline-flex w-full sm:w-auto">
+    <div ref="opener" class="inline-flex w-full sm:w-auto" :class="openerClass">
       <slot name="opener" :isOpen :floating></slot>
     </div>
     <slot name="opener-end"></slot>

@@ -94,4 +94,24 @@ export interface FzTooltipProps {
    * </FzTooltip>
    */
   _forceOpenForDesignReview?: boolean;
+
+  /**
+   * Shows the content on one line, cut with an ellipsis when it is wider than the
+   * room it is given, and opens the tooltip only while the content is cut.
+   *
+   * Like any truncated text, it can only be cut where its container stops growing:
+   * in a flex layout, every flex ancestor up to the one that sets the width needs
+   * `min-width: 0` (`min-w-0`).
+   *
+   * The content stays in the DOM in full, so the trigger takes no tab stop and the
+   * tooltip is not announced as its description: it only repeats what is cut.
+   * Style the visible text (color, size) on the tooltip itself, so the ellipsis
+   * matches it.
+   *
+   * @default false
+   *
+   * @example
+   * <FzTooltip truncate :text="fileName">{{ fileName }}</FzTooltip>
+   */
+  truncate?: boolean;
 }
