@@ -1,5 +1,11 @@
 # @fiscozen/composables
 
+## 1.1.6
+
+### Patch Changes
+
+- 65d8e36: `FzFloating` applies its `openerClass` prop to the element wrapping the opener. The prop was declared but never rendered.
+
 ## 1.1.5
 
 ### Patch Changes

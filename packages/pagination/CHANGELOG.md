@@ -1,5 +1,12 @@
 # @fiscozen/pagination
 
+## 1.0.13
+
+### Patch Changes
+
+- Updated dependencies [65d8e36]
+  - @fiscozen/composables@1.1.6
+
 ## 1.0.12
 
 ### Patch Changes

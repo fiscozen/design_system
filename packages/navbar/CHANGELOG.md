@@ -1,5 +1,12 @@
 # @fiscozen/navbar
 
+## 0.4.3
+
+### Patch Changes
+
+- Updated dependencies [65d8e36]
+  - @fiscozen/composables@1.1.6
+
 ## 0.4.2
 
 ### Patch Changes

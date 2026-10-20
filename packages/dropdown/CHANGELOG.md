@@ -1,5 +1,12 @@
 # @fiscozen/dropdown
 
+## 1.0.18
+
+### Patch Changes
+
+- Updated dependencies [65d8e36]
+  - @fiscozen/composables@1.1.6
+
 ## 1.0.17
 
 ### Patch Changes
