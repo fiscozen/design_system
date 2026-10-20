@@ -1951,6 +1951,9 @@ importers:
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      '@fiscozen/tooltip':
+        specifier: workspace:*
+        version: link:../tooltip
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.19(yaml@2.8.2)
@@ -2778,6 +2781,9 @@ importers:
       '@fiscozen/progress':
         specifier: workspace:*
         version: link:../progress
+      '@fiscozen/tooltip':
+        specifier: workspace:*
+        version: link:../tooltip
       fuse.js:
         specifier: ^7.1.0
         version: 7.1.0
@@ -3254,6 +3260,9 @@ importers:
       '@fiscozen/icons':
         specifier: workspace:^
         version: link:../icons
+      '@fiscozen/tooltip':
+        specifier: workspace:*
+        version: link:../tooltip
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.19(yaml@2.8.2)

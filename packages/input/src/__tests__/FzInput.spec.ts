@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { h } from "vue";
 import { mount } from "@vue/test-utils";
 import { FzInput } from "..";
@@ -445,6 +445,52 @@ describe("FzInput", () => {
         // Verify label element exists with matching id
         const label = wrapper.find("label").element as HTMLLabelElement;
         expect(label.getAttribute("id")).toBe(labelId);
+      });
+
+      describe("with truncateLabel", () => {
+        /** jsdom has neither API, and the label's tooltip needs both to mount. */
+        class NoopIntersectionObserver {
+          observe() {}
+          unobserve() {}
+          disconnect() {}
+        }
+        const noMediaMatches = (media: string) => ({
+          matches: false,
+          media,
+          addEventListener() {},
+          removeEventListener() {},
+        });
+
+        const mountTruncated = () =>
+          mount(FzInput, {
+            props: { label: "Data di versamento", required: true, truncateLabel: true },
+          });
+
+        beforeEach(() => {
+          vi.stubGlobal("IntersectionObserver", NoopIntersectionObserver);
+          vi.stubGlobal("matchMedia", noMediaMatches);
+        });
+
+        afterEach(() => {
+          vi.unstubAllGlobals();
+        });
+
+        it("keeps the full label as the input's accessible name", () => {
+          const wrapper = mountTruncated();
+
+          const labelId = wrapper.get("input").attributes("aria-labelledby");
+
+          expect(wrapper.get(`[id="${labelId}"]`).text()).toBe("Data di versamento");
+        });
+
+        it("keeps the required marker out of the part that is cut", () => {
+          const wrapper = mountTruncated();
+
+          const marker = wrapper.findAll("span").filter((span) => span.text() === "*");
+
+          expect(marker).toHaveLength(1);
+          expect(marker[0].element.closest(".fz__tooltip")).toBeNull();
+        });
       });
 
       it("does not apply aria-labelledby when label is not provided", async () => {

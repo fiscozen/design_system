@@ -13,7 +13,8 @@
   "keywords": [],
   "author": "Alen Ajam",
   "dependencies": {
-    "@fiscozen/alert": "workspace:*"
+    "@fiscozen/alert": "workspace:*",
+    "@fiscozen/tooltip": "workspace:*"
   },
   "peerDependencies": {
     "@fiscozen/icons": "workspace:^",

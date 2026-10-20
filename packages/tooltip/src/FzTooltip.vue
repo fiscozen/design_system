@@ -50,6 +50,7 @@
     withIcon: false,
     interactive: 'auto',
     _forceOpenForDesignReview: false,
+    truncate: false,
   })
 
   const slots = useSlots()
@@ -172,6 +173,17 @@
 
   const tooltipId = `tooltip-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
 
+  const opener = ref<HTMLElement | null>(null)
+
+  /**
+   * Whether the truncated content is cut right now. Measured when the tooltip is
+   * about to open rather than observed, so it always reflects the current layout.
+   */
+  function isContentCut(): boolean {
+    const element = opener.value
+    return element !== null && element.scrollWidth > element.clientWidth
+  }
+
   const isOpen = ref(false)
   const isHoveringTooltip = ref(false)
   const isFocused = ref(false)
@@ -193,7 +205,7 @@
    * Returns tooltip ID only when visible to prevent screen readers
    * from announcing hidden content.
    */
-  const ariaDescribedby = computed(() => isOpen.value ? tooltipId : undefined);
+  const ariaDescribedby = computed(() => (isOpen.value && !props.truncate ? tooltipId : undefined));
 
   /**
    * Dynamic tabindex based on interactive prop and auto-detection.
@@ -213,17 +225,26 @@
     if (typeof props.interactive === 'boolean') {
       return props.interactive ? undefined : 0;
     }
-    
+
+    // Truncated content is already in the DOM in full: the tooltip only repeats it,
+    // so it earns no tab stop and no description.
+    if (props.truncate) return undefined;
+
     // undefined or 'auto': use auto-detection
     return isInteractiveElement.value ? undefined : 0;
   });
+
+  /** Bound as an attribute object so an untruncated trigger renders no `class` at all. */
+  const openerAttrs = computed(() => (props.truncate ? { class: 'block min-w-0 truncate' } : {}))
   
   /**
    * Shows the tooltip if content is available.
    * When _forceOpenForDesignReview is true, tooltip remains visible.
    */
   function showTooltip() {
-    if (props.text || slots.text) {
+    const hasContent = !!(props.text || slots.text)
+    const isWorthShowing = props._forceOpenForDesignReview || !props.truncate || isContentCut()
+    if (hasContent && isWorthShowing) {
       isOpen.value = true
     }
   }
@@ -351,9 +372,13 @@
     :is-open="isOpen"
     :position="position"
     class="fz__tooltip flex h-max"
+    :class="{ 'min-w-0 max-w-full': truncate }"
+    :openerClass="{ 'min-w-0': truncate }"
     :contentClass="['rounded', classes, 'z-80']">
     <template #opener>
       <span
+        ref="opener"
+        v-bind="openerAttrs"
         :aria-label="props.ariaLabel"
         :aria-describedby="ariaDescribedby"
         :tabindex="computedTabindex"

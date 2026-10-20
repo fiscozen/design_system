@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { FzTextarea } from '..'
 
@@ -510,6 +510,52 @@ describe('FzTextarea', () => {
         expect(label.attributes('for')).toBe('test-id')
         expect(label.attributes('id')).toBe('test-id-label')
         expect(textarea.attributes('aria-labelledby')).toBe('test-id-label')
+      })
+
+      describe('with truncateLabel', () => {
+        /** jsdom has neither API, and the label's tooltip needs both to mount. */
+        class NoopIntersectionObserver {
+          observe() {}
+          unobserve() {}
+          disconnect() {}
+        }
+        const noMediaMatches = (media: string) => ({
+          matches: false,
+          media,
+          addEventListener() {},
+          removeEventListener() {}
+        })
+
+        const mountTruncated = () =>
+          mount(FzTextarea, {
+            props: { label: 'Data di versamento', required: true, truncateLabel: true }
+          })
+
+        beforeEach(() => {
+          vi.stubGlobal('IntersectionObserver', NoopIntersectionObserver)
+          vi.stubGlobal('matchMedia', noMediaMatches)
+        })
+
+        afterEach(() => {
+          vi.unstubAllGlobals()
+        })
+
+        it("keeps the full label as the textarea's accessible name", () => {
+          const wrapper = mountTruncated()
+
+          const labelId = wrapper.get('textarea').attributes('aria-labelledby')
+
+          expect(wrapper.get(`[id="${labelId}"]`).text()).toBe('Data di versamento')
+        })
+
+        it('keeps the required marker out of the part that is cut', () => {
+          const wrapper = mountTruncated()
+
+          const marker = wrapper.findAll('span').filter((span) => span.text() === '*')
+
+          expect(marker).toHaveLength(1)
+          expect(marker[0].element.closest('.fz__tooltip')).toBeNull()
+        })
       })
 
       it('should not have aria-labelledby when label is not provided', () => {
