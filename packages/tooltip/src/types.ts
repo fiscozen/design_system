@@ -114,4 +114,46 @@ export interface FzTooltipProps {
    * <FzTooltip truncate :text="fileName">{{ fileName }}</FzTooltip>
    */
   truncate?: boolean;
+
+  /**
+   * Whether focus sits on an element the trigger stands for but does not contain,
+   * such as the control a label names. While true, the tooltip behaves as if the
+   * trigger had focus: it opens (with `truncate`, only while the content is cut),
+   * stays open when the pointer leaves, and closes on Escape.
+   *
+   * @default false
+   *
+   * @example
+   * <FzTooltip truncate :text="label" :externalFocus="isInputFocused">{{ label }}</FzTooltip>
+   */
+  externalFocus?: boolean;
+}
+
+/**
+ * Props for the FzTruncatedLabel component.
+ */
+export interface FzTruncatedLabelProps {
+  /**
+   * Text of the label, cut with an ellipsis when it is wider than the field.
+   */
+  label: string;
+
+  /**
+   * `id` of the `<label>` element, for the control's `aria-labelledby`.
+   */
+  labelId: string;
+
+  /**
+   * `id` of the control the label names: rendered as the label's `for`. The full
+   * label opens in a tooltip while this control has focus and the label is cut.
+   */
+  controlId: string;
+
+  /**
+   * Appends a visual asterisk outside the cut, so it stays visible. It is hidden from
+   * assistive technology: mark the control itself as required.
+   *
+   * @default false
+   */
+  required?: boolean;
 }

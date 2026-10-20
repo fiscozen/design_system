@@ -35,7 +35,7 @@ import { computed, ref, watch, onMounted, onBeforeUnmount, nextTick, useSlots } 
 import { FzTextareaProps } from './types'
 import { FzAlert } from '@fiscozen/alert'
 import { FzIcon } from '@fiscozen/icons'
-import { FzTooltip } from '@fiscozen/tooltip'
+import { FzTruncatedLabel } from '@fiscozen/tooltip'
 import { generateTextareaId } from './utils'
 
 defineOptions({ inheritAttrs: false })
@@ -239,9 +239,6 @@ const labelClasses = computed(() => [
   props.disabled || props.readonly ? 'text-grey-300' : 'text-grey-500'
 ])
 
-/** Inline-size containment keeps the uncut label from widening the field. */
-const truncatedLabelRowClass = 'flex w-full min-w-0 [contain:inline-size]'
-
 const mapResizeToClass = {
   none: 'resize-none',
   vertical: 'resize-y',
@@ -352,12 +349,14 @@ const helpClasses = computed(() => [
 
 <template>
   <div :class="containerClasses">
-    <div v-if="label && truncateLabel" :class="truncatedLabelRowClass">
-      <FzTooltip truncate :text="label" :class="labelClasses">
-        <label :id="`${effectiveId}-label`" class="inline" :for="effectiveId">{{ label }}</label>
-      </FzTooltip>
-      <span v-if="required" aria-hidden="true" class="shrink-0 whitespace-pre" :class="labelClasses"> *</span>
-    </div>
+    <FzTruncatedLabel
+      v-if="label && truncateLabel"
+      :class="labelClasses"
+      :label
+      :labelId="`${effectiveId}-label`"
+      :controlId="effectiveId"
+      :required
+    />
     <label v-else-if="label" :id="`${effectiveId}-label`" :class="labelClasses" :for="effectiveId"
       >{{ label }}{{ required ? ' *' : '' }}</label
     >

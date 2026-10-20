@@ -637,5 +637,37 @@ export const Truncate: Story = {
         expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent(LONG_TEXT)
       })
     })
+
+    const shortText = canvas.getByText('Regime')
+    const shortTextRange = document.createRange()
+    shortTextRange.selectNodeContents(shortText)
+    const shortTextWidth = shortTextRange.getBoundingClientRect().width
+    shortColumn.style.flex = 'none'
+
+    await step('a text exactly as wide as its box opens no tooltip', async () => {
+      await userEvent.unhover(canvas.getByText(LONG_TEXT))
+      await waitFor(() => expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull())
+      shortColumn.style.width = `${shortTextWidth}px`
+
+      await userEvent.hover(shortText)
+
+      expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull()
+      await userEvent.unhover(shortText)
+    })
+
+    await step('a text cut by a fraction of a pixel opens the tooltip', async () => {
+      // One layout unit (1/64px) past the half pixel below the text: the text is cut,
+      // yet scrollWidth and clientWidth round to the same whole pixel.
+      const columnWidth = Math.floor(shortTextWidth * 2) / 2 + 1 / 64
+      shortColumn.style.width = `${columnWidth}px`
+      await expect(shortTextWidth).toBeGreaterThan(columnWidth)
+      await expect(shortText.scrollWidth).toBe(shortText.clientWidth)
+
+      await userEvent.hover(shortText)
+
+      await waitFor(() => {
+        expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent('Regime')
+      })
+    })
   }
 }
