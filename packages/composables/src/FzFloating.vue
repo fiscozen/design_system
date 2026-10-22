@@ -73,11 +73,7 @@ const useFloatingOpts: FzUseFloatingArgs = {
   }
 }
 
-// `position` has to stay live. It is copied by value into useFloatingOpts above, so
-// toRefs would hand the engine a ref onto that copy: setPosition would keep resolving
-// the placement chosen at setup, and every later change to the prop — a responsive
-// tooltip, a computed on FzSelect — would be silently ignored. A computed reads the
-// prop each time instead.
+// A computed, not toRefs: `position` is copied by value above, so a ref onto it never updates.
 const dynamicOpts = {
   ...toRefs(useFloatingOpts),
   position: computed(() => props.position)
