@@ -1,0 +1,130 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Form/FzRadioIconTile" />
+
+# FzRadioIconTile
+
+A single-select tile whose entire content is one icon: full height, full column width, icon centred, colour by accent.
+
+It fills the gap between `FzIconButton` — fixed, toolbar-sized — and `FzRadioCard` — a card with image, title and subtitle. Reach for it when the choice is between a handful of options each represented by a glyph: a satisfaction rating, a mode picker, a three-state filter.
+
+## Why a radio and not a button
+
+The tile is a native `<input type="radio">`, not a toggle button. That buys the things a button has to re-implement by hand:
+
+- the selected state travels to assistive technology through `:checked`, with no hand-maintained `aria-pressed`;
+- inside `FzRadioGroup` it inherits `role="radiogroup"`, a shared `name`, the aria wiring and native arrow-key navigation.
+
+## Features
+
+- **Full height, full width**: `82px` minimum (the design's tile height, and a floor that keeps the control above the 44×44 touch target), growing to fill a taller row
+- **Four accents**: `neutral`, `success`, `warning`, `error`, mapped onto the `@fiscozen/style` semantic token families
+- **Required accessible name**: `label` is mandatory and rendered visually hidden
+- **Selection on three vectors**: native checked state, thicker border, accent tint — only one of which is colour
+- **Keyboard-only focus ring**: no ring on pointer clicks
+- **Group-aware**: absorbs `FzRadioGroup`'s `radioGroupProps`, including the error `tone`
+
+## Installation
+
+```bash
+npm install @fiscozen/radio
+# or
+pnpm add @fiscozen/radio
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { FzRadioIconTile } from '@fiscozen/radio'
+import { ref } from 'vue'
+
+const vote = ref('')
+</script>
+
+<template>
+  <FzRadioIconTile
+    label="Soddisfatto"
+    icon-name="face-smile"
+    value="positive"
+    accent="success"
+    v-model="vote"
+  />
+</template>
+```
+
+## A row of tiles
+
+The shape the component exists for. `FzRadioGroup`'s `horizontal` variant lays the row out and hands every tile the group's `name`, so the browser treats the three as one single-select set.
+
+```vue
+<script setup lang="ts">
+import { FzRadioGroup, FzRadioIconTile } from '@fiscozen/radio'
+import { ref } from 'vue'
+
+const vote = ref('')
+
+const faces = [
+  { value: 'positive', label: 'Soddisfatto', iconName: 'face-smile', accent: 'success' },
+  { value: 'neutral', label: 'Nella media', iconName: 'face-meh', accent: 'warning' },
+  { value: 'negative', label: 'Insoddisfatto', iconName: 'face-frown', accent: 'error' }
+] as const
+</script>
+
+<template>
+  <FzRadioGroup label="Come è andata la conversazione?" variant="horizontal">
+    <template #default="{ radioGroupProps }">
+      <FzRadioIconTile
+        v-for="face in faces"
+        :key="face.value"
+        v-bind="radioGroupProps"
+        :value="face.value"
+        :label="face.label"
+        :icon-name="face.iconName"
+        :accent="face.accent"
+        v-model="vote"
+      />
+    </template>
+  </FzRadioGroup>
+</template>
+```
+
+## `accent` vs `tone`
+
+Two orthogonal colour inputs, deliberately not merged into one prop:
+
+| Prop | Says | Values | Set by |
+| --- | --- | --- | --- |
+| `accent` | what the tile *means* | `neutral` \| `success` \| `warning` \| `error` | the consumer, per tile |
+| `tone` | whether the *control* is valid | `neutral` \| `emphasis` \| `error` | usually `FzRadioGroup`, for the whole group |
+
+`FzRadioGroup` spreads `tone` down to every child through `radioGroupProps`. Had the tile's colour also been called `tone`, a group would silently overwrite each tile's colour. With both present, `accent` wins on a selected tile and `tone="error"` marks the unselected ones.
+
+## Accessibility
+
+- `label` is **required by the type**, not by convention: the tile renders no visible text, so the label is the only accessible name the option has. Colour and icon alone do not distinguish options — `getByRole('radio', { name: 'Soddisfatto' })` has to work.
+- The selected state is communicated by the native `:checked` state, so screen readers announce it without extra attributes.
+- Selection is also visible without colour perception: the border goes from 1px to 2px.
+- The focus ring is `focus-visible`-only, so keyboard users get it and pointer users don't.
+- The tile's `82px` minimum height keeps it well past the 44×44 minimum touch target. A future compact variant must still respect it.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | — | **Required.** Visually-hidden accessible name of the option |
+| `iconName` | `string` | — | **Required.** FontAwesome icon name from the `@awesome.me/kit-8137893ad3` kit |
+| `iconVariant` | `IconVariant` | `'far'` | FontAwesome variant |
+| `accent` | `'neutral' \| 'success' \| 'warning' \| 'error'` | `'neutral'` | Decorative colour family: icon, plus border and background of the selected state |
+| `value` | `string` | `label` | Value emitted on selection |
+| `modelValue` | `string` | — | Currently selected value of the set |
+| `name` | `string` | — | Radio group name; usually supplied by `FzRadioGroup` |
+| `required` | `boolean` | `false` | Marks the input required |
+| `disabled` | `boolean` | `false` | Disables interaction and greys the icon |
+| `tone` | `'neutral' \| 'emphasis' \| 'error'` | — | Validation state, inherited from the radio family |
+
+## Events
+
+| Event | Payload | Description |
+| --- | --- | --- |
+| `update:modelValue` | `string` | Emitted with the tile's `value` when it is selected |

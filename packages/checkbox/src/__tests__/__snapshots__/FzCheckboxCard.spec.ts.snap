@@ -5,7 +5,7 @@ exports[`FzCheckboxCard > Rendering > should render correctly 1`] = `
     <!--v-if-->
     <div data-v-7eaaa48f="" class="flex flex-row w-full justify-between min-w-0">
       <div data-v-7eaaa48f="" class="justify-center flex flex-col w-full grow-0 min-w-0 gap-4">
-        <p data-v-7eaaa48f="" class="font-medium break-words !m-0 !leading-[20px]">Card title</p>
+        <p data-v-7eaaa48f="" class="font-medium break-words !m-0 leading-[20px]">Card title</p>
         <!--v-if-->
       </div>
       <!--v-if-->

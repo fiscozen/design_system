@@ -1,5 +1,5 @@
 ---
-"@fiscozen/composables": patch
+"@fiscozen/composables": minor
 ---
 
 FzFloating: make a flipped panel's gap and gap class follow the side it actually landed on
@@ -10,9 +10,9 @@ That class is load-bearing, not decorative. The position calculators take the ga
 
 Both halves now come from the same place:
 
-- the flip is spaced by the gap the requested side declares in its margin class, so a flipped panel is spaced exactly like a native one on that side — above the opener the gap is in the arithmetic, below it `y` sits on the opener's edge and the flipped side's `margin-top` supplies it;
+- the flip is spaced by the gap declared in the panel's vertical margin class, so a flipped panel is spaced exactly like a native one on that side — above the opener the gap is in the arithmetic, below it `y` sits on the opener's edge and the flipped side's `margin-top` supplies it;
 - the correction reports the side it landed on, and the resolved position is mirrored onto it (keeping the alignment: `top-start` becomes `bottom-start`), so the gap class follows.
 
 Only `top*` / `bottom*` placements are affected. `left*` / `right*` sit beside their opener and keep their horizontal gap, so a vertical correction no longer restyles them onto a vertical side.
 
-Two notes for consumers. The resolved position now reports the flipped side, which is the intended reading — a flipped panel _is_ a panel on that side — but code that compared it against the requested `position` prop to detect "no flip happened" will see them differ. And a panel whose gap class has been overridden away now touches its opener when it flips, exactly as it already did when placed natively on that side; the flip no longer supplies a gap of its own.
+Notes for consumers. The resolved position (`actualPosition`) now reports the flipped side, which is the intended reading — a flipped panel _is_ a panel on that side — but code that compared it against the requested `position` prop to detect "no flip happened" will see them differ. `FzSelect` and `FzTypeahead` derive the panel's max-height from it, so a panel requested below that flips above its opener is now capped by the space above it instead of the space below. And a panel whose gap class has been overridden away now touches its opener when it flips, exactly as it already did when placed natively on that side; the flip no longer supplies a gap of its own.

@@ -1,4 +1,4 @@
-import { computed, type Ref } from "vue";
+import { computed, type ComputedRef, type Ref } from "vue";
 import { format, isSameDay, isValid, parseISO, startOfDay } from "date-fns";
 import { it } from "date-fns/locale";
 import type { FzAppointmentsCommonProps } from "../types";
@@ -9,13 +9,16 @@ export interface UseAppointmentsGenericOptions {
     "modelValue" | "name" | "alertTitle" | "alertDescription" | "infoText"
   >;
   currentDate: Ref<Date>;
+  hasAnyAvailability: ComputedRef<boolean>;
   emit: (event: "update:modelValue", value: string | undefined) => void;
 }
 
 // Default values
 const defaultAlertTitle = "Nessuna disponibilità";
-const defaultAlertDescription =
-  "Scegli un'altro giorno e prenota la tua consulenza.";
+const defaultOtherDayDescription =
+  "Scegli un altro giorno e prenota la tua consulenza.";
+const defaultNoAvailabilityDescription =
+  "Al momento non ci sono orari disponibili.";
 
 /**
  * Generic composable with common functionality shared between Auto and Manual modes
@@ -23,6 +26,7 @@ const defaultAlertDescription =
 export function useAppointmentsGeneric({
   props,
   currentDate,
+  hasAnyAvailability,
   emit,
 }: UseAppointmentsGenericOptions) {
   // Convert modelValue ISO-8601 string to Date object for internal use
@@ -59,9 +63,14 @@ export function useAppointmentsGeneric({
     return props.alertTitle ?? defaultAlertTitle;
   });
 
-  // Alert description
+  // Alert description: inviting another day only makes sense when another day exists
   const alertDescription = computed(() => {
-    return props.alertDescription ?? defaultAlertDescription;
+    if (props.alertDescription !== undefined) {
+      return props.alertDescription;
+    }
+    return hasAnyAvailability.value
+      ? defaultOtherDayDescription
+      : defaultNoAvailabilityDescription;
   });
 
   // Format time for display

@@ -57,7 +57,9 @@ type FzPdfViewerProps = {
   /**
    * When true, renders an invisible text layer over the PDF canvas that allows users to select and copy text.
    * Drag-to-pan remains active when clicking on the canvas background; clicking on text initiates native
-   * browser selection instead.
+   * browser selection instead. A drag that overshoots the end of a line into blank space selects only the
+   * text it crossed, and copied text is normalized to Unicode NFKC (ligatures such as "ﬁ" become "fi")
+   * with NUL characters removed, as in the pdf.js viewer.
    * Default is false.
    */
   selectable?: boolean;

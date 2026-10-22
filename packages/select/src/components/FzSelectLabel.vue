@@ -8,6 +8,7 @@
  * @internal
  */
 import { computed } from "vue";
+import { FzTruncatedLabel } from "@fiscozen/tooltip";
 import type { FzSelectLabelProps } from "./types";
 
 const props = defineProps<FzSelectLabelProps>();
@@ -33,7 +34,15 @@ const labelClass = computed(() => {
 </script>
 
 <template>
-  <label :id="labelId" :for="openerId" :class="labelClass">
+  <FzTruncatedLabel
+    v-if="truncate"
+    :class="labelClass"
+    :label
+    :labelId
+    :controlId="openerId"
+    :required
+  />
+  <label v-else :id="labelId" :for="openerId" :class="labelClass">
     {{ label }}{{ required ? " *" : "" }}
   </label>
 </template>

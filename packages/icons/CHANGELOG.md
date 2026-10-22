@@ -1,5 +1,11 @@
 # @fiscozen/icons
 
+## 1.0.8
+
+### Patch Changes
+
+- 23e34ed: chore: upgrade Font Awesome kit `@awesome.me/kit-8137893ad3` to 1.0.430 (18 new icons, none removed)
+
 ## 1.0.7
 
 ### Patch Changes

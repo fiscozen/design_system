@@ -7,15 +7,17 @@
    * as per WCAG 1.4.13 Content on Hover or Focus criteria.
    * 
    * Automatically detects interactive components (FzButton, FzLink) to prevent
-   * double tab stops. The wrapper adds tabindex="0" only for non-interactive content.
+   * double tab stops. The wrapper adds tabindex="0" only for non-interactive content
+   * that is not truncated: truncated content is in the DOM in full, so it takes none.
    * 
    * Supports _forceOpenForDesignReview prop for keeping tooltips visible in Storybook
    * during design review (not for production use).
    * 
    * @prop {boolean | 'auto'} interactive - Controls interactive behavior:
-   *   - undefined/'auto': Auto-detects FzButton and FzLink (recommended)
+   *   - undefined/'auto': Auto-detects FzButton and FzLink (recommended); truncated
+   *     content takes no wrapper tabindex
    *   - true: Forces interactive (no wrapper tabindex)
-   *   - false: Forces non-interactive (adds wrapper tabindex="0")
+   *   - false: Forces non-interactive (adds wrapper tabindex="0"), even when truncated
    * 
    * @example Auto-detection (recommended)
    * <FzTooltip text="Save changes">
@@ -50,6 +52,8 @@
     withIcon: false,
     interactive: 'auto',
     _forceOpenForDesignReview: false,
+    truncate: false,
+    externalFocus: false,
   })
 
   const slots = useSlots()
@@ -172,9 +176,27 @@
 
   const tooltipId = `tooltip-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
 
+  const opener = ref<HTMLElement | null>(null)
+  const truncatedContent = ref<HTMLElement | null>(null)
+
+  /**
+   * Whether the truncated content is cut right now. Measured when the tooltip is
+   * about to open rather than observed, so it always reflects the current layout.
+   * Compares the fractional widths of the inline content and of its box:
+   * scrollWidth and clientWidth are rounded to whole pixels, so content a fraction
+   * of a pixel wider than its box, which the browser still cuts, would read as
+   * fitting.
+   */
+  function isContentCut(): boolean {
+    if (opener.value === null || truncatedContent.value === null) return false
+    const contentWidth = truncatedContent.value.getBoundingClientRect().width
+    return contentWidth > opener.value.getBoundingClientRect().width
+  }
+
   const isOpen = ref(false)
   const isHoveringTooltip = ref(false)
-  const isFocused = ref(false)
+  const isTriggerFocused = ref(false)
+  const isFocused = computed(() => isTriggerFocused.value || props.externalFocus)
   const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
 
   const showIcon = computed(() => props.withIcon && props.status !== 'neutral');
@@ -193,37 +215,43 @@
    * Returns tooltip ID only when visible to prevent screen readers
    * from announcing hidden content.
    */
-  const ariaDescribedby = computed(() => isOpen.value ? tooltipId : undefined);
+  const ariaDescribedby = computed(() => (isOpen.value && !props.truncate ? tooltipId : undefined));
 
   /**
-   * Dynamic tabindex based on interactive prop and auto-detection.
-   * 
-   * Logic:
-   * - Explicit boolean (true/false): Override auto-detection
-   * - undefined or 'auto': Use auto-detection (isInteractiveElement)
-   * 
+   * Dynamic tabindex, resolved in this order:
+   * 1. Explicit `interactive` boolean: true → undefined, false → 0
+   * 2. `truncate`: undefined, since the content is already in the DOM in full and the
+   *    tooltip only repeats it
+   * 3. Auto-detection (`interactive` undefined or 'auto'): undefined for FzButton,
+   *    FzIconButton or FzLink, 0 otherwise
+   *
    * Returns:
-   * - undefined: Element is interactive (no wrapper tabindex, single tab stop)
-   * - 0: Element is not interactive (adds wrapper tabindex for keyboard accessibility)
-   * 
+   * - undefined: no wrapper tabindex (single tab stop, or none for truncated content)
+   * - 0: wrapper tabindex for keyboard accessibility of non-interactive content
+   *
    * This prevents double tab stops when wrapping interactive components.
    */
   const computedTabindex = computed(() => {
-    // Explicit boolean override takes precedence over auto-detection
     if (typeof props.interactive === 'boolean') {
       return props.interactive ? undefined : 0;
     }
-    
-    // undefined or 'auto': use auto-detection
+
+    if (props.truncate) return undefined;
+
     return isInteractiveElement.value ? undefined : 0;
   });
+
+  /** Bound as an attribute object so an untruncated trigger renders no `class` at all. */
+  const openerAttrs = computed(() => (props.truncate ? { class: 'block min-w-0 truncate' } : {}))
   
   /**
    * Shows the tooltip if content is available.
    * When _forceOpenForDesignReview is true, tooltip remains visible.
    */
   function showTooltip() {
-    if (props.text || slots.text) {
+    const hasContent = !!(props.text || slots.text)
+    const isWorthShowing = props._forceOpenForDesignReview || !props.truncate || isContentCut()
+    if (hasContent && isWorthShowing) {
       isOpen.value = true
     }
   }
@@ -298,18 +326,18 @@
    * but mouse has moved away (WCAG compliance for keyboard users).
    */
   function handleFocusIn() {
-    isFocused.value = true
+    isTriggerFocused.value = true
     showTooltip()
   }
 
   function handleFocusOut() {
-    isFocused.value = false
+    isTriggerFocused.value = false
     if (hoverTimeout.value) {
       clearTimeout(hoverTimeout.value)
       hoverTimeout.value = null
     }
     // This maintains WCAG 1.4.13 compliance for hover persistence
-    if (!isHoveringTooltip.value) {
+    if (!isHoveringTooltip.value && !isFocused.value) {
       hideTooltip()
     }
   }
@@ -321,12 +349,37 @@
   }
 
   /**
-   * Force tooltip visibility when _forceOpenForDesignReview is enabled.
-   * This runs on mount and whenever the prop changes.
+   * External focus sits outside the trigger, so Escape never reaches the trigger's
+   * keydown handler: while it lasts, Escape is listened for on the document, keeping
+   * the tooltip dismissible without moving focus (WCAG 1.4.13).
+   */
+  function gainExternalFocus() {
+    document.addEventListener('keydown', handleKeydown)
+    showTooltip()
+  }
+
+  function loseExternalFocus() {
+    document.removeEventListener('keydown', handleKeydown)
+    if (!isHoveringTooltip.value && !isFocused.value) {
+      hideTooltip()
+    }
+  }
+
+  watch(
+    () => props.externalFocus,
+    (focused) => (focused ? gainExternalFocus() : loseExternalFocus())
+  )
+
+  /**
+   * Applies _forceOpenForDesignReview and externalFocus as they stand at mount, once
+   * the trigger can be measured; their watchers apply every later change.
    */
   onMounted(() => {
     if (props._forceOpenForDesignReview) {
       showTooltip()
+    }
+    if (props.externalFocus) {
+      gainExternalFocus()
     }
   })
 
@@ -342,6 +395,7 @@
     if (hoverTimeout.value) {
       clearTimeout(hoverTimeout.value)
     }
+    document.removeEventListener('keydown', handleKeydown)
   })
 </script>
 
@@ -351,9 +405,13 @@
     :is-open="isOpen"
     :position="position"
     class="fz__tooltip flex h-max"
+    :class="{ 'min-w-0 max-w-full': truncate }"
+    :openerClass="{ 'min-w-0': truncate }"
     :contentClass="['rounded', classes, 'z-80']">
     <template #opener>
       <span
+        ref="opener"
+        v-bind="openerAttrs"
         :aria-label="props.ariaLabel"
         :aria-describedby="ariaDescribedby"
         :tabindex="computedTabindex"
@@ -363,7 +421,8 @@
         @focusout="handleFocusOut"
         @keydown="handleKeydown"
       >
-        <slot></slot>
+        <span v-if="truncate" ref="truncatedContent"><slot></slot></span>
+        <slot v-else></slot>
       </span>
     </template>
     <div

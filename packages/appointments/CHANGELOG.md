@@ -1,5 +1,52 @@
 # @fiscozen/appointments
 
+## 1.1.25
+
+### Patch Changes
+
+- @fiscozen/radio@3.1.4
+
+## 1.1.24
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+  - @fiscozen/alert@3.0.7
+  - @fiscozen/radio@3.1.3
+
+## 1.1.23
+
+### Patch Changes
+
+- 31a01d8: FzAppointments: fix the "un'altro" apostrophe in the default alert description, and stop
+  inviting the user to pick another day when no day carries slots. With `slots: []` (manual)
+  or `slotCount: 0` (auto) the day navigation and the info text are hidden — neither points
+  anywhere — and the alert reads "Al momento non ci sono orari disponibili."
+
+## 1.1.22
+
+### Patch Changes
+
+- @fiscozen/radio@3.1.2
+
+## 1.1.21
+
+### Patch Changes
+
+- Updated dependencies [92c1d3a]
+  - @fiscozen/radio@3.1.1
+  - @fiscozen/alert@3.0.6
+  - @fiscozen/button@3.1.3
+  - @fiscozen/container@0.5.2
+
+## 1.1.20
+
+### Patch Changes
+
+- Updated dependencies [4ccab53]
+  - @fiscozen/radio@3.1.0
+
 ## 1.1.19
 
 ### Patch Changes

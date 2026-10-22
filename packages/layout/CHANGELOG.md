@@ -1,5 +1,186 @@
 # @fiscozen/layout
 
+## 1.4.5
+
+### Patch Changes
+
+- Updated dependencies [65d8e36]
+  - @fiscozen/composables@1.1.6
+
+## 1.4.4
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+
+## 1.4.3
+
+### Patch Changes
+
+- 5482265: fix(layout): LIB-3174 the bottom-bar region no longer pads the bottom safe-area inset
+
+  `FzLayoutBottomBar` padded `env(safe-area-inset-bottom)` but paints no background. The
+  bar content teleported into it paints the surface and has to clear the home indicator
+  itself, so on a device with an inset the content padded it a second time: the actions
+  sat two insets above the edge, and under the white surface a transparent strip as tall
+  as the inset let the page scroll through, with the grey page background showing at the
+  end of the page. Measured with a 34px emulated inset on an iPhone viewport: the surface
+  stopped 34px short of the edge and the primary action sat 84px above it.
+
+  The region now applies no inset. This matches how `FzAppTemplate` already treats every
+  region that paints no surface: the content inside owns the insets, as the injected nav
+  does with `respectSafeArea`. Bar content that paints a surface pads
+  `env(safe-area-inset-bottom)` itself, so its background reaches the device edge. The
+  Storybook bars now show the pattern.
+
+  On a platform that reports no inset, desktop included, nothing changes. **Bar content
+  that did not pad the inset itself now sits flush against the home indicator**: add
+  `padding-bottom: calc(<gap> + env(safe-area-inset-bottom, 0px))` to its surface.
+
+## 1.4.2
+
+### Patch Changes
+
+- 991de33: fix(layout): LIB-2718 let the drawer enter, and drop the content cap below the breakpoint
+
+  Two findings from the frontoffice design review of `FzAppTemplate`.
+
+  The mobile aside appeared between two frames. It is opaque and covers the whole
+  viewport, so with no motion the page is simply gone and the user has to re-read
+  the screen to work out what happened — the shell it replaced animated it in from
+  the right. The drawer now enters from the edge it is docked to, in 300ms, and
+  only where the user has not asked for reduced motion. Entry only: closing is a
+  tap on a control already under their eye, and an exit animation delays the page
+  they asked to get back to.
+
+  The content card kept its `contentWidth` cap at every viewport, while the nav
+  region is full-width at both. Below the `desktop` breakpoint the card is
+  supposed to be full-bleed — no gutter, no rounding — but from the 1024px cap up
+  to the 1200px breakpoint the cap is narrower than the column, so the card was
+  centred in a grey gutter with square corners beside a nav bar running edge to
+  edge. The cap is the card's reading measure, so it is now scoped to the card's
+  desktop shape and the mobile shape is full-bleed as documented.
+
+## 1.4.1
+
+### Patch Changes
+
+- 8f0c428: `FzFrameTemplate` aligns the page card with the chrome, and one gutter separates it from
+  the tools panel (LIB-3054).
+
+  The content region inset the page card by 8px on all four sides. On the top and left edges
+  that inset separated the card from nothing: the toolbar sits flush above the region and
+  the nav rail flush beside it, so the gutter read as the card being off by 8px from chrome
+  it is meant to line up with. And because the region's right gutter and the aside's left
+  gutter both applied, the space between the two cards was 16px while the space between the
+  aside and the window was 8px.
+  - **The content region drops its top gutter, and its left gutter from `lg` up.** Below the
+    breakpoint the nav is a bar across the top and the region's left edge is the window's, so
+    the gutter stays there.
+  - **The aside drops its left gutter.** The gap between the two cards is now the content
+    region's gutter alone, equal to the aside's own margin to the window edge.
+
+  The right and bottom gutters, and every safe-area inset, are unchanged. The story test for
+  the shell now measures the four edges in a real browser, so the contract fails loudly
+  rather than drifting.
+
+- 26c6679: `layouts.json` declares a `$schema` that resolves, and the manifest is now validated
+  against it (LIB-3025).
+
+  The manifest pointed `$schema` at
+  `raw.githubusercontent.com/fiscozen/claude-plugin-agentic-design/main/docs/ds-layouts.schema.json`.
+  That repo is private, so the URL answers **404**: a file in a public package carried a
+  pointer no reader and no editor could follow.
+
+  Worse, nothing honoured the declaration. `layouts.manifest.spec.ts` never resolved or
+  validated the schema — it only cited it in a failure message, and its shape assertions
+  were written by hand. The contract was a claim with no check behind it, and a reader had
+  no way to tell it from a live one.
+  - **The contract is vendored** at `packages/layout/ds-layouts.schema.json`, and `$schema`
+    points at it relatively. A sibling file resolves offline, resolves inside the sparse
+    clone consumers read the manifest from, and always resolves to the same revision as the
+    manifest beside it — three things a URL tracking `main` does not do.
+  - **The spec validates the manifest against it** with ajv, replacing the hand-written
+    shape assertions. Because the schema closes `additionalProperties`, a misspelled or
+    invented field now fails the test naming the field — the case the hand-written
+    assertions could not see. The rules stricter than the contract (`whenToUse` long enough
+    to decide from, `since` semver, gaps listed whenever `composeOnly.safe` is false, a
+    `nestWithin` host that is a shell in this manifest) stay as explicit assertions.
+  - **The copy is checked, not trusted.** The agentic-design plugin owns the contract — it
+    is the engine that reads the manifest and decides what conformance means, for any design
+    system, so ownership stays there. The spec compares the vendored copy byte for byte
+    against the installed plugin's copy, which is why the copy is verbatim down to its `$id`
+    (an identifier, which JSON Schema does not require to be fetchable). With no plugin
+    installed the check reports on stderr that it did not run, rather than passing quietly.
+
+  No layout entry changed, and consumers pinned to a manifest declaring the old `$schema`
+  keep working: the engine never reads that field.
+
+- Updated dependencies [fbf556a]
+  - @fiscozen/composables@1.1.5
+
+## 1.4.0
+
+### Minor Changes
+
+- 316d2f1: New shell: `FzFrameTemplate`, the backoffice application frame — a persistent icon `nav` rail, a slim app-level `header` toolbar, the page, and an optional 400px tools `aside` that keeps its state across navigation _and_ across close/open (it is hidden, not unmounted).
+
+  Its reason for existing is the height contract, not the chrome. Every other shell here is `min-h-dvh` + document scroll, i.e. an ancestor with an indefinite height, and a `fills-parent` layout mounted in one collapses to zero and never scrolls its regions. This shell inverts the model — the root is `h-dvh` and clips — and `contentHeight` picks what the content region offers: `scroll` (the default) makes it the app's single scroll container, `bounded` gives it a definite height and makes it clip. Because the switch is per page, adopting it is incremental: a page opts into `bounded` when it is ported, and every other page is untouched.
+
+  That closes two gaps this package had documented against itself. `FzThreeColumnsTemplate` now has a verified host: `nestWithin` names `FzFrameTemplate`, backed by cases in `layoutComposition.spec.ts` and a Storybook play function that measures the resolved height chain in real Chromium (jsdom has no layout engine, so it cannot prove this). Its `composeOnly.safe` flips to `true` — a compose-only consumer can now create the bounded ancestor it requires, through a prop. `FzListTemplate` and `FzDetailTemplate` list the new shell as a verified host too.
+
+  Also new: `FZ_PAGE_SCROLL_TARGET`. Under `contentHeight="scroll"` the window no longer scrolls, so `window.scrollTo(0, 0)` is a no-op and browser scroll restoration on back/forward stops reaching the page; the shell provides its content region element so the app can scroll the page and wire its router's `scrollBehavior` against it.
+
+  Additive: no existing component, prop, slot or export changes.
+
+### Patch Changes
+
+- Updated dependencies [f11859d]
+  - @fiscozen/style@0.5.0
+  - @fiscozen/button@3.1.3
+  - @fiscozen/composables@1.1.4
+
+## 1.3.3
+
+### Patch Changes
+
+- 51b959d: FzAppTemplate: pin the mobile nav bar, which could not be pinned from the injected nav
+
+  The nav is persistent at both sizes, but only the desktop rail was actually pinned: `nav--rail` carried `sticky top-0`, `nav--bar` carried nothing, so on mobile the bar scrolled away with the page.
+
+  The frontoffice had already tried to fix this from its side, putting `sticky top-0 z-10` on the injected nav's own root — with a comment noting the template's mobile nav region is not sticky by default. That could never work, and the reason is worth recording because it is easy to repeat: `position: sticky` is bounded by its containing block, and the nav region is a `shrink-0` item in a column flex root, so it is exactly as tall as the nav inside it. A sticky child of a box that fits it has zero travel — the declaration applies and does nothing, then scrolls off with its parent. The bar looked correct in every static screenshot and only failed once someone scrolled.
+
+  `nav--bar` now carries `sticky top-0 z-10` itself, where it has the whole root to travel against. `z-10` matches the sticky header and stays below the aside backdrop (`z-20`) and drawer (`z-30`), so the full-screen chat still covers the bar.
+
+  Consumers that added their own sticky positioning to the injected nav to compensate can drop it — it was inert.
+
+- 51b959d: FzAppTemplate: keep the card's vertical padding at 24px below the breakpoint, narrowing only the sides
+
+  Corrects the mobile inset shipped in 1.3.2, which dropped the whole padding to a uniform 16px. Design's spec is narrower than that: the horizontal inset goes 24px → 16px below the `desktop` breakpoint, but the vertical padding stays 24px everywhere.
+
+  The distinction is worth keeping straight, because the two paddings are doing different jobs. The horizontal inset is a width negotiation — on a phone every pixel spent on a margin is a pixel the content cannot use, so it shrinks. The vertical padding is a separation between the content and the chrome above and below it, and that separation is no less necessary on a small screen; shrinking it just crowds the title against the nav bar.
+
+  `card` chrome below the breakpoint is now `px-16 py-24` instead of `p-16`. Desktop is unchanged at `p-24`.
+
+## 1.3.2
+
+### Patch Changes
+
+- 7677cb7: FzAppTemplate: collapse the content card to full-bleed on mobile and open the aside drawer full-screen
+
+  Two mobile regressions surfaced by the frontoffice while consuming the template for its standard layout (LIB-2718). Both are cases where a shape that is correct on desktop was being applied unchanged below the `desktop` (1200px) breakpoint.
+
+  **The content card framed the page in grey.** `chrome="card"` put a uniform 16px gutter on the main region and rounded the white content surface — a detached card floating in the page background. That is the desktop shape. On a phone the gutter spends horizontal space the content needs, and the rounded surface inside it reads as a framed box rather than as the page; the frontoffice had deliberately removed exactly this framing from its mobile dashboard, and consuming the template silently reinstated it.
+
+  `card` now keeps its white surface below the breakpoint but goes full-bleed: no gutter on main, no rounding, and a uniform 16px padding in place of the 24px card padding — the content inset design asked for, 24px on large screens and 16px on small. The bottom bar drops its mirrored `px-16` at the same breakpoint — that inset exists only to keep the bar edge-aligned with the content card, so leaving it would break the very alignment invariant it enforces. `flat` is unchanged and stays full-bleed at every width.
+
+  **The aside drawer was a 360px side sheet.** `w-[360px] max-w-[85vw]` is reasonable for a navigation or filter panel, but the aside's real content here is the support chat — tabs, a transcript and a composer with an upload control. In a 360px column capped at 85vw the composer is unusable, and the app cannot widen it: the width lives on the template's own class, not on anything the consumer passes through the slot.
+
+  The drawer is now `inset-0 w-full`. A surface that covers the viewport has no visible edge, so `max-w-[85vw]` and `shadow-xl` are gone as well, and the drawer's directional safe-area padding gains the left inset it can now bleed under. The backdrop, dialog semantics, focus trap and Escape-to-close are untouched.
+
+  Consumers that relied on either the mobile card frame or the partial side sheet will see a visual change below 1200px; there is no API change, and desktop rendering is identical.
+
 ## 1.3.1
 
 ### Patch Changes

@@ -1,5 +1,37 @@
 # @fiscozen/chat-container
 
+## 2.0.16
+
+### Patch Changes
+
+- @fiscozen/card@3.0.14
+
+## 2.0.15
+
+### Patch Changes
+
+- Updated dependencies [323946d]
+- Updated dependencies [9e4acc2]
+  - @fiscozen/avatar@1.1.0
+  - @fiscozen/button@3.2.0
+  - @fiscozen/card@3.0.13
+
+## 2.0.14
+
+### Patch Changes
+
+- @fiscozen/card@3.0.12
+
+## 2.0.13
+
+### Patch Changes
+
+- Updated dependencies [92c1d3a]
+  - @fiscozen/avatar@1.0.2
+  - @fiscozen/button@3.1.3
+  - @fiscozen/card@3.0.11
+  - @fiscozen/container@0.5.2
+
 ## 2.0.12
 
 ### Patch Changes

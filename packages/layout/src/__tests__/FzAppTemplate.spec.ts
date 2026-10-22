@@ -120,6 +120,16 @@ describe('FzAppTemplate', () => {
       expect(wrapper.find('nav[aria-label="Principale"]').exists()).toBe(true)
     })
 
+    it('pins the mobile bar on the region itself, where sticky can actually travel', () => {
+      setViewport(false)
+      const wrapper = mount(FzAppTemplate, { slots: fullSlots() })
+      const nav = wrapper.find('.fz-app-template__nav')
+      // The region is a shrink-0 flex item sized to the nav inside it, so a sticky
+      // *child* would have zero travel and scroll away with it. It has to be here.
+      expect(nav.classes()).toContain('sticky')
+      expect(nav.classes()).toContain('top-0')
+    })
+
     it('does not render a nav region when no nav slot is provided', () => {
       const wrapper = mount(FzAppTemplate, { slots: { default: 'x' } })
       expect(wrapper.find('.fz-app-template__nav').exists()).toBe(false)
@@ -206,6 +216,25 @@ describe('FzAppTemplate', () => {
       expect(main.classes()).not.toContain('p-16')
       expect(wrapper.find('.fz-layout-bottom-bar').classes()).not.toContain('px-16')
     })
+
+    it('collapses the card to full-bleed below the desktop breakpoint', () => {
+      setViewport(false)
+      const wrapper = mount(FzAppTemplate, { slots: { default: 'x' } })
+      const content = wrapper.find('.fz-app-template__content')
+      // Still the card surface, but framed as the page rather than as a floating
+      // box: white kept, gutter and rounding dropped. Only the horizontal inset
+      // narrows, 24 → 16; the vertical padding stays 24 at every size.
+      expect(content.classes()).toContain('fz-app-template__content--card')
+      expect(content.classes()).toContain('bg-core-white')
+      expect(content.classes()).toContain('px-16')
+      expect(content.classes()).toContain('py-24')
+      expect(content.classes()).not.toContain('rounded-lg')
+      expect(content.classes()).not.toContain('px-24')
+      expect(wrapper.find('.fz-app-template__main').classes()).not.toContain('p-16')
+      // The bar mirrors the gutter, so it drops its inset too — otherwise it would
+      // sit 16px inside the content it is supposed to stay edge-aligned with.
+      expect(wrapper.find('.fz-layout-bottom-bar').classes()).not.toContain('px-16')
+    })
   })
 
   describe('contentWidth prop', () => {
@@ -216,6 +245,20 @@ describe('FzAppTemplate', () => {
     ] as const)('maps %s to the right max-width class', (contentWidth, cls) => {
       const wrapper = mount(FzAppTemplate, { props: { contentWidth }, slots: { default: 'x' } })
       expect(wrapper.find('.fz-app-template__content').classes()).toContain(cls)
+    })
+
+    it('drops the cap below the breakpoint, where the card is full-bleed', () => {
+      setViewport(false)
+
+      const wrapper = mount(FzAppTemplate, {
+        props: { contentWidth: 'standard' },
+        slots: { default: 'x' }
+      })
+
+      // Between 1024px and the 1200px breakpoint the cap is narrower than the
+      // viewport, so keeping it would centre a square-cornered card in a grey
+      // gutter while the nav bar beside it runs edge to edge.
+      expect(wrapper.find('.fz-app-template__content').classes()).not.toContain('max-w-[1024px]')
     })
   })
 
@@ -263,6 +306,18 @@ describe('FzAppTemplate', () => {
       expect(aside.attributes('aria-modal')).toBe('true')
       expect(aside.attributes('aria-label')).toBe('Assistenza')
       expect(wrapper.find('.fz-app-template__backdrop').exists()).toBe(true)
+    })
+
+    it('renders the drawer full-screen, not as a partial side sheet', async () => {
+      const wrapper = mount(FzAppTemplate, { props: { hasAside: true }, slots: fullSlots() })
+      await wrapper.find('.open-aside').trigger('click')
+      const aside = wrapper.find('aside.fz-app-template__aside--drawer')
+      expect(aside.classes()).toContain('inset-0')
+      expect(aside.classes()).toContain('w-full')
+      // A surface that covers the viewport has no visible edge, so it needs
+      // neither a width cap nor a shadow to separate it from the page.
+      expect(aside.classes()).not.toContain('max-w-[85vw]')
+      expect(aside.classes()).not.toContain('shadow-xl')
     })
 
     it('closes the drawer on Escape', async () => {

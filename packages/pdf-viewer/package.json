@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/pdf-viewer",
-  "version": "1.0.8",
+  "version": "1.0.14",
   "description": "Design System PdfViewer component",
   "scripts": {
     "coverage": "vitest run --coverage",
@@ -40,6 +40,8 @@
   "dependencies": {
     "@fiscozen/button": "workspace:*",
     "@fiscozen/tab": "workspace:*",
-    "@tato30/vue-pdf": "^2.0.2"
+    "@tato30/vue-pdf": "^2.2.1",
+    "core-js": "^3.50.0",
+    "pdfjs-dist": "6.4.299"
   }
 }

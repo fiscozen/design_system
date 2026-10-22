@@ -38,6 +38,10 @@ export interface FzSelectLabelProps {
    * Whether the typeahead is readonly
    */
   readonly?: boolean;
+  /**
+   * Keeps the label on one line, with the full text in a tooltip when it is cut
+   */
+  truncate?: boolean;
 }
 
 /**

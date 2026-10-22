@@ -28,6 +28,7 @@
   import { FzAlert } from "@fiscozen/alert";
   import { FzIcon } from "@fiscozen/icons";
   import { FzIconButton } from "@fiscozen/button";
+  import { FzTruncatedLabel } from "@fiscozen/tooltip";
   import useInputStyle from "./useInputStyle";
   import useCurrencyInput from "./useCurrencyInput";
   import {
@@ -309,35 +310,15 @@
   }>();
 
   /**
-   * Handles container interaction (click or keyboard) to focus the input
+   * Focuses the input when the container area around it is clicked
    *
-   * Makes the entire container area clickable and keyboard-accessible for better UX,
-   * especially useful for floating-label variant and mobile devices.
+   * Pointer-only on purpose: keyboard users already reach the native input with Tab,
+   * so a focusable container would only add an empty tab stop before every field.
    * Respects disabled and readonly states.
    */
-  const handleContainerInteraction = () => {
+  const handleContainerClick = () => {
     if (!props.disabled && !props.readonly && inputRef.value) {
       inputRef.value.focus();
-    }
-  };
-
-  /**
-   * Handles keyboard events on container to focus input
-   *
-   * Supports Enter and Space keys following accessibility best practices.
-   * Only prevents default when event originates from container itself (not from child elements like input),
-   * allowing form submission when Enter is pressed inside the input field.
-   *
-   * @param e - Keyboard event
-   */
-  const handleContainerKeydown = (e: KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      // Only prevent default if event originated from container itself, not from child elements
-      // This allows Enter key presses in the input to trigger form submission
-      if (e.target === e.currentTarget || e.target === containerRef.value) {
-        e.preventDefault();
-        handleContainerInteraction();
-      }
     }
   };
 
@@ -621,13 +602,14 @@
 <template>
   <div class="fz-input text-core-black w-full flex flex-col gap-8" :class="rootClass">
     <slot name="label">
-      <label v-if="label" :id="`${effectiveId}-label`" :class="computedLabelClass" :for="effectiveId">
+      <FzTruncatedLabel v-if="label && truncateLabel" :class="computedLabelClass" :label
+        :labelId="`${effectiveId}-label`" :controlId="effectiveId" :required />
+      <label v-else-if="label" :id="`${effectiveId}-label`" :class="computedLabelClass" :for="effectiveId">
         {{ label }}{{ required ? " *" : "" }}
       </label>
     </slot>
     <div :class="[staticContainerClass, computedContainerClass]" ref="containerRef"
-      :tabindex="isReadonlyOrDisabled ? undefined : 0" @click="handleContainerInteraction"
-      @keydown="handleContainerKeydown">
+      @click="handleContainerClick">
       <slot name="left-icon">
         <FzIcon v-if="leftIcon" :name="leftIcon" size="md" :variant="leftIconVariant"
           :role="isLeftIconAccessible ? 'button' : undefined"

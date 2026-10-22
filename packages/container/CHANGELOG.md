@@ -1,5 +1,12 @@
 # @fiscozen/container
 
+## 0.5.2
+
+### Patch Changes
+
+- Updated dependencies [f11859d]
+  - @fiscozen/style@0.5.0
+
 ## 0.5.1
 
 ### Patch Changes

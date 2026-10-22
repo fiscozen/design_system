@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, fn, userEvent, within } from 'storybook/test'
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
+import { FzIconButton } from '@fiscozen/button'
+import { FzContainer } from '@fiscozen/container'
 import { FzTextarea } from '@fiscozen/textarea'
 import { ref } from 'vue'
+import { LONG_FIELD_LABEL, verifyTruncatedLabelRow } from '../test-utils'
 
 type PlayFunctionContext = {
   args: any
@@ -17,6 +20,16 @@ const meta = {
     resize: {
       control: 'select',
       options: ['none', 'vertical', 'horizontal', 'all']
+    },
+    variant: {
+      control: 'select',
+      options: ['default', 'bare']
+    },
+    focusAffordance: {
+      control: 'select',
+      options: ['field', 'container'],
+      description:
+        'Which element draws the focus indicator in the bare variant. `container` requires the caller to draw one on its own box.'
     }
   },
   args: {
@@ -89,7 +102,9 @@ const Error: TextareaStory = {
   },
   render: (args) => ({
     components: { FzTextarea },
-    setup() { return { args } },
+    setup() {
+      return { args }
+    },
     template: `<FzTextarea v-bind="args"><template #errorMessage>This is an error message</template></FzTextarea>`
   }),
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
@@ -132,7 +147,9 @@ const Help: TextareaStory = {
   },
   render: (args) => ({
     components: { FzTextarea },
-    setup() { return { args } },
+    setup() {
+      return { args }
+    },
     template: `<FzTextarea v-bind="args"><template #helpText>This is a long long long long long long long long long long help message</template></FzTextarea>`
   }),
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
@@ -252,11 +269,14 @@ const Disabled: TextareaStory = {
       await expect(textarea).toHaveValue(initialValue)
     })
 
-    await step('Verify update:modelValue is NOT called when typing in disabled textarea', async () => {
-      const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
-      await userEvent.type(textarea, 'test')
-      await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
-    })
+    await step(
+      'Verify update:modelValue is NOT called when typing in disabled textarea',
+      async () => {
+        const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
+        await userEvent.type(textarea, 'test')
+        await expect(args['onUpdate:modelValue']).not.toHaveBeenCalled()
+      }
+    )
   }
 }
 
@@ -421,7 +441,9 @@ const HelpDisabled: TextareaStory = {
   },
   render: (args) => ({
     components: { FzTextarea },
-    setup() { return { args } },
+    setup() {
+      return { args }
+    },
     template: `<FzTextarea v-bind="args"><template #helpText>This help text should be greyed out</template></FzTextarea>`
   }),
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
@@ -457,7 +479,9 @@ const RequiredWithHelp: TextareaStory = {
   },
   render: (args) => ({
     components: { FzTextarea },
-    setup() { return { args } },
+    setup() {
+      return { args }
+    },
     template: `<FzTextarea v-bind="args"><template #helpText>This field is mandatory</template></FzTextarea>`
   }),
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
@@ -492,7 +516,9 @@ const ErrorWithHelpOnly: TextareaStory = {
   },
   render: (args) => ({
     components: { FzTextarea },
-    setup() { return { args } },
+    setup() {
+      return { args }
+    },
     template: `<FzTextarea v-bind="args"><template #helpText>Please fill out this field</template></FzTextarea>`
   }),
   play: async ({ canvasElement, step }: PlayFunctionContext) => {
@@ -560,8 +586,11 @@ const AutoHeight: TextareaStory = {
     await step('Verify typing triggers height adjustment', async () => {
       const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
       const initialHeight = textarea.offsetHeight
-      await userEvent.type(textarea, 'Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nLine 8')
-      await new Promise(r => setTimeout(r, 100))
+      await userEvent.type(
+        textarea,
+        'Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nLine 8'
+      )
+      await new Promise((r) => setTimeout(r, 100))
       await expect(textarea.style.height).toBeTruthy()
     })
   }
@@ -599,7 +628,7 @@ const AutoHeightWithMaxRows: TextareaStory = {
       const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
       const manyLines = Array.from({ length: 20 }, (_, i) => `Line ${i + 1}`).join('\n')
       await userEvent.type(textarea, manyLines)
-      await new Promise(r => setTimeout(r, 100))
+      await new Promise((r) => setTimeout(r, 100))
       await expect(textarea.style.overflowY).toBe('auto')
     })
   }
@@ -638,18 +667,286 @@ const AutoHeightBottomAnchored: TextareaStory = {
 
     await step('Verify textarea grows upward when typing', async () => {
       const textarea = canvas.getByLabelText(/This is a label/i) as HTMLTextAreaElement
-      const containerBottom = canvasElement.querySelector('.flex.flex-col.justify-end')!.getBoundingClientRect().bottom
+      const containerBottom = canvasElement
+        .querySelector('.flex.flex-col.justify-end')!
+        .getBoundingClientRect().bottom
       await userEvent.type(textarea, 'Line 1\nLine 2\nLine 3\nLine 4\nLine 5')
-      await new Promise(r => setTimeout(r, 100))
-      const newContainerBottom = canvasElement.querySelector('.flex.flex-col.justify-end')!.getBoundingClientRect().bottom
+      await new Promise((r) => setTimeout(r, 100))
+      const newContainerBottom = canvasElement
+        .querySelector('.flex.flex-col.justify-end')!
+        .getBoundingClientRect().bottom
       await expect(newContainerBottom).toBeCloseTo(containerBottom, 0)
     })
   }
 }
 
+/**
+ * The bare variant in the shape it was asked for: a single-line composer bar
+ * where the visible field is the box around the textarea, and the character
+ * counter lives inside that same box.
+ *
+ * The box carries Tailwind classes deliberately. In the consuming apps a
+ * composer bar is a molecule — the layer where `class` is allowed — and
+ * FzContainer has no props for background, padding or radius. That is the whole
+ * point of the variant: the field brings no box of its own, so the caller draws
+ * one and the field only carries the text.
+ *
+ * Type is set once, on the box (`text-sm leading-5`), and both the field and the
+ * counter inherit it — the bare variant declares no font size of its own.
+ */
+const BareComposerBar: TextareaStory = {
+  args: {
+    id: 'bare-composer',
+    label: '',
+    variant: 'bare',
+    autoHeight: true,
+    maxRows: 6,
+    maxlength: 200,
+    placeholder: 'Scrivi un messaggio...',
+    'onUpdate:modelValue': fn()
+  },
+  render: (args) => ({
+    components: { FzTextarea, FzContainer, FzIconButton },
+    setup() {
+      const value = ref('')
+      return { args, value }
+    },
+    template: `
+      <FzContainer horizontal gap="xs" align-items="end">
+        <FzIconButton
+          icon-name="paperclip"
+          variant="invisible"
+          environment="frontoffice"
+          aria-label="Allega un documento"
+        />
+        <FzContainer
+          gap="none"
+          align-items="stretch"
+          class="min-h-[44px] w-[420px] justify-end gap-4 rounded bg-grey-100 px-10 py-8 text-sm leading-5"
+        >
+          <FzTextarea
+            v-bind="args"
+            :modelValue="value"
+            aria-label="Scrivi un messaggio"
+            @update:modelValue="args['onUpdate:modelValue']($event); value = $event"
+          />
+          <p class="self-end text-grey-500">{{ value.length }}/{{ args.maxlength }}</p>
+        </FzContainer>
+        <FzIconButton
+          icon-name="paper-plane"
+          variant="primary"
+          environment="frontoffice"
+          aria-label="Invia il messaggio"
+          :disabled="!value.length"
+        />
+      </FzContainer>
+    `
+  }),
+  play: async ({ args, canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify the field starts on a single line with no box of its own', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i)
+      await expect(textarea).toBeVisible()
+      await expect(textarea).toHaveAttribute('rows', '1')
+      await expect(textarea).not.toHaveClass('min-h-[77px]')
+      await expect(textarea).not.toHaveClass('border-1')
+      await expect(textarea).toHaveClass('bg-transparent')
+    })
+
+    await step('Verify the field inherits the type set on the box', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i)
+      await expect(textarea).not.toHaveClass('text-base')
+      const styles = getComputedStyle(textarea)
+      await expect(styles.fontSize).toBe('14px')
+      await expect(styles.lineHeight).toBe('20px')
+    })
+
+    await step('Verify focus stays visible without a border to recolour', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i)
+      await expect(textarea).toHaveClass('focus-visible:outline')
+      await expect(textarea).toHaveClass('focus-visible:outline-blue-600')
+    })
+
+    await step('Verify no label is rendered inside the composer', async () => {
+      await expect(canvasElement.querySelector('label')).toBeNull()
+    })
+
+    await step('Verify typing updates the model and the counter in the same box', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i) as HTMLTextAreaElement
+      await userEvent.type(textarea, 'Ciao')
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled()
+      await waitFor(async () => {
+        await expect(canvas.getByText('4/200')).toBeVisible()
+      })
+    })
+
+    await step('Verify the field grows with its content up to maxRows', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i) as HTMLTextAreaElement
+      const singleLineHeight = textarea.offsetHeight
+      await userEvent.type(textarea, '{Enter}Seconda riga')
+      await waitFor(async () => {
+        await expect(textarea.offsetHeight).toBeGreaterThan(singleLineHeight)
+      })
+    })
+
+    await step('Verify the send control unlocks once there is a draft', async () => {
+      const send = canvas.getByRole('button', { name: /Invia il messaggio/i })
+      await expect(send).toBeEnabled()
+    })
+  }
+}
+
+/**
+ * The same composer bar, with the focus indicator moved onto the box.
+ *
+ * `BareComposerBar` above draws the outline on the field. Inside a container
+ * with `px-10 py-8` that outline falls *within* the grey box and reads as a
+ * field inside a field. `focusAffordance="container"` hands the indicator over:
+ * the component draws none, and the box takes it with `focus-within:`.
+ *
+ * The prop moves an obligation rather than cancelling one — a field with no
+ * visible focus indicator fails WCAG 2.4.7 — so the `focus-within:` treatment
+ * on the box is not decoration, it is the other half of the prop.
+ */
+const BareComposerBarContainerFocus: TextareaStory = {
+  args: {
+    id: 'bare-composer-container-focus',
+    label: '',
+    variant: 'bare',
+    focusAffordance: 'container',
+    autoHeight: true,
+    maxRows: 6,
+    maxlength: 200,
+    placeholder: 'Scrivi un messaggio...',
+    'onUpdate:modelValue': fn()
+  },
+  render: (args) => ({
+    components: { FzTextarea, FzContainer, FzIconButton },
+    setup() {
+      const value = ref('')
+      return { args, value }
+    },
+    template: `
+      <FzContainer horizontal gap="xs" align-items="end">
+        <FzIconButton
+          icon-name="paperclip"
+          variant="invisible"
+          environment="frontoffice"
+          aria-label="Allega un documento"
+        />
+        <FzContainer
+          gap="none"
+          align-items="stretch"
+          class="min-h-[44px] w-[420px] justify-end gap-4 rounded bg-grey-100 px-10 py-8 text-sm leading-5 focus-within:outline focus-within:outline-2 focus-within:outline-blue-600"
+        >
+          <FzTextarea
+            v-bind="args"
+            :modelValue="value"
+            aria-label="Scrivi un messaggio"
+            @update:modelValue="args['onUpdate:modelValue']($event); value = $event"
+          />
+          <p class="self-end text-grey-500">{{ value.length }}/{{ args.maxlength }}</p>
+        </FzContainer>
+        <FzIconButton
+          icon-name="paper-plane"
+          variant="primary"
+          environment="frontoffice"
+          aria-label="Invia il messaggio"
+          :disabled="!value.length"
+        />
+      </FzContainer>
+    `
+  }),
+  play: async ({ canvasElement, step }: PlayFunctionContext) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify the field draws no focus ring of its own', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i)
+      await expect(textarea).not.toHaveClass('focus-visible:outline-blue-600')
+      await expect(textarea).toHaveClass('outline-none')
+    })
+
+    await step('Verify the box draws the indicator once the field is focused', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i) as HTMLTextAreaElement
+      const box = textarea.closest('.bg-grey-100') as HTMLElement
+
+      await expect(getComputedStyle(box).outlineStyle).toBe('none')
+
+      textarea.focus()
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(textarea)
+      })
+
+      // The indicator is on the box, and it is a real computed outline —
+      // the point of the prop is that focus stays visible somewhere.
+      await waitFor(async () => {
+        const boxOutline = getComputedStyle(box)
+        await expect(boxOutline.outlineStyle).toBe('solid')
+        await expect(boxOutline.outlineWidth).toBe('2px')
+        await expect(boxOutline.outlineColor).not.toBe('rgba(0, 0, 0, 0)')
+      })
+      const boxOutlineColor = getComputedStyle(box).outlineColor
+
+      // ...and it is not doubled by a visible one on the field itself.
+      // `outline-none` is Tailwind's `2px solid transparent` rather than
+      // `outline: none` — deliberately, so the ring reappears in forced-colours
+      // mode — so transparency is what "draws nothing" means here.
+      const fieldOutline = getComputedStyle(textarea)
+      await expect(fieldOutline.outlineColor).toBe('rgba(0, 0, 0, 0)')
+      await expect(fieldOutline.outlineColor).not.toBe(boxOutlineColor)
+    })
+
+    await step('Verify the field still behaves like a bare composer', async () => {
+      const textarea = canvas.getByLabelText(/Scrivi un messaggio/i)
+      await expect(textarea).toHaveAttribute('rows', '1')
+      await expect(textarea).toHaveClass('bg-transparent')
+      await expect(textarea).not.toHaveClass('border-1')
+    })
+  }
+}
+
+/**
+ * `truncateLabel` keeps each label on one line, so fields side by side stay aligned
+ * whatever their labels' length; a cut label shows in full in a tooltip on hover and
+ * while the textarea has focus.
+ */
+const TruncateLabel: TextareaStory = {
+  render: () => ({
+    components: { FzTextarea },
+    setup: () => ({ LONG_FIELD_LABEL }),
+    template: `
+      <div class="flex w-[400px] gap-16">
+        <FzTextarea class="flex-1" :label="LONG_FIELD_LABEL" truncateLabel />
+        <FzTextarea class="flex-1" label="Note" truncateLabel />
+      </div>
+    `
+  }),
+  play: async (context: PlayFunctionContext) => {
+    const canvas = within(context.canvasElement)
+    const controls = canvas.getAllByRole('textbox')
+    await verifyTruncatedLabelRow(context, controls, controls[0])
+  }
+}
+
 export {
-  Default, Error, Help, Valid, Required, Disabled, Readonly,
-  ErrorWithValue, ValidWithValue, DisabledWithValue,
-  HelpDisabled, RequiredWithHelp, ErrorWithHelpOnly,
-  AutoHeight, AutoHeightWithMaxRows, AutoHeightBottomAnchored
+  Default,
+  Error,
+  Help,
+  Valid,
+  Required,
+  Disabled,
+  Readonly,
+  ErrorWithValue,
+  ValidWithValue,
+  DisabledWithValue,
+  HelpDisabled,
+  RequiredWithHelp,
+  ErrorWithHelpOnly,
+  AutoHeight,
+  AutoHeightWithMaxRows,
+  AutoHeightBottomAnchored,
+  BareComposerBar,
+  BareComposerBarContainerFocus,
+  TruncateLabel
 }

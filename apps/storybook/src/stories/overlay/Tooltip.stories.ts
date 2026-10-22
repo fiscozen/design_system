@@ -33,16 +33,14 @@ const meta = {
     },
     text: { control: { type: 'text' } },
     withIcon: { control: { type: 'boolean' } },
-    interactive: {
+    interactive: { 
       control: { type: 'select' },
       options: [undefined, 'auto', true, false],
-      description:
-        'Controls interactive behavior: undefined/"auto" (auto-detect FzButton/FzLink), true (force interactive), false (force non-interactive)'
+      description: 'Controls interactive behavior: undefined/"auto" (auto-detect FzButton/FzLink), true (force interactive), false (force non-interactive)'
     },
     _forceOpenForDesignReview: {
       control: { type: 'boolean' },
-      description:
-        '⚠️ FOR DESIGN REVIEW ONLY - Forces tooltip to remain visible. DO NOT USE IN PRODUCTION.',
+      description: '⚠️ FOR DESIGN REVIEW ONLY - Forces tooltip to remain visible. DO NOT USE IN PRODUCTION.',
       table: {
         category: 'Design Review',
         defaultValue: { summary: 'false' }
@@ -102,19 +100,19 @@ export const NeutralTooltip: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-
+    
     // Test 1: Verify trigger element is rendered
     const trigger = canvas.getByText('hover')
     expect(trigger).toBeInTheDocument()
-
+    
     // Test 2: Verify no visible tooltips initially
     const visibleTooltipsBefore = document.querySelectorAll('[role="tooltip"][aria-hidden="false"]')
     expect(visibleTooltipsBefore.length).toBe(0)
-
+    
     // Test 3: Show tooltip on hover
     const wrapper = trigger.closest('span[tabindex="0"]') || trigger
     await userEvent.hover(wrapper)
-
+    
     // Wait for tooltip to be teleported and rendered
     await waitFor(async () => {
       const tooltip = document.querySelector('[role="tooltip"][aria-hidden="false"]')
@@ -122,17 +120,14 @@ export const NeutralTooltip: Story = {
       expect(tooltip).toBeVisible()
       expect(tooltip).toHaveTextContent('this is a informative tooltip')
     })
-
+    
     // Test 4: Hide tooltip on unhover
     await userEvent.unhover(wrapper)
-
-    await waitFor(
-      async () => {
-        const visibleTooltips = document.querySelectorAll('[role="tooltip"][aria-hidden="false"]')
-        expect(visibleTooltips.length).toBe(0)
-      },
-      { timeout: 500 }
-    )
+    
+    await waitFor(async () => {
+      const visibleTooltips = document.querySelectorAll('[role="tooltip"][aria-hidden="false"]')
+      expect(visibleTooltips.length).toBe(0)
+    }, { timeout: 500 })
   }
 }
 
@@ -150,15 +145,15 @@ export const InformativeTooltip: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-
+    
     // Find first tooltip trigger
     const trigger = canvas.getAllByText('hover')[0]
     expect(trigger).toBeInTheDocument()
-
+    
     // Hover to show tooltip
     const wrapper = trigger.closest('span[tabindex="0"]') || trigger
     await userEvent.hover(wrapper)
-
+    
     // Wait for tooltip to be teleported and rendered
     await waitFor(async () => {
       const tooltip = document.querySelector('[role="tooltip"]')
@@ -184,10 +179,10 @@ export const PositiveTooltip: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const trigger = canvas.getAllByText('hover')[0]
-
+    
     const wrapper = trigger.closest('span[tabindex="0"]') || trigger
     await userEvent.hover(wrapper)
-
+    
     await waitFor(async () => {
       const tooltip = document.querySelector('[role="tooltip"]')
       expect(tooltip).not.toBeNull()
@@ -211,10 +206,10 @@ export const AlertTooltip: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const trigger = canvas.getAllByText('hover')[0]
-
+    
     const wrapper = trigger.closest('span[tabindex="0"]') || trigger
     await userEvent.hover(wrapper)
-
+    
     await waitFor(async () => {
       const tooltip = document.querySelector('[role="tooltip"]')
       expect(tooltip).not.toBeNull()
@@ -238,10 +233,10 @@ export const ErrorTooltip: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const trigger = canvas.getAllByText('hover')[0]
-
+    
     const wrapper = trigger.closest('span[tabindex="0"]') || trigger
     await userEvent.hover(wrapper)
-
+    
     await waitFor(async () => {
       const tooltip = document.querySelector('[role="tooltip"]')
       expect(tooltip).not.toBeNull()
@@ -338,30 +333,30 @@ export const WithInteractiveElements: Story = {
   args: {},
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-
+    
     // Test 1: Auto-detected FzButton should NOT have wrapper tabindex
     const autoButton = canvas.getByRole('button', { name: 'Save' })
     const autoButtonWrapper = autoButton.parentElement
     expect(autoButtonWrapper).toBeInTheDocument()
     expect(autoButtonWrapper).not.toHaveAttribute('tabindex')
-
+    
     // Test 2: Non-interactive span should have wrapper tabindex="0"
     const iconWrapper = canvas.getByText('⚙️').closest('span[tabindex="0"]')
     expect(iconWrapper).toBeInTheDocument()
     expect(iconWrapper).toHaveAttribute('tabindex', '0')
-
+    
     // Test 3: Native button (not auto-detected) should have wrapper tabindex="0"
     const nativeButton = canvas.getByRole('button', { name: 'Native Button' })
     const nativeButtonWrapper = nativeButton.closest('span[tabindex="0"]')
     expect(nativeButtonWrapper).toBeInTheDocument()
     expect(nativeButtonWrapper).toHaveAttribute('tabindex', '0')
-
+    
     // Test 4: Native button with :interactive="true" should NOT have wrapper tabindex
     const nativeOptimized = canvas.getByRole('button', { name: 'Native Optimized' })
     const nativeOptimizedWrapper = nativeOptimized.parentElement
     expect(nativeOptimizedWrapper).toBeInTheDocument()
     expect(nativeOptimizedWrapper).not.toHaveAttribute('tabindex')
-
+    
     // Test 5: FzButton with :interactive="false" should have wrapper tabindex="0"
     const disabledButton = canvas.getByRole('button', { name: 'Disabled' })
     const disabledButtonWrapper = disabledButton.closest('span[tabindex="0"]')
@@ -395,27 +390,27 @@ export const TooltipStylingRegression: Story = {
   }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-
+    
     const trigger = canvas.getByTestId('tooltip-trigger')
-
+    
     // Hover to show tooltip
     await userEvent.hover(trigger)
-
+    
     // Wait for tooltip to appear
     const floatingContent = await waitFor(() => {
       const content = document.querySelector('.fz__floating__content')
       expect(content).toBeVisible()
       return content
     })
-
+    
     const computedStyle = window.getComputedStyle(floatingContent as Element)
-
+    
     // Verify positioning
     expect(computedStyle.position).toBe('fixed')
-
+    
     // Verify expected classes are applied
     expect(floatingContent).toHaveClass('bg-core-white')
-
+    
     // Verify margin is applied (for bottom position, should have margin-top)
     expect(floatingContent).toHaveClass('mt-4')
   }
@@ -438,42 +433,40 @@ export const TooltipBottomPosition: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const TOLERANCE = 5
-
+    
     const trigger = canvas.getByTestId('trigger-bottom')
     await userEvent.hover(trigger)
-
-    await waitFor(
-      () => {
-        const content = document.querySelector('.fz__floating__content')
-        expect(content).toBeVisible()
-
-        const triggerRect = trigger.getBoundingClientRect()
-        const tooltipRect = (content as Element).getBoundingClientRect()
-
-        // Verify correct margin class (bottom position = margin-top)
-        expect(content).toHaveClass('mt-4')
-
-        // Verify positioning: tooltip should be below trigger
-        expect(tooltipRect.top).toBeGreaterThanOrEqual(triggerRect.bottom - TOLERANCE)
-      },
-      { timeout: 2000 }
-    )
+    
+    await waitFor(() => {
+      const content = document.querySelector('.fz__floating__content')
+      expect(content).toBeVisible()
+      
+      const triggerRect = trigger.getBoundingClientRect()
+      const tooltipRect = (content as Element).getBoundingClientRect()
+      
+      // Verify correct margin class (bottom position = margin-top)
+      expect(content).toHaveClass('mt-4')
+      
+      // Verify positioning: tooltip should be below trigger
+      expect(tooltipRect.top).toBeGreaterThanOrEqual(triggerRect.bottom - TOLERANCE)
+    }, { timeout: 2000 })
   }
 }
 
 /**
- * Tests tooltip positioning with top position and verifies margin class.
- *
- * The generous top padding is load-bearing: with only the canvas default above it, the
- * trigger sits ~40px from the top and a tooltip cannot fit there, so the opener-aware
- * correction flips it below and the requested placement is untestable. See
- * `TooltipTopPositionNoRoomAbove` for that case.
+ * Tests tooltip positioning with top position and verifies margin class
  */
 export const TooltipTopPosition: Story = {
   render: () => ({
     components: { FzTooltip, FzButton },
+    // More padding than the sibling stories on purpose. An upward tooltip needs
+    // room above the trigger, and `p-40` is 40px in this design system — less
+    // than the tooltip is tall. With too little room `applyBoundaryCorrections`
+    // relocates the tooltip to keep it on screen, it lands below the trigger,
+    // and the assertion below fails having measured the boundary behaviour
+    // instead of top positioning.
     template: `
-      <div class="flex items-center justify-center" style="padding: 160px 40px">
+      <div class="p-96 flex items-center justify-center">
         <FzTooltip position="top" text="Top tooltip">
           <FzButton data-testid="trigger-top">Top</FzButton>
         </FzTooltip>
@@ -483,35 +476,26 @@ export const TooltipTopPosition: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const TOLERANCE = 5
-
+    
     const trigger = canvas.getByTestId('trigger-top')
     await userEvent.hover(trigger)
-
-    await waitFor(
-      () => {
-        const content = document.querySelector('.fz__floating__content')
-        expect(content).toBeVisible()
-
-        const triggerRect = trigger.getBoundingClientRect()
-        const tooltipRect = (content as Element).getBoundingClientRect()
-
-        // Verify correct margin class (top position = margin-bottom)
-        expect(content).toHaveClass('mb-4')
-
-        // Verify positioning: tooltip should be above trigger
-        expect(tooltipRect.bottom).toBeLessThanOrEqual(triggerRect.top + TOLERANCE)
-      },
-      { timeout: 2000 }
-    )
+    
+    await waitFor(() => {
+      const content = document.querySelector('.fz__floating__content')
+      expect(content).toBeVisible()
+      
+      const triggerRect = trigger.getBoundingClientRect()
+      const tooltipRect = (content as Element).getBoundingClientRect()
+      
+      // Verify correct margin class (top position = margin-bottom)
+      expect(content).toHaveClass('mb-4')
+      
+      // Verify positioning: tooltip should be above trigger
+      expect(tooltipRect.bottom).toBeLessThanOrEqual(triggerRect.top + TOLERANCE)
+    }, { timeout: 2000 })
   }
 }
 
-/**
- * The mirror case: a `top` tooltip with no room above flips below its trigger, and its gap
- * class follows it there. Covers LIB-2813 (the flip) together with LIB-2831 (the gap moving
- * with it) — before the latter the flipped tooltip kept `mb-4`, leaving the gap on the edge
- * facing away from the trigger.
- */
 export const TooltipTopPositionNoRoomAbove: Story = {
   render: () => ({
     components: { FzTooltip, FzButton },
@@ -629,23 +613,100 @@ export const DesignReview: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          '**FOR DESIGN REVIEW ONLY** - This story demonstrates tooltips with `_forceOpenForDesignReview` enabled, keeping them visible for design inspection. Toggle the control to see the effect. **Never use this prop in production code.**'
+        story: '**FOR DESIGN REVIEW ONLY** - This story demonstrates tooltips with `_forceOpenForDesignReview` enabled, keeping them visible for design inspection. Toggle the control to see the effect. **Never use this prop in production code.**'
       }
     }
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-
+    
     // Verify warning banner is present
     const warningBanner = canvas.getByText(/Design Review Mode/i)
     expect(warningBanner).toBeInTheDocument()
-
+    
     // Verify all tooltips are visible (role="tooltip" with aria-hidden="false")
     await waitFor(async () => {
       const visibleTooltips = document.querySelectorAll('[role="tooltip"][aria-hidden="false"]')
       // Should have multiple visible tooltips (at least the status variants)
       expect(visibleTooltips.length).toBeGreaterThan(0)
+    })
+  }
+}
+
+const LONG_TEXT = 'Data di versamento dell’imposta sostitutiva'
+
+/**
+ * `truncate` keeps the content on one line and opens the tooltip only while it is cut.
+ * The columns are flex items, so they carry `min-w-0`: without it a column grows to
+ * fit the uncut text, as with any truncated text.
+ */
+export const Truncate: Story = {
+  render: () => ({
+    components: { FzTooltip },
+    setup: () => ({ LONG_TEXT }),
+    template: `
+      <div class="flex w-[400px] gap-16 p-16">
+        <div class="flex-1 min-w-0" data-testid="long-column">
+          <FzTooltip truncate :text="LONG_TEXT" class="text-grey-500">{{ LONG_TEXT }}</FzTooltip>
+        </div>
+        <div class="flex-1 min-w-0" data-testid="short-column">
+          <FzTooltip truncate text="Regime" class="text-grey-500">Regime</FzTooltip>
+        </div>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const longColumn = canvas.getByTestId('long-column')
+    const shortColumn = canvas.getByTestId('short-column')
+
+    await step('a cut text does not widen its column', async () => {
+      expect(longColumn.getBoundingClientRect().width).toBe(shortColumn.getBoundingClientRect().width)
+    })
+
+    await step('a text that fits opens no tooltip', async () => {
+      await userEvent.hover(canvas.getByText('Regime'))
+      expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull()
+      await userEvent.unhover(canvas.getByText('Regime'))
+    })
+
+    await step('a cut text opens the tooltip with the full text', async () => {
+      await userEvent.hover(canvas.getByText(LONG_TEXT))
+      await waitFor(() => {
+        expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent(LONG_TEXT)
+      })
+    })
+
+    const shortText = canvas.getByText('Regime')
+    const shortTextRange = document.createRange()
+    shortTextRange.selectNodeContents(shortText)
+    const shortTextWidth = shortTextRange.getBoundingClientRect().width
+    shortColumn.style.flex = 'none'
+
+    await step('a text exactly as wide as its box opens no tooltip', async () => {
+      await userEvent.unhover(canvas.getByText(LONG_TEXT))
+      await waitFor(() => expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull())
+      shortColumn.style.width = `${shortTextWidth}px`
+
+      await userEvent.hover(shortText)
+
+      expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull()
+      await userEvent.unhover(shortText)
+    })
+
+    await step('a text cut by a fraction of a pixel opens the tooltip', async () => {
+      // One layout unit (1/64px) past the half pixel below the text: the text is cut,
+      // yet scrollWidth and clientWidth round to the same whole pixel.
+      const columnWidth = Math.floor(shortTextWidth * 2) / 2 + 1 / 64
+      shortColumn.style.width = `${columnWidth}px`
+      await expect(shortTextWidth).toBeGreaterThan(columnWidth)
+      await expect(shortText.scrollWidth).toBe(shortText.clientWidth)
+
+      await userEvent.hover(shortText)
+
+      await waitFor(() => {
+        expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent('Regime')
+      })
     })
   }
 }

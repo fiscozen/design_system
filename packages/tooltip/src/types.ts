@@ -94,4 +94,66 @@ export interface FzTooltipProps {
    * </FzTooltip>
    */
   _forceOpenForDesignReview?: boolean;
+
+  /**
+   * Shows the content on one line, cut with an ellipsis when it is wider than the
+   * room it is given, and opens the tooltip only while the content is cut.
+   *
+   * Like any truncated text, it can only be cut where its container stops growing:
+   * in a flex layout, every flex ancestor up to the one that sets the width needs
+   * `min-width: 0` (`min-w-0`).
+   *
+   * The content stays in the DOM in full, so the trigger takes no tab stop and the
+   * tooltip is not announced as its description: it only repeats what is cut.
+   * Style the visible text (color, size) on the tooltip itself, so the ellipsis
+   * matches it.
+   *
+   * @default false
+   *
+   * @example
+   * <FzTooltip truncate :text="fileName">{{ fileName }}</FzTooltip>
+   */
+  truncate?: boolean;
+
+  /**
+   * Whether focus sits on an element the trigger stands for but does not contain,
+   * such as the control a label names. While true, the tooltip behaves as if the
+   * trigger had focus: it opens (with `truncate`, only while the content is cut),
+   * stays open when the pointer leaves, and closes on Escape.
+   *
+   * @default false
+   *
+   * @example
+   * <FzTooltip truncate :text="label" :externalFocus="isInputFocused">{{ label }}</FzTooltip>
+   */
+  externalFocus?: boolean;
+}
+
+/**
+ * Props for the FzTruncatedLabel component.
+ */
+export interface FzTruncatedLabelProps {
+  /**
+   * Text of the label, cut with an ellipsis when it is wider than the field.
+   */
+  label: string;
+
+  /**
+   * `id` of the `<label>` element, for the control's `aria-labelledby`.
+   */
+  labelId: string;
+
+  /**
+   * `id` of the control the label names: rendered as the label's `for`. The full
+   * label opens in a tooltip while this control has focus and the label is cut.
+   */
+  controlId: string;
+
+  /**
+   * Appends a visual asterisk outside the cut, so it stays visible. It is hidden from
+   * assistive technology: mark the control itself as required.
+   *
+   * @default false
+   */
+  required?: boolean;
 }

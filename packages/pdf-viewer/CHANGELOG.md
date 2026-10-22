@@ -1,5 +1,43 @@
 # @fiscozen/pdf-viewer
 
+## 1.0.14
+
+### Patch Changes
+
+- @fiscozen/tab@3.0.12
+
+## 1.0.13
+
+### Patch Changes
+
+- c458024: `FzPdfViewer` renders PDFs with pdf.js 6.4.299 (through `@tato30/vue-pdf` 2.2.1), which fixes CSS injection and viewer/worker hangs on crafted PDFs (AIKIDO-2026-169371). pdf.js 6 needs `Map.prototype.getOrInsertComputed`, which only Chrome 145, Firefox 144 and Safari 26.2 have: `FzPdfViewer` now polyfills it on the main thread and runs the pdf.js legacy worker, so PDFs keep rendering on older browsers and on iOS/Android WebViews.
+
+## 1.0.12
+
+### Patch Changes
+
+- 28c4d54: `FzPdfViewer` with `selectable` keeps the text selection on the text the pointer crosses. A drag that started on a word and overshot the end of its line into blank space used to jump to unrelated lines, or drop the word altogether when dragged backwards; it now selects only the text crossed, as in the pdf.js viewer. Copied text is normalized to Unicode NFKC (ligatures such as "ﬁ" become "fi") and stripped of NUL characters.
+
+## 1.0.11
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+
+## 1.0.10
+
+### Patch Changes
+
+- @fiscozen/tab@3.0.11
+
+## 1.0.9
+
+### Patch Changes
+
+- @fiscozen/button@3.1.3
+- @fiscozen/tab@3.0.10
+
 ## 1.0.8
 
 ### Patch Changes

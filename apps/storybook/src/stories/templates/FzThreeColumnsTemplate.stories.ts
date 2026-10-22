@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, within, userEvent, waitFor } from 'storybook/test'
 import { ref } from 'vue'
-import { FzThreeColumnsTemplate } from '@fiscozen/layout'
+import { FzFrameTemplate, FzThreeColumnsTemplate } from '@fiscozen/layout'
 import { FzButton, FzIconButton } from '@fiscozen/button'
 import { FzBadge } from '@fiscozen/badge'
 import { FzInput } from '@fiscozen/input'
@@ -27,9 +27,17 @@ import { FzInput } from '@fiscozen/input'
  * ### Height contract
  * Unlike `FzListTemplate`/`FzDetailTemplate` (which grow with their content), this
  * template **fills the height of its parent** and gives each region its own
- * scroll, so it must be mounted inside a **bounded-height** ancestor (here a
- * `600px` box). It deliberately does not own `min-h-dvh`: it is meant to fill the
- * space below an app header, not the whole viewport.
+ * scroll, so it requires a **bounded-height ancestor**: in a box with an
+ * indefinite height it collapses to zero and its regions never scroll. It
+ * deliberately does not own `min-h-dvh` — it fills the space inside an app shell,
+ * not the whole viewport.
+ *
+ * The design system has exactly one host that can supply that ancestor:
+ * **`FzFrameTemplate` with `contentHeight="bounded"`**, which the examples below
+ * compose (and which `layouts.json` records as the verified pair). The other
+ * shells are `min-h-dvh` + document scroll, i.e. indefinite-height ancestors, so
+ * nesting this template in one collapses it. Also set `mainAs="div"`: the shell
+ * already owns the `main` landmark.
  *
  * > Not to be confused with `FzLayout`'s `layout="threeColumns"` variant, a
  * > CSS-grid primitive (menu/header/chat/main/footer). This is a standalone page
@@ -44,14 +52,19 @@ const meta: Meta<typeof FzThreeColumnsTemplate> = {
     sidebarLabel: { control: 'text' }
   },
   args: {
-    mainAs: 'main',
+    // `div`, not `main`: every example here nests inside FzFrameTemplate, which
+    // already renders the page's <main>. Switch the control to `main` to see the
+    // duplicate-landmark mistake the manifest's `whenNested.props` prevents.
+    mainAs: 'div',
     sidebarLabel: 'Lista documenti'
   },
   parameters: {
     layout: 'fullscreen',
     docs: {
       story: {
-        // Give the full-height template a bounded height in the docs panel.
+        // The host shell is `h-dvh`; rendered inline it would take the whole docs
+        // page, so give it an iframe with a viewport of its own to fill.
+        inline: false,
         height: '640px'
       }
     }
@@ -70,7 +83,7 @@ const documenti = [
 ]
 
 const workspace = (args: Record<string, unknown>) => ({
-  components: { FzThreeColumnsTemplate, FzButton, FzIconButton, FzBadge, FzInput },
+  components: { FzFrameTemplate, FzThreeColumnsTemplate, FzButton, FzIconButton, FzBadge, FzInput },
   setup() {
     const collapsed = ref(false)
     const search = ref('')
@@ -78,7 +91,7 @@ const workspace = (args: Record<string, unknown>) => ({
     return { args, collapsed, search, selected, documenti }
   },
   template: `
-    <div class="h-[600px] twp">
+    <FzFrameTemplate contentHeight="bounded" chrome="flat">
       <FzThreeColumnsTemplate v-bind="args" v-model:sidebarCollapsed="collapsed">
         <template #header-left>
           <FzIconButton iconName="chevron-left" iconVariant="far" variant="invisible" ariaLabel="Indietro" />
@@ -146,7 +159,7 @@ const workspace = (args: Record<string, unknown>) => ({
           </div>
         </template>
       </FzThreeColumnsTemplate>
-    </div>
+    </FzFrameTemplate>
   `
 })
 
@@ -159,13 +172,33 @@ export const Default: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
-    await step('Renders the header chrome, the aside and the main landmark', async () => {
+    await step('Renders the header chrome and the aside inside the host shell', async () => {
       await expect(canvas.getByText('Registrazione contabile')).toBeVisible()
       await expect(canvas.getByText('Mario Rossi')).toBeVisible()
       await expect(
         canvas.getByRole('complementary', { name: 'Lista documenti' })
       ).toBeInTheDocument()
-      await expect(canvas.getByRole('main')).toBeInTheDocument()
+      // One `main` on the page, and it is the shell's: with `mainAs="div"` the
+      // template renders its content columns as a plain container.
+      await expect(canvas.getAllByRole('main')).toHaveLength(1)
+      await expect(
+        canvasElement.querySelector('.fz-three-columns-template__columns')?.tagName
+      ).toBe('DIV')
+    })
+
+    await step('The host supplies a definite height, so the regions scroll', async () => {
+      // The pair `layouts.json` records: without `contentHeight="bounded"` on the
+      // shell this template's height is 0 and none of this scrolls.
+      const template = canvasElement.querySelector<HTMLElement>('.fz-three-columns-template')!
+      const column = canvasElement.querySelector<HTMLElement>(
+        '.fz-three-columns-template__column-right-content'
+      )!
+
+      await waitFor(() => expect(template.clientHeight).toBeGreaterThan(0))
+      await waitFor(() => expect(column.scrollHeight).toBeGreaterThan(column.clientHeight))
+      column.scrollTop = 120
+      await waitFor(() => expect(column.scrollTop).toBeGreaterThan(0))
+      expect(window.scrollY).toBe(0)
     })
 
     // Scope list-item queries to the sidebar landmark — the selected document's
@@ -184,25 +217,6 @@ export const Default: Story = {
     await step('Expanding restores the list', async () => {
       await userEvent.click(canvas.getByRole('button', { name: 'Espandi lista' }))
       await waitFor(() => expect(sidebar.getByText('Fattura 001/2026')).toBeVisible())
-    })
-  }
-}
-
-/**
- * Composed inside a shell that already renders a `<main>` (e.g. `FzAppTemplate`'s
- * default slot). Set `mainAs="div"` so the content columns are a plain `<div>` and
- * the page does not expose two `main` landmarks.
- */
-export const NestedInShell: Story = {
-  render: workspace,
-  args: { mainAs: 'div' },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement)
-    await step('Emits no <main> landmark, keeps the named complementary rail', async () => {
-      await expect(canvas.queryByRole('main')).toBeNull()
-      await expect(
-        canvas.getByRole('complementary', { name: 'Lista documenti' })
-      ).toBeInTheDocument()
     })
   }
 }

@@ -30,6 +30,7 @@ const borderWidth = filterTokensByType('borderWidth', globals)['border'];
 const borderRadius = filterTokensByType('borderRadius', globals)['rounded'];
 borderRadius.DEFAULT = borderRadius.base
 const screens = filterTokensByType('sizing', globals, true)['breakpoint'];
+const lineHeight = filterTokensByType('lineHeights', globals)['leading'];
 
 // ============================================================================
 // COLOR CONFIGURATION
@@ -121,6 +122,19 @@ module.exports = {
           )
         },
         colors,
+        /**
+         * Named line-height scale from the `leading.*` tokens, in px.
+         *
+         * Mirrors the fontSize keys (xs, sm, base, lg, xl, 2xl…), so
+         * `text-sm leading-sm` is the token pair and `leading-base` says 20px
+         * on purpose — where `leading-5` says it only by rem coincidence.
+         *
+         * Deliberately in `extend`, not a replacement: Tailwind's own numeric
+         * and ratio keys (`leading-4`, `leading-5`, `leading-relaxed`…) are in
+         * use across the products, and dropping them would make those classes
+         * silently stop being generated.
+         */
+        lineHeight,
         zIndex: {
             '60': '60',
             '70': '70',

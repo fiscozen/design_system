@@ -148,9 +148,6 @@ describe("FzCardListItem", () => {
       expect(wrapper.findComponent({ name: "FzIconButton" }).exists()).toBe(
         false,
       );
-      expect(wrapper.findComponent({ name: "FzIconDropdown" }).exists()).toBe(
-        false,
-      );
     });
 
     it("should not render a trailing control when actions is an empty array", async () => {
@@ -159,9 +156,6 @@ describe("FzCardListItem", () => {
       });
       await wrapper.vm.$nextTick();
       expect(wrapper.findComponent({ name: "FzIconButton" }).exists()).toBe(
-        false,
-      );
-      expect(wrapper.findComponent({ name: "FzIconDropdown" }).exists()).toBe(
         false,
       );
     });
@@ -195,21 +189,24 @@ describe("FzCardListItem", () => {
       expect(one.find(".cursor-pointer").exists()).toBe(true);
     });
 
-    it("should render dropdown when more than one action is passed", async () => {
+    it("should render an ellipsis opener when more than one action is passed", async () => {
       const wrapper = mount(FzCardListItem, {
         props: { title: "Item", actions: [actionA, actionB] },
       });
       await wrapper.vm.$nextTick();
-      const dropdown = wrapper.findComponent({ name: "FzIconDropdown" });
-      expect(dropdown.exists()).toBe(true);
-      expect(dropdown.props("actions")).toEqual([actionA, actionB]);
+      const opener = wrapper.findComponent({ name: "FzIconButton" });
+      expect(opener.exists()).toBe(true);
+      expect(opener.props("iconName")).toBe("ellipsis-vertical");
     });
 
     it("should ignore section markers when deciding actions mode", async () => {
       // Only a section header + one link action → still arrow (link) mode,
       // not dropdown — markers don't count as interactive actions.
       const sectionOnly = mount(FzCardListItem, {
-        props: { title: "Item", actions: [{ type: "section", label: "Group" }] },
+        props: {
+          title: "Item",
+          actions: [{ type: "section", label: "Group" }],
+        },
       });
       const sectionPlusOneLink = mount(FzCardListItem, {
         props: {
@@ -217,25 +214,18 @@ describe("FzCardListItem", () => {
           actions: [{ type: "section", label: "Group" }, linkAction],
         },
       });
-      await Promise.all([sectionOnly.vm.$nextTick(), sectionPlusOneLink.vm.$nextTick()]);
-      expect(sectionOnly.findComponent({ name: "FzIconButton" }).exists()).toBe(false);
-      expect(sectionOnly.findComponent({ name: "FzIconDropdown" }).exists()).toBe(false);
+      await Promise.all([
+        sectionOnly.vm.$nextTick(),
+        sectionPlusOneLink.vm.$nextTick(),
+      ]);
+      expect(sectionOnly.findComponent({ name: "FzIconButton" }).exists()).toBe(
+        false,
+      );
       expect(
         sectionPlusOneLink
           .findAllComponents({ name: "FzIcon" })
           .some((w) => w.props("name") === "chevron-right"),
       ).toBe(true);
-    });
-
-    it("should pass section markers through to the dropdown", async () => {
-      const section = { type: "section" as const, label: "Scarica" };
-      const wrapper = mount(FzCardListItem, {
-        props: { title: "Item", actions: [actionA, section, actionB] },
-      });
-      await wrapper.vm.$nextTick();
-      const dropdown = wrapper.findComponent({ name: "FzIconDropdown" });
-      expect(dropdown.exists()).toBe(true);
-      expect(dropdown.props("actions")).toEqual([actionA, section, actionB]);
     });
 
     it("should render badge in the top row when badge is provided", async () => {
@@ -437,18 +427,89 @@ describe("FzCardListItem", () => {
         expect(payload).toEqual([0, linkAction]);
       }
     });
+  });
 
-    it("should forward fzaction:click from dropdown", async () => {
+  /**
+   * The multi-action menu has two interchangeable implementations, picked by
+   * feature detection: the native popover (preferred) and the FzIconDropdown
+   * fallback. Both must render the same actions and emit the same payload.
+   */
+  /**
+   * The multi-action menu is an FzPopover now, so which engine renders it — native
+   * popover in CSS, or FzFloating — is the popover package's business and is tested
+   * there. What matters here is that the card wires it up: the ellipsis opens it, the
+   * actions and their sections land inside, and picking one reports its index.
+   */
+  describe("Actions menu", () => {
+    it("should render the actions inside an FzPopover hanging off the ellipsis", async () => {
       const wrapper = mount(FzCardListItem, {
         props: { title: "Item", actions: [actionA, actionB] },
       });
       await wrapper.vm.$nextTick();
 
-      const dropdown = wrapper.findComponent({ name: "FzIconDropdown" });
-      await dropdown.vm.$emit("fzaction:click", 1, actionB);
+      const popover = wrapper.findComponent({ name: "FzPopover" });
+      expect(popover.exists()).toBe(true);
+      expect(popover.props("position")).toBe("bottom-end");
 
-      expect(wrapper.emitted("fzaction:click")).toBeTruthy();
+      const opener = wrapper.findComponent({ name: "FzIconButton" });
+      expect(opener.props("iconName")).toBe("ellipsis-vertical");
+
+      const actions = wrapper.findAllComponents({ name: "FzAction" });
+      expect(actions.map((a) => a.props("label"))).toEqual([
+        "Action A",
+        "Action B",
+      ]);
+    });
+
+    it("should render section markers as group headers in the menu", async () => {
+      const section = { type: "section" as const, label: "Scarica" };
+      const wrapper = mount(FzCardListItem, {
+        props: { title: "Item", actions: [actionA, section, actionB] },
+      });
+      await wrapper.vm.$nextTick();
+
+      const sectionLabels = wrapper
+        .findAllComponents({ name: "FzActionSection" })
+        .map((s) => s.props("label"));
+      expect(sectionLabels).toContain("Scarica");
+      expect(
+        wrapper.findAllComponents({ name: "FzAction" }).map((a) => a.props("label")),
+      ).toEqual(["Action A", "Action B"]);
+    });
+
+    it("should report the menu state on the opener", async () => {
+      const wrapper = mount(FzCardListItem, {
+        props: { title: "Item", actions: [actionA, actionB] },
+      });
+      await wrapper.vm.$nextTick();
+
+      const opener = wrapper.get("button");
+      expect(opener.attributes("aria-expanded")).toBe("false");
+      await opener.trigger("click");
+      expect(opener.attributes("aria-expanded")).toBe("true");
+    });
+
+    it("should emit fzaction:click with the action index and close the menu", async () => {
+      const wrapper = mount(FzCardListItem, {
+        props: { title: "Item", actions: [actionA, actionB] },
+      });
+      await wrapper.vm.$nextTick();
+      await wrapper.get("button").trigger("click");
+
+      const actions = wrapper.findAllComponents({ name: "FzAction" });
+      await actions[1].trigger("click");
+
       expect(wrapper.emitted("fzaction:click")![0]).toEqual([1, actionB]);
+      // Picking an action closes the menu.
+      expect(wrapper.get("button").attributes("aria-expanded")).toBe("false");
+    });
+
+    it("should label the opener in Italian", async () => {
+      const wrapper = mount(FzCardListItem, {
+        props: { title: "Item", actions: [actionA, actionB] },
+      });
+      await wrapper.vm.$nextTick();
+      expect(wrapper.get("button").attributes("aria-label")).toBe("Mostra azioni");
     });
   });
 
@@ -470,6 +531,31 @@ describe("FzCardListItem", () => {
       expect(row.attributes("tabindex")).toBe("0");
       expect(row.attributes("aria-labelledby")).toBeTruthy();
       expect(wrapper.get("p.truncate").text()).toBe("Pay invoice");
+    });
+
+    it("should point aria-labelledby at its own title, with a document-unique id", async () => {
+      // Each mount() is its own Vue app: an app-scoped id (useId()) repeats
+      // across apps, and a screen reader then announces the first card's title
+      // for every row.
+      const first = mount(FzCardListItem, {
+        props: { title: "First invoice", actions: [linkAction] },
+      });
+      const second = mount(FzCardListItem, {
+        props: { title: "Second invoice", actions: [linkAction] },
+      });
+      await Promise.all([first.vm.$nextTick(), second.vm.$nextTick()]);
+
+      const labelId = (w: typeof first) =>
+        w.get('[role="button"]').attributes("aria-labelledby");
+      expect(labelId(first)).not.toBe(labelId(second));
+      // Each row's label id resolves to that row's own title.
+      for (const [wrapper, title] of [
+        [first, "First invoice"],
+        [second, "Second invoice"],
+      ] as const) {
+        const target = wrapper.get(`#${labelId(wrapper)}`);
+        expect(target.text()).toBe(title);
+      }
     });
   });
 

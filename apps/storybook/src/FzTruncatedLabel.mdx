@@ -1,0 +1,105 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Overlay/FzTruncatedLabel" />
+
+# FzTruncatedLabel
+
+A field label kept on one line. When the label is wider than the field it is cut with an ellipsis, and the full text shows in a tooltip on hover and while the labelled control has focus. Fields laid side by side stay aligned whatever their labels' length.
+
+`FzInput`, `FzSelect` and `FzTextarea` render it for you with their `truncateLabel` prop (`FzDatepicker` through `inputProps`). Use it directly only to build a field of your own.
+
+## Features
+
+- One-line label, cut with an ellipsis only when it does not fit
+- Full label in a tooltip on hover and while the control has focus
+- An uncut label never widens the field: fields side by side share a row equally
+- Required asterisk outside the cut, always visible
+- The control keeps the full label as its accessible name
+
+## Installation
+
+```bash
+npm install @fiscozen/tooltip
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzTruncatedLabel } from '@fiscozen/tooltip'
+</script>
+
+<template>
+  <div class="flex flex-col gap-8">
+    <FzTruncatedLabel
+      class="text-base text-grey-500"
+      label="Data di versamento dell’imposta sostitutiva"
+      labelId="payment-date-label"
+      controlId="payment-date"
+      required
+    />
+    <input id="payment-date" aria-labelledby="payment-date-label" required />
+  </div>
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Text of the label (required)</td>
+    </tr>
+    <tr>
+      <td><code>labelId</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td><code>id</code> of the <code>&lt;label&gt;</code> element, for the control's <code>aria-labelledby</code> (required)</td>
+    </tr>
+    <tr>
+      <td><code>controlId</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td><code>id</code> of the control the label names, rendered as the label's <code>for</code>. The tooltip opens while this control has focus and the label is cut (required)</td>
+    </tr>
+    <tr>
+      <td><code>required</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Appends a visual asterisk outside the cut. It is hidden from assistive technology: mark the control itself as required</td>
+    </tr>
+  </tbody>
+</table>
+
+## Styling
+
+Put text styles (color, size, weight) on the component: the label, the ellipsis and the asterisk inherit them.
+
+## Accessibility
+
+- The `<label>` holds the full text, so screen readers announce the whole label as the control's name, cut or not.
+- Keyboard users see the full label in the tooltip as soon as they tab into the control; `Escape` hides it without moving focus.
+- The tooltip only repeats the label: it adds no tab stop and is not announced as a description.
+- The asterisk is visual only: set `required` or `aria-required` on the control.
+
+## Best Practices
+
+- Use it where fields share a row and their labels may wrap; a field alone on its row can let its label wrap.
+- Keep labels short anyway: the tooltip is a fallback, not a place for instructions.
+- Give the field a width (for example `flex-1`): the label is cut at the field's width.
+
+## Related Components
+
+- **FzTooltip**: the tooltip it renders, with `truncate` and `externalFocus`
+- **FzInput**, **FzSelect**, **FzTextarea**: render it through their `truncateLabel` prop

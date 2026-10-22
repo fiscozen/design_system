@@ -3,6 +3,7 @@ import { expect, userEvent, within, fn, waitFor } from 'storybook/test'
 import { ref, onMounted } from 'vue'
 import { FzSelect, FzSelectOptionsProps } from '@fiscozen/select'
 import { FzButton } from '@fiscozen/button'
+import { LONG_FIELD_LABEL, verifyTruncatedLabelRow } from '../test-utils'
 
 const meta = {
   title: 'Form/FzSelect',
@@ -1794,5 +1795,33 @@ export const AIReasoningFilterable: SelectStory = {
     const buttons = canvas.getAllByRole('button')
     const opener = buttons.find((btn) => btn.getAttribute('test-id') === 'fzselect-opener')
     await expect(opener).toHaveAttribute('aria-disabled', 'false')
+  }
+}
+
+/**
+ * `truncateLabel` keeps each label on one line, so fields side by side stay aligned
+ * whatever their labels' length; a cut label shows in full in a tooltip on hover and
+ * while the select has focus.
+ */
+export const TruncateLabel: SelectStory = {
+  render: () => ({
+    components: { FzSelect },
+    setup: () => ({
+      LONG_FIELD_LABEL,
+      options: [{ value: '1', label: 'Ordinario' }],
+      first: ref<string>(),
+      second: ref<string>()
+    }),
+    template: `
+      <div class="flex w-[400px] gap-16">
+        <FzSelect v-model="first" class="flex-1" :label="LONG_FIELD_LABEL" :options truncateLabel />
+        <FzSelect v-model="second" class="flex-1" label="Regime" :options truncateLabel />
+      </div>
+    `
+  }),
+  play: async (context) => {
+    const canvas = within(context.canvasElement)
+    const controls = canvas.getAllByRole('button').filter((button) => button.getAttribute('test-id') === 'fzselect-opener')
+    await verifyTruncatedLabelRow(context, controls, controls[0])
   }
 }

@@ -4,8 +4,10 @@ import { h } from 'vue'
 import {
   FzAppTemplate,
   FzSidebarTemplate,
+  FzFrameTemplate,
   FzListTemplate,
-  FzDetailTemplate
+  FzDetailTemplate,
+  FzThreeColumnsTemplate
 } from '..'
 
 /**
@@ -24,9 +26,11 @@ import {
  */
 
 // ---------------------------------------------------------------------------
-// window.matchMedia mock — jsdom doesn't provide it and both shells query
-// `(min-width: 1200px)`. Desktop keeps the shells in their persistent-rail
-// state, which is the layout the pairs are documented against.
+// window.matchMedia mock — jsdom doesn't provide it and the shells query
+// `(min-width: 1200px)` (`FzAppTemplate`, `FzSidebarTemplate`) or
+// `(min-width: 1024px)` (`FzFrameTemplate`). `matches: true` keeps every shell in
+// its persistent-rail state, which is the layout the pairs are documented
+// against.
 // ---------------------------------------------------------------------------
 const originalMatchMedia = window.matchMedia
 
@@ -57,7 +61,8 @@ afterEach(() => {
 
 const SHELLS = [
   { name: 'FzAppTemplate', component: FzAppTemplate },
-  { name: 'FzSidebarTemplate', component: FzSidebarTemplate }
+  { name: 'FzSidebarTemplate', component: FzSidebarTemplate },
+  { name: 'FzFrameTemplate', component: FzFrameTemplate }
 ] as const
 
 describe('layout composition (manifest `nestWithin`)', () => {
@@ -123,6 +128,63 @@ describe('layout composition (manifest `nestWithin`)', () => {
         slots: { default: () => h(FzListTemplate, null, { default: () => 'rows' }) }
       })
       expect(wrapper.findAll('main')).toHaveLength(2)
+    })
+  })
+  // ==========================================================================
+  // The bounded pair — FzThreeColumnsTemplate needs a host that CLIPS
+  // ==========================================================================
+  describe('FzFrameTemplate hosts FzThreeColumnsTemplate (kind: bounded)', () => {
+    function mountPair(contentHeight: 'scroll' | 'bounded') {
+      return mount(FzFrameTemplate, {
+        props: { contentHeight },
+        slots: {
+          default: () =>
+            h(
+              FzThreeColumnsTemplate,
+              { mainAs: 'div', sidebarLabel: 'Documenti' },
+              {
+                'header-left': () => 'titolo',
+                'sidebar-content': () => 'lista',
+                'column-left': () => 'anteprima',
+                'column-right-content': () => 'record'
+              }
+            )
+        }
+      })
+    }
+
+    it('hosts it without a second main landmark', () => {
+      const wrapper = mountPair('bounded')
+
+      expect(wrapper.findAll('main')).toHaveLength(1)
+      expect(wrapper.find('.fz-three-columns-template').exists()).toBe(true)
+      expect(wrapper.text()).toContain('record')
+      // The nested layout's own complementary rail survives the nesting, named
+      // so it stays distinguishable from any rail the shell contributes.
+      expect(wrapper.findAll('aside[aria-label="Documenti"]')).toHaveLength(1)
+    })
+
+    it('clips its content region under contentHeight="bounded"', () => {
+      // This is the whole point of the pair: `h-full` on the nested layout only
+      // resolves against an ancestor with a *definite* height, and the clipping
+      // region is what makes it definite. The manifest's `whenNested.note` says
+      // the host must set this prop; this is that claim, as far as a DOM without
+      // a layout engine can carry it (the resolved heights are asserted in the
+      // Storybook play function, which runs in real Chromium).
+      const main = mountPair('bounded').find('.fz-frame-template__main')
+
+      expect(main.classes()).toContain('overflow-hidden')
+      expect(main.classes()).toEqual(expect.arrayContaining(['flex', 'flex-col', 'min-h-0']))
+    })
+
+    it('does not clip under the default contentHeight — which is why the note is not optional', () => {
+      // Same shell, prop omitted: the region scrolls instead of clipping, so its
+      // height is indefinite again and the nested layout has nothing to fill.
+      // Nesting inside the right shell is necessary but not sufficient.
+      const main = mountPair('scroll').find('.fz-frame-template__main')
+
+      expect(main.classes()).toContain('overflow-y-auto')
+      expect(main.classes()).not.toContain('overflow-hidden')
     })
   })
 })

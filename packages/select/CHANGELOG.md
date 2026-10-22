@@ -1,5 +1,55 @@
 # @fiscozen/select
 
+## 3.2.0
+
+### Minor Changes
+
+- 65d8e36: `FzInput`, `FzSelect` and `FzTextarea` take a `truncateLabel` prop: the label stays on one line, cut with an ellipsis when it is wider than the field, and a cut label shows in full in a tooltip on hover and while the field has focus. Fields laid side by side stay aligned whatever their labels' length, and the required asterisk stays visible past the cut. The field keeps the full label as its accessible name. `FzDatepicker` gets it through `inputProps`. Without the prop nothing changes.
+
+### Patch Changes
+
+- Updated dependencies [65d8e36]
+- Updated dependencies [65d8e36]
+- Updated dependencies [65d8e36]
+  - @fiscozen/input@3.6.0
+  - @fiscozen/composables@1.1.6
+  - @fiscozen/tooltip@3.1.0
+
+## 3.1.18
+
+### Patch Changes
+
+- Updated dependencies [6efe84a]
+  - @fiscozen/input@3.5.8
+
+## 3.1.17
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+  - @fiscozen/alert@3.0.7
+  - @fiscozen/input@3.5.7
+
+## 3.1.16
+
+### Patch Changes
+
+- Updated dependencies [fbf556a]
+  - @fiscozen/composables@1.1.5
+  - @fiscozen/input@3.5.6
+
+## 3.1.15
+
+### Patch Changes
+
+- Updated dependencies [92c1d3a]
+  - @fiscozen/alert@3.0.6
+  - @fiscozen/input@3.5.5
+  - @fiscozen/button@3.1.3
+  - @fiscozen/composables@1.1.4
+  - @fiscozen/progress@4.0.2
+
 ## 3.1.14
 
 ### Patch Changes

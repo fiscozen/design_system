@@ -22,7 +22,8 @@ export type FzAppointmentsCommonProps = {
    */
   alertTitle?: string;
   /**
-   * Description for the alert
+   * Description for the alert. Defaults to an invitation to pick another day,
+   * or to a plain "no availability" statement when no day carries slots.
    */
   alertDescription?: string;
   /**
@@ -105,6 +106,7 @@ export interface UseAppointmentsReturn {
   formattedDate: ComputedRef<string>;
   infoText: ComputedRef<string | undefined>;
   hasAvailableSlots: ComputedRef<boolean>;
+  hasAnyAvailability: ComputedRef<boolean>;
   selectedSlotValue: ComputedRef<string | undefined>;
   radioGroupName: ComputedRef<string>;
   alertTitle: ComputedRef<string>;

@@ -202,10 +202,15 @@ const positionCalculators: Record<string, PositionCalculator> = {
     transform: { x: -100, y: -100 }
   }),
 
-  // Right positions - content to right of opener
+  // Right positions - content to right of opener.
+  // `x` is the opener's edge and nothing more: `left` is written to an element
+  // that keeps its own `margin-left`, and for a positioned box with `left` set
+  // and `right: auto` that margin already moves the border edge past it. Adding
+  // the margin here too spends it twice and doubles the gap. The alignment axis
+  // still subtracts its margin, which is what cancels the layout one.
   right: (opener, margins) => ({
     position: {
-      x: opener.right + margins.left,
+      x: opener.right,
       y: opener.top - margins.top + opener.height / 2
     },
     transform: { x: 0, y: -50 }
@@ -213,7 +218,7 @@ const positionCalculators: Record<string, PositionCalculator> = {
 
   'right-start': (opener, margins) => ({
     position: {
-      x: opener.right + margins.left,
+      x: opener.right,
       y: opener.top - margins.top
     },
     transform: { x: 0, y: 0 }
@@ -221,7 +226,7 @@ const positionCalculators: Record<string, PositionCalculator> = {
 
   'right-end': (opener, margins) => ({
     position: {
-      x: opener.right + margins.left,
+      x: opener.right,
       y: opener.bottom + margins.bottom
     },
     transform: { x: 0, y: -100 }
@@ -678,10 +683,10 @@ export const useFloating = (
       // Only vertical placements get the flip treatment: `left*` / `right*` sit beside the
       // opener and keep their horizontal gap, so moving one vertically must not restyle it.
       const vertical = isVerticalPosition(actualPosition.value!)
-      // The design gap lives in the margin class of the requested side, so read it from
-      // there rather than hard-coding 16px: `top*` carries it as `margin-bottom`,
-      // `bottom*` as `margin-top`.
-      const openerGap = actualPosition.value!.startsWith('top') ? margins.bottom : margins.top
+      // The design gap lives in the margin class rather than in a hard-coded 16px. Read
+      // whichever vertical margin is set, not the requested side's: once a flip has been
+      // reported the class belongs to the flipped side, and the next run would read 0.
+      const openerGap = Math.max(margins.top, margins.bottom)
 
       const corrected = applyBoundaryCorrections(
         realPosition,
