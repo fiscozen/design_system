@@ -99,7 +99,7 @@ const descriptionClass = computed(() => {
   const hasBottomAction = showAction.value
   return [
     'font-normal',
-    '!leading-[20px]',
+    'leading-[20px]',
     {
       'mt-8': props.title && !isTextVariant.value,
       'mb-16': hasBottomAction,

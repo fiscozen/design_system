@@ -19,7 +19,7 @@ const id: string = generateCheckboxId();
 
 const model = defineModel<(string | number | boolean)[]>({
   required: true,
-  default: [],
+  default: () => [],
 });
 
 const injected = inject(CHECKED_SET_KEY, null);
@@ -155,7 +155,7 @@ const labelClass = computed(() => ({
         <div class="justify-center flex flex-col w-full grow-0 min-w-0 gap-4">
           <p
             :class="[
-              'font-medium break-words !m-0 !leading-[20px]',
+              'font-medium break-words !m-0 leading-[20px]',
               { 'text-grey-300': props.disabled },
             ]"
           >
@@ -164,7 +164,7 @@ const labelClass = computed(() => ({
           <p
             v-if="subtitle"
             :class="[
-              'font-normal text-sm mt-4 break-words !m-0 !leading-[16px]',
+              'font-normal text-sm mt-4 break-words !m-0 leading-[16px]',
               {
                 'text-grey-300': props.disabled,
                 'text-grey-500': !props.disabled,

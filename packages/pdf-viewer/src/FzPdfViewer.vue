@@ -142,12 +142,14 @@
 <script setup lang="ts">
 import { computed, ref, toRef } from "vue";
 import { FzPdfViewerProps } from "./types";
+import "./pdfjsCompat";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
 // @ts-ignore — CSS side-effect import, no type declarations needed
 import "@tato30/vue-pdf/style.css";
 import { FzIconButton } from "@fiscozen/button";
 import { FzTabs, FzTab } from "@fiscozen/tab";
 import { useOverflowDrag } from "./composables/useOverflowDrag";
+import { useTextLayerSelection } from "./composables/useTextLayerSelection";
 import PdfZoomControls from "./components/PdfZoomControls.vue";
 import PdfPageNav from "./components/PdfPageNav.vue";
 
@@ -192,6 +194,8 @@ const toolbarInnerClass = computed(() =>
 const { cursorClass } = useOverflowDrag(overflowContainer, {
   textLayerAware: toRef(props, "selectable"),
 });
+
+useTextLayerSelection(overflowContainer, toRef(props, "selectable"));
 
 function handlePageChange(newPage: number) {
   if (newPage > 0 && newPage <= pages.value) {

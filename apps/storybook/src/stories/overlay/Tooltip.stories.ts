@@ -459,8 +459,14 @@ export const TooltipBottomPosition: Story = {
 export const TooltipTopPosition: Story = {
   render: () => ({
     components: { FzTooltip, FzButton },
+    // More padding than the sibling stories on purpose. An upward tooltip needs
+    // room above the trigger, and `p-40` is 40px in this design system — less
+    // than the tooltip is tall. With too little room `applyBoundaryCorrections`
+    // relocates the tooltip to keep it on screen, it lands below the trigger,
+    // and the assertion below fails having measured the boundary behaviour
+    // instead of top positioning.
     template: `
-      <div class="p-40 flex items-center justify-center">
+      <div class="p-96 flex items-center justify-center">
         <FzTooltip position="top" text="Top tooltip">
           <FzButton data-testid="trigger-top">Top</FzButton>
         </FzTooltip>
@@ -584,6 +590,84 @@ export const DesignReview: Story = {
       const visibleTooltips = document.querySelectorAll('[role="tooltip"][aria-hidden="false"]')
       // Should have multiple visible tooltips (at least the status variants)
       expect(visibleTooltips.length).toBeGreaterThan(0)
+    })
+  }
+}
+
+const LONG_TEXT = 'Data di versamento dell’imposta sostitutiva'
+
+/**
+ * `truncate` keeps the content on one line and opens the tooltip only while it is cut.
+ * The columns are flex items, so they carry `min-w-0`: without it a column grows to
+ * fit the uncut text, as with any truncated text.
+ */
+export const Truncate: Story = {
+  render: () => ({
+    components: { FzTooltip },
+    setup: () => ({ LONG_TEXT }),
+    template: `
+      <div class="flex w-[400px] gap-16 p-16">
+        <div class="flex-1 min-w-0" data-testid="long-column">
+          <FzTooltip truncate :text="LONG_TEXT" class="text-grey-500">{{ LONG_TEXT }}</FzTooltip>
+        </div>
+        <div class="flex-1 min-w-0" data-testid="short-column">
+          <FzTooltip truncate text="Regime" class="text-grey-500">Regime</FzTooltip>
+        </div>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const longColumn = canvas.getByTestId('long-column')
+    const shortColumn = canvas.getByTestId('short-column')
+
+    await step('a cut text does not widen its column', async () => {
+      expect(longColumn.getBoundingClientRect().width).toBe(shortColumn.getBoundingClientRect().width)
+    })
+
+    await step('a text that fits opens no tooltip', async () => {
+      await userEvent.hover(canvas.getByText('Regime'))
+      expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull()
+      await userEvent.unhover(canvas.getByText('Regime'))
+    })
+
+    await step('a cut text opens the tooltip with the full text', async () => {
+      await userEvent.hover(canvas.getByText(LONG_TEXT))
+      await waitFor(() => {
+        expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent(LONG_TEXT)
+      })
+    })
+
+    const shortText = canvas.getByText('Regime')
+    const shortTextRange = document.createRange()
+    shortTextRange.selectNodeContents(shortText)
+    const shortTextWidth = shortTextRange.getBoundingClientRect().width
+    shortColumn.style.flex = 'none'
+
+    await step('a text exactly as wide as its box opens no tooltip', async () => {
+      await userEvent.unhover(canvas.getByText(LONG_TEXT))
+      await waitFor(() => expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull())
+      shortColumn.style.width = `${shortTextWidth}px`
+
+      await userEvent.hover(shortText)
+
+      expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull()
+      await userEvent.unhover(shortText)
+    })
+
+    await step('a text cut by a fraction of a pixel opens the tooltip', async () => {
+      // One layout unit (1/64px) past the half pixel below the text: the text is cut,
+      // yet scrollWidth and clientWidth round to the same whole pixel.
+      const columnWidth = Math.floor(shortTextWidth * 2) / 2 + 1 / 64
+      shortColumn.style.width = `${columnWidth}px`
+      await expect(shortTextWidth).toBeGreaterThan(columnWidth)
+      await expect(shortText.scrollWidth).toBe(shortText.clientWidth)
+
+      await userEvent.hover(shortText)
+
+      await waitFor(() => {
+        expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent('Regime')
+      })
     })
   }
 }

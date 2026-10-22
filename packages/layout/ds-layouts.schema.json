@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/fiscozen/claude-plugin-agentic-design/docs/ds-layouts.schema.json",
+  "title": "Design-system page-layout manifest",
+  "description": "Contract for the layout manifest a design system publishes about its own page layouts (e.g. `packages/layout/layouts.json`). The agentic-design engine finds it via the adapter's `layoutManifest` and generates a layout decision table into the consuming repo, so the 'which layout should this page use?' question is answered from the DS's source of truth instead of being hand-copied into every repo's ds.config.json.\n\nWHO OWNS THIS FILE: the design system, versioned and reviewed in the same PR that adds a layout. The DS is expected to enforce manifest/source parity itself (e.g. a unit test asserting every exported `*Template` has an entry). The engine additionally reports exports it finds with no manifest entry as `unclassified` — it never guesses their kind.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["package", "layouts"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional pointer to this contract, for editor completion."
+    },
+    "package": {
+      "type": "string",
+      "description": "The npm package the layouts are exported from, e.g. \"@fiscozen/layout\". Used as the default `import` for every entry and cross-referenced against the component inventory to detect entries that are in source but not yet in the published version."
+    },
+    "indexPath": {
+      "type": "string",
+      "description": "Optional. Path (relative to the manifest's own directory) of the barrel whose exports are the authoritative layout list, e.g. \"src/index.ts\". The engine diffs it against `layouts[]` to surface manifest drift. Defaults to \"src/index.ts\"."
+    },
+    "exportPattern": {
+      "type": "string",
+      "description": "Optional ERE matched against the barrel's export names to decide which are page layouts, e.g. \"Template$\". Names matching the pattern but absent from `layouts[]` are reported as drift. Defaults to \"Template$\". Set it to something the DS's own naming supports; a DS whose layouts have no common suffix should list them in `layouts[]` and set this to a pattern matching exactly those (or accept the drift report being advisory)."
+    },
+    "layouts": {
+      "type": "array",
+      "description": "One entry per layout, in the order a developer should consider them (most common first). Regions and grid primitives are listed too, so the engine can tell an agent NOT to reach for them directly.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "kind", "whenToUse"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Exported component name, e.g. \"FzAppTemplate\". Must match the barrel export exactly."
+          },
+          "kind": {
+            "enum": ["shell", "page-content", "bounded", "region", "grid"],
+            "description": "What role the layout plays — the single most important field, because it decides how the layout may be used:\n\n- `shell`: a top-level page shell that owns the viewport height. Exactly one per page, at the router-view level.\n- `page-content`: renders INSIDE a shell's content slot. Never top-level. Usually paired with a shell (see `nestWithin`).\n- `bounded`: fills the height of its parent and needs a bounded-height ancestor. Collapses to zero height if that contract isn't met — the riskiest kind, so `nestWithin` should list only VERIFIED hosts.\n- `region`: an internal region wrapper the layouts themselves compose. NOT for app code; the engine blocks direct use in consuming repos.\n- `grid`: a low-level grid/arrangement primitive for in-page composition, not a page layout."
+          },
+          "import": {
+            "type": "string",
+            "description": "Import specifier, if it differs from `package` (e.g. a subpath export)."
+          },
+          "surfaces": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Product surfaces this layout is intended for, drawn from the adapter's `surfaces` (e.g. [\"FO\"], [\"BO\"], [\"FO\", \"BO\"]). Drives the surface passed to the design-principles review, whose severity and tone depend on it. Omit when surface-neutral."
+          },
+          "since": {
+            "type": "string",
+            "description": "Package version the layout first shipped in, e.g. \"1.2.0\". The engine compares it against the version in the component inventory and flags entries whose `since` is ahead of the published version as NOT YET AVAILABLE — the failure mode where an agent installs the current release and the import doesn't resolve."
+          },
+          "whenToUse": {
+            "type": "string",
+            "description": "One or two sentences a non-technical designer would recognise: the page shape this layout is for. This is the text the layout decision is actually made from, so describe the SHAPE (\"list page: filter rail beside a table\"), not the implementation."
+          },
+          "notWhenToUse": {
+            "type": "string",
+            "description": "Optional but strongly recommended for any layout that is easily confused with another: what this is NOT for, naming the alternative. This is where near-miss mistakes get prevented (e.g. a three-column page template vs. a grid primitive's three-column variant)."
+          },
+          "slots": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Named slots, in render order, with the default slot written as \"default\". Kept in sync with the component's slot type by the DS's own parity test."
+          },
+          "keyProps": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Props worth surfacing at plan time (not the exhaustive list — the component source stays authoritative for signatures)."
+          },
+          "heightContract": {
+            "enum": ["owns-viewport", "document-scroll", "fills-parent"],
+            "description": "How the layout establishes its height — the contract most often violated when layouts are nested:\n\n- `owns-viewport`: owns a full-height root (e.g. `min-h-dvh`); does not depend on app-global height CSS.\n- `document-scroll`: grows with its content and lets the document scroll; the host owns the scroll container and device safe-area.\n- `fills-parent`: fills its parent's height and scrolls its regions internally; REQUIRES a bounded-height ancestor."
+          },
+          "nestWithin": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "For `page-content` and `bounded` layouts: the hosts this layout is VERIFIED to work inside — ideally backed by a composition test in the DS, not inferred from prose. Height contracts interact in non-obvious ways (a `fills-parent` layout inside a `min-height`-based shell is not self-evidently bounded), so an unverified pair belongs in `composeOnly.gaps` or `notWhenToUse`, not here."
+          },
+          "whenNested": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "What a consumer must change when this layout is nested inside a host — the props that avoid duplicate landmarks and ambiguous accessible names.",
+            "properties": {
+              "props": {
+                "type": "object",
+                "additionalProperties": { "type": "string" },
+                "description": "Prop → required value when nested, e.g. { \"mainAs\": \"div\" } to avoid a second `main` landmark inside a shell that already owns one."
+              },
+              "note": {
+                "type": "string",
+                "description": "Anything else the consumer must do, e.g. set an accessible name when the host contributes its own complementary landmark."
+              }
+            }
+          },
+          "composeOnly": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["safe"],
+            "description": "Whether this layout's documented capabilities are all reachable through its public API under a `compose-only` styling policy — i.e. without a fall-through `class` or `style` on the layout root. A layout whose only route to a documented capability is a class/inline style is not usable as documented in a compose-only repo, and the engine warns about it at PLAN time rather than letting the developer discover it when a write is blocked.",
+            "properties": {
+              "safe": {
+                "type": "boolean",
+                "description": "true when every documented capability is reachable via props/slots/tokens alone."
+              },
+              "gaps": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "One line per capability that currently requires a class/style, ideally naming the tracking ticket. Shown to the agent before it commits to this layout."
+              }
+            }
+          },
+          "docs": {
+            "type": "string",
+            "description": "Optional link or repo-relative path to fuller documentation (README section, RFC, ADR)."
+          }
+        }
+      }
+    }
+  }
+}

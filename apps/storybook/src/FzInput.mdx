@@ -59,6 +59,12 @@ import { FzInput } from '@fiscozen/input'
       <td>Text label displayed above the input field. Overridden by label slot if provided.</td>
     </tr>
     <tr>
+      <td><code>truncateLabel</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Keeps the label on one line, cut with an ellipsis when it is wider than the field; a cut label shows in full in a tooltip on hover and while the input has focus. The required asterisk stays visible past the cut. Fields side by side stay aligned whatever their labels' length. Has no effect on the <code>label</code> slot.</td>
+    </tr>
+    <tr>
       <td><code>environment</code></td>
       <td><code>'backoffice' | 'frontoffice'</code></td>
       <td><code>'frontoffice'</code></td>
@@ -557,6 +563,14 @@ Required inputs show an asterisk (*) next to the label and set the native requir
 
 ```vue
 <FzInput label="Email" type="email" required v-model="email" />
+```
+
+### Truncated label
+
+With `truncateLabel`, the label stays on one line: fields laid side by side stay aligned whatever their labels' length. A cut label shows in full in a tooltip on hover and while the input has focus; the input keeps the full label as its accessible name.
+
+```vue
+<FzInput label="Data di versamento dell'imposta sostitutiva" truncateLabel v-model="date" />
 ```
 
 ### Disabled

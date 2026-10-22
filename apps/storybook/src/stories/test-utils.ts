@@ -5,7 +5,7 @@
  * consistent test behavior across stories per testing-standards.mdc.
  */
 
-import { expect, within, waitFor } from 'storybook/test'
+import { expect, within, waitFor, userEvent } from 'storybook/test'
 
 // ============================================
 // TYPE DEFINITIONS
@@ -215,3 +215,63 @@ export async function verifyDisabledState(
   await expect(button).toBeDisabled()
 }
 
+// ============================================
+// TRUNCATED LABEL HELPERS
+// ============================================
+
+/** A label too long for a 200px field, shared by the `truncateLabel` stories. */
+export const LONG_FIELD_LABEL = 'Data di versamento dell’imposta sostitutiva'
+
+/**
+ * Verifies a row of fields rendered with `truncateLabel`, one of which carries
+ * {@link LONG_FIELD_LABEL}: the controls stay aligned, the long field keeps its
+ * full label as accessible name, and the cut label shows in full in a tooltip on
+ * hover and while the field has keyboard focus, until Escape dismisses it.
+ *
+ * @param controls - the row's controls, in order
+ * @param longControl - the control whose label is {@link LONG_FIELD_LABEL}, first tab stop of the canvas
+ */
+export async function verifyTruncatedLabelRow(
+  { canvasElement, step }: Pick<PlayFunctionContext, 'canvasElement' | 'step'>,
+  controls: HTMLElement[],
+  longControl: HTMLElement
+) {
+  const canvas = within(canvasElement)
+
+  await step('the controls stay aligned and share the row equally', async () => {
+    const boxes = controls.map((control) => control.getBoundingClientRect())
+    await expect(new Set(boxes.map((box) => Math.round(box.top))).size).toBe(1)
+    await expect(new Set(boxes.map((box) => Math.round(box.width))).size).toBe(1)
+  })
+
+  await step('the field keeps its full label as accessible name', async () => {
+    const labelId = longControl.getAttribute('aria-labelledby') ?? ''
+    await expect(canvasElement.querySelector(`[id="${labelId}"]`)).toHaveTextContent(LONG_FIELD_LABEL)
+  })
+
+  await step('hovering the cut label shows it in full', async () => {
+    await userEvent.hover(canvas.getByText(LONG_FIELD_LABEL))
+    await waitFor(() =>
+      expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent(LONG_FIELD_LABEL)
+    )
+  })
+
+  await step('tabbing into the field shows the cut label in full', async () => {
+    await userEvent.unhover(canvas.getByText(LONG_FIELD_LABEL))
+    await waitFor(() => expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull())
+
+    await userEvent.tab()
+
+    await expect(longControl).toHaveFocus()
+    await waitFor(() =>
+      expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent(LONG_FIELD_LABEL)
+    )
+  })
+
+  await step('Escape hides the label tooltip and keeps focus on the field', async () => {
+    await userEvent.keyboard('{Escape}')
+
+    await waitFor(() => expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toBeNull())
+    await expect(longControl).toHaveFocus()
+  })
+}

@@ -30,3 +30,39 @@ import type { InjectionKey, Ref } from 'vue'
 export const FZ_BOTTOM_BAR_TARGET = '@fiscozen/layout/bottomBarTarget' as unknown as InjectionKey<
   Readonly<Ref<HTMLElement | null>>
 >
+
+/**
+ * Injection key for the page scroll container.
+ *
+ * `FzFrameTemplate` owns the app's scroll container — under
+ * `contentHeight="scroll"` the window no longer scrolls, the shell's content
+ * region does — and `provide()`s that region's element through this key, so app
+ * code can scroll the page without knowing the shell's DOM (RFC
+ * `frame-shell-promotion.md` §6). Same pattern, and the same reasoning, as
+ * `FZ_BOTTOM_BAR_TARGET` above — including the namespaced string rather than a
+ * module-scope `Symbol`.
+ *
+ * Consumer side — scroll the page to the top on a route change:
+ *
+ * ```ts
+ * import { inject } from 'vue'
+ * import { FZ_PAGE_SCROLL_TARGET } from '@fiscozen/layout'
+ *
+ * const pageScroll = inject(FZ_PAGE_SCROLL_TARGET, null)
+ * // pageScroll?.value?.scrollTo({ top: 0 })
+ * ```
+ *
+ * The ref is `null` until the region has mounted, and when no shell that owns a
+ * scroll container is an ancestor — guard it, so a miss is an explicit,
+ * debuggable one rather than a silently ineffective scroll.
+ *
+ * **The element is provided in both height contracts, but it only *scrolls*
+ * under `contentHeight="scroll"`.** Under `bounded` the region clips and hands
+ * its height to the page layout inside it, which scrolls its own regions; the
+ * provided element's `scrollTop` stays 0 and writing to it does nothing. That is
+ * the correct behaviour — a bounded page has no single page scroll — but it is
+ * worth knowing before debugging a scroll that "does not work".
+ */
+export const FZ_PAGE_SCROLL_TARGET = '@fiscozen/layout/pageScrollTarget' as unknown as InjectionKey<
+  Readonly<Ref<HTMLElement | null>>
+>

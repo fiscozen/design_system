@@ -66,6 +66,7 @@ const amount = ref<number | undefined>(undefined)
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `label` | `string` | - | Text label displayed above the input field. Overridden by label slot if provided. |
+| `truncateLabel` | `boolean` | `false` | Keeps the label on one line, cut with an ellipsis when it is wider than the field; a cut label shows in full in a tooltip on hover and while the input has focus. The required asterisk stays visible past the cut. Has no effect on the label slot. |
 | `environment` | `'backoffice' \| 'frontoffice'` | `'frontoffice'` | Environment determining input size and styling |
 | `size` | `'sm' \| 'md' \| 'lg'` | - | **Deprecated**: Use `environment` prop instead. Size values map to environments: sm/md → backoffice, lg → frontoffice |
 | `placeholder` | `string` | - | Placeholder text shown when input is empty. Behavior differs based on variant. |

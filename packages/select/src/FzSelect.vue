@@ -1140,6 +1140,7 @@ defineExpose({
         :openerId
         :readonly
         :required
+        :truncate="truncateLabel"
       />
     </template>
 

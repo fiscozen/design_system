@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/collapse",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Design System Collapse and Accordion Components",
   "scripts": {
     "coverage": "vitest run --coverage",

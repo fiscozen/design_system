@@ -1,7 +1,7 @@
 <template>
   <FzContainer class="fz-appointments" alignItems="center" gap="base">
     <!-- Header with date navigation -->
-    <FzContainer horizontal gap="base" class="w-full">
+    <FzContainer v-if="hasAnyAvailability" horizontal gap="base" class="w-full">
       <FzIconButton
         iconName="angle-left"
         variant="invisible"
@@ -22,7 +22,7 @@
     </FzContainer>
 
     <!-- Info text -->
-    <p v-if="infoText" class="text-grey-500">
+    <p v-if="infoText && hasAnyAvailability" class="text-grey-500">
       {{ infoText }}
     </p>
 
@@ -88,6 +88,7 @@ const {
   formattedDate,
   infoText,
   hasAvailableSlots,
+  hasAnyAvailability,
   selectedSlotValue,
   radioGroupName,
   alertTitle,

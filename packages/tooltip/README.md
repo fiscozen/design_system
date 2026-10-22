@@ -125,6 +125,8 @@ import { FzButton } from '@fiscozen/button'
 | `withIcon` | `boolean` | `false` | Display status-appropriate icon in tooltip content |
 | `ariaLabel` | `string` | `undefined` | Accessible label for the trigger element |
 | `interactive` | `boolean \| 'auto'` | `'auto'` | Controls keyboard accessibility: `undefined`/`'auto'` for auto-detection (FzButton, FzLink), `true` to force interactive, `false` to force non-interactive |
+| `truncate` | `boolean` | `false` | Shows the content on one line, cut with an ellipsis when it does not fit, and opens the tooltip only while the content is cut. The trigger takes no tab stop and no `aria-describedby`: the full content is already in the DOM. In a flex layout, flex ancestors need `min-w-0` for the content to be cut |
+| `externalFocus` | `boolean` | `false` | Whether focus sits on an element the trigger stands for but does not contain, such as the control a label names. While `true`, the tooltip behaves as if the trigger had focus: it opens (with `truncate`, only while the content is cut), stays open when the pointer leaves, and closes on `Escape`. `FzTruncatedLabel` sets it for you |
 | `_forceOpenForDesignReview` | `boolean` | `false` | ⚠️ **FOR DESIGN REVIEW ONLY** - Forces tooltip to remain visible. **DO NOT USE IN PRODUCTION** |
 
 ### Slots
@@ -133,6 +135,28 @@ import { FzButton } from '@fiscozen/button'
 |------|-------------|
 | `default` | Trigger element content (required) |
 | `text` | Tooltip content - supports rich HTML content |
+
+### FzTruncatedLabel
+
+A field label kept on one line, for form components laid side by side. The label is cut with an ellipsis when it is wider than the field and shows in full in a tooltip on hover and while the labelled control has focus. The `<label>` keeps the full text, so the control keeps it as its accessible name. An uncut label never widens the field. Text styles go on the component: the label, the ellipsis and the asterisk inherit them.
+
+```vue
+<FzTruncatedLabel
+  class="text-base text-grey-500"
+  label="Data di versamento dell’imposta sostitutiva"
+  labelId="payment-date-label"
+  controlId="payment-date"
+  required
+/>
+<input id="payment-date" aria-labelledby="payment-date-label" required />
+```
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | - | Text of the label (required) |
+| `labelId` | `string` | - | `id` of the `<label>` element, for the control's `aria-labelledby` (required) |
+| `controlId` | `string` | - | `id` of the control the label names, rendered as the label's `for` (required) |
+| `required` | `boolean` | `false` | Appends a visual asterisk outside the cut. Hidden from assistive technology: mark the control itself as required |
 
 ### Status Types
 
@@ -239,6 +263,8 @@ Without proper interactive handling, the tooltip wrapper adds `tabindex="0"` for
 | `Escape` | Hide tooltip while maintaining focus |
 
 **Note**: When the wrapped element is interactive (button/link), its native keyboard behavior (Enter/Space activation) continues to work normally.
+
+**Note**: With `externalFocus`, focus sits outside the trigger: `Escape` pressed anywhere hides the tooltip while `externalFocus` is `true`.
 
 ## Design Review in Storybook
 

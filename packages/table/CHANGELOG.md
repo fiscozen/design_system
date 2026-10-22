@@ -1,5 +1,79 @@
 # @fiscozen/table
 
+## 2.1.26
+
+### Patch Changes
+
+- Updated dependencies [65d8e36]
+- Updated dependencies [65d8e36]
+  - @fiscozen/input@3.6.0
+  - @fiscozen/composables@1.1.6
+  - @fiscozen/checkbox@3.0.18
+  - @fiscozen/dialog@0.1.42
+  - @fiscozen/dropdown@1.0.18
+  - @fiscozen/radio@3.1.4
+
+## 2.1.25
+
+### Patch Changes
+
+- Updated dependencies [6efe84a]
+  - @fiscozen/input@3.5.8
+
+## 2.1.24
+
+### Patch Changes
+
+- a3f33a0: `FzCheckboxGroup`, `FzCheckboxCard`, `FzUpload` and `FzTable` declare their `defineModel` array and object defaults as factories, so every instance starts from its own empty value instead of one shared across instances, and they type-check against Vue 3.5.39+.
+- Updated dependencies [a3f33a0]
+  - @fiscozen/checkbox@3.0.17
+
+## 2.1.23
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+  - @fiscozen/dialog@0.1.41
+  - @fiscozen/dropdown@1.0.17
+  - @fiscozen/input@3.5.7
+  - @fiscozen/checkbox@3.0.16
+  - @fiscozen/radio@3.1.3
+
+## 2.1.22
+
+### Patch Changes
+
+- Updated dependencies [fbf556a]
+  - @fiscozen/composables@1.1.5
+  - @fiscozen/checkbox@3.0.15
+  - @fiscozen/dialog@0.1.40
+  - @fiscozen/dropdown@1.0.16
+  - @fiscozen/input@3.5.6
+  - @fiscozen/radio@3.1.2
+
+## 2.1.21
+
+### Patch Changes
+
+- Updated dependencies [92c1d3a]
+  - @fiscozen/radio@3.1.1
+  - @fiscozen/checkbox@3.0.14
+  - @fiscozen/input@3.5.5
+  - @fiscozen/button@3.1.3
+  - @fiscozen/composables@1.1.4
+  - @fiscozen/dialog@0.1.39
+  - @fiscozen/progress@4.0.2
+  - @fiscozen/dropdown@1.0.15
+  - @fiscozen/actionlist@0.1.17
+
+## 2.1.20
+
+### Patch Changes
+
+- Updated dependencies [4ccab53]
+  - @fiscozen/radio@3.1.0
+
 ## 2.1.19
 
 ### Patch Changes

@@ -1,5 +1,57 @@
 # @fiscozen/radio
 
+## 3.1.4
+
+### Patch Changes
+
+- Updated dependencies [65d8e36]
+- Updated dependencies [65d8e36]
+  - @fiscozen/composables@1.1.6
+  - @fiscozen/tooltip@3.1.0
+
+## 3.1.3
+
+### Patch Changes
+
+- @fiscozen/alert@3.0.7
+- @fiscozen/tooltip@3.0.9
+
+## 3.1.2
+
+### Patch Changes
+
+- Updated dependencies [fbf556a]
+  - @fiscozen/composables@1.1.5
+  - @fiscozen/tooltip@3.0.9
+
+## 3.1.1
+
+### Patch Changes
+
+- 92c1d3a: Paragraph line-heights no longer need `!important`. The card title and subtitle (`FzRadioCard`, `FzCheckboxCard`), the avatar title and subtitle, and the alert description all set their line-height with `!leading-[…]`. On the four that carry `text-sm`, that `!` was a workaround for `@fiscozen/style`'s `p.text-sm` default, which weighed (0,1,1) and beat any plain `leading-*` utility; now that the default is `p:where(.text-sm)` at (0,0,1), the utility wins on its own. The other four never needed it — they sit on paragraphs without `text-sm`, where only the element default competed and a plain utility already won — and were cargo-culted alongside.
+
+  Rendered line-heights are unchanged: 20px on the titles and the alert description, 16px on the subtitles, measured on every one of the eight sites before and after. What changes is that a consumer can now override them — `!important` previously made these line-heights unreachable from the outside.
+
+  These packages don't declare `@fiscozen/style` as a dependency; the consuming app supplies the stylesheet. Upgrading them without also upgrading `@fiscozen/style` to the release that carries the `p:where(.text-sm)` fix will render the `text-sm` subtitles at 18px instead of 16px.
+
+- Updated dependencies [92c1d3a]
+  - @fiscozen/alert@3.0.6
+  - @fiscozen/composables@1.1.4
+  - @fiscozen/tooltip@3.0.8
+
+## 3.1.0
+
+### Minor Changes
+
+- 4ccab53: feat(radio): add FzRadioIconTile, a selectable icon-only tile (LIB-2928)
+
+  A single-select tile whose whole content is one icon: full height, full column width, icon centred, colour by accent. It fills the gap between `FzIconButton` (fixed, toolbar-sized) and `FzRadioCard` (a card with image, title and subtitle), so consumers no longer have to reshape `FzButton` from the outside with `!h-[82px] !w-full !rounded !border-1` plus per-tone tints.
+
+  It is a native radio rather than a toggle button: the selected state reaches assistive technology through `:checked` instead of a hand-maintained `aria-pressed`, and inside `FzRadioGroup` it inherits `role="radiogroup"`, a shared `name` and native arrow-key navigation.
+  - `label` is required by the type and rendered visually hidden — colour and icon alone must never be the only way to tell the options apart.
+  - `accent` (`neutral` | `success` | `warning` | `error`) maps onto the `@fiscozen/style` semantic token families and stays independent from the radio family's validation `tone`, which `FzRadioGroup` spreads to every child.
+  - Selection shows on three vectors: native checked state, 1px → 2px border, accent tint.
+
 ## 3.0.13
 
 ### Patch Changes

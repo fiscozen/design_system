@@ -1,0 +1,153 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Documentation/Overlay/FzPopover" />
+
+# @fiscozen/popover
+
+Floating content that prefers the platform. `FzPopover` positions arbitrary content against an anchor and, where the browser allows, does it with **no JavaScript at all**: a native popover in the top layer, placed with CSS anchor positioning. Where the browser can't, it falls back to `FzFloating` — the measured-rect engine the design system already ships.
+
+It is the intended replacement for reaching for `FzFloating` directly.
+
+## Features
+
+- **Top layer, no clipping.** In the CSS engine the content is a native `[popover]`, so an ancestor's `overflow` can never cut it off and there is no z-index to arbitrate.
+- **Placement in CSS.** `position-anchor` + `position-area` keep the content glued to its anchor across scroll and resize without a line of JS, and flip it when the chosen side has no room.
+- **Dismissal included.** Light dismiss and Esc come from the platform in the CSS engine, and from `useClickOutside` / `useKeyDown` in the fallback. Either way the consumer writes none of it.
+- **One API, two engines.** The engine is picked per instance by feature detection; callers only describe what they want.
+- **`FzFloating`'s vocabulary.** The same 12 positions, so migrating an existing call site is a copy of the prop.
+
+## Which engine runs
+
+The CSS engine needs three things — the Popover API, CSS anchor positioning (`anchor-name` / `position-anchor`) and `position-area`. The JS engine takes over when:
+
+- any of the three is missing (anchor positioning only reached Baseline in 2026, so older Safari and Firefox are still out);
+- the placement is an `auto` one (`auto`, `auto-vertical`, and their `-start` / `-end` variants) — "the side with the most available space" needs measuring, and CSS only abandons a placement that *overflows*;
+- `forceFallback` is set, which exists for debugging and for visual tests that need to exercise the fallback.
+
+The fallback is meant to die. When anchor positioning is everywhere, the second engine goes and `FzFloating` goes with it.
+
+## Installation
+
+```bash
+npm install @fiscozen/popover
+```
+
+## Basic Usage
+
+The popover attaches no click handler of its own — bind `toggle` (or `open` / `close`) from the `opener` slot. That way an opener that is not a button keeps working.
+
+```vue
+<script setup>
+import { FzPopover } from '@fiscozen/popover'
+import { FzButton } from '@fiscozen/button'
+</script>
+
+<template>
+  <FzPopover position="bottom-end">
+    <template #opener="{ toggle }">
+      <FzButton @click="toggle">Azioni</FzButton>
+    </template>
+    <div class="rounded border border-grey-200 bg-core-white p-12 shadow-md">
+      <p>Contenuto del popover</p>
+    </div>
+  </FzPopover>
+</template>
+```
+
+### Controlled state
+
+`v-model:open` works in both engines, and stays in sync when the platform closes the popover on its own (Esc, click outside).
+
+```vue
+<script setup>
+import { ref } from 'vue'
+const isOpen = ref(false)
+</script>
+
+<template>
+  <FzPopover v-model:open="isOpen">
+    <template #opener="{ toggle }">
+      <FzButton @click="toggle">Apri</FzButton>
+    </template>
+    <template #default="{ close }">
+      <div class="bg-core-white p-12">
+        <FzButton @click="close">Chiudi</FzButton>
+      </div>
+    </template>
+  </FzPopover>
+</template>
+```
+
+### Anchoring somewhere else
+
+When the thing that opens the popover is not the thing it should hang off — a menu opened by a toolbar button but anchored to a table row, say — pass the element as `anchor`. It is the equivalent of `FzFloating`'s `overrideOpener`.
+
+```vue
+<FzPopover :anchor="rowElement" position="bottom-start">
+  <template #opener="{ toggle }">
+    <FzIconButton icon-name="ellipsis-vertical" @click="toggle" />
+  </template>
+  …
+</FzPopover>
+```
+
+## API Reference
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | `false` | Open state, usable as `v-model:open`. An `open` that is already true at mount renders open |
+| `position` | `FzFloatingPosition` | `'bottom-start'` | Same vocabulary as `FzFloating`. `auto` variants always take the JS engine |
+| `offset` | `number` | `4` | Gap between anchor and content, in px |
+| `matchOpenerWidth` | `boolean` | `false` | Give the content at least the anchor's width — `anchor-size()` in the CSS engine, the measured opener rect in the JS one |
+| `anchor` | `HTMLElement \| null` | `null` | Anchor to this element instead of the `opener` slot |
+| `contentClass` | `string \| string[] \| Record<string, boolean>` | `undefined` | Class applied to the content box |
+| `forceFallback` | `boolean` | `false` | Force the JS engine even where the browser could do it in CSS |
+
+### Slots
+
+| Slot | Props | Description |
+|------|-------|-------------|
+| `opener` | `isOpen`, `toggle`, `open`, `close` | The element the popover hangs off |
+| `default` | `isOpen`, `close` | The floating content |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `fzpopover:toggle` | `isOpen: boolean` | Fired after the popover opened or closed, whatever the cause |
+
+## Sizing the content
+
+`FzPopover` does **not** cap the height of its content, and that is a deliberate trade-off rather than an omission.
+
+CSS can do one of two things, not both. `position-area` plus `max-height: 100%` gives the content exactly the available space and lets it scroll — the equivalent of Floating UI's `size` middleware, for free. But a box that shrinks never *overflows*, and `position-try-fallbacks` only abandons a placement that overflows: with a cap in place, a menu near the bottom of the viewport stays squeezed into whatever slot it has instead of flipping above. Verified in Chromium 143, where a 40-item menu resolved to a 22px sliver; neither `position-try-order: most-block-size` nor a `min-height` rescues it.
+
+Flipping is the more useful half for a popover, so that is what the CSS engine does. In practice:
+
+- **Content that fits the viewport** (a handful of menu items, a small form): nothing to do.
+- **Content that may not fit** (a long option list): cap it yourself, or use the JS engine — `FzSelect` and `FzTypeahead` compute a max-height from the measured rects, which is why they sit on that engine.
+
+## Accessibility
+
+The popover manages the layer, not the semantics. What it gives you:
+
+- Esc and click-outside close it, in both engines.
+- The opener slot receives `isOpen`, so you can bind `aria-expanded` yourself.
+
+What it does **not** do yet, and you should add at the call site if your content is a menu: a `role` and an accessible name on the content, `aria-controls` on the opener, moving focus into the content on open, arrow-key navigation between items, and returning focus to the opener on close.
+
+## Testing notes
+
+Two things will bite you when writing tests around this component.
+
+**Native dismissal only answers trusted input.** `userEvent.keyboard('{Escape}')` does *not* close a native popover — light dismiss and Esc are platform behaviours reserved for real input events. In a play function, close through the opener instead, and cover Esc with a browser driver that sends real keys. In the JS engine the same synthetic event works fine, because dismissal there is our own listener.
+
+**jsdom has neither the Popover API nor `window.CSS`.** Unit tests therefore exercise the JS engine by default, which is useful — the fallback gets covered for free — but it means the CSS engine has to be either stubbed or checked in a real browser.
+
+## Learn More
+
+### Interactive Examples
+
+See the [FzPopover stories](/story/overlay-fzpopover--default) for both engines side by side, `matchOpenerWidth`, and an `auto` placement.

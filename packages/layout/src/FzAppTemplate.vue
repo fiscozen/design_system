@@ -13,16 +13,19 @@
  * Responsive frame:
  * - **Nav is persistent** and the *injected* nav owns its own responsiveness.
  *   The template only places it — a sticky **left rail** from the `desktop`
- *   breakpoint (1200px) up, a full-width **top region** below it — and does not
- *   render a nav drawer or hamburger. The frontoffice nav is `FzNavbar`
+ *   breakpoint (1200px) up, a sticky full-width **top bar** below it — and does
+ *   not render a nav drawer or hamburger. The frontoffice nav is `FzNavbar`
  *   (`@fiscozen/layout` sibling `@fiscozen/navbar`), which already renders its
  *   own responsive rail / mobile bar (hamburger + brand + notifications) and
  *   owns its menu open state; the template must not duplicate that. Rail width
  *   is a function of the injected content, never the template (RFC §4/§10).
  * - **The `aside` is the only region the template collapses.** On desktop it is
- *   a sticky right panel; below the breakpoint it becomes a **modal drawer** —
- *   `role="dialog"` + `aria-modal` + focus trap + Escape-to-close (the frontoffice
- *   support-chat overlay, which the app shell owns today, RFC §4/§6.1).
+ *   a sticky right panel; below the breakpoint it becomes a **full-screen modal
+ *   drawer** — `role="dialog"` + `aria-modal` + focus trap + Escape-to-close (the
+ *   frontoffice support-chat overlay, which the app shell owns today, RFC §4/§6.1).
+ * - **`card` chrome is a desktop shape.** Below the breakpoint the content card
+ *   collapses to a full-bleed white surface (no gutter, no rounding); see the
+ *   `chrome` prop.
  *
  * The bottom bar is placed inside the main content column so it aligns to that
  * column automatically and reserves its own space. The template `provide()`s the
@@ -84,16 +87,27 @@ const showAside = computed(
   () => props.hasAside && !!slots.aside && (isDesktop.value || asideOpen.value)
 )
 
+// The nav is persistent at both sizes, so it stays pinned at both: a sticky rail
+// on the left, a sticky bar on top. The bar's stickiness has to live *here*, on
+// the region, and cannot be delegated to the injected nav — `position: sticky`
+// is bounded by its containing block, and this region is a `shrink-0` column
+// flex item, so it is exactly as tall as the nav inside it. A sticky child would
+// have zero travel and would scroll away with the region, silently doing nothing.
 const navClass = computed(() =>
   isDesktop.value
     ? 'fz-app-template__nav--rail sticky top-0 h-dvh shrink-0 overflow-y-auto'
-    : 'fz-app-template__nav--bar w-full shrink-0'
+    : 'fz-app-template__nav--bar sticky top-0 z-10 w-full shrink-0'
 )
 
+// Below the breakpoint the aside takes the whole viewport rather than sliding in
+// as a partial sheet: its content (the frontoffice support chat) is a working
+// surface with tabs, a transcript and a composer, and a 360px column leaves the
+// composer unusable on a phone. Full-bleed also means no visible edge, so the
+// drawer needs neither a max-width nor a shadow to separate it from the page.
 const asideClass = computed(() =>
   isDesktop.value
     ? 'fz-app-template__aside--panel sticky top-0 h-dvh shrink-0 overflow-y-auto'
-    : 'fz-app-template__aside--drawer fixed inset-y-0 right-0 z-30 w-[360px] max-w-[85vw] overflow-y-auto bg-core-white shadow-xl'
+    : 'fz-app-template__aside--drawer fixed inset-0 z-30 w-full overflow-y-auto bg-core-white'
 )
 
 const contentWidthClass = computed(() => {
@@ -116,18 +130,40 @@ const contentWidthClass = computed(() => {
 // room to center: a margin-based gutter would collapse to zero and no background
 // would show beside the content. Padding guarantees the gutter; `mx-auto` + the
 // max-width still widen it once the row is wide enough. `flat` is full-bleed.
+//
+// The gutter is desktop-only: below the breakpoint the card collapses to
+// full-bleed (see contentClass), so there is nothing to detach from the edges.
 const mainClass = computed(() => [
   'fz-app-template__main flex-1 overflow-x-clip',
-  props.chrome === 'card' ? 'fz-app-template__main--card p-16' : 'fz-app-template__main--flat'
+  props.chrome === 'card'
+    ? ['fz-app-template__main--card', isDesktop.value ? 'p-16' : '']
+    : 'fz-app-template__main--flat'
 ])
 
+// `card` chrome is a *desktop* shape. On a phone there is no room to spend on a
+// grey gutter, and a rounded surface floating inside one reads as a framed box
+// rather than as the page — so below the `desktop` breakpoint the card keeps its
+// white surface but goes full-bleed: no gutter and no rounding (LIB-2718).
+//
+// Only the *horizontal* inset narrows with the viewport, 24px down to 16px: it is
+// buying back width the content needs. The vertical padding is 24px at every
+// size, because it separates the content from the chrome above and below it and
+// that separation does not get less necessary on a smaller screen.
+//
+// `contentWidth` is the card's reading measure, so it is scoped to the card's own
+// shape: between the cap and the `desktop` breakpoint the mobile shape is in
+// force, and a cap there strands a square-cornered white surface in a grey gutter
+// while the nav bar beside it runs edge to edge.
 const contentClass = computed(() => [
   'fz-app-template__content mx-auto flex w-full flex-1 flex-col',
-  contentWidthClass.value,
+  isDesktop.value ? contentWidthClass.value : '',
   // `flex-1` fills the (padded) main region, so a short page shows a full card,
   // not a stub floating in grey.
   props.chrome === 'card'
-    ? 'fz-app-template__content--card rounded-lg bg-core-white p-24'
+    ? [
+        'fz-app-template__content--card bg-core-white py-24',
+        isDesktop.value ? 'rounded-lg px-24' : 'px-16'
+      ]
     : 'fz-app-template__content--flat'
 ])
 
@@ -138,9 +174,13 @@ const contentClass = computed(() => [
 // width where the content card stops reaching its max-width — the bottom-bar ADR
 // D2 alignment invariant. No vertical padding: the bar stays pinned to the
 // bottom (main's `pb-16` already provides the gap above it).
+//
+// Mirrors the gutter's desktop-only scope: below the breakpoint the content card
+// is full-bleed, so an inset here would break the same edge alignment it exists
+// to preserve.
 const bottomBarClass = computed(() => [
   'fz-app-template__bottom-bar',
-  props.chrome === 'card' ? 'px-16' : ''
+  props.chrome === 'card' && isDesktop.value ? 'px-16' : ''
 ])
 
 // -- Bottom-bar teleport target (provide) -------------------------------------
@@ -282,9 +322,10 @@ onBeforeUnmount(() => {
 /* Directional safe-area: each sticky/overlay region pads only the edge(s) it
    can bleed under, so a region's background reaches the device edge while its
    content stays clear of notches / rounded corners / home indicators. Insets
-   resolve to 0 where the platform does not report them. The bottom bar owns its
-   own bottom inset (see FzLayoutBottomBar); the nav owns its own insets on
-   mobile (the injected nav, e.g. FzNavbar `respectSafeArea`). */
+   resolve to 0 where the platform does not report them. The bottom-bar and nav
+   regions paint no surface, so their content owns the insets: the bar content
+   pads the bottom one (see FzLayoutBottomBar), the injected nav its own on
+   mobile (e.g. FzNavbar `respectSafeArea`). */
 .fz-app-template__header {
   padding-top: env(safe-area-inset-top, 0px);
 }
@@ -297,9 +338,33 @@ onBeforeUnmount(() => {
   padding-right: env(safe-area-inset-right, 0px);
 }
 
+/* The drawer covers the whole viewport, so it can bleed under every edge — it
+   pads all four, unlike the desktop panel which only meets the right one. */
 .fz-app-template__aside--drawer {
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
   padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* The drawer is opaque and full-bleed, so without motion it replaces the page
+   between two frames and the user has to re-read the screen to find out what
+   happened. Entering from the right edge it is docked to says where it came
+   from and that the page is still behind it. Entry only: closing is a tap on a
+   control already under the user's eye, and an exit animation delays the page
+   they asked to get back to. */
+@media (prefers-reduced-motion: no-preference) {
+  .fz-app-template__aside--drawer {
+    animation: fz-app-template-drawer-in 300ms ease-out;
+  }
+}
+
+@keyframes fz-app-template-drawer-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 </style>

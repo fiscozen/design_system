@@ -142,6 +142,62 @@ describe('useFloating', () => {
     })
   })
 
+  // The opener spans x 100..200 and y 100..140; the content is 200x100. `left` is
+  // written to an element that keeps its own `margin-left`, so the gap between
+  // the two is that margin and the anchor must not add it a second time.
+  describe('right positions spend the content margin once', () => {
+    beforeEach(() => {
+      mockElement.style.marginLeft = '16px'
+    })
+
+    it('anchors right-start at the opener edge, top aligned', async () => {
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('right-start'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      expect(floating.float.position.x).toBe(200)
+      expect(floating.float.position.y).toBe(100)
+    })
+
+    it('anchors right at the opener edge, vertically centred', async () => {
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('right'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      expect(floating.float.position.x).toBe(200)
+      // Opener centre 120, less half the content's 100px height.
+      expect(floating.float.position.y).toBe(70)
+    })
+
+    it('anchors right-end at the opener edge, bottom aligned', async () => {
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('right-end'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+
+      expect(floating.float.position.x).toBe(200)
+      // Opener bottom 140, less the content's 100px height.
+      expect(floating.float.position.y).toBe(40)
+    })
+  })
+
   describe('auto positioning', () => {
     it('should resolve auto position based on available space', async () => {
       const args = toRefs({

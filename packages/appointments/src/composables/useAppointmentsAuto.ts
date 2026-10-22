@@ -57,6 +57,9 @@ export function useAppointmentsAuto({
     return isValid(parsed) ? parsed : null;
   });
 
+  // Whether any day at all can carry slots
+  const hasAnyAvailability = computed(() => props.slotCount > 0);
+
   // Current date being viewed
   const currentDate = ref<Date>(startDateAsDate.value);
 
@@ -73,6 +76,7 @@ export function useAppointmentsAuto({
   } = useAppointmentsGeneric({
     props,
     currentDate,
+    hasAnyAvailability,
     emit,
   });
 
@@ -341,6 +345,7 @@ export function useAppointmentsAuto({
     formattedDate,
     infoText,
     hasAvailableSlots,
+    hasAnyAvailability,
     selectedSlotValue,
     radioGroupName,
     alertTitle,

@@ -40,7 +40,9 @@ expose that landmark twice.
 The sticky bottom action-bar region. Placed by a template inside the main
 content column, it `position: sticky`s to the viewport bottom while the page
 scrolls, reserves its own height in the flow (so an empty bar collapses and no
-manual bottom-padding is needed), and pads the bottom device safe-area inset.
+manual bottom-padding is needed). It paints no background and pads no
+safe-area inset: the bar content paints the surface, so it pads
+`env(safe-area-inset-bottom)` itself and its background reaches the device edge.
 The container is `pointer-events: none` so taps pass through the empty gutters;
 its direct children are interactive again. It takes no props and exposes its
 root element as `el` so a template can use it as the bottom-bar teleport target.
@@ -184,7 +186,11 @@ complementary `aside`, an optional sticky bottom action bar and an optional
 rail and the aside a sticky right panel — their widths follow the **injected**
 content, never the template. The **nav is persistent** (a top region on mobile);
 the injected nav — e.g. [`FzNavbar`](../navbar) — owns its own responsive
-collapse and hamburger, so the template renders no nav drawer. Only the
+collapse and hamburger, so the template renders no nav drawer. Below the
+breakpoint the nav region is `sticky` at `z-10`, and a sticky box is a stacking
+context whatever its z-index: an overlay the injected nav opens (a full-screen
+menu) cannot rise above the later `z-10` chrome from inside it, so teleport it to
+`body` at the drawer tier (`z-30`). Only the
 **aside** collapses below the breakpoint, into a modal drawer (`role="dialog"` +
 `aria-modal` + focus trap + Escape-to-close). Owns a full-height root and applies
 directional safe-area insets to its sticky chrome.
@@ -221,7 +227,8 @@ Slots: `nav`, `header`, default (content), `aside`, `bottomBar`, `footer`. The
 `FZ_BOTTOM_BAR_TARGET`, so a deep page component can render bar content at the
 shell level without the app owning a magic DOM id. The template owns the bar's
 geometry (it aligns to the content column automatically); the page owns the
-content. Guard the `null` case — it means no `FzAppTemplate` ancestor.
+content, including its bottom safe-area inset (see `FzLayoutBottomBar`). Guard
+the `null` case — it means no `FzAppTemplate` ancestor.
 
 ```ts
 import { inject } from 'vue'
@@ -233,6 +240,133 @@ const bottomBarTarget = inject(FZ_BOTTOM_BAR_TARGET, null)
 
 See [`docs/RFC/layout/bottom-bar-adr.md`](../../docs/RFC/layout/bottom-bar-adr.md)
 for the decision record.
+
+### `FzFrameTemplate`
+
+The **backoffice application frame**: a persistent icon `nav` rail, a slim
+app-level `header` toolbar, the page, and an optional 400px `aside` holding tools
+available everywhere. Page layouts nest *inside* the default slot.
+
+**Its reason for existing is the height contract, not the chrome.** Every other
+shell here is `min-h-dvh` + document scroll — an ancestor with an *indefinite*
+height, in which a `fills-parent` layout ([`FzThreeColumnsTemplate`](#page-templates))
+collapses to zero and never scrolls its regions. This shell inverts the model: the
+root is `h-dvh` and **clips**, and `contentHeight` picks which contract the content
+region offers.
+
+| `contentHeight` | The region | For |
+| --- | --- | --- |
+| `scroll` *(default)* | is the app's **single scroll container** — document scroll moves from the window into it | a page that grows and scrolls as one: `FzListTemplate`, `FzDetailTemplate`, any page written against document scroll |
+| `bounded` | has a **definite height and clips** | a page that fills the frame and scrolls its own regions: `FzThreeColumnsTemplate` |
+
+Because the switch is per page, a migration is incremental: a page opts into
+`bounded` when it is ported, and every other page is untouched.
+
+The frame is a column below `lg` (1024px) and a row at and above it, in CSS. `lg`
+rather than the `desktop` (1200px) breakpoint `FzAppTemplate` uses, because the
+*injected nav* switches at `lg`: kept in a left column past that point,
+[`FzNavbar`](../navbar)'s compact bar shrink-wraps to a stub.
+
+| Prop            | Type                          | Default    | Description                                                        |
+| --------------- | ----------------------------- | ---------- | ------------------------------------------------------------------ |
+| `contentHeight` | `'scroll' \| 'bounded'`       | `'scroll'` | Height contract handed to the content region (see above).          |
+| `chrome`        | `'card' \| 'flat'`            | `'card'`   | `card` = the inset white surface; `flat` = full-bleed.             |
+| `background`    | `'page' \| 'transparent'`     | `'page'`   | Page background behind the chrome.                                 |
+| `hasAside`      | `boolean`                     | `false`    | Render the tools panel region.                                     |
+| `navLabel`      | `string`                      | —          | Accessible name for the `<nav>` landmark.                          |
+| `asideLabel`    | `string`                      | —          | Accessible name for the aside's `complementary` landmark.          |
+
+Slots: `nav`, `header`, default (the page), `aside`. The chrome slots receive
+`{ isDesktop, asideOpen, toggleAside }`; the panel's open state is
+`v-model:asideOpen`.
+
+`chrome` is deliberately **orthogonal** to `contentHeight`, not one "is migrated"
+flag: a page ported to `FzListTemplate` still scrolls with the region (`scroll`)
+but should let the frame own its container (`card`). A page that draws its own
+containers stays `flat`, or two white boxes stack with a strip of page background
+between them.
+
+```vue
+<template>
+  <FzFrameTemplate
+    v-model:aside-open="toolsOpen"
+    :content-height="route.meta.contentHeight ?? 'scroll'"
+    :chrome="route.meta.chrome ?? 'flat'"
+    has-aside
+    nav-label="Navigazione principale"
+    aside-label="Strumenti"
+  >
+    <template #nav><AppNavigation /></template>
+    <template #header="{ asideOpen, toggleAside }">
+      <FrameToolbar :aside-open="asideOpen" @toggle-tools="toggleAside()" />
+    </template>
+    <RouterView />
+    <template #aside="{ toggleAside }">
+      <ToolsPanel @close="toggleAside(false)" />
+    </template>
+  </FzFrameTemplate>
+</template>
+```
+
+The tools panel is a **sibling of the page**, not something each page renders, so
+whatever is mounted in it keeps its state across navigation with no global store —
+and it is hidden with `v-show` rather than unmounted, so it keeps that state
+across close/open too.
+
+#### Page scroll contract (`FZ_PAGE_SCROLL_TARGET`)
+
+Under `contentHeight="scroll"` the **window no longer scrolls**: the content
+region does. So `window.scrollTo(0, 0)` becomes a no-op, and browser scroll
+restoration on back/forward — which only ever restores the document scroller —
+stops reaching the page. The shell `provide()`s the region element so the app can
+scroll the page and wire its router's `scrollBehavior` against it. Guard the
+`null` case: it means no shell ancestor owning a scroll container.
+
+```ts
+import { inject } from 'vue'
+import { FZ_PAGE_SCROLL_TARGET } from '@fiscozen/layout'
+
+const pageScroll = inject(FZ_PAGE_SCROLL_TARGET, null)
+// pageScroll?.value?.scrollTo({ top: 0 })
+```
+
+The element is provided under both contracts but only *scrolls* under `scroll`:
+under `bounded` the region clips and the nested layout scrolls its own regions, so
+its `scrollTop` stays 0. `scrollIntoView` call sites are unaffected either way —
+they walk to the nearest scrollable ancestor.
+
+#### A note on Tailwind Preflight
+
+This shell is deliberately **independent of Tailwind's Preflight**, and anything
+added to it must stay that way: it states `border-solid` and `box-border`
+explicitly rather than relying on the reset. The backoffice scopes Preflight to a
+`.twp` class, and putting that class on an ancestor of the page slot would apply
+the reset to hundreds of legacy components at once. The app puts `twp` on its own
+slot content instead.
+
+See [`docs/RFC/layout/frame-shell-promotion.md`](../../docs/RFC/layout/frame-shell-promotion.md)
+for the decision record.
+
+## Layout manifest (`layouts.json`)
+
+Alongside the components, this package publishes
+[`layouts.json`](./layouts.json): a machine-readable description of every layout
+it exports — what page shape each one is for, which it is confused with, how it
+establishes its height, which hosts it is verified to nest inside, and which of
+its capabilities are unreachable under a compose-only styling policy.
+
+Repos governed by the **agentic-design** plugin read it at session start to
+answer the first question of any design implementation — *which layout should
+this page use?* — so a layout added here becomes selectable across the org with
+no change in any consuming repo.
+
+Its contract is the JSON Schema in
+[`ds-layouts.schema.json`](./ds-layouts.schema.json), which `layouts.json`
+references as its `$schema`. `src/__tests__/layouts.manifest.spec.ts` validates
+the manifest against it, and also holds the manifest to parity with `src/index.ts`
+and with the `Fz…Slots` types. The plugin owns the schema; the copy here is
+verbatim so the spec can detect drift. See `CLAUDE.md` in this package before
+changing either file.
 
 ## Stability & contribution policy
 

@@ -22,7 +22,7 @@
     "postinstall": "node scripts/postinstall-playwright.cjs"
   },
   "dependencies": {
-    "@awesome.me/kit-8137893ad3": "^1.0.421",
+    "@awesome.me/kit-8137893ad3": "^1.0.430",
     "@fiscozen/action": "workspace:^",
     "@fiscozen/actionlist": "workspace:^",
     "@fiscozen/alert": "workspace:^",
@@ -53,6 +53,7 @@
     "@fiscozen/navlist": "workspace:^",
     "@fiscozen/pagination": "workspace:*",
     "@fiscozen/pdf-viewer": "workspace:^",
+    "@fiscozen/popover": "workspace:*",
     "@fiscozen/progress": "workspace:^",
     "@fiscozen/radio": "workspace:^",
     "@fiscozen/select": "workspace:^",
@@ -62,6 +63,7 @@
     "@fiscozen/tab": "workspace:^",
     "@fiscozen/table": "workspace:^",
     "@fiscozen/textarea": "workspace:^",
+    "@fiscozen/thumbnail": "workspace:^",
     "@fiscozen/toast": "workspace:^",
     "@fiscozen/tooltip": "workspace:^",
     "@fiscozen/typeahead": "workspace:^",

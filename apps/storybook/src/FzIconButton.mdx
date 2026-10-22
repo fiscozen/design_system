@@ -9,8 +9,9 @@ Icon-only button component with notification badge support. Ideal for compact in
 ## Features
 
 - Icon-only design for compact interfaces
-- Multiple variants (primary, secondary, invisible)
+- Multiple variants (primary, secondary, invisible, danger)
 - Two environments (backoffice, frontoffice)
+- Compact mode: 20×20 control with a 44×44 touch area
 - Notification badge overlay support
 - Customizable icon variant
 - Full accessibility support
@@ -54,7 +55,7 @@ import { FzIconButton } from '@fiscozen/button'
     </tr>
     <tr>
       <td><code>variant</code></td>
-      <td><code>'primary' | 'secondary' | 'invisible'</code></td>
+      <td><code>'primary' | 'secondary' | 'invisible' | 'danger'</code></td>
       <td><code>'primary'</code></td>
       <td>Visual style variant determining colors and interactive states</td>
     </tr>
@@ -83,6 +84,12 @@ import { FzIconButton } from '@fiscozen/button'
       <td>Shows a notification badge in the top-right corner of the button</td>
     </tr>
     <tr>
+      <td><code>compact</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>20×20 box with a 12px glyph and a 44×44 touch area. Overrides <code>environment</code>; <code>invisible</code> renders as <code>secondary</code></td>
+    </tr>
+    <tr>
       <td><code>ariaLabel</code></td>
       <td><code>string</code></td>
       <td><code>undefined</code></td>
@@ -101,6 +108,7 @@ import { FzIconButton } from '@fiscozen/button'
     <FzIconButton iconName="bell" variant="primary" ariaLabel="Notifications" />
     <FzIconButton iconName="settings" variant="secondary" ariaLabel="Settings" />
     <FzIconButton iconName="trash" variant="invisible" ariaLabel="Delete" />
+    <FzIconButton iconName="trash" variant="danger" ariaLabel="Delete" />
   </div>
 </template>
 ```
@@ -148,6 +156,37 @@ import { FzIconButton } from '@fiscozen/button'
 </template>
 ```
 
+### Compact
+
+`compact` draws a 20×20 box with a 12px glyph, for a control laid over something small, such
+as the remove X on an image preview. The clickable area still extends to 44×44 (the minimum
+touch target) past the visible edge, without taking layout space: the component measures
+20×20.
+
+```vue
+<template>
+  <FzIconButton
+    compact
+    variant="secondary"
+    iconName="xmark"
+    ariaLabel="Rimuovi allegato"
+    @click="remove"
+  />
+</template>
+```
+
+The touch area overflows the box by 12px on every side, so where you place the box decides
+whether it stays whole:
+
+- **Keep the box at least 12px from the edge of any container that clips overflow**: the
+  image it sits on, a horizontally scrolling strip. Closer than that, the clipped part of the
+  touch area stops responding. For a 20px box in the corner of an image, that means 12px from
+  the top and 12px from the right.
+- **Keep two compact buttons at least 24px apart** (edge to edge), or their touch areas
+  overlap and a tap between them hits whichever comes later in the DOM.
+
+Compact mode needs a background to stay readable over an image, so `invisible` renders as
+`secondary` and logs a warning. `environment` has no effect while `compact` is on.
 
 ### With Tooltip (Recommended)
 
@@ -173,7 +212,8 @@ FzIconButton follows WCAG 2.1 AA standards and includes:
 - **Keyboard Navigation**: Full support for Enter and Space keys
 - **Disabled State**: Properly prevents click events and visual feedback when disabled
 - **Screen Reader Compatible**: Works with NVDA, JAWS, and VoiceOver
-- **Focus Indicators**: Visible focus states with 3:1 contrast ratio
+- **Focus Indicators**: In compact mode a 2px ring is drawn inside the 20px box, against the button's own fill: white on primary (4.11:1) and danger (3.77:1), blue-600 on secondary (5.93:1). At the larger sizes focus darkens the border, which stays below 3:1 against the fill on primary (1.44:1) and danger (1.76:1)
+- **Touch Target**: Compact mode keeps a 44×44 clickable area around the 20×20 box
 - **Notification Badge**: Marked as `aria-hidden="true"` to prevent screen reader announcements
 
 ### Accessibility Best Practices

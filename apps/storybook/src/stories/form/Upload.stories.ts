@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, userEvent, within, waitFor } from 'storybook/test'
-import { FzUpload } from '@fiscozen/upload'
+import { FzUpload, useFileSelect } from '@fiscozen/upload'
+import { FzIconButton } from '@fiscozen/button'
+import { FzContainer } from '@fiscozen/container'
 import { ref } from 'vue'
 
 const meta: Meta<typeof FzUpload> = {
@@ -625,6 +627,168 @@ export const EmptyState: Story = {
       const dropZone = canvasElement.querySelector('.border-dashed')
       await expect(dropZone).toBeInTheDocument()
       await expect(dropZone).toBeVisible()
+    })
+  }
+}
+
+
+// ============================================
+// OPENING THE PICKER FROM SOMEWHERE ELSE
+// ============================================
+
+/**
+ * The picker with no widget around it, through `useFileSelect`.
+ *
+ * This is the shape a chat composer needs: an icon-only clip in a toolbar, no
+ * dashed drop zone, and the picked files handed straight on. Nothing is
+ * rendered for the picker — the composable owns its own input — so there is no
+ * hidden component to mount and no DOM to reach into.
+ */
+export const ComposableTrigger: Story = {
+  render: (args) => ({
+    components: { FzContainer, FzIconButton },
+    inheritAttrs: false,
+    emits: ['update:modelValue'],
+    setup(_props, { emit }) {
+      const attached = ref<File[]>([])
+      const { open } = useFileSelect({
+        multiple: true,
+        accept: () => args.accept,
+        onSelect: (files) => {
+          attached.value = [...attached.value, ...files]
+          emit('update:modelValue', attached.value)
+        }
+      })
+      return { attached, open }
+    },
+    template: `
+      <FzContainer gap="sm">
+        <FzContainer horizontal gap="xs" alignItems="center">
+          <FzIconButton
+            iconName="paperclip"
+            variant="invisible"
+            ariaLabel="Allega un documento"
+            @click="open"
+          />
+          <p>Nessun widget di upload: solo il composable.</p>
+        </FzContainer>
+        <FzContainer gap="none">
+          <p v-for="file in attached" :key="file.name">{{ file.name }}</p>
+        </FzContainer>
+      </FzContainer>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify the trigger is the only affordance', async () => {
+      const trigger = canvas.getByRole('button', { name: /allega un documento/i })
+      await expect(trigger).toBeInTheDocument()
+      await expect(trigger).toBeVisible()
+    })
+
+    await step('Verify no upload widget is rendered', async () => {
+      await expect(canvasElement.querySelector('.border-dashed')).not.toBeInTheDocument()
+      await expect(canvas.queryByRole('button', { name: /carica/i })).not.toBeInTheDocument()
+    })
+
+    await step('Verify the trigger opens an input the composable owns', async () => {
+      // Swallow the click on the picker so no native file dialog is opened.
+      const clicked: HTMLInputElement[] = []
+      const guard = (event: Event) => {
+        const target = event.target as HTMLElement
+        if (target instanceof HTMLInputElement && target.type === 'file') {
+          event.preventDefault()
+          clicked.push(target)
+        }
+      }
+      document.addEventListener('click', guard, true)
+
+      try {
+        const trigger = canvas.getByRole('button', { name: /allega un documento/i })
+        await userEvent.click(trigger)
+
+        await waitFor(() => expect(clicked.length).toBe(1))
+        // Owned by the composable, so it lives outside the story's own markup.
+        await expect(canvasElement.contains(clicked[0])).toBe(false)
+      } finally {
+        document.removeEventListener('click', guard, true)
+      }
+    })
+  }
+}
+
+/**
+ * The widget kept, the button swapped, through the `opener` slot.
+ *
+ * Use this when the drop zone still belongs on the page and only the trigger
+ * has to change. The slot gets `open`, and everything around it — the drop
+ * zone, the file list, the model — keeps working.
+ */
+export const CustomOpener: Story = {
+  render: (args) => ({
+    components: { FzUpload, FzIconButton },
+    setup() {
+      const files = ref<File[]>([])
+      return { files, args }
+    },
+    template: `
+      <FzUpload v-bind="args" v-model="files" multiple>
+        <template #opener="{ open }">
+          <FzIconButton
+            iconName="paperclip"
+            variant="secondary"
+            ariaLabel="Allega un documento"
+            @click="open"
+          />
+        </template>
+      </FzUpload>
+    `
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Verify the custom opener replaced the default button', async () => {
+      const trigger = canvas.getByRole('button', { name: /allega un documento/i })
+      await expect(trigger).toBeInTheDocument()
+      await expect(canvas.queryByRole('button', { name: /carica/i })).not.toBeInTheDocument()
+    })
+
+    await step('Verify the drop zone is still rendered', async () => {
+      const dropZone = canvasElement.querySelector('.border-dashed')
+      await expect(dropZone).toBeInTheDocument()
+      await expect(dropZone).toBeVisible()
+    })
+
+    await step('Verify the opener opens the component own input', async () => {
+      const input = canvasElement.querySelector('input[type="file"]') as HTMLInputElement
+      await expect(input).toBeInTheDocument()
+
+      let opened = false
+      input.addEventListener('click', (event) => {
+        event.preventDefault()
+        opened = true
+      })
+
+      const trigger = canvas.getByRole('button', { name: /allega un documento/i })
+      await userEvent.click(trigger)
+
+      await waitFor(() => expect(opened).toBe(true))
+    })
+
+    await step('Verify dropping a file still fills the list', async () => {
+      const dropZone = canvasElement.querySelector('.border-dashed') as HTMLElement
+      const dataTransfer = new DataTransfer()
+      dataTransfer.items.add(new File(['content'], 'opener-drop.txt', { type: 'text/plain' }))
+
+      dropZone.dispatchEvent(
+        new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer })
+      )
+
+      await waitFor(() => {
+        const fileLinks = canvas.getAllByText('opener-drop.txt')
+        expect(fileLinks.length).toBeGreaterThan(0)
+      })
     })
   }
 }

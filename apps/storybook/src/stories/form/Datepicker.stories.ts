@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, userEvent, within, waitFor } from 'storybook/test'
 import { FzDatepicker } from '@fiscozen/datepicker'
 import { ref } from 'vue'
+import { LONG_FIELD_LABEL, verifyTruncatedLabelRow } from '../test-utils'
 
 // ============================================
 // FIXED DATES — deterministic across all runs
@@ -343,7 +344,7 @@ export const Backoffice: Story = {
 
       // Backoffice should have smaller sizing
       if (container) {
-        const inputWrapper = container.querySelector('[tabindex="0"]')
+        const inputWrapper = input.closest('.fz-input > div')
         if (inputWrapper) {
           const rect = inputWrapper.getBoundingClientRect()
           // Backoffice inputs are typically smaller (height around 32-40px)
@@ -383,7 +384,7 @@ export const Frontoffice: Story = {
 
       // Frontoffice should have larger sizing
       if (container) {
-        const inputWrapper = container.querySelector('[tabindex="0"]')
+        const inputWrapper = input.closest('.fz-input > div')
         if (inputWrapper) {
           const rect = inputWrapper.getBoundingClientRect()
           // Frontoffice inputs are typically larger (height around 48-56px)
@@ -950,7 +951,7 @@ export const ErrorState: Story = {
       await expect(container).toBeInTheDocument()
 
       // Test observable behavior: error border should have a red-ish color
-      const inputContainer = container?.querySelector('[tabindex="0"]')
+      const inputContainer = input.closest('.fz-input > div')
       if (inputContainer) {
         const styles = window.getComputedStyle(inputContainer)
         // Border should be visible (not 0)
@@ -1831,5 +1832,27 @@ export const FormNameAttribute: Story = {
       // Value may be empty (no date selected) but the key MUST be present.
       await expect(fd.has('business_start')).toBe(true)
     })
+  }
+}
+
+/**
+ * `truncateLabel` reaches the inner `FzInput` through `inputProps`: datepickers side
+ * by side stay aligned whatever their labels' length.
+ */
+export const TruncateLabel: Story = {
+  render: () => ({
+    components: { FzDatepicker },
+    setup: () => ({ LONG_FIELD_LABEL }),
+    template: `
+      <div class="flex w-[400px] gap-16">
+        <FzDatepicker class="flex-1" :inputProps="{ label: LONG_FIELD_LABEL, truncateLabel: true }" />
+        <FzDatepicker class="flex-1" :inputProps="{ label: 'Scadenza', truncateLabel: true }" />
+      </div>
+    `
+  }),
+  play: async (context) => {
+    const canvas = within(context.canvasElement)
+    const controls = canvas.getAllByRole('textbox')
+    await verifyTruncatedLabelRow(context, controls, controls[0])
   }
 }

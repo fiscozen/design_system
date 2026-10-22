@@ -29,7 +29,7 @@ export default defineConfig({
         "@fiscozen/badge",
         "@fiscozen/button",
         "@fiscozen/divider",
-        "@fiscozen/dropdown",
+        "@fiscozen/popover",
         "@fiscozen/container",
       ],
       output: {

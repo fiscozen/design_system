@@ -98,6 +98,20 @@ describe('FzIconButton', () => {
       expect(button.props('variant')).toBe('invisible')
     })
 
+    it('renders danger variant correctly', () => {
+      const wrapper = mount(FzIconButton, {
+        props: {
+          iconName: 'trash',
+          variant: 'danger',
+        },
+        global: {
+          components: { FzButton, FzIcon }
+        }
+      })
+
+      const button = wrapper.findComponent(FzButton)
+      expect(button.props('variant')).toBe('danger')
+    })
   })
 
   describe('Environment', () => {
@@ -465,6 +479,20 @@ describe('FzIconButton', () => {
   })
 
   describe('Notification Badge', () => {
+    it('applies a dark blue color for danger variant, which stands out from the red background', () => {
+      const wrapper = mount(FzIconButton, {
+        props: {
+          iconName: 'trash',
+          hasNotification: true,
+          variant: 'danger',
+        }
+      })
+
+      const badge = wrapper.find('div[aria-hidden="true"]')
+      expect(badge.classes()).toContain('bg-blue-800')
+      expect(badge.classes()).not.toContain('bg-blue-500')
+    })
+
     it('does not render badge when hasNotification is false', () => {
       const wrapper = mount(FzIconButton, {
         props: {
@@ -692,6 +720,91 @@ describe('FzIconButton', () => {
       const badge = wrapper.find('div[aria-hidden="true"]')
       expect(badge.classes()).toContain('w-8')
       expect(badge.classes()).toContain('h-8')
+    })
+  })
+
+  describe('Compact', () => {
+    it('draws the icon with the 12px glyph', () => {
+      const wrapper = mount(FzIconButton, {
+        props: { iconName: 'xmark', compact: true, variant: 'secondary' }
+      })
+
+      const icon = wrapper.findComponent(FzIcon)
+      expect(icon.props('size')).toBe('sm')
+      expect(icon.props('name')).toBe('xmark')
+    })
+
+    it('keeps the default glyph when compact is off', () => {
+      const wrapper = mount(FzIconButton, {
+        props: { iconName: 'xmark', variant: 'secondary' }
+      })
+
+      const icon = wrapper.findComponent(FzIcon)
+      expect(icon.props('size')).toBe('md')
+    })
+
+    it('passes the icon variant to the compact glyph', () => {
+      const wrapper = mount(FzIconButton, {
+        props: { iconName: 'xmark', compact: true, iconVariant: 'fas' }
+      })
+
+      expect(wrapper.findComponent(FzIcon).props('variant')).toBe('fas')
+    })
+
+    it('renders the invisible variant as secondary, so it keeps a background over images', () => {
+      const wrapper = mount(FzIconButton, {
+        props: { iconName: 'xmark', compact: true, variant: 'invisible' }
+      })
+
+      expect(wrapper.findComponent(FzButton).props('variant')).toBe('secondary')
+    })
+
+    it('warns when the invisible variant is used in compact mode', () => {
+      mount(FzIconButton, {
+        props: { iconName: 'xmark', compact: true, variant: 'invisible' }
+      })
+
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('[FzIconButton] The "invisible" variant has no background')
+      )
+    })
+
+    it('keeps the invisible variant when compact is off', () => {
+      const wrapper = mount(FzIconButton, {
+        props: { iconName: 'xmark', variant: 'invisible' }
+      })
+
+      expect(wrapper.findComponent(FzButton).props('variant')).toBe('invisible')
+      expect(console.warn).not.toHaveBeenCalled()
+    })
+
+    it('keeps a filled variant as chosen', () => {
+      const wrapper = mount(FzIconButton, {
+        props: { iconName: 'xmark', compact: true, variant: 'danger' }
+      })
+
+      expect(wrapper.findComponent(FzButton).props('variant')).toBe('danger')
+      expect(console.warn).not.toHaveBeenCalled()
+    })
+
+    it('emits click when pressed', async () => {
+      const onClick = vi.fn()
+      const wrapper = mount(FzIconButton, {
+        props: { iconName: 'xmark', compact: true, ariaLabel: 'Rimuovi allegato' },
+        attrs: { onClick }
+      })
+
+      await wrapper.find('button').trigger('click')
+
+      expect(onClick).toHaveBeenCalledTimes(1)
+    })
+
+    it('keeps the accessible name', () => {
+      const wrapper = mount(FzIconButton, {
+        props: { iconName: 'xmark', compact: true, ariaLabel: 'Rimuovi allegato' }
+      })
+
+      expect(wrapper.find('button').attributes('aria-label')).toBe('Rimuovi allegato')
     })
   })
 

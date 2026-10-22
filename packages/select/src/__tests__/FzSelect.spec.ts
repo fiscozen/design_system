@@ -733,6 +733,36 @@ describe("FzSelect", () => {
       expect(button.attributes("aria-labelledby")).toBeTruthy();
     });
 
+    describe("with truncateLabel", () => {
+      const mountTruncated = () =>
+        mount(FzSelect, {
+          props: {
+            modelValue: "",
+            label: "Data di versamento",
+            required: true,
+            truncateLabel: true,
+            options: [{ value: "option1", label: "Option 1" }],
+          },
+        });
+
+      it("keeps the full label as the opener's accessible name", () => {
+        const wrapper = mountTruncated();
+
+        const labelId = wrapper.get('button[test-id="fzselect-opener"]').attributes("aria-labelledby");
+
+        expect(wrapper.get(`[id="${labelId}"]`).text()).toBe("Data di versamento");
+      });
+
+      it("keeps the required marker out of the part that is cut", () => {
+        const wrapper = mountTruncated();
+
+        const marker = wrapper.findAll("span").filter((span) => span.text() === "*");
+
+        expect(marker).toHaveLength(1);
+        expect(marker[0].element.closest(".fz__tooltip")).toBeNull();
+      });
+    });
+
     it("sets aria-label when label is not provided", () => {
       const wrapper = mount(FzSelect, {
         props: {

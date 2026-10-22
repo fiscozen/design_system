@@ -1,5 +1,50 @@
 # @fiscozen/checkbox
 
+## 3.0.18
+
+### Patch Changes
+
+- Updated dependencies [65d8e36]
+- Updated dependencies [65d8e36]
+  - @fiscozen/composables@1.1.6
+  - @fiscozen/tooltip@3.1.0
+
+## 3.0.17
+
+### Patch Changes
+
+- a3f33a0: `FzCheckboxGroup`, `FzCheckboxCard`, `FzUpload` and `FzTable` declare their `defineModel` array and object defaults as factories, so every instance starts from its own empty value instead of one shared across instances, and they type-check against Vue 3.5.39+.
+
+## 3.0.16
+
+### Patch Changes
+
+- @fiscozen/alert@3.0.7
+- @fiscozen/tooltip@3.0.9
+
+## 3.0.15
+
+### Patch Changes
+
+- Updated dependencies [fbf556a]
+  - @fiscozen/composables@1.1.5
+  - @fiscozen/tooltip@3.0.9
+
+## 3.0.14
+
+### Patch Changes
+
+- 92c1d3a: Paragraph line-heights no longer need `!important`. The card title and subtitle (`FzRadioCard`, `FzCheckboxCard`), the avatar title and subtitle, and the alert description all set their line-height with `!leading-[…]`. On the four that carry `text-sm`, that `!` was a workaround for `@fiscozen/style`'s `p.text-sm` default, which weighed (0,1,1) and beat any plain `leading-*` utility; now that the default is `p:where(.text-sm)` at (0,0,1), the utility wins on its own. The other four never needed it — they sit on paragraphs without `text-sm`, where only the element default competed and a plain utility already won — and were cargo-culted alongside.
+
+  Rendered line-heights are unchanged: 20px on the titles and the alert description, 16px on the subtitles, measured on every one of the eight sites before and after. What changes is that a consumer can now override them — `!important` previously made these line-heights unreachable from the outside.
+
+  These packages don't declare `@fiscozen/style` as a dependency; the consuming app supplies the stylesheet. Upgrading them without also upgrading `@fiscozen/style` to the release that carries the `p:where(.text-sm)` fix will render the `text-sm` subtitles at 18px instead of 16px.
+
+- Updated dependencies [92c1d3a]
+  - @fiscozen/alert@3.0.6
+  - @fiscozen/composables@1.1.4
+  - @fiscozen/tooltip@3.0.8
+
 ## 3.0.13
 
 ### Patch Changes

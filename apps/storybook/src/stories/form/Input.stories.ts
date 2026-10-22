@@ -3,6 +3,7 @@ import { expect, fn, userEvent, within } from 'storybook/test'
 import { ref } from 'vue'
 import { FzInput } from '@fiscozen/input'
 import { all } from '@awesome.me/kit-8137893ad3/icons'
+import { LONG_FIELD_LABEL, verifyTruncatedLabelRow } from '../test-utils'
 
 const templateForm =
   '<form action="javascript:void(0);"><story/> <button type="submit" class="mt-10 border-1 px-10 py-4 rounded ">Submit</button></form>'
@@ -156,10 +157,11 @@ export const Default: Story = {
       }
     })
 
-    await step('Verify container is keyboard accessible', async () => {
+    await step('Verify Tab lands directly on the input', async () => {
       const input = canvas.getByRole('textbox', { name: /Input Label/i })
-      const container = input.closest('.fz-input > div')
-      await expect(container).toHaveAttribute('tabindex', '0')
+      input.blur()
+      await userEvent.tab()
+      await expect(input).toHaveFocus()
     })
   }
 }
@@ -755,10 +757,11 @@ export const Highlighted: Story = {
       await expect(input).toHaveAttribute('aria-disabled', 'false')
     })
 
-    await step('Verify container is keyboard accessible', async () => {
+    await step('Verify Tab lands directly on the input', async () => {
       const input = canvas.getByRole('textbox', { name: /Input Label/i })
-      const container = input.closest('.fz-input > div')
-      await expect(container).toHaveAttribute('tabindex', '0')
+      input.blur()
+      await userEvent.tab()
+      await expect(input).toHaveFocus()
     })
   }
 }
@@ -779,10 +782,11 @@ export const HighlightedBackoffice: Story = {
       await expect(input).toHaveAttribute('aria-invalid', 'false')
     })
 
-    await step('Verify container is keyboard accessible', async () => {
+    await step('Verify Tab lands directly on the input', async () => {
       const input = canvas.getByRole('textbox', { name: /Input Label/i })
-      const container = input.closest('.fz-input > div')
-      await expect(container).toHaveAttribute('tabindex', '0')
+      input.blur()
+      await userEvent.tab()
+      await expect(input).toHaveFocus()
     })
   }
 }
@@ -1107,6 +1111,35 @@ export const NumberWithStepControls: Story = {
       const arrowDown = canvasElement.querySelector('.fz__input__arrowdown') as HTMLElement
       await userEvent.click(arrowDown)
       await expect(input).toHaveValue(4)
+    })
+  }
+}
+
+/**
+ * `truncateLabel` keeps each label on one line, so fields side by side stay aligned
+ * whatever their labels' length; a cut label shows in full in a tooltip on hover and
+ * while the input has focus.
+ * The required marker stays visible past the cut.
+ */
+export const TruncateLabel: Story = {
+  render: () => ({
+    components: { FzInput },
+    setup: () => ({ LONG_FIELD_LABEL }),
+    template: `
+      <div class="flex w-[400px] gap-16">
+        <FzInput class="flex-1" :label="LONG_FIELD_LABEL" truncateLabel required />
+        <FzInput class="flex-1" label="Regime" truncateLabel />
+      </div>
+    `
+  }),
+  play: async (context) => {
+    const canvas = within(context.canvasElement)
+    const controls = canvas.getAllByRole('textbox')
+    await verifyTruncatedLabelRow(context, controls, controls[0])
+    await context.step('the required marker stays visible', async () => {
+      const marker = canvas.getByText('*')
+      const field = controls[0].closest('.fz-input') as HTMLElement
+      await expect(marker.getBoundingClientRect().right).toBeLessThanOrEqual(field.getBoundingClientRect().right)
     })
   }
 }

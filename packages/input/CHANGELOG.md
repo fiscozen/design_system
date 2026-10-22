@@ -1,5 +1,48 @@
 # @fiscozen/input
 
+## 3.6.0
+
+### Minor Changes
+
+- 65d8e36: `FzInput`, `FzSelect` and `FzTextarea` take a `truncateLabel` prop: the label stays on one line, cut with an ellipsis when it is wider than the field, and a cut label shows in full in a tooltip on hover and while the field has focus. Fields laid side by side stay aligned whatever their labels' length, and the required asterisk stays visible past the cut. The field keeps the full label as its accessible name. `FzDatepicker` gets it through `inputProps`. Without the prop nothing changes.
+
+### Patch Changes
+
+- Updated dependencies [65d8e36]
+- Updated dependencies [65d8e36]
+  - @fiscozen/composables@1.1.6
+  - @fiscozen/tooltip@3.1.0
+
+## 3.5.8
+
+### Patch Changes
+
+- 6efe84a: `FzInput` no longer makes the box around the input a tab stop: one Tab moves focus from one field's input straight to the next field's input, instead of stopping first on an empty container where typed characters were lost. Clicking anywhere in the box still focuses the input, and clickable icons with an aria-label stay keyboard reachable.
+
+## 3.5.7
+
+### Patch Changes
+
+- Updated dependencies [9e4acc2]
+  - @fiscozen/button@3.2.0
+  - @fiscozen/alert@3.0.7
+
+## 3.5.6
+
+### Patch Changes
+
+- Updated dependencies [fbf556a]
+  - @fiscozen/composables@1.1.5
+
+## 3.5.5
+
+### Patch Changes
+
+- Updated dependencies [92c1d3a]
+  - @fiscozen/alert@3.0.6
+  - @fiscozen/button@3.1.3
+  - @fiscozen/composables@1.1.4
+
 ## 3.5.4
 
 ### Patch Changes
