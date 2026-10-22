@@ -683,10 +683,10 @@ export const useFloating = (
       // Only vertical placements get the flip treatment: `left*` / `right*` sit beside the
       // opener and keep their horizontal gap, so moving one vertically must not restyle it.
       const vertical = isVerticalPosition(actualPosition.value!)
-      // The design gap lives in the margin class of the requested side, so read it from
-      // there rather than hard-coding 16px: `top*` carries it as `margin-bottom`,
-      // `bottom*` as `margin-top`.
-      const openerGap = actualPosition.value!.startsWith('top') ? margins.bottom : margins.top
+      // The design gap lives in the margin class rather than in a hard-coded 16px. Read
+      // whichever vertical margin is set, not the requested side's: once a flip has been
+      // reported the class belongs to the flipped side, and the next run would read 0.
+      const openerGap = Math.max(margins.top, margins.bottom)
 
       const corrected = applyBoundaryCorrections(
         realPosition,

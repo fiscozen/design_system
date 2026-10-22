@@ -528,6 +528,43 @@ describe('useFloating', () => {
       mockElement.style.marginTop = ''
     })
 
+    it('keeps the gap of a flipped menu once its class has followed the flip', async () => {
+      setViewport(390, 600)
+      mockElement.style.marginTop = '16px'
+      mockOpener.getBoundingClientRect = vi.fn(() => ({
+        width: 100,
+        height: 40,
+        top: 540,
+        left: 100,
+        right: 200,
+        bottom: 580,
+        x: 100,
+        y: 540,
+        toJSON: () => {}
+      })) as any
+      const args = toRefs({
+        position: ref<FzFloatingPosition>('bottom-start'),
+        element: { domRef: ref(mockElement) },
+        opener: { domRef: ref(mockOpener) }
+      })
+      const floating = useFloating(args)
+      await floating.setPosition()
+      await nextTick()
+      // FzFloating re-renders with the flipped side's class (mt-4 -> mb-4) before the next
+      // reposition: the content ResizeObserver's first delivery, a scroll, a resize.
+      // '0px', not '': a browser always computes a length, jsdom computes '' -> NaN.
+      mockElement.style.marginTop = '0px'
+      mockElement.style.marginBottom = '16px'
+
+      await floating.setPosition()
+      await nextTick()
+
+      expect(floating.float.position.y).toBe(540 - 16 - ELEMENT_HEIGHT)
+
+      mockElement.style.marginTop = ''
+      mockElement.style.marginBottom = ''
+    })
+
     it('leaves a left placement styled as horizontal when it is corrected vertically', async () => {
       // `left*` / `right*` sit beside the opener and keep their horizontal gap, so a
       // vertical correction must not restyle them onto a vertical side.
