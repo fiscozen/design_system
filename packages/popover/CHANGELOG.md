@@ -1,5 +1,13 @@
 # @fiscozen/popover
 
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [4fa961d]
+- Updated dependencies [4fa961d]
+  - @fiscozen/composables@1.2.0
+
 ## 0.2.2
 
 ### Patch Changes

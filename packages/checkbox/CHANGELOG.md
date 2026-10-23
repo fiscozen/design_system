@@ -1,5 +1,14 @@
 # @fiscozen/checkbox
 
+## 3.0.19
+
+### Patch Changes
+
+- Updated dependencies [4fa961d]
+- Updated dependencies [4fa961d]
+  - @fiscozen/composables@1.2.0
+  - @fiscozen/tooltip@3.1.1
+
 ## 3.0.18
 
 ### Patch Changes

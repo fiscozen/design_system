@@ -1,5 +1,13 @@
 # @fiscozen/dialog
 
+## 0.1.43
+
+### Patch Changes
+
+- Updated dependencies [4fa961d]
+- Updated dependencies [4fa961d]
+  - @fiscozen/composables@1.2.0
+
 ## 0.1.42
 
 ### Patch Changes

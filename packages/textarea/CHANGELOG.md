@@ -1,5 +1,11 @@
 # @fiscozen/textarea
 
+## 3.4.1
+
+### Patch Changes
+
+- @fiscozen/tooltip@3.1.1
+
 ## 3.4.0
 
 ### Minor Changes

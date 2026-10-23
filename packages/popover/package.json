@@ -1,6 +1,6 @@
 {
   "name": "@fiscozen/popover",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Design System Popover component",
   "scripts": {
     "coverage": "vitest run --coverage",

@@ -1,5 +1,15 @@
 # @fiscozen/select
 
+## 3.2.1
+
+### Patch Changes
+
+- Updated dependencies [4fa961d]
+- Updated dependencies [4fa961d]
+  - @fiscozen/composables@1.2.0
+  - @fiscozen/input@3.6.1
+  - @fiscozen/tooltip@3.1.1
+
 ## 3.2.0
 
 ### Minor Changes
