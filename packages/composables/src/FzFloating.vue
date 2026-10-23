@@ -73,7 +73,11 @@ const useFloatingOpts: FzUseFloatingArgs = {
   }
 }
 
-const dynamicOpts = toRefs(useFloatingOpts)
+// A computed, not toRefs: `position` is copied by value above, so a ref onto it never updates.
+const dynamicOpts = {
+  ...toRefs(useFloatingOpts),
+  position: computed(() => props.position)
+}
 if (slots.opener) {
   useFloatingOpts.opener = {
     // @ts-ignore
