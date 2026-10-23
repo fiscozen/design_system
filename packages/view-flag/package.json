@@ -2,6 +2,12 @@
   "name": "@fiscozen/view-flag",
   "version": "1.0.1",
   "description": "Design System View Flag component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/view-flag"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/view-flag",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

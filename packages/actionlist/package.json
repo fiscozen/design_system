@@ -2,6 +2,12 @@
   "name": "@fiscozen/actionlist",
   "version": "0.1.17",
   "description": "Design System Navlist Component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/actionlist"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/actionlist",
   "scripts": {
     "coverage": "vitest run --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",

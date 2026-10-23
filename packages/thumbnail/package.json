@@ -2,6 +2,12 @@
   "name": "@fiscozen/thumbnail",
   "version": "0.2.0",
   "description": "Design System Thumbnail component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/thumbnail"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/thumbnail",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

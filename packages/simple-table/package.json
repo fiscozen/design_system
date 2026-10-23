@@ -2,6 +2,12 @@
   "name": "@fiscozen/simple-table",
   "version": "0.1.6",
   "description": "Design System SimpleTable component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/simple-table"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/simple-table",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",

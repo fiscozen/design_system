@@ -57,6 +57,13 @@ if [ "$SKIP_CHANGESET" = "0" ]; then
   fi
 fi
 
+# ── Package metadata check ──────────────────────────────────────────────────
+# Every published package must declare repository and homepage pointing at this
+# repo. Fix with: node scripts/check-package-metadata.mjs --fix
+# ─────────────────────────────────────────────────────────────────────────────
+
+node scripts/check-package-metadata.mjs || exit 1
+
 # ── Build check ──────────────────────────────────────────────────────────────
 # Builds all packages to catch transitive breakage.
 # Skip with: SKIP_BUILD_CHECK=1 git push
