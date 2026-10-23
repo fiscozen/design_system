@@ -496,6 +496,45 @@ export const TooltipTopPosition: Story = {
   }
 }
 
+export const TooltipTopPositionNoRoomAbove: Story = {
+  render: () => ({
+    components: { FzTooltip, FzButton },
+    template: `
+      <div class="flex items-start justify-center" style="padding: 4px 40px 200px">
+        <FzTooltip position="top" text="Top tooltip">
+          <FzButton data-testid="trigger-top-cramped">Top</FzButton>
+        </FzTooltip>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const TOLERANCE = 5
+
+    const trigger = canvas.getByTestId('trigger-top-cramped')
+    await userEvent.hover(trigger)
+
+    await waitFor(
+      () => {
+        const content = document.querySelector('.fz__floating__content')
+        expect(content).toBeVisible()
+
+        const triggerRect = trigger.getBoundingClientRect()
+        const tooltipRect = (content as Element).getBoundingClientRect()
+
+        // Flipped below the trigger, because it cannot fit above it.
+        expect(tooltipRect.top).toBeGreaterThanOrEqual(triggerRect.bottom - TOLERANCE)
+        // …and it is spaced like any other panel below its opener.
+        expect(content).toHaveClass('mt-4')
+        expect(content).not.toHaveClass('mb-4')
+        // Still fully on screen.
+        expect(tooltipRect.top).toBeGreaterThanOrEqual(0)
+      },
+      { timeout: 2000 }
+    )
+  }
+}
+
 export const DesignReview: Story = {
   render: (args) => ({
     setup() {

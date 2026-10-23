@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, within, screen, waitFor } from 'storybook/test'
 import { reactive, ref } from 'vue'
 
+import type { FzFloatingPosition } from '@fiscozen/composables'
 import { FzFloating } from '@fiscozen/composables'
 import { FzNavlink } from '@fiscozen/navlink'
 import { FzNavlist } from '@fiscozen/navlist'
@@ -455,6 +456,67 @@ export const PositionBottomStart: Story = {
 
     // Content left should be approximately aligned with opener left (start)
     await expect(Math.abs(contentRect.left - openerRect.left)).toBeLessThan(POSITION_TOLERANCE)
+  }
+}
+
+/**
+ * Regression test for LIB-2854: `position` has to keep working when it changes while
+ * the floating is open. The options were built with a copy of the prop, so the engine
+ * kept resolving the placement chosen at setup — setPosition ran, the inline `top` was
+ * rewritten, and the content stayed exactly where it was.
+ *
+ * Has to live in a browser: jsdom reports every rect as zero, so a unit test would
+ * pass no matter what the code does.
+ */
+export const PositionChangesAtRuntime: Story = {
+  render: (args) => ({
+    setup() {
+      const isOpen = ref(true)
+      const position = ref<FzFloatingPosition>('bottom-start')
+      const flip = () => {
+        position.value = position.value === 'bottom-start' ? 'top-start' : 'bottom-start'
+      }
+      return { args, isOpen, position, flip }
+    },
+    components: { FzFloating, FzButton },
+    template: `
+      <div class="flex h-screen w-screen flex-col items-center justify-center gap-24">
+        <FzFloating :position="position" :isOpen="isOpen">
+          <template #opener>
+            <FzButton data-testid="opener-button" label="Opener" />
+          </template>
+          <div data-testid="floating-content" class="rounded border border-grey-300 bg-grey-100 p-16">
+            <p class="text-sm">Position: {{ position }}</p>
+          </div>
+        </FzFloating>
+        <FzButton data-testid="flip-button" @click="flip" label="Cambia posizione" />
+      </div>`
+  }),
+  args: {
+    position: 'bottom-start',
+    isOpen: true,
+    teleport: false
+  },
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement)
+    const opener = canvas.getByTestId('opener-button')
+    const content = () => getFloatingContent(canvasElement) as Element
+
+    await waitFor(() => expect(content()).toBeVisible())
+
+    // Starts below the opener.
+    await expect(content().getBoundingClientRect().top).toBeGreaterThanOrEqual(
+      opener.getBoundingClientRect().bottom - POSITION_TOLERANCE
+    )
+
+    await userEvent.click(canvas.getByTestId('flip-button'))
+
+    // And moves above it once the prop says top-start.
+    await waitFor(() =>
+      expect(content().getBoundingClientRect().bottom).toBeLessThanOrEqual(
+        opener.getBoundingClientRect().top + POSITION_TOLERANCE
+      )
+    )
   }
 }
 
