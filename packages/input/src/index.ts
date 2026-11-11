@@ -1,4 +1,5 @@
 export { default as FzInput } from "./FzInput.vue";
+export { default as FzInputLabel } from "./FzInputLabel.vue";
 /**
  * @deprecated Use `<FzInput type="currency">` instead. This wrapper is kept
  * for backwards compatibility until the migration of all consumers is complete.

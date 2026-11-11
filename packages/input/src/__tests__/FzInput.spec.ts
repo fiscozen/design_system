@@ -491,6 +491,71 @@ describe("FzInput", () => {
           expect(marker).toHaveLength(1);
           expect(marker[0].element.closest(".fz__tooltip")).toBeNull();
         });
+
+        it("keeps the label aside as the input's description", () => {
+          const wrapper = mount(FzInput, {
+            props: { label: "1. IVA dovuta", labelAside: "calcolato 971,65", truncateLabel: true },
+          });
+
+          const asideId = wrapper.get("input").attributes("aria-describedby");
+
+          expect(wrapper.get(`[id="${asideId}"]`).text()).toBe("calcolato 971,65");
+        });
+      });
+
+      describe("with labelAside", () => {
+        it("describes the input with the label aside", () => {
+          const wrapper = mount(FzInput, {
+            props: { label: "1. IVA dovuta", labelAside: "calcolato 971,65" },
+          });
+
+          const asideId = wrapper.get("input").attributes("aria-describedby");
+
+          expect(wrapper.get(`[id="${asideId}"]`).text()).toBe("calcolato 971,65");
+        });
+
+        it("describes the input with the label aside before the help text", () => {
+          const wrapper = mount(FzInput, {
+            props: { label: "1. IVA dovuta", labelAside: "calcolato 971,65" },
+            slots: { helpText: "Importo in euro" },
+          });
+
+          const ids = wrapper.get("input").attributes("aria-describedby")!.split(" ");
+
+          expect(ids.map((id) => wrapper.get(`[id="${id}"]`).text())).toEqual([
+            "calcolato 971,65",
+            "Importo in euro",
+          ]);
+        });
+
+        it("keeps the label as the input's accessible name, without the aside", () => {
+          const wrapper = mount(FzInput, {
+            props: { label: "1. IVA dovuta", labelAside: "calcolato 971,65", required: true },
+          });
+
+          const labelId = wrapper.get("input").attributes("aria-labelledby");
+
+          expect(wrapper.get(`[id="${labelId}"]`).text()).toBe("1. IVA dovuta *");
+        });
+
+        it("renders no label aside with the label slot", () => {
+          const wrapper = mount(FzInput, {
+            props: { label: "1. IVA dovuta", labelAside: "calcolato 971,65" },
+            slots: { label: () => "Custom Label Slot" },
+          });
+
+          expect(wrapper.text()).not.toContain("calcolato 971,65");
+          expect(wrapper.get("input").attributes("aria-describedby")).toBeUndefined();
+        });
+
+        it("renders no label aside without a label", () => {
+          const wrapper = mount(FzInput, {
+            props: { labelAside: "calcolato 971,65" },
+          });
+
+          expect(wrapper.text()).not.toContain("calcolato 971,65");
+          expect(wrapper.get("input").attributes("aria-describedby")).toBeUndefined();
+        });
       });
 
       it("does not apply aria-labelledby when label is not provided", async () => {

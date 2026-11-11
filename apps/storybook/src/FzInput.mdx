@@ -65,6 +65,12 @@ import { FzInput } from '@fiscozen/input'
       <td>Keeps the label on one line, cut with an ellipsis when it is wider than the field; a cut label shows in full in a tooltip on hover and while the input has focus. The required asterisk stays visible past the cut. Fields side by side stay aligned whatever their labels' length. Has no effect on the <code>label</code> slot.</td>
     </tr>
     <tr>
+      <td><code>labelAside</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Short text shown on the right of the label row, in a smaller size, such as a computed value next to a value typed by hand. The input announces it as its description. With <code>truncateLabel</code> the label is cut first, down to about twelve characters, and only then this text; without it, the label wraps and this text stays on its first line. Has no effect without <code>label</code> or on the <code>label</code> slot.</td>
+    </tr>
+    <tr>
       <td><code>environment</code></td>
       <td><code>'backoffice' | 'frontoffice'</code></td>
       <td><code>'frontoffice'</code></td>
@@ -571,6 +577,14 @@ With `truncateLabel`, the label stays on one line: fields laid side by side stay
 
 ```vue
 <FzInput label="Data di versamento dell'imposta sostitutiva" truncateLabel v-model="date" />
+```
+
+### Label aside
+
+`labelAside` shows a short text on the right of the label row. With `truncateLabel`, the label gives way first: it is cut down to about twelve characters before the aside is cut too, and each cut text shows in full in a tooltip on hover. The input announces the aside as its description, after its label.
+
+```vue
+<FzInput label="1. IVA dovuta" labelAside="calcolato 971,65" truncateLabel type="currency" v-model="amount" />
 ```
 
 ### Disabled

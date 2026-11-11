@@ -67,6 +67,14 @@ type FzInputProps<TType extends FzInputType = FzInputType> = {
    */
   truncateLabel?: boolean;
   /**
+   * Short text shown on the right of the label row, in a smaller size, such as a
+   * computed value next to a value typed by hand. The input announces it as its
+   * description. With `truncateLabel` the label is cut first, down to about twelve
+   * characters, and only then this text; without it, the label wraps and this text
+   * stays on its first line. Has no effect without `label` or on the label slot.
+   */
+  labelAside?: string;
+  /**
    * Environment determining input size and styling
    * @default 'frontoffice'
    */
@@ -386,3 +394,40 @@ interface FzCurrencyInputProps extends Omit<
 }
 
 export { FzInputProps, FzCurrencyInputProps };
+
+/**
+ * Props for the FzInputLabel component.
+ */
+export interface FzInputLabelProps {
+  /**
+   * Text of the label.
+   */
+  label: string;
+  /**
+   * `id` of the `<label>` element, for the control's `aria-labelledby`.
+   */
+  labelId: string;
+  /**
+   * `id` of the control the label names: rendered as the label's `for`.
+   */
+  controlId: string;
+  /**
+   * Appends an asterisk to the label. Mark the control itself as required.
+   * @default false
+   */
+  required?: boolean;
+  /**
+   * Keeps the row on one line: the label, then the aside, are cut with an ellipsis
+   * and shown in full in a tooltip.
+   * @default false
+   */
+  truncate?: boolean;
+  /**
+   * Short text on the right of the label row.
+   */
+  aside?: string;
+  /**
+   * `id` of the element holding `aside`, for the control's `aria-describedby`.
+   */
+  asideId?: string;
+}

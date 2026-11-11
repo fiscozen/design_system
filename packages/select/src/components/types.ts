@@ -39,9 +39,17 @@ export interface FzSelectLabelProps {
    */
   readonly?: boolean;
   /**
-   * Keeps the label on one line, with the full text in a tooltip when it is cut
+   * Keeps the label row on one line, with each cut text in full in a tooltip
    */
   truncate?: boolean;
+  /**
+   * Short text on the right of the label row
+   */
+  aside?: string;
+  /**
+   * ID of the element holding `aside`
+   */
+  asideId?: string;
 }
 
 /**
@@ -62,6 +70,10 @@ export interface FzSelectButtonProps {
    * Label text (for aria-label when labelId is not provided)
    */
   label?: string;
+  /**
+   * ID of the label aside for aria-describedby, when one is rendered
+   */
+  labelAsideId?: string;
   /**
    * Placeholder text
    */

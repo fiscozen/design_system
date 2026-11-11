@@ -23,6 +23,14 @@ interface FzSelectBaseProps extends FzFloatingProps {
    */
   truncateLabel?: boolean;
   /**
+   * Short text shown on the right of the label row, in a smaller size, such as a
+   * computed value next to a value picked by hand. The select announces it as its
+   * description. With `truncateLabel` the label is cut first, down to about twelve
+   * characters, and only then this text; without it, the label wraps and this text
+   * stays on its first line. Has no effect without `label`.
+   */
+  labelAside?: string;
+  /**
    * The placeholder displayed in the input
    */
   placeholder?: string;

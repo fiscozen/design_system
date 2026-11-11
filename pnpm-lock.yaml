@@ -2781,9 +2781,6 @@ importers:
       '@fiscozen/progress':
         specifier: workspace:*
         version: link:../progress
-      '@fiscozen/tooltip':
-        specifier: workspace:*
-        version: link:../tooltip
       fuse.js:
         specifier: ^7.1.0
         version: 7.1.0

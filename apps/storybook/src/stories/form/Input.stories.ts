@@ -3,7 +3,7 @@ import { expect, fn, userEvent, within } from 'storybook/test'
 import { ref } from 'vue'
 import { FzInput } from '@fiscozen/input'
 import { all } from '@awesome.me/kit-8137893ad3/icons'
-import { LONG_FIELD_LABEL, verifyTruncatedLabelRow } from '../test-utils'
+import { LABEL_ASIDE, LONG_FIELD_LABEL, verifyLabelAsideFields, verifyTruncatedLabelRow } from '../test-utils'
 
 const templateForm =
   '<form action="javascript:void(0);"><story/> <button type="submit" class="mt-10 border-1 px-10 py-4 rounded ">Submit</button></form>'
@@ -1141,6 +1141,35 @@ export const TruncateLabel: Story = {
       const field = controls[0].closest('.fz-input') as HTMLElement
       await expect(marker.getBoundingClientRect().right).toBeLessThanOrEqual(field.getBoundingClientRect().right)
     })
+  }
+}
+
+/**
+ * `labelAside` shows a short text on the right of the label row, here the computed
+ * value next to a value typed by hand. With `truncateLabel` the label is cut first,
+ * down to about twelve characters, and only then the aside; without it the label
+ * wraps and the aside stays on its first line. The input announces the aside as its
+ * description.
+ */
+export const LabelAside: Story = {
+  render: () => ({
+    components: { FzInput },
+    setup: () => ({ LABEL_ASIDE, LONG_FIELD_LABEL }),
+    template: `
+      <div class="flex w-[400px] flex-col gap-16">
+        <FzInput label="1. IVA dovuta" :labelAside="LABEL_ASIDE" />
+        <FzInput :label="LONG_FIELD_LABEL" :labelAside="LABEL_ASIDE" truncateLabel />
+        <FzInput :label="LONG_FIELD_LABEL" :labelAside="LABEL_ASIDE" />
+        <div class="flex gap-16">
+          <FzInput class="flex-1" :label="LONG_FIELD_LABEL" :labelAside="LABEL_ASIDE" truncateLabel />
+          <FzInput class="flex-1" label="IVA" :labelAside="LABEL_ASIDE" truncateLabel />
+        </div>
+      </div>
+    `
+  }),
+  play: async (context) => {
+    const canvas = within(context.canvasElement)
+    await verifyLabelAsideFields(context, canvas.getAllByRole('textbox'))
   }
 }
 

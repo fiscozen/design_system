@@ -28,7 +28,7 @@
   import { FzAlert } from "@fiscozen/alert";
   import { FzIcon } from "@fiscozen/icons";
   import { FzIconButton } from "@fiscozen/button";
-  import { FzTruncatedLabel } from "@fiscozen/tooltip";
+  import FzInputLabel from "./FzInputLabel.vue";
   import useInputStyle from "./useInputStyle";
   import useCurrencyInput from "./useCurrencyInput";
   import {
@@ -279,13 +279,21 @@
     return undefined;
   });
 
+  /** `id` of the text rendered from `labelAside`. */
+  const labelAsideId = computed(() => `${effectiveId.value}-label-aside`);
+
   /**
-   * Computes aria-describedby value linking input to help text or error message
+   * Computes aria-describedby value linking input to the label aside and to help text
+   * or error message. The label aside only renders with the default label, the same
+   * condition as aria-labelledby.
    *
    * Uses runtimeSlots (not slots from defineSlots) because defineSlots is only for TypeScript typing.
    */
   const ariaDescribedBy = computed(() => {
     const ids: string[] = [];
+    if (props.labelAside && ariaLabelledBy.value) {
+      ids.push(labelAsideId.value);
+    }
     if (props.error && runtimeSlots.errorMessage) {
       ids.push(`${effectiveId.value}-error`);
     }
@@ -602,11 +610,8 @@
 <template>
   <div class="fz-input text-core-black w-full flex flex-col gap-8" :class="rootClass">
     <slot name="label">
-      <FzTruncatedLabel v-if="label && truncateLabel" :class="computedLabelClass" :label
-        :labelId="`${effectiveId}-label`" :controlId="effectiveId" :required />
-      <label v-else-if="label" :id="`${effectiveId}-label`" :class="computedLabelClass" :for="effectiveId">
-        {{ label }}{{ required ? " *" : "" }}
-      </label>
+      <FzInputLabel v-if="label" :class="computedLabelClass" :label :labelId="`${effectiveId}-label`"
+        :controlId="effectiveId" :required :truncate="truncateLabel" :aside="labelAside" :asideId="labelAsideId" />
     </slot>
     <div :class="[staticContainerClass, computedContainerClass]" ref="containerRef"
       @click="handleContainerClick">

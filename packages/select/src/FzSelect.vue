@@ -347,6 +347,7 @@ const containerElement = computed(
 const instanceId = Math.random().toString(36).substring(2, 9);
 const openerId = `fzselect-opener-${instanceId}`;
 const labelId = `fzselect-label-${instanceId}`;
+const labelAsideId = `fzselect-label-aside-${instanceId}`;
 
 // ============================================================================
 // COMPUTED - State Flags
@@ -1141,6 +1142,8 @@ defineExpose({
         :readonly
         :required
         :truncate="truncateLabel"
+        :aside="labelAside"
+        :asideId="labelAsideId"
       />
     </template>
 
@@ -1159,6 +1162,7 @@ defineExpose({
         :isOpen
         :label
         :labelId
+        :labelAsideId="label && labelAside ? labelAsideId : undefined"
         :leftIcon
         :leftIconVariant
         :openerId

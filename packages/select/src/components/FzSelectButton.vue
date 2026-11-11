@@ -231,6 +231,7 @@ defineExpose({
       :aria-expanded="isOpen ? 'true' : 'false'"
       :aria-haspopup="'listbox'"
       :aria-labelledby="label ? labelId : undefined"
+      :aria-describedby="labelAsideId"
       :aria-label="
         !label
           ? selectedOption
@@ -375,6 +376,7 @@ defineExpose({
       :aria-expanded="isOpen ? 'true' : 'false'"
       :aria-haspopup="'listbox'"
       :aria-labelledby="label ? labelId : undefined"
+      :aria-describedby="labelAsideId"
       :aria-label="
         !label
           ? selectedOption
