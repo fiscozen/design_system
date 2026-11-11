@@ -22,10 +22,11 @@ npm install @fiscozen/input
 
 ## Components
 
-This package exports two components:
+This package exports three components:
 
 - `FzInput` - Standard input with label, icons, and validation states
 - `FzCurrencyInput` - Specialized currency input with number formatting and validation
+- `FzInputLabel` - The label row of FzInput, with the required asterisk, `truncate` and an `aside` text on the right; FzSelect renders it too. Use it directly only to build a field of your own
 
 ## Basic Usage
 
@@ -67,6 +68,7 @@ const amount = ref<number | undefined>(undefined)
 |------|------|---------|-------------|
 | `label` | `string` | - | Text label displayed above the input field. Overridden by label slot if provided. |
 | `truncateLabel` | `boolean` | `false` | Keeps the label on one line, cut with an ellipsis when it is wider than the field; a cut label shows in full in a tooltip on hover and while the input has focus. The required asterisk stays visible past the cut. Has no effect on the label slot. |
+| `labelAside` | `string` | - | Short text shown on the right of the label row, in a smaller size, such as a computed value next to a value typed by hand. The input announces it as its description. With `truncateLabel` the label is cut first, down to about twelve characters, and only then this text; without it, the label wraps and this text stays on its first line. Has no effect without `label` or on the label slot. |
 | `environment` | `'backoffice' \| 'frontoffice'` | `'frontoffice'` | Environment determining input size and styling |
 | `size` | `'sm' \| 'md' \| 'lg'` | - | **Deprecated**: Use `environment` prop instead. Size values map to environments: sm/md → backoffice, lg → frontoffice |
 | `placeholder` | `string` | - | Placeholder text shown when input is empty. Behavior differs based on variant. |

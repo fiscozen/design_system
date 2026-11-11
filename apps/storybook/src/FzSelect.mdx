@@ -112,6 +112,12 @@ const options = [
       <td>Keeps the label on one line, cut with an ellipsis when it is wider than the field; a cut label shows in full in a tooltip on hover and while the select has focus. The required asterisk stays visible past the cut. Fields side by side stay aligned whatever their labels' length.</td>
     </tr>
     <tr>
+      <td><code>labelAside</code></td>
+      <td><code>string</code></td>
+      <td><code>-</code></td>
+      <td>Short text shown on the right of the label row, in a smaller size, such as a computed value next to a value picked by hand. The select announces it as its description. With <code>truncateLabel</code> the label is cut first, down to about twelve characters, and only then this text; without it, the label wraps and this text stays on its first line. Has no effect without <code>label</code>.</td>
+    </tr>
+    <tr>
       <td><code>placeholder</code></td>
       <td><code>string</code></td>
       <td><code>-</code></td>
@@ -680,6 +686,7 @@ FzSelect is built with accessibility in mind and follows WCAG 2.1 AA standards:
 - **Focus Management**: Clear focus indicators, logical tab order, and focus trap within dropdown
 - **Required Fields**: Properly marked with `required` attribute and ARIA labels
 - **Error States**: Error messages are associated with inputs using `aria-describedby`
+- **Label Aside**: The `labelAside` text is associated with the select using `aria-describedby`
 - **Screen Reader Support**: All interactive elements are properly announced with live regions
 - **Role Attributes**: Proper roles (combobox, listbox, option) for screen reader navigation
 

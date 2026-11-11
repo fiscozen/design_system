@@ -3,7 +3,7 @@ import { expect, userEvent, within, fn, waitFor } from 'storybook/test'
 import { ref, onMounted } from 'vue'
 import { FzSelect, FzSelectOptionsProps } from '@fiscozen/select'
 import { FzButton } from '@fiscozen/button'
-import { LONG_FIELD_LABEL, verifyTruncatedLabelRow } from '../test-utils'
+import { LABEL_ASIDE, LONG_FIELD_LABEL, verifyLabelAsideFields, verifyTruncatedLabelRow } from '../test-utils'
 
 const meta = {
   title: 'Form/FzSelect',
@@ -1823,5 +1823,40 @@ export const TruncateLabel: SelectStory = {
     const canvas = within(context.canvasElement)
     const controls = canvas.getAllByRole('button').filter((button) => button.getAttribute('test-id') === 'fzselect-opener')
     await verifyTruncatedLabelRow(context, controls, controls[0])
+  }
+}
+
+/**
+ * `labelAside` shows a short text on the right of the label row, here the computed
+ * value next to a value picked by hand. With `truncateLabel` the label is cut first,
+ * down to about twelve characters, and only then the aside; without it the label
+ * wraps and the aside stays on its first line. The select announces the aside as its
+ * description.
+ */
+export const LabelAside: SelectStory = {
+  render: () => ({
+    components: { FzSelect },
+    setup: () => ({
+      LABEL_ASIDE,
+      LONG_FIELD_LABEL,
+      options: [{ value: '1', label: 'Ordinario' }],
+      values: ref<(string | undefined)[]>([])
+    }),
+    template: `
+      <div class="flex w-[400px] flex-col gap-16">
+        <FzSelect v-model="values[0]" label="Regime" :labelAside="LABEL_ASIDE" :options />
+        <FzSelect v-model="values[1]" :label="LONG_FIELD_LABEL" :labelAside="LABEL_ASIDE" :options truncateLabel />
+        <FzSelect v-model="values[2]" :label="LONG_FIELD_LABEL" :labelAside="LABEL_ASIDE" :options />
+        <div class="flex gap-16">
+          <FzSelect v-model="values[3]" class="flex-1" :label="LONG_FIELD_LABEL" :labelAside="LABEL_ASIDE" :options truncateLabel />
+          <FzSelect v-model="values[4]" class="flex-1" label="IVA" :labelAside="LABEL_ASIDE" :options truncateLabel />
+        </div>
+      </div>
+    `
+  }),
+  play: async (context) => {
+    const canvas = within(context.canvasElement)
+    const controls = canvas.getAllByRole('button').filter((button) => button.getAttribute('test-id') === 'fzselect-opener')
+    await verifyLabelAsideFields(context, controls)
   }
 }

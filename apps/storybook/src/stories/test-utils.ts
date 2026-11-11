@@ -275,3 +275,83 @@ export async function verifyTruncatedLabelRow(
     await expect(longControl).toHaveFocus()
   })
 }
+
+// ============================================
+// LABEL ASIDE HELPERS
+// ============================================
+
+/** The `labelAside` text shared by the `labelAside` stories. */
+export const LABEL_ASIDE = 'calcolato 971,65'
+
+/** Whether the text of `element` is wider than the nearest ancestor that clips it. */
+function isTextCut(element: HTMLElement): boolean {
+  let clip = element.parentElement
+  while (clip && getComputedStyle(clip).overflowX === 'visible') {
+    clip = clip.parentElement
+  }
+  return clip !== null && element.getBoundingClientRect().width > clip.getBoundingClientRect().width
+}
+
+/** The label and the label aside of a control, found through its ARIA references. */
+function labelRowOf(control: HTMLElement) {
+  return {
+    label: document.getElementById(control.getAttribute('aria-labelledby') ?? '') as HTMLElement,
+    aside: document.getElementById(control.getAttribute('aria-describedby') ?? '') as HTMLElement
+  }
+}
+
+/**
+ * Verifies five fields rendered with {@link LABEL_ASIDE}, in this order: a short
+ * label; {@link LONG_FIELD_LABEL} with `truncateLabel`; {@link LONG_FIELD_LABEL}
+ * without it; then, side by side in half the width, {@link LONG_FIELD_LABEL} and a
+ * short label, both with `truncateLabel`.
+ *
+ * @param controls - the controls of the five fields, in order
+ */
+export async function verifyLabelAsideFields(
+  { step }: Pick<PlayFunctionContext, 'step'>,
+  controls: HTMLElement[]
+) {
+  const [short, truncated, wrapped, halfLong, halfShort] = controls.map(labelRowOf)
+
+  await step('each field is described by its label aside', async () => {
+    const descriptions = [short, truncated, wrapped, halfLong, halfShort].map((row) => row.aside.textContent)
+    await expect(descriptions).toEqual([LABEL_ASIDE, LABEL_ASIDE, LABEL_ASIDE, LABEL_ASIDE, LABEL_ASIDE])
+  })
+
+  await step('a short label leaves the aside whole, on its right', async () => {
+    await expect(isTextCut(short.aside)).toBe(false)
+    await expect(short.aside.getBoundingClientRect().left).toBeGreaterThan(short.label.getBoundingClientRect().right)
+  })
+
+  await step('with truncateLabel a long label is cut before the aside', async () => {
+    await expect(isTextCut(truncated.label)).toBe(true)
+    await expect(isTextCut(truncated.aside)).toBe(false)
+  })
+
+  await step('without truncateLabel a long label wraps and the aside stays on its first line', async () => {
+    const lineHeight = short.label.getBoundingClientRect().height
+    const label = wrapped.label.getBoundingClientRect()
+    await expect(label.height).toBeGreaterThan(lineHeight * 1.5)
+    await expect(wrapped.aside.getBoundingClientRect().top).toBeLessThan(label.top + lineHeight)
+    await expect(isTextCut(wrapped.aside)).toBe(false)
+  })
+
+  await step('in a half-width field a long label is cut down to its minimum, then the aside', async () => {
+    await expect(isTextCut(halfLong.label)).toBe(true)
+    await expect(isTextCut(halfLong.aside)).toBe(true)
+  })
+
+  await step('in a half-width field a short label leaves the aside whole', async () => {
+    await expect(isTextCut(halfShort.label)).toBe(false)
+    await expect(isTextCut(halfShort.aside)).toBe(false)
+  })
+
+  await step('hovering a cut aside shows it in full', async () => {
+    await userEvent.hover(halfLong.aside)
+    await waitFor(() =>
+      expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent(LABEL_ASIDE)
+    )
+    await userEvent.unhover(halfLong.aside)
+  })
+}

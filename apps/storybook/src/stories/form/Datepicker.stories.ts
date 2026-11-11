@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, userEvent, within, waitFor } from 'storybook/test'
 import { FzDatepicker } from '@fiscozen/datepicker'
 import { ref } from 'vue'
-import { LONG_FIELD_LABEL, verifyTruncatedLabelRow } from '../test-utils'
+import { LABEL_ASIDE, LONG_FIELD_LABEL, verifyLabelAsideFields, verifyTruncatedLabelRow } from '../test-utils'
 
 // ============================================
 // FIXED DATES — deterministic across all runs
@@ -1854,5 +1854,32 @@ export const TruncateLabel: Story = {
     const canvas = within(context.canvasElement)
     const controls = canvas.getAllByRole('textbox')
     await verifyTruncatedLabelRow(context, controls, controls[0])
+  }
+}
+
+/**
+ * `labelAside` reaches the inner `FzInput` through `inputProps`, with the same layout
+ * as on FzInput: with `truncateLabel` the label is cut first, down to about twelve
+ * characters, and only then the aside.
+ */
+export const LabelAside: Story = {
+  render: () => ({
+    components: { FzDatepicker },
+    setup: () => ({ LABEL_ASIDE, LONG_FIELD_LABEL }),
+    template: `
+      <div class="flex w-[400px] flex-col gap-16">
+        <FzDatepicker :inputProps="{ label: 'Scadenza', labelAside: LABEL_ASIDE }" />
+        <FzDatepicker :inputProps="{ label: LONG_FIELD_LABEL, labelAside: LABEL_ASIDE, truncateLabel: true }" />
+        <FzDatepicker :inputProps="{ label: LONG_FIELD_LABEL, labelAside: LABEL_ASIDE }" />
+        <div class="flex gap-16">
+          <FzDatepicker class="flex-1" :inputProps="{ label: LONG_FIELD_LABEL, labelAside: LABEL_ASIDE, truncateLabel: true }" />
+          <FzDatepicker class="flex-1" :inputProps="{ label: 'Data', labelAside: LABEL_ASIDE, truncateLabel: true }" />
+        </div>
+      </div>
+    `
+  }),
+  play: async (context) => {
+    const canvas = within(context.canvasElement)
+    await verifyLabelAsideFields(context, canvas.getAllByRole('textbox'))
   }
 }

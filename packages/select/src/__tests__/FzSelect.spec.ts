@@ -761,6 +761,71 @@ describe("FzSelect", () => {
         expect(marker).toHaveLength(1);
         expect(marker[0].element.closest(".fz__tooltip")).toBeNull();
       });
+
+      it("keeps the label aside as the opener's description", () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            label: "Regime",
+            labelAside: "calcolato Ordinario",
+            truncateLabel: true,
+            options: [{ value: "option1", label: "Option 1" }],
+          },
+        });
+
+        const asideId = wrapper.get('button[test-id="fzselect-opener"]').attributes("aria-describedby");
+
+        expect(wrapper.get(`[id="${asideId}"]`).text()).toBe("calcolato Ordinario");
+      });
+    });
+
+    describe("with labelAside", () => {
+      const options = [{ value: "option1", label: "Option 1" }];
+
+      it("describes the opener with the label aside", () => {
+        const wrapper = mount(FzSelect, {
+          props: { modelValue: "", label: "Regime", labelAside: "calcolato Ordinario", options },
+        });
+
+        const asideId = wrapper.get('button[test-id="fzselect-opener"]').attributes("aria-describedby");
+
+        expect(wrapper.get(`[id="${asideId}"]`).text()).toBe("calcolato Ordinario");
+      });
+
+      it("describes the filter input with the label aside", () => {
+        const wrapper = mount(FzSelect, {
+          props: {
+            modelValue: "",
+            label: "Regime",
+            labelAside: "calcolato Ordinario",
+            filterable: true,
+            options,
+          },
+        });
+
+        const asideId = wrapper.get("input").attributes("aria-describedby");
+
+        expect(wrapper.get(`[id="${asideId}"]`).text()).toBe("calcolato Ordinario");
+      });
+
+      it("keeps the label as the opener's accessible name, without the aside", () => {
+        const wrapper = mount(FzSelect, {
+          props: { modelValue: "", label: "Regime", labelAside: "calcolato Ordinario", options },
+        });
+
+        const labelId = wrapper.get('button[test-id="fzselect-opener"]').attributes("aria-labelledby");
+
+        expect(wrapper.get(`[id="${labelId}"]`).text()).toBe("Regime");
+      });
+
+      it("renders no label aside without a label", () => {
+        const wrapper = mount(FzSelect, {
+          props: { modelValue: "", labelAside: "calcolato Ordinario", options },
+        });
+
+        expect(wrapper.text()).not.toContain("calcolato Ordinario");
+        expect(wrapper.get('button[test-id="fzselect-opener"]').attributes("aria-describedby")).toBeUndefined();
+      });
     });
 
     it("sets aria-label when label is not provided", () => {

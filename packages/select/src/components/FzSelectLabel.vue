@@ -2,13 +2,13 @@
 /**
  * FzSelectLabel Component
  *
- * Presentational component for the label with required indicator.
+ * Presentational component for the label row: label, required indicator and aside.
  *
  * @component
  * @internal
  */
 import { computed } from "vue";
-import { FzTruncatedLabel } from "@fiscozen/tooltip";
+import { FzInputLabel } from "@fiscozen/input";
 import type { FzSelectLabelProps } from "./types";
 
 const props = defineProps<FzSelectLabelProps>();
@@ -34,15 +34,14 @@ const labelClass = computed(() => {
 </script>
 
 <template>
-  <FzTruncatedLabel
-    v-if="truncate"
+  <FzInputLabel
     :class="labelClass"
     :label
     :labelId
     :controlId="openerId"
     :required
+    :truncate
+    :aside
+    :asideId
   />
-  <label v-else :id="labelId" :for="openerId" :class="labelClass">
-    {{ label }}{{ required ? " *" : "" }}
-  </label>
 </template>
