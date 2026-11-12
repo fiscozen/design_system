@@ -282,6 +282,11 @@
   /** `id` of the text rendered from `labelAside`. */
   const labelAsideId = computed(() => `${effectiveId.value}-label-aside`);
 
+  /** The `aside` and `asideId` FzInputLabel takes together, or neither. */
+  const labelAsideProps = computed(() =>
+    props.labelAside ? { aside: props.labelAside, asideId: labelAsideId.value } : {}
+  );
+
   /**
    * Computes aria-describedby value linking input to the label aside and to help text
    * or error message. The label aside only renders with the default label, the same
@@ -611,7 +616,7 @@
   <div class="fz-input text-core-black w-full flex flex-col gap-8" :class="rootClass">
     <slot name="label">
       <FzInputLabel v-if="label" :class="computedLabelClass" :label :labelId="`${effectiveId}-label`"
-        :controlId="effectiveId" :required :truncate="truncateLabel" :aside="labelAside" :asideId="labelAsideId" />
+        :controlId="effectiveId" :required :truncate="truncateLabel" v-bind="labelAsideProps" />
     </slot>
     <div :class="[staticContainerClass, computedContainerClass]" ref="containerRef"
       @click="handleContainerClick">

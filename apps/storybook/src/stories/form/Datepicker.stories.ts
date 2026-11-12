@@ -1860,7 +1860,8 @@ export const TruncateLabel: Story = {
 /**
  * `labelAside` reaches the inner `FzInput` through `inputProps`, with the same layout
  * as on FzInput: with `truncateLabel` the label is cut first, down to about twelve
- * characters, and only then the aside.
+ * characters, and only then the aside; a field narrower than twelve characters cuts
+ * the label at its own edge.
  */
 export const LabelAside: Story = {
   render: () => ({
@@ -1874,6 +1875,9 @@ export const LabelAside: Story = {
         <div class="flex gap-16">
           <FzDatepicker class="flex-1" :inputProps="{ label: LONG_FIELD_LABEL, labelAside: LABEL_ASIDE, truncateLabel: true }" />
           <FzDatepicker class="flex-1" :inputProps="{ label: 'Data', labelAside: LABEL_ASIDE, truncateLabel: true }" />
+        </div>
+        <div class="w-[96px]">
+          <FzDatepicker :inputProps="{ label: LONG_FIELD_LABEL, labelAside: LABEL_ASIDE, truncateLabel: true }" />
         </div>
       </div>
     `

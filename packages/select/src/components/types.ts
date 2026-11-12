@@ -49,7 +49,7 @@ export interface FzSelectLabelProps {
   /**
    * ID of the element holding `aside`
    */
-  asideId?: string;
+  asideId: string;
 }
 
 /**

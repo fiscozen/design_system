@@ -581,7 +581,7 @@ With `truncateLabel`, the label stays on one line: fields laid side by side stay
 
 ### Label aside
 
-`labelAside` shows a short text on the right of the label row. With `truncateLabel`, the label gives way first: it is cut down to about twelve characters before the aside is cut too, and each cut text shows in full in a tooltip on hover. The input announces the aside as its description, after its label.
+`labelAside` shows a short text on the right of the label row. With `truncateLabel`, the label gives way first: it is cut down to about twelve characters before the aside is cut too, and each cut text shows in full in a tooltip on hover and while the input has focus. The input announces the aside as its description, after its label.
 
 ```vue
 <FzInput label="1. IVA dovuta" labelAside="calcolato 971,65" truncateLabel type="currency" v-model="amount" />
