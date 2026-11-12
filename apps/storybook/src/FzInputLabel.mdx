@@ -1,0 +1,155 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Form/FzInputLabel" />
+
+# FzInputLabel
+
+The label row of a form field: the label, the required asterisk and, with `aside`, a short text on the right of the same row, one size smaller. With `truncate` the row stays on one line and each cut text shows in full in a tooltip.
+
+`FzInput` and `FzSelect` render it for you with their `label`, `truncateLabel` and `labelAside` props (`FzDatepicker` through `inputProps`). Use it directly only to build a field of your own.
+
+## Features
+
+- Label with an optional required asterisk
+- Optional aside on the right of the label row, such as a computed value next to a value typed by hand
+- With `truncate`: one line, the label cut first, down to about twelve characters, and only then the aside
+- Each cut text in full in a tooltip on hover and while the labelled control has focus
+- Without `truncate`: the label wraps and the aside stays on its first line
+
+## Installation
+
+```bash
+npm install @fiscozen/input
+```
+
+## Basic Usage
+
+```vue
+<script setup>
+import { FzInputLabel } from '@fiscozen/input'
+</script>
+
+<template>
+  <div class="flex flex-col gap-8">
+    <FzInputLabel
+      class="text-base text-grey-500"
+      label="1. IVA dovuta"
+      labelId="amount-label"
+      controlId="amount"
+      aside="calcolato 971,65"
+      asideId="amount-aside"
+      truncate
+    />
+    <input id="amount" aria-labelledby="amount-label" aria-describedby="amount-aside" />
+  </div>
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Text of the label (required)</td>
+    </tr>
+    <tr>
+      <td><code>labelId</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td><code>id</code> of the <code>&lt;label&gt;</code> element, for the control's <code>aria-labelledby</code> (required)</td>
+    </tr>
+    <tr>
+      <td><code>controlId</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td><code>id</code> of the control the label names, rendered as the label's <code>for</code>. Cut texts show in full while this control has focus (required)</td>
+    </tr>
+    <tr>
+      <td><code>required</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Appends an asterisk to the label. Mark the control itself as required</td>
+    </tr>
+    <tr>
+      <td><code>truncate</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Keeps the row on one line: the label, then the aside, are cut with an ellipsis and shown in full in a tooltip on hover and while the control has focus</td>
+    </tr>
+    <tr>
+      <td><code>aside</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Short text on the right of the label row. Requires <code>asideId</code></td>
+    </tr>
+    <tr>
+      <td><code>asideId</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td><code>id</code> of the element holding <code>aside</code>, for the control's <code>aria-describedby</code>. Required with <code>aside</code>, not allowed without it</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Label only
+
+```vue
+<template>
+  <FzInputLabel label="Codice fiscale" labelId="cf-label" controlId="cf" required />
+  <input id="cf" aria-labelledby="cf-label" required />
+</template>
+```
+
+### Aside without truncation
+
+The label wraps when it is long; the aside stays right-aligned on its first line.
+
+```vue
+<template>
+  <FzInputLabel
+    label="Imposta sostitutiva dovuta per il periodo d'imposta"
+    labelId="tax-label"
+    controlId="tax"
+    aside="calcolato 971,65"
+    asideId="tax-aside"
+  />
+  <input id="tax" aria-labelledby="tax-label" aria-describedby="tax-aside" />
+</template>
+```
+
+## Styling
+
+Put text styles (color, size, weight) on the component: the label, the asterisk and the aside inherit them, the aside one size smaller.
+
+## Accessibility
+
+- The `<label>` holds the label alone, so the control's accessible name never includes the aside.
+- Set the control's `aria-describedby` to `asideId`, so screen readers announce the aside as its description. Put it before any help or error text id.
+- Keyboard users see a cut label and a cut aside in full as soon as they tab into the control; `Escape` hides them without moving focus.
+- The tooltips only repeat visible text: they add no tab stop.
+- The asterisk is visual only: set `required` or `aria-required` on the control.
+
+## Best Practices
+
+- Prefer `FzInput` or `FzSelect` with `labelAside`: they wire the ids for you.
+- Keep the aside short, such as a number with a word before it. In a narrow field it is cut as soon as the label is down to about twelve characters.
+- Give the field a width (for example `flex-1`) when you use `truncate`: the row is cut at the field's width.
+
+## Related Components
+
+- **FzInput**, **FzSelect**: render it through their `label`, `truncateLabel` and `labelAside` props
+- **FzTruncatedLabel**: the one-line label it renders with `truncate`
+- **FzTooltip**: the tooltip that shows the cut aside

@@ -1830,8 +1830,9 @@ export const TruncateLabel: SelectStory = {
  * `labelAside` shows a short text on the right of the label row, here the computed
  * value next to a value picked by hand. With `truncateLabel` the label is cut first,
  * down to about twelve characters, and only then the aside; without it the label
- * wraps and the aside stays on its first line. The select announces the aside as its
- * description.
+ * wraps and the aside stays on its first line. A field narrower than twelve characters
+ * cuts the label at its own edge. The select announces the aside as its description,
+ * and shows a cut aside in full on hover and while it has focus.
  */
 export const LabelAside: SelectStory = {
   render: () => ({
@@ -1850,6 +1851,9 @@ export const LabelAside: SelectStory = {
         <div class="flex gap-16">
           <FzSelect v-model="values[3]" class="flex-1" :label="LONG_FIELD_LABEL" :labelAside="LABEL_ASIDE" :options truncateLabel />
           <FzSelect v-model="values[4]" class="flex-1" label="IVA" :labelAside="LABEL_ASIDE" :options truncateLabel />
+        </div>
+        <div class="w-[96px]">
+          <FzSelect v-model="values[5]" :label="LONG_FIELD_LABEL" :labelAside="LABEL_ASIDE" :options truncateLabel />
         </div>
       </div>
     `

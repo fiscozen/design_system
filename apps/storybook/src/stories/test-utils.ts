@@ -283,44 +283,81 @@ export async function verifyTruncatedLabelRow(
 /** The `labelAside` text shared by the `labelAside` stories. */
 export const LABEL_ASIDE = 'calcolato 971,65'
 
-/** Whether the text of `element` is wider than the nearest ancestor that clips it. */
-function isTextCut(element: HTMLElement): boolean {
+/** The nearest ancestor of `element` that clips its overflow, if any. */
+function clipOf(element: HTMLElement): HTMLElement | null {
   let clip = element.parentElement
   while (clip && getComputedStyle(clip).overflowX === 'visible') {
     clip = clip.parentElement
   }
+  return clip
+}
+
+/** Whether the text of `element` is wider than the nearest ancestor that clips it. */
+function isTextCut(element: HTMLElement): boolean {
+  const clip = clipOf(element)
   return clip !== null && element.getBoundingClientRect().width > clip.getBoundingClientRect().width
 }
 
-/** The label and the label aside of a control, found through its ARIA references. */
-function labelRowOf(control: HTMLElement) {
+/** Whether `element` shows its whole text on a single line, neither clipped by itself nor wrapped. */
+function isWholeOnOneLine(element: HTMLElement): boolean {
+  const isUnclipped = element.scrollWidth <= element.clientWidth
+  const lineHeight = parseFloat(getComputedStyle(element).lineHeight)
+  return isUnclipped && element.getBoundingClientRect().height < lineHeight * 1.5
+}
+
+/** A field's control with the label and the label aside it references. */
+interface LabelRow {
+  control: HTMLElement
+  label: HTMLElement
+  aside: HTMLElement
+}
+
+/** The control, its label and its label aside, found through the control's ARIA references. */
+function labelRowOf(control: HTMLElement): LabelRow {
   return {
+    control,
     label: document.getElementById(control.getAttribute('aria-labelledby') ?? '') as HTMLElement,
     aside: document.getElementById(control.getAttribute('aria-describedby') ?? '') as HTMLElement
   }
 }
 
+/** The box of the field: the nearest ancestor holding both the control and its label. */
+function fieldBoxOf({ control, label }: LabelRow): DOMRect {
+  let field = control.parentElement as HTMLElement
+  while (!field.contains(label)) {
+    field = field.parentElement as HTMLElement
+  }
+  return field.getBoundingClientRect()
+}
+
+const shownTooltipTexts = () =>
+  Array.from(document.querySelectorAll('[role="tooltip"][aria-hidden="false"]')).map(
+    (tooltip) => tooltip.textContent ?? ''
+  )
+
 /**
- * Verifies five fields rendered with {@link LABEL_ASIDE}, in this order: a short
+ * Verifies six fields rendered with {@link LABEL_ASIDE}, in this order: a short
  * label; {@link LONG_FIELD_LABEL} with `truncateLabel`; {@link LONG_FIELD_LABEL}
  * without it; then, side by side in half the width, {@link LONG_FIELD_LABEL} and a
- * short label, both with `truncateLabel`.
+ * short label, both with `truncateLabel`; last, {@link LONG_FIELD_LABEL} with
+ * `truncateLabel` in a field narrower than twelve characters.
  *
- * @param controls - the controls of the five fields, in order
+ * @param controls - the controls of the six fields, in order
  */
 export async function verifyLabelAsideFields(
   { step }: Pick<PlayFunctionContext, 'step'>,
   controls: HTMLElement[]
 ) {
-  const [short, truncated, wrapped, halfLong, halfShort] = controls.map(labelRowOf)
+  const rows = controls.map(labelRowOf)
+  const [short, truncated, wrapped, halfLong, halfShort, narrow] = rows
 
   await step('each field is described by its label aside', async () => {
-    const descriptions = [short, truncated, wrapped, halfLong, halfShort].map((row) => row.aside.textContent)
-    await expect(descriptions).toEqual([LABEL_ASIDE, LABEL_ASIDE, LABEL_ASIDE, LABEL_ASIDE, LABEL_ASIDE])
+    const descriptions = rows.map((row) => row.aside.textContent)
+    await expect(descriptions).toEqual(Array(6).fill(LABEL_ASIDE))
   })
 
   await step('a short label leaves the aside whole, on its right', async () => {
-    await expect(isTextCut(short.aside)).toBe(false)
+    await expect(isWholeOnOneLine(short.aside)).toBe(true)
     await expect(short.aside.getBoundingClientRect().left).toBeGreaterThan(short.label.getBoundingClientRect().right)
   })
 
@@ -334,7 +371,7 @@ export async function verifyLabelAsideFields(
     const label = wrapped.label.getBoundingClientRect()
     await expect(label.height).toBeGreaterThan(lineHeight * 1.5)
     await expect(wrapped.aside.getBoundingClientRect().top).toBeLessThan(label.top + lineHeight)
-    await expect(isTextCut(wrapped.aside)).toBe(false)
+    await expect(isWholeOnOneLine(wrapped.aside)).toBe(true)
   })
 
   await step('in a half-width field a long label is cut down to its minimum, then the aside', async () => {
@@ -347,11 +384,25 @@ export async function verifyLabelAsideFields(
     await expect(isTextCut(halfShort.aside)).toBe(false)
   })
 
+  await step('in a field narrower than twelve characters the label is cut inside the field', async () => {
+    const visibleLabel = (clipOf(narrow.label) as HTMLElement).getBoundingClientRect()
+    await expect(isTextCut(narrow.label)).toBe(true)
+    await expect(visibleLabel.right).toBeLessThanOrEqual(fieldBoxOf(narrow).right)
+  })
+
   await step('hovering a cut aside shows it in full', async () => {
     await userEvent.hover(halfLong.aside)
     await waitFor(() =>
       expect(document.querySelector('[role="tooltip"][aria-hidden="false"]')).toHaveTextContent(LABEL_ASIDE)
     )
     await userEvent.unhover(halfLong.aside)
+    await waitFor(() => expect(shownTooltipTexts()).toEqual([]))
+  })
+
+  await step('focusing a field with a cut aside shows it in full, leaving it hides it', async () => {
+    halfLong.control.focus()
+    await waitFor(() => expect(shownTooltipTexts()).toContainEqual(expect.stringContaining(LABEL_ASIDE)))
+    halfLong.control.blur()
+    await waitFor(() => expect(shownTooltipTexts()).toEqual([]))
   })
 }

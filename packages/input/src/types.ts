@@ -396,9 +396,9 @@ interface FzCurrencyInputProps extends Omit<
 export { FzInputProps, FzCurrencyInputProps };
 
 /**
- * Props for the FzInputLabel component.
+ * Props FzInputLabel takes with or without an aside.
  */
-export interface FzInputLabelProps {
+interface FzInputLabelBaseProps {
   /**
    * Text of the label.
    */
@@ -408,7 +408,8 @@ export interface FzInputLabelProps {
    */
   labelId: string;
   /**
-   * `id` of the control the label names: rendered as the label's `for`.
+   * `id` of the control the label names: rendered as the label's `for`. A cut label,
+   * or a cut aside, shows in full while this control has focus.
    */
   controlId: string;
   /**
@@ -418,16 +419,36 @@ export interface FzInputLabelProps {
   required?: boolean;
   /**
    * Keeps the row on one line: the label, then the aside, are cut with an ellipsis
-   * and shown in full in a tooltip.
+   * and shown in full in a tooltip on hover and while the control has focus.
    * @default false
    */
   truncate?: boolean;
+}
+
+/**
+ * A label row with no aside.
+ */
+export interface FzInputLabelPlainProps extends FzInputLabelBaseProps {
+  aside?: undefined;
+  asideId?: undefined;
+}
+
+/**
+ * A label row with an aside. The aside always gets an `id`, so the control can
+ * reference it in `aria-describedby`.
+ */
+export interface FzInputLabelAsideProps extends FzInputLabelBaseProps {
   /**
    * Short text on the right of the label row.
    */
-  aside?: string;
+  aside: string;
   /**
    * `id` of the element holding `aside`, for the control's `aria-describedby`.
    */
-  asideId?: string;
+  asideId: string;
 }
+
+/**
+ * Props for the FzInputLabel component: `aside` and `asideId` go together.
+ */
+export type FzInputLabelProps = FzInputLabelPlainProps | FzInputLabelAsideProps;

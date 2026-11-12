@@ -1148,8 +1148,9 @@ export const TruncateLabel: Story = {
  * `labelAside` shows a short text on the right of the label row, here the computed
  * value next to a value typed by hand. With `truncateLabel` the label is cut first,
  * down to about twelve characters, and only then the aside; without it the label
- * wraps and the aside stays on its first line. The input announces the aside as its
- * description.
+ * wraps and the aside stays on its first line. A field narrower than twelve characters
+ * cuts the label at its own edge. The input announces the aside as its description,
+ * and shows a cut aside in full on hover and while it has focus.
  */
 export const LabelAside: Story = {
   render: () => ({
@@ -1163,6 +1164,9 @@ export const LabelAside: Story = {
         <div class="flex gap-16">
           <FzInput class="flex-1" :label="LONG_FIELD_LABEL" :labelAside="LABEL_ASIDE" truncateLabel />
           <FzInput class="flex-1" label="IVA" :labelAside="LABEL_ASIDE" truncateLabel />
+        </div>
+        <div class="w-[96px]">
+          <FzInput :label="LONG_FIELD_LABEL" :labelAside="LABEL_ASIDE" truncateLabel />
         </div>
       </div>
     `

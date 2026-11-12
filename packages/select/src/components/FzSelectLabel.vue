@@ -31,6 +31,11 @@ const labelClass = computed(() => {
 
   return baseClasses;
 });
+
+/** The `aside` and `asideId` FzInputLabel takes together, or neither. */
+const asideProps = computed(() =>
+  props.aside ? { aside: props.aside, asideId: props.asideId } : {},
+);
 </script>
 
 <template>
@@ -41,7 +46,6 @@ const labelClass = computed(() => {
     :controlId="openerId"
     :required
     :truncate
-    :aside
-    :asideId
+    v-bind="asideProps"
   />
 </template>
