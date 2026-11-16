@@ -46,7 +46,8 @@
   },
   "pnpm": {
     "overrides": {
-      "glob": "^11.1.0"
+      "glob": "^11.1.0",
+      "source-map-js": "^1.2.2"
     }
   }
 }
