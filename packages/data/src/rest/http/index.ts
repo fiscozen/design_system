@@ -11,7 +11,7 @@ import { injectCsrfToken } from "./utils/csrf";
 import { mergeHeaders } from "./utils/headers";
 
 import { DEFAULT_HTTP_METHOD } from "./common";
-import { makeFetchStateWritable, trackFinishedOnExecute } from "./utils/fetch-result";
+import { makeIsFetchingWritable, readVueUseFlags, trackSettlement } from "./utils/fetch-result";
 import { WrapperChain } from "./wrappers/chain";
 import {
   emptyResponseWrapper,
@@ -123,7 +123,8 @@ const createFetchResult = <T>(
     baseFetchOptions,
   ).json();
 
-  makeFetchStateWritable(baseFetchResult);
+  const vueUseFlags = readVueUseFlags(baseFetchResult);
+  makeIsFetchingWritable(baseFetchResult);
 
   // Create wrapper context (body/headers as getters for params resolver and deduplication)
   const context: WrapperContext = {
@@ -138,7 +139,7 @@ const createFetchResult = <T>(
   // Apply wrappers using chain
   const wrapperChain = createDefaultWrapperChain();
   const wrappedResult = wrapperChain.apply(baseFetchResult, context);
-  trackFinishedOnExecute(wrappedResult);
+  trackSettlement(wrappedResult, vueUseFlags);
 
   // If we disabled immediate (interceptors or reactive params) and user wanted immediate,
   // run execute() once so the first request goes through the wrapper chain.

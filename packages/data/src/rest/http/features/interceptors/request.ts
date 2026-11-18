@@ -11,7 +11,7 @@ import { state } from "../../setup/state";
 import { handleFetchError } from "../../utils/error";
 import { parseResponseBody } from "../../utils/response";
 import { isEmptyResponseStatus } from "../empty-response/predicate";
-import { makeFetchStateWritable } from "../../utils/fetch-result";
+import { makeIsFetchingWritable } from "../../utils/fetch-result";
 import { wrapWithDeduplication } from "../deduplication/wrapper";
 
 /**
@@ -241,7 +241,7 @@ export const createModifiedFetchRequest = <T>(
     })
     .json();
 
-  makeFetchStateWritable(result);
+  makeIsFetchingWritable(result);
   return result;
 };
 
