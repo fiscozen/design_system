@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { ref } from "vue";
 import { until } from "@vueuse/core";
 import { setupFzFetcher, resetFzFetcher, useFzFetch, useActions } from "../rest";
-import { getFirstFetchCall } from "./test-utils";
+import { getFirstFetchCall, type FetchMock } from "./test-utils";
 
 /**
  * A regression here does not fail an assertion: the awaited promise never settles.
@@ -136,6 +136,29 @@ describe("Awaiting useFzFetch on the default path", () => {
     const settled = await useFzFetch<{ id: number }>("/items/1");
 
     expect(settled.data.value).toEqual({ id: 1 });
+  }, SETTLE_TIMEOUT_MS);
+});
+
+describe("Awaiting useFzFetch behind a request interceptor that changes the request", () => {
+  beforeEach(() => {
+    resetFzFetcher();
+    setupFzFetcher({ baseUrl: BASE_URL, requestInterceptor: addTestHeader });
+    respondWith(200, { id: 1 });
+  });
+
+  it("resolves once the request has completed", async () => {
+    const settled = await useFzFetch<{ id: number }>("/items/1");
+
+    expect(settled.data.value).toEqual({ id: 1 });
+  }, SETTLE_TIMEOUT_MS);
+
+  it("the settled value's execute() goes through the interceptor", async () => {
+    const settled = await useFzFetch<{ id: number }>("/items/1");
+
+    await settled.execute();
+
+    const [, secondInit] = (global.fetch as unknown as FetchMock).mock.calls[1] ?? [];
+    expect(new Headers(secondInit?.headers).get("X-Test")).toBe("1");
   }, SETTLE_TIMEOUT_MS);
 });
 
