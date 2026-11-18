@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { ref } from "vue";
+import { until } from "@vueuse/core";
 import { setupFzFetcher, resetFzFetcher, useFzFetch, useActions } from "../rest";
 import { getFirstFetchCall } from "./test-utils";
 
@@ -11,15 +12,25 @@ const SETTLE_TIMEOUT_MS = 1000;
 
 const BASE_URL = "https://api.example.com";
 
+const jsonResponse = (status: number, body: unknown = null) =>
+  new Response(body === null ? null : JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+
 const respondWith = (status: number, body: unknown = null) => {
-  global.fetch = vi.fn(() =>
-    Promise.resolve(
-      new Response(body === null ? null : JSON.stringify(body), {
-        status,
-        headers: { "Content-Type": "application/json" },
-      }),
-    ),
+  global.fetch = vi.fn(() => Promise.resolve(jsonResponse(status, body))) as unknown as typeof fetch;
+};
+
+/** Answers requests whose URL or body contains `heldMarker` only when the returned resolver is called. */
+const holdRequestsMatching = (heldMarker: string, immediateBody: unknown) => {
+  const held = Promise.withResolvers<Response>();
+  global.fetch = vi.fn((url: string, init?: RequestInit) =>
+    `${url} ${String(init?.body ?? "")}`.includes(heldMarker)
+      ? held.promise
+      : Promise.resolve(jsonResponse(200, immediateBody)),
   ) as unknown as typeof fetch;
+  return (body: unknown) => held.resolve(jsonResponse(200, body));
 };
 
 const addTestHeader = async (_url: string, init: RequestInit): Promise<RequestInit> => ({
@@ -141,5 +152,60 @@ describe("Awaiting useFzFetch with a reactive body", () => {
     const settled = await result;
 
     expect(settled.data.value).toEqual({ ok: false });
+  }, SETTLE_TIMEOUT_MS);
+});
+
+describe("Awaiting useFzFetch while requests overlap", () => {
+  beforeEach(() => {
+    resetFzFetcher();
+    setupFzFetcher({ baseUrl: BASE_URL });
+  });
+
+  it("an older execute() ending first does not settle a newer one", async () => {
+    const releaseHeld = holdRequestsMatching("second", { call: "first" });
+    const body = ref("first");
+    const result = useFzFetch<{ call: string }>("/items", { method: "POST", body }, { immediate: false });
+    const first = result.execute();
+    body.value = "second";
+    void result.execute();
+    await first;
+
+    const pending = result.then((settled) => settled.data.value);
+    releaseHeld({ call: "second" });
+
+    expect(await pending).toEqual({ call: "second" });
+  }, SETTLE_TIMEOUT_MS);
+
+  it("a refetch started by a URL change keeps a plain request pending", async () => {
+    const releaseHeld = holdRequestsMatching("/items/2", { id: 1 });
+    const id = ref(1);
+    const result = useFzFetch<{ id: number }>(() => `/items/${id.value}`, { refetch: true, immediate: false });
+    const first = result.execute();
+    id.value = 2;
+    await first;
+
+    const pending = result.then((settled) => settled.data.value);
+    releaseHeld({ id: 2 });
+
+    expect(await pending).toEqual({ id: 2 });
+  }, SETTLE_TIMEOUT_MS);
+
+  it("a refetch ending does not settle an execute() served by a separate fetch", async () => {
+    const releaseHeld = holdRequestsMatching("/items/1", { from: "refetch" });
+    const id = ref(1);
+    const body = ref("{}");
+    const result = useFzFetch<{ from: string }>(
+      () => `/items/${id.value}`,
+      { method: "POST", body },
+      { refetch: true, immediate: false },
+    );
+    void result.execute();
+    id.value = 2;
+    await until(result.data).toMatch((data) => data?.from === "refetch");
+
+    const pending = result.then((settled) => settled.data.value);
+    releaseHeld({ from: "execute" });
+
+    expect(await pending).toEqual({ from: "execute" });
   }, SETTLE_TIMEOUT_MS);
 });
