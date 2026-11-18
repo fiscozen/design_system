@@ -125,6 +125,20 @@ describe("Mutations settle when the request interceptor sends no request", () =>
   }, SETTLE_TIMEOUT_MS);
 });
 
+describe("Awaiting useFzFetch on the default path", () => {
+  beforeEach(() => {
+    resetFzFetcher();
+    setupFzFetcher({ baseUrl: BASE_URL });
+    respondWith(200, { id: 1 });
+  });
+
+  it("resolves once the request VueUse runs on its own has completed", async () => {
+    const settled = await useFzFetch<{ id: number }>("/items/1");
+
+    expect(settled.data.value).toEqual({ id: 1 });
+  }, SETTLE_TIMEOUT_MS);
+});
+
 describe("Awaiting useFzFetch with a reactive body", () => {
   beforeEach(() => {
     resetFzFetcher();
