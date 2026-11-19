@@ -1,5 +1,13 @@
 # @fiscozen/thumbnail
 
+## 0.3.0
+
+### Minor Changes
+
+- 5e4b60b: `FzThumbnail` takes a `fit` prop, `'cover' | 'contain'`. `cover` stays the default and renders as
+  before. `contain` shows the whole image inside the box instead of cropping it, for a screenshot or
+  a long receipt whose centre `cover` would crop to an empty band.
+
 ## 0.2.0
 
 ### Minor Changes
