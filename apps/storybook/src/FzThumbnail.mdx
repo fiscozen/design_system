@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 # FzThumbnail
 
-Shows an image from a URL, cropped into a box you size.
+Shows an image from a URL, fitted into a box you size.
 
 Before this component the design system had no way to render an arbitrary image.
 `FzAvatar` is round and owns its sizes; `FzRadioCard` and `FzCheckboxCard` render
@@ -14,7 +14,7 @@ document preview, an upload's pre-send thumbnail.
 
 ## Features
 
-- Crops with `object-fit: cover`, so the box never distorts the image
+- Crops with `object-fit: cover` by default, or shows the whole image with `fit="contain"` — never distorts it
 - Dimensions come from the caller, as props — nothing is hardwired
 - `alt` is **required**, with an explicit `alt=""` for decorative images
 - An `overlay` slot for an action, positioned without a class at the call site
@@ -137,6 +137,22 @@ the other, not both.
       <td>
         For a box with only one known dimension, e.g. <code>'16 / 9'</code>. Ignored when both{' '}
         <code>width</code> and <code>height</code> are set.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>fit</code>
+      </td>
+      <td>
+        <code>'cover' | 'contain'</code>
+      </td>
+      <td>
+        <code>'cover'</code>
+      </td>
+      <td>
+        <code>cover</code> fills the box and crops the overflow; <code>contain</code> shows the
+        whole image and leaves the rest of the box white — for a screenshot or a receipt whose
+        centre <code>cover</code> would crop to an empty band.
       </td>
     </tr>
     <tr>
@@ -348,6 +364,15 @@ check `!attachment.url` alongside `@error`.
 ```vue
 <FzThumbnail :src="image.url" alt="Anteprima" width="100%" aspectRatio="16 / 9" />
 ```
+
+### Showing the whole image
+
+```vue
+<FzThumbnail :src="attachment.url" :alt="attachment.name" width="100%" height="168px" fit="contain" />
+```
+
+For a phone screenshot or a long receipt in a landscape box, `cover` keeps only the
+middle band — often empty. `contain` shows all of it.
 
 ## Accessibility
 

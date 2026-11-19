@@ -23,6 +23,11 @@ const meta = {
     layout: 'padded'
   },
   argTypes: {
+    fit: {
+      control: 'inline-radio',
+      options: ['cover', 'contain'],
+      description: '`cover` crops the overflow; `contain` shows the whole image'
+    },
     radius: {
       control: 'select',
       options: ['none', 'sm', 'base', 'lg', 'xl'],
@@ -410,6 +415,40 @@ export const Cropping: ThumbnailStory = {
     // Four visibly different images, not four copies of the same nothing.
     const distinct = new Set(samples.map((s) => s.join(',')))
     await expect(distinct.size).toBe(4)
+  }
+}
+
+/**
+ * `fit="contain"` for an image whose whole content matters — a phone screenshot
+ * or a long receipt in a landscape box. `cover` would keep only the middle band of
+ * the tall one; `contain` shows all of it and leaves the rest of the box white.
+ * Compare with `Cropping`, same sources, same box.
+ */
+export const Contain: ThumbnailStory = {
+  render: () => ({
+    components: { FzThumbnail, FzContainer },
+    setup: () => ({ WIDE, TALL }),
+    template: `
+      <FzContainer horizontal gap="sm">
+        <FzThumbnail :src="WIDE" alt="Immagine molto larga, intera" fit="contain" bordered width="158px" height="108px" />
+        <FzThumbnail :src="TALL" alt="Immagine molto alta, intera" fit="contain" bordered width="158px" height="108px" />
+      </FzContainer>`
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    for (const name of ['Immagine molto larga, intera', 'Immagine molto alta, intera']) {
+      const img = canvas.getByAltText(name) as HTMLImageElement
+      await waitFor(() => expect(img.complete && img.naturalWidth > 0).toBe(true))
+
+      // The box is the caller's whatever the fit: only the painted area changes.
+      // Measured on the root, since `bordered` insets the image by 1px a side.
+      const box = img.closest('.fz-thumbnail') as HTMLElement
+      const { width, height } = box.getBoundingClientRect()
+      await expect(Math.round(width)).toBe(158)
+      await expect(Math.round(height)).toBe(108)
+      await expect(getComputedStyle(img).objectFit).toBe('contain')
+    }
   }
 }
 

@@ -12,6 +12,13 @@ type FzThumbnailRadius = 'none' | 'sm' | 'base' | 'lg' | 'xl'
 type FzThumbnailOverlayPosition = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'center'
 
 /**
+ * How the image fills the box, mirroring CSS `object-fit`. `cover` fills it and
+ * crops the overflow; `contain` shows the whole image and leaves the rest of the
+ * box empty.
+ */
+type FzThumbnailFit = 'cover' | 'contain'
+
+/**
  * Props for FzThumbnail.
  */
 export interface FzThumbnailProps {
@@ -44,6 +51,14 @@ export interface FzThumbnailProps {
    * and `height` are set.
    */
   aspectRatio?: string
+  /**
+   * How the image fills the box. `cover` by default: the box is filled and the
+   * overflow cropped, which suits a photo. Use `contain` when the whole image has
+   * to stay readable — a screenshot or a scanned receipt much taller or wider
+   * than the box, whose centre `cover` would crop to an empty band. Neither
+   * distorts the image; `contain` leaves the uncovered part of the box white.
+   */
+  fit?: FzThumbnailFit
   /** Corner radius. Defaults to `base` (4px). */
   radius?: FzThumbnailRadius
   /** Draws a 1px `grey-100` border around the box. */
@@ -95,4 +110,4 @@ export interface FzThumbnailProps {
   imgProps?: Omit<ImgHTMLAttributes, 'src' | 'alt' | 'loading' | 'onError'>
 }
 
-export type { FzThumbnailRadius, FzThumbnailOverlayPosition }
+export type { FzThumbnailRadius, FzThumbnailOverlayPosition, FzThumbnailFit }

@@ -37,7 +37,7 @@ describe('FzThumbnail', () => {
       expect(wrapper.find(PLACEHOLDER).exists()).toBe(true)
     })
 
-    it('should crop rather than distort the image', () => {
+    it('should crop rather than letterbox by default', () => {
       expect(createWrapper().find('img').classes()).toContain('object-cover')
     })
 
@@ -105,6 +105,12 @@ describe('FzThumbnail', () => {
       ['xl', 'rounded-xl']
     ] as const)('should map radius "%s" to %s', (radius, expected) => {
       expect(createWrapper({ radius }).classes()).toContain(expected)
+    })
+
+    it('should show the whole image, uncropped, when fit is contain', () => {
+      const classes = createWrapper({ fit: 'contain' }).find('img').classes()
+      expect(classes).toContain('object-contain')
+      expect(classes).not.toContain('object-cover')
     })
 
     it('should draw no border by default', () => {
