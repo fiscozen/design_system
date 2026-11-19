@@ -30,9 +30,15 @@
  */
 import { computed, ref, watch } from 'vue'
 import { FzIcon } from '@fiscozen/icons'
-import type { FzThumbnailOverlayPosition, FzThumbnailProps, FzThumbnailRadius } from './types'
+import type {
+  FzThumbnailFit,
+  FzThumbnailOverlayPosition,
+  FzThumbnailProps,
+  FzThumbnailRadius
+} from './types'
 
 const props = withDefaults(defineProps<FzThumbnailProps>(), {
+  fit: 'cover',
   radius: 'base',
   bordered: false,
   scrim: false,
@@ -79,6 +85,11 @@ const radiusClasses: Record<FzThumbnailRadius, string> = {
   xl: 'rounded-xl'
 }
 
+const fitClasses: Record<FzThumbnailFit, string> = {
+  cover: 'object-cover',
+  contain: 'object-contain'
+}
+
 const overlayPositionClasses: Record<FzThumbnailOverlayPosition, string> = {
   'top-start': 'items-start justify-start',
   'top-end': 'items-start justify-end',
@@ -113,7 +124,7 @@ const onError = () => {
       :src="src"
       :alt="alt"
       :loading="loading"
-      class="block size-full object-cover"
+      :class="['block size-full', fitClasses[fit]]"
       @error="onError"
     />
 

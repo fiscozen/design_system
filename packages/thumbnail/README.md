@@ -1,6 +1,6 @@
 # @fiscozen/thumbnail
 
-`FzThumbnail` — an image from a URL, cropped into a box the caller sizes.
+`FzThumbnail` — an image from a URL, fitted into a box the caller sizes.
 
 The design system had no way to show an arbitrary image. `FzAvatar` is round and
 owns its sizes; `FzRadioCard` and `FzCheckboxCard` render an illustration inside a
@@ -30,6 +30,18 @@ where a page needs it. Deciding it inside the component is the only way that
 capability exists for those layers — the same reasoning as `FzNavbar`'s
 `elevation`. A Tailwind class still works where the layer permits one; pick one
 mechanism or the other rather than both.
+
+## Cropping or showing it whole
+
+`fit` decides what the image does in that box. `cover`, the default, fills it and
+crops whatever overflows — right for a photo. `contain` shows the whole image and
+leaves the rest of the box white — right when every part of it matters, such as a
+phone screenshot or a long receipt in a landscape box, where `cover` keeps only
+the middle band. Neither distorts the image.
+
+```vue
+<FzThumbnail :src="attachment.url" :alt="attachment.name" width="100%" height="168px" fit="contain" />
+```
 
 ## Overlaying an action
 
@@ -105,6 +117,7 @@ name as `role="img"` + `aria-label` rather than letting it vanish. A decorative
 | `width` | `string` | — | Any CSS length. |
 | `height` | `string` | — | Any CSS length. |
 | `aspectRatio` | `string` | — | e.g. `'16 / 9'`. Ignored when both dimensions are set. |
+| `fit` | `'cover' \| 'contain'` | `'cover'` | `cover` crops the overflow; `contain` shows the whole image. |
 | `radius` | `'none' \| 'sm' \| 'base' \| 'lg' \| 'xl'` | `'base'` | `base` is 4px, the design's value. |
 | `bordered` | `boolean` | `false` | 1px `grey-100` border. |
 | `scrim` | `boolean` | `false` | Translucent overlay over the image only. |
