@@ -2,6 +2,12 @@
   "name": "@fiscozen/icons",
   "version": "1.0.8",
   "description": "Design system icon plugin and component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscozen/design_system.git",
+    "directory": "packages/icons"
+  },
+  "homepage": "https://github.com/fiscozen/design_system/tree/main/packages/icons",
   "scripts": {
     "coverage": "vitest run --coverage",
     "format": "prettier --write src/",
