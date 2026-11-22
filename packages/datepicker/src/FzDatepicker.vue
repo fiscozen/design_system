@@ -114,8 +114,6 @@ const applyMenuHeightBudget = () => {
   let budget = visibleHeight - MENU_VIEWPORT_MARGIN * 2
   if (input) {
     const field = input.getBoundingClientRect()
-    const below = visibleTop + visibleHeight - field.bottom - MENU_VIEWPORT_MARGIN
-    const above = field.top - visibleTop - MENU_VIEWPORT_MARGIN
 
     // Budget the side the menu is *actually* on. An earlier version budgeted the roomier
     // side, assuming VueDatePicker would place the calendar there — it does not always, and
@@ -129,12 +127,32 @@ const applyMenuHeightBudget = () => {
       (el) => el.getBoundingClientRect().height > 0
     )
     if (menu) {
-      const placedBelow = menu.getBoundingClientRect().top >= field.bottom - 1
-      budget = Math.min(budget, placedBelow ? below : above)
+      const menuRect = menu.getBoundingClientRect()
+      const placedBelow = menuRect.top >= field.bottom - 1
+
+      // Measure from the menu's own edge rather than the field's. VueDatePicker separates
+      // the two by its `offset` (plus arrow and padding), and measuring from the field hands
+      // that gap back as if it were usable space, so the calendar overflowed by exactly
+      // `gap - margin` every time. Measured on a 360x640 viewport with the field at 505..525
+      // and the menu opening at 547: a 107px budget (640 - 525 - 8) against 85px of real
+      // space, cut off by 14px — deterministically the 22px gap minus the 8px margin.
+      //
+      // The edge we measure from is the one Floating UI holds still: it anchors the menu's
+      // top when placed below and its bottom when placed above. Shrinking the height
+      // therefore never moves that edge, so the budget cannot oscillate.
+      budget = Math.min(
+        budget,
+        placedBelow
+          ? visibleTop + visibleHeight - menuRect.top - MENU_VIEWPORT_MARGIN
+          : menuRect.bottom - visibleTop - MENU_VIEWPORT_MARGIN
+      )
     } else {
-      // First run happens before VueDatePicker has rendered the menu, so the side is not
-      // known yet. Stay generous rather than flash a needlessly short calendar; the
-      // post-render recompute below refines it.
+      // First run happens before VueDatePicker has rendered the menu, so neither the side
+      // nor the gap is known yet. The field is the only reference available: stay generous
+      // rather than flash a needlessly short calendar, and let the post-render recompute
+      // below refine it against the real menu box.
+      const below = visibleTop + visibleHeight - field.bottom - MENU_VIEWPORT_MARGIN
+      const above = field.top - visibleTop - MENU_VIEWPORT_MARGIN
       budget = Math.min(budget, Math.max(below, above))
     }
   }

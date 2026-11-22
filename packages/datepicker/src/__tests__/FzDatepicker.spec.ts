@@ -1927,27 +1927,43 @@ describe('calendar height budget (LIB-2814)', () => {
   }
   const removeMenu = () => document.querySelector('.dp__menu')?.remove()
 
-  it('budgets the side the menu is actually on, not the roomier one', () => {
+  it('measures from the menu edge, not the field, when the calendar opens below', () => {
     const wrapper = mountPicker()
-    // HD-25540 geometry measured on the ephemeral env: field low, 96px below it, 504 above,
-    // and VueDatePicker places the calendar BELOW anyway. Budgeting the roomier side left
-    // the cap at 496px against 88px of real space, so it never bound and the calendar was
-    // cut off by 250px with no row reachable (LIB-2827).
+    // Production geometry (LIB-2828): field 504..524 with the menu opening at 546, so
+    // VueDatePicker's offset leaves a 22px gap between them. Measuring from the field hands
+    // that gap back as usable space, and the calendar overflows by exactly gap - margin.
     setViewportHeight(620)
     stubField(wrapper, 504, 524)
-    stubMenu(546, 324) // below the field
+    stubMenu(546, 324)
     openMenu(wrapper)
-    expect(document.documentElement.style.getPropertyValue(VAR)).toBe(`${620 - 524 - MARGIN}px`)
+    expect(document.documentElement.style.getPropertyValue(VAR)).toBe(`${620 - 546 - MARGIN}px`)
     removeMenu()
   })
 
-  it('budgets the space above when the menu is placed above the field', () => {
+  it('measures from the menu edge when the calendar opens above', () => {
     const wrapper = mountPicker()
+    // Mirror case: above the field the edge Floating UI holds still is the menu's *bottom*,
+    // and the same 22px gap sits between it and the field.
     setViewportHeight(620)
     stubField(wrapper, 504, 524)
-    stubMenu(180, 324) // above the field
+    stubMenu(158, 324) // bottom at 482, i.e. 22px above the field
     openMenu(wrapper)
-    expect(document.documentElement.style.getPropertyValue(VAR)).toBe(`${504 - MARGIN}px`)
+    expect(document.documentElement.style.getPropertyValue(VAR)).toBe(`${482 - MARGIN}px`)
+    removeMenu()
+  })
+
+  it('still budgets the side the menu is on, not the roomier one', () => {
+    const wrapper = mountPicker()
+    // LIB-2827's regression guard: 96px below the field against 504 above, and VueDatePicker
+    // places the calendar BELOW anyway. Budgeting the roomier side left the cap at 496px
+    // against real space in the eighties, so it never bound and the calendar was cut off
+    // with no row reachable.
+    setViewportHeight(620)
+    stubField(wrapper, 504, 524)
+    stubMenu(546, 324)
+    openMenu(wrapper)
+    const budget = parseInt(document.documentElement.style.getPropertyValue(VAR), 10)
+    expect(budget).toBeLessThan(504 - MARGIN)
     removeMenu()
   })
 
