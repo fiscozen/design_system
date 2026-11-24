@@ -211,9 +211,6 @@ describe('FzFrameTemplate', () => {
 
       expect(main.classes()).toContain('overflow-y-auto')
       expect(main.classes()).not.toContain('overflow-hidden')
-      // `min-h-full`, never `h-full`: a long page must grow past the region and
-      // scroll, not be clipped by it.
-      expect(wrapper.find('.fz-frame-template__surface').classes()).toContain('min-h-full')
     })
 
     it('clips the content region under bounded, handing a definite height down', () => {
@@ -233,7 +230,6 @@ describe('FzFrameTemplate', () => {
       expect(surface.classes()).toEqual(
         expect.arrayContaining(['flex', 'min-h-0', 'flex-1', 'flex-col', 'overflow-hidden'])
       )
-      expect(surface.classes()).not.toContain('min-h-full')
     })
 
     it('keeps the root clipping in both contracts', () => {

@@ -190,6 +190,14 @@ export const Default: Story = {
       )
     })
 
+    await step('The card grows with the page instead of the page spilling out of it', async () => {
+      // The region scrolls either way: content overflowing a card stuck at one
+      // region tall makes it scroll too. Only the card's own overflow tells them apart.
+      const card = canvasElement.querySelector<HTMLElement>('.fz-frame-template__surface')!
+      expect(card.scrollHeight).toBeLessThanOrEqual(card.clientHeight + 1)
+      expect(card.getBoundingClientRect().height).toBeGreaterThan(region.clientHeight)
+    })
+
     await step('The tools panel keeps its state while closed', async () => {
       const openTools = canvas.getByRole('button', { name: 'Apri strumenti' })
       await userEvent.click(openTools)

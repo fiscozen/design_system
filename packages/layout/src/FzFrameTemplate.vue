@@ -121,16 +121,17 @@ const mainClass = computed(() => [
   isBounded.value ? 'flex flex-col overflow-hidden' : 'overflow-y-auto'
 ])
 
-// The inset surface. Under `scroll` it must be `min-h-full` and NOT `h-full`:
-// the percentage resolves against the region's content box, so a short page
-// still fills the frame while a long one grows past it — `h-full` would clip the
-// overflow instead of scrolling it.
+// The inset surface. The region is a flex column in both contracts (FzLayoutMain
+// sets it), so the surface is a flex item. Under `scroll` it grows to fill the
+// region and never shrinks below its content: a percentage `min-height` would
+// replace the flex item's content-based minimum, and the default `flex-shrink: 1`
+// would then squeeze the card to one region tall with the page spilling out of it.
 const surfaceClass = computed(() => [
   'fz-frame-template__surface box-border',
   props.chrome === 'card'
     ? 'fz-frame-template__surface--card bg-core-white border-1 border-grey-200 rounded-xl border-solid'
     : 'fz-frame-template__surface--flat',
-  isBounded.value ? 'flex min-h-0 flex-1 flex-col overflow-hidden' : 'min-h-full'
+  isBounded.value ? 'flex min-h-0 flex-1 flex-col overflow-hidden' : 'grow shrink-0'
 ])
 
 // -- Page scroll target (provide) ---------------------------------------------
