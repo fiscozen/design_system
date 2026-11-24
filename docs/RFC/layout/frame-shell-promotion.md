@@ -157,7 +157,7 @@ div.fz-frame-template            h-dvh overflow-hidden flex flex-col lg:flex-row
 │     │                          scroll  → overflow-y-auto
 │     │                          bounded → flex flex-col overflow-hidden
 │     └─ div…__surface           card    → bg-core-white border-1 border-grey-200 rounded-xl border-solid
-│                                scroll  → min-h-full
+│                                scroll  → grow shrink-0
 │                                bounded → flex min-h-0 flex-1 flex-col overflow-hidden
 │                                <slot />
 └─ FzLayoutAside                 hidden lg:flex w-[400px] shrink-0 p-8             v-if hasAside && slots.aside
